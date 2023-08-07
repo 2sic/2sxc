@@ -17,22 +17,22 @@ namespace ToSic.Sxc.Context.Query
         bool ITyped.ContainsKey(string name) => OriginalsAsDic.ContainsKey(name);
 
         [PrivateApi]
-        object ITyped.Get(string name, string noParamOrder, bool? strict)
+        object ITyped.Get(string name, string noParamOrder, bool? required)
         {
-            Protect(noParamOrder, nameof(strict));
+            Protect(noParamOrder, nameof(required));
             return OriginalsAsDic.TryGetValue(name, out var value) ? value : null;
         }
 
         [PrivateApi]
-        bool ITyped.Bool(string name, string noParamOrder, bool fallback, bool? strict)
+        bool ITyped.Bool(string name, string noParamOrder, bool fallback, bool? required)
             => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        DateTime ITyped.DateTime(string name, string noParamOrder, DateTime fallback, bool? strict)
+        DateTime ITyped.DateTime(string name, string noParamOrder, DateTime fallback, bool? required)
             => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        string ITyped.String(string name, string noParamOrder, string fallback, bool? strict, bool scrubHtml)
+        string ITyped.String(string name, string noParamOrder, string fallback, bool? required, bool scrubHtml)
         {
             var value = GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 #pragma warning disable CS0618
@@ -41,34 +41,34 @@ namespace ToSic.Sxc.Context.Query
         }
 
         [PrivateApi]
-        int ITyped.Int(string name, string noParamOrder, int fallback, bool? strict)
+        int ITyped.Int(string name, string noParamOrder, int fallback, bool? required)
             => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        long ITyped.Long(string name, string noParamOrder, long fallback, bool? strict)
+        long ITyped.Long(string name, string noParamOrder, long fallback, bool? required)
             => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        float ITyped.Float(string name, string noParamOrder, float fallback, bool? strict)
+        float ITyped.Float(string name, string noParamOrder, float fallback, bool? required)
             => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        decimal ITyped.Decimal(string name, string noParamOrder, decimal fallback, bool? strict)
+        decimal ITyped.Decimal(string name, string noParamOrder, decimal fallback, bool? required)
             => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        double ITyped.Double(string name, string noParamOrder, double fallback, bool? strict)
+        double ITyped.Double(string name, string noParamOrder, double fallback, bool? required)
             => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        string ITyped.Url(string name, string noParamOrder, string fallback, bool? strict)
+        string ITyped.Url(string name, string noParamOrder, string fallback, bool? required)
         {
             var url = GetV(name, noParamOrder: noParamOrder, fallback);
             return Tags.SafeUrl(url).ToString();
         }
 
         [PrivateApi]
-        IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback, bool? strict)
+        IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback, bool? required)
         {
             // Note: we won't do special date processing, since all values in the Parameters are strings
             var value = GetV(name, noParamOrder: noParamOrder, fallback: fallback);

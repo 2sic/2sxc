@@ -11,12 +11,12 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="name">property name</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="strict">change if strict names-checks are applied.</param>
+        /// <param name="required">change if strict names-checks are applied.</param>
         /// <returns>The Folder object</returns>
         /// <remarks>Added in 16.02</remarks>
         IFolder Folder(string name,
             string noParamOrder = Protector,
-            bool? strict = default);
+            bool? required = default);
 
         /// <summary>
         /// Get the file of the current field.
@@ -29,11 +29,11 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="name">property name</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="strict">change if strict names-checks are applied.</param>
+        /// <param name="required">change if strict names-checks are applied.</param>
         /// <remarks>Added in 16.02</remarks>
         /// <returns></returns>
         IFile File(string name,
             string noParamOrder = Protector,
-            bool? strict = default);
+            bool? required = default);
     }
 }

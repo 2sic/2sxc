@@ -18,11 +18,11 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="name">the property name like `Image` - or path to sub-property like `Author.Name` (new v15)</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="strict">change if strict names-checks are applied.</param>
+        /// <param name="required">change if strict names-checks are applied.</param>
         /// <returns>The result if found or null; or error if the object is in strict mode</returns>
         object Get(string name,
             string noParamOrder = Protector,
-            bool? strict = default);
+            bool? required = default);
 
         // 2023-08-04 2dm removed/disabled, not useful as we should always be able to specify strict
         ///// <summary>
@@ -49,14 +49,14 @@ namespace ToSic.Sxc.Data
         /// <param name="name">the property name like `Image` - or path to sub-property like `Author.Name` (new v15)</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">the fallback value to provide if not found</param>
-        /// <param name="strict">change if strict names-checks are applied.</param>
+        /// <param name="required">change if strict names-checks are applied.</param>
         /// <returns>The typed value, or the `default` like `null` or `0` if casting isn't possible.</returns>
         /// <remarks>Added in v15</remarks>
         TValue Get<TValue>(string name,
             // ReSharper disable once MethodOverloadWithOptionalParameter
             string noParamOrder = Protector,
             TValue fallback = default,
-            bool? strict = default);
+            bool? required = default);
 
 
     }

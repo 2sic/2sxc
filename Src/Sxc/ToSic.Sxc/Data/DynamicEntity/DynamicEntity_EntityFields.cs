@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Data;
 
 namespace ToSic.Sxc.Data
 {
@@ -13,12 +14,18 @@ namespace ToSic.Sxc.Data
 
 
         /// <inheritdoc />
-        public IField Field(string name) => (this as ITypedItem).Field(name, strict: null);
+        public IField Field(string name) => (this as ITypedItem).Field(name, required: null);
 
-        IField ITypedItem.Field(string name, string noParamOrder, bool? strict) =>
-            IsErrStrict(name, strict, StrictGet)
+        IField ITypedItem.Field(string name, string noParamOrder, bool? required)
+        {
+            // TODO: make sure that if we use a path, the field is from the correct parent
+            if (name.Contains(PropertyStack.PathSeparator.ToString()))
+                throw new NotImplementedException("Path support on this method is not yet supported. Ask iJungleboy");
+
+            return IsErrStrict(name, required, StrictGet)
                 ? throw ErrStrict(name)
                 : new Field(this, name, _Services);
+        }
 
         /// <inheritdoc />
         public string EntityType => Entity?.Type?.Name;

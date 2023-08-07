@@ -35,11 +35,11 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="name">Name of the property</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="strict">change if strict names-checks are applied.</param>
+        /// <param name="required">change if strict names-checks are applied.</param>
         /// <returns></returns>
         IField Field(string name,
             string noParamOrder = Protector,
-            bool? strict = default);
+            bool? required = default);
 
 
 

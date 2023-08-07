@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Data
     public abstract partial class DynamicJacketBase: ITyped
     {
         [PrivateApi]
-        IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback, bool? strict)
+        IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback, bool? required)
         {
             Protect(noParamOrder, nameof(fallback));
             var value = FindValueOrNull(name, InvariantCultureIgnoreCase, null);
@@ -28,9 +28,9 @@ namespace ToSic.Sxc.Data
         protected abstract bool TypedHasImplementation(string name);
 
         [PrivateApi]
-        object ITyped.Get(string name, string noParamOrder, bool? strict)
+        object ITyped.Get(string name, string noParamOrder, bool? required)
         {
-            Protect(noParamOrder, nameof(strict));
+            Protect(noParamOrder, nameof(required));
             return FindValueOrNull(name, InvariantCultureIgnoreCase, null);
         }
 
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Data
             => G4T(name, noParamOrder, fallback);
 
         [PrivateApi]
-        TValue ITyped.Get<TValue>(string name, string noParamOrder, TValue fallback, bool? strict) 
+        TValue ITyped.Get<TValue>(string name, string noParamOrder, TValue fallback, bool? required) 
             => G4T(name, noParamOrder, fallback);
 
         [PrivateApi]
@@ -56,13 +56,15 @@ namespace ToSic.Sxc.Data
         dynamic ITyped.Dyn => this;
 
         [PrivateApi] 
-        bool ITyped.Bool(string name, string noParamOrder, bool fallback, bool? strict) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+        bool ITyped.Bool(string name, string noParamOrder, bool fallback, bool? required)
+            => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        DateTime ITyped.DateTime(string name, string noParamOrder, DateTime fallback, bool? strict) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+        DateTime ITyped.DateTime(string name, string noParamOrder, DateTime fallback, bool? required)
+            => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        string ITyped.String(string name, string noParamOrder, string fallback, bool? strict, bool scrubHtml)
+        string ITyped.String(string name, string noParamOrder, string fallback, bool? required, bool scrubHtml)
         {
             var value = G4T(name, noParamOrder: noParamOrder, fallback: fallback);
 #pragma warning disable CS0618
@@ -71,22 +73,22 @@ namespace ToSic.Sxc.Data
         }
 
         [PrivateApi]
-        int ITyped.Int(string name, string noParamOrder, int fallback, bool? strict) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+        int ITyped.Int(string name, string noParamOrder, int fallback, bool? required) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        long ITyped.Long(string name, string noParamOrder, long fallback, bool? strict) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+        long ITyped.Long(string name, string noParamOrder, long fallback, bool? required) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        float ITyped.Float(string name, string noParamOrder, float fallback, bool? strict) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+        float ITyped.Float(string name, string noParamOrder, float fallback, bool? required) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        decimal ITyped.Decimal(string name, string noParamOrder, decimal fallback, bool? strict) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+        decimal ITyped.Decimal(string name, string noParamOrder, decimal fallback, bool? required) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        double ITyped.Double(string name, string noParamOrder, double fallback, bool? strict) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+        double ITyped.Double(string name, string noParamOrder, double fallback, bool? required) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        string ITyped.Url(string name, string noParamOrder, string fallback, bool? strict)
+        string ITyped.Url(string name, string noParamOrder, string fallback, bool? required)
         {
             var url =  G4T(name, noParamOrder: noParamOrder, fallback: fallback);
             return Tags.SafeUrl(url).ToString();

@@ -35,28 +35,28 @@ namespace ToSic.Sxc.Data
         }
 
         [PrivateApi]
-        protected bool IsErrStrict(string name, bool? strict, bool strictGetDefault)
-            => !(this as ITyped).ContainsKey(name) && (strict ?? strictGetDefault);
+        protected bool IsErrStrict(string name, bool? required, bool strictGetDefault)
+            => !(this as ITyped).ContainsKey(name) && (required ?? strictGetDefault);
 
 
         /// <inheritdoc />
         [PrivateApi]
-        IFolder ITypedItem.Folder(string name, string noParamOrder, bool? strict)
+        IFolder ITypedItem.Folder(string name, string noParamOrder, bool? required)
         {
-            Protect(noParamOrder, nameof(strict));
-            return IsErrStrict(name, strict, StrictGet)
+            Protect(noParamOrder, nameof(required));
+            return IsErrStrict(name, required, StrictGet)
                 ? throw ErrStrict(name)
                 : _adamCache.Get(name, () => _Services.AsC.Folder(Entity, name));
         }
 
         private readonly GetOnceNamed<IFolder> _adamCache = new GetOnceNamed<IFolder>();
 
-        IFile ITypedItem.File(string name, string noParamOrder, bool? strict)
+        IFile ITypedItem.File(string name, string noParamOrder, bool? required)
         {
-            Protect(noParamOrder, nameof(strict));
+            Protect(noParamOrder, nameof(required));
             var typedThis = this as ITypedItem;
             // Case 1: The field contains a direct reference to a file
-            var file = GetServiceKitOrThrow().Adam.File(typedThis.Field(name, strict: strict));
+            var file = GetServiceKitOrThrow().Adam.File(typedThis.Field(name, required: required));
             // Case 2: No direct reference, just get the first file in the folder of this field
             return file ?? typedThis.Folder(name).Files.FirstOrDefault();
         }
@@ -91,11 +91,11 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi]
-        IEnumerable<ITypedItem> ITypedItem.Children(string field, string noParamOrder, string type, bool? strict)
+        IEnumerable<ITypedItem> ITypedItem.Children(string field, string noParamOrder, string type, bool? required)
         {
-            Protect(noParamOrder, $"{nameof(type)}, {nameof(strict)}");
+            Protect(noParamOrder, $"{nameof(type)}, {nameof(required)}");
 
-            if (IsErrStrict(field, strict, StrictGet))
+            if (IsErrStrict(field, required, StrictGet))
                 throw ErrStrict(field);
 
             var dynChildren = Children(field, type);
@@ -109,10 +109,10 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi]
-        ITypedItem ITypedItem.Child(string name, string noParamOrder, bool? strict)
+        ITypedItem ITypedItem.Child(string name, string noParamOrder, bool? required)
         {
-            Protect(noParamOrder, nameof(strict));
-            return IsErrStrict(name, strict, StrictGet)
+            Protect(noParamOrder, nameof(required));
+            return IsErrStrict(name, required, StrictGet)
                 ? throw ErrStrict(name)
                 : (this as ITypedItem).Children(name).FirstOrDefault();
         }

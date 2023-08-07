@@ -40,16 +40,16 @@ namespace ToSic.Sxc.Context.Query
         public TValue Get<TValue>(string name, string noParamOrder = Protector, TValue fallback = default) 
             => GetV(name, noParamOrder, fallback);
 
-        TValue ITyped.Get<TValue>(string name, string noParamOrder, TValue fallback, bool? strict) 
+        TValue ITyped.Get<TValue>(string name, string noParamOrder, TValue fallback, bool? required) 
             => GetV(name, noParamOrder, fallback);
 
-        private TValue GetV<TValue>(string name, string noParamOrder, TValue fallback, bool? strict = default, [CallerMemberName] string cName = default)
+        private TValue GetV<TValue>(string name, string noParamOrder, TValue fallback, bool? required = default, [CallerMemberName] string cName = default)
         {
             Protect(noParamOrder, nameof(fallback), methodName: cName);
             return OriginalsAsDic.TryGetValue(name, out var value)
                 ? value.ConvertOrFallback(fallback)
-                : (strict ?? false)
-                    ? throw new ArgumentException($"Can't find {name} and {nameof(strict)} is true; use {nameof(strict)}: false if this is intended")
+                : (required ?? false)
+                    ? throw new ArgumentException($"Can't find {name} and {nameof(required)} is true; use {nameof(required)}: false if this is intended")
                     : fallback;
         }
 

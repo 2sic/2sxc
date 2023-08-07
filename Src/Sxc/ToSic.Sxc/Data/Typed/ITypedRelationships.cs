@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Data
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="strict">change if strict names-checks are applied.</param>
         /// <returns></returns>
-        ITypedItem Child(string name, string noParamOrder = Protector, bool? strict = default);
+        ITypedItem Child(string name, string noParamOrder = Protector, bool? required = default);
 
         /// <summary>
         /// A **typed** list of sub-items. Important for LINQ style querying or just
@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Data
         /// <param name="strict">change if strict names-checks are applied.</param>
         /// <returns>A list of all items pointing here (filtered), converted to DynamicEntity for convenience.</returns>
         /// <remarks>Note that the parameter-order is reversed to the Parents()</remarks>
-        IEnumerable<ITypedItem> Children(string field = default, string noParamOrder = Protector, string type = default, bool? strict = default);
+        IEnumerable<ITypedItem> Children(string field = default, string noParamOrder = Protector, string type = default, bool? required = default);
 
         /// <summary>
         /// A **typed** list of entities which point to this item. Important for LINQ style querying or just
