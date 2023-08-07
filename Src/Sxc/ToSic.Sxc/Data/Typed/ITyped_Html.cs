@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Data
         /// <param name="name">Name of the property</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">Value to use if the property specified by `name` doesn't exist</param>
-        /// <param name="required">change if strict names-checks are applied.</param>
+        /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.TypedRequired)</param>
         /// <returns></returns>
         IRawHtmlString Attribute(string name, string noParamOrder = Protector, string fallback = default, bool? required = default);
     }

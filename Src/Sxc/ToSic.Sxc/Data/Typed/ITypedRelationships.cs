@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="name">Name of the field</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="strict">change if strict names-checks are applied.</param>
+        /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.TypedRequired)</param>
         /// <returns></returns>
         ITypedItem Child(string name, string noParamOrder = Protector, bool? required = default);
 
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Data
         /// <param name="field">Optional field filter - would only return items that point to the current item in a specific field name.</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="type">Optional type filter - would only return items of this type. </param>
-        /// <param name="strict">change if strict names-checks are applied.</param>
+        /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.TypedRequired)</param>
         /// <returns>A list of all items pointing here (filtered), converted to DynamicEntity for convenience.</returns>
         /// <remarks>Note that the parameter-order is reversed to the Parents()</remarks>
         IEnumerable<ITypedItem> Children(string field = default, string noParamOrder = Protector, string type = default, bool? required = default);
