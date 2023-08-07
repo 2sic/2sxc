@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Data;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
@@ -9,6 +10,9 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
     [TestClass]
     public class DynFromDictionaryBasic: TestBaseSxcDb
     {
+        private DynamicReadDictionary<TKey, TValue> ToDyn<TKey, TValue>(Dictionary<TKey, TValue> dic)
+            => GetService<DynamicWrapperFactory>().FromDictionary(dic);
+
         [TestMethod]
         public void BasicUseDictionary()
         {
@@ -21,7 +25,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
                 ["Truthy"] = true,
             };
 
-            var typed = GetService<DynamicWrapperFactory>().FromDictionary(dic); // as ITyped;
+            var typed = ToDyn(dic); // as ITyped;
             dynamic dynAnon = typed;
 
             IsNull(dynAnon.NotExisting);
@@ -36,6 +40,22 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             //IsTrue(typed.Has("NAME"));
             //IsTrue(typed.Has("Description"));
             //IsFalse(typed.Has("NonexistingField"));
+        }
+        [TestMethod]
+        public void Keys()
+        {
+            var anon = new Dictionary<string, object>
+            {
+                ["Key1"] = "hello",
+                ["Key2"] = "goodbye"
+            };
+            var typed = ToDyn(anon) as IHasKeys;
+            IsTrue(typed.ContainsKey("Key1"));
+            IsFalse(typed.ContainsKey("Nonexisting"));
+            IsTrue(typed.Keys().Any());
+            AreEqual(2, typed.Keys().Count());
+            AreEqual(1, typed.Keys(only: new[] { "Key1" }).Count());
+            AreEqual(0, typed.Keys(only: new[] { "Nonexisting" }).Count());
         }
 
     }

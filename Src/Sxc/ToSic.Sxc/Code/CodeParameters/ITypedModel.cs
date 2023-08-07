@@ -31,60 +31,19 @@ namespace ToSic.Sxc.Code
     /// > For less common types you'll need to use <see cref="Get"/> and cast it as needed, like this:
     /// > `string message = MyModel.Get("Message");`.
     /// </summary>
-    [WorkInProgressApi("WIP v16.02")]
-    public interface ITypedModel
+    /// <remarks>Introduced in v16.02</remarks>
+    [PublicApi]
+    public interface ITypedModel: IHasKeys
     {
         #region Check if parameters were supplied
 
-        /// <summary>
-        /// Get all the keys available in this Model (all the parameters passed in).
-        /// This is used to sometimes run early checks if all the expected parameters have been provided.
-        /// </summary>
-        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="only">Only return the keys specified here. Typical use: `only: new [] { "Key1", "Key2" }`</param>
-        /// <returns></returns>
-        /// <remarks>Added in 16.03</remarks>
-        IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default);
+        /// <inheritdoc cref="IHasKeys.ContainsKey"/>
+        new bool ContainsKey(string name);
 
-        ///// <summary>
-        ///// Ensure that all the specified parameter names were provided.
-        ///// Note that it only checks if it is provided, so null still counts. The type is also not checked.
-        ///// Use:
-        ///// 
-        ///// * `if (!MyModel.All(name1)) { ... }`
-        ///// * `if (!MyModel.All(name1, name2, name3)) { ... }`
-        ///// </summary>
-        ///// <param name="names"></param>
-        ///// <returns></returns>
-        //[PrivateApi("Will be removed in 16.03")]
-        //bool HasAll(params string[] names);
 
-        ///// <summary>
-        ///// Ensure that any the specified parameter names were provided.
-        ///// Note that it only checks if it is provided, so null still counts. The type is also not checked.
-        ///// Use:
-        ///// 
-        ///// * `if (!MyModel.All(name1)) { ... }`
-        ///// * `if (!MyModel.Any(name1, name2, name3)) { ... }`
-        ///// </summary>
-        ///// <param name="names"></param>
-        ///// <returns></returns>
-        //[PrivateApi("Will be removed in 16.03")]
-        //bool HasAny(params string[] names);
-
-        ///// <summary>
-        ///// Throw an exception if _none_ of the supplied names were provided as parameters.
-        ///// </summary>
-        ///// <param name="names"></param>
-        ///// <returns>a `null` string, just so it could be used in razor directly without a code block</returns>
-        //string RequireAny(params string[] names);
-
-        ///// <summary>
-        ///// Throw an exception if _not all_ of the supplied names were provided as parameters.
-        ///// </summary>
-        ///// <param name="names"></param>
-        ///// <returns>a `null` string, just so it could be used in razor directly without a code block</returns>
-        //string RequireAll(params string[] names);
+        /// <inheritdoc cref="IHasKeys.Keys"/>
+        new IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default);
+        
         #endregion
 
         #region Get

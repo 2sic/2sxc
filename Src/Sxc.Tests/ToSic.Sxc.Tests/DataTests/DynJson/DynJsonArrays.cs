@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Linq;
+using System.Text.Json.Nodes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Data;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
@@ -126,5 +127,23 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
             AreEqual<int>(1, dyn[1][0]);
             IsTrue(dyn[2][0]);
         }
+
+        [TestMethod]
+        public void Keys()
+        {
+            var anon = new[]
+            {
+                "hello",
+                "goodbye"
+            };
+            var typed = AsDynamic(anon) as ITyped;
+            IsTrue(typed.ContainsKey("1"));
+            IsFalse(typed.ContainsKey("3"));
+            IsTrue(typed.Keys().Any());
+            AreEqual(2, typed.Keys().Count());
+            AreEqual(1, typed.Keys(only: new[] { "1" }).Count());
+            AreEqual(0, typed.Keys(only: new[] { "3" }).Count());
+        }
+
     }
 }

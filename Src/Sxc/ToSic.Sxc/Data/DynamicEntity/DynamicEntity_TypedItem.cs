@@ -5,6 +5,7 @@ using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Data.Typed;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
@@ -33,6 +34,10 @@ namespace ToSic.Sxc.Data
 
             return false;
         }
+
+        [PrivateApi]
+        IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only) 
+            => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, Entity?.Attributes.Keys);
 
         [PrivateApi]
         protected bool IsErrStrict(string name, bool? required, bool strictGetDefault)

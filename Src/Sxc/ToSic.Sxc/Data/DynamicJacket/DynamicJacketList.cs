@@ -7,6 +7,7 @@ using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Data.Typed;
 
 namespace ToSic.Sxc.Data
 {
@@ -25,8 +26,13 @@ namespace ToSic.Sxc.Data
             if (name.IsEmpty() || UnwrappedContents == null) return false;
             var index = name.ConvertOrFallback<int>(fallback: -1, numeric: true);
             if (index == -1) return false;
-            return UnwrappedContents.Count <= index;
+            return index < UnwrappedContents.Count;
         }
+
+        [PrivateApi]
+        protected override IEnumerable<string> TypedKeysImplementation(string noParamOrder, IEnumerable<string> only) 
+            => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, UnwrappedContents?.Select((p, i) => i.ToString()));
+
 
         /// <inheritdoc />
         public override bool IsList => true;

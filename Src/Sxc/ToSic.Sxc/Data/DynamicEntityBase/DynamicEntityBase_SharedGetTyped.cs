@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Plumbing;
@@ -15,6 +16,11 @@ namespace ToSic.Sxc.Data
         bool ITyped.ContainsKey(string name)
         {
             return false; // must be overriden by implementation
+        }
+
+        public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default)
+        {
+            throw new NotImplementedException();
         }
 
         [PrivateApi]

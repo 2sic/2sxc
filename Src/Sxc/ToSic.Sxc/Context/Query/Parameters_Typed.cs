@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Typed;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Context.Query
@@ -15,6 +17,11 @@ namespace ToSic.Sxc.Context.Query
 
         [PrivateApi]
         bool ITyped.ContainsKey(string name) => OriginalsAsDic.ContainsKey(name);
+
+        [PrivateApi]
+        IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only)
+            => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, OriginalsAsDic?.Keys);
+
 
         [PrivateApi]
         object ITyped.Get(string name, string noParamOrder, bool? required)

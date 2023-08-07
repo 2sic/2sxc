@@ -9,6 +9,7 @@ using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using static System.StringComparison;
+using ToSic.Sxc.Data.Typed;
 
 namespace ToSic.Sxc.Data
 {
@@ -30,6 +31,10 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         protected override bool TypedHasImplementation(string name) 
             => !name.IsEmpty() && UnwrappedContents.Any(p => name.EqualsInsensitive(p.Key));
+
+        [PrivateApi]
+        protected override IEnumerable<string> TypedKeysImplementation(string noParamOrder, IEnumerable<string> only) 
+            => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, UnwrappedContents?.Select(p => p.Key));
 
         /// <inheritdoc />
         public override bool IsList => false;

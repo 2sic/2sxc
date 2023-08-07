@@ -108,5 +108,23 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
             IsNull(AsDynamic(jsonString).UndefinedType);
             IsNull(AsDynamic(jsonString).NonExistingProperty);
         }
+
+        [TestMethod]
+        public void Keys()
+        {
+            var anon = new
+            {
+                Key1 = "hello",
+                Key2 = "goodbye"
+            };
+            var typed = AsDynamic(anon) as ITyped;
+            IsTrue(typed.ContainsKey("Key1"));
+            IsFalse(typed.ContainsKey("Nonexisting"));
+            IsTrue(typed.Keys().Any());
+            AreEqual(2, typed.Keys().Count());
+            AreEqual(1, typed.Keys(only: new[] { "Key1" }).Count());
+            AreEqual(0, typed.Keys(only: new[] { "Nonexisting" }).Count());
+        }
+
     }
 }

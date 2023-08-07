@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
+using ToSic.Sxc.Data.Typed;
 using static System.StringComparison;
 using static ToSic.Eav.Parameters;
 
@@ -25,7 +27,14 @@ namespace ToSic.Sxc.Data
         bool ITyped.ContainsKey(string name) => TypedHasImplementation(name);
 
         [PrivateApi]
+        IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only)
+            => TypedKeysImplementation(noParamOrder, only);
+
+        [PrivateApi]
         protected abstract bool TypedHasImplementation(string name);
+
+        [PrivateApi]
+        protected abstract IEnumerable<string> TypedKeysImplementation(string noParamOrder, IEnumerable<string> only);
 
         [PrivateApi]
         object ITyped.Get(string name, string noParamOrder, bool? required)

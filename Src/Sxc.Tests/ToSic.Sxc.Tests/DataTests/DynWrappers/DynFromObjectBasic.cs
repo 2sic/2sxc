@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Data;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
@@ -75,6 +76,23 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             IsTrue(typed.ContainsKey("NAME"));
             IsTrue(typed.ContainsKey("Description"));
             IsFalse(typed.ContainsKey("NonexistingField"));
+        }
+
+        [TestMethod]
+        public void Keys()
+        {
+            var anon = new
+            {
+                Key1 = "hello",
+                Key2 = "goodbye"
+            };
+            var typed = GetService<DynamicWrapperFactory>().FromObject(anon, false, false) as ITyped;
+            IsTrue(typed.ContainsKey("Key1"));
+            IsFalse(typed.ContainsKey("Nonexisting"));
+            IsTrue(typed.Keys().Any());
+            AreEqual(2, typed.Keys().Count());
+            AreEqual(1, typed.Keys(only: new[] { "Key1" }).Count());
+            AreEqual(0, typed.Keys(only: new[] { "Nonexisting" }).Count());
         }
     }
 }

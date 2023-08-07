@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using ToSic.Eav;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Data.Typed;
 
 namespace ToSic.Sxc.Data
 {
@@ -16,7 +18,7 @@ namespace ToSic.Sxc.Data
     /// <remarks>
     /// Will always return true even if the property doesn't exist, in which case it resolves to null.
     /// </remarks>
-    public class DynamicReadDictionary<TKey, TVal>: DynamicObject, IWrapper<IDictionary<TKey, TVal>>
+    public class DynamicReadDictionary<TKey, TVal>: DynamicObject, IWrapper<IDictionary<TKey, TVal>>, IHasKeys
     {
         protected readonly IDictionary<TKey, TVal> UnwrappedDictionary;
         private readonly DynamicWrapperFactory _factory;
@@ -51,5 +53,17 @@ namespace ToSic.Sxc.Data
 
         public override bool TrySetMember(SetMemberBinder binder, object value) 
             => throw new NotSupportedException($"Setting a value on DynamicReadDictionary is not supported");
+
+        #region Typed
+
+
+
+        #endregion
+
+        [PrivateApi]
+        bool IHasKeys.ContainsKey(string name) => _ignoreCaseLookup.ContainsKey(name);
+
+        IEnumerable<string> IHasKeys.Keys(string noParamOrder, IEnumerable<string> only) 
+            => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, _ignoreCaseLookup?.Keys);
     }
 }

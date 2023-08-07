@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
+using ToSic.Sxc.Data.Typed;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
@@ -16,6 +18,10 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         bool ITyped.ContainsKey(string name) => _ignoreCaseLookup.ContainsKey(name);
+
+        [PrivateApi]
+        IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only)
+            => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, _ignoreCaseLookup?.Keys);
 
         [PrivateApi]
         object ITyped.Get(string name, string noParamOrder, bool? required)

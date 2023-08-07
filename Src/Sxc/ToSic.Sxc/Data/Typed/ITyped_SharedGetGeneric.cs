@@ -1,17 +1,16 @@
-﻿using static ToSic.Eav.Parameters;
+﻿using System.Collections.Generic;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
 {
-    public partial interface ITyped
+    public partial interface ITyped //: IHasKeys
     {
-        /// <summary>
-        /// Check if this typed object has a property of this specified name.
-        /// By default it's case insensitive.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        /// <remarks>Adding in 16.03 (WIP)</remarks>
+        /// <inheritdoc cref="IHasKeys.ContainsKey"/>
         bool ContainsKey(string name);
+
+        /// <inheritdoc cref="IHasKeys.Keys"/>
+        IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default);
+
 
         /// <summary>
         /// Get a property.
@@ -53,7 +52,6 @@ namespace ToSic.Sxc.Data
         /// <returns>The typed value, or the `default` like `null` or `0` if casting isn't possible.</returns>
         /// <remarks>Added in v15</remarks>
         TValue Get<TValue>(string name,
-            // ReSharper disable once MethodOverloadWithOptionalParameter
             string noParamOrder = Protector,
             TValue fallback = default,
             bool? required = default);

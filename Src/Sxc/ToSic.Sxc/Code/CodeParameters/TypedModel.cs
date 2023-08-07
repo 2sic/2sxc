@@ -8,6 +8,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Edit.Toolbar;
 using static ToSic.Eav.Parameters;
 
@@ -31,15 +32,10 @@ namespace ToSic.Sxc.Code
 
         #region Check if parameters were supplied
 
-        public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default)
-        {
-            var result = _paramsDictionary?.Keys;
-            if (result == null) return Array.Empty<string>();
+        public bool ContainsKey(string name) => !name.IsEmptyOrWs() && _paramsDictionary.ContainsKey(name);
 
-            if (only == default || !only.Any()) return result;
-            var filtered = result.Where(r => only.Any(k => k.EqualsInsensitive(r))).ToArray();
-            return filtered;
-        }
+        public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default) 
+            => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, _paramsDictionary?.Keys);
 
         #endregion
 
