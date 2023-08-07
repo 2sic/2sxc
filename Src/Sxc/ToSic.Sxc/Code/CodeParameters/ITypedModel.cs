@@ -41,10 +41,10 @@ namespace ToSic.Sxc.Code
         /// This is used to sometimes run early checks if all the expected parameters have been provided.
         /// </summary>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="only">Only return the keys specified here</param>
+        /// <param name="only">Only return the keys specified here. Typical use: `only: new [] { "Key1", "Key2" }`</param>
         /// <returns></returns>
         /// <remarks>Added in 16.03</remarks>
-        IEnumerable<string> Keys(string noParamOrder = Protector, params string[] only);
+        IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default);
 
         ///// <summary>
         ///// Ensure that all the specified parameter names were provided.

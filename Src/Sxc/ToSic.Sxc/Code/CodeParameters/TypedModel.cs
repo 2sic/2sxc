@@ -31,42 +31,15 @@ namespace ToSic.Sxc.Code
 
         #region Check if parameters were supplied
 
-        public IEnumerable<string> Keys(string noParamOrder = Protector, params string[] only)
+        public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default)
         {
             var result = _paramsDictionary?.Keys;
             if (result == null) return Array.Empty<string>();
 
-            if (only == null || only.Length == 0) return result;
+            if (only == default || !only.Any()) return result;
             var filtered = result.Where(r => only.Any(k => k.EqualsInsensitive(r))).ToArray();
             return filtered;
         }
-
-        //public bool HasAll(params string[] names)
-        //{
-        //    if (names == null || names.Length == 0) return true;
-        //    return names.All(n => _paramsDictionary.ContainsKey(n));
-        //}
-
-        //public bool HasAny(params string[] names)
-        //{
-        //    if (names == null || names.Length == 0) return true;
-        //    return names.Any(n => _paramsDictionary.ContainsKey(n));
-        //}
-
-        //public string RequireAny(params string[] names)
-        //{
-        //    if (HasAny(names)) return null;
-        //    throw new ArgumentException(RequireMsg("one or more", "none", names));
-        //}
-        //public string RequireAll(params string[] names)
-        //{
-        //    if (HasAll(names)) return null;
-        //    throw new ArgumentException(RequireMsg("all", "not all", names));
-        //}
-
-        private string RequireMsg(string requires, string but, string[] names) =>
-            $"Partial Razor '{_razorFileName}' requires {requires} of the following parameters, but {but} were provided: " +
-            string.Join(", ", (names ?? Array.Empty<string>()).Select(s => $"'{s}'"));
 
         #endregion
 
