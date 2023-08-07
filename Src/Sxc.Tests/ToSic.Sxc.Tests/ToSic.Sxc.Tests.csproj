@@ -113,6 +113,7 @@
     <Compile Include="DataTests\DynJson\DynJsonObjectTests.cs" />
     <Compile Include="DataTests\DynJson\DynJsonMixTests.cs" />
     <Compile Include="DataTests\DynJson\DynJsonTestBase.cs" />
+    <Compile Include="DataTests\DynWrappers\DynWrapperTestBase.cs" />
     <Compile Include="ServicesTests\CmsService\CmsServiceTest.cs" />
     <Compile Include="ServicesTests\CmsService\CmsServiceTestBase.cs" />
     <Compile Include="DataTests\DynWrappers\DynFromObjectSubItems.cs" />

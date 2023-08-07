@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Reflection;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
@@ -23,8 +23,10 @@ namespace ToSic.Sxc.Data
     public partial class DynamicReadObject: DynamicObject, IWrapper<object>, IPropertyLookup, IHasJsonSource, ICanGetByName
     {
         [PrivateApi]
-        public object GetContents() => UnwrappedObject;
-        private readonly Dictionary<string, PropertyInfo> _ignoreCaseLookup = new Dictionary<string, PropertyInfo>(StringComparer.InvariantCultureIgnoreCase);
+        public object GetContents() => Analyzer.GetContents();// UnwrappedObject;
+
+        [PrivateApi]
+        internal readonly AnalyzeObject Analyzer;
 
         /// <summary>
         /// 
@@ -37,24 +39,16 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         internal DynamicReadObject(object item, bool wrapChildren, bool wrapRealChildren, DynamicWrapperFactory wrapperFactory)
         {
-            _wrapChildren = wrapChildren;
-            _wrapRealChildren = wrapRealChildren;
             WrapperFactory = wrapperFactory;
-            UnwrappedObject = item;
-            if (item == null) return;
-            
-            var itemType = item.GetType();
-            foreach (var propertyInfo in itemType.GetProperties()) 
-                _ignoreCaseLookup[propertyInfo.Name] = propertyInfo;
+            //UnwrappedObject = item;
+            Analyzer = new AnalyzeObject(item, wrapChildren, wrapRealChildren, wrapperFactory);
         }
-        private readonly bool _wrapChildren;
-        private readonly bool _wrapRealChildren;
         protected readonly DynamicWrapperFactory WrapperFactory;
-        protected readonly object UnwrappedObject;
+        //protected readonly object UnwrappedObject;
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            result = FindValueOrNull(binder.Name);
+            result = Analyzer.TryGet(binder.Name).Result;
             return true;
         }
 
@@ -64,32 +58,16 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi("Internal")]
-        public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
-        {
-            path = path.KeepOrNew().Add("DynReadObj", specs.Field);
-            var result = FindValueOrNull(specs.Field);
-            return new PropReqResult(result: result, fieldType: Attributes.FieldIsDynamic, path: path) { Source = this, Name = "dynamic" };
-        }
+        public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path) 
+            => Analyzer.FindPropertyInternal(specs, path);
 
 
-        private object FindValueOrNull(string name)
-        {
-            if (UnwrappedObject == null)
-                return null;
+        object IHasJsonSource.JsonSource => Analyzer.GetContents();
 
-            if(!_ignoreCaseLookup.TryGetValue(name, out var lookup))
-                return null;
+        public dynamic Get(string name) => Analyzer.TryGet(name).Result;
 
-            var result = lookup.GetValue(UnwrappedObject);
+        [PrivateApi]
+        public List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) => Analyzer._Dump(specs, path);
 
-            // Probably re-wrap for further dynamic navigation!
-            return _wrapChildren 
-                ? WrapperFactory.WrapIfPossible(result, _wrapRealChildren, _wrapChildren, _wrapRealChildren) 
-                : result;
-        }
-
-
-        object IHasJsonSource.JsonSource => UnwrappedObject;
-        public dynamic Get(string name) => FindValueOrNull(name);
     }
 }

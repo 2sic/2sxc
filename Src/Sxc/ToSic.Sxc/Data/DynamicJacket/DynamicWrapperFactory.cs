@@ -9,6 +9,7 @@ using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Services;
 using static ToSic.Eav.Serialization.JsonOptions;
 
@@ -46,6 +47,12 @@ namespace ToSic.Sxc.Data
         public DynamicReadObject FromObject(object data, bool wrapChildren, bool wrapRealChildren)
             => new DynamicReadObject(data, wrapChildren, wrapRealChildren, this);
 
+        public ITyped TypedFromObject(object data, bool wrapChildren, bool wrapRealChildren)
+        {
+            var dyn = FromObject(data, wrapChildren, wrapRealChildren);
+            return new TypedObjectWrapper(dyn.Analyzer, this);
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -55,7 +62,7 @@ namespace ToSic.Sxc.Data
         /// <param name="wrapRealChildren"></param>
         /// <returns></returns>
         [PrivateApi]
-        internal object WrapIfPossible(object value, bool wrapRealObjects, bool wrapChildren, bool wrapRealChildren)
+        internal object WrapIfPossible(object value, bool wrapRealObjects, bool wrapChildren, bool wrapRealChildren, bool wrapIntoTyped = false)
         {
             // If null or simple value, use that
             if (value is null) return null;
@@ -85,7 +92,7 @@ namespace ToSic.Sxc.Data
 
             // Otherwise it's a complex object, which should be re-wrapped for navigation
             var wrap = wrapRealObjects || value.IsAnonymous();
-            return wrap ? new DynamicReadObject(value, wrapChildren, wrapRealChildren, this) : value;
+            return wrap ? FromObject(value, wrapChildren, wrapRealChildren) : value;
         }
 
         private static JsonNode AsJsonNode(string json, string fallback = EmptyJson)

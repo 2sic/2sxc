@@ -7,7 +7,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.DataTests.DynWrappers
 {
     [TestClass]
-    public class DynFromObjectBasic: TestBaseSxcDb
+    public class DynFromObjectBasic: DynWrapperTestBase
     {
         [TestMethod]
         public void BasicUseWithAnonymous()
@@ -21,8 +21,8 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
                 Truthy = true,
             };
 
-            var typed = GetService<DynamicWrapperFactory>().FromObject(anon, false, false) as ITyped;
-            dynamic dynAnon = typed;
+            var typed = TypedFromObject(anon, false, false);
+            dynamic dynAnon = DynFromObject(anon, false, false);
 
             IsNull(dynAnon.NotExisting);
             AreEqual(anon.Name, dynAnon.Name);
@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
                 Truthy = true,
             };
 
-            var typed = GetService<DynamicWrapperFactory>().FromObject(anon, false, false) as ITyped;
+            var typed = DynFromObject(anon, false, false) as ITyped;
             dynamic dynAnon = typed;
 
             IsNull(dynAnon.NotExisting);
@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
                 Key1 = "hello",
                 Key2 = "goodbye"
             };
-            var typed = GetService<DynamicWrapperFactory>().FromObject(anon, false, false) as ITyped;
+            var typed = TypedFromObject(anon, false, false);// as ITyped;
             IsTrue(typed.ContainsKey("Key1"));
             IsFalse(typed.ContainsKey("Nonexisting"));
             IsTrue(typed.Keys().Any());

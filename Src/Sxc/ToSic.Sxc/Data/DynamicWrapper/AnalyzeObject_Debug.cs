@@ -6,9 +6,9 @@ using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data
 {
-    public partial class DynamicReadObject
+    public partial class AnalyzeObject
     {
-        private const string DumpSourceName = "DynamicRead";
+        public const string DumpSourceName = "DynamicRead";
 
         [PrivateApi]
         public List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
@@ -21,15 +21,15 @@ namespace ToSic.Sxc.Data
 
             var simpleProps = allProperties;
             var resultDynChildren = simpleProps.Select(p => new
+            {
+                Field = p.Key,
+                Pdi = new PropertyDumpItem
                 {
-                    Field = p.Key,
-                    Pdi = new PropertyDumpItem
-                    {
-                        Path = path + PropertyDumpItem.Separator + p.Key,
-                        Property = FindPropertyInternal(specs.ForOtherField(p.Key), new PropertyLookupPath().Add("DynReadObject", p.Key)),
-                        SourceName = DumpSourceName
-                    }
-                })
+                    Path = path + PropertyDumpItem.Separator + p.Key,
+                    Property = FindPropertyInternal(specs.ForOtherField(p.Key), new PropertyLookupPath().Add("DynReadObject", p.Key)),
+                    SourceName = DumpSourceName
+                }
+            })
                 .ToList();
 
             var deeperProperties = resultDynChildren
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Data
                 }).Select(p => new
                 {
                     p.Field,
-                    CanDump = WrapperFactory.WrapIfPossible(p.Pdi.Property.Result, false, true, true) as IPropertyLookup
+                    CanDump = WrapperFactory.WrapIfPossible(value: p.Pdi.Property.Result, wrapRealObjects: false, wrapChildren: true, wrapRealChildren: true) as IPropertyLookup
                 })
                 .Where(p => !(p.CanDump is null))
                 .ToList();
