@@ -37,42 +37,54 @@ namespace ToSic.Sxc.Code
         #region Check if parameters were supplied
 
         /// <summary>
-        /// Ensure that all the specified parameter names were provided.
-        /// Note that it only checks if it is provided, so null still counts. The type is also not checked.
-        /// Use:
-        /// 
-        /// * `if (!MyModel.All(name1)) { ... }`
-        /// * `if (!MyModel.All(name1, name2, name3)) { ... }`
+        /// Get all the keys available in this Model (all the parameters passed in).
+        /// This is used to sometimes run early checks if all the expected parameters have been provided.
         /// </summary>
-        /// <param name="names"></param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="only">Only return the keys specified here</param>
         /// <returns></returns>
-        bool HasAll(params string[] names);
+        /// <remarks>Added in 16.03</remarks>
+        IEnumerable<string> Keys(string noParamOrder = Protector, params string[] only);
 
-        /// <summary>
-        /// Ensure that any the specified parameter names were provided.
-        /// Note that it only checks if it is provided, so null still counts. The type is also not checked.
-        /// Use:
-        /// 
-        /// * `if (!MyModel.All(name1)) { ... }`
-        /// * `if (!MyModel.Any(name1, name2, name3)) { ... }`
-        /// </summary>
-        /// <param name="names"></param>
-        /// <returns></returns>
-        bool HasAny(params string[] names);
+        ///// <summary>
+        ///// Ensure that all the specified parameter names were provided.
+        ///// Note that it only checks if it is provided, so null still counts. The type is also not checked.
+        ///// Use:
+        ///// 
+        ///// * `if (!MyModel.All(name1)) { ... }`
+        ///// * `if (!MyModel.All(name1, name2, name3)) { ... }`
+        ///// </summary>
+        ///// <param name="names"></param>
+        ///// <returns></returns>
+        //[PrivateApi("Will be removed in 16.03")]
+        //bool HasAll(params string[] names);
 
-        /// <summary>
-        /// Throw an exception if _none_ of the supplied names were provided as parameters.
-        /// </summary>
-        /// <param name="names"></param>
-        /// <returns>a `null` string, just so it could be used in razor directly without a code block</returns>
-        string RequireAny(params string[] names);
+        ///// <summary>
+        ///// Ensure that any the specified parameter names were provided.
+        ///// Note that it only checks if it is provided, so null still counts. The type is also not checked.
+        ///// Use:
+        ///// 
+        ///// * `if (!MyModel.All(name1)) { ... }`
+        ///// * `if (!MyModel.Any(name1, name2, name3)) { ... }`
+        ///// </summary>
+        ///// <param name="names"></param>
+        ///// <returns></returns>
+        //[PrivateApi("Will be removed in 16.03")]
+        //bool HasAny(params string[] names);
 
-        /// <summary>
-        /// Throw an exception if _not all_ of the supplied names were provided as parameters.
-        /// </summary>
-        /// <param name="names"></param>
-        /// <returns>a `null` string, just so it could be used in razor directly without a code block</returns>
-        string RequireAll(params string[] names);
+        ///// <summary>
+        ///// Throw an exception if _none_ of the supplied names were provided as parameters.
+        ///// </summary>
+        ///// <param name="names"></param>
+        ///// <returns>a `null` string, just so it could be used in razor directly without a code block</returns>
+        //string RequireAny(params string[] names);
+
+        ///// <summary>
+        ///// Throw an exception if _not all_ of the supplied names were provided as parameters.
+        ///// </summary>
+        ///// <param name="names"></param>
+        ///// <returns>a `null` string, just so it could be used in razor directly without a code block</returns>
+        //string RequireAll(params string[] names);
         #endregion
 
         #region Get
@@ -89,6 +101,7 @@ namespace ToSic.Sxc.Code
         /// <summary>
         /// Will get the value and return as type T as specified.
         /// </summary>
+        /// <typeparam name="T">The returned type</typeparam>
         /// <param name="name">The field name</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">The fallback value. If provided, the type is automatically determined.</param>
