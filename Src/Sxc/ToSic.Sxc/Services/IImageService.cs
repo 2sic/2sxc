@@ -137,7 +137,7 @@ namespace ToSic.Sxc.Services
         /// - The name of a settings configuration, like "Content", "Screen", "Square", etc.
         /// - A standardized Image-Settings object like Settings.Images.Content - see https://go.2sxc.org/settings
         /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
-        /// - A strictly typed <see cref="IResizeSettings"/> object containing all settings created using <see cref="ToSic.Sxc.Services.IImageService.Settings">ResizeSettings</see> 
+        /// - A <see cref="IResizeSettings"/> object containing all settings created using <see cref="ToSic.Sxc.Services.IImageService.Settings">ResizeSettings</see> 
         /// </param>
         /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
         /// <param name="width">An optional, fixed width of the image</param>
@@ -192,7 +192,7 @@ namespace ToSic.Sxc.Services
         ///     - The name of a settings configuration, like "Content", "Screen", "Square", etc.
         ///     - A standardized Image-Settings object like Settings.Images.Content - see https://go.2sxc.org/settings
         ///     - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
-        ///     - A strictly typed <see cref="IResizeSettings"/> object containing all settings created using <see cref="ToSic.Sxc.Services.IImageService.Settings">ResizeSettings</see> 
+        ///     - A <see cref="IResizeSettings"/> object containing all settings created using <see cref="ToSic.Sxc.Services.IImageService.Settings">ResizeSettings</see> 
         /// </param>
         /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
         /// <param name="width">An optional, fixed width of the image</param>

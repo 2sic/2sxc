@@ -103,6 +103,9 @@
     <Compile Include="DataSources\MockUsersDataSource.cs" />
     <Compile Include="DataSources\UsersDataSourceTests.cs" />
     <Compile Include="DataSources\RolesDataSourceTests.cs" />
+    <Compile Include="DataTests\DynConverterTests\AsConverterFakeTests.cs" />
+    <Compile Include="DataTests\DynConverterTests\AsConverterTestsBase.cs" />
+    <Compile Include="DataTests\DynConverterTests\AsConverterAsItem.cs" />
     <Compile Include="DataTests\DynWrappers\DynFromDictionaryBasic.cs" />
     <Compile Include="DataTests\DynWrappers\DynFromObjectBasic.cs" />
     <Compile Include="DataTests\DynJson\DynJsonArrays.cs" />

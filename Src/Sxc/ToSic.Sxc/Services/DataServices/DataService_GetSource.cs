@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Services
     internal partial class DataService
     {
 
-        // IMPORTANT - this is different! from the _DynCodeRoot - as it shouldn't auto attach at all!
+        // IMPORTANT - this is different! from the _DynCodeRoot - as it should NOT auto attach!
         public T GetSource<T>(
             string noParamOrder = Protector,
             IDataSourceLinkable attach = default,
