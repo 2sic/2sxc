@@ -44,7 +44,8 @@ namespace ToSic.Sxc.Data
             if (item == null) return;
             
             var itemType = item.GetType();
-            foreach (var propertyInfo in itemType.GetProperties()) _ignoreCaseLookup[propertyInfo.Name] = propertyInfo;
+            foreach (var propertyInfo in itemType.GetProperties()) 
+                _ignoreCaseLookup[propertyInfo.Name] = propertyInfo;
         }
         private readonly bool _wrapChildren;
         private readonly bool _wrapRealChildren;

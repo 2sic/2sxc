@@ -1,18 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Text.Json.Nodes;
-using ToSic.Sxc.Tests.Data.DynamicJacket;
+﻿using System.Text.Json.Nodes;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Data.Tests
+namespace ToSic.Sxc.Tests.DataTests.DynJson
 {
     [TestClass]
-    public class DynamicJacketObjectTests : DynamicJacketTestBase
+    public class DynJsonObjectTests : DynJsonTestBase
     {
         [TestMethod]
         public void ObjectWithObjects()
         {
-            var test = PrepareTest(new
+            var test = AnonToJsonToDyn(new
             {
                 ObjectProperty = new
                 {
@@ -28,7 +26,7 @@ namespace ToSic.Sxc.Data.Tests
                 }
             });
  
-            var expectedType = new DynamicJacket(new JsonObject(), Factory).GetType();
+            var expectedType = new Data.DynamicJacket(new JsonObject(), Factory).GetType();
 
             IsFalse(test.Dyn.IsList);
 

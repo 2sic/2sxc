@@ -1,15 +1,14 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Text.Json.Nodes;
-using ToSic.Sxc.Tests.Data.DynamicJacket;
+﻿using System.Text.Json.Nodes;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ToSic.Sxc.Data;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Data.Tests
+namespace ToSic.Sxc.Tests.DataTests.DynJson
 {
     [TestClass]
-    public class DynamicJacketArrays : DynamicJacketTestBase
+    public class DynJsonArrays : DynJsonTestBase
     {
-        private (dynamic Dyn, string Json, string[] Original) StringArrayPrepare() => PrepareTest(new[]
+        private (dynamic Dyn, string Json, string[] Original) StringArrayPrepare() => AnonToJsonToDyn(new[]
         {
             "val1",
             "val2",
@@ -48,7 +47,7 @@ namespace ToSic.Sxc.Data.Tests
             IsNull(test.Dyn.NonExistingProperty);
         }
 
-        private (dynamic Dyn, string Json, string[][] Original) StringArray2dPrepare() => PrepareTest(new[]
+        private (dynamic Dyn, string Json, string[][] Original) StringArray2dPrepare() => AnonToJsonToDyn(new[]
         {
             new[] {"0-0", "0-1", "0-2"},
             new[] {"1-0", "1-1"},
@@ -83,7 +82,7 @@ namespace ToSic.Sxc.Data.Tests
             public int Age;
         }
 
-        private (dynamic Dyn, string Json, MiniObj[] Original) ObjectArrayPrepare() => PrepareTest(new[]
+        private (dynamic Dyn, string Json, MiniObj[] Original) ObjectArrayPrepare() => AnonToJsonToDyn(new[]
         {
             new MiniObj { Name = "T1", Age = 11 },
             new MiniObj { Name = "t2", Age = 22 },
@@ -110,7 +109,7 @@ namespace ToSic.Sxc.Data.Tests
         [TestMethod]
         public void MixedArrays2D()
         {
-            var (dyn, json, original) = PrepareTest(new object[]
+            var (dyn, json, original) = AnonToJsonToDyn(new object[]
             {
                 new string[] {"a1"},
                 new object[] { 1, "b2"},

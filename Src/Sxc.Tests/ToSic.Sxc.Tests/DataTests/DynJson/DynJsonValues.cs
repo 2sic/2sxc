@@ -1,20 +1,25 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Sxc.Tests.Data.DynamicJacket;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ToSic.Sxc.Data;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Data.Tests
+namespace ToSic.Sxc.Tests.DataTests.DynJson
 {
     [TestClass]
-    public class DynamicJacketValues : DynamicJacketTestBase
+    public class DynJsonValues : DynJsonTestBase
     {
-        [TestMethod]
-        public void ObjectWithBoolProperty()
+        private bool HasKey(object dyn, string key)
         {
-            var (dyn, _, _) = PrepareTest(new
+            var typed = dyn as ITyped;
+            return typed.Has(key);
+        }
+
+        [TestMethod]
+        public void JsonBoolProperty()
+        {
+            var (dyn, _, _) = AnonToJsonToDyn(new
             {
                 TrueBoolType = true,
                 FalseBoolType = false
@@ -23,12 +28,17 @@ namespace ToSic.Sxc.Data.Tests
             IsTrue(dyn.TrueBoolType);
             IsFalse(dyn.FalseBoolType);
             IsNull(dyn.something);
+
+            IsTrue(HasKey(dyn, "TrueBoolType"));
+            IsTrue(HasKey(dyn, "TrueBoolTYPE"));
+            IsTrue(HasKey(dyn, "FalseBoolType"));
+            IsFalse(HasKey(dyn, "something"));
         }
 
         [TestMethod]
-        public void ObjectWithNumberProperty()
+        public void JsonNumberProperty()
         {
-            var (dyn, _, original) = PrepareTest(new 
+            var (dyn, _, original) = AnonToJsonToDyn(new 
             {
                 IntType = 32,
                 BigIntType = 9007199254740991,
@@ -42,22 +52,22 @@ namespace ToSic.Sxc.Data.Tests
         [TestMethod]
         public void ExpectCountOfPropertiesOnNonArray()
         {
-            var test = PrepareTest(new { Name = "Test" });
+            var test = AnonToJsonToDyn(new { Name = "Test" });
             AreEqual(1, test.Dyn.Count);
 
-            var test2 = PrepareTest(new { Name = "Test", Age = 3, Birthday = new DateTime(2022, 1, 1) });
+            var test2 = AnonToJsonToDyn(new { Name = "Test", Age = 3, Birthday = new DateTime(2022, 1, 1) });
             AreEqual(3, test2.Dyn.Count);
         }
 
         [TestMethod]
         public void EnumerateProperties()
         {
-            var test = PrepareTest(new { Name = "Test" });
+            var test = AnonToJsonToDyn(new { Name = "Test" });
             var testList = (test.Dyn as IEnumerable<object>).ToList();
             AreEqual(1, testList.Count);
             AreEqual("Name", testList.First().ToString());
 
-            var test2 = PrepareTest(new { Name = "Test", Age = 3, Birthday = new DateTime(2022, 1, 1) });
+            var test2 = AnonToJsonToDyn(new { Name = "Test", Age = 3, Birthday = new DateTime(2022, 1, 1) });
             var testList2 = (test2.Dyn as IEnumerable<object>).ToList();
             AreEqual(3, testList2.Count);
             IsTrue(testList2.Contains("Name"));

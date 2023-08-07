@@ -1,37 +1,15 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Microsoft.CSharp.RuntimeBinder;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Data;
-using static ToSic.Sxc.Tests.DynamicData.TestAccessors;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
-namespace ToSic.Sxc.Tests.DynamicData
+namespace ToSic.Sxc.Tests.DataTests.DynWrappers
 {
     [TestClass]
-    public class DynamicReadObjectTest : TestBaseSxcDb
+    public class DynFromObjectSubItems : TestBaseSxcDb
     {
-        [TestMethod]
-        public void BasicUseAndDataTypes()
-        {
-            var anon = new
-            {
-                Name = "2sxc",
-                Description = "",
-                Founded = 2012,
-                Birthday = new DateTime(2012, 5, 4),
-                Truthy = true,
-            };
-
-            var dynAnon = GetService<DynamicWrapperFactory>().FromObject(anon, false, false) as dynamic;
-
-            IsNull(dynAnon.NotExisting);
-            AreEqual(anon.Name, dynAnon.Name);
-            AreEqual(anon.Name, dynAnon.naME, "Should be the same irrelevant of case");
-            AreEqual(anon.Birthday, dynAnon.Birthday, "dates should be the same");
-            AreEqual(anon.Truthy, dynAnon.truthy);
-        }
-
 
         [TestMethod]
         public void SubObjectNotWrapped()
@@ -86,7 +64,7 @@ namespace ToSic.Sxc.Tests.DynamicData
             => AreEqual("ErrSubSomething-ok", SubObjectAutoWrapped(false, true, "ErrSubSomething"));
         #endregion
 
-        public string SubObjectAutoWrapped(bool wrapChildren, bool wrapRealChildren, string testSet)
+        private string SubObjectAutoWrapped(bool wrapChildren, bool wrapRealChildren, string testSet)
         {
             var anon = new
             {
@@ -100,7 +78,7 @@ namespace ToSic.Sxc.Tests.DynamicData
                 },
                 Guid = new Guid(),
                 SubNonDynamic = new List<string>(),
-                Arr = new string[0],
+                Arr = Array.Empty<string>(),
             };
 
             // Test wrapping anonymous sub-objects only

@@ -1,24 +1,22 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Tests.Data.DynamicJacket;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Data.Tests
+namespace ToSic.Sxc.Tests.DataTests.DynJson
 {
     [TestClass]
-    public class DynamicJacketMixTests: DynamicJacketTestBase
+    public class DynJsonMixTests: DynJsonTestBase
     {
         [TestMethod]
         public void ObjectWithStringProperty()
         {
-            var test = PrepareTest( new { FirstName = "test" });
+            var test = AnonToJsonToDyn( new { FirstName = "test" });
             AreEqual<string>("test", test.Dyn.FirstName);
         }
 
         [TestMethod]
         public void ArrayOfObjectsWithStringProperty()
         {
-            var test = PrepareTest(new object[]
+            var test = AnonToJsonToDyn(new object[]
             {
                 new { FirstName = "test" }, 
                 new { FirstName = "fn2" }
@@ -29,7 +27,7 @@ namespace ToSic.Sxc.Data.Tests
         [TestMethod]
         public void ObjectWithArrayPropertyOfObjectsWithStringProperty()
         {
-            var test = PrepareTest(new
+            var test = AnonToJsonToDyn(new
             {
                 a = new object[]
                 {
@@ -43,7 +41,7 @@ namespace ToSic.Sxc.Data.Tests
         [TestMethod]
         public void ObjectWithArrayPropertyWithObjectWithStringArrayProperty()
         {
-            var test = PrepareTest(new
+            var test = AnonToJsonToDyn(new
             {
                 a = new object[]
                 {
@@ -57,7 +55,7 @@ namespace ToSic.Sxc.Data.Tests
         [TestMethod]
         public void Gps()
         {
-            var test = PrepareTest(new { Lat = 43.508075, Long = 16.4665157 });
+            var test = AnonToJsonToDyn(new { Lat = 43.508075, Long = 16.4665157 });
             AreEqual<double>(43.508075, test.Dyn.Lat);
             AreEqual<double>(16.4665157, test.Dyn.Long);
         }
