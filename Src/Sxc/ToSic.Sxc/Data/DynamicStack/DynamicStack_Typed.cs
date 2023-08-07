@@ -7,11 +7,9 @@ namespace ToSic.Sxc.Data
     public partial class DynamicStack: ITypedStack
     {
         [PrivateApi]
-        bool ITyped.Has(string name)
+        bool ITyped.ContainsKey(string name)
         {
             throw new NotImplementedException($"Not yet implemented on {nameof(ITypedStack)}");
-            // todo: improve with path checks
-            return false;
         }
 
         ///// <summary>

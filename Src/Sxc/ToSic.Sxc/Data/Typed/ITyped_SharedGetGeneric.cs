@@ -5,12 +5,13 @@ namespace ToSic.Sxc.Data
     public partial interface ITyped
     {
         /// <summary>
-        /// WIP CHECK if this typed object has a property of this specified name
+        /// Check if this typed object has a property of this specified name.
+        /// By default it's case insensitive.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        /// <remarks>Adding (WIP) in 16.03</remarks>
-        bool Has(string name);
+        /// <remarks>Adding in 16.03 (WIP)</remarks>
+        bool ContainsKey(string name);
 
         /// <summary>
         /// Get a property.

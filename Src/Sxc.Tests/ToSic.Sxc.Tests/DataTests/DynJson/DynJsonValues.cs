@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
         private bool HasKey(object dyn, string key)
         {
             var typed = dyn as ITyped;
-            return typed.Has(key);
+            return typed.ContainsKey(key);
         }
 
         [TestMethod]

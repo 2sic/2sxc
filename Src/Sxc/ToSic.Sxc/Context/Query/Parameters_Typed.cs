@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Context.Query
         public dynamic Dyn => this;
 
         [PrivateApi]
-        bool ITyped.Has(string name) => OriginalsAsDic.ContainsKey(name);
+        bool ITyped.ContainsKey(string name) => OriginalsAsDic.ContainsKey(name);
 
         [PrivateApi]
         object ITyped.Get(string name, string noParamOrder, bool? strict)

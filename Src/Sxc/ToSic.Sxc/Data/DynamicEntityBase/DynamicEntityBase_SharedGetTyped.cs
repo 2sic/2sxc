@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Data
     public abstract partial class DynamicEntityBase: ITyped
     {
         [PrivateApi]
-        bool ITyped.Has(string name)
+        bool ITyped.ContainsKey(string name)
         {
             return false; // must be overriden by implementation
         }

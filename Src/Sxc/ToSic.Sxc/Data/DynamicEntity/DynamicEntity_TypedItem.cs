@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Data
     public partial class DynamicEntity: ITypedItem
     {
         [PrivateApi]
-        bool ITyped.Has(string name)
+        bool ITyped.ContainsKey(string name)
         {
             var parts = PropertyStack.SplitPathIntoParts(name);
             if (!parts.Any()) return false;
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         protected bool IsErrStrict(string name, bool? strict, bool strictGetDefault)
-            => !(this as ITyped).Has(name) && (strict ?? strictGetDefault);
+            => !(this as ITyped).ContainsKey(name) && (strict ?? strictGetDefault);
 
 
         /// <inheritdoc />

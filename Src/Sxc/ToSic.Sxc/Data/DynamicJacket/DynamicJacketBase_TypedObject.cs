@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Data
         }
 
         [PrivateApi]
-        bool ITyped.Has(string name) => TypedHasImplementation(name);
+        bool ITyped.ContainsKey(string name) => TypedHasImplementation(name);
 
         [PrivateApi]
         protected abstract bool TypedHasImplementation(string name);

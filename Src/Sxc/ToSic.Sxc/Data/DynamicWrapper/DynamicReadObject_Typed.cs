@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Data
         dynamic ITyped.Dyn => this;
 
         [PrivateApi]
-        bool ITyped.Has(string name) => _ignoreCaseLookup.ContainsKey(name);
+        bool ITyped.ContainsKey(string name) => _ignoreCaseLookup.ContainsKey(name);
 
         [PrivateApi]
         object ITyped.Get(string name, string noParamOrder, bool? strict)

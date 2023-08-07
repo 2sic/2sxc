@@ -29,10 +29,10 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             AreEqual(anon.Birthday, dynAnon.Birthday, "dates should be the same");
             AreEqual(anon.Truthy, dynAnon.truthy);
 
-            IsTrue(typed.Has("Name"));
-            IsTrue(typed.Has("NAME"));
-            IsTrue(typed.Has("Description"));
-            IsFalse(typed.Has("NonexistingField"));
+            IsTrue(typed.ContainsKey("Name"));
+            IsTrue(typed.ContainsKey("NAME"));
+            IsTrue(typed.ContainsKey("Description"));
+            IsFalse(typed.ContainsKey("NonexistingField"));
         }
 
         class AnonTyped
@@ -71,10 +71,10 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             AreEqual(anon.Birthday, dynAnon.Birthday, "dates should be the same");
             AreEqual(anon.Truthy, dynAnon.truthy);
 
-            IsTrue(typed.Has("Name"));
-            IsTrue(typed.Has("NAME"));
-            IsTrue(typed.Has("Description"));
-            IsFalse(typed.Has("NonexistingField"));
+            IsTrue(typed.ContainsKey("Name"));
+            IsTrue(typed.ContainsKey("NAME"));
+            IsTrue(typed.ContainsKey("Description"));
+            IsFalse(typed.ContainsKey("NonexistingField"));
         }
     }
 }

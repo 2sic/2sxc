@@ -19,6 +19,7 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         public DynamicJacketList(JsonArray originalData, DynamicWrapperFactory wrapperFactory) :base(originalData, wrapperFactory) { }
 
+        [PrivateApi]
         protected override bool TypedHasImplementation(string name)
         {
             if (name.IsEmpty() || UnwrappedContents == null) return false;
