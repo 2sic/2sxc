@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
@@ -13,7 +12,7 @@ namespace ToSic.Sxc.Data
     public partial class DynamicEntity
     {
         /// <inheritdoc/>
-        [PrivateApi("WIP not yet released")]
+        [PrivateApi("Should not be documented here, as it should only be used on ITyped")]
         public IHtmlTag Html(
             string name,
             string noParamOrder = Protector,
@@ -23,14 +22,28 @@ namespace ToSic.Sxc.Data
             bool debug = default
         )
         {
+            // Only do compatibility check if used on DynamicEntity
             if (_Services.AsC.CompatibilityLevel < Constants.CompatibilityLevel12)
                 throw new NotSupportedException($"{nameof(Html)}(...) not supported in older Razor templates. Use Hybrid14 or newer.");
-            
-            Protect(noParamOrder, $"{nameof(container)}, {nameof(imageSettings)}, {nameof(toolbar)}, {nameof(debug)}...");
+
+            return (this as ITypedItem).Html(name: name, noParamOrder: noParamOrder, container: container, toolbar: toolbar, imageSettings: imageSettings, debug: debug);
+        }
+
+        IHtmlTag ITypedItem.Html(
+            string name,
+            string noParamOrder,
+            object container,
+            bool? toolbar,
+            object imageSettings,
+            bool? required,
+            bool debug
+        )
+        {
+            Protect(noParamOrder, $"{nameof(container)}, {nameof(imageSettings)}, {nameof(toolbar)}, {nameof(required)}, {nameof(debug)}...");
 
             var kit = GetServiceKitOrThrow();
-
-            return kit.Cms.Html(Field(name), container: container, classes: null, imageSettings: imageSettings, debug: debug, toolbar: toolbar);
+            var field = (this as ITypedItem).Field(name, required: required);
+            return kit.Cms.Html(field, container: container, classes: null, imageSettings: imageSettings, debug: debug, toolbar: toolbar);
         }
 
         /// <inheritdoc/>
@@ -48,7 +61,7 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, $"{nameof(settings)}, {nameof(factor)}, {nameof(width)}, {nameof(imgAlt)}...");
             var kit = GetServiceKitOrThrow();
-            var field = Field(name);
+            var field = (this as ITypedItem).Field(name, required: true);
             return field.Url.IsEmptyOrWs()
                 ? null 
                 : kit.Image.Picture(field, settings: settings, factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass, recipe: recipe);
