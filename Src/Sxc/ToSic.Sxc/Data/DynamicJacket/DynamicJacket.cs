@@ -8,6 +8,7 @@ using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
+using static System.StringComparison;
 
 namespace ToSic.Sxc.Data
 {
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.Data
     /// JS/C# code style differences. <br/>
     /// You will usually do things like `AsDynamic(jsonString).FirstName` etc.
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic(...), don't use this directly")]
     [JsonConverter(typeof(DynamicJsonConverter))]
     public partial class DynamicJacket: DynamicJacketBase<JsonObject>, IPropertyLookup, IHasJsonSource
     {
@@ -26,8 +27,14 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         internal DynamicJacket(JsonObject originalData, DynamicWrapperFactory wrapperFactory) : base(originalData, wrapperFactory) { }
 
+        [PrivateApi]
+        protected override bool TypedHasImplementation(string name) 
+            => !name.IsEmpty() && UnwrappedContents.Any(p => name.EqualsInsensitive(p.Key));
+
         /// <inheritdoc />
         public override bool IsList => false;
+
+
 
         /// <summary>
         /// Enable enumeration. Will return the keys, not the values. <br/>
@@ -47,7 +54,7 @@ namespace ToSic.Sxc.Data
         /// <param name="key">the key, case-insensitive</param>
         /// <returns>A value (string, int etc.), <see cref="DynamicJacket"/> or <see cref="DynamicJacketList"/></returns>
         public object this[string key] 
-            => FindValueOrNull(key, StringComparison.InvariantCultureIgnoreCase, null);
+            => FindValueOrNull(key, InvariantCultureIgnoreCase, null);
 
         /// <summary>
         /// Access the properties of this object.
@@ -55,10 +62,11 @@ namespace ToSic.Sxc.Data
         /// <param name="key">the key</param>
         /// <param name="caseSensitive">true if case-sensitive, false if not</param>
         /// <returns>A value (string, int etc.), <see cref="DynamicJacket"/> or <see cref="DynamicJacketList"/></returns>
+        [PrivateApi("2023-08-07 2dm made privet now, before it was public. It's very exotic, so I don't think it's used anywhere, consider removing this later on")]
         public object this[string key, bool caseSensitive]
             => FindValueOrNull(key, caseSensitive 
-                ? StringComparison.Ordinal
-                : StringComparison.InvariantCultureIgnoreCase, null);
+                ? Ordinal
+                : InvariantCultureIgnoreCase, null);
 
 
         #region Private TryGetMember
@@ -71,7 +79,7 @@ namespace ToSic.Sxc.Data
         /// <returns>always returns true, to avoid errors</returns>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            result = FindValueOrNull(binder.Name, StringComparison.InvariantCultureIgnoreCase, null);
+            result = FindValueOrNull(binder.Name, InvariantCultureIgnoreCase, null);
             // always say it was found to prevent runtime errors
             return true;
         }
