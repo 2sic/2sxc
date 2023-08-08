@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Data
         public object GetContents() => Analyzer.GetContents();// UnwrappedObject;
 
         [PrivateApi]
-        internal readonly AnalyzeObject Analyzer;
+        internal readonly Wrapper.AnalyzeObject Analyzer;
 
         /// <summary>
         /// 
@@ -37,18 +37,17 @@ namespace ToSic.Sxc.Data
         /// When using this for DynamicModel it should be false, otherwise usually true.
         /// </param>
         [PrivateApi]
-        internal DynamicReadObject(object item, bool wrapChildren, bool wrapRealChildren, DynamicWrapperFactory wrapperFactory)
+        internal DynamicReadObject(Wrapper.AnalyzeObject analyzer, DynamicWrapperFactory wrapperFactory)
         {
             WrapperFactory = wrapperFactory;
-            //UnwrappedObject = item;
-            Analyzer = new AnalyzeObject(item, wrapChildren, wrapRealChildren, wrapperFactory);
+            Analyzer = analyzer;
         }
         protected readonly DynamicWrapperFactory WrapperFactory;
         //protected readonly object UnwrappedObject;
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            result = Analyzer.TryGet(binder.Name).Result;
+            result = Analyzer.TryGet(binder.Name, true).Result;
             return true;
         }
 
@@ -64,7 +63,7 @@ namespace ToSic.Sxc.Data
 
         object IHasJsonSource.JsonSource => Analyzer.GetContents();
 
-        public dynamic Get(string name) => Analyzer.TryGet(name).Result;
+        public dynamic Get(string name) => Analyzer.TryGet(name, true).Result;
 
         [PrivateApi]
         public List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) => Analyzer._Dump(specs, path);

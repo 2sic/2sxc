@@ -22,7 +22,7 @@ namespace Custom.Hybrid
 
         private TypedCode16Helper CreateCodeHelper()
         {
-            var myModelData = _overridePageData?.ObjectToDictionaryInvariant()
+            var myModelData = _overridePageData?.ToDicInvariantInsensitive()
                               ?? PageData?
                                   .Where(pair => pair.Key is string)
                                   .ToDictionary(pair => pair.Key.ToString(), pair => pair.Value, InvariantCultureIgnoreCase);

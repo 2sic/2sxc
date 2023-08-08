@@ -12,6 +12,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Services;
 using static ToSic.Eav.Serialization.JsonOptions;
+using ToSic.Sxc.Data.Wrapper;
 
 namespace ToSic.Sxc.Data
 {
@@ -39,43 +40,46 @@ namespace ToSic.Sxc.Data
         private readonly LazySvc<ConvertForCodeService> _forCodeConverter;
 
         internal DynamicJacketBase FromJson(string json, string fallback = default)
-            => TryToConvertToJacket(AsJsonNode(json, fallback ?? EmptyJson)).Jacket;
+            => IfJsonTryConvertToJacket(AsJsonNode(json, fallback ?? EmptyJson)).Jacket;
 
         internal DynamicReadDictionary<TKey, TValue> FromDictionary<TKey, TValue>(IDictionary<TKey, TValue> original)
-            => new DynamicReadDictionary<TKey, TValue>(original, this);
-
-        public DynamicReadObject FromObject(object data, bool wrapChildren, bool wrapRealChildren)
-            => new DynamicReadObject(data, wrapChildren, wrapRealChildren, this);
-
-        public ITyped TypedFromObject(object data, bool wrapChildren, bool wrapRealChildren)
         {
-            var dyn = FromObject(data, wrapChildren, wrapRealChildren);
-            return new TypedObjectWrapper(dyn.Analyzer, this);
+            return new DynamicReadDictionary<TKey, TValue>(original, this);
+        }
+
+        public DynamicReadObject FromObject(object data, ReWrapSettings reWrap)
+        {
+            var provider = new Wrapper.AnalyzeObject(data, reWrap, this);
+            return new DynamicReadObject(provider, this);
+        }
+
+        public ITyped TypedFromObject(object data, ReWrapSettings reWrap)
+        {
+            var provider = new Wrapper.AnalyzeObject(data, reWrap, this);
+            return new TypedObjectWrapper(provider, this);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="wrapRealObjects">if true and the contents isn't already a dynamic object, it will also wrap real objects; otherwise only anonymous</param>
-        /// <param name="wrapChildren"></param>
-        /// <param name="wrapRealChildren"></param>
+        /// <param name="data"></param>
+        /// <param name="wrapNonAnon">if true and the contents isn't already a dynamic object, it will also wrap real objects; otherwise only anonymous</param>
         /// <returns></returns>
         [PrivateApi]
-        internal object WrapIfPossible(object value, bool wrapRealObjects, bool wrapChildren, bool wrapRealChildren, bool wrapIntoTyped = false)
+        internal object WrapIfPossible(object data, bool wrapNonAnon, ReWrapSettings reWrap)
         {
             // If null or simple value, use that
-            if (value is null) return null;
+            if (data is null) return null;
 
-            if (value is string || value.GetType().IsValueType) return value;
+            if (data is string || data.GetType().IsValueType) return data;
 
             // Guids & DateTimes are objects, but very simple, and should be returned for normal use
-            if (value is Guid || value is DateTime) return value;
+            if (data is Guid || data is DateTime) return data;
 
             // Check if the result is a JSON object which should support navigation again
-            var result = WrapIfJObjectUnwrapIfJValue(value);
+            var result = IfJsonGetValueOrJacket(data);
 
-            // Check if the result already supports navigation... - which is the case if it's a DynamicJacket now
+            // Check if the original or result already supports navigation... - which is the case if it's a DynamicJacket now
             switch (result)
             {
                 case IPropertyLookup _:
@@ -91,8 +95,12 @@ namespace ToSic.Sxc.Data
             if (result.GetType().IsArray) return result;
 
             // Otherwise it's a complex object, which should be re-wrapped for navigation
-            var wrap = wrapRealObjects || value.IsAnonymous();
-            return wrap ? FromObject(value, wrapChildren, wrapRealChildren) : value;
+            var wrap = wrapNonAnon || data.IsAnonymous();
+            return wrap
+                ? reWrap.WrapDynamic 
+                    ? FromObject(data, reWrap) as object
+                    : TypedFromObject(data, reWrap)
+                : data;
         }
 
         private static JsonNode AsJsonNode(string json, string fallback = EmptyJson)
@@ -125,7 +133,7 @@ namespace ToSic.Sxc.Data
                 : JsonNode.Parse(fallback, JsonNodeDefaultOptions, JsonDocumentDefaultOptions);
         }
 
-        private (DynamicJacketBase Jacket, bool Ok, JsonValueKind ValueKind) TryToConvertToJacket(object original)
+        private (DynamicJacketBase Jacket, bool Ok, JsonValueKind ValueKind) IfJsonTryConvertToJacket(object original)
         {
             var l = Log.Fn<(DynamicJacketBase Jacket, bool Ok, JsonValueKind ValueKind)>();
             if (!(original is JsonNode jsonNode))
@@ -156,25 +164,22 @@ namespace ToSic.Sxc.Data
         }
 
         /// <summary>
-        /// Takes a result of a object query and ensures it will be treated as a DynamicJacket as well.
+        /// Takes a JSON Node and if it's just a value, return that.
+        /// If it's a complex object, place it in a jacket again for dynamic code to be able to navigate it. 
         /// So if it's a simple value, it's returned as a value, otherwise it's wrapped into a DynamicJacket again.
         /// </summary>
         /// <param name="original"></param>
         /// <returns></returns>
         [PrivateApi]
-        internal object WrapIfJObjectUnwrapIfJValue(object original)
+        internal object IfJsonGetValueOrJacket(object original)
         {
             if (!(original is JsonNode jsonNode)) return original;
 
-            var maybeJacket = TryToConvertToJacket(original);
+            var maybeJacket = IfJsonTryConvertToJacket(original);
             if (maybeJacket.Ok) return maybeJacket.Jacket;
 
             switch (jsonNode)
             {
-                //case JsonArray jArray:
-                //    return new DynamicJacketList(jArray);
-                //case JsonObject jResult: // it's another complex object, so return another wrapped reader
-                //    return new DynamicJacket(jResult);
                 case JsonValue jValue: // it's a simple value - so we want to return the underlying real value
                     {
                         var je = jValue.GetValue<JsonElement>();

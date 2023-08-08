@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Data.Typed;
 
 namespace ToSic.Sxc.Data
 {
@@ -29,8 +30,8 @@ namespace ToSic.Sxc.Data
         ITypedItem ITypedStack.Child(string name, string noParamOrder, bool? required)
         {
             var findResult = GetInternal(name, lookup: false);
-            return IsErrStrict(findResult.Found, required, StrictGet)
-                ? throw ErrStrict(name)
+            return TypedHelpers.IsErrStrict(findResult.Found, required, StrictGet)
+                ? throw TypedHelpers.ErrStrict(name)
                 : _Services.AsC.AsItem(findResult.Result, noParamOrder);
         }
 
@@ -38,8 +39,8 @@ namespace ToSic.Sxc.Data
         {
             // TODO: @2DM - type-filter of children is not applied
             var findResult = GetInternal(field, lookup: false);
-            return IsErrStrict(findResult.Found, required, StrictGet)
-                ? throw ErrStrict(field)
+            return TypedHelpers.IsErrStrict(findResult.Found, required, StrictGet)
+                ? throw TypedHelpers.ErrStrict(field)
                 : _Services.AsC.AsItems(findResult.Result, noParamOrder);
         }
     }

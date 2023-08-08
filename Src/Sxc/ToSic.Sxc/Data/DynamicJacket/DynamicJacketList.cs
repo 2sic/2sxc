@@ -39,14 +39,14 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         public override IEnumerator<object> GetEnumerator() 
-            => UnwrappedContents.Select(WrapperFactory.WrapIfJObjectUnwrapIfJValue).GetEnumerator();
+            => UnwrappedContents.Select(WrapperFactory.IfJsonGetValueOrJacket).GetEnumerator();
 
         /// <summary>
         /// Access the items in this object - but only if the underlying object is an array. 
         /// </summary>
         /// <param name="index">array index</param>
         /// <returns>the item or an error if not found</returns>
-        public override object this[int index] => WrapperFactory.WrapIfJObjectUnwrapIfJValue(UnwrappedContents[index]);
+        public override object this[int index] => WrapperFactory.IfJsonGetValueOrJacket(UnwrappedContents[index]);
 
         [PrivateApi("internal")]
         public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) 
@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Data
                     return false;
                 });
 
-            return WrapperFactory.WrapIfJObjectUnwrapIfJValue(found);
+            return WrapperFactory.IfJsonGetValueOrJacket(found);
         }
 
         private bool HasPropertyWithValue(JsonObject obj, string propertyName, string value, StringComparison comparison)

@@ -119,7 +119,7 @@ namespace Custom.Hybrid
         private TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
         private TypedCode16Helper _codeHelper;
 
-        private TypedCode16Helper CreateCodeHelper() => new TypedCode16Helper(_DynCodeRoot, MyData, null, false, "c# WebApiController");
+        private TypedCode16Helper CreateCodeHelper() => new(_DynCodeRoot, MyData, null, false, "c# WebApiController");
 
         public ITypedItem MyItem => CodeHelper.MyItem;
 

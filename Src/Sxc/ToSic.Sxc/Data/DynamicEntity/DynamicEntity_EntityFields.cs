@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Data;
+using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data
 {
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.Data
             if (name.Contains(PropertyStack.PathSeparator.ToString()))
                 throw new NotImplementedException("Path support on this method is not yet supported. Ask iJungleboy");
 
-            return IsErrStrict(name, required, StrictGet)
+            return IsErrStrict(this, name, required, StrictGet)
                 ? throw ErrStrict(name)
                 : new Field(this, name, _Services);
         }

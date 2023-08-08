@@ -5,8 +5,8 @@ using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Data.Typed;
 using static ToSic.Eav.Parameters;
+using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data
 {
@@ -37,11 +37,11 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only) 
-            => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, Entity?.Attributes.Keys);
+            => FilterKeysIfPossible(noParamOrder, only, Entity?.Attributes.Keys);
 
-        [PrivateApi]
-        protected bool IsErrStrict(string name, bool? required, bool strictGetDefault)
-            => !(this as ITyped).ContainsKey(name) && (required ?? strictGetDefault);
+        //[PrivateApi]
+        //protected bool IsErrStrict(string name, bool? required, bool strictGetDefault)
+        //    => !(this as ITyped).ContainsKey(name) && (required ?? strictGetDefault);
 
 
         /// <inheritdoc />
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Data
         IFolder ITypedItem.Folder(string name, string noParamOrder, bool? required)
         {
             Protect(noParamOrder, nameof(required));
-            return IsErrStrict(name, required, StrictGet)
+            return IsErrStrict(this, name, required, StrictGet)
                 ? throw ErrStrict(name)
                 : _adamCache.Get(name, () => _Services.AsC.Folder(Entity, name));
         }
@@ -100,7 +100,7 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, $"{nameof(type)}, {nameof(required)}");
 
-            if (IsErrStrict(field, required, StrictGet))
+            if (IsErrStrict(this, field, required, StrictGet))
                 throw ErrStrict(field);
 
             var dynChildren = Children(field, type);
@@ -117,7 +117,7 @@ namespace ToSic.Sxc.Data
         ITypedItem ITypedItem.Child(string name, string noParamOrder, bool? required)
         {
             Protect(noParamOrder, nameof(required));
-            return IsErrStrict(name, required, StrictGet)
+            return IsErrStrict(this, name, required, StrictGet)
                 ? throw ErrStrict(name)
                 : (this as ITypedItem).Children(name).FirstOrDefault();
         }

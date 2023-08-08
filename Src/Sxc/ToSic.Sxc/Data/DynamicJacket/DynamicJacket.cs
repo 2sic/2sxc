@@ -97,7 +97,7 @@ namespace ToSic.Sxc.Data
             var found = UnwrappedContents.FirstOrDefault(
                     p => string.Equals(p.Key, name, comparison));
 
-            return WrapperFactory.WrapIfJObjectUnwrapIfJValue(found.IsNullOrDefault() ? null : found.Value);
+            return WrapperFactory.IfJsonGetValueOrJacket(found.IsNullOrDefault() ? null : found.Value);
         }
 
         #endregion

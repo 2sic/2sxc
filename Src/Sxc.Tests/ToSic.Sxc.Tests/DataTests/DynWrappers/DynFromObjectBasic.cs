@@ -2,6 +2,8 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Wrapper;
+using static System.Text.Json.JsonSerializer;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.DataTests.DynWrappers
@@ -21,7 +23,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
                 Truthy = true,
             };
 
-            var typed = TypedFromObject(anon, false, false);
+            var typed = TypedFromObject(anon);
             dynamic dynAnon = DynFromObject(anon, false, false);
 
             IsNull(dynAnon.NotExisting);
@@ -34,6 +36,28 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             IsTrue(typed.ContainsKey("NAME"));
             IsTrue(typed.ContainsKey("Description"));
             IsFalse(typed.ContainsKey("NonexistingField"));
+        }
+
+        [TestMethod]
+        public void JsonSerialization()
+        {
+            var anon = new
+            {
+                Name = "2sxc",
+                Description = "Some description",
+                Founded = 2012,
+                Birthday = new DateTime(2012, 5, 4),
+                Truthy = true,
+            };
+            var typed = TypedFromObject(anon);
+            dynamic dynAnon = DynFromObject(anon, false, false);
+
+            var jsonTyped = Serialize(typed);
+            var jsonAnon = Serialize(anon);
+            var jsonDyn = Serialize(dynAnon);
+
+            AreEqual(jsonTyped, jsonDyn);
+            AreEqual(jsonTyped, jsonAnon);
         }
 
         class AnonTyped
@@ -60,8 +84,8 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
                 Truthy = true,
             };
 
-            var typed = DynFromObject(anon, false, false) as ITyped;
-            dynamic dynAnon = typed;
+            var typed = TypedFromObject(anon);
+            dynamic dynAnon = DynFromObject(anon, false, false);
 
             IsNull(dynAnon.NotExisting);
             AreEqual(anon.Name, dynAnon.Name);
@@ -86,7 +110,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
                 Key1 = "hello",
                 Key2 = "goodbye"
             };
-            var typed = TypedFromObject(anon, false, false);// as ITyped;
+            var typed = TypedFromObject(anon);
             IsTrue(typed.ContainsKey("Key1"));
             IsFalse(typed.ContainsKey("Nonexisting"));
             IsTrue(typed.Keys().Any());

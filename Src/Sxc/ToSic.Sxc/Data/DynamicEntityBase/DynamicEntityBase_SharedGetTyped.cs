@@ -6,6 +6,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
+using ToSic.Sxc.Data.Typed;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
@@ -28,8 +29,8 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, nameof(required));
             var findResult = GetInternal(name, lookup: false);
-            return IsErrStrict(findResult.Found, required, StrictGet)
-                ? throw ErrStrict(name)
+            return TypedHelpers.IsErrStrict(findResult.Found, required, StrictGet)
+                ? throw TypedHelpers.ErrStrict(name)
                 : findResult.Result;
         }
 
@@ -45,32 +46,32 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, nameof(fallback), methodName: cName);
             var findResult = GetInternal(name, lookup: false);
-            return IsErrStrict(findResult.Found, required, StrictGet)
-                ? throw ErrStrict(name, cName)
+            return TypedHelpers.IsErrStrict(findResult.Found, required, StrictGet)
+                ? throw TypedHelpers.ErrStrict(name, cName)
                 : findResult.Result.ConvertOrFallback(fallback);
         }
 
 
-        [PrivateApi]
-        protected bool IsErrStrict(bool found, bool? required, bool requiredDefault) 
-            => !found && (required ?? requiredDefault);
+        //[PrivateApi]
+        //protected bool IsErrStrict(bool found, bool? required, bool requiredDefault) 
+        //    => !found && (required ?? requiredDefault);
 
-        [PrivateApi]
-        protected static ArgumentException ErrStrict(string name, [CallerMemberName] string cName = default)
-        {
-            var help = $"Either a) correct the name '{name}'; b) use {cName}(\"{name}\", required: false); or c) or use AsItem(..., strict: false)";
-            var msg = cName == "."
-                ? $".{name} not found and 'strict' is true, meaning that an error is thrown. {help}"
-                : $"{cName}('{name}', ...) not found and 'strict' is true, meaning that an error is thrown. {help}";
-            return new ArgumentException(msg, nameof(name));
-        }
+        //[PrivateApi]
+        //protected static ArgumentException ErrStrict(string name, [CallerMemberName] string cName = default)
+        //{
+        //    var help = $"Either a) correct the name '{name}'; b) use {cName}(\"{name}\", required: false); or c) or use AsItem(..., strict: false)";
+        //    var msg = cName == "."
+        //        ? $".{name} not found and 'strict' is true, meaning that an error is thrown. {help}"
+        //        : $"{cName}('{name}', ...) not found and 'strict' is true, meaning that an error is thrown. {help}";
+        //    return new ArgumentException(msg, nameof(name));
+        //}
 
         [PrivateApi]
         IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback, bool? required)
         {
             Protect(noParamOrder, nameof(fallback));
             var findResult = GetInternal(name, lookup: false);
-            if (IsErrStrict(findResult.Found, required, StrictGet)) throw ErrStrict(name);
+            if (TypedHelpers.IsErrStrict(findResult.Found, required, StrictGet)) throw TypedHelpers.ErrStrict(name);
             var strValue = _Services.ForCode.ForCode(findResult.Result, fallback: fallback);
             return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
         }

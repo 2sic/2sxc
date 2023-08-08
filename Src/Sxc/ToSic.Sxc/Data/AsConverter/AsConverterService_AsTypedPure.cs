@@ -5,6 +5,7 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Data.Wrapper;
 
 namespace ToSic.Sxc.Data.AsConverter
 {
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.Data.AsConverter
             if (original is ITyped alreadyTyped)
                 return l.Return(alreadyTyped, "already typed");
 
-            var result = _dynJacketFactory.Value.WrapIfPossible(value: original, wrapRealObjects: true, wrapChildren: true, wrapRealChildren: false, wrapIntoTyped: true);
+            var result = _dynJacketFactory.Value.WrapIfPossible(data: original, wrapNonAnon: true, ReWrapSettings.Typed(children: true, realObjectsToo: false));
             if (result is ITyped resTyped)
                 return l.Return(resTyped, "converted to dyn-read");
 

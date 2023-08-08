@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Data.Wrapper;
 
 namespace ToSic.Sxc.Data.AsConverter
 {
@@ -85,7 +86,10 @@ namespace ToSic.Sxc.Data.AsConverter
                     if (dynObject.GetType().IsValueType) return l.Return(dynObject, "bad call - value type");
 
                     // 2021-09-14 new - just convert to a DynamicReadObject
-                    var result = _dynJacketFactory.Value.WrapIfPossible(value: dynObject, wrapRealObjects: true, wrapChildren: true, wrapRealChildren: false, wrapIntoTyped: false);
+                    var result = _dynJacketFactory.Value.WrapIfPossible(data: dynObject,
+                        // 2023-08-08 2dm - changed `wrapNonAnon` to true, I'm not sure why it was false, but I'm certain that's wrong
+                        wrapNonAnon: true /* false, */,
+                        ReWrapSettings.Dyn(children: true, realObjectsToo: false));
                     if (!(result is null)) return l.Return(result, "converted to dyn-read");
 
                     // Note 2dm 2021-09-14 returning the original object was actually the default till now.
@@ -103,16 +107,9 @@ namespace ToSic.Sxc.Data.AsConverter
         public dynamic MergeDynamic(params object[] entities)
         {
             if (entities == null || !entities.Any()) return null;
-            if (entities.Length == 1) return AsDynamicFromObject(entities[0]);
-
+            // 2023-08-08 2dm disable this 1-only optimization, because it results in a slightly different object
+            // if (entities.Length == 1) return AsDynamicFromObject(entities[0]);
             return AsStack(entities);
-            //// New case: many items found, must create a stack
-            //var sources = entities
-            //    .Select(e => e as IPropertyLookup)
-            //    .Where(e => e != null)
-            //    .Select(e => new KeyValuePair<string, IPropertyLookup>(null, e))
-            //    .ToList();
-            //return new DynamicStack(Eav.Constants.NullNameId, DynamicEntityServices, sources);
         }
 
 

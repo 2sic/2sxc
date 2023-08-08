@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Data
+namespace ToSic.Sxc.Data.Wrapper
 {
     public partial class AnalyzeObject
     {
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.Data
 
             if (string.IsNullOrEmpty(path)) path = DumpSourceName;
 
-            var allProperties = _ignoreCaseLookup.ToList();
+            var allProperties = _ignoreCaseLookup.ToList<KeyValuePair<string, PropertyInfo>>();
 
             var simpleProps = allProperties;
             var resultDynChildren = simpleProps.Select(p => new
@@ -40,7 +41,7 @@ namespace ToSic.Sxc.Data
                 }).Select(p => new
                 {
                     p.Field,
-                    CanDump = WrapperFactory.WrapIfPossible(value: p.Pdi.Property.Result, wrapRealObjects: false, wrapChildren: true, wrapRealChildren: true) as IPropertyLookup
+                    CanDump = WrapperFactory.WrapIfPossible(data: p.Pdi.Property.Result, wrapNonAnon: false, ReWrapSettings.Dyn(children: true, realObjectsToo: true)) as IPropertyLookup
                 })
                 .Where(p => !(p.CanDump is null))
                 .ToList();

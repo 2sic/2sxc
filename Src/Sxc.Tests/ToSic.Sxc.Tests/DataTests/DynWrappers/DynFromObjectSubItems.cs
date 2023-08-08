@@ -95,6 +95,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             {
                 AreNotEqual(anon.Sub, dynWrapAnon.Sub, $"Should not be equal, as the Sub should be re-wrapped {msgPlus}");
                 AreEqual(anon.Sub, dynWrapAnon.Sub.GetContents(), $"Sub should be = to unwrapped {msgPlus}");
+                AreEqual(typeof(DynamicReadObject), dynWrapAnon.Sub.GetType(), $"type should be {nameof(DynamicReadObject)}");
                 AreNotEqual(anon.Sub.Sub, dynWrapAnon.Sub.Sub, $"sub-sub shouldn't be equal either, as they are still wrapped {msgPlus}");
                 AreEqual(anon.Sub.Sub, dynWrapAnon.Sub.Sub.GetContents(), $"sub-sub GetContents {msgPlus}");
                 AreEqual(anon.Sub.Something, dynWrapAnon.sub.something, $"simple value, but case-invariant {msgPlus}");
@@ -119,6 +120,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             if (testSet == "FT" || testSet == "FF")
             {
                 AreEqual(anon.Sub, dynWrapAnon.Sub, $"Should not be equal, as the Sub should be re-wrapped {msgPlus}");
+                AreNotEqual(typeof(DynamicReadObject), dynWrapAnon.Sub.GetType(), $"type should be {nameof(DynamicReadObject)}");
                 AreEqual(anon.Sub.Sub, dynWrapAnon.Sub.Sub, $"sub-sub shouldn't be equal either, as they are still wrapped {msgPlus}");
             }
 

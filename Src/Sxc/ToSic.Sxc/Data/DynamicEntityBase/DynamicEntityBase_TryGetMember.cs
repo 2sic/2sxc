@@ -1,5 +1,6 @@
 ﻿using System.Dynamic;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Data.Typed;
 
 namespace ToSic.Sxc.Data
 {
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Data
         {
             var findResult = GetInternal(binder.Name);
             // ReSharper disable once ExplicitCallerInfoArgument
-            if (!findResult.Found && StrictGet) throw ErrStrict(binder.Name, ".");
+            if (!findResult.Found && StrictGet) throw TypedHelpers.ErrStrict(binder.Name, ".");
             result = findResult.Result;
             return true;
         }

@@ -6,6 +6,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data.Typed;
+using ToSic.Sxc.Data.Wrapper;
 
 namespace ToSic.Sxc.Data
 {
@@ -46,7 +47,7 @@ namespace ToSic.Sxc.Data
             // if result is an anonymous object, re-wrap again for consistency with other APIs
             if (result is null) return true;
             if (result.IsAnonymous())
-                result = _factory.WrapIfPossible(value: result, wrapRealObjects: false, wrapChildren: true, wrapRealChildren: false, wrapIntoTyped: false);
+                result = _factory.WrapIfPossible(data: result, wrapNonAnon: false, ReWrapSettings.Dyn(children: true, realObjectsToo: false));
 
             return true;
         }
