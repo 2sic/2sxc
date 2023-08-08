@@ -43,13 +43,13 @@ namespace ToSic.Sxc.Data.Wrapper
         {
             WrapperFactory = wrapperFactory;
             UnwrappedObject = item;
-            _settings = settings;
+            Settings = settings;
             _ignoreCaseLookup = CreateDictionary(item);
         }
 
         protected readonly DynamicWrapperFactory WrapperFactory;
         protected readonly object UnwrappedObject;
-        private readonly WrapperSettings _settings;
+        public readonly WrapperSettings Settings;
 
         private static Dictionary<string, PropertyInfo> CreateDictionary(object original)
         {
@@ -94,8 +94,8 @@ namespace ToSic.Sxc.Data.Wrapper
 
             // Probably re-wrap for further dynamic navigation!
             return (true, result,
-                _settings.WrapChildren && wrapDefault
-                ? WrapperFactory.WrapIfPossible(result, _settings.WrapRealObjects, _settings)
+                Settings.WrapChildren && wrapDefault
+                ? WrapperFactory.WrapIfPossible(result, Settings.WrapRealObjects, Settings)
                 : result);
         }
 
@@ -103,7 +103,7 @@ namespace ToSic.Sxc.Data.Wrapper
         {
             Protect(noParamOrder, nameof(fallback), methodName: cName);
             var (found, raw, _) = TryGet(name, false);
-            return IsErrStrict(found, required, _settings.GetStrict)
+            return IsErrStrict(found, required, Settings.GetStrict)
                 ? throw ErrStrict(name)
                 : raw.ConvertOrFallback(fallback);
         }

@@ -56,7 +56,12 @@ namespace ToSic.Sxc.Data
         public ITyped TypedFromObject(object data, WrapperSettings settings)
         {
             var preWrap = new PreWrapObject(data, settings, this);
-            return new TypedObjectWrapper(preWrap, this);
+            return new WrapObjectTyped(preWrap, this);
+        }
+        public ITypedItem TypedItemFromObject(object data, WrapperSettings settings)
+        {
+            var preWrap = new PreWrapObject(data, settings, this);
+            return new WrapObjectTypedItem(preWrap, this);
         }
 
         /// <summary>

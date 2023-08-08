@@ -16,5 +16,8 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
 
         public ITyped TypedFromObject(object data, WrapperSettings? reWrap = null)
             => Factory.TypedFromObject(data, reWrap ?? WrapperSettings.Typed(true, true));
+
+        public ITypedItem ItemFromObject(object data, WrapperSettings? reWrap = null)
+            => Factory.TypedItemFromObject(data, reWrap ?? WrapperSettings.Typed(true, true));
     }
 }

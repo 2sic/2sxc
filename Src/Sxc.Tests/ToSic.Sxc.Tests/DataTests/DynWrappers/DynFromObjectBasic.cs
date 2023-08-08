@@ -12,13 +12,13 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
     {
         private class TestData
         {
-            public string Name { get; } = "2sic";
-            public string Description { get; } = "Some description";
+            public string Name => "2sic";
+            public string Description => "Some description";
             /// <summary> This one is not a real property but just a value! </summary>
             public string DescriptionAsProperty = "Some description";
-            public int Founded { get; } = 2012;
+            public int Founded => 2012;
             public DateTime Birthday { get; } = new DateTime(2012, 5, 4);
-            public bool Truthy { get; } = true;
+            public bool Truthy => true;
         }
         private static TestData Data = new TestData();
 

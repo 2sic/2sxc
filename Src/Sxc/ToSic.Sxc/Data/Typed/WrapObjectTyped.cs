@@ -9,48 +9,49 @@ using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
+using ToSic.Sxc.Data.Wrapper;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data.Typed
 {
     [PrivateApi]
     [JsonConverter(typeof(DynamicJsonConverter))]
-    internal class TypedObjectWrapper: Wrapper<object>, ITyped, IPropertyLookup, IHasJsonSource
+    internal class WrapObjectTyped: Wrapper<object>, ITyped, IPropertyLookup, IHasJsonSource
     {
-        private readonly DynamicWrapperFactory _wrapperFactory;
-        private readonly Wrapper.PreWrapObject _analyzer;
+        protected readonly DynamicWrapperFactory WrapperFactory;
+        protected readonly PreWrapObject PreWrap;
 
-        public TypedObjectWrapper(Wrapper.PreWrapObject analyzer, DynamicWrapperFactory wrapperFactory) : base(analyzer.GetContents())
+        public WrapObjectTyped(PreWrapObject preWrap, DynamicWrapperFactory wrapperFactory) : base(preWrap.GetContents())
         {
-            _wrapperFactory = wrapperFactory;
-            _analyzer = analyzer;
+            WrapperFactory = wrapperFactory;
+            PreWrap = preWrap;
         }
 
         dynamic ITyped.Dyn => this;
 
-        bool ITyped.ContainsKey(string name) => _analyzer.ContainsKey(name);
+        bool ITyped.ContainsKey(string name) => PreWrap.ContainsKey(name);
 
         IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only)
-            => _analyzer.Keys(noParamOrder, only);
+            => PreWrap.Keys(noParamOrder, only);
 
         object ITyped.Get(string name, string noParamOrder, bool? required)
         {
             Protect(noParamOrder, nameof(required));
-            return _analyzer.TryGet(name, true).Result;
+            return PreWrap.TryGet(name, true).Result;
         }
 
         TValue ITyped.Get<TValue>(string name, string noParamOrder, TValue fallback, bool? required)
-            => _analyzer.TryGet(name, noParamOrder, fallback, required: required);
+            => PreWrap.TryGet(name, noParamOrder, fallback, required: required);
 
         bool ITyped.Bool(string name, string noParamOrder, bool fallback, bool? required)
-            => _analyzer.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         DateTime ITyped.DateTime(string name, string noParamOrder, DateTime fallback, bool? required)
-            => _analyzer.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         string ITyped.String(string name, string noParamOrder, string fallback, bool? required, bool scrubHtml)
         {
-            var value = _analyzer.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            var value = PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 #pragma warning disable CS0618
             return scrubHtml ? Tags.Strip(value) : value;
 #pragma warning restore CS0618
@@ -58,31 +59,31 @@ namespace ToSic.Sxc.Data.Typed
         }
 
         int ITyped.Int(string name, string noParamOrder, int fallback, bool? required)
-            => _analyzer.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         long ITyped.Long(string name, string noParamOrder, long fallback, bool? required)
-            => _analyzer.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         float ITyped.Float(string name, string noParamOrder, float fallback, bool? required)
-            => _analyzer.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         decimal ITyped.Decimal(string name, string noParamOrder, decimal fallback, bool? required)
-            => _analyzer.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         double ITyped.Double(string name, string noParamOrder, double fallback, bool? required)
-            => _analyzer.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         string ITyped.Url(string name, string noParamOrder, string fallback, bool? required)
         {
-            var url = _analyzer.TryGet(name, noParamOrder: noParamOrder, fallback, required: required);
+            var url = PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback, required: required);
             return Tags.SafeUrl(url).ToString();
         }
 
         IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback, bool? required)
         {
             Protect(noParamOrder, nameof(fallback));
-            var value = _analyzer.TryGet(name, false).Result;
-            var strValue = _wrapperFactory.ConvertForCode.ForCode(value, fallback: fallback);
+            var value = PreWrap.TryGet(name, false).Result;
+            var strValue = WrapperFactory.ConvertForCode.ForCode(value, fallback: fallback);
             return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
         }
 
@@ -90,15 +91,15 @@ namespace ToSic.Sxc.Data.Typed
 
         [PrivateApi]
         object IHasJsonSource.JsonSource
-            => _analyzer.JsonSource;
+            => PreWrap.JsonSource;
 
         [PrivateApi]
         PropReqResult IPropertyLookup.FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path) 
-            => _analyzer.FindPropertyInternal(specs, path);
+            => PreWrap.FindPropertyInternal(specs, path);
 
         [PrivateApi]
         List<PropertyDumpItem> IPropertyLookup._Dump(PropReqSpecs specs, string path) 
-            => _analyzer._Dump(specs, path);
+            => PreWrap._Dump(specs, path);
 
         #endregion
     }
