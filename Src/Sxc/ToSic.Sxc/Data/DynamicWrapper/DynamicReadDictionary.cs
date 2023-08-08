@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using ToSic.Eav;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
@@ -47,7 +46,7 @@ namespace ToSic.Sxc.Data
             // if result is an anonymous object, re-wrap again for consistency with other APIs
             if (result is null) return true;
             if (result.IsAnonymous())
-                result = _factory.WrapIfPossible(data: result, wrapNonAnon: false, ReWrapSettings.Dyn(children: true, realObjectsToo: false));
+                result = _factory.WrapIfPossible(data: result, wrapNonAnon: false, WrapperSettings.Dyn(children: true, realObjectsToo: false));
 
             return true;
         }

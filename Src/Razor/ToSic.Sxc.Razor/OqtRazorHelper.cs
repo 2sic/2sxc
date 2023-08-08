@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Razor
         #region Dynamic Model / MyModel
 
         public dynamic DynamicModel => _dynamicModel ??= _owner.GetService<DynamicWrapperFactory>()
-            .FromObject(_overridePageData ?? _owner.Model, ReWrapSettings.Dyn(false, false));
+            .FromObject(_overridePageData ?? _owner.Model, WrapperSettings.Dyn(false, false));
         private dynamic _dynamicModel;
         private object _overridePageData;
 

@@ -143,7 +143,7 @@ namespace ToSic.Sxc.Web
         private dynamic _dynamicModel;
 
         internal void SetDynamicModel(object data) =>
-            _dynamicModel = DynamicWrapperFactory.FromObject(data, ReWrapSettings.Dyn(children: false, realObjectsToo: false));
+            _dynamicModel = DynamicWrapperFactory.FromObject(data, WrapperSettings.Dyn(children: false, realObjectsToo: false));
         // new DynamicReadObject(data, false, false, _DynCodeRoot.GetService<DynamicJacketFactory>());
 
         #endregion

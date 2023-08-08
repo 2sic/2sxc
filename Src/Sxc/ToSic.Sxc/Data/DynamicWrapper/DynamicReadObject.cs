@@ -23,10 +23,10 @@ namespace ToSic.Sxc.Data
     public partial class DynamicReadObject: DynamicObject, IWrapper<object>, IPropertyLookup, IHasJsonSource, ICanGetByName
     {
         [PrivateApi]
-        public object GetContents() => Analyzer.GetContents();// UnwrappedObject;
+        public object GetContents() => PreWrap.GetContents();
 
         [PrivateApi]
-        internal readonly Wrapper.AnalyzeObject Analyzer;
+        internal readonly Wrapper.PreWrapObject PreWrap;
 
         /// <summary>
         /// 
@@ -37,17 +37,17 @@ namespace ToSic.Sxc.Data
         /// When using this for DynamicModel it should be false, otherwise usually true.
         /// </param>
         [PrivateApi]
-        internal DynamicReadObject(Wrapper.AnalyzeObject analyzer, DynamicWrapperFactory wrapperFactory)
+        internal DynamicReadObject(Wrapper.PreWrapObject preWrap, DynamicWrapperFactory wrapperFactory)
         {
             WrapperFactory = wrapperFactory;
-            Analyzer = analyzer;
+            PreWrap = preWrap;
         }
         protected readonly DynamicWrapperFactory WrapperFactory;
         //protected readonly object UnwrappedObject;
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            result = Analyzer.TryGet(binder.Name, true).Result;
+            result = PreWrap.TryGet(binder.Name, true).Result;
             return true;
         }
 
@@ -58,15 +58,15 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         [PrivateApi("Internal")]
         public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path) 
-            => Analyzer.FindPropertyInternal(specs, path);
+            => PreWrap.FindPropertyInternal(specs, path);
 
 
-        object IHasJsonSource.JsonSource => Analyzer.GetContents();
+        object IHasJsonSource.JsonSource => PreWrap.GetContents();
 
-        public dynamic Get(string name) => Analyzer.TryGet(name, true).Result;
+        public dynamic Get(string name) => PreWrap.TryGet(name, true).Result;
 
         [PrivateApi]
-        public List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) => Analyzer._Dump(specs, path);
+        public List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) => PreWrap._Dump(specs, path);
 
     }
 }

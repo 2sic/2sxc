@@ -89,7 +89,7 @@ namespace ToSic.Sxc.Data.AsConverter
                     var result = _dynJacketFactory.Value.WrapIfPossible(data: dynObject,
                         // 2023-08-08 2dm - changed `wrapNonAnon` to true, I'm not sure why it was false, but I'm certain that's wrong
                         wrapNonAnon: true /* false, */,
-                        ReWrapSettings.Dyn(children: true, realObjectsToo: false));
+                        WrapperSettings.Dyn(children: true, realObjectsToo: false));
                     if (!(result is null)) return l.Return(result, "converted to dyn-read");
 
                     // Note 2dm 2021-09-14 returning the original object was actually the default till now.

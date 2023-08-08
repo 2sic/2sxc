@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Data.AsConverter
             if (original is ITyped alreadyTyped)
                 return l.Return(alreadyTyped, "already typed");
 
-            var result = _dynJacketFactory.Value.WrapIfPossible(data: original, wrapNonAnon: true, ReWrapSettings.Typed(children: true, realObjectsToo: false));
+            var result = _dynJacketFactory.Value.WrapIfPossible(data: original, wrapNonAnon: true, WrapperSettings.Typed(children: true, realObjectsToo: false));
             if (result is ITyped resTyped)
                 return l.Return(resTyped, "converted to dyn-read");
 

@@ -8,8 +8,8 @@ using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Data.Typed;
 using static ToSic.Eav.Parameters;
+using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data.Wrapper
 {
@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Data.Wrapper
     /// Will always return a value even if the property doesn't exist, in which case it resolves to null.
     /// </remarks>
     [JsonConverter(typeof(DynamicJsonConverter))]
-    public partial class AnalyzeObject: IWrapper<object>, IPropertyLookup, IHasJsonSource //, ICanGetByName
+    public partial class PreWrapObject: IWrapper<object>, IPropertyLookup, IHasJsonSource
     {
         #region Constructor / Setup
 
@@ -34,22 +34,22 @@ namespace ToSic.Sxc.Data.Wrapper
         /// 
         /// </summary>
         /// <param name="item"></param>
-        /// <param name="reWrap">
+        /// <param name="settings">
         /// Determines if properties which are objects should again be wrapped.
         /// When using this for DynamicModel it should be false, otherwise usually true.
         /// </param>
         [PrivateApi]
-        internal AnalyzeObject(object item, ReWrapSettings reWrap, DynamicWrapperFactory wrapperFactory)
+        internal PreWrapObject(object item, WrapperSettings settings, DynamicWrapperFactory wrapperFactory)
         {
             WrapperFactory = wrapperFactory;
             UnwrappedObject = item;
-            _reWrap = reWrap;
+            _settings = settings;
             _ignoreCaseLookup = CreateDictionary(item);
         }
 
         protected readonly DynamicWrapperFactory WrapperFactory;
         protected readonly object UnwrappedObject;
-        private readonly ReWrapSettings _reWrap;
+        private readonly WrapperSettings _settings;
 
         private static Dictionary<string, PropertyInfo> CreateDictionary(object original)
         {
@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Data.Wrapper
         public bool ContainsKey(string name) => _ignoreCaseLookup.ContainsKey(name);
 
         public IEnumerable<string> Keys(string noParamOrder, IEnumerable<string> only)
-            => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, _ignoreCaseLookup?.Keys);
+            => FilterKeysIfPossible(noParamOrder, only, _ignoreCaseLookup?.Keys);
 
         #endregion
 
@@ -94,23 +94,25 @@ namespace ToSic.Sxc.Data.Wrapper
 
             // Probably re-wrap for further dynamic navigation!
             return (true, result,
-                _reWrap.Children && wrapDefault
-                ? WrapperFactory.WrapIfPossible(result, _reWrap.RealObjectsToo, _reWrap)
+                _settings.WrapChildren && wrapDefault
+                ? WrapperFactory.WrapIfPossible(result, _settings.WrapRealObjects, _settings)
                 : result);
         }
 
-        public (bool Found, object Raw, object Result) TryGet<TValue>(string name, string noParamOrder, TValue fallback, bool required, [CallerMemberName] string cName = default)
+        public TValue TryGet<TValue>(string name, string noParamOrder, TValue fallback, bool? required, [CallerMemberName] string cName = default)
         {
             Protect(noParamOrder, nameof(fallback), methodName: cName);
-            var result = TryGet(name, false);
-            return (result.Found, result.Raw, result.Raw.ConvertOrFallback(fallback));
+            var (found, raw, _) = TryGet(name, false);
+            return IsErrStrict(found, required, _settings.GetStrict)
+                ? throw ErrStrict(name)
+                : raw.ConvertOrFallback(fallback);
         }
 
-        public TValue G4T<TValue>(string name, string noParamOrder, TValue fallback, [CallerMemberName] string cName = default)
-        {
-            Protect(noParamOrder, nameof(fallback), methodName: cName);
-            return TryGet(name, false).Result.ConvertOrFallback(fallback);
-        }
+        //public TValue G4T<TValue>(string name, string noParamOrder, TValue fallback, [CallerMemberName] string cName = default)
+        //{
+        //    Protect(noParamOrder, nameof(fallback), methodName: cName);
+        //    return TryGet(name, false).Result.ConvertOrFallback(fallback);
+        //}
 
 
 

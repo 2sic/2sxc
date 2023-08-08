@@ -47,15 +47,15 @@ namespace ToSic.Sxc.Data
             return new DynamicReadDictionary<TKey, TValue>(original, this);
         }
 
-        public DynamicReadObject FromObject(object data, ReWrapSettings reWrap)
+        public DynamicReadObject FromObject(object data, WrapperSettings settings)
         {
-            var provider = new Wrapper.AnalyzeObject(data, reWrap, this);
+            var provider = new Wrapper.PreWrapObject(data, settings, this);
             return new DynamicReadObject(provider, this);
         }
 
-        public ITyped TypedFromObject(object data, ReWrapSettings reWrap)
+        public ITyped TypedFromObject(object data, WrapperSettings settings)
         {
-            var provider = new Wrapper.AnalyzeObject(data, reWrap, this);
+            var provider = new Wrapper.PreWrapObject(data, settings, this);
             return new TypedObjectWrapper(provider, this);
         }
 
@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Data
         /// <param name="wrapNonAnon">if true and the contents isn't already a dynamic object, it will also wrap real objects; otherwise only anonymous</param>
         /// <returns></returns>
         [PrivateApi]
-        internal object WrapIfPossible(object data, bool wrapNonAnon, ReWrapSettings reWrap)
+        internal object WrapIfPossible(object data, bool wrapNonAnon, WrapperSettings settings)
         {
             // If null or simple value, use that
             if (data is null) return null;
@@ -97,9 +97,9 @@ namespace ToSic.Sxc.Data
             // Otherwise it's a complex object, which should be re-wrapped for navigation
             var wrap = wrapNonAnon || data.IsAnonymous();
             return wrap
-                ? reWrap.WrapDynamic 
-                    ? FromObject(data, reWrap) as object
-                    : TypedFromObject(data, reWrap)
+                ? settings.WrapToDynamic 
+                    ? FromObject(data, settings) as object
+                    : TypedFromObject(data, settings)
                 : data;
         }
 

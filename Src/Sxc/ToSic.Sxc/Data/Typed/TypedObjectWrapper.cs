@@ -18,9 +18,9 @@ namespace ToSic.Sxc.Data.Typed
     internal class TypedObjectWrapper: Wrapper<object>, ITyped, IPropertyLookup, IHasJsonSource
     {
         private readonly DynamicWrapperFactory _wrapperFactory;
-        private readonly Wrapper.AnalyzeObject _analyzer;
+        private readonly Wrapper.PreWrapObject _analyzer;
 
-        public TypedObjectWrapper(Wrapper.AnalyzeObject analyzer, DynamicWrapperFactory wrapperFactory) : base(analyzer.GetContents())
+        public TypedObjectWrapper(Wrapper.PreWrapObject analyzer, DynamicWrapperFactory wrapperFactory) : base(analyzer.GetContents())
         {
             _wrapperFactory = wrapperFactory;
             _analyzer = analyzer;
@@ -40,17 +40,17 @@ namespace ToSic.Sxc.Data.Typed
         }
 
         TValue ITyped.Get<TValue>(string name, string noParamOrder, TValue fallback, bool? required)
-            => _analyzer.G4T(name, noParamOrder, fallback);
+            => _analyzer.TryGet(name, noParamOrder, fallback, required: required);
 
         bool ITyped.Bool(string name, string noParamOrder, bool fallback, bool? required)
-            => _analyzer.G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+            => _analyzer.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         DateTime ITyped.DateTime(string name, string noParamOrder, DateTime fallback, bool? required)
-            => _analyzer.G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+            => _analyzer.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         string ITyped.String(string name, string noParamOrder, string fallback, bool? required, bool scrubHtml)
         {
-            var value = _analyzer.G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+            var value = _analyzer.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 #pragma warning disable CS0618
             return scrubHtml ? Tags.Strip(value) : value;
 #pragma warning restore CS0618
@@ -58,23 +58,23 @@ namespace ToSic.Sxc.Data.Typed
         }
 
         int ITyped.Int(string name, string noParamOrder, int fallback, bool? required)
-            => _analyzer.G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+            => _analyzer.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         long ITyped.Long(string name, string noParamOrder, long fallback, bool? required)
-            => _analyzer.G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+            => _analyzer.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         float ITyped.Float(string name, string noParamOrder, float fallback, bool? required)
-            => _analyzer.G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+            => _analyzer.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         decimal ITyped.Decimal(string name, string noParamOrder, decimal fallback, bool? required)
-            => _analyzer.G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+            => _analyzer.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         double ITyped.Double(string name, string noParamOrder, double fallback, bool? required)
-            => _analyzer.G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+            => _analyzer.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         string ITyped.Url(string name, string noParamOrder, string fallback, bool? required)
         {
-            var url = _analyzer.G4T(name, noParamOrder: noParamOrder, fallback);
+            var url = _analyzer.TryGet(name, noParamOrder: noParamOrder, fallback, required: required);
             return Tags.SafeUrl(url).ToString();
         }
 

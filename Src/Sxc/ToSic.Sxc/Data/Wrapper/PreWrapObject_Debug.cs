@@ -7,7 +7,7 @@ using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data.Wrapper
 {
-    public partial class AnalyzeObject
+    public partial class PreWrapObject
     {
         public const string DumpSourceName = "DynamicRead";
 
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Data.Wrapper
                 }).Select(p => new
                 {
                     p.Field,
-                    CanDump = WrapperFactory.WrapIfPossible(data: p.Pdi.Property.Result, wrapNonAnon: false, ReWrapSettings.Dyn(children: true, realObjectsToo: true)) as IPropertyLookup
+                    CanDump = WrapperFactory.WrapIfPossible(data: p.Pdi.Property.Result, wrapNonAnon: false, WrapperSettings.Dyn(children: true, realObjectsToo: true)) as IPropertyLookup
                 })
                 .Where(p => !(p.CanDump is null))
                 .ToList();
