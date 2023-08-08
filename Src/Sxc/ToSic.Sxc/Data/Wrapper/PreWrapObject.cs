@@ -108,14 +108,6 @@ namespace ToSic.Sxc.Data.Wrapper
                 : raw.ConvertOrFallback(fallback);
         }
 
-        //public TValue G4T<TValue>(string name, string noParamOrder, TValue fallback, [CallerMemberName] string cName = default)
-        //{
-        //    Protect(noParamOrder, nameof(fallback), methodName: cName);
-        //    return TryGet(name, false).Result.ConvertOrFallback(fallback);
-        //}
-
-
-
         public object JsonSource => UnwrappedObject;
     }
 }

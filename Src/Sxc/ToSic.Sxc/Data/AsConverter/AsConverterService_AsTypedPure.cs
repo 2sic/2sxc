@@ -13,26 +13,29 @@ namespace ToSic.Sxc.Data.AsConverter
     {
         private const string NameOfAsTyped = nameof(IDynamicCode16.AsTyped) + "(...)";
 
-        public ITyped AsTyped(object original, bool required = false, string detailsMessage = default)
+        public ITyped AsTyped(object data, bool required = false, bool? strict = default, string detailsMessage = default)
         {
             var l = Log.Fn<ITyped>();
 
-            if (AsTypedPreflightReturnNull(original, NameOfAsTyped, required, detailsMessage))
+            if (AsTypedPreflightReturnNull(data, NameOfAsTyped, required, detailsMessage))
                 return l.ReturnNull();
 
-            if (original is ITyped alreadyTyped)
+            if (data is ITyped alreadyTyped)
                 return l.Return(alreadyTyped, "already typed");
 
-            var result = _dynJacketFactory.Value.WrapIfPossible(data: original, wrapNonAnon: true, WrapperSettings.Typed(children: true, realObjectsToo: false));
+            var result = _dynJacketFactory.Value.WrapIfPossible(data: data, wrapNonAnon: true,
+                WrapperSettings.Typed(children: true, realObjectsToo: false, strict: strict ?? true));
             if (result is ITyped resTyped)
                 return l.Return(resTyped, "converted to dyn-read");
 
-            throw l.Done(new ArgumentException($"Can't wrap/convert the original '{original.GetType()}'"));
+            throw l.Done(new ArgumentException($"Can't wrap/convert the original '{data.GetType()}'"));
         }
 
         private const string NameOfAsTypedList = nameof(IDynamicCode16.AsTypedList) + "(...)";
-        public IEnumerable<ITyped> AsTypedList(object list, bool? required = false)
+        public IEnumerable<ITyped> AsTypedList(object list, string noParamOrder, bool? required = false, bool? strict = default)
         {
+            Eav.Parameters.Protect(noParamOrder, nameof(strict));
+
             var l = Log.Fn<IEnumerable<ITyped>>();
 
             if (AsTypedPreflightReturnNull(list, NameOfAsTypedList, required == true))
@@ -47,7 +50,7 @@ namespace ToSic.Sxc.Data.AsConverter
             var itemsRequired = required != false;
             var result = enumerable
                 .Cast<object>()
-                .Select((o, i) => AsTyped(o, itemsRequired, $"index: {i}"))
+                .Select((o, i) => AsTyped(o, itemsRequired, strict, $"index: {i}"))
                 .ToList();
 
             return result;

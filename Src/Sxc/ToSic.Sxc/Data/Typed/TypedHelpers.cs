@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Data.Typed
 
         public static ArgumentException ErrStrict(string name, [CallerMemberName] string cName = default)
         {
-            var help = $"Either a) correct the name '{name}'; b) use {cName}(\"{name}\", required: false); or c) or use AsItem(..., strict: false)";
+            var help = $"Either a) correct the name '{name}'; b) use {cName}(\"{name}\", required: false); or c) or use AsItem(..., strict: false) or AsTyped(..., strict: false)";
             var msg = cName == "."
                 ? $".{name} not found and 'strict' is true, meaning that an error is thrown. {help}"
                 : $"{cName}('{name}', ...) not found and 'strict' is true, meaning that an error is thrown. {help}";

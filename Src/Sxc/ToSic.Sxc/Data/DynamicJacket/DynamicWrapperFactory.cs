@@ -49,14 +49,14 @@ namespace ToSic.Sxc.Data
 
         public DynamicReadObject FromObject(object data, WrapperSettings settings)
         {
-            var provider = new Wrapper.PreWrapObject(data, settings, this);
-            return new DynamicReadObject(provider, this);
+            var preWrap = new PreWrapObject(data, settings, this);
+            return new DynamicReadObject(preWrap, this);
         }
 
         public ITyped TypedFromObject(object data, WrapperSettings settings)
         {
-            var provider = new Wrapper.PreWrapObject(data, settings, this);
-            return new TypedObjectWrapper(provider, this);
+            var preWrap = new PreWrapObject(data, settings, this);
+            return new TypedObjectWrapper(preWrap, this);
         }
 
         /// <summary>

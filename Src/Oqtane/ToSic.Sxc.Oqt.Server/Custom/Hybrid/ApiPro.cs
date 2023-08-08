@@ -146,10 +146,12 @@ namespace Custom.Hybrid
         public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot.AsC.AsEntity(thing);
 
         /// <inheritdoc cref="IDynamicCode16.AsTyped" />
-        public ITyped AsTyped(object original) => _DynCodeRoot.AsC.AsTyped(original);
+        public ITyped AsTyped(object original, string noParamOrder = Protector, bool? strict = default)
+            => _DynCodeRoot.AsC.AsTyped(original, strict: strict);
 
         /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
-        public IEnumerable<ITyped> AsTypedList(object list) => _DynCodeRoot.AsC.AsTypedList(list);
+        public IEnumerable<ITyped> AsTypedList(object list, string noParamOrder = Protector, bool? strict = default)
+            => _DynCodeRoot.AsC.AsTypedList(list, noParamOrder, strict: strict);
 
         /// <inheritdoc cref="IDynamicCode16.AsStack" />
         public ITypedStack AsStack(params object[] items) => _DynCodeRoot.AsC.AsStack(items);

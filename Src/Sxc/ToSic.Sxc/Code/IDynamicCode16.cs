@@ -7,6 +7,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code
 {
@@ -97,12 +98,12 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <param name="target"></param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="strict">determine if the items returned will do strict property-name checking; default is true</param>
+        /// <param name="strict">make the resulting object [strict](xref:NetCode.Conventions.TypedRequired), default `true`</param>
         /// <returns></returns>
         /// <remarks>New in v16.02</remarks>
         ITypedItem AsItem(
             object target,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
             bool? strict = default
         );
 
@@ -111,12 +112,12 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <param name="list">The original list which is usually a list of <see cref="IEntity"/> objects.</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="strict">determine if the items returned will do strict property-name checking; default is true</param>
+        /// <param name="strict">make the resulting object [strict](xref:NetCode.Conventions.TypedRequired), default `true`</param>
         /// <returns></returns>
         /// <remarks>New in v16.01</remarks>
         IEnumerable<ITypedItem> AsItems(
             object list,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
             bool? strict = default
         );
 
@@ -130,17 +131,28 @@ namespace ToSic.Sxc.Code
         /// 
         /// If you have an array of such objects, use <see cref="AsTypedList"/>.
         /// </summary>
-        /// <param name="original"></param>
+        /// <param name="data"></param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="strict">make the resulting object [strict](xref:NetCode.Conventions.TypedRequired), default `true`</param>
         /// <returns></returns>
-        ITyped AsTyped(object original);
+        ITyped AsTyped(
+            object data,
+            string noParamOrder = Protector,
+            bool? strict = default
+        );
 
         /// <summary>
         /// Create a list
         /// </summary>
-        /// <param name="original"></param>
+        /// <param name="list">List/Enumerable object containing a bunch of items to make typed</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="strict">make the resulting object [strict](xref:NetCode.Conventions.TypedRequired), default `true`</param>
         /// <returns></returns>
-        [PrivateApi]
-        IEnumerable<ITyped> AsTypedList(object original);
+        IEnumerable<ITyped> AsTypedList(
+            object list,
+            string noParamOrder = Protector,
+            bool? strict = default
+        );
 
         /// <summary>
         /// Create a typed object which will provide all the properties of the things wrapped inside it.
@@ -209,7 +221,7 @@ namespace ToSic.Sxc.Code
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="className">Optional class name, if it doesn't match the file name (new 16.03)</param>
         /// <returns>Created in 16.02, `className` added in 16.03</returns>
-        dynamic GetCode(string path, string noParamOrder = Eav.Parameters.Protector, string className = default);
+        dynamic GetCode(string path, string noParamOrder = Protector, string className = default);
 
         #endregion
 
