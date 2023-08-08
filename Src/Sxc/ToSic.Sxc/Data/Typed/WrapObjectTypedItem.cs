@@ -56,10 +56,11 @@ namespace ToSic.Sxc.Data.Typed
             var blank = Enumerable.Empty<ITypedItem>();
             var (found, raw, _) = PreWrap.TryGet(field);
             if (!found || raw == null || raw.GetType().IsValueType) return blank;
-            if (!(raw is IEnumerable re)) return new []
+            if (!(raw is IEnumerable re))
             {
-                WrapperFactory.TypedItemFromObject(raw, PreWrap.Settings)
-            };
+                var rawWrapped = WrapperFactory.TypedItemFromObject(raw, PreWrap.Settings);
+                return rawWrapped == null ? null : new[] { rawWrapped };
+            }
 
             var list = re.Cast<object>()
                 .Where(o => o != null && !o.GetType().IsValueType)
@@ -76,19 +77,17 @@ namespace ToSic.Sxc.Data.Typed
         {
             var blank = Enumerable.Empty<ITypedItem>();
             var typed = this as ITypedItem;
-            var parents = typed.Children(nameof(ITypedItem.Parents), noParamOrder)?.ToList();
+            var items = typed.Children(nameof(ITypedItem.Parents), noParamOrder)?.ToList();
 
-            if (parents == null || !parents.Any() || !type.HasValue() && !field.HasValue())
-                return parents ?? blank;
+            if (items == null || !items.Any() || !type.HasValue() && !field.HasValue())
+                return items ?? blank;
 
             if (type.HasValue())
-                parents = parents.First().Children(type, noParamOrder)?.ToList();
+                items = items.Where(i => i.String(nameof(ITypedItem.Type), required: false).EqualsInsensitive(type)).ToList();
 
-            if (parents == null || !parents.Any() || !field.HasValue()) 
-                return parents ?? blank;
-
-            parents = parents.First().Children(field, noParamOrder)?.ToList();
-            return parents ?? blank;
+            if (field.HasValue())
+                items = items.Where(i => i.String("Field", required: false).EqualsInsensitive(field)).ToList();
+            return items;
         }
 
         IFolder ITypedItem.Folder(string name, string noParamOrder, bool? required) => null;

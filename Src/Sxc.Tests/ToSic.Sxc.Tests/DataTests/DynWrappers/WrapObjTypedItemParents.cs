@@ -13,6 +13,13 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
         {
             public int Id { get; set; }
             public string Name { get; set; }
+            public string Field { get; set; }
+            public virtual string Type => "Tag";
+        }
+
+        private class TestCategory : TestTag
+        {
+            public override string Type => "Category";
         }
         private static readonly TestTag[] TestTagList =
         {
@@ -20,67 +27,57 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             {
                 Id = 1001,
                 Name = "Web",
+                Field = "Tags",
             },
             new TestTag
             {
                 Id = 1002,
-                Name = "IT"
+                Name = "IT",
+                Field = "Advanced"
+            },
+            new TestCategory
+            {
+                Id = 2001,
+                Name = "Cat1",
+                Field = "Advanced"
+            },
+            new TestCategory
+            {
+                Id = 2002,
+                Name = "Cat2",
+                Field = "Advanced"
             }
         };
 
 
-        private class TestDataParentsFlat
+        private class TestDataParents
         {
             public TestTag[] Parents => TestTagList;
         }
-        private static readonly TestDataParentsFlat DataParentFlat = new TestDataParentsFlat();
+        private static readonly TestDataParents DataParent = new TestDataParents();
+        private ITypedItem Item => ItemFromObject(DataParent);
 
-        private IEnumerable<ITypedItem> ParentsFlat => ItemFromObject(DataParentFlat).Parents();
+        private IEnumerable<ITypedItem> TagsFlat => Item.Parents();
+        private IEnumerable<ITypedItem> TagsFlatInField(string field) => Item.Parents(field: field);
 
-        [TestMethod] public void ParentsFlatExists() => IsNotNull(ParentsFlat);
-        [TestMethod] public void ParentsFlatCount() => AreEqual(2, ParentsFlat.Count());
-        [TestMethod] public void ParentsFlat1Id() => AreEqual(DataParentFlat.Parents[0].Id, ParentsFlat.First().Id);
-        [TestMethod] public void ParentsFlat1Name() => AreEqual(DataParentFlat.Parents[0].Name, ParentsFlat.First().Title);
-        [TestMethod] public void ParentsFlat2Id() => AreEqual(DataParentFlat.Parents[1].Id, ParentsFlat.Skip(1).First().Id);
+        [TestMethod] public void ParentsFlatExists() => IsNotNull(TagsFlat);
+        [TestMethod] public void ParentsFlatCount() => AreEqual(4, TagsFlat.Count());
+        [TestMethod] public void ParentsFlat1Id() => AreEqual(DataParent.Parents[0].Id, TagsFlat.First().Id);
+        [TestMethod] public void ParentsFlat1Name() => AreEqual(DataParent.Parents[0].Name, TagsFlat.First().Title);
+        [TestMethod] public void ParentsFlat2Id() => AreEqual(DataParent.Parents[1].Id, TagsFlat.Skip(1).First().Id);
+        [TestMethod] public void ParentsFlatTagsCount() => AreEqual(1, TagsFlatInField("Tags").Count());
+        [TestMethod] public void ParentsFlatCategoriesCount() => AreEqual(3, TagsFlatInField("Advanced").Count());
 
-        private class TestDataParent
-        {
-            public object Parents { get; } = new
-            {
-                Tags = new[]
-                {
-                    new TestTag
-                    {
-                        Id = 1001,
-                    },
-                    new TestTag {
-                        Id = 1002,
-                    }
-                }
-            };
-        }
-
-        private IEnumerable<ITypedItem> Tags => ItemFromObject(DataParent).Parents("Tags");
-        private static TestDataParent DataParent { get; } = new TestDataParent();
+        
+        /// <summary> Only the ones of type "Tag" </summary>
+        private IEnumerable<ITypedItem> Tags => Item.Parents("Tag");
+        private IEnumerable<ITypedItem> TypeFake => Item.Parents("Fake");
         [TestMethod] public void ParentTagsExists() => IsNotNull(Tags);
         [TestMethod] public void ParentTagsExists2() => AreEqual(2, Tags.Count());
-        [TestMethod] public void ParentFakeEmptyList() => IsNotNull(ItemFromObject(DataParent).Parents("Fake"));
-        [TestMethod] public void ParentFakeEmptyList0() => AreEqual(0, ItemFromObject(DataParent).Parents("Fake").Count());
+        [TestMethod] public void ParentFakeEmptyList() => IsNotNull(TypeFake);
+        [TestMethod] public void ParentFakeEmptyList0() => AreEqual(0, TypeFake.Count());
 
-
-        private class TestDataParents
-        {
-            public TestPerson[] Parents { get; } = {
-                new TestPerson
-                {
-                    Id = 1001,
-                },
-                new TestPerson
-                {
-                    Id = 1002,
-                }
-            };
-        }
-        private static readonly TestDataParents DataParents = new TestDataParents();
+        [TestMethod] public void ParentTagsOfField() => AreEqual(1, Item.Parents("Tag", field: "Tags").Count());
+        
     }
 }
