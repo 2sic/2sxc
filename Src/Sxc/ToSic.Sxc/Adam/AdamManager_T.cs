@@ -5,7 +5,6 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.AsConverter;
 
 namespace ToSic.Sxc.Adam
