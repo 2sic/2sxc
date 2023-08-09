@@ -7,9 +7,9 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data.Wrapper;
 
-namespace ToSic.Sxc.Data.AsConverter
+namespace ToSic.Sxc.Data
 {
-    public partial class AsConverterService
+    public partial class CodeDataFactory
     {
         private const string NameOfAsTyped = nameof(IDynamicCode16.AsTyped) + "(...)";
 

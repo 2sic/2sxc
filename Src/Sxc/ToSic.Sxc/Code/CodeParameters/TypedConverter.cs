@@ -4,7 +4,6 @@ using ToSic.Eav.Data;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.AsConverter;
 using ToSic.Sxc.Edit.Toolbar;
 
 namespace ToSic.Sxc.Code
@@ -14,9 +13,9 @@ namespace ToSic.Sxc.Code
     /// </summary>
     internal class TypedConverter
     {
-        public AsConverterService AsC { get; }
+        public CodeDataFactory AsC { get; }
 
-        public TypedConverter(AsConverterService asC)
+        public TypedConverter(CodeDataFactory asC)
         {
             AsC = asC;
         }

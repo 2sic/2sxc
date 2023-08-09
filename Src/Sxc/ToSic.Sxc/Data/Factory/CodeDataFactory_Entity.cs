@@ -1,9 +1,9 @@
 ﻿using System;
 using ToSic.Eav.Data;
 
-namespace ToSic.Sxc.Data.AsConverter
+namespace ToSic.Sxc.Data
 {
-    public partial class AsConverterService
+    public partial class CodeDataFactory
     {
         public IEntity AsEntity(object thingToConvert) =>
             thingToConvert == null

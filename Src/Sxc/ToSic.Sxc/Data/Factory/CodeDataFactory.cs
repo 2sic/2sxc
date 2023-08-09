@@ -8,10 +8,10 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Data.AsConverter
+namespace ToSic.Sxc.Data
 {
     // todo: make internal once we have an interface
-    public partial class AsConverterService: ServiceForDynamicCode
+    public partial class CodeDataFactory: ServiceForDynamicCode
     {
         private readonly LazySvc<CodeDataWrapper> _dynJacketFactory;
         private readonly LazySvc<DataBuilder> _dataBuilderLazy;
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Data.AsConverter
         private readonly LazySvc<AdamManager> _adamManagerLazy;
         private readonly LazySvc<IContextOfApp> _contextOfAppLazy;
 
-        public AsConverterService(
+        public CodeDataFactory(
             LazySvc<DynamicEntity.MyServices> dynamicEntityDependencies,
             LazySvc<AdamManager> adamManager,
             LazySvc<IContextOfApp> contextOfApp,

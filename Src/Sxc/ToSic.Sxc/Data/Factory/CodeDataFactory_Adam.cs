@@ -4,9 +4,9 @@ using ToSic.Eav.Data;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 
-namespace ToSic.Sxc.Data.AsConverter
+namespace ToSic.Sxc.Data
 {
-    public partial class AsConverterService
+    public partial class CodeDataFactory
     {
         public AdamManager AdamManager => _adamManager.Get(GetAdamManager);
         private readonly GetOnce<AdamManager> _adamManager = new GetOnce<AdamManager>();
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Data.AsConverter
 
             // If we don't even have a _DynCodeRoot (eg. when exporting from a neutral WebAPI)
             if (_DynCodeRoot is null)
-                throw new Exception($"Can't create App Context for {nameof(AdamManager)} in {nameof(AsConverterService)} - no block, no App");
+                throw new Exception($"Can't create App Context for {nameof(AdamManager)} in {nameof(CodeDataFactory)} - no block, no App");
 
             IContextOfApp contextOfApp = _DynCodeRoot.Block?.Context;
             // TODO: @2dm - find out / document why this could even be null

@@ -9,7 +9,6 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.AsConverter;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -24,14 +23,14 @@ namespace ToSic.Sxc.Adam
     /// </remarks>
     public abstract class AdamManager: ServiceBase, ICompatibilityLevel
     {
-        private readonly LazySvc<AsConverterService> _asConverter;
+        private readonly LazySvc<CodeDataFactory> _asConverter;
 
         #region Constructor for inheritance
 
         protected AdamManager(
             LazySvc<AppRuntime> appRuntimeLazy,
             LazySvc<AdamMetadataMaker> metadataMakerLazy,
-            LazySvc<AsConverterService> asConverter,
+            LazySvc<CodeDataFactory> asConverter,
             AdamConfiguration adamConfiguration,
             string logName) : base(logName ?? "Adm.Managr")
         {
@@ -56,7 +55,7 @@ namespace ToSic.Sxc.Adam
 
         #region Init
 
-        public virtual AdamManager Init(IContextOfApp ctx, AsConverterService asc, int compatibility)
+        public virtual AdamManager Init(IContextOfApp ctx, CodeDataFactory asc, int compatibility)
         {
             AppContext = ctx;
 
@@ -72,8 +71,8 @@ namespace ToSic.Sxc.Adam
 
         public ISite Site { get; private set; }
 
-        internal AsConverterService AsC => _asc ?? (_asc = _asConverter.Value);
-        private AsConverterService _asc;
+        internal CodeDataFactory AsC => _asc ?? (_asc = _asConverter.Value);
+        private CodeDataFactory _asc;
         #endregion
 
 

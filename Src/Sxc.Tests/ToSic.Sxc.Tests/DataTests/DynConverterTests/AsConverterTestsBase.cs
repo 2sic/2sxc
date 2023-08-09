@@ -1,11 +1,10 @@
-﻿using ToSic.Sxc.Data.AsConverter;
+﻿using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Tests.DataTests.DynConverterTests
 {
     public class AsConverterTestsBase : TestBaseSxcDb
     {
-        public AsConverterService AsC => _asc ?? (_asc = GetService<AsConverterService>());
-        private AsConverterService _asc;
-
+        public CodeDataFactory AsC => _asc ?? (_asc = GetService<CodeDataFactory>());
+        private CodeDataFactory _asc;
     }
 }

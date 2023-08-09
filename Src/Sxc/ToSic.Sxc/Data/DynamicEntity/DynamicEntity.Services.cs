@@ -4,7 +4,6 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Data.AsConverter;
 using ToSic.Sxc.Services;
 using IRenderService = ToSic.Sxc.Services.IRenderService;
 
@@ -32,7 +31,7 @@ namespace ToSic.Sxc.Data
                 );
             }
 
-            internal MyServices Init(IBlock blockOrNull, string[] dimensions, AsConverterService asConverter)
+            internal MyServices Init(IBlock blockOrNull, string[] dimensions, CodeDataFactory asConverter)
             {
                 Dimensions = dimensions;
                 BlockOrNull = blockOrNull;
@@ -45,7 +44,7 @@ namespace ToSic.Sxc.Data
             internal string[] Dimensions { get; private set; }
 
 
-            internal AsConverterService AsC { get; private set; }
+            internal CodeDataFactory AsC { get; private set; }
 
             /// <summary>
             /// The ValueConverter is used to parse links in the format like "file:72"

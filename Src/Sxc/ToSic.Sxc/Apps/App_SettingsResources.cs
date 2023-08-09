@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Data.AsConverter;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Decorators;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -24,8 +24,8 @@ namespace ToSic.Sxc.Apps
             return (_asc ?? _asConverter.Value).AsDynamic(wrapped, strict: false);
         }
 
-        internal void SetupAsConverter(AsConverterService asc) => _asc = asc;
-        private AsConverterService _asc;
+        internal void SetupAsConverter(CodeDataFactory asc) => _asc = asc;
+        private CodeDataFactory _asc;
 
         /// <inheritdoc cref="IDynamicCode12.Settings" />
         public dynamic Settings => AppSettings == null ? null : _settings.Get(() => MakeDynProperty(AppSettings, strict: false));

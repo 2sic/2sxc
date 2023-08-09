@@ -4,7 +4,6 @@ using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.AsConverter;
 
 namespace ToSic.Sxc.Adam
 {
@@ -33,7 +32,7 @@ namespace ToSic.Sxc.Adam
 
         // TODO: @2dm #AdamTyped
         public override AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid,
-            bool usePortalRoot, AsConverterService asc)
+            bool usePortalRoot, CodeDataFactory asc)
         {
             var logCall = Log.Fn<AdamContext>($"..., usePortalRoot: {usePortalRoot}");
             AdamManager.Init(context, asc, Constants.CompatibilityLevel10);

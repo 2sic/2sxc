@@ -2,7 +2,7 @@
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Data.AsConverter;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
@@ -12,12 +12,12 @@ namespace ToSic.Sxc.Code
 {
     public partial class DynamicCodeRoot
     {
-        public AsConverterService AsC => _asc.Get(() =>
+        public CodeDataFactory AsC => _asc.Get(() =>
         {
             Services.AsConverter.ConnectToRoot(this);
             return Services.AsConverter;
         });
-        private readonly GetOnce<AsConverterService> _asc = new GetOnce<AsConverterService>();
+        private readonly GetOnce<CodeDataFactory> _asc = new GetOnce<CodeDataFactory>();
 
         #region AsDynamic Implementations
 

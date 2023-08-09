@@ -6,9 +6,9 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.Data.AsConverter
+namespace ToSic.Sxc.Data
 {
-    public partial class AsConverterService
+    public partial class CodeDataFactory
     {
         [PrivateApi]
         public ITypedStack AsStack(params object[] parts) => AsStack(null, parts);
