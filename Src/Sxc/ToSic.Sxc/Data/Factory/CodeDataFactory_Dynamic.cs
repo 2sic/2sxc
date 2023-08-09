@@ -20,17 +20,17 @@ namespace ToSic.Sxc.Data
         /// <param name="entity"></param>
         /// <returns></returns>
         public DynamicEntity CodeAsDyn(IEntity entity)
-            => new DynamicEntity(entity, DynamicEntityServices, strict: false);
+            => new DynamicEntity(entity, this, strict: false);
 
         public DynamicEntity AsDynamic(IEntity entity, bool strict)
-            => new DynamicEntity(entity, DynamicEntityServices, strict: strict);
+            => new DynamicEntity(entity, this, strict: strict);
 
         /// <summary>
         /// Convert a list of Entities into a DynamicEntity.
         /// Only used in DynamicCodeRoot.
         /// </summary>
         internal DynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, bool strict) 
-            => new DynamicEntity(list: list, parent: null, field: null, appIdOrNull: null, strict: strict, services: DynamicEntityServices);
+            => new DynamicEntity(list: list, parent: null, field: null, appIdOrNull: null, strict: strict, cdf: this);
 
         /// <summary>
         /// Convert any object into a dynamic list.
@@ -78,7 +78,7 @@ namespace ToSic.Sxc.Data
                 case ISxcDynamicObject sxcDyn:
                     return l.Return(sxcDyn, "Dynamic Something");
                 case IEntity entity:
-                    return l.Return(new DynamicEntity(entity, DynamicEntityServices, strict: strict), "IEntity");
+                    return l.Return(new DynamicEntity(entity, this, strict: strict), "IEntity");
                 case DynamicObject typedDynObject:
                     return l.Return(typedDynObject, "DynamicObject");
                 default:

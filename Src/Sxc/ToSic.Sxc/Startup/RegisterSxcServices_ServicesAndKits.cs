@@ -78,6 +78,7 @@ namespace ToSic.Sxc.Startup
 
             // v16 AsConverter
             services.TryAddTransient<CodeDataFactory>();
+            services.TryAddTransient<CodeDataServices>();
 
             // Kits v14+
             services.TryAddTransient<ServiceKit>();

@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Data
         )
         {
             // Only do compatibility check if used on DynamicEntity
-            if (_Services.Cdf.CompatibilityLevel < Constants.CompatibilityLevel12)
+            if (_Cdf.CompatibilityLevel < Constants.CompatibilityLevel12)
                 throw new NotSupportedException($"{nameof(Html)}(...) not supported in older Razor templates. Use Hybrid14 or newer.");
 
             return (this as ITypedItem).Html(name: name, noParamOrder: noParamOrder, container: container, toolbar: toolbar, imageSettings: imageSettings, debug: debug);
@@ -70,11 +70,11 @@ namespace ToSic.Sxc.Data
 
         private ServiceKit14 GetServiceKitOrThrow([CallerMemberName] string cName = default)
         {
-            if (_Services == null)
+            if (_Cdf == null)
                 throw new NotSupportedException(
-                    $"Trying to use {cName}(...) in a scenario where the {nameof(_Services)} is not available.");
+                    $"Trying to use {cName}(...) in a scenario where the {nameof(_Cdf)} is not available.");
 
-            var kit = _Services.Cdf.GetServiceKit14();
+            var kit = _Cdf.GetServiceKit14();
             return kit ?? throw new NotSupportedException(
                 $"Trying to use {cName}(...) in a scenario where the {nameof(ServiceKit14)} is not available.");
         }

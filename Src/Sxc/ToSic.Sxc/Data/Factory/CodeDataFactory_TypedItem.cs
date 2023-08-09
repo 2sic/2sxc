@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Data
 
             ITypedItem ConvertOrNullAndLog(IEntity e, string typeName) => e == null
                 ? l.ReturnNull($"empty {typeName}")
-                : l.Return(new DynamicEntity(e, DynamicEntityServices, strict: strict), typeName);
+                : l.Return(new DynamicEntity(e, this, strict: strict), typeName);
 
             switch (target)
             {

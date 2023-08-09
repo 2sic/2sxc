@@ -102,10 +102,5 @@ namespace ToSic.Sxc.Data
             var url =  G4T(name, noParamOrder: noParamOrder, fallback: fallback);
             return Tags.SafeUrl(url).ToString();
         }
-
-        // 2023-07-31 turned off again as not final and probably not a good idea #ITypedIndexer
-        //[PrivateApi]
-        //IRawHtmlString ITyped.this[string name] => new TypedItemValue(Get(name));
-
     }
 }

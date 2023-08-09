@@ -49,7 +49,6 @@ namespace ToSic.Sxc.Startup
 
             // Code
             services.TryAddTransient<DynamicCodeRoot.MyServices>();
-            services.TryAddTransient<DynamicEntity.MyServices>();
 
             // Block Editors
             services.TryAddTransient<BlockEditorForEntity>();

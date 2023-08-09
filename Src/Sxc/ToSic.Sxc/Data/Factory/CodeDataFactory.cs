@@ -3,6 +3,7 @@ using ToSic.Eav.Data.Build;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Wrapper;
@@ -13,21 +14,21 @@ namespace ToSic.Sxc.Data
     // todo: make internal once we have an interface
     public partial class CodeDataFactory: ServiceForDynamicCode
     {
+        private readonly LazySvc<CodeDataServices> _codeDataServices;
         private readonly LazySvc<CodeDataWrapper> _dynJacketFactory;
         private readonly LazySvc<DataBuilder> _dataBuilderLazy;
-        private readonly LazySvc<DynamicEntity.MyServices> _dynamicEntityDependenciesLazy;
         private readonly LazySvc<AdamManager> _adamManagerLazy;
         private readonly LazySvc<IContextOfApp> _contextOfAppLazy;
 
         public CodeDataFactory(
-            LazySvc<DynamicEntity.MyServices> dynamicEntityDependencies,
+            LazySvc<CodeDataServices> codeDataServices,
             LazySvc<AdamManager> adamManager,
             LazySvc<IContextOfApp> contextOfApp,
             LazySvc<DataBuilder> dataBuilderLazy,
             LazySvc<CodeDataWrapper> dynJacketFactory) : base("Sxc.AsConv")
         {
             ConnectServices(
-                _dynamicEntityDependenciesLazy = dynamicEntityDependencies,
+                _codeDataServices = codeDataServices,
                 _adamManagerLazy = adamManager,
                 _contextOfAppLazy = contextOfApp,
                 _dataBuilderLazy = dataBuilderLazy,
@@ -41,7 +42,6 @@ namespace ToSic.Sxc.Data
         {
             _siteOrNull = site;
             _compatibilityLevel = compatibility ?? _compatibilityLevel;
-            //_adamManagerPrepared = adamManagerPrepared;
             _adamManager.Reset(adamManagerPrepared);
         }
 
@@ -49,7 +49,6 @@ namespace ToSic.Sxc.Data
         public int CompatibilityLevel => _priorityCompatibilityLevel ?? _compatibilityLevel;
         private int? _priorityCompatibilityLevel;
         private int _compatibilityLevel = Constants.CompatibilityLevel10;
-        //private AdamManager _adamManagerPrepared;
 
 
         #region Kit - used by some things created by ASC
@@ -58,23 +57,17 @@ namespace ToSic.Sxc.Data
 
         #endregion
 
-        #region DynamicEntityServices
+        #region CodeDataServices
 
-        private DynamicEntity.MyServices DynamicEntityServices => _dynamicEntityServices.Get(Log, l =>
-        {
-            var rawServices = _dynamicEntityDependenciesLazy.Value;
+        public CodeDataServices Services => _codeDataServices.Value;
 
-            // Get block or if not known, null it
-            var block = _DynCodeRoot?.Block;
+        // If we don't have a DynCodeRoot, try to generate the language codes and compatibility
+        // There are cases where these were supplied using SetFallbacks, but in some cases none of this is known
+        internal string[] Dimensions => _dimensions.Get(() => _DynCodeRoot?.CmsContext.SafeLanguagePriorityCodes()
+                                                              ?? _siteOrNull.SafeLanguagePriorityCodes());
+        private readonly GetOnce<string[]> _dimensions = new GetOnce<string[]>();
 
-            // If we don't have a DynCodeRoot, try to generate the language codes and compatibility
-            // There are cases where these were supplied using SetFallbacks, but in some cases none of this is known
-            var languageCodes = _DynCodeRoot?.CmsContext.SafeLanguagePriorityCodes()
-                                ?? _siteOrNull.SafeLanguagePriorityCodes();
-
-            return rawServices.Init(block, languageCodes, this);
-        });
-        private readonly GetOnce<DynamicEntity.MyServices> _dynamicEntityServices = new GetOnce<DynamicEntity.MyServices>();
+        internal IBlock BlockOrNull => _DynCodeRoot?.Block;
 
         #endregion
 

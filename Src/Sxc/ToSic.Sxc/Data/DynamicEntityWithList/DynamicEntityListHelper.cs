@@ -16,23 +16,23 @@ namespace ToSic.Sxc.Data
         protected bool StrictGet { get; }
         public readonly IEntity ParentOrNull;
         public readonly string FieldOrNull;
-        private readonly DynamicEntity.MyServices _services;
+        private readonly CodeDataFactory _services;
 
         private Func<bool?> _getDebug;
 
-        public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, bool strictGet, DynamicEntity.MyServices services)
+        public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, bool strictGet, CodeDataFactory cdf)
         {
             StrictGet = strictGet;
             _list = new List<IDynamicEntity> {singleItem ?? throw new ArgumentException(nameof(singleItem))};
-            _services = services ?? throw new ArgumentNullException(nameof(services));
+            _services = cdf ?? throw new ArgumentNullException(nameof(cdf));
             _getDebug = getDebug;
         }
         
-        public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug, bool strictGet, DynamicEntity.MyServices services)
+        public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug, bool strictGet, CodeDataFactory cdf)
         {
             ParentOrNull = parentOrNull;
             FieldOrNull = fieldOrNull;
-            _services = services ?? throw new ArgumentNullException(nameof(services));
+            _services = cdf ?? throw new ArgumentNullException(nameof(cdf));
             _entities = entities?.ToArray() ?? throw new ArgumentNullException(nameof(entities));
             _getDebug = getDebug;
             StrictGet = strictGet;

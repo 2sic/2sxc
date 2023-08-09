@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Data
             Protect(noParamOrder, nameof(required));
             return IsErrStrict(this, name, required, StrictGet)
                 ? throw ErrStrict(name)
-                : _adamCache.Get(name, () => _Services.Cdf.Folder(Entity, name));
+                : _adamCache.Get(name, () => _Cdf.Folder(Entity, name));
         }
 
         private readonly GetOnceNamed<IFolder> _adamCache = new GetOnceNamed<IFolder>();
@@ -82,16 +82,12 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         ITypedItem ITypedItem.Presentation => Presentation;
 
-        // 2023-07-31 turned off again as not final and probably not a good idea #ITypedIndexer
-        //[PrivateApi]
-        //IRawHtmlString ITyped.this[string name] => new TypedItemValue(Get(name));
-
         /// <inheritdoc />
         [PrivateApi]
         IEnumerable<ITypedItem> ITypedItem.Parents(string type, string noParamOrder, string field)
         {
             Protect(noParamOrder, nameof(field));
-            return _Services.Cdf.AsItems(Parents(type, field), noParamOrder);
+            return _Cdf.AsItems(Parents(type, field), noParamOrder);
         }
 
         /// <inheritdoc />
@@ -104,7 +100,7 @@ namespace ToSic.Sxc.Data
                 throw ErrStrict(field);
 
             var dynChildren = Children(field, type);
-            var list = _Services.Cdf.AsItems(dynChildren, noParamOrder).ToList();
+            var list = _Cdf.AsItems(dynChildren, noParamOrder).ToList();
             if (list.Any()) return list;
 
             // Generate a marker/placeholder to remember what field this is etc.

@@ -1,5 +1,8 @@
 ﻿namespace ToSic.Sxc.Data
 {
+    /// <summary>
+    /// This is minor cross-concerns aspect of Dynamic-Entity-like objects
+    /// </summary>
     public partial interface IDynamicEntityBase
     {
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */

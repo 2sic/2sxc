@@ -128,8 +128,7 @@ namespace ToSic.Sxc.Data
         dynamic Presentation { get; }
 
         [PrivateApi]
-        // ReSharper disable once InconsistentNaming
-        DynamicEntity.MyServices _Services { get; }
+        CodeDataFactory _Cdf {get; }
 
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */
         ///// <summary>

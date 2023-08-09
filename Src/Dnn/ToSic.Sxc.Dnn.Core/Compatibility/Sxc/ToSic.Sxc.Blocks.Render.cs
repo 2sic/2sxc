@@ -66,17 +66,17 @@ namespace ToSic.Sxc.Blocks
 
         private static Services.IRenderService RenderServiceWithWarning(DynamicEntity parent)
         {
-            var services = parent._Services;
+            var cdf = parent._Cdf;
             // First do version checks -should not be allowed if compatibility is too low
-            if (services.Cdf.CompatibilityLevel > Constants.MaxLevelForStaticRender)
+            if (cdf.CompatibilityLevel > Constants.MaxLevelForStaticRender)
                 throw new Exception(
                     "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. For v12+ use the ToSic.Sxc.Services.IRenderService instead");
 
 
-            var block = services.BlockOrNull;
+            var block = cdf.BlockOrNull;
             DnnStaticDi.CodeInfos.WarnSxc(WarnObsolete.UsedAs(appId: parent.Entity.AppId, specificId: $"View:{block?.View?.Id}"), block: block);
 
-            return services.RenderService;
+            return cdf.Services.RenderService;
         }
 
         private static readonly ICodeInfo WarnObsolete = V13To17("Deprecated Static RenderService", "https://go.2sxc.org/brc-13-static-render");

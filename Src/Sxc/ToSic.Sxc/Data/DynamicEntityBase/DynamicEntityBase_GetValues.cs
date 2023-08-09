@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Data
                 return l.Return(new TryGetResult(_ValueCache[field], true), "cached");
 
             // use the standard dimensions or overload
-            var languages = language == null ? _Services.Dimensions : new[] { language };
+            var languages = language == null ? _Cdf.Dimensions : new[] { language };
             l.A($"{nameof(useCache)}: {useCache}, {nameof(languages)}:{languages}");
 
             // Get the field or the path if it has one
@@ -65,8 +65,8 @@ namespace ToSic.Sxc.Data
                        && original.FieldType == DataTypes.Hyperlink
                        && ValueConverterBase.CouldBeReference(strResult))
             {
-                l.A($"Try to convert value - HasValueConverter: {_Services.ValueConverterOrNull != null}");
-                result = _Services.ValueConverterOrNull?.ToValue(strResult, parent?.EntityGuid ?? Guid.Empty) ?? result;
+                l.A($"Try to convert value - HasValueConverter: {_Cdf.Services.ValueConverterOrNull != null}");
+                result = _Cdf.Services.ValueConverterOrNull?.ToValue(strResult, parent?.EntityGuid ?? Guid.Empty) ?? result;
                 return l.Return(result, "link-conversion");
             }
 
@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Data
             if (result is IEnumerable<IEntity> children)
             {
                 l.A($"Convert entity list as {nameof(DynamicEntity)}");
-                var dynEnt = new DynamicEntity(children.ToArray(), parent, field, null, strict: StrictGet, _Services);
+                var dynEnt = new DynamicEntity(children.ToArray(), parent, field, null, strict: StrictGet, _Cdf);
                 if (Debug) dynEnt.Debug = true;
                 return l.Return(dynEnt, "ent-list, now dyn");
             }

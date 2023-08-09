@@ -11,8 +11,8 @@ namespace ToSic.Sxc.Data
     [PrivateApi("Hide implementation")]
     public class Metadata: DynamicEntity, IMetadata
     {
-        internal Metadata(IMetadataOf metadata, IEntity parentOrNull, MyServices services)
-            : base(metadata, parentOrNull, "Metadata", Eav.Constants.TransientAppId, strict: false, services)
+        internal Metadata(IMetadataOf metadata, IEntity parentOrNull, CodeDataFactory cdf)
+            : base(metadata, parentOrNull, "Metadata", Eav.Constants.TransientAppId, strict: false, cdf)
         {
             _metadata = metadata;
         }

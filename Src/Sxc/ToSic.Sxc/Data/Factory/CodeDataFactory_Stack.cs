@@ -36,6 +36,6 @@ namespace ToSic.Sxc.Data
         }
 
         public DynamicStack AsStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources) 
-            => new DynamicStack(name, DynamicEntityServices, sources);
+            => new DynamicStack(name, this, sources);
     }
 }

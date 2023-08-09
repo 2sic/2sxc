@@ -6,6 +6,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Images;
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Data
 {
@@ -13,14 +14,14 @@ namespace ToSic.Sxc.Data
     public class Field: IField
     {
 
-        internal Field(ITypedItem parent, string name, DynamicEntity.MyServices services)
+        internal Field(ITypedItem parent, string name, CodeDataFactory cdf)
         {
             Parent = parent;
-            _services = services;
+            _cdf = cdf;
             Name = name;
         }
 
-        private readonly DynamicEntity.MyServices _services;
+        private readonly CodeDataFactory _cdf;
 
         /// <inheritdoc />
         public string Name { get; }
@@ -41,14 +42,14 @@ namespace ToSic.Sxc.Data
         private string _url;
 
 
-        public IMetadata Metadata => _dynMeta.Get(() => new Metadata(MetadataOfItem, Parent.Entity, _services));
+        public IMetadata Metadata => _dynMeta.Get(() => new Metadata(MetadataOfItem, Parent.Entity, _cdf));
         private readonly GetOnce<IMetadata> _dynMeta = new GetOnce<IMetadata>();
 
 
         private IMetadataOf MetadataOfItem => _itemMd.Get(() =>
             {
                 if (!(Raw is string rawString) || string.IsNullOrWhiteSpace(rawString)) return null;
-                var appState = _services?.BlockOrNull?.Context?.AppState;
+                var appState = _cdf?.BlockOrNull?.Context?.AppState;
                 var md = appState?.GetMetadataOf(TargetTypes.CmsItem, rawString, "");
 
                 // Optionally add image-metadata recommendations
@@ -68,7 +69,7 @@ namespace ToSic.Sxc.Data
         public ImageDecorator ImageDecoratorOrNull => _imgDec2.Get(() =>
         {
             var decItem = MetadataOfItem?.FirstOrDefaultOfType(ImageDecorator.TypeNameId);
-            return decItem != null ? new ImageDecorator(decItem, _services.Dimensions) : null;
+            return decItem != null ? new ImageDecorator(decItem, _cdf.Dimensions) : null;
         });
         private readonly GetOnce<ImageDecorator> _imgDec2 = new GetOnce<ImageDecorator>();
         

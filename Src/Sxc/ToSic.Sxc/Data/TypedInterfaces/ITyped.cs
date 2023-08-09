@@ -140,14 +140,6 @@ namespace ToSic.Sxc.Data
         /// <returns>A url converted if possible. If the field contains anything else such as `hello` then it will not be modified.</returns>
         string Url(string name, string noParamOrder = Protector, string fallback = default, bool? required = default);
 
-        #region Indexer WIP 16.03/04
-
-        // 2023-07-31 turned off again as not final and probably not a good idea #ITypedIndexer
-        //[PrivateApi("experimental v16.03")]
-        //IRawHtmlString this[string name] { get; }
-
-        #endregion
-
         #region Debugging
 
         [PrivateApi]

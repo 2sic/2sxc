@@ -13,26 +13,12 @@ namespace ToSic.Sxc.Data
             throw new NotImplementedException($"Not yet implemented on {nameof(ITypedStack)}");
         }
 
-        ///// <summary>
-        ///// This error is used a lot, when accessing primary properties of ITypedItem, since it's simply not supported.
-        ///// </summary>
-        //private const string ErrNotSupported =
-        //    "You are trying to access '{0}'. This is a merged object containing multiple other sources. " +
-        //    "So there is no real/primary '{0}' property it can provide. " +
-        //    "If you need it, get it from the part you need which was used to create this merged object. " +
-        //    "If you see this error when using a more advanced API such as the ImageService, make sure you give it the correct original object, not the merged object. ";
-
-        //private string CreateErrMsg(string addOn = default, [CallerMemberName] string cName = default)
-        //{
-        //    return string.Format(ErrNotSupported, cName);
-        //}
-
         ITypedItem ITypedStack.Child(string name, string noParamOrder, bool? required)
         {
             var findResult = GetInternal(name, lookup: false);
             return TypedHelpers.IsErrStrict(findResult.Found, required, StrictGet)
                 ? throw TypedHelpers.ErrStrict(name)
-                : _Services.Cdf.AsItem(findResult.Result, noParamOrder);
+                : _Cdf.AsItem(findResult.Result, noParamOrder);
         }
 
         IEnumerable<ITypedItem> ITypedStack.Children(string field, string noParamOrder, string type, bool? required)
@@ -41,7 +27,7 @@ namespace ToSic.Sxc.Data
             var findResult = GetInternal(field, lookup: false);
             return TypedHelpers.IsErrStrict(findResult.Found, required, StrictGet)
                 ? throw TypedHelpers.ErrStrict(field)
-                : _Services.Cdf.AsItems(findResult.Result, noParamOrder);
+                : _Cdf.AsItems(findResult.Result, noParamOrder);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Data
 
             // Check #2 Presentation which the EAV doesn't know
             // but only pre V16 (Pro) code. Newer code MUST use the .Presentation
-            if (_Services.Cdf.CompatibilityLevel < Constants.CompatibilityLevel16 && field == ViewParts.Presentation)
+            if (_Cdf.CompatibilityLevel < Constants.CompatibilityLevel16 && field == ViewParts.Presentation)
                 return new TryGetResult(Presentation, Presentation != null);
 
             return base.GetInternal(field, language, lookup);

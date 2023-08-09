@@ -13,15 +13,15 @@ namespace ToSic.Sxc.Data
     [PrivateApi]
     public abstract partial class DynamicEntityBase : DynamicObject, IDynamicEntityBase, IPropertyLookup, ISxcDynamicObject, ICanDebug
     {
-        protected DynamicEntityBase(DynamicEntity.MyServices services, bool strict)
+        protected DynamicEntityBase(CodeDataFactory cdf, bool strict)
         {
-            _Services = services;
+            _Cdf = cdf;
             StrictGet = strict;
         }
 
+        [PrivateApi]
         // ReSharper disable once InconsistentNaming
-        [PrivateApi("Private, but public for debugging in emergencies")]
-        public DynamicEntity.MyServices _Services { get; }
+        public CodeDataFactory _Cdf { get; }
 
         [PrivateApi]
         protected bool StrictGet { get; }
@@ -38,12 +38,12 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="contents"></param>
         /// <returns></returns>
-        protected IDynamicEntity SubDynEntityOrNull(IEntity contents) => SubDynEntityOrNull(contents, _Services, Debug, strictGet: StrictGet);
+        protected IDynamicEntity SubDynEntityOrNull(IEntity contents) => SubDynEntityOrNull(contents, _Cdf, Debug, strictGet: StrictGet);
 
-        internal static IDynamicEntity SubDynEntityOrNull(IEntity contents, DynamicEntity.MyServices services, bool? debug, bool strictGet)
+        internal static IDynamicEntity SubDynEntityOrNull(IEntity contents, CodeDataFactory cdf, bool? debug, bool strictGet)
         {
             if (contents == null) return null;
-            var result = new DynamicEntity(contents, services, strict: strictGet);
+            var result = new DynamicEntity(contents, cdf, strict: strictGet);
             if (debug == true) result.Debug = true;
             return result;
         }
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Data
 
         #endregion
 
-        protected ILog LogOrNull => _logOrNull.Get(() => _Services.Cdf?.Log?.SubLogOrNull("DynEnt", Debug));
+        protected ILog LogOrNull => _logOrNull.Get(() => _Cdf?.Log?.SubLogOrNull("DynEnt", Debug));
         private readonly GetOnce<ILog> _logOrNull = new GetOnce<ILog>();
 
     }

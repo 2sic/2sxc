@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Data
 
             return IsErrStrict(this, name, required, StrictGet)
                 ? throw ErrStrict(name)
-                : new Field(this, name, _Services);
+                : new Field(this, name, _Cdf);
         }
 
         /// <inheritdoc />

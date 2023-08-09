@@ -107,7 +107,7 @@ namespace ToSic.Sxc.Blocks
             item = item ?? parent;
             MakeSureLogIsInHistory();
             var simpleRenderer = _Deps.SimpleRenderer.New();
-            var block = ((IDynamicEntity)parent)._Services.BlockOrNull;
+            var block = ((IDynamicEntity)parent)._Cdf.BlockOrNull;
             return Tag.Custom(field == null
                 ? simpleRenderer.Render(block, item.Entity, data: data) // without field edit-context
                 : simpleRenderer.RenderWithEditContext(block, parent, item, field, newGuid, GetEdit(block), data)); // with field-edit-context data-list-context
@@ -138,7 +138,7 @@ namespace ToSic.Sxc.Blocks
             if (string.IsNullOrWhiteSpace(field)) throw new ArgumentNullException(nameof(field));
 
             MakeSureLogIsInHistory();
-            var block = ((IDynamicEntity)parent)._Services.BlockOrNull;
+            var block = ((IDynamicEntity)parent)._Cdf.BlockOrNull;
             return Tag.Custom(merge == null
                     ? _Deps.SimpleRenderer.New().RenderListWithContext(block, parent.Entity, field, apps, max, GetEdit(block))
                     : _Deps.InTextRenderer.New().RenderMerge(block, parent.Entity, field, merge, GetEdit(block)));
