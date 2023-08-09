@@ -3,6 +3,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Wrapper;
 using static ToSic.Eav.Parameters;
 using static ToSic.Eav.Serialization.JsonOptions;
 
@@ -11,9 +12,9 @@ namespace ToSic.Sxc.Services
     [PrivateApi("Hide implementation")]
     internal class JsonService: ServiceBase, IJsonService
     {
-        private readonly LazySvc<DynamicWrapperFactory> _dynJacketFactory;
+        private readonly LazySvc<CodeDataWrapper> _dynJacketFactory;
 
-        public JsonService(LazySvc<DynamicWrapperFactory> dynJacketFactory): base("Sxc.JsnSvc")
+        public JsonService(LazySvc<CodeDataWrapper> dynJacketFactory): base("Sxc.JsnSvc")
         {
             ConnectServices(
                 _dynJacketFactory = dynJacketFactory

@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Serialization;
-using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Wrapper;
 
 namespace ToSic.Sxc.Tests.DataTests.DynJson
 {
@@ -7,9 +7,9 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
     {
         protected DynJsonTestBase()
         {
-            Factory = GetService<DynamicWrapperFactory>();
+            Factory = GetService<CodeDataWrapper>();
         }
-        protected DynamicWrapperFactory Factory;
+        protected CodeDataWrapper Factory;
 
         public dynamic AsDynamic(string jsonString) => Factory.FromJson(jsonString);
 

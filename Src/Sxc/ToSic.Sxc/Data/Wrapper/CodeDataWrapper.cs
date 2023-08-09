@@ -1,26 +1,25 @@
-﻿using System.Text.Json.Nodes;
-using System.Text.Json;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-using System.Dynamic;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
+using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Services;
 using static ToSic.Eav.Serialization.JsonOptions;
-using ToSic.Sxc.Data.Wrapper;
 using static ToSic.Sxc.Data.Wrapper.WrapperConstants;
 
-namespace ToSic.Sxc.Data
+namespace ToSic.Sxc.Data.Wrapper
 {
     [PrivateApi]
-    public class DynamicWrapperFactory: ServiceBase
+    public class CodeDataWrapper: ServiceBase
     {
-        public DynamicWrapperFactory(LazySvc<ConvertForCodeService> forCodeConverter): base("Sxc.DWrpFk")
+        public CodeDataWrapper(LazySvc<ConvertForCodeService> forCodeConverter): base("Sxc.DWrpFk")
         {
             ConnectServices(
                 _forCodeConverter = forCodeConverter

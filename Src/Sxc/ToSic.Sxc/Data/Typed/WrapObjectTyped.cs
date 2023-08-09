@@ -18,12 +18,12 @@ namespace ToSic.Sxc.Data.Typed
     [JsonConverter(typeof(DynamicJsonConverter))]
     internal class WrapObjectTyped: Wrapper<object>, ITyped, IPropertyLookup, IHasJsonSource
     {
-        protected readonly DynamicWrapperFactory WrapperFactory;
+        protected readonly CodeDataWrapper Wrapper;
         protected readonly PreWrapObject PreWrap;
 
-        public WrapObjectTyped(PreWrapObject preWrap, DynamicWrapperFactory wrapperFactory) : base(preWrap.GetContents())
+        public WrapObjectTyped(PreWrapObject preWrap, CodeDataWrapper wrapper) : base(preWrap.GetContents())
         {
-            WrapperFactory = wrapperFactory;
+            Wrapper = wrapper;
             PreWrap = preWrap;
         }
 
@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Data.Typed
         {
             Protect(noParamOrder, nameof(fallback));
             var value = PreWrap.TryGet(name, false).Result;
-            var strValue = WrapperFactory.ConvertForCode.ForCode(value, fallback: fallback);
+            var strValue = Wrapper.ConvertForCode.ForCode(value, fallback: fallback);
             return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
         }
 

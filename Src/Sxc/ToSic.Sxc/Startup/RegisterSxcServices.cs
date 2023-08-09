@@ -13,6 +13,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Helpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DotNet;
 using ToSic.Sxc.Engines;
@@ -175,7 +176,7 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<DynamicCodeDataSources>();
 
             // v16 DynamicJacket and DynamicRead factories
-            services.TryAddTransient<DynamicWrapperFactory>();
+            services.TryAddTransient<CodeDataWrapper>();
 
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need

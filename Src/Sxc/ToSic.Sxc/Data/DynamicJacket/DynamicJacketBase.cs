@@ -7,6 +7,7 @@ using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Data.Wrapper;
 using static System.StringComparison;
 
 namespace ToSic.Sxc.Data
@@ -19,13 +20,13 @@ namespace ToSic.Sxc.Data
     public abstract partial class DynamicJacketBase: DynamicObject, IReadOnlyList<object>, IPropertyLookup, ISxcDynamicObject, ICanGetByName
     {
 
-        protected DynamicJacketBase(DynamicWrapperFactory wrapperFactory)
+        protected DynamicJacketBase(CodeDataWrapper wrapper)
         {
-            WrapperFactory = wrapperFactory;
+            Wrapper = wrapper;
         }
 
         [PrivateApi]
-        protected readonly DynamicWrapperFactory WrapperFactory;
+        protected readonly CodeDataWrapper Wrapper;
 
         /// <summary>
         /// Check if it's an array.

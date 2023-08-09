@@ -39,15 +39,15 @@ namespace ToSic.Sxc.Data.Wrapper
         /// When using this for DynamicModel it should be false, otherwise usually true.
         /// </param>
         [PrivateApi]
-        internal PreWrapObject(object item, WrapperSettings settings, DynamicWrapperFactory wrapperFactory)
+        internal PreWrapObject(object item, WrapperSettings settings, CodeDataWrapper wrapper)
         {
-            WrapperFactory = wrapperFactory;
+            Wrapper = wrapper;
             UnwrappedObject = item;
             Settings = settings;
             _ignoreCaseLookup = CreateDictionary(item);
         }
 
-        protected readonly DynamicWrapperFactory WrapperFactory;
+        protected readonly CodeDataWrapper Wrapper;
         protected readonly object UnwrappedObject;
         public readonly WrapperSettings Settings;
 
@@ -95,7 +95,7 @@ namespace ToSic.Sxc.Data.Wrapper
             // Probably re-wrap for further dynamic navigation!
             return (true, result,
                 Settings.WrapChildren && wrapDefault
-                ? WrapperFactory.WrapIfPossible(result, Settings.WrapRealObjects, Settings)
+                ? Wrapper.WrapIfPossible(result, Settings.WrapRealObjects, Settings)
                 : result);
         }
 

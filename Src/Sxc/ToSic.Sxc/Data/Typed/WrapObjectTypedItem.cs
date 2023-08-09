@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Data.Typed
 {
     internal class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
     {
-        public WrapObjectTypedItem(PreWrapObject preWrap, DynamicWrapperFactory wrapperFactory) : base(preWrap, wrapperFactory)
+        public WrapObjectTypedItem(PreWrapObject preWrap, CodeDataWrapper wrapper) : base(preWrap, wrapper)
         {
         }
 
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Data.Typed
             if (!found || raw == null || raw.GetType().IsValueType) return blank;
             if (!(raw is IEnumerable re))
             {
-                var rawWrapped = WrapperFactory.TypedItemFromObject(raw, PreWrap.Settings);
+                var rawWrapped = Wrapper.TypedItemFromObject(raw, PreWrap.Settings);
                 return rawWrapped == null ? null : new[] { rawWrapped };
             }
 
@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Data.Typed
                 .Where(o => o != null && !o.GetType().IsValueType)
                 .ToList();
             
-            return list.Select(l => WrapperFactory.TypedItemFromObject(l, PreWrap.Settings));
+            return list.Select(l => Wrapper.TypedItemFromObject(l, PreWrap.Settings));
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace ToSic.Sxc.Data.Typed
             var first = raw is IEnumerable re ? re.Cast<object>().FirstOrDefault() : raw;
             if (first == null || first.GetType().IsValueType)
                 return null;
-            return WrapperFactory.TypedItemFromObject(first, PreWrap.Settings);
+            return Wrapper.TypedItemFromObject(first, PreWrap.Settings);
         }
 
         #endregion

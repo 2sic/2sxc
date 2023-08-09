@@ -7,6 +7,7 @@ using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Data.Wrapper;
 
 namespace ToSic.Sxc.Data
 {
@@ -37,12 +38,12 @@ namespace ToSic.Sxc.Data
         /// When using this for DynamicModel it should be false, otherwise usually true.
         /// </param>
         [PrivateApi]
-        internal DynamicReadObject(Wrapper.PreWrapObject preWrap, DynamicWrapperFactory wrapperFactory)
+        internal DynamicReadObject(Wrapper.PreWrapObject preWrap, CodeDataWrapper wrapper)
         {
-            WrapperFactory = wrapperFactory;
+            Wrapper = wrapper;
             PreWrap = preWrap;
         }
-        protected readonly DynamicWrapperFactory WrapperFactory;
+        protected readonly CodeDataWrapper Wrapper;
         //protected readonly object UnwrappedObject;
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)

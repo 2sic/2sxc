@@ -21,13 +21,13 @@ namespace ToSic.Sxc.Data
     public class DynamicReadDictionary<TKey, TVal>: DynamicObject, IWrapper<IDictionary<TKey, TVal>>, IHasKeys
     {
         protected readonly IDictionary<TKey, TVal> UnwrappedDictionary;
-        private readonly DynamicWrapperFactory _factory;
+        private readonly CodeDataWrapper _factory;
 
         [PrivateApi]
         public IDictionary<TKey, TVal> GetContents() => UnwrappedDictionary;
         private readonly Dictionary<string, object> _ignoreCaseLookup = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
 
-        public DynamicReadDictionary(IDictionary<TKey, TVal> dictionary, DynamicWrapperFactory factory)
+        public DynamicReadDictionary(IDictionary<TKey, TVal> dictionary, CodeDataWrapper factory)
         {
             UnwrappedDictionary = dictionary;
             _factory = factory;

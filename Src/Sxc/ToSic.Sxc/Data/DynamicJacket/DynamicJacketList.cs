@@ -8,6 +8,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Data.Typed;
+using ToSic.Sxc.Data.Wrapper;
 
 namespace ToSic.Sxc.Data
 {
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.Data
     public class DynamicJacketList : DynamicJacketBase<JsonArray>, IReadOnlyList<object>
     {
         /// <inheritdoc />
-        public DynamicJacketList(JsonArray originalData, DynamicWrapperFactory wrapperFactory) :base(originalData, wrapperFactory) { }
+        public DynamicJacketList(JsonArray originalData, CodeDataWrapper wrapper) :base(originalData, wrapper) { }
 
         [PrivateApi]
         protected override bool TypedHasImplementation(string name)
@@ -39,14 +40,14 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         public override IEnumerator<object> GetEnumerator() 
-            => UnwrappedContents.Select(WrapperFactory.IfJsonGetValueOrJacket).GetEnumerator();
+            => UnwrappedContents.Select(Wrapper.IfJsonGetValueOrJacket).GetEnumerator();
 
         /// <summary>
         /// Access the items in this object - but only if the underlying object is an array. 
         /// </summary>
         /// <param name="index">array index</param>
         /// <returns>the item or an error if not found</returns>
-        public override object this[int index] => WrapperFactory.IfJsonGetValueOrJacket(UnwrappedContents[index]);
+        public override object this[int index] => Wrapper.IfJsonGetValueOrJacket(UnwrappedContents[index]);
 
         [PrivateApi("internal")]
         public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) 
@@ -79,7 +80,7 @@ namespace ToSic.Sxc.Data
                     return false;
                 });
 
-            return WrapperFactory.IfJsonGetValueOrJacket(found);
+            return Wrapper.IfJsonGetValueOrJacket(found);
         }
 
         private bool HasPropertyWithValue(JsonObject obj, string propertyName, string value, StringComparison comparison)

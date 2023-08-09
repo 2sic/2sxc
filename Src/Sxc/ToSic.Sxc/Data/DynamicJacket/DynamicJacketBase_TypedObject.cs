@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, nameof(fallback));
             var value = FindValueOrNull(name, InvariantCultureIgnoreCase, null);
-            var strValue = WrapperFactory.ConvertForCode.ForCode(value, fallback: fallback);
+            var strValue = Wrapper.ConvertForCode.ForCode(value, fallback: fallback);
             return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
         }
 

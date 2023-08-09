@@ -10,6 +10,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using static System.StringComparison;
 using ToSic.Sxc.Data.Typed;
+using ToSic.Sxc.Data.Wrapper;
 
 namespace ToSic.Sxc.Data
 {
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.Data
     {
         /// <inheritdoc />
         [PrivateApi]
-        internal DynamicJacket(JsonObject originalData, DynamicWrapperFactory wrapperFactory) : base(originalData, wrapperFactory) { }
+        internal DynamicJacket(JsonObject originalData, CodeDataWrapper wrapper) : base(originalData, wrapper) { }
 
         [PrivateApi]
         protected override bool TypedHasImplementation(string name) 
@@ -97,7 +98,7 @@ namespace ToSic.Sxc.Data
             var found = UnwrappedContents.FirstOrDefault(
                     p => string.Equals(p.Key, name, comparison));
 
-            return WrapperFactory.IfJsonGetValueOrJacket(found.IsNullOrDefault() ? null : found.Value);
+            return Wrapper.IfJsonGetValueOrJacket(found.IsNullOrDefault() ? null : found.Value);
         }
 
         #endregion

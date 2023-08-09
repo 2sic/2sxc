@@ -5,6 +5,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Data.AsConverter
@@ -12,7 +13,7 @@ namespace ToSic.Sxc.Data.AsConverter
     // todo: make internal once we have an interface
     public partial class AsConverterService: ServiceForDynamicCode
     {
-        private readonly LazySvc<DynamicWrapperFactory> _dynJacketFactory;
+        private readonly LazySvc<CodeDataWrapper> _dynJacketFactory;
         private readonly LazySvc<DataBuilder> _dataBuilderLazy;
         private readonly LazySvc<DynamicEntity.MyServices> _dynamicEntityDependenciesLazy;
         private readonly LazySvc<AdamManager> _adamManagerLazy;
@@ -23,7 +24,7 @@ namespace ToSic.Sxc.Data.AsConverter
             LazySvc<AdamManager> adamManager,
             LazySvc<IContextOfApp> contextOfApp,
             LazySvc<DataBuilder> dataBuilderLazy,
-            LazySvc<DynamicWrapperFactory> dynJacketFactory) : base("Sxc.AsConv")
+            LazySvc<CodeDataWrapper> dynJacketFactory) : base("Sxc.AsConv")
         {
             ConnectServices(
                 _dynamicEntityDependenciesLazy = dynamicEntityDependencies,

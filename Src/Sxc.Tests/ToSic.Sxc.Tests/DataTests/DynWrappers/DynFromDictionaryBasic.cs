@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Wrapper;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.DataTests.DynWrappers
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
     public class DynFromDictionaryBasic: TestBaseSxcDb
     {
         private DynamicReadDictionary<TKey, TValue> ToDyn<TKey, TValue>(Dictionary<TKey, TValue> dic)
-            => GetService<DynamicWrapperFactory>().FromDictionary(dic);
+            => GetService<CodeDataWrapper>().FromDictionary(dic);
 
         [TestMethod]
         public void BasicUseDictionary()

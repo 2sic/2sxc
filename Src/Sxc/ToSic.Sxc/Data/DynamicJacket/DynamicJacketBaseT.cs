@@ -6,6 +6,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Data.Wrapper;
 using static System.StringComparison;
 
 namespace ToSic.Sxc.Data
@@ -33,7 +34,7 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="originalData">the original data we're wrapping</param>
         [PrivateApi]
-        protected DynamicJacketBase(T originalData, DynamicWrapperFactory wrapperFactory): base(wrapperFactory)
+        protected DynamicJacketBase(T originalData, CodeDataWrapper wrapper): base(wrapper)
         {
             UnwrappedContents = originalData;
         }
