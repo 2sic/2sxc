@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Data.Wrapper;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
 {
@@ -15,10 +18,15 @@ namespace ToSic.Sxc.Data
         #region AsTyped Implementations
 
 
-        public ITypedItem AsItem(object original, string noParamOrder, bool? required = default, ITypedItem fallback = default, bool? strict = default)
+        public ITypedItem AsItem(object data, string noParamOrder, bool? required = default, ITypedItem fallback = default, bool? strict = default, bool? mock = default)
         {
-            Eav.Parameters.Protect(noParamOrder);
-            return AsItemInternal(original, MaxRecursions, strict: strict ?? false) ?? fallback;
+            Protect(noParamOrder, $"{nameof(fallback)}, {nameof(strict)}, {nameof(mock)}");
+            if (mock == true)
+                return _codeDataWrapper.Value.TypedItemFromObject(data,
+                    WrapperSettings.Typed(true, true, strict ?? true),
+                    new LazyLike<CodeDataFactory>(this));
+
+            return AsItemInternal(data, MaxRecursions, strict: strict ?? false) ?? fallback;
         }
 
         private ITypedItem AsItemInternal(object target, int recursions, bool strict)
@@ -57,14 +65,15 @@ namespace ToSic.Sxc.Data
                     // retry conversion
                     return l.Return(AsItemInternal(enumFirst, recursions - 1, strict: strict));
                 default:
-                    throw l.Done(new ArgumentException($"Type '{target.GetType()}' cannot be converted to {nameof(ITypedItem)}"));
+                    throw l.Done(new ArgumentException($"Type '{target.GetType()}' cannot be converted to {nameof(ITypedItem)}. " +
+                                                       $"If you are trying to create mock/fake/fallback data, try using \", mock: true\""));
             }
 
         }
 
         public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder, bool? required = default, IEnumerable<ITypedItem> fallback = default, bool? strict = default)
         {
-            Eav.Parameters.Protect(noParamOrder);
+            Protect(noParamOrder);
             return AsItemList(list, required ?? true, fallback, MaxRecursions, strict: strict ?? false);
         }
 

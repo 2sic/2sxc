@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Data
     public partial class CodeDataFactory: ServiceForDynamicCode
     {
         private readonly LazySvc<CodeDataServices> _codeDataServices;
-        private readonly LazySvc<CodeDataWrapper> _dynJacketFactory;
+        private readonly LazySvc<CodeDataWrapper> _codeDataWrapper;
         private readonly LazySvc<DataBuilder> _dataBuilderLazy;
         private readonly LazySvc<AdamManager> _adamManagerLazy;
         private readonly LazySvc<IContextOfApp> _contextOfAppLazy;
@@ -25,14 +25,14 @@ namespace ToSic.Sxc.Data
             LazySvc<AdamManager> adamManager,
             LazySvc<IContextOfApp> contextOfApp,
             LazySvc<DataBuilder> dataBuilderLazy,
-            LazySvc<CodeDataWrapper> dynJacketFactory) : base("Sxc.AsConv")
+            LazySvc<CodeDataWrapper> codeDataWrapper) : base("Sxc.AsConv")
         {
             ConnectServices(
                 _codeDataServices = codeDataServices,
                 _adamManagerLazy = adamManager,
                 _contextOfAppLazy = contextOfApp,
                 _dataBuilderLazy = dataBuilderLazy,
-                _dynJacketFactory = dynJacketFactory
+                _codeDataWrapper = codeDataWrapper
             );
         }
 
@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Data
         #endregion
 
         public DynamicJacketBase AsDynamicFromJson(string json, string fallback = default) 
-            => _dynJacketFactory.Value.FromJson(json, fallback);
+            => _codeDataWrapper.Value.FromJson(json, fallback);
 
     }
 }

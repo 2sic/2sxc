@@ -19,10 +19,13 @@ namespace ToSic.Sxc.Data.Wrapper
     [PrivateApi]
     public class CodeDataWrapper: ServiceBase
     {
-        public CodeDataWrapper(LazySvc<ConvertForCodeService> forCodeConverter): base("Sxc.DWrpFk")
+        private readonly LazySvc<CodeDataFactory> _cdf;
+
+        public CodeDataWrapper(LazySvc<ConvertForCodeService> forCodeConverter, LazySvc<CodeDataFactory> cdf): base("Sxc.DWrpFk")
         {
             ConnectServices(
-                _forCodeConverter = forCodeConverter
+                _forCodeConverter = forCodeConverter,
+                _cdf = cdf
             );
         }
 
@@ -48,10 +51,10 @@ namespace ToSic.Sxc.Data.Wrapper
             var preWrap = new PreWrapObject(data, settings, this);
             return new WrapObjectTyped(preWrap, this);
         }
-        public ITypedItem TypedItemFromObject(object data, WrapperSettings settings)
+        public ITypedItem TypedItemFromObject(object data, WrapperSettings settings, ILazyLike<CodeDataFactory> cdf = default)
         {
             var preWrap = new PreWrapObject(data, settings, this);
-            return new WrapObjectTypedItem(preWrap, this);
+            return new WrapObjectTypedItem(preWrap, this, cdf ?? _cdf);
         }
 
         /// <summary>

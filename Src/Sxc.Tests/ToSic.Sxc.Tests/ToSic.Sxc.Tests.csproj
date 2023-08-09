@@ -114,6 +114,7 @@
     <Compile Include="DataTests\DynJson\DynJsonMixTests.cs" />
     <Compile Include="DataTests\DynJson\DynJsonTestBase.cs" />
     <Compile Include="DataTests\DynWrappers\TestPerson.cs" />
+    <Compile Include="DataTests\DynWrappers\WrapObjTypedItemAdvanced.cs" />
     <Compile Include="DataTests\DynWrappers\WrapObjTypedItemParents.cs" />
     <Compile Include="DataTests\DynWrappers\WrapObjTypedItemChildren.cs" />
     <Compile Include="DataTests\DynWrappers\WrapObjTypedItem.cs" />
@@ -183,6 +184,10 @@
     <Compile Include="WebUrlTests\UrlValueFilterTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">
+      <Project>{fa1b4495-6b85-400f-a5e3-0e292ccbfae2}</Project>
+      <Name>ToSic.Eav.Apps</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core.Tests\ToSic.Eav.Core.Tests.csproj">
       <Project>{afed35b5-8e43-4f46-8e4d-fc3f07244d8b}</Project>
       <Name>ToSic.Eav.Core.Tests</Name>

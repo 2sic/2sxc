@@ -96,15 +96,17 @@ namespace ToSic.Sxc.Code
         /// If a list is provided, it will return the first item in the list.
         /// If null was provided, it will return null.
         /// </summary>
-        /// <param name="target"></param>
+        /// <param name="data">An original object which can be converted to a TypedItem, such as a <see cref="IEntity"/> .</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="strict">make the resulting object [strict](xref:NetCode.Conventions.TypedRequired), default `true`</param>
+        /// <param name="mock">Specify that the data is fake/mock data, which should pretend to be an Item. Default is `false`</param>
         /// <returns></returns>
         /// <remarks>New in v16.02</remarks>
         ITypedItem AsItem(
-            object target,
+            object data,
             string noParamOrder = Protector,
-            bool? strict = default
+            bool? strict = default,
+            bool? mock = default
         );
 
         /// <summary>

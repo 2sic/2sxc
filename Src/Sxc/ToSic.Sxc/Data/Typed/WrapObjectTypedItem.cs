@@ -5,19 +5,24 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Images;
 using static ToSic.Eav.Parameters;
+using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data.Typed
 {
     internal class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
     {
-        public WrapObjectTypedItem(PreWrapObject preWrap, CodeDataWrapper wrapper) : base(preWrap, wrapper)
+        private readonly ILazyLike<CodeDataFactory> _cdf;
+
+        public WrapObjectTypedItem(PreWrapObject preWrap, CodeDataWrapper wrapper, ILazyLike<CodeDataFactory> cdf) : base(preWrap, wrapper)
         {
+            _cdf = cdf;
         }
 
 
@@ -36,22 +41,25 @@ namespace ToSic.Sxc.Data.Typed
             throw new NotImplementedException();
         }
 
-        int ITypedItem.Id => PreWrap.TryGet(nameof(ITypedItem.Id), noParamOrder: Protector, fallback: 0, required: false);
+        public int Id => PreWrap.TryGet(nameof(Id), noParamOrder: Protector, fallback: 0, required: false);
 
-        Guid ITypedItem.Guid => PreWrap.TryGet(nameof(ITypedItem.Guid), noParamOrder: Protector, fallback: Guid.Empty, required: false);
+        public Guid Guid => PreWrap.TryGet(nameof(Guid), noParamOrder: Protector, fallback: Guid.Empty, required: false);
 
-        string ITypedItem.Title => _title.Get(() => 
+        public string Title => _title.Get(() => 
             PreWrap.TryGet<string>(nameof(ITypedItem.Title), noParamOrder: Protector, fallback: null, required: false)
             ?? PreWrap.TryGet<string>("Name", noParamOrder: Protector, fallback: null, required: false));
         private readonly GetOnce<string> _title = new GetOnce<string>();
 
         #region Properties which return null or empty
 
-        IEntity ICanBeEntity.Entity => null;
-        IContentType ITypedItem.Type => null;
-        ITypedItem ITypedItem.Child(string name, string noParamOrder, bool? required) => CreateItemFromProperty(name);
+        public IEntity Entity => null;
+        public IContentType Type => null;
 
-        IEnumerable<ITypedItem> ITypedItem.Children(string field, string noParamOrder, string type, bool? required)
+        #region Relationships - Child, Children, Parents, Presentation
+
+        public ITypedItem Child(string name, string noParamOrder, bool? required) => CreateItemFromProperty(name);
+
+        public IEnumerable<ITypedItem> Children(string field, string noParamOrder, string type, bool? required)
         {
             var blank = Enumerable.Empty<ITypedItem>();
             var (found, raw, _) = PreWrap.TryGet(field);
@@ -73,7 +81,7 @@ namespace ToSic.Sxc.Data.Typed
         /// The parents are "fake" so they behave just like children... but under the node "Parents".
         /// If "field" is specified, then it will assume another child-level under the node parents
         /// </summary>
-        IEnumerable<ITypedItem> ITypedItem.Parents(string type, string noParamOrder, string field)
+        public IEnumerable<ITypedItem> Parents(string type, string noParamOrder, string field)
         {
             var blank = Enumerable.Empty<ITypedItem>();
             var typed = this as ITypedItem;
@@ -90,11 +98,7 @@ namespace ToSic.Sxc.Data.Typed
             return items;
         }
 
-        IFolder ITypedItem.Folder(string name, string noParamOrder, bool? required) => null;
-
-        IFile ITypedItem.File(string name, string noParamOrder, bool? required) => null;
-
-        ITypedItem ITypedItem.Presentation => _presentation.Get(() => CreateItemFromProperty(nameof(ITypedItem.Presentation)));
+        public ITypedItem Presentation => _presentation.Get(() => CreateItemFromProperty(nameof(ITypedItem.Presentation)));
         private readonly GetOnce<ITypedItem> _presentation = new GetOnce<ITypedItem>();
 
         private ITypedItem CreateItemFromProperty(string name)
@@ -110,6 +114,32 @@ namespace ToSic.Sxc.Data.Typed
 
         #endregion
 
+
+        public IFolder Folder(string name, string noParamOrder, bool? required)
+        {
+            Protect(noParamOrder, nameof(required));
+            return IsErrStrict(this, name, required, PreWrap.Settings.GetStrict)
+                ? throw ErrStrict(name)
+                : _cdf.Value.AdamManager.Folder(Guid, name);
+        }
+
+        public IFile File(string name, string noParamOrder, bool? required)
+        {
+            Protect(noParamOrder, nameof(required));
+            if (IsErrStrict(this, name, required, PreWrap.Settings.GetStrict))
+                throw ErrStrict(name);
+            var typed = this as ITypedItem;
+            // Check if it's a direct string, or an object with a sub-property with a Value
+            var idString = typed.String(name) ?? typed.Child(name)?.String("Value");
+
+            // TODO: SEE if we can also provide optional metadata
+
+            var fileId = AdamManager.CheckIdStringForId(idString);
+            return fileId == null ? null : _cdf.Value.AdamManager.File(fileId.Value);
+        }
+
+        #endregion
+
         #region Not Supported Properties such as Entity, Type, Child, Folder, Presentation, Metadata
 
         IMetadata ITypedItem.Metadata
@@ -121,11 +151,8 @@ namespace ToSic.Sxc.Data.Typed
             }
         }
 
-        IField ITypedItem.Field(string name, string noParamOrder, bool? required)
-        {
-            // var field = new Field(this, name, TODO );
-            return null;
-        }
+        public IField Field(string name, string noParamOrder, bool? required) 
+            => new Field(this, name, _cdf.Value);
 
         private NotSupportedException NotSupportedEx([CallerMemberName] string cName = default)
         {

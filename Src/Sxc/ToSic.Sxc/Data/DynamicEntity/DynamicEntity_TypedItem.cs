@@ -39,11 +39,6 @@ namespace ToSic.Sxc.Data
         IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only) 
             => FilterKeysIfPossible(noParamOrder, only, Entity?.Attributes.Keys);
 
-        //[PrivateApi]
-        //protected bool IsErrStrict(string name, bool? required, bool strictGetDefault)
-        //    => !(this as ITyped).ContainsKey(name) && (required ?? strictGetDefault);
-
-
         /// <inheritdoc />
         [PrivateApi]
         IFolder ITypedItem.Folder(string name, string noParamOrder, bool? required)
@@ -61,7 +56,8 @@ namespace ToSic.Sxc.Data
             Protect(noParamOrder, nameof(required));
             var typedThis = this as ITypedItem;
             // Case 1: The field contains a direct reference to a file
-            var file = GetServiceKitOrThrow().Adam.File(typedThis.Field(name, required: required));
+            var field = typedThis.Field(name, required: required);
+            var file = GetServiceKitOrThrow().Adam.File(field);
             // Case 2: No direct reference, just get the first file in the folder of this field
             return file ?? typedThis.Folder(name).Files.FirstOrDefault();
         }

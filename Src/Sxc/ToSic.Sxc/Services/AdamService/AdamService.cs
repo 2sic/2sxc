@@ -28,14 +28,17 @@ namespace ToSic.Sxc.Services
         /// <inheritdoc />
         public IFile File(string id)
         {
-            if (!id.HasValue()) return null;
-            var linkParts = new LinkParts(id);
-            if (!linkParts.IsMatch || linkParts.Id == 0) return null;
-            return File(linkParts.Id);
+            var fileId = AdamManager.CheckIdStringForId(id);
+            return fileId == null ? null : File(fileId.Value);
+            //if (!id.HasValue()) return null;
+            //var linkParts = new LinkParts(id);
+            //if (!linkParts.IsMatch || linkParts.Id == 0) return null;
+            //return File(linkParts.Id);
         }
 
+
         /// <inheritdoc />
-        public IFile File(IField field) => File(field?.Raw as string);
+        public IFile File(IField field) => field?.Raw is string id ? File(id) : null; // File(field?.Raw as string);
 
         /// <inheritdoc />
         public IFolder Folder(int id)

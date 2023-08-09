@@ -102,8 +102,8 @@ namespace Custom.Hybrid
         #region As Conversions
 
         /// <inheritdoc cref="IDynamicCode16.AsItem" />
-        public ITypedItem AsItem(object target, string noParamOrder = Protector, bool? strict = default)
-            => _DynCodeRoot.Cdf.AsItem(target, noParamOrder, strict: strict ?? true);
+        public ITypedItem AsItem(object data, string noParamOrder = Protector, bool? strict = default, bool? mock = default)
+            => _DynCodeRoot.Cdf.AsItem(data, noParamOrder, strict: strict ?? true, mock: mock);
 
         /// <inheritdoc cref="IDynamicCode16.AsItems" />
         public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Protector, bool? strict = default) 

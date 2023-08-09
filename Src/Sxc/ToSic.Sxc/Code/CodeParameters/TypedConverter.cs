@@ -34,10 +34,10 @@ namespace ToSic.Sxc.Code
             return ok ? typed : Cdf.AsEntity(untyped);
         }
 
-        public ITypedItem Item(object maybe, string noParamOrder, ITypedItem fallback)
+        public ITypedItem Item(object data, string noParamOrder, ITypedItem fallback)
         {
             Eav.Parameters.Protect(noParamOrder);
-            var (typed, untyped, ok) = EvalInterface(maybe, fallback);
+            var (typed, untyped, ok) = EvalInterface(data, fallback);
             // Try to convert, in case it's an IEntity or something; could also result in error
             return ok ? typed : Cdf.AsItem(untyped, noParamOrder);
         }
