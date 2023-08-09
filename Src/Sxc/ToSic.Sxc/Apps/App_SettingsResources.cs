@@ -21,11 +21,10 @@ namespace ToSic.Sxc.Apps
         {
             var wrapped = CmsEditDecorator.Wrap(contents, false);
             // TODO: FIGURE OUT IF STRICT
-            return (_asc ?? _cdfLazy.Value).AsDynamic(wrapped, strict: false);
+            return _cdfLazy.Value.AsDynamic(wrapped, strict: false);
         }
 
-        internal void SetupAsConverter(CodeDataFactory asc) => _asc = asc;
-        private CodeDataFactory _asc;
+        internal void SetupAsConverter(CodeDataFactory cdf) => _cdfLazy.Inject(cdf);
 
         /// <inheritdoc cref="IDynamicCode12.Settings" />
         public dynamic Settings => AppSettings == null ? null : _settings.Get(() => MakeDynProperty(AppSettings, strict: false));
