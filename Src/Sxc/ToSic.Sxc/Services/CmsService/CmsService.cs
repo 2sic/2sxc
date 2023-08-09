@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Services.CmsService
                 // ...wysiwyg
                 if (inputType == InputTypes.InputTypeWysiwyg)
                 {
-                    var fieldAdam = _DynCodeRoot.AsAdam(field.Parent.Entity, field.Name);
+                    var fieldAdam = _DynCodeRoot.AsAdam(field.Parent, field.Name);
                     var htmlResult = _stringWysiwyg.New()
                         .Init(field, contentType, attribute, fieldAdam, debug, imageSettings)
                         .HtmlForStringAndWysiwyg();

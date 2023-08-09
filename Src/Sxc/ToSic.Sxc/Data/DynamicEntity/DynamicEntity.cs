@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Data
 
         // ReSharper disable once InheritdocInvalidUsage
         /// <inheritdoc />
-        public bool IsDemoItem => _isDemoItem ?? (_isDemoItem = Entity.IsDemoItem()).Value;
+        public bool IsDemoItem => _isDemoItem ?? (_isDemoItem = Entity.IsDemoItemSafe()).Value;
         private bool? _isDemoItem;
 
         [PrivateApi("Not in use yet, and I believe not communicated")]

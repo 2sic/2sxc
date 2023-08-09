@@ -121,7 +121,11 @@ namespace ToSic.Sxc.Data.Typed
             }
         }
 
-        IField ITypedItem.Field(string name, string noParamOrder, bool? required) => null;
+        IField ITypedItem.Field(string name, string noParamOrder, bool? required)
+        {
+            // var field = new Field(this, name, TODO );
+            return null;
+        }
 
         private NotSupportedException NotSupportedEx([CallerMemberName] string cName = default)
         {

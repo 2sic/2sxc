@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Images
                 if (!isInSameEntity) return tag;
 
                 // Check if it's not a demo-entity, in which case editing settings shouldn't happen
-                if (Call.Field.Parent.Entity.DisableInlineEdit()) return tag;
+                if (Call.Field.Parent.Entity.DisableInlineEditSafe()) return tag;
 
                 // var tlbUi = ImgService.ToolbarOrNull?.
                 var toolbarConfig = ImgService.ToolbarOrNull?.Empty().Metadata(Call.Field).Settings(hover: "right-middle");

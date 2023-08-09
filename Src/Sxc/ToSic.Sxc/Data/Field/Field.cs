@@ -13,9 +13,9 @@ namespace ToSic.Sxc.Data
     public class Field: IField
     {
 
-        internal Field(IDynamicEntity parent, string name, DynamicEntity.MyServices services)
+        internal Field(ITypedItem parent, string name, DynamicEntity.MyServices services)
         {
-            Parent = parent as ITypedItem;
+            Parent = parent;
             _services = services;
             Name = name;
         }
@@ -28,12 +28,12 @@ namespace ToSic.Sxc.Data
         public ITypedItem Parent { get; }
 
         /// <inheritdoc />
-        public object Raw => _raw.Get(() => Parent.Get(Name));
+        public object Raw => _raw.Get(() => Parent.Get(Name, required: false));
         private readonly GetOnce<object> _raw = new GetOnce<object>();
 
 
         /// <inheritdoc />
-        public object Value => _value.Get(() => (Parent as IDynamicEntity).Get(Name, convertLinks: true));
+        public object Value => _value.Get(() => (Parent as IDynamicEntity)?.Get(Name, convertLinks: true) ?? Raw);
         private readonly GetOnce<object> _value = new GetOnce<object>();
 
         /// <inheritdoc />
