@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Apps
         {
             var wrapped = CmsEditDecorator.Wrap(contents, false);
             // TODO: FIGURE OUT IF STRICT
-            return (_asc ?? _asConverter.Value).AsDynamic(wrapped, strict: false);
+            return (_asc ?? _cdfLazy.Value).AsDynamic(wrapped, strict: false);
         }
 
         internal void SetupAsConverter(CodeDataFactory asc) => _asc = asc;

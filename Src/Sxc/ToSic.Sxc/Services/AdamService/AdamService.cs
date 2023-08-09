@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Services
         /// <inheritdoc />
         public IFile File(int id)
         {
-            var admManager = (_codeRoot as DynamicCodeRoot)?.AsC.AdamManager;
+            var admManager = (_codeRoot as DynamicCodeRoot)?.Cdf.AdamManager;
             return admManager?.File(id);
         }
 
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Services
         /// <inheritdoc />
         public IFolder Folder(int id)
         {
-            var admManager = (_codeRoot as DynamicCodeRoot)?.AsC.AdamManager;
+            var admManager = (_codeRoot as DynamicCodeRoot)?.Cdf.AdamManager;
             return admManager?.Folder(id);
         }
 

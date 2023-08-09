@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         [PublicApi]
         public DynamicStack Resources => _resources.Get(() =>
-            AsC.AsStack(RootNameResources, Services.SettingsStack
+            Cdf.AsStack(RootNameResources, Services.SettingsStack
                 .Init(App.AppState)
                 .GetStack(ConfigurationConstants.Resources, Block?.View?.Resources)));
         private readonly GetOnce<DynamicStack> _resources = new GetOnce<DynamicStack>();
@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         [PublicApi]
         public DynamicStack Settings => _settings.Get(() =>
-            AsC.AsStack(RootNameSettings, Services.SettingsStack
+            Cdf.AsStack(RootNameSettings, Services.SettingsStack
                 .Init(App.AppState)
                 .GetStack(ConfigurationConstants.Settings, Block?.View?.Settings)));
         private readonly GetOnce<DynamicStack> _settings = new GetOnce<DynamicStack>();

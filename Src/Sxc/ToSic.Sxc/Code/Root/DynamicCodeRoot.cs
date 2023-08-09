@@ -35,8 +35,8 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public class MyServices: MyServicesBase
         {
-            public CodeDataFactory AsConverter => _asConverter.Value;
-            private readonly LazySvc<CodeDataFactory> _asConverter;
+            public CodeDataFactory Cdf => _cdf.Value;
+            private readonly LazySvc<CodeDataFactory> _cdf;
             public LazySvc<DynamicCodeDataSources> DataSources { get; }
             public LazySvc<IDataSourcesService> DataSourceFactory { get; }
             public LazySvc<IConvertService> ConvertService { get; }
@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Code
                 LazySvc<IConvertService> convertService,
                 LazySvc<IDataSourcesService> dataSourceFactory,
                 LazySvc<DynamicCodeDataSources> dataSources,
-                LazySvc<CodeDataFactory> asConverter)
+                LazySvc<CodeDataFactory> cdf)
             {
                 ConnectServices(
                     ServiceProvider = serviceProvider,
@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Code
                     ConvertService = convertService,
                     DataSourceFactory = dataSourceFactory,
                     DataSources = dataSources,
-                    _asConverter = asConverter
+                    _cdf = cdf
                 );
             }
 

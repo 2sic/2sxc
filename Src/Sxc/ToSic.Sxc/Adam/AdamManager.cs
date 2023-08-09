@@ -23,14 +23,14 @@ namespace ToSic.Sxc.Adam
     /// </remarks>
     public abstract class AdamManager: ServiceBase, ICompatibilityLevel
     {
-        private readonly LazySvc<CodeDataFactory> _asConverter;
+        private readonly LazySvc<CodeDataFactory> _cdf;
 
         #region Constructor for inheritance
 
         protected AdamManager(
             LazySvc<AppRuntime> appRuntimeLazy,
             LazySvc<AdamMetadataMaker> metadataMakerLazy,
-            LazySvc<CodeDataFactory> asConverter,
+            LazySvc<CodeDataFactory> cdf,
             AdamConfiguration adamConfiguration,
             string logName) : base(logName ?? "Adm.Managr")
         {
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Adam
                 _appRuntimeLazy = appRuntimeLazy,
                 _metadataMakerLazy = metadataMakerLazy,
                 _adamConfiguration = adamConfiguration,
-                _asConverter = asConverter.SetInit(asc => asc.SetFallbacks(AppContext?.Site, CompatibilityLevel, this))
+                _cdf = cdf.SetInit(asc => asc.SetFallbacks(AppContext?.Site, CompatibilityLevel, this))
             );
         }
         
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Adam
 
         #region Init
 
-        public virtual AdamManager Init(IContextOfApp ctx, CodeDataFactory asc, int compatibility)
+        public virtual AdamManager Init(IContextOfApp ctx, CodeDataFactory cdf, int compatibility)
         {
             AppContext = ctx;
 
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Adam
             Site = AppContext.Site;
             AppRuntime.InitQ(AppContext.AppState);
             CompatibilityLevel = compatibility;
-            _asc = asc;
+            _asc = cdf;
             return callLog.Return(this, "ready");
         }
         
@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Adam
 
         public ISite Site { get; private set; }
 
-        internal CodeDataFactory AsC => _asc ?? (_asc = _asConverter.Value);
+        internal CodeDataFactory Cdf => _asc ?? (_asc = _cdf.Value);
         private CodeDataFactory _asc;
         #endregion
 

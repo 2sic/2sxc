@@ -13,11 +13,11 @@ namespace ToSic.Sxc.Code
     /// </summary>
     internal class TypedConverter
     {
-        public CodeDataFactory AsC { get; }
+        public CodeDataFactory Cdf { get; }
 
-        public TypedConverter(CodeDataFactory asC)
+        public TypedConverter(CodeDataFactory cdf)
         {
-            AsC = asC;
+            Cdf = cdf;
         }
 
         public (T typed, object untyped, bool ok) EvalInterface<T>(object maybe, T fallback = default) where T: class 
@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Code
         {
             var (typed, untyped, ok) = EvalInterface(maybe, fallback);
             // Try to convert, in case it's an IEntity or something; could also result in error
-            return ok ? typed : AsC.AsEntity(untyped);
+            return ok ? typed : Cdf.AsEntity(untyped);
         }
 
         public ITypedItem Item(object maybe, string noParamOrder, ITypedItem fallback)
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Code
             Eav.Parameters.Protect(noParamOrder);
             var (typed, untyped, ok) = EvalInterface(maybe, fallback);
             // Try to convert, in case it's an IEntity or something; could also result in error
-            return ok ? typed : AsC.AsItem(untyped, noParamOrder);
+            return ok ? typed : Cdf.AsItem(untyped, noParamOrder);
         }
 
         public IEnumerable<ITypedItem> Items(object maybe, string noParamOrder, IEnumerable<ITypedItem> fallback)
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Code
             Eav.Parameters.Protect(noParamOrder);
             var (typed, untyped, ok) = EvalInterface(maybe, fallback);
             // Try to convert, in case it's an IEntity or something; could also result in error
-            return ok ? typed : AsC.AsItems(untyped, noParamOrder);
+            return ok ? typed : Cdf.AsItems(untyped, noParamOrder);
         }
 
         public IToolbarBuilder Toolbar(object maybe, IToolbarBuilder fallback)
@@ -104,7 +104,7 @@ namespace ToSic.Sxc.Code
         {
             var (typed, untyped, ok) = EvalInterface(maybe, fallback);
             // Try to convert, in case it's an IEntity or something; could also result in error
-            return ok ? typed : AsC.AsItem(untyped, noParamOrder);
+            return ok ? typed : Cdf.AsItem(untyped, noParamOrder);
         }
 
         #region Tags

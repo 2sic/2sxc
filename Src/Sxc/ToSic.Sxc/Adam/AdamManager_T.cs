@@ -18,11 +18,11 @@ namespace ToSic.Sxc.Adam
         public AdamManager(
             LazySvc<AppRuntime> appRuntime,
             LazySvc<AdamMetadataMaker> metadataMaker,
-            LazySvc<CodeDataFactory> asConverter,
+            LazySvc<CodeDataFactory> cdf,
             AdamConfiguration adamConfiguration,
             LazySvc<IAdamFileSystem<TFolderId, TFileId>> adamFsLazy,
             Generator<AdamStorageOfField<TFolderId, TFileId>> fieldStorageGenerator)
-            : base(appRuntime, metadataMaker, asConverter, adamConfiguration, "Adm.MngrTT")
+            : base(appRuntime, metadataMaker, cdf, adamConfiguration, "Adm.MngrTT")
         {
             ConnectServices(
                 _adamFsLazy = adamFsLazy.SetInit(f => f.Init(this)),
@@ -30,9 +30,9 @@ namespace ToSic.Sxc.Adam
             );
         }
 
-        public override AdamManager Init(IContextOfApp ctx, CodeDataFactory asc, int compatibility)
+        public override AdamManager Init(IContextOfApp ctx, CodeDataFactory cdf, int compatibility)
         {
-            base.Init(ctx, asc, compatibility);
+            base.Init(ctx, cdf, compatibility);
             AdamFs = _adamFsLazy.Value;
             return this;
         }

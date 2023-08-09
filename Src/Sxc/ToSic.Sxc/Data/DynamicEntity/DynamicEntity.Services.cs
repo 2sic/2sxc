@@ -31,11 +31,11 @@ namespace ToSic.Sxc.Data
                 );
             }
 
-            internal MyServices Init(IBlock blockOrNull, string[] dimensions, CodeDataFactory asConverter)
+            internal MyServices Init(IBlock blockOrNull, string[] dimensions, CodeDataFactory cdf)
             {
                 Dimensions = dimensions;
                 BlockOrNull = blockOrNull;
-                AsC = asConverter;
+                Cdf = cdf;
                 return this;
             }
 
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Data
             internal string[] Dimensions { get; private set; }
 
 
-            internal CodeDataFactory AsC { get; private set; }
+            internal CodeDataFactory Cdf { get; private set; }
 
             /// <summary>
             /// The ValueConverter is used to parse links in the format like "file:72"

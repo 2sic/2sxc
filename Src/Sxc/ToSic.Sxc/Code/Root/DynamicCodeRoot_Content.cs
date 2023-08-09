@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Code
             var list = Data[sourceStream].List.ToList();
             return !list.Any()
                 ? l.ReturnNull("first is null") 
-                : l.Return(AsC.AsDynamicFromEntities(list, false), "found");
+                : l.Return(Cdf.AsDynamicFromEntities(list, false), "found");
         }
         
         #endregion

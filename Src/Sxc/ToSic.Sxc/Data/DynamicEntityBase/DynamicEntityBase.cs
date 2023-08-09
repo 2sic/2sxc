@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Data
 
         #endregion
 
-        protected ILog LogOrNull => _logOrNull.Get(() => _Services.AsC?.Log?.SubLogOrNull("DynEnt", Debug));
+        protected ILog LogOrNull => _logOrNull.Get(() => _Services.Cdf?.Log?.SubLogOrNull("DynEnt", Debug));
         private readonly GetOnce<ILog> _logOrNull = new GetOnce<ILog>();
 
     }

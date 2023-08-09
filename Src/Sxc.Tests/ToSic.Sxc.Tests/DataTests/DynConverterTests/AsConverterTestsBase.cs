@@ -4,7 +4,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynConverterTests
 {
     public class AsConverterTestsBase : TestBaseSxcDb
     {
-        public CodeDataFactory AsC => _asc ?? (_asc = GetService<CodeDataFactory>());
-        private CodeDataFactory _asc;
+        public CodeDataFactory Cdf => _cdf ?? (_cdf = GetService<CodeDataFactory>());
+        private CodeDataFactory _cdf;
     }
 }

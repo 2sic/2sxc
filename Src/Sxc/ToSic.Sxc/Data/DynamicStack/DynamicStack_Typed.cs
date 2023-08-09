@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Data
             var findResult = GetInternal(name, lookup: false);
             return TypedHelpers.IsErrStrict(findResult.Found, required, StrictGet)
                 ? throw TypedHelpers.ErrStrict(name)
-                : _Services.AsC.AsItem(findResult.Result, noParamOrder);
+                : _Services.Cdf.AsItem(findResult.Result, noParamOrder);
         }
 
         IEnumerable<ITypedItem> ITypedStack.Children(string field, string noParamOrder, string type, bool? required)
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Data
             var findResult = GetInternal(field, lookup: false);
             return TypedHelpers.IsErrStrict(findResult.Found, required, StrictGet)
                 ? throw TypedHelpers.ErrStrict(field)
-                : _Services.AsC.AsItems(findResult.Result, noParamOrder);
+                : _Services.Cdf.AsItems(findResult.Result, noParamOrder);
         }
     }
 }

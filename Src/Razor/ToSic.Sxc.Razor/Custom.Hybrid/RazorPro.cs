@@ -76,25 +76,25 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="IDynamicCode16.AsItem" />
         public ITypedItem AsItem(object target, string noParamOrder = Protector, bool? strict = default)
-            => _DynCodeRoot.AsC.AsItem(target, noParamOrder, strict: strict ?? true);
+            => _DynCodeRoot.Cdf.AsItem(target, noParamOrder, strict: strict ?? true);
 
         /// <inheritdoc cref="IDynamicCode16.AsItems" />
         public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Protector, bool? strict = default)
-            => _DynCodeRoot.AsC.AsItems(list, noParamOrder, strict: strict ?? true);
+            => _DynCodeRoot.Cdf.AsItems(list, noParamOrder, strict: strict ?? true);
 
         /// <inheritdoc cref="IDynamicCode16.AsEntity" />
-        public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot.AsC.AsEntity(thing);
+        public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot.Cdf.AsEntity(thing);
 
         /// <inheritdoc cref="IDynamicCode16.AsTyped" />
         public ITyped AsTyped(object original, string noParamOrder = Protector, bool? strict = default)
-            => _DynCodeRoot.AsC.AsTyped(original, strict: strict);
+            => _DynCodeRoot.Cdf.AsTyped(original, strict: strict);
 
         /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
         public IEnumerable<ITyped> AsTypedList(object list, string noParamOrder = Protector, bool? strict = default)
-            => _DynCodeRoot.AsC.AsTypedList(list, noParamOrder, strict: strict);
+            => _DynCodeRoot.Cdf.AsTypedList(list, noParamOrder, strict: strict);
 
         /// <inheritdoc cref="IDynamicCode16.AsStack" />
-        public ITypedStack AsStack(params object[] items) => _DynCodeRoot.AsC.AsStack(items);
+        public ITypedStack AsStack(params object[] items) => _DynCodeRoot.Cdf.AsStack(items);
 
         #endregion
 

@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Blocks
         {
             var services = parent._Services;
             // First do version checks -should not be allowed if compatibility is too low
-            if (services.AsC.CompatibilityLevel > Constants.MaxLevelForStaticRender)
+            if (services.Cdf.CompatibilityLevel > Constants.MaxLevelForStaticRender)
                 throw new Exception(
                     "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. For v12+ use the ToSic.Sxc.Services.IRenderService instead");
 

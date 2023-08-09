@@ -24,13 +24,13 @@ namespace ToSic.Sxc.Code
             Data = data as ContextData;
         }
 
-        public ITypedItem MyItem => _myItem.Get(() => _codeRoot.AsC.AsItem(Data.MyItem, Protector, strict: DefaultStrict));
+        public ITypedItem MyItem => _myItem.Get(() => _codeRoot.Cdf.AsItem(Data.MyItem, Protector, strict: DefaultStrict));
         private readonly GetOnce<ITypedItem> _myItem = new GetOnce<ITypedItem>();
 
-        public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => _codeRoot.AsC.AsItems(Data.MyItem, Protector, strict: DefaultStrict));
+        public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => _codeRoot.Cdf.AsItems(Data.MyItem, Protector, strict: DefaultStrict));
         private readonly GetOnce<IEnumerable<ITypedItem>> _myItems = new GetOnce<IEnumerable<ITypedItem>>();
 
-        public ITypedItem MyHeader => _myHeader.Get(() => _codeRoot.AsC.AsItem(Data.MyHeader, Protector, strict: DefaultStrict));
+        public ITypedItem MyHeader => _myHeader.Get(() => _codeRoot.Cdf.AsItem(Data.MyHeader, Protector, strict: DefaultStrict));
         private readonly GetOnce<ITypedItem> _myHeader = new GetOnce<ITypedItem>();
 
         public ITypedModel MyModel => _myModel.Get(() => new TypedModel(_myModelData, _codeRoot, _isRazor, _codeFileName));

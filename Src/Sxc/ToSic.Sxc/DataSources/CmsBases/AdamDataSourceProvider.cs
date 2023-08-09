@@ -81,7 +81,7 @@ namespace ToSic.Sxc.DataSources
             var list = new List<AdamItemDataRaw>();
 
             // TODO: this is just tmp code to get some data...
-            _services.AdamContext.Value.Init(_context, entity.Type.Name, string.Empty, entity.EntityGuid, false, asc: null);
+            _services.AdamContext.Value.Init(_context, entity.Type.Name, string.Empty, entity.EntityGuid, false, cdf: null);
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
             var root = _services.AdamContext.Value.AdamRoot.Folder(false);

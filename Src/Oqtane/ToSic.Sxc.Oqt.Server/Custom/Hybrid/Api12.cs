@@ -93,30 +93,30 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
         [NonAction]
-        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot?.AsC.AsDynamicFromJson(json, fallback);
+        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot?.Cdf.AsDynamicFromJson(json, fallback);
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
         [NonAction]
-        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot?.AsC.CodeAsDyn(entity);
+        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot?.Cdf.CodeAsDyn(entity);
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
         [NonAction]
-        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot?.AsC.AsDynamicFromObject(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot?.Cdf.AsDynamicFromObject(dynamicEntity);
 
         /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
         [NonAction]
-        public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.AsC.MergeDynamic(entities);
+        public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.Cdf.MergeDynamic(entities);
 
         /// <inheritdoc cref="IDynamicCode.AsList" />
         [NonAction]
-        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.AsC.CodeAsDynList(list);
+        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.Cdf.CodeAsDynList(list);
 
         #endregion
 
         #region AsEntity
 
         /// <inheritdoc cref="IDynamicCode.AsEntity" />
-        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot?.AsC.AsEntity(dynamicEntity);
+        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot?.Cdf.AsEntity(dynamicEntity);
 
         #endregion
 

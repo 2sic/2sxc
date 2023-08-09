@@ -161,7 +161,7 @@ namespace ToSic.Sxc.Engines
             {
                 // Create property sources for the current data item (for the current data item and its list information)
                 var propertySources = new Dictionary<string, ILookUp>();
-                propertySources.Add(sourceName, new LookUpForTokenTemplate(sourceName, _data.AsC.AsDynamic(dataItems.ElementAt(i), strict: false), i, itemsCount));
+                propertySources.Add(sourceName, new LookUpForTokenTemplate(sourceName, _data.Cdf.AsDynamic(dataItems.ElementAt(i), strict: false), i, itemsCount));
                 builder.Append(RenderSection(template, propertySources));
             }
 

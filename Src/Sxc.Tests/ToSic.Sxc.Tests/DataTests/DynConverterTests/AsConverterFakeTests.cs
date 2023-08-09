@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynConverterTests
         [TestMethod]
         public void EntityFake()
         {
-            var fake = AsC.FakeEntity(0);
+            var fake = Cdf.FakeEntity(0);
             Assert.IsNotNull(fake);
             Assert.AreEqual(DataConstants.DataFactoryDefaultEntityId, fake.EntityId);
             Assert.AreEqual(DataConstants.DataFactoryDefaultEntityId, fake.RepositoryId);
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynConverterTests
         [TestMethod]
         public void ItemFake()
         {
-            var fake = AsC.AsItem(AsC.FakeEntity(0), noParamOrder: Protector, strict: false);
+            var fake = Cdf.AsItem(Cdf.FakeEntity(0), noParamOrder: Protector, strict: false);
             Assert.IsNotNull(fake);
             Assert.IsNull(fake.String("some-field"));
         }

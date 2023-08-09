@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Code
         #region AsConverter (internal)
 
         [PrivateApi("internal use only")]
-        CodeDataFactory AsC { get; }
+        CodeDataFactory Cdf { get; }
 
         #endregion
     }

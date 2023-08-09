@@ -207,7 +207,7 @@ namespace ToSic.Sxc.Engines
             webPage.ConnectToRoot(dynCode);
 
             // New in 10.25 - ensure jquery is not included by default
-            if (dynCode.AsC.CompatibilityLevel > Constants.MaxLevelForAutoJQuery)
+            if (dynCode.Cdf.CompatibilityLevel > Constants.MaxLevelForAutoJQuery)
             {
                 l.A("Compatibility is new, don't need AutoJQuery");
                 CompatibilityAutoLoadJQueryAndRvt = false;

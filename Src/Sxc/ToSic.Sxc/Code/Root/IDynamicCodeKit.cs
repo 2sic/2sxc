@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Code
 
         public static IDynamicCodeRoot SetCompatibility(this IDynamicCodeRoot codeRoot, int compatibility)
         {
-            codeRoot.AsC.SetCompatibilityLevel(compatibility);
+            codeRoot.Cdf.SetCompatibilityLevel(compatibility);
             return codeRoot;
         }
     }

@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         /// Initializes the object and performs all the initial security checks
         /// </summary>
-        public virtual AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, CodeDataFactory asc)
+        public virtual AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, CodeDataFactory cdf)
         {
             var callLog = Log.Fn<AdamContext>($"app: {context.AppState.Show()}, field:{fieldName}, guid:{entityGuid}");
             Context = context;

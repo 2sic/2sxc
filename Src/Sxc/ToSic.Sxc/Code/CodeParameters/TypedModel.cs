@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Code
             _isRazor = isRazor;
             _razorFileName = razorFileName;
             _paramsDictionary = paramsDictionary?.ToInvariant() ?? new Dictionary<string, object>();
-            _converter = new TypedConverter(codeRoot.AsC);
+            _converter = new TypedConverter(codeRoot.Cdf);
         }
 
         #region Check if parameters were supplied
