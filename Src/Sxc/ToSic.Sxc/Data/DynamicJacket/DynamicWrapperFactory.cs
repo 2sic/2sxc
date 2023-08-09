@@ -13,22 +13,13 @@ using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Services;
 using static ToSic.Eav.Serialization.JsonOptions;
 using ToSic.Sxc.Data.Wrapper;
+using static ToSic.Sxc.Data.Wrapper.WrapperConstants;
 
 namespace ToSic.Sxc.Data
 {
     [PrivateApi]
     public class DynamicWrapperFactory: ServiceBase
     {
-
-        [PrivateApi]
-        public const string EmptyJson = "{}";
-        [PrivateApi]
-        private const char JObjStart = '{';
-        [PrivateApi]
-        private const char JArrayStart = '[';
-        [PrivateApi]
-        private const string JsonErrorCode = "error";
-
         public DynamicWrapperFactory(LazySvc<ConvertForCodeService> forCodeConverter): base("Sxc.DWrpFk")
         {
             ConnectServices(
