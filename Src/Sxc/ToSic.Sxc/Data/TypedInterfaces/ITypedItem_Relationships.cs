@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Data
         IEnumerable<ITypedItem> Children(string field = default, string noParamOrder = Protector, string type = default, bool? required = default);
 
         /// <inheritdoc cref="ITypedRelationships.Parents"/>
-        IEnumerable<ITypedItem> Parents(string type = default, string noParamOrder = Protector, string field = default);
+        IEnumerable<ITypedItem> Parents(string noParamOrder = Protector, string type = default, string field = default);
 
         #endregion 
     }

@@ -70,14 +70,14 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
 
         
         /// <summary> Only the ones of type "Tag" </summary>
-        private IEnumerable<ITypedItem> Tags => Item.Parents("Tag");
-        private IEnumerable<ITypedItem> TypeFake => Item.Parents("Fake");
+        private IEnumerable<ITypedItem> Tags => Item.Parents(type: "Tag");
+        private IEnumerable<ITypedItem> TypeFake => Item.Parents(type: "Fake");
         [TestMethod] public void ParentTagsExists() => IsNotNull(Tags);
         [TestMethod] public void ParentTagsExists2() => AreEqual(2, Tags.Count());
         [TestMethod] public void ParentFakeEmptyList() => IsNotNull(TypeFake);
         [TestMethod] public void ParentFakeEmptyList0() => AreEqual(0, TypeFake.Count());
 
-        [TestMethod] public void ParentTagsOfField() => AreEqual(1, Item.Parents("Tag", field: "Tags").Count());
+        [TestMethod] public void ParentTagsOfField() => AreEqual(1, Item.Parents(type: "Tag", field: "Tags").Count());
         
     }
 }

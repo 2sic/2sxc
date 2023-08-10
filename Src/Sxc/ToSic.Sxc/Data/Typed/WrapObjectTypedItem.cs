@@ -15,6 +15,7 @@ using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Images;
 using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Data.Typed
 {
@@ -81,7 +82,7 @@ namespace ToSic.Sxc.Data.Typed
         /// The parents are "fake" so they behave just like children... but under the node "Parents".
         /// If "field" is specified, then it will assume another child-level under the node parents
         /// </summary>
-        public IEnumerable<ITypedItem> Parents(string type, string noParamOrder, string field)
+        public IEnumerable<ITypedItem> Parents(string noParamOrder, string type, string field)
         {
             var blank = Enumerable.Empty<ITypedItem>();
             var typed = this as ITypedItem;
@@ -143,6 +144,7 @@ namespace ToSic.Sxc.Data.Typed
         #region Not Supported Properties such as Entity, Type, Child, Folder, Presentation, Metadata
 
         IMetadata ITypedItem.Metadata => _metadata ?? (_metadata = BuildMetadata(PreWrap.TryGet(nameof(Metadata)).Raw));
+        private Metadata _metadata;
 
         private Metadata BuildMetadata(object raw)
         {
@@ -172,7 +174,6 @@ namespace ToSic.Sxc.Data.Typed
             return metadata;
         }
 
-        private Metadata _metadata;
 
         public IField Field(string name, string noParamOrder, bool? required) 
             => new Field(this, name, _cdf.Value);

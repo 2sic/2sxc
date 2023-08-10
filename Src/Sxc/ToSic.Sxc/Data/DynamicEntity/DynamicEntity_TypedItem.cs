@@ -80,9 +80,11 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi]
-        IEnumerable<ITypedItem> ITypedItem.Parents(string type, string noParamOrder, string field)
+        IEnumerable<ITypedItem> ITypedItem.Parents(string noParamOrder, string type, string field)
         {
-            Protect(noParamOrder, nameof(field));
+            Protect(noParamOrder, nameof(field), message: 
+                $" ***IMPORTANT***: The typed '.Parents(...)' method was changed to also make the parameter '{nameof(type)}' required. " +
+                "So if you had '.Parents(something)' then change it to '.Parents(type: something)'");
             return _Cdf.AsItems(Parents(type, field), noParamOrder);
         }
 
