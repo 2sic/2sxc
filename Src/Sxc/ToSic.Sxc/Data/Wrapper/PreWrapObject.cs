@@ -81,18 +81,18 @@ namespace ToSic.Sxc.Data.Wrapper
             return new PropReqResult(result: result, fieldType: Attributes.FieldIsDynamic, path: path) { Source = this, Name = "dynamic" };
         }
 
-        public (bool Found, object Raw, object Result) TryGet(string name, bool wrapDefault = true)
+        public TryGetResult TryGet(string name, bool wrapDefault = true)
         {
             if (UnwrappedObject == null)
-                return (false, null, null);
+                return new TryGetResult(false, null, null);
 
             if (!_ignoreCaseLookup.TryGetValue(name, out var lookup))
-                return (false, null, null);
+                return new TryGetResult(false, null, null);
 
             var result = lookup.GetValue(UnwrappedObject);
 
             // Probably re-wrap for further dynamic navigation!
-            return (true, result,
+            return new TryGetResult(true, result,
                 Settings.WrapChildren && wrapDefault
                 ? Wrapper.WrapIfPossible(result, Settings.WrapRealObjects, Settings)
                 : result);
@@ -101,10 +101,10 @@ namespace ToSic.Sxc.Data.Wrapper
         public TValue TryGet<TValue>(string name, string noParamOrder, TValue fallback, bool? required, [CallerMemberName] string cName = default)
         {
             Protect(noParamOrder, nameof(fallback), methodName: cName);
-            var (found, raw, _) = TryGet(name, false);
-            return IsErrStrict(found, required, Settings.GetStrict)
+            var result = TryGet(name, false);
+            return IsErrStrict(result.Found, required, Settings.GetStrict)
                 ? throw ErrStrict(name)
-                : raw.ConvertOrFallback(fallback);
+                : result.Raw.ConvertOrFallback(fallback);
         }
 
         public object JsonSource => UnwrappedObject;

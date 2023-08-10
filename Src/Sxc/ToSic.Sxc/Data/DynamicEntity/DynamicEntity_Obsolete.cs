@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi("shouldn't be used, but it may be published by accident, so shouldn't be removed. ")]
         [Obsolete("please use Get instead")]
-        public object GetEntityValue(string field) => GetInternal(field).Result;
+        public object GetEntityValue(string name) => Helper.TryGet(name).Result;
 
 
     }

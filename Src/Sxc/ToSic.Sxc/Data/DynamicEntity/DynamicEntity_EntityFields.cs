@@ -1,5 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Data;
+using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data
@@ -15,18 +17,11 @@ namespace ToSic.Sxc.Data
 
 
         /// <inheritdoc />
-        public IField Field(string name) => (this as ITypedItem).Field(name);
+        public IField Field(string name) => ItemHelper.Field(this, name);
 
-        IField ITypedItem.Field(string name, string noParamOrder, bool? required)
-        {
-            // TODO: make sure that if we use a path, the field is from the correct parent
-            if (name.Contains(PropertyStack.PathSeparator.ToString()))
-                throw new NotImplementedException("Path support on this method is not yet supported. Ask iJungleboy");
+        [PrivateApi]
+        IField ITypedItem.Field(string name, string noParamOrder, bool? required) => ItemHelper.Field(this, name, noParamOrder, required);
 
-            return IsErrStrict(this, name, required, StrictGet)
-                ? throw ErrStrict(name)
-                : new Field(this, name, _Cdf);
-        }
 
         /// <inheritdoc />
         public string EntityType => Entity?.Type?.Name;

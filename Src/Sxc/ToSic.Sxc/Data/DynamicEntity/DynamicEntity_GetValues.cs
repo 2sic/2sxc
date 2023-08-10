@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
@@ -6,30 +7,54 @@ using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Data
 {
     public partial class DynamicEntity
     {
         [PrivateApi]
-        protected override TryGetResult GetInternal(string field, string language = null, bool lookup = true)
+        public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            // Check special cases #1 Toolbar - only in DNN, not available in Oqtane
+            // Check special cases #1 Toolbar - only in DNN and only on the explicit dynamic entity; not available in Oqtane
 #if NETFRAMEWORK
-            // ReSharper disable once ConvertIfStatementToSwitchStatement
 #pragma warning disable 618 // ignore Obsolete
-            if (field == "Toolbar") return new TryGetResult(Toolbar.ToString(), true);
+            if (binder.Name == "Toolbar")
+            {
+                result = Toolbar.ToString();
+                return true;
+            }
 #pragma warning restore 618
 #endif
+            // 2023-08-11 2dm disabled this, don't think it's ever hit, because Presentation is a real property so it's
+            // picked up before the binder. Disable and monitor, remove ca. end of August 2023
+            //// Check #2 Presentation which the EAV doesn't know
+            //// but only pre V16 (Pro) code. Newer code MUST use the .Presentation
+            //if (_Cdf.CompatibilityLevel < Constants.CompatibilityLevel16 && binder.Name == ViewParts.Presentation)
+            //{
+            //    result = Presentation;
+            //    return true;
+            //}
 
-            // Check #2 Presentation which the EAV doesn't know
-            // but only pre V16 (Pro) code. Newer code MUST use the .Presentation
-            if (_Cdf.CompatibilityLevel < Constants.CompatibilityLevel16 && field == ViewParts.Presentation)
-                return new TryGetResult(Presentation, Presentation != null);
-
-            return base.GetInternal(field, language, lookup);
+            return base.TryGetMember(binder, out result);
         }
+
+//        [PrivateApi]
+//        protected override TryGetResult GetInternal(string field, string language = null, bool lookup = true)
+//        {
+//            // Check special cases #1 Toolbar - only in DNN, not available in Oqtane
+//#if NETFRAMEWORK
+//#pragma warning disable 618 // ignore Obsolete
+//            if (field == "Toolbar") return new TryGetResult(true, Toolbar.ToString());
+//#pragma warning restore 618
+//#endif
+
+//            // Check #2 Presentation which the EAV doesn't know
+//            // but only pre V16 (Pro) code. Newer code MUST use the .Presentation
+//            if (_Cdf.CompatibilityLevel < Constants.CompatibilityLevel16 && field == ViewParts.Presentation)
+//                return new TryGetResult(Presentation != null, Presentation);
+
+//            return base.GetInternal(field, language, lookup);
+//        }
 
         [PrivateApi("Internal")]
         public override PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)

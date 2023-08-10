@@ -62,11 +62,11 @@ namespace ToSic.Sxc.Data.Typed
         public IEnumerable<ITypedItem> Children(string field, string noParamOrder, string type, bool? required)
         {
             var blank = Enumerable.Empty<ITypedItem>();
-            var (found, raw, _) = PreWrap.TryGet(field);
-            if (!found || raw == null || raw.GetType().IsValueType) return blank;
-            if (!(raw is IEnumerable re))
+            var r = PreWrap.TryGet(field);
+            if (!r.Found || r.Raw == null || r.Raw.GetType().IsValueType) return blank;
+            if (!(r.Raw is IEnumerable re))
             {
-                var rawWrapped = Wrapper.TypedItemFromObject(raw, PreWrap.Settings);
+                var rawWrapped = Wrapper.TypedItemFromObject(r.Raw, PreWrap.Settings);
                 return rawWrapped == null ? null : new[] { rawWrapped };
             }
 
@@ -105,10 +105,10 @@ namespace ToSic.Sxc.Data.Typed
 
         private ITypedItem CreateItemFromProperty(string name)
         {
-            var (found, raw, _) = PreWrap.TryGet(name);
-            if (!found || raw == null || raw.GetType().IsValueType)
+            var result = PreWrap.TryGet(name);
+            if (!result.Found || result.Raw == null || result.Raw.GetType().IsValueType)
                 return null;
-            var first = raw is IEnumerable re ? re.Cast<object>().FirstOrDefault() : raw;
+            var first = result.Raw is IEnumerable re ? re.Cast<object>().FirstOrDefault() : result.Raw;
             if (first == null || first.GetType().IsValueType)
                 return null;
             return Wrapper.TypedItemFromObject(first, PreWrap.Settings);

@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Data
         IFolder ITypedItem.Folder(string name, string noParamOrder, bool? required)
         {
             Protect(noParamOrder, nameof(required));
-            return IsErrStrict(this, name, required, StrictGet)
+            return IsErrStrict(this, name, required, Helper.StrictGet)
                 ? throw ErrStrict(name)
                 : _adamCache.Get(name, () => _Cdf.Folder(Entity, name, (this as ITypedItem).Field(name, required: false)));
         }
@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, $"{nameof(type)}, {nameof(required)}");
 
-            if (IsErrStrict(this, field, required, StrictGet))
+            if (IsErrStrict(this, field, required, Helper.StrictGet))
                 throw ErrStrict(field);
 
             var dynChildren = Children(field, type);
@@ -97,7 +97,7 @@ namespace ToSic.Sxc.Data
         ITypedItem ITypedItem.Child(string name, string noParamOrder, bool? required)
         {
             Protect(noParamOrder, nameof(required));
-            return IsErrStrict(this, name, required, StrictGet)
+            return IsErrStrict(this, name, required, Helper.StrictGet)
                 ? throw ErrStrict(name)
                 : (this as ITypedItem).Children(name).FirstOrDefault();
         }

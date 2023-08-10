@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Data
         protected bool StrictGet { get; }
         public readonly IEntity ParentOrNull;
         public readonly string FieldOrNull;
-        private readonly CodeDataFactory _services;
+        private readonly CodeDataFactory _cdf;
 
         private Func<bool?> _getDebug;
 
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Data
         {
             StrictGet = strictGet;
             _list = new List<IDynamicEntity> {singleItem ?? throw new ArgumentException(nameof(singleItem))};
-            _services = cdf ?? throw new ArgumentNullException(nameof(cdf));
+            _cdf = cdf ?? throw new ArgumentNullException(nameof(cdf));
             _getDebug = getDebug;
         }
         
@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Data
         {
             ParentOrNull = parentOrNull;
             FieldOrNull = fieldOrNull;
-            _services = cdf ?? throw new ArgumentNullException(nameof(cdf));
+            _cdf = cdf ?? throw new ArgumentNullException(nameof(cdf));
             _entities = entities?.ToArray() ?? throw new ArgumentNullException(nameof(entities));
             _getDebug = getDebug;
             StrictGet = strictGet;
@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Data
                         var blockEntity = reWrapWithListNumbering
                             ? EntityInBlockDecorator.Wrap(e, ParentOrNull.EntityGuid, FieldOrNull, i)
                             : e;
-                        return DynamicEntityBase.SubDynEntityOrNull(blockEntity, _services, debug, strictGet: StrictGet);
+                        return CodeEntityHelper.SubDynEntityOrNull(blockEntity, _cdf, debug, strictGet: StrictGet);
                     })
                     .ToList();
             }

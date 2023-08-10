@@ -6,8 +6,7 @@ namespace ToSic.Sxc.Data
     public partial class DynamicEntity
     {
         /// <inheritdoc />
-        public dynamic Presentation => _presentation 
-                                       ?? (_presentation =  SubDynEntityOrNull(Entity.GetDecorator<EntityInBlockDecorator>()?.Presentation));
-        private IDynamicEntity _presentation;
+        public dynamic Presentation => _p ?? (_p = Helper.SubDynEntityOrNull(Entity.GetDecorator<EntityInBlockDecorator>()?.Presentation));
+        private IDynamicEntity _p;
     }
 }

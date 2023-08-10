@@ -38,8 +38,8 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         public dynamic GetStack(params string[] names)
         {
-            var wrapLog = LogOrNull.Fn<object>();
-            var newStack = UnwrappedStack.GetStack(LogOrNull, names);
+            var wrapLog = Helper.LogOrNull.Fn<object>();
+            var newStack = UnwrappedStack.GetStack(Helper.LogOrNull, names);
             var newDynStack = new DynamicStack("New", _Cdf, newStack.Sources);
             return wrapLog.Return(newDynStack);
         }
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Data
         {
             if (source == null) return null;
             if (source is IDynamicEntity dynEnt) return dynEnt;
-            if (source is IEntity ent) return SubDynEntityOrNull(ent);
+            if (source is IEntity ent) return Helper.SubDynEntityOrNull(ent);
             return null;
         }
 

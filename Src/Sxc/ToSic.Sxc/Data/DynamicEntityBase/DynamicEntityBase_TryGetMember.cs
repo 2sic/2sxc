@@ -6,16 +6,19 @@ namespace ToSic.Sxc.Data
 {
     public partial class DynamicEntityBase
     {
-        /// <inheritdoc />
+        #region TryGetMember for dynamic access
+
         [PrivateApi]
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            var findResult = GetInternal(binder.Name);
+            var findResult = Helper.GetInternal(binder.Name, lookupLink: true);
             // ReSharper disable once ExplicitCallerInfoArgument
-            if (!findResult.Found && StrictGet) throw TypedHelpers.ErrStrict(binder.Name, ".");
+            if (!findResult.Found && Helper.StrictGet) throw TypedHelpers.ErrStrict(binder.Name, ".");
             result = findResult.Result;
             return true;
         }
+
+        #endregion
 
     }
 }
