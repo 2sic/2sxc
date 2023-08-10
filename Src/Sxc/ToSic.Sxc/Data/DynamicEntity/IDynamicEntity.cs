@@ -34,9 +34,10 @@ namespace ToSic.Sxc.Data
         /// <returns>
         /// An Entity object.
         /// </returns>
-        [PrivateApi("This should not be used publicly, use AsTyped instead")]
+        [PrivateApi("This should not be used publicly, use AsTyped instead. It's necessary so that code can find the Entity without ambiguity")]
         new IEntity Entity { get; }
-        
+
+
         /// <summary>
         /// Get a Field-object of a property of this entity, to use with services like the <see cref="Services.IImageService"/> which also need more information like the metadata.
         /// </summary>
@@ -128,14 +129,8 @@ namespace ToSic.Sxc.Data
         dynamic Presentation { get; }
 
         [PrivateApi]
+        // ReSharper disable once InconsistentNaming
         CodeDataFactory _Cdf {get; }
-
-        /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */
-        ///// <summary>
-        ///// Activate debugging, so that you'll see details in [Insights](xref:NetCode.Debug.Insights.Index) how the value was retrieved.
-        ///// </summary>
-        ///// <param name="debug"></param>
-        //void SetDebug(bool debug);
 
     }
 }

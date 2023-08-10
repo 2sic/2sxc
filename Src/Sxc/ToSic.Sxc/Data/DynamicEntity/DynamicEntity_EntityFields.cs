@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Data
 
 
         /// <inheritdoc />
-        public IField Field(string name) => (this as ITypedItem).Field(name, required: null);
+        public IField Field(string name) => (this as ITypedItem).Field(name);
 
         IField ITypedItem.Field(string name, string noParamOrder, bool? required)
         {

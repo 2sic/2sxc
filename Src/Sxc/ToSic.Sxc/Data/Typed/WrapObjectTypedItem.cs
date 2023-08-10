@@ -74,7 +74,12 @@ namespace ToSic.Sxc.Data.Typed
                 .Where(o => o != null && !o.GetType().IsValueType)
                 .ToList();
             
-            return list.Select(l => Wrapper.TypedItemFromObject(l, PreWrap.Settings));
+            var items = list.Select(l => Wrapper.TypedItemFromObject(l, PreWrap.Settings));
+
+            if (type.HasValue())
+                items = items.Where(i => i.String(nameof(ITypedItem.Type), required: false).EqualsInsensitive(type)).ToList();
+            
+            return items;
         }
 
         /// <summary>
@@ -85,13 +90,10 @@ namespace ToSic.Sxc.Data.Typed
         {
             var blank = Enumerable.Empty<ITypedItem>();
             var typed = this as ITypedItem;
-            var items = typed.Children(nameof(ITypedItem.Parents), noParamOrder)?.ToList();
+            var items = typed.Children(nameof(ITypedItem.Parents), type: type)?.ToList();
 
-            if (items == null || !items.Any() || !type.HasValue() && !field.HasValue())
+            if (items == null || !items.Any() && !field.HasValue())
                 return items ?? blank;
-
-            if (type.HasValue())
-                items = items.Where(i => i.String(nameof(ITypedItem.Type), required: false).EqualsInsensitive(type)).ToList();
 
             if (field.HasValue())
                 items = items.Where(i => i.String("Field", required: false).EqualsInsensitive(field)).ToList();
