@@ -38,16 +38,15 @@ namespace ToSic.Sxc.Data
         private string _url;
 
 
-        public IMetadata Metadata => _dynMeta.Get(() => new Metadata(MetadataOfItem, Parent.Entity, _cdf));
+        public IMetadata Metadata => _dynMeta.Get(() => new Metadata(MetadataOfValue, Parent.Entity, _cdf));
         private readonly GetOnce<IMetadata> _dynMeta = new GetOnce<IMetadata>();
 
 
-        private IMetadataOf MetadataOfItem => _itemMd.Get(() =>
+        private IMetadataOf MetadataOfValue => _itemMd.Get(() =>
             {
                 if (!(Raw is string rawString) || string.IsNullOrWhiteSpace(rawString)) return null;
                 var appState = _cdf?.BlockOrNull?.Context?.AppState;
                 var md = appState?.GetMetadataOf(TargetTypes.CmsItem, rawString, "");
-
                 ImageDecorator.AddRecommendations(md, Value as string);
                 return md;
             });
@@ -57,6 +56,6 @@ namespace ToSic.Sxc.Data
             _imgDec2.Get(() => ImageDecorator.GetOrNull(this, _cdf.Dimensions));
         private readonly GetOnce<ImageDecorator> _imgDec2 = new GetOnce<ImageDecorator>();
         
-        IMetadataOf IHasMetadata.Metadata => MetadataOfItem;
+        IMetadataOf IHasMetadata.Metadata => MetadataOfValue;
     }
 }

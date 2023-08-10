@@ -46,7 +46,6 @@ namespace ToSic.Sxc.Data
         /// </summary>
         object Value { get; }
 
-
         /// <summary>
         /// Metadata of the thing in the field - if it has such metadata.
         ///

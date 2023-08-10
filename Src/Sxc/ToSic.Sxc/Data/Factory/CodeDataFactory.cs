@@ -4,7 +4,6 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Services;
@@ -50,12 +49,6 @@ namespace ToSic.Sxc.Data
         private int? _priorityCompatibilityLevel;
         private int _compatibilityLevel = Constants.CompatibilityLevel10;
 
-
-        #region Kit - used by some things created by ASC
-
-        public ServiceKit14 GetServiceKit14() => _DynCodeRoot.GetKit<ServiceKit14>();
-
-        #endregion
 
         #region CodeDataServices
 

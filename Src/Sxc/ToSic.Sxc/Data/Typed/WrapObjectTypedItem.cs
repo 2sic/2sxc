@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Metadata;
@@ -32,17 +31,17 @@ namespace ToSic.Sxc.Data.Typed
         bool ITypedItem.IsDemoItem => PreWrap.TryGet(nameof(ITypedItem.IsDemoItem), noParamOrder: Protector, fallback: false, required: false);
 
         IHtmlTag ITypedItem.Html(string name, string noParamOrder, object container, bool? toolbar,
-            object imageSettings, bool? required, bool debug)
-        {
-            throw new NotImplementedException();
-        }
+            object imageSettings, bool? required, bool debug
+        ) => TypedItemHelpers.Html(_cdf.Value, this, name: name, noParamOrder: noParamOrder, container: container,
+            toolbar: toolbar, imageSettings: imageSettings, required: required, debug: debug);
 
         IResponsivePicture ITypedItem.Picture(string name, string noParamOrder, object settings,
             object factor, object width, string imgAlt, string imgAltFallback,
-            string imgClass, object recipe)
-        {
-            throw new NotImplementedException();
-        }
+            string imgClass, object recipe
+        ) => TypedItemHelpers.Picture(cdf: _cdf.Value, item: this, name: name, noParamOrder: noParamOrder,
+            settings: settings, factor: factor, width: width, imgAlt: imgAlt,
+            imgAltFallback: imgAltFallback, imgClass: imgClass, recipe: recipe);
+
 
         public int Id => PreWrap.TryGet(nameof(Id), noParamOrder: Protector, fallback: 0, required: false);
 
@@ -178,13 +177,20 @@ namespace ToSic.Sxc.Data.Typed
         public IField Field(string name, string noParamOrder, bool? required) 
             => new Field(this, name, _cdf.Value);
 
-        private NotSupportedException NotSupportedEx([CallerMemberName] string cName = default)
+        /// <summary>
+        /// Override the URL, to also support checks for "file:72"
+        /// </summary>
+        string ITyped.Url(string name, string noParamOrder, string fallback, bool? required)
         {
-            var ex = new NotSupportedException(
-                $"You are accessing a virtual {nameof(ITypedItem)} which is based on an object, not an {nameof(IEntity)}. The method {cName}(...) doesn't work in this scenario.");
-            return ex;
-        }
+            var url = PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback, required: required);
+            if (url == null) return null;
 
+            // ReSharper disable once ConvertTypeCheckPatternToNullCheck
+            if (ValueConverterBase.CouldBeReference(url))
+                url = _cdf.Value.Services.ValueConverterOrNull?.ToValue(url, Guid.Empty) ?? url;
+
+            return Tags.SafeUrl(url).ToString();
+        }
         #endregion
     }
 }

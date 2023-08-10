@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Services
     public class ServiceKit16: ServiceKit
     {
         [PrivateApi("Public constructor for DI")]
-        public ServiceKit16() : base("Sxc.Kit14")
+        public ServiceKit16() : base("Sxc.Kit16")
         {
         }
 

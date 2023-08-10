@@ -42,8 +42,8 @@ namespace ToSic.Sxc.Services.CmsService
                 return l.Return(cntHelper.Wrap(thing, defaultToolbar: false), "No field, will just treat as value");
 
             // Get Content type and field information
-            var value = field.Raw as object;
-            var contentType = field.Parent.Entity.Type;
+            var value = field.Raw;
+            var contentType = field.Parent.Entity?.Type; // Entity can be null on mock data
             if (contentType == null)
                 return l.Return(cntHelper.Wrap(value, defaultToolbar: false), "can't find content-type, treat as value");
 
