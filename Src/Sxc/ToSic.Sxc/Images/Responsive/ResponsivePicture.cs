@@ -56,8 +56,8 @@ namespace ToSic.Sxc.Images
                     // We must copy the settings, because we change them and this shouldn't affect anything else
                     var formatSettings = new ResizeSettings(resizeSettings, format: resizeFormat != defFormat ? resizeFormat.Format : null);
                     var srcSet = useMultiSrcSet
-                        ? ImgLinker.SrcSet(url, formatSettings, SrcSetType.Source, Call.Field)
-                        : ImgLinker.ImageOnly(url, formatSettings, Call.Field).Url;
+                        ? ImgLinker.SrcSet(url, formatSettings, SrcSetType.Source, Call.HasDecoOrNull)
+                        : ImgLinker.ImageOnly(url, formatSettings, Call.HasDecoOrNull).Url;
                     var source = Razor.Blade.Tag.Source().Type(resizeFormat.MimeType).Srcset(srcSet);
                     if (!string.IsNullOrEmpty(Sizes)) source.Sizes(Sizes);
                     return source;
