@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data.Typed;
 
@@ -10,8 +11,24 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         bool ITyped.ContainsKey(string name)
         {
+            return UnwrappedStack.Sources.Any(s =>
+            {
+                switch (s.Value)
+                {
+                    case null:
+                        return false;
+                    case ITyped typed:
+                        return typed.ContainsKey(name);
+                    case IHasKeys keyed:
+                        return keyed.ContainsKey(name);
+                }
+
+                return false;
+            });
             throw new NotImplementedException($"Not yet implemented on {nameof(ITypedStack)}");
         }
+
+        // TODO: Keys()
 
         ITypedItem ITypedStack.Child(string name, string noParamOrder, bool? required)
         {

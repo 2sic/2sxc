@@ -66,7 +66,6 @@ namespace ToSic.Sxc.Data.Wrapper
         #region Keys
 
         public bool ContainsKey(string name) => _ignoreCaseLookup.ContainsKey(name);
-
         public IEnumerable<string> Keys(string noParamOrder, IEnumerable<string> only)
             => FilterKeysIfPossible(noParamOrder, only, _ignoreCaseLookup?.Keys);
 

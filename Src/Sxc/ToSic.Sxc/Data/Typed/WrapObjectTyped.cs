@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Data;
@@ -29,7 +31,28 @@ namespace ToSic.Sxc.Data.Typed
 
         dynamic ITyped.Dyn => this;
 
-        bool ITyped.ContainsKey(string name) => PreWrap.ContainsKey(name);
+        bool ITyped.ContainsKey(string name)
+        {
+            return TypedHelpers.ContainsKey(name, this,
+                (e, k) => e.PreWrap.ContainsKey(k),
+                (e, k) =>
+                {
+                    var child = e.PreWrap.TryGet(k);
+                    if (!child.Found || child.Result == null) return null;
+                    if (child.Result is WrapObjectTyped typed) return typed;
+                    // Note: arrays have never been supported, so the following won't work
+                    // Because the inner objects are not of the expected type.
+                    // We don't want to start supporting it now.
+                    // Leave this code in though, so we know that we did try it.
+                    //if (child.Result is IEnumerable list)
+                    //    return list.Cast<WrapObjectTyped>().FirstOrDefault(o => o != null);
+                    return null;
+                }
+            // e.Children(k)?.FirstOrDefault()
+            );
+
+            return PreWrap.ContainsKey(name);
+        }
 
         IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only)
             => PreWrap.Keys(noParamOrder, only);

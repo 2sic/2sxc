@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Data
     /// <remarks>
     /// New in 16.02.
     /// </remarks>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP v16.02")]
+    [PublicApi]
     [JsonConverter(typeof(DynamicJsonConverter))] // we'll have to keep an eye on it for scenarios where ITypedItem also inherits from ITypedRead, and could have some surprises. But since the DynamicEntity was never meant to become json, probably there is no code out there that tries to do this. 
     public partial interface ITyped
     {

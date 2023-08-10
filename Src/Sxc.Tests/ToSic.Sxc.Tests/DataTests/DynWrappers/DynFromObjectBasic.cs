@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Wrapper;
 using static System.Text.Json.JsonSerializer;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
@@ -114,15 +115,69 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             var anon = new
             {
                 Key1 = "hello",
-                Key2 = "goodbye"
+                Key2 = "goodbye",
+                Deep = new 
+                {
+                    Sub1 = "hello",
+                    Sub2 = "hello",
+                    Deeper = new
+                    {
+                        SubSub1 = "hello"
+                    }
+                }
             };
             var typed = TypedFromObject(anon);
             IsTrue(typed.ContainsKey("Key1"));
             IsFalse(typed.ContainsKey("Nonexisting"));
             IsTrue(typed.Keys().Any());
-            AreEqual(2, typed.Keys().Count());
+            AreEqual(3, typed.Keys().Count());
             AreEqual(1, typed.Keys(only: new[] { "Key1" }).Count());
             AreEqual(0, typed.Keys(only: new[] { "Nonexisting" }).Count());
+        }
+
+        [TestMethod] public void DeepParent() => IsTrue(DataForDeepKeys.ContainsKey("Deep"));
+
+        [TestMethod] public void DeepSub1() => IsTrue(DataForDeepKeys.ContainsKey("Deep.Sub1"));
+        [TestMethod] public void DeepDeeper() => IsTrue(DataForDeepKeys.ContainsKey("Deep.Deeper"));
+        [TestMethod] public void DeepDeeperSub() => IsTrue(DataForDeepKeys.ContainsKey("Deep.Deeper.SubSub1"));
+        [TestMethod] public void DeepHasArray() => IsTrue(DataForDeepKeys.ContainsKey("List"));
+
+        // Note: Arrays are not supported
+        //IsTrue(typed.ContainsKey("List.L1"));
+        //IsTrue(typed.ContainsKey("List.L2"));
+
+        private ITyped DataForDeepKeys
+        {
+            get
+            {
+                var anon = new
+                {
+                    Key1 = "hello",
+                    Key2 = "goodbye",
+                    Deep = new
+                    {
+                        Sub1 = "hello",
+                        Sub2 = "hello",
+                        Deeper = new
+                        {
+                            SubSub1 = "hello"
+                        }
+                    },
+                    List = new object[]
+                    {
+                        new
+                        {
+                            L1 = "hello",
+                        },
+                        new
+                        {
+                            L2 = "hello",
+                        }
+                    }
+                };
+                var typed = TypedFromObject(anon);
+                return typed;
+            }
         }
     }
 }

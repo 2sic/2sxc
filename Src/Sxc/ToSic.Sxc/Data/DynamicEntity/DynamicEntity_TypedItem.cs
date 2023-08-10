@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Data.Typed;
 using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
@@ -13,27 +15,11 @@ namespace ToSic.Sxc.Data
     public partial class DynamicEntity: ITypedItem
     {
         [PrivateApi]
-        bool ITyped.ContainsKey(string name)
-        {
-            var parts = PropertyStack.SplitPathIntoParts(name);
-            if (!parts.Any()) return false;
-
-            var parentEntity = Entity;
-            var max = parts.Length - 1;
-            for (var i = 0; i < parts.Length; i++)
-            {
-                var key = parts[i];
-                var has = parentEntity.Attributes.ContainsKey(key);
-                if (i == max || !has) return has;
-
-                // has = true, and we have more nodes, so we must check the children
-                var children = parentEntity.Children(key);
-                if (!children.Any()) return false;
-                parentEntity = children[0];
-            }
-
-            return false;
-        }
+        bool ITyped.ContainsKey(string name) =>
+            TypedHelpers.ContainsKey(name, Entity,
+                (e, k) => e.Attributes.ContainsKey(k),
+                (e, k) => e.Children(k)?.FirstOrDefault()
+            );
 
         [PrivateApi]
         IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only) 

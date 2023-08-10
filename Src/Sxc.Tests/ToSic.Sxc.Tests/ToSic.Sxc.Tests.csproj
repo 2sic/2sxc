@@ -106,6 +106,8 @@
     <Compile Include="DataTests\DynConverterTests\AsConverterFakeTests.cs" />
     <Compile Include="DataTests\DynConverterTests\AsConverterTestsBase.cs" />
     <Compile Include="DataTests\DynConverterTests\AsConverterAsItem.cs" />
+    <Compile Include="DataTests\DynStack\DynStackKeys.cs" />
+    <Compile Include="DataTests\DynStack\DynStackTestBase.cs" />
     <Compile Include="DataTests\DynWrappers\DynFromDictionaryBasic.cs" />
     <Compile Include="DataTests\DynWrappers\DynFromObjectBasic.cs" />
     <Compile Include="DataTests\DynJson\DynJsonArrays.cs" />

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
 using static ToSic.Eav.Parameters;
 
@@ -10,6 +11,30 @@ namespace ToSic.Sxc.Data.Typed
 {
     internal static class TypedHelpers
     {
+        public static bool ContainsKey<TNode>(string name, TNode start, Func<TNode, string, bool> checkNode, Func<TNode, string, TNode> dig) where TNode: class
+        {
+            var parts = PropertyStack.SplitPathIntoParts(name);
+            if (!parts.Any()) return false;
+
+            var current = start;
+            var max = parts.Length - 1;
+            for (var i = 0; i < parts.Length; i++)
+            {
+                var key = parts[i];
+                var has = checkNode(current, key); // current.Attributes.ContainsKey(key);
+                if (i == max || !has) return has;
+
+                // has = true, and we have more nodes, so we must check the children
+                //var children = current.Children(key);
+                //if (!children.Any()) return false;
+                current = dig(current, key); // children[0];
+                if (current == null) return false;
+            }
+
+            return false;
+
+        }
+
         public static IEnumerable<string> FilterKeysIfPossible(string noParamOrder, IEnumerable<string> only, IEnumerable<string> result)
         {
             Protect(noParamOrder, nameof(only), methodName: nameof(IHasKeys.Keys));
