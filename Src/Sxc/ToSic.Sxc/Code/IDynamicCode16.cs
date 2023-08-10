@@ -30,8 +30,8 @@ namespace ToSic.Sxc.Code
 
         #region Kit
 
-        /// <inheritdoc cref="IDynamicCodeKit{TServiceKit}.Kit"/>
-        ServiceKit16 Kit { get; }
+        ///// <inheritdoc cref="IDynamicCodeKit{TServiceKit}.Kit"/>
+        //ServiceKit16 Kit { get; }
 
         #endregion
 

@@ -18,7 +18,6 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
 
         private ITypedItem Item => ItemFromObject(Data);
         private IField Field => Item.Field("ForField");
-        //private IField Metadata => Item.Metadata; //("Metadata");
 
         [TestMethod] public void FieldExists() => IsNotNull(Field);
 
