@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Data
             Protect(noParamOrder, nameof(required));
             return IsErrStrict(this, name, required, StrictGet)
                 ? throw ErrStrict(name)
-                : _adamCache.Get(name, () => _Cdf.Folder(Entity, name));
+                : _adamCache.Get(name, () => _Cdf.Folder(Entity, name, (this as ITypedItem).Field(name, required: false)));
         }
 
         private readonly GetOnceNamed<IFolder> _adamCache = new GetOnceNamed<IFolder>();

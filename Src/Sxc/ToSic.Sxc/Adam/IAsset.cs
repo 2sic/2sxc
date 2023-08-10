@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Adam
     /// This contains properties which both <see cref="IFolder"/> and <see cref="IFile"/> have in common.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public interface IAsset: IHasMetadata
+    public interface IAsset: IHasMetadata, IFromField
     {
         #region Metadata
         /// <summary>

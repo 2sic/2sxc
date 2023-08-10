@@ -30,15 +30,16 @@ namespace ToSic.Sxc.Services
         {
             var fileId = AdamManager.CheckIdStringForId(id);
             return fileId == null ? null : File(fileId.Value);
-            //if (!id.HasValue()) return null;
-            //var linkParts = new LinkParts(id);
-            //if (!linkParts.IsMatch || linkParts.Id == 0) return null;
-            //return File(linkParts.Id);
         }
 
 
         /// <inheritdoc />
-        public IFile File(IField field) => field?.Raw is string id ? File(id) : null; // File(field?.Raw as string);
+        public IFile File(IField field)
+        {
+            var file = field?.Raw is string id ? File(id) : null;
+            if (file != null) file.Field = field;
+            return file;
+        }
 
         /// <inheritdoc />
         public IFolder Folder(int id)

@@ -121,7 +121,7 @@ namespace ToSic.Sxc.Data.Typed
             Protect(noParamOrder, nameof(required));
             return IsErrStrict(this, name, required, PreWrap.Settings.GetStrict)
                 ? throw ErrStrict(name)
-                : _cdf.Value.AdamManager.Folder(Guid, name);
+                : _cdf.Value.AdamManager.Folder(Guid, name, Field(name, noParamOrder, required));
         }
 
         public IFile File(string name, string noParamOrder, bool? required)

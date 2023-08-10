@@ -57,7 +57,8 @@ namespace ToSic.Sxc.Code
         #region Adam
 
         /// <inheritdoc cref="IDynamicCode.AsAdam" />
-        public IFolder AsAdam(ICanBeEntity item, string fieldName) => Cdf.Folder(item, fieldName);
+        public IFolder AsAdam(ICanBeEntity item, string fieldName) 
+            => Cdf.Folder(item, fieldName, null);
 
         #endregion
     }

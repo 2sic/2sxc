@@ -88,15 +88,16 @@ namespace ToSic.Sxc.Adam
 
         public Export<TFolderId, TFileId> Export => new Export<TFolderId, TFileId>(this);
 
-        public override IFolder Folder(Guid entityGuid, string fieldName)
+        public override IFolder Folder(Guid entityGuid, string fieldName, IField field = default)
         {
             var folderStorage = _fieldStorageGenerator.New().InitItemAndField(entityGuid, fieldName);
             folderStorage.Init(this);
-            var folder = new FolderOfField<TFolderId, TFileId>(this, folderStorage);
+            var folder = new FolderOfField<TFolderId, TFileId>(this, folderStorage)
+            {
+                Field = field
+            };
             return folder;
         }
-
-        public override IFolder Folder(IEntity entity, string fieldName) => Folder(entity.EntityGuid, fieldName);
 
         // Note: Signature isn't great yet, as it's int, but theoretically it could be another type.
         public override IFile File(int id) =>

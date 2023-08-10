@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Adam
+﻿using ToSic.Sxc.Data;
+
+namespace ToSic.Sxc.Adam
 {
     /// <summary>
     /// The ADAM Navigator creates a folder object for an entity/field combination
@@ -30,7 +32,6 @@
 
             PhysicalPath = f.PhysicalPath;
         }
-
     }
 
 }

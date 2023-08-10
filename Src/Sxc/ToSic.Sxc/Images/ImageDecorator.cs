@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Images
             if (mdOf?.Target == null || !path.HasValue()) return;
             var ext = Path.GetExtension(path);
             if (ext.HasValue() && Classification.IsImage(ext))
-                mdOf.Target.Recommendations = new[] { ImageDecorator.TypeNameId };
+                mdOf.Target.Recommendations = new[] { TypeNameId };
         }
 
 

@@ -2,6 +2,7 @@
 using ToSic.Eav;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
 
@@ -131,6 +132,7 @@ namespace ToSic.Sxc.Services
         /// 
         /// - a string url, in which case it would be used if `url` is not specified
         /// - a <see cref="IField"/> in which case it would be used if `field` is not specified
+        /// - a <see cref="IFile"/> (new 16.03)
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="settings">
@@ -162,7 +164,8 @@ namespace ToSic.Sxc.Services
         /// </param>
         /// <returns>A ResponsivePicture object which can be rendered directly. See [](xref:NetCode.Images.Index)</returns>
         /// <remarks>
-        /// Added in v13.03
+        /// * Added in v13.03
+        /// * Extended in v16.03 to also support IFile
         /// </remarks>
         IResponsivePicture Picture(
             object link = null,

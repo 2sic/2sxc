@@ -40,7 +40,8 @@ namespace ToSic.Sxc.Data
         }
         #region ADAM / Folder
 
-        public IFolder Folder(ICanBeEntity item, string fieldName) => AdamManager.Folder(item.Entity, fieldName);
+        public IFolder Folder(ICanBeEntity item, string name, IField field)
+            => AdamManager.Folder(item.Entity.EntityGuid, name, field);
 
         #endregion
 

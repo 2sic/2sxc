@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Metadata;
+using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -17,7 +19,7 @@ namespace ToSic.Sxc.Adam
 
         /// <inheritdoc />
         [JsonIgnore]
-        public IMetadata Metadata => _metadata ?? (_metadata = AdamManager.MetadataMaker.Get(AdamManager, CmsMetadata.FolderPrefix + SysId, Name));
+        public IMetadata Metadata => _metadata ?? (_metadata = AdamMetadataMaker.Create(AdamManager, CmsMetadata.FolderPrefix + SysId, Name));
         private IMetadata _metadata;
 
         /// <inheritdoc />
@@ -41,20 +43,32 @@ namespace ToSic.Sxc.Adam
 
 
         /// <inheritdoc />
-        public IEnumerable<IFolder> Folders => _folders ?? (_folders = AdamManager.AdamFs.GetFolders(this)); 
-
-        private IEnumerable<IFolder> _folders;
+        public IEnumerable<IFolder> Folders => _folders.Get(() =>
+        {
+            var folders = AdamManager.AdamFs.GetFolders(this);
+            folders?.ForEach(f => f.Field = Field);
+            return folders;
+        });
+        private readonly GetOnce<IEnumerable<IFolder>> _folders = new GetOnce<IEnumerable<IFolder>>();
 
 
         /// <inheritdoc/>
-        public IEnumerable<IFile> Files 
-            => _files ?? (_files = AdamManager.AdamFs.GetFiles(this));
-        private IEnumerable<IFile> _files;
+        public IEnumerable<IFile> Files => _files.Get(() =>
+        {
+            var files = AdamManager.AdamFs.GetFiles(this);
+            files?.ForEach(f => f.Field = Field);
+            return files;
+        });
+        private readonly GetOnce<IEnumerable<IFile>> _files = new GetOnce<IEnumerable<IFile>>();
 
+        IMetadataOf IHasMetadata.Metadata => ((Metadata as ITypedItem)?.Metadata as IHasMetadata)?.Metadata;
 
-        IMetadataOf IHasMetadata.Metadata
-            => _metadataOf ?? (_metadataOf = AdamManager.AppContext.AppState.GetMetadataOf(TargetTypes.CmsItem,
-                CmsMetadata.FolderPrefix + SysId, Name));
-        private IMetadataOf _metadataOf;
+        //IMetadataOf IHasMetadata.Metadata
+        //    => _metadataOf ?? (_metadataOf = AdamManager.AppContext.AppState.GetMetadataOf(TargetTypes.CmsItem,
+        //        CmsMetadata.FolderPrefix + SysId, Name));
+        //private IMetadataOf _metadataOf;
+
+        [PrivateApi]
+        public IField Field { get; set; }
     }
 }

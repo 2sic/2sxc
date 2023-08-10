@@ -43,9 +43,9 @@ namespace ToSic.Sxc.Images
             Parameters.ProtectAgainstMissingParameterNames(noParamOrder, method,
                 $"{nameof(link)}, {nameof(settings)}, factor, {nameof(imgAlt)}, {nameof(imgClass)}, recipe");
 
-            Field = link as IField;
+            Field = link as IField ?? (link as IFromField)?.Field;
             HasDecoOrNull = link as IHasMetadata;
-            Link = (IHasLink)Field ?? new HasLink(link as string);
+            Link = link as IHasLink ?? new HasLink(link as string);
             Settings = settings;
             ImgAlt = imgAlt;
             ImgAltFallback = imgAltFallback;

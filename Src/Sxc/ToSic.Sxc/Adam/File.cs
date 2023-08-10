@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Metadata;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
 
@@ -13,7 +14,8 @@ namespace ToSic.Sxc.Adam
 #pragma warning disable 618
         ToSic.SexyContent.Adam.AdamFile, 
 #pragma warning restore 618
-        IFile
+        IFile,
+        IHasLink
     {
         public File(AdamManager adamManager) => AdamManager = adamManager;
         private AdamManager AdamManager { get; }
@@ -23,7 +25,7 @@ namespace ToSic.Sxc.Adam
         /// <inheritdoc />
         [JsonIgnore]
         public IMetadata Metadata => _metadata 
-            ?? (_metadata = AdamManager.MetadataMaker.Get(AdamManager, CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations));
+            ?? (_metadata = AdamMetadataMaker.Create(AdamManager, CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations));
         private IMetadata _metadata;
 
         /// <summary>
@@ -36,6 +38,8 @@ namespace ToSic.Sxc.Adam
             if (Type == Classification.Image)
                 mdOf.Target.Recommendations = new[] { ImageDecorator.TypeNameId };
         }
+
+        IMetadataOf IHasMetadata.Metadata => (Metadata as IHasMetadata)?.Metadata;
 
         /// <inheritdoc />
         [JsonIgnore]
@@ -56,9 +60,8 @@ namespace ToSic.Sxc.Adam
 
         public int FileId => SysId as int? ?? 0;
 
-        IMetadataOf IHasMetadata.Metadata
-            => _metadataOf ?? (_metadataOf = AdamManager.AppContext.AppState.GetMetadataOf(TargetTypes.CmsItem,
-                CmsMetadata.FilePrefix + SysId, FileName));
-        private IMetadataOf _metadataOf;
+
+        [PrivateApi]
+        public IField Field { get; set; }
     }
 }

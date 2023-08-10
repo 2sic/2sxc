@@ -102,9 +102,7 @@ namespace ToSic.Sxc.Adam
 
         #region Properties the base class already provides, but must be implemented at inheritance
 
-        public abstract IFolder Folder(Guid entityGuid, string fieldName);
-
-        public abstract IFolder Folder(IEntity entity, string fieldName);
+        public abstract IFolder Folder(Guid entityGuid, string fieldName, IField field = default);
 
 
         public abstract IFile File(int id);
