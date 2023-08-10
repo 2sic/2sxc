@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Configuration;
 using DotNetNuke.Services.FileSystem;
+using ToSic.Eav.Apps.Adam;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
@@ -79,7 +80,7 @@ namespace ToSic.Sxc.Dnn.Adam
             var name = Path.GetFileNameWithoutExtension(fileName);
             var ext = Path.GetExtension(fileName);
             for (var i = 1;
-                 i < AdamFileSystemBasic.MaxSameFileRetries &&
+                 i < AdamConstants.MaxSameFileRetries &&
                  _dnnFiles.FileExists(dnnFolder, Path.GetFileName(fileName));
                  i++)
                 fileName = $"{name}-{i}{ext}";

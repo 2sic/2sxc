@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Adam
 {
-    public abstract class AdamFileSystemBasic<TFolder, TFile>: AdamFileSystemBase, IAdamFileSystem<TFolder, TFile>
+    public abstract class AdamFileSystemBasic<TFolder, TFile>: ServiceBase, IAdamFileSystem<TFolder, TFile>
     {
         #region Setup
 
-        protected AdamFileSystemBasic(IAdamPaths adamPaths, string logPrefix) : base(logPrefix)
+        protected AdamFileSystemBasic(IAdamPaths adamPaths, string logPrefix) : base($"{logPrefix}.FilSys")
         {
             ConnectServices(
                 _adamPaths = adamPaths,
@@ -41,7 +43,7 @@ namespace ToSic.Sxc.Adam
         public virtual void Delete(IFile file) => Log.Do(() => File.Delete(_adamPaths.PhysicalPath(file.Path)));
 
 
-        public int MaxUploadKb() => MaxUploadKbDefault;
+        public int MaxUploadKb() => AdamConstants.MaxUploadKbDefault;
         public abstract File<TFolder, TFile> GetFile(TFile fileId);
         public abstract List<File<TFolder, TFile>> GetFiles(IFolder folder);
 

@@ -22,9 +22,12 @@ namespace ToSic.Sxc.Adam
         public IMetadata Metadata => _metadata ?? (_metadata = AdamMetadataMaker.Create(AdamManager, CmsMetadata.FolderPrefix + SysId, Name));
         private IMetadata _metadata;
 
+        IMetadataOf IHasMetadata.Metadata => (Metadata as IHasMetadata)?.Metadata;
+
         /// <inheritdoc />
         [JsonIgnore]
         public bool HasMetadata => (Metadata as IHasMetadata)?.Metadata.Any() ?? false;
+
 
 
         /// <inheritdoc />
@@ -60,13 +63,6 @@ namespace ToSic.Sxc.Adam
             return files;
         });
         private readonly GetOnce<IEnumerable<IFile>> _files = new GetOnce<IEnumerable<IFile>>();
-
-        IMetadataOf IHasMetadata.Metadata => ((Metadata as ITypedItem)?.Metadata as IHasMetadata)?.Metadata;
-
-        //IMetadataOf IHasMetadata.Metadata
-        //    => _metadataOf ?? (_metadataOf = AdamManager.AppContext.AppState.GetMetadataOf(TargetTypes.CmsItem,
-        //        CmsMetadata.FolderPrefix + SysId, Name));
-        //private IMetadataOf _metadataOf;
 
         [PrivateApi]
         public IField Field { get; set; }
