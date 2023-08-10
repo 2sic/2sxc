@@ -121,8 +121,8 @@ namespace ToSic.Sxc.Images
             var one = DimGen.ResizeDimensions(resizeSettings, srcSetSettings, partDef);
             one.Recipe = srcSetSettings;
 
-            var imgDecorator = _imgDecCache.GetOrAdd(field, 
-                f => GetOrNull(f, _siteLazy.Value.SafeLanguagePriorityCodes()));
+            var imgDecorator = field == null ? null 
+                : _imgDecCache.GetOrAdd(field, f => GetOrNull(f, _siteLazy.Value.SafeLanguagePriorityCodes()));
 
             var resizeMode = resizeSettings.ResizeMode;
             if (imgDecorator?.CropBehavior == NoCrop)
