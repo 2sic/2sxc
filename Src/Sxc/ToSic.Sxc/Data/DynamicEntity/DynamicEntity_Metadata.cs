@@ -10,6 +10,10 @@ namespace ToSic.Sxc.Data
         public IMetadata Metadata => _metadata ?? (_metadata = new Metadata(Entity?.Metadata, Entity, _Cdf));
         private Metadata _metadata;
 
+        /// <inheritdoc />
+        IMetadata ITypedItem.Metadata => Metadata;
+
+
         /// <summary>
         /// Explicit implementation, so it's not really available on DynamicEntity, only when cast to IHasMetadata
         /// This is important, because it uses the same name "Metadata"

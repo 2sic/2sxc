@@ -12,11 +12,13 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             public string ForField { get; set; } = "Hello";
 
             public string File => "file:72";
+
         }
         private static readonly TestData Data = new TestData();
 
         private ITypedItem Item => ItemFromObject(Data);
         private IField Field => Item.Field("ForField");
+        //private IField Metadata => Item.Metadata; //("Metadata");
 
         [TestMethod] public void FieldExists() => IsNotNull(Field);
 
@@ -24,7 +26,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
 
         [TestMethod] public void FieldHasValue() => AreEqual("Hello", Field.Value);
         [TestMethod] public void FieldHasRaw() => AreEqual("Hello", Field.Raw);
-
+        
         // File / Folder Tests are more complex, as they need an App context
         // Disabled for now
         //[TestMethod] public void FileExists() => IsNotNull(Item.File("File"));

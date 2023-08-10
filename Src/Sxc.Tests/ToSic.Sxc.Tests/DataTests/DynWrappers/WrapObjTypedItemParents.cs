@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
         private class TestTag
         {
             public int Id { get; set; }
-            public string Name { get; set; }
+            public string Title { get; set; }
             public string Field { get; set; }
             public virtual string Type => "Tag";
         }
@@ -26,25 +26,25 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             new TestTag
             {
                 Id = 1001,
-                Name = "Web",
+                Title = "Web",
                 Field = "Tags",
             },
             new TestTag
             {
                 Id = 1002,
-                Name = "IT",
+                Title = "IT",
                 Field = "Advanced"
             },
             new TestCategory
             {
                 Id = 2001,
-                Name = "Cat1",
+                Title = "Cat1",
                 Field = "Advanced"
             },
             new TestCategory
             {
                 Id = 2002,
-                Name = "Cat2",
+                Title = "Cat2",
                 Field = "Advanced"
             }
         };
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
         [TestMethod] public void ParentsFlatExists() => IsNotNull(TagsFlat);
         [TestMethod] public void ParentsFlatCount() => AreEqual(4, TagsFlat.Count());
         [TestMethod] public void ParentsFlat1Id() => AreEqual(DataParent.Parents[0].Id, TagsFlat.First().Id);
-        [TestMethod] public void ParentsFlat1Name() => AreEqual(DataParent.Parents[0].Name, TagsFlat.First().Title);
+        [TestMethod] public void ParentsFlat1Name() => AreEqual(DataParent.Parents[0].Title, TagsFlat.First().Title);
         [TestMethod] public void ParentsFlat2Id() => AreEqual(DataParent.Parents[1].Id, TagsFlat.Skip(1).First().Id);
         [TestMethod] public void ParentsFlatTagsCount() => AreEqual(1, TagsFlatInField("Tags").Count());
         [TestMethod] public void ParentsFlatCategoriesCount() => AreEqual(3, TagsFlatInField("Advanced").Count());

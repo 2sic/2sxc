@@ -25,7 +25,6 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             IsNull(typed.Type);
             IsNull(typed.Presentation);
             IsNull(typed.Child("DoesntExist"));
-            IsNull(typed.Field("Simple"));
         }
 
         [TestMethod] public void IsDemoItemDefault() => IsFalse(ItemFromObject(new { }).IsDemoItem);
@@ -41,7 +40,6 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
         private static readonly Guid _guid = Guid.NewGuid();
         [TestMethod] public void TitleDefault() => IsNull(ItemFromObject(new { }).Title);
         [TestMethod] public void TitleCustom() => AreEqual("title X", ItemFromObject(new { Title = "title X" }).Title);
-        [TestMethod] public void TitleFromName() => AreEqual("title X", ItemFromObject(new { Name = "title X" }).Title);
         [TestMethod] public void TitleNumber() => AreEqual("222", ItemFromObject(new { Title = 222 }).Title);
         
     }

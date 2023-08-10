@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Build;
+using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
@@ -45,9 +47,7 @@ namespace ToSic.Sxc.Data.Typed
 
         public Guid Guid => PreWrap.TryGet(nameof(Guid), noParamOrder: Protector, fallback: Guid.Empty, required: false);
 
-        public string Title => _title.Get(() => 
-            PreWrap.TryGet<string>(nameof(ITypedItem.Title), noParamOrder: Protector, fallback: null, required: false)
-            ?? PreWrap.TryGet<string>("Name", noParamOrder: Protector, fallback: null, required: false));
+        public string Title => _title.Get(() => PreWrap.TryGet<string>(nameof(ITypedItem.Title), noParamOrder: Protector, fallback: null, required: false));
         private readonly GetOnce<string> _title = new GetOnce<string>();
 
         #region Properties which return null or empty
@@ -142,14 +142,37 @@ namespace ToSic.Sxc.Data.Typed
 
         #region Not Supported Properties such as Entity, Type, Child, Folder, Presentation, Metadata
 
-        IMetadata ITypedItem.Metadata
+        IMetadata ITypedItem.Metadata => _metadata ?? (_metadata = BuildMetadata(PreWrap.TryGet(nameof(Metadata)).Raw));
+
+        private Metadata BuildMetadata(object raw)
         {
-            get
-            {
-                // TODO: maybe consider creating virtual metadata based on the data provided?
-                throw NotSupportedEx();
-            }
+            var objList = raw != null
+                ? raw is IEnumerable rawEnum
+                    ? rawEnum.Cast<object>().ToList()
+                    : new List<object> { raw }
+                : new List<object>();
+
+            var df = _cdf.Value.Services.DataFactory.New(
+                options: new DataFactoryOptions(appId: _cdf.Value.BlockOrNull?.AppId, autoId: false));
+            var mdEntities = objList
+                .Where(o => o != null)
+                .Select(o =>
+                {
+                    var values = o.ToDicInvariantInsensitive();
+                    // Note: id/guid don't really work, but it's never used in metadata context
+                    //var id = values.TryGetValue(nameof(Id), out var maybeId) ? maybeId.ConvertOrFallback(0) : 0;
+                    //var guid = values.TryGetValue(nameof(Guid), out var maybeGuid) ? maybeGuid.ConvertOrFallback(Guid.Empty) : Guid.Empty;
+                    return df.Create(values); //, id: id, guid: guid);
+                })
+                .ToList();
+
+            var mdOf = new MetadataOf<int>(0, 0, "virtual", mdEntities);
+            var metadata = new Metadata(mdOf, parentOrNull: null, _cdf.Value);
+            ;
+            return metadata;
         }
+
+        private Metadata _metadata;
 
         public IField Field(string name, string noParamOrder, bool? required) 
             => new Field(this, name, _cdf.Value);

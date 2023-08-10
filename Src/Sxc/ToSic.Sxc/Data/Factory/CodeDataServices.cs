@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Data;
+using ToSic.Eav.Data.Build;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
@@ -10,22 +11,24 @@ namespace ToSic.Sxc.Data
     [PrivateApi]
     public class CodeDataServices: MyServicesBase
     {
-        public CodeDataServices(LazySvc<IValueConverter> valueConverterLazy,
+        public CodeDataServices(
+            LazySvc<IValueConverter> valueConverterLazy,
             Generator<IRenderService> renderServiceGenerator,
             LazySvc<IScrub> scrub,
-            LazySvc<ConvertForCodeService> forCode)
+            LazySvc<ConvertForCodeService> forCode,
+            LazySvc<DataFactory> dataFactory)
         {
             ConnectServices(
                 _valueConverterLazy = valueConverterLazy,
                 _renderServiceGenerator = renderServiceGenerator,
                 _scrub = scrub,
-                _forCode = forCode
+                _forCode = forCode,
+                _dataFactory = dataFactory
             );
         }
         /// <summary>
         /// The ValueConverter is used to parse links in the format like "file:72"
         /// </summary>
-        
         internal IValueConverter ValueConverterOrNull => _valueConverterLazy.Value;
         private readonly LazySvc<IValueConverter> _valueConverterLazy;
 
@@ -37,6 +40,9 @@ namespace ToSic.Sxc.Data
 
         internal ConvertForCodeService ForCode => _forCode.Value;
         private readonly LazySvc<ConvertForCodeService> _forCode;
+
+        internal DataFactory DataFactory => _dataFactory.Value;
+        private readonly LazySvc<DataFactory> _dataFactory;
 
     }
 }
