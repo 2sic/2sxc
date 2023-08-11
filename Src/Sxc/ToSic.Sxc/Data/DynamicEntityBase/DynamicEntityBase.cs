@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Data
 {
@@ -13,21 +15,26 @@ namespace ToSic.Sxc.Data
     {
         protected DynamicEntityBase(CodeDataFactory cdf, bool strict)
         {
-            _Cdf = cdf;
-            Helper = new CodeEntityHelper(this, cdf, strict);
-        }
-        internal DynamicEntityBase(CodeEntityHelper helper)
-        {
-            _Cdf = helper.Cdf;
-            Helper = helper;
+            Cdf = cdf;
+            _strict = strict;
         }
 
         [PrivateApi]
-        internal CodeEntityHelper Helper { get; }
+        protected void CompleteSetup(IPropertyLookup data) 
+            => _helper = new CodeEntityHelper(data, Cdf, _strict, () => Debug);
+
+        [PrivateApi]
+        internal CodeEntityHelper Helper => _helper ?? throw new Exception($"{nameof(Helper)} not ready, did you CompleteSetup()");
+        private CodeEntityHelper _helper;
+
+        internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, _strict, Debug));
+        private SubDataFactory _subData;
 
         [PrivateApi]
         // ReSharper disable once InconsistentNaming
-        public CodeDataFactory _Cdf { get; }
+        public CodeDataFactory Cdf { get; }
+
+        private readonly bool _strict;
 
         public abstract PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path);
 

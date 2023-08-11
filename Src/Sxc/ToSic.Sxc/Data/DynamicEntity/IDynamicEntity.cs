@@ -130,7 +130,7 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         // ReSharper disable once InconsistentNaming
-        CodeDataFactory _Cdf {get; }
+        CodeDataFactory Cdf {get; }
 
     }
 }

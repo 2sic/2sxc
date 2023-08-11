@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
@@ -28,13 +29,16 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         internal PreWrapEntity PreWrap { get; private set; }
 
+        private CodeDynHelper DynHelper => _dynHelper ?? (_dynHelper = new CodeDynHelper(Entity, SubDataFactory));
+        private CodeDynHelper _dynHelper;
+
         /// <summary>
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
         [PrivateApi]
         public DynamicEntity(IEntity entity, CodeDataFactory cdf, bool strict): base(cdf, strict: strict)
         {
-            SetEntity(entity);
+            CompleteSetup(entity);
 
             // WIP new in 12.03
             ListHelper = new DynamicEntityListHelper(this, () => Debug, strictGet: strict, cdf);
@@ -43,20 +47,21 @@ namespace ToSic.Sxc.Data
         internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, bool strict, CodeDataFactory cdf): base(cdf, strict: strict)
         {
             // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
-            SetEntity(list.FirstOrDefault() ?? Helper.PlaceHolder(appIdOrNull, parent, field));
+            CompleteSetup(list.FirstOrDefault() ?? cdf.PlaceHolderInBlock(appIdOrNull, parent, field));
             ListHelper = new DynamicEntityListHelper(list, parent, field, () => Debug, strictGet: strict, cdf);
         }
         [PrivateApi]
         internal readonly DynamicEntityListHelper ListHelper;
 
         [PrivateApi]
-        protected void SetEntity(IEntity entity)
+        private void CompleteSetup(IEntity entity)
         {
             Entity = entity;
-            PreWrap = new PreWrapEntity(entity, Helper, this);
+            PreWrap = new PreWrapEntity(entity, () => Debug);
             var entAsWrapper = Entity as IEntityWrapper;
             RootContentsForEqualityCheck = entAsWrapper?.RootContentsForEqualityCheck ?? Entity;
             Decorators = entAsWrapper?.Decorators ?? new List<IDecorator<IEntity>>();
+            CompleteSetup(PreWrap);
         }
 
         #endregion
@@ -70,7 +75,7 @@ namespace ToSic.Sxc.Data
         public Guid EntityGuid => Entity?.EntityGuid ?? Guid.Empty;
 
         /// <inheritdoc />
-        public string EntityTitle => Entity?.GetBestTitle(_Cdf.Dimensions);
+        public string EntityTitle => Entity?.GetBestTitle(Cdf.Dimensions);
 
         /// <inheritdoc />
         public string EntityType => Entity?.Type?.Name;
@@ -91,10 +96,10 @@ namespace ToSic.Sxc.Data
             bool? toolbar = default,
             object imageSettings = default,
             bool debug = default
-        ) => _Cdf.CompatibilityLevel < Constants.CompatibilityLevel12
+        ) => Cdf.CompatibilityLevel < Constants.CompatibilityLevel12
             // Only do compatibility check if used on DynamicEntity
             ? throw new NotSupportedException($"{nameof(Html)}(...) not supported in older Razor templates. Use Razor14, RazorPro or newer.")
-            : TypedItemHelpers.Html(_Cdf, this, name: name, noParamOrder: noParamOrder, container: container,
+            : TypedItemHelpers.Html(Cdf, this, name: name, noParamOrder: noParamOrder, container: container,
                 toolbar: toolbar, imageSettings: imageSettings, required: false, debug: debug);
 
         #endregion
@@ -115,7 +120,7 @@ namespace ToSic.Sxc.Data
         #region Metadata
 
         /// <inheritdoc />
-        public IMetadata Metadata => PreWrap.Metadata;
+        public IMetadata Metadata => DynHelper.Metadata;
 
         /// <summary>
         /// Explicit implementation, so it's not really available on DynamicEntity, only when cast to IHasMetadata
@@ -130,18 +135,18 @@ namespace ToSic.Sxc.Data
         #region Relationships: Presentation, Children, Parents
 
         /// <inheritdoc />
-        public dynamic Presentation => PreWrap.Presentation;
+        public dynamic Presentation => DynHelper.Presentation;
 
         /// <inheritdoc />
         public List<IDynamicEntity> Parents(string type = null, string field = null)
-            => Entity.Parents(type, field).Select(e => Helper.SubDynEntityOrNull(e)).ToList();
+            => Entity.Parents(type, field).Select(e => SubDataFactory.SubDynEntityOrNull(e)).ToList();
 
 
         /// <inheritdoc />
         public List<IDynamicEntity> Children(string field = null, string type = null)
             => Entity.Children(field, type)
                 .Select((e, i) => EntityInBlockDecorator.Wrap(e, Entity.EntityGuid, field, i))
-                .Select(e => Helper.SubDynEntityOrNull(e))
+                .Select(e => SubDataFactory.SubDynEntityOrNull(e))
                 .ToList();
 
 
@@ -153,10 +158,10 @@ namespace ToSic.Sxc.Data
         public bool IsPublished => Entity?.IsPublished ?? true;
 
         /// <inheritdoc />
-        public dynamic GetDraft() => Helper.SubDynEntityOrNull(Entity == null ? null : _Cdf.BlockOrNull?.App.AppState?.GetDraft(Entity));
+        public dynamic GetDraft() => SubDataFactory.SubDynEntityOrNull(Entity == null ? null : Cdf.BlockOrNull?.App.AppState?.GetDraft(Entity));
 
         /// <inheritdoc />
-        public dynamic GetPublished() => Helper.SubDynEntityOrNull(Entity == null ? null : _Cdf.BlockOrNull?.App.AppState?.GetPublished(Entity));
+        public dynamic GetPublished() => SubDataFactory.SubDynEntityOrNull(Entity == null ? null : Cdf.BlockOrNull?.App.AppState?.GetPublished(Entity));
 
         #endregion
 

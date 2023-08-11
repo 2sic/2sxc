@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
@@ -12,26 +13,19 @@ namespace ToSic.Sxc.Data
 {
     internal class PreWrapEntity: ICanBeEntity, IPropertyLookup
     {
-        private readonly ICanDebug _debugState;
+        private readonly Func<bool> _getDebug;
+
         public IEntity Entity { get; }
-        public CodeEntityHelper Helper { get; }
 
-        public PreWrapEntity(IEntity entity, CodeEntityHelper helper, ICanDebug debugState)
+        public PreWrapEntity(IEntity entity, Func<bool> getDebug)
         {
-            _debugState = debugState;
+            _getDebug = getDebug;
             Entity = entity;
-            Helper = helper;
         }
-
-        public dynamic Presentation => _p ?? (_p = Helper.SubDynEntityOrNull(Entity.GetDecorator<EntityInBlockDecorator>()?.Presentation));
-        private IDynamicEntity _p;
-
-        public IMetadata Metadata => _metadata ?? (_metadata = new Metadata(Entity?.Metadata, Entity, Helper.Cdf));
-        private Metadata _metadata;
 
         public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
         {
-            specs = specs.SubLog("Sxc.DynEnt", _debugState.Debug);
+            specs = specs.SubLog("Sxc.DynEnt", _getDebug());
             var l = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), "DynEntity");
             // check Entity is null (in cases where null-objects are asked for properties)
             if (Entity == null) return l.ReturnNull("no entity");

@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Blocks
 
         private static Services.IRenderService RenderServiceWithWarning(DynamicEntity parent)
         {
-            var cdf = parent._Cdf;
+            var cdf = parent.Cdf;
             // First do version checks -should not be allowed if compatibility is too low
             if (cdf.CompatibilityLevel > Constants.MaxLevelForStaticRender)
                 throw new Exception(

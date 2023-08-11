@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         bool ITyped.ContainsKey(string name) =>
-            TypedHelpers.ContainsKey(name, Entity,
+            ContainsKey(name, Entity,
                 (e, k) => e.Attributes.ContainsKey(k),
                 (e, k) => e.Children(k)?.FirstOrDefault()
             );
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Data
             Protect(noParamOrder, nameof(required));
             return IsErrStrict(this, name, required, Helper.StrictGet)
                 ? throw ErrStrict(name)
-                : _adamCache.Get(name, () => _Cdf.Folder(Entity, name, (this as ITypedItem).Field(name, required: false)));
+                : _adamCache.Get(name, () => Cdf.Folder(Entity, name, (this as ITypedItem).Field(name, required: false)));
         }
         private readonly GetOnceNamed<IFolder> _adamCache = new GetOnceNamed<IFolder>();
 
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Data
             var typedThis = this as ITypedItem;
             // Case 1: The field contains a direct reference to a file
             var field = typedThis.Field(name, required: required);
-            var file = _Cdf.GetServiceKitOrThrow().Adam.File(field);
+            var file = Cdf.GetServiceKitOrThrow().Adam.File(field);
             // Case 2: No direct reference, just get the first file in the folder of this field
             return file ?? typedThis.Folder(name).Files.FirstOrDefault();
         }
@@ -72,10 +72,10 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi]
-        ITypedItem ITypedItem.Presentation => PreWrap.Presentation;
+        ITypedItem ITypedItem.Presentation => DynHelper.Presentation;
 
         /// <inheritdoc />
-        IMetadata ITypedItem.Metadata => PreWrap.Metadata;
+        IMetadata ITypedItem.Metadata => DynHelper.Metadata;
 
         /// <inheritdoc />
         [PrivateApi]
@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Data
             Protect(noParamOrder, nameof(field), message: 
                 $" ***IMPORTANT***: The typed '.Parents(...)' method was changed to also make the parameter '{nameof(type)}' required. " +
                 "So if you had '.Parents(something)' then change it to '.Parents(type: something)'");
-            return _Cdf.AsItems(Parents(type, field), noParamOrder);
+            return Cdf.AsItems(Parents(type, field), noParamOrder);
         }
 
         /// <inheritdoc />
@@ -97,11 +97,11 @@ namespace ToSic.Sxc.Data
                 throw ErrStrict(field);
 
             var dynChildren = Children(field, type);
-            var list = _Cdf.AsItems(dynChildren, noParamOrder).ToList();
+            var list = Cdf.AsItems(dynChildren, noParamOrder).ToList();
             if (list.Any()) return list;
 
             // Generate a marker/placeholder to remember what field this is etc.
-            var fakeEntity = Helper.PlaceHolder(Entity.AppId, Entity, field);
+            var fakeEntity = Helper.Cdf.PlaceHolderInBlock(Entity.AppId, Entity, field);
             return new ListTypedItems(new List<ITypedItem>(), fakeEntity);
         }
 
@@ -130,7 +130,7 @@ namespace ToSic.Sxc.Data
             object imageSettings,
             bool? required,
             bool debug
-        ) => TypedItemHelpers.Html(_Cdf, this, name: name, noParamOrder: noParamOrder, container: container,
+        ) => TypedItemHelpers.Html(Cdf, this, name: name, noParamOrder: noParamOrder, container: container,
             toolbar: toolbar, imageSettings: imageSettings, required: required, debug: debug);
 
         /// <inheritdoc/>
@@ -144,7 +144,7 @@ namespace ToSic.Sxc.Data
             string imgAltFallback,
             string imgClass,
             object recipe
-        ) => TypedItemHelpers.Picture(cdf: _Cdf, item: this, name: name, noParamOrder: noParamOrder, settings: settings,
+        ) => TypedItemHelpers.Picture(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder, settings: settings,
             factor: factor, width: width, imgAlt: imgAlt,
             imgAltFallback: imgAltFallback, imgClass: imgClass, recipe: recipe);
 

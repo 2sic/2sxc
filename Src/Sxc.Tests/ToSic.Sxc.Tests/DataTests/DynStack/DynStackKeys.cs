@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynStack
                     },
                 },
             });
-            var stack = Factory.AsStack(typed, part2);
+            var stack = Factory.AsStack(new [] { typed, part2 });
             return stack;
         }
     }

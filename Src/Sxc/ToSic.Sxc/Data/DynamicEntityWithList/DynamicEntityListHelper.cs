@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Data
                         var blockEntity = reWrapWithListNumbering
                             ? EntityInBlockDecorator.Wrap(e, ParentOrNull.EntityGuid, FieldOrNull, i)
                             : e;
-                        return CodeEntityHelper.SubDynEntityOrNull(blockEntity, _cdf, debug, strictGet: StrictGet);
+                        return SubDataFactory.SubDynEntityOrNull(blockEntity, _cdf, debug, strictGet: StrictGet);
                     })
                     .ToList();
             }

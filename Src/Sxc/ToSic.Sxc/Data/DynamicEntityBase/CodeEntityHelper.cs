@@ -13,14 +13,21 @@ namespace ToSic.Sxc.Data
 {
     internal class CodeEntityHelper
     {
+        private readonly Func<bool> _getDebug;
 
         #region Setup and Log
 
-        public CodeEntityHelper(IPropertyLookup parent, CodeDataFactory cdf, bool strict)
+        public CodeEntityHelper(IPropertyLookup parent, CodeDataFactory cdf, bool strict, Func<bool> getDebug)
         {
+            _getDebug = getDebug;
             Parent = parent;
             Cdf = cdf;
             StrictGet = strict;
+        }
+
+        public void Setup(IPropertyLookup parent)
+        {
+            Parent = parent;
         }
 
         public CodeDataFactory Cdf { get; }
@@ -28,11 +35,9 @@ namespace ToSic.Sxc.Data
         public bool StrictGet { get; }
 
 
-        public readonly IPropertyLookup Parent;
+        public IPropertyLookup Parent { get; private set; }
 
-        public bool Debug { get; set; }
-
-        public ILog LogOrNull => _logOrNull.Get(() => Cdf?.Log?.SubLogOrNull("DynEnt", Debug));
+        public ILog LogOrNull => _logOrNull.Get(() => Cdf?.Log?.SubLogOrNull("DynEnt", _getDebug()));
         private readonly GetOnce<ILog> _logOrNull = new GetOnce<ILog>();
 
         #endregion
@@ -43,7 +48,7 @@ namespace ToSic.Sxc.Data
 
         public TryGetResult GetInternal(string field, string language = null, bool lookupLink = true)
         {
-            var logOrNull = LogOrNull.SubLogOrNull("Dyn.EntBas", Debug);
+            var logOrNull = LogOrNull.SubLogOrNull("Dyn.EntBas", _getDebug());
             var l = logOrNull.Fn<TryGetResult>($"Type: {GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookupLink)}:{lookupLink}");
 
             if (!field.HasValue())
@@ -122,7 +127,7 @@ namespace ToSic.Sxc.Data
             {
                 l.A($"Convert entity list as {nameof(DynamicEntity)}");
                 var dynEnt = new DynamicEntity(children.ToArray(), parent, field, null, strict: StrictGet, Cdf);
-                if (Debug) dynEnt.Debug = true;
+                if (_getDebug()) dynEnt.Debug = true;
                 return l.Return(dynEnt, "ent-list, now dyn");
             }
 
@@ -136,33 +141,6 @@ namespace ToSic.Sxc.Data
 
             return l.Return(value, "unmodified");
         }
-
-        #endregion
-
-        #region Create Entities
-
-        /// <summary>
-        /// Generate a dynamic entity based on an IEntity.
-        /// Used in various cases where a property would return an IEntity, and the Razor should be able to continue in dynamic syntax
-        /// </summary>
-        /// <param name="contents"></param>
-        /// <returns></returns>
-        public IDynamicEntity SubDynEntityOrNull(IEntity contents) => SubDynEntityOrNull(contents, Cdf, Debug, strictGet: StrictGet);
-
-        internal static IDynamicEntity SubDynEntityOrNull(IEntity contents, CodeDataFactory cdf, bool? debug, bool strictGet)
-        {
-            if (contents == null) return null;
-            var result = new DynamicEntity(contents, cdf, strict: strictGet);
-            if (debug == true) result.Debug = true;
-            return result;
-        }
-
-        public IEntity PlaceHolder(int? appIdOrNull, IEntity parent, string field)
-        {
-            var dummyEntity = Cdf.FakeEntity(appIdOrNull ?? parent.AppId);
-            return parent == null ? dummyEntity : EntityInBlockDecorator.Wrap(dummyEntity, parent.EntityGuid, field);
-        }
-
 
         #endregion
 

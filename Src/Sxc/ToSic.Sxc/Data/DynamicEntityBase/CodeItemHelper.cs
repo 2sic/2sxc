@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Net;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
+using ToSic.Razor.Blade;
+using ToSic.Razor.Markup;
 using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
@@ -10,12 +12,10 @@ namespace ToSic.Sxc.Data
 {
     internal class CodeItemHelper
     {
-        public readonly IPropertyLookup Parent;
         public readonly CodeEntityHelper Helper;
 
-        public CodeItemHelper(IPropertyLookup parent, CodeEntityHelper helper)
+        public CodeItemHelper(CodeEntityHelper helper)
         {
-            Parent = parent;
             Helper = helper;
         }
 
@@ -41,6 +41,27 @@ namespace ToSic.Sxc.Data
 
 
         #endregion
+
+        public IRawHtmlString Attribute(string name, string noParamOrder, string fallback, bool? required)
+        {
+            var result = Get(name, noParamOrder, required);
+            var strValue = Helper.Cdf.Services.ForCode.ForCode(result, fallback: fallback);
+            return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
+        }
+
+        public string String(string name, string noParamOrder, string fallback, bool? required, bool scrubHtml)
+        {
+            var value = G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            return scrubHtml ? Helper.Cdf.Services.Scrub.All(value) : value;
+        }
+
+        public string Url(string name, string noParamOrder, string fallback, bool? required)
+        {
+            // TODO: STRICT
+            var url = Helper.GetInternal(name, lookupLink: true).Result as string;
+            return Tags.SafeUrl(url).ToString();
+        }
+
 
 
         public IField Field(ITypedItem parent, string name, string noParamOrder = Protector, bool? required = default)

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using ToSic.Lib.Documentation;
-using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using static ToSic.Eav.Parameters;
 
@@ -13,7 +11,7 @@ namespace ToSic.Sxc.Data
     public abstract partial class DynamicEntityBase: ITyped
     {
         [PrivateApi]
-        internal CodeItemHelper ItemHelper => _itemHelper ?? (_itemHelper = new CodeItemHelper(this, Helper));
+        internal CodeItemHelper ItemHelper => _itemHelper ?? (_itemHelper = new CodeItemHelper(Helper));
         private CodeItemHelper _itemHelper;
 
         [PrivateApi]
@@ -36,12 +34,8 @@ namespace ToSic.Sxc.Data
             => ItemHelper.G4T(name, noParamOrder, fallback: fallback, required: required);
 
         [PrivateApi]
-        IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback, bool? required)
-        {
-            var result = ItemHelper.Get(name, noParamOrder, required);
-            var strValue = _Cdf.Services.ForCode.ForCode(result, fallback: fallback);
-            return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
-        }
+        IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback, bool? required) 
+            => ItemHelper.Attribute(name, noParamOrder, fallback, required);
 
         [PrivateApi]
         dynamic ITyped.Dyn => this;
@@ -52,11 +46,8 @@ namespace ToSic.Sxc.Data
             => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         [PrivateApi]
-        string ITyped.String(string name, string noParamOrder, string fallback, bool? required, bool scrubHtml)
-        {
-            var value = ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
-            return scrubHtml ? _Cdf.Services.Scrub.All(value) : value;
-        }
+        string ITyped.String(string name, string noParamOrder, string fallback, bool? required, bool scrubHtml) 
+            => ItemHelper.String(name, noParamOrder, fallback, required, scrubHtml);
 
         [PrivateApi]
         int ITyped.Int(string name, string noParamOrder, int fallback, bool? required)
@@ -83,12 +74,8 @@ namespace ToSic.Sxc.Data
             => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         [PrivateApi]
-        string ITyped.Url(string name, string noParamOrder, string fallback, bool? required)
-        {
-            // TODO: STRICT
-            var url = Helper.GetInternal(name, lookupLink: true).Result as string;// Get(name, noParamOrder: noParamOrder, convertLinks: true) as string;
-            return Tags.SafeUrl(url).ToString();
-        }
+        string ITyped.Url(string name, string noParamOrder, string fallback, bool? required) 
+            => ItemHelper.Url(name, noParamOrder, fallback, required);
 
         [PrivateApi]
         string ITyped.ToString() => "test / debug: " + ToString();

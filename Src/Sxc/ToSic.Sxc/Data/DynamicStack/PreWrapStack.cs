@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
@@ -8,20 +8,20 @@ using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Data
 {
-    internal class PreWrapStack
+    internal class PreWrapStack: IPropertyLookup
     {
-        private readonly ICanDebug _debugState;
+        private readonly Func<bool> _getDebug;
         public IPropertyStack Stack { get; }
 
-        public PreWrapStack(IPropertyStack stack, ICanDebug debugState)
+        public PreWrapStack(IPropertyStack stack, Func<bool> getDebug)
         {
-            _debugState = debugState;
+            _getDebug = getDebug;
             Stack = stack;
         }
 
         public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
         {
-            specs = specs.SubLog("Sxc.DynStk", _debugState.Debug);
+            specs = specs.SubLog("Sxc.DynStk", _getDebug());
             path = path.KeepOrNew().Add("DynStack", specs.Field);
 
             var l = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), "DynamicStack");

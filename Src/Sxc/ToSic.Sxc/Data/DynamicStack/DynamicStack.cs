@@ -6,6 +6,7 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -21,7 +22,8 @@ namespace ToSic.Sxc.Data
         {
             var stack = new PropertyStack().Init(name, sources);
             UnwrappedStack = stack;
-            PreWrap = new PreWrapStack(stack, this);
+            PreWrap = new PreWrapStack(stack, () => Debug);
+            CompleteSetup(PreWrap);
         }
 
         protected readonly IPropertyStack UnwrappedStack;
@@ -35,7 +37,7 @@ namespace ToSic.Sxc.Data
         {
             var source = UnwrappedStack.GetSource(name)
                          // If not found, create a fake one
-                         ?? _Cdf.FakeEntity(_Cdf.BlockOrNull?.AppId);
+                         ?? Cdf.FakeEntity(Cdf.BlockOrNull?.AppId);
 
             return SourceToDynamicEntity(source);
         }
@@ -45,7 +47,7 @@ namespace ToSic.Sxc.Data
         {
             var wrapLog = Helper.LogOrNull.Fn<object>();
             var newStack = UnwrappedStack.GetStack(Helper.LogOrNull, names);
-            var newDynStack = new DynamicStack("New", _Cdf, newStack.Sources);
+            var newDynStack = new DynamicStack("New", Cdf, newStack.Sources);
             return wrapLog.Return(newDynStack);
         }
 
@@ -53,29 +55,14 @@ namespace ToSic.Sxc.Data
         {
             if (source == null) return null;
             if (source is IDynamicEntity dynEnt) return dynEnt;
-            if (source is IEntity ent) return Helper.SubDynEntityOrNull(ent);
+            if (source is IEntity ent) return SubDataFactory.SubDynEntityOrNull(ent);
             return null;
         }
 
         /// <inheritdoc />
         [PrivateApi("Internal")]
-        public override PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
-        {
-            return PreWrap.FindPropertyInternal(specs, path);
-            //specs = specs.SubLog("Sxc.DynStk", Debug);
-            //path = path.KeepOrNew().Add("DynStack", specs.Field);
-
-            //var l = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), "DynamicStack");
-            //if (!specs.Field.HasValue())
-            //    return l.Return(null, "no key");
-
-            //var hasPath = specs.Field.Contains(".");
-            //var r = hasPath
-            //    ? UnwrappedStack.InternalGetPath(specs, path)
-            //    : UnwrappedStack.FindPropertyInternal(specs, path);
-
-            //return l.Return(r, $"{(r == null ? "null" : "ok")} using {(hasPath ? "Path" : "Property")}");
-        }
+        public override PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path) 
+            => PreWrap.FindPropertyInternal(specs, path);
 
         [PrivateApi("Internal")]
         public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
