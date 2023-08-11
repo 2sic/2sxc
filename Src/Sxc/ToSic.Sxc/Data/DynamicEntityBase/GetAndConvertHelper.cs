@@ -6,18 +6,17 @@ using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Data.Decorators;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.Data
 {
-    internal class CodeEntityHelper
+    internal class GetAndConvertHelper
     {
         private readonly Func<bool> _getDebug;
 
         #region Setup and Log
 
-        public CodeEntityHelper(IPropertyLookup parent, CodeDataFactory cdf, bool strict, Func<bool> getDebug)
+        public GetAndConvertHelper(IPropertyLookup parent, CodeDataFactory cdf, bool strict, Func<bool> getDebug)
         {
             _getDebug = getDebug;
             Parent = parent;

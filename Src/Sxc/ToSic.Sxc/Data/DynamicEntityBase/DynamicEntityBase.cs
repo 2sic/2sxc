@@ -21,11 +21,11 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         protected void CompleteSetup(IPropertyLookup data) 
-            => _helper = new CodeEntityHelper(data, Cdf, _strict, () => Debug);
+            => _helper = new GetAndConvertHelper(data, Cdf, _strict, () => Debug);
 
         [PrivateApi]
-        internal CodeEntityHelper Helper => _helper ?? throw new Exception($"{nameof(Helper)} not ready, did you CompleteSetup()");
-        private CodeEntityHelper _helper;
+        internal GetAndConvertHelper Helper => _helper ?? throw new Exception($"{nameof(Helper)} not ready, did you CompleteSetup()");
+        private GetAndConvertHelper _helper;
 
         internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, _strict, Debug));
         private SubDataFactory _subData;
@@ -36,16 +36,16 @@ namespace ToSic.Sxc.Data
 
         private readonly bool _strict;
 
+        #region IPropertyLookup & Debug system
+
+        [PrivateApi]
         public abstract PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path);
-
-        #region Debug system
-
-        /// <inheritdoc />
-        public bool Debug { get; set; }
-
 
         [PrivateApi("Internal")]
         public abstract List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path);
+        
+        /// <inheritdoc />
+        public bool Debug { get; set; }
 
         #endregion
     }

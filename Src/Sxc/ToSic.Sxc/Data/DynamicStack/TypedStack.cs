@@ -29,45 +29,30 @@ namespace ToSic.Sxc.Data
 
 
         [PrivateApi]
-        internal CodeEntityHelper Helper => _helper ?? (_helper = new CodeEntityHelper(PreWrap, Cdf, strict: false, () => Debug));
-        private CodeEntityHelper _helper;
+        private GetAndConvertHelper Helper => _helper ?? (_helper = new GetAndConvertHelper(PreWrap, Cdf, strict: false, () => Debug));
+        private GetAndConvertHelper _helper;
 
         public bool Debug { get; set; }
 
         [PrivateApi]
-        internal CodeItemHelper ItemHelper => _itemHelper ?? (_itemHelper = new CodeItemHelper(Helper));
+        private CodeItemHelper ItemHelper => _itemHelper ?? (_itemHelper = new CodeItemHelper(Helper));
         private CodeItemHelper _itemHelper;
 
 
 
-        #region ITyped.Keys
+        #region ITyped.Keys and Dyn - both not implemented
 
         [PrivateApi]
-        bool ITyped.ContainsKey(string name)
-        {
-            //return UnwrappedStack.Sources.Any(s =>
-            //{
-            //    switch (s.Value)
-            //    {
-            //        case null:
-            //            return false;
-            //        case ITyped typed:
-            //            return typed.ContainsKey(name);
-            //        case IHasKeys keyed:
-            //            return keyed.ContainsKey(name);
-            //    }
-
-            //    return false;
-            //});
-            throw new NotImplementedException($"Not yet implemented on {nameof(ITypedStack)}");
-        }
+        bool ITyped.ContainsKey(string name) 
+            => throw new NotImplementedException($"Not yet implemented on {nameof(ITypedStack)}");
 
         // TODO: Keys()
-        public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default) 
+            => throw new NotImplementedException();
 
+        [PrivateApi]
+        dynamic ITyped.Dyn 
+            => throw new NotSupportedException($"{nameof(ITyped.Dyn)} is not supported on the {nameof(ITypedStack)} by design");
 
         #endregion
 
@@ -85,9 +70,6 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback, bool? required)
             => ItemHelper.Attribute(name, noParamOrder, fallback, required);
-
-        [PrivateApi]
-        dynamic ITyped.Dyn => throw new NotSupportedException($"{nameof(ITyped.Dyn)} is not supported on the {nameof(ITypedStack)} by design");
 
 
         [PrivateApi]

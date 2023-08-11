@@ -19,7 +19,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using ToSic.Sxc.Adam;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -108,10 +107,10 @@ namespace Custom.Hybrid
         public IAppTyped App => (IAppTyped)_DynCodeRoot?.App;
 
         /// <inheritdoc cref="IDynamicCode16.AllResources" />
-        public ITypedStack AllResources => _DynCodeRoot.Resources;
+        public ITypedStack AllResources => CodeHelper.AllResources;
 
         /// <inheritdoc cref="IDynamicCode16.AllSettings" />
-        public ITypedStack AllSettings => _DynCodeRoot.Settings;
+        public ITypedStack AllSettings => CodeHelper.AllSettings;
 
         #endregion
 

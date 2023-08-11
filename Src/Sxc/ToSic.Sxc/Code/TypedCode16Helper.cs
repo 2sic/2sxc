@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using static ToSic.Eav.Parameters;
+using static ToSic.Eav.Configuration.ConfigurationConstants;
 
 namespace ToSic.Sxc.Code
 {
@@ -35,6 +37,18 @@ namespace ToSic.Sxc.Code
 
         public ITypedModel MyModel => _myModel.Get(() => new TypedModel(_myModelData, _codeRoot, _isRazor, _codeFileName));
         private readonly GetOnce<ITypedModel> _myModel = new GetOnce<ITypedModel>();
+
+
+        [PrivateApi] public ITypedStack AllResources => (_codeRoot as DynamicCodeRoot)?.AllResources;
+        //_allRes.Get(() 
+        //    => _codeRoot.Cdf.AsTypedStack(RootNameResources, (_codeRoot as DynamicCodeRoot)?.ResSrc));
+        //private readonly GetOnce<ITypedStack> _allRes = new GetOnce<ITypedStack>();
+
+        [PrivateApi]
+        public ITypedStack AllSettings => (_codeRoot as DynamicCodeRoot)?.AllSettings;
+        //    _allSettings.Get(() 
+        //    => _codeRoot.Cdf.AsTypedStack(RootNameSettings, (_codeRoot as DynamicCodeRoot)?.SetSrc));
+        //private readonly GetOnce<ITypedStack> _allSettings = new GetOnce<ITypedStack>();
 
     }
 }

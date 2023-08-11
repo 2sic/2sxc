@@ -12,9 +12,9 @@ namespace ToSic.Sxc.Data
 {
     internal class CodeItemHelper
     {
-        public readonly CodeEntityHelper Helper;
+        public readonly GetAndConvertHelper Helper;
 
-        public CodeItemHelper(CodeEntityHelper helper)
+        public CodeItemHelper(GetAndConvertHelper helper)
         {
             Helper = helper;
         }

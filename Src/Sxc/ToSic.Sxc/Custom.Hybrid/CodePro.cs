@@ -82,10 +82,10 @@ namespace Custom.Hybrid
         public IAppTyped App => (IAppTyped)_DynCodeRoot?.App;
 
         /// <inheritdoc cref="IDynamicCode16.AllResources" />
-        public ITypedStack AllResources => _DynCodeRoot.Resources;
+        public ITypedStack AllResources => CodeHelper.AllResources;
 
         /// <inheritdoc cref="IDynamicCode16.AllSettings" />
-        public ITypedStack AllSettings => _DynCodeRoot.Settings;
+        public ITypedStack AllSettings => CodeHelper.AllSettings;
 
 
         public IContextData MyData => _DynCodeRoot.Data;
