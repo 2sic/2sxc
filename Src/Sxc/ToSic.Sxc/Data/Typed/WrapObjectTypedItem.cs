@@ -100,7 +100,7 @@ namespace ToSic.Sxc.Data.Typed
             return items;
         }
 
-        public ITypedItem Presentation => _presentation.Get(() => CreateItemFromProperty(nameof(ITypedItem.Presentation)));
+        public ITypedItem Presentation => _presentation.Get(() => CreateItemFromProperty(nameof(Presentation)));
         private readonly GetOnce<ITypedItem> _presentation = new GetOnce<ITypedItem>();
 
         private ITypedItem CreateItemFromProperty(string name)

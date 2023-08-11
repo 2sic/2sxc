@@ -11,15 +11,22 @@ using static System.StringComparer;
 
 namespace ToSic.Sxc.Data
 {
-    internal class CodeEntityHelper: CodeHelperBase
+    internal class CodeEntityHelper
     {
 
         #region Setup and Log
 
-        public CodeEntityHelper(IPropertyLookup parent, CodeDataFactory cdf, bool strict) : base(cdf, strict)
+        public CodeEntityHelper(IPropertyLookup parent, CodeDataFactory cdf, bool strict)
         {
             Parent = parent;
+            Cdf = cdf;
+            StrictGet = strict;
         }
+
+        public CodeDataFactory Cdf { get; }
+
+        public bool StrictGet { get; }
+
 
         public readonly IPropertyLookup Parent;
 
@@ -44,9 +51,9 @@ namespace ToSic.Sxc.Data
 
             // This determines if we should access & store in cache
             // check if we already have it in the cache - but only in default case (no language, lookup=true)
-            var cacheKey = field + "$" + lookupLink + "-" + language;
+            var cacheKey = (field + "$" + lookupLink + "-" + language).ToLowerInvariant();
             if (_rawValCache.TryGetValue(cacheKey, out var cached))
-                return l.Return(new TryGetResult(true, cached), "cached");
+                return l.Return(cached, "cached");
 
             // use the standard dimensions or overload
             var languages = language == null ? Cdf.Dimensions : new[] { language };
@@ -69,12 +76,13 @@ namespace ToSic.Sxc.Data
             // cache result, but only if using default languages
             l.A("add to cache");
             var found = resultSet.FieldType != Attributes.FieldIsNotFound;
+            var final = new TryGetResult(found, result);
             if (found)
-                _rawValCache.Add(cacheKey, result);
+                _rawValCache.Add(cacheKey, final);
 
-            return l.Return(new TryGetResult(found, result), "ok");
+            return l.Return(final, "ok");
         }
-        private readonly Dictionary<string, object> _rawValCache = new Dictionary<string, object>(InvariantCultureIgnoreCase);
+        private readonly Dictionary<string, TryGetResult> _rawValCache = new Dictionary<string, TryGetResult>(InvariantCultureIgnoreCase);
 
         //public string StringAsPossibleLinkOrNull(PropReqResult original, ILog logOrNull)
         //{
@@ -96,7 +104,6 @@ namespace ToSic.Sxc.Data
         public object ValueAutoConverted(PropReqResult original, bool lookupLink, string field, ILog logOrNull)
         {
             var l = logOrNull.Fn<object>($"..., {nameof(lookupLink)}: {lookupLink}, {nameof(field)}: {field}");
-            //var l = logOrNull.Fn<object>($"..., {nameof(field)}: {field}");
             var value = original.Result;
             var parent = original.Source as IEntity;
             // New mechanism to not use resolve-hyperlink

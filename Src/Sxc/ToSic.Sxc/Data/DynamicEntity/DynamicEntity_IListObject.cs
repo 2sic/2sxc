@@ -12,10 +12,10 @@ namespace ToSic.Sxc.Data
         #region IList explicit implementations (were already explicit before v16.03
 
         [PrivateApi("would confuse")]
-        int ICollection<object>.Count => _ListHelper.DynEntities.Count;
+        int ICollection<object>.Count => ListHelper.DynEntities.Count;
 
         [PrivateApi("Hide, will only confuse")]
-        IEnumerator<object> IEnumerable<object>.GetEnumerator() => _ListHelper.DynEntities.GetEnumerator();
+        IEnumerator<object> IEnumerable<object>.GetEnumerator() => ListHelper.DynEntities.GetEnumerator();
 
         #endregion
 
@@ -23,18 +23,18 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi("Hide as it won't work")]
         [Obsolete("Don't use this, it's not supported")]
-        bool ICollection<object>.Contains(object item) => _ListHelper.DynEntities.Contains(item);
+        bool ICollection<object>.Contains(object item) => ListHelper.DynEntities.Contains(item);
 
         [PrivateApi("Hide as it won't work")]
         [Obsolete("Don't use this, it's not supported")]
-        int IList<object>.IndexOf(object item) => _ListHelper.DynEntities.IndexOf(item as IDynamicEntity);
+        int IList<object>.IndexOf(object item) => ListHelper.DynEntities.IndexOf(item as IDynamicEntity);
 
         [PrivateApi("Hide as it won't work")]
         [Obsolete("Don't use this, it's not supported")]
         void ICollection<object>.CopyTo(object[] array, int arrayIndex)
         {
-            var target = new IDynamicEntity[_ListHelper.DynEntities.Count];
-            _ListHelper.DynEntities.CopyTo(target, arrayIndex);
+            var target = new IDynamicEntity[ListHelper.DynEntities.Count];
+            ListHelper.DynEntities.CopyTo(target, arrayIndex);
             target.CopyTo(array, arrayIndex);
         }
 

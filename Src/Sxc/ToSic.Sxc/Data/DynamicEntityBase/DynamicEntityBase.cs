@@ -16,6 +16,11 @@ namespace ToSic.Sxc.Data
             _Cdf = cdf;
             Helper = new CodeEntityHelper(this, cdf, strict);
         }
+        internal DynamicEntityBase(CodeEntityHelper helper)
+        {
+            _Cdf = helper.Cdf;
+            Helper = helper;
+        }
 
         [PrivateApi]
         internal CodeEntityHelper Helper { get; }

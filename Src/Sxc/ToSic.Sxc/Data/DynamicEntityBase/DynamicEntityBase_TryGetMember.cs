@@ -13,7 +13,8 @@ namespace ToSic.Sxc.Data
         {
             var findResult = Helper.GetInternal(binder.Name, lookupLink: true);
             // ReSharper disable once ExplicitCallerInfoArgument
-            if (!findResult.Found && Helper.StrictGet) throw TypedHelpers.ErrStrict(binder.Name, ".");
+            if (!findResult.Found && Helper.StrictGet)
+                throw TypedHelpers.ErrStrict(binder.Name, cName: ".");
             result = findResult.Result;
             return true;
         }

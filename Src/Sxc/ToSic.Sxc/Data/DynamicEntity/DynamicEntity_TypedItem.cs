@@ -72,10 +72,10 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi]
-        ITypedItem ITypedItem.Presentation => Presentation;
+        ITypedItem ITypedItem.Presentation => PreWrap.Presentation;
 
         /// <inheritdoc />
-        IMetadata ITypedItem.Metadata => Metadata;
+        IMetadata ITypedItem.Metadata => PreWrap.Metadata;
 
         /// <inheritdoc />
         [PrivateApi]

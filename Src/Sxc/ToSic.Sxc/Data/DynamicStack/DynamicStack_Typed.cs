@@ -11,20 +11,20 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         bool ITyped.ContainsKey(string name)
         {
-            return UnwrappedStack.Sources.Any(s =>
-            {
-                switch (s.Value)
-                {
-                    case null:
-                        return false;
-                    case ITyped typed:
-                        return typed.ContainsKey(name);
-                    case IHasKeys keyed:
-                        return keyed.ContainsKey(name);
-                }
+            //return UnwrappedStack.Sources.Any(s =>
+            //{
+            //    switch (s.Value)
+            //    {
+            //        case null:
+            //            return false;
+            //        case ITyped typed:
+            //            return typed.ContainsKey(name);
+            //        case IHasKeys keyed:
+            //            return keyed.ContainsKey(name);
+            //    }
 
-                return false;
-            });
+            //    return false;
+            //});
             throw new NotImplementedException($"Not yet implemented on {nameof(ITypedStack)}");
         }
 

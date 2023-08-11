@@ -6,6 +6,8 @@ namespace ToSic.Sxc.Data
 {
     public partial class DynamicEntityBase: ICanGetByName
     {
+        #region Get / Get<T>
+
         /// <inheritdoc/>
         public dynamic Get(string name) => Helper.GetInternal(name, lookupLink: true).Result;
 
@@ -33,5 +35,7 @@ namespace ToSic.Sxc.Data
             Protect(noParamOrder, nameof(fallback));
             return Helper.TryGet(name).Result.ConvertOrFallback(fallback);
         }
+
+        #endregion
     }
 }

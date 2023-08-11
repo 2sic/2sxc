@@ -25,6 +25,9 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         public IEntity Entity { get; private set; }
 
+        [PrivateApi]
+        internal PreWrapEntity PreWrap { get; private set; }
+
         /// <summary>
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
@@ -34,22 +37,23 @@ namespace ToSic.Sxc.Data
             SetEntity(entity);
 
             // WIP new in 12.03
-            _ListHelper = new DynamicEntityListHelper(this, () => Debug, strictGet: strict, cdf);
+            ListHelper = new DynamicEntityListHelper(this, () => Debug, strictGet: strict, cdf);
         }
 
         internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, bool strict, CodeDataFactory cdf): base(cdf, strict: strict)
         {
             // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
             SetEntity(list.FirstOrDefault() ?? Helper.PlaceHolder(appIdOrNull, parent, field));
-            _ListHelper = new DynamicEntityListHelper(list, parent, field, () => Debug, strictGet: strict, cdf);
+            ListHelper = new DynamicEntityListHelper(list, parent, field, () => Debug, strictGet: strict, cdf);
         }
         [PrivateApi]
-        internal readonly DynamicEntityListHelper _ListHelper;
+        internal readonly DynamicEntityListHelper ListHelper;
 
         [PrivateApi]
         protected void SetEntity(IEntity entity)
         {
             Entity = entity;
+            PreWrap = new PreWrapEntity(entity, Helper, this);
             var entAsWrapper = Entity as IEntityWrapper;
             RootContentsForEqualityCheck = entAsWrapper?.RootContentsForEqualityCheck ?? Entity;
             Decorators = entAsWrapper?.Decorators ?? new List<IDecorator<IEntity>>();
@@ -111,8 +115,7 @@ namespace ToSic.Sxc.Data
         #region Metadata
 
         /// <inheritdoc />
-        public IMetadata Metadata => _metadata ?? (_metadata = new Metadata(Entity?.Metadata, Entity, _Cdf));
-        private Metadata _metadata;
+        public IMetadata Metadata => PreWrap.Metadata;
 
         /// <summary>
         /// Explicit implementation, so it's not really available on DynamicEntity, only when cast to IHasMetadata
@@ -124,11 +127,10 @@ namespace ToSic.Sxc.Data
 
         #endregion
 
-        #region Relationships: Presentation, Metadata, Children, Parents
+        #region Relationships: Presentation, Children, Parents
 
         /// <inheritdoc />
-        public dynamic Presentation => _p ?? (_p = Helper.SubDynEntityOrNull(Entity.GetDecorator<EntityInBlockDecorator>()?.Presentation));
-        private IDynamicEntity _p;
+        public dynamic Presentation => PreWrap.Presentation;
 
         /// <inheritdoc />
         public List<IDynamicEntity> Parents(string type = null, string field = null)
@@ -144,5 +146,33 @@ namespace ToSic.Sxc.Data
 
 
         #endregion
+
+        #region Publishing: IsPublished, GetDraft(), GetPublished()
+
+        /// <inheritdoc />
+        public bool IsPublished => Entity?.IsPublished ?? true;
+
+        /// <inheritdoc />
+        public dynamic GetDraft() => Helper.SubDynEntityOrNull(Entity == null ? null : _Cdf.BlockOrNull?.App.AppState?.GetDraft(Entity));
+
+        /// <inheritdoc />
+        public dynamic GetPublished() => Helper.SubDynEntityOrNull(Entity == null ? null : _Cdf.BlockOrNull?.App.AppState?.GetPublished(Entity));
+
+        #endregion
+
+
+        #region Any*** properties just for documentation
+
+        public bool AnyBooleanProperty => true;
+        public DateTime AnyDateTimeProperty => DateTime.Now;
+        public IEnumerable<DynamicEntity> AnyChildrenProperty => null;
+        public string AnyJsonProperty => null;
+        public string AnyLinkOrFileProperty => null;
+        public double AnyNumberProperty => 0;
+        public string AnyStringProperty => null;
+        public IEnumerable<DynamicEntity> AnyTitleOfAnEntityInTheList => null;
+
+        #endregion
+
     }
 }

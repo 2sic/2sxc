@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Data
 {
@@ -40,26 +37,11 @@ namespace ToSic.Sxc.Data
         
 
         [PrivateApi("Internal")]
-        public override PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
-        {
-            specs = specs.SubLog("Sxc.DynEnt", Debug);
-            var l = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), "DynEntity");
-            // check Entity is null (in cases where null-objects are asked for properties)
-            if (Entity == null) return l.ReturnNull("no entity");
-            if (!specs.Field.HasValue()) return l.ReturnNull("no path");
-
-            path = path.KeepOrNew().Add("DynEnt", specs.Field);
-            var isPath = specs.Field.Contains(PropertyStack.PathSeparator);
-            var propRequest = !isPath
-                ? Entity.FindPropertyInternal(specs, path)
-                : PropertyStack.TraversePath(specs, path, Entity);
-            return l.Return(propRequest, $"{nameof(isPath)}: {isPath}");
-        }
+        public override PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path) 
+            => PreWrap.FindPropertyInternal(specs, path);
 
         [PrivateApi("WIP / internal")]
-        public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) =>
-            Entity == null || !Entity.Attributes.Any()
-                ? new List<PropertyDumpItem>()
-                : Entity._Dump(specs, path);
+        public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
+            => PreWrap._Dump(specs, path);
     }
 }
