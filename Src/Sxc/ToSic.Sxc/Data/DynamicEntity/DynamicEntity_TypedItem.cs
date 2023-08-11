@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data.Typed;
+using ToSic.Sxc.Images;
 using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
@@ -14,6 +15,8 @@ namespace ToSic.Sxc.Data
 {
     public partial class DynamicEntity: ITypedItem
     {
+        #region Keys
+
         [PrivateApi]
         bool ITyped.ContainsKey(string name) =>
             TypedHelpers.ContainsKey(name, Entity,
@@ -25,6 +28,10 @@ namespace ToSic.Sxc.Data
         IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only) 
             => FilterKeysIfPossible(noParamOrder, only, Entity?.Attributes.Keys);
 
+        #endregion
+
+        #region ADAM
+
         /// <inheritdoc />
         [PrivateApi]
         IFolder ITypedItem.Folder(string name, string noParamOrder, bool? required)
@@ -34,7 +41,6 @@ namespace ToSic.Sxc.Data
                 ? throw ErrStrict(name)
                 : _adamCache.Get(name, () => _Cdf.Folder(Entity, name, (this as ITypedItem).Field(name, required: false)));
         }
-
         private readonly GetOnceNamed<IFolder> _adamCache = new GetOnceNamed<IFolder>();
 
         IFile ITypedItem.File(string name, string noParamOrder, bool? required)
@@ -48,6 +54,8 @@ namespace ToSic.Sxc.Data
             return file ?? typedThis.Folder(name).Files.FirstOrDefault();
         }
 
+        #endregion
+
         [PrivateApi]
         int ITypedItem.Id => EntityId;
 
@@ -60,9 +68,14 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         IContentType ITypedItem.Type => Entity?.Type;
 
+        #region Relationship properties Presentation, Metadata, Child, Children, Parents
+
         /// <inheritdoc />
         [PrivateApi]
         ITypedItem ITypedItem.Presentation => Presentation;
+
+        /// <inheritdoc />
+        IMetadata ITypedItem.Metadata => Metadata;
 
         /// <inheritdoc />
         [PrivateApi]
@@ -88,7 +101,7 @@ namespace ToSic.Sxc.Data
             if (list.Any()) return list;
 
             // Generate a marker/placeholder to remember what field this is etc.
-            var fakeEntity = PlaceHolder(Entity.AppId, Entity, field);
+            var fakeEntity = Helper.PlaceHolder(Entity.AppId, Entity, field);
             return new ListTypedItems(new List<ITypedItem>(), fakeEntity);
         }
 
@@ -101,5 +114,40 @@ namespace ToSic.Sxc.Data
                 ? throw ErrStrict(name)
                 : (this as ITypedItem).Children(name).FirstOrDefault();
         }
+
+        #endregion
+
+        #region Fields, Html, Picture
+
+        [PrivateApi]
+        IField ITypedItem.Field(string name, string noParamOrder, bool? required) => ItemHelper.Field(this, name, noParamOrder, required);
+
+        IHtmlTag ITypedItem.Html(
+            string name,
+            string noParamOrder,
+            object container,
+            bool? toolbar,
+            object imageSettings,
+            bool? required,
+            bool debug
+        ) => TypedItemHelpers.Html(_Cdf, this, name: name, noParamOrder: noParamOrder, container: container,
+            toolbar: toolbar, imageSettings: imageSettings, required: required, debug: debug);
+
+        /// <inheritdoc/>
+        IResponsivePicture ITypedItem.Picture(
+            string name,
+            string noParamOrder,
+            object settings,
+            object factor,
+            object width,
+            string imgAlt,
+            string imgAltFallback,
+            string imgClass,
+            object recipe
+        ) => TypedItemHelpers.Picture(cdf: _Cdf, item: this, name: name, noParamOrder: noParamOrder, settings: settings,
+            factor: factor, width: width, imgAlt: imgAlt,
+            imgAltFallback: imgAltFallback, imgClass: imgClass, recipe: recipe);
+
+        #endregion
     }
 }

@@ -6,6 +6,7 @@ using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Data.Decorators;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.Data
@@ -147,6 +148,12 @@ namespace ToSic.Sxc.Data
             var result = new DynamicEntity(contents, cdf, strict: strictGet);
             if (debug == true) result.Debug = true;
             return result;
+        }
+
+        public IEntity PlaceHolder(int? appIdOrNull, IEntity parent, string field)
+        {
+            var dummyEntity = Cdf.FakeEntity(appIdOrNull ?? parent.AppId);
+            return parent == null ? dummyEntity : EntityInBlockDecorator.Wrap(dummyEntity, parent.EntityGuid, field);
         }
 
 

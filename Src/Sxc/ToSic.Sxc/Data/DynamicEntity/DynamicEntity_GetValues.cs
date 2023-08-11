@@ -37,24 +37,7 @@ namespace ToSic.Sxc.Data
 
             return base.TryGetMember(binder, out result);
         }
-
-//        [PrivateApi]
-//        protected override TryGetResult GetInternal(string field, string language = null, bool lookup = true)
-//        {
-//            // Check special cases #1 Toolbar - only in DNN, not available in Oqtane
-//#if NETFRAMEWORK
-//#pragma warning disable 618 // ignore Obsolete
-//            if (field == "Toolbar") return new TryGetResult(true, Toolbar.ToString());
-//#pragma warning restore 618
-//#endif
-
-//            // Check #2 Presentation which the EAV doesn't know
-//            // but only pre V16 (Pro) code. Newer code MUST use the .Presentation
-//            if (_Cdf.CompatibilityLevel < Constants.CompatibilityLevel16 && field == ViewParts.Presentation)
-//                return new TryGetResult(Presentation != null, Presentation);
-
-//            return base.GetInternal(field, language, lookup);
-//        }
+        
 
         [PrivateApi("Internal")]
         public override PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
