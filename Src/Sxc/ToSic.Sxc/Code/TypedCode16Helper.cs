@@ -39,16 +39,8 @@ namespace ToSic.Sxc.Code
         private readonly GetOnce<ITypedModel> _myModel = new GetOnce<ITypedModel>();
 
 
-        [PrivateApi] public ITypedStack AllResources => (_codeRoot as DynamicCodeRoot)?.AllResources;
-        //_allRes.Get(() 
-        //    => _codeRoot.Cdf.AsTypedStack(RootNameResources, (_codeRoot as DynamicCodeRoot)?.ResSrc));
-        //private readonly GetOnce<ITypedStack> _allRes = new GetOnce<ITypedStack>();
+        public ITypedStack AllResources => (_codeRoot as DynamicCodeRoot)?.AllResources;
 
-        [PrivateApi]
         public ITypedStack AllSettings => (_codeRoot as DynamicCodeRoot)?.AllSettings;
-        //    _allSettings.Get(() 
-        //    => _codeRoot.Cdf.AsTypedStack(RootNameSettings, (_codeRoot as DynamicCodeRoot)?.SetSrc));
-        //private readonly GetOnce<ITypedStack> _allSettings = new GetOnce<ITypedStack>();
-
     }
 }
