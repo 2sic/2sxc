@@ -13,30 +13,29 @@ using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data
 {
-    internal class TypedStack: Wrapper<IPropertyStack>, ITypedStack, ICanDebug
+    [PrivateApi]
+    internal class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPropLookup, ICanDebug
     {
         public TypedStack(string name, CodeDataFactory cdf, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources)
-        : base(new PropertyStack().Init(name, sources))
         {
+            _stack = new PropertyStack().Init(name, sources);
             Cdf = cdf;
+            PropertyLookup = new PropLookupStack(_stack, () => Debug);
+            _helper = new GetAndConvertHelper(this, cdf, strict: false, () => Debug);
+            _itemHelper = new CodeItemHelper(_helper);
         }
 
-        private PreWrapStack PreWrap => _preWrap ?? (_preWrap = new PreWrapStack(GetContents(), () => Debug));
-        private PreWrapStack _preWrap;
+        private readonly IPropertyStack _stack;
         [PrivateApi]
-        // ReSharper disable once InconsistentNaming
+        public IPropertyLookup PropertyLookup { get; }
+        private readonly GetAndConvertHelper _helper;
+        private readonly CodeItemHelper _itemHelper;
+
+        public IPropertyStack GetContents() => _stack;
+
         public CodeDataFactory Cdf { get; }
 
-
-        [PrivateApi]
-        private GetAndConvertHelper Helper => _helper ?? (_helper = new GetAndConvertHelper(PreWrap, Cdf, strict: false, () => Debug));
-        private GetAndConvertHelper _helper;
-
         public bool Debug { get; set; }
-
-        [PrivateApi]
-        private CodeItemHelper ItemHelper => _itemHelper ?? (_itemHelper = new CodeItemHelper(Helper));
-        private CodeItemHelper _itemHelper;
 
 
 
@@ -58,55 +57,54 @@ namespace ToSic.Sxc.Data
 
         #region ITyped
 
-
         [PrivateApi]
         object ITyped.Get(string name, string noParamOrder, bool? required)
-            => ItemHelper.Get(name, noParamOrder, required);
+            => _itemHelper.Get(name, noParamOrder, required);
 
         [PrivateApi]
         TValue ITyped.Get<TValue>(string name, string noParamOrder, TValue fallback, bool? required)
-            => ItemHelper.G4T(name, noParamOrder, fallback: fallback, required: required);
+            => _itemHelper.G4T(name, noParamOrder, fallback: fallback, required: required);
 
         [PrivateApi]
         IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback, bool? required)
-            => ItemHelper.Attribute(name, noParamOrder, fallback, required);
+            => _itemHelper.Attribute(name, noParamOrder, fallback, required);
 
 
         [PrivateApi]
         DateTime ITyped.DateTime(string name, string noParamOrder, DateTime fallback, bool? required)
-            => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => _itemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         [PrivateApi]
         string ITyped.String(string name, string noParamOrder, string fallback, bool? required, bool scrubHtml)
-            => ItemHelper.String(name, noParamOrder, fallback, required, scrubHtml);
+            => _itemHelper.String(name, noParamOrder, fallback, required, scrubHtml);
 
         [PrivateApi]
         int ITyped.Int(string name, string noParamOrder, int fallback, bool? required)
-            => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => _itemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         [PrivateApi]
         bool ITyped.Bool(string name, string noParamOrder, bool fallback, bool? required)
-            => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => _itemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         [PrivateApi]
         long ITyped.Long(string name, string noParamOrder, long fallback, bool? required)
-            => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => _itemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         [PrivateApi]
         float ITyped.Float(string name, string noParamOrder, float fallback, bool? required)
-            => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => _itemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         [PrivateApi]
         decimal ITyped.Decimal(string name, string noParamOrder, decimal fallback, bool? required)
-            => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => _itemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         [PrivateApi]
         double ITyped.Double(string name, string noParamOrder, double fallback, bool? required)
-            => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => _itemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         [PrivateApi]
         string ITyped.Url(string name, string noParamOrder, string fallback, bool? required)
-            => ItemHelper.Url(name, noParamOrder, fallback, required);
+            => _itemHelper.Url(name, noParamOrder, fallback, required);
 
         [PrivateApi]
         string ITyped.ToString() => "test / debug: " + ToString();
@@ -117,8 +115,8 @@ namespace ToSic.Sxc.Data
 
         ITypedItem ITypedStack.Child(string name, string noParamOrder, bool? required)
         {
-            var findResult = Helper.TryGet(name);
-            return IsErrStrict(findResult.Found, required, Helper.StrictGet)
+            var findResult = _helper.TryGet(name);
+            return IsErrStrict(findResult.Found, required, _helper.StrictGet)
                 ? throw ErrStrict(name)
                 : Cdf.AsItem(findResult.Result, noParamOrder);
         }
@@ -126,8 +124,8 @@ namespace ToSic.Sxc.Data
         IEnumerable<ITypedItem> ITypedStack.Children(string field, string noParamOrder, string type, bool? required)
         {
             // TODO: @2DM - type-filter of children is not applied
-            var findResult = Helper.TryGet(field);
-            return IsErrStrict(findResult.Found, required, Helper.StrictGet)
+            var findResult = _helper.TryGet(field);
+            return IsErrStrict(findResult.Found, required, _helper.StrictGet)
                 ? throw ErrStrict(field)
                 : Cdf.AsItems(findResult.Result, noParamOrder);
         }

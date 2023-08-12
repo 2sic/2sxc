@@ -3,15 +3,7 @@
     public partial interface IDynamicStack
     {
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */
-        /// <summary>
-        /// Get a value of the entity. Usually you will prefer the quick access like
-        /// @content.FirstName - which will give you the same things as content.Get("FirstName").
-        /// There are two cases to use this:
-        /// - when you dynamically assemble the field name in your code, like when using App.Resources or similar use cases.
-        /// - to access a field which has a conflicting name with this object, like Get("Parents")
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns>An object which can be either a string, number, boolean or List&lt;IDynamicEntity&gt;, depending on the field type. Will return null if the field was not found. </returns>
+        /// <inheritdoc cref="IDynamicEntityBase.Get(string)"/>
         dynamic Get(string name);
 
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */

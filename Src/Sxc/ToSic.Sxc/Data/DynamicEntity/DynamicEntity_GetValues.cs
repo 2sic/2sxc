@@ -32,16 +32,18 @@ namespace ToSic.Sxc.Data
             //    return true;
             //}
 
-            return base.TryGetMember(binder, out result);
+            return CodeDynHelper.TryGetMemberAndRespectStrict(GetHelper, binder, out result);
+
+            //return base.TryGetMember(binder, out result);
         }
         
 
         [PrivateApi("Internal")]
         public override PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path) 
-            => PreWrap.FindPropertyInternal(specs, path);
+            => PropertyLookup.FindPropertyInternal(specs, path);
 
         [PrivateApi("WIP / internal")]
         public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
-            => PreWrap._Dump(specs, path);
+            => PropertyLookup._Dump(specs, path);
     }
 }

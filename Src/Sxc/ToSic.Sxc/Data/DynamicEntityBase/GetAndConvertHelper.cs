@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
@@ -7,16 +8,20 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using static System.StringComparer;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
 {
     internal class GetAndConvertHelper
     {
-        private readonly Func<bool> _getDebug;
-
         #region Setup and Log
 
-        public GetAndConvertHelper(IPropertyLookup parent, CodeDataFactory cdf, bool strict, Func<bool> getDebug)
+
+        public CodeDataFactory Cdf { get; }
+
+        public bool StrictGet { get; }
+
+        public GetAndConvertHelper(IHasPropLookup parent, CodeDataFactory cdf, bool strict, Func<bool> getDebug)
         {
             _getDebug = getDebug;
             Parent = parent;
@@ -24,20 +29,41 @@ namespace ToSic.Sxc.Data
             StrictGet = strict;
         }
 
-        public void Setup(IPropertyLookup parent)
+        public bool Debug => _debug ?? _getDebug();
+        private bool? _debug;
+        private readonly Func<bool> _getDebug;
+
+
+        public IHasPropLookup Parent { get; }
+
+        public ILog LogOrNull => _logOrNull.Get(() => Cdf?.Log?.SubLogOrNull("DynEnt", Debug));
+        private readonly GetOnce<ILog> _logOrNull = new GetOnce<ILog>();
+
+        #endregion
+
+        #region Get Implementations 1:1 - names must be identical with caller, so the exceptions have the right names
+
+        public dynamic Get(string name) => GetInternal(name, lookupLink: true).Result;
+
+        public object Get(string name, string noParamOrder = Protector, string language = null, bool convertLinks = true, bool? debug = null)
         {
-            Parent = parent;
+            Protect(noParamOrder, $"{nameof(language)}, {nameof(convertLinks)}");
+
+            _debug = debug;
+            var result = GetInternal(name, language, convertLinks).Result;
+            _debug = null;
+
+            return result;
         }
 
-        public CodeDataFactory Cdf { get; }
+        public TValue Get<TValue>(string name) => TryGet(name).Result.ConvertOrDefault<TValue>();
 
-        public bool StrictGet { get; }
+        public TValue Get<TValue>(string name, string noParamOrder = Protector, TValue fallback = default)
+        {
+            Protect(noParamOrder, nameof(fallback));
+            return TryGet(name).Result.ConvertOrFallback(fallback);
+        }
 
-
-        public IPropertyLookup Parent { get; private set; }
-
-        public ILog LogOrNull => _logOrNull.Get(() => Cdf?.Log?.SubLogOrNull("DynEnt", _getDebug()));
-        private readonly GetOnce<ILog> _logOrNull = new GetOnce<ILog>();
 
         #endregion
 
@@ -47,7 +73,7 @@ namespace ToSic.Sxc.Data
 
         public TryGetResult GetInternal(string field, string language = null, bool lookupLink = true)
         {
-            var logOrNull = LogOrNull.SubLogOrNull("Dyn.EntBas", _getDebug());
+            var logOrNull = LogOrNull.SubLogOrNull("Dyn.EntBas", Debug);
             var l = logOrNull.Fn<TryGetResult>($"Type: {GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookupLink)}:{lookupLink}");
 
             if (!field.HasValue())
@@ -67,7 +93,7 @@ namespace ToSic.Sxc.Data
             // Classic field case
             var specs = new PropReqSpecs(field, languages, logOrNull);
             var path = new PropertyLookupPath().Add("DynEntStart", field);
-            var resultSet = Parent.FindPropertyInternal(specs, path);
+            var resultSet = Parent.PropertyLookup.FindPropertyInternal(specs, path);
 
             // check Entity is null (in cases where null-objects are asked for properties)
             if (resultSet == null)
@@ -126,7 +152,7 @@ namespace ToSic.Sxc.Data
             {
                 l.A($"Convert entity list as {nameof(DynamicEntity)}");
                 var dynEnt = new DynamicEntity(children.ToArray(), parent, field, null, strict: StrictGet, Cdf);
-                if (_getDebug()) dynEnt.Debug = true;
+                if (Debug) dynEnt.Debug = true;
                 return l.Return(dynEnt, "ent-list, now dyn");
             }
 

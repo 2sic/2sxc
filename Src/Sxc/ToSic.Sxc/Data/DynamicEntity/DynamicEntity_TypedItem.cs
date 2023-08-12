@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Data
         IFolder ITypedItem.Folder(string name, string noParamOrder, bool? required)
         {
             Protect(noParamOrder, nameof(required));
-            return IsErrStrict(this, name, required, Helper.StrictGet)
+            return IsErrStrict(this, name, required, GetHelper.StrictGet)
                 ? throw ErrStrict(name)
                 : _adamCache.Get(name, () => Cdf.Folder(Entity, name, (this as ITypedItem).Field(name, required: false)));
         }
@@ -93,7 +93,7 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, $"{nameof(type)}, {nameof(required)}");
 
-            if (IsErrStrict(this, field, required, Helper.StrictGet))
+            if (IsErrStrict(this, field, required, GetHelper.StrictGet))
                 throw ErrStrict(field);
 
             var dynChildren = Children(field, type);
@@ -101,7 +101,7 @@ namespace ToSic.Sxc.Data
             if (list.Any()) return list;
 
             // Generate a marker/placeholder to remember what field this is etc.
-            var fakeEntity = Helper.Cdf.PlaceHolderInBlock(Entity.AppId, Entity, field);
+            var fakeEntity = GetHelper.Cdf.PlaceHolderInBlock(Entity.AppId, Entity, field);
             return new ListTypedItems(new List<ITypedItem>(), fakeEntity);
         }
 
@@ -110,7 +110,7 @@ namespace ToSic.Sxc.Data
         ITypedItem ITypedItem.Child(string name, string noParamOrder, bool? required)
         {
             Protect(noParamOrder, nameof(required));
-            return IsErrStrict(this, name, required, Helper.StrictGet)
+            return IsErrStrict(this, name, required, GetHelper.StrictGet)
                 ? throw ErrStrict(name)
                 : (this as ITypedItem).Children(name).FirstOrDefault();
         }

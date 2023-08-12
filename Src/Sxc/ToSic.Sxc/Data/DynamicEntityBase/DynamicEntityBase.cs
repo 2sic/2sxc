@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Dynamic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
+using static ToSic.Eav.Parameters;
+
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Data
 {
     [PrivateApi]
-    public abstract partial class DynamicEntityBase : DynamicObject, IDynamicEntityBase, IPropertyLookup, ISxcDynamicObject, ICanDebug
+    public abstract class DynamicEntityBase : DynamicObject, IDynamicEntityBase, IPropertyLookup, ISxcDynamicObject, ICanDebug, IHasPropLookup
     {
         protected DynamicEntityBase(CodeDataFactory cdf, bool strict)
         {
@@ -19,12 +20,13 @@ namespace ToSic.Sxc.Data
             _strict = strict;
         }
 
+        //[PrivateApi]
+        //protected void CompleteSetup() => _helper = new GetAndConvertHelper(this, Cdf, _strict, () => Debug);
         [PrivateApi]
-        protected void CompleteSetup(IPropertyLookup data) 
-            => _helper = new GetAndConvertHelper(data, Cdf, _strict, () => Debug);
+        public abstract IPropertyLookup PropertyLookup { get; }
 
         [PrivateApi]
-        internal GetAndConvertHelper Helper => _helper ?? throw new Exception($"{nameof(Helper)} not ready, did you CompleteSetup()");
+        internal GetAndConvertHelper GetHelper => _helper ?? (_helper = new GetAndConvertHelper(this, Cdf, _strict, () => Debug));
         private GetAndConvertHelper _helper;
 
         internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, _strict, Debug));
@@ -46,6 +48,27 @@ namespace ToSic.Sxc.Data
         
         /// <inheritdoc />
         public bool Debug { get; set; }
+
+        #endregion
+
+        #region Get / Get<T>
+
+        /// <inheritdoc/>
+        public dynamic Get(string name) => GetHelper.Get(name);
+
+        /// <inheritdoc/>
+        // ReSharper disable once MethodOverloadWithOptionalParameter
+        public dynamic Get(string name, string noParamOrder = Protector, string language = null, bool convertLinks = true, bool? debug = null)
+            => GetHelper.Get(name, noParamOrder, language, convertLinks, debug);
+
+        /// <inheritdoc/>
+        public TValue Get<TValue>(string name)
+            => GetHelper.Get<TValue>(name);
+
+        /// <inheritdoc/>
+        // ReSharper disable once MethodOverloadWithOptionalParameter
+        public TValue Get<TValue>(string name, string noParamOrder = Protector, TValue fallback = default)
+            => GetHelper.Get(name, noParamOrder, fallback);
 
         #endregion
     }

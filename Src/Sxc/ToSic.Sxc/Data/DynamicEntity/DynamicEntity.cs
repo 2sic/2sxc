@@ -27,7 +27,8 @@ namespace ToSic.Sxc.Data
         public IEntity Entity { get; private set; }
 
         [PrivateApi]
-        internal PreWrapEntity PreWrap { get; private set; }
+        public override IPropertyLookup PropertyLookup => _propLookup ?? (_propLookup = new PropLookupWithPathEntity(Entity, () => Debug));
+        private PropLookupWithPathEntity _propLookup;
 
         private CodeDynHelper DynHelper => _dynHelper ?? (_dynHelper = new CodeDynHelper(Entity, SubDataFactory));
         private CodeDynHelper _dynHelper;
@@ -57,11 +58,11 @@ namespace ToSic.Sxc.Data
         private void CompleteSetup(IEntity entity)
         {
             Entity = entity;
-            PreWrap = new PreWrapEntity(entity, () => Debug);
+            //PropertyLookup = new PropLookupWithPathEntity(entity, () => Debug);
             var entAsWrapper = Entity as IEntityWrapper;
             RootContentsForEqualityCheck = entAsWrapper?.RootContentsForEqualityCheck ?? Entity;
             Decorators = entAsWrapper?.Decorators ?? new List<IDecorator<IEntity>>();
-            CompleteSetup(PreWrap);
+            //CompleteSetup();
         }
 
         #endregion
@@ -170,12 +171,12 @@ namespace ToSic.Sxc.Data
 
         public bool AnyBooleanProperty => true;
         public DateTime AnyDateTimeProperty => DateTime.Now;
-        public IEnumerable<DynamicEntity> AnyChildrenProperty => null;
+        public IEnumerable<IDynamicEntity> AnyChildrenProperty => null;
         public string AnyJsonProperty => null;
         public string AnyLinkOrFileProperty => null;
-        public double AnyNumberProperty => 0;
+        public decimal AnyNumberProperty => 0;
         public string AnyStringProperty => null;
-        public IEnumerable<DynamicEntity> AnyTitleOfAnEntityInTheList => null;
+        //public IEnumerable<DynamicEntity> AnyTitleOfAnEntityInTheList => null;
 
         #endregion
 

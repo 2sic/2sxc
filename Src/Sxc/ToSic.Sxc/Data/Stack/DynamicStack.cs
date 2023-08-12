@@ -6,7 +6,6 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -15,27 +14,35 @@ using ToSic.Lib.Logging;
 namespace ToSic.Sxc.Data
 {
     [PrivateApi("Keep implementation hidden, only publish interface")]
-    public partial class DynamicStack: DynamicEntityBase, IWrapper<IPropertyStack>, IDynamicStack,
+    public class DynamicStack: DynamicEntityBase, IWrapper<IPropertyStack>, IDynamicStack,
         IEnumerable // note: not sure why it supports this, but it has been this way for a long time
     {
         public DynamicStack(string name, CodeDataFactory cdf, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources) : base(cdf, strict: false)
         {
             var stack = new PropertyStack().Init(name, sources);
-            UnwrappedStack = stack;
-            PreWrap = new PreWrapStack(stack, () => Debug);
-            CompleteSetup(PreWrap);
+            _stack = stack;
+            _propLookup = new PropLookupStack(stack, () => Debug);
+            //CompleteSetup();
         }
 
-        protected readonly IPropertyStack UnwrappedStack;
-        private readonly PreWrapStack PreWrap;
+        private readonly IPropertyStack _stack;
+        private readonly PropLookupStack _propLookup;
+
+
+
+        public override bool TryGetMember(GetMemberBinder binder, out object result) 
+            => CodeDynHelper.TryGetMemberAndRespectStrict(GetHelper, binder, out result);
+
+        public override IPropertyLookup PropertyLookup => _propLookup;
 
         /// <inheritdoc />
-        public IPropertyStack GetContents() => UnwrappedStack;
+        [PrivateApi]
+        public IPropertyStack GetContents() => _stack;
 
         /// <inheritdoc />
         public dynamic GetSource(string name)
         {
-            var source = UnwrappedStack.GetSource(name)
+            var source = _stack.GetSource(name)
                          // If not found, create a fake one
                          ?? Cdf.FakeEntity(Cdf.BlockOrNull?.AppId);
 
@@ -43,10 +50,11 @@ namespace ToSic.Sxc.Data
         }
 
         /// <inheritdoc />
+        [PrivateApi("Never published in docs")]
         public dynamic GetStack(params string[] names)
         {
-            var wrapLog = Helper.LogOrNull.Fn<object>();
-            var newStack = UnwrappedStack.GetStack(Helper.LogOrNull, names);
+            var wrapLog = GetHelper.LogOrNull.Fn<object>();
+            var newStack = _stack.GetStack(GetHelper.LogOrNull, names);
             var newDynStack = new DynamicStack("New", Cdf, newStack.Sources);
             return wrapLog.Return(newDynStack);
         }
@@ -59,21 +67,23 @@ namespace ToSic.Sxc.Data
             return null;
         }
 
+
         /// <inheritdoc />
         [PrivateApi("Internal")]
         public override PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path) 
-            => PreWrap.FindPropertyInternal(specs, path);
+            => _propLookup.FindPropertyInternal(specs, path);
 
         [PrivateApi("Internal")]
         public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
-            => PreWrap._Dump(specs, path);
+            => _propLookup._Dump(specs, path);
 
+        [PrivateApi("not implemented")]
         public override bool TrySetMember(SetMemberBinder binder, object value)
             => throw new NotSupportedException($"Setting a value on {nameof(IDynamicStack)} is not supported");
 
         #region IEnumerable<IDynamicEntity>
 
-        private List<IDynamicEntity> List => _list ?? (_list = UnwrappedStack.Sources
+        private List<IDynamicEntity> List => _list ?? (_list = _stack.Sources
             .Select(src => SourceToDynamicEntity(src.Value))
             .Where(e => e != null)
             .ToList());
@@ -91,12 +101,12 @@ namespace ToSic.Sxc.Data
 
         public bool AnyBooleanProperty => true;
         public DateTime AnyDateTimeProperty => DateTime.Now;
-        public IEnumerable<DynamicEntity> AnyChildrenProperty => null;
+        public IEnumerable<IDynamicEntity> AnyChildrenProperty => null;
         public string AnyJsonProperty => null;
         public string AnyLinkOrFileProperty => null;
-        public double AnyNumberProperty => 0;
+        public decimal AnyNumberProperty => 0;
         public string AnyStringProperty => null;
-        public IEnumerable<DynamicEntity> AnyTitleOfAnEntityInTheList => null;
+        //public IEnumerable<DynamicEntity> AnyTitleOfAnEntityInTheList => null;
 
         #endregion
 

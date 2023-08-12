@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text.Json.Serialization;
-using ToSic.Eav.Data;
-using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
@@ -18,7 +14,7 @@ namespace ToSic.Sxc.Data.Typed
 {
     [PrivateApi]
     [JsonConverter(typeof(DynamicJsonConverter))]
-    internal class WrapObjectTyped: Wrapper<object>, ITyped, IPropertyLookup, IHasJsonSource
+    internal class WrapObjectTyped: Wrapper<object>, ITyped, /*IPropertyLookup,*/ IHasPropLookup, IHasJsonSource
     {
         protected readonly CodeDataWrapper Wrapper;
         protected readonly PreWrapObject PreWrap;
@@ -29,33 +25,34 @@ namespace ToSic.Sxc.Data.Typed
             PreWrap = preWrap;
         }
 
+        IPropertyLookup IHasPropLookup.PropertyLookup => PreWrap;
+
+
         dynamic ITyped.Dyn => this;
 
-        bool ITyped.ContainsKey(string name)
-        {
-            return TypedHelpers.ContainsKey(name, this,
-                (e, k) => e.PreWrap.ContainsKey(k),
-                (e, k) =>
-                {
-                    var child = e.PreWrap.TryGet(k);
-                    if (!child.Found || child.Result == null) return null;
-                    if (child.Result is WrapObjectTyped typed) return typed;
-                    // Note: arrays have never been supported, so the following won't work
-                    // Because the inner objects are not of the expected type.
-                    // We don't want to start supporting it now.
-                    // Leave this code in though, so we know that we did try it.
-                    //if (child.Result is IEnumerable list)
-                    //    return list.Cast<WrapObjectTyped>().FirstOrDefault(o => o != null);
-                    return null;
-                }
-            // e.Children(k)?.FirstOrDefault()
-            );
+        #region Keys
 
-            return PreWrap.ContainsKey(name);
-        }
+        bool ITyped.ContainsKey(string name) => TypedHelpers.ContainsKey(name, this,
+            (e, k) => e.PreWrap.ContainsKey(k),
+            (e, k) =>
+            {
+                var child = e.PreWrap.TryGet(k);
+                if (!child.Found || child.Result == null) return null;
+                if (child.Result is WrapObjectTyped typed) return typed;
+                // Note: arrays have never been supported, so the following won't work
+                // Because the inner objects are not of the expected type.
+                // We don't want to start supporting it now.
+                // Leave this code in though, so we know that we did try it.
+                //if (child.Result is IEnumerable list)
+                //    return list.Cast<WrapObjectTyped>().FirstOrDefault(o => o != null);
+                return null;
+            }
+        );
 
         IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only)
             => PreWrap.Keys(noParamOrder, only);
+
+        #endregion
 
         object ITyped.Get(string name, string noParamOrder, bool? required)
         {
@@ -116,13 +113,13 @@ namespace ToSic.Sxc.Data.Typed
         object IHasJsonSource.JsonSource
             => PreWrap.JsonSource;
 
-        [PrivateApi]
-        PropReqResult IPropertyLookup.FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path) 
-            => PreWrap.FindPropertyInternal(specs, path);
+        //[PrivateApi]
+        //PropReqResult IPropertyLookup.FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path) 
+        //    => PreWrap.FindPropertyInternal(specs, path);
 
-        [PrivateApi]
-        List<PropertyDumpItem> IPropertyLookup._Dump(PropReqSpecs specs, string path) 
-            => PreWrap._Dump(specs, path);
+        //[PrivateApi]
+        //List<PropertyDumpItem> IPropertyLookup._Dump(PropReqSpecs specs, string path) 
+        //    => PreWrap._Dump(specs, path);
 
         #endregion
     }

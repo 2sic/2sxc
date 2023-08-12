@@ -11,13 +11,13 @@ using ToSic.Sxc.Data.Decorators;
 
 namespace ToSic.Sxc.Data
 {
-    internal class PreWrapEntity: ICanBeEntity, IPropertyLookup
+    internal class PropLookupWithPathEntity: ICanBeEntity, IPropertyLookup
     {
         private readonly Func<bool> _getDebug;
 
         public IEntity Entity { get; }
 
-        public PreWrapEntity(IEntity entity, Func<bool> getDebug)
+        public PropLookupWithPathEntity(IEntity entity, Func<bool> getDebug)
         {
             _getDebug = getDebug;
             Entity = entity;
@@ -39,10 +39,8 @@ namespace ToSic.Sxc.Data
             return l.Return(propRequest, $"{nameof(isPath)}: {isPath}");
         }
 
-        public List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) =>
-            Entity == null || !Entity.Attributes.Any()
-                ? new List<PropertyDumpItem>()
-                : Entity._Dump(specs, path);
+        public List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) 
+            => Entity?._Dump(specs, path) ?? new List<PropertyDumpItem>();
 
     }
 }

@@ -1,29 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Markup;
-using static ToSic.Eav.Parameters;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Data
 {
-    public abstract partial class DynamicEntityBase: ITyped
+    public partial class DynamicEntity: ITyped
     {
         [PrivateApi]
-        internal CodeItemHelper ItemHelper => _itemHelper ?? (_itemHelper = new CodeItemHelper(Helper));
+        internal CodeItemHelper ItemHelper => _itemHelper ?? (_itemHelper = new CodeItemHelper(GetHelper));
         private CodeItemHelper _itemHelper;
-
-        [PrivateApi]
-        bool ITyped.ContainsKey(string name)
-        {
-            return false; // must be overriden by implementation
-        }
-
-        public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default)
-        {
-            throw new NotImplementedException();
-        }
 
         [PrivateApi]
         object ITyped.Get(string name, string noParamOrder, bool? required) 

@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Data
             
             // Must create a stack
             var sources = parts
-                .Select(e => e as IPropertyLookup)
+                .Select(e => e is IPropertyLookup pl ? pl : e is IHasPropLookup hasPl ? hasPl.PropertyLookup : null)
                 .Where(e => e != null)
                 .Select(e => new KeyValuePair<string, IPropertyLookup>(null, e))
                 .ToList();
