@@ -9,7 +9,7 @@ using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Data
 {
-    internal class PropLookupMetadata: IPropertyLookup
+    internal class PropLookupMetadata: IPropertyLookup, ICanBeEntity
     {
         private readonly Func<bool> _getDebug;
 

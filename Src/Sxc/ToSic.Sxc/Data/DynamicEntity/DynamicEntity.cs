@@ -5,11 +5,13 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data.Decorators;
 using ToSic.Sxc.Data.Typed;
 using IEntity = ToSic.Eav.Data.IEntity;
 using static ToSic.Eav.Parameters;
+using System.Dynamic;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Data
@@ -19,51 +21,65 @@ namespace ToSic.Sxc.Data
     /// Note that it will provide many things not listed here, usually things like `.Image`, `.FirstName` etc. based on your ContentType.
     /// </summary>
     [PrivateApi("Changed to private in v16.01, previously was public/stable")]
-    public partial class DynamicEntity : DynamicEntityBase, IDynamicEntity, IHasMetadata, ISxcDynamicObject
+    public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata, IHasPropLookup, ISxcDynamicObject, ICanDebug
     {
         #region Constructor / Setup
-
-        [PrivateApi]
-        public IEntity Entity { get; private set; }
-
-        [PrivateApi]
-        public override IPropertyLookup PropertyLookup => _propLookup ?? (_propLookup = new PropLookupWithPathEntity(Entity, () => Debug));
-        private PropLookupWithPathEntity _propLookup;
-
-        private CodeDynHelper DynHelper => _dynHelper ?? (_dynHelper = new CodeDynHelper(Entity, SubDataFactory));
-        private CodeDynHelper _dynHelper;
 
         /// <summary>
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
         [PrivateApi]
-        public DynamicEntity(IEntity entity, CodeDataFactory cdf, bool strict): base(cdf, strict: strict)
+        public DynamicEntity(IEntity entity, CodeDataFactory cdf, bool strict): this(cdf, strict, entity)
         {
-            CompleteSetup(entity);
-
-            // WIP new in 12.03
             ListHelper = new DynamicEntityListHelper(this, () => Debug, strictGet: strict, cdf);
         }
 
-        internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, bool strict, CodeDataFactory cdf): base(cdf, strict: strict)
-        {
+        internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, bool strict, CodeDataFactory cdf)
+        : this(cdf, strict,
             // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
-            CompleteSetup(list.FirstOrDefault() ?? cdf.PlaceHolderInBlock(appIdOrNull, parent, field));
+            list.FirstOrDefault() ?? cdf.PlaceHolderInBlock(appIdOrNull, parent, field))
+        {
             ListHelper = new DynamicEntityListHelper(list, parent, field, () => Debug, strictGet: strict, cdf);
         }
+        /// <summary>
+        /// Internal helper to make a entity behave as a list, new in 12.03
+        /// </summary>
         [PrivateApi]
         internal readonly DynamicEntityListHelper ListHelper;
 
-        [PrivateApi]
-        private void CompleteSetup(IEntity entity)
+        private DynamicEntity(CodeDataFactory cdf, bool strict, IEntity entity)
         {
+            Cdf = cdf;
+            _strict = strict;
             Entity = entity;
-            //PropertyLookup = new PropLookupWithPathEntity(entity, () => Debug);
             var entAsWrapper = Entity as IEntityWrapper;
             RootContentsForEqualityCheck = entAsWrapper?.RootContentsForEqualityCheck ?? Entity;
             Decorators = entAsWrapper?.Decorators ?? new List<IDecorator<IEntity>>();
-            //CompleteSetup();
         }
+
+
+        // ReSharper disable once InconsistentNaming
+        [PrivateApi] public CodeDataFactory Cdf { get; }
+        [PrivateApi] public IEntity Entity { get; }
+        private readonly bool _strict;
+
+        [PrivateApi]
+        internal GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, _strict, () => Debug));
+        private GetAndConvertHelper _getHelper;
+
+        [PrivateApi]
+        internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, _strict, Debug));
+        private SubDataFactory _subData;
+
+
+        [PrivateApi] public virtual IPropertyLookup PropertyLookup => _propLookup ?? (_propLookup = new PropLookupWithPathEntity(Entity, () => Debug));
+        private PropLookupWithPathEntity _propLookup;
+
+        private CodeDynHelper DynHelper => _dynHelper ?? (_dynHelper = new CodeDynHelper(Entity, SubDataFactory));
+        private CodeDynHelper _dynHelper;
+
+        /// <inheritdoc />
+        public bool Debug { get; set; }
 
         #endregion
 
@@ -163,6 +179,23 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         public dynamic GetPublished() => SubDataFactory.SubDynEntityOrNull(Entity == null ? null : Cdf.BlockOrNull?.App.AppState?.GetPublished(Entity));
+
+        #endregion
+
+        #region Get / Get<T>
+
+        public dynamic Get(string name) => GetHelper.Get(name);
+
+        // ReSharper disable once MethodOverloadWithOptionalParameter
+        public dynamic Get(string name, string noParamOrder = Protector, string language = null, bool convertLinks = true, bool? debug = null)
+            => GetHelper.Get(name, noParamOrder, language, convertLinks, debug);
+
+        public TValue Get<TValue>(string name)
+            => GetHelper.Get<TValue>(name);
+
+        // ReSharper disable once MethodOverloadWithOptionalParameter
+        public TValue Get<TValue>(string name, string noParamOrder = Protector, TValue fallback = default)
+            => GetHelper.Get(name, noParamOrder, fallback);
 
         #endregion
 

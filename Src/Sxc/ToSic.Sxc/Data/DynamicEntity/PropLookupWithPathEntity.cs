@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Data.Decorators;
+
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Data
 {
-    internal class PropLookupWithPathEntity: ICanBeEntity, IPropertyLookup
+    internal class PropLookupWithPathEntity:
+        ICanBeEntity,       // This is important, to ensure that when used in a stack it can be converted to something else again
+        IPropertyLookup
     {
         private readonly Func<bool> _getDebug;
 

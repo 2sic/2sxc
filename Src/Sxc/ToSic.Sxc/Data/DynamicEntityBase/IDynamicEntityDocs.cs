@@ -1,9 +1,11 @@
-﻿namespace ToSic.Sxc.Data
+﻿using static ToSic.Eav.Parameters;
+
+namespace ToSic.Sxc.Data
 {
     /// <summary>
     /// This is minor cross-concerns aspect of Dynamic-Entity-like objects
     /// </summary>
-    public partial interface IDynamicEntityBase
+    public interface IDynamicEntityDocs
     {
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */
         /// <summary>
@@ -30,10 +32,42 @@
         /// <returns>a dynamically typed result, can be string, bool, etc.</returns>
         dynamic Get(string name,
             // ReSharper disable once MethodOverloadWithOptionalParameter
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
             string language = null,
             bool convertLinks = true,
             bool? debug = null
         );
+
+        /// <summary>
+        /// Get a value using the name - and cast it to the expected strong type.
+        /// For example to get an int even though it's stored as decimal.
+        /// </summary>
+        /// <typeparam name="TValue">The expected type, like `string`, `int`, etc.</typeparam>
+        /// <param name="name">the property name like `Image` - or path like `Author.Name` (new v15)</param>
+        /// <returns>The typed value, or the `default` like `null` or `0` if casting isn't possible.</returns>
+        /// <remarks>Added in v15</remarks>
+        TValue Get<TValue>(string name);
+
+        /// <summary>
+        /// Get a value using the name - and cast it to the expected strong type.
+        /// For example to get an int even though it's stored as decimal.
+        /// 
+        /// Since the parameter `fallback` determines the type `TValue` you can just write this like
+        /// `Content.Get("Title", fallback: "no title")
+        /// </summary>
+        /// <typeparam name="TValue">
+        /// The expected type, like `string`, `int`, etc.
+        /// Note that you don't need to specify it, if you specify the `fallback` property.
+        /// </typeparam>
+        /// <param name="name">the property name like `Image` - or path like `Author.Name` (new v15)</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="fallback">the fallback value to provide if not found</param>
+        /// <returns>The typed value, or the `default` like `null` or `0` if casting isn't possible.</returns>
+        /// <remarks>Added in v15</remarks>
+        TValue Get<TValue>(string name,
+            // ReSharper disable once MethodOverloadWithOptionalParameter
+            string noParamOrder = Protector,
+            TValue fallback = default);
+
     }
 }

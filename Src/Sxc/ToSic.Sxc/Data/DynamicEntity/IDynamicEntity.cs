@@ -25,17 +25,21 @@ namespace ToSic.Sxc.Data
 #if NETFRAMEWORK
         SexyContent.Interfaces.IDynamicEntity,
 #endif
-        IEntityWrapper, IDynamicEntityBase, ISxcDynamicObject, ICanDebug
+        IEntityWrapper, 
+        /*IDynamicEntityBase,*/ 
+        ISxcDynamicObject, 
+        ICanDebug
         //, ITypedItem // New 16.02, still experimental, must be sure we don't have naming conflicts
     {
-        /// <summary>
-        /// The underlying entity which provides all the data for the DynamicEntity
-        /// </summary>
-        /// <returns>
-        /// An Entity object.
-        /// </returns>
-        [PrivateApi("This should not be used publicly, use AsTyped instead. It's necessary so that code can find the Entity without ambiguity")]
-        new IEntity Entity { get; }
+        // 2023-08-13 2dm removed, as it's already in IEntityWrapper
+        ///// <summary>
+        ///// The underlying entity which provides all the data for the DynamicEntity
+        ///// </summary>
+        ///// <returns>
+        ///// An Entity object.
+        ///// </returns>
+        //[PrivateApi("This should not be used publicly, use AsTyped instead. It's necessary so that code can find the Entity without ambiguity")]
+        //new IEntity Entity { get; }
 
 
         /// <summary>

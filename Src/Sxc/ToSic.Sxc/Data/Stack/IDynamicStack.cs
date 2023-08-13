@@ -1,5 +1,8 @@
-﻿using ToSic.Lib.Documentation;
+﻿using System.Collections.Generic;
+using System;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
 {
@@ -9,7 +12,7 @@ namespace ToSic.Sxc.Data
     /// </summary>
     /// <remarks>New in 12.02</remarks>
     [PublicApi]
-    public partial interface IDynamicStack: ISxcDynamicObject, ICanDebug
+    public interface IDynamicStack: ISxcDynamicObject, ICanDebug
     {
         /// <summary>
         /// Get a source object which is used in the stack. Returned as a dynamic object. 
@@ -24,7 +27,58 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         dynamic GetStack(params string[] names);
 
+        #region Get and Get<T>
 
+        /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */
+        /// <inheritdoc cref="IDynamicEntityDocs.Get(string)"/>
+        dynamic Get(string name);
+
+        /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */
+        /// <inheritdoc cref="IDynamicEntityDocs.Get(string, string, string, bool, bool?)"/>
+            // ReSharper disable once MethodOverloadWithOptionalParameter
+        dynamic Get(string name, string noParamOrder = Protector, string language = null, bool convertLinks = true, bool? debug = null);
+
+        /// <inheritdoc cref="IDynamicEntityDocs.Get{TValue}(string)"/>
+        TValue Get<TValue>(string name);
+
+        /// <inheritdoc cref="IDynamicEntityDocs.Get{TValue}(string, string, TValue)"/>
+        // ReSharper disable once MethodOverloadWithOptionalParameter
+        TValue Get<TValue>(string name, string noParamOrder = Protector, TValue fallback = default);
+
+        #endregion
+
+        #region Any** IMPORTANT: These are just fake properties for documentation - Keep in Sync between IDynamicEntity and IDynamicStack
+
+        /// <inheritdoc cref="IDynamicAnythingDocs.AnyBooleanProperty"/>
+        bool AnyBooleanProperty { get; }
+
+        /// <inheritdoc cref="IDynamicAnythingDocs.AnyDateTimeProperty"/>
+        DateTime AnyDateTimeProperty { get; }
+
+        /// <inheritdoc cref="IDynamicAnythingDocs.AnyChildrenProperty"/>
+        IEnumerable<IDynamicEntity> AnyChildrenProperty { get; }
+
+        // 2023-08-12 2dm - removed this, as we don't officially have the Json Type any more
+        //string AnyJsonProperty { get; }
+
+        /// <inheritdoc cref="IDynamicAnythingDocs.AnyLinkOrFileProperty"/>
+        string AnyLinkOrFileProperty { get; }
+
+        /// <inheritdoc cref="IDynamicAnythingDocs.AnyNumberProperty"/>
+        decimal AnyNumberProperty { get; }
+
+        /// <inheritdoc cref="IDynamicAnythingDocs.AnyStringProperty"/>
+        string AnyStringProperty { get; }
+
+        // 2023-08-11 2dm - disable this, believe the instructions were a bit wrong
+        ///// <summary>
+        ///// If this DynamicEntity carries a list of items (for example a `BlogPost.Tags` which behaves as the first Tag, but also carries all the tags in it)
+        ///// Then you can also use DynamicCode to directly navigate to a sub-item, like `Blogs.Tags.WebDesign`. 
+        ///// </summary>
+        ///// <remarks>New in 12.03</remarks>
+        //IEnumerable<DynamicEntity> AnyTitleOfAnEntityInTheList { get; }
+
+        #endregion
 
     }
 }

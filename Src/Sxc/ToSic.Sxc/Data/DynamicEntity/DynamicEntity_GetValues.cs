@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Dynamic;
-using ToSic.Eav.Data;
-using ToSic.Eav.Data.Debug;
-using ToSic.Eav.Data.PropertyLookup;
+﻿using System.Dynamic;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data
@@ -33,17 +29,7 @@ namespace ToSic.Sxc.Data
             //}
 
             return CodeDynHelper.TryGetMemberAndRespectStrict(GetHelper, binder, out result);
-
-            //return base.TryGetMember(binder, out result);
         }
         
-
-        [PrivateApi("Internal")]
-        public override PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path) 
-            => PropertyLookup.FindPropertyInternal(specs, path);
-
-        [PrivateApi("WIP / internal")]
-        public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
-            => PropertyLookup._Dump(specs, path);
     }
 }
