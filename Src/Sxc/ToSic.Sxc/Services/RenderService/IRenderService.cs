@@ -4,6 +4,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Services
 {
@@ -38,8 +39,8 @@ namespace ToSic.Sxc.Services
         /// * Changed result object to `IRawHtmlString` in v16.02 from `IHybridHtmlString`
         /// </remarks>
         IRawHtmlString One(
-            ITypedItem parent,
-            string noParamOrder = Eav.Parameters.Protector,
+            ICanBeItem parent,
+            string noParamOrder = Protector,
             ICanBeEntity item = null,
             object data = null,
             string field = null,
@@ -60,8 +61,8 @@ namespace ToSic.Sxc.Services
         /// * Changed result object to `IRawHtmlString` in v16.02 from `IHybridHtmlString`
         /// </remarks>
         IRawHtmlString All(
-            ITypedItem parent,
-            string noParamOrder = Eav.Parameters.Protector,
+            ICanBeItem parent,
+            string noParamOrder = Protector,
             string field = null,
             string apps = null,
             int max = 100,
@@ -83,7 +84,7 @@ namespace ToSic.Sxc.Services
         IRenderResult Module(
             int pageId,
             int moduleId,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
             object data = null
         );
     }

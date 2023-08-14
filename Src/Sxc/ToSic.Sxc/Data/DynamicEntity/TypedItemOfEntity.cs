@@ -19,7 +19,7 @@ using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data
 {
-    internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanHaveBlockContext, ICanGetByName
+    internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName
     {
         private readonly DynamicEntity _dyn;
         public TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFactory cdf, bool strict)
@@ -260,8 +260,7 @@ namespace ToSic.Sxc.Data
 
         #endregion
 
-        [PrivateApi]
-        IBlock ICanHaveBlockContext.TryGetBlockContext() => Cdf?.BlockOrNull;
-
+        [PrivateApi] IBlock ICanBeItem.TryGetBlockContext() => Cdf?.BlockOrNull;
+        [PrivateApi] ITypedItem ICanBeItem.Item => this;
     }
 }

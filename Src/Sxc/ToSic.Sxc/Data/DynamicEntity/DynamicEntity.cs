@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Data
     /// Note that it will provide many things not listed here, usually things like `.Image`, `.FirstName` etc. based on your ContentType.
     /// </summary>
     [PrivateApi("Changed to private in v16.01, previously was public/stable")]
-    public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata, IHasPropLookup, ISxcDynamicObject, ICanDebug, ICanHaveBlockContext, ICanGetByName
+    public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata, IHasPropLookup, ISxcDynamicObject, ICanDebug, ICanBeItem, ICanGetByName
     {
         #region Constructor / Setup
 
@@ -217,7 +217,7 @@ namespace ToSic.Sxc.Data
 
         #endregion
 
-        [PrivateApi]
-        IBlock ICanHaveBlockContext.TryGetBlockContext() => Cdf?.BlockOrNull;
+        [PrivateApi] IBlock ICanBeItem.TryGetBlockContext() => Cdf?.BlockOrNull;
+        [PrivateApi] ITypedItem ICanBeItem.Item => TypedItem;
     }
 }
