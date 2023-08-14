@@ -14,7 +14,6 @@ namespace ToSic.Sxc.Data
             : base(metadata, parentOrNull, "Metadata", Eav.Constants.TransientAppId, strict: false, cdf)
         {
             _metadata = metadata;
-            //_propLookup = new PropLookupMetadata(this, Entity, base.PropertyLookup, () => Debug);
         }
 
         [PrivateApi("Hide this")]
