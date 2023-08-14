@@ -1,4 +1,3 @@
-using Oqtane.Modules;
 using Oqtane.Services;
 using Oqtane.Shared;
 using System.Net.Http;
@@ -7,7 +6,7 @@ using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Client.Services
 {
-  public class OqtSxcRenderService : ServiceBase
+    public class OqtSxcRenderService : ServiceBase
     {
         public OqtSxcRenderService(HttpClient http, SiteState siteState) : base(http, siteState) { }
 

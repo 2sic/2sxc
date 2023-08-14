@@ -9,7 +9,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
 using static System.StringComparison;
 
@@ -20,7 +19,6 @@ namespace ToSic.Sxc.Oqt.App
     {
         #region Injected Services
         [Inject] public OqtSxcRenderService OqtSxcRenderService { get; set; }
-        [Inject] public IOqtPrerenderService OqtPrerenderService { get; set; }
         [Inject] public OqtPageChangeService OqtPageChangeService { get; set; }
         [Inject] public IJSRuntime JsRuntime { get; set; }
 
@@ -63,12 +61,6 @@ namespace ToSic.Sxc.Oqt.App
                     Log($"1.2: Initialize2sxcContentBlock");
                     await Initialize2SxcContentBlock();
                     NewDataArrived = true;
-                    if (ViewResults != null)
-                    {
-                        ViewResults.SystemHtml = IsPreRendering() ? OqtPrerenderService?.GetSystemHtml() : string.Empty;
-                        Csp();
-                        Log($"1.3: Csp");
-                    }
                 }
 
                 Log($"1 end: OnParametersSetAsync(NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
@@ -206,19 +198,5 @@ namespace ToSic.Sxc.Oqt.App
 
             #endregion
         }
-
-        #region CSP
-
-        public bool ApplyCsp = true;
-
-        private void Csp()
-        {
-            if (IsPreRendering() && ApplyCsp) // executed only in prerender
-                OqtPageChangeService.ApplyHttpHeaders(ViewResults, this);
-
-            ApplyCsp = false; // flag to ensure that code is executed only first time in prerender
-        }
-
-        #endregion
     }
 }

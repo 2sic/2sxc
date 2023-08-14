@@ -14,7 +14,7 @@ using CspParameters = ToSic.Sxc.Web.ContentSecurityPolicy.CspParameters;
 
 namespace ToSic.Sxc.Oqt.Server.Services
 {
-  public class OqtPageChangesSupportService : IOqtPageChangesSupportService
+  public class OqtPageChangesSupportService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly LazySvc<IFeaturesService> _featuresService;
@@ -24,7 +24,6 @@ namespace ToSic.Sxc.Oqt.Server.Services
             _httpContextAccessor = httpContextAccessor;
             _featuresService = featuresService;
         }
-
 
         public int ApplyHttpHeaders(OqtViewResultsDto result, IOqtHybridLog page)
         {
@@ -96,7 +95,6 @@ namespace ToSic.Sxc.Oqt.Server.Services
             page?.Log($"{logPrefix}httpHeaders.Count: {httpHeaders!.Count}");
             return httpHeaders!.Count;
         }
-
         public dynamic PageCsp(bool enforced, IOqtHybridLog page)
         {
             var logPrefix = $"{nameof(PageCsp)}(enforced:{enforced}) - ";
