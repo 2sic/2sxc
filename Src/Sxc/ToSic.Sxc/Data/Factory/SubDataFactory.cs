@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ToSic.Eav.Data;
+﻿using ToSic.Eav.Data;
 
 namespace ToSic.Sxc.Data
 {
@@ -32,10 +26,10 @@ namespace ToSic.Sxc.Data
         /// <returns></returns>
         public IDynamicEntity SubDynEntityOrNull(IEntity contents) => SubDynEntityOrNull(contents, Cdf, Debug, strictGet: Strict);
 
-        internal static IDynamicEntity SubDynEntityOrNull(IEntity contents, CodeDataFactory cdf, bool? debug, bool strictGet)
+        internal static DynamicEntity SubDynEntityOrNull(IEntity contents, CodeDataFactory cdf, bool? debug, bool strictGet)
         {
             if (contents == null) return null;
-            var result = new DynamicEntity(contents, cdf, strict: strictGet);
+            var result = cdf.AsDynamic(contents, strictGet); // new DynamicEntity(contents, cdf, strict: strictGet);
             if (debug == true) result.Debug = true;
             return result;
         }

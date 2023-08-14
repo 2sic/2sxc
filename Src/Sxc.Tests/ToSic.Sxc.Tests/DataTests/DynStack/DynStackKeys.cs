@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Data;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
@@ -20,6 +21,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynStack
         [DataRow("Deep.NotDeeper.ReallyNot", false)]
         [DataRow("Deep.Deeper.Value", true)]
         [DataRow("Data.Deeper.NotValue", false)]
+        [ExpectedException(typeof(NotImplementedException))]
         public void Keys(string key, bool expected) => AreEqual(expected, StackForKeys.ContainsKey(key));
 
 

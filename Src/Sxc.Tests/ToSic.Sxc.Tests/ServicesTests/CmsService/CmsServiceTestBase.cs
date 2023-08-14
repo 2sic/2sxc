@@ -55,13 +55,13 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
             return GetService<EntityBuilder>().TestCreate(appId: AppId, entityId: 1, contentType: contentType, values: values, titleField: SomeTextField);
         }
 
-        public DynamicEntity DynEntity(IEntity entity = null) => new DynamicEntity(entity, Cdf, strict: true);
+        public DynamicEntity DynEntStrict(IEntity entity = null) => Cdf.AsDynamic(entity, true); // new DynamicEntity(entity, Cdf, strict: true);
 
         public IHtmlTag CmsServiceShow(string someHtmlValue)
         {
             const string someTextValue = "Just Basic Text";
             var entity = TstDataEntity(someTextValue, someHtmlValue, TstDataContentType);
-            var dynamicEntity = DynEntity(entity);
+            var dynamicEntity = DynEntStrict(entity);
             var dynamicField = dynamicEntity.Field(SomeHtmlField);
             //var imgService = Build<LazySvc<IImageService>>();
             //var valueConverter = Build<LazySvc<IValueConverter>>();

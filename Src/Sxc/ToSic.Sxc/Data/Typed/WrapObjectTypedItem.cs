@@ -145,9 +145,9 @@ namespace ToSic.Sxc.Data.Typed
         #region Not Supported Properties such as Entity, Type, Child, Folder, Presentation, Metadata
 
         IMetadata ITypedItem.Metadata => _metadata ?? (_metadata = BuildMetadata(PreWrap.TryGet(nameof(Metadata)).Raw));
-        private Metadata _metadata;
+        private IMetadata _metadata;
 
-        private Metadata BuildMetadata(object raw)
+        private IMetadata BuildMetadata(object raw)
         {
             var objList = raw != null
                 ? raw is IEnumerable rawEnum
@@ -170,8 +170,8 @@ namespace ToSic.Sxc.Data.Typed
                 .ToList();
 
             var mdOf = new MetadataOf<int>(0, 0, "virtual", mdEntities);
-            var metadata = new Metadata(mdOf, parentOrNull: null, _cdf.Value);
-            ;
+            // TODO: @2dm - this probably won't work yet, without an entity (null) #todoTyped
+            var metadata = _cdf.Value.Metadata(mdOf/*, mdOf.FirstOrDefault()*/); // new Metadata(mdOf, parentOrNull: null, _cdf.Value);
             return metadata;
         }
 

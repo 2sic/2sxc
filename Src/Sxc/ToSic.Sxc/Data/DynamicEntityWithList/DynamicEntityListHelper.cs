@@ -18,24 +18,27 @@ namespace ToSic.Sxc.Data
         public readonly string FieldOrNull;
         private readonly CodeDataFactory _cdf;
 
-        private Func<bool?> _getDebug;
+        private readonly Func<bool?> _getDebug;
 
         public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, bool strictGet, CodeDataFactory cdf)
+            : this(cdf, strictGet, getDebug)
         {
-            StrictGet = strictGet;
-            _list = new List<IDynamicEntity> {singleItem ?? throw new ArgumentException(nameof(singleItem))};
-            _cdf = cdf ?? throw new ArgumentNullException(nameof(cdf));
-            _getDebug = getDebug;
+            _list = new List<IDynamicEntity> { singleItem ?? throw new ArgumentException(nameof(singleItem)) };
         }
         
         public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug, bool strictGet, CodeDataFactory cdf)
+            : this(cdf, strictGet, getDebug)
         {
             ParentOrNull = parentOrNull;
             FieldOrNull = fieldOrNull;
-            _cdf = cdf ?? throw new ArgumentNullException(nameof(cdf));
             _entities = entities?.ToArray() ?? throw new ArgumentNullException(nameof(entities));
-            _getDebug = getDebug;
+        }
+
+        private DynamicEntityListHelper(CodeDataFactory cdf, bool strictGet, Func<bool?> getDebug)
+        {
+            _cdf = cdf ?? throw new ArgumentNullException(nameof(cdf));
             StrictGet = strictGet;
+            _getDebug = getDebug;
         }
         
         private List<IDynamicEntity> _list;
@@ -62,16 +65,13 @@ namespace ToSic.Sxc.Data
                         var blockEntity = reWrapWithListNumbering
                             ? EntityInBlockDecorator.Wrap(e, ParentOrNull.EntityGuid, FieldOrNull, i)
                             : e;
-                        return SubDataFactory.SubDynEntityOrNull(blockEntity, _cdf, debug, strictGet: StrictGet);
+                        return SubDataFactory.SubDynEntityOrNull(blockEntity, _cdf, debug, strictGet: StrictGet) as IDynamicEntity;
                     })
                     .ToList();
             }
         }
 
-
-
-        public int Count => _entities?.Length ?? 1;
-
+        //public int Count => _entities?.Length ?? 1;
 
     }
 }

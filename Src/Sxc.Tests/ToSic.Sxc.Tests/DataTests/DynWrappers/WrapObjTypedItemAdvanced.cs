@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
 
         [TestMethod] public void FieldHasName() => AreEqual("ForField", Field.Name);
 
-        [TestMethod] public void FieldHasValue() => AreEqual("Hello", Field.Value);
+        [TestMethod] public void FieldHasUrl() => AreEqual("Hello", Field.Url);
         [TestMethod] public void FieldHasRaw() => AreEqual("Hello", Field.Raw);
         
         // File / Folder Tests are more complex, as they need an App context

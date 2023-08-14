@@ -74,8 +74,10 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
             if (target is IEntity entity)
                 return (entity.AppId, "entity-appid");
-            if (target is IDynamicEntity dynEntity)
-                return (dynEntity.Entity?.AppId ?? NoAppId, "dyn entity");
+            //if (target is IDynamicEntity dynEntity)
+            //    return (dynEntity.Entity?.AppId ?? NoAppId, "dyn entity");
+            if (target is ICanBeEntity canBeEntity)
+                return (canBeEntity.Entity?.AppId ?? NoAppId, "dyn/typed entity");
             if (target is IHasMetadata md)
             {
                 if (md.Metadata.Any())

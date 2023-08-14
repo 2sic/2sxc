@@ -12,6 +12,8 @@ using ToSic.Sxc.Data.Typed;
 using IEntity = ToSic.Eav.Data.IEntity;
 using static ToSic.Eav.Parameters;
 using System.Dynamic;
+using ToSic.Sxc.Blocks;
+
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Data
@@ -21,7 +23,7 @@ namespace ToSic.Sxc.Data
     /// Note that it will provide many things not listed here, usually things like `.Image`, `.FirstName` etc. based on your ContentType.
     /// </summary>
     [PrivateApi("Changed to private in v16.01, previously was public/stable")]
-    public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata, IHasPropLookup, ISxcDynamicObject, ICanDebug
+    public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata, IHasPropLookup, ISxcDynamicObject, ICanDebug, ICanHaveBlockContext, ICanGetByName
     {
         #region Constructor / Setup
 
@@ -29,15 +31,16 @@ namespace ToSic.Sxc.Data
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
         [PrivateApi]
-        public DynamicEntity(IEntity entity, CodeDataFactory cdf, bool strict): this(cdf, strict, entity)
+        public DynamicEntity(IEntity entity, CodeDataFactory cdf, bool strict)
+            : this(cdf, strict, entity)
         {
             ListHelper = new DynamicEntityListHelper(this, () => Debug, strictGet: strict, cdf);
         }
 
         internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, bool strict, CodeDataFactory cdf)
-        : this(cdf, strict,
-            // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
-            list.FirstOrDefault() ?? cdf.PlaceHolderInBlock(appIdOrNull, parent, field))
+            : this(cdf, strict,
+                // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
+                list.FirstOrDefault() ?? cdf.PlaceHolderInBlock(appIdOrNull, parent, field))
         {
             ListHelper = new DynamicEntityListHelper(list, parent, field, () => Debug, strictGet: strict, cdf);
         }
@@ -64,19 +67,29 @@ namespace ToSic.Sxc.Data
         private readonly bool _strict;
 
         [PrivateApi]
-        internal GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, _strict, () => Debug));
+        IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ?? (_propLookup = new PropLookupWithPathEntity(Entity, () => Debug));
+        private PropLookupWithPathEntity _propLookup;
+
+        [PrivateApi]
+        internal GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, _strict, () => Debug, childrenShouldBeDynamic: true));
         private GetAndConvertHelper _getHelper;
 
         [PrivateApi]
         internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, _strict, Debug));
         private SubDataFactory _subData;
 
-
-        [PrivateApi] public virtual IPropertyLookup PropertyLookup => _propLookup ?? (_propLookup = new PropLookupWithPathEntity(Entity, () => Debug));
-        private PropLookupWithPathEntity _propLookup;
-
-        private CodeDynHelper DynHelper => _dynHelper ?? (_dynHelper = new CodeDynHelper(Entity, SubDataFactory));
+        [PrivateApi]
+        internal CodeDynHelper DynHelper => _dynHelper ?? (_dynHelper = new CodeDynHelper(Entity, SubDataFactory));
         private CodeDynHelper _dynHelper;
+
+        [PrivateApi]
+        internal CodeItemHelper ItemHelper => _itemHelper ?? (_itemHelper = new CodeItemHelper(GetHelper));
+        private CodeItemHelper _itemHelper;
+
+        [PrivateApi]
+        internal ITypedItem TypedItem => _typedItem ?? (_typedItem = new TypedItemOfEntity(this, Entity, Cdf, _strict));
+        private TypedItemOfEntity _typedItem;
+
 
         /// <inheritdoc />
         public bool Debug { get; set; }
@@ -102,7 +115,7 @@ namespace ToSic.Sxc.Data
         #region Advanced: Fields, Html
 
         /// <inheritdoc />
-        public IField Field(string name) => ItemHelper.Field(this, name);
+        public IField Field(string name) => ItemHelper.Field(this.TypedItem, name);
 
         /// <inheritdoc/>
         [PrivateApi("Should not be documented here, as it should only be used on ITyped")]
@@ -116,7 +129,7 @@ namespace ToSic.Sxc.Data
         ) => Cdf.CompatibilityLevel < Constants.CompatibilityLevel12
             // Only do compatibility check if used on DynamicEntity
             ? throw new NotSupportedException($"{nameof(Html)}(...) not supported in older Razor templates. Use Razor14, RazorPro or newer.")
-            : TypedItemHelpers.Html(Cdf, this, name: name, noParamOrder: noParamOrder, container: container,
+            : TypedItemHelpers.Html(Cdf, this.TypedItem, name: name, noParamOrder: noParamOrder, container: container,
                 toolbar: toolbar, imageSettings: imageSettings, required: false, debug: debug);
 
         #endregion
@@ -156,16 +169,11 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         public List<IDynamicEntity> Parents(string type = null, string field = null)
-            => Entity.Parents(type, field).Select(e => SubDataFactory.SubDynEntityOrNull(e)).ToList();
-
+            => GetHelper.Parents(entity: Entity, type: type, field: field);
 
         /// <inheritdoc />
         public List<IDynamicEntity> Children(string field = null, string type = null)
-            => Entity.Children(field, type)
-                .Select((e, i) => EntityInBlockDecorator.Wrap(e, Entity.EntityGuid, field, i))
-                .Select(e => SubDataFactory.SubDynEntityOrNull(e))
-                .ToList();
-
+            => GetHelper.Children(Entity, field: field, type: type);
 
         #endregion
 
@@ -213,5 +221,7 @@ namespace ToSic.Sxc.Data
 
         #endregion
 
+        [PrivateApi]
+        IBlock ICanHaveBlockContext.TryGetBlockContext() => Cdf?.BlockOrNull;
     }
 }

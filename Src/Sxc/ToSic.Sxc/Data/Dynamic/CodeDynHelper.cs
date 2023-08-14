@@ -17,11 +17,15 @@ namespace ToSic.Sxc.Data
             SubDataFactory = subDataFactory;
         }
 
-        public dynamic Presentation => _p ?? (_p = SubDataFactory.SubDynEntityOrNull(Entity.GetDecorator<EntityInBlockDecorator>()?.Presentation));
+        public IDynamicEntity Presentation => _p ?? (_p = SubDataFactory.SubDynEntityOrNull(Entity.GetDecorator<EntityInBlockDecorator>()?.Presentation));
         private IDynamicEntity _p;
 
-        public IMetadata Metadata => _metadata ?? (_metadata = new Metadata(Entity?.Metadata, Entity, SubDataFactory.Cdf));
-        private Metadata _metadata;
+        public IMetadata Metadata => _metadata ?? (_metadata = SubDataFactory.Cdf.Metadata(Entity?.Metadata)); // new Metadata(Entity?.Metadata, null /*Entity*/, SubDataFactory.Cdf));
+        private IMetadata _metadata;
+
+        //public IMetadata MetadataTyped =>
+        //    _metadataTyped ?? (_metadataTyped = SubDataFactory.Cdf.Metadata(Entity?.Metadata/*, Entity*/)); // new Metadata(Entity?.Metadata, Entity, SubDataFactory.Cdf));
+        //private IMetadata _metadataTyped;
 
 
         #region TryGetMember for dynamic access

@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Data
         public IPropertyLookup PropertyLookup { get; }
 
         [PrivateApi]
-        internal GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, Strict, () => Debug));
+        internal GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, Strict, () => Debug, childrenShouldBeDynamic: true));
         private GetAndConvertHelper _getHelper;
 
         [PrivateApi]

@@ -17,11 +17,10 @@ namespace ToSic.Sxc.Apps
         public AppConfiguration Configuration => _appConfig.Get(() => new AppConfiguration(AppConfiguration, Log));
         private readonly GetOnce<AppConfiguration> _appConfig = new GetOnce<AppConfiguration>();
 
-        private dynamic MakeDynProperty(IEntity contents, bool strict)
+        private DynamicEntity MakeDynProperty(IEntity contents, bool strict)
         {
             var wrapped = CmsEditDecorator.Wrap(contents, false);
-            // TODO: FIGURE OUT IF STRICT
-            return _cdfLazy.Value.AsDynamic(wrapped, strict: false);
+            return _cdfLazy.Value.AsDynamic(wrapped, strict: strict);
         }
 
         internal void SetupAsConverter(CodeDataFactory cdf) => _cdfLazy.Inject(cdf);

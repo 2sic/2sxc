@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Data
             if (Cdf.CompatibilityLevel > Constants.MaxLevelForEntityDotRender)
                 throw new Exception("content.Render() is deprecated in the new RazorComponent. Use GetService&lt;ToSic.Sxc.Services.IRenderService&gt;().One(content) instead.");
 
-            return Cdf.Services.RenderService.One(this);
+            return Cdf.Services.RenderService.One(this.TypedItem);
         }
 
         [PrivateApi("shouldn't be used, but it may be published by accident, so shouldn't be removed. ")]

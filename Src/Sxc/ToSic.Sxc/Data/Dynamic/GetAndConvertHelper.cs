@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Data.Decorators;
 using static System.StringComparer;
 using static ToSic.Eav.Parameters;
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Data
 {
@@ -21,9 +22,10 @@ namespace ToSic.Sxc.Data
 
         public bool StrictGet { get; }
 
-        public GetAndConvertHelper(IHasPropLookup parent, CodeDataFactory cdf, bool strict, Func<bool> getDebug)
+        public GetAndConvertHelper(IHasPropLookup parent, CodeDataFactory cdf, bool strict, Func<bool> getDebug, bool childrenShouldBeDynamic)
         {
             _getDebug = getDebug;
+            _childrenShouldBeDynamic = childrenShouldBeDynamic;
             Parent = parent;
             Cdf = cdf;
             StrictGet = strict;
@@ -32,6 +34,10 @@ namespace ToSic.Sxc.Data
         public bool Debug => _debug ?? _getDebug();
         private bool? _debug;
         private readonly Func<bool> _getDebug;
+        private readonly bool _childrenShouldBeDynamic;
+
+        internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, StrictGet, Debug));
+        private SubDataFactory _subData;
 
 
         public IHasPropLookup Parent { get; }
@@ -150,10 +156,20 @@ namespace ToSic.Sxc.Data
             // Note 2021-06-08 if the parent is _not_ an IEntity, this will throw an error. Could happen in the DynamicStack, but that should never have such children
             if (value is IEnumerable<IEntity> children)
             {
-                l.A($"Convert entity list as {nameof(DynamicEntity)}");
-                var dynEnt = new DynamicEntity(children.ToArray(), parent, field, null, strict: StrictGet, Cdf);
-                if (Debug) dynEnt.Debug = true;
-                return l.Return(dynEnt, "ent-list, now dyn");
+                if (_childrenShouldBeDynamic)
+                {
+                    l.A($"Convert entity list as {nameof(DynamicEntity)}");
+                    var dynEnt = new DynamicEntity(children.ToArray(), parent, field, null, strict: StrictGet, Cdf);
+                    if (Debug) dynEnt.Debug = true;
+                    return l.Return(dynEnt, "ent-list, now dyn");
+                }
+                l.A($"Convert entity list as {nameof(ITypedItem)}");
+                var converted = Entity2Children(children, parent?.EntityGuid, field)
+                    .Cast<DynamicEntity>()
+                    .Select(de => de.TypedItem)
+                    .ToList();
+                // if (Debug) converted.ForEach(c => c.Debug = true);
+                return l.Return(converted, "ent-list, now dyn");
             }
 
             // special debug of path if possible
@@ -168,6 +184,34 @@ namespace ToSic.Sxc.Data
         }
 
         #endregion
+
+        #region Parents / Children - ATM still dynamic
+
+        public List<IDynamicEntity> Parents(IEntity entity, string type = null, string field = null)
+            => entity.Parents(type, field).Select(e => SubDataFactory.SubDynEntityOrNull(e)).ToList();
+
+
+        //public List<IEntity> ChildrenDecorated(IEntity entity, string field = null, string type = null)
+        //    => /*Entity2Children(*/entity.Children(field, type) //, entity.EntityGuid, field);
+        //        .Select((e, i) => EntityInBlockDecorator.Wrap(e, entity.EntityGuid, field, i) as IEntity)
+        //        .ToList();
+
+
+        public List<IDynamicEntity> Children(IEntity entity, string field = null, string type = null)
+            => // ChildrenDecorated(entity, field, type)
+                Entity2Children( entity.Children(field, type), entity.EntityGuid, field);
+                //.Select((e, i) => EntityInBlockDecorator.Wrap(e, entity.EntityGuid, field, i))
+                //.Select(e => SubDataFactory.SubDynEntityOrNull(e))
+                //.ToList();
+
+        private List<IDynamicEntity> Entity2Children(IEnumerable<IEntity> entities, Guid? parentGuid, string field = null)
+            => entities
+                .Select((e, i) => EntityInBlockDecorator.Wrap(e, parentGuid, field, i))
+                .Select(e => SubDataFactory.SubDynEntityOrNull(e))
+                .ToList();
+
+        #endregion
+
 
     }
 }

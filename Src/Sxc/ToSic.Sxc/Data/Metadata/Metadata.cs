@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Metadata;
@@ -8,7 +9,7 @@ using ToSic.Lib.Documentation;
 namespace ToSic.Sxc.Data
 {
     [PrivateApi("Hide implementation")]
-    public class Metadata: DynamicEntity, IMetadata, IHasPropLookup
+    internal partial class Metadata: DynamicEntity, IMetadata, IHasPropLookup
     {
         internal Metadata(IMetadataOf metadata, IEntity parentOrNull, CodeDataFactory cdf)
             : base(metadata, parentOrNull, "Metadata", Eav.Constants.TransientAppId, strict: false, cdf)
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.Data
 
         IMetadataOf IHasMetadata.Metadata => _metadata;
 
-        public override IPropertyLookup PropertyLookup => _propLookup ?? (_propLookup = new PropLookupMetadata(this, Entity, base.PropertyLookup, () => Debug));
+        IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ?? (_propLookup = new PropLookupMetadata(this, /*Entity, base.PropertyLookup,*/ () => Debug));
         private PropLookupMetadata _propLookup;
 
 
@@ -30,5 +31,12 @@ namespace ToSic.Sxc.Data
 
         public IEnumerable<IEntity> OfType(string type) => _metadata.OfType(type);
 
+        #region Properties from the interfaces which are not really supported
+
+        public new bool IsDemoItem => false;
+
+        public new ITypedItem Presentation => throw new NotSupportedException();
+
+        #endregion
     }
 }

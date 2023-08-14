@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ToSic.Eav.Data;
+using ToSic.Eav.Metadata;
 using ToSic.Sxc.Data;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
@@ -20,7 +22,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
         private ITypedItem ItemMd1 => ItemFromObject(new TestDataMd1());
 
         [TestMethod] public void MetadataHasValue() => IsNotNull(ItemMd1.TestMetadata());
-        [TestMethod] public void MetadataCount1() => AreEqual(1, (ItemMd1.TestMetadata() as IEnumerable<IDynamicEntity>).Count());
+        [TestMethod] public void MetadataCount1() => AreEqual(1, ((ItemMd1.TestMetadata() as IHasMetadata).Metadata as IEnumerable<IEntity>).Count());
         //[TestMethod] public void MetadataId() => AreEqual(999, Item.Metadata.Entity.EntityId);
         [TestMethod] public void MetadataDescription() => AreEqual("MD Description", ItemMd1.TestMetadata().Get<string>("Description"));
 
@@ -46,7 +48,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
         }
         private ITypedItem ItemMd3 => ItemFromObject(new TestDataMd3());
         [TestMethod] public void Metadata3HasValue() => IsNotNull(ItemMd3.TestMetadata());
-        [TestMethod] public void Metadata3Count3() => AreEqual(3, (ItemMd3.TestMetadata() as IEnumerable<IDynamicEntity>).Count());
+        [TestMethod] public void Metadata3Count3() => AreEqual(3, ((ItemMd3.TestMetadata() as IHasMetadata).Metadata /*as IEnumerable<IDynamicEntity>*/).Count());
         [TestMethod] public void Metadata3Description() => AreEqual("MD3 Description", ItemMd3.TestMetadata().Get<string>("Description"));
         [TestMethod] public void Metadata3Color() => AreEqual("white", ItemMd3.TestMetadata().Get<string>("Color"));
 

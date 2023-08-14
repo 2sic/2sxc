@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Blocks
             ICanBeEntity item = null,
             string field = null,
             Guid? newGuid = null)
-            => RenderServiceWithWarning(parent).One(parent, noParamOrder, item, data: null, field: field, newGuid: newGuid);
+            => RenderServiceWithWarning(parent).One(parent.TypedItem, noParamOrder, item, data: null, field: field, newGuid: newGuid);
 
         /// <summary>
         /// Render content-blocks into a larger html-block containing placeholders
@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Blocks
             string apps = null,
             int max = 100,
             string merge = null) 
-            => RenderServiceWithWarning(parent).All(parent, noParamOrder, field, apps, max, merge);
+            => RenderServiceWithWarning(parent).All(parent.TypedItem, noParamOrder, field, apps, max, merge);
 
         private static Services.IRenderService RenderServiceWithWarning(DynamicEntity parent)
         {
@@ -70,7 +70,8 @@ namespace ToSic.Sxc.Blocks
             // First do version checks -should not be allowed if compatibility is too low
             if (cdf.CompatibilityLevel > Constants.MaxLevelForStaticRender)
                 throw new Exception(
-                    "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. For v12+ use the ToSic.Sxc.Services.IRenderService instead");
+                    "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. " +
+                    "For v14+ use the Kit.Render (IRenderService) or for v12+ use the GetService<ToSic.Sxc.Services.IRenderService>().");
 
 
             var block = cdf.BlockOrNull;

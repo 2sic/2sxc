@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Data
             return AsItemInternal(data, MaxRecursions, strict: strict ?? false) ?? fallback;
         }
 
-        private ITypedItem AsItemInternal(object target, int recursions, bool strict)
+        internal ITypedItem AsItemInternal(object data, int recursions, bool strict)
         {
             var l = Log.Fn<ITypedItem>();
             if (recursions <= 0)
@@ -37,14 +37,14 @@ namespace ToSic.Sxc.Data
 
             ITypedItem ConvertOrNullAndLog(IEntity e, string typeName) => e == null
                 ? l.ReturnNull($"empty {typeName}")
-                : l.Return(new DynamicEntity(e, this, strict: strict), typeName);
+                : l.Return(new DynamicEntity(e, this, strict: strict).TypedItem, typeName);
 
-            switch (target)
+            switch (data)
             {
                 case null:
                     return l.ReturnNull("null");
                 case string _:
-                    throw l.Done(new ArgumentException($"Type '{target.GetType()}' cannot be converted to {nameof(ITypedItem)}"));
+                    throw l.Done(new ArgumentException($"Type '{data.GetType()}' cannot be converted to {nameof(ITypedItem)}"));
                 case ITypedItem alreadyCmsItem:
                     return ConvertOrNullAndLog(alreadyCmsItem.Entity, nameof(ITypedItem));
                 //case IDynamicEntity dynEnt:
@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Data
                     // retry conversion
                     return l.Return(AsItemInternal(enumFirst, recursions - 1, strict: strict));
                 default:
-                    throw l.Done(new ArgumentException($"Type '{target.GetType()}' cannot be converted to {nameof(ITypedItem)}. " +
+                    throw l.Done(new ArgumentException($"Type '{data.GetType()}' cannot be converted to {nameof(ITypedItem)}. " +
                                                        $"If you are trying to create mock/fake/fallback data, try using \", mock: true\""));
             }
 
