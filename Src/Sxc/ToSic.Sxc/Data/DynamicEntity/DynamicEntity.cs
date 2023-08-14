@@ -67,15 +67,15 @@ namespace ToSic.Sxc.Data
         private readonly bool _strict;
 
         [PrivateApi]
-        IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ?? (_propLookup = new PropLookupWithPathEntity(Entity, () => Debug));
+        IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ?? (_propLookup = new PropLookupWithPathEntity(Entity, canDebug: this));
         private PropLookupWithPathEntity _propLookup;
 
         [PrivateApi]
-        internal GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, _strict, () => Debug, childrenShouldBeDynamic: true));
+        internal GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, _strict, childrenShouldBeDynamic: true, canDebug: this));
         private GetAndConvertHelper _getHelper;
 
         [PrivateApi]
-        internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, _strict, Debug));
+        internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, _strict, canDebug: this));
         private SubDataFactory _subData;
 
         [PrivateApi]

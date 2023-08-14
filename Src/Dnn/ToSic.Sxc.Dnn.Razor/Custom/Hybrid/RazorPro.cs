@@ -6,7 +6,6 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -129,7 +128,7 @@ namespace Custom.Hybrid
         #region Dev Tools & Dev Helpers
 
         [PrivateApi("Not yet ready")]
-        public IDevTools DevTools => _DynCodeRoot.DevTools;
+        public IDevTools DevTools => CodeHelper.DevTools;
 
         [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => CodeHelpDbV16.Compile16;
 

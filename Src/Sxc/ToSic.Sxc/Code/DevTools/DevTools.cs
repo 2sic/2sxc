@@ -1,25 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
+using static ToSic.Eav.Parameters;
 
-namespace ToSic.Sxc.Code.DevTools
+namespace ToSic.Sxc.Code
 {
-    internal class DevTools: IDevTools
+    internal class DevTools: ServiceBase, IDevTools
     {
         public bool IsRazor { get; }
         public string RazorFileName { get; }
 
-        public DevTools(bool isRazor, string razorFileName)
+        public DevTools(bool isRazor, string razorFileName, ILog parentLog): base($"{Constants.SxcLogName}.DevTls")
         {
             IsRazor = isRazor;
             RazorFileName = razorFileName;
+            this.LinkLog(parentLog);
         }
 
         private string RequireMsg(string requires, string but, string[] names) =>
             $"Partial Razor '{RazorFileName}' requires {requires} of the following parameters, but {but} were provided: " +
             string.Join(", ", (names ?? Array.Empty<string>()).Select(s => $"'{s}'"));
+
+        public void Debug(object target, string noParamOrder = Protector, bool debug = true)
+        {
+            var l = Log.Fn($"{nameof(target)}: '{target?.GetType()}', {nameof(debug)}: {debug}");
+            Protect(noParamOrder);
+            if (!(target is ICanDebug canDebug))
+                throw new ArgumentException($"Can't enable debug on {nameof(target)} as it doesn't support {nameof(ICanDebug)}");
+            canDebug.Debug = debug;
+            l.Done();
+        }
 
         //public bool HasAll(params string[] names)
         //{

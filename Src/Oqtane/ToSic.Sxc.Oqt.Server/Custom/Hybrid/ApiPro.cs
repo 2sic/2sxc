@@ -6,7 +6,6 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -69,7 +68,7 @@ namespace Custom.Hybrid
         private readonly GetOnce<ServiceKit16> _kit = new GetOnce<ServiceKit16>();
 
         [PrivateApi("Not yet ready")]
-        public IDevTools DevTools => _DynCodeRoot.DevTools;
+        public IDevTools DevTools => CodeHelper.DevTools;
 
         #endregion
 

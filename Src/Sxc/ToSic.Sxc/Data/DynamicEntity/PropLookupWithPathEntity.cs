@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
@@ -14,19 +13,19 @@ namespace ToSic.Sxc.Data
         ICanBeEntity,       // This is important, to ensure that when used in a stack it can be converted to something else again
         IPropertyLookup
     {
-        private readonly Func<bool> _getDebug;
+        private readonly ICanDebug _canDebug;
 
         public IEntity Entity { get; }
 
-        public PropLookupWithPathEntity(IEntity entity, Func<bool> getDebug)
+        public PropLookupWithPathEntity(IEntity entity, ICanDebug canDebug)
         {
-            _getDebug = getDebug;
+            _canDebug = canDebug;
             Entity = entity;
         }
 
         public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
         {
-            specs = specs.SubLog("Sxc.DynEnt", _getDebug());
+            specs = specs.SubLog("Sxc.DynEnt", _canDebug.Debug);
             var l = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), "DynEntity");
             // check Entity is null (in cases where null-objects are asked for properties)
             if (Entity == null) return l.ReturnNull("no entity");

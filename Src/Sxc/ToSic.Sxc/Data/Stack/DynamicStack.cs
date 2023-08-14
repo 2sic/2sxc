@@ -41,11 +41,11 @@ namespace ToSic.Sxc.Data
         public IPropertyLookup PropertyLookup { get; }
 
         [PrivateApi]
-        internal GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, Strict, () => Debug, childrenShouldBeDynamic: true));
+        internal GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, Strict, childrenShouldBeDynamic: true, canDebug: this));
         private GetAndConvertHelper _getHelper;
 
         [PrivateApi]
-        internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, Strict, Debug));
+        internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, Strict, canDebug: this));
         private SubDataFactory _subData;
 
         /// <inheritdoc />

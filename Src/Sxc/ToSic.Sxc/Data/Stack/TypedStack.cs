@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Data
             _stack = new PropertyStack().Init(name, sources);
             Cdf = cdf;
             PropertyLookup = new PropLookupStack(_stack, () => Debug);
-            _helper = new GetAndConvertHelper(this, cdf, strict: false, () => Debug, childrenShouldBeDynamic: false);
+            _helper = new GetAndConvertHelper(this, cdf, strict: false, childrenShouldBeDynamic: false, canDebug: this);
             _itemHelper = new CodeItemHelper(_helper);
         }
 

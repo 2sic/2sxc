@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
-using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using static ToSic.Eav.Parameters;
-using static ToSic.Eav.Configuration.ConfigurationConstants;
 
 namespace ToSic.Sxc.Code
 {
-    public class TypedCode16Helper
+    public class TypedCode16Helper: ServiceBase
     {
         public bool DefaultStrict = true;
 
@@ -18,12 +18,14 @@ namespace ToSic.Sxc.Code
         private readonly string _codeFileName;
         internal ContextData Data { get; }
         public TypedCode16Helper(IDynamicCodeRoot codeRoot, IContextData data, IDictionary<string, object> myModelData, bool isRazor, string codeFileName)
+            : base(Constants.SxcLogName + ".TCd16H")
         {
             _codeRoot = codeRoot;
             _myModelData = myModelData;
             _isRazor = isRazor;
             _codeFileName = codeFileName;
             Data = data as ContextData;
+            this.LinkLog(codeRoot.Log);
         }
 
         public ITypedItem MyItem => _myItem.Get(() => _codeRoot.Cdf.AsItem(Data.MyItem, Protector, strict: DefaultStrict));
@@ -42,5 +44,8 @@ namespace ToSic.Sxc.Code
         public ITypedStack AllResources => (_codeRoot as DynamicCodeRoot)?.AllResources;
 
         public ITypedStack AllSettings => (_codeRoot as DynamicCodeRoot)?.AllSettings;
+
+        public IDevTools DevTools => _devTools.Get(() => new DevTools(_isRazor, _codeFileName, Log));
+        private readonly GetOnce<IDevTools> _devTools = new GetOnce<IDevTools>();
     }
 }

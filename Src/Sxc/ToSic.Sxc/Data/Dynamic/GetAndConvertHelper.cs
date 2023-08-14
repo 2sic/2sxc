@@ -22,21 +22,21 @@ namespace ToSic.Sxc.Data
 
         public bool StrictGet { get; }
 
-        public GetAndConvertHelper(IHasPropLookup parent, CodeDataFactory cdf, bool strict, Func<bool> getDebug, bool childrenShouldBeDynamic)
+        public GetAndConvertHelper(IHasPropLookup parent, CodeDataFactory cdf, bool strict, bool childrenShouldBeDynamic, ICanDebug canDebug)
         {
-            _getDebug = getDebug;
             _childrenShouldBeDynamic = childrenShouldBeDynamic;
+            _canDebug = canDebug;
             Parent = parent;
             Cdf = cdf;
             StrictGet = strict;
         }
 
-        public bool Debug => _debug ?? _getDebug();
+        public bool Debug => _debug ?? _canDebug.Debug;
         private bool? _debug;
-        private readonly Func<bool> _getDebug;
         private readonly bool _childrenShouldBeDynamic;
+        private readonly ICanDebug _canDebug;
 
-        internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, StrictGet, Debug));
+        internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, StrictGet, _canDebug));
         private SubDataFactory _subData;
 
 
@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Data
         public TryGetResult GetInternal(string field, string language = null, bool lookupLink = true)
         {
             var logOrNull = LogOrNull.SubLogOrNull("Dyn.EntBas", Debug);
-            var l = logOrNull.Fn<TryGetResult>($"Type: {GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookupLink)}:{lookupLink}");
+            var l = logOrNull.Fn<TryGetResult>($"Type: {Parent.GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookupLink)}:{lookupLink}");
 
             if (!field.HasValue())
                 return l.Return(new TryGetResult(false, null), "field null/empty");
@@ -137,7 +137,7 @@ namespace ToSic.Sxc.Data
         //    return l.Return(value, "no conversion");
         //}
 
-        public object ValueAutoConverted(PropReqResult original, bool lookupLink, string field, ILog logOrNull)
+        private object ValueAutoConverted(PropReqResult original, bool lookupLink, string field, ILog logOrNull)
         {
             var l = logOrNull.Fn<object>($"..., {nameof(lookupLink)}: {lookupLink}, {nameof(field)}: {field}");
             var value = original.Result;
@@ -173,12 +173,14 @@ namespace ToSic.Sxc.Data
             }
 
             // special debug of path if possible
-            try
-            {
-                var finalPath = string.Join(" > ", original.Path?.Parts?.ToArray() ?? Array.Empty<string>());
-                l.A($"Debug path: {finalPath}");
-            }
-            catch {/* ignore */}
+            if (_canDebug.Debug)
+                try
+                {
+                    
+                    var finalPath = string.Join(" > ", original.Path?.Parts?.ToArray() ?? Array.Empty<string>());
+                    l.A($"Debug path: {finalPath}");
+                }
+                catch {/* ignore */}
 
             return l.Return(value, "unmodified");
         }

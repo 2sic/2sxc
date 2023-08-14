@@ -10,7 +10,6 @@ using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
 using System.Web.Http;
-using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using System.IO;
 using System.Net.Http;
@@ -71,7 +70,7 @@ namespace Custom.Hybrid
         public ILinkService Link => _DynCodeRoot?.Link;
 
         [PrivateApi("Not yet ready")]
-        public IDevTools DevTools => _DynCodeRoot.DevTools;
+        public IDevTools DevTools => CodeHelper.DevTools;
 
         #endregion
 

@@ -85,10 +85,10 @@ namespace ToSic.Sxc.Startup
 
 
             // Context stuff, which is explicitly scoped
-            services.TryAddScoped<Sxc.Context.IContextResolver, Sxc.Context.ContextResolver>();
+            services.TryAddScoped<Context.IContextResolver, Context.ContextResolver>();
             // New v15.04 WIP
-            services.TryAddScoped<Eav.Context.IContextResolver>(x => x.GetRequiredService<Sxc.Context.IContextResolver>());
-            services.TryAddScoped<IContextResolverUserPermissions>(x => x.GetRequiredService<Sxc.Context.IContextResolver>());
+            services.TryAddScoped<Eav.Context.IContextResolver>(x => x.GetRequiredService<Context.IContextResolver>());
+            services.TryAddScoped<IContextResolverUserPermissions>(x => x.GetRequiredService<Context.IContextResolver>());
             services.TryAddScoped<AppIdResolver>();
 
 

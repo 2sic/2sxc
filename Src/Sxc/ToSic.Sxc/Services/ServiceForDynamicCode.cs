@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Services
     /// Internal special base class for services which link to the dynamic code root
     /// </summary>
     [PrivateApi]
-    public abstract class ServiceForDynamicCode: ServiceBase, INeedsDynamicCodeRoot, IHasDynamicCodeRoot
+    public abstract class ServiceForDynamicCode: ServiceBase, INeedsDynamicCodeRoot, IHasDynamicCodeRoot, ICanDebug
     {
         [PrivateApi]
         protected ServiceForDynamicCode(string logName) : base(logName)
@@ -47,5 +47,7 @@ namespace ToSic.Sxc.Services
         [PrivateApi]
         public IDynamicCodeRoot _DynCodeRoot { get; private set; }
 
+        [PrivateApi]
+        public bool Debug { get; set; }
     }
 }

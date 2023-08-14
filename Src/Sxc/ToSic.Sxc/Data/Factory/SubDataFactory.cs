@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Data;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Data
 {
@@ -7,15 +8,15 @@ namespace ToSic.Sxc.Data
     /// </summary>
     internal class SubDataFactory
     {
+        private readonly ICanDebug _canDebug;
         public CodeDataFactory Cdf { get; }
         public bool Strict { get; }
-        public bool? Debug { get; }
 
-        public SubDataFactory(CodeDataFactory cdf, bool strict, bool? debug)
+        public SubDataFactory(CodeDataFactory cdf, bool strict, ICanDebug canDebug)
         {
+            _canDebug = canDebug;
             Cdf = cdf;
             Strict = strict;
-            Debug = debug;
         }
 
         /// <summary>
@@ -24,7 +25,7 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="contents"></param>
         /// <returns></returns>
-        public IDynamicEntity SubDynEntityOrNull(IEntity contents) => SubDynEntityOrNull(contents, Cdf, Debug, strictGet: Strict);
+        public IDynamicEntity SubDynEntityOrNull(IEntity contents) => SubDynEntityOrNull(contents, Cdf, _canDebug.Debug, strictGet: Strict);
 
         internal static DynamicEntity SubDynEntityOrNull(IEntity contents, CodeDataFactory cdf, bool? debug, bool strictGet)
         {

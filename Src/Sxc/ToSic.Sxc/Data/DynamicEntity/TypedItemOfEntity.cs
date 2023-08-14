@@ -34,15 +34,15 @@ namespace ToSic.Sxc.Data
         private CodeDataFactory Cdf { get; }
         private readonly bool _strict;
 
-        IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ?? (_propLookup = new PropLookupWithPathEntity(Entity, () => Debug));
+        IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ?? (_propLookup = new PropLookupWithPathEntity(Entity, canDebug: this));
         private PropLookupWithPathEntity _propLookup;
 
         [PrivateApi]
-        internal GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, _strict, () => Debug, childrenShouldBeDynamic: false));
+        internal GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, _strict, childrenShouldBeDynamic: false, canDebug: this));
         private GetAndConvertHelper _getHelper;
 
         [PrivateApi]
-        internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, _strict, Debug));
+        internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, _strict, canDebug: this));
         private SubDataFactory _subData;
 
         [PrivateApi]
@@ -182,7 +182,7 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi]
-        ITypedItem ITypedItem.Presentation => (DynHelper.Presentation as DynamicEntity).TypedItem;
+        ITypedItem ITypedItem.Presentation => (DynHelper.Presentation as DynamicEntity)?.TypedItem;
 
         /// <inheritdoc />
         IMetadata ITypedItem.Metadata => DynHelper.Metadata;
