@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Services;
@@ -14,15 +15,19 @@ using CspParameters = ToSic.Sxc.Web.ContentSecurityPolicy.CspParameters;
 
 namespace ToSic.Sxc.Oqt.Server.Services
 {
-  public class OqtPageChangesSupportService
+  public class OqtPageChangesSupportService : ServiceBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly LazySvc<IFeaturesService> _featuresService;
+        private readonly Generator<CspOfPage> _cspOfPage;
 
-        public OqtPageChangesSupportService(IHttpContextAccessor httpContextAccessor, LazySvc<IFeaturesService> featuresService)
+        public OqtPageChangesSupportService(IHttpContextAccessor httpContextAccessor, LazySvc<IFeaturesService> featuresService, Generator<CspOfPage> cspOfPage) : base($"{Constants.SxcLogName}.OqtPgChService")
         {
-            _httpContextAccessor = httpContextAccessor;
-            _featuresService = featuresService;
+            ConnectServices(
+                _httpContextAccessor = httpContextAccessor,
+                _featuresService = featuresService,
+                _cspOfPage = cspOfPage
+                );
         }
 
         public int ApplyHttpHeaders(OqtViewResultsDto result, IOqtHybridLog page)
@@ -111,7 +116,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
             }
 
             // Not yet registered. Create, and register for on-end of request
-            var pageLevelCsp = new CspOfPage();
+            var pageLevelCsp = _cspOfPage.New();
             _httpContextAccessor.HttpContext.Items[key] = pageLevelCsp;
 
             // Register event to attach headers once the request is done and all Apps have registered their Csp

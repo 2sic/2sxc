@@ -5,12 +5,10 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
-    public class CspParameterFinalizer: HelperBase
+    public class CspParameterFinalizer: ServiceBase
     {
-        public CspParameterFinalizer(ILog parentLog): base(parentLog, $"{CspConstants.LogPrefix}.ParFin")
-        {
-
-        }
+        public CspParameterFinalizer(): base($"{CspConstants.LogPrefix}.ParFin")
+        { }
 
         public CspParameters Finalize(CspParameters original)
         {
