@@ -10,6 +10,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Images;
 using static ToSic.Eav.Parameters;
@@ -194,5 +195,9 @@ namespace ToSic.Sxc.Data.Typed
             return Tags.SafeUrl(url).ToString();
         }
         #endregion
+
+        public IBlock TryGetBlockContext() => _cdf?.Value.BlockOrNull;
+
+        public ITypedItem Item => this;
     }
 }

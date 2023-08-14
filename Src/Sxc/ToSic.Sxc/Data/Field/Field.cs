@@ -40,8 +40,8 @@ namespace ToSic.Sxc.Data
 
 
         // 2023-08-14 v16.03 removed by 2dm as never used; KISS
-        //public IMetadata Metadata => _dynMeta.Get(() => new Metadata(MetadataOfValue, Parent.Entity, _cdf));
-        //private readonly GetOnce<IMetadata> _dynMeta = new GetOnce<IMetadata>();
+        public IMetadata Metadata => _dynMeta.Get(() => new Metadata(MetadataOfValue, /*Parent.Entity,*/ _cdf));
+        private readonly GetOnce<IMetadata> _dynMeta = new GetOnce<IMetadata>();
 
 
         private IMetadataOf MetadataOfValue => _itemMd.Get(() =>

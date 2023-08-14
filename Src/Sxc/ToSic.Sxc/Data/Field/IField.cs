@@ -47,13 +47,12 @@ namespace ToSic.Sxc.Data
         [PrivateApi("Was public till 16.03, but don't think it should be surfaced...")]
         object Value { get; }
 
-        // 2023-08-14 v16.03 removed by 2dm as never used; KISS
-        ///// <summary>
-        ///// Metadata of the thing in the field - if it has such metadata.
-        /////
-        ///// The object will never be null, but it can of course not have any data if there is no metadata. 
-        ///// </summary>
-        //new IMetadata Metadata { get; }
+        /// <summary>
+        /// Metadata of the thing in the field - if it has such metadata.
+        ///
+        /// The object will never be null, but it can of course not have any data if there is no metadata. 
+        /// </summary>
+        new IMetadata Metadata { get; }
 
 
         [PrivateApi("Internal use only, may change at any time")]

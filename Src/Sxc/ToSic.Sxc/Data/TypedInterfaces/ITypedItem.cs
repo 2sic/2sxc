@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Data
     /// Introduced in 2sxc 16.01
     /// </remarks>
     [PublicApi]
-    public partial interface ITypedItem: ITyped, ICanBeEntity
+    public partial interface ITypedItem: ITyped, ICanBeEntity, ICanBeItem
     {
 
         /// <summary>
