@@ -3,11 +3,10 @@ using System;
 using System.Collections.Generic;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Oqt.Shared.Interfaces;
 
 namespace ToSic.Sxc.Oqt.Server.Services
 {
-    public class OqtPrerenderService : ServiceBase, IOqtPrerenderService
+    public class OqtPrerenderService : ServiceBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 

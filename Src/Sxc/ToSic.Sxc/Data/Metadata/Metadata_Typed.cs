@@ -173,7 +173,7 @@ namespace ToSic.Sxc.Data
         #region Fields, Html, Picture
 
         [PrivateApi]
-        IField ITypedItem.Field(string name, string noParamOrder, bool? required) => ItemHelper.Field(this, name, noParamOrder, required);
+        IField ITypedItem.Field(string name, string noParamOrder, bool? required) => Cdf.Field(this, name, GetHelper.StrictGet, noParamOrder, required);
 
         IHtmlTag ITypedItem.Html(
             string name,

@@ -64,17 +64,17 @@ namespace ToSic.Sxc.Data
 
 
 
-        public IField Field(ITypedItem parent, string name, string noParamOrder = Protector, bool? required = default)
-        {
-            Protect(noParamOrder, nameof(required));
-            // TODO: make sure that if we use a path, the field is from the correct parent
-            if (name.Contains(PropertyStack.PathSeparator.ToString()))
-                throw new NotImplementedException("Path support on this method is not yet supported. Ask iJungleboy");
+        //public IField Field(ITypedItem parent, string name, string noParamOrder = Protector, bool? required = default)
+        //{
+        //    Protect(noParamOrder, nameof(required));
+        //    // TODO: make sure that if we use a path, the field is from the correct parent
+        //    if (name.Contains(PropertyStack.PathSeparator.ToString()))
+        //        throw new NotImplementedException("Path support on this method is not yet supported. Ask iJungleboy");
 
-            return IsErrStrict(parent, name, required, Helper.StrictGet)
-                ? throw ErrStrict(name)
-                : new Field(parent, name, Helper.Cdf);
-        }
+        //    return IsErrStrict(parent, name, required, Helper.StrictGet)
+        //        ? throw ErrStrict(name)
+        //        : new Field(parent, name, Helper.Cdf);
+        //}
 
     }
 }

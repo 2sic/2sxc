@@ -10,13 +10,6 @@ namespace ToSic.Sxc.Oqt.Client.Services
 {
   public class OqtPageChangeService
   {
-        private readonly IOqtPageChangesSupportService _oqtPageChangesSupportService;
-
-        public OqtPageChangeService(IOqtPageChangesSupportService oqtPageChangesSupportService)
-        {
-            _oqtPageChangesSupportService = oqtPageChangesSupportService;
-        }
-
         public async Task AttachScriptsAndStyles(OqtViewResultsDto viewResults, SxcInterop sxcInterop, IOqtHybridLog page)
         {
             var logPrefix = $"{nameof(AttachScriptsAndStyles)}(...) - ";
@@ -81,9 +74,6 @@ namespace ToSic.Sxc.Oqt.Client.Services
                     inline.Content,
                     "body");
         }
-
-        public int ApplyHttpHeaders(OqtViewResultsDto result, IOqtHybridLog page)
-            => _oqtPageChangesSupportService.ApplyHttpHeaders(result, page);
         public async Task UpdatePageProperties(OqtViewResultsDto viewResults, SxcInterop sxcInterop, ModuleProBase page)
         {
             var logPrefix = $"{nameof(UpdatePageProperties)}(...) - ";
@@ -160,7 +150,5 @@ namespace ToSic.Sxc.Oqt.Client.Services
             page?.Log($"{logPrefix}{change.Change}, UpdateTitle:{result3}");
             return result3;
         }
-        public object PageCsp(bool enforced, IOqtHybridLog page)
-            => _oqtPageChangesSupportService.PageCsp(enforced, page) as CspOfPage;
     }
 }

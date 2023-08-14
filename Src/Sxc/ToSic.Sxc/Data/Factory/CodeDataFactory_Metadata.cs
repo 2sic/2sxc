@@ -1,12 +1,9 @@
-﻿using ToSic.Eav.Data;
-using ToSic.Eav.Metadata;
+﻿using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Data
 {
     public partial class CodeDataFactory
     {
-        public IMetadata Metadata(IMetadataOf mdOf) => new Metadata(mdOf, null, this);
-
-        //public IMetadataTyped MetadataTyped(IMetadataOf mdOf, IEntity entity) => new MetadataTyped(mdOf, entity, this);
+        public IMetadata Metadata(IMetadataOf mdOf) => new Metadata(mdOf, /*null,*/ this);
     }
 }

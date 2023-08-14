@@ -12,9 +12,6 @@ using ToSic.Sxc.Oqt.Server.Services;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.WebApi.Infrastructure;
-using OqtPageChangesSupportService = ToSic.Sxc.Oqt.Server.Services.OqtPageChangesSupportService;
-using OqtPrerenderService = ToSic.Sxc.Oqt.Server.Services.OqtPrerenderService;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
 {
@@ -75,11 +72,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
         private static IServiceCollection AddOqtaneBlazorWebAssemblySupport(this IServiceCollection services)
         {
             services.Replace(ServiceDescriptor.Scoped<IOqtDebugStateService, OqtDebugStateService>());
-            //services.TryAddScoped<IOqtPageChangesSupportService, OqtPageChangesSupportService>();
-            services.Replace(ServiceDescriptor.Scoped<IOqtPageChangesSupportService, OqtPageChangesSupportService>());
-            //services.TryAddScoped<IOqtPrerenderService, OqtPrerenderService> ();
-            services.Replace(ServiceDescriptor.Scoped<IOqtPrerenderService, OqtPrerenderService>());
-            //services.TryAddScoped<IOqtSxcRenderService, OqtSxcRenderService>();
+            services.TryAddScoped<OqtPageChangesSupportService>();
+            services.TryAddScoped<OqtPrerenderService> ();
 
             return services;
         }

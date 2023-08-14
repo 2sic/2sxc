@@ -11,11 +11,17 @@ namespace ToSic.Sxc.Data
     [PrivateApi("Hide implementation")]
     internal partial class Metadata: DynamicEntity, IMetadata, IHasPropLookup
     {
-        internal Metadata(IMetadataOf metadata, IEntity parentOrNull, CodeDataFactory cdf)
-            : base(metadata, parentOrNull, "Metadata", Eav.Constants.TransientAppId, strict: false, cdf)
+        internal Metadata(IMetadataOf metadata, /*IEntity parentOrNull,*/ CodeDataFactory cdf)
+            : base(metadata, /*parentOrNull*/null, "Metadata(virtual-field)", Eav.Constants.TransientAppId, strict: false, cdf)
         {
             _metadata = metadata;
         }
+        IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ?? (_propLookup = new PropLookupMetadata(this, () => Debug));
+        private PropLookupMetadata _propLookup;
+
+        [PrivateApi]
+        private CodeItemHelper ItemHelper => _itemHelper ?? (_itemHelper = new CodeItemHelper(GetHelper));
+        private CodeItemHelper _itemHelper;
 
         [PrivateApi("Hide this")]
         private readonly IMetadataOf _metadata;
@@ -23,8 +29,6 @@ namespace ToSic.Sxc.Data
 
         IMetadataOf IHasMetadata.Metadata => _metadata;
 
-        IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ?? (_propLookup = new PropLookupMetadata(this, /*Entity, base.PropertyLookup,*/ () => Debug));
-        private PropLookupMetadata _propLookup;
 
 
         public bool HasType(string type) => _metadata.HasType(type);

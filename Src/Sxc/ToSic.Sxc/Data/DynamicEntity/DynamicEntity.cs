@@ -83,10 +83,6 @@ namespace ToSic.Sxc.Data
         private CodeDynHelper _dynHelper;
 
         [PrivateApi]
-        internal CodeItemHelper ItemHelper => _itemHelper ?? (_itemHelper = new CodeItemHelper(GetHelper));
-        private CodeItemHelper _itemHelper;
-
-        [PrivateApi]
         internal ITypedItem TypedItem => _typedItem ?? (_typedItem = new TypedItemOfEntity(this, Entity, Cdf, _strict));
         private TypedItemOfEntity _typedItem;
 
@@ -115,7 +111,7 @@ namespace ToSic.Sxc.Data
         #region Advanced: Fields, Html
 
         /// <inheritdoc />
-        public IField Field(string name) => ItemHelper.Field(this.TypedItem, name);
+        public IField Field(string name) => Cdf.Field(TypedItem, name, _strict);
 
         /// <inheritdoc/>
         [PrivateApi("Should not be documented here, as it should only be used on ITyped")]

@@ -14,13 +14,13 @@ using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Web.LightSpeed;
 using ToSic.Sxc.Web.Url;
 using Page = Oqtane.Models.Page;
+using ToSic.Sxc.Oqt.Server.Services;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks
 {
     [PrivateApi]
     public class OqtSxcViewBuilder : ServiceBase
     {
-
         #region Constructor and DI
 
         public OqtSxcViewBuilder(
@@ -30,14 +30,17 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             IContextResolver contextResolverForLookUps,
             ILogStore logStore,
             GlobalTypesCheck globalTypesCheck,
+            OqtPrerenderService oqtPrerenderService,
             IOutputCache outputCache
         ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
         {
+
             ConnectServices(
                 _contextOfBlockEmpty = contextOfBlockEmpty,
                 _blockModuleEmpty = blockModuleEmpty,
                 _contextResolverForLookUps = contextResolverForLookUps,
                 _globalTypesCheck = globalTypesCheck,
+                _oqtPrerenderService = oqtPrerenderService,
                 _outputCache = outputCache,
                 PageOutput = pageOutput
             );
@@ -49,6 +52,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         private readonly BlockFromModule _blockModuleEmpty;
         private readonly IContextResolver _contextResolverForLookUps;
         private readonly GlobalTypesCheck _globalTypesCheck;
+        private readonly OqtPrerenderService _oqtPrerenderService;
         private readonly IOutputCache _outputCache;
 
         #endregion
@@ -98,7 +102,8 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                     CspEnforced = renderResult.CspEnforced,
                     CspParameters = renderResult.CspParameters.Select(c => c.NvcToString())
                         .ToList(), // convert NameValueCollection to (query) string because can't serialize NameValueCollection to json
-                };
+                    SystemHtml = PreRender ? _oqtPrerenderService?.GetSystemHtml() : string.Empty
+            };
             }));
             LogTimer.Done(OutputCache?.Existing?.Data?.IsError ?? false ? "⚠️" : finalMessage);
 
