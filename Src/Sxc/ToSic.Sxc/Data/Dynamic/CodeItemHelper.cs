@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
@@ -28,8 +29,8 @@ namespace ToSic.Sxc.Data
             var result = Get(name, Protector, required: false);
             if (result == null) return false;
             // edge case: could return an empty list...
-            if (result is IEnumerable<ITypedItem> typedList)
-                return typedList.Any();
+            if (result is IEnumerable typedList)
+                return typedList.Cast<object>().Any();
             return true;
         }
 
