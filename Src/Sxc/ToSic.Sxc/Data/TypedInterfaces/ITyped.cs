@@ -59,9 +59,13 @@ namespace ToSic.Sxc.Data
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.TypedRequired)</param>
-        /// <param name="scrubHtml">If true, will remove all HTML tags from the string. This is the same as using `Kit.Scrub.All(...)`. For more detailed scrubbing, use the `Kit.Scrub`</param>
+        /// <param name="scrubHtml">
+        /// If `true`, will remove all HTML tags from the string.
+        /// If `p` will remove all `p` tags, if `div,span` will remove these tags.
+        /// This is the same as using `Kit.Scrub.All(...)` or `.Only(...). For more detailed scrubbing, use the `Kit.Scrub`
+        /// </param>
         /// <returns>Value as `string`</returns>
-        string String(string name, string noParamOrder = Protector, string fallback = default, bool? required = default, bool scrubHtml = default);
+        string String(string name, string noParamOrder = Protector, string fallback = default, bool? required = default, object scrubHtml = default);
 
         #region Numbers
 

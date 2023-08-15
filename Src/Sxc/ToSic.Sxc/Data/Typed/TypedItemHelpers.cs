@@ -1,4 +1,6 @@
-﻿using ToSic.Eav.Plumbing;
+﻿using System.Linq;
+using System;
+using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Images;
 using static ToSic.Eav.Parameters;
@@ -45,6 +47,22 @@ namespace ToSic.Sxc.Data.Typed
             return field.Url.IsEmptyOrWs()
                 ? null
                 : kit.Image.Picture(field, settings: settings, factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass, recipe: recipe);
+        }
+
+        public static string MaybeScrub(string value, object scrubHtml, Func<IScrub> scrubSvc)
+        {
+            if (value == null) return null;
+            switch (scrubHtml)
+            {
+                case string scrubStr:
+                    return scrubStr.HasValue()
+                        ? scrubSvc().Only(value, scrubStr.Split(',').Select(s => s.Trim()).ToArray())
+                        : value;
+                case bool scrubBln:
+                    return scrubBln ? scrubSvc().All(value) : value;
+                default:
+                    return value;
+            }
         }
 
     }

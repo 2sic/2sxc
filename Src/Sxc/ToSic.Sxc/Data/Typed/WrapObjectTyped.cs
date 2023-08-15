@@ -71,13 +71,13 @@ namespace ToSic.Sxc.Data.Typed
         DateTime ITyped.DateTime(string name, string noParamOrder, DateTime fallback, bool? required)
             => PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-        string ITyped.String(string name, string noParamOrder, string fallback, bool? required, bool scrubHtml)
+        string ITyped.String(string name, string noParamOrder, string fallback, bool? required, object scrubHtml)
         {
             var value = PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
-#pragma warning disable CS0618
-            return scrubHtml ? Tags.Strip(value) : value;
-#pragma warning restore CS0618
-
+            return TypedItemHelpers.MaybeScrub(value, scrubHtml, () => Wrapper.Cdf.Value.Services.Scrub);
+//#pragma warning disable CS0618
+//            return scrubHtml ? Tags.Strip(value) : value;
+//#pragma warning restore CS0618
         }
 
         int ITyped.Int(string name, string noParamOrder, int fallback, bool? required)

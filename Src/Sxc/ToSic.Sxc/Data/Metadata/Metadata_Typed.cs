@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Data
             => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         [PrivateApi]
-        string ITyped.String(string name, string noParamOrder, string fallback, bool? required, bool scrubHtml)
+        string ITyped.String(string name, string noParamOrder, string fallback, bool? required, object scrubHtml)
             => ItemHelper.String(name, noParamOrder, fallback, required, scrubHtml);
 
         [PrivateApi]

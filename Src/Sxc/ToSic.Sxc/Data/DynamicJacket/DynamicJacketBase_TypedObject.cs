@@ -76,12 +76,13 @@ namespace ToSic.Sxc.Data
             => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        string ITyped.String(string name, string noParamOrder, string fallback, bool? required, bool scrubHtml)
+        string ITyped.String(string name, string noParamOrder, string fallback, bool? required, object scrubHtml)
         {
             var value = G4T(name, noParamOrder: noParamOrder, fallback: fallback);
-#pragma warning disable CS0618
-            return scrubHtml ? Tags.Strip(value) : value;
-#pragma warning restore CS0618
+            return TypedItemHelpers.MaybeScrub(value, scrubHtml, () => Wrapper.Cdf.Value.Services.Scrub);
+//#pragma warning disable CS0618
+//            return scrubHtml ? Tags.Strip(value) : value;
+//#pragma warning restore CS0618
         }
 
         [PrivateApi]

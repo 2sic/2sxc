@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -6,6 +7,7 @@ using System.Runtime.CompilerServices;
 using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
+using ToSic.Sxc.Data.Typed;
 using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
@@ -67,11 +69,12 @@ namespace ToSic.Sxc.Data
             return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
         }
 
-        public string String(string name, string noParamOrder, string fallback, bool? required, bool scrubHtml)
+        public string String(string name, string noParamOrder, string fallback, bool? required, object scrubHtml = default)
         {
             var value = G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
-            return scrubHtml ? Helper.Cdf.Services.Scrub.All(value) : value;
+            return TypedItemHelpers.MaybeScrub(value, scrubHtml, () => Helper.Cdf.Services.Scrub);
         }
+
 
         public string Url(string name, string noParamOrder, string fallback, bool? required)
         {
