@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data.PropertyLookup;
@@ -28,13 +29,15 @@ namespace ToSic.Sxc.Data
             
             // Filter out unexpected
             var cleaned = parts
-                .Select((original, index) => new
+                .Select((original, index) =>
                 {
-                    index,
-                    original,
-                    lookup = original is IPropertyLookup pl 
-                        ? pl 
-                        : original is IHasPropLookup hasPl ? hasPl.PropertyLookup : null
+                    var lookup = GetPropertyLookupOrNull(original)
+                                 // This should cover the case where it's a list<ITypedItem> or similar
+                                 ?? (original is IEnumerable maybePlEnum
+                                     ? GetPropertyLookupOrNull(maybePlEnum.Cast<object>()
+                                         .FirstOrDefault(mpl => mpl is IHasPropLookup || mpl is IPropertyLookup))
+                                     : null);
+                    return new { index, original, lookup };
                 })
                 .Where(s => !(s.original is null))
                 .ToList();
@@ -52,15 +55,17 @@ namespace ToSic.Sxc.Data
 
             // Must create a stack
             var sources = cleaned
-                // parts
-                //.Select(e => e is IPropertyLookup pl ? pl : e is IHasPropLookup hasPl ? hasPl.PropertyLookup : null)
-                //.Where(e => e != null)
                 .Select(s => new KeyValuePair<string, IPropertyLookup>(null, s.lookup))
                 .ToList();
             return l.ReturnAsOk(generate(name, sources));
         }
 
-        
+        private IPropertyLookup GetPropertyLookupOrNull(object original) =>
+            original is IPropertyLookup pl
+                ? pl
+                : original is IHasPropLookup hasPl
+                    ? hasPl.PropertyLookup
+                    : null;
 
         public DynamicStack AsDynStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources) 
             => new DynamicStack(name, this, sources);
