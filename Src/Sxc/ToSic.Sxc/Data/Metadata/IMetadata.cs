@@ -36,10 +36,6 @@ namespace ToSic.Sxc.Data
         /// <returns></returns>
         IEnumerable<IEntity> OfType(string type);
 
-        //[PrivateApi("Must be re-defined, because otherwise we get interface problems.")]
-        //new bool IsDemoItem { get; }
-
-        //[PrivateApi("Must be re-defined, because otherwise we get interface problems.")]
-        //new ITypedItem Presentation { get; }
+        
     }
 }
