@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using ToSic.Eav;
+using ToSic.Eav.Code.Help;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
 using static ToSic.Eav.Parameters;
@@ -52,13 +54,68 @@ namespace ToSic.Sxc.Data.Typed
         public static bool IsErrStrict(ITyped parent, string name, bool? required, bool requiredDefault)
             => !parent.ContainsKey(name) && (required ?? requiredDefault);
 
-        public static ArgumentException ErrStrict(string name, [CallerMemberName] string cName = default)
+        private const int MaxKeysToUseList = 20;
+
+        public static Exception ErrStrictForTyped(ITyped parent, string name, [CallerMemberName] string cName = default)
         {
-            var help = $"Either a) correct the name '{name}'; b) use {cName}(\"{name}\", required: false); or c) or use AsItem(..., strict: false) or AsTyped(..., strict: false)";
+            // Note that the parent may not fully implement som APIs, so we must try/catch everything
+            const string unknown = "unknown";
+            string typeName = null;
+            var keys = new[] { "keys can't be determined" };
+            string id = null;
+            //string guid = null;
+            var title = "title can't be determined";
+            if (parent != null)
+            {
+                try
+                {
+                    keys = parent.Keys()?.ToArray() ?? keys;
+                }
+                catch { /* ignore */ }
+                try
+                {
+                    var item = parent as ITypedItem;
+                    typeName = item?.Type?.Name;
+                    id = item?.Id.ToString();
+                    //guid = item?.Guid.ToString();
+                    title = item?.Title;
+                }
+                catch { /* ignore */ }
+            }
+
+            var html = $@"<div>
+<em>You tried to use {cName}(""{name}"") which failed. Here is more info about the object:</em>
+<br>
+Content-Type: <strong>{typeName ?? unknown}</strong>
+<br>
+Item Title: <strong>{title ?? unknown}</strong>
+<br>
+Item Id: <strong>{id ?? unknown}</strong>
+<br>
+<em>Fields of type {typeName}:</em>
+{(keys.Length > MaxKeysToUseList
+    ? "<br>" + string.Join(", ", keys) + "<br>"
+    : $@"<ol>
+    <li>
+    {string.Join("</li><li>", keys)}
+    </li>
+</ol>")}
+</div>";
+            var help = new CodeHelp("get-help", name, uiMessage: null, detailsHtml: html);
+            return ErrStrict(name, help, cName);
+        }
+
+
+        public static Exception ErrStrict(string name, CodeHelp codeHelp = default, [CallerMemberName] string cName = default)
+        {
+            var info = $"Either a) correct the name '{name}'; b) use {cName}(\"{name}\", required: false); or c) or use AsItem(..., strict: false) or AsTyped(..., strict: false)";
             var msg = cName == "."
-                ? $".{name} not found and 'strict' is true, meaning that an error is thrown. {help}"
-                : $"{cName}('{name}', ...) not found and 'strict' is true, meaning that an error is thrown. {help}";
-            return new ArgumentException(msg, nameof(name));
+                ? $".{name} not found and 'strict' is true, meaning that an error is thrown. {info}"
+                : $"{cName}('{name}', ...) not found and 'strict' is true, meaning that an error is thrown. {info}";
+            var argEx = new ArgumentException(msg, nameof(name));
+            if (codeHelp != default)
+                return new ExceptionWithHelp(codeHelp, inner: argEx);
+            return argEx;
         }
 
     }

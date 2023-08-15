@@ -12,10 +12,12 @@ namespace ToSic.Sxc.Data
 {
     internal class CodeItemHelper
     {
+        public ITyped Data { get; }
         public readonly GetAndConvertHelper Helper;
 
-        public CodeItemHelper(GetAndConvertHelper helper)
+        public CodeItemHelper(GetAndConvertHelper helper, ITyped data)
         {
+            Data = data;
             Helper = helper;
         }
 
@@ -41,7 +43,7 @@ namespace ToSic.Sxc.Data
             Protect(noParamOrder, nameof(required), methodName: cName);
             var findResult = Helper.TryGet(name);
             return IsErrStrict(findResult.Found, required, Helper.StrictGet)
-                ? throw ErrStrict(name, cName)
+                ? throw ErrStrictForTyped(Data, name, cName: cName)
                 : findResult.Result;
         }
 
@@ -50,7 +52,7 @@ namespace ToSic.Sxc.Data
             Protect(noParamOrder, nameof(fallback), methodName: cName);
             var findResult = Helper.TryGet(name);
             return IsErrStrict(findResult.Found, required, Helper.StrictGet)
-                ? throw ErrStrict(name, cName)
+                ? throw ErrStrictForTyped(Data, name, cName: cName)
                 : findResult.Result.ConvertOrFallback(fallback);
         }
 

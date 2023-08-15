@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Data
         private CodeDynHelper _dynHelper;
 
         [PrivateApi]
-        private CodeItemHelper ItemHelper => _itemHelper ?? (_itemHelper = new CodeItemHelper(GetHelper));
+        private CodeItemHelper ItemHelper => _itemHelper ?? (_itemHelper = new CodeItemHelper(GetHelper, this));
         private CodeItemHelper _itemHelper;
 
         public bool Debug { get; set; }
@@ -170,7 +170,7 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, nameof(required));
             return IsErrStrict(this, name, required, GetHelper.StrictGet)
-                ? throw ErrStrict(name)
+                ? throw ErrStrictForTyped(this, name)
                 : _adamCache.Get(name, () => Cdf.Folder(Entity, name, (this as ITypedItem).Field(name, required: false)));
         }
         private readonly GetOnceNamed<IFolder> _adamCache = new GetOnceNamed<IFolder>();
@@ -214,7 +214,7 @@ namespace ToSic.Sxc.Data
             Protect(noParamOrder, $"{nameof(type)}, {nameof(required)}");
 
             if (IsErrStrict(this, field, required, GetHelper.StrictGet))
-                throw ErrStrict(field);
+                throw ErrStrictForTyped(this, field);
 
             var dynChildren = GetHelper.Children(entity: Entity, field: field, type: type);
             var list = dynChildren.Cast<DynamicEntity>().Select(d => d.TypedItem).ToList(); // Cdf.AsItems(dynChildren, noParamOrder).ToList();
@@ -231,7 +231,7 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, nameof(required));
             return IsErrStrict(this, name, required, GetHelper.StrictGet)
-                ? throw ErrStrict(name)
+                ? throw ErrStrictForTyped(this, name)
                 : (this as ITypedItem).Children(name).FirstOrDefault();
         }
 

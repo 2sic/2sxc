@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Data
         private PropLookupMetadata _propLookup;
 
         [PrivateApi]
-        private CodeItemHelper ItemHelper => _itemHelper ?? (_itemHelper = new CodeItemHelper(GetHelper));
+        private CodeItemHelper ItemHelper => _itemHelper ?? (_itemHelper = new CodeItemHelper(GetHelper, this));
         private CodeItemHelper _itemHelper;
 
         [PrivateApi("Hide this")]

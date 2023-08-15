@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Data
             Cdf = cdf;
             PropertyLookup = new PropLookupStack(_stack, () => Debug);
             _helper = new GetAndConvertHelper(this, cdf, strict: false, childrenShouldBeDynamic: false, canDebug: this);
-            _itemHelper = new CodeItemHelper(_helper);
+            _itemHelper = new CodeItemHelper(_helper, this);
         }
 
         private readonly IPropertyStack _stack;

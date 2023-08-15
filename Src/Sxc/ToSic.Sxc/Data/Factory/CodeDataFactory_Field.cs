@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Data
                 throw new NotImplementedException("Path support on this method is not yet supported. Ask iJungleboy");
 
             return IsErrStrict(parent, name, required, strictGet)
-                ? throw ErrStrict(name)
+                ? throw ErrStrictForTyped(parent, name)
                 : new Field(parent, name, this);
         }
 

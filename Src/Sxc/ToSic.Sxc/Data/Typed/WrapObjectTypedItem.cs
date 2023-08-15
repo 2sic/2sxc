@@ -122,7 +122,7 @@ namespace ToSic.Sxc.Data.Typed
         {
             Protect(noParamOrder, nameof(required));
             return IsErrStrict(this, name, required, PreWrap.Settings.GetStrict)
-                ? throw ErrStrict(name)
+                ? throw ErrStrictForTyped(this, name)
                 : _cdf.Value.AdamManager.Folder(Guid, name, Field(name, noParamOrder, required));
         }
 
@@ -130,7 +130,7 @@ namespace ToSic.Sxc.Data.Typed
         {
             Protect(noParamOrder, nameof(required));
             if (IsErrStrict(this, name, required, PreWrap.Settings.GetStrict))
-                throw ErrStrict(name);
+                throw ErrStrictForTyped(this, name);
             var typed = this as ITypedItem;
             // Check if it's a direct string, or an object with a sub-property with a Value
             var idString = typed.String(name) ?? typed.Child(name)?.String("Value");
