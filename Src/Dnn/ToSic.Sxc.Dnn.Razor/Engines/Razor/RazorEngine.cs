@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
@@ -109,7 +110,10 @@ namespace ToSic.Sxc.Engines
             }
             catch (Exception maybeIEntityCast)
             {
-                throw l.Ex(_errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast, page));
+                var ex = l.Ex(_errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast, page));
+                // Special form of throw to preserve details about the call stack
+                ExceptionDispatchInfo.Capture(ex).Throw();
+                throw; // fake throw, just so the code shows what happens
             }
             return l.Return((writer, page.SysHlp.ExceptionsOrNull));
         }
@@ -132,7 +136,7 @@ namespace ToSic.Sxc.Engines
             {
                 compiledType = BuildManager.GetCompiledType(TemplatePath);
             }
-            catch (Exception ex)
+            catch (Exception compileEx)
             {
                 // TODO: ADD MORE compile error help
                 // 1. Read file
@@ -140,7 +144,10 @@ namespace ToSic.Sxc.Engines
                 // 3. ...
                 var razorType = _sourceAnalyzer.Value.TypeOfVirtualPath(TemplatePath);
                 l.A($"Razor Type: {razorType}");
-                throw l.Ex(_errorHelp.Value.AddHelpForCompileProblems(ex, razorType));
+                var ex = l.Ex(_errorHelp.Value.AddHelpForCompileProblems(compileEx, razorType));
+                // Special form of throw to preserve details about the call stack
+                ExceptionDispatchInfo.Capture(ex).Throw();
+                throw; // fake throw, just so the code shows what happens
             }
 
             try
@@ -152,9 +159,12 @@ namespace ToSic.Sxc.Engines
                 var pageObjectValue = RuntimeHelpers.GetObjectValue(page);
                 return l.ReturnAsOk(pageObjectValue);
             }
-            catch (Exception ex)
+            catch (Exception createInstanceException)
             {
-                throw l.Ex(_errorHelp.Value.AddHelpIfKnownError(ex, page));
+                var ex = l.Ex(_errorHelp.Value.AddHelpIfKnownError(createInstanceException, page));
+                // Special form of throw to preserve details about the call stack
+                ExceptionDispatchInfo.Capture(ex).Throw();
+                throw; // fake throw, just so the code shows what happens
             }
         }
 

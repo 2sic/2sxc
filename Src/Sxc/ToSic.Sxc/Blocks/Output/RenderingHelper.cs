@@ -112,6 +112,9 @@ namespace ToSic.Sxc.Blocks.Output
             if (encodeMessage)
                 msg = HttpUtility.HtmlEncode(msg);
 
+            // Try to spot the code file which caused the problem, and add an emoji to better spot it.
+            msg = msg.Replace(".cshtml:", ".cshtml🎯:");
+
             // add dnn-error-div-wrapper together with a special HTML marker so errors can handled better
             msg = $"<div class='dnnFormMessage dnnFormWarning'>{ErrorHtmlMarker}{msg}</div>";
 
