@@ -109,7 +109,7 @@ namespace ToSic.Sxc.Data
             if (entities == null || !entities.Any()) return null;
             // 2023-08-08 2dm disable this 1-only optimization, because it results in a slightly different object
             // if (entities.Length == 1) return AsDynamicFromObject(entities[0]);
-            return AsStack(null, entities, AsDynStack);
+            return AsStack(null, entities, strictTypes: false, AsDynStack);
             //return AsStack(entities);
         }
 
