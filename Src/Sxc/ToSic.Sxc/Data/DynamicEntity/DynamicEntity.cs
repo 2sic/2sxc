@@ -134,7 +134,7 @@ namespace ToSic.Sxc.Data
 
         // ReSharper disable once InheritdocInvalidUsage
         /// <inheritdoc />
-        public bool IsDemoItem => _isDemoItem ?? (_isDemoItem = Entity.IsDemoItemSafe()).Value;
+        public virtual bool IsDemoItem => _isDemoItem ?? (_isDemoItem = Entity.IsDemoItemSafe()).Value;
         private bool? _isDemoItem;
 
         [PrivateApi("Not in use yet, and I believe not communicated")]
@@ -219,5 +219,21 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi] IBlock ICanBeItem.TryGetBlockContext() => Cdf?.BlockOrNull;
         [PrivateApi] ITypedItem ICanBeItem.Item => TypedItem;
+
+
+        #region Metadata - Enable Metadata.Methods()
+
+        // Background: 2023-08-15 2dm
+        // For reasons we don't fully understand, the razor dynamic binder can't find methods on inherited objects.
+        // If we add their signatures here, and then override them in the implementation, it works
+        // This is probably not the best way to do it, but for now it should work.
+
+        [PrivateApi("This doesn't work until overriden by the Metadata object")]
+        public virtual bool HasType(string type) => throw new NotSupportedException("This is just a stub for Metadata");
+
+        [PrivateApi("This doesn't work until overriden by the Metadata object")]
+        public virtual IEnumerable<IEntity> OfType(string type) => throw new NotSupportedException("This is just a stub for Metadata");
+
+        #endregion
     }
 }

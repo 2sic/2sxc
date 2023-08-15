@@ -11,8 +11,8 @@ namespace ToSic.Sxc.Data
     [PrivateApi("Hide implementation")]
     internal partial class Metadata: DynamicEntity, IMetadata, IHasPropLookup
     {
-        internal Metadata(IMetadataOf metadata, /*IEntity parentOrNull,*/ CodeDataFactory cdf)
-            : base(metadata, /*parentOrNull*/null, "Metadata(virtual-field)", Eav.Constants.TransientAppId, strict: false, cdf)
+        internal Metadata(IMetadataOf metadata, CodeDataFactory cdf)
+            : base(metadata, null, "Metadata(virtual-field)", Eav.Constants.TransientAppId, strict: false, cdf)
         {
             _metadata = metadata;
         }
@@ -31,15 +31,15 @@ namespace ToSic.Sxc.Data
 
 
 
-        public bool HasType(string type) => _metadata.HasType(type);
+        public override bool HasType(string type) => _metadata.HasType(type);
 
-        public IEnumerable<IEntity> OfType(string type) => _metadata.OfType(type);
+        public override IEnumerable<IEntity> OfType(string type) => _metadata.OfType(type);
 
         #region Properties from the interfaces which are not really supported
 
-        public new bool IsDemoItem => false;
+        public override bool IsDemoItem => false;
 
-        public new ITypedItem Presentation => throw new NotSupportedException();
+        public override ITypedItem Presentation => throw new NotSupportedException();
 
         #endregion
     }
