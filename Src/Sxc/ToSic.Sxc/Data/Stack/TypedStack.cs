@@ -50,6 +50,8 @@ namespace ToSic.Sxc.Data
         bool ITyped.ContainsKey(string name) 
             => throw new NotImplementedException($"Not yet implemented on {nameof(ITypedStack)}");
 
+        bool ITyped.ContainsData(string name) => _itemHelper.ContainsData(name);
+
         // TODO: Keys()
         public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default) 
             => throw new NotImplementedException();

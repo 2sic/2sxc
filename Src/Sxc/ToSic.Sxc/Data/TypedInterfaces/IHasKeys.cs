@@ -9,12 +9,21 @@ namespace ToSic.Sxc.Data
     {
         /// <summary>
         /// Check if this typed object has a property of this specified name.
-        /// By default it's case insensitive.
+        /// It's case insensitive.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
         /// <remarks>Adding in 16.03 (WIP)</remarks>
         bool ContainsKey(string name);
+
+        /// <summary>
+        /// Check if this typed object has a property of this specified name, and has real data.
+        /// It's case insensitive.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>`true` if the property exists and has a real value. If it would return an empty list, it will also return `false`</returns>
+        /// <remarks>Adding in 16.03 (WIP)</remarks>
+        bool ContainsData(string name);
 
 
         /// <summary>

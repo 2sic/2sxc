@@ -63,6 +63,9 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         bool IHasKeys.ContainsKey(string name) => _ignoreCaseLookup.ContainsKey(name);
 
+        public bool ContainsData(string name) => _ignoreCaseLookup.TryGetValue(name, out var result) && result != null;
+
+
         IEnumerable<string> IHasKeys.Keys(string noParamOrder, IEnumerable<string> only) 
             => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, _ignoreCaseLookup?.Keys);
     }

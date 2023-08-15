@@ -1,7 +1,7 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
-using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
@@ -18,6 +18,21 @@ namespace ToSic.Sxc.Data
         {
             Helper = helper;
         }
+
+        #region Keys
+
+        public bool ContainsData(string name)
+        {
+            var result = Get(name, Protector, required: false);
+            if (result == null) return false;
+            // edge case: could return an empty list...
+            if (result is IEnumerable<ITypedItem> typedList)
+                return typedList.Any();
+            return true;
+        }
+
+
+        #endregion
 
         #region Get
 
@@ -61,20 +76,6 @@ namespace ToSic.Sxc.Data
             var url = Helper.GetInternal(name, lookupLink: true).Result as string;
             return Tags.SafeUrl(url).ToString();
         }
-
-
-
-        //public IField Field(ITypedItem parent, string name, string noParamOrder = Protector, bool? required = default)
-        //{
-        //    Protect(noParamOrder, nameof(required));
-        //    // TODO: make sure that if we use a path, the field is from the correct parent
-        //    if (name.Contains(PropertyStack.PathSeparator.ToString()))
-        //        throw new NotImplementedException("Path support on this method is not yet supported. Ask iJungleboy");
-
-        //    return IsErrStrict(parent, name, required, Helper.StrictGet)
-        //        ? throw ErrStrict(name)
-        //        : new Field(parent, name, Helper.Cdf);
-        //}
 
     }
 }

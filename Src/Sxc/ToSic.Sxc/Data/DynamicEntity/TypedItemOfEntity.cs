@@ -38,19 +38,19 @@ namespace ToSic.Sxc.Data
         private PropLookupWithPathEntity _propLookup;
 
         [PrivateApi]
-        internal GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, _strict, childrenShouldBeDynamic: false, canDebug: this));
+        private GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, _strict, childrenShouldBeDynamic: false, canDebug: this));
         private GetAndConvertHelper _getHelper;
 
         [PrivateApi]
-        internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, _strict, canDebug: this));
+        private SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, _strict, canDebug: this));
         private SubDataFactory _subData;
 
         [PrivateApi]
-        internal CodeDynHelper DynHelper => _dynHelper ?? (_dynHelper = new CodeDynHelper(Entity, SubDataFactory));
+        private CodeDynHelper DynHelper => _dynHelper ?? (_dynHelper = new CodeDynHelper(Entity, SubDataFactory));
         private CodeDynHelper _dynHelper;
 
         [PrivateApi]
-        internal CodeItemHelper ItemHelper => _itemHelper ?? (_itemHelper = new CodeItemHelper(GetHelper));
+        private CodeItemHelper ItemHelper => _itemHelper ?? (_itemHelper = new CodeItemHelper(GetHelper));
         private CodeItemHelper _itemHelper;
 
         public bool Debug { get; set; }
@@ -64,6 +64,16 @@ namespace ToSic.Sxc.Data
                 (e, k) => e.Attributes.ContainsKey(k),
                 (e, k) => e.Children(k)?.FirstOrDefault()
             );
+
+        bool ITyped.ContainsData(string name) => ItemHelper.ContainsData(name);
+        //{
+        //    var result = (this as ITyped).Get(name, required: false);
+        //    if (result == null) return false;
+        //    // edge case: could return an empty list...
+        //    if (result is IEnumerable<ITypedItem> typedList)
+        //        return typedList.Any();
+        //    return true;
+        //}
 
         [PrivateApi]
         IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only)

@@ -49,6 +49,8 @@ namespace ToSic.Sxc.Data.Typed
             }
         );
 
+        bool ITyped.ContainsData(string name) => (this as ITyped).Get(name, required: false) != null;
+
         IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only)
             => PreWrap.Keys(noParamOrder, only);
 

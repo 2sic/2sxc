@@ -27,6 +27,9 @@ namespace ToSic.Sxc.Data
         bool ITyped.ContainsKey(string name) => TypedHasImplementation(name);
 
         [PrivateApi]
+        bool ITyped.ContainsData(string name) => (this as ITyped).Get(name, required: false) != null;
+
+        [PrivateApi]
         IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only)
             => TypedKeysImplementation(noParamOrder, only);
 

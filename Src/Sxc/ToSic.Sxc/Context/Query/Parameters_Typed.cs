@@ -19,6 +19,10 @@ namespace ToSic.Sxc.Context.Query
         bool ITyped.ContainsKey(string name) => OriginalsAsDic.ContainsKey(name);
 
         [PrivateApi]
+        bool ITyped.ContainsData(string name) => OriginalsAsDic.TryGetValue(name, out var result) && result != null;
+
+
+        [PrivateApi]
         IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only)
             => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, OriginalsAsDic?.Keys);
 

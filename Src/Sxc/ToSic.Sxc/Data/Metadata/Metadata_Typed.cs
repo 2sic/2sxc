@@ -24,6 +24,8 @@ namespace ToSic.Sxc.Data
                 (e, k) => e.Children(k)?.FirstOrDefault()
             );
 
+        public bool ContainsData(string name) => TypedItem.ContainsData(name);
+
         [PrivateApi]
         IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only)
             => FilterKeysIfPossible(noParamOrder, only, Entity?.Attributes.Keys);
