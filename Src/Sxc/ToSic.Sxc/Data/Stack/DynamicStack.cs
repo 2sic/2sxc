@@ -64,6 +64,7 @@ namespace ToSic.Sxc.Data
         public IPropertyStack GetContents() => _stack;
 
         /// <inheritdoc />
+        [PrivateApi("was public till v16.02, but since I'm not sure if it is really used, we decided to hide it again since it's probably not an important API")]
         public dynamic GetSource(string name)
         {
             var source = _stack.GetSource(name)

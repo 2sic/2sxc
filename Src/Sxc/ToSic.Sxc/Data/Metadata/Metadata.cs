@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Data
 
         public override bool IsDemoItem => false;
 
-        public override ITypedItem Presentation => throw new NotSupportedException();
+        public new ITypedItem Presentation => throw new NotSupportedException();
 
         #endregion
     }

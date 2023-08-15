@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Compatibility.Sxc
         public IEnumerable<IDictionary<string, object>> Prepare(IEnumerable<dynamic> dynamicList)
             => _converter.Convert(dynamicList);
 
-        public IDictionary<string, object> Prepare(IDynamicEntity dynamicEntity)
+        public IDictionary<string, object> Prepare(ICanBeEntity dynamicEntity)
             => _converter.Convert(dynamicEntity);
 
         public IDictionary<string, IEnumerable<EavLightEntity>> Prepare(IDataSource source,

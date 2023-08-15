@@ -69,9 +69,9 @@ namespace ToSic.Sxc.Data
             switch (dynObject)
             {
                 case null:
-                    return l.Return(this.AsDynamicFromJson(null), "null");
+                    return l.Return(AsDynamicFromJson(null), "null");
                 case string strObject:
-                    return l.Return(this.AsDynamicFromJson(strObject), "string");
+                    return l.Return(AsDynamicFromJson(strObject), "string");
                 case IDynamicEntity dynEnt:
                     return l.Return(dynEnt, "DynamicEntity");
                 // New case - should avoid re-converting dynamic json, DynamicStack etc.

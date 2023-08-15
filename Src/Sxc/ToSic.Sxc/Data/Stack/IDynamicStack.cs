@@ -22,9 +22,10 @@ namespace ToSic.Sxc.Data
         /// <remarks>
         /// Added in 2sxc 12.03
         /// </remarks>
+        [PrivateApi("was public till v16.02, but since I'm not sure if it is really used, we decided to hide it again since it's probably not an important API")]
         dynamic GetSource(string name);
 
-        [PrivateApi]
+        [PrivateApi("Never published in docs")]
         dynamic GetStack(params string[] names);
 
         #region Get and Get<T>
