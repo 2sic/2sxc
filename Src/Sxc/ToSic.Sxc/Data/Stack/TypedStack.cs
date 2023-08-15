@@ -14,7 +14,7 @@ using static ToSic.Sxc.Data.Typed.TypedHelpers;
 namespace ToSic.Sxc.Data
 {
     [PrivateApi]
-    internal class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPropLookup, ICanDebug
+    internal class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPropLookup, ICanDebug, ICanGetByName
     {
         public TypedStack(string name, CodeDataFactory cdf, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources)
         {
@@ -37,6 +37,11 @@ namespace ToSic.Sxc.Data
 
         public bool Debug { get; set; }
 
+        #region GetByName - to allow this to be used for image settings etc.
+
+        object ICanGetByName.Get(string name) => (this as ITyped).Get(name);
+
+        #endregion
 
 
         #region ITyped.Keys and Dyn - both not implemented
@@ -108,6 +113,8 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         string ITyped.ToString() => "test / debug: " + ToString();
+
+
 
         #endregion
 

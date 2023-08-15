@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using static ToSic.Eav.Parameters;
@@ -12,7 +13,7 @@ namespace ToSic.Sxc.Data
     /// </summary>
     /// <remarks>New in 12.02</remarks>
     [PublicApi]
-    public interface IDynamicStack: ISxcDynamicObject, ICanDebug
+    public interface IDynamicStack: ISxcDynamicObject, ICanDebug, ICanGetByName
     {
         /// <summary>
         /// Get a source object which is used in the stack. Returned as a dynamic object. 
