@@ -45,6 +45,9 @@ namespace Custom.Hybrid
 
         [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel12;
 
+        private CodeHelper14 CodeHelper => _codeHelper ?? (_codeHelper = new CodeHelper14(_DynCodeRoot, false, "c# code file"));
+        private CodeHelper14 _codeHelper;
+
         #endregion
 
         public ServiceKit14 Kit => _kit.Get(() => _DynCodeRoot.GetKit<ServiceKit14>());
@@ -62,7 +65,7 @@ namespace Custom.Hybrid
         public dynamic Settings => _DynCodeRoot?.Settings;
 
         [PrivateApi("Not yet ready")]
-        public IDevTools DevTools => _DynCodeRoot.DevTools;
+        public IDevTools DevTools => CodeHelper.DevTools;
 
         #endregion
 

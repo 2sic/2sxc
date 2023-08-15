@@ -36,7 +36,8 @@ namespace Custom.Hybrid
         /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
         public TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
 
-        private TypedCode16Helper CodeHelper => _codeHelper ?? (_codeHelper = CreateCodeHelper());
+        private TypedCode16Helper CodeHelper 
+            => _codeHelper ?? (_codeHelper = new TypedCode16Helper(_DynCodeRoot, MyData, null, false, "c# code file"));
         private TypedCode16Helper _codeHelper;
 
         [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel16;
@@ -92,12 +93,6 @@ namespace Custom.Hybrid
         #endregion
 
         #region My... Stuff
-
-
-        private TypedCode16Helper CreateCodeHelper()
-        {
-            return new TypedCode16Helper(_DynCodeRoot, MyData, null, false, "c# code file");
-        }
 
         public ITypedItem MyItem => CodeHelper.MyItem;
 
