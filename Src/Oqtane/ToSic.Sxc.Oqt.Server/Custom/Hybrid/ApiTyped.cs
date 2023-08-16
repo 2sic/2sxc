@@ -29,13 +29,13 @@ namespace Custom.Hybrid
     /// </summary>
     [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
     [JsonFormatter]
-    public abstract class ApiPro : OqtStatefulControllerBase, IDynamicWebApi, IHasCodeLog, IHasDynamicCodeRoot, IDynamicCode16
+    public abstract class ApiTyped : OqtStatefulControllerBase, IDynamicWebApi, IHasCodeLog, IHasDynamicCodeRoot, IDynamicCode16
     {
         #region setup
 
-        protected ApiPro() : this(EavWebApiConstants.HistoryNameWebApi) { }
+        protected ApiTyped() : this(EavWebApiConstants.HistoryNameWebApi) { }
 
-        protected ApiPro(string logSuffix) : base(logSuffix) { }
+        protected ApiTyped(string logSuffix) : base(logSuffix) { }
 
         /// <summary>
         /// Our custom dynamic 2sxc app api controllers, depends on event OnActionExecuting to provide dependencies (without DI in constructor).
@@ -81,10 +81,6 @@ namespace Custom.Hybrid
 
 
         #region Adam
-
-        ///// <inheritdoc cref="IDynamicCode.AsAdam" />
-        //[NonAction]
-        //public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot?.AsAdam(item, fieldName);
 
         /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
         [NonAction]

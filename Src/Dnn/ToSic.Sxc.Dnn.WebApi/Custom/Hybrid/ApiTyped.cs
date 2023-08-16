@@ -30,10 +30,9 @@ namespace Custom.Hybrid
     /// </remarks>
     [PublicApi]
     [DnnLogExceptions]
-    // v16 should now default to normal
-    //[DefaultToNewtonsoftForHttpJson]
+    //[DefaultToNewtonsoftForHttpJson] - // !!! v16 should now default to normal
     [JsonFormatter]
-    public abstract class ApiPro: DynamicApiController, IHasCodeLog, IDynamicWebApi, IHasDynamicCodeRoot, IDynamicCode16, IGetCodePath
+    public abstract class ApiTyped: DynamicApiController, IHasCodeLog, IDynamicWebApi, IHasDynamicCodeRoot, IDynamicCode16, IGetCodePath
     {
         #region Setup
 
@@ -41,13 +40,13 @@ namespace Custom.Hybrid
         /// Main constructor.
         /// Doesn't have parameters so it can easily be inherited.
         /// </summary>
-        protected ApiPro() : base(EavWebApiConstants.HistoryNameWebApi) { }
+        protected ApiTyped() : base(EavWebApiConstants.HistoryNameWebApi) { }
 
         /// <summary>
         /// Alternate constructor to use when inheriting, placing the Insights logs in an own section.
         /// </summary>
         /// <param name="insightsGroup">Name of the section in Insights</param>
-        protected ApiPro(string insightsGroup) : base("Api16", insightsGroup) { }
+        protected ApiTyped(string insightsGroup) : base("Api16", insightsGroup) { }
 
         /// <inheritdoc cref="IDynamicCodeKit{ServiceKit14}.Kit" />
         /// <inheritdoc cref="IDynamicCode16.Kit"/>

@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Code
     /// This is a base class for dynamic code which is compiled at runtime.
     ///
     /// > [!TIP]
-    /// > This is an old base class and works, but you should use a newer one such as <see cref="CodePro"/>
+    /// > This is an old base class and works, but you should use a newer one such as <see cref="CodeTyped"/>
     /// </summary>
     [PublicApi]
     public abstract class DynamicCode : DynamicCodeBase, IHasCodeLog, IDynamicCode

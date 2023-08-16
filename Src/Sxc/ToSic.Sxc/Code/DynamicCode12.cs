@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Code
     /// Adds new properties and methods, and doesn't keep old / legacy APIs
     ///
     /// > [!TIP]
-    /// > This is an old base class and works, but you should use a newer one such as <see cref="CodePro"/>
+    /// > This is an old base class and works, but you should use a newer one such as <see cref="CodeTyped"/>
     /// </summary>
     [PublicApi]
     public class DynamicCode12: DynamicCodeBase, IHasCodeLog, IDynamicCode, IDynamicCode12

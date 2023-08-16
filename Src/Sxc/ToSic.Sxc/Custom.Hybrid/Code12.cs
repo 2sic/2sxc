@@ -20,7 +20,7 @@ namespace Custom.Hybrid
     /// By inheriting from this base class, you will automatically have the context like the App object etc. available.
     ///
     /// > [!TIP]
-    /// > This is an old base class and works, but you should use a newer one such as <see cref="CodePro"/>
+    /// > This is an old base class and works, but you should use a newer one such as <see cref="CodeTyped"/>
     /// </summary>
     [PublicApi]
     public abstract class Code12 : DynamicCodeBase, IHasCodeLog, IDynamicCode, IDynamicCode12

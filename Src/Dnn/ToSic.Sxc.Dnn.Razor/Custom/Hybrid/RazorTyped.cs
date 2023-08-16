@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.WebPages;
 using ToSic.Eav.Code.Help;
 using ToSic.Eav.Data;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
@@ -10,10 +12,12 @@ using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Engines;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using static ToSic.Eav.Parameters;
 using Constants = ToSic.Sxc.Constants;
+using static System.StringComparer;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -28,8 +32,9 @@ namespace Custom.Hybrid
     /// Be aware of this since the APIs are very different.
     /// </remarks>
     [WorkInProgressApi("WIP 16.02 - not final")]
-    public abstract partial class RazorPro: RazorComponentBase, IRazor, IDynamicCode16, IHasCodeHelp, IGetCodePath
+    public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IHasCodeHelp, IGetCodePath, ISetDynamicModel
     {
+        #region Constructor, Setup, Helpers
 
         /// <inheritdoc cref="DnnRazorHelper.RenderPageNotSupported"/>
         [PrivateApi]
@@ -46,6 +51,27 @@ namespace Custom.Hybrid
         /// <inheritdoc cref="IDynamicCode16.Kit"/>
         public ServiceKit16 Kit => _kit.Get(() => _DynCodeRoot.GetKit<ServiceKit16>());
         private readonly GetOnce<ServiceKit16> _kit = new GetOnce<ServiceKit16>();
+
+        private TypedCode16Helper CodeHelper => _codeHelper ?? (_codeHelper = CreateCodeHelper());
+        private TypedCode16Helper _codeHelper;
+
+        void ISetDynamicModel.SetDynamicModel(object data) => _overridePageData = data;
+
+        private object _overridePageData;
+
+        private TypedCode16Helper CreateCodeHelper()
+        {
+            var myModelData = _overridePageData?.ToDicInvariantInsensitive()
+                              ?? PageData?
+                                  .Where(pair => pair.Key is string)
+                                  .ToDictionary(pair => pair.Key.ToString(), pair => pair.Value, InvariantCultureIgnoreCase);
+
+            return new TypedCode16Helper(_DynCodeRoot, _DynCodeRoot.Data, myModelData, false, Path);
+        }
+
+
+        #endregion
+
 
         #region Core Properties which should appear in docs
 
@@ -78,6 +104,25 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="IDynamicCode16.AllSettings" />
         public ITypedStack AllSettings => CodeHelper.AllSettings;
+
+        #endregion
+
+        #region My Data Stuff
+
+        /// <inheritdoc />
+        public ITypedItem MyItem => CodeHelper.MyItem;
+
+        /// <inheritdoc />
+        public IEnumerable<ITypedItem> MyItems => CodeHelper.MyItems;
+
+        /// <inheritdoc />
+        public ITypedItem MyHeader => CodeHelper.MyHeader;
+
+        /// <inheritdoc />
+        public IContextData MyData => _DynCodeRoot.Data;
+
+        /// <inheritdoc />
+        public ITypedModel MyModel => CodeHelper.MyModel;
 
         #endregion
 

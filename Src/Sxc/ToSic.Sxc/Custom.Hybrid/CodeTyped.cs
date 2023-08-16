@@ -19,7 +19,7 @@ namespace Custom.Hybrid
     /// Base class for v16 Pro Dynamic Code files.
     /// </summary>
     [WorkInProgressApi("WIP 16.02")]
-    public abstract class CodePro : DynamicCodeBase, IHasCodeLog, IDynamicCode16
+    public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
     {
 
         #region Constructor / Setup
@@ -28,7 +28,7 @@ namespace Custom.Hybrid
         /// Main constructor.
         /// Doesn't have parameters so it can easily be inherited.
         /// </summary>
-        protected CodePro() : base("Sxc.Code16") { }
+        protected CodeTyped() : base("Sxc.Code16") { }
 
         /// <inheritdoc cref="IHasCodeLog.Log" />
         public new ICodeLog Log => SysHlp.CodeLog;
