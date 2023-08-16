@@ -6,6 +6,7 @@ using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Data.Wrapper;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
 {
@@ -63,7 +64,8 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         bool IHasKeys.ContainsKey(string name) => _ignoreCaseLookup.ContainsKey(name);
 
-        public bool ContainsData(string name) => _ignoreCaseLookup.TryGetValue(name, out var result) && result != null;
+        public bool ContainsData(string name, string noParamOrder = Protector, bool? blankIs = default)
+            => _ignoreCaseLookup.TryGetValue(name, out var result) && result != null;
 
 
         IEnumerable<string> IHasKeys.Keys(string noParamOrder, IEnumerable<string> only) 

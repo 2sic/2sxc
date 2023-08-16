@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
@@ -26,14 +22,10 @@ namespace ToSic.Sxc.Data
 
         #region Keys
 
-        public bool ContainsData(string name)
+        public bool ContainsData(string name, string noParamOrder, bool? isBlank)
         {
             var result = Get(name, Protector, required: false);
-            if (result == null) return false;
-            // edge case: could return an empty list...
-            if (result is IEnumerable typedList)
-                return typedList.Cast<object>().Any();
-            return true;
+            return HasKeysHelper.ContainsData(result, isBlank);
         }
 
 

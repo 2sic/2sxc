@@ -35,7 +35,8 @@ namespace ToSic.Sxc.Code
         public bool ContainsKey(string name) => !name.IsEmptyOrWs() && _paramsDictionary.ContainsKey(name);
 
         [PrivateApi]
-        public bool ContainsData(string name) => Get(name, required: false) != null;
+        public bool ContainsData(string name, string noParamOrder = Protector, bool? blankIs = default)
+            => Get(name, required: false) != null;
 
         public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default) 
             => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, _paramsDictionary?.Keys);

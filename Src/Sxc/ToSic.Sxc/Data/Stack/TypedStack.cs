@@ -48,10 +48,11 @@ namespace ToSic.Sxc.Data
         #region ITyped.Keys and Dyn - both not implemented
 
         [PrivateApi]
-        bool ITyped.ContainsKey(string name) 
+        public bool ContainsKey(string name) 
             => throw new NotImplementedException($"Not yet implemented on {nameof(ITypedStack)}");
 
-        bool ITyped.ContainsData(string name) => _itemHelper.ContainsData(name);
+        public bool ContainsData(string name, string noParamOrder = Protector, bool? blankIs = default)
+            => _itemHelper.ContainsData(name, noParamOrder, blankIs);
 
         // TODO: Keys()
         public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default) 

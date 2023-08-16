@@ -59,24 +59,17 @@ namespace ToSic.Sxc.Data
         #region Keys
 
         [PrivateApi]
-        bool ITyped.ContainsKey(string name) =>
-            ContainsKey(name, Entity,
+        public bool ContainsKey(string name) =>
+            TypedHelpers.ContainsKey(name, Entity,
                 (e, k) => e.Attributes.ContainsKey(k),
                 (e, k) => e.Children(k)?.FirstOrDefault()
             );
 
-        bool ITyped.ContainsData(string name) => ItemHelper.ContainsData(name);
-        //{
-        //    var result = (this as ITyped).Get(name, required: false);
-        //    if (result == null) return false;
-        //    // edge case: could return an empty list...
-        //    if (result is IEnumerable<ITypedItem> typedList)
-        //        return typedList.Any();
-        //    return true;
-        //}
+        public bool ContainsData(string name, string noParamOrder = Protector, bool? blankIs = default)
+            => ItemHelper.ContainsData(name, noParamOrder, blankIs);
 
         [PrivateApi]
-        IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only)
+        public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default)
             => FilterKeysIfPossible(noParamOrder, only, Entity?.Attributes.Keys);
 
         #endregion
@@ -203,7 +196,7 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, nameof(field), message:
                 $" ***IMPORTANT***: The typed '.Parents(...)' method was changed to also make the parameter '{nameof(type)}' required. " +
-                "So if you had '.Parents(something)' then change it to '.Parents(type: something)'");
+                "So if you had '.Parents(something)' then change it to '.Parents(type: something)'. See https://r.2sxc.org/brc-1603");
             return Cdf.AsItems(GetHelper.Parents(entity: Entity, type: type, field: field), noParamOrder);
         }
 
@@ -217,7 +210,7 @@ namespace ToSic.Sxc.Data
                 throw ErrStrictForTyped(this, field);
 
             var dynChildren = GetHelper.Children(entity: Entity, field: field, type: type);
-            var list = dynChildren.Cast<DynamicEntity>().Select(d => d.TypedItem).ToList(); // Cdf.AsItems(dynChildren, noParamOrder).ToList();
+            var list = dynChildren.Cast<DynamicEntity>().Select(d => d.TypedItem).ToList();
             if (list.Any()) return list;
 
             // Generate a marker/placeholder to remember what field this is etc.

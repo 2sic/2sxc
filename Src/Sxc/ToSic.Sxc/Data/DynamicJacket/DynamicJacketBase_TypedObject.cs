@@ -24,13 +24,14 @@ namespace ToSic.Sxc.Data
         }
 
         [PrivateApi]
-        bool ITyped.ContainsKey(string name) => TypedHasImplementation(name);
+        public bool ContainsKey(string name) => TypedHasImplementation(name);
 
         [PrivateApi]
-        bool ITyped.ContainsData(string name) => (this as ITyped).Get(name, required: false) != null;
+        public bool ContainsData(string name, string noParamOrder = Protector, bool? blankIs = default) 
+            => HasKeysHelper.ContainsData(this, name, noParamOrder, blankIs);
 
         [PrivateApi]
-        IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only)
+        public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default)
             => TypedKeysImplementation(noParamOrder, only);
 
         [PrivateApi]

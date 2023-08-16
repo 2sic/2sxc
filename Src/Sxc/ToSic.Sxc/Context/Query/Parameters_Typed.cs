@@ -16,11 +16,12 @@ namespace ToSic.Sxc.Context.Query
         public dynamic Dyn => this;
 
         [PrivateApi]
-        bool ITyped.ContainsKey(string name) => OriginalsAsDic.ContainsKey(name);
+        bool ITyped.ContainsKey(string name)
+            => OriginalsAsDic.ContainsKey(name);
 
         [PrivateApi]
-        bool ITyped.ContainsData(string name) => OriginalsAsDic.TryGetValue(name, out var result) && result != null;
-
+        public bool ContainsData(string name, string noParamOrder = Protector, bool? blankIs = default)
+            => OriginalsAsDic.TryGetValue(name, out var result) && HasKeysHelper.ContainsData(result, blankIs);
 
         [PrivateApi]
         IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only)

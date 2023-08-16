@@ -18,12 +18,23 @@ namespace ToSic.Sxc.Data
 
         /// <summary>
         /// Check if this typed object has a property of this specified name, and has real data.
-        /// It's case insensitive.
+        ///
+        /// > [!IMPORTANT]
+        /// > This method is optimized for use in Razor-like scenarios.
+        /// > It may have some behavior that is super-useful but maybe not always expected.
+        /// >
+        /// > * If the value is a string, and is empty or only contains whitespace (even `&amp;nbsp;`) it will still return `false` - you can change this behavior by changing the `blankIs` attribute.
+        /// > * If the returned value is an empty list (eg. a field containing relationships, without any items in it) it returns `false`.
         /// </summary>
         /// <param name="name"></param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="blankIs">Change how blank strings (empty, whitespace, html-whitespace) is treated.
+        /// `true` means that every whitespace inkl. empty strings return `true`,
+        /// `false` (default) means every whitespace incl. empty strings return `false`.
+        /// </param>
         /// <returns>`true` if the property exists and has a real value. If it would return an empty list, it will also return `false`</returns>
         /// <remarks>Adding in 16.03 (WIP)</remarks>
-        bool ContainsData(string name);
+        bool ContainsData(string name, string noParamOrder = Protector, bool? blankIs = default);
 
 
         /// <summary>

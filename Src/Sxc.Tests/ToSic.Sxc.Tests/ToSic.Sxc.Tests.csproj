@@ -122,6 +122,7 @@
     <Compile Include="DataTests\DynWrappers\WrapObjTypedItemChildren.cs" />
     <Compile Include="DataTests\DynWrappers\WrapObjTypedItem.cs" />
     <Compile Include="DataTests\DynWrappers\DynWrapperTestBase.cs" />
+    <Compile Include="DataTests\HasKeysTests.cs" />
     <Compile Include="DataTests\TypedItemTestAccessors.cs" />
     <Compile Include="ServicesTests\CmsService\CmsServiceTest.cs" />
     <Compile Include="ServicesTests\CmsService\CmsServiceTestBase.cs" />

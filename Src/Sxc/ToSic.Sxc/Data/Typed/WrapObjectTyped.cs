@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Data.Typed
 
         #region Keys
 
-        bool ITyped.ContainsKey(string name) => TypedHelpers.ContainsKey(name, this,
+        public bool ContainsKey(string name) => TypedHelpers.ContainsKey(name, this,
             (e, k) => e.PreWrap.ContainsKey(k),
             (e, k) =>
             {
@@ -49,9 +49,12 @@ namespace ToSic.Sxc.Data.Typed
             }
         );
 
-        bool ITyped.ContainsData(string name) => (this as ITyped).Get(name, required: false) != null;
+        public bool ContainsData(string name, string noParamOrder = Protector, bool? blankIs = default)
+            => HasKeysHelper.ContainsData(this, name, noParamOrder, blankIs);
 
-        IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only)
+
+
+        public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default)
             => PreWrap.Keys(noParamOrder, only);
 
         #endregion

@@ -18,16 +18,17 @@ namespace ToSic.Sxc.Data
         #region Keys
 
         [PrivateApi]
-        bool ITyped.ContainsKey(string name) =>
-            ContainsKey(name, Entity,
+        public bool ContainsKey(string name) =>
+            TypedHelpers.ContainsKey(name, Entity,
                 (e, k) => e.Attributes.ContainsKey(k),
                 (e, k) => e.Children(k)?.FirstOrDefault()
             );
 
-        public bool ContainsData(string name) => TypedItem.ContainsData(name);
+        public bool ContainsData(string name, string noParamOrder = Protector, bool? blankIs = default)
+            => ItemHelper.ContainsData(name, noParamOrder, blankIs);
 
         [PrivateApi]
-        IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only)
+        public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default)
             => FilterKeysIfPossible(noParamOrder, only, Entity?.Attributes.Keys);
 
         #endregion

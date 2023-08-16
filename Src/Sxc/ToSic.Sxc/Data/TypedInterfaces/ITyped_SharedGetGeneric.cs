@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Data
         bool ContainsKey(string name);
 
         /// <inheritdoc cref="IHasKeys.ContainsData"/>
-        bool ContainsData(string name);
+        bool ContainsData(string name, string noParamOrder = Protector, bool? blankIs = default);
 
         /// <inheritdoc cref="IHasKeys.Keys"/>
         IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default);
