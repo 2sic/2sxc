@@ -1,12 +1,12 @@
-﻿
+﻿using ToSic.Lib.Documentation;
+
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
 {
-    /// <summary>
-    /// Fallback class for releases of 16.02
-    /// TODO: ADD WARNINGS
-    /// </summary>
+    /// <inheritdoc cref="Custom.Hybrid.CodePro"/>
+    [InternalApi_DoNotUse_MayChangeWithoutNotice]
+    // TODO: ADD WARNINGS
     public abstract class RazorPro: RazorTyped
     {
     }
