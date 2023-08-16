@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Data;
@@ -132,11 +133,13 @@ namespace ToSic.Sxc.Data
 
         IEnumerable<ITypedItem> ITypedStack.Children(string field, string noParamOrder, string type, bool? required)
         {
-            // TODO: @2DM - type-filter of children is not applied
             var findResult = _helper.TryGet(field);
             return IsErrStrict(findResult.Found, required, _helper.StrictGet)
                 ? throw ErrStrict(field)
-                : Cdf.AsItems(findResult.Result, noParamOrder);
+                : Cdf.AsItems(findResult.Result, noParamOrder)
+                    // Apply type filter - even if a bit "late"
+                    .Where(i => i.Entity.Type.Is(type))
+                    .ToList();
         }
 
         #endregion
