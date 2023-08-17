@@ -86,8 +86,8 @@ Either change the calling Html.Partial(""{_razorFileName}"", {{ {name} = ... }} 
 
         #endregion
 
-        public dynamic Dynamic(string name, string noParamOrder = Protector, object fallback = default, bool? required = default) 
-            => GetInternal(name, noParamOrder, fallback, required);
+        //public dynamic Dynamic(string name, string noParamOrder = Protector, object fallback = default, bool? required = default) 
+        //    => GetInternal(name, noParamOrder, fallback, required);
 
         #region Numbers
 

@@ -5,6 +5,7 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
+// ReSharper disable PossibleMultipleEnumeration
 
 namespace ToSic.Sxc.Code
 {
@@ -52,7 +53,7 @@ namespace ToSic.Sxc.Code
 
         public IToolbarBuilder Toolbar(object maybe, IToolbarBuilder fallback)
         {
-            var (typed, untyped, ok) = EvalInterface(maybe, fallback);
+            var (typed, _, ok) = EvalInterface(maybe, fallback);
             // Try to convert, in case it's an IEntity or something; could also result in error
             return ok ? typed : fallback;
         }
