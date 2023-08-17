@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.DataSource;
+﻿#if NETFRAMEWORK
+using ToSic.Eav.DataSource;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
 
@@ -12,13 +13,13 @@ namespace ToSic.Sxc.DataSources
     public interface IBlockDataSource: IDataSource
     {
 
-#if NETFRAMEWORK
         [PrivateApi("older use case, will probably become obsolete some day")]
         DataPublishing Publish { get; }
 
         [System.Obsolete("Must be removed soon, but it's part of older Mobius so we must add warnings there")]
         [PrivateApi]
         Compatibility.CacheWithGetContentType Cache { get; }
-#endif
+
     }
 }
+#endif

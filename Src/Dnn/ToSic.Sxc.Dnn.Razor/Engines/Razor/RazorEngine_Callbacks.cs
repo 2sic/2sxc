@@ -8,7 +8,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Web;
-
 using ToSic.Sxc.Search;
 
 namespace ToSic.Sxc.Engines
@@ -21,7 +20,7 @@ namespace ToSic.Sxc.Engines
         public override void CustomizeData()
         {
             if (!(Webpage is IDnnRazorCustomize old)) return;
-            if (!(old.Data is IBlockDataSourceOld isOld)) return;
+            if (!(old.Data is IBlockDataSource isOld)) return;
             //(isOld as ContextData)?.ToggleOldMode();
             old.CustomizeData();
         }

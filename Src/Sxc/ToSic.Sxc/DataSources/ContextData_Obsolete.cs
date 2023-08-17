@@ -7,7 +7,7 @@ using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 
 namespace ToSic.Sxc.DataSources
 {
-    internal partial class ContextData: IBlockDataSourceOld
+    internal partial class ContextData: IBlockDataSource
     {
         private readonly LazySvc<CodeInfoService> _codeChanges;
 

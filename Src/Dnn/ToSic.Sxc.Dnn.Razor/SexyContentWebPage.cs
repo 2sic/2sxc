@@ -98,7 +98,7 @@ namespace ToSic.SexyContent.Razor
         #region Data - with old interface #DataInAddWontWork
 
         /// <inheritdoc />
-        public IBlockDataSourceOld Data => (IBlockDataSourceOld)_DynCodeRoot.Data;
+        public IBlockDataSource Data => (IBlockDataSource)_DynCodeRoot.Data;
 
         // This is explicitly implemented so the interfaces don't complain
         // but actually we're not showing this - in reality we're showing the Old (see above)
