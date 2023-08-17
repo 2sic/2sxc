@@ -64,9 +64,11 @@ namespace ToSic.Sxc.Data
                 (e, k) => e.Attributes.ContainsKey(k),
                 (e, k) => e.Children(k)?.FirstOrDefault()
             );
+        public bool IsEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default)
+            => ItemHelper.IsEmpty(name, noParamOrder, default /*blankIs*/);
 
-        public bool ContainsData(string name, string noParamOrder = Protector, bool? blankIs = default)
-            => ItemHelper.ContainsData(name, noParamOrder, blankIs);
+        public bool IsNotEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default)
+            => ItemHelper.IsFilled(name, noParamOrder, default /*blankIs*/);
 
         [PrivateApi]
         public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default)

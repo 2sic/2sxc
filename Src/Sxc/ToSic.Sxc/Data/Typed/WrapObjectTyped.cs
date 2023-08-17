@@ -49,8 +49,11 @@ namespace ToSic.Sxc.Data.Typed
             }
         );
 
-        public bool ContainsData(string name, string noParamOrder = Protector, bool? blankIs = default)
-            => HasKeysHelper.ContainsData(this, name, noParamOrder, blankIs);
+        public bool IsEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default)
+            => HasKeysHelper.IsEmpty(this, name, noParamOrder, default /*blankIs*/);
+
+        public bool IsNotEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default)
+            => HasKeysHelper.IsFilled(this, name, noParamOrder, default /*blankIs*/);
 
 
 

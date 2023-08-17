@@ -21,11 +21,16 @@ namespace ToSic.Sxc.Data
         }
 
         #region Keys
-
-        public bool ContainsData(string name, string noParamOrder, bool? isBlank)
+        public bool IsEmpty(string name, string noParamOrder, bool? isBlank)
         {
-            var result = Get(name, Protector, required: false);
-            return HasKeysHelper.ContainsData(result, isBlank);
+            var result = Get(name, noParamOrder, required: false);
+            return HasKeysHelper.IsEmpty(result, isBlank);
+        }
+
+        public bool IsFilled(string name, string noParamOrder, bool? isBlank)
+        {
+            var result = Get(name, noParamOrder, required: false);
+            return HasKeysHelper.IsFilled(result, isBlank);
         }
 
 

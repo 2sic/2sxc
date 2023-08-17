@@ -20,8 +20,12 @@ namespace ToSic.Sxc.Context.Query
             => OriginalsAsDic.ContainsKey(name);
 
         [PrivateApi]
-        public bool ContainsData(string name, string noParamOrder = Protector, bool? blankIs = default)
-            => OriginalsAsDic.TryGetValue(name, out var result) && HasKeysHelper.ContainsData(result, blankIs);
+        public bool IsEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default)
+            => !OriginalsAsDic.TryGetValue(name, out var result) || HasKeysHelper.IsEmpty(result, default /*blankIs*/);
+
+        [PrivateApi]
+        public bool IsNotEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default)
+            => OriginalsAsDic.TryGetValue(name, out var result) && HasKeysHelper.IsFilled(result, default /*blankIs*/);
 
         [PrivateApi]
         IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only)

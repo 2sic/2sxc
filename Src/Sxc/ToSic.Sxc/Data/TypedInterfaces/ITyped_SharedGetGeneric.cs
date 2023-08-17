@@ -3,13 +3,18 @@ using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
 {
-    public partial interface ITyped //: IHasKeys
+    public partial interface ITyped : IValueChecks //: IHasKeys
     {
         /// <inheritdoc cref="IHasKeys.ContainsKey"/>
         bool ContainsKey(string name);
 
-        /// <inheritdoc cref="IHasKeys.ContainsData"/>
-        bool ContainsData(string name, string noParamOrder = Protector, bool? blankIs = default);
+        /// <inheritdoc cref="IValueChecks.IsEmpty"/>
+        new bool IsEmpty(string name, string noParamOrder = Protector);//, bool? blankIs = default);
+        // ^^^ new is just so it's in the docs
+
+        /// <inheritdoc cref="IValueChecks.IsNotEmpty"/>
+        new bool IsNotEmpty(string name, string noParamOrder = Protector);//, bool? blankIs = default);
+        // ^^^ new is just so it's in the docs
 
         /// <inheritdoc cref="IHasKeys.Keys"/>
         IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default);

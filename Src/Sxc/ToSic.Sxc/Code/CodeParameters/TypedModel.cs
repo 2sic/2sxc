@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Generics;
 using ToSic.Eav.Plumbing;
@@ -35,8 +34,12 @@ namespace ToSic.Sxc.Code
         public bool ContainsKey(string name) => !name.IsEmptyOrWs() && _paramsDictionary.ContainsKey(name);
 
         [PrivateApi]
-        public bool ContainsData(string name, string noParamOrder = Protector, bool? blankIs = default)
-            => Get(name, required: false) != null;
+        public bool IsEmpty(string name, string noParamOrder = Protector) //, bool? blankIs = default)
+            => HasKeysHelper.IsEmpty(Get(name, required: false), default /*blankIs*/);
+
+        [PrivateApi]
+        public bool IsNotEmpty(string name, string noParamOrder = Protector) //, bool? blankIs = default)
+            => HasKeysHelper.IsFilled(Get(name, required: false), default /*blankIs*/);
 
         public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default) 
             => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, _paramsDictionary?.Keys);

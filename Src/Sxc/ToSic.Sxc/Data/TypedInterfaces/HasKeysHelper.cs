@@ -6,13 +6,26 @@ namespace ToSic.Sxc.Data
 {
     public class HasKeysHelper
     {
-        public static bool ContainsData(ITyped item, string name, string noParamOrder, bool? blankIs)
+        public static bool IsEmpty(ITyped item, string name, string noParamOrder, bool? blankIs)
         {
-            var value = item.Get(name, required: false);
-            return HasKeysHelper.ContainsData(value, blankIs);
+            var value = item.Get(name, noParamOrder, required: false);
+            return IsEmpty(value, blankIs);
         }
 
-        public static bool ContainsData(object value, bool? blankIs)
+        public static bool IsFilled(ITyped item, string name, string noParamOrder, bool? blankIs)
+        {
+            var value = item.Get(name, noParamOrder, required: false);
+            return IsFilled(value, blankIs);
+        }
+
+        public static bool IsEmpty(object value, bool? blankIs)
+        {
+            // Since we'll reverse the final result, we must ensure that blankIs is pre-reversed as well
+            blankIs = !(blankIs ?? true);
+            return !IsFilled(value, blankIs);
+        }
+
+        public static bool IsFilled(object value, bool? blankIs)
         {
             if (value == null) return false;
 

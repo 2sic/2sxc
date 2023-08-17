@@ -64,8 +64,11 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         bool IHasKeys.ContainsKey(string name) => _ignoreCaseLookup.ContainsKey(name);
 
-        public bool ContainsData(string name, string noParamOrder = Protector, bool? blankIs = default)
-            => _ignoreCaseLookup.TryGetValue(name, out var result) && result != null;
+        public bool IsEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default)
+            => !_ignoreCaseLookup.TryGetValue(name, out var result) || HasKeysHelper.IsEmpty(result, default /*blankIs*/);
+
+        public bool IsNotEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default)
+            => _ignoreCaseLookup.TryGetValue(name, out var result) && HasKeysHelper.IsFilled(result, default /*blankIs*/);
 
 
         IEnumerable<string> IHasKeys.Keys(string noParamOrder, IEnumerable<string> only) 

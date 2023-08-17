@@ -51,8 +51,11 @@ namespace ToSic.Sxc.Data
         public bool ContainsKey(string name) 
             => throw new NotImplementedException($"Not yet implemented on {nameof(ITypedStack)}");
 
-        public bool ContainsData(string name, string noParamOrder = Protector, bool? blankIs = default)
-            => _itemHelper.ContainsData(name, noParamOrder, blankIs);
+        public bool IsEmpty(string name, string noParamOrder = Protector) //, bool? blankIs = default)
+            => _itemHelper.IsEmpty(name, noParamOrder, default /*blankIs*/);
+
+        public bool IsNotEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default)
+            => _itemHelper.IsFilled(name, noParamOrder, default /*blankIs*/);
 
         // TODO: Keys()
         public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default) 

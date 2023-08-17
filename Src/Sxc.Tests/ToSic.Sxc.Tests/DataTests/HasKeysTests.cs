@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Data;
+using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.DataTests
 {
@@ -8,49 +9,92 @@ namespace ToSic.Sxc.Tests.DataTests
     public class HasKeysTests
     {
         [TestMethod]
-        public void ContainsDataStringsNull() 
-            => Assert.AreEqual(false, HasKeysHelper.ContainsData(null, null));
+        public void IsFilledNull() 
+            => AreEqual(false, HasKeysHelper.IsFilled(null, blankIs: null));
 
         [TestMethod]
-        [DataRow("")]
-        [DataRow( " ")]
-        [DataRow( "   ")]
-        [DataRow( "\t", "tab")]
-        [DataRow( "\t \t", "tabs")]
-        [DataRow( "\n \r", "new lines")]
-        [DataRow("\u00A0", "non-breaking space")]
-        [DataRow( "&nbsp;", "non-breaking space HTML")]
-        [DataRow(" &nbsp; \n", "non-breaking space HTML")]
-        public void ContainsDataStringsBlank(string value, string testName = default)
+        public void IsEmptyNull() 
+            => AreEqual(true, HasKeysHelper.IsEmpty(null, blankIs: null));
+
+        public static IEnumerable<object[]> BlankStrings => new[]
         {
-            Assert.AreEqual(false, HasKeysHelper.ContainsData(value, null), testName ?? value + " blankIs: null");
-            Assert.AreEqual(false, HasKeysHelper.ContainsData(value, false), testName ?? value + " blankIs: false");
-            Assert.AreEqual(true, HasKeysHelper.ContainsData(value, true), testName ?? value + " blankIs: true");
-        }
+            new object[] { "" },
+            new object[] { " " },
+            new object[] { "   " },
+            new object[] { "\t", "tab" },
+            new object[] { "\t \t", "tabs" },
+            new object[] { "\n \r", "new lines" },
+            new object[] { "\u00A0", "non-breaking space" },
+            new object[] { "&nbsp;", "non-breaking space HTML" },
+            new object[] { " &nbsp; \n", "non-breaking space HTML" },
+        };
 
         [TestMethod]
-        [DataRow(0)]
-        [DataRow(-1)]
-        [DataRow(27)]
-        [DataRow(true)]
-        [DataRow(false)]
-        [DataRow("hello")]
-        [DataRow('x', "character")]
-        public void ContainsDataSimpleData(object value, string testName = default)
+        [DynamicData(nameof(BlankStrings))]
+        public void IsFilled_StringsBlank_BlankIsDefault(string value, string testName = default) 
+            => AreEqual(false, HasKeysHelper.IsFilled(value, blankIs: null), testName ?? value + " blankIs: null");
+
+        [TestMethod]
+        [DynamicData(nameof(BlankStrings))]
+        public void IsFilled_StringsBlank_BlankIsFalse(string value, string testName = default) 
+            => AreEqual(false, HasKeysHelper.IsFilled(value, blankIs: false), testName ?? value + " blankIs: false");
+
+        [TestMethod]
+        [DynamicData(nameof(BlankStrings))]
+        public void IsFilled_StringsBlank_BlankIsTrue(string value, string testName = default) 
+            => AreEqual(true, HasKeysHelper.IsFilled(value, blankIs: true), testName ?? value + " blankIs: true");
+        
+        [TestMethod]
+        [DynamicData(nameof(BlankStrings))]
+        public void IsEmpty_StringsBlank_BlankIsDefault(string value, string testName = default) 
+            => AreEqual(true, HasKeysHelper.IsEmpty(value, blankIs: null), testName ?? value + " blankIs: null");
+
+        [TestMethod]
+        [DynamicData(nameof(BlankStrings))]
+        public void IsEmpty_StringsBlank_BlankIsFalse(string value, string testName = default) 
+            => AreEqual(false, HasKeysHelper.IsEmpty(value, blankIs: false), testName ?? value + " blankIs: null");
+
+        [TestMethod]
+        [DynamicData(nameof(BlankStrings))]
+        public void IsEmpty_StringsBlank_BlankIsTrue(string value, string testName = default) 
+            => AreEqual(true, HasKeysHelper.IsEmpty(value, blankIs: true), testName ?? value + " blankIs: null");
+
+
+        public static IEnumerable<object[]> SimpleData => new[]
         {
-            Assert.AreEqual(true, HasKeysHelper.ContainsData(value, null), testName ?? value + " blankIs: null");
-            Assert.AreEqual(true, HasKeysHelper.ContainsData(value, false), testName ?? value + " blankIs: false");
-            Assert.AreEqual(true, HasKeysHelper.ContainsData(value, true), testName ?? value + " blankIs: true");
-        }
+            new object[] { 0 },
+            new object[] { -1 },
+            new object[] { 27 },
+            new object[] { true },
+            new object[] { false },
+            new object[] { "hello" },
+            new object[] { 'x', "Character" },
+        };
+
+        [TestMethod]
+        [DynamicData(nameof(SimpleData))]
+        public void IsFilled_SimpleData_BlankIsDefault(object value, string testName = default) 
+            => AreEqual(true, HasKeysHelper.IsFilled(value, blankIs: null), testName ?? value + " blankIs: null");
+
+        [TestMethod]
+        [DynamicData(nameof(SimpleData))]
+        public void IsFilled_SimpleData_BlankIsFalse(object value, string testName = default) 
+            => AreEqual(true, HasKeysHelper.IsFilled(value, blankIs: false), testName ?? value + " blankIs: false");
+
+        [TestMethod]
+        [DynamicData(nameof(SimpleData))]
+        public void IsFilled_SimpleData_BlankIsTrue(object value, string testName = default) 
+            => AreEqual(true, HasKeysHelper.IsFilled(value, blankIs: true), testName ?? value + " blankIs: true");
+        
 
         [TestMethod]
         public void ContainsDataObject()
         {
             var value = new object();
             var testName = "object";
-            Assert.AreEqual(true, HasKeysHelper.ContainsData(value, null), testName ?? value + " blankIs: null");
-            Assert.AreEqual(true, HasKeysHelper.ContainsData(value, false), testName ?? value + " blankIs: false");
-            Assert.AreEqual(true, HasKeysHelper.ContainsData(value, true), testName ?? value + " blankIs: true");
+            AreEqual(true, HasKeysHelper.IsFilled(value, blankIs: null), testName ?? value + " blankIs: null");
+            AreEqual(true, HasKeysHelper.IsFilled(value, blankIs: false), testName ?? value + " blankIs: false");
+            AreEqual(true, HasKeysHelper.IsFilled(value, blankIs: true), testName ?? value + " blankIs: true");
         }
 
         [TestMethod]
@@ -58,9 +102,9 @@ namespace ToSic.Sxc.Tests.DataTests
         {
             var value = new List<string>();
             var testName = "object";
-            Assert.AreEqual(false, HasKeysHelper.ContainsData(value, null), testName ?? value + " blankIs: null");
-            Assert.AreEqual(false, HasKeysHelper.ContainsData(value, false), testName ?? value + " blankIs: false");
-            Assert.AreEqual(false, HasKeysHelper.ContainsData(value, true), testName ?? value + " blankIs: true");
+            AreEqual(false, HasKeysHelper.IsFilled(value, blankIs: null), testName ?? value + " blankIs: null");
+            AreEqual(false, HasKeysHelper.IsFilled(value, blankIs: false), testName ?? value + " blankIs: false");
+            AreEqual(false, HasKeysHelper.IsFilled(value, blankIs: true), testName ?? value + " blankIs: true");
         }
 
         [TestMethod]
@@ -68,9 +112,9 @@ namespace ToSic.Sxc.Tests.DataTests
         {
             var value = new List<string> { "hello" };
             var testName = "object";
-            Assert.AreEqual(true, HasKeysHelper.ContainsData(value, null), testName ?? value + " blankIs: null");
-            Assert.AreEqual(true, HasKeysHelper.ContainsData(value, false), testName ?? value + " blankIs: false");
-            Assert.AreEqual(true, HasKeysHelper.ContainsData(value, true), testName ?? value + " blankIs: true");
+            AreEqual(true, HasKeysHelper.IsFilled(value, blankIs: null), testName ?? value + " blankIs: null");
+            AreEqual(true, HasKeysHelper.IsFilled(value, blankIs: false), testName ?? value + " blankIs: false");
+            AreEqual(true, HasKeysHelper.IsFilled(value, blankIs: true), testName ?? value + " blankIs: true");
         }
     }
 }

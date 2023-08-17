@@ -27,8 +27,12 @@ namespace ToSic.Sxc.Data
         public bool ContainsKey(string name) => TypedHasImplementation(name);
 
         [PrivateApi]
-        public bool ContainsData(string name, string noParamOrder = Protector, bool? blankIs = default) 
-            => HasKeysHelper.ContainsData(this, name, noParamOrder, blankIs);
+        public bool IsEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default) 
+            => HasKeysHelper.IsEmpty(this, name, noParamOrder, default /*blankIs*/);
+
+        [PrivateApi]
+        public bool IsNotEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default) 
+            => HasKeysHelper.IsFilled(this, name, noParamOrder, default /*blankIs*/);
 
         [PrivateApi]
         public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default)
