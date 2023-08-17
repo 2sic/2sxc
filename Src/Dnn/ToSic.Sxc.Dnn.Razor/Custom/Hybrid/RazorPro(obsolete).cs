@@ -6,7 +6,6 @@ namespace Custom.Hybrid
 {
     /// <inheritdoc cref="Custom.Hybrid.CodePro"/>
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    // TODO: ADD WARNINGS
     public abstract class RazorPro: RazorTyped
     {
         protected RazorPro() => throw CodePro.ExceptionObsolete(nameof(RazorPro), nameof(RazorTyped));

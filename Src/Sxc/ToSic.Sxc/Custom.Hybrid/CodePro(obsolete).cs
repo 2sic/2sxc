@@ -25,12 +25,10 @@ namespace Custom.Hybrid
         public static ExceptionWithHelp ExceptionObsolete(string deprecated, string replacement)
             => new ExceptionWithHelp(HelpObsolete(deprecated, replacement));
 
-        public static CodeHelp HelpObsolete(string deprecated, string replacement)
-        {
-            return new CodeHelp(name: "", detect: null, linkCode: "https://r.2sxc.org/brc-1603",
+        private static CodeHelp HelpObsolete(string deprecated, string replacement) =>
+            new CodeHelp(name: "", detect: null, linkCode: "https://r.2sxc.org/brc-1603",
                 uiMessage: $"{deprecated} which was experimental in v16.02 is replaced with {replacement}. " +
                            $"Sorry for the inconvenience, but this is important for long term stable, consistent APIs. " +
                            $"Please update all uses of Custom.Hybrid.{deprecated} with Custom.Hybrid.{replacement}. See https://r.2sxc.org/brc-1603.");
-        }
     }
 }
