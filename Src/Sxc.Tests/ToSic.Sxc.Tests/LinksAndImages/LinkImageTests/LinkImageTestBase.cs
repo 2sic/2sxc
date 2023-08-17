@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         public ImgResizeLinker GetLinker() => GetService<ImgResizeLinker>();
         public ILinkService GetLinkHelper() => GetService<ILinkService>();
 
-        public DynamicReadObject ToDyn(object contents) => GetService<CodeDataWrapper>().FromObject(contents, WrapperSettings.Dyn(children: false, realObjectsToo: false));
+        public WrapObjectDynamic ToDyn(object contents) => GetService<CodeDataWrapper>().FromObject(contents, WrapperSettings.Dyn(children: false, realObjectsToo: false));
 
 
         protected void TestOnLinkerAndHelper(string expected,

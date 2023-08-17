@@ -35,15 +35,15 @@ namespace ToSic.Sxc.Data.Wrapper
         internal DynamicJacketBase FromJson(string json, string fallback = default)
             => IfJsonTryConvertToJacket(AsJsonNode(json, fallback ?? EmptyJson)).Jacket;
 
-        internal DynamicReadDictionary<TKey, TValue> FromDictionary<TKey, TValue>(IDictionary<TKey, TValue> original)
+        internal WrapDictionaryDynamic<TKey, TValue> FromDictionary<TKey, TValue>(IDictionary<TKey, TValue> original)
         {
-            return new DynamicReadDictionary<TKey, TValue>(original, this);
+            return new WrapDictionaryDynamic<TKey, TValue>(original, this);
         }
 
-        public DynamicReadObject FromObject(object data, WrapperSettings settings)
+        public WrapObjectDynamic FromObject(object data, WrapperSettings settings)
         {
             var preWrap = new PreWrapObject(data, settings, this);
-            return new DynamicReadObject(preWrap, this);
+            return new WrapObjectDynamic(preWrap, this);
         }
 
         public ITyped TypedFromObject(object data, WrapperSettings settings)

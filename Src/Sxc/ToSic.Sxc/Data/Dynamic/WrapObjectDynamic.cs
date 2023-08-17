@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Data
     /// Will always return a value even if the property doesn't exist, in which case it resolves to null.
     /// </remarks>
     [JsonConverter(typeof(DynamicJsonConverter))]
-    public partial class DynamicReadObject: DynamicObject, IWrapper<object>, IPropertyLookup, IHasJsonSource, ICanGetByName
+    public class WrapObjectDynamic: DynamicObject, IWrapper<object>, IPropertyLookup, IHasJsonSource, ICanGetByName
     {
         [PrivateApi]
         public object GetContents() => PreWrap.GetContents();
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Data
         /// When using this for DynamicModel it should be false, otherwise usually true.
         /// </param>
         [PrivateApi]
-        internal DynamicReadObject(Wrapper.PreWrapObject preWrap, CodeDataWrapper wrapper)
+        internal WrapObjectDynamic(Wrapper.PreWrapObject preWrap, CodeDataWrapper wrapper)
         {
             Wrapper = wrapper;
             PreWrap = preWrap;
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Data
         }
 
         public override bool TrySetMember(SetMemberBinder binder, object value) 
-            => throw new NotSupportedException($"Setting a value on {nameof(DynamicReadObject)} is not supported");
+            => throw new NotSupportedException($"Setting a value on {nameof(WrapObjectDynamic)} is not supported");
 
 
         /// <inheritdoc />

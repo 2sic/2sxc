@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
     [TestClass]
     public class DynFromDictionaryBasic: TestBaseSxcDb
     {
-        private DynamicReadDictionary<TKey, TValue> ToDyn<TKey, TValue>(Dictionary<TKey, TValue> dic)
+        private WrapDictionaryDynamic<TKey, TValue> ToDyn<TKey, TValue>(Dictionary<TKey, TValue> dic)
             => GetService<CodeDataWrapper>().FromDictionary(dic);
 
         [TestMethod]
