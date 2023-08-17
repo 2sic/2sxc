@@ -8,6 +8,7 @@ namespace Custom.Hybrid
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
     public abstract class RazorPro: RazorTyped
     {
+        [PrivateApi]
         protected RazorPro() => throw CodePro.ExceptionObsolete(nameof(RazorPro), nameof(RazorTyped));
     }
 }

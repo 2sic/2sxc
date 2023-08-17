@@ -20,11 +20,14 @@ namespace Custom.Hybrid
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
     public abstract class CodePro: CodeTyped
     {
+        [PrivateApi]
         protected CodePro() => throw ExceptionObsolete(nameof(CodePro), nameof(CodeTyped));
 
+        [PrivateApi]
         public static ExceptionWithHelp ExceptionObsolete(string deprecated, string replacement)
             => new ExceptionWithHelp(HelpObsolete(deprecated, replacement));
 
+        [PrivateApi]
         private static CodeHelp HelpObsolete(string deprecated, string replacement) =>
             new CodeHelp(name: "", detect: null, linkCode: "https://r.2sxc.org/brc-1603",
                 uiMessage: $"{deprecated} which was experimental in v16.02 is replaced with {replacement}. " +
