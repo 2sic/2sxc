@@ -9,5 +9,6 @@ namespace Custom.Hybrid
     // TODO: ADD WARNINGS
     public abstract class RazorPro: RazorTyped
     {
+        protected RazorPro() => throw CodePro.ExceptionObsolete(nameof(RazorPro), nameof(RazorTyped));
     }
 }

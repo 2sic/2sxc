@@ -7,5 +7,6 @@ namespace Custom.Hybrid
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
     public abstract class ApiPro: ApiTyped
     {
+        protected ApiPro() => throw CodePro.ExceptionObsolete(nameof(ApiPro), nameof(ApiTyped));
     }
 }
