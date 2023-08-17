@@ -8,7 +8,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.DataTests.DynWrappers
 {
     [TestClass]
-    public class DynFromObjectSubItems: DynWrapperTestBase
+    public class DynFromObjectSubItems: DynAndTypedTestsBase
     {
 
         [TestMethod]
@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
                 }
             };
 
-            var dynAnon = DynFromObject(anon, false, false) as dynamic;
+            var dynAnon = WrapObjFromObject(anon, false, false) as dynamic;
             AreEqual(anon.Sub, dynAnon.Sub);
         }
 
@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
 
             // Test wrapping anonymous sub-objects only
             var msgPlus = $" - DynRead(..., {wrapChildren}, {wrapRealChildren})";
-            var dynWrapAnon = DynFromObject(anon, wrapChildren, wrapRealChildren) as dynamic;
+            var dynWrapAnon = WrapObjFromObject(anon, wrapChildren, wrapRealChildren) as dynamic;
 
             // These tests should run in all cases
             AreNotEqual(anon, dynWrapAnon, $"wrapper should never be equal {msgPlus}");

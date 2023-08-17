@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Data
             => !_ignoreCaseLookup.TryGetValue(name, out var result) || HasKeysHelper.IsEmpty(result, default /*blankIs*/);
 
         public bool IsNotEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default)
-            => _ignoreCaseLookup.TryGetValue(name, out var result) && HasKeysHelper.IsFilled(result, default /*blankIs*/);
+            => _ignoreCaseLookup.TryGetValue(name, out var result) && HasKeysHelper.IsNotEmpty(result, default /*blankIs*/);
 
 
         IEnumerable<string> IHasKeys.Keys(string noParamOrder, IEnumerable<string> only) 

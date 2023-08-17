@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Data.Wrapper
     /// Will always return a value even if the property doesn't exist, in which case it resolves to null.
     /// </remarks>
     [JsonConverter(typeof(DynamicJsonConverter))]
-    public partial class PreWrapObject: IWrapper<object>, IPropertyLookup, IHasJsonSource
+    public partial class PreWrapObject: IWrapper<object>, IPropertyLookup, IHasJsonSource, IPreWrap
     {
         #region Constructor / Setup
 
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Data.Wrapper
 
         protected readonly CodeDataWrapper Wrapper;
         protected readonly object UnwrappedObject;
-        public readonly WrapperSettings Settings;
+        public WrapperSettings Settings { get; }
 
         private static Dictionary<string, PropertyInfo> CreateDictionary(object original)
         {
@@ -77,11 +77,11 @@ namespace ToSic.Sxc.Data.Wrapper
         public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
         {
             path = path.KeepOrNew().Add("DynReadObj", specs.Field);
-            var result = TryGet(specs.Field, true).Result;
+            var result = TryGetWrap(specs.Field, true).Result;
             return new PropReqResult(result: result, fieldType: Attributes.FieldIsDynamic, path: path) { Source = this, Name = "dynamic" };
         }
 
-        public TryGetResult TryGet(string name, bool wrapDefault = true)
+        public TryGetResult TryGetWrap(string name, bool wrapDefault = true)
         {
             if (UnwrappedObject == null)
                 return new TryGetResult(false, null, null);
@@ -98,10 +98,10 @@ namespace ToSic.Sxc.Data.Wrapper
                 : result);
         }
 
-        public TValue TryGet<TValue>(string name, string noParamOrder, TValue fallback, bool? required, [CallerMemberName] string cName = default)
+        public TValue TryGetTyped<TValue>(string name, string noParamOrder, TValue fallback, bool? required, [CallerMemberName] string cName = default)
         {
             Protect(noParamOrder, nameof(fallback), methodName: cName);
-            var result = TryGet(name, false);
+            var result = TryGetWrap(name, false);
             return IsErrStrict(result.Found, required, Settings.GetStrict)
                 ? throw ErrStrict(name)
                 : result.Raw.ConvertOrFallback(fallback);

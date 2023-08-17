@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Context.Query
 
         [PrivateApi]
         public bool IsNotEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default)
-            => OriginalsAsDic.TryGetValue(name, out var result) && HasKeysHelper.IsFilled(result, default /*blankIs*/);
+            => OriginalsAsDic.TryGetValue(name, out var result) && HasKeysHelper.IsNotEmpty(result, default /*blankIs*/);
 
         [PrivateApi]
         IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only)

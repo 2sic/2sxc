@@ -14,10 +14,10 @@ namespace ToSic.Sxc.Data.Typed
 {
     [PrivateApi]
     [JsonConverter(typeof(DynamicJsonConverter))]
-    internal class WrapObjectTyped: Wrapper<object>, ITyped, /*IPropertyLookup,*/ IHasPropLookup, IHasJsonSource
+    internal class WrapObjectTyped: Wrapper<object>, ITyped, IHasPropLookup, IHasJsonSource
     {
         protected readonly CodeDataWrapper Wrapper;
-        protected readonly PreWrapObject PreWrap;
+        protected readonly IPreWrap PreWrap;
 
         public WrapObjectTyped(PreWrapObject preWrap, CodeDataWrapper wrapper) : base(preWrap.GetContents())
         {
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Data.Typed
             (e, k) => e.PreWrap.ContainsKey(k),
             (e, k) =>
             {
-                var child = e.PreWrap.TryGet(k);
+                var child = e.PreWrap.TryGetWrap(k);
                 if (!child.Found || child.Result == null) return null;
                 if (child.Result is WrapObjectTyped typed) return typed;
                 // Note: arrays have never been supported, so the following won't work
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Data.Typed
             => HasKeysHelper.IsEmpty(this, name, noParamOrder, default /*blankIs*/);
 
         public bool IsNotEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default)
-            => HasKeysHelper.IsFilled(this, name, noParamOrder, default /*blankIs*/);
+            => HasKeysHelper.IsNotEmpty(this, name, noParamOrder, default /*blankIs*/);
 
 
 
@@ -65,21 +65,21 @@ namespace ToSic.Sxc.Data.Typed
         object ITyped.Get(string name, string noParamOrder, bool? required)
         {
             Protect(noParamOrder, nameof(required));
-            return PreWrap.TryGet(name, true).Result;
+            return PreWrap.TryGetWrap(name, true).Result;
         }
 
         TValue ITyped.Get<TValue>(string name, string noParamOrder, TValue fallback, bool? required)
-            => PreWrap.TryGet(name, noParamOrder, fallback, required: required);
+            => PreWrap.TryGetTyped(name, noParamOrder, fallback, required: required);
 
         bool ITyped.Bool(string name, string noParamOrder, bool fallback, bool? required)
-            => PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         DateTime ITyped.DateTime(string name, string noParamOrder, DateTime fallback, bool? required)
-            => PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         string ITyped.String(string name, string noParamOrder, string fallback, bool? required, object scrubHtml)
         {
-            var value = PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            var value = PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
             return TypedItemHelpers.MaybeScrub(value, scrubHtml, () => Wrapper.Cdf.Value.Services.Scrub);
 //#pragma warning disable CS0618
 //            return scrubHtml ? Tags.Strip(value) : value;
@@ -87,30 +87,30 @@ namespace ToSic.Sxc.Data.Typed
         }
 
         int ITyped.Int(string name, string noParamOrder, int fallback, bool? required)
-            => PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         long ITyped.Long(string name, string noParamOrder, long fallback, bool? required)
-            => PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         float ITyped.Float(string name, string noParamOrder, float fallback, bool? required)
-            => PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         decimal ITyped.Decimal(string name, string noParamOrder, decimal fallback, bool? required)
-            => PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         double ITyped.Double(string name, string noParamOrder, double fallback, bool? required)
-            => PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+            => PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
         string ITyped.Url(string name, string noParamOrder, string fallback, bool? required)
         {
-            var url = PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback, required: required);
+            var url = PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback, required: required);
             return Tags.SafeUrl(url).ToString();
         }
 
         IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback, bool? required)
         {
             Protect(noParamOrder, nameof(fallback));
-            var value = PreWrap.TryGet(name, false).Result;
+            var value = PreWrap.TryGetWrap(name, false).Result;
             var strValue = Wrapper.ConvertForCode.ForCode(value, fallback: fallback);
             return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
         }

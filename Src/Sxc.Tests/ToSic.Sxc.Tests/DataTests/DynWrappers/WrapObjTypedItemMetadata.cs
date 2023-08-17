@@ -9,7 +9,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.DataTests.DynWrappers
 {
     [TestClass]
-    public class WrapObjTypedItemMetadata : DynWrapperTestBase
+    public class WrapObjTypedItemMetadata : DynAndTypedTestsBase
     {
         private class TestDataMd1
         {
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
                 Description = "MD Description"
             };
         }
-        private ITypedItem ItemMd1 => ItemFromObject(new TestDataMd1());
+        private ITypedItem ItemMd1 => Obj2Item(new TestDataMd1());
 
         [TestMethod] public void MetadataHasValue() => IsNotNull(ItemMd1.TestMetadata());
         [TestMethod] public void MetadataCount1() => AreEqual(1, ((ItemMd1.TestMetadata() as IHasMetadata).Metadata as IEnumerable<IEntity>).Count());
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             };
 
         }
-        private ITypedItem ItemMd3 => ItemFromObject(new TestDataMd3());
+        private ITypedItem ItemMd3 => Obj2Item(new TestDataMd3());
         [TestMethod] public void Metadata3HasValue() => IsNotNull(ItemMd3.TestMetadata());
         [TestMethod] public void Metadata3Count3() => AreEqual(3, ((ItemMd3.TestMetadata() as IHasMetadata).Metadata /*as IEnumerable<IDynamicEntity>*/).Count());
         [TestMethod] public void Metadata3Description() => AreEqual("MD3 Description", ItemMd3.TestMetadata().Get<string>("Description"));

@@ -4,19 +4,19 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.DataTests.DynJson
 {
     [TestClass]
-    public class DynJsonMixTests: DynJsonTestBase
+    public class DynJsonMixTests: DynAndTypedTestsBase
     {
         [TestMethod]
         public void ObjectWithStringProperty()
         {
-            var test = AnonToJsonToDyn( new { FirstName = "test" });
+            var test = DynJsonAndOriginal( new { FirstName = "test" });
             AreEqual<string>("test", test.Dyn.FirstName);
         }
 
         [TestMethod]
         public void ArrayOfObjectsWithStringProperty()
         {
-            var test = AnonToJsonToDyn(new object[]
+            var test = DynJsonAndOriginal(new object[]
             {
                 new { FirstName = "test" }, 
                 new { FirstName = "fn2" }
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
         [TestMethod]
         public void ObjectWithArrayPropertyOfObjectsWithStringProperty()
         {
-            var test = AnonToJsonToDyn(new
+            var test = DynJsonAndOriginal(new
             {
                 a = new object[]
                 {
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
         [TestMethod]
         public void ObjectWithArrayPropertyWithObjectWithStringArrayProperty()
         {
-            var test = AnonToJsonToDyn(new
+            var test = DynJsonAndOriginal(new
             {
                 a = new object[]
                 {
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
         [TestMethod]
         public void Gps()
         {
-            var test = AnonToJsonToDyn(new { Lat = 43.508075, Long = 16.4665157 });
+            var test = DynJsonAndOriginal(new { Lat = 43.508075, Long = 16.4665157 });
             AreEqual<double>(43.508075, test.Dyn.Lat);
             AreEqual<double>(16.4665157, test.Dyn.Long);
         }

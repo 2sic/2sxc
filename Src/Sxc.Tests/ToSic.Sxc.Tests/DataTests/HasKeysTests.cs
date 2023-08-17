@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Tests.DataTests
     {
         [TestMethod]
         public void IsFilledNull() 
-            => AreEqual(false, HasKeysHelper.IsFilled(null, blankIs: null));
+            => AreEqual(false, HasKeysHelper.IsNotEmpty(null, blankIs: null));
 
         [TestMethod]
         public void IsEmptyNull() 
@@ -32,17 +32,17 @@ namespace ToSic.Sxc.Tests.DataTests
         [TestMethod]
         [DynamicData(nameof(BlankStrings))]
         public void IsFilled_StringsBlank_BlankIsDefault(string value, string testName = default) 
-            => AreEqual(false, HasKeysHelper.IsFilled(value, blankIs: null), testName ?? value + " blankIs: null");
+            => AreEqual(false, HasKeysHelper.IsNotEmpty(value, blankIs: null), testName ?? value + " blankIs: null");
 
         [TestMethod]
         [DynamicData(nameof(BlankStrings))]
         public void IsFilled_StringsBlank_BlankIsFalse(string value, string testName = default) 
-            => AreEqual(false, HasKeysHelper.IsFilled(value, blankIs: false), testName ?? value + " blankIs: false");
+            => AreEqual(false, HasKeysHelper.IsNotEmpty(value, blankIs: false), testName ?? value + " blankIs: false");
 
         [TestMethod]
         [DynamicData(nameof(BlankStrings))]
         public void IsFilled_StringsBlank_BlankIsTrue(string value, string testName = default) 
-            => AreEqual(true, HasKeysHelper.IsFilled(value, blankIs: true), testName ?? value + " blankIs: true");
+            => AreEqual(true, HasKeysHelper.IsNotEmpty(value, blankIs: true), testName ?? value + " blankIs: true");
         
         [TestMethod]
         [DynamicData(nameof(BlankStrings))]
@@ -74,17 +74,17 @@ namespace ToSic.Sxc.Tests.DataTests
         [TestMethod]
         [DynamicData(nameof(SimpleData))]
         public void IsFilled_SimpleData_BlankIsDefault(object value, string testName = default) 
-            => AreEqual(true, HasKeysHelper.IsFilled(value, blankIs: null), testName ?? value + " blankIs: null");
+            => AreEqual(true, HasKeysHelper.IsNotEmpty(value, blankIs: null), testName ?? value + " blankIs: null");
 
         [TestMethod]
         [DynamicData(nameof(SimpleData))]
         public void IsFilled_SimpleData_BlankIsFalse(object value, string testName = default) 
-            => AreEqual(true, HasKeysHelper.IsFilled(value, blankIs: false), testName ?? value + " blankIs: false");
+            => AreEqual(true, HasKeysHelper.IsNotEmpty(value, blankIs: false), testName ?? value + " blankIs: false");
 
         [TestMethod]
         [DynamicData(nameof(SimpleData))]
         public void IsFilled_SimpleData_BlankIsTrue(object value, string testName = default) 
-            => AreEqual(true, HasKeysHelper.IsFilled(value, blankIs: true), testName ?? value + " blankIs: true");
+            => AreEqual(true, HasKeysHelper.IsNotEmpty(value, blankIs: true), testName ?? value + " blankIs: true");
         
 
         [TestMethod]
@@ -92,9 +92,9 @@ namespace ToSic.Sxc.Tests.DataTests
         {
             var value = new object();
             var testName = "object";
-            AreEqual(true, HasKeysHelper.IsFilled(value, blankIs: null), testName ?? value + " blankIs: null");
-            AreEqual(true, HasKeysHelper.IsFilled(value, blankIs: false), testName ?? value + " blankIs: false");
-            AreEqual(true, HasKeysHelper.IsFilled(value, blankIs: true), testName ?? value + " blankIs: true");
+            AreEqual(true, HasKeysHelper.IsNotEmpty(value, blankIs: null), testName ?? value + " blankIs: null");
+            AreEqual(true, HasKeysHelper.IsNotEmpty(value, blankIs: false), testName ?? value + " blankIs: false");
+            AreEqual(true, HasKeysHelper.IsNotEmpty(value, blankIs: true), testName ?? value + " blankIs: true");
         }
 
         [TestMethod]
@@ -102,9 +102,9 @@ namespace ToSic.Sxc.Tests.DataTests
         {
             var value = new List<string>();
             var testName = "object";
-            AreEqual(false, HasKeysHelper.IsFilled(value, blankIs: null), testName ?? value + " blankIs: null");
-            AreEqual(false, HasKeysHelper.IsFilled(value, blankIs: false), testName ?? value + " blankIs: false");
-            AreEqual(false, HasKeysHelper.IsFilled(value, blankIs: true), testName ?? value + " blankIs: true");
+            AreEqual(false, HasKeysHelper.IsNotEmpty(value, blankIs: null), testName ?? value + " blankIs: null");
+            AreEqual(false, HasKeysHelper.IsNotEmpty(value, blankIs: false), testName ?? value + " blankIs: false");
+            AreEqual(false, HasKeysHelper.IsNotEmpty(value, blankIs: true), testName ?? value + " blankIs: true");
         }
 
         [TestMethod]
@@ -112,9 +112,9 @@ namespace ToSic.Sxc.Tests.DataTests
         {
             var value = new List<string> { "hello" };
             var testName = "object";
-            AreEqual(true, HasKeysHelper.IsFilled(value, blankIs: null), testName ?? value + " blankIs: null");
-            AreEqual(true, HasKeysHelper.IsFilled(value, blankIs: false), testName ?? value + " blankIs: false");
-            AreEqual(true, HasKeysHelper.IsFilled(value, blankIs: true), testName ?? value + " blankIs: true");
+            AreEqual(true, HasKeysHelper.IsNotEmpty(value, blankIs: null), testName ?? value + " blankIs: null");
+            AreEqual(true, HasKeysHelper.IsNotEmpty(value, blankIs: false), testName ?? value + " blankIs: false");
+            AreEqual(true, HasKeysHelper.IsNotEmpty(value, blankIs: true), testName ?? value + " blankIs: true");
         }
     }
 }

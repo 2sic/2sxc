@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Data.Typed
         }
 
 
-        bool ITypedItem.IsDemoItem => PreWrap.TryGet(nameof(ITypedItem.IsDemoItem), noParamOrder: Protector, fallback: false, required: false);
+        bool ITypedItem.IsDemoItem => PreWrap.TryGetTyped(nameof(ITypedItem.IsDemoItem), noParamOrder: Protector, fallback: false, required: false);
 
         IHtmlTag ITypedItem.Html(string name, string noParamOrder, object container, bool? toolbar,
             object imageSettings, bool? required, bool debug
@@ -44,11 +44,11 @@ namespace ToSic.Sxc.Data.Typed
             imgAltFallback: imgAltFallback, imgClass: imgClass, recipe: recipe);
 
 
-        public int Id => PreWrap.TryGet(nameof(Id), noParamOrder: Protector, fallback: 0, required: false);
+        public int Id => PreWrap.TryGetTyped(nameof(Id), noParamOrder: Protector, fallback: 0, required: false);
 
-        public Guid Guid => PreWrap.TryGet(nameof(Guid), noParamOrder: Protector, fallback: Guid.Empty, required: false);
+        public Guid Guid => PreWrap.TryGetTyped(nameof(Guid), noParamOrder: Protector, fallback: Guid.Empty, required: false);
 
-        public string Title => _title.Get(() => PreWrap.TryGet<string>(nameof(ITypedItem.Title), noParamOrder: Protector, fallback: null, required: false));
+        public string Title => _title.Get(() => PreWrap.TryGetTyped<string>(nameof(ITypedItem.Title), noParamOrder: Protector, fallback: null, required: false));
         private readonly GetOnce<string> _title = new GetOnce<string>();
 
         #region Properties which return null or empty
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Data.Typed
         public IEnumerable<ITypedItem> Children(string field, string noParamOrder, string type, bool? required)
         {
             var blank = Enumerable.Empty<ITypedItem>();
-            var r = PreWrap.TryGet(field);
+            var r = PreWrap.TryGetWrap(field);
             if (!r.Found || r.Raw == null || r.Raw.GetType().IsValueType) return blank;
             if (!(r.Raw is IEnumerable re))
             {
@@ -106,7 +106,7 @@ namespace ToSic.Sxc.Data.Typed
 
         private ITypedItem CreateItemFromProperty(string name)
         {
-            var result = PreWrap.TryGet(name);
+            var result = PreWrap.TryGetWrap(name);
             if (!result.Found || result.Raw == null || result.Raw.GetType().IsValueType)
                 return null;
             var first = result.Raw is IEnumerable re ? re.Cast<object>().FirstOrDefault() : result.Raw;
@@ -145,7 +145,7 @@ namespace ToSic.Sxc.Data.Typed
 
         #region Not Supported Properties such as Entity, Type, Child, Folder, Presentation, Metadata
 
-        IMetadata ITypedItem.Metadata => _metadata ?? (_metadata = BuildMetadata(PreWrap.TryGet(nameof(Metadata)).Raw));
+        IMetadata ITypedItem.Metadata => _metadata ?? (_metadata = BuildMetadata(PreWrap.TryGetWrap(nameof(Metadata)).Raw));
         private IMetadata _metadata;
 
         private IMetadata BuildMetadata(object raw)
@@ -185,7 +185,7 @@ namespace ToSic.Sxc.Data.Typed
         /// </summary>
         string ITyped.Url(string name, string noParamOrder, string fallback, bool? required)
         {
-            var url = PreWrap.TryGet(name, noParamOrder: noParamOrder, fallback, required: required);
+            var url = PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback, required: required);
             if (url == null) return null;
 
             // ReSharper disable once ConvertTypeCheckPatternToNullCheck

@@ -7,7 +7,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.DataTests.DynWrappers
 {
     [TestClass]
-    public class WrapObjTypedItemParents : DynWrapperTestBase
+    public class WrapObjTypedItemParents : DynAndTypedTestsBase
     {
         private class TestTag
         {
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             public TestTag[] Parents => TestTagList;
         }
         private static readonly TestDataParents DataParent = new TestDataParents();
-        private ITypedItem Item => ItemFromObject(DataParent);
+        private ITypedItem Item => Obj2Item(DataParent);
 
         private IEnumerable<ITypedItem> TagsFlat => Item.Parents();
         private IEnumerable<ITypedItem> TagsFlatInField(string field) => Item.Parents(field: field);

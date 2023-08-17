@@ -9,9 +9,9 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.DataTests.DynWrappers
 {
     [TestClass]
-    public class DynFromObjectBasic: DynWrapperTestBase
+    public class DynFromObjectBasic: DynAndTypedTestsBase
     {
-        private class TestData
+        public class TestData
         {
             public string Name => "2sic";
             public string Description => "Some description";
@@ -21,14 +21,14 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             public DateTime Birthday { get; } = new DateTime(2012, 5, 4);
             public bool Truthy => true;
         }
-        private static TestData Data = new TestData();
+        public static TestData Data = new TestData();
 
         [TestMethod]
         public void SourceAnonymous()
         {
             var anon = new { Data.Name, Data.Description, Data.Founded, Data.Birthday, Data.Truthy };
-            var typed = TypedFromObject(anon);
-            dynamic dynAnon = DynFromObject(anon, false, false);
+            var typed = Obj2Typed(anon);
+            dynamic dynAnon = WrapObjFromObject(anon, false, false);
 
             IsNull(dynAnon.NotExisting);
             AreEqual(anon.Name, dynAnon.Name);
@@ -46,8 +46,8 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
         public void SourceTyped()
         {
             var data = new TestData();
-            var typed = TypedFromObject(data);
-            dynamic dynAnon = DynFromObject(data, false, false);
+            var typed = Obj2Typed(data);
+            dynamic dynAnon = WrapObjFromObject(data, false, false);
 
             IsNull(dynAnon.NotExisting);
             AreEqual(data.Name, dynAnon.Name);
@@ -65,45 +65,31 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
         }
 
         [TestMethod]
-        public void RequiredDynDefaultExisting() => IsTrue(AsDynamic(Data).Truthy);
+        public void RequiredDynDefaultExisting() => IsTrue(DynFromWrapFromObject(Data).Truthy);
 
         [TestMethod]
-        public void RequiredDynDefaultNonExisting() => IsNull(AsDynamic(Data).TruthyXyz);
+        public void RequiredDynDefaultNonExisting() => IsNull(DynFromWrapFromObject(Data).TruthyXyz);
 
         [TestMethod]
-        public void RequiredTypedDefaultExisting() => IsTrue(TypedFromObject(Data).Bool(nameof(TestData.Truthy)));
+        public void RequiredTypedDefaultExisting() => IsTrue(Obj2Typed(Data).Bool(nameof(TestData.Truthy)));
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void RequiredTypedDefaultNonExisting() =>
-            TypedFromObject(Data).Bool("FakeName");
+            Obj2Typed(Data).Bool("FakeName");
 
         [TestMethod]
         public void RequiredTypedDefaultNonExistingWithParam() =>
-            IsFalse(TypedFromObject(Data).Bool("FakeName", required: false));
+            IsFalse(Obj2Typed(Data).Bool("FakeName", required: false));
 
         [TestMethod]
         public void RequiredTypedDefaultNonExistingWithParamFallback() =>
-            IsTrue(TypedFromObject(Data).Bool("FakeName", fallback: true, required: false));
+            IsTrue(Obj2Typed(Data).Bool("FakeName", fallback: true, required: false));
 
         [TestMethod]
         public void RequiredTypedNonStrictNonExistingWithParam() =>
-            IsFalse(TypedFromObject(Data, WrapperSettings.Typed(true, true, false)).Bool("FakeName"));
+            IsFalse(Obj2Typed(Data, WrapperSettings.Typed(true, true, false)).Bool("FakeName"));
 
-        [TestMethod]
-        public void JsonSerialization()
-        {
-            var anon = new { Data.Name, Data.Description, Data.Founded, Data.Birthday, Data.Truthy };
-            var typed = TypedFromObject(anon);
-            dynamic dynAnon = DynFromObject(anon, false, false);
-
-            var jsonTyped = Serialize(typed);
-            var jsonAnon = Serialize(anon);
-            var jsonDyn = Serialize(dynAnon);
-
-            AreEqual(jsonTyped, jsonDyn);
-            AreEqual(jsonTyped, jsonAnon);
-        }
 
 
 
@@ -126,7 +112,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
                     }
                 }
             };
-            var typed = TypedFromObject(anon);
+            var typed = Obj2Typed(anon);
             IsTrue(typed.ContainsKey("Key1"));
             IsFalse(typed.ContainsKey("Nonexisting"));
             IsTrue(typed.Keys().Any());
@@ -175,7 +161,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
                         }
                     }
                 };
-                var typed = TypedFromObject(anon);
+                var typed = Obj2Typed(anon);
                 return typed;
             }
         }

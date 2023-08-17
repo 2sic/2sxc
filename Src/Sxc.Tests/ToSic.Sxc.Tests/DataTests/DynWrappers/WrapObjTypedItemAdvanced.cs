@@ -5,7 +5,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.DataTests.DynWrappers
 {
     [TestClass]
-    public class WrapObjTypedItemAdvanced : DynWrapperTestBase
+    public class WrapObjTypedItemAdvanced : DynAndTypedTestsBase
     {
         private class TestData
         {
@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
         }
         private static readonly TestData Data = new TestData();
 
-        private ITypedItem Item => ItemFromObject(Data);
+        private ITypedItem Item => Obj2Item(Data);
         private IField Field => Item.Field("ForField");
 
         [TestMethod] public void FieldExists() => IsNotNull(Field);

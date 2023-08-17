@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Data
         public bool IsFilled(string name, string noParamOrder, bool? isBlank)
         {
             var result = Get(name, noParamOrder, required: false);
-            return HasKeysHelper.IsFilled(result, isBlank);
+            return HasKeysHelper.IsNotEmpty(result, isBlank);
         }
 
 

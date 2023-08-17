@@ -12,20 +12,20 @@ namespace ToSic.Sxc.Data
             return IsEmpty(value, blankIs);
         }
 
-        public static bool IsFilled(ITyped item, string name, string noParamOrder, bool? blankIs)
+        public static bool IsNotEmpty(ITyped item, string name, string noParamOrder, bool? blankIs)
         {
             var value = item.Get(name, noParamOrder, required: false);
-            return IsFilled(value, blankIs);
+            return IsNotEmpty(value, blankIs);
         }
 
         public static bool IsEmpty(object value, bool? blankIs)
         {
             // Since we'll reverse the final result, we must ensure that blankIs is pre-reversed as well
             blankIs = !(blankIs ?? true);
-            return !IsFilled(value, blankIs);
+            return !IsNotEmpty(value, blankIs);
         }
 
-        public static bool IsFilled(object value, bool? blankIs)
+        public static bool IsNotEmpty(object value, bool? blankIs)
         {
             if (value == null) return false;
 

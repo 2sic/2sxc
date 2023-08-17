@@ -7,9 +7,9 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.DataTests.DynJson
 {
     [TestClass]
-    public class DynJsonArrays : DynJsonTestBase
+    public class DynJsonArrays : DynAndTypedTestsBase
     {
-        private (dynamic Dyn, string Json, string[] Original) StringArrayPrepare() => AnonToJsonToDyn(new[]
+        private (dynamic Dyn, string Json, string[] Original) StringArrayPrepare() => DynJsonAndOriginal(new[]
         {
             "val1",
             "val2",
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
             IsNull(test.Dyn.NonExistingProperty);
         }
 
-        private (dynamic Dyn, string Json, string[][] Original) StringArray2dPrepare() => AnonToJsonToDyn(new[]
+        private (dynamic Dyn, string Json, string[][] Original) StringArray2dPrepare() => DynJsonAndOriginal(new[]
         {
             new[] {"0-0", "0-1", "0-2"},
             new[] {"1-0", "1-1"},
@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
             public int Age;
         }
 
-        private (dynamic Dyn, string Json, MiniObj[] Original) ObjectArrayPrepare() => AnonToJsonToDyn(new[]
+        private (dynamic Dyn, string Json, MiniObj[] Original) ObjectArrayPrepare() => DynJsonAndOriginal(new[]
         {
             new MiniObj { Name = "T1", Age = 11 },
             new MiniObj { Name = "t2", Age = 22 },
@@ -110,14 +110,14 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
         [TestMethod]
         public void MixedArrays2D()
         {
-            var (dyn, json, original) = AnonToJsonToDyn(new object[]
+            var (dyn, json, original) = DynJsonAndOriginal(new object[]
             {
                 new string[] {"a1"},
                 new object[] { 1, "b2"},
                 new object[] { true, 2, "c3"}
             });
 
-            var expectedType = new DynamicJacketList(new JsonArray(), Factory).GetType();
+            var expectedType = new DynamicJacketList(new JsonArray(), Wrapper).GetType();
 
             IsTrue(dyn.IsList);
 
@@ -136,7 +136,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
                 "hello",
                 "goodbye"
             };
-            var typed = AsDynamic(anon) as ITyped;
+            var typed = Json2Obj2Dyn(anon) as ITyped;
             IsTrue(typed.ContainsKey("1"));
             IsFalse(typed.ContainsKey("3"));
             IsTrue(typed.Keys().Any());

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Data.Wrapper;
-using static System.StringComparison;
 
 namespace ToSic.Sxc.Data
 {
@@ -17,8 +14,9 @@ namespace ToSic.Sxc.Data
     /// To check if something is an array or an object, use "IsArray"
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
-    public abstract partial class DynamicJacketBase: DynamicObject, IReadOnlyList<object>, IPropertyLookup, ISxcDynamicObject, ICanGetByName
+    public abstract partial class DynamicJacketBase: DynamicObject, IReadOnlyList<object>, /*IPropertyLookup,*/ ISxcDynamicObject, ICanGetByName, IHasPropLookup
     {
+        #region Constructor / Setup
 
         protected DynamicJacketBase(CodeDataWrapper wrapper)
         {
@@ -27,6 +25,14 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         protected readonly CodeDataWrapper Wrapper;
+
+        [PrivateApi]
+        internal abstract IPreWrap PreWrap { get; }
+
+        public IPropertyLookup PropertyLookup => PreWrap;
+
+
+        #endregion
 
         /// <summary>
         /// Check if it's an array.
@@ -48,7 +54,7 @@ namespace ToSic.Sxc.Data
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <inheritdoc />
-        public dynamic Get(string name) => FindValueOrNull(name, InvariantCultureIgnoreCase, null);
+        public dynamic Get(string name) => PreWrap.TryGetWrap(name).Result;
 
         /// <summary>
         /// Count array items or object properties
@@ -71,24 +77,20 @@ namespace ToSic.Sxc.Data
         /// <param name="result">always null, unless overriden</param>
         /// <returns>always returns true, to avoid errors</returns>
         [PrivateApi]
-        public override bool TryGetMember(GetMemberBinder binder, out object result)
-        {
-            result = null;
-            return true;
-        }
+        public abstract override bool TryGetMember(GetMemberBinder binder, out object result);
 
-        /// <inheritdoc />
-        [PrivateApi("Internal")]
-        public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
-        {
-            path = path.KeepOrNew().Add("DynJacket", specs.Field);
-            var result = FindValueOrNull(specs.Field, InvariantCultureIgnoreCase, specs.LogOrNull);
-            return new PropReqResult(result: result, fieldType: Attributes.FieldIsDynamic, path: path) { Source = this, Name = "dynamic" };
-        }
+        ///// <inheritdoc />
+        //[PrivateApi("Internal")]
+        //public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
+        //{
+        //    path = path.KeepOrNew().Add("DynJacket", specs.Field);
+        //    var result = PreWrap.TryGetWrap(specs.Field).Result;
+        //    return new PropReqResult(result: result, fieldType: Attributes.FieldIsDynamic, path: path) { Source = this, Name = "dynamic" };
+        //}
 
-        public abstract List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path);
+        //public abstract List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path);
 
-        protected abstract object FindValueOrNull(string name, StringComparison comparison, ILog parentLogOrNull);
+        //protected abstract object FindValueOrNull(string name, ILog parentLogOrNull = default);
 
     }
 }

@@ -1,26 +1,14 @@
 ﻿using ToSic.Eav.Serialization;
-using ToSic.Sxc.Data.Wrapper;
 
 namespace ToSic.Sxc.Tests.DataTests.DynJson
 {
-    public abstract class DynJsonTestBase: TestBaseSxcDb
+    public abstract class DynJsonTestBase: DynAndTypedTestsBase
     {
-        protected DynJsonTestBase()
-        {
-            Factory = GetService<CodeDataWrapper>();
-        }
-        protected CodeDataWrapper Factory;
+        //public dynamic DynFromJson(string jsonString) => Factory.FromJson(jsonString);
 
-        public dynamic AsDynamic(string jsonString) => Factory.FromJson(jsonString);
+        //public dynamic DynFromJsonFromObject(object obj) => DynFromJson(JsonSerialize(obj));
 
-        public dynamic AsDynamic(object obj) => AsDynamic(AsJson(obj));
+        //public string JsonSerialize(object obj) => System.Text.Json.JsonSerializer.Serialize(obj, JsonOptions.UnsafeJsonWithoutEncodingHtml);
 
-        public string AsJson(object obj) => System.Text.Json.JsonSerializer.Serialize(obj, JsonOptions.UnsafeJsonWithoutEncodingHtml);
-
-        public (dynamic Dyn, string Json, T Original) AnonToJsonToDyn<T>(T original)
-        {
-            var json = AsJson(original);
-            return (AsDynamic(json), json, original);
-        }
     }
 }

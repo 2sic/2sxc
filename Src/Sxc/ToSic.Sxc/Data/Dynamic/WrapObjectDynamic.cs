@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Data
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            result = PreWrap.TryGet(binder.Name, true).Result;
+            result = PreWrap.TryGetWrap(binder.Name, true).Result;
             return true;
         }
 
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Data
 
         object IHasJsonSource.JsonSource => PreWrap.GetContents();
 
-        public dynamic Get(string name) => PreWrap.TryGet(name, true).Result;
+        public dynamic Get(string name) => PreWrap.TryGetWrap(name, true).Result;
 
         [PrivateApi]
         public List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) => PreWrap._Dump(specs, path);

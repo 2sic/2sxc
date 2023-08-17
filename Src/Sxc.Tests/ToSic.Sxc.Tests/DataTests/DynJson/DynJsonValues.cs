@@ -8,7 +8,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.DataTests.DynJson
 {
     [TestClass]
-    public class DynJsonValues : DynJsonTestBase
+    public class DynJsonValues : DynAndTypedTestsBase
     {
         private bool HasKey(object dyn, string key)
         {
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
         [TestMethod]
         public void JsonBoolProperty()
         {
-            var (dyn, _, _) = AnonToJsonToDyn(new
+            var (dyn, _, _) = DynJsonAndOriginal(new
             {
                 TrueBoolType = true,
                 FalseBoolType = false
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
         [TestMethod]
         public void JsonNumberProperty()
         {
-            var (dyn, _, original) = AnonToJsonToDyn(new 
+            var (dyn, _, original) = DynJsonAndOriginal(new 
             {
                 IntType = 32,
                 BigIntType = 9007199254740991,
@@ -52,22 +52,22 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
         [TestMethod]
         public void ExpectCountOfPropertiesOnNonArray()
         {
-            var test = AnonToJsonToDyn(new { Name = "Test" });
+            var test = DynJsonAndOriginal(new { Name = "Test" });
             AreEqual(1, test.Dyn.Count);
 
-            var test2 = AnonToJsonToDyn(new { Name = "Test", Age = 3, Birthday = new DateTime(2022, 1, 1) });
+            var test2 = DynJsonAndOriginal(new { Name = "Test", Age = 3, Birthday = new DateTime(2022, 1, 1) });
             AreEqual(3, test2.Dyn.Count);
         }
 
         [TestMethod]
         public void EnumerateProperties()
         {
-            var test = AnonToJsonToDyn(new { Name = "Test" });
+            var test = DynJsonAndOriginal(new { Name = "Test" });
             var testList = (test.Dyn as IEnumerable<object>).ToList();
             AreEqual(1, testList.Count);
             AreEqual("Name", testList.First().ToString());
 
-            var test2 = AnonToJsonToDyn(new { Name = "Test", Age = 3, Birthday = new DateTime(2022, 1, 1) });
+            var test2 = DynJsonAndOriginal(new { Name = "Test", Age = 3, Birthday = new DateTime(2022, 1, 1) });
             var testList2 = (test2.Dyn as IEnumerable<object>).ToList();
             AreEqual(3, testList2.Count);
             IsTrue(testList2.Contains("Name"));
@@ -82,8 +82,8 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
                 ""StringType"": ""stringValue"", 
                 ""GuidType"": ""00000000-0000-0000-0000-000000000000"",
             }";
-            AreEqual<string>("stringValue", AsDynamic(jsonString).StringType);
-            AreEqual<string>("00000000-0000-0000-0000-000000000000", AsDynamic(jsonString).GuidType);
+            AreEqual<string>("stringValue", Json2Dyn(jsonString).StringType);
+            AreEqual<string>("00000000-0000-0000-0000-000000000000", Json2Dyn(jsonString).GuidType);
         }
 
         [TestMethod]
@@ -93,8 +93,8 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
                 ""DateTimeType"": ""2022-11-09T23:00:00.000"", 
                 ""ZuluTimeType"": ""2021-04-15T21:01:00.000Z"", 
             }";
-            AreEqual<DateTime>(new DateTime(2022,11,9, 23,0,0), AsDynamic(jsonString).DateTimeType);
-            AreEqual<DateTime>(new DateTime(2021, 4, 15, 21, 1, 0, DateTimeKind.Utc), AsDynamic(jsonString).ZuluTimeType);
+            AreEqual<DateTime>(new DateTime(2022,11,9, 23,0,0), Json2Dyn(jsonString).DateTimeType);
+            AreEqual<DateTime>(new DateTime(2021, 4, 15, 21, 1, 0, DateTimeKind.Utc), Json2Dyn(jsonString).ZuluTimeType);
         }
 
         [TestMethod]
@@ -104,9 +104,9 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
                 ""NullType"": null, 
                 ""UndefinedType"": undefined, 
             }";
-            IsNull(AsDynamic(jsonString).NullType);
-            IsNull(AsDynamic(jsonString).UndefinedType);
-            IsNull(AsDynamic(jsonString).NonExistingProperty);
+            IsNull(Json2Dyn(jsonString).NullType);
+            IsNull(Json2Dyn(jsonString).UndefinedType);
+            IsNull(Json2Dyn(jsonString).NonExistingProperty);
         }
 
         [TestMethod]
@@ -117,7 +117,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
                 Key1 = "hello",
                 Key2 = "goodbye"
             };
-            var typed = AsDynamic(anon) as ITyped;
+            var typed = Json2Obj2Dyn(anon) as ITyped;
             IsTrue(typed.ContainsKey("Key1"));
             IsFalse(typed.ContainsKey("Nonexisting"));
             IsTrue(typed.Keys().Any());

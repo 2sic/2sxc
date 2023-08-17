@@ -1,11 +1,11 @@
 ﻿using static ToSic.Eav.Parameters;
 
-namespace ToSic.Sxc.Data
+namespace ToSic.Sxc.Data.Docs
 {
     /// <summary>
     /// This is minor cross-concerns aspect of Dynamic-Entity-like objects
     /// </summary>
-    public interface IDynamicEntityDocs
+    public abstract class DynamicEntityDocs
     {
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */
         /// <summary>
@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="name"></param>
         /// <returns>An object which can be either a string, number, boolean or List&lt;IDynamicEntity&gt;, depending on the field type. Will return null if the field was not found. </returns>
-        dynamic Get(string name);
+        public abstract dynamic Get(string name);
 
 
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */
@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Data
         /// <param name="convertLinks">Optionally turn off if links like file:72 are looked up to a real link. Default is true.</param>
         /// <param name="debug">Set true to see more details in [Insights](xref:NetCode.Debug.Insights.Index) how the value was retrieved.</param>
         /// <returns>a dynamically typed result, can be string, bool, etc.</returns>
-        dynamic Get(string name,
+        public abstract dynamic Get(string name,
             // ReSharper disable once MethodOverloadWithOptionalParameter
             string noParamOrder = Protector,
             string language = null,
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Data
         /// <param name="name">the property name like `Image` - or path like `Author.Name` (new v15)</param>
         /// <returns>The typed value, or the `default` like `null` or `0` if casting isn't possible.</returns>
         /// <remarks>Added in v15</remarks>
-        TValue Get<TValue>(string name);
+        public abstract TValue Get<TValue>(string name);
 
         /// <summary>
         /// Get a value using the name - and cast it to the expected strong type.
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Data
         /// <param name="fallback">the fallback value to provide if not found</param>
         /// <returns>The typed value, or the `default` like `null` or `0` if casting isn't possible.</returns>
         /// <remarks>Added in v15</remarks>
-        TValue Get<TValue>(string name,
+        public abstract TValue Get<TValue>(string name,
             // ReSharper disable once MethodOverloadWithOptionalParameter
             string noParamOrder = Protector,
             TValue fallback = default);

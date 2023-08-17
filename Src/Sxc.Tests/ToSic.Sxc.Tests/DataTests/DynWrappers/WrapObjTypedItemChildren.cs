@@ -7,7 +7,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.DataTests.DynWrappers
 {
     [TestClass]
-    public class WrapObjTypedItemChildren : DynWrapperTestBase
+    public class WrapObjTypedItemChildren : DynAndTypedTestsBase
     {
 
         private class TestData
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             };
         }
         private static readonly TestData Data = new TestData();
-        private ITypedItem Item => ItemFromObject(Data);
+        private ITypedItem Item => Obj2Item(Data);
         private ITypedItem Author() => Item.Child("author");
         private ITypedItem Reader() => Item.Child("readers");
         private IEnumerable<ITypedItem> Readers() => Item.Children("readers");

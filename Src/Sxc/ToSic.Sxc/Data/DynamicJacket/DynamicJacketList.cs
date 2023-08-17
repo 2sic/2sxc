@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Data.Wrapper;
 
 namespace ToSic.Sxc.Data
@@ -19,28 +16,39 @@ namespace ToSic.Sxc.Data
     public class DynamicJacketList : DynamicJacketBase<JsonArray>, IReadOnlyList<object>
     {
         /// <inheritdoc />
-        public DynamicJacketList(JsonArray originalData, CodeDataWrapper wrapper) :base(originalData, wrapper) { }
-
-        [PrivateApi]
-        protected override bool TypedHasImplementation(string name)
+        public DynamicJacketList(JsonArray originalData, CodeDataWrapper wrapper) : base(originalData, wrapper)
         {
-            if (name.IsEmpty() || UnwrappedContents == null) return false;
-            var index = name.ConvertOrFallback<int>(fallback: -1, numeric: true);
-            if (index == -1) return false;
-            return index < UnwrappedContents.Count;
+            PreWrapList = new PreWrapJsonArray(originalData, WrapperSettings.Dyn(true, true), wrapper);
         }
+        private PreWrapJsonArray PreWrapList { get; }
 
-        [PrivateApi]
-        protected override IEnumerable<string> TypedKeysImplementation(string noParamOrder, IEnumerable<string> only) 
-            => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, UnwrappedContents?.Select((p, i) => i.ToString()));
+        internal override IPreWrap PreWrap => PreWrapList;
 
+        #region Basic Jacket Properties
 
         /// <inheritdoc />
         public override bool IsList => true;
 
+        /// <summary>
+        /// Count array items or object properties
+        /// </summary>
+        public override int Count => UnwrappedContents.Count;
+
+        #endregion
+
+
+
         [PrivateApi]
         public override IEnumerator<object> GetEnumerator() 
             => UnwrappedContents.Select(Wrapper.IfJsonGetValueOrJacket).GetEnumerator();
+
+        [PrivateApi]
+        public override bool TryGetMember(GetMemberBinder binder, out object result)
+        {
+            result = null;
+            return true;
+        }
+
 
         /// <summary>
         /// Access the items in this object - but only if the underlying object is an array. 
@@ -49,48 +57,8 @@ namespace ToSic.Sxc.Data
         /// <returns>the item or an error if not found</returns>
         public override object this[int index] => Wrapper.IfJsonGetValueOrJacket(UnwrappedContents[index]);
 
-        [PrivateApi("internal")]
-        public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) 
-            => new List<PropertyDumpItem> { new PropertyDumpItem { Path = "Not supported on DynamicJacket" } };
-
-        /// <summary>
-        /// On a dynamic Jacket List where is no reasonable convention how to find something by name
-        /// since it's not clear which property would be the name-giving property. 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="comparison"></param>
-        /// <param name="parentLogOrNull"></param>
-        /// <returns></returns>
-        protected override object FindValueOrNull(string name, StringComparison comparison, ILog parentLogOrNull)
-        {
-            if (UnwrappedContents == null || !UnwrappedContents.Any())
-                return null;
-
-            var found = UnwrappedContents.FirstOrDefault(p =>
-                {
-                    if (!(p is JsonObject pJObject))
-                        return false;
-
-                    if (HasPropertyWithValue(pJObject, "Name", name, comparison))
-                        return true;
-
-                    if (HasPropertyWithValue(pJObject, "Title", name, comparison))
-                        return true;
-
-                    return false;
-                });
-
-            return Wrapper.IfJsonGetValueOrJacket(found);
-        }
-
-        private bool HasPropertyWithValue(JsonObject obj, string propertyName, string value, StringComparison comparison)
-        {
-            if (obj.TryGetPropertyValue(propertyName, out var propertyValue) && propertyValue is JsonValue jValResult && jValResult.TryGetValue<string>(out var stringValue))
-                return string.Equals(stringValue, value, comparison);
-
-            return false;
-
-        }
-
+        //[PrivateApi("internal")]
+        //public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
+        //    => PreWrapList._Dump(specs, path);
     }
 }

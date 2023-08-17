@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Code
 
         [PrivateApi]
         public bool IsNotEmpty(string name, string noParamOrder = Protector) //, bool? blankIs = default)
-            => HasKeysHelper.IsFilled(Get(name, required: false), default /*blankIs*/);
+            => HasKeysHelper.IsNotEmpty(Get(name, required: false), default /*blankIs*/);
 
         public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default) 
             => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, _paramsDictionary?.Keys);
