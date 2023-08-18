@@ -46,7 +46,8 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
             AreEqual<int>(27, dyn.Int("TopLevelNUMBER"));
             // TODO!!! 
             //AreEqual<string>("test", dyn.Child("OBJECTPROPERTY").Get.stringproperty);
-            //AreEqual<int>(1, dyn.ObjectProperty.ObjectProperty.NumberProperty);
+            AreEqual(1, dyn.Get("ObjectProperty.ObjectProperty.NumberProperty"));
+            AreEqual<int>(1, dyn.Int("ObjectProperty.ObjectProperty.NumberProperty"));
             //AreEqual<bool>(true, dyn.ObjectProperty.ObjectProperty.ObjectProperty.BoolProperty);
         }
 
@@ -76,6 +77,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
             IsInstanceOfType(dyn.Get("ObjectProperty"), expectedType);
             IsNull(dyn.Get("ObjectPropertyNonExisting", required: false));
             IsInstanceOfType((dyn.Get("ObjectProperty") as ITyped).Get("ObjectProperty"), expectedType);
+            IsInstanceOfType(dyn.Get("ObjectProperty.ObjectProperty"), expectedType);
             //IsInstanceOfType(dyn.ObjectProperty.ObjectProperty.ObjectPROPERTY, expectedType);
             // TODO!
             //IsNull(dyn.ObjectProperty.ObjectProperty.ObjectIncorrect);

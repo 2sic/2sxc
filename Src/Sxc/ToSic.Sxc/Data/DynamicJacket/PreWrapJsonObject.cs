@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text.Json.Nodes;
+using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
@@ -39,16 +41,35 @@ namespace ToSic.Sxc.Data
 
         public override TryGetResult TryGetWrap(string name, bool wrapDefault = true)
         {
-            if (UnwrappedContents == null || !UnwrappedContents.Any())
+            if (name.IsEmptyOrWs() || UnwrappedContents == null || !UnwrappedContents.Any())
                 return new TryGetResult(false, null, null);
 
-            var found = UnwrappedContents
-                .FirstOrDefault(p => p.Key.EqualsInsensitive(name));
+            var isPath = name.Contains(PropertyStack.PathSeparator.ToString());
+            if (!isPath)
+                return TryGetFromNode(name, UnwrappedContents);
 
-            return new TryGetResult(false, found.Value, 
-                Wrapper.IfJsonGetValueOrJacket(found.IsNullOrDefault() ? null : found.Value));
+            var pathParts = PropertyStack.SplitPathIntoParts(name);
+            var node = UnwrappedContents;
+            for (var i = 0; i < pathParts.Length; i++)
+            {
+                var part = pathParts[i];
+                var result = TryGetFromNode(part, node);
+                // last one or not found - return a not-found
+                if (i == pathParts.Length -1 || !result.Found) return result;
+                node = result.Raw as JsonObject;
+                if (node == null) return new TryGetResult(false, null, null);
+            }
+            return new TryGetResult(false, null, null);
         }
 
+        private TryGetResult TryGetFromNode(string name, JsonObject node)
+        {
+            var result = node
+                .FirstOrDefault(p => p.Key.EqualsInsensitive(name));
+
+            var found = !result.Equals(default(KeyValuePair<string, JsonNode>));
+            return new TryGetResult(found, result.Value, found ? Wrapper.IfJsonGetValueOrJacket(result.Value) : null);
+        }
 
         #endregion
 
