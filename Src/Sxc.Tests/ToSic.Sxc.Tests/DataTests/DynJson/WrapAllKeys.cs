@@ -8,7 +8,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.DataTests.DynJson
 {
     [TestClass]
-    public class WrapJsonTypedKeys : DynAndTypedTestsBase
+    public class WrapAllKeys : DynAndTypedTestsBase
     {
         public static readonly object BoolDataAnon = new
         {
@@ -110,5 +110,10 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
             => AreEqual(expected, KeysData.ContainsKey(key));
 
 
+        //[TestMethod]
+        //public void ContainsData(bool expected, string key)
+        //{
+        //    // var contains = KeysData.contain
+        //}
     }
 }

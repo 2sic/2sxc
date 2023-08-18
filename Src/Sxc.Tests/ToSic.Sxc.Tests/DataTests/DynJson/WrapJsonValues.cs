@@ -9,14 +9,14 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.DataTests.DynJson
 {
     [TestClass]
-    public class DynJsonValues : DynAndTypedTestsBase
+    public class WrapJsonValues : DynAndTypedTestsBase
     {
-        private dynamic BoolDataDynLoose => _dynBool ?? (_dynBool = Obj2Json2Dyn(WrapJsonTypedKeys.BoolDataAnon));
+        private dynamic BoolDataDynLoose => _dynBool ?? (_dynBool = Obj2Json2Dyn(WrapAllKeys.BoolDataAnon));
         private static object _dynBool;
 
-        private ITyped BoolTestDataStrict => _boolTestDataStrict ?? (_boolTestDataStrict = Obj2Json2TypedStrict(WrapJsonTypedKeys.BoolDataAnon));
+        private ITyped BoolTestDataStrict => _boolTestDataStrict ?? (_boolTestDataStrict = Obj2Json2TypedStrict(WrapAllKeys.BoolDataAnon));
         private static ITyped _boolTestDataStrict;
-        private ITyped BoolTestDataLoose => _boolTestDataLoose ?? (_boolTestDataLoose = Obj2Json2TypedLoose(WrapJsonTypedKeys.BoolDataAnon));
+        private ITyped BoolTestDataLoose => _boolTestDataLoose ?? (_boolTestDataLoose = Obj2Json2TypedLoose(WrapAllKeys.BoolDataAnon));
         private static ITyped _boolTestDataLoose;
 
         [TestMethod]

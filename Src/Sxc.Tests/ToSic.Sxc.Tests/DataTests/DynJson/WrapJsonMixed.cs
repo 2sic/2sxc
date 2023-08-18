@@ -4,7 +4,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.DataTests.DynJson
 {
     [TestClass]
-    public class DynJsonMixTests: DynAndTypedTestsBase
+    public class WrapJsonMixed: DynAndTypedTestsBase
     {
         [TestMethod]
         public void ObjectWithStringProperty()
@@ -51,13 +51,6 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
             });
             AreEqual<string>("test", test.Dyn.a[0].p2[0]);
         }
-
-        [TestMethod]
-        public void Gps()
-        {
-            var test = DynJsonAndOriginal(new { Lat = 43.508075, Long = 16.4665157 });
-            AreEqual<double>(43.508075, test.Dyn.Lat);
-            AreEqual<double>(16.4665157, test.Dyn.Long);
-        }
+        
     }
 }

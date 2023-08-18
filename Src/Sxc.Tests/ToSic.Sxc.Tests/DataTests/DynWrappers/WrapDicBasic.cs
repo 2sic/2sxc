@@ -9,7 +9,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.DataTests.DynWrappers
 {
     [TestClass]
-    public class DynFromDictionaryBasic: TestBaseSxcDb
+    public class WrapDicBasic: TestBaseSxcDb
     {
         private WrapDictionaryDynamic<TKey, TValue> ToDyn<TKey, TValue>(Dictionary<TKey, TValue> dic)
             => GetService<CodeDataWrapper>().FromDictionary(dic);

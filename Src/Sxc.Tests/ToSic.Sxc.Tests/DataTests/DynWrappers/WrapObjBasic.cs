@@ -3,13 +3,12 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Wrapper;
-using static System.Text.Json.JsonSerializer;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.DataTests.DynWrappers
 {
     [TestClass]
-    public class DynFromObjectBasic: DynAndTypedTestsBase
+    public class WrapObjBasic: DynAndTypedTestsBase
     {
         public class TestData
         {
@@ -36,10 +35,10 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             AreEqual(anon.Birthday, dynAnon.Birthday, "dates should be the same");
             AreEqual(anon.Truthy, dynAnon.truthy);
 
-            IsTrue(typed.ContainsKey("Name"));
-            IsTrue(typed.ContainsKey("NAME"));
-            IsTrue(typed.ContainsKey("Description"));
-            IsFalse(typed.ContainsKey("NonexistingField"));
+            IsTrue(typed.TestContainsKey("Name"));
+            IsTrue(typed.TestContainsKey("NAME"));
+            IsTrue(typed.TestContainsKey("Description"));
+            IsFalse(typed.TestContainsKey("NonexistingField"));
         }
 
         [TestMethod]
@@ -58,10 +57,10 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             AreEqual(data.Birthday, dynAnon.Birthday, "dates should be the same");
             AreEqual(data.Truthy, dynAnon.truthy);
 
-            IsTrue(typed.ContainsKey("Name"));
-            IsTrue(typed.ContainsKey("NAME"));
-            IsTrue(typed.ContainsKey("Description"));
-            IsFalse(typed.ContainsKey("NonexistingField"));
+            IsTrue(typed.TestContainsKey("Name"));
+            IsTrue(typed.TestContainsKey("NAME"));
+            IsTrue(typed.TestContainsKey("Description"));
+            IsFalse(typed.TestContainsKey("NonexistingField"));
         }
 
         [TestMethod]
@@ -113,24 +112,24 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
                 }
             };
             var typed = Obj2Typed(anon);
-            IsTrue(typed.ContainsKey("Key1"));
-            IsFalse(typed.ContainsKey("Nonexisting"));
+            IsTrue(typed.TestContainsKey("Key1"));
+            IsFalse(typed.TestContainsKey("Nonexisting"));
             IsTrue(typed.TestKeys().Any());
             AreEqual(3, typed.TestKeys().Count());
             AreEqual(1, typed.TestKeys(only: new[] { "Key1" }).Count());
             AreEqual(0, typed.TestKeys(only: new[] { "Nonexisting" }).Count());
         }
 
-        [TestMethod] public void DeepParent() => IsTrue(DataForDeepKeys.ContainsKey("Deep"));
+        [TestMethod] public void DeepParent() => IsTrue(DataForDeepKeys.TestContainsKey("Deep"));
 
-        [TestMethod] public void DeepSub1() => IsTrue(DataForDeepKeys.ContainsKey("Deep.Sub1"));
-        [TestMethod] public void DeepDeeper() => IsTrue(DataForDeepKeys.ContainsKey("Deep.Deeper"));
-        [TestMethod] public void DeepDeeperSub() => IsTrue(DataForDeepKeys.ContainsKey("Deep.Deeper.SubSub1"));
-        [TestMethod] public void DeepHasArray() => IsTrue(DataForDeepKeys.ContainsKey("List"));
+        [TestMethod] public void DeepSub1() => IsTrue(DataForDeepKeys.TestContainsKey("Deep.Sub1"));
+        [TestMethod] public void DeepDeeper() => IsTrue(DataForDeepKeys.TestContainsKey("Deep.Deeper"));
+        [TestMethod] public void DeepDeeperSub() => IsTrue(DataForDeepKeys.TestContainsKey("Deep.Deeper.SubSub1"));
+        [TestMethod] public void DeepHasArray() => IsTrue(DataForDeepKeys.TestContainsKey("List"));
 
         // Note: Arrays are not supported
-        //IsTrue(typed.ContainsKey("List.L1"));
-        //IsTrue(typed.ContainsKey("List.L2"));
+        //IsTrue(typed.TestContainsKey("List.L1"));
+        //IsTrue(typed.TestContainsKey("List.L2"));
 
         private ITyped DataForDeepKeys
         {

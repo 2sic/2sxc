@@ -8,7 +8,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.DataTests.DynWrappers
 {
     [TestClass]
-    public class DynFromObjectSubItems: DynAndTypedTestsBase
+    public class WrapObjDeep: DynAndTypedTestsBase
     {
 
         [TestMethod]

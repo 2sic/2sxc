@@ -6,12 +6,29 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.DataTests.DynJson
 {
     [TestClass]
-    public class WrapJsonReSerialization: DynAndTypedTestsBase
+    public class WrapAllSerialize: DynAndTypedTestsBase
     {
         [TestMethod]
-        public void JsonSerialization()
+        public void AnonToObjSerialize()
         {
-            var data = DynFromObjectBasic.Data;
+            var data = WrapObjBasic.Data;
+            var anon = new { data.Name, data.Description, data.Founded, data.Birthday, data.Truthy };
+            var typed = Obj2Typed(anon);
+            dynamic dynAnon = WrapObjFromObject(anon, false, false);
+
+            var jsonTyped = Serialize(typed);
+            var jsonAnon = Serialize(anon);
+            var jsonDyn = Serialize(dynAnon);
+
+            AreEqual(jsonTyped, jsonDyn);
+            AreEqual(jsonTyped, jsonAnon);
+        }
+
+
+        [TestMethod]
+        public void AnonToJsonToWrapperSerialize()
+        {
+            var data = WrapObjBasic.Data;
             var anon = new
             {
                 data.Name,
@@ -35,7 +52,6 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
             var dynAnon = Obj2Json2Dyn(anon);
 
             var jsonTyped = Serialize(typed);
-
             var jsonDyn = Serialize(dynAnon);
 
             AreEqual(jsonAnon, jsonTyped);

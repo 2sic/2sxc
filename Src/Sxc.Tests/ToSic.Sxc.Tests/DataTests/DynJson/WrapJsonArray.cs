@@ -7,7 +7,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.DataTests.DynJson
 {
     [TestClass]
-    public class DynJsonArrays : DynAndTypedTestsBase
+    public class WrapJsonArray : DynAndTypedTestsBase
     {
         private (dynamic Dyn, string Json, string[] Original) StringArrayPrepare() => DynJsonAndOriginal(new[]
         {
@@ -137,8 +137,8 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
                 "goodbye"
             };
             var typed = Obj2Json2TypedStrict(anon);
-            IsTrue(typed.ContainsKey("1"));
-            IsFalse(typed.ContainsKey("3"));
+            IsTrue(typed.TestContainsKey("1"));
+            IsFalse(typed.TestContainsKey("3"));
             IsTrue(typed.TestKeys().Any());
             AreEqual(2, typed.TestKeys().Count());
             AreEqual(1, typed.TestKeys(only: new[] { "1" }).Count());
