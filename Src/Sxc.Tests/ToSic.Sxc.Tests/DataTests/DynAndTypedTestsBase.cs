@@ -46,8 +46,14 @@ namespace ToSic.Sxc.Tests.DataTests
         public ITyped Obj2Typed(object data, WrapperSettings? reWrap = null)
             => Wrapper.TypedFromObject(data, reWrap ?? WrapperSettings.Typed(true, true));
 
-        public ITyped Obj2Json2Typed(object data, WrapperSettings? settings = null) 
-            => JsonWrapper.Setup(WrapperSettings.Typed(true, true)).Json2Typed(JsonSerialize(data));
+        public ITyped Obj2Json2TypedStrict(object data)
+            => Obj2Json2Typed(data, WrapperSettings.Typed(true, true, strict: true));
+
+        public ITyped Obj2Json2TypedLoose(object data)
+            => Obj2Json2Typed(data, WrapperSettings.Typed(true, true, strict: false));
+
+        private ITyped Obj2Json2Typed(object data, WrapperSettings settings) 
+            => JsonWrapper.Setup(settings).Json2Typed(JsonSerialize(data));
 
         public ITypedItem Obj2Item(object data, WrapperSettings? reWrap = null)
             => Wrapper.TypedItemFromObject(data, reWrap ?? WrapperSettings.Typed(true, true));

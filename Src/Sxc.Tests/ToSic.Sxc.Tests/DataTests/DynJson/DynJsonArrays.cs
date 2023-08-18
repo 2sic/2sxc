@@ -136,13 +136,13 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
                 "hello",
                 "goodbye"
             };
-            var typed = Obj2Json2Typed(anon);
+            var typed = Obj2Json2TypedStrict(anon);
             IsTrue(typed.ContainsKey("1"));
             IsFalse(typed.ContainsKey("3"));
-            IsTrue(typed.Keys().Any());
-            AreEqual(2, typed.Keys().Count());
-            AreEqual(1, typed.Keys(only: new[] { "1" }).Count());
-            AreEqual(0, typed.Keys(only: new[] { "3" }).Count());
+            IsTrue(typed.TestKeys().Any());
+            AreEqual(2, typed.TestKeys().Count());
+            AreEqual(1, typed.TestKeys(only: new[] { "1" }).Count());
+            AreEqual(0, typed.TestKeys(only: new[] { "3" }).Count());
         }
 
     }

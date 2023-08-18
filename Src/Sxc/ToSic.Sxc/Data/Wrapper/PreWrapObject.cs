@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
-using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using static ToSic.Eav.Parameters;
@@ -23,7 +20,7 @@ namespace ToSic.Sxc.Data.Wrapper
     /// Will always return a value even if the property doesn't exist, in which case it resolves to null.
     /// </remarks>
     [JsonConverter(typeof(DynamicJsonConverter))]
-    public partial class PreWrapObject: IWrapper<object>, IPropertyLookup, IHasJsonSource, IPreWrap
+    public partial class PreWrapObject: PreWrapBase, IWrapper<object>, IPropertyLookup, IHasJsonSource, IPreWrap
     {
         #region Constructor / Setup
 
@@ -49,7 +46,7 @@ namespace ToSic.Sxc.Data.Wrapper
 
         protected readonly CodeDataWrapper Wrapper;
         protected readonly object UnwrappedObject;
-        public WrapperSettings Settings { get; }
+        public override WrapperSettings Settings { get; }
 
         private static Dictionary<string, PropertyInfo> CreateDictionary(object original)
         {
@@ -65,23 +62,15 @@ namespace ToSic.Sxc.Data.Wrapper
 
         #region Keys
 
-        public bool ContainsKey(string name) => _ignoreCaseLookup.ContainsKey(name);
-        public IEnumerable<string> Keys(string noParamOrder, IEnumerable<string> only)
+        public override bool ContainsKey(string name) => _ignoreCaseLookup.ContainsKey(name);
+
+        public override IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default)
             => FilterKeysIfPossible(noParamOrder, only, _ignoreCaseLookup?.Keys);
 
         #endregion
 
 
-        /// <inheritdoc />
-        [PrivateApi("Internal")]
-        public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
-        {
-            path = path.KeepOrNew().Add("DynReadObj", specs.Field);
-            var result = TryGetWrap(specs.Field, true).Result;
-            return new PropReqResult(result: result, fieldType: Attributes.FieldIsDynamic, path: path) { Source = this, Name = "dynamic" };
-        }
-
-        public TryGetResult TryGetWrap(string name, bool wrapDefault = true)
+        public override TryGetResult TryGetWrap(string name, bool wrapDefault = true)
         {
             if (UnwrappedObject == null)
                 return new TryGetResult(false, null, null);
@@ -98,15 +87,24 @@ namespace ToSic.Sxc.Data.Wrapper
                 : result);
         }
 
-        public TValue TryGetTyped<TValue>(string name, string noParamOrder, TValue fallback, bool? required, [CallerMemberName] string cName = default)
-        {
-            Protect(noParamOrder, nameof(fallback), methodName: cName);
-            var result = TryGetWrap(name, false);
-            return IsErrStrict(result.Found, required, Settings.GetStrict)
-                ? throw ErrStrict(name)
-                : result.Raw.ConvertOrFallback(fallback);
-        }
+        //public object TryGet(string name, string noParamOrder, bool? required, [CallerMemberName] string cName = default)
+        //{
+        //    Protect(noParamOrder, nameof(required));
+        //    var result = TryGetWrap(name, true);
+        //    return IsErrStrict(result.Found, required, Settings.GetStrict)
+        //        ? throw ErrStrict(name, cName: cName)
+        //        : result.Result;
+        //}
 
-        public object JsonSource => UnwrappedObject;
+        //public TValue TryGetTyped<TValue>(string name, string noParamOrder, TValue fallback, bool? required, [CallerMemberName] string cName = default)
+        //{
+        //    Protect(noParamOrder, nameof(fallback), methodName: cName);
+        //    var result = TryGetWrap(name, false);
+        //    return IsErrStrict(result.Found, required, Settings.GetStrict)
+        //        ? throw ErrStrict(name, cName: cName)
+        //        : result.Raw.ConvertOrFallback(fallback);
+        //}
+
+        public override object JsonSource => UnwrappedObject;
     }
 }

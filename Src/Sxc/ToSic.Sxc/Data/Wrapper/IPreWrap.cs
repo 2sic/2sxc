@@ -14,6 +14,8 @@ namespace ToSic.Sxc.Data.Wrapper
     {
         TryGetResult TryGetWrap(string name, bool wrapDefault = true);
 
+        object TryGetObject(string name, string noParamOrder, bool? required, [CallerMemberName] string cName = default);
+
         TValue TryGetTyped<TValue>(string name, string noParamOrder, TValue fallback, bool? required, [CallerMemberName] string cName = default);
 
         WrapperSettings Settings { get; }

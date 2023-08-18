@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Data.Typed
         object ITyped.Get(string name, string noParamOrder, bool? required)
         {
             Protect(noParamOrder, nameof(required));
-            return PreWrap.TryGetWrap(name, true).Result;
+            return PreWrap.TryGetObject(name, noParamOrder, required);
         }
 
         TValue ITyped.Get<TValue>(string name, string noParamOrder, TValue fallback, bool? required)

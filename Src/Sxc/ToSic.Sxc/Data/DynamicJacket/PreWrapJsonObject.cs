@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text.Json.Nodes;
 using ToSic.Eav.Data;
@@ -16,24 +15,48 @@ namespace ToSic.Sxc.Data
     internal class PreWrapJsonObject: PreWrapJsonBase, IWrapper<JsonObject>
     {
 
-        internal PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item, WrapperSettings settings): base(wrapper, settings)
+        internal PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item): base(wrapper)
         {
-            UnwrappedContents = item;
+            _jObject = item;
         }
 
-        protected readonly JsonObject UnwrappedContents;
+        private readonly JsonObject _jObject;
 
-        public JsonObject GetContents() => UnwrappedContents;
+        public JsonObject GetContents() => _jObject;
 
-        public override object JsonSource => UnwrappedContents;
+        public override object JsonSource => _jObject;
 
         #region Keys
 
         public override IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default) 
-            => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, UnwrappedContents.Select(p => p.Key));
+            => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, _jObject.Select(p => p.Key));
 
         public override bool ContainsKey(string name)
-            => !name.IsEmpty() && UnwrappedContents.Any(p => name.EqualsInsensitive(p.Key));
+        {
+            if (name.IsEmptyOrWs() || _jObject == null) 
+                return false;
+
+            var isPath = name.Contains(PropertyStack.PathSeparator.ToString());
+            if (!isPath)
+                return JsonObjectContainsKey(_jObject, name);// _jObject.Any(p => name.EqualsInsensitive(p.Key));
+
+            var pathParts = PropertyStack.SplitPathIntoParts(name);
+            var node = _jObject;
+            for (var i = 0; i < pathParts.Length; i++)
+            {
+                var part = pathParts[i];
+                var result = TryGetFromNode(part, node);
+                // last one or not found - return a not-found
+                if (i == pathParts.Length - 1 || !result.Found) return result.Found;
+                node = result.Raw as JsonObject;
+                if (node == null) return false;
+            }
+
+            return false;
+        }
+
+        private bool JsonObjectContainsKey(JsonObject jsonObject, string name)
+            => jsonObject.Any(p => name.EqualsInsensitive(p.Key));
 
         #endregion
 
@@ -41,15 +64,15 @@ namespace ToSic.Sxc.Data
 
         public override TryGetResult TryGetWrap(string name, bool wrapDefault = true)
         {
-            if (name.IsEmptyOrWs() || UnwrappedContents == null || !UnwrappedContents.Any())
+            if (name.IsEmptyOrWs() || _jObject == null || !_jObject.Any())
                 return new TryGetResult(false, null, null);
 
             var isPath = name.Contains(PropertyStack.PathSeparator.ToString());
             if (!isPath)
-                return TryGetFromNode(name, UnwrappedContents);
+                return TryGetFromNode(name, _jObject);
 
             var pathParts = PropertyStack.SplitPathIntoParts(name);
-            var node = UnwrappedContents;
+            var node = _jObject;
             for (var i = 0; i < pathParts.Length; i++)
             {
                 var part = pathParts[i];
@@ -79,11 +102,11 @@ namespace ToSic.Sxc.Data
 
         public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
         {
-            if (UnwrappedContents == null || !UnwrappedContents.Any()) return new List<PropertyDumpItem>();
+            if (_jObject == null || !_jObject.Any()) return new List<PropertyDumpItem>();
 
             if (string.IsNullOrEmpty(path)) path = DumpSourceName;
 
-            var allProperties = UnwrappedContents.ToList();
+            var allProperties = _jObject.ToList();
 
             var simpleProps = allProperties.Where(p => !(p.Value is JsonObject));
             var resultDynChildren = simpleProps.Select(p => new PropertyDumpItem

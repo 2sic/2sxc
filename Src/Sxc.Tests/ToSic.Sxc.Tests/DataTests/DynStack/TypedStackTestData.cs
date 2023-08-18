@@ -53,8 +53,8 @@ namespace ToSic.Sxc.Tests.DataTests.DynStack
         }
         public static ITypedStack GetStackForKeysUsingJson(DynAndTypedTestsBase parent)
         {
-            var part1 = parent.Obj2Json2Typed(Anon1);
-            var part2 = parent.Obj2Json2Typed(Anon2);
+            var part1 = parent.Obj2Json2TypedStrict(Anon1);
+            var part2 = parent.Obj2Json2TypedStrict(Anon2);
             var stack = parent.Factory.AsStack(new[] { part1, part2 });
             return stack;
         }

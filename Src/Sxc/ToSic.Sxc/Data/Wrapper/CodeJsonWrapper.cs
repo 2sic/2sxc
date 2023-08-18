@@ -91,23 +91,22 @@ namespace ToSic.Sxc.Data.Wrapper
 
         internal DynamicJacket CreateDynJacketObject(JsonObject jsonObject)
         {
-            var preWrap = new PreWrapJsonObject(this, jsonObject, Settings);
+            var preWrap = new PreWrapJsonObject(this, jsonObject);
             return new DynamicJacket(this, preWrap);
         }
-
         private DynamicJacketList CreateDynJacketList(JsonArray jsonArray)
         {
-            var preWrap = new PreWrapJsonArray(this, jsonArray, Settings);
+            var preWrap = new PreWrapJsonArray(this, jsonArray);
             return new DynamicJacketList(this, preWrap);
         }
         private WrapObjectTyped CreateTypedList(JsonArray jsonArray)
         {
-            var preWrap = new PreWrapJsonArray(this, jsonArray, Settings);
+            var preWrap = new PreWrapJsonArray(this, jsonArray);
             return _wrapTypeGenerator.New().Setup(preWrap);
         }
         private WrapObjectTyped CreateTypedObject(JsonObject jsonObject)
         {
-            var preWrap = new PreWrapJsonObject(this, jsonObject, Settings);
+            var preWrap = new PreWrapJsonObject(this, jsonObject);
             return _wrapTypeGenerator.New().Setup(preWrap);
         }
 

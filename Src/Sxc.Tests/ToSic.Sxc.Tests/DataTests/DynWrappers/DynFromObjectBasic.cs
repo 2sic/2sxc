@@ -115,10 +115,10 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             var typed = Obj2Typed(anon);
             IsTrue(typed.ContainsKey("Key1"));
             IsFalse(typed.ContainsKey("Nonexisting"));
-            IsTrue(typed.Keys().Any());
-            AreEqual(3, typed.Keys().Count());
-            AreEqual(1, typed.Keys(only: new[] { "Key1" }).Count());
-            AreEqual(0, typed.Keys(only: new[] { "Nonexisting" }).Count());
+            IsTrue(typed.TestKeys().Any());
+            AreEqual(3, typed.TestKeys().Count());
+            AreEqual(1, typed.TestKeys(only: new[] { "Key1" }).Count());
+            AreEqual(0, typed.TestKeys(only: new[] { "Nonexisting" }).Count());
         }
 
         [TestMethod] public void DeepParent() => IsTrue(DataForDeepKeys.ContainsKey("Deep"));

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Data;
@@ -10,42 +11,37 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
     [TestClass]
     public class DynJsonValues : DynAndTypedTestsBase
     {
-        private bool HasKey(ITyped typed, string key)
+        private dynamic BoolDataDynLoose => _dynBool ?? (_dynBool = Obj2Json2Dyn(WrapJsonTypedKeys.BoolDataAnon));
+        private static object _dynBool;
+
+        private ITyped BoolTestDataStrict => _boolTestDataStrict ?? (_boolTestDataStrict = Obj2Json2TypedStrict(WrapJsonTypedKeys.BoolDataAnon));
+        private static ITyped _boolTestDataStrict;
+        private ITyped BoolTestDataLoose => _boolTestDataLoose ?? (_boolTestDataLoose = Obj2Json2TypedLoose(WrapJsonTypedKeys.BoolDataAnon));
+        private static ITyped _boolTestDataLoose;
+
+        [TestMethod]
+        public void JsonBool_Dyn()
         {
-            return typed.ContainsKey(key);
+            IsTrue(BoolDataDynLoose.TrueBoolType);
+            IsFalse(BoolDataDynLoose.FalseBoolType);
+            IsNull(BoolDataDynLoose.something);
         }
 
         [TestMethod]
-        public void JsonBoolProperty()
-        {
-            var (dyn, _, _) = DynJsonAndOriginal(new
-            {
-                TrueBoolType = true,
-                FalseBoolType = false
-            });
+        [DataRow(true, "TrueBoolType")]
+        [DataRow(false, "FalseBoolType")]
+        [DataRow(true, "TrueString")]
+        [DataRow(false, "FalseString")]
+        [DataRow(true, "TrueNumber")]
+        [DataRow(true, "TrueNumberBig")]
+        [DataRow(false, "FalseNumber")]
+        [DataRow(true, "TrueNumberNegative")]
+        public void JsonBoolProperty_Typed(bool expected, string key) 
+            => AreEqual(expected, BoolTestDataStrict.Bool(key));
 
-            IsTrue(dyn.TrueBoolType);
-            IsFalse(dyn.FalseBoolType);
-            IsNull(dyn.something);
-        }
-        [TestMethod]
-        public void JsonBoolPropertyKeys_Typed()
-        {
-            var typed = Obj2Json2Typed(new
-            {
-                TrueBoolType = true,
-                FalseBoolType = false
-            });
 
-            IsTrue(typed.Bool("TrueBoolType"));
-            IsFalse(typed.Bool("FalseBoolType"));
-            IsFalse(typed.Bool("something"));
 
-            IsTrue(HasKey(typed, "TrueBoolType"));
-            IsTrue(HasKey(typed, "TrueBoolTYPE"));
-            IsTrue(HasKey(typed, "FalseBoolType"));
-            IsFalse(HasKey(typed, "something"));
-        }
+
 
         [TestMethod]
         public void JsonNumberProperty()
@@ -120,23 +116,5 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
             IsNull(dynJson.UndefinedType);
             IsNull(dynJson.NonExistingProperty);
         }
-
-        [TestMethod]
-        public void Keys()
-        {
-            var anon = new
-            {
-                Key1 = "hello",
-                Key2 = "goodbye"
-            };
-            var typed = Obj2Json2Typed(anon);
-            IsTrue(typed.ContainsKey("Key1"));
-            IsFalse(typed.ContainsKey("Nonexisting"));
-            IsTrue(typed.Keys().Any());
-            AreEqual(2, typed.Keys().Count());
-            AreEqual(1, typed.Keys(only: new[] { "Key1" }).Count());
-            AreEqual(0, typed.Keys(only: new[] { "Nonexisting" }).Count());
-        }
-
     }
 }

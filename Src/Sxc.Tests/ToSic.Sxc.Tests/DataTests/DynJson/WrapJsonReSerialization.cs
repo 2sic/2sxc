@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
             var jsonAnon = Serialize(anon);
 
 
-            var typed = Obj2Json2Typed(anon);
+            var typed = Obj2Json2TypedStrict(anon);
             var dynAnon = Obj2Json2Dyn(anon);
 
             var jsonTyped = Serialize(typed);

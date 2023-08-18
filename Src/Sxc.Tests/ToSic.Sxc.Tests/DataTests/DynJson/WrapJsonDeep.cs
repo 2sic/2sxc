@@ -22,8 +22,17 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
                         BoolProperty = true
                     }
                 }
+            },
+            Array = new object[]
+            {
+                new { name = "zeroth" },
+                new { Name = "first" },
+                new { Name = "second" }
             }
         };
+
+        private ITyped DataTyped => _dataTyped ?? (_dataTyped = Obj2Json2TypedStrict(DeepData));
+        private ITyped _dataTyped;
 
         [TestMethod]
         public void DeepValueAndCasingWithDyn()
@@ -39,16 +48,14 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
         [TestMethod]
         public void DeepValueAndCasingWithTyped()
         {
-            var dyn = Obj2Json2Typed(DeepData);
-            AreEqual(27, dyn.Get("TopLevelNumber"));
-            AreEqual<int>(27, dyn.Int("TopLevelNumber"));
-            AreEqual(27, dyn.Get("TopLevelNUMBER"));
-            AreEqual<int>(27, dyn.Int("TopLevelNUMBER"));
-            // TODO!!! 
-            //AreEqual<string>("test", dyn.Child("OBJECTPROPERTY").Get.stringproperty);
-            AreEqual(1, dyn.Get("ObjectProperty.ObjectProperty.NumberProperty"));
-            AreEqual<int>(1, dyn.Int("ObjectProperty.ObjectProperty.NumberProperty"));
-            //AreEqual<bool>(true, dyn.ObjectProperty.ObjectProperty.ObjectProperty.BoolProperty);
+            AreEqual(27, DataTyped.Get("TopLevelNumber"));
+            AreEqual<int>(27, DataTyped.Int("TopLevelNumber"));
+            AreEqual(27, DataTyped.Get("TopLevelNUMBER"));
+            AreEqual<int>(27, DataTyped.Int("TopLevelNUMBER"));
+            AreEqual("test", (DataTyped.Get("OBJECTPROPERTY") as ITyped).Get("stringproperty"));
+            AreEqual(1, DataTyped.Get("ObjectProperty.ObjectProperty.NumberProperty"));
+            AreEqual<int>(1, DataTyped.Int("ObjectProperty.ObjectProperty.NumberProperty"));
+            AreEqual<bool>(true, DataTyped.Bool("ObjectProperty.ObjectProperty.ObjectProperty.BoolProperty"));
         }
 
         [TestMethod]
@@ -72,12 +79,12 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
         [TestMethod]
         public void DeepTypeCheckTyped()
         {
-            var dyn = Obj2Json2Typed(DeepData);
+            //var dyn = Obj2Json2Typed(DeepData);
             var expectedType = typeof(WrapObjectTyped);
-            IsInstanceOfType(dyn.Get("ObjectProperty"), expectedType);
-            IsNull(dyn.Get("ObjectPropertyNonExisting", required: false));
-            IsInstanceOfType((dyn.Get("ObjectProperty") as ITyped).Get("ObjectProperty"), expectedType);
-            IsInstanceOfType(dyn.Get("ObjectProperty.ObjectProperty"), expectedType);
+            IsInstanceOfType(DataTyped.Get("ObjectProperty"), expectedType);
+            IsNull(DataTyped.Get("ObjectPropertyNonExisting", required: false));
+            IsInstanceOfType((DataTyped.Get("ObjectProperty") as ITyped).Get("ObjectProperty"), expectedType);
+            IsInstanceOfType(DataTyped.Get("ObjectProperty.ObjectProperty"), expectedType);
             //IsInstanceOfType(dyn.ObjectProperty.ObjectProperty.ObjectPROPERTY, expectedType);
             // TODO!
             //IsNull(dyn.ObjectProperty.ObjectProperty.ObjectIncorrect);

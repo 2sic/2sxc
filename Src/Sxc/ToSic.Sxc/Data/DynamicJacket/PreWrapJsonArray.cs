@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Data
 {
     internal class PreWrapJsonArray: PreWrapJsonBase, IWrapper<JsonArray>
     {
-        public PreWrapJsonArray(CodeJsonWrapper wrapper, JsonArray item, WrapperSettings settings): base(wrapper, settings)
+        public PreWrapJsonArray(CodeJsonWrapper wrapper, JsonArray item): base(wrapper)
         {
             UnwrappedContents = item;
         }

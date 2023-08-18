@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Data.Wrapper
         public const string DumpSourceName = "DynamicRead";
 
         [PrivateApi]
-        public List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
+        public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
         {
             if (UnwrappedObject == null) return new List<PropertyDumpItem>();
 
