@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Data
 
         #endregion
 
-        internal DynamicJacketBase Json2Jacket(string json, string fallback = default)
+        public DynamicJacketBase Json2Jacket(string json, string fallback = default)
             => _wrapJsonGenerator.New().Setup(WrapperSettings.Dyn(true, true))
                 .Json2Jacket(json, fallback: fallback);
 
