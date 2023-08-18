@@ -53,9 +53,9 @@ namespace ToSic.Sxc.DataSources
             bool includeSystem = default,
             bool includeLinks = default,
             bool requireViewPermissions = true,
-            bool requireEditPermissions = true
-        ) => Log.Func(l =>
+            bool requireEditPermissions = true)
         {
+            var l = Log.Fn<List<PageDataRaw>>();
             var user = _httpContextAccessor?.HttpContext?.User;
             var pages = _pages.GetPages(_siteState.Alias.SiteId)
                 .Where(page => _userPermissions.IsAuthorized(user, PermissionNames.View, page.Permissions))
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.DataSources
 
             var parts = new UrlParts(_linkPathsLazy.Value.GetCurrentRequestUrl());
 
-            return pages.Select(p => new PageDataRaw
+            return l.ReturnAsOk(pages.Select(p => new PageDataRaw
             {
                 // In v14
                 Id = p.PageId,
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.DataSources
                 Order = p.Order,
                 // New in 15.02
                 LinkTarget = "", // TODO
-            }).ToList();
-        });
+            }).ToList());
+        }
     }
 }

@@ -26,26 +26,27 @@ namespace ToSic.Sxc.DataSources
             );
         }
 
-        public override IEnumerable<CmsUserRaw> GetUsersInternal() => Log.Func(l =>
+        public override IEnumerable<CmsUserRaw> GetUsersInternal()
         {
+            var l = Log.Fn<IEnumerable<CmsUserRaw>>();
             var siteId = _siteState.Alias.SiteId;
             l.A($"Portal Id {siteId}");
             try
             {
                 var userRoles = _userRoles.Value.GetUserRoles(siteId).ToList();
                 var users = userRoles.Select(ur => ur.User).Distinct().ToList();
-                if (!users.Any()) return (new(), "null/empty");
+                if (!users.Any()) return l.Return(new List<CmsUserRaw>(), "null/empty");
 
                 var result = users
                     .Where(u => !u.IsDeleted)
                     .Select(u => _oqtSecurity.Value.CmsUserBuilder(u)).ToList();
-                return (result, "found");
+                return l.Return(result, "found");
             }
             catch (Exception ex)
             {
                 l.Ex(ex);
-                return (new(), "error");
+                return l.Return(new List<CmsUserRaw>(), "error");
             }
-        });
+        }
     }
 }

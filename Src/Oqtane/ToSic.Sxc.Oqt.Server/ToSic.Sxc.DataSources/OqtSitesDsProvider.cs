@@ -35,10 +35,11 @@ namespace ToSic.Sxc.DataSources
 
         #endregion
 
-        public override List<SiteDataRaw> GetSitesInternal() => Log.Func(l =>
+        public override List<SiteDataRaw> GetSitesInternal()
         {
+            var l = Log.Fn<List<SiteDataRaw>>();
             var sites = _sites.GetSites().ToList();
-            return sites.Select(s => new SiteDataRaw
+            return l.ReturnAsOk(sites.Select(s => new SiteDataRaw
             {
                 Id = s.SiteId,
                 Guid = new(s.SiteGuid),
@@ -51,8 +52,8 @@ namespace ToSic.Sxc.DataSources
                 ZoneId = GetZoneId(s.SiteId),
                 ContentAppId = GetDefaultAppId(s.SiteId),
                 PrimaryAppId = GetPrimaryAppId(s.SiteId)
-            }).ToList();
-        });
+            }).ToList());
+        }
 
         private string GetUrl(int siteId)
         {

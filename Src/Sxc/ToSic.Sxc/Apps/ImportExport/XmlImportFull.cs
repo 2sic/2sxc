@@ -28,12 +28,12 @@ namespace ToSic.Sxc.Apps.ImportExport
 
         // ReSharper disable once UnusedMember.Global
         // The system says it's never used, but it's provided through DI as the base class
-        public new bool ImportXml(int zoneId, int appId, XDocument doc, bool leaveExistingValuesUntouched = true
-        ) => Log.Func($"{zoneId}, {appId}, ..., {leaveExistingValuesUntouched}", l =>
+        public new bool ImportXml(int zoneId, int appId, XDocument doc, bool leaveExistingValuesUntouched = true)
         {
+            var l = Log.Fn<bool>($"{zoneId}, {appId}, ..., {leaveExistingValuesUntouched}");
             var ok = base.ImportXml(zoneId, appId, doc, leaveExistingValuesUntouched);
             if (!ok)
-                return (false, "error");
+                return l.ReturnFalse("error");
 
             l.A("Now import templates - if found");
 
@@ -48,8 +48,8 @@ namespace ToSic.Sxc.Apps.ImportExport
             else
                 l.A("No templates found");
 
-            return (true, "ok");
-        });
+            return l.ReturnTrue("ok");
+        }
 
     }
 }
