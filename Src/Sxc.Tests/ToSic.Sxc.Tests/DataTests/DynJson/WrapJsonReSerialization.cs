@@ -6,7 +6,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.DataTests.DynJson
 {
     [TestClass]
-    public class WrapJsonSerialization: DynAndTypedTestsBase
+    public class WrapJsonReSerialization: DynAndTypedTestsBase
     {
         [TestMethod]
         public void JsonSerialization()

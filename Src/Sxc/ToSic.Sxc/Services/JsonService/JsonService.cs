@@ -30,8 +30,8 @@ namespace ToSic.Sxc.Services
             => JsonSerializer.Deserialize<object>(json, SafeJsonForHtmlAttributes);
 
         /// <inheritdoc />
-        public ITyped ToTyped(string json, string noParamOrder = Protector, string fallback = default) 
-            => _dynJacketFactory.Value.Json2Jacket(json, fallback).Typed;
+        public ITyped ToTyped(string json, string noParamOrder = Protector, string fallback = default)
+            => _dynJacketFactory.Value.Json2Typed(json, fallback);
 
         /// <inheritdoc />
         public string ToJson(object item)

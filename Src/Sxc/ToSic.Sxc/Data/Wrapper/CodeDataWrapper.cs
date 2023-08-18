@@ -33,9 +33,10 @@ namespace ToSic.Sxc.Data.Wrapper
         private readonly LazySvc<ConvertForCodeService> _forCodeConverter;
 
         internal DynamicJacketBase Json2Jacket(string json, string fallback = default)
-            => IfJsonTryConvertToJacket(AsJsonNode(json, fallback ?? EmptyJson)).Jacket;
+            => IfJsonTryConvertToJacket(AsJsonNode(json, fallback ?? EmptyJson)).Final;
+
         internal ITyped Json2Typed(string json, string fallback = default)
-            => IfJsonTryConvertToJacket(AsJsonNode(json, fallback ?? EmptyJson)).Jacket.Typed;
+            => IfJsonTryConvertToTyped(AsJsonNode(json, fallback ?? EmptyJson)).Final;
 
         internal WrapDictionaryDynamic<TKey, TValue> FromDictionary<TKey, TValue>(IDictionary<TKey, TValue> original)
         {
@@ -133,27 +134,47 @@ namespace ToSic.Sxc.Data.Wrapper
                 : JsonNode.Parse(fallback, JsonNodeDefaultOptions, JsonDocumentDefaultOptions);
         }
 
-        private (DynamicJacketBase Jacket, bool Ok, JsonValueKind ValueKind) IfJsonTryConvertToJacket(object original)
+        private (object Final, bool Ok, JsonValueKind ValueKind) IfJsonTryConvertToWrapper(object original, bool dynamic = true)
         {
-            var l = Log.Fn<(DynamicJacketBase Jacket, bool Ok, JsonValueKind ValueKind)>();
+            return dynamic
+                ? ((object Final, bool Ok, JsonValueKind ValueKind))IfJsonTryConvertToJacket(original)
+                : IfJsonTryConvertToTyped(original);
+        }
+        private (DynamicJacketBase Final, bool Ok, JsonValueKind ValueKind) IfJsonTryConvertToJacket(object original)
+        {
+            return IfJsonTryConvertToJacket<DynamicJacketBase>(original,
+                o => new DynamicJacket(o, this),
+                o => new DynamicJacketList(o, this));
+        }
+        private (ITyped Final, bool Ok, JsonValueKind ValueKind) IfJsonTryConvertToTyped(object original)
+        {
+            return IfJsonTryConvertToJacket<ITyped>(original,
+                o => new DynamicJacket(o, this).Typed,
+                o => new DynamicJacketList(o, this).Typed);
+        }
+
+        private (TResult Final, bool Ok, JsonValueKind ValueKind)
+            IfJsonTryConvertToJacket<TResult>(object original, Func<JsonObject, TResult> toObj, Func<JsonArray, TResult> toArr) where TResult: class
+        {
+            ILogCall<(TResult Final, bool Ok, JsonValueKind ValueKind)> l = Log.Fn<(TResult Jacket, bool Ok, JsonValueKind ValueKind)>();
             if (!(original is JsonNode jsonNode))
                 return l.Return((null, false, JsonValueKind.Undefined), "not json node");
 
             switch (jsonNode)
             {
                 case JsonArray jArray:
-                    return l.Return((new DynamicJacketList(jArray, this), true, JsonValueKind.Array), "array");
+                    return l.Return((toArr(jArray), true, JsonValueKind.Array), "array");
                 case JsonObject jResult: // it's another complex object, so return another wrapped reader
-                    return l.Return((new DynamicJacket(jResult, this), true, JsonValueKind.Object), "obj");
+                    return l.Return((toObj(jResult), true, JsonValueKind.Object), "obj");
                 case JsonValue jValue: // it's a simple value - so we want to return the underlying real value
                     {
                         var je = jValue.GetValue<JsonElement>();
                         switch (je.ValueKind)
                         {
                             case JsonValueKind.Object:
-                                return l.Return((new DynamicJacket(JsonObject.Create(je), this), true, JsonValueKind.Object), "val obj");
+                                return l.Return((toObj(JsonObject.Create(je)), true, JsonValueKind.Object), "val obj");
                             case JsonValueKind.Array:
-                                return l.Return((new DynamicJacketList(JsonArray.Create(je), this), true, JsonValueKind.Array), "val array");
+                                return l.Return((toArr(JsonArray.Create(je)), true, JsonValueKind.Array), "val array");
                             default:
                                 return l.Return((null, false, JsonValueKind.Undefined), "val not handled");
                         }
@@ -175,8 +196,8 @@ namespace ToSic.Sxc.Data.Wrapper
         {
             if (!(original is JsonNode jsonNode)) return original;
 
-            var maybeJacket = IfJsonTryConvertToJacket(original);
-            if (maybeJacket.Ok) return maybeJacket.Jacket;
+            var maybeJacket = IfJsonTryConvertToWrapper(original, dynamic: true);
+            if (maybeJacket.Ok) return maybeJacket.Final;
 
             switch (jsonNode)
             {

@@ -107,7 +107,8 @@
     <Compile Include="DataTests\DynConverterTests\AsConverterFakeTests.cs" />
     <Compile Include="DataTests\DynConverterTests\AsConverterTestsBase.cs" />
     <Compile Include="DataTests\DynConverterTests\AsConverterAsItem.cs" />
-    <Compile Include="DataTests\DynJson\WrapJsonSerialization.cs" />
+    <Compile Include="DataTests\DynJson\WrapJsonTypedKeys.cs" />
+    <Compile Include="DataTests\DynJson\WrapJsonReSerialization.cs" />
     <Compile Include="DataTests\DynStack\TypedStackGet.cs" />
     <Compile Include="DataTests\DynStack\TypedStackKeys_NotImplemented.cs" />
     <Compile Include="DataTests\DynStack\TypedStackTestData.cs" />
@@ -115,7 +116,7 @@
     <Compile Include="DataTests\DynWrappers\DynFromObjectBasic.cs" />
     <Compile Include="DataTests\DynJson\DynJsonArrays.cs" />
     <Compile Include="DataTests\DynJson\DynJsonValues.cs" />
-    <Compile Include="DataTests\DynJson\DynJsonObjectTests.cs" />
+    <Compile Include="DataTests\DynJson\WrapJsonDeep.cs" />
     <Compile Include="DataTests\DynJson\DynJsonMixTests.cs" />
     <Compile Include="DataTests\DynJson\DynJsonTestBase.cs" />
     <Compile Include="DataTests\DynWrappers\TestPerson.cs" />

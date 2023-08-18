@@ -112,13 +112,13 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
         [TestMethod]
         public void ObjectWithNullProperty()
         {
-            var jsonString = @"{ 
+            var dynJson = Json2Dyn(@"{ 
                 ""NullType"": null, 
                 ""UndefinedType"": undefined, 
-            }";
-            IsNull(Json2Dyn(jsonString).NullType);
-            IsNull(Json2Dyn(jsonString).UndefinedType);
-            IsNull(Json2Dyn(jsonString).NonExistingProperty);
+            }");
+            IsNull(dynJson.NullType);
+            IsNull(dynJson.UndefinedType);
+            IsNull(dynJson.NonExistingProperty);
         }
 
         [TestMethod]
