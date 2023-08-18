@@ -1,37 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
-using ToSic.Eav;
-using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Data;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Data.Wrapper;
-using static System.StringComparison;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
 {
     internal class PreWrapJsonObject: PreWrapJsonBase, IWrapper<JsonObject>
     {
 
-        internal PreWrapJsonObject(JsonObject item, WrapperSettings settings, CodeDataWrapper wrapper): base(wrapper, settings)
+        internal PreWrapJsonObject(CodeDataWrapper wrapper, JsonObject item, WrapperSettings settings): base(wrapper, settings)
         {
             UnwrappedContents = item;
         }
 
         protected readonly JsonObject UnwrappedContents;
 
-        JsonObject IWrapper<JsonObject>.GetContents() => UnwrappedContents;
+        public JsonObject GetContents() => UnwrappedContents;
 
         public override object JsonSource => UnwrappedContents;
 
         #region Keys
 
-        public override IEnumerable<string> Keys(string noParamOrder = Parameters.Protector, IEnumerable<string> only = default) 
+        public override IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default) 
             => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, UnwrappedContents.Select(p => p.Key));
 
         public override bool ContainsKey(string name)
@@ -50,7 +46,7 @@ namespace ToSic.Sxc.Data
                 .FirstOrDefault(p => p.Key.EqualsInsensitive(name));
 
             return new TryGetResult(false, found.Value, 
-                Wrapper.IfJsonGetValueOrJacket(found.IsNullOrDefault() ? null : found.Value));
+                Wrapper.IfJsonGetValueOrJacket(found.IsNullOrDefault() ? null : found.Value, Settings));
         }
 
 
@@ -82,7 +78,7 @@ namespace ToSic.Sxc.Data
                 .Where(p => p.Value is JsonObject)
                 .SelectMany(p =>
                 {
-                    var jacket = new DynamicJacket(p.Value.AsObject(), Wrapper);
+                    var jacket = Wrapper.CreateDynJacketObject(p.Value.AsObject());
                     return ((IHasPropLookup)jacket).PropertyLookup._Dump(specs, path + PropertyDumpItem.Separator + p.Key);
                 })
                 .Where(p => !(p is null));

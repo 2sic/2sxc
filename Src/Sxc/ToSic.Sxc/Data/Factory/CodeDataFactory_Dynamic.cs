@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Data
                     if (dynObject.GetType().IsValueType) return l.Return(dynObject, "bad call - value type");
 
                     // 2021-09-14 new - just convert to a DynamicReadObject
-                    var result = _codeDataWrapper.Value.WrapIfPossible(data: dynObject,
+                    var result = _codeDataWrapper.Value.JsonChildWrapIfPossible(data: dynObject,
                         // 2023-08-08 2dm - changed `wrapNonAnon` to true, I'm not sure why it was false, but I'm certain that's wrong
                         wrapNonAnon: true /* false, */,
                         WrapperSettings.Dyn(children: true, realObjectsToo: false));

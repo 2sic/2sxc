@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Data.Wrapper
         /// <param name="wrapNonAnon">if true and the contents isn't already a dynamic object, it will also wrap real objects; otherwise only anonymous</param>
         /// <returns></returns>
         [PrivateApi]
-        internal object WrapIfPossible(object data, bool wrapNonAnon, WrapperSettings settings)
+        internal object JsonChildWrapIfPossible(object data, bool wrapNonAnon, WrapperSettings settings)
         {
             // If null or simple value, use that
             if (data is null) return null;
@@ -78,7 +78,7 @@ namespace ToSic.Sxc.Data.Wrapper
             if (data is Guid || data is DateTime) return data;
 
             // Check if the result is a JSON object which should support navigation again
-            var result = IfJsonGetValueOrJacket(data);
+            var result = IfJsonGetValueOrJacket(data, settings);
 
             // Check if the original or result already supports navigation... - which is the case if it's a DynamicJacket now
             switch (result)
@@ -134,23 +134,41 @@ namespace ToSic.Sxc.Data.Wrapper
                 : JsonNode.Parse(fallback, JsonNodeDefaultOptions, JsonDocumentDefaultOptions);
         }
 
-        private (object Final, bool Ok, JsonValueKind ValueKind) IfJsonTryConvertToWrapper(object original, bool dynamic = true)
+        private (object Final, bool Ok, JsonValueKind ValueKind) IfJsonTryConvertToWrapper(object original, WrapperSettings settings)
         {
-            return dynamic
+            return settings.WrapToDynamic
                 ? ((object Final, bool Ok, JsonValueKind ValueKind))IfJsonTryConvertToJacket(original)
                 : IfJsonTryConvertToTyped(original);
         }
         private (DynamicJacketBase Final, bool Ok, JsonValueKind ValueKind) IfJsonTryConvertToJacket(object original)
         {
-            return IfJsonTryConvertToJacket<DynamicJacketBase>(original,
-                o => new DynamicJacket(o, this),
-                o => new DynamicJacketList(o, this));
+            return IfJsonTryConvertToJacket<DynamicJacketBase>(original, CreateDynJacketObject, CreateDynJacketList);
         }
         private (ITyped Final, bool Ok, JsonValueKind ValueKind) IfJsonTryConvertToTyped(object original)
         {
-            return IfJsonTryConvertToJacket<ITyped>(original,
-                o => new DynamicJacket(o, this).Typed,
-                o => new DynamicJacketList(o, this).Typed);
+            return IfJsonTryConvertToJacket<ITyped>(original, CreateTypedObject, CreateTypedList);
+        }
+
+        internal DynamicJacket CreateDynJacketObject(JsonObject jsonObject)
+        {
+            var preWrap = new PreWrapJsonObject(this, jsonObject, WrapperSettings.Dyn(true, true));
+            return new DynamicJacket(this, preWrap);
+        }
+
+        private DynamicJacketList CreateDynJacketList(JsonArray jsonArray)
+        {
+            var preWrap = new PreWrapJsonArray(this, jsonArray, WrapperSettings.Dyn(true, true));
+            return new DynamicJacketList(this, preWrap);
+        }
+        private WrapObjectTyped CreateTypedList(JsonArray jsonArray)
+        {
+            var preWrap = new PreWrapJsonArray(this, jsonArray, WrapperSettings.Typed(true, true));
+            return new WrapObjectTyped(preWrap, this);
+        }
+        private WrapObjectTyped CreateTypedObject(JsonObject jsonObject)
+        {
+            var preWrap = new PreWrapJsonObject(this, jsonObject, WrapperSettings.Typed(true, true));
+            return new WrapObjectTyped(preWrap, this);
         }
 
         private (TResult Final, bool Ok, JsonValueKind ValueKind)
@@ -192,11 +210,11 @@ namespace ToSic.Sxc.Data.Wrapper
         /// <param name="original"></param>
         /// <returns></returns>
         [PrivateApi]
-        internal object IfJsonGetValueOrJacket(object original)
+        internal object IfJsonGetValueOrJacket(object original, WrapperSettings settings)
         {
             if (!(original is JsonNode jsonNode)) return original;
 
-            var maybeJacket = IfJsonTryConvertToWrapper(original, dynamic: true);
+            var maybeJacket = IfJsonTryConvertToWrapper(original, settings);
             if (maybeJacket.Ok) return maybeJacket.Final;
 
             switch (jsonNode)

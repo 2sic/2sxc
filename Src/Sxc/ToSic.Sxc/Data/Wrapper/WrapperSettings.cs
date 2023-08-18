@@ -10,8 +10,8 @@
             GetStrict = strict;
         }
 
-        public static WrapperSettings Dyn(bool children, bool realObjectsToo)
-            => new WrapperSettings(wrapChildren: children, wrapRealObjects: realObjectsToo, wrapToDynamic: true, strict: false);
+        public static WrapperSettings Dyn(bool children, bool realObjectsToo, bool strict = false)
+            => new WrapperSettings(wrapChildren: children, wrapRealObjects: realObjectsToo, wrapToDynamic: true, strict: strict);
 
         public static WrapperSettings Typed(bool children, bool realObjectsToo, bool strict = true)
             => new WrapperSettings(wrapChildren: children, wrapRealObjects: realObjectsToo, wrapToDynamic: false, strict: strict);

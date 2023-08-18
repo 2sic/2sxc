@@ -1,33 +1,32 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
-using ToSic.Eav;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Data;
 using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Data.Wrapper;
-using static System.StringComparison;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
 {
     internal class PreWrapJsonArray: PreWrapJsonBase, IWrapper<JsonArray>
     {
-        public PreWrapJsonArray(JsonArray item, WrapperSettings settings, CodeDataWrapper wrapper): base(wrapper, settings)
+        public PreWrapJsonArray(CodeDataWrapper wrapper, JsonArray item, WrapperSettings settings): base(wrapper, settings)
         {
             UnwrappedContents = item;
         }
 
         protected readonly JsonArray UnwrappedContents;
 
-        JsonArray IWrapper<JsonArray>.GetContents() => UnwrappedContents;
+        public JsonArray GetContents() => UnwrappedContents;
 
         public override object JsonSource => UnwrappedContents;
 
         #region Keys
 
-        public override IEnumerable<string> Keys(string noParamOrder = Parameters.Protector, IEnumerable<string> only = default)
+        public override IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default)
             => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, UnwrappedContents?.Select((p, i) => i.ToString()));
 
         public override bool ContainsKey(string name)
@@ -53,7 +52,7 @@ namespace ToSic.Sxc.Data
             });
 
             return new TryGetResult(false, found,
-                Wrapper.IfJsonGetValueOrJacket(found));
+                Wrapper.IfJsonGetValueOrJacket(found, Settings));
         }
 
 

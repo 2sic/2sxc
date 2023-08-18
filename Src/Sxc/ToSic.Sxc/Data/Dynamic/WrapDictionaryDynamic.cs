@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Data
             // if result is an anonymous object, re-wrap again for consistency with other APIs
             if (result is null) return true;
             if (result.IsAnonymous())
-                result = _factory.WrapIfPossible(data: result, wrapNonAnon: false, WrapperSettings.Dyn(children: true, realObjectsToo: false));
+                result = _factory.JsonChildWrapIfPossible(data: result, wrapNonAnon: false, WrapperSettings.Dyn(children: true, realObjectsToo: false));
 
             return true;
         }

@@ -117,7 +117,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
                 new object[] { true, 2, "c3"}
             });
 
-            var expectedType = new DynamicJacketList(new JsonArray(), Wrapper).GetType();
+            var expectedType = typeof(DynamicJacketList);
 
             IsTrue(dyn.IsList);
 

@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Data.Wrapper
                 }).Select(p => new
                 {
                     p.Field,
-                    CanDump = Wrapper.WrapIfPossible(data: p.Pdi.Property.Result, wrapNonAnon: false, WrapperSettings.Dyn(children: true, realObjectsToo: true)) as IPropertyLookup
+                    CanDump = Wrapper.JsonChildWrapIfPossible(data: p.Pdi.Property.Result, wrapNonAnon: false, WrapperSettings.Dyn(children: true, realObjectsToo: true)) as IPropertyLookup
                 })
                 .Where(p => !(p.CanDump is null))
                 .ToList();

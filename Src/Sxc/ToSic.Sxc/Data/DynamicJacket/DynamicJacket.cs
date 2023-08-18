@@ -3,12 +3,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using ToSic.Eav.Data;
-using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Data.Wrapper;
 
 namespace ToSic.Sxc.Data
@@ -22,13 +17,13 @@ namespace ToSic.Sxc.Data
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic(...), don't use this directly")]
     [JsonConverter(typeof(DynamicJsonConverter))]
-    public partial class DynamicJacket: DynamicJacketBase<JsonObject>
+    public class DynamicJacket: DynamicJacketBase<JsonObject>
     {
         /// <inheritdoc />
         [PrivateApi]
-        internal DynamicJacket(JsonObject originalData, CodeDataWrapper wrapper) : base(originalData, wrapper)
+        internal DynamicJacket(CodeDataWrapper wrapper, PreWrapJsonObject preWrap) : base(preWrap.GetContents(), wrapper)
         {
-            PreWrapJson = new PreWrapJsonObject(originalData, WrapperSettings.Dyn(true, true), wrapper);
+            PreWrapJson = preWrap;
         }
 
         private PreWrapJsonObject PreWrapJson { get; }
@@ -67,7 +62,7 @@ namespace ToSic.Sxc.Data
         /// </remarks>
         /// <param name="key">the key, case-insensitive</param>
         /// <returns>A value (string, int etc.), <see cref="DynamicJacket"/> or <see cref="DynamicJacketList"/></returns>
-        public object this[string key] => PreWrapJson.TryGetWrap(key).Result;
+        public object this[string key] => PreWrap.TryGetWrap(key).Result;
 
         // 2023-08-17 2dm - completely removed this, I can't imagine it actually being used anywhere.
         ///// <summary>
@@ -93,7 +88,7 @@ namespace ToSic.Sxc.Data
         /// <returns>always returns true, to avoid errors</returns>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            result = PreWrapJson.TryGetWrap(binder.Name).Result;
+            result = PreWrap.TryGetWrap(binder.Name).Result;
             // always say it was found to prevent runtime errors
             return true;
         }
