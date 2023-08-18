@@ -12,23 +12,23 @@ namespace ToSic.Sxc.Context.Query
 {
     public partial class Parameters: ITyped
     {
-        //[PrivateApi]
-        //public dynamic Dyn => this;
-
         [PrivateApi]
         bool ITyped.ContainsKey(string name)
             => OriginalsAsDic.ContainsKey(name);
 
         [PrivateApi]
-        public bool IsEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default)
-            => !OriginalsAsDic.TryGetValue(name, out var result) || HasKeysHelper.IsEmpty(result, default /*blankIs*/);
+        public bool IsEmpty(string name, string noParamOrder = Protector)
+            => !OriginalsAsDic.TryGetValue(name, out var result) || HasKeysHelper.IsEmpty(result, default);
 
         [PrivateApi]
-        public bool IsNotEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default)
-            => OriginalsAsDic.TryGetValue(name, out var result) && HasKeysHelper.IsNotEmpty(result, default /*blankIs*/);
+        public bool IsNotEmpty(string name, string noParamOrder = Protector)
+            => OriginalsAsDic.TryGetValue(name, out var result) && HasKeysHelper.IsNotEmpty(result, default);
 
         [PrivateApi]
         IEnumerable<string> ITyped.Keys(string noParamOrder, IEnumerable<string> only)
+            => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, OriginalsAsDic?.Keys);
+        [PrivateApi]
+        IEnumerable<string> IHasKeys.Keys(string noParamOrder, IEnumerable<string> only)
             => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, OriginalsAsDic?.Keys);
 
 

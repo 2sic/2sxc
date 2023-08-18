@@ -3,10 +3,10 @@ using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
 {
-    public partial interface ITyped : IValueChecks //: IHasKeys
+    public partial interface ITyped : IHasKeys
     {
         /// <inheritdoc cref="IHasKeys.ContainsKey"/>
-        bool ContainsKey(string name);
+        new bool ContainsKey(string name);
 
         /// <inheritdoc cref="IValueChecks.IsEmpty"/>
         new bool IsEmpty(string name, string noParamOrder = Protector);
@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Data
         // ^^^ new is just so it's in the docs
 
         /// <inheritdoc cref="IHasKeys.Keys"/>
-        IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default);
+        new IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default);
 
 
         /// <summary>
