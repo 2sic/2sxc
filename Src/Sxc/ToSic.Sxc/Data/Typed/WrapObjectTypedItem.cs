@@ -7,6 +7,7 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
@@ -28,6 +29,9 @@ namespace ToSic.Sxc.Data.Typed
             _cdf = cdf;
         }
 
+        [PrivateApi]
+        dynamic ITypedItem.Dyn
+            => throw new NotSupportedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(ITypedStack)} by design");
 
         bool ITypedItem.IsDemoItem => PreWrap.TryGetTyped(nameof(ITypedItem.IsDemoItem), noParamOrder: Protector, fallback: false, required: false);
 

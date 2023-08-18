@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Data
             => ItemHelper.Attribute(name, noParamOrder, fallback, required);
 
         [PrivateApi]
-        dynamic ITyped.Dyn => this;
+        dynamic ITypedItem.Dyn => this;
 
 
         [PrivateApi]

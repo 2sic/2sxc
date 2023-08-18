@@ -15,6 +15,13 @@ namespace ToSic.Sxc.Data
     [PublicApi]
     public partial interface ITypedItem: ITyped, ICanBeEntity, ICanBeItem
     {
+        /// <summary>
+        /// A dynamic accessor for properties, to quickly get values when you don't care about type safety.
+        /// This is _often_ (but not always) a <see cref="IDynamicEntity"/>.
+        ///
+        /// Example: `Dyn.FirstName` might just work - and return the first name or `null` if not found.
+        /// </summary>
+        dynamic Dyn { get; }
 
         /// <summary>
         /// The presentation item or `null` if it doesn't exist.

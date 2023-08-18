@@ -61,9 +61,9 @@ namespace ToSic.Sxc.Data
         public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default) 
             => throw new NotImplementedException();
 
-        [PrivateApi]
-        dynamic ITyped.Dyn 
-            => throw new NotSupportedException($"{nameof(ITyped.Dyn)} is not supported on the {nameof(ITypedStack)} by design");
+        //[PrivateApi]
+        //dynamic ITyped.Dyn 
+        //    => throw new NotSupportedException($"{nameof(ITyped.Dyn)} is not supported on the {nameof(ITypedStack)} by design");
 
         #endregion
 

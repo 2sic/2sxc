@@ -12,8 +12,8 @@ namespace ToSic.Sxc.Context.Query
 {
     public partial class Parameters: ITyped
     {
-        [PrivateApi]
-        public dynamic Dyn => this;
+        //[PrivateApi]
+        //public dynamic Dyn => this;
 
         [PrivateApi]
         bool ITyped.ContainsKey(string name)

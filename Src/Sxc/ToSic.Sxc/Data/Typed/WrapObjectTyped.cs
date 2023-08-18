@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Data.Typed
         IPropertyLookup IHasPropLookup.PropertyLookup => PreWrap;
 
 
-        dynamic ITyped.Dyn => this;
+        //dynamic ITyped.Dyn => this;
 
         #region Keys
 
