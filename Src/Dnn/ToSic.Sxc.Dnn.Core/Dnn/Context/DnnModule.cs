@@ -36,22 +36,24 @@ namespace ToSic.Sxc.Dnn.Context
         /// We don't use a Constructor because of DI
         /// So you must always call Init
         /// </summary>
-        public new DnnModule Init(ModuleInfo item) => Log.Func($"{item?.ModuleID}", () =>
+        public new DnnModule Init(ModuleInfo item)
         {
+            var l = Log.Fn<DnnModule>($"{item?.ModuleID}");
             base.Init(item);
-            return this;
-        });
+            return l.ReturnAsOk(this);
+        }
 
         /// <summary>
         /// We don't use a Constructor because of DI
         /// So you must always call Init
         /// </summary>
-        public override IModule Init(int moduleId) => Log.Func($"{moduleId}", () =>
+        public override IModule Init(int moduleId)
         {
+            var l = Log.Fn<IModule>($"{moduleId}");
             var mod = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, false);
             Init(mod);
-            return this;
-        });
+            return l.ReturnAsOk(this);
+        }
 
         #endregion
 
@@ -93,25 +95,26 @@ namespace ToSic.Sxc.Dnn.Context
         }
         private IBlockIdentifier _blockIdentifier;
 
-        private (int AppId, string AppNameId) GetInstanceAppIdAndName(int zoneId) => Log.Func($"{zoneId}", () =>
+        private (int AppId, string AppNameId) GetInstanceAppIdAndName(int zoneId)
         {
+            var l = Log.Fn<(int, string)>($"{zoneId}");
             var module = UnwrappedModule ?? throw new Exception("instance is not ModuleInfo");
             var msg = $"get appid from instance for Z:{zoneId} Mod:{module.ModuleID}";
             if (IsContent)
             {
                 var appId = _appStates.DefaultAppId(zoneId);
-                return ((appId, "Content"), $"{msg} - use Default app: {appId}");
+                return l.Return((appId, "Content"), $"{msg} - use Default app: {appId}");
             }
 
             if (module.ModuleSettings.ContainsKey(Settings.ModuleSettingApp))
             {
                 var guid = module.ModuleSettings[Settings.ModuleSettingApp].ToString();
                 var appId = _appFinderLazy.Value.FindAppId(zoneId, guid);
-                return ((appId, guid), $"{msg} AppG:{guid} = app:{appId}");
+                return l.Return((appId, guid), $"{msg} AppG:{guid} = app:{appId}");
             }
 
             Log.A($"{msg} not found = null");
-            return ((Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty), "not found");
-        });
+            return l.Return((Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty), "not found");
+        }
     }
 }

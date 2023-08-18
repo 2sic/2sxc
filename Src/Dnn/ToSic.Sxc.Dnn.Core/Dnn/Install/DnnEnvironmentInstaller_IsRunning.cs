@@ -26,9 +26,9 @@ namespace ToSic.Sxc.Dnn.Install
         private bool UpgradeComplete(bool alwaysLogToFile) => UpgradeCompleteCache.Get(() => IsUpgradeComplete(LastVersionWithServerChanges, alwaysLogToFile, "- first check"));
         private static readonly GetOnce<bool> UpgradeCompleteCache = new GetOnce<bool>();
 
-        private bool IsUpgradeComplete(string version, bool alwaysLogToFile, string note = "") => Log.Func(timer: true, message: note, func: () =>
+        private bool IsUpgradeComplete(string version, bool alwaysLogToFile, string note = "")
         {
-            var l = Log.Fn<bool>($"Log to file even if all is ok: {alwaysLogToFile}");
+            var l = Log.Fn<bool>(message: $"{note} Log to file even if all is ok: {alwaysLogToFile}", timer: true);
             // 2023-03-23 2dm
             // Previously this created a file on every startup, because it logged trying to find the status.
             // This sometimes resulted in exceptions simply because the file was locked - so to avoid this
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Dnn.Install
                 catch { /* ignore */ }
             }
             return l.ReturnAndLog(complete);
-        });
+        }
 
         // cache the status
         private static bool? _running;

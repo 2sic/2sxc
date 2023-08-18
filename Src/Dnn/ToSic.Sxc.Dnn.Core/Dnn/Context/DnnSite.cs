@@ -46,8 +46,9 @@ namespace ToSic.Sxc.Dnn.Context
 
         #region Swap new Portal Settings into this object
 
-        public DnnSite Swap(PortalSettings settings, ILog extLogOrNull) => Log.Func(() =>
+        public DnnSite Swap(PortalSettings settings, ILog extLogOrNull)
         {
+            var l = Log.Fn<DnnSite>();
             UnwrappedSite = KeepBestPortalSettings(settings);
 
             // reset language info to be sure to get it from the latest source
@@ -55,18 +56,19 @@ namespace ToSic.Sxc.Dnn.Context
             _defaultLanguage = null;
             _zoneId = null;
 
-            return (this, $"Site Id {Id}");
-        });
+            return l.Return(this, $"Site Id {Id}");
+        }
 
-        public DnnSite TrySwap(ModuleInfo module, ILog extLog) => Log.Func($"Owner Site: {module?.OwnerPortalID}, Current Site: {module?.PortalID}", () =>
+        public DnnSite TrySwap(ModuleInfo module, ILog extLog)
         {
-            if (module == null) return (this, "no module");
-            if (module.OwnerPortalID < 0) return (this, "no change, owner < 0");
+            var l = extLog.Fn<DnnSite>($"Owner Site: {module?.OwnerPortalID}, Current Site: {module?.PortalID}");
+            if (module == null) return l.Return(this, "no module");
+            if (module.OwnerPortalID < 0) return l.Return(this, "no change, owner < 0");
 
             var modulePortalSettings = new PortalSettings(module.OwnerPortalID);
             Swap(modulePortalSettings, extLog);
-            return (this, "ok");
-        });
+            return l.Return(this, "ok");
+        }
 
         /// <summary>
         /// Very special helper to work around a DNN issue
@@ -77,19 +79,20 @@ namespace ToSic.Sxc.Dnn.Context
         /// </summary>
         /// <param name="settings"></param>
         /// <returns></returns>
-        private static PortalSettings KeepBestPortalSettings(PortalSettings settings, ILog extLogOrNull = null) => extLogOrNull.Func(() =>
+        private static PortalSettings KeepBestPortalSettings(PortalSettings settings, ILog extLogOrNull = null)
         {
+            var l = extLogOrNull.Fn<PortalSettings>();
             // in case we don't have an HTTP Context with current portal settings, don't try anything
-            if (PortalSettings.Current == null) return (settings, "null, use given");
+            if (PortalSettings.Current == null) return l.Return(settings, "null, use given");
 
             // If we don't have settings, or they point to the same portal, then use that
-            if (settings == null) return (PortalSettings.Current, "null, use current");
-            if (settings == PortalSettings.Current) return (PortalSettings.Current, "is current, use current");
-            if (settings.PortalId == PortalSettings.Current.PortalId) return (PortalSettings.Current, "id=current, use current");
+            if (settings == null) return l.Return(PortalSettings.Current, "null, use current");
+            if (settings == PortalSettings.Current) return l.Return(PortalSettings.Current, "is current, use current");
+            if (settings.PortalId == PortalSettings.Current.PortalId) return l.Return(PortalSettings.Current, "id=current, use current");
 
             // fallback: use supplied settings
-            return (settings, "use new settings");
-        });
+            return l.Return(settings, "use new settings");
+        }
 
 
         #endregion

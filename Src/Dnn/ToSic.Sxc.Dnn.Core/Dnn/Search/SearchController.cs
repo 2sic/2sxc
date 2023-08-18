@@ -82,12 +82,13 @@ namespace ToSic.Sxc.Search
         /// </summary>
         /// <param name="module"></param>
         /// <returns></returns>
-        private string InitAllAndVerifyIfOk(IModule module) => Log.Func(l =>
+        private string InitAllAndVerifyIfOk(IModule module)
         {
+            var l = Log.Fn<string>();
             // Start by getting the module info
             DnnModule = (module as Module<ModuleInfo>)?.GetContents();
             l.A($"start search for mod#{DnnModule?.ModuleID}");
-            if (DnnModule == null) return "no module";
+            if (DnnModule == null) return l.ReturnAsOk("no module");
 
             // This changes site in whole scope
             DnnSite = ((DnnSite)_siteGenerator.New()).TrySwap(DnnModule, Log);
@@ -95,7 +96,7 @@ namespace ToSic.Sxc.Search
             // New Context because Portal-Settings.Current is null
             var appId = module.BlockIdentifier.AppId;
             if (appId == AppConstants.AppIdNotFound || appId == Eav.Constants.NullId)
-                return "no app id";
+                return l.ReturnAsOk("no app id");
 
             // Ensure cache builds up with correct primary language
             // In case it's not loaded yet
@@ -116,15 +117,15 @@ namespace ToSic.Sxc.Search
 
             // Get all streams to index
             var streamsToIndex = GetStreamsToIndex();
-            if (!streamsToIndex.Any()) return "no streams to index";
+            if (!streamsToIndex.Any()) return l.ReturnAsOk("no streams to index");
 
 
             // Convert DNN SearchDocuments from 2sxc SearchInfos
             SearchItems = BuildInitialSearchInfos(streamsToIndex, DnnModule);
 
             // all ok - return null so upstream knows no errors
-            return null;
-        });
+            return l.ReturnNull();
+        }
 
         /// <summary>The DnnModule will be initialized, and must exist for the search-index to provide data.</summary>
         public ModuleInfo DnnModule;
@@ -139,8 +140,9 @@ namespace ToSic.Sxc.Search
         /// Get search info for each dnn module containing 2sxc data
         /// </summary>
         /// <returns></returns>
-        public IList<SearchDocument> GetModifiedSearchDocuments(IModule module, DateTime beginDate) => Log.Func(l =>
+        public IList<SearchDocument> GetModifiedSearchDocuments(IModule module, DateTime beginDate)
         {
+            var l = Log.Fn<IList<SearchDocument>>();
             // Turn off logging into history by default - the template code can reactivate this if desired
             var logWithPreserve = Log as Log;
             if (logWithPreserve != null) logWithPreserve.Preserve = false;
@@ -148,7 +150,7 @@ namespace ToSic.Sxc.Search
             // Log with infos, to ensure errors are caught
             var exitMessage = InitAllAndVerifyIfOk(module);
             if (exitMessage != null)
-                return (new List<SearchDocument>(), exitMessage);
+                return l.Return(new List<SearchDocument>(), exitMessage);
 
             try
             {
@@ -158,7 +160,7 @@ namespace ToSic.Sxc.Search
                 {
                     /* New mode in 12.02 using a custom ViewController */
                     var customizeSearch = CreateAndInitViewController(DnnSite, Block);
-                    if (customizeSearch == null) return (new List<SearchDocument>(), "exit");
+                    if (customizeSearch == null) return l.Return(new List<SearchDocument>(), "exit");
 
                     // Call CustomizeSearch in a try/catch
                     l.A("execute CustomizeSearch");
@@ -186,7 +188,7 @@ namespace ToSic.Sxc.Search
             }
             catch (Exception e)
             {
-                return (LogErrorForExit(e, DnnModule),
+                return l.Return(LogErrorForExit(e, DnnModule),
                     "error, so return nothing to ensure we don't bleed unexpected infos");
             }
 
@@ -198,8 +200,8 @@ namespace ToSic.Sxc.Search
             // reduce load by only keeping recently modified items
             var searchDocuments = KeepOnlyChangesSinceLastIndex(beginDate, SearchItems);
 
-            return (searchDocuments, $"{searchDocuments.Count}");
-        });
+            return l.Return(searchDocuments, $"{searchDocuments.Count}");
+        }
 
         
         
@@ -236,10 +238,9 @@ namespace ToSic.Sxc.Search
         /// <summary>
         /// Convert DNN SearchDocuments from 2sxc SearchInfos
         /// </summary>
-        private Dictionary<string, List<ISearchItem>> BuildInitialSearchInfos(
-            KeyValuePair<string, IDataStream>[] streamsToIndex, ModuleInfo dnnModule
-        ) => Log.Func(() =>
+        private Dictionary<string, List<ISearchItem>> BuildInitialSearchInfos(KeyValuePair<string, IDataStream>[] streamsToIndex, ModuleInfo dnnModule)
         {
+            var l = Log.Fn<Dictionary<string, List<ISearchItem>>>();
             var language = dnnModule.CultureCode;
             var searchInfoDictionary = new Dictionary<string, List<ISearchItem>>();
             foreach (var stream in streamsToIndex)
@@ -271,8 +272,8 @@ namespace ToSic.Sxc.Search
                 }));
             }
 
-            return (searchInfoDictionary, $"{searchInfoDictionary.Count}");
-        });
+            return l.Return(searchInfoDictionary, $"{searchInfoDictionary.Count}");
+        }
 
         /// <summary>
         /// Attach DNN Lookup Providers so query-params like [DateTime:Now] or [Portal:PortalId] will work
@@ -299,8 +300,9 @@ namespace ToSic.Sxc.Search
         /// <summary>
         /// Get original streams and if the settings restrict which ones to keep, apply that. 
         /// </summary>
-        private KeyValuePair<string, IDataStream>[] GetStreamsToIndex() => Log.Func(() =>
+        private KeyValuePair<string, IDataStream>[] GetStreamsToIndex()
         {
+            var l = Log.Fn<KeyValuePair<string, IDataStream>[]>();
             // Check if we should filter the streams - new in 12.02
             var streamsToKeep = Block.View.SearchIndexingStreams
                 .Split(',')
@@ -318,8 +320,8 @@ namespace ToSic.Sxc.Search
                     .Where(s => streamsToKeep.Contains(s.Key, InvariantCultureIgnoreCase))
                     .ToArray();
 
-            return (streamsToIndex, $"{streamsToIndex.Length}");
-        });
+            return l.Return(streamsToIndex, $"{streamsToIndex.Length}");
+        }
 
         private ICustomizeSearch CreateAndInitViewController(DnnSite site, IBlock block)
         {
@@ -328,10 +330,10 @@ namespace ToSic.Sxc.Search
             var path = Path
                 .Combine(Block.View.IsShared ? site.SharedAppsRootRelative : site.AppsRootRelative, block.Context.AppState.Folder)
                 .ForwardSlash();
-            Log.A($"compile ViewController class on path: {path}/{Block.View.ViewController}");
+            l.A($"compile ViewController class on path: {path}/{Block.View.ViewController}");
             var instance = _codeCompiler.New().InstantiateClass(virtualPath: block.View.ViewController, 
                 className: null, relativePath: path, throwOnError: true);
-            Log.A("got instance of compiled ViewController class");
+            l.A("got instance of compiled ViewController class");
 
             // 2. Check if it implements ToSic.Sxc.Search.ICustomizeSearch - otherwise just return the empty search results as shown above
             if (!(instance is ICustomizeSearch customizeSearch)) return l.ReturnNull("exit, class do not implements ICustomizeSearch");
@@ -339,7 +341,7 @@ namespace ToSic.Sxc.Search
             // 3. Make sure it has the full context if it's based on DynamicCode (like Code12)
             if (instance is INeedsDynamicCodeRoot instanceWithContext)
             {
-                Log.A($"attach DynamicCode context to class instance");
+                l.A($"attach DynamicCode context to class instance");
                 var parentDynamicCodeRoot = _codeRootFactory.New()
                     .BuildCodeRoot(null, block, Log, Constants.CompatibilityLevel10);
                     //.InitDynCodeRoot(block, Log) //, Constants.CompatibilityLevel10)

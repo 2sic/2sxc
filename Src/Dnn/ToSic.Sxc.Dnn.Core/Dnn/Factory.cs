@@ -59,11 +59,12 @@ namespace ToSic.Sxc.Dnn
         /// <param name="parentLog">The parent log, optional</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
         [Obsolete("This is obsolete in V13 but will continue to work for now, we plan to remove in v15 or 16. Use the IDynamicCodeService or the IRenderService instead.")]
-        public static IBlockBuilder CmsBlock(int pageId, int modId, ILog parentLog) => parentLog.Func($"{pageId}, {modId}", () =>
+        public static IBlockBuilder CmsBlock(int pageId, int modId, ILog parentLog)
         {
+            var l = parentLog.Fn<IBlockBuilder>($"{pageId}, {modId}");
             DnnStaticDi.CodeInfos.Warn(V13To17($"ToSic.Sxc.Dnn.Factory.{nameof(CmsBlock)}", "https://go.2sxc.org/brc-13-dnn-factory"));
-            return StaticBuild<IModuleAndBlockBuilder>(parentLog).GetProvider(pageId, modId).LoadBlock().BlockBuilder;
-        });
+            return l.ReturnAsOk(StaticBuild<IModuleAndBlockBuilder>(parentLog).GetProvider(pageId, modId).LoadBlock().BlockBuilder);
+        }
 
         /// <summary>
         /// Get a Root CMS Block if you have the ModuleInfo object

@@ -124,8 +124,9 @@ namespace ToSic.Sxc.Dnn.DataSources
 
         #endregion
 
-        private IImmutableList<IEntity> GetList() => Log.Func(l =>
+        private IImmutableList<IEntity> GetList()
         {
+            var l = Log.Fn<IImmutableList<IEntity>>();
             Configuration.Parse();
 
             var realTenant = _services.Site.Id != Eav.Constants.NullId ? _services.Site : _services.ZoneMapper.SiteOfApp(AppId);
@@ -168,8 +169,8 @@ namespace ToSic.Sxc.Dnn.DataSources
             }
             l.A($"results: {results.Count}");
             var userProfileDataFactory = _dataFactory.New(options: new DataFactoryOptions(DnnUserProfileDataRaw.Options, typeName: ContentType?.NullIfNoValue()));
-            return (userProfileDataFactory.Create(results), "ok");
-        });
+            return l.Return(userProfileDataFactory.Create(results), "ok");
+        }
 
         private static string GetDnnProfileValue(UserInfo user, string property)
         {

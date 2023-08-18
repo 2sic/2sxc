@@ -29,16 +29,23 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         /// <inheritdoc />
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        [AllowAnonymous]   // will check security internally, so assume no requirements
-        public EditDto Load([FromBody] List<ItemIdentifier> items, int appId) 
-            => Log.Func(() => Real.Load(items, appId));
+        [AllowAnonymous] // will check security internally, so assume no requirements
+        public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
+        {
+            var l = Log.Fn<EditDto>($"Items: {items.Count}, AppId: {appId}");
+            return l.ReturnAsOk(Real.Load(items, appId));
+        }
+
 
         /// <inheritdoc />
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         [AllowAnonymous] // will check security internally, so assume no requirements
         public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
-            => Log.Func(() => Real.Save(package, appId, partOfPage));
+        {
+            var l = Log.Fn<Dictionary<Guid, int>>($"Items: {package?.Items?.Count}, AppId: {appId}, PartOfPage: {partOfPage}");
+            return l.ReturnAsOk(Real.Save(package, appId, partOfPage));
+        }
 
 
         /// <inheritdoc />

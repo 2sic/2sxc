@@ -29,9 +29,9 @@ namespace ToSic.Sxc.DataSources
             bool includeSystem = default,
             bool includeLinks = default,
             bool requireViewPermissions = true,
-            bool requireEditPermissions = true
-        ) => Log.Func($"PortalId: {PortalSettings.Current?.PortalId ?? -1}", l =>
+            bool requireEditPermissions = true)
         {
+            var l = Log.Fn<List<PageDataRaw>>($"PortalId: {PortalSettings.Current?.PortalId ?? -1}");
             List<TabInfo> pages;
             try
             {
@@ -43,10 +43,10 @@ namespace ToSic.Sxc.DataSources
             catch (Exception ex)
             {
                 l.Ex(ex);
-                return (new List<PageDataRaw>(), "error");
+                return l.Return(new List<PageDataRaw>(), "error");
             }
 
-            if (pages == null || !pages.Any()) return (new List<PageDataRaw>(), "null/empty");
+            if (pages == null || !pages.Any()) return l.Return(new List<PageDataRaw>(), "null/empty");
 
             try
             {
@@ -85,14 +85,14 @@ namespace ToSic.Sxc.DataSources
                         LinkTarget = (string)p.TabSettings["LinkNewWindow"] == true.ToString() ? "_blank": "",
                     })
                     .ToList();
-                return (result, $"found {result.Count}");
+                return l.Return(result, $"found {result.Count}");
             }
             catch (Exception ex)
             {
                 l.Ex(ex);
-                return (new List<PageDataRaw>(), "error");
+                return l.Return(new List<PageDataRaw>(), "error");
             }
-        });
+        }
 
     }
 }
