@@ -18,15 +18,16 @@ namespace ToSic.Sxc.Data
     [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
     public abstract partial class DynamicJacketBase: DynamicObject, IReadOnlyList<object>, ISxcDynamicObject, ICanGetByName, IHasPropLookup, IHasJsonSource
     {
+
         #region Constructor / Setup
 
-        protected DynamicJacketBase(CodeDataWrapper wrapper)
+        internal DynamicJacketBase(CodeJsonWrapper wrapper)
         {
             Wrapper = wrapper;
         }
 
         [PrivateApi]
-        protected readonly CodeDataWrapper Wrapper;
+        internal CodeJsonWrapper Wrapper { get; }
 
         [PrivateApi]
         internal abstract IPreWrap PreWrap { get; }

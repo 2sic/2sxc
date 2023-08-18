@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Data.Wrapper
 {
     [PrivateApi]
     [JsonConverter(typeof(DynamicJsonConverter))]
-    internal interface IPreWrap : /*IHasKeys,*/ IHasJsonSource, IPropertyLookup //, IWrapper<object>
+    public interface IPreWrap : /*IHasKeys,*/ IHasJsonSource, IPropertyLookup //, IWrapper<object>
     {
         TryGetResult TryGetWrap(string name, bool wrapDefault = true);
 

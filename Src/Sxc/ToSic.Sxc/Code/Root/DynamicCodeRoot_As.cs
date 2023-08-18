@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Code
         #region AsDynamic Implementations
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
-        public dynamic AsDynamic(string json, string fallback = default) => Cdf.AsDynamicFromJson(json, fallback);
+        public dynamic AsDynamic(string json, string fallback = default) => Cdf.Json2Jacket(json, fallback);
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
         public dynamic AsDynamic(IEntity entity) => Cdf.CodeAsDyn(entity);

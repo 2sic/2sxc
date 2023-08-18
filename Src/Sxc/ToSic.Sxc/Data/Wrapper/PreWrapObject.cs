@@ -94,7 +94,7 @@ namespace ToSic.Sxc.Data.Wrapper
             // Probably re-wrap for further dynamic navigation!
             return new TryGetResult(true, result,
                 Settings.WrapChildren && wrapDefault
-                ? Wrapper.JsonChildWrapIfPossible(result, Settings.WrapRealObjects, Settings)
+                ? Wrapper.ChildNonJsonWrapIfPossible(result, Settings.WrapRealObjects, Settings)
                 : result);
         }
 

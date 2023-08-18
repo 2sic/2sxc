@@ -114,7 +114,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
         {
             var dynJson = Json2Dyn(@"{ 
                 ""NullType"": null, 
-                ""UndefinedType"": undefined, 
+                ""UndefinedType"": null, // undefined would not be valid
             }");
             IsNull(dynJson.NullType);
             IsNull(dynJson.UndefinedType);

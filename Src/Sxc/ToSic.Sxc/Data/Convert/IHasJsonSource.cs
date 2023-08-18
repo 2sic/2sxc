@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Data
 {
     [PrivateApi]
-    internal interface IHasJsonSource
+    public interface IHasJsonSource
     {
         object JsonSource { get; }
     }

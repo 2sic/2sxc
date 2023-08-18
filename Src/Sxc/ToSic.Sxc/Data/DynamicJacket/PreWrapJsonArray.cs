@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Data
 {
     internal class PreWrapJsonArray: PreWrapJsonBase, IWrapper<JsonArray>
     {
-        public PreWrapJsonArray(CodeDataWrapper wrapper, JsonArray item, WrapperSettings settings): base(wrapper, settings)
+        public PreWrapJsonArray(CodeJsonWrapper wrapper, JsonArray item, WrapperSettings settings): base(wrapper, settings)
         {
             UnwrappedContents = item;
         }
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Data
             });
 
             return new TryGetResult(false, found,
-                Wrapper.IfJsonGetValueOrJacket(found, Settings));
+                Wrapper.IfJsonGetValueOrJacket(found));
         }
 
 

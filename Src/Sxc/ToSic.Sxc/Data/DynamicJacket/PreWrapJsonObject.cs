@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Data
     internal class PreWrapJsonObject: PreWrapJsonBase, IWrapper<JsonObject>
     {
 
-        internal PreWrapJsonObject(CodeDataWrapper wrapper, JsonObject item, WrapperSettings settings): base(wrapper, settings)
+        internal PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item, WrapperSettings settings): base(wrapper, settings)
         {
             UnwrappedContents = item;
         }
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Data
                 .FirstOrDefault(p => p.Key.EqualsInsensitive(name));
 
             return new TryGetResult(false, found.Value, 
-                Wrapper.IfJsonGetValueOrJacket(found.IsNullOrDefault() ? null : found.Value, Settings));
+                Wrapper.IfJsonGetValueOrJacket(found.IsNullOrDefault() ? null : found.Value));
         }
 
 

@@ -69,9 +69,9 @@ namespace ToSic.Sxc.Data
             switch (dynObject)
             {
                 case null:
-                    return l.Return(AsDynamicFromJson(null), "null");
+                    return l.Return(Json2Jacket(null), "null");
                 case string strObject:
-                    return l.Return(AsDynamicFromJson(strObject), "string");
+                    return l.Return(Json2Jacket(strObject), "string");
                 case IDynamicEntity dynEnt:
                     return l.Return(dynEnt, "DynamicEntity");
                 // New case - should avoid re-converting dynamic json, DynamicStack etc.
@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Data
                     if (dynObject.GetType().IsValueType) return l.Return(dynObject, "bad call - value type");
 
                     // 2021-09-14 new - just convert to a DynamicReadObject
-                    var result = _codeDataWrapper.Value.JsonChildWrapIfPossible(data: dynObject,
+                    var result = _codeDataWrapper.Value.ChildNonJsonWrapIfPossible(data: dynObject,
                         // 2023-08-08 2dm - changed `wrapNonAnon` to true, I'm not sure why it was false, but I'm certain that's wrong
                         wrapNonAnon: true /* false, */,
                         WrapperSettings.Dyn(children: true, realObjectsToo: false));

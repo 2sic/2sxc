@@ -13,6 +13,7 @@ namespace ToSic.Sxc.Data
     // todo: make internal once we have an interface
     public partial class CodeDataFactory: ServiceForDynamicCode
     {
+        private readonly Generator<CodeJsonWrapper> _wrapJsonGenerator;
         private readonly LazySvc<CodeDataServices> _codeDataServices;
         private readonly LazySvc<CodeDataWrapper> _codeDataWrapper;
         private readonly LazySvc<DataBuilder> _dataBuilderLazy;
@@ -24,14 +25,16 @@ namespace ToSic.Sxc.Data
             LazySvc<AdamManager> adamManager,
             LazySvc<IContextOfApp> contextOfApp,
             LazySvc<DataBuilder> dataBuilderLazy,
-            LazySvc<CodeDataWrapper> codeDataWrapper) : base("Sxc.AsConv")
+            LazySvc<CodeDataWrapper> codeDataWrapper,
+            Generator<CodeJsonWrapper> wrapJsonGenerator) : base("Sxc.AsConv")
         {
             ConnectServices(
                 _codeDataServices = codeDataServices,
                 _adamManagerLazy = adamManager,
                 _contextOfAppLazy = contextOfApp,
                 _dataBuilderLazy = dataBuilderLazy,
-                _codeDataWrapper = codeDataWrapper
+                _codeDataWrapper = codeDataWrapper,
+                _wrapJsonGenerator = wrapJsonGenerator
             );
         }
 
@@ -64,8 +67,9 @@ namespace ToSic.Sxc.Data
 
         #endregion
 
-        public DynamicJacketBase AsDynamicFromJson(string json, string fallback = default) 
-            => _codeDataWrapper.Value.Json2Jacket(json, fallback);
+        internal DynamicJacketBase Json2Jacket(string json, string fallback = default)
+            => _wrapJsonGenerator.New().Setup(WrapperSettings.Dyn(true, true))
+                .Json2Jacket(json, fallback: fallback);
 
     }
 }

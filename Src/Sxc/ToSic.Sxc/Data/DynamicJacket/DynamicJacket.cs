@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Data
     {
         /// <inheritdoc />
         [PrivateApi]
-        internal DynamicJacket(CodeDataWrapper wrapper, PreWrapJsonObject preWrap) : base(preWrap.GetContents(), wrapper)
+        internal DynamicJacket(CodeJsonWrapper wrapper, PreWrapJsonObject preWrap) : base(wrapper, preWrap.GetContents())
         {
             PreWrapJson = preWrap;
         }

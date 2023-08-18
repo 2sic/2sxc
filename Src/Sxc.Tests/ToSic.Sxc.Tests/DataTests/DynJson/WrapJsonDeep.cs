@@ -74,9 +74,10 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
             var dyn = Obj2Json2Typed(DeepData);
             var expectedType = typeof(WrapObjectTyped);
             IsInstanceOfType(dyn.Get("ObjectProperty"), expectedType);
-            // TODO!
-            //IsInstanceOfType(dyn.ObjectProperty.ObjectProperty, expectedType);
+            IsNull(dyn.Get("ObjectPropertyNonExisting", required: false));
+            IsInstanceOfType((dyn.Get("ObjectProperty") as ITyped).Get("ObjectProperty"), expectedType);
             //IsInstanceOfType(dyn.ObjectProperty.ObjectProperty.ObjectPROPERTY, expectedType);
+            // TODO!
             //IsNull(dyn.ObjectProperty.ObjectProperty.ObjectIncorrect);
         }
 

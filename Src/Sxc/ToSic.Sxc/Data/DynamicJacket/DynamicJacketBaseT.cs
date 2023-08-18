@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="originalData">the original data we're wrapping</param>
         [PrivateApi]
-        protected DynamicJacketBase(T originalData, CodeDataWrapper wrapper): base(wrapper)
+        internal DynamicJacketBase(CodeJsonWrapper wrapper, T originalData): base(wrapper)
         {
             UnwrappedContents = originalData;
         }

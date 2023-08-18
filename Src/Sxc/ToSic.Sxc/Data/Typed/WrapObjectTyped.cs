@@ -4,31 +4,39 @@ using System.Net;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Data;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Services;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data.Typed
 {
     [PrivateApi]
     [JsonConverter(typeof(DynamicJsonConverter))]
-    internal class WrapObjectTyped: Wrapper<IPreWrap>, ITyped, IHasPropLookup, IHasJsonSource
+    public class WrapObjectTyped: IWrapper<IPreWrap>, ITyped, IHasPropLookup, IHasJsonSource
     {
-        protected readonly CodeDataWrapper Wrapper;
-        protected readonly IPreWrap PreWrap;
+        private readonly LazySvc<IScrub> _scrubSvc;
+        private readonly LazySvc<ConvertForCodeService> _forCodeConverter;
+        internal IPreWrap PreWrap { get; private set; }
 
-        public WrapObjectTyped(IPreWrap preWrap, CodeDataWrapper wrapper) : base(preWrap)
+        public WrapObjectTyped(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeService> forCodeConverter)
         {
-            Wrapper = wrapper;
-            PreWrap = preWrap;
+            _scrubSvc = scrubSvc;
+            _forCodeConverter = forCodeConverter;
         }
 
+        internal WrapObjectTyped Setup(IPreWrap preWrap)
+        {
+            PreWrap = preWrap;
+            return this;
+        }
+
+        public IPreWrap GetContents() => PreWrap;
+
         IPropertyLookup IHasPropLookup.PropertyLookup => PreWrap;
-
-
-        //dynamic ITyped.Dyn => this;
 
         #region Keys
 
@@ -80,10 +88,7 @@ namespace ToSic.Sxc.Data.Typed
         string ITyped.String(string name, string noParamOrder, string fallback, bool? required, object scrubHtml)
         {
             var value = PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
-            return TypedItemHelpers.MaybeScrub(value, scrubHtml, () => Wrapper.Cdf.Value.Services.Scrub);
-//#pragma warning disable CS0618
-//            return scrubHtml ? Tags.Strip(value) : value;
-//#pragma warning restore CS0618
+            return TypedItemHelpers.MaybeScrub(value, scrubHtml, () => _scrubSvc.Value);
         }
 
         int ITyped.Int(string name, string noParamOrder, int fallback, bool? required)
@@ -111,7 +116,7 @@ namespace ToSic.Sxc.Data.Typed
         {
             Protect(noParamOrder, nameof(fallback));
             var value = PreWrap.TryGetWrap(name, false).Result;
-            var strValue = Wrapper.ConvertForCode.ForCode(value, fallback: fallback);
+            var strValue = _forCodeConverter.Value.ForCode(value, fallback: fallback);
             return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
         }
 
@@ -122,5 +127,6 @@ namespace ToSic.Sxc.Data.Typed
             => PreWrap.JsonSource;
 
         #endregion
+
     }
 }

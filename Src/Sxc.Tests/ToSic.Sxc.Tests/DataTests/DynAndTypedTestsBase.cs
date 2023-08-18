@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Serialization;
+using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Wrapper;
@@ -10,7 +11,6 @@ namespace ToSic.Sxc.Tests.DataTests
     {
         protected DynAndTypedTestsBase()
         {
-            // Wrapper = GetService<CodeDataWrapper>();
         }
 
         public CodeDataFactory Factory => _fac.Get(GetService<CodeDataFactory>);
@@ -19,7 +19,10 @@ namespace ToSic.Sxc.Tests.DataTests
         public CodeDataWrapper Wrapper => _wrapFac.Get(GetService<CodeDataWrapper>);
         private readonly GetOnce<CodeDataWrapper> _wrapFac = new GetOnce<CodeDataWrapper>();
 
-        public DynamicJacketBase Json2Jacket(string jsonString) => Wrapper.Json2Jacket(jsonString);
+        public CodeJsonWrapper JsonWrapper => _codeJson.Get(GetService<Generator<CodeJsonWrapper>>).New();
+        private readonly GetOnce<Generator<CodeJsonWrapper>> _codeJson = new GetOnce<Generator<CodeJsonWrapper>>();
+
+        public DynamicJacketBase Json2Jacket(string jsonString) => Factory.Json2Jacket(jsonString);
 
         public dynamic Json2Dyn(string jsonString) => Json2Jacket(jsonString);
 
@@ -44,7 +47,7 @@ namespace ToSic.Sxc.Tests.DataTests
             => Wrapper.TypedFromObject(data, reWrap ?? WrapperSettings.Typed(true, true));
 
         public ITyped Obj2Json2Typed(object data, WrapperSettings? settings = null) 
-            => Wrapper.Json2Typed(JsonSerialize(data));
+            => JsonWrapper.Setup(WrapperSettings.Typed(true, true)).Json2Typed(JsonSerialize(data));
 
         public ITypedItem Obj2Item(object data, WrapperSettings? reWrap = null)
             => Wrapper.TypedItemFromObject(data, reWrap ?? WrapperSettings.Typed(true, true));

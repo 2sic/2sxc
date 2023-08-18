@@ -12,13 +12,14 @@ namespace ToSic.Sxc.Data
 {
     internal abstract class PreWrapJsonBase: IPreWrap, IPropertyLookup //, IHasKeys
     {
-        internal PreWrapJsonBase(CodeDataWrapper wrapper, WrapperSettings settings)
+        internal PreWrapJsonBase(CodeJsonWrapper wrapper, WrapperSettings settings)
         {
             Wrapper = wrapper;
             Settings = settings;
         }
 
-        public readonly CodeDataWrapper Wrapper;
+        public readonly CodeJsonWrapper Wrapper;
+
         public WrapperSettings Settings { get; }
 
         #region Abstract

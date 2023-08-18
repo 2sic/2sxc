@@ -14,20 +14,31 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Services;
 using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Data.Typed
 {
-    internal class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
+    public class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
     {
-        private readonly ILazyLike<CodeDataFactory> _cdf;
+        private ILazyLike<CodeDataFactory> _cdf { get; set; }
 
-        public WrapObjectTypedItem(PreWrapObject preWrap, CodeDataWrapper wrapper, ILazyLike<CodeDataFactory> cdf) : base(preWrap, wrapper)
+        public WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeService> forCodeConverter) : base(scrubSvc, forCodeConverter)
         {
-            _cdf = cdf;
         }
+
+        public WrapObjectTypedItem Setup(ILazyLike<CodeDataFactory> cdf, CodeDataWrapper wrapper, PreWrapObject preWrap)
+        {
+            Setup(preWrap);
+            Wrapper = wrapper;
+            _cdf = cdf;
+            return this;
+        }
+
+        private CodeDataWrapper Wrapper { get; set; }
+
 
         [PrivateApi]
         dynamic ITypedItem.Dyn

@@ -2,8 +2,6 @@
 using System.Dynamic;
 using System.Linq;
 using System.Text.Json.Nodes;
-using ToSic.Eav.Data.Debug;
-using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data.Wrapper;
 
@@ -16,7 +14,7 @@ namespace ToSic.Sxc.Data
     public class DynamicJacketList : DynamicJacketBase<JsonArray>, IReadOnlyList<object>
     {
         /// <inheritdoc />
-        internal DynamicJacketList(CodeDataWrapper wrapper, PreWrapJsonArray preWrap) : base(preWrap.GetContents(), wrapper)
+        internal DynamicJacketList(CodeJsonWrapper wrapper, PreWrapJsonArray preWrap) : base(wrapper, preWrap.GetContents())
         {
             PreWrapList = preWrap;
         }
@@ -40,7 +38,7 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         public override IEnumerator<object> GetEnumerator() 
-            => UnwrappedContents.Select(o => Wrapper.IfJsonGetValueOrJacket(o, PreWrap.Settings)).GetEnumerator();
+            => UnwrappedContents.Select(o => Wrapper.IfJsonGetValueOrJacket(o)).GetEnumerator();
 
         [PrivateApi]
         public override bool TryGetMember(GetMemberBinder binder, out object result)
@@ -55,6 +53,6 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="index">array index</param>
         /// <returns>the item or an error if not found</returns>
-        public override object this[int index] => Wrapper.IfJsonGetValueOrJacket(UnwrappedContents[index], PreWrap.Settings);
+        public override object this[int index] => Wrapper.IfJsonGetValueOrJacket(UnwrappedContents[index]);
     }
 }

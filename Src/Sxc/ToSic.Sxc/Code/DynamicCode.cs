@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Code
         #region AsDynamic and AsEntity
 
         /// <inheritdoc />
-        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot?.Cdf.AsDynamicFromJson(json, fallback);
+        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot?.Cdf.Json2Jacket(json, fallback);
 
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity) => _DynCodeRoot?.Cdf.CodeAsDyn(entity);

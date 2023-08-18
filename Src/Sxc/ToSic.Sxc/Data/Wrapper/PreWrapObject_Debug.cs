@@ -38,10 +38,15 @@ namespace ToSic.Sxc.Data.Wrapper
                 {
                     var result = r.Pdi.Property.Result;
                     return result != null && !(result is string) && !result.GetType().IsValueType;
-                }).Select(p => new
+                }).Select(p =>
                 {
-                    p.Field,
-                    CanDump = Wrapper.JsonChildWrapIfPossible(data: p.Pdi.Property.Result, wrapNonAnon: false, WrapperSettings.Dyn(children: true, realObjectsToo: true)) as IPropertyLookup
+                    var maybeDump = Wrapper.ChildNonJsonWrapIfPossible(data: p.Pdi.Property.Result, wrapNonAnon: false,
+                        WrapperSettings.Dyn(children: true, realObjectsToo: true));
+                    return new
+                    {
+                        p.Field,
+                        CanDump = maybeDump as IPropertyLookup ?? (maybeDump as IHasPropLookup)?.PropertyLookup,
+                    };
                 })
                 .Where(p => !(p.CanDump is null))
                 .ToList();

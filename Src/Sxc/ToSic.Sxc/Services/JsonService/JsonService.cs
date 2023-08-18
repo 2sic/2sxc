@@ -12,12 +12,12 @@ namespace ToSic.Sxc.Services
     [PrivateApi("Hide implementation")]
     internal class JsonService: ServiceBase, IJsonService
     {
-        private readonly LazySvc<CodeDataWrapper> _dynJacketFactory;
+        private readonly Generator<CodeJsonWrapper> _wrapJsonGenerator;
 
-        public JsonService(LazySvc<CodeDataWrapper> dynJacketFactory): base("Sxc.JsnSvc")
+        public JsonService(Generator<CodeJsonWrapper> wrapJsonGenerator) : base("Sxc.JsnSvc")
         {
             ConnectServices(
-                _dynJacketFactory = dynJacketFactory
+                _wrapJsonGenerator = wrapJsonGenerator
             );
         }
 
@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Services
 
         /// <inheritdoc />
         public ITyped ToTyped(string json, string noParamOrder = Protector, string fallback = default)
-            => _dynJacketFactory.Value.Json2Typed(json, fallback);
+            => _wrapJsonGenerator.New().Setup(WrapperSettings.Typed(true, true)).Json2Typed(json, noParamOrder, fallback);
 
         /// <inheritdoc />
         public string ToJson(object item)
