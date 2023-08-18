@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Data
 
             var isPath = name.Contains(PropertyStack.PathSeparator.ToString());
             if (!isPath)
-                return JsonObjectContainsKey(_jObject, name);// _jObject.Any(p => name.EqualsInsensitive(p.Key));
+                return JsonObjectContainsKey(_jObject, name);
 
             var pathParts = PropertyStack.SplitPathIntoParts(name);
             var node = _jObject;

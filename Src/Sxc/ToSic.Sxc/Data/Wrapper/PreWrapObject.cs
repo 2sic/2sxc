@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using static ToSic.Eav.Parameters;
@@ -24,8 +26,12 @@ namespace ToSic.Sxc.Data.Wrapper
     {
         #region Constructor / Setup
 
-        public object GetContents() => UnwrappedObject;
-        private readonly Dictionary<string, PropertyInfo> _ignoreCaseLookup;
+        public object GetContents() => _innerObject;
+
+        /// <summary>
+        /// Case insensitive property dictionary
+        /// </summary>
+        private Dictionary<string, PropertyInfo> PropDic { get; }
 
         /// <summary>
         /// 
@@ -38,14 +44,14 @@ namespace ToSic.Sxc.Data.Wrapper
         [PrivateApi]
         internal PreWrapObject(object item, WrapperSettings settings, CodeDataWrapper wrapper)
         {
-            Wrapper = wrapper;
-            UnwrappedObject = item;
+            _wrapper = wrapper;
+            _innerObject = item;
             Settings = settings;
-            _ignoreCaseLookup = CreateDictionary(item);
+            PropDic = CreateDictionary(item);
         }
 
-        protected readonly CodeDataWrapper Wrapper;
-        protected readonly object UnwrappedObject;
+        private readonly CodeDataWrapper _wrapper;
+        private readonly object _innerObject;
         public override WrapperSettings Settings { get; }
 
         private static Dictionary<string, PropertyInfo> CreateDictionary(object original)
@@ -62,49 +68,57 @@ namespace ToSic.Sxc.Data.Wrapper
 
         #region Keys
 
-        public override bool ContainsKey(string name) => _ignoreCaseLookup.ContainsKey(name);
+        public override bool ContainsKey(string name) => PropDic.ContainsKey(name);
 
         public override IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default)
-            => FilterKeysIfPossible(noParamOrder, only, _ignoreCaseLookup?.Keys);
+            => FilterKeysIfPossible(noParamOrder, only, PropDic?.Keys);
 
         #endregion
 
 
         public override TryGetResult TryGetWrap(string name, bool wrapDefault = true)
         {
-            if (UnwrappedObject == null)
+            if (name.IsEmptyOrWs() || _innerObject == null)
                 return new TryGetResult(false, null, null);
 
-            if (!_ignoreCaseLookup.TryGetValue(name, out var lookup))
+            var isPath = name.Contains(PropertyStack.PathSeparator.ToString());
+
+            if (!isPath)
+                return TryGetFromNode(name, this, wrapDefault);
+
+            var pathParts = PropertyStack.SplitPathIntoParts(name);
+            var node = this;
+            for (var i = 0; i < pathParts.Length; i++)
+            {
+                var part = pathParts[i];
+                var result = TryGetFromNode(part, node, true);
+                // last one or not found - return a not-found
+                if (i == pathParts.Length - 1 || !result.Found) return result;
+
+                node = (result.Result as IHasPropLookup)?.PropertyLookup as PreWrapObject;
+                if (node == null) return new TryGetResult(false, null, null);
+            }
+            return new TryGetResult(false, null, null);
+
+        }
+
+        private TryGetResult TryGetFromNode(string name, PreWrapObject preWrap, bool wrapDefault)
+        {
+            if (!preWrap.PropDic.TryGetValue(name, out var lookup))
                 return new TryGetResult(false, null, null);
 
-            var result = lookup.GetValue(UnwrappedObject);
+            var result = lookup.GetValue(preWrap._innerObject);
 
             // Probably re-wrap for further dynamic navigation!
             return new TryGetResult(true, result,
                 Settings.WrapChildren && wrapDefault
-                ? Wrapper.ChildNonJsonWrapIfPossible(result, Settings.WrapRealObjects, Settings)
-                : result);
+                    ? _wrapper.ChildNonJsonWrapIfPossible(result, Settings.WrapRealObjects, Settings)
+                    : result);
+
         }
 
-        //public object TryGet(string name, string noParamOrder, bool? required, [CallerMemberName] string cName = default)
-        //{
-        //    Protect(noParamOrder, nameof(required));
-        //    var result = TryGetWrap(name, true);
-        //    return IsErrStrict(result.Found, required, Settings.GetStrict)
-        //        ? throw ErrStrict(name, cName: cName)
-        //        : result.Result;
-        //}
 
-        //public TValue TryGetTyped<TValue>(string name, string noParamOrder, TValue fallback, bool? required, [CallerMemberName] string cName = default)
-        //{
-        //    Protect(noParamOrder, nameof(fallback), methodName: cName);
-        //    var result = TryGetWrap(name, false);
-        //    return IsErrStrict(result.Found, required, Settings.GetStrict)
-        //        ? throw ErrStrict(name, cName: cName)
-        //        : result.Raw.ConvertOrFallback(fallback);
-        //}
 
-        public override object JsonSource => UnwrappedObject;
+        public override object JsonSource => _innerObject;
     }
 }

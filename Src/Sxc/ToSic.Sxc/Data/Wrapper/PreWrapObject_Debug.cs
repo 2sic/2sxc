@@ -14,11 +14,11 @@ namespace ToSic.Sxc.Data.Wrapper
         [PrivateApi]
         public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
         {
-            if (UnwrappedObject == null) return new List<PropertyDumpItem>();
+            if (_innerObject == null) return new List<PropertyDumpItem>();
 
             if (string.IsNullOrEmpty(path)) path = DumpSourceName;
 
-            var allProperties = _ignoreCaseLookup.ToList<KeyValuePair<string, PropertyInfo>>();
+            var allProperties = PropDic.ToList<KeyValuePair<string, PropertyInfo>>();
 
             var simpleProps = allProperties;
             var resultDynChildren = simpleProps.Select(p => new
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Data.Wrapper
                     return result != null && !(result is string) && !result.GetType().IsValueType;
                 }).Select(p =>
                 {
-                    var maybeDump = Wrapper.ChildNonJsonWrapIfPossible(data: p.Pdi.Property.Result, wrapNonAnon: false,
+                    var maybeDump = _wrapper.ChildNonJsonWrapIfPossible(data: p.Pdi.Property.Result, wrapNonAnon: false,
                         WrapperSettings.Dyn(children: true, realObjectsToo: true));
                     return new
                     {
