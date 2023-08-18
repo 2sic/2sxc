@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Data.PropertyLookup;
+using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using static ToSic.Eav.Parameters;
 
@@ -9,7 +10,7 @@ namespace ToSic.Sxc.Data.Wrapper
 {
     [PrivateApi]
     [JsonConverter(typeof(DynamicJsonConverter))]
-    internal interface IPreWrap : /*IHasKeys,*/ IHasJsonSource, IPropertyLookup
+    internal interface IPreWrap : /*IHasKeys,*/ IHasJsonSource, IPropertyLookup //, IWrapper<object>
     {
         TryGetResult TryGetWrap(string name, bool wrapDefault = true);
 

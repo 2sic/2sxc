@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Data
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic(...), don't use this directly")]
     [JsonConverter(typeof(DynamicJsonConverter))]
-    public partial class DynamicJacket: DynamicJacketBase<JsonObject>, /*IPropertyLookup,*/ IHasJsonSource
+    public partial class DynamicJacket: DynamicJacketBase<JsonObject>
     {
         /// <inheritdoc />
         [PrivateApi]
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Data
         /// <summary>
         /// Count array items or object properties
         /// </summary>
-        public override int Count => PreWrapJson.GetContents().Count;
+        public override int Count => UnwrappedContents.Count;
 
         #endregion
 
@@ -105,7 +105,5 @@ namespace ToSic.Sxc.Data
         public override object this[int index] => (_propertyArray ?? (_propertyArray = UnwrappedContents.Select(p => p.Value).ToArray()))[index];
         private JsonNode[] _propertyArray;
 
-        /// <inheritdoc />
-        object IHasJsonSource.JsonSource => UnwrappedContents;
     }
 }

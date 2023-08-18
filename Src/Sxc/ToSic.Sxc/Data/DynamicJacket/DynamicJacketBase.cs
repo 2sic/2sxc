@@ -5,7 +5,9 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Data.Wrapper;
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Data
 {
@@ -14,7 +16,7 @@ namespace ToSic.Sxc.Data
     /// To check if something is an array or an object, use "IsArray"
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
-    public abstract partial class DynamicJacketBase: DynamicObject, IReadOnlyList<object>, /*IPropertyLookup,*/ ISxcDynamicObject, ICanGetByName, IHasPropLookup
+    public abstract partial class DynamicJacketBase: DynamicObject, IReadOnlyList<object>, ISxcDynamicObject, ICanGetByName, IHasPropLookup, IHasJsonSource
     {
         #region Constructor / Setup
 
@@ -29,8 +31,14 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         internal abstract IPreWrap PreWrap { get; }
 
-        public IPropertyLookup PropertyLookup => PreWrap;
+        [PrivateApi]
+        IPropertyLookup IHasPropLookup.PropertyLookup => PreWrap;
 
+        [PrivateApi]
+        object IHasJsonSource.JsonSource => PreWrap.JsonSource;
+
+        [PrivateApi] internal ITyped Typed => _typed ?? (_typed = new WrapObjectTyped(PreWrap, Wrapper));
+        private ITyped _typed;
 
         #endregion
 
@@ -78,19 +86,6 @@ namespace ToSic.Sxc.Data
         /// <returns>always returns true, to avoid errors</returns>
         [PrivateApi]
         public abstract override bool TryGetMember(GetMemberBinder binder, out object result);
-
-        ///// <inheritdoc />
-        //[PrivateApi("Internal")]
-        //public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
-        //{
-        //    path = path.KeepOrNew().Add("DynJacket", specs.Field);
-        //    var result = PreWrap.TryGetWrap(specs.Field).Result;
-        //    return new PropReqResult(result: result, fieldType: Attributes.FieldIsDynamic, path: path) { Source = this, Name = "dynamic" };
-        //}
-
-        //public abstract List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path);
-
-        //protected abstract object FindValueOrNull(string name, ILog parentLogOrNull = default);
-
+        
     }
 }

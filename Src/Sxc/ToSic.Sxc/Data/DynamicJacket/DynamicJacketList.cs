@@ -56,9 +56,5 @@ namespace ToSic.Sxc.Data
         /// <param name="index">array index</param>
         /// <returns>the item or an error if not found</returns>
         public override object this[int index] => Wrapper.IfJsonGetValueOrJacket(UnwrappedContents[index]);
-
-        //[PrivateApi("internal")]
-        //public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
-        //    => PreWrapList._Dump(specs, path);
     }
 }

@@ -136,7 +136,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
                 "hello",
                 "goodbye"
             };
-            var typed = Json2Obj2Dyn(anon) as ITyped;
+            var typed = Obj2Json2Typed(anon);
             IsTrue(typed.ContainsKey("1"));
             IsFalse(typed.ContainsKey("3"));
             IsTrue(typed.Keys().Any());

@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data.Wrapper;
@@ -14,7 +13,7 @@ namespace ToSic.Sxc.Data
     /// </summary>
     /// <typeparam name="T">The underlying type, either a JObject or a JToken</typeparam>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
-    public abstract class DynamicJacketBase<T>: DynamicJacketBase, IReadOnlyList<object>, IWrapper<T>, /*IPropertyLookup,*/ ISxcDynamicObject, ICanGetByName
+    public abstract class DynamicJacketBase<T>: DynamicJacketBase, IReadOnlyList<object>, IWrapper<T>, ISxcDynamicObject, ICanGetByName
     {
         [PrivateApi]
         protected T UnwrappedContents;

@@ -14,12 +14,12 @@ namespace ToSic.Sxc.Data.Typed
 {
     [PrivateApi]
     [JsonConverter(typeof(DynamicJsonConverter))]
-    internal class WrapObjectTyped: Wrapper<object>, ITyped, IHasPropLookup, IHasJsonSource
+    internal class WrapObjectTyped: Wrapper<IPreWrap>, ITyped, IHasPropLookup, IHasJsonSource
     {
         protected readonly CodeDataWrapper Wrapper;
         protected readonly IPreWrap PreWrap;
 
-        public WrapObjectTyped(PreWrapObject preWrap, CodeDataWrapper wrapper) : base(preWrap.GetContents())
+        public WrapObjectTyped(IPreWrap preWrap, CodeDataWrapper wrapper) : base(preWrap)
         {
             Wrapper = wrapper;
             PreWrap = preWrap;
@@ -120,14 +120,6 @@ namespace ToSic.Sxc.Data.Typed
         [PrivateApi]
         object IHasJsonSource.JsonSource
             => PreWrap.JsonSource;
-
-        //[PrivateApi]
-        //PropReqResult IPropertyLookup.FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path) 
-        //    => PreWrap.FindPropertyInternal(specs, path);
-
-        //[PrivateApi]
-        //List<PropertyDumpItem> IPropertyLookup._Dump(PropReqSpecs specs, string path) 
-        //    => PreWrap._Dump(specs, path);
 
         #endregion
     }

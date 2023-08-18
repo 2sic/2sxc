@@ -32,8 +32,10 @@ namespace ToSic.Sxc.Data.Wrapper
         internal ConvertForCodeService ConvertForCode => _forCodeConverter.Value;
         private readonly LazySvc<ConvertForCodeService> _forCodeConverter;
 
-        internal DynamicJacketBase FromJson(string json, string fallback = default)
+        internal DynamicJacketBase Json2Jacket(string json, string fallback = default)
             => IfJsonTryConvertToJacket(AsJsonNode(json, fallback ?? EmptyJson)).Jacket;
+        internal ITyped Json2Typed(string json, string fallback = default)
+            => IfJsonTryConvertToJacket(AsJsonNode(json, fallback ?? EmptyJson)).Jacket.Typed;
 
         internal WrapDictionaryDynamic<TKey, TValue> FromDictionary<TKey, TValue>(IDictionary<TKey, TValue> original)
         {

@@ -6,7 +6,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.DataTests.DynJson
 {
     [TestClass]
-    public class DynTypedWrapJsonSerialization: DynAndTypedTestsBase
+    public class WrapJsonSerialization: DynAndTypedTestsBase
     {
         [TestMethod]
         public void JsonSerialization()
@@ -20,19 +20,25 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
                 // Birthday not used in this test, because the initial default serializer
                 // will not use "Z" time, so it will be a bit different.
                 //data.Birthday, 
-                data.Truthy
+                data.Truthy,
+                subData = new { }, // empty sub object
+                subFilled = new
+                {
+                    something = "iJungleboy",
+                    number = 7,
+                }
             };
             var jsonAnon = Serialize(anon);
 
 
-            //var typed = TypedFromObject(anon);
-            var dynAnon = Json2Obj2Dyn(anon);
+            var typed = Obj2Json2Typed(anon);
+            var dynAnon = Obj2Json2Dyn(anon);
 
-            //var jsonTyped = Serialize(typed);
-            
+            var jsonTyped = Serialize(typed);
+
             var jsonDyn = Serialize(dynAnon);
 
-            //AreEqual(jsonTyped, jsonDyn);
+            AreEqual(jsonAnon, jsonTyped);
             AreEqual(jsonAnon, jsonDyn);
         }
     }

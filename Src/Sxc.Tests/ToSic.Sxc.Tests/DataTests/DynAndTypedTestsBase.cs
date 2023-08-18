@@ -19,11 +19,11 @@ namespace ToSic.Sxc.Tests.DataTests
         public CodeDataWrapper Wrapper => _wrapFac.Get(GetService<CodeDataWrapper>);
         private readonly GetOnce<CodeDataWrapper> _wrapFac = new GetOnce<CodeDataWrapper>();
 
-        public DynamicJacketBase Json2Jacket(string jsonString) => Wrapper.FromJson(jsonString);
+        public DynamicJacketBase Json2Jacket(string jsonString) => Wrapper.Json2Jacket(jsonString);
 
         public dynamic Json2Dyn(string jsonString) => Json2Jacket(jsonString);
 
-        public dynamic Json2Obj2Dyn(object obj) => Json2Jacket(JsonSerialize(obj));
+        public dynamic Obj2Json2Dyn(object obj) => Json2Jacket(JsonSerialize(obj));
 
         public string JsonSerialize(object obj) => Serialize(obj, JsonOptions.UnsafeJsonWithoutEncodingHtml);
 
@@ -43,10 +43,8 @@ namespace ToSic.Sxc.Tests.DataTests
         public ITyped Obj2Typed(object data, WrapperSettings? reWrap = null)
             => Wrapper.TypedFromObject(data, reWrap ?? WrapperSettings.Typed(true, true));
 
-        public ITyped Obj2Json2Typed(object data, WrapperSettings? settings = null)
-        {
-            return Json2Jacket(JsonSerialize(data));
-        }
+        public ITyped Obj2Json2Typed(object data, WrapperSettings? settings = null) 
+            => Wrapper.Json2Typed(JsonSerialize(data));
 
         public ITypedItem Obj2Item(object data, WrapperSettings? reWrap = null)
             => Wrapper.TypedItemFromObject(data, reWrap ?? WrapperSettings.Typed(true, true));

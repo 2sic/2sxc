@@ -10,7 +10,7 @@ using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
 {
-    internal abstract class PreWrapJsonBase: /*ICanGetByName,*/ IPreWrap, IPropertyLookup //, IHasKeys
+    internal abstract class PreWrapJsonBase: IPreWrap, IPropertyLookup //, IHasKeys
     {
         internal PreWrapJsonBase(CodeDataWrapper wrapper, WrapperSettings settings)
         {

@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Data
 
         protected readonly JsonArray UnwrappedContents;
 
-        public JsonArray GetContents() => UnwrappedContents;
+        JsonArray IWrapper<JsonArray>.GetContents() => UnwrappedContents;
 
         public override object JsonSource => UnwrappedContents;
 
@@ -39,28 +39,6 @@ namespace ToSic.Sxc.Data
         }
 
         #endregion
-
-
-        /// <summary>
-        /// On a dynamic Jacket List where is no reasonable convention how to find something by name
-        /// since it's not clear which property would be the name-giving property. 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        //public override object Get(string name)
-        //{
-        //    if (UnwrappedContents == null || !UnwrappedContents.Any())
-        //        return null;
-
-        //    var found = UnwrappedContents.FirstOrDefault(p =>
-        //    {
-        //        if (!(p is JsonObject pJObject)) return false;
-        //        return HasPropertyWithValue(pJObject, "Name", name)
-        //               || HasPropertyWithValue(pJObject, "Title", name);
-        //    });
-
-        //    return Wrapper.IfJsonGetValueOrJacket(found);
-        //}
 
         public override TryGetResult TryGetWrap(string name, bool wrapDefault = true)
         {

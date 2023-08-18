@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Data
         #endregion
 
         public DynamicJacketBase AsDynamicFromJson(string json, string fallback = default) 
-            => _codeDataWrapper.Value.FromJson(json, fallback);
+            => _codeDataWrapper.Value.Json2Jacket(json, fallback);
 
     }
 }

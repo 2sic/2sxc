@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Data
 
         protected readonly JsonObject UnwrappedContents;
 
-        public JsonObject GetContents() => UnwrappedContents;
+        JsonObject IWrapper<JsonObject>.GetContents() => UnwrappedContents;
 
         public override object JsonSource => UnwrappedContents;
 
@@ -40,17 +40,6 @@ namespace ToSic.Sxc.Data
         #endregion
 
         #region TryGet
-
-        //public override object Get(string name)
-        //{
-        //    if (UnwrappedContents == null || !UnwrappedContents.Any())
-        //        return null;
-
-        //    var found = UnwrappedContents
-        //        .FirstOrDefault(p => p.Key.EqualsInsensitive(name));
-
-        //    return Wrapper.IfJsonGetValueOrJacket(found.IsNullOrDefault() ? null : found.Value);
-        //}
 
         public override TryGetResult TryGetWrap(string name, bool wrapDefault = true)
         {
@@ -94,7 +83,7 @@ namespace ToSic.Sxc.Data
                 .SelectMany(p =>
                 {
                     var jacket = new DynamicJacket(p.Value.AsObject(), Wrapper);
-                    return jacket.PropertyLookup._Dump(specs, path + PropertyDumpItem.Separator + p.Key);
+                    return ((IHasPropLookup)jacket).PropertyLookup._Dump(specs, path + PropertyDumpItem.Separator + p.Key);
                 })
                 .Where(p => !(p is null));
 

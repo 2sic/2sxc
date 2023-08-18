@@ -10,9 +10,8 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
     [TestClass]
     public class DynJsonValues : DynAndTypedTestsBase
     {
-        private bool HasKey(object dyn, string key)
+        private bool HasKey(ITyped typed, string key)
         {
-            var typed = dyn as ITyped;
             return typed.ContainsKey(key);
         }
 
@@ -28,11 +27,24 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
             IsTrue(dyn.TrueBoolType);
             IsFalse(dyn.FalseBoolType);
             IsNull(dyn.something);
+        }
+        [TestMethod]
+        public void JsonBoolPropertyKeys_Typed()
+        {
+            var typed = Obj2Json2Typed(new
+            {
+                TrueBoolType = true,
+                FalseBoolType = false
+            });
 
-            IsTrue(HasKey(dyn, "TrueBoolType"));
-            IsTrue(HasKey(dyn, "TrueBoolTYPE"));
-            IsTrue(HasKey(dyn, "FalseBoolType"));
-            IsFalse(HasKey(dyn, "something"));
+            IsTrue(typed.Bool("TrueBoolType"));
+            IsFalse(typed.Bool("FalseBoolType"));
+            IsFalse(typed.Bool("something"));
+
+            IsTrue(HasKey(typed, "TrueBoolType"));
+            IsTrue(HasKey(typed, "TrueBoolTYPE"));
+            IsTrue(HasKey(typed, "FalseBoolType"));
+            IsFalse(HasKey(typed, "something"));
         }
 
         [TestMethod]
@@ -117,7 +129,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
                 Key1 = "hello",
                 Key2 = "goodbye"
             };
-            var typed = Json2Obj2Dyn(anon) as ITyped;
+            var typed = Obj2Json2Typed(anon);
             IsTrue(typed.ContainsKey("Key1"));
             IsFalse(typed.ContainsKey("Nonexisting"));
             IsTrue(typed.Keys().Any());
