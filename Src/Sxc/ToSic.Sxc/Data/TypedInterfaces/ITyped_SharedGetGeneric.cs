@@ -8,11 +8,11 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc cref="IHasKeys.ContainsKey"/>
         new bool ContainsKey(string name);
 
-        /// <inheritdoc cref="IValueChecks.IsEmpty"/>
+        /// <inheritdoc cref="IHasKeys.IsEmpty"/>
         new bool IsEmpty(string name, string noParamOrder = Protector);
         // ^^^ new is just so it's in the docs
 
-        /// <inheritdoc cref="IValueChecks.IsNotEmpty"/>
+        /// <inheritdoc cref="IHasKeys.IsNotEmpty"/>
         new bool IsNotEmpty(string name, string noParamOrder = Protector);
         // ^^^ new is just so it's in the docs
 
