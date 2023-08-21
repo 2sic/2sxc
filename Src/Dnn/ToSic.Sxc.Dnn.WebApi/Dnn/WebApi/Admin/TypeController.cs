@@ -10,7 +10,7 @@ using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
-using RealController = ToSic.Sxc.WebApi.Admin.TypeControllerReal<System.Net.Http.HttpResponseMessage>;
+using RealController = ToSic.Sxc.WebApi.Admin.TypeControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// Security checking is possible, because the cookie still contains user information
     /// </remarks>
     [DnnLogExceptions]
-    public class TypeController : SxcApiControllerBase, ITypeController<HttpResponseMessage>
+    public class TypeController : SxcApiControllerBase, ITypeController
     {
         public TypeController() : base(RealController.LogSuffix) { }
 
@@ -135,8 +135,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public HttpResponseMessage Json(int appId, string name)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = SysHlp.GetResponseMaker();
-            responseMaker.Init(this);
+            SysHlp.SetupResponseMaker(this);
 
             return Real.Json(appId, name);
         }
@@ -169,8 +168,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public HttpResponseMessage JsonBundleExport(int appId, Guid exportConfiguration, int indentation = 0)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = SysHlp.GetResponseMaker();
-            responseMaker.Init(this);
+            SysHlp.SetupResponseMaker(this);
 
             return Real.JsonBundleExport(appId, exportConfiguration, indentation);
         }

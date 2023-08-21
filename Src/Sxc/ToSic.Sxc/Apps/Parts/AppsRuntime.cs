@@ -28,8 +28,9 @@ namespace ToSic.Sxc.Apps
 
         #endregion
 
-        public IList<AppUiInfo> GetSelectableApps(ISite site, string filter) => Log.Func(filter, () =>
+        public IList<AppUiInfo> GetSelectableApps(ISite site, string filter)
         {
+            var l = Log.Fn<List<AppUiInfo>>($"filter:{filter}");
             var list =
                 GetApps(site, null)
                     .Where(a => a.Name != Eav.Constants.ContentAppName 
@@ -47,7 +48,7 @@ namespace ToSic.Sxc.Apps
                     })
                     .ToList();
 
-            if (string.IsNullOrWhiteSpace(filter)) return (list, "unfiltered");
+            if (string.IsNullOrWhiteSpace(filter)) return l.Return(list, "unfiltered");
 
             // New feature in 10.27 - if app-list is provided, only return these
             var appNames = filter.Split(',')
@@ -57,8 +58,8 @@ namespace ToSic.Sxc.Apps
             list = list.Where(ap => appNames
                     .Any(name => string.Equals(name, ap.Name, StringComparison.InvariantCultureIgnoreCase)))
                 .ToList();
-            return (list, "ok");
-        });
+            return l.Return(list, "ok");
+        }
 
         /// <summary>
         /// Returns all Apps for the current zone

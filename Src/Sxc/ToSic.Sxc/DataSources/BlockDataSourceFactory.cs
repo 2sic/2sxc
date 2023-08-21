@@ -57,7 +57,7 @@ namespace ToSic.Sxc.DataSources
                 // Note: Deprecated feature in v13, remove ca. 14 - should warn
                 // TODO: #WarnDeprecated
 #if NETFRAMEWORK
-                if (contextDataSource is IBlockDataSourceOld old)
+                if (contextDataSource is IBlockDataSource old)
                 {
                     old.Publish.Enabled = view.PublishData;
                     old.Publish.Streams = view.StreamsToPublish;

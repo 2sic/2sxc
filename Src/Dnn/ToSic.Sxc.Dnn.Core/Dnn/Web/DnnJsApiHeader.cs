@@ -18,19 +18,20 @@ namespace ToSic.Sxc.Dnn.Web
             _dnnJsApiService = dnnJsApiService;
         }
 
-        public bool AddHeaders() => Log.Func(() =>
+        public bool AddHeaders()
         {
+            var l = Log.Fn<bool>();
             // ensure we only do this once
-            if (MarkAddedAndReturnIfAlreadyDone()) return (false, "already");
+            if (MarkAddedAndReturnIfAlreadyDone()) return l.ReturnFalse("already");
 
             var json = _dnnJsApiService.GetJsApiJson();
-            if (json == null) return (false, "no path");
+            if (json == null) return l.ReturnFalse("no path");
 
 #pragma warning disable CS0618
             HtmlPage.AddMeta(InpageCms.MetaName, json);
 #pragma warning restore CS0618
-            return (true, "added");
-        });
+            return l.ReturnTrue("added");
+        }
   
         private const string KeyToMarkAdded = "2sxcApiHeadersAdded";
 

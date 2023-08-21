@@ -3,10 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using RealController = ToSic.Sxc.WebApi.Admin.AppPartsControllerReal<Microsoft.AspNetCore.Mvc.IActionResult>;
+using RealController = ToSic.Sxc.WebApi.Admin.AppPartsControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -19,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
     [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    public class AppPartsController : OqtStatefulControllerBase, IAppPartsController<IActionResult>
+    public class AppPartsController : OqtStatefulControllerBase, IAppPartsController
     {
         public AppPartsController(): base(RealController.LogSuffix) { }
 
@@ -40,9 +39,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public IActionResult Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>();
-            responseMaker.Init(this);
-
+            CtxHlp.SetupResponseMaker();
             return Real.Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString, entityIdsString: entityIdsString, templateIdsString: templateIdsString);
         }
 

@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.WebApi.Views;
+#if NETFRAMEWORK
+using THttpResponseType = System.Net.Http.HttpResponseMessage;
+#else
+using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
+#endif
 
 namespace ToSic.Sxc.WebApi.Admin
 {
@@ -19,7 +24,7 @@ namespace ToSic.Sxc.WebApi.Admin
     /// Instead, each method must have all attributes, or do additional security checking.
     /// Security checking is possible, because the cookie still contains user information
     /// </remarks>
-    public interface IViewController<THttpResponseType>
+    public interface IViewController
     {
         /// <summary>
         /// Get the views of this App

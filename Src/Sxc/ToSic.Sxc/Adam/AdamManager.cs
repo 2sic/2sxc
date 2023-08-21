@@ -9,7 +9,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.AsConverter;
+using ToSic.Eav.Plumbing;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -24,14 +24,14 @@ namespace ToSic.Sxc.Adam
     /// </remarks>
     public abstract class AdamManager: ServiceBase, ICompatibilityLevel
     {
-        private readonly LazySvc<AsConverterService> _asConverter;
+        private readonly LazySvc<CodeDataFactory> _cdf;
 
         #region Constructor for inheritance
 
         protected AdamManager(
             LazySvc<AppRuntime> appRuntimeLazy,
             LazySvc<AdamMetadataMaker> metadataMakerLazy,
-            LazySvc<AsConverterService> asConverter,
+            LazySvc<CodeDataFactory> cdf,
             AdamConfiguration adamConfiguration,
             string logName) : base(logName ?? "Adm.Managr")
         {
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Adam
                 _appRuntimeLazy = appRuntimeLazy,
                 _metadataMakerLazy = metadataMakerLazy,
                 _adamConfiguration = adamConfiguration,
-                _asConverter = asConverter.SetInit(asc => asc.SetFallbacks(AppContext?.Site, CompatibilityLevel, this))
+                _cdf = cdf.SetInit(asc => asc.SetFallbacks(AppContext?.Site, CompatibilityLevel, this))
             );
         }
         
@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Adam
 
         #region Init
 
-        public virtual AdamManager Init(IContextOfApp ctx, AsConverterService asc, int compatibility)
+        public virtual AdamManager Init(IContextOfApp ctx, CodeDataFactory cdf, int compatibility)
         {
             AppContext = ctx;
 
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Adam
             Site = AppContext.Site;
             AppRuntime.InitQ(AppContext.AppState);
             CompatibilityLevel = compatibility;
-            _asc = asc;
+            _asc = cdf;
             return callLog.Return(this, "ready");
         }
         
@@ -72,11 +72,22 @@ namespace ToSic.Sxc.Adam
 
         public ISite Site { get; private set; }
 
-        internal AsConverterService AsC => _asc ?? (_asc = _asConverter.Value);
-        private AsConverterService _asc;
+        internal CodeDataFactory Cdf => _asc ?? (_asc = _cdf.Value);
+        private CodeDataFactory _asc;
         #endregion
 
+        #region Static Helpers
 
+        public static int? CheckIdStringForId(string id)
+        {
+            if (!id.HasValue()) return null;
+            var linkParts = new LinkParts(id);
+            if (!linkParts.IsMatch || linkParts.Id == 0) return null;
+            return linkParts.Id;
+        }
+
+
+        #endregion
 
         /// <summary>
         /// Path to the app assets
@@ -91,9 +102,7 @@ namespace ToSic.Sxc.Adam
 
         #region Properties the base class already provides, but must be implemented at inheritance
 
-        public abstract IFolder Folder(Guid entityGuid, string fieldName);
-
-        public abstract IFolder Folder(IEntity entity, string fieldName);
+        public abstract IFolder Folder(Guid entityGuid, string fieldName, IField field = default);
 
 
         public abstract IFile File(int id);

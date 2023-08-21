@@ -6,10 +6,9 @@ using System.Collections.Generic;
 using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using RealController = ToSic.Eav.WebApi.Admin.EntityControllerReal<Microsoft.AspNetCore.Mvc.IActionResult>;
+using RealController = ToSic.Eav.WebApi.Admin.EntityControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -32,7 +31,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
     [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    public class EntityController : OqtStatefulControllerBase, IEntityController<IActionResult>
+    public class EntityController : OqtStatefulControllerBase, IEntityController
     {
         public EntityController() : base(RealController.LogSuffix) { }
 
@@ -68,9 +67,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public IActionResult Json(int appId, int id, string prefix, bool withMetadata)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>();
-            responseMaker.Init(this);
-
+            CtxHlp.SetupResponseMaker();
             return Real.Json(appId, id, prefix, withMetadata);
         }
 
@@ -89,9 +86,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             string selectedIds = null)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>();
-            responseMaker.Init(this);
-
+            CtxHlp.SetupResponseMaker();
             return Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
                 languageReferences, selectedIds);
         }

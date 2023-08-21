@@ -1,11 +1,12 @@
 ﻿#if NETCOREAPP
 using System;
 using System.IO;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Code;
 using ToSic.Eav.Context;
-using ToSic.Eav.Run;
-using ToSic.Eav.WebApi.Helpers;
+using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
@@ -20,12 +21,13 @@ namespace ToSic.Sxc.WebApi.Infrastructure
 {
     internal class NetCoreWebApiContextHelper: CodeHelperBase
     {
-        private readonly IHasLog _owner;
-        private readonly NetCoreControllersHelper _helper;
+        private readonly ControllerBase _owner;
+        private readonly ICanGetService _helper;
 
-        public NetCoreWebApiContextHelper(IHasLog owner, NetCoreControllersHelper helper) : base("Oqt.ApiHlp")
+        public NetCoreWebApiContextHelper(ControllerBase owner, ICanGetService helper) : base("Oqt.ApiHlp")
         {
-            this.LinkLog(owner.Log);
+            if (owner is IHasLog ownerWithLog)
+                this.LinkLog(ownerWithLog.Log);
             _owner = owner;
             _helper = helper;
         }
@@ -58,12 +60,13 @@ namespace ToSic.Sxc.WebApi.Infrastructure
             // Use the ServiceProvider of the current request to build DynamicCodeRoot
             // Note that BlockOptional was already retrieved in the base class
             var codeRoot = context.HttpContext.RequestServices
-                .Build<DynamicCodeRoot>()
-                .InitDynCodeRoot(BlockOptional, Log, (_owner as ICompatibilityLevel)?.CompatibilityLevel ?? Constants.CompatibilityLevel12);
+                .Build<CodeRootFactory>()
+                .BuildCodeRoot(_owner, BlockOptional, Log, compatibilityFallback: Constants.CompatibilityLevel12);
             ConnectToRoot(codeRoot);
 
-            AdamCode = _helper.GetService<AdamCode>();
-            AdamCode.ConnectToRoot(_DynCodeRoot, Log);
+            AdamCode = codeRoot.GetService<AdamCode>();
+            // 2023-07-18 2dm - shouldn't needed any more, verify and remove
+            //AdamCode.ConnectToRoot(_DynCodeRoot, Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (_DynCodeRoot.App == null)
@@ -123,6 +126,12 @@ namespace ToSic.Sxc.WebApi.Infrastructure
             return app.Init(new AppIdentity(AppConstants.AutoLookupZone, appId), _helper.GetService<AppConfigDelegate>().Build());
         });
 
+
+        #endregion
+
+        #region Context Maker
+
+        public void SetupResponseMaker() => _helper.GetService<IResponseMaker>().Init(_owner);
 
         #endregion
 

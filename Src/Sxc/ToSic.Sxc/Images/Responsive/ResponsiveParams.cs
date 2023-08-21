@@ -1,5 +1,7 @@
 ﻿using ToSic.Eav;
+using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Images
@@ -19,6 +21,7 @@ namespace ToSic.Sxc.Images
         /// The field used for this responsive output - can be null!
         /// </summary>
         public IField Field { get; }
+        public IHasMetadata HasDecoOrNull { get; }
         public IResizeSettings Settings { get; }
         public string ImgAlt { get; }
         public string ImgAltFallback { get; }
@@ -40,13 +43,18 @@ namespace ToSic.Sxc.Images
             Parameters.ProtectAgainstMissingParameterNames(noParamOrder, method,
                 $"{nameof(link)}, {nameof(settings)}, factor, {nameof(imgAlt)}, {nameof(imgClass)}, recipe");
 
-            Field = link as IField;
-            Link = (IHasLink)Field ?? new HasLink(link as string);
+            Field = link as IField ?? (link as IFromField)?.Field;
+            HasDecoOrNull = link as IHasMetadata;
+            Link = link as IHasLink ?? new HasLink(link as string);
             Settings = settings;
             ImgAlt = imgAlt;
             ImgAltFallback = imgAltFallback;
             ImgClass = imgClass;
             PicClass = picClass;
         }
+
+        public string Description => _description.Get(() => Field?.ImageDecoratorOrNull?.Description);
+        private readonly GetOnce<string> _description = new GetOnce<string>();
+
     }
 }

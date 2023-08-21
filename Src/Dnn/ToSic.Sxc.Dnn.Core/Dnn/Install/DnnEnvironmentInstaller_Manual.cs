@@ -8,12 +8,13 @@ namespace ToSic.Sxc.Dnn.Install
     public partial class DnnEnvironmentInstaller
     {
 
-        public bool ResumeAbortedUpgrade() => Log.Func(l =>
+        public bool ResumeAbortedUpgrade()
         {
+            var l = Log.Fn<bool>();
             if (IsUpgradeRunning)
             {
                 l.A("Upgrade is still running");
-                throw new Exception("There seems to be an upgrade running - please wait. If you still see this message after 3-4 minutes, please restart the web application.");
+                throw l.Done(new Exception("There seems to be an upgrade running - please wait. If you still see this message after 3-4 minutes, please restart the web application."));
             }
 
             _installLogger.LogStep("", "FinishAbortedUpgrade starting", false);
@@ -32,8 +33,8 @@ namespace ToSic.Sxc.Dnn.Install
             _installLogger.CloseLogFiles();
             // Restart application
             HttpRuntime.UnloadAppDomain();
-            return (true, "ok");
-        });
+            return l.ReturnTrue("ok");
+        }
 
     }
 }

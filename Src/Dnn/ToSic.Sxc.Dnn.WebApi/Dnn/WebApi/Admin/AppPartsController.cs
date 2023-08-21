@@ -6,14 +6,14 @@ using System.Web.Http;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
-using RealController = ToSic.Sxc.WebApi.Admin.AppPartsControllerReal<System.Net.Http.HttpResponseMessage>;
+using RealController = ToSic.Sxc.WebApi.Admin.AppPartsControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)] can't be used, because it forces the security
     // token, which fails in the cases where the url is called using get, which should result in a download
 
-    public class AppPartsController : DnnApiControllerWithFixes, IAppPartsController<HttpResponseMessage>
+    public class AppPartsController : DnnApiControllerWithFixes, IAppPartsController
     {
         public AppPartsController() : base(RealController.LogSuffix) { }
         private RealController Real => SysHlp.GetService<RealController>();
@@ -31,8 +31,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public HttpResponseMessage Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = SysHlp.GetResponseMaker();
-            responseMaker.Init(this);
+            SysHlp.SetupResponseMaker(this);
 
             return Real.Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString,
                 entityIdsString: entityIdsString, templateIdsString: templateIdsString);

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Dnn;
 
 // ReSharper disable once CheckNamespace
@@ -14,7 +14,7 @@ namespace ToSic.SexyContent.WebApi
         #region new AsDynamic - not supported
 
         [PrivateApi]
-        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson)
+        public dynamic AsDynamic(string json, string fallback = WrapperConstants.EmptyJson)
             => throw new Exception($"The AsDynamic(string) is a new feature in 2sxc 10.20. {ApiController.ErrRecommendedNamespaces}");
 
 

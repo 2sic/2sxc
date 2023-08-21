@@ -2,14 +2,19 @@
 using System.IO;
 using System.Web.Hosting;
 using System.Web.WebPages;
+using Custom.Hybrid;
 using ToSic.Eav;
 using ToSic.Eav.Code.Help;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.CodeHelpers;
+using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Engines;
 using ToSic.Sxc.Engines.Razor;
 using static ToSic.Eav.Parameters;
 
@@ -78,6 +83,12 @@ namespace ToSic.Sxc.Web
 
         #region Create Instance
 
+        public object GetCode(string path, string noParamOrder = Protector, string className = default)
+        {
+            Protect(noParamOrder, nameof(className));
+            return CreateInstance(path, name: className);
+        }
+
         public object CreateInstance(string virtualPath,
             string noParamOrder = Protector,
             string name = null,
@@ -117,6 +128,23 @@ namespace ToSic.Sxc.Web
             pageAsRcb?.SysHlp.ConfigurePage(Page, pageAsRcb.VirtualPath);
             return pageAsCode;
         }
+
+
+        #endregion
+
+        #region DynamicModel and Factory
+
+        private CodeDataWrapper CodeDataWrapper => _dynJacketFactory.Get(() => _DynCodeRoot.GetService<CodeDataWrapper>());
+        private readonly GetOnce<CodeDataWrapper> _dynJacketFactory = new GetOnce<CodeDataWrapper>();
+
+        /// <inheritdoc cref="IRazor14{TModel,TServiceKit}.DynamicModel"/>
+        public dynamic DynamicModel => _dynamicModel ?? (_dynamicModel = CodeDataWrapper.FromDictionary(Page.PageData));
+        // new DynamicReadDictionary<object, dynamic>(Page.PageData, _DynCodeRoot.GetService<DynamicJacketFactory>()));
+        private dynamic _dynamicModel;
+
+        internal void SetDynamicModel(object data) =>
+            _dynamicModel = CodeDataWrapper.FromObject(data, WrapperSettings.Dyn(children: false, realObjectsToo: false));
+        // new DynamicReadObject(data, false, false, _DynCodeRoot.GetService<DynamicJacketFactory>());
 
         #endregion
     }

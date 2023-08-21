@@ -26,6 +26,6 @@ namespace ToSic.Sxc.Services
         /// <typeparam name="TService"></typeparam>
         /// <returns></returns>
         [PrivateApi]
-        protected TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
+        protected TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
     }
 }

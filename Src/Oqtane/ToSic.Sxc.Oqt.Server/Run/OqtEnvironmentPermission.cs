@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Oqtane.Security;
 using Oqtane.Shared;
-using System;
 using System.Security.Claims;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
@@ -61,21 +60,30 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return false;
         }
 
-        protected override bool UserIsModuleAdmin() => Log.Func(UserIsModuleEditor);
-
-        protected override bool UserIsModuleEditor() => _userIsModuleEditor ??= Log.Func(() =>
+        protected override bool UserIsModuleAdmin()
         {
-            if (Module == null) return false;
-            try
+            var l = Log.Fn<bool>($"{nameof(Module)}: {Module?.Id}.");
+            return l.ReturnAsOk(UserIsModuleEditor());
+        }
+
+        protected override bool UserIsModuleEditor()
+        {
+            return _userIsModuleEditor ??= IsModuleEditor();
+            bool IsModuleEditor()
             {
-                return _userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, Module.Id,
-                    PermissionNames.Edit);
+                var l = Log.Fn<bool>();
+                if (Module == null)
+                    return l.ReturnFalse();
+                try
+                {
+                    return l.Return(_userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, Module.Id, PermissionNames.Edit));
+                }
+                catch
+                {
+                    return l.ReturnFalse();
+                }
             }
-            catch
-            {
-                return false;
-            }
-        });
+        }
         private bool? _userIsModuleEditor;
     }
 }

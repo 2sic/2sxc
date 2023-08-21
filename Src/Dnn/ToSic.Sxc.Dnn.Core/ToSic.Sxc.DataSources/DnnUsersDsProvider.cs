@@ -23,33 +23,34 @@ namespace ToSic.Sxc.DataSources
             );
         }
 
-        public override IEnumerable<CmsUserRaw> GetUsersInternal() => Log.Func(l =>
+        public override IEnumerable<CmsUserRaw> GetUsersInternal()
+        {
+            var l = Log.Fn<IEnumerable<CmsUserRaw>>();
+            var siteId = PortalSettings.Current?.PortalId ?? -1;
+            l.A($"Portal Id {siteId}");
+            try
             {
-                var siteId = PortalSettings.Current?.PortalId ?? -1;
-                l.A($"Portal Id {siteId}");
-                try
-                {
-                    // take all portal users (this should include superusers, but superusers are missing)
-                    var dnnAllUsers =
-                        UserController.GetUsers(portalId: siteId, includeDeleted: false, superUsersOnly: false);
+                // take all portal users (this should include superusers, but superusers are missing)
+                var dnnAllUsers =
+                    UserController.GetUsers(portalId: siteId, includeDeleted: false, superUsersOnly: false);
 
-                    // append all superusers
-                    dnnAllUsers.AddRange(UserController.GetUsers(portalId: -1, includeDeleted: false,
-                        superUsersOnly: true));
+                // append all superusers
+                dnnAllUsers.AddRange(UserController.GetUsers(portalId: -1, includeDeleted: false,
+                    superUsersOnly: true));
 
-                    var dnnUsers = dnnAllUsers.Cast<UserInfo>().ToList();
-                    if (!dnnUsers.Any()) return (new List<CmsUserRaw>(), "null/empty");
+                var dnnUsers = dnnAllUsers.Cast<UserInfo>().ToList();
+                if (!dnnUsers.Any()) return l.Return(new List<CmsUserRaw>(), "null/empty");
 
-                    var result = dnnUsers
-                        //.Where(user => !user.IsDeleted)
-                        .Select(u => _dnnSecurity.Value.CmsUserBuilder(u, siteId)).ToList();
-                    return (result, "found");
-                }
-                catch (Exception ex)
-                {
-                    l.Ex(ex);
-                    return (new List<CmsUserRaw>(), "error");
-                }
-            });
+                var result = dnnUsers
+                    //.Where(user => !user.IsDeleted)
+                    .Select(u => _dnnSecurity.Value.CmsUserBuilder(u, siteId)).ToList();
+                return l.Return(result, "found");
+            }
+            catch (Exception ex)
+            {
+                l.Ex(ex);
+                return l.Return(new List<CmsUserRaw>(), "error");
+            }
+        }
     }
 }

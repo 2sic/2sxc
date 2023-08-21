@@ -1,4 +1,5 @@
-﻿using ToSic.Lib.Documentation;
+﻿#if NETFRAMEWORK
+using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data
 {
@@ -19,7 +20,5 @@ namespace ToSic.Sxc.Data
         }
 
     }
-
-    
-
 }
+#endif

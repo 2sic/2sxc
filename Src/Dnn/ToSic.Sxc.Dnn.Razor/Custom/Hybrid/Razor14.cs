@@ -7,7 +7,6 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -38,8 +37,8 @@ namespace Custom.Hybrid
         [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel12;
 
 
-        /// <inheritdoc cref="IDynamicCode.GetService{TService}" />
-        public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
+        /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+        public TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
 
 
         public ServiceKit14 Kit => _kit.Get(() => _DynCodeRoot.GetKit<ServiceKit14>());

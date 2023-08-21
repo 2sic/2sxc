@@ -57,13 +57,6 @@ namespace ToSic.Sxc.Services
         public IDataService Data => _data.Get(GetService<IDataService>);
         private readonly GetOnce<IDataService> _data = new GetOnce<IDataService>();
 
-        // Wait till we have a signature without the IEntity, but more an IHasEntity or something
-        ///// <summary>
-        ///// The TODO Service, 
-        ///// </summary>
-        //public IConvertToEavLight Todo => _convEavLight.Get(GetService<IConvertToEavLight>);
-        //private readonly ValueGetOnce<IConvertToEavLight> _convEavLight = new ValueGetOnce<IConvertToEavLight>();
-
         /// <summary>
         /// The Edit service, same as the main Edit service
         /// </summary>

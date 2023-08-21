@@ -48,9 +48,9 @@ namespace ToSic.Sxc.Oqt.Server.Code
         // That could keep the SimpleUnloadableAssemblyLoadContext alive and prevent the unload.
         [MethodImpl(MethodImplOptions.NoInlining)]
 
-        private Assembly CompileSourceCode(string path, string sourceCode, string dllName
-        ) => Log.Func($"{nameof(dllName)}: {dllName}.", l =>
+        private Assembly CompileSourceCode(string path, string sourceCode, string dllName)
         {
+            var l = Log.Fn<Assembly>($"{nameof(dllName)}: {dllName}.");
             var encoding = Encoding.UTF8;
             var pdbName = $"{dllName}.pdb";
             using (var peStream = new MemoryStream())
@@ -88,7 +88,7 @@ namespace ToSic.Sxc.Oqt.Server.Code
                         errors.Add($"{diagnostic.Id}: {diagnostic.GetMessage()}");
                     }
 
-                    throw new IOException(string.Join("\n", errors));
+                    throw l.Done(new IOException(string.Join("\n", errors)));
                 }
 
                 peStream.Seek(0, SeekOrigin.Begin);
@@ -97,9 +97,9 @@ namespace ToSic.Sxc.Oqt.Server.Code
                 var assemblyLoadContext = new SimpleUnloadableAssemblyLoadContext();
                 var assembly = assemblyLoadContext.LoadFromStream(peStream, pdbStream);
 
-                return (assembly, "Compilation done without any error.");
+                return l.Return(assembly, "Compilation done without any error.");
             }
-        });
+        }
 
         private static CSharpCompilation GenerateCode(string path, SourceText sourceCode, string dllName)
         {

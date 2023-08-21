@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-using static System.StringComparison;
+using ToSic.Sxc.Data.Typed;
+using ToSic.Sxc.Data.Wrapper;
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Data
 {
@@ -16,8 +16,32 @@ namespace ToSic.Sxc.Data
     /// To check if something is an array or an object, use "IsArray"
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
-    public abstract partial class DynamicJacketBase: DynamicObject, IReadOnlyList<object>, IPropertyLookup, ISxcDynamicObject, ICanGetByName
+    public abstract partial class DynamicJacketBase: DynamicObject, IReadOnlyList<object>, ISxcDynamicObject, ICanGetByName, IHasPropLookup, IHasJsonSource
     {
+
+        #region Constructor / Setup
+
+        internal DynamicJacketBase(CodeJsonWrapper wrapper)
+        {
+            Wrapper = wrapper;
+        }
+
+        [PrivateApi]
+        internal CodeJsonWrapper Wrapper { get; }
+
+        [PrivateApi]
+        internal abstract IPreWrap PreWrap { get; }
+
+        [PrivateApi]
+        IPropertyLookup IHasPropLookup.PropertyLookup => PreWrap;
+
+        [PrivateApi]
+        object IHasJsonSource.JsonSource => PreWrap.JsonSource;
+
+        //[PrivateApi] internal ITyped Typed => _typed ?? (_typed = new WrapObjectTyped(PreWrap, Wrapper));
+        //private ITyped _typed;
+
+        #endregion
 
         /// <summary>
         /// Check if it's an array.
@@ -39,7 +63,7 @@ namespace ToSic.Sxc.Data
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <inheritdoc />
-        public dynamic Get(string name) => FindValueOrNull(name, InvariantCultureIgnoreCase, null);
+        public dynamic Get(string name) => PreWrap.TryGetWrap(name).Result;
 
         /// <summary>
         /// Count array items or object properties
@@ -62,24 +86,7 @@ namespace ToSic.Sxc.Data
         /// <param name="result">always null, unless overriden</param>
         /// <returns>always returns true, to avoid errors</returns>
         [PrivateApi]
-        public override bool TryGetMember(GetMemberBinder binder, out object result)
-        {
-            result = null;
-            return true;
-        }
-
-        /// <inheritdoc />
-        [PrivateApi("Internal")]
-        public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
-        {
-            path = path.KeepOrNew().Add("DynJacket", specs.Field);
-            var result = FindValueOrNull(specs.Field, InvariantCultureIgnoreCase, specs.LogOrNull);
-            return new PropReqResult(result, path) { FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic" };
-        }
-
-        public abstract List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path);
-
-        protected abstract object FindValueOrNull(string name, StringComparison comparison, ILog parentLogOrNull);
-
+        public abstract override bool TryGetMember(GetMemberBinder binder, out object result);
+        
     }
 }

@@ -49,7 +49,7 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
         public dynamic CreateInstance(string virtualPath, string noParamOrder = Protector, string name = null, string relativePath = null, bool throwOnError = true)
-            => SysHlp.CreateInstance(virtualPath, Path, noParamOrder, name, relativePath, throwOnError);
+            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
 
         #endregion
 
@@ -83,26 +83,26 @@ namespace Custom.Hybrid
         #region AsDynamic in many variations + AsList
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
-        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot.AsC.AsDynamicFromJson(json, fallback);
+        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot.Cdf.Json2Jacket(json, fallback);
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
-        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.AsC.AsDynamic(entity);
+        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.Cdf.CodeAsDyn(entity);
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
-        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsC.AsDynamicInternal(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.Cdf.AsDynamicFromObject(dynamicEntity);
 
         /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
-        public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.AsC.MergeDynamic(entities);
+        public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.Cdf.MergeDynamic(entities);
 
         /// <inheritdoc cref="IDynamicCode.AsList" />
-        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot.AsC.AsDynamicList(list);
+        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot.Cdf.CodeAsDynList(list);
 
         #endregion
 
         #region AsEntity
 
         /// <inheritdoc cref="IDynamicCode.AsEntity" />
-        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.AsC.AsEntity(dynamicEntity);
+        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.Cdf.AsEntity(dynamicEntity);
 
         #endregion
 

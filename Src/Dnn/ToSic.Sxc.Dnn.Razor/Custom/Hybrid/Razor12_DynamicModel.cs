@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Data;
+﻿using ToSic.Razor.Internals.Documentation;
 using ToSic.Sxc.Engines;
 
 // ReSharper disable once CheckNamespace
@@ -6,16 +6,10 @@ namespace Custom.Hybrid
 {
     public partial class Razor12: ISetDynamicModel
     {
-        /// <summary>
-        /// Dynamic object containing parameters. So in Dnn it contains the PageData, in Oqtane it contains the Model
-        /// </summary>
-        /// <remarks>
-        /// New in v12
-        /// </remarks>
-        public dynamic DynamicModel => _dynamicModel ?? (_dynamicModel = new DynamicReadDictionary<object, dynamic>(PageData));
-        private dynamic _dynamicModel;
+        /// <inheritdoc cref="IRazor14{TModel,TServiceKit}.DynamicModel"/>
+        public dynamic DynamicModel => SysHlp.DynamicModel;
 
-
-        void ISetDynamicModel.SetDynamicModel(object data) => _dynamicModel = new DynamicReadObject(data, false, false);
+        [PrivateApi]
+        void ISetDynamicModel.SetDynamicModel(object data) => SysHlp.SetDynamicModel(data);
     }
 }

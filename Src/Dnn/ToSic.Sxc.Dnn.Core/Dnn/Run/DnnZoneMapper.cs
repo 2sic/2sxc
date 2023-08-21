@@ -62,11 +62,12 @@ namespace ToSic.Sxc.Dnn.Run
 
         }
 
-        public override ISite SiteOfZone(int zoneId) => Log.Func($"{zoneId}", () =>
+        public override ISite SiteOfZone(int zoneId)
         {
+            var l = Log.Fn<ISite>($"{zoneId}");
             var pinst = PortalController.Instance;
             var portals = pinst.GetPortals();
-            Log.A($"Sites/Portals Count: {portals.Count}");
+            l.A($"Sites/Portals Count: {portals.Count}");
             var found = portals.Cast<PortalInfo>().Select(p =>
                 {
                     var pSettings = pinst.GetPortalSettings(p.PortalID);
@@ -77,9 +78,9 @@ namespace ToSic.Sxc.Dnn.Run
                 .FirstOrDefault(f => f != null);
 
             return found == null
-                ? ((DnnSite)null, "not found")
-                : (((DnnSite)_site.New()).Swap(found, Log), $"found {found.PortalId}");
-        });
+                ? l.Return((DnnSite)null, "not found")
+                : l.Return(((DnnSite)_site.New()).Swap(found, Log), $"found {found.PortalId}");
+        }
 
         /// <inheritdoc />
         public override List<ISiteLanguageState> CulturesWithState(ISite site)

@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Services.CmsService
             if (_field.Parent.IsDemoItem)
                 return l.Return(tag, "demo-item, so no toolbar");
 
-            if (_field.Parent.Entity.DisableInlineEdit())
+            if (_field.Parent.Entity.DisableInlineEditSafe())
                 return l.Return(tag, "decorator no-edit");
 
             var toolbar = _toolbar ?? defaultToolbar;

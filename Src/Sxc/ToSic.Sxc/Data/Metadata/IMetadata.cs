@@ -2,6 +2,7 @@
 using ToSic.Eav.Data;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Data
 {
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.Data
     ///     _Note that this is a breaking change, but we believe the type is never directly mentioned in any code_
     /// </remarks>
     [PublicApi]
-    public interface IMetadata: IDynamicEntity, IHasMetadata
+    public interface IMetadata: /*IDynamicEntity,*/ IHasMetadata, ITypedItem, ICanDebug, ISxcDynamicObject, IEntityWrapper
     {
         /// <summary>
         /// Ask if there is metadata of the type specified.
@@ -34,5 +35,7 @@ namespace ToSic.Sxc.Data
         /// <param name="type"></param>
         /// <returns></returns>
         IEnumerable<IEntity> OfType(string type);
+
+        
     }
 }

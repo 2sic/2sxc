@@ -31,7 +31,7 @@
 ### Instructions to Reproduce the Problem
 <!--
 If the current behavior is a bug or you can illustrate your feature request better with an example, 
-please provide the *STEPS TO REPRODUCE* and/or a *MINIMAL DEMO* like a screenshot or screencast.
+please provide the *STEPS TO REPRODUCE* and/or a *MINIMAL DEMO* like a screenshot or screen cast.
 
 A sample App to reproduce the issue is also great!
 -->
@@ -39,7 +39,7 @@ A sample App to reproduce the issue is also great!
 ### Your environment
 <!-- HINT: Operating system, IDE, package manager, HTTP server, ... -->
 
-* **2sxc version(s):** 15.0X.X  <!-- Check whether this is still an issue in the most recent version -->
+* **2sxc version(s):** 16.0X.X  <!-- Check whether this is still an issue in the most recent version -->
 * **Browser:** all | Chrome XX | Firefox XX | Edge XX | IE XX | Mobile Chrome XX | Android X.X Web Browser | iOS XX Safari
 * **DNN:** all | 9.6.1 | 9.xx.xx
 * **Hosting platform:** all | IIS | azure | other

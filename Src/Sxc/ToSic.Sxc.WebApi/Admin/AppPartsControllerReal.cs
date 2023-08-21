@@ -7,16 +7,21 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.DI;
 using ToSic.Sxc.WebApi.ImportExport;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
+#if NETFRAMEWORK
+using THttpResponseType = System.Net.Http.HttpResponseMessage;
+#else
+using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
+#endif
 
 namespace ToSic.Sxc.WebApi.Admin
 {
-    public class AppPartsControllerReal<THttpResponseType> : ServiceBase, IAppPartsController<THttpResponseType>
+    public class AppPartsControllerReal : ServiceBase, IAppPartsController
     {
         public const string LogSuffix = "AParts";
 
         public AppPartsControllerReal(
             LazySvc<IContextOfSite> context,
-            LazySvc<ExportContent<THttpResponseType>> exportContent,
+            LazySvc<ExportContent> exportContent,
             Generator<ImportContent> importContent
             ): base("Api.APartsRl")
         {
@@ -28,7 +33,7 @@ namespace ToSic.Sxc.WebApi.Admin
             
         }
         private readonly LazySvc<IContextOfSite> _context;
-        private readonly LazySvc<ExportContent<THttpResponseType>> _exportContent;
+        private readonly LazySvc<ExportContent> _exportContent;
         private readonly Generator<ImportContent> _importContent;
 
 

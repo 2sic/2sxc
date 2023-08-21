@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
@@ -36,7 +37,7 @@ namespace ToSic.Sxc.Adam
 
             var name = Path.GetFileNameWithoutExtension(fileName);
             var ext = Path.GetExtension(fileName);
-            for (var i = 1; i < AdamFileSystemBase.MaxSameFileRetries 
+            for (var i = 1; i < AdamConstants.MaxSameFileRetries 
                             && File.Exists(Path.Combine(serverPath, Path.GetFileName(fileName))); i++)
                 fileName = $"{name}-{i}{ext}";
 

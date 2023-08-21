@@ -12,7 +12,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using AppDto = ToSic.Eav.WebApi.Dto.AppDto;
-using RealController = ToSic.Sxc.WebApi.Admin.AppControllerReal<System.Net.Http.HttpResponseMessage>;
+using RealController = ToSic.Sxc.WebApi.Admin.AppControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {

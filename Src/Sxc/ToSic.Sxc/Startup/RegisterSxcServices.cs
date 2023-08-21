@@ -13,6 +13,8 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Helpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Typed;
+using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DotNet;
 using ToSic.Sxc.Engines;
@@ -48,7 +50,6 @@ namespace ToSic.Sxc.Startup
 
             // Code
             services.TryAddTransient<DynamicCodeRoot.MyServices>();
-            services.TryAddTransient<DynamicEntity.MyServices>();
 
             // Block Editors
             services.TryAddTransient<BlockEditorForEntity>();
@@ -68,7 +69,6 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<BlockBase.MyServices>();
 
             // Configuration Provider WIP
-            services.TryAddTransient<QueryStringLookUp>();
             services.TryAddTransient<AppConfigDelegate>();
             services.TryAddTransient<App>();
             services.TryAddTransient<ImportExportEnvironmentBase.MyServices>();
@@ -86,10 +86,10 @@ namespace ToSic.Sxc.Startup
 
 
             // Context stuff, which is explicitly scoped
-            services.TryAddScoped<Sxc.Context.IContextResolver, Sxc.Context.ContextResolver>();
+            services.TryAddScoped<Context.IContextResolver, Context.ContextResolver>();
             // New v15.04 WIP
-            services.TryAddScoped<Eav.Context.IContextResolver>(x => x.GetRequiredService<Sxc.Context.IContextResolver>());
-            services.TryAddScoped<IContextResolverUserPermissions>(x => x.GetRequiredService<Sxc.Context.IContextResolver>());
+            services.TryAddScoped<Eav.Context.IContextResolver>(x => x.GetRequiredService<Context.IContextResolver>());
+            services.TryAddScoped<IContextResolverUserPermissions>(x => x.GetRequiredService<Context.IContextResolver>());
             services.TryAddScoped<AppIdResolver>();
 
 
@@ -175,9 +175,16 @@ namespace ToSic.Sxc.Startup
             // v15
             services.TryAddTransient<DynamicCodeDataSources>();
 
+            // v16 DynamicJacket and DynamicRead factories
+            services.TryAddTransient<CodeDataWrapper>();
+            services.TryAddTransient<CodeJsonWrapper>();
+            services.TryAddTransient<WrapObjectTyped>();
+            services.TryAddTransient<WrapObjectTypedItem>();
+
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need
             services
+                .AddSxcCoreLookUps()
                 .AddServicesAndKits()
                 .AddCmsContext()
                 .ExternalConfig()

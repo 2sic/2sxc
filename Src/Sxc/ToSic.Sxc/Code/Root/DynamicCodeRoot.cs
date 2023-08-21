@@ -6,11 +6,9 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Code.Helpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.AsConverter;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -36,8 +34,8 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public class MyServices: MyServicesBase
         {
-            public AsConverterService AsConverter => _asConverter.Value;
-            private readonly LazySvc<AsConverterService> _asConverter;
+            public CodeDataFactory Cdf => _cdf.Value;
+            private readonly LazySvc<CodeDataFactory> _cdf;
             public LazySvc<DynamicCodeDataSources> DataSources { get; }
             public LazySvc<IDataSourcesService> DataSourceFactory { get; }
             public LazySvc<IConvertService> ConvertService { get; }
@@ -52,7 +50,7 @@ namespace ToSic.Sxc.Code
                 LazySvc<IConvertService> convertService,
                 LazySvc<IDataSourcesService> dataSourceFactory,
                 LazySvc<DynamicCodeDataSources> dataSources,
-                LazySvc<AsConverterService> asConverter)
+                LazySvc<CodeDataFactory> cdf)
             {
                 ConnectServices(
                     ServiceProvider = serviceProvider,
@@ -61,7 +59,7 @@ namespace ToSic.Sxc.Code
                     ConvertService = convertService,
                     DataSourceFactory = dataSourceFactory,
                     DataSources = dataSources,
-                    _asConverter = asConverter
+                    _cdf = cdf
                 );
             }
 
@@ -87,8 +85,8 @@ namespace ToSic.Sxc.Code
         #endregion
 
 
-        /// <inheritdoc cref="IDynamicCode.GetService{TService}" />
-        public TService GetService<TService>()
+        /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+        public TService GetService<TService>() where TService : class
         {
             var newService = _serviceProvider.Build<TService>(Log);
             if (newService is INeedsDynamicCodeRoot newWithNeeds)
@@ -97,12 +95,12 @@ namespace ToSic.Sxc.Code
         }
 
         [PrivateApi]
-        public virtual IDynamicCodeRoot InitDynCodeRoot(IBlock block, ILog parentLog, int compatibility)
+        public virtual IDynamicCodeRoot InitDynCodeRoot(IBlock block, ILog parentLog) //, int compatibility)
         {
             this.LinkLog(parentLog ?? block?.Log);
-            var cLog = Log.Fn<IDynamicCodeRoot>($"{nameof(compatibility)}: {compatibility}");
+            var cLog = Log.Fn<IDynamicCodeRoot>(); //$"{nameof(compatibility)}: {compatibility}");
 
-            AsC.SetCompatibilityLevel(compatibility);
+            //AsC.SetCompatibilityLevel(compatibility);
             if (block == null)
                 return cLog.Return(this, "no block");
 

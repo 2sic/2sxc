@@ -5,7 +5,6 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Razor;
 using IHasLog = ToSic.Lib.Logging.IHasLog;
 using ILog = ToSic.Lib.Logging.ILog;
-using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Engines;
 
 // ReSharper disable once CheckNamespace
@@ -39,8 +38,8 @@ namespace Custom.Hybrid
 
         #region GetService / Logs / DevTools
 
-        /// <inheritdoc cref="IDynamicCode.GetService{TService}" />
-        public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
+        /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+        public TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
 
         /// <inheritdoc cref="IHasCodeLog.Log" />
         public ICodeLog Log => SysHlp.CodeLog;

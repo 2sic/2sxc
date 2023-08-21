@@ -10,6 +10,7 @@ using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -96,21 +97,21 @@ namespace ToSic.Sxc.Blocks
         /// <param name="newGuid">Internal: this is the guid given to the item when being created in this block. Important for the inner-content functionality to work. </param>
         /// <returns></returns>
         public IRawHtmlString One(
-            ITypedItem parent,
-            string noParamOrder = Eav.Parameters.Protector,
+            ICanBeItem parent,
+            string noParamOrder = Protector,
             ICanBeEntity item = null,
             object data = null,
             string field = null,
             Guid? newGuid = null)
         {
-            Eav.Parameters.Protect(noParamOrder, $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
-            item = item ?? parent;
+            Protect(noParamOrder, $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
+            item = item ?? parent.Item;
             MakeSureLogIsInHistory();
             var simpleRenderer = _Deps.SimpleRenderer.New();
-            var block = ((IDynamicEntity)parent)._Services.BlockOrNull;
+            var block = parent.TryGetBlockContext();
             return Tag.Custom(field == null
                 ? simpleRenderer.Render(block, item.Entity, data: data) // without field edit-context
-                : simpleRenderer.RenderWithEditContext(block, parent, item, field, newGuid, GetEdit(block), data)); // with field-edit-context data-list-context
+                : simpleRenderer.RenderWithEditContext(block, parent, item, field, newGuid, GetEditService(block), data)); // with field-edit-context data-list-context
         }
 
         /// <summary>
@@ -127,21 +128,21 @@ namespace ToSic.Sxc.Blocks
         /// * Changed result object to `IRawHtmlString` in v16.02 from `IHybridHtmlString`
         /// </remarks>
         public IRawHtmlString All(
-            ITypedItem parent,
-            string noParamOrder = Eav.Parameters.Protector,
+            ICanBeItem parent,
+            string noParamOrder = Protector,
             string field = null,
             string apps = null,
             int max = 100,
             string merge = null)
         {
-            Eav.Parameters.Protect(noParamOrder, $"{nameof(field)},{nameof(merge)}");
+            Protect(noParamOrder, $"{nameof(field)},{nameof(merge)}");
             if (string.IsNullOrWhiteSpace(field)) throw new ArgumentNullException(nameof(field));
 
             MakeSureLogIsInHistory();
-            var block = ((IDynamicEntity)parent)._Services.BlockOrNull;
+            var block = parent.TryGetBlockContext();
             return Tag.Custom(merge == null
-                    ? _Deps.SimpleRenderer.New().RenderListWithContext(block, parent.Entity, field, apps, max, GetEdit(block))
-                    : _Deps.InTextRenderer.New().RenderMerge(block, parent.Entity, field, merge, GetEdit(block)));
+                    ? _Deps.SimpleRenderer.New().RenderListWithContext(block, parent.Entity, field, apps, max, GetEditService(block))
+                    : _Deps.InTextRenderer.New().RenderMerge(block, parent.Entity, field, merge, GetEditService(block)));
         }
 
 
@@ -149,11 +150,11 @@ namespace ToSic.Sxc.Blocks
         public virtual IRenderResult Module(
             int pageId,
             int moduleId,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
             object data = null)
         {
             var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
-            Eav.Parameters.Protect(noParamOrder, $"{nameof(data)}");
+            Protect(noParamOrder, $"{nameof(data)}");
             MakeSureLogIsInHistory();
             var block = _Deps.Builder.Value.GetProvider(pageId, moduleId).LoadBlock().BlockBuilder;
             var result = block.Run(true, data);
@@ -164,7 +165,7 @@ namespace ToSic.Sxc.Blocks
         /// create edit-object which is necessary for context attributes
         /// We need a new one for each parent
         /// </summary>
-        private IEditService GetEdit(IBlock blockOrNull)
+        private IEditService GetEditService(IBlock blockOrNull)
         {
             // If we have a dyn-code, use that
             if (_DynCodeRoot?.Edit != null) return _DynCodeRoot.Edit;

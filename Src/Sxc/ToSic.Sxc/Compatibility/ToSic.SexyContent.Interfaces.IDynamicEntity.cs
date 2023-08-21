@@ -1,5 +1,6 @@
 ﻿#if NETFRAMEWORK
 using System;
+using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Markup;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -13,7 +14,7 @@ namespace ToSic.SexyContent.Interfaces
     /// But this interface shouldn't be enhanced or documented publicly
     /// </summary>
     [PrivateApi("this was an old interface which must still work for compatibility, but shouldn't be used any more")]
-    public interface IDynamicEntity
+    public interface IDynamicEntity: IEntityWrapper
     {
 #if NETFRAMEWORK
         /// <summary>
@@ -33,7 +34,8 @@ namespace ToSic.SexyContent.Interfaces
         IRawHtmlString Render();
 #endif
 
-        IEntity Entity { get; }
+        // 2023-08-13 2dm removed and used IEntityWrapper - unsure if this has side effects
+        //IEntity Entity { get; }
 
 
         int EntityId { get; }

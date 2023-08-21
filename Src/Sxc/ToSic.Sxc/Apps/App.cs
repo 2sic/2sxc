@@ -7,7 +7,7 @@ using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Data.AsConverter;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.LookUp;
 using CodeInfoService = ToSic.Eav.Code.InfoSystem.CodeInfoService;
 using EavApp = ToSic.Eav.Apps.App;
@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Apps
             LazySvc<AppPaths> appPathsLazy,
             Generator<IAppStates> appStates,
             Generator<AppConfigDelegate> appConfigDelegate, 
-            LazySvc<AsConverterService> asConverter,
+            LazySvc<CodeDataFactory> cdf,
             LazySvc<CodeInfoService> codeChanges)
             : base(services, "App.SxcApp")
         {
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Apps
                 _appPathsLazy = appPathsLazy,
                 _appStates = appStates,
                 _appConfigDelegate = appConfigDelegate,
-                _asConverter = asConverter.SetInit(asc => asc.SetFallbacks(Site)),
+                _cdfLazy = cdf.SetInit(asc => asc.SetFallbacks(Site)),
                 _codeChanges = codeChanges
             );
         }
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Apps
         private readonly Generator<IAppStates> _appStates;
         private readonly Generator<AppConfigDelegate> _appConfigDelegate;
         private readonly LazySvc<CodeInfoService> _codeChanges;
-        private readonly LazySvc<AsConverterService> _asConverter;
+        private readonly LazySvc<CodeDataFactory> _cdfLazy;
 
 
         private AppPaths AppPaths => _appPaths.Get(() => _appPathsLazy.Value.Init(Site, AppState));

@@ -57,13 +57,14 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
             services.TryAddTransient<OqtPageOutput>();
             services.TryAddTransient<OqtSxcViewBuilder>();
-            services.TryAddTransient<IBlockResourceExtractor, OqtBlockResourceExtractor>();
+            services.TryAddTransient<IBlockResourceExtractor, BlockResourceExtractorWithInline>();
             services.TryAddTransient<IValueConverter, OqtValueConverter>();
 
             // Views / Templates / Razor: View Builder
             services.TryAddTransient<OqtSxcViewBuilder>();
 
-            services.TryAddTransient<DynamicCodeRoot, OqtaneDynamicCodeRoot>();
+            services.TryAddTransient<DynamicCodeRoot, OqtDynamicCodeRoot>();
+            services.TryAddTransient(typeof(DynamicCodeRoot<,>), typeof(OqtDynamicCodeRoot<,>));
             services.TryAddTransient<IWebApiContextBuilder, OqtGetBlock>();
 
             // v13

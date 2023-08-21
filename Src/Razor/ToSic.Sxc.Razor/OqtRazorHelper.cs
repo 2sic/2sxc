@@ -7,7 +7,9 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.CodeHelpers;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Engines;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Razor
 {
@@ -18,11 +20,6 @@ namespace ToSic.Sxc.Razor
             _owner = owner;
         }
         private readonly OqtRazorBase<TModel> _owner;
-
-        //public OqtRazorHelper<TModel> Init(IHasDynamicCodeRoot owner)
-        //{
-        //    return this;
-        //}
 
         #region DynamicCode Attachment / Handling through ViewData
 
@@ -64,15 +61,15 @@ namespace ToSic.Sxc.Razor
 
         #region Dynamic Model / MyModel
 
-        public dynamic DynamicModel => _dynamicModel ??= new DynamicReadObject(_owner.Model, true, false);
+        public dynamic DynamicModel => _dynamicModel ??= _owner.GetService<CodeDataWrapper>()
+            .FromObject(_overridePageData ?? _owner.Model, WrapperSettings.Dyn(false, false));
         private dynamic _dynamicModel;
         private object _overridePageData;
 
         public void SetDynamicModel(object data)
         {
             _overridePageData = data;
-            //UpdateModel(data);
-            _dynamicModel = new DynamicReadObject(data, false, false);
+            //_dynamicModel = _owner.GetService<DynamicWrapperFactory>().FromObject(data, false, false);
         }
 
         public TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
@@ -80,9 +77,9 @@ namespace ToSic.Sxc.Razor
 
         private TypedCode16Helper CreateCodeHelper()
         {
-            var myModelData = _overridePageData?.ObjectToDictionaryInvariant()
-                              ?? _owner.Model?.ObjectToDictionary();
-            return new TypedCode16Helper(_DynCodeRoot, _DynCodeRoot.Data, myModelData, true, _owner.Path);
+            var myModelData = (_overridePageData ?? _owner.Model)?.ToDicInvariantInsensitive();
+                              // ?? _owner.Model?.ObjectToDictionary();
+            return new(_DynCodeRoot, _DynCodeRoot.Data, myModelData, true, _owner.Path);
         }
 
 
@@ -90,18 +87,25 @@ namespace ToSic.Sxc.Razor
 
         #region Create Instance
 
+        public object GetCode(string path, string noParamOrder = Protector, string className = default)
+        {
+            Protect(noParamOrder, nameof(className));
+            return CreateInstance(path, /*_owner.Path,*/ name: className);
+        }
+
+
         /// <summary>
         /// Creates instances of the shared pages with the given relative path
         /// </summary>
         /// <returns></returns>
-        public dynamic CreateInstance(string virtualPath,
-            string razorPath,
-            string noParamOrder = ToSic.Eav.Parameters.Protector,
+        public object CreateInstance(string virtualPath,
+            //string razorPath,
+            string noParamOrder = Protector,
             string name = null,
             string relativePath = null,
             bool throwOnError = true)
         {
-            var directory = System.IO.Path.GetDirectoryName(razorPath)
+            var directory = System.IO.Path.GetDirectoryName(_owner.Path)
                             ?? throw new("Current directory seems to be null");
             var path = System.IO.Path.Combine(directory, virtualPath);
             VerifyFileExists(path);

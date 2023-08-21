@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             if (root == null) return false;
 
             // If root is not demo, then don't use demo mode
-            if (!root.IsDemoItem()) return false;
+            if (!root.IsDemoItemSafe()) return false;
 
             // Check if we have a target, if not, then go into demo-mode
             var target = (FindRule<ToolbarRuleForParams>()?.Target as ICanBeEntity)?.Entity;

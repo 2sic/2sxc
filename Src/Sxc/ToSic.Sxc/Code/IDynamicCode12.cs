@@ -4,7 +4,6 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -41,8 +40,8 @@ namespace ToSic.Sxc.Code
         // **************************************************
 
 
-        /// <inheritdoc cref="IDynamicCode.GetService{TService}" />
-        TService GetService<TService>();
+        /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+        TService GetService<TService>() where TService : class;
 
         /// <inheritdoc cref="IDynamicCode.App" />
         IApp App { get; }

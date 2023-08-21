@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
-using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -16,7 +16,6 @@ using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Dnn;
-using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Engines
@@ -32,10 +31,10 @@ namespace ToSic.Sxc.Engines
         #region Constructor / DI
 
         private readonly LazySvc<CodeErrorHelpService> _errorHelp;
-        private readonly DnnCodeRootFactory _codeRootFactory;
+        private readonly CodeRootFactory _codeRootFactory;
         private readonly LazySvc<DnnRazorSourceAnalyzer> _sourceAnalyzer;
 
-        public RazorEngine(MyServices helpers, DnnCodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<DnnRazorSourceAnalyzer> sourceAnalyzer) : base(helpers)
+        public RazorEngine(MyServices helpers, CodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<DnnRazorSourceAnalyzer> sourceAnalyzer) : base(helpers)
         {
             ConnectServices(
                 _codeRootFactory = codeRootFactory,
@@ -111,7 +110,10 @@ namespace ToSic.Sxc.Engines
             }
             catch (Exception maybeIEntityCast)
             {
-                throw l.Ex(_errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast, page));
+                var ex = l.Ex(_errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast, page));
+                // Special form of throw to preserve details about the call stack
+                ExceptionDispatchInfo.Capture(ex).Throw();
+                throw; // fake throw, just so the code shows what happens
             }
             return l.Return((writer, page.SysHlp.ExceptionsOrNull));
         }
@@ -134,7 +136,7 @@ namespace ToSic.Sxc.Engines
             {
                 compiledType = BuildManager.GetCompiledType(TemplatePath);
             }
-            catch (Exception ex)
+            catch (Exception compileEx)
             {
                 // TODO: ADD MORE compile error help
                 // 1. Read file
@@ -142,7 +144,10 @@ namespace ToSic.Sxc.Engines
                 // 3. ...
                 var razorType = _sourceAnalyzer.Value.TypeOfVirtualPath(TemplatePath);
                 l.A($"Razor Type: {razorType}");
-                throw l.Ex(_errorHelp.Value.AddHelpForCompileProblems(ex, razorType));
+                var ex = l.Ex(_errorHelp.Value.AddHelpForCompileProblems(compileEx, razorType));
+                // Special form of throw to preserve details about the call stack
+                ExceptionDispatchInfo.Capture(ex).Throw();
+                throw; // fake throw, just so the code shows what happens
             }
 
             try
@@ -154,9 +159,12 @@ namespace ToSic.Sxc.Engines
                 var pageObjectValue = RuntimeHelpers.GetObjectValue(page);
                 return l.ReturnAsOk(pageObjectValue);
             }
-            catch (Exception ex)
+            catch (Exception createInstanceException)
             {
-                throw l.Ex(_errorHelp.Value.AddHelpIfKnownError(ex, page));
+                var ex = l.Ex(_errorHelp.Value.AddHelpIfKnownError(createInstanceException, page));
+                // Special form of throw to preserve details about the call stack
+                ExceptionDispatchInfo.Capture(ex).Throw();
+                throw; // fake throw, just so the code shows what happens
             }
         }
 
@@ -186,7 +194,7 @@ namespace ToSic.Sxc.Engines
                 //compatibility = Constants.CompatibilityLevel10;
             }
 
-            var compatibility = (pageToInit as ICompatibilityLevel)?.CompatibilityLevel ?? Constants.CompatibilityLevel9Old;
+            //var compatibility = (pageToInit as ICompatibilityLevel)?.CompatibilityLevel ?? Constants.CompatibilityLevel9Old;
             //if (pageToInit is IDynamicCode16)
             //    compatibility = Constants.CompatibilityLevel16;
             //else if (pageToInit is ICompatibleToCode12)
@@ -196,20 +204,24 @@ namespace ToSic.Sxc.Engines
 #pragma warning disable 618, CS0612
                 oldPage.InstancePurpose = (InstancePurposes)Purpose;
 #pragma warning restore 618, CS0612
-            InitHelpers(pageToInit, compatibility);
+            InitHelpers(pageToInit);
             return l.ReturnTrue("ok");
         }
 
-        private void InitHelpers(RazorComponentBase webPage, int compatibility)
+        private void InitHelpers(RazorComponentBase webPage)
         {
-            var l = Log.Fn($"{nameof(compatibility)}: {compatibility}");
-            var dynCode = _codeRootFactory.BuildDynamicCodeRoot(webPage);
-            dynCode.InitDynCodeRoot(Block, Log, compatibility);
+            var l = Log.Fn();
+            var dynCode = _codeRootFactory.BuildCodeRoot(webPage, Block, Log, compatibilityFallback: Constants.CompatibilityLevel9Old);
+            //dynCode.InitDynCodeRoot(Block, Log); //, compatibility)
+                //.SetCompatibility(compatibility);
             webPage.ConnectToRoot(dynCode);
 
             // New in 10.25 - ensure jquery is not included by default
-            if (compatibility > Constants.MaxLevelForAutoJQuery)
+            if (dynCode.Cdf.CompatibilityLevel > Constants.MaxLevelForAutoJQuery)
+            {
+                l.A("Compatibility is new, don't need AutoJQuery");
                 CompatibilityAutoLoadJQueryAndRvt = false;
+            }
             l.Done();
         }
 

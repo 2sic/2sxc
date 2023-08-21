@@ -41,7 +41,9 @@ namespace ToSic.Sxc.Startup
             services.AddTransient<IPagePublishingGetSettings, PagePublishingGetSettingsForbidden>();
 
             // Code / Dynamic Code
+            services.TryAddTransient<CodeRootFactory>();
             services.TryAddTransient<DynamicCodeRoot, DynamicCodeRootUnknown>();
+            services.TryAddTransient(typeof(DynamicCodeRoot<,>), typeof(DynamicCodeRootUnknown<,>));
             services.TryAddTransient<IModule, ModuleUnknown>();
             
             // 11.08 - fallback in case not added

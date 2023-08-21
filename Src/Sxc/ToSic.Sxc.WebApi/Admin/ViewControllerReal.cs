@@ -13,17 +13,22 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi.Usage;
 using ToSic.Sxc.WebApi.Views;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
+#if NETFRAMEWORK
+using THttpResponseType = System.Net.Http.HttpResponseMessage;
+#else
+using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
+#endif
 
 namespace ToSic.Sxc.WebApi.Admin
 {
-    public class ViewControllerReal<THttpResponseType> : ServiceBase, IViewController<THttpResponseType>
+    public class ViewControllerReal : ServiceBase, IViewController
     {
         public const string LogSuffix = "View";
 
         public ViewControllerReal(
             LazySvc<IContextOfSite> context,
             LazySvc<ViewsBackend> viewsBackend, 
-            LazySvc<ViewsExportImport<THttpResponseType>> viewExportImport, 
+            LazySvc<ViewsExportImport> viewExportImport, 
             LazySvc<UsageBackend> usageBackend, 
             LazySvc<PolymorphismBackend> polymorphismBackend
             ) : base("Api.ViewRl")
@@ -40,7 +45,7 @@ namespace ToSic.Sxc.WebApi.Admin
         private readonly LazySvc<PolymorphismBackend> _polymorphismBackend;
         private readonly LazySvc<UsageBackend> _usageBackend;
         private readonly LazySvc<ViewsBackend> _viewsBackend;
-        private readonly LazySvc<ViewsExportImport<THttpResponseType>> _viewExportImport;
+        private readonly LazySvc<ViewsExportImport> _viewExportImport;
 
         /// <inheritdoc />
         public IEnumerable<ViewDetailsDto> All(int appId) => _viewsBackend.Value.GetAll(appId);
@@ -99,7 +104,7 @@ namespace ToSic.Sxc.WebApi.Admin
             }
             return _usageBackend.Value.ViewUsage(appId, guid, FinalBuilder);
         }
-        public ViewControllerReal<THttpResponseType> UsagePreparations(Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
+        public ViewControllerReal UsagePreparations(Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
         {
             FinalBuilder = finalBuilder;
             return this;

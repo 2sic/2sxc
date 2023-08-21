@@ -1,4 +1,5 @@
 ﻿using ToSic.Lib.Logging;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code.CodeHelpers
 {
@@ -23,9 +24,15 @@ namespace ToSic.Sxc.Code.CodeHelpers
 
         #region CreateInstance
 
+        public object GetCode(string path, string noParamOrder = Protector, string className = default)
+        {
+            Protect(noParamOrder, nameof(className));
+            return CreateInstance(path, name: className);
+        }
+
         /// <inheritdoc />
         public object CreateInstance(string virtualPath,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
             string name = null,
             string relativePath = null,
             bool throwOnError = true) => Log.Func(() =>

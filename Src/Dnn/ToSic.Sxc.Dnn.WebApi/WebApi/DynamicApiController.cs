@@ -30,7 +30,7 @@ namespace ToSic.Sxc.WebApi
         protected DynamicApiController() : this("DynApi") { }
 
         [PrivateApi]
-        protected DynamicApiController(string logSuffix) : base(logSuffix) { }
+        protected DynamicApiController(string logSuffix, string insightsGroup = default) : base(logSuffix, insightsGroup) { }
 
         [PrivateApi]
         protected override void Initialize(HttpControllerContext controllerContext)
@@ -61,8 +61,8 @@ namespace ToSic.Sxc.WebApi
 
         #region Services / Properties to share
 
-        /// <inheritdoc cref="IDynamicCode.GetService{TService}"/>
-        public virtual TService GetService<TService>() => SysHlp.GetService<TService>();
+        ///// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+        //public virtual TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
 
         /// <inheritdoc cref="IHasDnn.Dnn"/>
         public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
@@ -73,15 +73,5 @@ namespace ToSic.Sxc.WebApi
             => DynHlp.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
 
         #endregion
-
-        //#region CreateInstance
-
-        //string IGetCodePath.CreateInstancePath { get; set; }
-
-        ///// <inheritdoc cref="ICreateInstance.CreateInstance"/>
-        //public dynamic CreateInstance(string virtualPath, string noParamOrder = Protector, string name = null, string relativePath = null, bool throwOnError = true)
-        //    => _DynCodeRoot.CreateInstance(virtualPath, noParamOrder, name, ((IGetCodePath)this).CreateInstancePath, throwOnError);
-
-        //#endregion
     }
 }

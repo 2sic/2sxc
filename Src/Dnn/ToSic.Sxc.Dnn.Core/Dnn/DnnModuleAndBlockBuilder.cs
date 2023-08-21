@@ -24,17 +24,18 @@ namespace ToSic.Sxc.Dnn
         private ILog ParentLog => (Log as Log)?.Parent ?? Log;
 
 
-        protected override IModule GetModuleImplementation(int pageId, int moduleId) => Log.Func($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}", l =>
+        protected override IModule GetModuleImplementation(int pageId, int moduleId)
         {
+            var l = Log.Fn<IModule>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
             var moduleInfo = new ModuleController().GetModule(moduleId, pageId, false);
 
             l.A($"Page Id on DNN Module: {moduleInfo.TabID} - should be {pageId}");
 
             ThrowIfModuleIsNull(pageId, moduleId, moduleInfo);
             var module = ((DnnModule)_moduleGenerator.New()).Init(moduleInfo);
-            l.A($"Page Id on IModule: {module.BlockIdentifier} - should be {pageId}");
-            return module;
-        });
+
+            return l.Return(module, $"Page Id on IModule: {module.BlockIdentifier} - should be {pageId}");
+        }
 
         protected override IContextOfBlock GetContextOfBlock(IModule module, int? pageId) => GetContextOfBlock((module as DnnModule)?.GetContents(), pageId);
 
@@ -49,24 +50,26 @@ namespace ToSic.Sxc.Dnn
             return initializedCtx;
         }
 
-        private IContextOfBlock InitDnnSiteModuleAndBlockContext(ModuleInfo dnnModule, int? pageId) => Log.Func(() =>
+        private IContextOfBlock InitDnnSiteModuleAndBlockContext(ModuleInfo dnnModule, int? pageId)
         {
+            var l = Log.Fn<IContextOfBlock>($"{nameof(pageId)}: {pageId}, {nameof(dnnModule.ModuleID)}: {dnnModule.ModuleID}");
             var context = _contextGenerator.New();
             Log.A($"Will try-swap module info of {dnnModule.ModuleID} into site");
             ((DnnSite)context.Site).TrySwap(dnnModule, ParentLog);
             Log.A("Will init module");
             ((DnnModule)context.Module).Init(dnnModule);
-            return InitPageOnly(context, pageId);
-        });
+            return l.ReturnAsOk(InitPageOnly(context, pageId));
+        }
 
-        private IContextOfBlock InitPageOnly(IContextOfBlock context, int? pageId) => Log.Func(() =>
+        private IContextOfBlock InitPageOnly(IContextOfBlock context, int? pageId)
         {
+            var l = Log.Fn<IContextOfBlock>($"{nameof(pageId)}: {pageId}");
             // Collect / assemble page information
             var activeTab = (context.Site as Site<PortalSettings>)?.GetContents()?.ActiveTab;
             var page = (DnnPage)context.Page;
             var url = page.InitPageIdAndUrl(activeTab, pageId);
-            return (context, url);
-        });
+            return l.Return(context, url);
+        }
 
     }
 }

@@ -1,6 +1,6 @@
 ﻿using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Dnn.Code;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.LookUp;
 
@@ -15,17 +15,17 @@ namespace ToSic.Sxc.WebApi
     {
         public LazySvc<AppConfigDelegate> AppConfigDelegateLazy { get; }
         public LazySvc<Apps.App> AppOverrideLazy { get; }
-        public DnnCodeRootFactory DnnCodeRootFactory { get; }
+        public CodeRootFactory CodeRootFactory { get; }
         public DnnAppFolderUtilities AppFolderUtilities { get; }
 
         public DynamicApiServices(
-            DnnCodeRootFactory dnnCodeRootFactory,
+            CodeRootFactory codeRootFactory,
             DnnAppFolderUtilities appFolderUtilities,
             LazySvc<Apps.App> appOverrideLazy,
             LazySvc<AppConfigDelegate> appConfigDelegateLazy)
         {
             ConnectServices(
-                DnnCodeRootFactory = dnnCodeRootFactory,
+                CodeRootFactory = codeRootFactory,
                 AppFolderUtilities = appFolderUtilities,
                 AppOverrideLazy = appOverrideLazy,
                 AppConfigDelegateLazy = appConfigDelegateLazy

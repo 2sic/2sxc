@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
-using RealController = ToSic.Sxc.WebApi.Sys.InstallControllerReal<Microsoft.AspNetCore.Mvc.IActionResult>;
+using RealController = ToSic.Sxc.WebApi.Sys.InstallControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
@@ -44,12 +43,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
         public InstallAppsDto InstallSettings(bool isContentApp)
             => Real.InstallSettings(isContentApp, CtxHlp.BlockOptional.Context.Module);
 
-        private void PrepareResponseMaker()
-        {
-            // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>();
-            responseMaker.Init(this);
-        }
 
         /// <inheritdoc />
         [HttpPost]
@@ -59,7 +52,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
         public IActionResult RemotePackage(string packageUrl)
         {
             HotReloadEnabledCheck.Check(); // Ensure that Hot Reload is not enabled or try to disable it.
-            PrepareResponseMaker();
+            // Make sure the Scoped ResponseMaker has this controller context
+            CtxHlp.SetupResponseMaker();
             return Real.RemotePackage(packageUrl, CtxHlp.BlockOptional?.Context.Module);
         }
     }

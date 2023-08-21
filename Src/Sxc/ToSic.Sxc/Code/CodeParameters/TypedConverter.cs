@@ -4,8 +4,8 @@ using ToSic.Eav.Data;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.AsConverter;
 using ToSic.Sxc.Edit.Toolbar;
+// ReSharper disable PossibleMultipleEnumeration
 
 namespace ToSic.Sxc.Code
 {
@@ -14,11 +14,11 @@ namespace ToSic.Sxc.Code
     /// </summary>
     internal class TypedConverter
     {
-        public AsConverterService AsC { get; }
+        public CodeDataFactory Cdf { get; }
 
-        public TypedConverter(AsConverterService asC)
+        public TypedConverter(CodeDataFactory cdf)
         {
-            AsC = asC;
+            Cdf = cdf;
         }
 
         public (T typed, object untyped, bool ok) EvalInterface<T>(object maybe, T fallback = default) where T: class 
@@ -32,26 +32,28 @@ namespace ToSic.Sxc.Code
         {
             var (typed, untyped, ok) = EvalInterface(maybe, fallback);
             // Try to convert, in case it's an IEntity or something; could also result in error
-            return ok ? typed : AsC.AsEntity(untyped);
+            return ok ? typed : Cdf.AsEntity(untyped);
         }
 
-        public ITypedItem Item(object maybe, ITypedItem fallback)
+        public ITypedItem Item(object data, string noParamOrder, ITypedItem fallback)
         {
-            var (typed, untyped, ok) = EvalInterface(maybe, fallback);
+            Eav.Parameters.Protect(noParamOrder);
+            var (typed, untyped, ok) = EvalInterface(data, fallback);
             // Try to convert, in case it's an IEntity or something; could also result in error
-            return ok ? typed : AsC.AsItem(untyped);
+            return ok ? typed : Cdf.AsItem(untyped, noParamOrder);
         }
 
-        public IEnumerable<ITypedItem> Items(object maybe, IEnumerable<ITypedItem> fallback)
+        public IEnumerable<ITypedItem> Items(object maybe, string noParamOrder, IEnumerable<ITypedItem> fallback)
         {
+            Eav.Parameters.Protect(noParamOrder);
             var (typed, untyped, ok) = EvalInterface(maybe, fallback);
             // Try to convert, in case it's an IEntity or something; could also result in error
-            return ok ? typed : AsC.AsItems(untyped);
+            return ok ? typed : Cdf.AsItems(untyped, noParamOrder);
         }
 
         public IToolbarBuilder Toolbar(object maybe, IToolbarBuilder fallback)
         {
-            var (typed, untyped, ok) = EvalInterface(maybe, fallback);
+            var (typed, _, ok) = EvalInterface(maybe, fallback);
             // Try to convert, in case it's an IEntity or something; could also result in error
             return ok ? typed : fallback;
         }
@@ -99,11 +101,11 @@ namespace ToSic.Sxc.Code
             return ok ? typed : null;
         }
 
-        public ITyped Typed(object maybe, ITyped fallback)
+        public ITyped Typed(object maybe, string noParamOrder, ITyped fallback)
         {
             var (typed, untyped, ok) = EvalInterface(maybe, fallback);
             // Try to convert, in case it's an IEntity or something; could also result in error
-            return ok ? typed : AsC.AsItem(untyped);
+            return ok ? typed : Cdf.AsItem(untyped, noParamOrder);
         }
 
         #region Tags

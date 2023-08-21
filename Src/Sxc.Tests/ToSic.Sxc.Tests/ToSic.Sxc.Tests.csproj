@@ -103,17 +103,34 @@
     <Compile Include="DataSources\MockUsersDataSource.cs" />
     <Compile Include="DataSources\UsersDataSourceTests.cs" />
     <Compile Include="DataSources\RolesDataSourceTests.cs" />
-    <Compile Include="Data\DynamicJacket\DynamicJacketArrays.cs" />
-    <Compile Include="Data\DynamicJacket\DynamicJacketValues.cs" />
-    <Compile Include="Data\DynamicJacket\DynamicJacketObjectTests.cs" />
-    <Compile Include="Data\DynamicJacket\DynamicJacketMixTests.cs" />
-    <Compile Include="Data\DynamicJacket\DynamicJacketTestBase.cs" />
+    <Compile Include="DataTests\DynAndTypedTestsBase.cs" />
+    <Compile Include="DataTests\DynConverterTests\AsConverterFakeTests.cs" />
+    <Compile Include="DataTests\DynConverterTests\AsConverterTestsBase.cs" />
+    <Compile Include="DataTests\DynConverterTests\AsConverterAsItem.cs" />
+    <Compile Include="DataTests\PropInfo.cs" />
+    <Compile Include="DataTests\DynJson\WrapAllGps.cs" />
+    <Compile Include="DataTests\DynJson\WrapAllKeys.cs" />
+    <Compile Include="DataTests\DynJson\WrapAllSerialize.cs" />
+    <Compile Include="DataTests\DynStack\TypedStackGet.cs" />
+    <Compile Include="DataTests\DynStack\TypedStackKeys_NotImplemented.cs" />
+    <Compile Include="DataTests\DynStack\TypedStackTestData.cs" />
+    <Compile Include="DataTests\DynWrappers\WrapDicBasic.cs" />
+    <Compile Include="DataTests\DynWrappers\WrapObjBasic.cs" />
+    <Compile Include="DataTests\DynJson\WrapJsonArray.cs" />
+    <Compile Include="DataTests\DynJson\WrapJsonValues.cs" />
+    <Compile Include="DataTests\DynJson\WrapJsonDeep.cs" />
+    <Compile Include="DataTests\DynJson\WrapJsonMixed.cs" />
+    <Compile Include="DataTests\DynWrappers\TestPerson.cs" />
+    <Compile Include="DataTests\DynWrappers\WrapObjTypedItemMetadata.cs" />
+    <Compile Include="DataTests\DynWrappers\WrapObjTypedItemAdvanced.cs" />
+    <Compile Include="DataTests\DynWrappers\WrapObjTypedItemParents.cs" />
+    <Compile Include="DataTests\DynWrappers\WrapObjTypedItemChildren.cs" />
+    <Compile Include="DataTests\DynWrappers\WrapObjTypedItem.cs" />
+    <Compile Include="DataTests\HasKeysTests.cs" />
+    <Compile Include="DataTests\TypedItemTestAccessors.cs" />
     <Compile Include="ServicesTests\CmsService\CmsServiceTest.cs" />
     <Compile Include="ServicesTests\CmsService\CmsServiceTestBase.cs" />
-    <Compile Include="DynamicData\DynamicReadObjectTest.cs" />
-    <Compile Include="DynamicData\SimpleObject.cs" />
-    <Compile Include="DynamicData\TestAccessors.cs" />
-    <Compile Include="DynamicData\DynamicReadRealClass.cs" />
+    <Compile Include="DataTests\DynWrappers\WrapObjDeep.cs" />
     <Compile Include="LinksAndImages\LinkImageTests\MultiResizeTests.cs" />
     <Compile Include="LinksAndImages\LinkImageTests\ImgSrcSet.cs" />
     <Compile Include="LinksAndImages\SrcSetParsePart.cs" />
@@ -176,6 +193,10 @@
     <Compile Include="WebUrlTests\UrlValueFilterTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">
+      <Project>{fa1b4495-6b85-400f-a5e3-0e292ccbfae2}</Project>
+      <Name>ToSic.Eav.Apps</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core.Tests\ToSic.Eav.Core.Tests.csproj">
       <Project>{afed35b5-8e43-4f46-8e4d-fc3f07244d8b}</Project>
       <Name>ToSic.Eav.Core.Tests</Name>

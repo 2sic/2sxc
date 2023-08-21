@@ -1,37 +1,51 @@
 ﻿using System.Collections.Generic;
 using ToSic.Lib.Helpers;
+using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code
 {
-    public class TypedCode16Helper
+    public class TypedCode16Helper: CodeHelperXxBase
     {
-        private readonly IDynamicCodeRoot _codeRoot;
+        public bool DefaultStrict = true;
+
+        //protected readonly IDynamicCodeRoot CodeRoot;
         private readonly IDictionary<string, object> _myModelData;
-        private readonly bool _isRazor;
-        private readonly string _codeFileName;
+        //protected readonly bool IsRazor;
+        //protected readonly string CodeFileName;
         internal ContextData Data { get; }
         public TypedCode16Helper(IDynamicCodeRoot codeRoot, IContextData data, IDictionary<string, object> myModelData, bool isRazor, string codeFileName)
+            : base(codeRoot, isRazor, codeFileName, Constants.SxcLogName + ".TCd16H")
         {
-            _codeRoot = codeRoot;
+            //CodeRoot = codeRoot;
             _myModelData = myModelData;
-            _isRazor = isRazor;
-            _codeFileName = codeFileName;
+            //IsRazor = isRazor;
+            //CodeFileName = codeFileName;
             Data = data as ContextData;
+            //this.LinkLog(codeRoot.Log);
         }
 
-        public ITypedItem MyItem => _myItem.Get(() => _codeRoot.AsC.AsItem(Data.MyItem));
+        public ITypedItem MyItem => _myItem.Get(() => CodeRoot.Cdf.AsItem(Data.MyItem, Protector, propsRequired: DefaultStrict));
         private readonly GetOnce<ITypedItem> _myItem = new GetOnce<ITypedItem>();
 
-        public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => _codeRoot.AsC.AsItems(Data.MyItem));
+        public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => CodeRoot.Cdf.AsItems(Data.MyItem, Protector, propsRequired: DefaultStrict));
         private readonly GetOnce<IEnumerable<ITypedItem>> _myItems = new GetOnce<IEnumerable<ITypedItem>>();
 
-        public ITypedItem MyHeader => _myHeader.Get(() => _codeRoot.AsC.AsItem(Data.MyHeader));
+        public ITypedItem MyHeader => _myHeader.Get(() => CodeRoot.Cdf.AsItem(Data.MyHeader, Protector, propsRequired: DefaultStrict));
         private readonly GetOnce<ITypedItem> _myHeader = new GetOnce<ITypedItem>();
 
-        public ITypedModel MyModel => _myModel.Get(() => new TypedModel(_myModelData, _codeRoot, _isRazor, _codeFileName));
+        public ITypedModel MyModel => _myModel.Get(() => new TypedModel(_myModelData, CodeRoot, IsRazor, CodeFileName));
         private readonly GetOnce<ITypedModel> _myModel = new GetOnce<ITypedModel>();
 
+
+        public ITypedStack AllResources => (CodeRoot as DynamicCodeRoot)?.AllResources;
+
+        public ITypedStack AllSettings => (CodeRoot as DynamicCodeRoot)?.AllSettings;
+
+        //public IDevTools DevTools => _devTools.Get(() => new DevTools(IsRazor, CodeFileName, Log));
+        //private readonly GetOnce<IDevTools> _devTools = new GetOnce<IDevTools>();
     }
 }

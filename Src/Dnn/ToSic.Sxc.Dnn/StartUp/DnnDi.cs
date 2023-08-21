@@ -56,7 +56,9 @@ namespace ToSic.Sxc.Dnn.StartUp
             // This is because the old Dnn wasn't DI aware
             if (services == null) services = new ServiceCollection();
 
-            services.AddDnn()
+            services
+                .AddDnn()
+                .AddDnnCore() // TODO: Move core stuff from AddDnn to AddDnnCore and make implementations internal
                 .AddDnnSxcDataSources()
                 //.AddDnnCore()
                 .AddDnnDataSources()
@@ -67,7 +69,7 @@ namespace ToSic.Sxc.Dnn.StartUp
                 .AddSxcWebApi()
                 .AddSxcCore()
                 .AddEav()
-                .AddEavWebApiTypedAfterEav<HttpResponseMessage>()
+                .AddEavWebApiTypedAfterEav()
                 .AddRazorBlade();
 
             // temp polymorphism - later put into AddPolymorphism
@@ -123,8 +125,10 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<DnnDynamicCodeRoot>();
             // New v14
             services.TryAddTransient(typeof(DynamicCodeRoot<,>), typeof(DnnDynamicCodeRoot<,>));
-            services.TryAddTransient(typeof(DnnDynamicCodeRoot<,>));
-            services.TryAddTransient<DnnCodeRootFactory>();
+            //services.TryAddTransient(typeof(DnnDynamicCodeRoot<,>));
+            //services.TryAddTransient<DnnCodeRootFactory>();
+            //services.AddDnnCore();
+            //services.TryAddTransient<CodeRootFactory, DnnCodeRootFactory>();
 
 
 

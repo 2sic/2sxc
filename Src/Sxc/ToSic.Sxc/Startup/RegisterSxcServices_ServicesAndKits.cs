@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Data.AsConverter;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.EditService;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Images;
@@ -38,7 +38,10 @@ namespace ToSic.Sxc.Startup
 
             // WIP 12.05 - json converter
             services.TryAddTransient<IJsonService, JsonService>();
+            services.TryAddTransient<ConvertValueService>();
+            services.TryAddTransient<ConvertForCodeService>();
             services.TryAddTransient<IConvertService, ConvertService>();
+            services.TryAddTransient<IConvertService16, ConvertService16>();
 
             // New 12.05: SecureData
             services.TryAddTransient<ISecureDataService, SecureDataService>();
@@ -59,11 +62,6 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<ToolbarBuilder.MyServices>();
             services.TryAddTransient<ToolbarButtonDecoratorHelper>();
 
-            // v14 Kits
-            services.TryAddTransient<ServiceKit>();
-            services.TryAddTransient<ServiceKit14>();
-            services.TryAddTransient<ServiceKitLight16>();
-
             // WIP v14
             services.TryAddTransient<IAdamService, AdamService>();
 
@@ -79,7 +77,14 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<DataSource16.MyServices>();
 
             // v16 AsConverter
-            services.TryAddTransient<AsConverterService>();
+            services.TryAddTransient<CodeDataFactory>();
+            services.TryAddTransient<CodeDataServices>();
+
+            // Kits v14+
+            services.TryAddTransient<ServiceKit>();
+            services.TryAddTransient<ServiceKit14>();
+            services.TryAddTransient<ServiceKit16>();
+            services.TryAddTransient<ServiceKitLight16>();
 
             return services;
         }

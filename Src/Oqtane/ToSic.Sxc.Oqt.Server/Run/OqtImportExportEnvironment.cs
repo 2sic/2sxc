@@ -223,7 +223,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private bool FileExists(Folder folderInfo, string fileName) => GetFile(folderInfo, fileName) != null;
 
         private File GetFile(Folder folderInfo, string fileName)
-            => _oqtFileRepository.GetFiles(folderInfo.FolderId)
+            => _oqtFileRepository.GetFiles(folderInfo.FolderId, false)
                 .FirstOrDefault(f => f.Name.Equals(fileName, StringComparison.OrdinalIgnoreCase));
 
         private Folder GetOqtFolderByPath(string path) => _oqtFolderRepository.GetFolder(Site.Id, path.EnsureOqtaneFolderFormat());

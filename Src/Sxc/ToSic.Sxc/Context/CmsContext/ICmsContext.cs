@@ -43,9 +43,9 @@ namespace ToSic.Sxc.Context
         
         
         /// <summary>
-        /// Experimental feature for 12.02 - not final. Provides View-information.
+        /// View-information such as the view Name, Identity or Edition.
         /// </summary>
-        /// <remarks>New in v12.02, WIP</remarks>
+        /// <remarks>New in v12.02</remarks>
         ICmsView View { get; }
 
 

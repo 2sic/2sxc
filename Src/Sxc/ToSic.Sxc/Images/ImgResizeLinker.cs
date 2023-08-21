@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.Linq;
 using Connect.Koi;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.Context;
+using ToSic.Eav.Metadata;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -12,6 +15,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 using static ToSic.Sxc.Images.ImageConstants;
+using static ToSic.Sxc.Images.ImageDecorator;
 using static ToSic.Sxc.Images.RecipeVariant;
 
 namespace ToSic.Sxc.Images
@@ -19,16 +23,20 @@ namespace ToSic.Sxc.Images
     [PrivateApi("Internal stuff")]
     public class ImgResizeLinker : ServiceBase, ICanDebug
     {
-        public ImgResizeLinker(LazySvc<IFeaturesInternal> features, LazySvc<ICss> koi) : base($"{Constants.SxcLogName}.ImgRes")
+
+        public ImgResizeLinker(LazySvc<IFeaturesInternal> features, LazySvc<ICss> koi, LazySvc<ISite> siteLazy)
+            : base($"{Constants.SxcLogName}.ImgRes")
         {
             ConnectServices(
                 _features = features,
                 _koi = koi,
                 DimGen = new ResizeDimensionGenerator()
             );
+            _siteLazy = siteLazy;
         }
         private readonly LazySvc<IFeaturesInternal> _features;
         private readonly LazySvc<ICss> _koi;
+        private readonly LazySvc<ISite> _siteLazy;
 
         public bool Debug { get; set; }
 
@@ -71,7 +79,7 @@ namespace ToSic.Sxc.Images
             return wrapLog.Return(result, "built:" + result);
         }
         
-        public OneResize ImageOnly(string url, ResizeSettings settings, IField field)
+        public OneResize ImageOnly(string url, ResizeSettings settings, IHasMetadata field)
         {
             var wrapLog = Log.Fn<OneResize>();
             var srcSetSettings = settings.Find(SrcSetType.Img, _features.Value.IsEnabled(ImageServiceUseFactors), _koi.Value.Framework);
@@ -79,7 +87,7 @@ namespace ToSic.Sxc.Images
         }
         
 
-        public string SrcSet(string url, ResizeSettings settings, SrcSetType srcSetType, IField field = null)
+        public string SrcSet(string url, ResizeSettings settings, SrcSetType srcSetType, IHasMetadata field = null)
         {
             var wrapLog = Log.Fn<string>();
 
@@ -108,17 +116,18 @@ namespace ToSic.Sxc.Images
 
 
 
-        private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, Recipe srcSetSettings, IField field, RecipeVariant partDef = null)
+        private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, Recipe srcSetSettings, IHasMetadata field, RecipeVariant partDef = null)
         {
             var one = DimGen.ResizeDimensions(resizeSettings, srcSetSettings, partDef);
             one.Recipe = srcSetSettings;
 
-            var imgDecorator = field?.ImageDecoratorOrNull;
+            var imgDecorator = field == null ? null 
+                : _imgDecCache.GetOrAdd(field, f => GetOrNull(f, _siteLazy.Value.SafeLanguagePriorityCodes()));
 
             var resizeMode = resizeSettings.ResizeMode;
-            if (imgDecorator?.CropBehavior == ImageDecorator.NoCrop)
+            if (imgDecorator?.CropBehavior == NoCrop)
             {
-                resizeMode = ImageConstants.ModeMax;
+                resizeMode = ModeMax;
                 one.ShowAll = true;
                 one.Height = 0; // if we show all, the height may not match crop-height
             }
@@ -145,6 +154,9 @@ namespace ToSic.Sxc.Images
             one.Url = result;
             return one;
         }
+
+        // cache buffer settings which had already been looked up
+        private ConcurrentDictionary<IHasMetadata, ImageDecorator> _imgDecCache = new ConcurrentDictionary<IHasMetadata, ImageDecorator>();
 
 
         private bool ImgAddIfRelevant(NameValueCollection resizer, string key, object value, string irrelevant = "")

@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Apps
             {
                 _codeChanges.Value.Warn(OldIApp.Replace(nameof(Configuration)));
                 var c = Configuration;
-                return c?.Entity != null ? MakeDynProperty(c.Entity) : null;
+                return c?.Entity != null ? MakeDynProperty(c.Entity, propsRequired: false) : null;
             }
         }
         private static readonly ICodeInfo OldIApp = CodeInfoObsolete.V05To17("SexyContent.Interfaces.IApp.{0}",

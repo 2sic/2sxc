@@ -7,7 +7,6 @@ using ToSic.Sxc;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -21,7 +20,7 @@ namespace Custom.Hybrid
     /// By inheriting from this base class, you will automatically have the context like the App object etc. available.
     ///
     /// > [!TIP]
-    /// > This is an old base class and works, but you should use a newer one such as <see cref="CodePro"/>
+    /// > This is an old base class and works, but you should use a newer one such as <see cref="CodeTyped"/>
     /// </summary>
     [PublicApi]
     public abstract class Code12 : DynamicCodeBase, IHasCodeLog, IDynamicCode, IDynamicCode12
@@ -37,8 +36,8 @@ namespace Custom.Hybrid
         /// <inheritdoc cref="IHasCodeLog.Log" />
         public new ICodeLog Log => SysHlp.CodeLog;
 
-        /// <inheritdoc cref="IDynamicCode12.GetService{TService}" />
-        public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
+        /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+        public TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
 
         [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel12;
 
@@ -111,26 +110,26 @@ namespace Custom.Hybrid
         #region AsDynamic and AsEntity
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
-        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot?.AsC.AsDynamicFromJson(json, fallback);
+        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot?.Cdf.Json2Jacket(json, fallback);
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
-        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot?.AsC.AsDynamic(entity);
+        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot?.Cdf.CodeAsDyn(entity);
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
-        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot?.AsC.AsDynamicInternal(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot?.Cdf.AsDynamicFromObject(dynamicEntity);
 
         /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
-        public dynamic AsDynamic(params object[] entities) => _DynCodeRoot?.AsC.MergeDynamic(entities);
+        public dynamic AsDynamic(params object[] entities) => _DynCodeRoot?.Cdf.MergeDynamic(entities);
 
         /// <inheritdoc cref="IDynamicCode.AsEntity" />
-        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot?.AsC.AsEntity(dynamicEntity);
+        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot?.Cdf.AsEntity(dynamicEntity);
 
         #endregion
 
         #region AsList
 
         /// <inheritdoc cref="IDynamicCode.AsList" />
-        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.AsC.AsDynamicList(list);
+        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.Cdf.CodeAsDynList(list);
 
         #endregion
 

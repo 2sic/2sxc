@@ -6,7 +6,6 @@ using ToSic.Eav.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.AsConverter;
 
 namespace ToSic.Sxc.Adam
 {
@@ -19,11 +18,11 @@ namespace ToSic.Sxc.Adam
         public AdamManager(
             LazySvc<AppRuntime> appRuntime,
             LazySvc<AdamMetadataMaker> metadataMaker,
-            LazySvc<AsConverterService> asConverter,
+            LazySvc<CodeDataFactory> cdf,
             AdamConfiguration adamConfiguration,
             LazySvc<IAdamFileSystem<TFolderId, TFileId>> adamFsLazy,
             Generator<AdamStorageOfField<TFolderId, TFileId>> fieldStorageGenerator)
-            : base(appRuntime, metadataMaker, asConverter, adamConfiguration, "Adm.MngrTT")
+            : base(appRuntime, metadataMaker, cdf, adamConfiguration, "Adm.MngrTT")
         {
             ConnectServices(
                 _adamFsLazy = adamFsLazy.SetInit(f => f.Init(this)),
@@ -31,9 +30,9 @@ namespace ToSic.Sxc.Adam
             );
         }
 
-        public override AdamManager Init(IContextOfApp ctx, AsConverterService asc, int compatibility)
+        public override AdamManager Init(IContextOfApp ctx, CodeDataFactory cdf, int compatibility)
         {
-            base.Init(ctx, asc, compatibility);
+            base.Init(ctx, cdf, compatibility);
             AdamFs = _adamFsLazy.Value;
             return this;
         }
@@ -89,15 +88,16 @@ namespace ToSic.Sxc.Adam
 
         public Export<TFolderId, TFileId> Export => new Export<TFolderId, TFileId>(this);
 
-        public override IFolder Folder(Guid entityGuid, string fieldName)
+        public override IFolder Folder(Guid entityGuid, string fieldName, IField field = default)
         {
             var folderStorage = _fieldStorageGenerator.New().InitItemAndField(entityGuid, fieldName);
             folderStorage.Init(this);
-            var folder = new FolderOfField<TFolderId, TFileId>(this, folderStorage);
+            var folder = new FolderOfField<TFolderId, TFileId>(this, folderStorage)
+            {
+                Field = field
+            };
             return folder;
         }
-
-        public override IFolder Folder(IEntity entity, string fieldName) => Folder(entity.EntityGuid, fieldName);
 
         // Note: Signature isn't great yet, as it's int, but theoretically it could be another type.
         public override IFile File(int id) =>

@@ -29,12 +29,13 @@ namespace ToSic.Sxc.Dnn.Install
             );
         }
 
-        public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp) => Log.Func(() =>
+        public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp)
         {
+            var l = Log.Fn<string>();
             var moduleInfo = (module as DnnModule)?.GetContents();
             var portal = (site as DnnSite)?.GetContents();
             if (moduleInfo == null || portal == null)
-                throw new ArgumentException("missing portal/module");
+                throw l.Done(new ArgumentException("missing portal/module"));
 
             // new: check if it should allow this
             // it should only be allowed, if the current situation is either
@@ -63,7 +64,7 @@ namespace ToSic.Sxc.Dnn.Install
                 forContentApp);
 
             // Set src to iframe
-            return gettingStartedSrc;
-        });
+            return l.ReturnAsOk(gettingStartedSrc);
+        }
     }
 }

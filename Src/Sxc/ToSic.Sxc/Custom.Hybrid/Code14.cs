@@ -8,7 +8,6 @@ using ToSic.Sxc;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -41,10 +40,13 @@ namespace Custom.Hybrid
         /// <inheritdoc cref="IHasCodeLog.Log" />
         public new ICodeLog Log => SysHlp.CodeLog;
 
-        /// <inheritdoc cref="IDynamicCode12.GetService{TService}" />
-        public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
+        /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+        public TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
 
         [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel12;
+
+        private CodeHelper14 CodeHelper => _codeHelper ?? (_codeHelper = new CodeHelper14(_DynCodeRoot, false, "c# code file"));
+        private CodeHelper14 _codeHelper;
 
         #endregion
 
@@ -63,7 +65,7 @@ namespace Custom.Hybrid
         public dynamic Settings => _DynCodeRoot?.Settings;
 
         [PrivateApi("Not yet ready")]
-        public IDevTools DevTools => _DynCodeRoot.DevTools;
+        public IDevTools DevTools => CodeHelper.DevTools;
 
         #endregion
 
@@ -121,26 +123,26 @@ namespace Custom.Hybrid
         #region AsDynamic and AsEntity
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
-        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot?.AsC.AsDynamicFromJson(json, fallback);
+        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot?.Cdf.Json2Jacket(json, fallback);
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
-        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot?.AsC.AsDynamic(entity);
+        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot?.Cdf.CodeAsDyn(entity);
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
-        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot?.AsC.AsDynamicInternal(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot?.Cdf.AsDynamicFromObject(dynamicEntity);
 
         /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
-        public dynamic AsDynamic(params object[] entities) => _DynCodeRoot?.AsC.MergeDynamic(entities);
+        public dynamic AsDynamic(params object[] entities) => _DynCodeRoot?.Cdf.MergeDynamic(entities);
 
         /// <inheritdoc cref="IDynamicCode.AsEntity" />
-        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot?.AsC.AsEntity(dynamicEntity);
+        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot?.Cdf.AsEntity(dynamicEntity);
 
         #endregion
 
         #region AsList
 
         /// <inheritdoc cref="IDynamicCode.AsList" />
-        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.AsC.AsDynamicList(list);
+        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.Cdf.CodeAsDynList(list);
 
         #endregion
 
@@ -161,15 +163,15 @@ namespace Custom.Hybrid
         public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot?.AsAdam(item, fieldName);
 
 
-        /// <inheritdoc />
-        public ITypedItem AsTyped(object original, string noParamOrder = Protector, bool? required = default) => _DynCodeRoot.AsC.AsItem(original);
+        ///// <inheritdoc />
+        //public ITypedItem AsTyped(object original, string noParamOrder = Protector, bool? required = default) => _DynCodeRoot.Cdf.AsItem(original, noParamOrder);
 
-        /// <inheritdoc />
-        public IEnumerable<ITypedItem> AsTypedList(object list,
-            string noParamOrder = Protector,
-            bool? required = default,
-            IEnumerable<ITypedItem> fallback = default)
-            => _DynCodeRoot.AsC.AsItems(list, required: required, fallback: fallback);
+        ///// <inheritdoc />
+        //public IEnumerable<ITypedItem> AsTypedList(object list,
+        //    string noParamOrder = Protector,
+        //    bool? required = default,
+        //    IEnumerable<ITypedItem> fallback = default)
+        //    => _DynCodeRoot.Cdf.AsItems(list, noParamOrder, required: required, fallback: fallback);
 
     }
 }

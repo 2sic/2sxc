@@ -68,11 +68,11 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<ExportApp>();
             services.TryAddTransient<ImportApp>();
             services.TryAddTransient<ImportContent>();
-            services.TryAddTransient(typeof(ExportContent<>));
+            services.TryAddTransient<ExportContent>();
             services.TryAddTransient<ResetApp>();
             services.TryAddTransient<AppStackBackend>();
             services.TryAddTransient<AppFolder>();
-            services.TryAddTransient(typeof(ViewsExportImport<>));
+            services.TryAddTransient<ViewsExportImport>();
 
             // Small WebApi Helpers
             // #UnusedFeatureHistoryOfGroup 2022-07-05 2dm removed - probably clean up ca. Q4 2022
@@ -93,26 +93,26 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient(typeof(AdamControllerReal<>));
             services.TryAddTransient<AppFilesControllerReal>();
             services.TryAddTransient<QueryControllerReal>();
-            services.TryAddTransient(typeof(AppControllerReal<>));
-            services.TryAddTransient(typeof(AppPartsControllerReal<>));
+            services.TryAddTransient<AppControllerReal>();
+            services.TryAddTransient<AppPartsControllerReal>();
             services.TryAddTransient<DialogControllerReal>();
-            services.TryAddTransient(typeof(TypeControllerReal<>));
-            services.TryAddTransient(typeof(ViewControllerReal<>));
+            services.TryAddTransient<TypeControllerReal>();
+            services.TryAddTransient<ViewControllerReal>();
             services.TryAddTransient<AppDataControllerReal>();
             services.TryAddTransient<AppQueryControllerReal>();
             services.TryAddTransient<ContentGroupControllerReal>();
             services.TryAddTransient<EditControllerReal>();
             services.TryAddTransient<HistoryControllerReal>();
             services.TryAddTransient<ListControllerReal>();
-            services.TryAddTransient(typeof(InstallControllerReal<>));
+            services.TryAddTransient<InstallControllerReal>();
             services.TryAddTransient<BlockControllerReal>();
             services.TryAddTransient<CodeControllerReal>();
 
             services.AddLoadSettingsProviders();
 
-#if NETCOREAPP
-            services.AddNetCore();
-#endif
+//#if NETCOREAPP
+//            services.AddNetCore();
+//#endif
 
             services.AddFallbacks();
 
@@ -160,14 +160,17 @@ namespace ToSic.Sxc.WebApi
             return services;
         }
 
-#if NETCOREAPP
-        public static IServiceCollection AddNetCore(this IServiceCollection services)
-        {
-            // Helper to get header, query string and route information from current request
-            services.TryAddScoped<RequestHelper>();
+//#if NETCOREAPP
+//        public static IServiceCollection AddNetCore(this IServiceCollection services)
+//        {
+//            // Helper to get header, query string and route information from current request
+//            services.TryAddScoped<RequestHelper>();
 
-            return services;
-        }
-#endif
+//            //// This ensures that generic backends (.net framework/core) can create a response object
+//            //services.TryAddScoped<ResponseMaker<Microsoft.AspNetCore.Mvc.IActionResult>, ResponseMakerNetCore>();
+
+//            return services;
+//        }
+//#endif
     }
 }

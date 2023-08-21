@@ -5,6 +5,7 @@ using ToSic.Eav.WebApi.Helpers;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Oqt.Server.Plumbing;
+using ToSic.Sxc.WebApi.ActionFilters;
 using ToSic.Sxc.WebApi.Infrastructure;
 using Log = ToSic.Lib.Logging.Log;
 
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     /// It is because our custom dynamic 2sxc app api controllers (without constructor), depends on event OnActionExecuting
     /// to provide dependencies (without DI in constructor).
     /// </summary>
-    [SystemTestJsonFormatter] // This is needed to preserve compatibility with previous api usage
+    [SystemTextJsonFormatter] // This is needed to preserve compatibility with previous api usage
     [ServiceFilter(typeof(OptionalBodyFilter))] // Instead of global options.AllowEmptyInputInBodyModelBinding = true;
     [ServiceFilter(typeof(HttpResponseExceptionFilter))]
     public abstract class OqtControllerBase : ControllerBase, IHasLog, IActionFilter

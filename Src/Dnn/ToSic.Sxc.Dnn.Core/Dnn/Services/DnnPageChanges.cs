@@ -67,8 +67,9 @@ namespace ToSic.Sxc.Dnn.Services
             return count;
         }
 
-        private int Apply(DnnHtmlPage dnnPage, IList<PagePropertyChange> props) => Log.Func(() =>
+        private int Apply(DnnHtmlPage dnnPage, IList<PagePropertyChange> props)
         {
+            var l = Log.Fn<int>($"{props.Count} props");
             // 2022-05-03 2dm - don't think the props are ever null, requiring access to the shared data
             // props = props ?? PageServiceShared.GetPropertyChangesAndFlush(Log);
             foreach (var p in props)
@@ -90,8 +91,8 @@ namespace ToSic.Sxc.Dnn.Services
 
             var count = props.Count;
 
-            return (count, $"{count}");
-        });
+            return l.Return(count, $"{count}");
+        }
 
         private int ManualFeatures(DnnHtmlPage dnnPage, IList<IPageFeature> feats)
         {
@@ -113,8 +114,9 @@ namespace ToSic.Sxc.Dnn.Services
             return headChanges.Count;
         }
 
-        private int ApplyHttpHeaders(Page page, IRenderResult result) => Log.Func(() =>
+        private int ApplyHttpHeaders(Page page, IRenderResult result)
         {
+            var l = Log.Fn<int>();
             var httpHeaders = result.HttpHeaders;
 
             // Register CSP changes for applying once all modules have been prepared
@@ -122,9 +124,9 @@ namespace ToSic.Sxc.Dnn.Services
             if (result.CspEnabled && _featuresService.Value.IsEnabled(BuiltInFeatures.ContentSecurityPolicy.NameId))
                 PageCsp(result.CspEnforced).Add(result.CspParameters);
 
-            if (page?.Response == null) return (0, "error, HttpResponse is null");
-            if (page.Response.HeadersWritten) return (0, "error, to late for adding http headers");
-            if (httpHeaders.SafeNone()) return (0, "ok, no headers to add");
+            if (page?.Response == null) return l.Return(0, "error, HttpResponse is null");
+            if (page.Response.HeadersWritten) return l.Return(0, "error, to late for adding http headers");
+            if (httpHeaders.SafeNone()) return l.Return(0, "ok, no headers to add");
 
             foreach (var httpHeader in httpHeaders)
             {
@@ -136,8 +138,8 @@ namespace ToSic.Sxc.Dnn.Services
                 page.Response.Headers[httpHeader.Name] = httpHeader.Value;
             }
 
-            return (httpHeaders.Count, "ok");
-        });
+            return l.ReturnAsOk(httpHeaders.Count);
+        }
 
         private CspOfPage PageCsp(bool enforced)
         {

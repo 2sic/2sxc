@@ -9,6 +9,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Services
 {
@@ -30,7 +31,7 @@ namespace ToSic.Sxc.Services
 
         /// <inheritdoc />
         public string To(
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
             int? pageId = null,
             string api = null,
             object parameters = null,
@@ -38,28 +39,28 @@ namespace ToSic.Sxc.Services
             string language = null
             )
         {
-            var wrapLog = Log.Fn<string>($"pid:{pageId},api:{api},t:{type},l:{language}");
+            var l = (Debug ? Log : null).Fn<string>($"pid:{pageId},api:{api},t:{type},l:{language}");
 
             // prevent incorrect use without named parameters
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
+            Protect(noParamOrder, $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
 
             // Check initial conflicting values.
             if (pageId != null && api != null)
                 throw new ArgumentException($"Only one of the parameters '{nameof(api)}' or '{nameof(pageId)}' can have a value.");
 
             var strParams = ParametersToString(parameters);
-            Log.A($"parameters:{strParams}");
+            l.A($"parameters:{strParams}");
  
             // TODO: unclear what would happen if a new parameter would replace an existing - would it just append? that wouldn't be good
             var url = api == null
                 ? ToPage(pageId, strParams, language)
                 : ToApi(api, strParams);
-            Log.A($"url:{url}");
+            l.A($"url:{url}");
 
             var processed = ExpandUrlIfNecessary(type, url);
-            Log.A($"expandUrl:{processed}, t:{type}");
+            l.A($"expandUrl:{processed}, t:{type}");
 
-            return wrapLog.ReturnAsOk(Tags.SafeUrl(processed).ToString());
+            return l.ReturnAsOk(Tags.SafeUrl(processed).ToString());
         }
 
         private string ExpandUrlIfNecessary(string type, string url)
@@ -118,7 +119,7 @@ namespace ToSic.Sxc.Services
             string url = default,
             object settings = default,
             object factor = default,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
             IField field = default,
             object width = default,
             object height = default,
@@ -132,14 +133,14 @@ namespace ToSic.Sxc.Services
             )
         {
             // prevent incorrect use without named parameters
-            Eav.Parameters.Protect(noParamOrder, $"{nameof(width)},{nameof(height)}," +
+            Protect(noParamOrder, $"{nameof(width)},{nameof(height)}," +
                 $"{nameof(quality)},{nameof(resizeMode)},{nameof(scaleMode)},{nameof(format)},{nameof(aspectRatio)},{nameof(type)},{nameof(parameters)}");
 
             // If params were given, ensure it can be used as string, as it could also be a params-object
             var strParams = ParametersToString(parameters);
 
             // If the url should be expanded to have a full root or something, do this first
-            url = url ?? field?.Parent.Get<string>(field.Name);
+            url = url ?? field?.Parent.Url(field.Name);
             var expandedUrl = ExpandUrlIfNecessary(type, url);
 
             // Get the image-url(s) as needed

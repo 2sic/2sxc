@@ -10,13 +10,13 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public void AttachApp(IApp app)
         {
-            if (app is App typedApp) typedApp.AddDynamicEntityServices(AsC);
+            if (app is App typedApp) typedApp.SetupAsConverter(Cdf);
             App = app;
         }
 
         [PrivateApi]
         [Obsolete("Warning - avoid using this on the DynamicCode Root - always use the one on the AsC")]
-        public int CompatibilityLevel => AsC.CompatibilityLevel;
+        public int CompatibilityLevel => Cdf.CompatibilityLevel;
 
         [PrivateApi] public IBlock Block { get; private set; }
 

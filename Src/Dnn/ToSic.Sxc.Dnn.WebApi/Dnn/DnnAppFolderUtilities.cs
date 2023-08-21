@@ -31,15 +31,17 @@ namespace ToSic.Sxc.Dnn
             );
         }
 
-        internal string GetAppFolderVirtualPath(HttpRequestMessage request, ISite site) => Log.Func(() =>
+        internal string GetAppFolderVirtualPath(HttpRequestMessage request, ISite site)
         {
+            var l = Log.Fn<string>();
             var appFolder = GetAppFolder(request, true);
             var appFolderVirtualPath = Path.Combine(((DnnSite)site).AppsRootRelative, appFolder).ForwardSlash();
-            return (appFolderVirtualPath, $"Ok, AppFolder Virtual Path: {appFolderVirtualPath}");
-        });
+            return l.Return(appFolderVirtualPath, $"Ok, AppFolder Virtual Path: {appFolderVirtualPath}");
+        }
 
-        internal string GetAppFolder(HttpRequestMessage request, bool errorIfNotFound) => Log.Func(l =>
+        internal string GetAppFolder(HttpRequestMessage request, bool errorIfNotFound)
         {
+            var l = Log.Fn<string>();
             const string errPrefix = "Api Controller Finder Error: ";
             const string errSuffix = "Check event-log, code and inner exception. ";
 
@@ -67,7 +69,7 @@ namespace ToSic.Sxc.Dnn
                 const string msg = errPrefix + "Trying to find app name, unexpected error - possibly bad/invalid headers. " + errSuffix;
                 if (errorIfNotFound)
                     throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.BadRequest, getBlockException, msg, _errorHelp.Value));
-                return (null, "not found, maybe error");
+                return l.Return(null, "not found, maybe error");
             }
 
             if (string.IsNullOrWhiteSpace(appFolder) && errorIfNotFound)
@@ -77,8 +79,8 @@ namespace ToSic.Sxc.Dnn
                 throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.BadRequest, new Exception(msg), msg, _errorHelp.Value));
             }
 
-            return (appFolder, "ok");
-        });
+            return l.ReturnAsOk(appFolder);
+        }
 
     }
 }

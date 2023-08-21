@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.DataSource;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Data;
-using static ToSic.Eav.Parameters;
 
 // ReSharper disable UnusedMemberInSuper.Global
 
@@ -12,7 +9,7 @@ namespace ToSic.Sxc.Apps
     /// <summary>
     /// An app-object as is available in a razor template or WebApi
     /// </summary>
-    [PublicApi_Stable_ForUseInYourCode]
+    [PublicApi]
     public interface IAppTyped: 
         Eav.Apps.IApp,
         IAppPaths
@@ -41,13 +38,13 @@ namespace ToSic.Sxc.Apps
         /// images in the app folder. 
         /// </summary>
         /// <returns>Path usually starting with /portals/...</returns>
-        string Path { get; }
+        new string Path { get; }
 
         /// <summary>
         /// The path on the server hard disk for the current app. 
         /// </summary>
         /// <returns>Path usually starting with c:\...</returns>
-        string PhysicalPath { get; }
+        new string PhysicalPath { get; }
 
         /// <summary>
         /// The path to the current apps shared/global folder, for linking JS/CSS files and

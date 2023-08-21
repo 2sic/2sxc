@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Images
         protected readonly ImageService ImgService;
 
         protected OneResize ThisResize => _thisResize.Get(() => { 
-            var t = ImgLinker.ImageOnly(Call.Link.Url, Settings as ResizeSettings, Call.Field);
+            var t = ImgLinker.ImageOnly(Call.Link.Url, Settings as ResizeSettings, Call.HasDecoOrNull);
             Log.A(ImgService.Debug, $"{nameof(ThisResize)}: " + t?.Dump());
             return t;
         });
@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Images
                 if (!isInSameEntity) return tag;
 
                 // Check if it's not a demo-entity, in which case editing settings shouldn't happen
-                if (Call.Field.Parent.Entity.DisableInlineEdit()) return tag;
+                if (Call.Field.Parent.Entity.DisableInlineEditSafe()) return tag;
 
                 // var tlbUi = ImgService.ToolbarOrNull?.
                 var toolbarConfig = ImgService.ToolbarOrNull?.Empty().Metadata(Call.Field).Settings(hover: "right-middle");
@@ -103,8 +103,7 @@ namespace ToSic.Sxc.Images
             return tag;
         }
 
-        public string Description => _description.Get(() => Call.Field?.ImageDecoratorOrNull?.Description);
-        private readonly GetOnce<string> _description = new GetOnce<string>();
+        public string Description => Call.Description;
 
         /// <inheritdoc />
         public string Alt => _alt.Get(() =>
@@ -151,7 +150,7 @@ namespace ToSic.Sxc.Images
             var hasVariants = !string.IsNullOrWhiteSpace(ThisResize?.Recipe?.Variants);
             return Log.Func($"{nameof(isEnabled)}: {isEnabled}, {nameof(hasVariants)}: {hasVariants}",
                 () => isEnabled && hasVariants
-                    ? ImgLinker.SrcSet(Call.Link.Url, Settings as ResizeSettings, SrcSetType.Img, Call.Field)
+                    ? ImgLinker.SrcSet(Call.Link.Url, Settings as ResizeSettings, SrcSetType.Img, Call.HasDecoOrNull)
                     : null,
                 enabled: ImgService.Debug);
         }

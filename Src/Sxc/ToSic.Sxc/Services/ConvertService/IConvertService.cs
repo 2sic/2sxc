@@ -32,15 +32,17 @@ namespace ToSic.Sxc.Services
 
         /// <summary>
         /// If set to true (default) will optimize converting numbers.
-        /// For example, a string like "4.2" will properly convert to an int of 2.
+        /// For example, a string like "4.2" will properly convert to an int of 4.
         /// If set to false, this optimization doesn't happen and a string "4.2" would result in a 0 int
         /// </summary>
+        [PrivateApi("Set to private in 16.03 as it was never communicated and it's read-only anyhow, so it can't be in use")]
         bool OptimizeNumbers { get; }
 
         /// <summary>
         /// If set to true, will treat a number like 2 or -1 and strings like "2" as true.
         /// If set to false, only 1 will be true, other numbers will be false.
         /// </summary>
+        [PrivateApi("Set to private in 16.03 as it was never communicated and it's read-only anyhow, so it can't be in use")]
         bool OptimizeBoolean { get; }
 
         /// <summary>
@@ -64,11 +66,11 @@ namespace ToSic.Sxc.Services
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="value"></param>
-        /// <param name="paramsMustBeNamed">requires that all params must be named, like `fallback: 27`</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">The value used if conversion fails.</param>
         /// <returns></returns>
         T To<T>(object value,
-            string paramsMustBeNamed = Eav.Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             T fallback = default);
 
         /// <summary>
@@ -168,9 +170,13 @@ namespace ToSic.Sxc.Services
         /// In the standard implementation would only give you the fallback, if conversion failed.
         /// But this ToString will also give you the fallback, if the result is null. 
         /// </summary>
+        /// <param name="value">The value to convert</param>
+        /// <param name="fallback">Fallback in case conversion fails or result is null</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="fallbackOnNull">Determine that nulls should also fallback, default is `true`</param>
         string ToString(object value,
             string fallback = default,
-            string paramsMustBeNamed = Eav.Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             bool fallbackOnNull = true);
 
         /// <summary>

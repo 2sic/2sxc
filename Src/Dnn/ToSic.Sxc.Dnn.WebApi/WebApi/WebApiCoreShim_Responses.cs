@@ -21,7 +21,7 @@ namespace ToSic.Sxc.WebApi
         /// </remarks>
         /// <returns>The created .net-core like `OkResult` for the response.</returns>
         [NonAction]
-        public dynamic Ok() => Request.CreateResponse(HttpStatusCode.OK);
+        public HttpResponseMessage Ok() => Request.CreateResponse(HttpStatusCode.OK);
 
         /// <summary>
         /// Creates an .net-core like `OkObjectResult` object that produces an .net-core like `StatusCodes.Status200OK` response.
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.WebApi
         /// <returns>The created .net-core like `OkObjectResult` for the response.</returns>
         [NonAction]
         // maybe ??? low priority
-        public dynamic Ok(object value) => Request.CreateResponse(HttpStatusCode.OK, value);
+        public HttpResponseMessage Ok(object value) => Request.CreateResponse(HttpStatusCode.OK, value);
 
         /// <summary>
         /// Creates a .net-core like `NoContentResult` object that produces an empty
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.WebApi
         /// </remarks>
         /// <returns>The created .net-core like `NoContentResult` object for the response.</returns>
         [NonAction]
-        public dynamic NoContent() => Request.CreateResponse(HttpStatusCode.NoContent);
+        public HttpResponseMessage NoContent() => Request.CreateResponse(HttpStatusCode.NoContent);
 
         // TODO: this Shim could now be implemented after 16.02 - since we don't have the Content property any more
         #region Content (ca. 5 overloads) can't be implemented, because it conflicts with our property "Content"
@@ -81,7 +81,7 @@ namespace ToSic.Sxc.WebApi
         /// <param name="url">The URL to redirect to.</param>
         /// <returns>The created .net-core like `RedirectResult` for the response.</returns>
         [NonAction]
-        public dynamic Redirect(string url)
+        public HttpResponseMessage Redirect(string url)
         {
             if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
             var response = Request.CreateResponse(HttpStatusCode.Redirect);
@@ -102,7 +102,7 @@ namespace ToSic.Sxc.WebApi
         /// <param name="url">The URL to redirect to.</param>
         /// <returns>The created .net-core like `RedirectResult` for the response.</returns>
         [NonAction]
-        public dynamic RedirectPermanent(string url)
+        public HttpResponseMessage RedirectPermanent(string url)
         {
             if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
             var response = Request.CreateResponse(HttpStatusCode.MovedPermanently);
@@ -129,7 +129,7 @@ namespace ToSic.Sxc.WebApi
         /// <param name="statusCode">The status code to set on the response.</param>
         /// <returns>The created .net-core like `StatusCodeResult` object for the response.</returns>
         [NonAction]
-        public dynamic StatusCode(int statusCode) => Request.CreateResponse((HttpStatusCode)statusCode);
+        public HttpResponseMessage StatusCode(int statusCode) => Request.CreateResponse((HttpStatusCode)statusCode);
 
         /// <summary>
         /// Creates a .net-core like `ObjectResult` object by specifying a <paramref name="statusCode"/> and <paramref name="value"/>
@@ -144,7 +144,7 @@ namespace ToSic.Sxc.WebApi
         /// <param name="value">The value to set on the .net-core like `ObjectResult"/>.</param>
         /// <returns>The created .net-core like `ObjectResult` object for the response.</returns>
         [NonAction]
-        public dynamic StatusCode(int statusCode, object value) => Request.CreateResponse((HttpStatusCode)statusCode, value);
+        public HttpResponseMessage StatusCode(int statusCode, object value) => Request.CreateResponse((HttpStatusCode)statusCode, value);
         #endregion
 
 
@@ -159,7 +159,7 @@ namespace ToSic.Sxc.WebApi
         /// </remarks>
         /// <returns>The created .net-core like `UnauthorizedResult` for the response.</returns>
         [NonAction]
-        public dynamic Unauthorized() => Request.CreateResponse(HttpStatusCode.Unauthorized);
+        public HttpResponseMessage Unauthorized() => Request.CreateResponse(HttpStatusCode.Unauthorized);
 
         /// <summary>
         /// Creates an .net-core like `UnauthorizedObjectResult` that produces a .net-core like `StatusCodes.Status401Unauthorized` response.
@@ -172,7 +172,7 @@ namespace ToSic.Sxc.WebApi
         /// </remarks>
         /// <returns>The created .net-core like `UnauthorizedObjectResult` for the response.</returns>
         [NonAction]
-        public dynamic Unauthorized(object value) => Request.CreateResponse(HttpStatusCode.Unauthorized, value);
+        public HttpResponseMessage Unauthorized(object value) => Request.CreateResponse(HttpStatusCode.Unauthorized, value);
 
         /// <summary>
         /// Creates an .net-core like `NotFoundResult` that produces a .net-core like `StatusCodes.Status404NotFound` response.
@@ -185,7 +185,7 @@ namespace ToSic.Sxc.WebApi
         /// </remarks>
         /// <returns>The created .net-core like `NotFoundResult` for the response.</returns>
         [NonAction]
-        public dynamic NotFound() => Request.CreateResponse(HttpStatusCode.NotFound);
+        public HttpResponseMessage NotFound() => Request.CreateResponse(HttpStatusCode.NotFound);
 
         /// <summary>
         /// Creates an .net-core like `NotFoundObjectResult` that produces a .net-core like `StatusCodes.Status404NotFound` response.
@@ -198,7 +198,7 @@ namespace ToSic.Sxc.WebApi
         /// </remarks>
         /// <returns>The created .net-core like `NotFoundObjectResult` for the response.</returns>
         [NonAction]
-        public dynamic NotFound(object value) => Request.CreateResponse(HttpStatusCode.NotFound, value);
+        public HttpResponseMessage NotFound(object value) => Request.CreateResponse(HttpStatusCode.NotFound, value);
 
         /// <summary>
         /// Creates an .net-core like `BadRequestResult` that produces a .net-core like `StatusCodes.Status400BadRequest` response.
@@ -211,7 +211,7 @@ namespace ToSic.Sxc.WebApi
         /// </remarks>
         /// <returns>The created .net-core like `BadRequestResult` for the response.</returns>
         [NonAction]
-        public dynamic BadRequest() => Request.CreateResponse(HttpStatusCode.BadRequest);
+        public HttpResponseMessage BadRequest() => Request.CreateResponse(HttpStatusCode.BadRequest);
 
         ///// <summary>
         ///// Creates an .net-core like `BadRequestObjectResult` that produces a .net-core like `StatusCodes.Status400BadRequest` response.
@@ -244,7 +244,7 @@ namespace ToSic.Sxc.WebApi
         /// </remarks>
         /// <returns>The created .net-core like `ConflictResult` for the response.</returns>
         [NonAction]
-        public dynamic Conflict() => Request.CreateResponse(HttpStatusCode.Conflict);
+        public HttpResponseMessage Conflict() => Request.CreateResponse(HttpStatusCode.Conflict);
 
         /// <summary>
         /// Creates an .net-core like `ConflictObjectResult` that produces a .net-core like `StatusCodes.Status409Conflict` response.
@@ -258,7 +258,7 @@ namespace ToSic.Sxc.WebApi
         /// <param name="error">Contains errors to be returned to the client.</param>
         /// <returns>The created .net-core like `ConflictObjectResult` for the response.</returns>
         [NonAction]
-        public dynamic Conflict(object error) => Request.CreateResponse(HttpStatusCode.Conflict, error);
+        public HttpResponseMessage Conflict(object error) => Request.CreateResponse(HttpStatusCode.Conflict, error);
 
         ///// <summary>
         ///// Creates an .net-core like `ConflictObjectResult` that produces a .net-core like `StatusCodes.Status409Conflict` response.
@@ -291,7 +291,7 @@ namespace ToSic.Sxc.WebApi
         /// </remarks>
         /// <returns>The created .net-core like `AcceptedResult` for the response.</returns>
         [NonAction]
-        public dynamic Accepted() => Request.CreateResponse(HttpStatusCode.Accepted);
+        public HttpResponseMessage Accepted() => Request.CreateResponse(HttpStatusCode.Accepted);
 
         // All other accepted - don't implement
         ///// <summary>
@@ -388,7 +388,7 @@ namespace ToSic.Sxc.WebApi
         /// a redirect to show a login page.
         /// </remarks>
         [NonAction]
-        public dynamic Forbid() => Request.CreateResponse(HttpStatusCode.Forbidden);
+        public HttpResponseMessage Forbid() => Request.CreateResponse(HttpStatusCode.Forbidden);
 
         #endregion
     }

@@ -7,6 +7,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code
 {
@@ -15,15 +16,22 @@ namespace ToSic.Sxc.Code
     /// Provides typed APIs to access Settings, Resources and more.
     /// </summary>
     [PrivateApi("Shouldn't be visible, as the real API is 100% visible on RazorPro, CodePro etc.")]
-    public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog
+    public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IDynamicCodeKit<ServiceKit16>
     {
         #region Stuff basically inherited from v12/14
 
-        /// <inheritdoc cref="IDynamicCode.GetService{TService}"/>
-        TService GetService<TService>();
+        /// <inheritdoc cref="Eav.Code.ICanGetService.GetService{TService}"/>
+        TService GetService<TService>() where TService : class;
 
         /// <inheritdoc cref="IDynamicCode.Link"/>
         ILinkService Link { get; }
+
+        #endregion
+
+        #region Kit
+
+        ///// <inheritdoc cref="IDynamicCodeKit{TServiceKit}.Kit"/>
+        //ServiceKit16 Kit { get; }
 
         #endregion
 
@@ -49,6 +57,10 @@ namespace ToSic.Sxc.Code
 
         #region App, Resources, Settings
 
+        /// <summary>
+        /// The current App object (with strictly typed Settings/Resources).
+        /// Use it to access App properties such as `Path` or any data in the App.
+        /// </summary>
         IAppTyped App { get; }
 
         /// <summary>
@@ -84,25 +96,31 @@ namespace ToSic.Sxc.Code
         /// If a list is provided, it will return the first item in the list.
         /// If null was provided, it will return null.
         /// </summary>
-        /// <param name="target"></param>
+        /// <param name="data">An original object which can be converted to a TypedItem, such as a <see cref="IEntity"/> .</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertyRequired), default `true`</param>
+        /// <param name="mock">Specify that the data is fake/mock data, which should pretend to be an Item. Default is `false`</param>
         /// <returns></returns>
         /// <remarks>New in v16.02</remarks>
         ITypedItem AsItem(
-            object target,
-            string noParamOrder = Eav.Parameters.Protector
+            object data,
+            string noParamOrder = Protector,
+            bool? propsRequired = default,
+            bool? mock = default
         );
 
         /// <summary>
-        /// 
+        /// Convert an object containing a list of Entities or similar to a list of <see cref="ITypedItem"/>s.
         /// </summary>
-        /// <param name="list"></param>
+        /// <param name="list">The original list which is usually a list of <see cref="IEntity"/> objects.</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertiesRequired), default `true`</param>
         /// <returns></returns>
         /// <remarks>New in v16.01</remarks>
         IEnumerable<ITypedItem> AsItems(
             object list,
-            string noParamOrder = Eav.Parameters.Protector
+            string noParamOrder = Protector,
+            bool? propsRequired = default
         );
 
 
@@ -112,19 +130,31 @@ namespace ToSic.Sxc.Code
         /// <summary>
         /// Creates a typed object to read the original passed into this function.
         /// This is usually used to process objects which the compiler can't know, such as anonymous objects returned from helper code etc.
-        ///
+        /// 
         /// If you have an array of such objects, use <see cref="AsTypedList"/>.
         /// </summary>
-        /// <param name="original"></param>
+        /// <param name="data"></param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertyRequired), default `true`</param>
         /// <returns></returns>
-        ITyped AsTyped(object original);
+        ITyped AsTyped(
+            object data,
+            string noParamOrder = Protector,
+            bool? propsRequired = default
+        );
 
         /// <summary>
-        /// TODO: WIP NAME NOT FINAL
+        /// Create a list
         /// </summary>
-        /// <param name="original"></param>
+        /// <param name="list">List/Enumerable object containing a bunch of items to make typed</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertyRequired), default `true`</param>
         /// <returns></returns>
-        IEnumerable<ITyped> AsTypedList(object original);
+        IEnumerable<ITyped> AsTypedList(
+            object list,
+            string noParamOrder = Protector,
+            bool? propsRequired = default
+        );
 
         /// <summary>
         /// Create a typed object which will provide all the properties of the things wrapped inside it.
@@ -138,17 +168,49 @@ namespace ToSic.Sxc.Code
 
         #region My... Stuff
 
+        /// <summary>
+        /// The main Item belonging to this Template/Module.
+        /// This data is edited by the user directly on this specific module.
+        /// In some cases it can also be a pre-set item configured in the View to be used if the user has not added any data himself.
+        ///
+        /// If this view can have a list of items (more than one) then this contains the first item.
+        /// To get all the items, see <see cref="MyItems"/>
+        /// </summary>
         ITypedItem MyItem {get; }
 
+        /// <summary>
+        /// List of all Items belonging to this Template/Module.
+        /// This data is edited by the user directly on this specific module.
+        /// In some cases it can also be a pre-set item configured in the View to be used if the user has not added any data himself.
+        ///
+        /// If this view is configured to only have one item, then this list will only contain one item.
+        /// Otherwise it will have as many items as the editor added.
+        /// </summary>
         IEnumerable<ITypedItem> MyItems { get; }
 
+        /// <summary>
+        /// The Header-Item belonging to this Template/Module.
+        /// This data is edited by the user directly on this specific module.
+        /// In some cases it can also be a pre-set item configured in the View to be used if the user has not added any data himself.
+        /// </summary>
         ITypedItem MyHeader { get; }
 
+        /// <summary>
+        /// All the data which the current Template received, based on the View configuration.
+        /// There are a few common scenarios:
+        ///
+        /// 1. If it's a simple view, then this will just contain streams with the main Item(s) and Header
+        /// 1. If the view expects no data, it will just contain a `Default` stream containing no items
+        /// 1. If the view has a Query behind it, then MyData will have all the streams provided by the Query
+        /// </summary>
         IContextData MyData { get; }
 
         #endregion
 
-
+        /// <summary>
+        /// Data passed to this Razor template by a caller.
+        /// This is typical for Razor components which are re-used, and called from other Razor templates using `@Html.Partial("filename.cshtml", new { thing = 7 })`.
+        /// </summary>
         ITypedModel MyModel { get; }
 
         #region SharedCode
@@ -158,8 +220,10 @@ namespace ToSic.Sxc.Code
         /// Note that the class name in the file must match the file name, so `MyHelpers.cs` must have a `MyHelpers` class.
         /// </summary>
         /// <param name="path">The path, like `Helper.cs`, `./helper.cs` or `../../Helper.cs`</param>
-        /// <returns></returns>
-        dynamic GetCode(string path);
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="className">Optional class name, if it doesn't match the file name (new 16.03)</param>
+        /// <returns>Created in 16.02, `className` added in 16.03</returns>
+        dynamic GetCode(string path, string noParamOrder = Protector, string className = default);
 
         #endregion
 

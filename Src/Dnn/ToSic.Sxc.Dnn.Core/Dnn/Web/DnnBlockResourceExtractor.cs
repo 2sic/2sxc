@@ -18,8 +18,9 @@ namespace ToSic.Sxc.Dnn.Web
         private readonly GetOnce<ClientAssetsExtractSettings> _settings = new GetOnce<ClientAssetsExtractSettings>();
 
 
-        protected override (string Template, bool Include2sxcJs) ExtractFromHtml(string html, ClientAssetsExtractSettings settings) => Log.Func(() =>
+        protected override (string Template, bool Include2sxcJs) ExtractFromHtml(string html, ClientAssetsExtractSettings settings)
         {
+            var l = Log.Fn<(string, bool)>();
             var include2SxcJs = false;
             
             // Handle Client Dependency injection
@@ -28,7 +29,7 @@ namespace ToSic.Sxc.Dnn.Web
             // Handle Scripts
             html = ExtractStyles(html, settings);
 
-            return ((renderedTemplate: html, include2SxcJs), "ok");
-        });
+            return l.ReturnAsOk((html, include2SxcJs));
+        }
     }
 }

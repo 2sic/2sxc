@@ -23,20 +23,21 @@ namespace ToSic.Sxc.Dnn.WebApi
             );
         }
 
-        internal BlockWithContextProvider GetCmsBlock(HttpRequestMessage request) => Log.Func(timer: true, func: () =>
+        internal BlockWithContextProvider GetCmsBlock(HttpRequestMessage request)
         {
+            var l = Log.Fn<BlockWithContextProvider>(timer: true);
             var moduleInfo = request.FindModuleInfo();
 
             if (moduleInfo == null)
-                return (null, "request ModuleInfo not found");
+                return l.ReturnNull("request ModuleInfo not found");
 
             var blockProvider = _moduleAndBlockBuilder.New().GetProvider(moduleInfo, null);
 
             var result = new BlockWithContextProvider(blockProvider.ContextOfBlock,
                 () => GetBlockOrInnerContentBlock(request, blockProvider));
 
-            return (result, "ok");
-        });
+            return l.ReturnAsOk(result);
+        }
 
         private IBlock GetBlockOrInnerContentBlock(HttpRequestMessage request, BlockWithContextProvider blockWithContextProvider)
         {

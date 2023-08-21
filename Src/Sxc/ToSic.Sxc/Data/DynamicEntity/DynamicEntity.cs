@@ -1,9 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.PropertyLookup;
+using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Data.Typed;
 using IEntity = ToSic.Eav.Data.IEntity;
+using static ToSic.Eav.Parameters;
+using System.Dynamic;
+using ToSic.Sxc.Blocks;
+
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Data
 {
@@ -12,62 +23,217 @@ namespace ToSic.Sxc.Data
     /// Note that it will provide many things not listed here, usually things like `.Image`, `.FirstName` etc. based on your ContentType.
     /// </summary>
     [PrivateApi("Changed to private in v16.01, previously was public/stable")]
-    public partial class DynamicEntity : DynamicEntityBase, IDynamicEntity, ISxcDynamicObject
+    public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata, IHasPropLookup, ISxcDynamicObject, ICanDebug, ICanBeItem, ICanGetByName
     {
-        [PrivateApi]
-        public IEntity Entity { get; private set; }
+        #region Constructor / Setup
 
         /// <summary>
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
         [PrivateApi]
-        public DynamicEntity(IEntity entity, MyServices services): base(services)
+        public DynamicEntity(IEntity entity, CodeDataFactory cdf, bool propsRequired)
+            : this(cdf, propsRequired, entity)
         {
-            SetEntity(entity);
-
-            // WIP new in 12.03
-            _ListHelper = new DynamicEntityListHelper(this, () => Debug, services);
+            ListHelper = new DynamicEntityListHelper(this, () => Debug, propsRequired: propsRequired, cdf);
         }
 
-        internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, MyServices services): base(services)
+        internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, bool propsRequired, CodeDataFactory cdf)
+            : this(cdf, propsRequired,
+                // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
+                list.FirstOrDefault() ?? cdf.PlaceHolderInBlock(appIdOrNull, parent, field))
         {
-            // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
-            SetEntity(list.FirstOrDefault() ?? PlaceHolder(appIdOrNull, parent, field));
-            _ListHelper = new DynamicEntityListHelper(list, parent, field, () => Debug, services);
+            ListHelper = new DynamicEntityListHelper(list, parent, field, () => Debug, propsRequired: propsRequired, cdf);
         }
-
-        private IEntity PlaceHolder(int? appIdOrNull, IEntity parent, string field)
-        {
-            var dummyEntity = _Services.AsC.FakeEntity(appIdOrNull ?? parent.AppId);
-            return parent == null ? dummyEntity : EntityInBlockDecorator.Wrap(dummyEntity, parent.EntityGuid, field);
-        }
-
-
+        /// <summary>
+        /// Internal helper to make a entity behave as a list, new in 12.03
+        /// </summary>
         [PrivateApi]
-        protected void SetEntity(IEntity entity)
+        internal readonly DynamicEntityListHelper ListHelper;
+
+        private DynamicEntity(CodeDataFactory cdf, bool propsRequired, IEntity entity)
         {
+            Cdf = cdf;
+            _propsRequired = propsRequired;
             Entity = entity;
             var entAsWrapper = Entity as IEntityWrapper;
             RootContentsForEqualityCheck = entAsWrapper?.RootContentsForEqualityCheck ?? Entity;
             Decorators = entAsWrapper?.Decorators ?? new List<IDecorator<IEntity>>();
         }
 
+
         // ReSharper disable once InconsistentNaming
-        internal readonly DynamicEntityListHelper _ListHelper;
+        [PrivateApi] public CodeDataFactory Cdf { get; }
+        [PrivateApi] public IEntity Entity { get; }
+        private readonly bool _propsRequired;
 
+        [PrivateApi]
+        IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ?? (_propLookup = new PropLookupWithPathEntity(Entity, canDebug: this));
+        private PropLookupWithPathEntity _propLookup;
+
+        [PrivateApi]
+        internal GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, _propsRequired, childrenShouldBeDynamic: true, canDebug: this));
+        private GetAndConvertHelper _getHelper;
+
+        [PrivateApi]
+        internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, _propsRequired, canDebug: this));
+        private SubDataFactory _subData;
+
+        [PrivateApi]
+        internal CodeDynHelper DynHelper => _dynHelper ?? (_dynHelper = new CodeDynHelper(Entity, SubDataFactory));
+        private CodeDynHelper _dynHelper;
+
+        [PrivateApi]
+        internal ITypedItem TypedItem => _typedItem ?? (_typedItem = new TypedItemOfEntity(this, Entity, Cdf, _propsRequired));
+        private TypedItemOfEntity _typedItem;
+
+
+        /// <inheritdoc />
+        public bool Debug { get; set; }
+
+        #endregion
+
+        #region Basic Entity props: Id, Guid, Title, Type
+
+        /// <inheritdoc />
+        public int EntityId => Entity?.EntityId ?? 0;
+
+        /// <inheritdoc />
+        public Guid EntityGuid => Entity?.EntityGuid ?? Guid.Empty;
+
+        /// <inheritdoc />
+        public string EntityTitle => Entity?.GetBestTitle(Cdf.Dimensions);
+
+        /// <inheritdoc />
+        public string EntityType => Entity?.Type?.Name;
+
+        #endregion
+
+        #region Advanced: Fields, Html
+
+        /// <inheritdoc />
+        public IField Field(string name) => Cdf.Field(TypedItem, name, _propsRequired);
+
+        /// <inheritdoc/>
+        [PrivateApi("Should not be documented here, as it should only be used on ITyped")]
+        public IHtmlTag Html(
+            string name,
+            string noParamOrder = Protector,
+            object container = default,
+            bool? toolbar = default,
+            object imageSettings = default,
+            bool debug = default
+        ) => Cdf.CompatibilityLevel < Constants.CompatibilityLevel12
+            // Only do compatibility check if used on DynamicEntity
+            ? throw new NotSupportedException($"{nameof(Html)}(...) not supported in older Razor templates. Use Razor14, RazorPro or newer.")
+            : TypedItemHelpers.Html(Cdf, this.TypedItem, name: name, noParamOrder: noParamOrder, container: container,
+                toolbar: toolbar, imageSettings: imageSettings, required: false, debug: debug);
+
+        #endregion
+
+        #region Special: IsDemoItem, IsFake
 
         // ReSharper disable once InheritdocInvalidUsage
         /// <inheritdoc />
-        public string EntityTitle => Entity?.GetBestTitle(_Services.Dimensions);
-
-
-        // ReSharper disable once InheritdocInvalidUsage
-        /// <inheritdoc />
-        public bool IsDemoItem => _isDemoItem ?? (_isDemoItem = Entity.IsDemoItem()).Value;
+        public virtual bool IsDemoItem => _isDemoItem ?? (_isDemoItem = Entity.IsDemoItemSafe()).Value;
         private bool? _isDemoItem;
 
         [PrivateApi("Not in use yet, and I believe not communicated")]
         public bool IsFake => _isFake ?? (_isFake = (Entity?.EntityId ?? DataConstants.DataFactoryDefaultEntityId) == DataConstants.DataFactoryDefaultEntityId).Value;
         private bool? _isFake;
+
+        #endregion
+
+        #region Metadata
+
+        /// <inheritdoc />
+        public IMetadata Metadata => DynHelper.Metadata;
+
+        /// <summary>
+        /// Explicit implementation, so it's not really available on DynamicEntity, only when cast to IHasMetadata
+        /// This is important, because it uses the same name "Metadata"
+        /// </summary>
+        [PrivateApi]
+        IMetadataOf IHasMetadata.Metadata => Entity?.Metadata;
+
+
+        #endregion
+
+        #region Relationships: Presentation, Children, Parents
+
+        /// <inheritdoc />
+        public dynamic Presentation => DynHelper.Presentation;
+
+        /// <inheritdoc />
+        public List<IDynamicEntity> Parents(string type = null, string field = null)
+            => GetHelper.Parents(entity: Entity, type: type, field: field);
+
+        /// <inheritdoc />
+        public List<IDynamicEntity> Children(string field = null, string type = null)
+            => GetHelper.Children(Entity, field: field, type: type);
+
+        #endregion
+
+        #region Publishing: IsPublished, GetDraft(), GetPublished()
+
+        /// <inheritdoc />
+        public bool IsPublished => Entity?.IsPublished ?? true;
+
+        /// <inheritdoc />
+        public dynamic GetDraft() => SubDataFactory.SubDynEntityOrNull(Entity == null ? null : Cdf.BlockOrNull?.App.AppState?.GetDraft(Entity));
+
+        /// <inheritdoc />
+        public dynamic GetPublished() => SubDataFactory.SubDynEntityOrNull(Entity == null ? null : Cdf.BlockOrNull?.App.AppState?.GetPublished(Entity));
+
+        #endregion
+
+        #region Get / Get<T>
+
+        public dynamic Get(string name) => GetHelper.Get(name);
+
+        // ReSharper disable once MethodOverloadWithOptionalParameter
+        public dynamic Get(string name, string noParamOrder = Protector, string language = null, bool convertLinks = true, bool? debug = null)
+            => GetHelper.Get(name, noParamOrder, language, convertLinks, debug);
+
+        public TValue Get<TValue>(string name)
+            => GetHelper.Get<TValue>(name);
+
+        // ReSharper disable once MethodOverloadWithOptionalParameter
+        public TValue Get<TValue>(string name, string noParamOrder = Protector, TValue fallback = default)
+            => GetHelper.Get(name, noParamOrder, fallback);
+
+        #endregion
+
+
+        #region Any*** properties just for documentation
+
+        public bool AnyBooleanProperty => true;
+        public DateTime AnyDateTimeProperty => DateTime.Now;
+        public IEnumerable<IDynamicEntity> AnyChildrenProperty => null;
+        public string AnyJsonProperty => null;
+        public string AnyLinkOrFileProperty => null;
+        public decimal AnyNumberProperty => 0;
+        public string AnyStringProperty => null;
+        //public IEnumerable<DynamicEntity> AnyTitleOfAnEntityInTheList => null;
+
+        #endregion
+
+        [PrivateApi] IBlock ICanBeItem.TryGetBlockContext() => Cdf?.BlockOrNull;
+        [PrivateApi] ITypedItem ICanBeItem.Item => TypedItem;
+
+
+        #region Metadata - Enable Metadata.Methods()
+
+        // Background: 2023-08-15 2dm
+        // For reasons we don't fully understand, the razor dynamic binder can't find methods on inherited objects.
+        // If we add their signatures here, and then override them in the implementation, it works
+        // This is probably not the best way to do it, but for now it should work.
+
+        [PrivateApi("This doesn't work until overriden by the Metadata object")]
+        public virtual bool HasType(string type) => throw new NotSupportedException("This is just a stub for Metadata");
+
+        [PrivateApi("This doesn't work until overriden by the Metadata object")]
+        public virtual IEnumerable<IEntity> OfType(string type) => throw new NotSupportedException("This is just a stub for Metadata");
+
+        #endregion
     }
 }

@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Context
         }
 
         public IMetadata Metadata =>
-            _dynMeta.Get(() => _parent._DynCodeRoot.AsC.Metadata((this as IHasMetadata).Metadata)); // new Metadata((this as IHasMetadata).Metadata, null, _parent.DEDeps));
+            _dynMeta.Get(() => _parent._DynCodeRoot.Cdf.Metadata((this as IHasMetadata).Metadata)); // new Metadata((this as IHasMetadata).Metadata, null, _parent.DEDeps));
         private readonly GetOnce<IMetadata> _dynMeta = new GetOnce<IMetadata>();
 
         IMetadataOf IHasMetadata.Metadata => _md.Get(GetMetadataOf);

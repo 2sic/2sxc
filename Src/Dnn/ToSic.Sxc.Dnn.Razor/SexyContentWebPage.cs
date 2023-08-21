@@ -19,6 +19,7 @@ using ToSic.Sxc.Compatibility.RazorPermissions;
 using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
@@ -27,7 +28,6 @@ using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
-using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -87,8 +87,8 @@ namespace ToSic.SexyContent.Razor
         /// </summary>
         [PrivateApi] public IBlock Block => _DynCodeRoot.Block;
 
-        /// <inheritdoc cref="IDynamicCode.GetService{TService}" />
-        public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
+        /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+        public TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
 
         [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel9Old;
 
@@ -98,7 +98,7 @@ namespace ToSic.SexyContent.Razor
         #region Data - with old interface #DataInAddWontWork
 
         /// <inheritdoc />
-        public IBlockDataSourceOld Data => (IBlockDataSourceOld)_DynCodeRoot.Data;
+        public IBlockDataSource Data => (IBlockDataSource)_DynCodeRoot.Data;
 
         // This is explicitly implemented so the interfaces don't complain
         // but actually we're not showing this - in reality we're showing the Old (see above)
@@ -115,34 +115,34 @@ namespace ToSic.SexyContent.Razor
 
         /// <inheritdoc />
         [Obsolete]
-        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.AsC.AsDynamic(entity);
+        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.Cdf.CodeAsDyn(entity);
 
 
         /// <inheritdoc />
-        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsC.AsDynamicInternal(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.Cdf.AsDynamicFromObject(dynamicEntity);
 
         /// <inheritdoc />
         [PublicApi("Careful - still Experimental in 12.02")]
-        public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.AsC.MergeDynamic(entities);
+        public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.Cdf.MergeDynamic(entities);
 
         // todo: only in "old" controller, not in new one
         /// <inheritdoc />
         [Obsolete]
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => _DynCodeRoot.AsC.AsDynamic(entityKeyValuePair.Value);
+        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => _DynCodeRoot.Cdf.CodeAsDyn(entityKeyValuePair.Value);
 
 
 
         /// <inheritdoc />
         [Obsolete]
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => _DynCodeRoot.AsC.AsDynamicList(stream.List);
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => _DynCodeRoot.Cdf.CodeAsDynList(stream.List);
 
         /// <inheritdoc />
-        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.AsC.AsEntity(dynamicEntity);
+        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.Cdf.AsEntity(dynamicEntity);
 
 
         /// <inheritdoc />
         [Obsolete]
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => _DynCodeRoot.AsC.AsDynamicList(entities);
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => _DynCodeRoot.Cdf.CodeAsDynList(entities);
 
         #endregion
 
@@ -171,16 +171,16 @@ namespace ToSic.SexyContent.Razor
         #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => _DynCodeRoot.AsC.AsDynamic(entity as IEntity);
+        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => _DynCodeRoot.Cdf.CodeAsDyn(entity as IEntity);
 
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => _DynCodeRoot.AsC.AsDynamic(entityKeyValuePair.Value as IEntity);
+        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => _DynCodeRoot.Cdf.CodeAsDyn(entityKeyValuePair.Value as IEntity);
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => _DynCodeRoot.AsC.AsDynamicList(entities.Cast<IEntity>());
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => _DynCodeRoot.Cdf.CodeAsDynList(entities.Cast<IEntity>());
         #endregion
 
 
@@ -232,7 +232,7 @@ namespace ToSic.SexyContent.Razor
 #pragma warning restore 618
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
-        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson)
+        public dynamic AsDynamic(string json, string fallback = WrapperConstants.EmptyJson)
             => throw new Exception("The AsDynamic(string) is a new feature in 2sxc 10.20. To use it, change your template type to inherit from " 
                                    + nameof(RazorComponent) + " see https://go.2sxc.org/RazorComponent");
 

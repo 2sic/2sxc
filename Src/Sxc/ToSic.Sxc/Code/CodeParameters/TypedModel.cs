@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using ToSic.Eav.Data;
 using ToSic.Eav.Generics;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Edit.Toolbar;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code
 {
+    [PrivateApi]
     public class TypedModel : ITypedModel
     {
         private readonly bool _isRazor;
@@ -25,37 +26,23 @@ namespace ToSic.Sxc.Code
             _isRazor = isRazor;
             _razorFileName = razorFileName;
             _paramsDictionary = paramsDictionary?.ToInvariant() ?? new Dictionary<string, object>();
-            _converter = new TypedConverter(codeRoot.AsC);
+            _converter = new TypedConverter(codeRoot.Cdf);
         }
 
         #region Check if parameters were supplied
 
-        public bool HasAll(params string[] names)
-        {
-            if (names == null || names.Length == 0) return true;
-            return names.All(n => _paramsDictionary.ContainsKey(n));
-        }
+        public bool ContainsKey(string name) => !name.IsEmptyOrWs() && _paramsDictionary.ContainsKey(name);
 
-        public bool HasAny(params string[] names)
-        {
-            if (names == null || names.Length == 0) return true;
-            return names.Any(n => _paramsDictionary.ContainsKey(n));
-        }
+        [PrivateApi]
+        public bool IsEmpty(string name, string noParamOrder = Protector) //, bool? blankIs = default)
+            => HasKeysHelper.IsEmpty(Get(name, required: false), default /*blankIs*/);
 
-        public string RequireAny(params string[] names)
-        {
-            if (HasAny(names)) return null;
-            throw new ArgumentException(RequireMsg("one or more", "none", names));
-        }
-        public string RequireAll(params string[] names)
-        {
-            if (HasAll(names)) return null;
-            throw new ArgumentException(RequireMsg("all", "not all", names));
-        }
+        [PrivateApi]
+        public bool IsNotEmpty(string name, string noParamOrder = Protector) //, bool? blankIs = default)
+            => HasKeysHelper.IsNotEmpty(Get(name, required: false), default /*blankIs*/);
 
-        private string RequireMsg(string requires, string but, string[] names) =>
-            $"Partial Razor '{_razorFileName}' requires {requires} of the following parameters, but {but} were provided: " +
-            string.Join(", ", (names ?? Array.Empty<string>()).Select(s => $"'{s}'"));
+        public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default) 
+            => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, _paramsDictionary?.Keys);
 
         #endregion
 
@@ -99,8 +86,8 @@ Either change the calling Html.Partial(""{_razorFileName}"", {{ {name} = ... }} 
 
         #endregion
 
-        public dynamic Dynamic(string name, string noParamOrder = Protector, object fallback = default, bool? required = default) 
-            => GetInternal(name, noParamOrder, fallback, required);
+        //public dynamic Dynamic(string name, string noParamOrder = Protector, object fallback = default, bool? required = default) 
+        //    => GetInternal(name, noParamOrder, fallback, required);
 
         #region Numbers
 
@@ -161,10 +148,10 @@ Either change the calling Html.Partial(""{_razorFileName}"", {{ {name} = ... }} 
         #region Entity and Item(s)
 
         public ITypedItem Item(string name, string noParamOrder = Protector, ITypedItem fallback = default, bool? required = default)
-            => _converter.Item(GetInternal(name, required, noParamOrder), fallback);
+            => _converter.Item(GetInternal(name, required, noParamOrder), noParamOrder, fallback);
 
         public IEnumerable<ITypedItem> Items(string name, string noParamOrder = Protector, IEnumerable<ITypedItem> fallback = default, bool? required = default)
-            => _converter.Items(GetInternal(name, required, noParamOrder), fallback);
+            => _converter.Items(GetInternal(name, required, noParamOrder), noParamOrder, fallback);
 
         #endregion
 

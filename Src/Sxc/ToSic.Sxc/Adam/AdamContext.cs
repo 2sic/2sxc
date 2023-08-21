@@ -9,7 +9,6 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.AsConverter;
 using static ToSic.Eav.Configuration.BuiltInFeatures;
 
 namespace ToSic.Sxc.Adam
@@ -56,7 +55,7 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         /// Initializes the object and performs all the initial security checks
         /// </summary>
-        public virtual AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, AsConverterService asc)
+        public virtual AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, CodeDataFactory cdf)
         {
             var callLog = Log.Fn<AdamContext>($"app: {context.AppState.Show()}, field:{fieldName}, guid:{entityGuid}");
             Context = context;

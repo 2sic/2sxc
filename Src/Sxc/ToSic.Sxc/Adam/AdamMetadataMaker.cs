@@ -13,11 +13,11 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         /// Get the first metadata entity of an item - or return a fake one instead
         /// </summary>
-        internal IMetadata Get(AdamManager manager, string key, string title, Action<IMetadataOf> mdInit = null)
+        internal static IMetadata Create(AdamManager manager, string key, string title, Action<IMetadataOf> mdInit = null)
         {
             var mdOf = new MetadataOf<string>((int)TargetTypes.CmsItem, key, title, null, manager.AppRuntime.AppState);
             mdInit?.Invoke(mdOf);
-            return manager.AsC.Metadata(mdOf);
+            return manager.Cdf.Metadata(mdOf);
         }
     }
 }

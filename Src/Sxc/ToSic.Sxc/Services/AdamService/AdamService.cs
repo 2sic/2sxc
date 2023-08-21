@@ -21,26 +21,30 @@ namespace ToSic.Sxc.Services
         /// <inheritdoc />
         public IFile File(int id)
         {
-            var admManager = (_codeRoot as DynamicCodeRoot)?.AsC.AdamManager;
+            var admManager = (_codeRoot as DynamicCodeRoot)?.Cdf.AdamManager;
             return admManager?.File(id);
         }
 
         /// <inheritdoc />
         public IFile File(string id)
         {
-            if (!id.HasValue()) return null;
-            var linkParts = new LinkParts(id);
-            if (!linkParts.IsMatch || linkParts.Id == 0) return null;
-            return File(linkParts.Id);
+            var fileId = AdamManager.CheckIdStringForId(id);
+            return fileId == null ? null : File(fileId.Value);
         }
 
+
         /// <inheritdoc />
-        public IFile File(IField field) => File(field?.Raw as string);
+        public IFile File(IField field)
+        {
+            var file = field?.Raw is string id ? File(id) : null;
+            if (file != null) file.Field = field;
+            return file;
+        }
 
         /// <inheritdoc />
         public IFolder Folder(int id)
         {
-            var admManager = (_codeRoot as DynamicCodeRoot)?.AsC.AdamManager;
+            var admManager = (_codeRoot as DynamicCodeRoot)?.Cdf.AdamManager;
             return admManager?.Folder(id);
         }
 

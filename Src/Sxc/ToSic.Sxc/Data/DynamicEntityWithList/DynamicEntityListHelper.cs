@@ -13,25 +13,31 @@ namespace ToSic.Sxc.Data
     [PrivateApi]
     internal class DynamicEntityListHelper
     {
+        protected bool PropsRequired { get; }
         public readonly IEntity ParentOrNull;
         public readonly string FieldOrNull;
-        private readonly DynamicEntity.MyServices _services;
+        private readonly CodeDataFactory _cdf;
 
-        private Func<bool?> _getDebug;
+        private readonly Func<bool?> _getDebug;
 
-        public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, DynamicEntity.MyServices services)
+        public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, bool propsRequired, CodeDataFactory cdf)
+            : this(cdf, propsRequired, getDebug)
         {
-            _list = new List<IDynamicEntity> {singleItem ?? throw new ArgumentException(nameof(singleItem))};
-            _services = services ?? throw new ArgumentNullException(nameof(services));
-            _getDebug = getDebug;
+            _list = new List<IDynamicEntity> { singleItem ?? throw new ArgumentException(nameof(singleItem)) };
         }
         
-        public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug, DynamicEntity.MyServices services)
+        public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug, bool propsRequired, CodeDataFactory cdf)
+            : this(cdf, propsRequired, getDebug)
         {
             ParentOrNull = parentOrNull;
             FieldOrNull = fieldOrNull;
-            _services = services ?? throw new ArgumentNullException(nameof(services));
             _entities = entities?.ToArray() ?? throw new ArgumentNullException(nameof(entities));
+        }
+
+        private DynamicEntityListHelper(CodeDataFactory cdf, bool propsRequired, Func<bool?> getDebug)
+        {
+            _cdf = cdf ?? throw new ArgumentNullException(nameof(cdf));
+            PropsRequired = propsRequired;
             _getDebug = getDebug;
         }
         
@@ -59,16 +65,13 @@ namespace ToSic.Sxc.Data
                         var blockEntity = reWrapWithListNumbering
                             ? EntityInBlockDecorator.Wrap(e, ParentOrNull.EntityGuid, FieldOrNull, i)
                             : e;
-                        return DynamicEntityBase.SubDynEntityOrNull(blockEntity, _services, debug);
+                        return SubDataFactory.SubDynEntityOrNull(blockEntity, _cdf, debug, propsRequired: PropsRequired) as IDynamicEntity;
                     })
                     .ToList();
             }
         }
 
-
-
-        public int Count => _entities?.Length ?? 1;
-
+        //public int Count => _entities?.Length ?? 1;
 
     }
 }

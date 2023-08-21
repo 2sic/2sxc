@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                 .AddSxcWebApi()                 // This adds all the standard backend services for WebAPIs to work
                 .AddSxcCore()                   // Core 2sxc services
                 .AddEav()                       // Core EAV services
-                .AddEavWebApiTypedAfterEav<IActionResult>()
+                .AddEavWebApiTypedAfterEav()
                 .AddOqtAppWebApi()              // Oqtane App WebAPI stuff
                 .AddRazorBlade();               // RazorBlade helpers for Razor in the edition used by Oqtane
 
@@ -72,6 +72,17 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //#region Unhandled Errors (should be in the start off pipeline)
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+            //else
+            //{
+            //    app.UseExceptionHandler("/error"); // This will redirect to the ErrorLocalDevelopment action in ErrorController when an exception occurs
+            //}
+            //#endregion
+
             var serviceProvider = app.ApplicationServices;
 
             serviceProvider.Build<IDbConfiguration>().ConnectionString = Configuration.GetConnectionString("DefaultConnection");

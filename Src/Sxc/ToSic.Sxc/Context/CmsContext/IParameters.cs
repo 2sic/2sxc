@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Context
 {
@@ -10,15 +11,16 @@ namespace ToSic.Sxc.Context
     /// </summary>
     /// <remarks>
     /// * uses the [](xref:NetCode.Conventions.Functional)
+    /// * Added typed accessors such as `Int(...)` etc. in v16.03 implementing <see cref="ITyped"/>
     /// </remarks>
     [PublicApi]
-    public interface IParameters: IReadOnlyDictionary<string, string>
+    public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
     {
         /// <summary>
         /// ToString is especially implemented, to give you the parameters again as they were originally given on the page.
         /// </summary>
         /// <returns></returns>
-        string ToString();
+        new string ToString();
 
         #region Get (new v15.04)
 
@@ -30,7 +32,7 @@ namespace ToSic.Sxc.Context
         /// <remarks>
         /// Added v15.04
         /// </remarks>
-        string Get(string name);
+        new string Get(string name);
 
         /// <summary>
         /// Get a parameter and convert to the needed type - or return the default.
@@ -144,5 +146,9 @@ namespace ToSic.Sxc.Context
         /// <param name="name"></param>
         /// <returns></returns>
         IParameters Remove(string name);
+
+        [PrivateApi("experimental v16.03")] 
+        new string this[string name] { get; }
+
     }
 }

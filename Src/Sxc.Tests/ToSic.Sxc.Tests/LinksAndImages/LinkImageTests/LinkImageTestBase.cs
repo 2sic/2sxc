@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Eav.Configuration;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Tests.DynamicData;
 using ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         public ImgResizeLinker GetLinker() => GetService<ImgResizeLinker>();
         public ILinkService GetLinkHelper() => GetService<ILinkService>();
 
-        public static DynamicReadObject ToDyn(object contents) => TestAccessors.DynReadObjT(contents, false, false);
+        public WrapObjectDynamic ToDyn(object contents) => GetService<CodeDataWrapper>().FromObject(contents, WrapperSettings.Dyn(children: false, realObjectsToo: false));
 
 
         protected void TestOnLinkerAndHelper(string expected,
