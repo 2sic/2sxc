@@ -12,22 +12,28 @@ namespace ToSic.Sxc.Tests.DataTests.DynStack
     [TestClass]
     public class TypedStackGet: DynAndTypedTestsBase
     {
-        public static IEnumerable<object[]> KeysAndExpectations => TypedStackTestData.KeysAndExpectations;
-
         private ITypedStack StackForKeysFromAnon => _stackForKeys ?? (_stackForKeys = TypedStackTestData.GetStackForKeysUsingAnon(this));
-        private ITypedStack _stackForKeys;
+        private static ITypedStack _stackForKeys;
+
+
+        private static IEnumerable<object[]> StackProps => TypedStackTestData.StackOrder12PropInfo.ToTestEnum();
 
         [TestMethod]
-        [DynamicData(nameof(KeysAndExpectations))]
-        public void Get_AnonObjects(string key, bool expected)
+        [DynamicData(nameof(StackProps))]
+        public void IsNotEmpty_BasedOnAnon(PropInfo pti)
         {
-            AreEqual(expected, StackForKeysFromAnon.Get(key) != null);
+            AreEqual(pti.HasData, StackForKeysFromAnon.IsNotEmpty(pti.Name), pti.ToString());
         }
+
+        [TestMethod]
+        [DynamicData(nameof(StackProps))]
+        public void Get_AnonObjects_ReqFalse(PropInfo pti) 
+            => AreEqual(pti.Exists, StackForKeysFromAnon.Get(pti.Name, required: false) != null);
 
         [TestMethod]
         public void StackFromAnonWrapsObjectTyped()
         {
-            var inspect = StackForKeysFromAnon as IWrapper<IPropertyStack>;
+            var inspect = (IWrapper<IPropertyStack>)StackForKeysFromAnon;
             IsInstanceOfType(inspect.GetContents().Sources.FirstOrDefault().Value, typeof(PreWrapObject));
         }
 
@@ -37,11 +43,9 @@ namespace ToSic.Sxc.Tests.DataTests.DynStack
         private ITypedStack _stackForKeysTyped;
 
         [TestMethod]
-        [DynamicData(nameof(KeysAndExpectations))]
-        public void Get_TypedObjects(string key, bool expected)
-        {
-            AreEqual(expected, StackForKeysFromTyped.Get(key) != null);
-        }
+        [DynamicData(nameof(StackProps))]
+        public void Get_TypedObjects_NewReqFalse(PropInfo pti) 
+            => AreEqual(pti.Exists, StackForKeysFromTyped.Get(pti.Name, required: false) != null);
 
         [TestMethod]
         public void StackFromTypedWrapsJacket()

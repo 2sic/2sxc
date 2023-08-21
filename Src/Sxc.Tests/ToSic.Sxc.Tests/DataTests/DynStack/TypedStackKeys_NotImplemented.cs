@@ -9,12 +9,12 @@ namespace ToSic.Sxc.Tests.DataTests.DynStack
     [TestClass]
     public class TypedStackKeys_NotImplemented: DynAndTypedTestsBase
     {
-        public static IEnumerable<object[]> KeysAndExpectations => TypedStackTestData.KeysAndExpectations;
+        private static IEnumerable<object[]> StackProps => TypedStackTestData.StackOrder12PropInfo.ToTestEnum();
 
         [TestMethod]
-        [DynamicData(nameof(KeysAndExpectations))]
+        [DynamicData(nameof(StackProps))]
         [ExpectedException(typeof(NotImplementedException))]
-        public void Keys_AnonObjects(string key, bool expected) => AreEqual(expected, StackForKeysFromAnon.ContainsKey(key));
+        public void Keys_AnonObjects(PropInfo pti) => AreEqual(pti.Exists, StackForKeysFromAnon.ContainsKey(pti.Name));
 
 
         private ITypedStack StackForKeysFromAnon => _stackForKeys ?? (_stackForKeys = TypedStackTestData.GetStackForKeysUsingAnon(this));
