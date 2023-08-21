@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
 using static System.StringComparison;
 
@@ -21,6 +22,7 @@ namespace ToSic.Sxc.Oqt.App
         [Inject] public OqtSxcRenderService OqtSxcRenderService { get; set; }
         [Inject] public OqtPageChangeService OqtPageChangeService { get; set; }
         [Inject] public IJSRuntime JsRuntime { get; set; }
+        [Inject] public IOqtPageChangesOnServerService OqtPageChangesOnServerService { get; set; }
 
         #endregion
 
@@ -61,6 +63,12 @@ namespace ToSic.Sxc.Oqt.App
                     Log($"1.2: Initialize2sxcContentBlock");
                     await Initialize2SxcContentBlock();
                     NewDataArrived = true;
+                    if (ViewResults != null)
+                    {
+                        OqtPageChangesOnServerService.ApplyHttpHeaders(ViewResults, this);
+                        Log($"1.3: Csp");
+                    }
+                    
                 }
 
                 Log($"1 end: OnParametersSetAsync(NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");

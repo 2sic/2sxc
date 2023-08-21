@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
         private static IServiceCollection AddOqtaneBlazorWebAssemblySupport(this IServiceCollection services)
         {
             services.Replace(ServiceDescriptor.Scoped<IOqtDebugStateService, OqtDebugStateService>());
-            services.TryAddScoped<OqtPageChangesSupportService>();
+            services.TryAddScoped<IOqtPageChangesOnServerService, OqtPageChangesOnServerService>();
             services.TryAddScoped<OqtPrerenderService> ();
 
             return services;

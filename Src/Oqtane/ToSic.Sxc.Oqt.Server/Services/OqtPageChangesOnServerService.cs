@@ -15,13 +15,13 @@ using CspParameters = ToSic.Sxc.Web.ContentSecurityPolicy.CspParameters;
 
 namespace ToSic.Sxc.Oqt.Server.Services
 {
-  public class OqtPageChangesSupportService : ServiceBase
+    public class OqtPageChangesOnServerService : ServiceBase, IOqtPageChangesOnServerService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly LazySvc<IFeaturesService> _featuresService;
         private readonly Generator<CspOfPage> _cspOfPage;
 
-        public OqtPageChangesSupportService(IHttpContextAccessor httpContextAccessor, LazySvc<IFeaturesService> featuresService, Generator<CspOfPage> cspOfPage) : base($"{Constants.SxcLogName}.OqtPgChService")
+        public OqtPageChangesOnServerService(IHttpContextAccessor httpContextAccessor, LazySvc<IFeaturesService> featuresService, Generator<CspOfPage> cspOfPage) : base($"{Constants.SxcLogName}.OqtPgChService")
         {
             ConnectServices(
                 _httpContextAccessor = httpContextAccessor,
