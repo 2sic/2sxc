@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
 using System.Linq;
 using ToSic.Sxc.Context;
+using ToSic.Testing.Shared;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using static ToSic.Sxc.Tests.LinksAndImages.ParametersTestExtensions;
 
@@ -198,18 +199,23 @@ namespace ToSic.Sxc.Tests.ContextTests
         public void ContainsKey(bool exists, string key, string testName = default)
             => AreEqual(exists, GetTestParameters().ContainsKey(key));
 
-        private static IEnumerable<object[]> CountTests => new List<object[]>
+        #region Count Tests
+
+        private static IEnumerable<object[]> CountTests => new List<ParameterCountTest>
         {
-            new object[] { new ParameterCountTest { Count = 2 } },
-            new object[] { new ParameterCountTest { Count = 2, Prepare = p => p.TestSet("id") } },
-            new object[] { new ParameterCountTest { Count = 3, Prepare = p => p.TestSet("new") } },
-            new object[] { new ParameterCountTest { Count = 1, Prepare = p => p.TestRemove("id") } },
-        };
+            new ParameterCountTest { Count = 2 },
+            new ParameterCountTest { Count = 2, Prepare = p => p.TestSet("id") },
+            new ParameterCountTest { Count = 3, Prepare = p => p.TestSet("new") },
+            new ParameterCountTest { Count = 1, Prepare = p => p.TestRemove("id") },
+        }.ToTestEnum();
 
         [TestMethod]
         [DynamicData(nameof(CountTests))]
         public void CountKeys(ParameterCountTest pct)
             => AreEqual(pct.Count, pct.Prepare(GetTestParameters()).Keys().Count());
+
+        #endregion
+
 
         [TestMethod]
         [DataRow(true, "id")]

@@ -56,6 +56,8 @@ namespace ToSic.Sxc.Context
 
         #endregion
 
+        #region Add / Set / Remove
+
         /// <summary>
         /// Add another URL parameter and return a new <see cref="IParameters"/>.
         /// If the name/key already exists, it will extend it, add a simple 
@@ -142,15 +144,27 @@ namespace ToSic.Sxc.Context
         /// <returns></returns>
         IParameters Remove(string name);
 
+        #endregion
+
+        #region ToString to easily create url params from this object
+
         /// <summary>
         /// ToString() is specially implemented, to give you the parameters again as they were originally given on the page.
         /// </summary>
         /// <returns></returns>
         new string ToString();
 
+        #endregion
 
-        [PrivateApi("experimental v16.03")] 
-        new string this[string name] { get; }
+        #region Handle duplicate interface methods
 
+        /// <inheritdoc cref="IHasKeys.ContainsKey"/>
+        new bool ContainsKey(string name);
+
+        #endregion
+
+        //[PrivateApi("experimental v16.03")]
+        // not implemented on purpose
+        //new string this[string name] { get; }
     }
 }
