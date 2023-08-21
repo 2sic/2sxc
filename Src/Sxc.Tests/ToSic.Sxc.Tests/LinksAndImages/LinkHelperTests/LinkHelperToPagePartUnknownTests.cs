@@ -1,8 +1,8 @@
 ﻿using System.Collections.Specialized;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Context.Query;
 using ToSic.Sxc.Services;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+using static ToSic.Sxc.Tests.LinksAndImages.ParametersTestExtensions;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests
 {
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests
             AreEqual($"{LinkServiceUnknown.DefRoot}/page27", Link.TestTo(pageId: 27));
             AreEqual($"{LinkServiceUnknown.DefRoot}/page27", Link.TestTo(pageId: 27, parameters: null));
             AreEqual($"{LinkServiceUnknown.DefRoot}/page27?a=1&b=2#fragment", Link.TestTo(pageId: 27, parameters: "a=1&b=2#fragment"));
-            AreEqual($"{LinkServiceUnknown.DefRoot}/page27?a=1&b=2&c=3", Link.TestTo(pageId: 27, parameters: new Parameters(new NameValueCollection
+            AreEqual($"{LinkServiceUnknown.DefRoot}/page27?a=1&b=2&c=3", Link.TestTo(pageId: 27, parameters: NewParameters(new NameValueCollection
             {
                 { "a", "1" },
                 { "b", "2" },

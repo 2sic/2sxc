@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Context.Query;
 using static ToSic.Sxc.Services.LinkServiceUnknown;
+using static ToSic.Sxc.Tests.LinksAndImages.ParametersTestExtensions;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests
 {
@@ -59,27 +60,27 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests
         [TestMethod] public void NoPageObjectParamUnsupported() => NoPageObjectParam(new DateTime(), "");
 
         [TestMethod]
-        public void NoPageObjectParamsEmpty() => NoPageObjectParam(new Parameters(null), "");
+        public void NoPageObjectParamsEmpty() => NoPageObjectParam(NewParameters(null), "");
 
         [TestMethod]
         public void NoPageObjectParamsKeyOnly() =>
-            NoPageObjectParam(new Parameters(new NameValueCollection { { "active", null } }), "active");
+            NoPageObjectParam(NewParameters(new NameValueCollection { { "active", null } }), "active");
 
         [TestMethod]
         public void NoPageObjectParamsKeyValueEmpty() =>
-            NoPageObjectParam(new Parameters(new NameValueCollection { { "active", "" } }), "active");
+            NoPageObjectParam(NewParameters(new NameValueCollection { { "active", "" } }), "active");
 
         [TestMethod]
         public void NoPageObjectParamsKeyEmpty() =>
-            NoPageObjectParam(new Parameters(new NameValueCollection { { "", "" } }), "");
+            NoPageObjectParam(NewParameters(new NameValueCollection { { "", "" } }), "");
 
         [TestMethod]
         public void NoPageObjectParamDicKeyValue() =>
-            NoPageObjectParam(new Parameters(new NameValueCollection { { "active", "true" } }), "active=true");
+            NoPageObjectParam(NewParameters(new NameValueCollection { { "active", "true" } }), "active=true");
 
         [TestMethod]
         public void NoPageObjectParamDicObject() =>
-            NoPageObjectParam(new Parameters(new NameValueCollection { { "active", "true" }, {"passive", "false"} }), "active=true&passive=false");
+            NoPageObjectParam(NewParameters(new NameValueCollection { { "active", "true" }, {"passive", "false"} }), "active=true&passive=false");
 
 
         /// <summary>

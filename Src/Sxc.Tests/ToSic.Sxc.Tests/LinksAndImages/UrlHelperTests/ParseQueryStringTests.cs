@@ -1,8 +1,8 @@
 ﻿using System.Collections.Specialized;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Context.Query;
 using ToSic.Sxc.Web.Url;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+using static ToSic.Sxc.Tests.LinksAndImages.ParametersTestExtensions;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests
 {
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests
             query = (query == UseExpected) ? expected : query;
             var result = Parse(query);
             AreEqual(expCount, result.Count);
-            var reStringed = new Parameters(result).ToString();
+            var reStringed = NewParameters(result).ToString();
             AreEqual(expected, reStringed);
         }
 

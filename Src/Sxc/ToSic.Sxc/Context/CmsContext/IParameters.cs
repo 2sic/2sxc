@@ -16,11 +16,6 @@ namespace ToSic.Sxc.Context
     [PublicApi]
     public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
     {
-        /// <summary>
-        /// ToString is especially implemented, to give you the parameters again as they were originally given on the page.
-        /// </summary>
-        /// <returns></returns>
-        new string ToString();
 
         #region Get (new v15.04)
 
@@ -146,6 +141,13 @@ namespace ToSic.Sxc.Context
         /// <param name="name"></param>
         /// <returns></returns>
         IParameters Remove(string name);
+
+        /// <summary>
+        /// ToString() is specially implemented, to give you the parameters again as they were originally given on the page.
+        /// </summary>
+        /// <returns></returns>
+        new string ToString();
+
 
         [PrivateApi("experimental v16.03")] 
         new string this[string name] { get; }
