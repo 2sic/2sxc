@@ -73,7 +73,9 @@ namespace ToSic.Sxc.Services
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">
         /// Alternate string to use, if the original json can't parse.
-        /// Can also be null or the word "error" if you would prefer an error to be thrown.</param>
+        /// Can also be null or the word "error" if you would prefer an error to be thrown.
+        /// </param>
+        /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertiesRequired), default `true`</param>
         /// <returns>A dynamic object representing the original json.
         /// If it can't be parsed, it will parse the fallback, which by default is an empty empty dynamic object.
         /// If you provide null for the fallback, then you will get null back.
@@ -83,6 +85,6 @@ namespace ToSic.Sxc.Services
         /// </remarks>
         /// <returns></returns>
         [WorkInProgressApi("WIP 16.02 - not yet done")]
-        ITyped ToTyped(string json, string noParamOrder = Parameters.Protector, string fallback = default);
+        ITyped ToTyped(string json, string noParamOrder = Parameters.Protector, string fallback = default, bool? propsRequired = default);
     }
 }
