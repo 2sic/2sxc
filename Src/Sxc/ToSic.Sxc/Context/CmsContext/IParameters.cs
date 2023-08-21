@@ -160,6 +160,7 @@ namespace ToSic.Sxc.Context
 
         /// <inheritdoc cref="IHasKeys.ContainsKey"/>
         new bool ContainsKey(string name);
+        // ^^^ this is added, because both Dictionary and ITyped have this method, so it could be unclear
 
         #endregion
 
