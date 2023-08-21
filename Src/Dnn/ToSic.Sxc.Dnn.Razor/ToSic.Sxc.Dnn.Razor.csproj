@@ -19,6 +19,9 @@
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
+    <!-- Opt in to build acceleration in VS (from 17.5 onwards): https://github.com/dotnet/project-system/blob/main/docs/build-acceleration.md -->
+    <!-- not supported to projects with pre/post build steps -->
+    <AccelerateBuildsInVisualStudio>false</AccelerateBuildsInVisualStudio>
     <!-- Don't generate assembly properties from this XML which should come from the core file, like version - these lines must be in sync in all ToSic.Eav.*.csproj files -->
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>

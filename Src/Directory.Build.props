@@ -1,0 +1,8 @@
+<Project>
+  <PropertyGroup>
+    <!-- Produce reference assemblies during compile for faster builds: https://learn.microsoft.com/en-us/dotnet/standard/assembly/reference-assemblies -->
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <!-- Opt in to build acceleration in VS (from 17.5 onwards): https://github.com/dotnet/project-system/blob/main/docs/build-acceleration.md -->
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+  </PropertyGroup>
+</Project>
