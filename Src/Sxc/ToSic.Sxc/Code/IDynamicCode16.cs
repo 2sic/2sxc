@@ -98,14 +98,14 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <param name="data">An original object which can be converted to a TypedItem, such as a <see cref="IEntity"/> .</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="strict">make the resulting object [strict](xref:NetCode.Conventions.TypedRequired), default `true`</param>
+        /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertyRequired), default `true`</param>
         /// <param name="mock">Specify that the data is fake/mock data, which should pretend to be an Item. Default is `false`</param>
         /// <returns></returns>
         /// <remarks>New in v16.02</remarks>
         ITypedItem AsItem(
             object data,
             string noParamOrder = Protector,
-            bool? strict = default,
+            bool? propsRequired = default,
             bool? mock = default
         );
 
@@ -114,13 +114,13 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <param name="list">The original list which is usually a list of <see cref="IEntity"/> objects.</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="strict">make the resulting object [strict](xref:NetCode.Conventions.TypedRequired), default `true`</param>
+        /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertiesRequired), default `true`</param>
         /// <returns></returns>
         /// <remarks>New in v16.01</remarks>
         IEnumerable<ITypedItem> AsItems(
             object list,
             string noParamOrder = Protector,
-            bool? strict = default
+            bool? propsRequired = default
         );
 
 
@@ -135,12 +135,12 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <param name="data"></param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="strict">make the resulting object [strict](xref:NetCode.Conventions.TypedRequired), default `true`</param>
+        /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertyRequired), default `true`</param>
         /// <returns></returns>
         ITyped AsTyped(
             object data,
             string noParamOrder = Protector,
-            bool? strict = default
+            bool? propsRequired = default
         );
 
         /// <summary>
@@ -148,12 +148,12 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <param name="list">List/Enumerable object containing a bunch of items to make typed</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="strict">make the resulting object [strict](xref:NetCode.Conventions.TypedRequired), default `true`</param>
+        /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertyRequired), default `true`</param>
         /// <returns></returns>
         IEnumerable<ITyped> AsTypedList(
             object list,
             string noParamOrder = Protector,
-            bool? strict = default
+            bool? propsRequired = default
         );
 
         /// <summary>

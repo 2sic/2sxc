@@ -10,13 +10,13 @@ namespace ToSic.Sxc.Data
     {
         private readonly ICanDebug _canDebug;
         public CodeDataFactory Cdf { get; }
-        public bool Strict { get; }
+        public bool PropsRequired { get; }
 
-        public SubDataFactory(CodeDataFactory cdf, bool strict, ICanDebug canDebug)
+        public SubDataFactory(CodeDataFactory cdf, bool propsRequired, ICanDebug canDebug)
         {
             _canDebug = canDebug;
             Cdf = cdf;
-            Strict = strict;
+            PropsRequired = propsRequired;
         }
 
         /// <summary>
@@ -25,12 +25,12 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="contents"></param>
         /// <returns></returns>
-        public IDynamicEntity SubDynEntityOrNull(IEntity contents) => SubDynEntityOrNull(contents, Cdf, _canDebug.Debug, strictGet: Strict);
+        public IDynamicEntity SubDynEntityOrNull(IEntity contents) => SubDynEntityOrNull(contents, Cdf, _canDebug.Debug, propsRequired: PropsRequired);
 
-        internal static DynamicEntity SubDynEntityOrNull(IEntity contents, CodeDataFactory cdf, bool? debug, bool strictGet)
+        internal static DynamicEntity SubDynEntityOrNull(IEntity contents, CodeDataFactory cdf, bool? debug, bool propsRequired)
         {
             if (contents == null) return null;
-            var result = cdf.AsDynamic(contents, strictGet); // new DynamicEntity(contents, cdf, strict: strictGet);
+            var result = cdf.AsDynamic(contents, propsRequired);
             if (debug == true) result.Debug = true;
             return result;
         }

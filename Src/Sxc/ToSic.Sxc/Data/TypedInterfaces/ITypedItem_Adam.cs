@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="name">property name</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.TypedRequired)</param>
+        /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
         /// <returns>The Folder object</returns>
         /// <remarks>Added in 16.02</remarks>
         IFolder Folder(string name,
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="name">property name</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.TypedRequired)</param>
+        /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
         /// <remarks>Added in 16.02</remarks>
         /// <returns></returns>
         IFile File(string name,

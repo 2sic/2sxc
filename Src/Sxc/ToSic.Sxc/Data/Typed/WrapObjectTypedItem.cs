@@ -136,7 +136,7 @@ namespace ToSic.Sxc.Data.Typed
         public IFolder Folder(string name, string noParamOrder, bool? required)
         {
             Protect(noParamOrder, nameof(required));
-            return IsErrStrict(this, name, required, PreWrap.Settings.GetStrict)
+            return IsErrStrict(this, name, required, PreWrap.Settings.PropsRequired)
                 ? throw ErrStrictForTyped(this, name)
                 : _cdf.Value.AdamManager.Folder(Guid, name, Field(name, noParamOrder, required));
         }
@@ -144,7 +144,7 @@ namespace ToSic.Sxc.Data.Typed
         public IFile File(string name, string noParamOrder, bool? required)
         {
             Protect(noParamOrder, nameof(required));
-            if (IsErrStrict(this, name, required, PreWrap.Settings.GetStrict))
+            if (IsErrStrict(this, name, required, PreWrap.Settings.PropsRequired))
                 throw ErrStrictForTyped(this, name);
             var typed = this as ITypedItem;
             // Check if it's a direct string, or an object with a sub-property with a Value

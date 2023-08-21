@@ -108,7 +108,7 @@ Item Id: <strong>{id ?? unknown}</strong>
 
         public static Exception ErrStrict(string name, CodeHelp codeHelp = default, [CallerMemberName] string cName = default)
         {
-            var info = $"Either a) correct the name '{name}'; b) use {cName}(\"{name}\", required: false); or c) or use AsItem(..., strict: false) or AsTyped(..., strict: false)";
+            var info = $"Either a) correct the name '{name}'; b) use {cName}(\"{name}\", required: false); or c) or use AsItem(..., propsRequired: false) or similar";
             var msg = cName == "."
                 ? $".{name} not found and 'strict' is true, meaning that an error is thrown. {info}"
                 : $"{cName}('{name}', ...) not found and 'strict' is true, meaning that an error is thrown. {info}";

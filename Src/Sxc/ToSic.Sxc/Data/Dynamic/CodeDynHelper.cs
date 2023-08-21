@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Data
         {
             var findResult = helper.GetInternal(binder.Name, lookupLink: true);
             // ReSharper disable once ExplicitCallerInfoArgument
-            if (!findResult.Found && helper.StrictGet)
+            if (!findResult.Found && helper.PropsRequired)
                 throw TypedHelpers.ErrStrict(binder.Name, cName: ".");
             result = findResult.Result;
             return true;

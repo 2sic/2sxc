@@ -22,27 +22,27 @@ namespace ToSic.Sxc.Data
     internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName
     {
         private readonly DynamicEntity _dyn;
-        public TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFactory cdf, bool strict)
+        public TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFactory cdf, bool propsRequired)
         {
             Entity = entity;
             Cdf = cdf;
             _dyn = dyn;
-            _strict = strict;
+            _propsRequired = propsRequired;
         }
 
         public IEntity Entity { get; }
         private CodeDataFactory Cdf { get; }
-        private readonly bool _strict;
+        private readonly bool _propsRequired;
 
         IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ?? (_propLookup = new PropLookupWithPathEntity(Entity, canDebug: this));
         private PropLookupWithPathEntity _propLookup;
 
         [PrivateApi]
-        private GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, _strict, childrenShouldBeDynamic: false, canDebug: this));
+        private GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, _propsRequired, childrenShouldBeDynamic: false, canDebug: this));
         private GetAndConvertHelper _getHelper;
 
         [PrivateApi]
-        private SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, _strict, canDebug: this));
+        private SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, _propsRequired, canDebug: this));
         private SubDataFactory _subData;
 
         [PrivateApi]
@@ -165,7 +165,7 @@ namespace ToSic.Sxc.Data
         IFolder ITypedItem.Folder(string name, string noParamOrder, bool? required)
         {
             Protect(noParamOrder, nameof(required));
-            return IsErrStrict(this, name, required, GetHelper.StrictGet)
+            return IsErrStrict(this, name, required, GetHelper.PropsRequired)
                 ? throw ErrStrictForTyped(this, name)
                 : _adamCache.Get(name, () => Cdf.Folder(Entity, name, (this as ITypedItem).Field(name, required: false)));
         }
@@ -209,7 +209,7 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, $"{nameof(type)}, {nameof(required)}");
 
-            if (IsErrStrict(this, field, required, GetHelper.StrictGet))
+            if (IsErrStrict(this, field, required, GetHelper.PropsRequired))
                 throw ErrStrictForTyped(this, field);
 
             var dynChildren = GetHelper.Children(entity: Entity, field: field, type: type);
@@ -226,7 +226,7 @@ namespace ToSic.Sxc.Data
         ITypedItem ITypedItem.Child(string name, string noParamOrder, bool? required)
         {
             Protect(noParamOrder, nameof(required));
-            return IsErrStrict(this, name, required, GetHelper.StrictGet)
+            return IsErrStrict(this, name, required, GetHelper.PropsRequired)
                 ? throw ErrStrictForTyped(this, name)
                 : (this as ITypedItem).Children(name).FirstOrDefault();
         }
@@ -236,7 +236,7 @@ namespace ToSic.Sxc.Data
         #region Fields, Html, Picture
 
         [PrivateApi]
-        IField ITypedItem.Field(string name, string noParamOrder, bool? required) => Cdf.Field(this, name, _strict, noParamOrder, required);
+        IField ITypedItem.Field(string name, string noParamOrder, bool? required) => Cdf.Field(this, name, _propsRequired, noParamOrder, required);
 
         IHtmlTag ITypedItem.Html(
             string name,

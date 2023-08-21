@@ -28,13 +28,13 @@ namespace ToSic.Sxc.Code
             //this.LinkLog(codeRoot.Log);
         }
 
-        public ITypedItem MyItem => _myItem.Get(() => CodeRoot.Cdf.AsItem(Data.MyItem, Protector, strict: DefaultStrict));
+        public ITypedItem MyItem => _myItem.Get(() => CodeRoot.Cdf.AsItem(Data.MyItem, Protector, propsRequired: DefaultStrict));
         private readonly GetOnce<ITypedItem> _myItem = new GetOnce<ITypedItem>();
 
-        public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => CodeRoot.Cdf.AsItems(Data.MyItem, Protector, strict: DefaultStrict));
+        public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => CodeRoot.Cdf.AsItems(Data.MyItem, Protector, propsRequired: DefaultStrict));
         private readonly GetOnce<IEnumerable<ITypedItem>> _myItems = new GetOnce<IEnumerable<ITypedItem>>();
 
-        public ITypedItem MyHeader => _myHeader.Get(() => CodeRoot.Cdf.AsItem(Data.MyHeader, Protector, strict: DefaultStrict));
+        public ITypedItem MyHeader => _myHeader.Get(() => CodeRoot.Cdf.AsItem(Data.MyHeader, Protector, propsRequired: DefaultStrict));
         private readonly GetOnce<ITypedItem> _myHeader = new GetOnce<ITypedItem>();
 
         public ITypedModel MyModel => _myModel.Get(() => new TypedModel(_myModelData, CodeRoot, IsRazor, CodeFileName));

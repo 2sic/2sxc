@@ -2,19 +2,19 @@
 {
     public readonly struct WrapperSettings
     {
-        private WrapperSettings(bool wrapChildren, bool wrapRealObjects, bool wrapToDynamic, bool strict = false)
+        private WrapperSettings(bool wrapChildren, bool wrapRealObjects, bool wrapToDynamic, bool propsRequired = false)
         {
             WrapChildren = wrapChildren;
             WrapRealObjects = wrapRealObjects;
             WrapToDynamic = wrapToDynamic;
-            GetStrict = strict;
+            PropsRequired = propsRequired;
         }
 
-        public static WrapperSettings Dyn(bool children, bool realObjectsToo, bool strict = false)
-            => new WrapperSettings(wrapChildren: children, wrapRealObjects: realObjectsToo, wrapToDynamic: true, strict: strict);
+        public static WrapperSettings Dyn(bool children, bool realObjectsToo, bool propsRequired = false)
+            => new WrapperSettings(wrapChildren: children, wrapRealObjects: realObjectsToo, wrapToDynamic: true, propsRequired: propsRequired);
 
-        public static WrapperSettings Typed(bool children, bool realObjectsToo, bool strict = true)
-            => new WrapperSettings(wrapChildren: children, wrapRealObjects: realObjectsToo, wrapToDynamic: false, strict: strict);
+        public static WrapperSettings Typed(bool children, bool realObjectsToo, bool propsRequired = true)
+            => new WrapperSettings(wrapChildren: children, wrapRealObjects: realObjectsToo, wrapToDynamic: false, propsRequired: propsRequired);
 
         /// <summary>
         /// Determine if children of this object should be re wrapped into special objects,
@@ -35,6 +35,6 @@
         /// <summary>
         /// Determine if Get will be strict
         /// </summary>
-        public bool GetStrict { get; }
+        public bool PropsRequired { get; }
     }
 }

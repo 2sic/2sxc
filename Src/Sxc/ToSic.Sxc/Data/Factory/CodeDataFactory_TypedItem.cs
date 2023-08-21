@@ -18,18 +18,18 @@ namespace ToSic.Sxc.Data
         #region AsTyped Implementations
 
 
-        public ITypedItem AsItem(object data, string noParamOrder, bool? required = default, ITypedItem fallback = default, bool? strict = default, bool? mock = default)
+        public ITypedItem AsItem(object data, string noParamOrder, bool? required = default, ITypedItem fallback = default, bool? propsRequired = default, bool? mock = default)
         {
-            Protect(noParamOrder, $"{nameof(fallback)}, {nameof(strict)}, {nameof(mock)}");
+            Protect(noParamOrder, $"{nameof(fallback)}, {nameof(propsRequired)}, {nameof(mock)}");
             if (mock == true)
                 return _codeDataWrapper.Value.TypedItemFromObject(data,
-                    WrapperSettings.Typed(true, true, strict ?? true),
+                    WrapperSettings.Typed(true, true, propsRequired ?? true),
                     new LazyLike<CodeDataFactory>(this));
 
-            return AsItemInternal(data, MaxRecursions, strict: strict ?? false) ?? fallback;
+            return AsItemInternal(data, MaxRecursions, propsRequired: propsRequired ?? false) ?? fallback;
         }
 
-        internal ITypedItem AsItemInternal(object data, int recursions, bool strict)
+        internal ITypedItem AsItemInternal(object data, int recursions, bool propsRequired)
         {
             var l = Log.Fn<ITypedItem>();
             if (recursions <= 0)
@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Data
 
             ITypedItem ConvertOrNullAndLog(IEntity e, string typeName) => e == null
                 ? l.ReturnNull($"empty {typeName}")
-                : l.Return(new DynamicEntity(e, this, strict: strict).TypedItem, typeName);
+                : l.Return(new DynamicEntity(e, this, propsRequired: propsRequired).TypedItem, typeName);
 
             switch (data)
             {
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Data
                     var enumFirst = enumerable.Cast<object>().FirstOrDefault();
                     if (enumFirst is null) return l.ReturnNull($"{nameof(IEnumerable)} with null object");
                     // retry conversion
-                    return l.Return(AsItemInternal(enumFirst, recursions - 1, strict: strict));
+                    return l.Return(AsItemInternal(enumFirst, recursions - 1, propsRequired: propsRequired));
                 default:
                     throw l.Done(new ArgumentException($"Type '{data.GetType()}' cannot be converted to {nameof(ITypedItem)}. " +
                                                        $"If you are trying to create mock/fake/fallback data, try using \", mock: true\""));
@@ -71,13 +71,13 @@ namespace ToSic.Sxc.Data
 
         }
 
-        public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder, bool? required = default, IEnumerable<ITypedItem> fallback = default, bool? strict = default)
+        public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder, bool? required = default, IEnumerable<ITypedItem> fallback = default, bool? propsRequired = default)
         {
             Protect(noParamOrder);
-            return AsItemList(list, required ?? true, fallback, MaxRecursions, strict: strict ?? false);
+            return AsItemList(list, required ?? true, fallback, MaxRecursions, propsRequired: propsRequired ?? false);
         }
 
-        private IEnumerable<ITypedItem> AsItemList(object list, bool required, IEnumerable<ITypedItem> fallback, int recursions, bool strict)
+        private IEnumerable<ITypedItem> AsItemList(object list, bool required, IEnumerable<ITypedItem> fallback, int recursions, bool propsRequired)
         {
             var l = Log.Fn<IEnumerable<ITypedItem>>($"{nameof(list)}: '{list}'; {nameof(required)}: {required}; {nameof(recursions)}: {recursions}");
 
@@ -101,31 +101,31 @@ namespace ToSic.Sxc.Data
                     return FallbackOrErrorAndLog("string", "Got a string.");
                 // List of ITypedItem
                 case IEnumerable<ITypedItem> alreadyOk:
-                    return l.Return(alreadyOk.Select(e => AsItemInternal(e, MaxRecursions, strict: strict)), nameof(IEnumerable<ITypedItem>));
+                    return l.Return(alreadyOk.Select(e => AsItemInternal(e, MaxRecursions, propsRequired: propsRequired)), nameof(IEnumerable<ITypedItem>));
                     //return l.Return(alreadyOk, "already matches type");
                 //case IEnumerable<IDynamicEntity> dynIDynEnt:
                 //    return l.Return(dynIDynEnt.Select(e => AsTyped(e, services, MaxRecursions, log)), "IEnum<DynEnt>");
                 case IDataSource dsEntities:
-                    return l.Return(AsItemList(dsEntities.List, required, fallback, recursions - 1, strict: strict), "DataSource - convert list");
+                    return l.Return(AsItemList(dsEntities.List, required, fallback, recursions - 1, propsRequired: propsRequired), "DataSource - convert list");
                 case IDataStream dataStream:
-                    return l.Return(AsItemList(dataStream.List, required, fallback, recursions - 1, strict: strict), "DataStream - convert list");
+                    return l.Return(AsItemList(dataStream.List, required, fallback, recursions - 1, propsRequired: propsRequired), "DataStream - convert list");
                 case IEnumerable<IEntity> iEntities:
-                    return l.Return(iEntities.Select(e => AsItemInternal(e, MaxRecursions, strict: strict)), nameof(IEnumerable<IEntity>));
+                    return l.Return(iEntities.Select(e => AsItemInternal(e, MaxRecursions, propsRequired: propsRequired)), nameof(IEnumerable<IEntity>));
                 case IEnumerable<dynamic> dynEntities:
-                    return l.Return(dynEntities.Select(e => AsItemInternal(e as object, MaxRecursions, strict: strict)), nameof(IEnumerable<dynamic>));
+                    return l.Return(dynEntities.Select(e => AsItemInternal(e as object, MaxRecursions, propsRequired: propsRequired)), nameof(IEnumerable<dynamic>));
                 // Variations of single items - should be converted to list
                 case IEntity _:
                 case IDynamicEntity _:
                 case ITypedItem _:
                 case ICanBeEntity _:
-                    var converted = AsItemInternal(list, MaxRecursions, strict: strict);
+                    var converted = AsItemInternal(list, MaxRecursions, propsRequired: propsRequired);
                     return converted != null
                         ? l.Return(new List<ITypedItem> { converted }, "single item to list")
                         : l.Return(new List<ITypedItem>(), "typed but converted to null; empty list");
                 // Check for IEnumerable but make sure it's not a string
                 // Should come fairly late, because some things like DynamicEntities can also be enumerated
                 case IEnumerable asEnumerable when !(asEnumerable is string):
-                    return l.Return(asEnumerable.Cast<object>().Select(e => AsItemInternal(e, MaxRecursions, strict: strict)), "IEnumerable");
+                    return l.Return(asEnumerable.Cast<object>().Select(e => AsItemInternal(e, MaxRecursions, propsRequired: propsRequired)), "IEnumerable");
                 default:
                     return FallbackOrErrorAndLog($"can't convert '{list.GetType()}'", $"Type '{list.GetType()}' cannot be converted.");
             }

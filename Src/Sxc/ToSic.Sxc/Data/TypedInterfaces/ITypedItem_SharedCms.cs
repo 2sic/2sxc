@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Data
         /// </param>
         /// <param name="toolbar">Override default toolbar behavior on this field. See [docs](xref:NetCode.DynamicData.DynamicEntityHtml)</param>
         /// <param name="imageSettings">Settings for resizing. Default is `Wysiwyg` but it can also be `Content` or a settings object.</param>
-        /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.TypedRequired)</param>
+        /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
         /// <param name="debug">Activate debug visualization to better see alignments and such.</param>
         /// <returns></returns>
         /// <remarks>
@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Data
         /// Optional `alt` attribute which is only used if the `imgAlt` or the alt-text in the metadata are empty.
         /// </param>
         /// <param name="imgClass">Optional `class` attribute on the created `img` tag</param>
-        /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.TypedRequired)</param>
+        /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
         /// <param name="recipe">
         /// Optional recipe = instructions how to create the various variants of this link.
         /// Can be any one of these:

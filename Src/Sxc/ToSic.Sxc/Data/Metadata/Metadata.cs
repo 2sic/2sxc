@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Data
     internal partial class Metadata: DynamicEntity, IMetadata, IHasPropLookup
     {
         internal Metadata(IMetadataOf metadata, CodeDataFactory cdf)
-            : base(metadata, null, "Metadata(virtual-field)", Eav.Constants.TransientAppId, strict: false, cdf)
+            : base(metadata, null, "Metadata(virtual-field)", Eav.Constants.TransientAppId, propsRequired: false, cdf)
         {
             _metadata = metadata;
         }

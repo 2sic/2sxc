@@ -47,10 +47,10 @@ namespace ToSic.Sxc.Tests.DataTests
             => Wrapper.TypedFromObject(data, reWrap ?? WrapperSettings.Typed(true, true));
 
         public ITyped Obj2Json2TypedStrict(object data)
-            => Obj2Json2Typed(data, WrapperSettings.Typed(true, true, strict: true));
+            => Obj2Json2Typed(data, WrapperSettings.Typed(true, true, propsRequired: true));
 
         public ITyped Obj2Json2TypedLoose(object data)
-            => Obj2Json2Typed(data, WrapperSettings.Typed(true, true, strict: false));
+            => Obj2Json2Typed(data, WrapperSettings.Typed(true, true, propsRequired: false));
 
         private ITyped Obj2Json2Typed(object data, WrapperSettings settings) 
             => JsonWrapper.Setup(settings).Json2Typed(JsonSerialize(data));

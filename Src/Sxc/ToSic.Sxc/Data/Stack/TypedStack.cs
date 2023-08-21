@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Data
             _stack = new PropertyStack().Init(name, sources);
             Cdf = cdf;
             PropertyLookup = new PropLookupStack(_stack, () => Debug);
-            _helper = new GetAndConvertHelper(this, cdf, strict: false, childrenShouldBeDynamic: false, canDebug: this);
+            _helper = new GetAndConvertHelper(this, cdf, propsRequired: false, childrenShouldBeDynamic: false, canDebug: this);
             _itemHelper = new CodeItemHelper(_helper, this);
         }
 
@@ -130,7 +130,7 @@ namespace ToSic.Sxc.Data
         ITypedItem ITypedStack.Child(string name, string noParamOrder, bool? required)
         {
             var findResult = _helper.TryGet(name);
-            return IsErrStrict(findResult.Found, required, _helper.StrictGet)
+            return IsErrStrict(findResult.Found, required, _helper.PropsRequired)
                 ? throw ErrStrict(name)
                 : Cdf.AsItem(findResult.Result, noParamOrder);
         }
@@ -138,7 +138,7 @@ namespace ToSic.Sxc.Data
         IEnumerable<ITypedItem> ITypedStack.Children(string field, string noParamOrder, string type, bool? required)
         {
             var findResult = _helper.TryGet(field);
-            return IsErrStrict(findResult.Found, required, _helper.StrictGet)
+            return IsErrStrict(findResult.Found, required, _helper.PropsRequired)
                 ? throw ErrStrict(field)
                 : Cdf.AsItems(findResult.Result, noParamOrder)
                     // Apply type filter - even if a bit "late"

@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Data
     {
         private const string NameOfAsTyped = nameof(IDynamicCode16.AsTyped) + "(...)";
 
-        public ITyped AsTyped(object data, bool required = false, bool? strict = default, string detailsMessage = default)
+        public ITyped AsTyped(object data, bool required = false, bool? propsRequired = default, string detailsMessage = default)
         {
             var l = Log.Fn<ITyped>();
 
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Data
                 return l.Return(alreadyTyped, "already typed");
 
             var result = _codeDataWrapper.Value.ChildNonJsonWrapIfPossible(data: data, wrapNonAnon: true,
-                WrapperSettings.Typed(children: true, realObjectsToo: false, strict: strict ?? true));
+                WrapperSettings.Typed(children: true, realObjectsToo: false, propsRequired: propsRequired ?? true));
             if (result is ITyped resTyped)
                 return l.Return(resTyped, "converted to dyn-read");
 
@@ -32,9 +32,9 @@ namespace ToSic.Sxc.Data
         }
 
         private const string NameOfAsTypedList = nameof(IDynamicCode16.AsTypedList) + "(...)";
-        public IEnumerable<ITyped> AsTypedList(object list, string noParamOrder, bool? required = false, bool? strict = default)
+        public IEnumerable<ITyped> AsTypedList(object list, string noParamOrder, bool? required = false, bool? propsRequired = default)
         {
-            Eav.Parameters.Protect(noParamOrder, nameof(strict));
+            Eav.Parameters.Protect(noParamOrder, nameof(propsRequired));
 
             var l = Log.Fn<IEnumerable<ITyped>>();
 
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Data
             var itemsRequired = required != false;
             var result = enumerable
                 .Cast<object>()
-                .Select((o, i) => AsTyped(o, itemsRequired, strict, $"index: {i}"))
+                .Select((o, i) => AsTyped(o, itemsRequired, propsRequired, $"index: {i}"))
                 .ToList();
 
             return result;

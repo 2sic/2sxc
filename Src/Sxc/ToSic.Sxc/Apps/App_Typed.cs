@@ -8,17 +8,17 @@ namespace ToSic.Sxc.Apps
     public partial class App: IAppTyped
     {
         /// <inheritdoc cref="IAppTyped.Settings"/>
-        ITypedItem IAppTyped.Settings => AppSettings == null ? null : _typedSettings.Get(() => MakeTyped(AppSettings, strict: true));
+        ITypedItem IAppTyped.Settings => AppSettings == null ? null : _typedSettings.Get(() => MakeTyped(AppSettings, propsRequired: true));
         private readonly GetOnce<ITypedItem> _typedSettings = new GetOnce<ITypedItem>();
 
         /// <inheritdoc cref="IAppTyped.Resources"/>
-        ITypedItem IAppTyped.Resources => _typedRes.Get(() => MakeTyped(AppResources, strict: true));
+        ITypedItem IAppTyped.Resources => _typedRes.Get(() => MakeTyped(AppResources, propsRequired: true));
         private readonly GetOnce<ITypedItem> _typedRes = new GetOnce<ITypedItem>();
 
-        private ITypedItem MakeTyped(IEntity contents, bool strict)
+        private ITypedItem MakeTyped(IEntity contents, bool propsRequired)
         {
             var wrapped = CmsEditDecorator.Wrap(contents, false);
-            return _cdfLazy.Value.AsItem(wrapped, Eav.Parameters.Protector, strict: strict);
+            return _cdfLazy.Value.AsItem(wrapped, Eav.Parameters.Protector, propsRequired: propsRequired);
         }
 
     }

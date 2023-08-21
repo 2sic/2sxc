@@ -31,18 +31,18 @@ namespace ToSic.Sxc.Data
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
         [PrivateApi]
-        public DynamicEntity(IEntity entity, CodeDataFactory cdf, bool strict)
-            : this(cdf, strict, entity)
+        public DynamicEntity(IEntity entity, CodeDataFactory cdf, bool propsRequired)
+            : this(cdf, propsRequired, entity)
         {
-            ListHelper = new DynamicEntityListHelper(this, () => Debug, strictGet: strict, cdf);
+            ListHelper = new DynamicEntityListHelper(this, () => Debug, propsRequired: propsRequired, cdf);
         }
 
-        internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, bool strict, CodeDataFactory cdf)
-            : this(cdf, strict,
+        internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, bool propsRequired, CodeDataFactory cdf)
+            : this(cdf, propsRequired,
                 // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
                 list.FirstOrDefault() ?? cdf.PlaceHolderInBlock(appIdOrNull, parent, field))
         {
-            ListHelper = new DynamicEntityListHelper(list, parent, field, () => Debug, strictGet: strict, cdf);
+            ListHelper = new DynamicEntityListHelper(list, parent, field, () => Debug, propsRequired: propsRequired, cdf);
         }
         /// <summary>
         /// Internal helper to make a entity behave as a list, new in 12.03
@@ -50,10 +50,10 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         internal readonly DynamicEntityListHelper ListHelper;
 
-        private DynamicEntity(CodeDataFactory cdf, bool strict, IEntity entity)
+        private DynamicEntity(CodeDataFactory cdf, bool propsRequired, IEntity entity)
         {
             Cdf = cdf;
-            _strict = strict;
+            _propsRequired = propsRequired;
             Entity = entity;
             var entAsWrapper = Entity as IEntityWrapper;
             RootContentsForEqualityCheck = entAsWrapper?.RootContentsForEqualityCheck ?? Entity;
@@ -64,18 +64,18 @@ namespace ToSic.Sxc.Data
         // ReSharper disable once InconsistentNaming
         [PrivateApi] public CodeDataFactory Cdf { get; }
         [PrivateApi] public IEntity Entity { get; }
-        private readonly bool _strict;
+        private readonly bool _propsRequired;
 
         [PrivateApi]
         IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ?? (_propLookup = new PropLookupWithPathEntity(Entity, canDebug: this));
         private PropLookupWithPathEntity _propLookup;
 
         [PrivateApi]
-        internal GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, _strict, childrenShouldBeDynamic: true, canDebug: this));
+        internal GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, _propsRequired, childrenShouldBeDynamic: true, canDebug: this));
         private GetAndConvertHelper _getHelper;
 
         [PrivateApi]
-        internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, _strict, canDebug: this));
+        internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, _propsRequired, canDebug: this));
         private SubDataFactory _subData;
 
         [PrivateApi]
@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Data
         private CodeDynHelper _dynHelper;
 
         [PrivateApi]
-        internal ITypedItem TypedItem => _typedItem ?? (_typedItem = new TypedItemOfEntity(this, Entity, Cdf, _strict));
+        internal ITypedItem TypedItem => _typedItem ?? (_typedItem = new TypedItemOfEntity(this, Entity, Cdf, _propsRequired));
         private TypedItemOfEntity _typedItem;
 
 
@@ -111,7 +111,7 @@ namespace ToSic.Sxc.Data
         #region Advanced: Fields, Html
 
         /// <inheritdoc />
-        public IField Field(string name) => Cdf.Field(TypedItem, name, _strict);
+        public IField Field(string name) => Cdf.Field(TypedItem, name, _propsRequired);
 
         /// <inheritdoc/>
         [PrivateApi("Should not be documented here, as it should only be used on ITyped")]

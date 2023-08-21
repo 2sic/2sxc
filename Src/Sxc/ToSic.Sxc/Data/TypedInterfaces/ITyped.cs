@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Data
         /// <param name="name">property name</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
-        /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.TypedRequired)</param>
+        /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
         /// <returns>Value as `bool`</returns>
         bool Bool(string name, string noParamOrder = Protector, bool fallback = default, bool? required = default);
 
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Data
         /// <param name="name">property name</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
-        /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.TypedRequired)</param>
+        /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
         /// <returns>Value as `DateTime`</returns>
         DateTime DateTime(string name, string noParamOrder = Protector, DateTime fallback = default, bool? required = default);
 
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Data
         /// <param name="name">property name</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
-        /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.TypedRequired)</param>
+        /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
         /// <param name="scrubHtml">
         /// If `true`, will remove all HTML tags from the string.
         /// If `p` will remove all `p` tags, if `div,span` will remove these tags.
@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Data
         /// <param name="name">property name</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
-        /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.TypedRequired)</param>
+        /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
         /// <returns>Value as `int`</returns>
         int Int(string name, string noParamOrder = Protector, int fallback = default, bool? required = default);
 
@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Data
         /// <param name="name">property name</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
-        /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.TypedRequired)</param>
+        /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
         /// <returns>Value as `long`</returns>
         long Long(string name, string noParamOrder = Protector, long fallback = default, bool? required = default);
 
@@ -102,7 +102,7 @@ namespace ToSic.Sxc.Data
         /// <param name="name">property name</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
-        /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.TypedRequired)</param>
+        /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
         /// <returns>Value as `float`</returns>
         float Float(string name, string noParamOrder = Protector, float fallback = default, bool? required = default);
 
@@ -114,7 +114,7 @@ namespace ToSic.Sxc.Data
         /// <param name="name">property name</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
-        /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.TypedRequired)</param>
+        /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
         /// <returns>Value as `decimal`</returns>
         decimal Decimal(string name, string noParamOrder = Protector, decimal fallback = default, bool? required = default);
 
@@ -125,7 +125,7 @@ namespace ToSic.Sxc.Data
         /// <param name="name">property name</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
-        /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.TypedRequired)</param>
+        /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
         /// <returns>Value as `double`</returns>
         double Double(string name, string noParamOrder = Protector, double fallback = default, bool? required = default);
 
@@ -140,7 +140,7 @@ namespace ToSic.Sxc.Data
         /// <param name="name">The field name.</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
-        /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.TypedRequired)</param>
+        /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
         /// <returns>A url converted if possible. If the field contains anything else such as `hello` then it will not be modified.</returns>
         string Url(string name, string noParamOrder = Protector, string fallback = default, bool? required = default);
 

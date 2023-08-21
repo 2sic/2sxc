@@ -20,15 +20,15 @@ namespace ToSic.Sxc.Data
 
         public CodeDataFactory Cdf { get; }
 
-        public bool StrictGet { get; }
+        public bool PropsRequired { get; }
 
-        public GetAndConvertHelper(IHasPropLookup parent, CodeDataFactory cdf, bool strict, bool childrenShouldBeDynamic, ICanDebug canDebug)
+        public GetAndConvertHelper(IHasPropLookup parent, CodeDataFactory cdf, bool propsRequired, bool childrenShouldBeDynamic, ICanDebug canDebug)
         {
             _childrenShouldBeDynamic = childrenShouldBeDynamic;
             _canDebug = canDebug;
             Parent = parent;
             Cdf = cdf;
-            StrictGet = strict;
+            PropsRequired = propsRequired;
         }
 
         public bool Debug => _debug ?? _canDebug.Debug;
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Data
         private readonly bool _childrenShouldBeDynamic;
         private readonly ICanDebug _canDebug;
 
-        internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, StrictGet, _canDebug));
+        internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, PropsRequired, _canDebug));
         private SubDataFactory _subData;
 
 
@@ -159,7 +159,7 @@ namespace ToSic.Sxc.Data
                 if (_childrenShouldBeDynamic)
                 {
                     l.A($"Convert entity list as {nameof(DynamicEntity)}");
-                    var dynEnt = new DynamicEntity(children.ToArray(), parent, field, null, strict: StrictGet, Cdf);
+                    var dynEnt = new DynamicEntity(children.ToArray(), parent, field, null, propsRequired: PropsRequired, Cdf);
                     if (Debug) dynEnt.Debug = true;
                     return l.Return(dynEnt, "ent-list, now dyn");
                 }

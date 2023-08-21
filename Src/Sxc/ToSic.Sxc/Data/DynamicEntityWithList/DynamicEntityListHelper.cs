@@ -13,31 +13,31 @@ namespace ToSic.Sxc.Data
     [PrivateApi]
     internal class DynamicEntityListHelper
     {
-        protected bool StrictGet { get; }
+        protected bool PropsRequired { get; }
         public readonly IEntity ParentOrNull;
         public readonly string FieldOrNull;
         private readonly CodeDataFactory _cdf;
 
         private readonly Func<bool?> _getDebug;
 
-        public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, bool strictGet, CodeDataFactory cdf)
-            : this(cdf, strictGet, getDebug)
+        public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, bool propsRequired, CodeDataFactory cdf)
+            : this(cdf, propsRequired, getDebug)
         {
             _list = new List<IDynamicEntity> { singleItem ?? throw new ArgumentException(nameof(singleItem)) };
         }
         
-        public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug, bool strictGet, CodeDataFactory cdf)
-            : this(cdf, strictGet, getDebug)
+        public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug, bool propsRequired, CodeDataFactory cdf)
+            : this(cdf, propsRequired, getDebug)
         {
             ParentOrNull = parentOrNull;
             FieldOrNull = fieldOrNull;
             _entities = entities?.ToArray() ?? throw new ArgumentNullException(nameof(entities));
         }
 
-        private DynamicEntityListHelper(CodeDataFactory cdf, bool strictGet, Func<bool?> getDebug)
+        private DynamicEntityListHelper(CodeDataFactory cdf, bool propsRequired, Func<bool?> getDebug)
         {
             _cdf = cdf ?? throw new ArgumentNullException(nameof(cdf));
-            StrictGet = strictGet;
+            PropsRequired = propsRequired;
             _getDebug = getDebug;
         }
         
@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Data
                         var blockEntity = reWrapWithListNumbering
                             ? EntityInBlockDecorator.Wrap(e, ParentOrNull.EntityGuid, FieldOrNull, i)
                             : e;
-                        return SubDataFactory.SubDynEntityOrNull(blockEntity, _cdf, debug, strictGet: StrictGet) as IDynamicEntity;
+                        return SubDataFactory.SubDynEntityOrNull(blockEntity, _cdf, debug, propsRequired: PropsRequired) as IDynamicEntity;
                     })
                     .ToList();
             }

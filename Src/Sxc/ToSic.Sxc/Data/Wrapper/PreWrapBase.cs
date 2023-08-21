@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Data.Wrapper
         {
             Protect(noParamOrder, nameof(required));
             var result = TryGetWrap(name, true);
-            return IsErrStrict(result.Found, required, Settings.GetStrict)
+            return IsErrStrict(result.Found, required, Settings.PropsRequired)
                 ? throw ErrStrict(name, cName: cName)
                 : result.Result;
         }
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Data.Wrapper
         {
             Protect(noParamOrder, nameof(fallback), methodName: cName);
             var result = TryGetWrap(name, false);
-            return IsErrStrict(result.Found, required, Settings.GetStrict)
+            return IsErrStrict(result.Found, required, Settings.PropsRequired)
                 ? throw ErrStrict(name, cName: cName)
                 : result.Result.ConvertOrFallback(fallback);
         }

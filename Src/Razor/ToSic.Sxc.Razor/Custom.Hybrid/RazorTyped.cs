@@ -75,23 +75,23 @@ namespace Custom.Hybrid
         #region As Conversions
 
         /// <inheritdoc cref="IDynamicCode16.AsItem" />
-        public ITypedItem AsItem(object data, string noParamOrder = Protector, bool? strict = default, bool? mock = default)
-            => _DynCodeRoot.Cdf.AsItem(data, noParamOrder, strict: strict ?? true, mock: mock);
+        public ITypedItem AsItem(object data, string noParamOrder = Protector, bool? propsRequired = default, bool? mock = default)
+            => _DynCodeRoot.Cdf.AsItem(data, noParamOrder, propsRequired: propsRequired ?? true, mock: mock);
 
         /// <inheritdoc cref="IDynamicCode16.AsItems" />
-        public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Protector, bool? strict = default)
-            => _DynCodeRoot.Cdf.AsItems(list, noParamOrder, strict: strict ?? true);
+        public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Protector, bool? propsRequired = default)
+            => _DynCodeRoot.Cdf.AsItems(list, noParamOrder, propsRequired: propsRequired ?? true);
 
         /// <inheritdoc cref="IDynamicCode16.AsEntity" />
         public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot.Cdf.AsEntity(thing);
 
         /// <inheritdoc cref="IDynamicCode16.AsTyped" />
-        public ITyped AsTyped(object original, string noParamOrder = Protector, bool? strict = default)
-            => _DynCodeRoot.Cdf.AsTyped(original, strict: strict);
+        public ITyped AsTyped(object original, string noParamOrder = Protector, bool? propsRequired = default)
+            => _DynCodeRoot.Cdf.AsTyped(original, propsRequired: propsRequired);
 
         /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
-        public IEnumerable<ITyped> AsTypedList(object list, string noParamOrder = Protector, bool? strict = default)
-            => _DynCodeRoot.Cdf.AsTypedList(list, noParamOrder, strict: strict);
+        public IEnumerable<ITyped> AsTypedList(object list, string noParamOrder = Protector, bool? propsRequired = default)
+            => _DynCodeRoot.Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
 
         /// <inheritdoc cref="IDynamicCode16.AsStack" />
         public ITypedStack AsStack(params object[] items) => _DynCodeRoot.Cdf.AsStack(items);

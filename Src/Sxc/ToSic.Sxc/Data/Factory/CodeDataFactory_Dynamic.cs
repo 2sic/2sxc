@@ -20,23 +20,23 @@ namespace ToSic.Sxc.Data
         /// <param name="entity"></param>
         /// <returns></returns>
         public DynamicEntity CodeAsDyn(IEntity entity)
-            => new DynamicEntity(entity, this, strict: false);
+            => new DynamicEntity(entity, this, propsRequired: false);
 
-        public DynamicEntity AsDynamic(IEntity entity, bool strict)
-            => new DynamicEntity(entity, this, strict: strict);
+        public DynamicEntity AsDynamic(IEntity entity, bool propsRequired)
+            => new DynamicEntity(entity, this, propsRequired: propsRequired);
 
         /// <summary>
         /// Convert a list of Entities into a DynamicEntity.
         /// Only used in DynamicCodeRoot.
         /// </summary>
-        internal DynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, bool strict) 
-            => new DynamicEntity(list: list, parent: null, field: null, appIdOrNull: null, strict: strict, cdf: this);
+        internal DynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, bool propsRequired) 
+            => new DynamicEntity(list: list, parent: null, field: null, appIdOrNull: null, propsRequired: propsRequired, cdf: this);
 
         /// <summary>
         /// Convert any object into a dynamic list.
         /// Only used in Dynamic Code for the public API.
         /// </summary>
-        public IEnumerable<dynamic> CodeAsDynList(object list, bool strict = false)
+        public IEnumerable<dynamic> CodeAsDynList(object list, bool propsRequired = false)
         {
             switch (list)
             {
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Data
                 case IDataSource dsEntities:
                     return CodeAsDynList(dsEntities.List);
                 case IEnumerable<IEntity> iEntities:
-                    return iEntities.Select(e => AsDynamic(e, strict: strict));
+                    return iEntities.Select(e => AsDynamic(e, propsRequired: propsRequired));
                 case IEnumerable<IDynamicEntity> dynIDynEnt:
                     return dynIDynEnt;
                 case IEnumerable<dynamic> dynEntities:
@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Data
         /// Convert any object into a dynamic object.
         /// Only used in Dynamic Code for the public API.
         /// </summary>
-        public object AsDynamicFromObject(object dynObject, bool strict = false)
+        public object AsDynamicFromObject(object dynObject, bool propsRequired = false)
         {
             var l = Log.Fn<object>();
             //var typed = AsTypedInternal(dynObject);
@@ -78,7 +78,7 @@ namespace ToSic.Sxc.Data
                 case ISxcDynamicObject sxcDyn:
                     return l.Return(sxcDyn, "Dynamic Something");
                 case IEntity entity:
-                    return l.Return(new DynamicEntity(entity, this, strict: strict), "IEntity");
+                    return l.Return(new DynamicEntity(entity, this, propsRequired: propsRequired), "IEntity");
                 case DynamicObject typedDynObject:
                     return l.Return(typedDynObject, "DynamicObject");
                 default:

@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="name">Name of the property</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.TypedRequired)</param>
+        /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
         /// <returns></returns>
         IField Field(string name,
             string noParamOrder = Protector,

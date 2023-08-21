@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, nameof(required), methodName: cName);
             var findResult = Helper.TryGet(name);
-            return IsErrStrict(findResult.Found, required, Helper.StrictGet)
+            return IsErrStrict(findResult.Found, required, Helper.PropsRequired)
                 ? throw ErrStrictForTyped(Data, name, cName: cName)
                 : findResult.Result;
         }
@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, nameof(fallback), methodName: cName);
             var findResult = Helper.TryGet(name);
-            return IsErrStrict(findResult.Found, required, Helper.StrictGet)
+            return IsErrStrict(findResult.Found, required, Helper.PropsRequired)
                 ? throw ErrStrictForTyped(Data, name, cName: cName)
                 : findResult.Result.ConvertOrFallback(fallback);
         }
