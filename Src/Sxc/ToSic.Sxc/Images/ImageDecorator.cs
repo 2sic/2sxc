@@ -12,9 +12,9 @@ namespace ToSic.Sxc.Images
         public static string TypeNameId = "cb27a0f2-f921-48d0-a3bc-37c0e77b1d0c";
         public static string NiceTypeName = "ImageDecorator";
 
-        public const string FieldDescription = "Description";
-        public const string FieldCropBehavior = "CropBehavior";
-        public const string FieldCompass = "CropTo";
+        //public const string FieldDescription = "Description";
+        //public const string FieldCropBehavior = "CropBehavior";
+        //public const string FieldCompass = "CropTo";
         public const string NoCrop = "none";
 
         public static ImageDecorator GetOrNull(IHasMetadata source, string[] dimensions)
@@ -25,11 +25,11 @@ namespace ToSic.Sxc.Images
 
         public ImageDecorator(IEntity entity, string[] languageCodes) : base(entity, languageCodes) { }
 
-        public string CropBehavior => Get(FieldCropBehavior, "");
+        public string CropBehavior => GetThis("");
 
-        public string CropTo => Get(FieldCompass, "");
+        public string CropTo => GetThis("");
 
-        public string Description => Get(FieldDescription, "");
+        public string Description => GetThis("");
 
         public (string Param, string Value) GetAnchorOrNull()
         {

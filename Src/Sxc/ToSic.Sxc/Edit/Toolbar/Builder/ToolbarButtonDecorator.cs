@@ -13,11 +13,11 @@ namespace ToSic.Sxc.Edit.Toolbar
         public static string TypeName = "ToolbarButtonDecorator";
         public static string TypeNameId = "acc185a7-f300-4468-bce8-d6a64038989d";
 
-        public static string FieldCommand = "Command";
-        public static string FieldUi = "Ui";
-        public static string FieldUiIcon = "UiIcon";
-        public static string FieldUiColor = "UiColor";
-        public static string FieldUiData = "UiData";
+        //public static string FieldCommand = "Command";
+        //public static string FieldUi = "Ui";
+        //public static string FieldUiIcon = "UiIcon";
+        //public static string FieldUiColor = "UiColor";
+        //public static string FieldUiData = "UiData";
 
         public static string KeyColor = "color";
         public static string KeyIcon = "icon";
@@ -30,15 +30,15 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
         }
 
-        public string Command => Get(FieldCommand, "");
+        public string Command => GetThis("");
 
-        public bool UiData => Get(FieldUiData, false);
+        public bool UiData => GetThis(false);
 
-        public string Ui => Get(FieldUi, "");
+        public string Ui => GetThis("");
 
-        public string UiIcon => Get(FieldUiIcon, "");
+        public string UiIcon => GetThis("");
 
-        public string UiColor=> Get(FieldUiColor, "").Trim('#');
+        public string UiColor=> GetThis("").Trim('#');
 
         public string AllRules()
         {

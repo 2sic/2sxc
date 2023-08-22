@@ -23,8 +23,8 @@ namespace ToSic.Sxc.Apps
         {
             var values = new Dictionary<string, object>
             {
-                {View.FieldName, name },
-                {View.FieldPath, path },
+                {nameof(IView.Name) /*View.FieldName*/, name },
+                {nameof(IView.Path) /*View.FieldPath*/, path },
                 {View.FieldContentType, contentTypeStaticName },
                 {View.FieldContentDemo, contentDemoEntity.HasValue ? new List<int> { contentDemoEntity.Value } : new List<int>() },
                 {View.FieldPresentationType, presentationTypeStaticName },
@@ -33,8 +33,8 @@ namespace ToSic.Sxc.Apps
                 {View.FieldHeaderItem, listContentDemoEntity.HasValue ? new List<int> { listContentDemoEntity.Value } : new List<int>() },
                 {View.FieldHeaderPresentationType, listPresentationTypeStaticName },
                 {View.FieldHeaderPresentationItem, listPresentationDemoEntity.HasValue ? new List<int> { listPresentationDemoEntity.Value } : new List<int>() },
-                {View.FieldType, templateType },
-                {View.FieldIsHidden, isHidden },
+                {nameof(IView.Type) /*View.FieldType*/, templateType },
+                {nameof(IView.IsHidden) /*View.FieldIsHidden*/, isHidden },
                 {View.FieldLocation, location },
                 {View.FieldUseList, useForList },
                 {View.FieldPublishEnable, publishData },

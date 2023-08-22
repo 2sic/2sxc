@@ -16,11 +16,11 @@ namespace ToSic.Sxc.Apps
         // todo: probably move most to Eav.Apps.AppConstants
         [PrivateApi]
         public const string
-            FieldDescription = "Description",
+            //FieldDescription = "Description",
             //FieldName = "DisplayName",
             //FieldFolder = "Folder",
-            FieldOriginalId = "OriginalId",
-            FieldVersion = "Version",
+            //FieldOriginalId = "OriginalId",
+            //FieldVersion = "Version",
             FieldAllowRazor = "AllowRazorTemplates",
             FieldAllowToken = "AllowTokenTemplates",
             //FieldHidden = "Hidden",
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Apps
         {
             get
             {
-                var versionValue = Get(FieldVersion, "");
+                var versionValue = GetThis("");
                 var valid = Version.TryParse(versionValue, out var version);
                 return valid
                     ? version
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Apps
 
         public string Name => Get(AppConstants.FieldName, Eav.Constants.NullNameId);
 
-        public string Description => Get(FieldDescription, "");
+        public string Description => GetThis("");
 
         public string Folder => Get( AppConstants.FieldFolder, "");
 
@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Apps
 
         public bool EnableAjax => Get(FieldSupportsAjax, false);
 
-        public Guid OriginalId => Guid.TryParse(Get(FieldOriginalId, ""), out var result) ? result : Guid.Empty;
+        public Guid OriginalId => Guid.TryParse(GetThis(""), out var result) ? result : Guid.Empty;
 
         public Version RequiredSxc =>
             Version.TryParse(Get(FieldRequiredSxcVersion, ""), out var version)
