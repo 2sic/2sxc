@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using ToSic.Sxc.Oqt.Client.Helpers;
 using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
@@ -63,12 +64,6 @@ namespace ToSic.Sxc.Oqt.App
                     Log($"1.2: Initialize2sxcContentBlock");
                     await Initialize2SxcContentBlock();
                     NewDataArrived = true;
-                    if (ViewResults != null)
-                    {
-                        OqtPageChangesOnServerService.ApplyHttpHeaders(ViewResults, this);
-                        Log($"1.3: Csp");
-                    }
-                    
                 }
 
                 Log($"1 end: OnParametersSetAsync(NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
@@ -155,6 +150,26 @@ namespace ToSic.Sxc.Oqt.App
             Content = ViewResults?.FinalHtml;
 
             Log($"1.2.2: Html:{ViewResults?.Html?.Length ?? -1}", ViewResults);
+
+            if (ViewResults != null)
+            {
+                OqtPageChangesOnServerService.ApplyHttpHeaders(ViewResults, this);
+                Log($"1.3: Csp");
+            }
+
+            if (ViewResults?.PageProperties?.Any() ?? false)
+            {
+                Log($"1.4: UpdatePageProperties");
+                HtmlHelper.UpdatePageProperties(SiteState, ViewResults, this);
+            }
+
+            // Add Context-Meta first, because it should be available when $2sxc loads
+            if (ViewResults?.SxcContextMetaName != null)
+            {
+                Log($"1.5: Context-Meta RenderUri:{RenderedUri}");
+                SiteState.Properties.HeadContent = HtmlHelper.AddOrUpdateMetaTagContent(SiteState.Properties.HeadContent,
+                    ViewResults.SxcContextMetaName, ViewResults.SxcContextMetaContents);
+            }
         }
 
         private async Task StandardAssets()
@@ -162,14 +177,6 @@ namespace ToSic.Sxc.Oqt.App
             if (ViewResults == null) return;
 
             #region 2sxc Standard Assets and Header
-
-            // Add Context-Meta first, because it should be available when $2sxc loads
-            if (ViewResults.SxcContextMetaName != null)
-            {
-                Log($"2.2: RenderUri:{RenderedUri}");
-                await SxcInterop.IncludeMeta("sxc-context-meta", "name", ViewResults.SxcContextMetaName,
-                    ViewResults.SxcContextMetaContents /*, "id"*/); // Oqtane.client 3.3.1
-            }
 
             // Lets load all 2sxc js dependencies (js / styles)
             // Not done the official Oqtane way, because that asks for the scripts before
@@ -198,11 +205,6 @@ namespace ToSic.Sxc.Oqt.App
                 await OqtPageChangeService.AttachScriptsAndStyles(ViewResults, SxcInterop, this);
             }
 
-            if (ViewResults.PageProperties?.Any() ?? false)
-            {
-                Log($"2.6: UpdatePageProperties");
-                await OqtPageChangeService.UpdatePageProperties(ViewResults, SxcInterop, this);
-            }
 
             #endregion
         }

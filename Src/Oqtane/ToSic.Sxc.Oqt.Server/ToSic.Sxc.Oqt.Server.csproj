@@ -40,6 +40,7 @@
     <Compile Remove="Content\**" />
     <Compile Remove="Engines\**" />
     <Compile Remove="RazorPartialToString\**" />
+    <Compile Remove="wwwroot\Modules\ToSic.Sxc.Oqtane.Install\**" />
     <Compile Remove="wwwroot\Modules\ToSic.Sxc.Oqtane\**" />
     <Compile Remove="wwwroot\Modules\ToSic.Sxc\**" />
     <Content Remove="Apps\**" />
@@ -47,6 +48,7 @@
     <Content Remove="Content\**" />
     <Content Remove="Engines\**" />
     <Content Remove="RazorPartialToString\**" />
+    <Content Remove="wwwroot\Modules\ToSic.Sxc.Oqtane.Install\**" />
     <Content Remove="wwwroot\Modules\ToSic.Sxc.Oqtane\**" />
     <Content Remove="wwwroot\Modules\ToSic.Sxc\**" />
     <EmbeddedResource Remove="Apps\**" />
@@ -54,6 +56,7 @@
     <EmbeddedResource Remove="Content\**" />
     <EmbeddedResource Remove="Engines\**" />
     <EmbeddedResource Remove="RazorPartialToString\**" />
+    <EmbeddedResource Remove="wwwroot\Modules\ToSic.Sxc.Oqtane.Install\**" />
     <EmbeddedResource Remove="wwwroot\Modules\ToSic.Sxc.Oqtane\**" />
     <EmbeddedResource Remove="wwwroot\Modules\ToSic.Sxc\**" />
     <None Remove="Apps\**" />
@@ -61,6 +64,7 @@
     <None Remove="Content\**" />
     <None Remove="Engines\**" />
     <None Remove="RazorPartialToString\**" />
+    <None Remove="wwwroot\Modules\ToSic.Sxc.Oqtane.Install\**" />
     <None Remove="wwwroot\Modules\ToSic.Sxc.Oqtane\**" />
     <None Remove="wwwroot\Modules\ToSic.Sxc\**" />
   </ItemGroup>
@@ -121,8 +125,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\Modules\ToSic.Sxc.Oqtane.Install\NativeModule.js" />
-    <None Include="wwwroot\Modules\ToSic.Sxc.Oqtane.Install\Module.js" />
+    <Folder Include="wwwroot\Modules\" />
   </ItemGroup>
 
 </Project>

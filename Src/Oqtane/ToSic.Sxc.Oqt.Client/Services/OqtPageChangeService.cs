@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Oqtane.UI;
 using ToSic.Sxc.Oqt.App;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
@@ -10,7 +11,14 @@ namespace ToSic.Sxc.Oqt.Client.Services
 {
   public class OqtPageChangeService
   {
-        public async Task AttachScriptsAndStyles(OqtViewResultsDto viewResults, SxcInterop sxcInterop, IOqtHybridLog page)
+      private readonly SiteState _siteState;
+
+      public OqtPageChangeService(SiteState siteState)
+      {
+          _siteState = siteState;
+      }
+      
+      public async Task AttachScriptsAndStyles(OqtViewResultsDto viewResults, SxcInterop sxcInterop, IOqtHybridLog page)
         {
             var logPrefix = $"{nameof(AttachScriptsAndStyles)}(...) - ";
 
@@ -84,9 +92,10 @@ namespace ToSic.Sxc.Oqt.Client.Services
                 switch (p.Property)
                 {
                     case OqtPageProperties.Title:
-                        var title = await sxcInterop.GetTitleValue();
-                        page?.Log($"{logPrefix}UpdateTitle:", title);
-                        await sxcInterop.UpdateTitle(UpdateProperty(title, p.InjectOriginalInValue(title), page));
+                        //var title = await sxcInterop.GetTitleValue();
+                        //page?.Log($"{logPrefix}UpdateTitle:", title);
+                        //// await sxcInterop.UpdateTitle(UpdateProperty(title, p.InjectOriginalInValue(title), page));
+                        //_siteState.Properties.PageTitle = UpdateProperty(title, p.InjectOriginalInValue(title), page);
                         break;
                     case OqtPageProperties.Keywords:
                         var keywords = await sxcInterop.GetMetaTagContentByName("KEYWORDS");
