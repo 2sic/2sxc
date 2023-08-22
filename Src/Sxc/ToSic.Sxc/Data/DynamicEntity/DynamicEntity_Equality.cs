@@ -10,8 +10,8 @@ namespace ToSic.Sxc.Data
 {
     public partial class DynamicEntity: IEquatable<IEntityWrapper>
     {
-        [PrivateApi] public IEntity RootContentsForEqualityCheck { get; private set; }
-        [PrivateApi] public List<IDecorator<IEntity>> Decorators { get; private set; }
+        [PrivateApi] public IEntity RootContentsForEqualityCheck { get; }
+        [PrivateApi] public List<IDecorator<IEntity>> Decorators { get; }
 
         #region Changing comparison operation to internally compare the entities, not this wrapper
 

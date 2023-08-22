@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
             var data = WrapObjBasic.Data;
             var anon = new { data.Name, data.Description, data.Founded, data.Birthday, data.Truthy };
             var typed = Obj2Typed(anon);
-            dynamic dynAnon = WrapObjFromObject(anon, false, false);
+            dynamic dynAnon = Obj2WrapObj(anon, false, false);
 
             var jsonTyped = Serialize(typed);
             var jsonAnon = Serialize(anon);

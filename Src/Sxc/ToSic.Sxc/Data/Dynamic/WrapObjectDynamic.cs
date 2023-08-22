@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Data
     public class WrapObjectDynamic: DynamicObject, IWrapper<object>, IPropertyLookup, IHasJsonSource, ICanGetByName
     {
         [PrivateApi]
-        public object GetContents() => PreWrap.GetContents();
+        public object GetContents() => ((IWrapper<object>)PreWrap).GetContents();
 
         [PrivateApi]
         internal readonly Wrapper.PreWrapObject PreWrap;
@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Data
             => PreWrap.FindPropertyInternal(specs, path);
 
 
-        object IHasJsonSource.JsonSource => PreWrap.GetContents();
+        object IHasJsonSource.JsonSource => ((IWrapper<object>)PreWrap).GetContents();
 
         public dynamic Get(string name) => PreWrap.TryGetWrap(name, true).Result;
 

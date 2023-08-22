@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Data
     internal class PreWrapJsonObject: PreWrapJsonBase, IWrapper<JsonObject>
     {
 
-        internal PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item): base(wrapper)
+        internal PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item): base(wrapper, item)
         {
             _jObject = item;
         }

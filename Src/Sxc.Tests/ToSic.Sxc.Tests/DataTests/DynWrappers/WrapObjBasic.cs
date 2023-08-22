@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
         {
             var anon = new { Data.Name, Data.Description, Data.Founded, Data.Birthday, Data.Truthy };
             var typed = Obj2Typed(anon);
-            dynamic dynAnon = WrapObjFromObject(anon, false, false);
+            dynamic dynAnon = Obj2WrapObj(anon, false, false);
 
             IsNull(dynAnon.NotExisting);
             AreEqual(anon.Name, dynAnon.Name);
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
         {
             var data = new TestData();
             var typed = Obj2Typed(data);
-            dynamic dynAnon = WrapObjFromObject(data, false, false);
+            dynamic dynAnon = Obj2WrapObj(data, false, false);
 
             IsNull(dynAnon.NotExisting);
             AreEqual(data.Name, dynAnon.Name);
@@ -64,10 +64,10 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
         }
 
         [TestMethod]
-        public void RequiredDynDefaultExisting() => IsTrue(DynFromWrapFromObject(Data).Truthy);
+        public void RequiredDynDefaultExisting() => IsTrue(Obj2WrapObjAsDyn(Data).Truthy);
 
         [TestMethod]
-        public void RequiredDynDefaultNonExisting() => IsNull(DynFromWrapFromObject(Data).TruthyXyz);
+        public void RequiredDynDefaultNonExisting() => IsNull(Obj2WrapObjAsDyn(Data).TruthyXyz);
 
         [TestMethod]
         public void RequiredTypedDefaultExisting() => IsTrue(Obj2Typed(Data).Bool(nameof(TestData.Truthy)));

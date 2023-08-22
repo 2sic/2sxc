@@ -4,14 +4,26 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data.Wrapper
 {
-    public abstract class PreWrapBase
+    public abstract class PreWrapBase: IWrapper<object>
     {
+        protected PreWrapBase(object data)
+        {
+            _data = data;
+        }
+        private readonly object _data;
+
+        #region IWrapper
+
+        object IWrapper<object>.GetContents() => _data;
+
+        #endregion
 
         public abstract WrapperSettings Settings { get; }
 
@@ -33,6 +45,7 @@ namespace ToSic.Sxc.Data.Wrapper
 
         #endregion
 
+        #region TryGet and FindPropertyInternals
 
         public object TryGetObject(string name, string noParamOrder, bool? required, [CallerMemberName] string cName = default)
         {
@@ -61,6 +74,7 @@ namespace ToSic.Sxc.Data.Wrapper
             return new PropReqResult(result: result, fieldType: Attributes.FieldIsDynamic, path: path) { Source = this, Name = "dynamic" };
         }
 
+        #endregion
 
     }
 }
