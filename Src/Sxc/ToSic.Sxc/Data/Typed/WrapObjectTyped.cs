@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Eav.Data.Shared;
 using ToSic.Lib.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
@@ -11,6 +10,7 @@ using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Services;
+using static ToSic.Eav.Data.Shared.WrapperEquality;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data.Typed
@@ -143,17 +143,17 @@ namespace ToSic.Sxc.Data.Typed
         /// </summary>
         [PrivateApi]
         // ReSharper disable once NonReadonlyMemberInGetHashCode
-        public override int GetHashCode() => WrapperEquality2.GetHashCode(PreWrap);
+        public override int GetHashCode() => GetWrappedHashCode(PreWrap);
 
         [PrivateApi]
-        public static bool operator ==(WrapObjectTyped d1, WrapObjectTyped d2) => WrapperEquality2.IsEqual(d1?.PreWrap, d2?.PreWrap);
+        public static bool operator ==(WrapObjectTyped d1, WrapObjectTyped d2) => IsEqual(d1?.PreWrap, d2?.PreWrap);
 
         [PrivateApi]
-        public static bool operator !=(WrapObjectTyped d1, WrapObjectTyped d2) => !WrapperEquality2.IsEqual(d1?.PreWrap, d2?.PreWrap);
+        public static bool operator !=(WrapObjectTyped d1, WrapObjectTyped d2) => !IsEqual(d1?.PreWrap, d2?.PreWrap);
 
         /// <inheritdoc />
         [PrivateApi]
-        public bool Equals(WrapObjectTyped dynObj) => WrapperEquality2.EqualsWrapper(PreWrap, dynObj?.PreWrap);
+        public bool Equals(WrapObjectTyped dynObj) => EqualsWrapper(PreWrap, dynObj?.PreWrap);
 
         public override bool Equals(object b)
         {
