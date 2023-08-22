@@ -142,6 +142,10 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         /// <summary>
         /// Add parameters to the button - which are usually used when executing the command.
+        ///
+        /// > [!TIP]
+        /// > These parameters are used in the page itself and not forwarded to the form.
+        /// > Use <see cref="FormParameters(object)"/> for that purpose.
         /// </summary>
         /// <param name="value">A string such as `name=value` or an anonymous object such as `new { name = 27 }`</param>
         /// <returns></returns>
@@ -149,6 +153,10 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         /// <summary>
         /// Add parameters to the button - which are usually used when executing the command.
+
+        /// > [!TIP]
+        /// > These parameters are used in the page itself and not forwarded to the form.
+        /// > Use <see cref="FormParameters(object)"/> for that purpose.
         /// </summary>
         /// <param name="name">The name/key which comes before the `=`</param>
         /// <param name="value">The value which comes after the `=`</param>

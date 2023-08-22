@@ -86,15 +86,26 @@ namespace ToSic.Sxc.Images
                 if (ImgService.EditOrNull?.Enabled != true) return tag;
                 if (Call.Field?.Parent == null) return tag;
 
-                // Determine if this is an "own" adam file, because only field-owned files should allow config
-                var isInSameEntity = Adam.Security.PathIsInItemAdam(Call.Field.Parent.Guid, "", Src);
-                if (!isInSameEntity) return tag;
-
                 // Check if it's not a demo-entity, in which case editing settings shouldn't happen
                 if (Call.Field.Parent.Entity.DisableInlineEditSafe()) return tag;
 
-                // var tlbUi = ImgService.ToolbarOrNull?.
-                var toolbarConfig = ImgService.ToolbarOrNull?.Empty().Metadata(Call.Field).Settings(hover: "right-middle");
+                // Determine if this is an "own" adam file, because only field-owned files should allow config
+                var isInSameEntity = Adam.Security.PathIsInItemAdam(Call.Field.Parent.Guid, "", Src);
+                // 2023-08-22 v16.04 - changed this, now it's possible, but with hint/info
+                //if (!isInSameEntity) return tag;
+
+                // Construct the toolbar; in edge cases the toolbar service could be missing
+                var imgTlb = ImgService.ToolbarOrNull?.Empty().Settings(
+                    hover: "right-middle",
+                    // Delay show of toolbar if it's a shared image, as it shouldn't be used much
+                    ui: isInSameEntity ? null : "delayShow=1000"
+                );
+                if (imgTlb == null) return tag;
+
+                var toolbarConfig = isInSameEntity
+                    ? imgTlb.Metadata(Call.Field)
+                    : imgTlb.Metadata(Call.Field,
+                        tweak: btn => btn.FormParameters(ImageDecorator.ShowWarningGlobalFile, true));
                 var toolbar = ImgService.EditOrNull.TagToolbar(toolbar: toolbarConfig).ToString();
                 tag.Attr(toolbar);
             }
@@ -103,7 +114,11 @@ namespace ToSic.Sxc.Images
             return tag;
         }
 
-        public string Description => Call.Description;
+        public string Description => _description.Get(() => Call.Field?.ImageDecoratorOrNull?.Description);
+        private readonly GetOnce<string> _description = new GetOnce<string>();
+
+        public string DescriptionExtended => _descriptionDet.Get(() => Call.Field?.ImageDecoratorOrNull?.DescriptionExtended);
+        private readonly GetOnce<string> _descriptionDet = new GetOnce<string>();
 
         /// <inheritdoc />
         public string Alt => _alt.Get(() =>
@@ -111,8 +126,8 @@ namespace ToSic.Sxc.Images
             Call.ImgAlt 
             // If we take the image description, empty does NOT take precedence, it will be treated as not-set
             ?? Description.NullIfNoValue()
-            // If all else fails, take the fallback specified in the call
-            ?? Call.ImgAltFallback
+            // If all else fails, take the fallback specified in the call - IF it's allowed
+            ?? (Call.Field?.ImageDecoratorOrNull?.SkipFallbackTitle ?? false ? null : Call.ImgAltFallback)
             );
         private readonly GetOnce<string> _alt = new GetOnce<string>();
 

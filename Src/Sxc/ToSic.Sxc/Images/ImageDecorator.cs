@@ -17,6 +17,11 @@ namespace ToSic.Sxc.Images
         //public const string FieldCompass = "CropTo";
         public const string NoCrop = "none";
 
+        /// <summary>
+        /// Parameter to give the UI when it should show a warning for a global file
+        /// </summary>
+        public const string ShowWarningGlobalFile = "showWarningGlobalFile";
+
         public static ImageDecorator GetOrNull(IHasMetadata source, string[] dimensions)
         {
             var decItem = source?.Metadata?.FirstOrDefaultOfType(TypeNameId);
@@ -30,6 +35,16 @@ namespace ToSic.Sxc.Images
         public string CropTo => GetThis("");
 
         public string Description => GetThis("");
+
+        /// <summary>
+        /// Disable falling back to the default/alternate title
+        /// </summary>
+        public bool SkipFallbackTitle => GetThis(false);
+
+        /// <summary>
+        /// Detailed description of an image
+        /// </summary>
+        public string DescriptionExtended => GetThis<string>(null);
 
         public (string Param, string Value) GetAnchorOrNull()
         {

@@ -53,8 +53,10 @@ namespace ToSic.Sxc.Images
             PicClass = picClass;
         }
 
-        public string Description => _description.Get(() => Field?.ImageDecoratorOrNull?.Description);
-        private readonly GetOnce<string> _description = new GetOnce<string>();
+
+
+        //public string Description => _description.Get(() => Field?.ImageDecoratorOrNull?.Description);
+        //private readonly GetOnce<string> _description = new GetOnce<string>();
 
     }
 }

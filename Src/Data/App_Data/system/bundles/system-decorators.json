@@ -531,6 +531,88 @@
             "Description": null,
             "Attributes": [
               {
+                "Name": "WarningGlobalFile",
+                "Type": "Empty",
+                "InputType": "empty-message",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 176327,
+                    "Version": 5,
+                    "Guid": "c1f8cd4a-c057-4e98-8bd6-75aaea8dd8eb",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-message"
+                        },
+                        "Name": {
+                          "en-us": "WarningGlobalFile"
+                        },
+                        "Notes": {
+                          "en-us": "<h3>&nbsp;⚠️ Warning: This is a Shared File</h3>\n<p><em>Normally you would add settings to images which belong to a specific thing, like images which belong to a blog-post. This file is shared, so it could be used in many places. The settings you edit here will apply everywhere this file used.&nbsp;</em></p>",
+                          "de-de": "<h3>&nbsp;⚠️Warnung: Gemeinsam genutzte Datei</h3>\n<p><em>Normalerweise setzt man Einstellungen bei Bildern, die zu einem bestimmten Ding geh&ouml;ren, beispielsweise Bilder eines Blog-Beitrags.&nbsp;Diese Datei ist global und kann an vielen Orten verwendet werden. Diese Einstellungen gelten auch, wenn diese Datei anderswo eingesetzt wird.</em></p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "1aef80c1-fb18-493a-90b9-e5f8c702965e"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "Description",
                 "Type": "String",
                 "InputType": "string-default",
@@ -628,6 +710,362 @@
                     "Attributes": {
                       "String": {
                         "InputFontFamily": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "SkipFallbackTitle",
+                "Type": "Boolean",
+                "InputType": "boolean-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 176316,
+                    "Version": 3,
+                    "Guid": "cec3a006-939e-4189-9068-4b44e527ac05",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "boolean-default"
+                        },
+                        "Name": {
+                          "en-us": "SkipFallbackTitle"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "2ab4855c-9699-4f33-8a8c-b17ef8f86bed"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 176317,
+                    "Version": 1,
+                    "Guid": "66eca87d-f9c3-4536-8a3f-9271db0b9916",
+                    "Type": {
+                      "Name": "@Boolean",
+                      "Id": "@Boolean"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "TitleFalse": {
+                          "en-us": "Use a default title (as none is specified here)",
+                          "de-de": "Verwende Standardbeschriftung (da hier keine angegeben wurde)"
+                        },
+                        "TitleIndeterminate": {
+                          "en-us": ""
+                        },
+                        "TitleTrue": {
+                          "en-us": "Leave title empty",
+                          "de-de": "Keine Beschriftung verwenden"
+                        }
+                      },
+                      "Boolean": {
+                        "ReverseToggle": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "AddDescriptionDetailed",
+                "Type": "Boolean",
+                "InputType": "boolean-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 176319,
+                    "Version": 5,
+                    "Guid": "bd63a2ef-22fa-4566-892f-5e07683a99ca",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "boolean-default"
+                        },
+                        "Name": {
+                          "en-us": "Add Detailed / Extended Description",
+                          "de-de": "Erweiterte Beschreibung hinzufügen"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "7d4c5b6f-9831-4a72-bbaa-5b82c4564851"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "IsEphemeral": {
+                          "en-us": true
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 176321,
+                    "Version": 3,
+                    "Guid": "969bca03-8a22-48f5-8acc-2eb02123eeaf",
+                    "Type": {
+                      "Name": "@Boolean",
+                      "Id": "@Boolean"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "TitleFalse": {
+                          "en-us": ""
+                        },
+                        "TitleIndeterminate": {
+                          "en-us": ""
+                        },
+                        "TitleTrue": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "DescriptionExtended",
+                "Type": "String",
+                "InputType": "string-wysiwyg",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 176320,
+                    "Version": 4,
+                    "Guid": "e2bd110b-f7d5-4644-b264-ed904ed7ce94",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-wysiwyg"
+                        },
+                        "Name": {
+                          "en-us": "Extended Description",
+                          "de-de": "Erweiterte Beschreibung"
+                        },
+                        "Notes": {
+                          "en-us": "<p>This is only shown in special scenarios like when used in galleries.</p>",
+                          "de-de": "<p>Dies wird nur in speziellen F&auml;llen angezeigt, beispielsweise in Galerien.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "6bcded21-014b-430a-b968-b095bc627776"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 176324,
+                    "Version": 2,
+                    "Guid": "2d814147-6cc9-46eb-b567-ac1af1ee338f",
+                    "Type": {
+                      "Name": "@String",
+                      "Id": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 176325,
+                    "Version": 2,
+                    "Guid": "b4b62531-015b-445e-91dd-7b1e3c18b136",
+                    "Type": {
+                      "Name": "@string-wysiwyg",
+                      "Id": "@string-wysiwyg"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "ButtonAdvanced": {
+                          "en-us": ""
+                        },
+                        "ButtonSource": {
+                          "en-us": ""
+                        },
+                        "Dialog": {
+                          "en-us": ""
+                        },
+                        "InlineInitialHeight": {
+                          "en-us": ""
+                        },
+                        "WysiwygConfiguration": {
+                          "en-us": "d3dde02f-c1dc-43b8-a8b7-4be3c43eadd0"
+                        }
+                      },
+                      "Hyperlink": {
+                        "ContentCss": {
                           "en-us": ""
                         }
                       }
@@ -1063,6 +1501,118 @@
                 "String": {
                   "Formula": {
                     "en-us": "v1(data, context) { return data.CropBehavior !== ''; }"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 176318,
+              "Version": 3,
+              "Guid": "2ab4855c-9699-4f33-8a8c-b17ef8f86bed",
+              "Type": {
+                "Name": "UiFormula",
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "// Only show if the description is not null/whitespace etc.\n// https://stackoverflow.com/questions/10232366\nv2((data) => {\n  const str = data.Description;\n  return str === null || (/^\\s*$/).test(str);\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 176322,
+              "Version": 4,
+              "Guid": "7d4c5b6f-9831-4a72-bbaa-5b82c4564851",
+              "Type": {
+                "Name": "UiFormula",
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "// Only show if the description is not null/whitespace AND data.DescriptionExtended is empty\nv2((data) => {\n  const detailsBlank = data.DescriptionExtended == '';\n  const title = data.Description;\n  const titleBlank = title == null || (/^\\s*$/).test(title);\n  return detailsBlank && !titleBlank;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 176323,
+              "Version": 3,
+              "Guid": "6bcded21-014b-430a-b968-b095bc627776",
+              "Type": {
+                "Name": "UiFormula",
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "// new formula syntax - see https://go.2sxc.org/formulas\nv2((data, context) => {\n  const detailsBlank = data.DescriptionExtended == '';\n  return !detailsBlank || data.AddDescriptionDetailed;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 176328,
+              "Version": 2,
+              "Guid": "1aef80c1-fb18-493a-90b9-e5f8c702965e",
+              "Type": {
+                "Name": "UiFormula",
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "// new formula syntax - see https://go.2sxc.org/formulas\nv2((data, context) => {\n  return !!data.parameters?.showWarningGlobalFile;\n});"
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"

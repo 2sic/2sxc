@@ -46,6 +46,12 @@ namespace ToSic.Sxc.Images
         string Description { get; }
 
         /// <summary>
+        /// Extended description, typically used in galleries.
+        /// </summary>
+        [PrivateApi("WIP v16.04")]
+        string DescriptionExtended { get; }
+
+        /// <summary>
         /// The `img` tag which would normally be added to the page automatically.
         /// You can also use the normal RazorBlade API and do things like `.Alt("description")` etc.
         /// See also the [RazorBlade Img docs](https://razor-blade.net/api/ToSic.Razor.Html5.Img.html)
