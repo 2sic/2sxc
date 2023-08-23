@@ -104,19 +104,22 @@ namespace Custom.Hybrid
         /// <inheritdoc cref="IDynamicCode16.GetCode"/>
         public dynamic GetCode(string path, string noParamOrder = Protector, string className = default) => SysHlp.GetCode(path, noParamOrder, className);
 
-        #region MyContext
+        #region MyContext & UniqueKey
 
         /// <inheritdoc cref="IDynamicCode16.MyContext" />
         public ICmsContext MyContext => _DynCodeRoot.CmsContext;
 
-        /// <inheritdoc cref="IDynamicCode16.MyUser" />
-        public ICmsUser MyUser => _DynCodeRoot.CmsContext.User;
-
         /// <inheritdoc cref="IDynamicCode16.MyPage" />
         public ICmsPage MyPage => _DynCodeRoot.CmsContext.Page;
 
+        /// <inheritdoc cref="IDynamicCode16.MyUser" />
+        public ICmsUser MyUser => _DynCodeRoot.CmsContext.User;
+
         /// <inheritdoc cref="IDynamicCode16.MyView" />
         public ICmsView MyView => _DynCodeRoot.CmsContext.View;
+
+        /// <inheritdoc cref="IDynamicCode16.UniqueKey" />
+        public string UniqueKey => (_DynCodeRoot.CmsContext as CmsContext)?.UniqueKey;
 
         #endregion
 

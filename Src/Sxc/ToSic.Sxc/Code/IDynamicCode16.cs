@@ -39,16 +39,18 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc cref="IDynamicCode.CmsContext" />
         ICmsContext MyContext { get; }
-
         
-        /// <inheritdoc cref="ICmsContext.User" />
-        ICmsUser MyUser { get; }
-
         /// <inheritdoc cref="ICmsContext.Page" />
         ICmsPage MyPage { get; }
 
+        /// <inheritdoc cref="ICmsContext.User" />
+        ICmsUser MyUser { get; }
+
         /// <inheritdoc cref="ICmsContext.View" />
         ICmsView MyView { get; }
+
+        /// <inheritdoc cref="CmsContext.UniqueKey"/>
+        string UniqueKey { get; }
 
         #endregion
 
