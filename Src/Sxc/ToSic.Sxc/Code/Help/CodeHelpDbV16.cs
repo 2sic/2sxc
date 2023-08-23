@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Code.Help;
+using ToSic.Sxc.Adam;
+using ToSic.Sxc.Apps;
 using static ToSic.Sxc.Code.Help.CodeHelpDb;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -97,9 +99,15 @@ namespace ToSic.Sxc.Code.Help
             new GenChangeOn("ToSic.Sxc.Data.ITypedItem", "EntityGuid", alt: "Guid"),
             new GenChangeOn("ToSic.Sxc.Data.ITypedItem", "EntityTitle", alt: "Title"),
 
-            // Renamed properties on IAppTyped
+            // Renamed properties on IAppTyped: Path, Folder
             new GenChangeOn("ToSic.Sxc.Apps.IAppTyped", "Path",
-                alt: new (string, string)[] { ("Url", null), ("UrlAdvanced(...)", null) })
+                alt: $".{nameof(IAppTyped.Folder)}().{nameof(IAsset.Url)}"),
+            new GenChangeOn("ToSic.Sxc.Apps.IAppTyped", "PhysicalPath",
+                alt: $".{nameof(IAppTyped.Folder)}().{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}"),
+            new GenChangeOn("ToSic.Sxc.Apps.IAppTyped", "PathShared",
+                alt: $".{nameof(IAppTyped.Folder)}(location: \"shared\").{nameof(IAsset.Url)}"),
+            new GenChangeOn("ToSic.Sxc.Apps.IAppTyped", "PhysicalPathShared",
+                alt: $".{nameof(IAppTyped.Folder)}(location: \"shared\").{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}")
         ));
         private static List<CodeHelp> _help;
     }

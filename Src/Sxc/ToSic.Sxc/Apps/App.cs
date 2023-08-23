@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Apps.Paths;
@@ -8,8 +7,10 @@ using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.LookUp;
+using static ToSic.Sxc.Apps.AppAssetFolderMain;
 using CodeInfoService = ToSic.Eav.Code.InfoSystem.CodeInfoService;
 using EavApp = ToSic.Eav.Apps.App;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -59,60 +60,21 @@ namespace ToSic.Sxc.Apps
         #endregion
 
 
-        #region Paths
+        #region IApp Paths
 
-        /// <inheritdoc cref="IAppTyped.Url"/>
-        public string Url => UrlAdvanced();
 
-        /// <inheritdoc cref="IAppTyped.UrlAdvanced"/>
-        public string UrlAdvanced(string noParamOrder = Eav.Parameters.Protector, string location = default)
-        {
-            switch (location?.ToLowerInvariant())
-            {
-                case null:
-                case "auto": return AppState.IsShared() ? PathShared : Path;
-                case "shared": return PathShared;
-                case "site": return Path;
-                default: throw new ArgumentException("should be null, auto, site or shared", nameof(location));
-            }
-        }
-
-        /// <inheritdoc />
+        /// <inheritdoc cref="IApp.Path" />
         public string Path => _path.Get(() => AppPaths.Path);
         private readonly GetOnce<string> _path = new GetOnce<string>();
 
-        /// <inheritdoc />
-        public string Thumbnail
-        {
-            get
-            {
-                if (_thumbnail != null) return _thumbnail;
+        /// <inheritdoc cref="IApp.Thumbnail" />
+        public string Thumbnail => (this as IAppTyped).Thumbnail.Url;
 
-                // Primary app - we only PiggyBack cache the icon in this case
-                // Because otherwise the icon could get moved, and people would have a hard time seeing the effect
-                if (NameId == Eav.Constants.PrimaryAppGuid)
-                    return _thumbnail = AppState.GetPiggyBack(nameof(Thumbnail), 
-                        () => _globalPaths.Value.GlobalPathTo(AppConstants.AppPrimaryIconFile, PathTypes.Link));
-
-                // standard app (not global) try to find app-icon in its (portal) app folder
-                if (!AppState.IsShared())
-                    if (File.Exists(PhysicalPath + "/" + AppConstants.AppIconFile))
-                        return _thumbnail = Path + "/" + AppConstants.AppIconFile;
-
-                // global app (and standard app without app-icon in its portal folder) looks for app-icon in global shared location 
-                if (File.Exists(PhysicalPathShared + "/" + AppConstants.AppIconFile))
-                    return _thumbnail = PathShared + "/" + AppConstants.AppIconFile;
-
-                return null;
-            }
-        }
-        private string _thumbnail;
-
-        /// <inheritdoc />
+        /// <inheritdoc cref="IApp.PathShared" />
         public string PathShared => _pathShared.Get(() => AppPaths.PathShared);
         private readonly GetOnce<string> _pathShared = new GetOnce<string>();
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IApp.PhysicalPathShared" />
         public string PhysicalPathShared => _physicalPathGlobal.Get(() => AppPaths.PhysicalPathShared);
         private readonly GetOnce<string> _physicalPathGlobal = new GetOnce<string>();
 
