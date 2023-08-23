@@ -2,6 +2,7 @@
 using ToSic.Eav.Code.Help;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Context;
 using static ToSic.Sxc.Code.Help.CodeHelpDb;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -101,13 +102,20 @@ namespace ToSic.Sxc.Code.Help
 
             // Renamed properties on IAppTyped: Path, Folder
             new GenChangeOn("ToSic.Sxc.Apps.IAppTyped", "Path",
-                alt: $".{nameof(IAppTyped.Folder)}().{nameof(IAsset.Url)}"),
+                alt: $".{nameof(IAppTyped.Folder)}.{nameof(IAsset.Url)}"),
             new GenChangeOn("ToSic.Sxc.Apps.IAppTyped", "PhysicalPath",
-                alt: $".{nameof(IAppTyped.Folder)}().{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}"),
+                alt: $".{nameof(IAppTyped.Folder)}.{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}"),
             new GenChangeOn("ToSic.Sxc.Apps.IAppTyped", "PathShared",
-                alt: $".{nameof(IAppTyped.Folder)}(location: \"shared\").{nameof(IAsset.Url)}"),
+                alt: $".{nameof(IAppTyped.FolderAdvanced)}(location: \"shared\").{nameof(IAsset.Url)}"),
             new GenChangeOn("ToSic.Sxc.Apps.IAppTyped", "PhysicalPathShared",
-                alt: $".{nameof(IAppTyped.Folder)}(location: \"shared\").{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}")
+                alt: $".{nameof(IAppTyped.FolderAdvanced)}(location: \"shared\").{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}"),
+
+            new GenChangeOn("ToSic.Sxc.Context.ICmsView", "PathShared",
+                alt: $"MyView.{nameof(ICmsView.Folder)}.{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}"),
+            new GenChangeOn("ToSic.Sxc.Context.ICmsView", "PhysicalPath",
+                alt: $"MyView.{nameof(ICmsView.Folder)}.{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}"),
+            new GenChangeOn("ToSic.Sxc.Context.ICmsView", "PhysicalPathShared",
+                alt: $"MyView.{nameof(ICmsView.Folder)}.{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}")
         ));
         private static List<CodeHelp> _help;
     }

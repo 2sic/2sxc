@@ -4,6 +4,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Decorators;
+using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Apps.AppAssetFolderMain;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.Apps
 
         IFolder IAppTyped.FolderAdvanced(string noParamOrder, string location)
         {
-            Eav.Parameters.Protect(noParamOrder, nameof(location));
+            Protect(noParamOrder, nameof(location));
             return new AppAssetFolderMain(this, DetermineShared(location) ?? AppState.IsShared());
         }
 
@@ -38,7 +39,7 @@ namespace ToSic.Sxc.Apps
         private ITypedItem MakeTyped(IEntity contents, bool propsRequired)
         {
             var wrapped = CmsEditDecorator.Wrap(contents, false);
-            return _cdfLazy.Value.AsItem(wrapped, Eav.Parameters.Protector, propsRequired: propsRequired);
+            return _cdfLazy.Value.AsItem(wrapped, Protector, propsRequired: propsRequired);
         }
 
     }
