@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using Oqtane.Models;
+﻿using Oqtane.Models;
+using System.Collections.Generic;
 using System.Linq;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
@@ -14,7 +14,6 @@ using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Web.LightSpeed;
 using ToSic.Sxc.Web.Url;
 using Page = Oqtane.Models.Page;
-using ToSic.Sxc.Oqt.Server.Services;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks
 {
@@ -30,7 +29,6 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             IContextResolver contextResolverForLookUps,
             ILogStore logStore,
             GlobalTypesCheck globalTypesCheck,
-            OqtPrerenderService oqtPrerenderService,
             IOutputCache outputCache
         ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
         {
@@ -40,7 +38,6 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                 _blockModuleEmpty = blockModuleEmpty,
                 _contextResolverForLookUps = contextResolverForLookUps,
                 _globalTypesCheck = globalTypesCheck,
-                _oqtPrerenderService = oqtPrerenderService,
                 _outputCache = outputCache,
                 PageOutput = pageOutput
             );
@@ -52,7 +49,6 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         private readonly BlockFromModule _blockModuleEmpty;
         private readonly IContextResolver _contextResolverForLookUps;
         private readonly GlobalTypesCheck _globalTypesCheck;
-        private readonly OqtPrerenderService _oqtPrerenderService;
         private readonly IOutputCache _outputCache;
 
         #endregion
@@ -102,7 +98,6 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                     CspEnforced = renderResult.CspEnforced,
                     CspParameters = renderResult.CspParameters.Select(c => c.NvcToString())
                         .ToList(), // convert NameValueCollection to (query) string because can't serialize NameValueCollection to json
-                    SystemHtml = PreRender ? _oqtPrerenderService?.GetSystemHtml() : string.Empty
             };
             }));
             LogTimer.Done(OutputCache?.Existing?.Data?.IsError ?? false ? "⚠️" : finalMessage);

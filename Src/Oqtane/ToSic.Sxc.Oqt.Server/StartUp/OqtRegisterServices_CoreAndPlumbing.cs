@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
         {
             services.Replace(ServiceDescriptor.Scoped<IOqtDebugStateService, OqtDebugStateService>());
             services.TryAddScoped<IOqtPageChangesOnServerService, OqtPageChangesOnServerService>();
-            services.TryAddScoped<OqtPrerenderService> ();
+            services.TryAddScoped<IOqtPrerenderService, OqtPrerenderService> ();
 
             return services;
         }
