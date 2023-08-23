@@ -5,6 +5,9 @@ namespace ToSic.Sxc.Context
     /// <summary>
     /// This is the runtime context of your code in the CMS. It can tell you about the site, page, module etc. that you're on.
     /// Note that it it _Platform Agnostic_ so it's the same on Dnn, Oqtane etc.
+    ///
+    /// 🪒 In [Dynamic Razor](xref:Custom.Hybrid.Razor14) it's found on `CmsContext`  
+    /// 🪒 In [Typed Razor](xref:Custom.Hybrid.RazorTyped) it's found on `MyContext`, but many objects are directly available, eg. `MyPage`
     /// </summary>
     [PublicApi]
     public interface ICmsContext

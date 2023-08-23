@@ -6,6 +6,9 @@ namespace ToSic.Sxc.Context
 {
     /// <summary>
     /// Information about the module context the code is running in.
+    /// 
+    /// 🪒 In [Dynamic Razor](xref:Custom.Hybrid.Razor14) it's found on `CmsContext.Module`  
+    /// 🪒 In [Typed Razor](xref:Custom.Hybrid.RazorTyped) it's found on `MyModule`
     /// </summary>
     /// <remarks>
     /// Note that the module context is the module for which the code is currently running.
@@ -18,7 +21,8 @@ namespace ToSic.Sxc.Context
         /// <summary>
         /// The module id on the page. 
         /// 
-        /// 🪒 Use in Razor: `CmsContext.Module.Id`
+        /// 🪒 Use in Dynamic Razor: `CmsContext.Module.Id`  
+        /// 🪒 Use in Typed Razor: `MyModule.Id`
         /// </summary>
         /// <remarks>
         /// Corresponds to the Dnn ModuleId or the Oqtane Module Id.
