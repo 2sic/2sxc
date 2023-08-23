@@ -3,10 +3,11 @@ using System;
 using System.Collections.Generic;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Oqt.Shared.Interfaces;
 
 namespace ToSic.Sxc.Oqt.Server.Services
 {
-    public class OqtPrerenderService : ServiceBase
+    public class OqtPrerenderService : ServiceBase, IOqtPrerenderService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -51,10 +52,17 @@ namespace ToSic.Sxc.Oqt.Server.Services
 
         private const string ExecutedKey = "PrerenderServiceExecuted";
 
+        public bool CheckForKeyInQueryString(string key)
+        {
+            var queryCollection = _httpContextAccessor.HttpContext?.Request.Query;
+            return queryCollection != null && queryCollection.ContainsKey(key);
+        }
+
         private bool HasUserAgentSignature()
         {
             var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
-            return userAgent.HasValue && _userAgentSignatures.Exists(x => userAgent.Value.ToString().Contains(x, StringComparison.InvariantCultureIgnoreCase));
+            return userAgent.HasValue && _userAgentSignatures.Exists(x => userAgent.Value.ToString().Contains(x, StringComparison.InvariantCultureIgnoreCase))
+                   || CheckForKeyInQueryString("prerender");
         }
         // based on https://raw.githubusercontent.com/monperrus/crawler-user-agents/master/crawler-user-agents.json
         private readonly List<string> _userAgentSignatures = new() // used for production

@@ -24,6 +24,7 @@ namespace ToSic.Sxc.Oqt.App
         [Inject] public OqtPageChangeService OqtPageChangeService { get; set; }
         [Inject] public IJSRuntime JsRuntime { get; set; }
         [Inject] public IOqtPageChangesOnServerService OqtPageChangesOnServerService { get; set; }
+        [Inject] public IOqtPrerenderService OqtPrerenderService { get; set; }
 
         #endregion
 
@@ -147,12 +148,11 @@ namespace ToSic.Sxc.Oqt.App
             if (!string.IsNullOrEmpty(ViewResults?.ErrorMessage))
                 LogError(ViewResults.ErrorMessage);
 
-            Content = ViewResults?.FinalHtml;
-
             Log($"1.2.2: Html:{ViewResults?.Html?.Length ?? -1}", ViewResults);
 
             if (ViewResults != null)
             {
+                ViewResults.SystemHtml = IsPreRendering() ? OqtPrerenderService?.GetSystemHtml() : string.Empty;
                 OqtPageChangesOnServerService.ApplyHttpHeaders(ViewResults, this);
                 Log($"1.3: Csp");
             }
@@ -170,6 +170,17 @@ namespace ToSic.Sxc.Oqt.App
                 SiteState.Properties.HeadContent = HtmlHelper.AddOrUpdateMetaTagContent(SiteState.Properties.HeadContent,
                     ViewResults.SxcContextMetaName, ViewResults.SxcContextMetaContents);
             }
+
+            //// Lets load all 2sxc js dependencies (js / styles)
+            //var index = 0;
+            //if (ViewResults?.SxcScripts != null)
+            //    foreach (var resource in ViewResults.SxcScripts)
+            //    {
+            //        Log($"1.6.{++index}: IncludeScript:{resource}");
+            //        SiteState.Properties.HeadContent = HtmlHelper.AddScript(SiteState.Properties.HeadContent, resource, SiteState.Alias);
+            //    }
+
+            Content = ViewResults?.FinalHtml;
         }
 
         private async Task StandardAssets()

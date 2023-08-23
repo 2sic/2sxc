@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Oqtane.Models;
+using Oqtane.Shared;
+using System;
 using System.Net;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
-using Oqtane.Shared;
 using ToSic.Sxc.Oqt.App;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
@@ -66,6 +66,21 @@ namespace ToSic.Sxc.Oqt.Client.Helpers
         //    }
         //}
 
+        public static string AddScript(string html, string src, Alias alias)
+        {
+            if (string.IsNullOrEmpty(src)) return html;
+            var script = CreateScript(src, alias);
+            if (!html.Contains(script)) html += script + Environment.NewLine;
+            return html;
+        }
+
+        private static string CreateScript(string src, Alias alias)
+        {
+            if (string.IsNullOrEmpty(src)) return null;
+            var url = (src.Contains("://")) ? src : alias.BaseUrl + src;
+            return "<script src=\"" + url + "\"" + "></script>";
+        }
+
         public static string GetMetaTagContent(string html, string name, bool decode = true)
         {
             if (string.IsNullOrEmpty(html) || string.IsNullOrEmpty(name))
@@ -95,9 +110,8 @@ namespace ToSic.Sxc.Oqt.Client.Helpers
                 return Regex.Replace(html, pattern, $"$1{(encode ? WebUtility.HtmlEncode(content) : content)}$3", RegexOptions.IgnoreCase);
 
             // If the meta tag doesn't exist, add it
-            return html + $"{Environment.NewLine}<meta name=\"{WebUtility.HtmlEncode(name)}\" content=\"{(encode ? WebUtility.HtmlEncode(content) : content)}\">";
+            return html + $"<meta name=\"{WebUtility.HtmlEncode(name)}\" content=\"{(encode ? WebUtility.HtmlEncode(content) : content)}\">{Environment.NewLine}";
         }
-
 
         public static string UpdateProperty(string original, OqtPagePropertyChanges change, IOqtHybridLog page)
         {
