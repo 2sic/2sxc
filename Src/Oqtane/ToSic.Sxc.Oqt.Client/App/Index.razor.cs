@@ -170,6 +170,15 @@ namespace ToSic.Sxc.Oqt.App
                 SiteState.Properties.HeadContent = HtmlHelper.AddOrUpdateMetaTagContent(SiteState.Properties.HeadContent,
                     ViewResults.SxcContextMetaName, ViewResults.SxcContextMetaContents);
             }
+
+            //// Lets load all 2sxc js dependencies (js / styles)
+            //var index = 0;
+            //if (ViewResults?.SxcScripts != null)
+            //    foreach (var resource in ViewResults.SxcScripts)
+            //    {
+            //        Log($"1.6.{++index}: IncludeScript:{resource}");
+            //        SiteState.Properties.HeadContent = HtmlHelper.AddScript(SiteState.Properties.HeadContent, resource, SiteState.Alias);
+            //    }
         }
 
         private async Task StandardAssets()
