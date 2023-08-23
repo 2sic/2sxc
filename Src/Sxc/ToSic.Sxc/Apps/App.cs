@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Apps.Paths;
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Apps
     /// A <em>single-use</em> app-object providing quick simple api to access
     /// name, folder, data, metadata etc.
     /// </summary>
-    [PublicApi_Stable_ForUseInYourCode]
+    [PrivateApi("hide implementation - IMPORTANT: was PublicApi_Stable_ForUseInYourCode up to 16.03!")]
     public partial class App : EavApp, IApp
     {
         #region DI Constructors
@@ -59,6 +60,22 @@ namespace ToSic.Sxc.Apps
 
 
         #region Paths
+
+        /// <inheritdoc cref="IAppTyped.Url"/>
+        public string Url => UrlAdvanced();
+
+        /// <inheritdoc cref="IAppTyped.UrlAdvanced"/>
+        public string UrlAdvanced(string noParamOrder = Eav.Parameters.Protector, string location = default)
+        {
+            switch (location?.ToLowerInvariant())
+            {
+                case null:
+                case "auto": return AppState.IsShared() ? PathShared : Path;
+                case "shared": return PathShared;
+                case "site": return Path;
+                default: throw new ArgumentException("should be null, auto, site or shared", nameof(location));
+            }
+        }
 
         /// <inheritdoc />
         public string Path => _path.Get(() => AppPaths.Path);

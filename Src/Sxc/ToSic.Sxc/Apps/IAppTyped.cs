@@ -11,34 +11,64 @@ namespace ToSic.Sxc.Apps
     /// </summary>
     [PublicApi]
     public interface IAppTyped: 
-        Eav.Apps.IApp,
-        IAppPaths
+        Eav.Apps.IApp
+        //IAppPaths
     {
-        /// <summary>
-        /// Configuration object as a DynamicEntity.
-        /// This contains things like app version, path etc.
-        /// </summary>
-        /// <returns>An <see cref="IDynamicEntity"/> object</returns>
+        /// <inheritdoc cref="IApp.Configuration"/>
         AppConfiguration Configuration { get; }
 
         /// <summary>
         /// All the app settings which are custom for each app. 
         /// </summary>
-        /// <returns>An <see cref="IDynamicEntity"/> object</returns>
         ITypedItem Settings { get;  }
 
         /// <summary>
         /// All the app resources (usually used for multi-language labels etc.)
         /// </summary>
-        /// <returns>An <see cref="IDynamicEntity"/> object</returns>
         ITypedItem Resources { get;  }
 
+        #region Paths / Urls
+
         /// <summary>
-        /// The path to the current app, for linking JS/CSS files and
-        /// images in the app folder. 
+        /// Retrieve the url to the location of the files of this App.
+        /// This replaces the previous `Path` and `PathShared` properties, but with some improvements.
+        /// It will automatically detect if the App files are located in the site or shared, and return that url.
+        /// 
+        /// If you need more control, use <see cref="UrlAdvanced"/>
         /// </summary>
-        /// <returns>Path usually starting with /portals/...</returns>
-        new string Path { get; }
+        /// <returns></returns>
+        /// <remarks>Added v16.04</remarks>
+        string Url { get; }
+
+        /// <summary>
+        /// Retrieve the url to the location of the files of this App.
+        ///
+        /// 1. In the standard setup, it's just the path to the app files in the current site
+        /// 2. If the app is shared - meaning that the files are in a shared location, it will return that path
+        /// </summary>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="location">name of the app location - either `auto` (default), `site` or `shared`</param>
+        /// <returns></returns>
+        /// <remarks>Added v16.04</remarks>
+        string UrlAdvanced(string noParamOrder = Eav.Parameters.Protector, string location = default);
+
+        ///// <summary>
+        ///// The path to the current app, for linking JS/CSS files and
+        ///// images in the app folder. 
+        ///// </summary>
+        ///// <returns>Path usually starting with /portals/...</returns>
+        //new string Path { get; }
+
+        //        /// <summary>
+        //        /// The path to the current apps shared/global folder, for linking JS/CSS files and
+        //        /// images in the app folder. 
+        //        /// </summary>
+        //        /// <returns>Path usually starting with /portals/_default/...</returns>
+        //        /// <remarks>Added v13.01</remarks>
+        //#pragma warning disable CS0108, CS0114
+        //        // Important: Repeat definition of base interface for docs and because of Razor-Interface-Inheritance-Problems
+        //        string PathShared { get; }
+        //#pragma warning restore CS0108, CS0114
 
         /// <summary>
         /// The path on the server hard disk for the current app. 
@@ -46,16 +76,7 @@ namespace ToSic.Sxc.Apps
         /// <returns>Path usually starting with c:\...</returns>
         new string PhysicalPath { get; }
 
-        /// <summary>
-        /// The path to the current apps shared/global folder, for linking JS/CSS files and
-        /// images in the app folder. 
-        /// </summary>
-        /// <returns>Path usually starting with /portals/_default/...</returns>
-        /// <remarks>Added v13.01</remarks>
-#pragma warning disable CS0108, CS0114
-        // Important: Repeat definition of base interface for docs and because of Razor-Interface-Inheritance-Problems
-        string PathShared { get; }
-#pragma warning restore CS0108, CS0114
+
 
         /// <summary>
         /// The path on the server hard disk for the current apps shared/global folder. 
@@ -67,56 +88,13 @@ namespace ToSic.Sxc.Apps
         string PhysicalPathShared { get; }
 #pragma warning restore CS0108, CS0114
 
-        ///// <summary>
-        ///// Path relative to the website root.
-        ///// In DNN this is usually the same as the url-path.
-        ///// In Oqtane it's very different. 
-        ///// </summary>
-        ///// <remarks>
-        ///// * Made public v15.06 but existed previously
-        ///// </remarks>
-        //[PrivateApi("not public, not sure if we should surface this")]
-        //new string RelativePath { get; }
+        #endregion
 
-        ///// <summary>
-        ///// Path of the shared App relative to the website root.
-        ///// In DNN this is usually the same as the url-path.
-        ///// In Oqtane it's very different. 
-        ///// </summary>
-        ///// <remarks>
-        ///// * Made public v15.06 but existed previously
-        ///// </remarks>
-        //[PrivateApi("not public, not sure if we should surface this")]
-        //new string RelativePathShared { get; }
 
-        /// <summary>
-        /// The thumbnail path for the current app. 
-        /// </summary>
-        /// <returns>path + app-icon.png if there is an icon there. </returns>
+
+        /// <inheritdoc cref="IApp.Thumbnail"/>
         string Thumbnail { get; }
 
 
-
-        // TODO: @2dm - must create an ITypedAppData - create a new wrapper object and use it for MyData as well
-        // Also rename IAppTyped to ITypedApp?
-
-        ///// <inheritdoc cref="IMyData.Item"/>
-        //ITypedItem Item(
-        //    string streamName = default,
-        //    string noParamOrder = Protector,
-        //    ITypedItem fallback = default,
-        //    bool? required = default
-        //);
-
-        ///// <inheritdoc cref="IMyData.Items"/>
-        //IEnumerable<ITypedItem> Items(
-        //    string streamName = default,
-        //    string noParamOrder = Protector,
-        //    IEnumerable<ITypedItem> fallback = default,
-        //    bool? required = default,
-        //    bool? preferNull = default);
-
-        ///// <inheritdoc cref="IMyData.DataSource"/>
-        //IDataSource DataSource { get; }
     }
 }

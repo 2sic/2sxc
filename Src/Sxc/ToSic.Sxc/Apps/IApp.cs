@@ -20,10 +20,9 @@ namespace ToSic.Sxc.Apps
 #endif
     {
         /// <summary>
-        /// Configuration object as a DynamicEntity.
+        /// Configuration object with information about the App.
         /// This contains things like app version, path etc.
         /// </summary>
-        /// <returns>An <see cref="IDynamicEntity"/> object</returns>
         new AppConfiguration Configuration { get; }
 
         /// <summary>
