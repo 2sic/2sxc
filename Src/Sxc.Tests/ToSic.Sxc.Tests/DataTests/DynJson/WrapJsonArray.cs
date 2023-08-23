@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
@@ -78,7 +79,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
         public void DetectJsonComplexOfObject(bool expComplex, bool expArray, object value, string testName = default)
         {
             var json = JsonSerialize(value);
-            var (isComplex, isArray) = CodeJsonWrapper.AnalyzeJson(json);
+            var (isComplex, isArray) = JsonProcessingHelpers.AnalyzeJson(json);
             AreEqual(expComplex, isComplex, testName + ":" + value + "; json: " + json);
             AreEqual(expArray, isArray, testName + ":" + value + "; json: " + json);
         }
@@ -97,6 +98,49 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
             var list = Obj2Json2TypedListStrict(new object[] { new { a = 7 }, new { b = 27 } });
             IsNotNull(list);
             AreEqual(2, list.Count());
+        }
+
+        [TestMethod]
+        public void ArrayPropertyShouldWork()
+        {
+            var anon = new
+            {
+                items = new[] { 14, 27, 33 }
+            };
+            var typed = Obj2Json2TypedStrict(anon);
+            IsNotNull(typed);
+            var items = typed.Get(nameof(anon.items));
+            IsNotNull(items);
+            var itemList = items as IEnumerable;
+            IsNotNull(itemList);
+            AreEqual(3, itemList.Cast<object>().Count());
+            AreEqual(14, itemList.Cast<object>().FirstOrDefault());
+        }
+
+        [TestMethod]
+        public void TestJsonValueBehavior()
+        {
+            var anon = new { x = 27, y = 203.02003050 };
+            var json = JsonNode.Parse(JsonSerialize(anon));
+            IsInstanceOfType(json, typeof(JsonNode));
+            var xPropExists = json.AsObject().TryGetPropertyValue(nameof(anon.x), out var xProp);
+            IsTrue(xPropExists);
+
+            var asVal = xProp.AsValue();
+            IsInstanceOfType(asVal, typeof(JsonValue));
+            var data = asVal.GetValue<int>();
+            IsInstanceOfType(data, typeof(int));
+
+            var maybeInt = JsonProcessingHelpers.JsonValueGetContents(asVal);
+            IsInstanceOfType(maybeInt, typeof(int));
+            AreEqual(27, maybeInt);
+
+            var yPropExists = json.AsObject().TryGetPropertyValue(nameof(anon.y), out var yProp);
+            asVal = yProp.AsValue();
+            var maybeDouble = JsonProcessingHelpers.JsonValueGetContents(asVal);
+            IsInstanceOfType(maybeDouble, typeof(double));
+            IsNotInstanceOfType(maybeDouble, typeof(int));
+            AreEqual(203.02003050, maybeDouble);
         }
 
 
