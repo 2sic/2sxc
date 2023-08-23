@@ -17,8 +17,7 @@ namespace ToSic.Sxc.Data.Typed
 {
     [PrivateApi]
     [JsonConverter(typeof(DynamicJsonConverter))]
-    public class WrapObjectTyped: IWrapper<IPreWrap>, ITyped, IHasPropLookup, IHasJsonSource,
-        IEquatable<WrapObjectTyped>
+    public class WrapObjectTyped: IWrapper<IPreWrap>, ITyped, IHasPropLookup, IHasJsonSource
     {
 
         private readonly LazySvc<IScrub> _scrubSvc;
@@ -145,32 +144,20 @@ namespace ToSic.Sxc.Data.Typed
         // ReSharper disable once NonReadonlyMemberInGetHashCode
         public override int GetHashCode() => GetWrappedHashCode(PreWrap);
 
-        [PrivateApi]
-        public static bool operator ==(WrapObjectTyped d1, WrapObjectTyped d2) => IsEqual(d1?.PreWrap, d2?.PreWrap);
-
-        [PrivateApi]
-        public static bool operator !=(WrapObjectTyped d1, WrapObjectTyped d2) => !IsEqual(d1?.PreWrap, d2?.PreWrap);
-
-        /// <inheritdoc />
-        [PrivateApi]
-        public bool Equals(WrapObjectTyped dynObj) => EqualsWrapper(PreWrap, dynObj?.PreWrap);
-
         public override bool Equals(object b)
         {
             if (b is null) return false;
             if (ReferenceEquals(this, b)) return true;
             if (b.GetType() != GetType()) return false;
-            return Equals((WrapObjectTyped)b);
+            return EqualsWrapper(PreWrap, ((WrapObjectTyped)b).PreWrap);
         }
-
 
         #endregion
 
         #region Explicit interfaces for Json, PropertyLookup etc.
 
         [PrivateApi]
-        object IHasJsonSource.JsonSource
-            => PreWrap.JsonSource;
+        object IHasJsonSource.JsonSource => PreWrap.JsonSource;
 
         #endregion
 

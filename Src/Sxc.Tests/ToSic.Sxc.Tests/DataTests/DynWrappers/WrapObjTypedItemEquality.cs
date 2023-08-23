@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ToSic.Sxc.Data.Typed;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.DataTests.DynWrappers
@@ -28,6 +29,20 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
         {
             var anon = CreateAnon();
             AreEqual(Obj2Typed(anon), Obj2Typed(anon));
+        }
+
+        [TestMethod]
+        [Ignore("This can't work, because we can't overload == on interfaces - pls preserve this test, so it's documented")]
+        public void SameWrapTwiceShouldBeEqual_TypedUsingEqEq()
+        {
+            var anon = CreateAnon();
+            var a = Obj2Typed(anon);
+            var b = Obj2Typed(anon);
+            var c = Obj2Typed(anon) as WrapObjectTyped;
+            var x = c == c;
+            IsTrue(a == a, "Test basic comparison");
+            IsTrue(a as WrapObjectTyped == b, "a as ... == b should work");
+            IsTrue(a == b, "a == b should work");
         }
 
         [TestMethod]
