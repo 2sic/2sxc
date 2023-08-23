@@ -1,13 +1,13 @@
-﻿using Oqtane.Models;
-using Oqtane.Shared;
-using System;
+﻿using System;
 using System.Net;
 using System.Text.RegularExpressions;
+using Oqtane.Models;
+using Oqtane.Shared;
 using ToSic.Sxc.Oqt.App;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
 
-namespace ToSic.Sxc.Oqt.Client.Helpers
+namespace ToSic.Sxc.Oqt.Client
 {
     public class HtmlHelper
     {
@@ -111,85 +111,6 @@ namespace ToSic.Sxc.Oqt.Client.Helpers
 
             // If the meta tag doesn't exist, add it
             return html + $"<meta name=\"{WebUtility.HtmlEncode(name)}\" content=\"{(encode ? WebUtility.HtmlEncode(content) : content)}\">{Environment.NewLine}";
-        }
-
-        public static string UpdateProperty(string original, OqtPagePropertyChanges change, IOqtHybridLog page)
-        {
-            var logPrefix = $"{nameof(UpdateProperty)}(original:{original}) - ";
-
-            if (string.IsNullOrEmpty(original))
-            {
-                var result = change.Value ?? original;
-                page?.Log($"{logPrefix}is empty, UpdateTitle:{result}");
-                return result;
-            };
-
-            // 1. Check if we have a replacement token - if yes, try to replace it
-            if (!string.IsNullOrEmpty(change.Placeholder))
-            {
-                var pos = original.IndexOf(change.Placeholder, StringComparison.InvariantCultureIgnoreCase);
-                if (pos >= 0)
-                {
-                    var suffixPos = pos + change.Placeholder.Length;
-                    var suffix = suffixPos < original.Length ? original.Substring(suffixPos) : "";
-                    var result2 = original.Substring(0, pos) + change.Value + suffix;
-                    page?.Log($"{logPrefix}token replaced, UpdateTitle:{result2}");
-                    return result2;
-                }
-
-                page?.Log($"{logPrefix}replace token not found, UpdateTitle:{original}");
-                if (change.Change == OqtPagePropertyOperation.ReplaceOrSkip) return original;
-            }
-
-            // 2. If not, try to prefix / suffix / replace depending on the property
-            var result3 = change.Change switch
-            {
-                OqtPagePropertyOperation.Replace => change.Value ?? original,
-                OqtPagePropertyOperation.Suffix => $"{original}{change.Value}",
-                OqtPagePropertyOperation.Prefix => $"{change.Value}{original}",
-                OqtPagePropertyOperation.ReplaceOrSkip => original,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-            page?.Log($"{logPrefix}{change.Change}, UpdateTitle:{result3}");
-            return result3;
-        }
-
-        public static void UpdatePageProperties(SiteState siteState, OqtViewResultsDto viewResults, ModuleProBase page)
-        {
-            var logPrefix = $"{nameof(UpdatePageProperties)}(...) - ";
-
-            // Go through Page Properties
-            foreach (var p in viewResults.PageProperties)
-            {
-                switch (p.Property)
-                {
-                    case OqtPageProperties.Title:
-                        var currentTitle = siteState.Properties.PageTitle;
-                        var updatedTitle = UpdateProperty(currentTitle, p.InjectOriginalInValue(currentTitle), page);
-                        page?.Log($"{logPrefix}UpdateTitle:", updatedTitle);
-                        siteState.Properties.PageTitle = updatedTitle;
-                        break;
-                    case OqtPageProperties.Keywords:
-                        var currentKeywords = GetMetaTagContent(siteState.Properties.HeadContent, "KEYWORDS");
-                        var updatedKeywords = UpdateProperty(currentKeywords, p.InjectOriginalInValue(currentKeywords), page);
-                        page?.Log($"{logPrefix}Keywords:", updatedKeywords);
-                        siteState.Properties.HeadContent = AddOrUpdateMetaTagContent(siteState.Properties.HeadContent, "KEYWORDS", updatedKeywords);
-                        break;
-                    case OqtPageProperties.Description:
-                        var currentDescription = GetMetaTagContent(siteState.Properties.HeadContent, "DESCRIPTION");
-                        var updatedDescription = UpdateProperty(currentDescription, p.InjectOriginalInValue(currentDescription), page);
-                        page?.Log($"{logPrefix}Description:", updatedDescription);
-                        siteState.Properties.HeadContent = AddOrUpdateMetaTagContent(siteState.Properties.HeadContent, "DESCRIPTION", updatedDescription);
-                        break;
-                    case OqtPageProperties.Base:
-                        // For base - ignore for now as we don't know what side-effects this could have
-                        page?.Log($"{logPrefix}Base ignore for now");
-                        break;
-                    default:
-                        page?.Log($"{logPrefix} ArgumentOutOfRangeException");
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
         }
     }
 }
