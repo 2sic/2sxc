@@ -79,7 +79,8 @@ namespace ToSic.Sxc.Context.Query
             }
         }
         private IDictionary<string, string> _originalsAsDic;
-        
+
+        #region Basic Dictionary Properties
 
         public IEnumerator<KeyValuePair<string, string>> GetEnumerator() => OriginalsAsDic.GetEnumerator();
 
@@ -97,8 +98,12 @@ namespace ToSic.Sxc.Context.Query
 
         public IEnumerable<string> Values => OriginalsAsDic.Values;
 
+        #endregion
+
 
         public override string ToString() => Nvc.NvcToString();
+
+        #region Basic Add/Set/Remove with key only or string-value
 
         public IParameters Add(string key)
         {
@@ -129,6 +134,9 @@ namespace ToSic.Sxc.Context.Query
             return new Parameters(copy);
         }
 
+        #endregion
+
+
         #region New Object Add/Set
 
         public IParameters Add(string key, object value) => Add(key, ValueToUrlValue(value));
@@ -151,5 +159,6 @@ namespace ToSic.Sxc.Context.Query
         }
 
         #endregion
+        
     }
 }

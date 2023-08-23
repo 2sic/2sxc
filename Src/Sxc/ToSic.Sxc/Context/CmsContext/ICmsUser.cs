@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Context
         /// If anonymous is zero.
         /// 
         /// 🪒 Use in Razor12+: `CmsContext.User.Id`
-        /// 🪒 Use in RazorPro: `MyUser.Id`
+        /// 🪒 Use in RazorTyped: `MyUser.Id`
         /// </summary>
         int Id { get; }
 
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Context
         /// Basically this means a user has Admin permissions, but may not have all admin permissions if excluded through special 2sxc-groups.
         /// 
         /// 🪒 Use in Razor12+: `CmsContext.User.IsContentAdmin`
-        /// 🪒 Use in RazorPro: `MyUser.IsContentAdmin`
+        /// 🪒 Use in RazorTyped: `MyUser.IsContentAdmin`
         /// </summary>
         /// <remarks>
         /// These are not the highest possible privileges
@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Context
         /// to install additional components or do dangerous things like edit razor.
         /// 
         /// 🪒 Use in Razor12+: `CmsContext.User.isSystemAdmin`
-        /// 🪒 Use in RazorPro: `MyUser.isSystemAdmin`
+        /// 🪒 Use in RazorTyped: `MyUser.isSystemAdmin`
         /// </summary>
         /// <remarks>
         /// New in 2sxc 12
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Context
         /// to install additional components or do dangerous things like edit razor.
         /// 
         /// 🪒 Use in Razor12+: `CmsContext.User.IsSiteDeveloper`
-        /// 🪒 Use in RazorPro: `MyUser.IsSiteDeveloper`
+        /// 🪒 Use in RazorTyped: `MyUser.IsSiteDeveloper`
         /// </summary>
         /// <remarks>
         /// These are not the highest possible privileges
