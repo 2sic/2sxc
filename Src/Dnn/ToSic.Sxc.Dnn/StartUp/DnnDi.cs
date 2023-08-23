@@ -151,7 +151,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<IEnvironmentLogger, DnnEnvironmentLogger>();
 
             // new in 11.08 - provide Razor Engine and platform
-            services.TryAddTransient<IRazorEngine, RazorEngine>();
+            services.TryAddTransient<IRazorEngine, DnnRazorEngine>();
             services.TryAddSingleton<IPlatform, DnnPlatformContext>();
 
             // add page publishing

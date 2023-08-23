@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Razor
     [PrivateApi("used to be marked as internal, but it doesn't make sense to show in docs")]
     [EngineDefinition(Name = "Razor")]
 
-    public partial class RazorEngine : EngineBase, IRazorEngine
+    public class NetCoreRazorEngine : EngineBase, IRazorEngine
     {
         private readonly LazySvc<CodeErrorHelpService> _errorHelp;
         private readonly LazySvc<CodeRootFactory> _codeRootFactory;
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Razor
 
         #region Constructor / DI
 
-        public RazorEngine(MyServices services, IRazorRenderer razorRenderer, LazySvc<CodeRootFactory> codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp) : base(services)
+        public NetCoreRazorEngine(MyServices services, IRazorRenderer razorRenderer, LazySvc<CodeRootFactory> codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp) : base(services)
         {
             ConnectServices(
                 _codeRootFactory = codeRootFactory,

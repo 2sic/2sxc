@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Engines
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     [EngineDefinition(Name = "Razor")]
     // ReSharper disable once UnusedMember.Global
-    public partial class RazorEngine : EngineBase, IRazorEngine
+    public partial class DnnRazorEngine : EngineBase, IRazorEngine
     {
         #region Constructor / DI
 
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Engines
         private readonly CodeRootFactory _codeRootFactory;
         private readonly LazySvc<DnnRazorSourceAnalyzer> _sourceAnalyzer;
 
-        public RazorEngine(MyServices helpers, CodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<DnnRazorSourceAnalyzer> sourceAnalyzer) : base(helpers)
+        public DnnRazorEngine(MyServices helpers, CodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<DnnRazorSourceAnalyzer> sourceAnalyzer) : base(helpers)
         {
             ConnectServices(
                 _codeRootFactory = codeRootFactory,
