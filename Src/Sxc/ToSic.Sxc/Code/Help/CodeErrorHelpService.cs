@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Code.Help
             Log.A("Trying to add help to error, something must have happened");
         }
 
-        public Exception AddHelpForCompileProblems(Exception ex, CodeFileTypes fileType)
+        public Exception AddHelpForCompileProblems(Exception ex, CodeFileInfo fileInfo)
         {
             var l = Log.Fn<Exception>();
             try
@@ -33,10 +33,10 @@ namespace ToSic.Sxc.Code.Help
                 if (ex is IExceptionWithHelp) 
                     return l.Return(ex, "already has help");
 
-                if (!CodeHelpDb.CompileHelp.TryGetValue(fileType, out var list))
+                if (!fileInfo.Help.SafeAny())// !CodeHelpDb.CompileHelp.TryGetValue(fileInfo, out var list))
                     return l.Return(ex, "no additional help found");
 
-                var help = FindManyOrNull(ex, list);
+                var help = FindManyOrNull(ex, fileInfo.Help);
                 return help == null 
                     ? l.Return(ex)
                     : l.Return(new ExceptionWithHelp(help, ex), "added help");
