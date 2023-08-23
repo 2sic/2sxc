@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Serialization;
+﻿using System.Collections.Generic;
+using ToSic.Eav.Serialization;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
@@ -42,6 +43,10 @@ namespace ToSic.Sxc.Tests.DataTests
 
         public dynamic Obj2WrapObjAsDyn(object data) => Obj2WrapObj(data);
 
+        public ITypedItem Obj2Item(object data, WrapperSettings? reWrap = null)
+            => Wrapper.TypedItemFromObject(data, reWrap ?? WrapperSettings.Typed(true, true));
+
+        #region To Json Wrappers
 
         public ITyped Obj2Typed(object data, WrapperSettings? reWrap = null)
             => Wrapper.TypedFromObject(data, reWrap ?? WrapperSettings.Typed(true, true));
@@ -53,10 +58,16 @@ namespace ToSic.Sxc.Tests.DataTests
             => Obj2Json2Typed(data, WrapperSettings.Typed(true, true, propsRequired: false));
 
         private ITyped Obj2Json2Typed(object data, WrapperSettings settings) 
-            => JsonWrapper.Setup(settings).Json2Typed(JsonSerialize(data));
+            => JsonWrapper.Setup(settings).JsonToTyped(JsonSerialize(data));
 
-        public ITypedItem Obj2Item(object data, WrapperSettings? reWrap = null)
-            => Wrapper.TypedItemFromObject(data, reWrap ?? WrapperSettings.Typed(true, true));
+
+        public IEnumerable<ITyped> Obj2Json2TypedListStrict(object data)
+            => Obj2Json2TypedList(data, WrapperSettings.Typed(true, true, propsRequired: true));
+
+        private IEnumerable<ITyped> Obj2Json2TypedList(object data, WrapperSettings settings) 
+            => JsonWrapper.Setup(settings).JsonToTypedList(JsonSerialize(data));
+        #endregion
+
 
     }
 }

@@ -1,7 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Nodes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Wrapper;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.DataTests.DynJson
@@ -17,7 +20,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
         });
 
         [TestMethod]
-        public void StringArray()
+        public void StringArray_Dyn()
         {
             var (dyn, _, original) = StringArrayPrepare();
             IsTrue(dyn.IsList);
@@ -28,25 +31,74 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
         }
 
         [TestMethod]
-        public void StringArrayCount()
+        public void StringArrayCount_Dyn()
         {
             var (dyn, _, original) = StringArrayPrepare();
             AreEqual(original.Length, dyn.Count);
         }
 
         [TestMethod]
-        public void StringArrayIterate()
+        public void StringArrayIterate_Dyn()
         {
-            var (dyn, _, original) = StringArrayPrepare();
+            var (dyn, _, _) = StringArrayPrepare();
             foreach (var strItem in dyn) IsNotNull(strItem);
         }
 
         [TestMethod]
-        public void StringArrayNonExistingProperty()
+        public void StringArrayNonExistingProperty_Dyn()
         {
             var test = StringArrayPrepare();
             IsNull(test.Dyn.NonExistingProperty);
         }
+
+        [TestMethod]
+        public void Test()
+        {
+            var anon = new[] { "test", "test2", "test3" };
+            var json = JsonSerialize(anon);
+
+            var jsonNode = JsonNode.Parse(json);
+            var isArray = jsonNode is JsonArray;
+            Assert.IsTrue(isArray);
+            IsNotNull(jsonNode.AsArray());
+        }
+
+        public static IEnumerable<object[]> DetectJsonType => new List<object[]>
+        {
+            new object[] { true, false, new { something = "hello" } },
+            new object[] { true, false, new { } },
+            new object[] { true, true, new[] { "hello", "there" } },
+            new object[] { true, true, new[] { 1, 2, 3 } },
+            new object[] { false, false, "just a string" },
+            new object[] { false, false, 27 },
+        };
+
+        [TestMethod]
+        [DynamicData(nameof(DetectJsonType))]
+        public void DetectJsonComplexOfObject(bool expComplex, bool expArray, object value, string testName = default)
+        {
+            var json = JsonSerialize(value);
+            var (isComplex, isArray) = CodeJsonWrapper.AnalyzeJson(json);
+            AreEqual(expComplex, isComplex, testName + ":" + value + "; json: " + json);
+            AreEqual(expArray, isArray, testName + ":" + value + "; json: " + json);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void WrapArrayToStrictShouldFail() => Obj2Json2TypedStrict(new[] { 1, 2, 3 });
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void WrapArrayValuesToStrictListShouldFail() => Obj2Json2TypedListStrict(new[] { 1, 2, 3 });
+
+        [TestMethod]
+        public void WrapArrayToStrictListShouldBeOk()
+        {
+            var list = Obj2Json2TypedListStrict(new object[] { new { a = 7 }, new { b = 27 } });
+            IsNotNull(list);
+            AreEqual(2, list.Count());
+        }
+
 
         private (dynamic Dyn, string Json, string[][] Original) StringArray2dPrepare() => DynJsonAndOriginal(new[]
         {
@@ -129,6 +181,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
         }
 
         [TestMethod]
+        [Ignore("2023-08-23 2dm - This test can't work - json Arrays don't support keys; may need to re-write the test or delete")]
         public void Keys()
         {
             var anon = new[]

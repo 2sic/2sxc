@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using ToSic.Eav.Plumbing;
@@ -37,57 +40,117 @@ namespace ToSic.Sxc.Data.Wrapper
             return IfJsonTryConvertToJacket(AsJsonNode(json, fallback)).Final;
         }
 
-        public ITyped Json2Typed(string json, string noParamOrder = Protector, string fallback = default)
+        public ITyped JsonToTyped(string json, string noParamOrder = Protector, string fallback = default)
         {
             Protect(noParamOrder, nameof(fallback));
-            return IfJsonTryConvertToTyped(AsJsonNode(json, fallback)).Final;
+            if (!json.HasValue()) return null;
+            ThrowIfNotExpected(json, false);
+            var node = AsJsonNode(json, fallback);
+            var result = IfJsonTryConvertToJacket<ITyped>(node, CreateTypedObject, array => null);
+            return result.Final;
+        }
+
+        public IEnumerable<ITyped> JsonToTypedList(string json, string noParamOrder = Protector, string fallback = default)
+        {
+            Protect(noParamOrder, nameof(fallback));
+            if (!json.HasValue()) return null;
+            ThrowIfNotExpected(json, true);
+            var node = AsJsonNode(json, fallback);
+            var result = IfJsonTryConvertToJacket(node,
+                obj => null as IEnumerable<ITyped>,
+                array => array.Select((j, index) => j is JsonObject jo
+                        ? CreateTypedObject(jo)
+                        : throw new ArgumentException(
+                            $"Tried to create array of objects but array seems to contain simple values or something else. '{j}', index: {index}"))
+                    .ToList()
+            );
+            return result.Final;
+        }
+
+        public void ThrowIfNotExpected(string json, bool expectArray, [CallerMemberName] string cName = default)
+        {
+            var (isComplex, isArray) = AnalyzeJson(json);
+            if (!isComplex)
+                throw new ArgumentException(
+                    @"Wrapping Json only works for complex objects. This value is either null, empty or a value type.",
+                    nameof(json));
+
+            // If Array-state and expectations match, it's ok
+            if (isArray == expectArray) return;
+
+            // Throw if IsArray and it wasn't expected
+            if (isArray)
+                throw new ArgumentException(@"Expected an object but got an array. For arrays you should use ToTypedList(...)", nameof(json));
+
+            // Not array, but apparently expected
+            throw new ArgumentException(@"Expected an array but got an object. For objects you should use ToTyped(...)",
+                nameof(json));
         }
 
 
         private static JsonNode AsJsonNode(string json, string fallback = EmptyJson)
         {
-            if (json.HasValue())
-                try
+            if (!json.HasValue()) return fallback == null ? null : StandardParse(fallback);
+
+            try
+            {
+                var (isComplex, isArray) = AnalyzeJson(json);
+                if (isComplex)
                 {
-                    // find first possible opening character
-                    var firstCharPos = json.IndexOfAny(new[] { JObjStart, JArrayStart });
-                    if (firstCharPos > -1)
-                    {
-                        var firstChar = json[firstCharPos];
-                        switch (firstChar)
-                        {
-                            case JObjStart:
-                                return JsonNode.Parse(json, JsonNodeDefaultOptions, JsonDocumentDefaultOptions)?.AsObject();
-                            case JArrayStart:
-                                return JsonNode.Parse(json, JsonNodeDefaultOptions, JsonDocumentDefaultOptions)?.AsArray();
-                        }
-                    }
+                    var node = StandardParse(json);
+                    if (node != null)
+                        return node;
+                        // return isArray ? node.AsArray() as JsonNode : node.AsObject();
                 }
-                catch
-                {
-                    if (fallback == JsonErrorCode) throw;
-                }
+                // 2023-08-23 2dm - this is fairly complex, I believe the conversions are not necessary
+                //var firstCharPos = json.IndexOfAny(new[] { JObjStart, JArrayStart });
+                //if (firstCharPos > -1)
+                //{
+                //    var firstChar = json[firstCharPos];
+                //    switch (firstChar)
+                //    {
+                //        case JObjStart: return StandardParse(json)?.AsObject();
+                //        case JArrayStart: return StandardParse(json)?.AsArray();
+                //    }
+                //}
+            }
+            catch
+            {
+                if (fallback == JsonErrorCode) throw;
+            }
 
             // fallback
-            return fallback == null
-                ? null
-                : JsonNode.Parse(fallback, JsonNodeDefaultOptions, JsonDocumentDefaultOptions);
+            return fallback == null ? null : StandardParse(fallback);
         }
 
-        private (object Final, bool Ok, JsonValueKind ValueKind) IfJsonTryConvertToWrapper(object original)
+        /// <summary>
+        /// Find out if a string is a complex object (obj/array) and if it's an array.
+        /// </summary>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        public static (bool IsComplex, bool IsArray) AnalyzeJson(string json)
         {
-            return Settings.WrapToDynamic
+            // find first possible opening character
+            var firstCharPos = json.IndexOfAny(new[] { JObjStart, JArrayStart });
+            return firstCharPos <= -1 
+                ? (false, false) 
+                : (true, json[firstCharPos] == JArrayStart);
+        }
+
+        private static JsonNode StandardParse(string json) =>
+            JsonNode.Parse(json, JsonNodeDefaultOptions, JsonDocumentDefaultOptions);
+
+
+        private (object Final, bool Ok, JsonValueKind ValueKind) IfJsonTryConvertToWrapper(object original) =>
+            Settings.WrapToDynamic
                 ? ((object Final, bool Ok, JsonValueKind ValueKind))IfJsonTryConvertToJacket(original)
                 : IfJsonTryConvertToTyped(original);
-        }
-        private (DynamicJacketBase Final, bool Ok, JsonValueKind ValueKind) IfJsonTryConvertToJacket(object original)
-        {
-            return IfJsonTryConvertToJacket<DynamicJacketBase>(original, CreateDynJacketObject, CreateDynJacketList);
-        }
-        private (ITyped Final, bool Ok, JsonValueKind ValueKind) IfJsonTryConvertToTyped(object original)
-        {
-            return IfJsonTryConvertToJacket<ITyped>(original, CreateTypedObject, CreateTypedList);
-        }
+
+        private (DynamicJacketBase Final, bool Ok, JsonValueKind ValueKind) IfJsonTryConvertToJacket(object original) =>
+            IfJsonTryConvertToJacket<DynamicJacketBase>(original, CreateDynJacketObject, CreateDynJacketList);
+
+        private (ITyped Final, bool Ok, JsonValueKind ValueKind) IfJsonTryConvertToTyped(object original) =>
+            IfJsonTryConvertToJacket<ITyped>(original, CreateTypedObject, CreateTypedList);
 
         internal DynamicJacket CreateDynJacketObject(JsonObject jsonObject)
         {
@@ -113,7 +176,7 @@ namespace ToSic.Sxc.Data.Wrapper
         private (TResult Final, bool Ok, JsonValueKind ValueKind)
             IfJsonTryConvertToJacket<TResult>(object original, Func<JsonObject, TResult> toObj, Func<JsonArray, TResult> toArr) where TResult : class
         {
-            ILogCall<(TResult Final, bool Ok, JsonValueKind ValueKind)> l = Log.Fn<(TResult Jacket, bool Ok, JsonValueKind ValueKind)>();
+            var l = Log.Fn<(TResult Jacket, bool Ok, JsonValueKind ValueKind)>();
             if (!(original is JsonNode jsonNode))
                 return l.Return((null, false, JsonValueKind.Undefined), "not json node");
 
