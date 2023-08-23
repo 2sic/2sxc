@@ -32,7 +32,7 @@ namespace Custom.Hybrid
     [PublicApi]
     [DnnLogExceptions]
     [DefaultToNewtonsoftForHttpJson]
-    public abstract class Api14: DynamicApiController, IDynamicCode14<object, ServiceKit14>, IHasCodeLog, IDynamicWebApi, IDynamicCode12, ICreateInstance
+    public abstract partial class Api14: DynamicApiController, IDynamicCode14<object, ServiceKit14>, IHasCodeLog, IDynamicWebApi, IDynamicCode12, ICreateInstance
     {
         #region Setup
 

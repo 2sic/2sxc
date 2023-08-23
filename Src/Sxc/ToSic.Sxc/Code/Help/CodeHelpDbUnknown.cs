@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Code.Help;
-using static ToSic.Sxc.Code.Help.CodeHelpDbV12;
 
 namespace ToSic.Sxc.Code.Help
 {

@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Code.Help;
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
@@ -15,7 +17,7 @@ namespace Custom.Hybrid
 {
     [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
     // ReSharper disable once UnusedMember.Global
-    public abstract class RazorTyped: OqtRazorBase<dynamic>, IHasCodeLog, IRazor, ISetDynamicModel, IDynamicCode16
+    public abstract class RazorTyped: OqtRazorBase<dynamic>, IHasCodeLog, IRazor, ISetDynamicModel, IDynamicCode16, IHasCodeHelp
     {
         #region Constructor / DI / SysHelp
 
@@ -115,6 +117,15 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="IDynamicCode16.MyView" />
         public ICmsView MyView => _DynCodeRoot.CmsContext.View;
+
+        #endregion
+
+        #region Dev Tools & Dev Helpers
+
+        [PrivateApi("Not yet ready")]
+        public IDevTools DevTools => CodeHelper.DevTools;
+
+        [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => CodeHelpDbV16.Compile16;
 
         #endregion
 

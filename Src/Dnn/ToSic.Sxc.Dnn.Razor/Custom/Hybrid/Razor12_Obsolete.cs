@@ -23,7 +23,7 @@ using ToSic.Lib.Documentation;
         [PrivateApi]
         [Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
         public dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity)
-            => AsDynamicInterfacesIEntity();
+            => ExAsDynamicInterfacesIEntity();
 
 
         [PrivateApi]
@@ -42,7 +42,7 @@ using ToSic.Lib.Documentation;
 
         [PrivateApi]
         [Obsolete("throws error with fix-instructions. Use AsDynamic(IEnumerable<IEntity>...)")]
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => AsDynamicKvp();
+        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => ExAsDynamicKvp();
 
         #endregion
 
@@ -57,9 +57,9 @@ using ToSic.Lib.Documentation;
 
         #region Old AsDynamic with correct warnings
 
-        [PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataStream stream) => AsDynamicForList();
-        [PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataSource source) => AsDynamicForList();
-        [PrivateApi] public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => AsDynamicForList();
+        [PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataStream stream) => ExAsDynamicForList();
+        [PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataSource source) => ExAsDynamicForList();
+        [PrivateApi] public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => ExAsDynamicForList();
 
         #endregion
     }
