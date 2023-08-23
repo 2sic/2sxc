@@ -15,41 +15,11 @@ namespace ToSic.Sxc.Code.Help
         private static CodeHelp NotExists(string property, params string[] replacement)
             => new GenNotExist(property, replacement) { MsgNotSupportedIn = IsNotSupportedIn16Plus }.Generate();
 
-
         #endregion
 
-        //private static List<CodeHelp> ResourceHelp = ManyHelps(
-        //    NotExists("Resources", "App.Resources", "AllResources"),
-        //    h => new CodeHelp(h, detect: "does not exist in the namespace 'Resources' (are you missing an assembly reference?)")
-        //);
-
-        //private static readonly CodeHelp ResourcesNotExist16 =
-        //    NotExists("Resources", "App.Resources", "AllResources");
-
-        //private static readonly CodeHelp ResourcesNotExist16B = new CodeHelp(ResourcesNotExist16,
-        //    detect: "does not exist in the namespace 'Resources' (are you missing an assembly reference?)");
-
-        //private static readonly CodeHelp SettingsNotExist16 =
-        //    NotExists("Settings", "App.Settings", "AllSettings");
-
-        //private static readonly CodeHelp EditNotExist = new GenNotExist("Edit", new[]
-        //    {
-        //        ("Kit.Toolbar.Default()...", "to build a standard toolbar"),
-        //        ("Kit.Toolbar.Empty()...", "to start with an empty toolbar"),
-        //        ("MyUser.IsContentAdmin", "to find out if edit is enabled"),
-        //        ("Kit.Edit", "to really use the Edit object (not often needed, as the replacements are better)")
-        //    })
-        //{
-        //    MsgNotSupportedIn = IsNotSupportedIn16Plus,
-        //}.Generate();
-
-        //private static readonly CodeHelp AsAdamNotExist =
-        //    new GenNotExist("AsAdam", ("object.Folder(\"FieldName\")", "Use the Folder(...) method on an Item"))
-        //    {
-        //        Comments = "AsAdam isn't needed any more, since there is an easier syntax.",
-        //        MsgNotSupportedIn = IsNotSupportedIn16Plus,
-        //    }.Generate();
-
+        /// <summary>
+        /// Compile Help for RazorTyped etc.
+        /// </summary>
         public static List<CodeHelp> Compile16 => _help ?? (_help = BuildList(
             // use old `Convert` object
             CodeHelpDbV14.SystemConvertIncorrectUse,
@@ -79,9 +49,8 @@ namespace ToSic.Sxc.Code.Help
             ManyHelps(
                 NotExists("List", "MyItems", "AsItems(MyData.Get())"),
                 h => new CodeHelp(h, detect: "does not contain a definition for 'List'"),
-                h => new CodeHelp(h,
-                    detect:
-                    @"error CS0305: Using the generic type 'System.Collections.Generic.List<T>' requires 1 type arguments")
+                h => new CodeHelp(h, detect: "error CS0305: Using the generic type " +
+                                             "'System.Collections.Generic.List<T>' requires 1 type arguments")
             ),
 
             // Core data objects like Content, Presentation, List...
@@ -95,10 +64,12 @@ namespace ToSic.Sxc.Code.Help
             NotExists("Settings", "App.Settings", "AllSettings"),
             ManyHelps(
                 NotExists("Resources", "App.Resources", "AllResources"),
-                h => new CodeHelp(h,
-                    detect: "does not exist in the namespace 'Resources' (are you missing an assembly reference?)"),
-                h => new CodeHelp(h, detect: "error CS0118: 'Resources' is a 'namespace' but is used like a 'variable' at"),
-                h => new CodeHelp(h, detectRegex: true, detect: "error CS0234: The type or namespace name '.*' does not exist in the namespace 'Resources' \\(are you missing an assembly reference\\?\\)")
+                h => new CodeHelp(h, detect: "does not exist in the namespace " +
+                                             "'Resources' (are you missing an assembly reference?)"),
+                h => new CodeHelp(h, detect: "error CS0118: 'Resources' is a " +
+                                             "'namespace' but is used like a 'variable'"),
+                h => new CodeHelp(h, detectRegex: true, detect: "error CS0234: The type or namespace name " +
+                                                                "'.*' does not exist in the namespace 'Resources' \\(are you missing an assembly reference\\?\\)")
             ),
 
             // Edit object

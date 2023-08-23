@@ -101,7 +101,12 @@ namespace ToSic.Sxc.Code.Help
         private static CodeHelp FindHelp(Exception ex, List<CodeHelp> errorList)
         {
             var msg = ex?.Message;
-            return msg == null ? null : errorList.FirstOrDefault(help => help.DetectRegex ? Regex.IsMatch(msg, help.Detect) : msg.Contains(help.Detect));
+            return msg == null ? null : errorList.FirstOrDefault(help =>
+            {
+                if (help.DetectRegex)
+                    return Regex.IsMatch(msg, help.Detect);
+                return msg.Contains(help.Detect);
+            });
         }
         private static List<CodeHelp> FindManyOrNull(Exception ex, List<CodeHelp> errorList)
         {
