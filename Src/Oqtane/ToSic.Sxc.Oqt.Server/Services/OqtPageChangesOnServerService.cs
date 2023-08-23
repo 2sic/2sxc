@@ -34,16 +34,33 @@ namespace ToSic.Sxc.Oqt.Server.Services
         {
             var logPrefix = $"{nameof(ApplyHttpHeaders)}(...) - ";
 
-            page?.Log($"{logPrefix}stv#1 poc");
+            #region initial request and parameters validation
+            page?.Log($"{logPrefix}validate parameters");
 
-            if (_httpContextAccessor?.HttpContext?.Request?.Path.HasValue != true)
-                return -1; // no path, no headers
+            if (_httpContextAccessor?.HttpContext == null)
+            {
+                page?.Log($"{logPrefix}missing http context");
+                return -1;
+            }
+
+            if (_httpContextAccessor.HttpContext.Request?.Path.HasValue != true)
+            {
+                page?.Log($"{logPrefix}not a page because no path, so no headers");
+                return -1;
+            }
 
             if (_httpContextAccessor.HttpContext.Request.Path.Value!.Contains("/_blazor"))
-                return -1; // no headers for blazor
+            {
+                page?.Log($"{logPrefix}no headers for blazor");
+                return -1;
+            }
 
             if (!(result?.CspParameters?.Any() ?? false))
-                return -1; // no headers if there are no CSP parameters
+            {
+                page?.Log($"{logPrefix}no headers if there are no CSP parameters");
+                return -1;
+            }
+            #endregion
 
             // Register CSP changes for applying once all modules have been prepared
             // Note that in cached scenarios, CspEnabled is true, but it may have been turned off since
@@ -53,25 +70,20 @@ namespace ToSic.Sxc.Oqt.Server.Services
                 PageCsp(result.CspEnforced, page).Add(result.CspParameters.Select(p => new CspParameters(UrlHelpers.ParseQueryString(p))).ToList());
             }
 
-            var httpHeaders = result.HttpHeaders;
-
-            if (_httpContextAccessor.HttpContext?.Response == null)
-            {
-                page?.Log($"{logPrefix}error, HttpResponse is null");
-                return 0;
-            }
-
+            #region response and headers validation
             if (_httpContextAccessor.HttpContext.Response.HasStarted)
             {
                 page?.Log($"{logPrefix}error, to late for adding http headers");
                 return 0;
             }
 
-            if (httpHeaders?.Any() == true) // ????
+            var httpHeaders = result.HttpHeaders;
+            if (httpHeaders?.Any() == true)
             {
                 page?.Log($"{logPrefix}ok, no headers to add");
                 return 0;
-            }
+            } 
+            #endregion
 
             // Register event to attach headers
             _httpContextAccessor.HttpContext.Response.OnStarting(() =>
@@ -100,7 +112,8 @@ namespace ToSic.Sxc.Oqt.Server.Services
             page?.Log($"{logPrefix}httpHeaders.Count: {httpHeaders!.Count}");
             return httpHeaders!.Count;
         }
-        public dynamic PageCsp(bool enforced, IOqtHybridLog page)
+
+        private CspOfPage PageCsp(bool enforced, IOqtHybridLog page)
         {
             var logPrefix = $"{nameof(PageCsp)}(enforced:{enforced}) - ";
 
@@ -108,7 +121,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
 
             // If it's already registered, then the add-on-sending has already been added too
             // So we shouldn't repeat it, just return the cache which will be used later
-            if (_httpContextAccessor.HttpContext.Items.ContainsKey(key))
+            if (_httpContextAccessor.HttpContext!.Items.ContainsKey(key))
             {
                 var result = (CspOfPage)_httpContextAccessor.HttpContext.Items[key];
                 page?.Log($"already registered {logPrefix}{key}={result}");

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using ToSic.Sxc.Oqt.Client.Helpers;
+using ToSic.Sxc.Oqt.Client;
 using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
@@ -60,11 +60,17 @@ namespace ToSic.Sxc.Oqt.App
                 if (string.IsNullOrEmpty(RenderedUri) || (!NavigationManager.Uri.Equals(RenderedUri, InvariantCultureIgnoreCase) && NavigationManager.Uri.StartsWith(RenderedPage, InvariantCultureIgnoreCase)))
                 {
                     RenderedUri = NavigationManager.Uri;
-                    Log($"1.1: RenderUri:{RenderedUri}");
                     RenderedPage = NavigationManager.Uri.RemoveQueryAndFragment();
-                    Log($"1.2: Initialize2sxcContentBlock");
+                    Log($"1.1: RenderUri:{RenderedUri}");
+
                     await Initialize2SxcContentBlock();
                     NewDataArrived = true;
+
+                    ProcessPageChanges();
+
+                    // convenient place to apply Csp HttpHeaders to response
+                    var count = OqtPageChangesOnServerService.ApplyHttpHeaders(ViewResults, this);
+                    Log($"1.4: Csp:{count}");
                 }
 
                 Log($"1 end: OnParametersSetAsync(NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
@@ -105,7 +111,7 @@ namespace ToSic.Sxc.Oqt.App
                 LogError(ex);
             }
         }
-        private DotNetObjectReference<Index> _dotNetObjectReference = null;
+        private DotNetObjectReference<Index> _dotNetObjectReference;
 
         // This is called from JS to reload module content from blazor instead of ajax that breaks blazor
         [JSInvokable("ReloadModule")]
@@ -115,6 +121,7 @@ namespace ToSic.Sxc.Oqt.App
             {
                 Log($"3: ReloadModule");
                 await Initialize2SxcContentBlock();
+                ProcessPageChanges();
                 await StandardAssets();
                 StateHasChanged();
             }
@@ -130,43 +137,55 @@ namespace ToSic.Sxc.Oqt.App
         }
  
         /// <summary>
-        /// prepare the html / headers for later rendering
+        /// Prepare the html / headers for later rendering
         /// </summary>
         private async Task Initialize2SxcContentBlock()
         {
-            var culture = CultureInfo.CurrentUICulture.Name;
+            Log($"1.2: Initialize2sxcContentBlock");
 
-            var urlQuery = NavigationManager.ToAbsoluteUri(NavigationManager.Uri).Query;
+            #region ViewResults prepare
             ViewResults = await OqtSxcRenderService.PrepareAsync(
                 PageState.Alias.AliasId,
                 PageState.Page.PageId,
                 ModuleState.ModuleId,
-                culture,
-                urlQuery,
+                CultureInfo.CurrentUICulture.Name,
+                NavigationManager.ToAbsoluteUri(NavigationManager.Uri).Query,
                 IsPreRendering());
 
             if (!string.IsNullOrEmpty(ViewResults?.ErrorMessage))
                 LogError(ViewResults.ErrorMessage);
 
-            Log($"1.2.2: Html:{ViewResults?.Html?.Length ?? -1}", ViewResults);
+            Log($"1.2.1: Html:{ViewResults?.Html?.Length ?? -1}"); 
+            #endregion
 
+            #region ViewResults finalization
             if (ViewResults != null)
-            {
                 ViewResults.SystemHtml = IsPreRendering() ? OqtPrerenderService?.GetSystemHtml() : string.Empty;
-                OqtPageChangesOnServerService.ApplyHttpHeaders(ViewResults, this);
-                Log($"1.3: Csp");
-            }
+            #endregion
+        }
+
+
+        /// <summary>
+        /// Process page changes in html for title, keywords, descriptions and other meta or html tags.
+        /// Oqtane decide to directly render this changes in page html as part of first request, or latter with interop.
+        /// </summary>
+        private void ProcessPageChanges()
+        {
+            Log($"1.3: ProcessPageChanges");
+
+            Log($"1.3.1: module html content set on page");
+            Content = ViewResults?.FinalHtml;
 
             if (ViewResults?.PageProperties?.Any() ?? false)
             {
-                Log($"1.4: UpdatePageProperties");
-                HtmlHelper.UpdatePageProperties(SiteState, ViewResults, this);
+                Log($"1.3.2: UpdatePageProperties title, keywords, description");
+                OqtPageChangeService.UpdatePageProperties(SiteState, ViewResults, this);
             }
 
             // Add Context-Meta first, because it should be available when $2sxc loads
             if (ViewResults?.SxcContextMetaName != null)
             {
-                Log($"1.5: Context-Meta RenderUri:{RenderedUri}");
+                Log($"1.3.3: Context-Meta RenderUri:{RenderedUri}");
                 SiteState.Properties.HeadContent = HtmlHelper.AddOrUpdateMetaTagContent(SiteState.Properties.HeadContent,
                     ViewResults.SxcContextMetaName, ViewResults.SxcContextMetaContents);
             }
@@ -176,13 +195,16 @@ namespace ToSic.Sxc.Oqt.App
             //if (ViewResults?.SxcScripts != null)
             //    foreach (var resource in ViewResults.SxcScripts)
             //    {
-            //        Log($"1.6.{++index}: IncludeScript:{resource}");
+            //        Log($"1.3.4.{++index}: IncludeScript:{resource}");
             //        SiteState.Properties.HeadContent = HtmlHelper.AddScript(SiteState.Properties.HeadContent, resource, SiteState.Alias);
             //    }
-
-            Content = ViewResults?.FinalHtml;
         }
 
+        /// <summary>
+        /// Ensure standard assets like java-scripts and styles.
+        /// This is done with interop after the page is rendered.
+        /// </summary>
+        /// <returns></returns>
         private async Task StandardAssets()
         {
             if (ViewResults == null) return;
@@ -215,7 +237,6 @@ namespace ToSic.Sxc.Oqt.App
                 Log($"2.5: AttachScriptsAndStyles");
                 await OqtPageChangeService.AttachScriptsAndStyles(ViewResults, SxcInterop, this);
             }
-
 
             #endregion
         }
