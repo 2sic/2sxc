@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Apps
         /// Configuration object with information about the App.
         /// This contains things like app version, path etc.
         /// </summary>
-        new AppConfiguration Configuration { get; }
+        new IAppConfiguration Configuration { get; }
 
         /// <summary>
         /// All the app settings which are custom for each app. 

@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using ToSic.Eav.Apps.Decorators;
+using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Run;
 using ToSic.Lib.DI;
@@ -10,11 +11,13 @@ namespace ToSic.Sxc.Apps
 {
     internal class AppAssetThumbnail : AppAssetFile
     {
+        public AppPaths AppPaths { get; }
         private readonly IApp _app;
         private readonly LazySvc<GlobalPaths> _globalPaths;
 
-        public AppAssetThumbnail(IApp app, LazySvc<GlobalPaths> globalPaths)
+        public AppAssetThumbnail(IApp app, AppPaths appPaths, LazySvc<GlobalPaths> globalPaths)
         {
+            AppPaths = appPaths;
             _app = app;
             _globalPaths = globalPaths;
         }
@@ -28,12 +31,12 @@ namespace ToSic.Sxc.Apps
                     () => _globalPaths.Value.GlobalPathTo(AppPrimaryIconFile, PathTypes.Link));
 
             // standard app (not global) try to find app-icon in its (portal) app folder
-            if (!_app.AppState.IsShared() && File.Exists($"{_app.PhysicalPath}/{AppIconFile}")) 
-                return $"{_app.Path}/{AppIconFile}";
+            if (!_app.AppState.IsShared() && File.Exists($"{AppPaths.PhysicalPath}/{AppIconFile}")) 
+                return $"{AppPaths.Path}/{AppIconFile}";
 
             // global app (and standard app without app-icon in its portal folder) looks for app-icon in global shared location 
-            if (File.Exists($"{_app.PhysicalPathShared}/{AppIconFile}"))
-                return $"{_app.PathShared}/{AppIconFile}";
+            if (File.Exists($"{AppPaths.PhysicalPathShared}/{AppIconFile}"))
+                return $"{AppPaths.PathShared}/{AppIconFile}";
 
             return null;
 

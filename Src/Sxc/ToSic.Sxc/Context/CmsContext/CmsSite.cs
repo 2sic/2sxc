@@ -31,7 +31,8 @@ namespace ToSic.Sxc.Context
         public string Url => GetContents()?.Url ?? string.Empty;
         public string UrlRoot => GetContents().UrlRoot ?? string.Empty;
 
-        public IApp App => _app.Get(() => _siteAppLazy.Value.Init(_appState, null));
+        
+        private IApp App => _app.Get(() => _siteAppLazy.Value.Init(_appState, null));
         private readonly GetOnce<IApp> _app = new GetOnce<IApp>();
 
         protected override IMetadataOf GetMetadataOf() 

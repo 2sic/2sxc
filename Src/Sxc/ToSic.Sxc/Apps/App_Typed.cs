@@ -22,10 +22,10 @@ namespace ToSic.Sxc.Apps
         IFolder IAppTyped.FolderAdvanced(string noParamOrder, string location)
         {
             Protect(noParamOrder, nameof(location));
-            return new AppAssetFolderMain(this, DetermineShared(location) ?? AppState.IsShared());
+            return new AppAssetFolderMain(AppPaths, Folder, DetermineShared(location) ?? AppState.IsShared());
         }
 
-        IFile IAppTyped.Thumbnail => _thumbnailFile.Get(() => new AppAssetThumbnail(this, _globalPaths));
+        IFile IAppTyped.Thumbnail => _thumbnailFile.Get(() => new AppAssetThumbnail(this, AppPaths, _globalPaths));
         private readonly GetOnce<IFile> _thumbnailFile = new GetOnce<IFile>();
 
         #endregion

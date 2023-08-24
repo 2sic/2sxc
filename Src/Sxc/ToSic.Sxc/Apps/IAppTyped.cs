@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Apps
 
 
         /// <inheritdoc cref="IApp.Configuration"/>
-        AppConfiguration Configuration { get; }
+        IAppConfiguration Configuration { get; }
 
         /// <summary>
         /// All the app settings which are custom for each app. 

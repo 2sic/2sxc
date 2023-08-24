@@ -63,8 +63,9 @@ namespace ToSic.Sxc.Context
         [PrivateApi]
         ICmsSite Init(CmsContext parent, AppState appState);
 
-        [PrivateApi("WIP v13/14")]
-        IApp App { get; }
+        // 2023-08-24 2dm hide for now, not sure if we want to publish like this, or just provide appIdentity to get it yourself
+        //[PrivateApi("WIP v13/14")]
+        //IApp App { get; }
 
     }
 }

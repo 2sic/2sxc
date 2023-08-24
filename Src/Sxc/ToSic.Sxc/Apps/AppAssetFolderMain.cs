@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Apps.Paths;
 
 namespace ToSic.Sxc.Apps
 {
@@ -26,22 +27,23 @@ namespace ToSic.Sxc.Apps
         }
 
 
-        private readonly IApp _app;
+        internal readonly AppPaths AppPaths;
         private readonly bool _shared;
 
-        public AppAssetFolderMain(IApp app, bool shared)
+        public AppAssetFolderMain(AppPaths appPaths, string folder, bool shared)
         {
-            _app = app;
+            Name = folder;
+            AppPaths = appPaths;
             _shared = shared;
         }
 
-        public override string Name => _app.Folder;
+        public override string Name { get; }
 
-        public override string Path => _shared ? _app.RelativePathShared : _app.RelativePath;
+        public override string Path => _shared ? AppPaths.RelativePathShared : AppPaths.RelativePath;
 
-        public override string PhysicalPath => (_shared ? _app.PhysicalPathShared : _app.PhysicalPath);
+        public override string PhysicalPath => (_shared ? AppPaths.PhysicalPathShared : AppPaths.PhysicalPath);
 
-        public override string Url => _shared ? _app.PathShared : _app.Path;
+        public override string Url => _shared ? AppPaths.PathShared : AppPaths.Path;
 
 
     }
