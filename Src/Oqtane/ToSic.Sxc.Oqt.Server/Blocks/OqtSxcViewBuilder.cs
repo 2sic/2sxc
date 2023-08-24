@@ -58,13 +58,13 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         /// <summary>
         /// Prepare must always be the first thing to be called - to ensure that afterwards both headers and html are known.
         /// </summary>
-        public OqtViewResultsDto Prepare(Alias alias, Site site, Page page, Module module, bool preRender)
+        public OqtViewResultsDto Prepare(Alias alias, Site site, Page page, Module module, bool isPrerendering)
         {
             Alias = alias;
             Site = site;
             Page = page;
             Module = module;
-            PreRender = preRender;
+            IsPrerendering = isPrerendering;
 
             // Check for installation errors before even trying to build a view, and otherwise return this object if Refs are missing.
             if (RefsInstalledCheck.WarnIfRefsAreNotInstalled(out var oqtViewResultsDtoWarning)) return oqtViewResultsDtoWarning;
@@ -119,7 +119,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         internal Site Site;
         internal Page Page;
         internal Module Module;
-        internal bool PreRender;
+        internal bool IsPrerendering;
 
         internal IBlock Block => _blockGetOnce.Get(() => LogTimer.DoInTimer(() =>
         {
@@ -134,7 +134,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         }));
         private readonly GetOnce<IBlock> _blockGetOnce = new();
 
-        protected ILogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"PreRender:{PreRender}, Page:{Page?.PageId} '{Page?.Name}', Module:{Module?.ModuleId} '{Module?.Title}'"));
+        protected ILogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"IsPrerendering:{IsPrerendering}, Page:{Page?.PageId} '{Page?.Name}', Module:{Module?.ModuleId} '{Module?.Title}'"));
         private readonly GetOnce<ILogCall> _logTimer = new();
 
 

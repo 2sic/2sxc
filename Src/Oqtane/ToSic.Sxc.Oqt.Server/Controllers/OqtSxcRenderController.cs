@@ -57,9 +57,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         private readonly IUserPermissions _userPermissions;
         private readonly Oqtane.Shared.SiteState _siteState;
 
-        [HttpGet("{aliasId:int}/{pageId:int}/{moduleId:int}/{culture}/{preRender:bool}/Prepare")]
+        [HttpGet("{aliasId:int}/{pageId:int}/{moduleId:int}/{culture}/{isPrerendering:bool}/Prepare")]
         //[Authorize(Policy = PolicyNames.ViewModule)]
-        public OqtViewResultsDto Prepare([FromRoute] int aliasId, [FromRoute] int pageId, [FromRoute] int moduleId, [FromRoute] string culture, [FromRoute] bool preRender, [FromQuery] string originalParameters)
+        public OqtViewResultsDto Prepare([FromRoute] int aliasId, [FromRoute] int pageId, [FromRoute] int moduleId, [FromRoute] string culture, [FromRoute] bool isPrerendering, [FromQuery] string originalParameters)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
                 module.Settings = _settings.GetSettings(EntityNames.Module, moduleId).ToDictionary(setting => setting.SettingName, setting => setting.SettingValue);
 
-                return _sxcOqtane.Prepare(alias, site, page, module, preRender);
+                return _sxcOqtane.Prepare(alias, site, page, module, isPrerendering);
             }
             catch (Exception ex)
             {

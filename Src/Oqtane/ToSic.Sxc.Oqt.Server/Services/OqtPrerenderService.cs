@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using Oqtane.Shared;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
@@ -10,10 +11,12 @@ namespace ToSic.Sxc.Oqt.Server.Services
     public class OqtPrerenderService : ServiceBase, IOqtPrerenderService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly SiteState _siteState;
 
-        public OqtPrerenderService(IHttpContextAccessor httpContextAccessor) : base($"{Constants.SxcLogName}.OqtPrerndSrv")
+        public OqtPrerenderService(IHttpContextAccessor httpContextAccessor, SiteState siteState) : base($"{Constants.SxcLogName}.OqtPrerndSrv")
         {
             _httpContextAccessor = httpContextAccessor;
+            _siteState = siteState;
         }
 
         public string GetSystemHtml()
@@ -21,6 +24,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
             try
             {
                 if (Executed) return string.Empty;
+                if (!_siteState.IsPrerendering) return string.Empty;
                 if (!HasUserAgentSignature()) return string.Empty;
                 Executed = true;
                 return SystemHtml();

@@ -12,10 +12,9 @@ namespace ToSic.Sxc.Oqt.Client.Services
 
         private string ApiUrl => CreateApiUrl("OqtSxcRender");
 
-        public async Task<OqtViewResultsDto> PrepareAsync(int aliasId, int pageId, int moduleId, string culture,
-            string query, bool preRender)
+        public async Task<OqtViewResultsDto> PrepareAsync(int aliasId, int pageId, int moduleId, string culture, string query, bool isPrerendering)
         {
-            var url = CreateAuthorizationPolicyUrl($"{ApiUrl}/{aliasId}/{pageId}/{moduleId}/{culture}/{preRender}/Prepare{query}", EntityNames.Module, moduleId);
+            var url = CreateAuthorizationPolicyUrl($"{ApiUrl}/{aliasId}/{pageId}/{moduleId}/{culture}/{isPrerendering}/Prepare{query}", EntityNames.Module, moduleId);
             return await GetJsonAsync<OqtViewResultsDto>(url);
         }
     }
