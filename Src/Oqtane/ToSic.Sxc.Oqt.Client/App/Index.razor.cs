@@ -150,7 +150,7 @@ namespace ToSic.Sxc.Oqt.App
                 ModuleState.ModuleId,
                 CultureInfo.CurrentUICulture.Name,
                 NavigationManager.ToAbsoluteUri(NavigationManager.Uri).Query,
-                IsPreRendering());
+                IsPrerendering(SiteState.IsPrerendering));
 
             if (!string.IsNullOrEmpty(ViewResults?.ErrorMessage))
                 LogError(ViewResults.ErrorMessage);
@@ -160,7 +160,7 @@ namespace ToSic.Sxc.Oqt.App
 
             #region ViewResults finalization
             if (ViewResults != null)
-                ViewResults.SystemHtml = IsPreRendering() ? OqtPrerenderService?.GetSystemHtml() : string.Empty;
+                ViewResults.SystemHtml = IsPrerendering(SiteState.IsPrerendering) ? OqtPrerenderService?.GetSystemHtml() : string.Empty;
             #endregion
         }
 

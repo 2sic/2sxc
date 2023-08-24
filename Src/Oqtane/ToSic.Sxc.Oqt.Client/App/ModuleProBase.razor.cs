@@ -41,12 +41,13 @@ namespace ToSic.Sxc.Oqt.App
 
         #endregion
 
-        //protected override async Task OnInitializedAsync()
-        //{
-        //    await base.OnInitializedAsync();
-        //}
-        public bool IsPreRendering() => 
-            (PageState.Site.RenderMode is "ServerPrerendered" or "WebAssemblyPrerendered") // The render mode for the site.
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isPrerendering"></param>
+        /// <returns></returns>
+        public bool IsPrerendering(bool isPrerendering) =>
+            isPrerendering // The render mode for the site
             || PageState.QueryString.ContainsKey("prerender"); // used for testing, just add to page url in query string ("?prerender")
 
         protected override async Task OnParametersSetAsync()
