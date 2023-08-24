@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Context
     /// Information about the module context the code is running in.
     /// 
     /// 🪒 In [Dynamic Razor](xref:Custom.Hybrid.Razor14) it's found on `CmsContext.Module`  
-    /// 🪒 In [Typed Razor](xref:Custom.Hybrid.RazorTyped) it's found on `MyModule`
+    /// 🪒 In [Typed Razor](xref:Custom.Hybrid.RazorTyped) it's found on `MyContext.Module`
     /// </summary>
     /// <remarks>
     /// Note that the module context is the module for which the code is currently running.
@@ -22,7 +22,12 @@ namespace ToSic.Sxc.Context
         /// The module id on the page. 
         /// 
         /// 🪒 Use in Dynamic Razor: `CmsContext.Module.Id`  
-        /// 🪒 Use in Typed Razor: `MyModule.Id`
+        /// 🪒 Use in Typed Razor: `MyContext.Module.Id`
+        ///
+        /// > [!TIP]
+        /// > This Module ID is often used to give DOM elements a unique name.
+        /// > For example: `id="my-app-wrapper-@CmsContext.Module.Id"`.
+        /// > But since v16.04 there is a new property `UniqueKey` which is better suited for this.
         /// </summary>
         /// <remarks>
         /// Corresponds to the Dnn ModuleId or the Oqtane Module Id.
