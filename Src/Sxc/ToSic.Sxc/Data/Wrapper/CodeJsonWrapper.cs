@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Data.Wrapper
             if (!json.HasValue()) return null;
             ThrowIfNotExpected(json, false);
             var node = AsJsonNode(json, fallback);
-            var result = IfJsonTryConvertToJacket<ITyped>(node, CreateTypedObject, array => null);
+            var result = IfJsonTryConvertTo<ITyped>(node, CreateTypedObject, array => null);
             return result.Final;
         }
 
@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Data.Wrapper
             if (!json.HasValue()) return null;
             ThrowIfNotExpected(json, true);
             var node = AsJsonNode(json, fallback);
-            var result = IfJsonTryConvertToJacket(node, obj => null, arr => JsonArrayToTypedList(arr, true));
+            var result = IfJsonTryConvertTo(node, obj => null, arr => JsonArrayToTypedList(arr, true));
             return result.Final;
         }
 
@@ -102,7 +102,7 @@ namespace ToSic.Sxc.Data.Wrapper
 
 
         private (DynamicJacketBase Final, bool Ok, JsonValueKind ValueKind) IfJsonTryConvertToJacket(object original) =>
-            IfJsonTryConvertToJacket<DynamicJacketBase>(original, CreateDynJacketObject, CreateDynJacketList);
+            IfJsonTryConvertTo<DynamicJacketBase>(original, CreateDynJacketObject, CreateDynJacketList);
 
 
         internal DynamicJacket CreateDynJacketObject(JsonObject jsonObject) => 
@@ -118,7 +118,7 @@ namespace ToSic.Sxc.Data.Wrapper
             _wrapTypeGenerator.New().Setup(new PreWrapJsonObject(this, jsonObject));
 
         private (TResult Final, bool Ok, JsonValueKind ValueKind)
-            IfJsonTryConvertToJacket<TResult>(object original, Func<JsonObject, TResult> toObj, Func<JsonArray, TResult> toArr) where TResult : class
+            IfJsonTryConvertTo<TResult>(object original, Func<JsonObject, TResult> toObj, Func<JsonArray, TResult> toArr) where TResult : class
         {
             var l = Log.Fn<(TResult Jacket, bool Ok, JsonValueKind ValueKind)>();
             if (!(original is JsonNode jsonNode))
@@ -171,7 +171,7 @@ namespace ToSic.Sxc.Data.Wrapper
 
             if (!Settings.WrapToDynamic)
             {
-                var wrapTyped = IfJsonTryConvertToJacket<object>(original,
+                var wrapTyped = IfJsonTryConvertTo<object>(original,
                         CreateTypedObject,
                         jArr => JsonArrayToTypedList(jArr, errorIfNotPossible: false));
                 if (wrapTyped.Ok && wrapTyped.Final != null) return wrapTyped.Final;

@@ -3,6 +3,8 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Context.Keys;
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Services
 {
@@ -123,6 +125,11 @@ namespace ToSic.Sxc.Services
         [PrivateApi("Experimental in v15.03")]
         public IUsersService Users => _users.Get(GetService<IUsersService>);
         private readonly GetOnce<IUsersService> _users = new GetOnce<IUsersService>();
+
+        // v16 new Keys
+        [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP v16.04")]
+        public IKeysService Keys => _keys ?? (_keys = new KeysService());
+        private IKeysService _keys;
     }
 
 }

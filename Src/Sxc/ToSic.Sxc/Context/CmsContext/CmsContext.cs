@@ -1,11 +1,10 @@
-﻿using System;
-using ToSic.Eav.Apps;
+﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Eav.Identity;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context.Keys;
 using ToSic.Sxc.Services;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -86,23 +85,13 @@ namespace ToSic.Sxc.Context
 
         #region Unique Key
 
-        /// <summary>
-        /// A unique, random key for the current module.
-        /// It's recommended for giving DOM elements a unique id for scripts to then access them.
-        /// 
-        /// It's generated for every content-block, and more reliable than `Module.Id`
-        /// since that sometimes results in duplicate keys, if the many blocks are used inside each other.
-        ///
-        /// It's generated using a GUID and converted/shortened. 
-        /// In the current version it's 8 characters long, so it has 10^14 combinations, making collisions extremely unlikely.
-        /// (currently 8 characters)
-        /// </summary>
+        /// <inheritdoc cref="IKeysService.UniqueKey"/>
         [PrivateApi]
-        public string UniqueKey => _uniqueKey ?? (_uniqueKey = GenerateUniqueId());
-        private string _uniqueKey;
+        public string UniqueKey => Keys.UniqueKey;
 
         [PrivateApi]
-        public string GenerateUniqueId() => Guid.NewGuid().GuidCompress().Substring(0, 8);
+        internal UniqueKeysServices Keys => _keys ?? (_keys = new UniqueKeysServices());
+        private UniqueKeysServices _keys;
 
         #endregion
     }

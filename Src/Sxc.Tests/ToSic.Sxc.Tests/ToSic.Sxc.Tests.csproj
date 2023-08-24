@@ -98,6 +98,7 @@
     <Compile Include="ContentSecurityPolicyTests\CspParameterFinalizerTests.cs" />
     <Compile Include="ContentSecurityPolicyTests\CspPolicyTextProcessorTests.cs" />
     <Compile Include="ContextTests\ParametersTests.cs" />
+    <Compile Include="ContextTests\UniqueKeyTests.cs" />
     <Compile Include="DataForImageTests\ResizeRecipesData.cs" />
     <Compile Include="DataSources\MockRolesDataSource.cs" />
     <Compile Include="DataSources\MockUsersDataSource.cs" />
