@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.DataSource;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
@@ -25,8 +26,16 @@ namespace ToSic.Sxc.Apps
         /// <inheritdoc cref="Eav.Apps.IApp.Data"/>
         IAppData Data { get; }
 
-
         #endregion
+
+        [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP v16.04")]
+        IDataSource GetQuery(
+            string name = default,
+            string noParamOrder = Protector,
+            IDataSourceLinkable attach = default,
+            object parameters = default
+        );
+
 
         /// <inheritdoc cref="IApp.Configuration"/>
         AppConfiguration Configuration { get; }

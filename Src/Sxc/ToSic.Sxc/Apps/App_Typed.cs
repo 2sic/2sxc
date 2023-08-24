@@ -1,9 +1,11 @@
 ﻿using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataSource;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Services.DataServices;
 using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Apps.AppAssetFolderMain;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -25,6 +27,16 @@ namespace ToSic.Sxc.Apps
 
         IFile IAppTyped.Thumbnail => _thumbnailFile.Get(() => new AppAssetThumbnail(this, _globalPaths));
         private readonly GetOnce<IFile> _thumbnailFile = new GetOnce<IFile>();
+
+        #endregion
+
+        #region GetQuery
+
+        IDataSource IAppTyped.GetQuery(string name, string noParamOrder, IDataSourceLinkable attach, object parameters)
+        {
+            var opts = new DataSourceOptionsMs(this, () => ConfigurationProvider);
+            return new GetQueryMs(Services.QueryManager, opts, Log).GetQuery(name, noParamOrder, attach, parameters);
+        }
 
         #endregion
 

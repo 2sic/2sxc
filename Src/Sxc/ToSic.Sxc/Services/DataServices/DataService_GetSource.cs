@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Services
             Protect(noParamOrder, $"{nameof(attach)}, {nameof(parameters)}, {nameof(options)}");
 
             // If no in-source was provided, make sure that we create one from the current app
-            var fullOptions = SafeOptions(parameters, options: options);
+            var fullOptions = OptionsMs.SafeOptions(parameters, options: options);
             var ds = _dataSources.Value.Create<T>(attach: attach, options: fullOptions);
 
             return l.Return(ds);
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Services
             var showErrors = debug == true || (_user.IsSystemAdmin && debug != false);
 
             // Do this first, to ensure AppIdentity is really known/set
-            var safeOptions = SafeOptions(parameters, options: options);
+            var safeOptions = OptionsMs.SafeOptions(parameters, options: options);
             var appId = safeOptions.AppIdentity.AppId;
 
             var dsInfo = _catalog.Value.FindDataSourceInfo(name, appId);
