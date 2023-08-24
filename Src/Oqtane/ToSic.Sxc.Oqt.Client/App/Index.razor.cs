@@ -155,12 +155,12 @@ namespace ToSic.Sxc.Oqt.App
             if (!string.IsNullOrEmpty(ViewResults?.ErrorMessage))
                 LogError(ViewResults.ErrorMessage);
 
-            Log($"1.2.1: Html:{ViewResults?.Html?.Length ?? -1}"); 
+            Log($"1.2.1: Html:{ViewResults?.Html?.Length ?? -1}");
             #endregion
 
             #region ViewResults finalization
             if (ViewResults != null)
-                ViewResults.SystemHtml = IsPrerendering() ? OqtPrerenderService?.GetSystemHtml() : string.Empty;
+                ViewResults.PrerenderHtml = OqtPrerenderService.GetPrerenderHtml(IsPrerendering(), ViewResults, SiteState, PageState.Page.ThemeType ?? PageState.Site.DefaultThemeType);
             #endregion
         }
 

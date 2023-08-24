@@ -1,4 +1,6 @@
-﻿using ToSic.Sxc.Oqt.Shared.Interfaces;
+﻿using Oqtane.Shared;
+using ToSic.Sxc.Oqt.Shared.Interfaces;
+using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Client.Services.NoOp
 {
@@ -9,6 +11,6 @@ namespace ToSic.Sxc.Oqt.Client.Services.NoOp
     /// </summary>
     public class OqtPrerenderNoOpService : IOqtPrerenderService
     {
-        public string GetSystemHtml() => string.Empty;
+        public string GetPrerenderHtml(bool isPrerendered, OqtViewResultsDto viewResults, SiteState siteState, string themeType) => string.Empty;
     }
 }

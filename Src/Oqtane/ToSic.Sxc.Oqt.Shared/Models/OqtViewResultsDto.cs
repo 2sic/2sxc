@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Oqt.Shared.Models
         /// <summary>
         /// The final HTML to show in the browser
         /// </summary>
-        public string FinalHtml => $"{Html}{SystemHtml}";
+        public string FinalHtml => $"{Html}{PrerenderHtml}";
 
         /// <summary>
         /// The content HTML
@@ -53,9 +53,9 @@ namespace ToSic.Sxc.Oqt.Shared.Models
         public IEnumerable<OqtPagePropertyChanges> PageProperties { get; set; }
 
         /// <summary>
-        /// System generated HTML
+        /// Prerender HTML fragment
         /// </summary>
-        public string SystemHtml { get; set; }
+        public string PrerenderHtml { get; set; }
 
         /// <summary>
         /// List of HttpHeaders to add to the response in format "key:value"

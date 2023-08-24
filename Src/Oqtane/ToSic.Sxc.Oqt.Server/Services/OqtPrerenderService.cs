@@ -1,29 +1,40 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Oqtane.Models;
+using Oqtane.Repository;
+using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
+using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Server.Services
 {
     public class OqtPrerenderService : ServiceBase, IOqtPrerenderService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IThemeRepository _themes;
 
-        public OqtPrerenderService(IHttpContextAccessor httpContextAccessor) : base($"{Constants.SxcLogName}.OqtPrerndSrv")
+        public OqtPrerenderService(IHttpContextAccessor httpContextAccessor, IThemeRepository themes) : base($"{Constants.SxcLogName}.OqtPrerndSrv")
         {
             _httpContextAccessor = httpContextAccessor;
+            _themes = themes;
         }
 
-        public string GetSystemHtml()
+        public string GetPrerenderHtml(bool isPrerendered, OqtViewResultsDto viewResults, SiteState siteState, string themeType)
         {
             try
             {
-                if (Executed) return string.Empty;
-                if (!HasUserAgentSignature()) return string.Empty;
-                Executed = true;
-                return SystemHtml();
+                if (!isPrerendered || !UsePrerender) return string.Empty;
+
+                var prerenderHtmlFragment = string.Empty;
+                prerenderHtmlFragment = ManageStyleSheets(prerenderHtmlFragment, viewResults, siteState.Alias, themeType);
+                prerenderHtmlFragment = ManageScripts(prerenderHtmlFragment, viewResults, siteState.Alias);
+                prerenderHtmlFragment = SystemHtml(prerenderHtmlFragment);
+                Html += prerenderHtmlFragment;
+                return prerenderHtmlFragment;
             }
             catch (Exception e)
             {
@@ -32,25 +43,15 @@ namespace ToSic.Sxc.Oqt.Server.Services
             }
         }
 
-        private string SystemHtml() => $"<style> {(OqtaneVersion >= new Version(3, 0, 2) ? "body" : "app")} > div:first-of-type {{ display: block !important }} </style>";
+        #region Validation
+        public bool UsePrerender => _usePrerender ??= (HasUserAgentSignature() || CheckForKeyInQueryString("prerender"));
+        private bool? _usePrerender;
 
-        private Version OqtaneVersion => _oqtaneVersion ??= GetOqtaneVersion();
-        private Version _oqtaneVersion;
-
-        private static Version GetOqtaneVersion() 
-            => Version.TryParse(Oqtane.Shared.Constants.Version, out var ver) ? ver : new Version(1, 0);
-
-        private bool Executed // for execution once per request
+        private bool HasUserAgentSignature()
         {
-            get => (_httpContextAccessor?.HttpContext?.Items[ExecutedKey] as bool?) ?? false;
-            set
-            {
-                if (_httpContextAccessor?.HttpContext != null)
-                    _httpContextAccessor.HttpContext.Items[ExecutedKey] = value;
-            }
+            var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
+            return userAgent.HasValue && _userAgentSignatures.Exists(x => userAgent.Value.ToString().Contains(x, StringComparison.InvariantCultureIgnoreCase));
         }
-
-        private const string ExecutedKey = "PrerenderServiceExecuted";
 
         public bool CheckForKeyInQueryString(string key)
         {
@@ -58,12 +59,6 @@ namespace ToSic.Sxc.Oqt.Server.Services
             return queryCollection != null && queryCollection.ContainsKey(key);
         }
 
-        private bool HasUserAgentSignature()
-        {
-            var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
-            return userAgent.HasValue && _userAgentSignatures.Exists(x => userAgent.Value.ToString().Contains(x, StringComparison.InvariantCultureIgnoreCase))
-                   || CheckForKeyInQueryString("prerender");
-        }
         // based on https://raw.githubusercontent.com/monperrus/crawler-user-agents/master/crawler-user-agents.json
         private readonly List<string> _userAgentSignatures = new() // used for production
         {
@@ -583,6 +578,124 @@ namespace ToSic.Sxc.Oqt.Server.Services
             @"PTST",
             @"minicrawler",
             // ReSharper restore StringLiteralTypo
-        };
+        }; 
+        #endregion
+
+        #region StyleSheets
+        private string ManageStyleSheets(string html, OqtViewResultsDto viewResults, Alias alias, string themeType)
+        {
+            if (viewResults == null) return html;
+
+            var external = viewResults.TemplateResources
+                .Where(r => r.IsExternal && r.ResourceType == ResourceType.Stylesheet)
+                .Select(r => r.Url)
+                .ToList();
+
+            var count = 0;
+            foreach (var styleSheet in viewResults.SxcStyles.Union(external))
+            {
+                var url = styleSheet;
+
+                if (url.StartsWith("~"))
+                    url = url.Replace("~", "/Themes/" + Theme(themeType).Name + "/").Replace("//", "/");
+
+                if (!url.Contains("://") && alias.BaseUrl != "" && !url.StartsWith(alias.BaseUrl))
+                    url = alias.BaseUrl + url;
+
+                if (!html.Contains(url, StringComparison.OrdinalIgnoreCase) && !Html.Contains(url, StringComparison.OrdinalIgnoreCase))
+                {
+                    count++;
+                    var id = "id=\"app-stylesheet-" + ResourceLevel.Page.ToString().ToLower() + "-" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + "-" + count.ToString("00") + "\" ";
+                    html += "<link " + id + "rel=\"stylesheet\" href=\"" + url + "\" type=\"text/css\"/>" + Environment.NewLine;
+                }
+            }
+
+            return html;
+        }
+
+        private Theme Theme(string themeType) => _theme ??= _themes.GetThemes().FirstOrDefault(item => item.Themes.Any(item => item.TypeName == themeType));
+        private Theme _theme;
+        #endregion
+
+        #region Scripts
+        private string ManageScripts(string html, OqtViewResultsDto viewResults, Alias alias)
+        {
+            if (viewResults == null) return html;
+            if (string.IsNullOrEmpty(html)) html = string.Empty;
+
+            var externalScripts = viewResults.TemplateResources
+                .Where(r => r.IsExternal && r.ResourceType == ResourceType.Script)
+                .Select(r => r.Url)
+                .ToList();
+
+            foreach (var external in viewResults.SxcScripts.Union(externalScripts))
+                html = AddExternalScript(html, external, alias);
+
+            foreach (var inline in viewResults.TemplateResources.Where(r => !r.IsExternal))
+                html = AddInlineScript(html, inline.Content);
+
+            return html;
+        }
+
+        private string AddExternalScript(string html, string src, Alias alias)
+        {
+            if (string.IsNullOrEmpty(src)) return html;
+            var script = "<script src=\"" + ((src.Contains("://")) ? src : alias.BaseUrl + src) + "\"" + "></script>";
+            if (!html.Contains(script, StringComparison.OrdinalIgnoreCase) && !Html.Contains(script, StringComparison.OrdinalIgnoreCase)) html += script + Environment.NewLine;
+            return html;
+        }
+
+        private string AddInlineScript(string html, string content)
+        {
+            if (string.IsNullOrEmpty(content)) return html;
+            var script = $"<script>{content}</script>";
+            if (!html.Contains(script, StringComparison.OrdinalIgnoreCase) && !Html.Contains(script, StringComparison.OrdinalIgnoreCase)) html += script + Environment.NewLine;
+            return html;
+        }
+
+        #endregion
+
+        #region SystemHtml
+        private string SystemHtml(string html)
+        {
+            if (Executed) return html;
+            var systemHtml =
+                $"<style> {(OqtaneVersion >= new Version(3, 0, 2) ? "body" : "app")} > div:first-of-type {{ display: block !important }} </style>";
+            if (!html.Contains(systemHtml, StringComparison.OrdinalIgnoreCase) && !Html.Contains(systemHtml, StringComparison.OrdinalIgnoreCase))
+                html += systemHtml + Environment.NewLine;
+            Executed = true;
+            return html;
+        }
+
+        private Version OqtaneVersion => _oqtaneVersion ??= GetOqtaneVersion();
+        private Version _oqtaneVersion;
+
+        private static Version GetOqtaneVersion()
+            => Version.TryParse(Oqtane.Shared.Constants.Version, out var ver) ? ver : new Version(1, 0);
+
+        private bool Executed // for execution once per request
+        {
+            get => (_httpContextAccessor?.HttpContext?.Items[ExecutedKey] as bool?) ?? false;
+            set
+            {
+                if (_httpContextAccessor?.HttpContext != null)
+                    _httpContextAccessor.HttpContext.Items[ExecutedKey] = value;
+            }
+        }
+        private const string ExecutedKey = "PrerenderServiceExecuted";
+        #endregion
+
+        #region Html
+        private string Html // for execution once per request
+        {
+            get => (_httpContextAccessor?.HttpContext?.Items[PrerenderHtmlFragmentKey] as string) ?? string.Empty;
+            set
+            {
+                if (_httpContextAccessor?.HttpContext != null)
+                    _httpContextAccessor.HttpContext.Items[PrerenderHtmlFragmentKey] = value;
+            }
+        }
+        private const string PrerenderHtmlFragmentKey = "PrerenderHtmlFragment"; 
+        #endregion
     }
 }
