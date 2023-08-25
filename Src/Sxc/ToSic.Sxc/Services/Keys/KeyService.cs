@@ -5,7 +5,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Context.Keys
 {
-    internal class KeysService : IKeysService
+    internal class KeyService : IKeyService
     {
         private UniqueKeysServices UniqueKeysSvc => _uniqueKeysServices ?? (_uniqueKeysServices = new UniqueKeysServices());
         private UniqueKeysServices _uniqueKeysServices;

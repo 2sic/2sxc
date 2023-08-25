@@ -186,7 +186,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<IModuleAndBlockBuilder, DnnModuleAndBlockBuilder>();
 
             // v13.04
-            services.TryAddTransient<IUsersService, DnnUsersService>();
+            services.TryAddTransient<IUserService, DnnUsersService>();
 
             // v13.12
             services.AddTransient<IStartUpRegistrations, DnnStartUpRegistrations>();   // must be Add, not TryAdd

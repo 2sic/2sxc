@@ -121,15 +121,15 @@ namespace ToSic.Sxc.Services
         public IToolbarService Toolbar => _toolbar.Get(GetService<IToolbarService>);
         private readonly GetOnce<IToolbarService> _toolbar = new GetOnce<IToolbarService>();
 
-        /// <inheritdoc cref="ServiceKit14.Users"/>
+        /// <inheritdoc cref="ServiceKit14.User"/>
         [PrivateApi("Experimental in v15.03")]
-        public IUsersService Users => _users.Get(GetService<IUsersService>);
-        private readonly GetOnce<IUsersService> _users = new GetOnce<IUsersService>();
+        public IUserService User => _users.Get(GetService<IUserService>);
+        private readonly GetOnce<IUserService> _users = new GetOnce<IUserService>();
 
         // v16 new Keys
         [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP v16.04")]
-        public IKeysService Keys => _keys ?? (_keys = new KeysService());
-        private IKeysService _keys;
+        public IKeyService Key => _keys ?? (_keys = new KeyService());
+        private IKeyService _keys;
     }
 
 }

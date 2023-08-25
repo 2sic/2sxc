@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc cref="ICmsContext.View" />
         ICmsView MyView { get; }
 
-        /// <inheritdoc cref="IKeysService.UniqueKey"/>
+        /// <inheritdoc cref="IKeyService.UniqueKey"/>
         string UniqueKey { get; }
 
         #endregion

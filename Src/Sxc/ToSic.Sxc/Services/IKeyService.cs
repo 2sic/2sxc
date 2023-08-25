@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Services
     /// WIP 16.04
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("Still WIP in v16.04")]
-    public interface IKeysService
+    public interface IKeyService
     {
         /// <summary>
         /// A unique, random key for the current module.
@@ -25,8 +25,8 @@ namespace ToSic.Sxc.Services
         /// > use the <see cref="UniqueKeyWith"/> method.
         /// </summary>
         /// <remarks>
-        /// If you get a fresh <see cref="IKeysService"/> it will also create a new UniqueKey.
-        /// So your code should usually use the built in property `UniqueKey` which comes from teh shared ServiceKit <see cref="ServiceKit16.Keys"/>.
+        /// If you get a fresh <see cref="IKeyService"/> it will also create a new UniqueKey.
+        /// So your code should usually use the built in property `UniqueKey` which comes from teh shared ServiceKit <see cref="ServiceKit16.Key"/>.
         /// </remarks>
         string UniqueKey { get; }
 

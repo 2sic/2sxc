@@ -142,7 +142,7 @@ namespace Custom.Hybrid
         public ICmsView MyView => _DynCodeRoot.CmsContext.View;
 
         /// <inheritdoc cref="IDynamicCode16.UniqueKey" />
-        public string UniqueKey => Kit.Keys.UniqueKey;
+        public string UniqueKey => Kit.Key.UniqueKey;
 
         #endregion
 

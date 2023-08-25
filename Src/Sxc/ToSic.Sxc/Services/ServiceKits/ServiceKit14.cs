@@ -159,8 +159,8 @@ namespace ToSic.Sxc.Services
         private readonly GetOnce<IToolbarService> _toolbar = new GetOnce<IToolbarService>();
 
         [PrivateApi("Experimental in v15.03")]
-        public IUsersService Users => _users.Get(GetService<IUsersService>);
-        private readonly GetOnce<IUsersService> _users = new GetOnce<IUsersService>();
+        public IUserService User => _users.Get(GetService<IUserService>);
+        private readonly GetOnce<IUserService> _users = new GetOnce<IUserService>();
     }
 
 }
