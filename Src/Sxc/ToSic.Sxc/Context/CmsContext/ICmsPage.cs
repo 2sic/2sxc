@@ -39,12 +39,17 @@ namespace ToSic.Sxc.Context
         /// </summary>
         IParameters Parameters { get; }
 
-        // unsure if used
         /// <summary>
-        /// The resource specific url, like the one to this page or portal
+        /// The resource specific Url, like the one to this page or portal.
+        ///
+        /// 🪒 Use in Dynamic Razor: `CmsContext.Page.Url`  
+        /// 🪒 Use in Typed Razor: `MyPage.Url`
         /// </summary>
-        [PrivateApi("Not yet official property, must decide if we'll put in on the ICmsPage or maybe on an ICmsUrl or something")]
+        /// <remarks>
+        /// Added ca. v12.
+        /// </remarks>
         string Url { get; }
+        // ^^^ note: property added ca. v12 but was not visible in docs till 16.04
 
         /// <summary>
         /// Metadata of the current page
