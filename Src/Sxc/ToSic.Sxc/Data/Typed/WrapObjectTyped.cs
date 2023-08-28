@@ -161,5 +161,10 @@ namespace ToSic.Sxc.Data.Typed
 
         #endregion
 
+        #region ToString to support Json objects
+
+        public override string ToString() => PreWrap.GetContents().ToString();
+
+        #endregion
     }
 }
