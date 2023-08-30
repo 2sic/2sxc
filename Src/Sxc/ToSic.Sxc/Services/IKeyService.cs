@@ -30,6 +30,9 @@ namespace ToSic.Sxc.Services
         /// </remarks>
         string UniqueKey { get; }
 
+        [PrivateApi("not yet sure if we should publish this")]
+        string UniqueKeyOf(object data);
+
         /// <summary>
         /// Generate a unique key based on the <see cref="UniqueKey"/> and additional objects.
         ///

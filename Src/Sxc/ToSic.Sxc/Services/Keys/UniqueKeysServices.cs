@@ -8,7 +8,7 @@ using ToSic.Sxc.Adam;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
-namespace ToSic.Sxc.Context.Keys
+namespace ToSic.Sxc.Services
 {
     internal class UniqueKeysServices
     {

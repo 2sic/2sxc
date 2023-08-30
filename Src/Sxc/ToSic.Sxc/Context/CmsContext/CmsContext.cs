@@ -4,7 +4,6 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Context.Keys;
 using ToSic.Sxc.Services;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -83,16 +82,5 @@ namespace ToSic.Sxc.Context
         public ICmsBlock Block => _cmsBlock ?? (_cmsBlock = new CmsBlock(RealBlockOrNull));
         private ICmsBlock _cmsBlock;
 
-        #region Unique Key
-
-        /// <inheritdoc cref="IKeyService.UniqueKey"/>
-        [PrivateApi]
-        public string UniqueKey => Keys.UniqueKey;
-
-        [PrivateApi]
-        internal UniqueKeysServices Keys => _keys ?? (_keys = new UniqueKeysServices());
-        private UniqueKeysServices _keys;
-
-        #endregion
     }
 }
