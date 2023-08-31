@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Runtime.CompilerServices;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
@@ -11,6 +10,7 @@ using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Web;
 using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
+using static ToSic.Sxc.Images.ImageDecorator;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -110,10 +110,11 @@ namespace ToSic.Sxc.Images
 
             return _toolbar.Get(() =>
             {
+                // If we're creating an image for a string value, it won't have a field or parent.
+                if (Params.Field?.Parent == null || Params.HasMetadataOrNull == null) return null;
+
                 // Determine if this is an "own" adam file, because only field-owned files should allow config
                 var isInSameEntity = Adam.Security.PathIsInItemAdam(Params.Field.Parent.Guid, "", Src);
-                // 2023-08-22 v16.04 - changed this, now it's possible, but with hint/info
-                //if (!isInSameEntity) return tag;
 
                 // Construct the toolbar; in edge cases the toolbar service could be missing
                 var imgTlb = ImgService.ToolbarOrNull?.Empty().Settings(
@@ -123,11 +124,11 @@ namespace ToSic.Sxc.Images
                 );
 
                 // Try to add the metadata button (or just null if not available)
-                imgTlb = imgTlb?.Metadata(Params.HasMetadataOrNull /*note: before 16.04 it was .Field)*/,
+                imgTlb = imgTlb?.Metadata(Params.HasMetadataOrNull,
                     tweak: btn =>
                     {
                         btn = btn.Tooltip($"{ToolbarConstants.ToolbarLabelPrefix}MetadataImage");
-                        return isInSameEntity ? btn : btn.FormParameters(ImageDecorator.ShowWarningGlobalFile, true);
+                        return isInSameEntity ? btn : btn.FormParameters(ShowWarningGlobalFile, true);
                     });
 
                 return imgTlb;
