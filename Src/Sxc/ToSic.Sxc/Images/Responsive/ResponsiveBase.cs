@@ -8,6 +8,7 @@ using ToSic.Razor.Html5;
 using ToSic.Sxc.Data.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Web;
+using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -100,28 +101,36 @@ namespace ToSic.Sxc.Images
             return tag;
         }
 
-        public IToolbarBuilder Toolbar() => _toolbar.Get(() =>
+        /// <inheritdoc />
+        public IToolbarBuilder Toolbar(string noParamOrder = Protector, IToolbarBuilder replace = default)
         {
-            // Determine if this is an "own" adam file, because only field-owned files should allow config
-            var isInSameEntity = Adam.Security.PathIsInItemAdam(Params.Field.Parent.Guid, "", Src);
-            // 2023-08-22 v16.04 - changed this, now it's possible, but with hint/info
-            //if (!isInSameEntity) return tag;
+            Protect(noParamOrder, nameof(replace));
+            if (replace != default) _toolbar.Reset(replace);
 
-            // Construct the toolbar; in edge cases the toolbar service could be missing
-            var imgTlb = ImgService.ToolbarOrNull?.Empty().Settings(
-                hover: "right-middle",
-                // Delay show of toolbar if it's a shared image, as it shouldn't be used much
-                ui: isInSameEntity ? null : "delayShow=1000"
-            );
-            if (imgTlb == null) return null;
+            return _toolbar.Get(() =>
+            {
+                // Determine if this is an "own" adam file, because only field-owned files should allow config
+                var isInSameEntity = Adam.Security.PathIsInItemAdam(Params.Field.Parent.Guid, "", Src);
+                // 2023-08-22 v16.04 - changed this, now it's possible, but with hint/info
+                //if (!isInSameEntity) return tag;
 
-            var toolbarConfig = isInSameEntity
-                ? imgTlb.Metadata(Params.HasMetadataOrNull) // note: before 16.04 it was .Field)
-                : imgTlb.Metadata(Params.HasMetadataOrNull, // note: before 16.04 it was .Field,
-                    tweak: btn => btn.FormParameters(ImageDecorator.ShowWarningGlobalFile, true));
-            
-            return toolbarConfig;
-        });
+                // Construct the toolbar; in edge cases the toolbar service could be missing
+                var imgTlb = ImgService.ToolbarOrNull?.Empty().Settings(
+                    hover: "right-middle",
+                    // Delay show of toolbar if it's a shared image, as it shouldn't be used much
+                    ui: isInSameEntity ? null : "delayShow=1000"
+                );
+                if (imgTlb == null) return null;
+
+                var toolbarConfig = isInSameEntity
+                    ? imgTlb.Metadata(Params.HasMetadataOrNull) // note: before 16.04 it was .Field)
+                    : imgTlb.Metadata(Params.HasMetadataOrNull, // note: before 16.04 it was .Field,
+                        tweak: btn => btn.FormParameters(ImageDecorator.ShowWarningGlobalFile, true));
+
+                return toolbarConfig;
+            });
+        }
+
         private readonly GetOnce<IToolbarBuilder> _toolbar = new GetOnce<IToolbarBuilder>();
 
         public string Description => _description.Get(() => Params.Field?.ImageDecoratorOrNull?.Description);

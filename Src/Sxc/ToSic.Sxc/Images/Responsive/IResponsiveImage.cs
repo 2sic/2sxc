@@ -3,6 +3,7 @@ using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Edit.Toolbar;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Images
 {
@@ -97,11 +98,14 @@ namespace ToSic.Sxc.Images
         string Sizes { get; }
 
         /// <summary>
-        /// 
+        /// Get the toolbar to show it on another tag (typically a `figure` around the `picture`)
+        /// or set another toolbar instead.
         /// </summary>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="replace">alternate toolbar to replace the default toolbar; this only has an affect if done early on</param>
         /// <remarks>Added in v16.04</remarks>
-        [PrivateApi("WIP 16.04")]
-        IToolbarBuilder Toolbar();
+        [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP 16.04, may still change")]
+        IToolbarBuilder Toolbar(string noParamOrder = Protector, IToolbarBuilder replace = default);
 
         /// <summary>
         /// The main url, used for main `src` property
