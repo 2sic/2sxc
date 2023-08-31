@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Context;
 using ToSic.Lib.Documentation;
@@ -40,43 +41,49 @@ namespace ToSic.Sxc.Dnn.LookUp
         [PrivateApi]
         public LookUpEngine GenerateDnnBasedLookupEngine(PortalSettings portalSettings, int moduleId)
         {
-            var l = Log.Fn<LookUpEngine>($"..., {moduleId}");
+            var l = Log.Fn<LookUpEngine>($"{nameof(moduleId)}: {moduleId}");
             var providers = new LookUpEngine(Log);
             var dnnUsr = portalSettings.UserInfo;
             var dnnCult = _cultureResolver.SafeCurrentCultureInfo();
             var dnn = new DnnTokenReplace(moduleId, portalSettings, dnnUsr);
             var stdSources = dnn.PropertySources;
-            foreach (var propertyAccess in stdSources)
-                providers.Add(new LookUpInDnnPropertyAccess(propertyAccess.Key, propertyAccess.Value, dnnUsr, dnnCult));
+
+            var lookUps = stdSources
+                .Select(s => new LookUpInDnnPropertyAccess(s.Key, s.Value, dnnUsr, dnnCult) as ILookUp)
+                .ToList();
+
+            // must already add, as we'll later check if some specific ones exist
+            providers.Add(lookUps);
+            lookUps.Clear();
 
             // Expand the Lookup for "module" to also have an "id" property
             if (providers.HasSource(SourceModule))
             {
                 var original = providers.Sources[SourceModule];
-                var id = original.Get(OldDnnModuleId);
-                var preferred = new LookUpInDictionary(SourceModule, new Dictionary<string, string> { { KeyId, id } });
-                providers.Sources[SourceModule] = new LookUpInLookUps(SourceModule, preferred, original);
+                var modAdditional = new LookUpInDictionary(SourceModule, new Dictionary<string, string>
+                {
+                    { KeyId, original.Get(OldDnnModuleId) }
+                });
+                lookUps.Add(new LookUpInLookUps(SourceModule, modAdditional, original));
             }
 
             // Create the lookup for "site" based on the "portal" and only give it "id" & "guid"
             if (providers.HasSource(OldDnnSiteSource))
-            {
-                var original = providers.Sources[OldDnnSiteSource];
-                var id = original.Get(OldDnnSiteId);
-                var guid = DotNetNuke.Common.Globals.GetPortalSettings()?.GUID;
-                var preferred = new LookUpInDictionary(SourceSite, new Dictionary<string, string> { { KeyId, id }, { KeyGuid, $"{guid}" } });
-                providers.Add(preferred);
-            }
+                lookUps.Add(new LookUpInDictionary(SourceSite, new Dictionary<string, string>
+                {
+                    { KeyId, providers.Sources[OldDnnSiteSource].Get(OldDnnSiteId) },
+                    { KeyGuid, $"{DotNetNuke.Common.Globals.GetPortalSettings()?.GUID}" }
+                }));
 
             // Create the lookup for "page" based on the "tab" and only give it "id" & "guid"
             if (providers.HasSource(OldDnnPageSource))
-            {
-                var original = providers.Sources[OldDnnPageSource];
-                var id = original.Get(OldDnnPageId);
-                var guid = DotNetNuke.Common.Globals.GetPortalSettings()?.ActiveTab?.UniqueId;
-                var preferred = new LookUpInDictionary(SourcePage, new Dictionary<string, string> { { KeyId, id }, { KeyGuid, $"{guid}" } });
-                providers.Add(preferred);
-            }
+                lookUps.Add(new LookUpInDictionary(SourcePage, new Dictionary<string, string>
+                {
+                    { KeyId, providers.Sources[OldDnnPageSource].Get(OldDnnPageId) },
+                    { KeyGuid, $"{DotNetNuke.Common.Globals.GetPortalSettings()?.ActiveTab?.UniqueId}" }
+                }));
+
+            providers.Add(lookUps);
 
             // Not implemented in Dnn: "Tenant" source
 

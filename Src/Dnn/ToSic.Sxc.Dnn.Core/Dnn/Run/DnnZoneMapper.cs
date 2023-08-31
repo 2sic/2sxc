@@ -65,12 +65,12 @@ namespace ToSic.Sxc.Dnn.Run
         public override ISite SiteOfZone(int zoneId)
         {
             var l = Log.Fn<ISite>($"{zoneId}");
-            var pinst = PortalController.Instance;
-            var portals = pinst.GetPortals();
+            var portalController = PortalController.Instance;
+            var portals = portalController.GetPortals();
             l.A($"Sites/Portals Count: {portals.Count}");
             var found = portals.Cast<PortalInfo>().Select(p =>
                 {
-                    var pSettings = pinst.GetPortalSettings(p.PortalID);
+                    var pSettings = portalController.GetPortalSettings(p.PortalID);
                     if (!pSettings.TryGetValue(PortalSettingZoneId, out var portalZoneId)) return null;
                     if (!int.TryParse(portalZoneId, out var zid)) return null;
                     return zid == zoneId ? new PortalSettings(p) : null;
@@ -78,8 +78,8 @@ namespace ToSic.Sxc.Dnn.Run
                 .FirstOrDefault(f => f != null);
 
             return found == null
-                ? l.Return((DnnSite)null, "not found")
-                : l.Return(((DnnSite)_site.New()).Swap(found, Log), $"found {found.PortalId}");
+                ? l.Return(null, "not found")
+                : l.Return(((DnnSite)_site.New()).TryInitPortal(found, Log), $"found {found.PortalId}");
         }
 
         /// <inheritdoc />
