@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
@@ -120,14 +121,16 @@ namespace ToSic.Sxc.Images
                     // Delay show of toolbar if it's a shared image, as it shouldn't be used much
                     ui: isInSameEntity ? null : "delayShow=1000"
                 );
-                if (imgTlb == null) return null;
 
-                var toolbarConfig = isInSameEntity
-                    ? imgTlb.Metadata(Params.HasMetadataOrNull) // note: before 16.04 it was .Field)
-                    : imgTlb.Metadata(Params.HasMetadataOrNull, // note: before 16.04 it was .Field,
-                        tweak: btn => btn.FormParameters(ImageDecorator.ShowWarningGlobalFile, true));
+                // Try to add the metadata button (or just null if not available)
+                imgTlb = imgTlb?.Metadata(Params.HasMetadataOrNull /*note: before 16.04 it was .Field)*/,
+                    tweak: btn =>
+                    {
+                        btn = btn.Tooltip($"{ToolbarConstants.ToolbarLabelPrefix}MetadataImage");
+                        return isInSameEntity ? btn : btn.FormParameters(ImageDecorator.ShowWarningGlobalFile, true);
+                    });
 
-                return toolbarConfig;
+                return imgTlb;
             });
         }
 
