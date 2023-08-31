@@ -613,6 +613,103 @@
                 ]
               },
               {
+                "Name": "GroupDescription",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 177517,
+                    "Version": 2,
+                    "Guid": "b309674f-e06c-4657-9b07-30a32df2e762",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-default"
+                        },
+                        "Name": {
+                          "en-us": "Title & Description",
+                          "de-de": "Titel & Beschreibung"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 177518,
+                    "Version": 1,
+                    "Guid": "7eaa2ece-4ce6-4307-8253-cc521404bbee",
+                    "Type": {
+                      "Name": "@empty-default",
+                      "Id": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "Description",
                 "Type": "String",
                 "InputType": "string-default",
@@ -837,7 +934,7 @@
                 "Metadata": [
                   {
                     "Id": 176320,
-                    "Version": 4,
+                    "Version": 7,
                     "Guid": "e2bd110b-f7d5-4644-b264-ed904ed7ce94",
                     "Type": {
                       "Name": "@All",
@@ -912,7 +1009,7 @@
                   },
                   {
                     "Id": 176324,
-                    "Version": 2,
+                    "Version": 5,
                     "Guid": "2d814147-6cc9-46eb-b567-ac1af1ee338f",
                     "Type": {
                       "Name": "@String",
@@ -932,7 +1029,7 @@
                   },
                   {
                     "Id": 176325,
-                    "Version": 2,
+                    "Version": 5,
                     "Guid": "b4b62531-015b-445e-91dd-7b1e3c18b136",
                     "Type": {
                       "Name": "@string-wysiwyg",
@@ -941,10 +1038,10 @@
                     "Attributes": {
                       "String": {
                         "ButtonAdvanced": {
-                          "en-us": ""
+                          "en-us": "false"
                         },
                         "ButtonSource": {
-                          "en-us": ""
+                          "en-us": "false"
                         },
                         "Dialog": {
                           "en-us": ""
@@ -953,7 +1050,7 @@
                           "en-us": ""
                         },
                         "WysiwygConfiguration": {
-                          "en-us": "d3dde02f-c1dc-43b8-a8b7-4be3c43eadd0"
+                          "en-us": "3e9dd123-ccef-4d81-80e7-4c6ae6f5ddc6"
                         }
                       },
                       "Hyperlink": {
@@ -1069,6 +1166,103 @@
                         "TitleTrue": {
                           "en-us": "with detailed description",
                           "de-de": "mit erweiterter Beschreibung"
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "GroupCrop",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 177515,
+                    "Version": 2,
+                    "Guid": "32bf5ace-2134-46f3-bb9c-4cf841127bf4",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-default"
+                        },
+                        "Name": {
+                          "en-us": "Image Cropping",
+                          "de-de": "Bild zuschneiden"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 177516,
+                    "Version": 1,
+                    "Guid": "7536e75b-9ffd-4ae6-b84c-f9f4603a4ae3",
+                    "Type": {
+                      "Name": "@empty-default",
+                      "Id": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": false
                         }
                       }
                     },
