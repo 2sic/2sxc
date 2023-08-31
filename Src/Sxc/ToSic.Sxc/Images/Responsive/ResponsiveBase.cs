@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Runtime.CompilerServices;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
@@ -8,7 +9,6 @@ using ToSic.Sxc.Data.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Web;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
-using ToSic.Razor.Markup;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -172,60 +172,38 @@ namespace ToSic.Sxc.Images
         private string SrcSetGenerator()
         {
             var isEnabled = ImgService.Features.IsEnabled(ImageServiceMultipleSizes.NameId);
-            var hasVariants = !string.IsNullOrWhiteSpace(ThisResize?.Recipe?.Variants);
-            return Log.Func($"{nameof(isEnabled)}: {isEnabled}, {nameof(hasVariants)}: {hasVariants}",
-                () => isEnabled && hasVariants
-                    ? ImgLinker.SrcSet(Params.Link.Url, Settings as ResizeSettings, SrcSetType.Img, Params.HasMetadataOrNull)
-                    : null,
-                enabled: ImgService.Debug);
+            var hasVariants = (ThisResize?.Recipe?.Variants).HasValue();
+            var l = (ImgService.Debug ? Log : null).Fn<string>($"{nameof(isEnabled)}: {isEnabled}, {nameof(hasVariants)}: {hasVariants}");
+            return isEnabled && hasVariants
+                ? l.Return(ImgLinker.SrcSet(Params.Link.Url, Settings as ResizeSettings, SrcSetType.Img,
+                    Params.HasMetadataOrNull))
+                : l.ReturnNull();
         }
 
 
 
         /// <inheritdoc />
-        public string Width => _width.Get(WidthGenerator);
+        public string Width => _width.Get(() => UseIfActive(ThisResize.Recipe?.SetWidth, ThisResize.Width));
         private readonly GetOnce<string> _width = new GetOnce<string>();
-        private string WidthGenerator()
-        {
-            var setWidth = ThisResize.Recipe?.SetWidth;
-            return Log.Func($"setWidth: {setWidth}, Width: {ThisResize.Width}",
-                () => setWidth == true && ThisResize.Width != 0
-                    ? ThisResize.Width.ToString()
-                    : null,
-                enabled: ImgService.Debug);
-        }
-
-
 
         /// <inheritdoc />
-        public string Height => _height.Get(HeightGenerator);
+        public string Height => _height.Get(() => UseIfActive(ThisResize.Recipe?.SetHeight, ThisResize.Height));
         private readonly GetOnce<string> _height = new GetOnce<string>();
-        private string HeightGenerator()
-        {
-            var setHeight = ThisResize.Recipe?.SetHeight;
-            return Log.Func($"setHeight: {setHeight}, Height: {ThisResize.Height}",
-                () => setHeight == true && ThisResize.Height != 0
-                    ? ThisResize.Height.ToString()
-                    : null,
-                enabled: ImgService.Debug);
-        }
 
-
-        public string Sizes => _sizes.Get(SizesGenerator);
+        /// <inheritdoc />
+        public string Sizes => _sizes.Get(() => UseIfActive(ImgService.Features.IsEnabled(ImageServiceSetSizes.NameId), ThisResize.Recipe?.Sizes));
         private readonly GetOnce<string> _sizes = new GetOnce<string>();
 
-        private string SizesGenerator() => Log.Func(() =>
+        private string UseIfActive<T>(bool? active, T value, [CallerMemberName] string name = default)
         {
-            if (!ImgService.Features.IsEnabled(ImageServiceSetSizes.NameId))
-                return (null, "disabled");
-            var sizes = ThisResize.Recipe?.Sizes;
-            return (sizes, "");
-        }, enabled: ImgService.Debug);
+            var l = (ImgService.Debug ? Log : null).Fn<string>($"{name}: active: {active}; value: {value}");
+            return active == true && value.IsNotDefault()
+                ? l.ReturnAndLog($"{value}")
+                : l.ReturnNull("disabled");
+        }
 
-        ///// <inheritdoc />
-        //[PrivateApi]
-        //public string Url => ThisResize.Url;
 
+        /// <inheritdoc />
         public string Src => ThisResize.Url;
 
     }

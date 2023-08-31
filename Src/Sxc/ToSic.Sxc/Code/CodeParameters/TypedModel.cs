@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Code
         private T GetInternal<T>(string name, string noParamOrder, T fallback, object fallbackAsObj, bool? required, [CallerMemberName] string method = default)
         {
             // If we have a clear fallback, don't make it required
-            if (!(fallbackAsObj is null) || (fallback != null && !EqualityComparer<T>.Default.Equals(fallback, default)))
+            if (!(fallbackAsObj is null) || (fallback != null && fallback.IsNotDefault())) // EqualityComparer<T>.Default.Equals(fallback, default)))
                 required = false;
 
             var found = GetInternalObj(name, noParamOrder, required, method: method);
