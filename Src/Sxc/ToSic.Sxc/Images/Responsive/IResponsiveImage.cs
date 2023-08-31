@@ -2,6 +2,7 @@
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
+using ToSic.Sxc.Edit.Toolbar;
 
 namespace ToSic.Sxc.Images
 {
@@ -94,6 +95,13 @@ namespace ToSic.Sxc.Images
         /// It will only be used for normal `img` tags, but not for `img` tags inside `picture` tags.
         /// </summary>
         string Sizes { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Added in v16.04</remarks>
+        [PrivateApi("WIP 16.04")]
+        IToolbarBuilder Toolbar();
 
         /// <summary>
         /// The main url, used for main `src` property

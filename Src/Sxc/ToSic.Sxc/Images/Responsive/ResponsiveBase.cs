@@ -5,8 +5,10 @@ using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Web;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
+using ToSic.Razor.Markup;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -18,23 +20,23 @@ namespace ToSic.Sxc.Images
         protected ResponsiveBase(ImageService imgService, ResponsiveParams callParams, ILog parentLog, string logName)
             : base(parentLog, $"Img.{logName}")
         {
-            Call = callParams;
+            Params = callParams;
             ImgService = imgService;
             ImgLinker = imgService.ImgLinker;
         }
-        protected ResponsiveParams Call { get; }
+        protected ResponsiveParams Params { get; }
         protected readonly ImgResizeLinker ImgLinker;
         protected readonly ImageService ImgService;
 
         protected OneResize ThisResize => _thisResize.Get(() => { 
-            var t = ImgLinker.ImageOnly(Call.Link.Url, Settings as ResizeSettings, Call.HasDecoOrNull);
+            var t = ImgLinker.ImageOnly(Params.Link.Url, Settings as ResizeSettings, Params.HasMetadataOrNull);
             Log.A(ImgService.Debug, $"{nameof(ThisResize)}: " + t?.Dump());
             return t;
         });
         private readonly GetOnce<OneResize> _thisResize = new GetOnce<OneResize>();
 
 
-        internal IResizeSettings Settings => Call.Settings;
+        internal IResizeSettings Settings => Params.Settings;
 
 
         /// <summary>
@@ -84,50 +86,58 @@ namespace ToSic.Sxc.Images
             {
                 // attach edit if we are in edit-mode and the link was generated through a call
                 if (ImgService.EditOrNull?.Enabled != true) return tag;
-                if (Call.Field?.Parent == null) return tag;
+                if (Params.Field?.Parent == null) return tag;
 
                 // Check if it's not a demo-entity, in which case editing settings shouldn't happen
-                if (Call.Field.Parent.Entity.DisableInlineEditSafe()) return tag;
+                if (Params.Field.Parent.Entity.DisableInlineEditSafe()) return tag;
 
-                // Determine if this is an "own" adam file, because only field-owned files should allow config
-                var isInSameEntity = Adam.Security.PathIsInItemAdam(Call.Field.Parent.Guid, "", Src);
-                // 2023-08-22 v16.04 - changed this, now it's possible, but with hint/info
-                //if (!isInSameEntity) return tag;
-
-                // Construct the toolbar; in edge cases the toolbar service could be missing
-                var imgTlb = ImgService.ToolbarOrNull?.Empty().Settings(
-                    hover: "right-middle",
-                    // Delay show of toolbar if it's a shared image, as it shouldn't be used much
-                    ui: isInSameEntity ? null : "delayShow=1000"
-                );
-                if (imgTlb == null) return tag;
-
-                var toolbarConfig = isInSameEntity
-                    ? imgTlb.Metadata(Call.Field)
-                    : imgTlb.Metadata(Call.Field,
-                        tweak: btn => btn.FormParameters(ImageDecorator.ShowWarningGlobalFile, true));
-                var toolbar = ImgService.EditOrNull.TagToolbar(toolbar: toolbarConfig).ToString();
-                tag.Attr(toolbar);
+                // Get toolbar - if it's null (basically when the ImageService fails) stop here
+                var toolbar = Toolbar();
+                if (toolbar != null) tag.Attr(toolbar);
             }
             catch { /* ignore */ }
 
             return tag;
         }
 
-        public string Description => _description.Get(() => Call.Field?.ImageDecoratorOrNull?.Description);
+        public IToolbarBuilder Toolbar() => _toolbar.Get(() =>
+        {
+            // Determine if this is an "own" adam file, because only field-owned files should allow config
+            var isInSameEntity = Adam.Security.PathIsInItemAdam(Params.Field.Parent.Guid, "", Src);
+            // 2023-08-22 v16.04 - changed this, now it's possible, but with hint/info
+            //if (!isInSameEntity) return tag;
+
+            // Construct the toolbar; in edge cases the toolbar service could be missing
+            var imgTlb = ImgService.ToolbarOrNull?.Empty().Settings(
+                hover: "right-middle",
+                // Delay show of toolbar if it's a shared image, as it shouldn't be used much
+                ui: isInSameEntity ? null : "delayShow=1000"
+            );
+            if (imgTlb == null) return null;
+
+            var toolbarConfig = isInSameEntity
+                ? imgTlb.Metadata(Params.HasMetadataOrNull) // note: before 16.04 it was .Field)
+                : imgTlb.Metadata(Params.HasMetadataOrNull, // note: before 16.04 it was .Field,
+                    tweak: btn => btn.FormParameters(ImageDecorator.ShowWarningGlobalFile, true));
+            
+            return toolbarConfig;
+        });
+        private readonly GetOnce<IToolbarBuilder> _toolbar = new GetOnce<IToolbarBuilder>();
+
+        public string Description => _description.Get(() => Params.Field?.ImageDecoratorOrNull?.Description);
         private readonly GetOnce<string> _description = new GetOnce<string>();
 
-        public string DescriptionExtended => _descriptionDet.Get(() => Call.Field?.ImageDecoratorOrNull?.DescriptionExtended);
+        public string DescriptionExtended => _descriptionDet.Get(() => Params.Field?.ImageDecoratorOrNull?.DescriptionExtended);
         private readonly GetOnce<string> _descriptionDet = new GetOnce<string>();
 
         /// <inheritdoc />
         public string Alt => _alt.Get(() =>
             // If alt is specified, it takes precedence - even if it's an empty string, because there must have been a reason for this
-            Call.ImgAlt 
+            Params.ImgAlt 
             // If we take the image description, empty does NOT take precedence, it will be treated as not-set
             ?? Description.NullIfNoValue()
             // If all else fails, take the fallback specified in the call - IF it's allowed
-            ?? (Call.Field?.ImageDecoratorOrNull?.SkipFallbackTitle ?? false ? null : Call.ImgAltFallback)
+            ?? (Params.Field?.ImageDecoratorOrNull?.SkipFallbackTitle ?? false ? null : Params.ImgAltFallback)
             );
         private readonly GetOnce<string> _alt = new GetOnce<string>();
 
@@ -138,12 +148,12 @@ namespace ToSic.Sxc.Images
 
         private string ClassGenerator() => Log.Func(() =>
         {
-            var part1 = Call.ImgClass;
+            var part1 = Params.ImgClass;
             object attrClass = null;
             ThisResize.Recipe?.Attributes?.TryGetValue(Recipe.SpecialPropertyClass, out attrClass);
             // var attrClass = attrClassObj;
             var hasOnAttrs = !string.IsNullOrWhiteSpace(attrClass?.ToString());
-            var hasOnImgClass = !string.IsNullOrWhiteSpace(Call.ImgClass);
+            var hasOnImgClass = !string.IsNullOrWhiteSpace(Params.ImgClass);
 
             // Must use null if neither are useful
             if (!hasOnAttrs && !hasOnImgClass) return (null, "null/nothing");
@@ -165,7 +175,7 @@ namespace ToSic.Sxc.Images
             var hasVariants = !string.IsNullOrWhiteSpace(ThisResize?.Recipe?.Variants);
             return Log.Func($"{nameof(isEnabled)}: {isEnabled}, {nameof(hasVariants)}: {hasVariants}",
                 () => isEnabled && hasVariants
-                    ? ImgLinker.SrcSet(Call.Link.Url, Settings as ResizeSettings, SrcSetType.Img, Call.HasDecoOrNull)
+                    ? ImgLinker.SrcSet(Params.Link.Url, Settings as ResizeSettings, SrcSetType.Img, Params.HasMetadataOrNull)
                     : null,
                 enabled: ImgService.Debug);
         }

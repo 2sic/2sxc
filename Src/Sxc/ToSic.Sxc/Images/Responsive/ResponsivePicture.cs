@@ -22,14 +22,14 @@ namespace ToSic.Sxc.Images
         public Picture Picture => _picTag.Get(() =>
         {
             var pic = Razor.Blade.Tag.Picture(Sources, Img);
-            if (Call.PicClass.HasValue()) pic = pic.Class(Call.PicClass);
+            if (Params.PicClass.HasValue()) pic = pic.Class(Params.PicClass);
             return pic;
         });
         private readonly GetOnce<Picture> _picTag = new GetOnce<Picture>();
 
         protected override IHtmlTag GetOutermostTag() => Picture;
 
-        public TagList Sources => _sourceTags.Get(() => SourceTagsInternal(Call.Link.Url, Settings));
+        public TagList Sources => _sourceTags.Get(() => SourceTagsInternal(Params.Link.Url, Settings));
         private readonly GetOnce<TagList> _sourceTags = new GetOnce<TagList>();
 
         private TagList SourceTagsInternal(string url, IResizeSettings resizeSettings)
@@ -56,8 +56,8 @@ namespace ToSic.Sxc.Images
                     // We must copy the settings, because we change them and this shouldn't affect anything else
                     var formatSettings = new ResizeSettings(resizeSettings, format: resizeFormat != defFormat ? resizeFormat.Format : null);
                     var srcSet = useMultiSrcSet
-                        ? ImgLinker.SrcSet(url, formatSettings, SrcSetType.Source, Call.HasDecoOrNull)
-                        : ImgLinker.ImageOnly(url, formatSettings, Call.HasDecoOrNull).Url;
+                        ? ImgLinker.SrcSet(url, formatSettings, SrcSetType.Source, Params.HasMetadataOrNull)
+                        : ImgLinker.ImageOnly(url, formatSettings, Params.HasMetadataOrNull).Url;
                     var source = Razor.Blade.Tag.Source().Type(resizeFormat.MimeType).Srcset(srcSet);
                     if (!string.IsNullOrEmpty(Sizes)) source.Sizes(Sizes);
                     return source;

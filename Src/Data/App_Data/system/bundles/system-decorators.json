@@ -830,114 +830,6 @@
                 ]
               },
               {
-                "Name": "AddDescriptionDetailed",
-                "Type": "Boolean",
-                "InputType": "boolean-default",
-                "IsTitle": false,
-                "Metadata": [
-                  {
-                    "Id": 176319,
-                    "Version": 5,
-                    "Guid": "bd63a2ef-22fa-4566-892f-5e07683a99ca",
-                    "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "CustomJavaScript": {
-                          "en-us": ""
-                        },
-                        "DefaultValue": {
-                          "en-us": ""
-                        },
-                        "Information": {
-                          "en-us": ""
-                        },
-                        "InputType": {
-                          "en-us": "boolean-default"
-                        },
-                        "Name": {
-                          "en-us": "Add Detailed / Extended Description",
-                          "de-de": "Erweiterte Beschreibung hinzufügen"
-                        },
-                        "Notes": {
-                          "en-us": ""
-                        },
-                        "Placeholder": {
-                          "en-us": ""
-                        },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
-                        "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
-                          "en-us": ""
-                        }
-                      },
-                      "Entity": {
-                        "Errors": {
-                          "*": []
-                        },
-                        "Formulas": {
-                          "*": [
-                            "7d4c5b6f-9831-4a72-bbaa-5b82c4564851"
-                          ]
-                        },
-                        "Warnings": {
-                          "*": []
-                        }
-                      },
-                      "Boolean": {
-                        "Disabled": {
-                          "en-us": false
-                        },
-                        "DisableTranslation": {
-                          "en-us": false
-                        },
-                        "IsEphemeral": {
-                          "en-us": true
-                        },
-                        "Required": {
-                          "en-us": false
-                        },
-                        "VisibleInEditUI": {
-                          "en-us": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 176321,
-                    "Version": 3,
-                    "Guid": "969bca03-8a22-48f5-8acc-2eb02123eeaf",
-                    "Type": {
-                      "Name": "@Boolean",
-                      "Id": "@Boolean"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "TitleFalse": {
-                          "en-us": ""
-                        },
-                        "TitleIndeterminate": {
-                          "en-us": ""
-                        },
-                        "TitleTrue": {
-                          "en-us": ""
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  }
-                ]
-              },
-              {
                 "Name": "DescriptionExtended",
                 "Type": "String",
                 "InputType": "string-wysiwyg",
@@ -1067,6 +959,116 @@
                       "Hyperlink": {
                         "ContentCss": {
                           "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "AddDescriptionDetailed",
+                "Type": "Boolean",
+                "InputType": "boolean-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 176319,
+                    "Version": 6,
+                    "Guid": "bd63a2ef-22fa-4566-892f-5e07683a99ca",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "boolean-default"
+                        },
+                        "Name": {
+                          "en-us": "Add Detailed / Extended Description",
+                          "de-de": "Erweiterte Beschreibung hinzufügen"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "7d4c5b6f-9831-4a72-bbaa-5b82c4564851"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "IsEphemeral": {
+                          "en-us": true
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 176321,
+                    "Version": 4,
+                    "Guid": "969bca03-8a22-48f5-8acc-2eb02123eeaf",
+                    "Type": {
+                      "Name": "@Boolean",
+                      "Id": "@Boolean"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "TitleFalse": {
+                          "en-us": "without detailed description",
+                          "de-de": "ohne erweiterte Beschreibung"
+                        },
+                        "TitleIndeterminate": {
+                          "en-us": ""
+                        },
+                        "TitleTrue": {
+                          "en-us": "with detailed description",
+                          "de-de": "mit erweiterter Beschreibung"
                         }
                       }
                     },
@@ -1312,7 +1314,7 @@
                 "Metadata": [
                   {
                     "Id": 163986,
-                    "Version": 4,
+                    "Version": 5,
                     "Guid": "11587585-b4e1-48e4-8f4b-51d4f3bba01f",
                     "Type": {
                       "Name": "@All",
@@ -1326,6 +1328,9 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
+                        "Information": {
+                          "en-us": ""
+                        },
                         "InputType": {
                           "en-us": "empty-message"
                         },
@@ -1333,13 +1338,21 @@
                           "en-us": "MessageCropRequirements"
                         },
                         "Notes": {
-                          "en-us": "<p>Important: Crop settings will only take effect if the template creating the HTML interprets the settings. If it seems like the settings don't work, please contact your web developer.&nbsp;</p>",
-                          "de-de": "<p>Wichtig: Zuschnittseinstellungen haben nur einen Effekt, wenn der Template-Code (der Teil, welches HTML generiert) diese Einstellungen auch ber&uuml;cksichtigt. Sollten deine Anpassungen nicht den erw&uuml;nschten Effekt haben, frag bitte deinen Webdesigner.</p>"
+                          "en-us": "<p><em>Tip: Crop settings will only take effect if the template creating the HTML interprets the settings. If it seems like the settings don't work, please contact your web developer.&nbsp;</em></p>",
+                          "de-de": "<p><em>Tipp: Die Einstellungen wirken nur, wenn das Template (der Teil, welches HTML generiert) diese ber&uuml;cksichtigt. Sollten die Einstellungen nicht wirken, dann frag deinen Webdesigner.</em></p>"
                         },
                         "Placeholder": {
                           "en-us": ""
                         },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
                         "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
                           "en-us": ""
                         }
                       },
