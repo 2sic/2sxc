@@ -48,6 +48,6 @@ namespace ToSic.Sxc.Services
         public IDynamicCodeRoot _DynCodeRoot { get; private set; }
 
         [PrivateApi]
-        public bool Debug { get; set; }
+        public virtual bool Debug { get; set; }
     }
 }

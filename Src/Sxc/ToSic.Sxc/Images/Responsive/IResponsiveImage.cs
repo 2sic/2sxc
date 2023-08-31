@@ -101,11 +101,9 @@ namespace ToSic.Sxc.Images
         /// Get the toolbar to show it on another tag (typically a `figure` around the `picture`)
         /// or set another toolbar instead.
         /// </summary>
-        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="replace">alternate toolbar to replace the default toolbar; this only has an affect if done early on</param>
         /// <remarks>Added in v16.04</remarks>
         [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP 16.04, may still change")]
-        IToolbarBuilder Toolbar(string noParamOrder = Protector, IToolbarBuilder replace = default);
+        IToolbarBuilder Toolbar();
 
         /// <summary>
         /// The main url, used for main `src` property

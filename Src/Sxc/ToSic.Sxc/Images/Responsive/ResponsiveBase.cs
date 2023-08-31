@@ -8,7 +8,6 @@ using ToSic.Razor.Html5;
 using ToSic.Sxc.Data.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Web;
-using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 using static ToSic.Sxc.Images.ImageDecorator;
 
@@ -103,37 +102,34 @@ namespace ToSic.Sxc.Images
         }
 
         /// <inheritdoc />
-        public IToolbarBuilder Toolbar(string noParamOrder = Protector, IToolbarBuilder replace = default)
+        public IToolbarBuilder Toolbar() => _toolbar.Get(() =>
         {
-            Protect(noParamOrder, nameof(replace));
-            if (replace != default) _toolbar.Reset(replace);
+            if (Params.Toolbar is bool toggle && !toggle) return null;
+            if (Params.Toolbar is IToolbarBuilder customToolbar) return customToolbar;
 
-            return _toolbar.Get(() =>
-            {
-                // If we're creating an image for a string value, it won't have a field or parent.
-                if (Params.Field?.Parent == null || Params.HasMetadataOrNull == null) return null;
+            // If we're creating an image for a string value, it won't have a field or parent.
+            if (Params.Field?.Parent == null || Params.HasMetadataOrNull == null) return null;
 
-                // Determine if this is an "own" adam file, because only field-owned files should allow config
-                var isInSameEntity = Adam.Security.PathIsInItemAdam(Params.Field.Parent.Guid, "", Src);
+            // Determine if this is an "own" adam file, because only field-owned files should allow config
+            var isInSameEntity = Adam.Security.PathIsInItemAdam(Params.Field.Parent.Guid, "", Src);
 
-                // Construct the toolbar; in edge cases the toolbar service could be missing
-                var imgTlb = ImgService.ToolbarOrNull?.Empty().Settings(
-                    hover: "right-middle",
-                    // Delay show of toolbar if it's a shared image, as it shouldn't be used much
-                    ui: isInSameEntity ? null : "delayShow=1000"
-                );
+            // Construct the toolbar; in edge cases the toolbar service could be missing
+            var imgTlb = ImgService.ToolbarOrNull?.Empty().Settings(
+                hover: "right-middle",
+                // Delay show of toolbar if it's a shared image, as it shouldn't be used much
+                ui: isInSameEntity ? null : "delayShow=1000"
+            );
 
-                // Try to add the metadata button (or just null if not available)
-                imgTlb = imgTlb?.Metadata(Params.HasMetadataOrNull,
-                    tweak: btn =>
-                    {
-                        btn = btn.Tooltip($"{ToolbarConstants.ToolbarLabelPrefix}MetadataImage");
-                        return isInSameEntity ? btn : btn.FormParameters(ShowWarningGlobalFile, true);
-                    });
+            // Try to add the metadata button (or just null if not available)
+            imgTlb = imgTlb?.Metadata(Params.HasMetadataOrNull,
+                tweak: btn =>
+                {
+                    btn = btn.Tooltip($"{ToolbarConstants.ToolbarLabelPrefix}MetadataImage");
+                    return isInSameEntity ? btn : btn.FormParameters(ShowWarningGlobalFile, true);
+                });
 
-                return imgTlb;
-            });
-        }
+            return imgTlb;
+        });
 
         private readonly GetOnce<IToolbarBuilder> _toolbar = new GetOnce<IToolbarBuilder>();
 

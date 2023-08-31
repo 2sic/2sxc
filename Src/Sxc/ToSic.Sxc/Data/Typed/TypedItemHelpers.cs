@@ -2,6 +2,7 @@
 using System;
 using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Images;
 using static ToSic.Eav.Parameters;
 
@@ -38,6 +39,7 @@ namespace ToSic.Sxc.Data.Typed
             string imgAlt,
             string imgAltFallback,
             string imgClass,
+            object toolbar,
             object recipe
         )
         {
@@ -46,7 +48,8 @@ namespace ToSic.Sxc.Data.Typed
             var field = item.Field(name, required: true);
             return field.Url.IsEmptyOrWs()
                 ? null
-                : kit.Image.Picture(field, settings: settings, factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass, recipe: recipe);
+                : kit.Image.Picture(field, settings: settings, factor: factor, width: width, imgAlt: imgAlt,
+                    imgAltFallback: imgAltFallback, imgClass: imgClass, toolbar: toolbar, recipe: recipe);
         }
 
         public static string MaybeScrub(string value, object scrubHtml, Func<IScrub> scrubSvc)

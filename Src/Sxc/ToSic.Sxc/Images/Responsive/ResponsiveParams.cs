@@ -2,6 +2,7 @@
 using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Edit.Toolbar;
 
 namespace ToSic.Sxc.Images
 {
@@ -28,6 +29,8 @@ namespace ToSic.Sxc.Images
 
         public string PicClass { get; }
 
+        public object Toolbar { get; }
+
         internal ResponsiveParams(
             string method,
             object target,
@@ -36,7 +39,8 @@ namespace ToSic.Sxc.Images
             string imgAlt = default,
             string imgAltFallback = default,
             string imgClass = default,
-            string picClass = default
+            string picClass = default,
+            object toolbar = default
             )
         {
             Parameters.ProtectAgainstMissingParameterNames(noParamOrder, method,
@@ -50,6 +54,7 @@ namespace ToSic.Sxc.Images
             ImgAltFallback = imgAltFallback;
             ImgClass = imgClass;
             PicClass = picClass;
+            Toolbar = toolbar;
         }
     }
 }

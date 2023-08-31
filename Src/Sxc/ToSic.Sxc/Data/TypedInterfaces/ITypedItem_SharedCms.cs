@@ -82,6 +82,7 @@ namespace ToSic.Sxc.Data
         /// Optional `alt` attribute which is only used if the `imgAlt` or the alt-text in the metadata are empty.
         /// </param>
         /// <param name="imgClass">Optional `class` attribute on the created `img` tag</param>
+        /// <param name="toolbar">Provide a custom toolbar or `false` to not show a toolbar</param>
         /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
         /// <param name="recipe">
         /// Optional recipe = instructions how to create the various variants of this link.
@@ -110,6 +111,7 @@ namespace ToSic.Sxc.Data
             string imgAlt = default,
             string imgAltFallback = default,
             string imgClass = default,
+            object toolbar = default,
             object recipe = default
         );
     }

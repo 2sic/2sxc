@@ -301,10 +301,11 @@ namespace ToSic.Sxc.Data
             string imgAlt,
             string imgAltFallback,
             string imgClass,
+            object toolbar,
             object recipe
         ) => TypedItemHelpers.Picture(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder, settings: settings,
             factor: factor, width: width, imgAlt: imgAlt,
-            imgAltFallback: imgAltFallback, imgClass: imgClass, recipe: recipe);
+            imgAltFallback: imgAltFallback, imgClass: imgClass, toolbar: toolbar, recipe: recipe);
 
         #endregion
 
