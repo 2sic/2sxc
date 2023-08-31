@@ -45,6 +45,7 @@ namespace ToSic.Sxc.Services
                 .JsonToTyped(json, noParamOrder, fallback);
 
 
+        /// <inheritdoc />
         public IEnumerable<ITyped> ToTypedList(string json, string noParamOrder = Protector, string fallback = default, bool? propsRequired = default)
             => _wrapJsonGenerator.New()
                 .Setup(WrapperSettings.Typed(true, true, propsRequired: propsRequired ?? true))
