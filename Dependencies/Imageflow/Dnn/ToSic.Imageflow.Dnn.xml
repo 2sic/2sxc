@@ -62,6 +62,56 @@
             </summary>
             <param name="cacheDir"></param>
         </member>
+        <member name="M:ToSic.Imageflow.Dnn.Cache.HybridCacheService.#ctor(ToSic.Imageflow.Dnn.Cache.HybridCacheOptions,Microsoft.Extensions.Logging.ILogger{ToSic.Imageflow.Dnn.Cache.HybridCacheService})">
+            <summary>
+            Constructor for the Hybrid Cache service.
+            </summary>
+            <param name="options">Options for the Hybrid Cache service.</param>
+            <param name="logger">Logger instance for logging events.</param>
+        </member>
+        <member name="M:ToSic.Imageflow.Dnn.Cache.HybridCacheService.GetIssues">
+            <summary>
+            Get a list of issues within the Hybrid Cache.
+            </summary>
+            <returns>A list of issues within the cache.</returns>
+        </member>
+        <member name="M:ToSic.Imageflow.Dnn.Cache.HybridCacheService.StartAsync(System.Threading.CancellationToken)">
+            <summary>
+            Start the Hybrid Cache.
+            </summary>
+            <param name="cancellationToken">Cancellation token for the operation.</param>
+            <returns>A task representing the starting of the cache.</returns>
+        </member>
+        <member name="M:ToSic.Imageflow.Dnn.Cache.HybridCacheService.StopAsync(System.Threading.CancellationToken)">
+            <summary>
+            Stop the Hybrid Cache.
+            </summary>
+            <param name="cancellationToken">Cancellation token for the operation.</param>
+            <returns>A task representing the stopping of the cache.</returns>
+        </member>
+        <member name="M:ToSic.Imageflow.Dnn.Cache.HybridCacheService.GetOrCreateBytes(System.Byte[],Imazen.Common.Extensibility.StreamCache.AsyncBytesResult,System.Threading.CancellationToken,System.Boolean)">
+            <summary>
+            Retrieve or create a new set of bytes within the cache.
+            </summary>
+            <param name="key">The key to identify the cache entry.</param>
+            <param name="dataProviderCallback">The function that retrieves missing data.</param>
+            <param name="cancellationToken">Cancellation token for the operation.</param>
+            <param name="retrieveContentType">Whether or not to retrieve the content type of the data.</param>
+            <returns>The result of the cache retrieval or creation.</returns>
+        </member>
+        <member name="T:ToSic.Imageflow.Dnn.Cache.HybridCacheServiceExtensions">
+            <summary>
+            Extension method for adding hybrid cache service to the IServiceCollection.
+            </summary>
+        </member>
+        <member name="M:ToSic.Imageflow.Dnn.Cache.HybridCacheServiceExtensions.AddImageflowHybridCache(Microsoft.Extensions.DependencyInjection.IServiceCollection,ToSic.Imageflow.Dnn.Cache.HybridCacheOptions)">
+            <summary>
+            Adds image flow hybrid cache service to the IServiceCollection.
+            </summary>
+            <param name="services">The IServiceCollection instance.</param>
+            <param name="options">The hybrid cache options.</param>
+            <returns>The updated IServiceCollection instance.</returns>
+        </member>
         <member name="M:ToSic.Imageflow.Dnn.DependencyInjection.Resolve``1">
             <summary>
             Dependency Injection resolver with a known type as a parameter.
@@ -81,17 +131,38 @@
         </member>
         <member name="T:ToSic.Imageflow.Dnn.Helpers.MagicBytes">
             <summary>
-            Identifying Common File Formats
+            Identify common file formats and proxy streams to the HTTP response.
             </summary>
+        </member>
+        <member name="M:ToSic.Imageflow.Dnn.Helpers.MagicBytes.GetContentTypeFromBytes(System.Byte[])">
+            <summary>
+            Returns the MIME type based on the provided byte array data.
+            </summary>
+            <param name="data">The byte array data to check for the MIME type.</param>
+            <returns>A string representing the MIME type of the provided data.</returns>
         </member>
         <member name="M:ToSic.Imageflow.Dnn.Helpers.MagicBytes.ProxyToStream(System.IO.Stream,System.Web.HttpResponse)">
             <summary>
-            Proxies the given stream to the HTTP response, while also setting the content length
-            and the content type based off the magic bytes of the image
+            Proxies the given stream to the provided HTTP response, while also setting the content length
+            and the content type based off the provided data if possible.
             </summary>
-            <param name="sourceStream"></param>
-            <param name="response"></param>
+            <param name="sourceStream">The source stream to proxy.</param>
+            <param name="response">The HTTP response to write to.</param>
             <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:ToSic.Imageflow.Dnn.Helpers.PathHelpers.Base64Hash(System.String)">
+            <summary>
+            Return the Base64 encoded hash string
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ToSic.Imageflow.Dnn.Helpers.PathHelpers.ToQueryDictionary(System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Create a dictionary from a name value collection.
+            </summary>
+            <returns>A dictionary containing all the key-value pairs from a NameValueCollection</returns>
+            <param name="requestQuery">The NameValueCollection containing the input key-value pairs.</param>
         </member>
         <member name="T:ToSic.Imageflow.Dnn.ImageflowModule">
             <summary>
