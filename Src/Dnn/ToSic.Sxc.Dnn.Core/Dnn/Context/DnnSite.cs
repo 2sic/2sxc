@@ -149,9 +149,9 @@ namespace ToSic.Sxc.Dnn.Context
             // 2023-08-31 2dm - new code, as it could contain risks, use try/catch/null to default
             try
             {
-                // TODO: Activate as soon as possible
-                //if (!_featuresSvc.Value.Enabled(BuiltInFeatures.LanguagesAdvancedFallback.Guid))
-                //    return null;
+                // If the feature is not enabled, return null so up-stream can handle defaults
+                if (!_featuresSvc.Value.Enabled(BuiltInFeatures.LanguagesAdvancedFallback.Guid))
+                    return null;
 
                 var lc = LocaleController.Instance;
                 if (lc == null) return null;
