@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿#pragma warning disable 1591
+using System.Web;
 using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Dnn

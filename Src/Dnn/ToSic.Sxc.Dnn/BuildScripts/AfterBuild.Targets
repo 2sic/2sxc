@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <Target Name="PostBuild" AfterTargets="Build" Condition="'$(DnnTargets)' != ''">
+    <Message Text="DnnTargets='$(DnnTargets)'" Importance="High"/>
+
+    <!--Split the paths in DnnTargets into individual items-->
+    <ItemGroup>
+      <DnnRoot Include="$(DnnTargets)"/>
+    </ItemGroup>
+
+    <PropertyGroup>
+      <DnnRootIdentityValue>%(DnnRoot.Identity)</DnnRootIdentityValue>
+    </PropertyGroup>
+    <Message Text="DnnRoot='$(DnnRootIdentityValue)'" Importance="High"/>
+  </Target>
+
+  <Target Name="PostBuildForEachItem" AfterTargets="PostBuild" DependsOnTargets="PostBuild" Outputs="%(DnnRoot.Identity)" Condition="'$(DnnTargets)' != ''">
+    <Message Text="DnnRoot='%(DnnRoot.Identity)'" Importance="High"/>
+    <PropertyGroup>
+      <CurrentDnnRoot>%(DnnRoot.Identity)</CurrentDnnRoot>
+      <BuildTarget>$(CurrentDnnRoot)DesktopModules/ToSic_SexyContent</BuildTarget>
+    </PropertyGroup>
+    <!-- Echo Statements -->
+    <Message Text="BuildTarget='$(BuildTarget)'" Importance="High"/>
+
+    <ItemGroup>
+      <!-- Global / Shared 2sxc and EAV DLLs-->
+      <DnnBinInclude Include="bin\ToSic.Sxc.dll" />
+      <DnnBinInclude Include="bin\ToSic.Sxc.pdb" />
+      <DnnBinInclude Include="bin\ToSic.Sxc.WebApi.dll" />
+      <DnnBinInclude Include="bin\ToSic.Sxc.WebApi.pdb" />
+      <DnnBinInclude Include="bin\ToSic.Eav*.dll" />
+      <DnnBinInclude Include="bin\ToSic.Eav*.pdb" />
+      <DnnBinInclude Include="bin\ToSic.Lib*.dll" />
+      <DnnBinInclude Include="bin\ToSic.Lib*.pdb" />
+
+      <!-- DNN specific DLLs -->
+      <DnnBinInclude Include="bin\ToSic.Sxc.Dnn*.dll" />
+      <DnnBinInclude Include="bin\ToSic.Sxc.Dnn*.pdb" />
+
+      <!-- 2sxc 13+ netstandard2.0/framework 4.7.2 assemblies -->
+      <DependeciesInclude Include="bin\Microsoft.Bcl.AsyncInterfaces.dll" />
+      <DependeciesInclude Include="bin\Microsoft.EntityFrameworkCore.Abstractions.dll" />
+      <DependeciesInclude Include="bin\Microsoft.EntityFrameworkCore.dll" />
+      <DependeciesInclude Include="bin\Microsoft.EntityFrameworkCore.Relational.dll" />
+      <DependeciesInclude Include="bin\Microsoft.EntityFrameworkCore.SqlServer.dll" />
+      <DependeciesInclude Include="bin\Microsoft.Extensions.Caching.Abstractions.dll" />
+      <DependeciesInclude Include="bin\Microsoft.Extensions.Caching.Memory.dll" />
+      <DependeciesInclude Include="bin\Microsoft.Extensions.Configuration.Abstractions.dll" />
+      <DependeciesInclude Include="bin\Microsoft.Extensions.Configuration.Binder.dll" />
+      <DependeciesInclude Include="bin\Microsoft.Extensions.Configuration.dll" />
+      <!--<DependeciesInclude Include="bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />-->
+      <!--<DependeciesInclude Include="bin\Microsoft.Extensions.DependencyInjection.dll" />-->
+      <DependeciesInclude Include="bin\Microsoft.Extensions.Logging.Abstractions.dll" />
+      <DependeciesInclude Include="bin\Microsoft.Extensions.Logging.dll" />
+      <DependeciesInclude Include="bin\Microsoft.Extensions.Options.dll" />
+      <DependeciesInclude Include="bin\Microsoft.Extensions.Primitives.dll" />
+      <!--<DependeciesInclude Include="bin\Newtonsoft.Json.dll" />-->
+      <DependeciesInclude Include="bin\Remotion.Linq.dll" />
+      <DependeciesInclude Include="bin\System.Buffers.dll" />
+      <DependeciesInclude Include="bin\System.Collections.Immutable.dll" />
+      <DependeciesInclude Include="bin\System.ComponentModel.Annotations.dll" />
+      <DependeciesInclude Include="bin\System.Data.SqlClient.dll" />
+      <DependeciesInclude Include="bin\System.Diagnostics.DiagnosticSource.dll" />
+      <DependeciesInclude Include="bin\System.Interactive.Async.dll" />
+      <DependeciesInclude Include="bin\System.Memory.dll" />
+      <!--<DependeciesInclude Include="bin\System.Net.Http.Formatting.dll" />-->
+      <DependeciesInclude Include="bin\System.Numerics.Vectors.dll" />
+      <DependeciesInclude Include="bin\System.Runtime.CompilerServices.Unsafe.dll" />
+      <DependeciesInclude Include="bin\System.Text.Encodings.Web.dll" />
+      <DependeciesInclude Include="bin\System.Text.Json.dll" />
+      <DependeciesInclude Include="bin\System.Threading.Tasks.Extensions.dll" />
+      <DependeciesInclude Include="bin\System.ValueTuple.dll" />
+      <!--<DependeciesInclude Include="bin\System.Web.Http.dll" />-->
+      <!--<DependeciesInclude Include="bin\System.Web.Http.WebHost.dll" />-->
+
+      <!-- Other DLLs -->
+      <DependeciesInclude Include="bin\CsvHelper.dll" />
+
+      <!-- DNN specific DLLs -->
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\ToSic.Imageflow.Dnn.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Newtonsoft.Json.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\koi\bin\*.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\razorblade\bin\*.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\razorblade-old\bin\*.dll" />
+
+    </ItemGroup>
+
+    <Copy SourceFiles="@(DnnBinInclude)" DestinationFolder="$(CurrentDnnRoot)/bin" />
+    <Copy SourceFiles="@(DependeciesInclude)" DestinationFolder="$(CurrentDnnRoot)/bin" />
+
+    <!-- Copy Imageflow and dependecies -->
+    <Exec Command="robocopy /S &quot;$(ProjectDir)Extensions/Imageflow/bin/&quot; &quot;$(CurrentDnnRoot)bin/&quot;" IgnoreExitCode="true"/>
+    <!-- Imageflow.dll Handling -->
+    <Exec Command="if exist &quot;$(TargetDir)runtimes/win-x64/native/imageflow.dll&quot; ( del &quot;$(TargetDir)runtimes/win-x64/native/imageflow.dll&quot; &amp; rename &quot;$(TargetDir)runtimes/win-x64/native/imageflow.dll.pending&quot; imageflow.dll )" />
+    <Exec Command="if exist &quot;$(TargetDir)runtimes/win-x86/native/imageflow.dll&quot; ( del &quot;$(TargetDir)runtimes/win-x86/native/imageflow.dll&quot; &amp; rename &quot;$(TargetDir)runtimes/win-x86/native/imageflow.dll.pending&quot; imageflow.dll )" />
+
+    <!--Copy the data folders-->
+    <Exec Command="robocopy /MIR &quot;$(ProjectDir)../../Data/App_Data/&quot; &quot;$(BuildTarget)/App_Data/&quot; /XO /XF &quot;$(BuildTarget)/App_Data/system-custom/configurations/features.json&quot; /XF &quot;$(BuildTarget)/App_Data/system-custom/configurations/default.license.json&quot;" IgnoreExitCode="true"/>
+    <Exec Command="robocopy /S &quot;$(ProjectDir)../../../../2sxc-dev-materials/App_Data/&quot; &quot;$(BuildTarget)/App_Data/&quot;" IgnoreExitCode="true"/>
+    <Exec Command="robocopy /MIR &quot;$(ProjectDir)../../Data/assets/ &quot; &quot;$(BuildTarget)/assets/&quot;" IgnoreExitCode="true"/>
+
+    <!--Add the DNN specific content-types-->
+    <Exec Command="robocopy /S &quot;$(ProjectDir)../../Data-Dnn/App_Data/system/&quot; &quot;$(BuildTarget)/App_Data/system/&quot;" IgnoreExitCode="true"/>
+
+    <!--Copy DNN JavaScripts and Bridge-->
+    <Exec Command="robocopy /MIR &quot;$(ProjectDir)ClientScripts/&quot; &quot;$(BuildTarget)/ClientScripts/&quot;" IgnoreExitCode="true"/>
+    <Exec Command="robocopy /MIR &quot;$(ProjectDir)DnnWebForms/&quot; &quot;$(BuildTarget)/DnnWebForms/&quot;" IgnoreExitCode="true"/>
+
+    <!--Copy 2sxc JS stuff (order of commands is important) -->
+    <!--<Exec Command="robocopy /MIR &quot;$(Source)/js/&quot; &quot;$(BuildTarget)/js/&quot;" IgnoreExitCode="true" Condition="Exists('$(Source)')"/>
+    <Exec Command="robocopy /MIR &quot;$(Source)/system/&quot; &quot;$(BuildTarget)/system/&quot;" IgnoreExitCode="true" Condition="Exists('$(Source)')"/>
+    <Exec Command="robocopy /MIR &quot;$(Source)/dist/&quot; &quot;$(BuildTarget)/dist/&quot;" IgnoreExitCode="true" Condition="Exists('$(Source)')"/>-->
+    <Exec Command="robocopy /S &quot;$(ProjectDir)dist/&quot; &quot;$(BuildTarget)/dist/&quot; &quot;Default.aspx&quot;" IgnoreExitCode="true"/>
+    <Exec Command="robocopy /MIR &quot;$(ProjectDir)Extensions/&quot; &quot;$(BuildTarget)/Extensions/&quot;" IgnoreExitCode="true"/>
+    <Exec Command="robocopy /MIR &quot;$(ProjectDir)ImportExport/&quot; &quot;$(BuildTarget)/ImportExport/&quot;" IgnoreExitCode="true"/>
+    <Exec Command="robocopy /MIR &quot;$(ProjectDir)App_LocalResources/&quot; &quot;$(BuildTarget)/App_LocalResources/&quot;" IgnoreExitCode="true"/>
+
+    <!-- Xcopy Commands -->
+    <Exec Command="xcopy &quot;$(ProjectDir)View.ascx&quot; &quot;$(BuildTarget)&quot; /y" IgnoreExitCode="true"/>
+    <Exec Command="xcopy &quot;$(ProjectDir)icon.png&quot; &quot;$(BuildTarget)&quot; /y" IgnoreExitCode="true"/>
+    <Exec Command="xcopy &quot;$(ProjectDir)icon-app.png&quot; &quot;$(BuildTarget)&quot; /y" IgnoreExitCode="true"/>
+    <Exec Command="xcopy &quot;$(ProjectDir)WebConfigTemplate.config&quot; &quot;$(BuildTarget)&quot; /y" IgnoreExitCode="true"/>
+    <!-- ... Add other xcopy commands similarly ... -->
+
+    <!-- Echo Statements -->
+    <Message Text="Copied all files to this DNN target: '$(CurrentDnnRoot)'" Importance="High"/>
+    <Message Text="So DesktopModules Folder is '$(BuildTarget)'" Importance="High"/>
+  </Target>
+
+</Project>

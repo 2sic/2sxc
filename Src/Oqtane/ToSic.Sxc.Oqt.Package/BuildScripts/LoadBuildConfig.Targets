@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <Target Name="CheckBuildTool" AfterTargets="Build" BeforeTargets="PostBuild">
+    <Message Text="Running on .NET Core MSBuild" Condition="'$(MSBuildRuntimeType)' == 'Core'" Importance="high"/>
+    <Message Text="Running on Full MSBuild" Condition="'$(MSBuildRuntimeType)' != 'Core'" Importance="high"/>
+  </Target>
+
+  <UsingTask Condition="'$(MSBuildRuntimeType)' == 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net7.0\ToSic.Sxc.BuildTasks.dll " TaskName="GetBuildConfig"/>
+  <UsingTask Condition="'$(MSBuildRuntimeType)' != 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll " TaskName="GetBuildConfig"/>
+  <UsingTask Condition="'$(MSBuildRuntimeType)' == 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net7.0\ToSic.Sxc.BuildTasks.dll " TaskName="ColorMessage"/>
+  <UsingTask Condition="'$(MSBuildRuntimeType)' != 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll " TaskName="ColorMessage"/>
+
+  <Target Name="BuildConfigTarget" AfterTargets="CheckBuildTool">
+
+    <GetBuildConfig>
+      <Output TaskParameter="BuildConfigPath" PropertyName="BuildConfigPath" />
+      <Output TaskParameter="OqtaneTargets" PropertyName="OqtaneTargets" />
+      <Output TaskParameter="OqtaneTarget" PropertyName="OqtaneTarget" />
+      <Output TaskParameter="Sources" PropertyName="Sources" />
+      <Output TaskParameter="Source" PropertyName="Source" />
+      <Output TaskParameter="OqtaneModuleInstallPackages" PropertyName="OqtaneModuleInstallPackages" />
+    </GetBuildConfig>
+
+    <!-- Create a property to capture the result of the Exists function -->
+    <PropertyGroup>
+      <SourceExist Condition="Exists('$(Source)')">true</SourceExist>
+      <SourceExist Condition="!Exists('$(Source)')">false</SourceExist>
+      <OqtaneExist Condition="Exists('$(OqtaneTarget)')">true</OqtaneExist>
+      <OqtaneExist Condition="!Exists('$(OqtaneTarget)')">false</OqtaneExist>
+    </PropertyGroup>
+
+    <ColorMessage Text="------------------------------------------------------------------------------" ForegroundColor="White" BackgroundColor="Magenta"/>
+    <ColorMessage Text="$(BuildConfigPath)" ForegroundColor="Magenta"/>
+    <ColorMessage Text="------------------------------------------------------------------------------" ForegroundColor="White" BackgroundColor="Magenta"/>
+    <ColorMessage Text="OqtaneTargets:" ForegroundColor="White"/>
+    <ColorMessage Text="$(OqtaneTargets)" ForegroundColor="Magenta"/>
+    <ColorMessage Text="Source:" ForegroundColor="White"/>
+    <ColorMessage Text="$(Source)" ForegroundColor="Magenta"/>
+    <ColorMessage Text="OqtaneModuleInstallPackages:" ForegroundColor="White"/>
+    <ColorMessage Text="$(OqtaneModuleInstallPackages)" ForegroundColor="Magenta"/>
+    <ColorMessage Text="------------------------------------------------------------------------------" ForegroundColor="White" BackgroundColor="Magenta"/>
+
+  </Target>
+
+</Project>

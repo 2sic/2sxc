@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="BuildScripts\LoadBuildConfig.Targets" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -36,40 +37,36 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <!-- end: Don't generate... -->
+    <OutputPath>bin\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <OutputPath>$(Dev2sxcDnnRoot)\bin\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
     <NoWarn>1591</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugDnn|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <OutputPath>$(Dev2sxcDnnRoot)\bin\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
     <NoWarn>1591</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>bin\Release\ToSic.Sxc.Dnn.xml</DocumentationFile>
-  </PropertyGroup>
+   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugOqtane|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\</OutputPath>
@@ -250,11 +247,12 @@
   <!--<Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />-->
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
+
   <Target Name="BeforeBuild">
   </Target>
+
   <Target Name="AfterBuild">
-  </Target>
-  -->
+  </Target>-->
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
@@ -264,65 +262,10 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <PropertyGroup>
-    <PostBuildEvent>
-      @Echo Configuration='$(Configuration)'
-      @Echo StartWith ='$(Configuration.StartsWith('Debug'))'
-      @Echo Platform ='$(Platform)'
-      @set BuildTarget=%25Dev2sxcDnnRoot%25DesktopModules\ToSIC_SexyContent
-      @REM set BuildTarget=C:\Projects\2sxc-dnn742-target\Website\DesktopModules\ToSIC_SexyContent
-      @REM xcopy "$(TargetDir)ToSic.*.*" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /y /i
-      @REM xcopy "$(TargetDir)ToSic.*.*" "C:\Projects\dnn9102-farm\Website\bin\" /y /i
-      @REM xcopy "$(TargetDir)ToSic.*.*" "C:\Projects\_Test\2sxc-evoq\2sxc-evoq910611-t01\Website\bin\" /y /i
 
-      @REM Copy Imageflow and dependecies
-      robocopy $(ProjectDir)Extensions\Imageflow\bin $(Dev2sxcDnnRoot)bin /S
-      if exist $(TargetDir)runtimes\win-x64\native\imageflow.dll (
-      @Echo delete: $(TargetDir)runtimes\win-x64\native\imageflow.dll
-      del $(TargetDir)runtimes\win-x64\native\imageflow.dll
-      rename $(TargetDir)runtimes\win-x64\native\imageflow.dll.pending imageflow.dll
-      )
-      if exist $(TargetDir)runtimes\win-x86\native\imageflow.dll (
-      @Echo delete: $(TargetDir)runtimes\win-x86\native\imageflow.dll
-      del $(TargetDir)runtimes\win-x86\native\imageflow.dll
-      rename $(TargetDir)runtimes\win-x86\native\imageflow.dll.pending imageflow.dll
-      )
-
-      @REM Copy the data folders
-      robocopy "$(ProjectDir)..\..\Data\App_Data\ " "%25BuildTarget%25\App_Data\ " /MIR /XO /XF "%25BuildTarget%25\App_Data\system-custom\configurations\features.json" /XF "%25BuildTarget%25\App_Data\system-custom\configurations\default.license.json"
-      robocopy "$(ProjectDir)..\..\..\..\2sxc-dev-materials\App_Data\ " "%25BuildTarget%25\App_Data\ " /s
-      robocopy /mir "$(ProjectDir)..\..\Data\assets\ " "%25BuildTarget%25\assets\ "
-
-      @REM Add the DNN specific content-types
-      robocopy /s "$(ProjectDir)..\..\Data-Dnn\App_Data\system\ " "%25BuildTarget%25\App_Data\system\ "
-
-      @REM Copy DNN JavaScripts and Bridge
-      robocopy /mir "$(ProjectDir)ClientScripts\ " "%25BuildTarget%25\ClientScripts\ "
-      robocopy /mir "$(ProjectDir)DnnWebForms\ " "%25BuildTarget%25\DnnWebForms\ "
-
-      @REM Copy 2sxc JS stuff
-      robocopy /mir "$(Dev2sxcAssets)\js\ " "%25BuildTarget%25\js\ "
-      robocopy /mir "$(Dev2sxcAssets)\dist\ " "%25BuildTarget%25\dist\ "
-      robocopy /mir "$(Dev2sxcAssets)\system\ " "%25BuildTarget%25\system\ "
-
-      robocopy "$(ProjectDir)dist\ " "%25BuildTarget%25\dist\ " "Default.aspx" /S
-      robocopy /mir "$(ProjectDir)Extensions\ " "%25BuildTarget%25\Extensions\ "
-      robocopy /mir "$(ProjectDir)ImportExport\ " "%25BuildTarget%25\ImportExport\ "
-      robocopy /mir "$(ProjectDir)App_LocalResources\ " "%25BuildTarget%25\App_LocalResources\ "
-
-      xcopy "$(ProjectDir)View.ascx" "%25BuildTarget%25\" /y
-      xcopy "$(ProjectDir)icon.png" "%25BuildTarget%25\" /y
-      xcopy "$(ProjectDir)icon-app.png" "%25BuildTarget%25\" /y
-      xcopy "$(ProjectDir)WebConfigTemplate.config" "%25BuildTarget%25\" /y
-
-      @echo Copied all files to this DNN target: '%25Dev2sxcDnnRoot%25'
-      @echo So DesktopModules Folder is '%25BuildTarget%25'
-      @echo To change your path to DNN set the environment variable Dev2sxcDnnRoot to your DNN Root and restart visual studio
-
-    </PostBuildEvent>
-  </PropertyGroup>
   <!-- Run the DNN Package Builder after every build -->
   <Import Project="BuildScripts\ModulePackage.Targets" />
+  <Import Project="BuildScripts\AfterBuild.Targets" />
   <Target Name="TestMessages" BeforeTargets="PrepareForBuild">
     <Message Text="Debug Messages created by 2dm" Importance="High">
     </Message>
@@ -335,6 +278,7 @@
     <Message Text="OutputPath=$(OutputPath)" Importance="High">
     </Message>
   </Target>
+
   <Target Name="TestMessages2" BeforeTargets="Build">
     <Message Text="Debug Messages created by 2dm" Importance="High">
     </Message>
@@ -346,5 +290,18 @@
     </Message>
     <Message Text="OutputPath=$(OutputPath)" Importance="High">
     </Message>
+  </Target>
+
+  <Target Name="BuildConfigTarget2" AfterTargets="Build" DependsOnTargets="BuildConfigTarget">
+
+    <Message Text="------------------------------------------------------------------------------" Importance="high"/>
+    <Message Text="$(BuildConfigPath)" Importance="high"/>
+    <Message Text="------------------------------------------------------------------------------" Importance="high"/>
+    <Message Text="DnnTargets:" Importance="high"/>
+    <Message Text="$(DnnTargets)" Importance="high"/>
+    <Message Text="Source:" Importance="high"/>
+    <Message Text="$(Source)" Importance="high"/>
+    <Message Text="------------------------------------------------------------------------------" Importance="high"/>
+
   </Target>
 </Project>

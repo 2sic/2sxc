@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿#pragma warning disable 1591
+using System.Web.Http;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Dnn.Run;
 

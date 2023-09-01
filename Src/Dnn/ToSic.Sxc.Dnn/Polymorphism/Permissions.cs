@@ -1,4 +1,5 @@
-﻿using DotNetNuke.Entities.Portals;
+﻿#pragma warning disable 1591
+using DotNetNuke.Entities.Portals;
 using ToSic.Lib.Logging;
 using static System.StringComparison;
 

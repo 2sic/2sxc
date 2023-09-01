@@ -1,0 +1,17 @@
+{
+  "JsTargets": [
+    // "C:/Projects/2sxc/2sxc-dnn/Website/DesktopModules/ToSIC_SexyContent",
+    // "C:/Projects/2sxc/2sxc/Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc.Oqtane",
+    // "C:/Projects/2sxc/2sxc-ui/projects/$2sxc-jasmine-browser/src"
+  ],
+  "DnnTargets": [
+    // "C:/Projects/2sxc/2sxc-dnn/Website"
+  ],
+  "OqtaneTargets": [
+    // "C:/Projects/2sxc/oqtane/oqtane.framework/Oqtane.Server"
+  ],
+  "Sources": [
+    // "C:/Projects/2sxc/2sxc-sources/_latest"
+  ]
+  // "OqtaneModuleInstallPackages": "A:/2sxc/2sxc/InstallPackages/OqtaneModule"
+}

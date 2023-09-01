@@ -1,6 +1,8 @@
-﻿using System;
+﻿#pragma warning disable 1591
+using System;
 using ToSic.Sxc.Web.EditUi;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Dnn.dist.eavUi
 {
     public class Default : CachedPageBase
