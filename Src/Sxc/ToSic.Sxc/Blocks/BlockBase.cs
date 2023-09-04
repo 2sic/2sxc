@@ -160,7 +160,7 @@ namespace ToSic.Sxc.Blocks
 
 
 
-        public IContextData Data => _data.Get(Log, l =>
+        public IContextData Data => _data.GetL(Log, l =>
         {
             l.A($"About to load data source with possible app configuration provider. App is probably null: {App}");
             var dataSource = Services.BdsFactoryLazy.Value.GetContextDataSource(this, App?.ConfigurationProvider);

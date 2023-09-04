@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Images
         public override string ToString() => Tag.ToString();
 
         /// <inheritdoc />
-        public virtual Img Img => _imgTag.Get(Log, l =>
+        public virtual Img Img => _imgTag.GetL(Log, l =>
         {
             var imgTag = Razor.Blade.Tag.Img().Src(Src);
 

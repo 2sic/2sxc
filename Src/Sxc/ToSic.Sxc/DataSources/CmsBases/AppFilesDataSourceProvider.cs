@@ -85,7 +85,7 @@ namespace ToSic.Sxc.DataSources
         /// <returns></returns>
         public (List<AppFolderDataRaw> Folders, List<AppFileDataRaw> Files) GetAll() => Log.Func(l => (Folders, Files));
 
-        public List<AppFileDataRaw> Files => _files.Get(Log, l =>
+        public List<AppFileDataRaw> Files => _files.GetM(Log, l =>
         {
             var files = new List<AppFileDataRaw>();
             if (!_onlyFolders)
@@ -116,7 +116,7 @@ namespace ToSic.Sxc.DataSources
         });
         private readonly GetOnce<List<AppFileDataRaw>> _files = new GetOnce<List<AppFileDataRaw>>();
 
-        public List<AppFolderDataRaw> Folders => _folders.Get(Log, l =>
+        public List<AppFolderDataRaw> Folders => _folders.GetM(Log, l =>
         {
             var folders = new List<AppFolderDataRaw>();
             if (!_onlyFiles)

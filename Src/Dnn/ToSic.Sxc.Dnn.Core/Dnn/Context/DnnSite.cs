@@ -125,7 +125,7 @@ namespace ToSic.Sxc.Dnn.Context
         private string _defaultLanguage;
 
 
-        public override string CurrentCultureCode => _currentCulture.Get(Log, l =>
+        public override string CurrentCultureCode => _currentCulture.GetM(Log, l =>
         {
             // First check if we know more about the site
             var portal = UnwrappedSite;
@@ -144,7 +144,7 @@ namespace ToSic.Sxc.Dnn.Context
         });
         private readonly GetOnce<string> _currentCulture = new GetOnce<string>();
 
-        public List<string> CultureCodesWithFallbacks => _currentCodeFallbacks.Get(Log, l =>
+        public List<string> CultureCodesWithFallbacks => _currentCodeFallbacks.GetL(Log, l =>
         {
             // 2023-08-31 2dm - new code, as it could contain risks, use try/catch/null to default
             try
