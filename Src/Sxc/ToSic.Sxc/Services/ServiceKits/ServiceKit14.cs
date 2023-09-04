@@ -60,7 +60,8 @@ namespace ToSic.Sxc.Services
         /// <summary>
         /// The Edit service, same as the main Edit service
         /// </summary>
-        public IEditService Edit => _edit.Get(GetService<IEditService>);
+        // Important: must share the Edit from the _DynCodeRoot for scenarios where Enable was set manually
+        public IEditService Edit => _edit.Get(() => _DynCodeRoot.Edit ?? GetService<IEditService>());
         private readonly GetOnce<IEditService> _edit = new GetOnce<IEditService>();
 
 

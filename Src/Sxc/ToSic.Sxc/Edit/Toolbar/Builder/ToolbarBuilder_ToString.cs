@@ -5,8 +5,8 @@ using System.Text.Json;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.Serialization;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Services;
 using static ToSic.Sxc.Edit.Toolbar.ItemToolbarBase;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleToolbar;
 using Attribute = ToSic.Razor.Markup.Attribute;
@@ -25,6 +25,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public override string ToString()
         {
+            // Get edit, but don't exit if null, as the Render (later on) will add comments if Edit is null
             var edit = _DynCodeRoot?.Edit;
 
             // TODO:
@@ -40,13 +41,21 @@ namespace ToSic.Sxc.Edit.Toolbar
             }
 
             // No auto-demo
-            if (!ShouldUseDemoMode()) return Render();
+            return ShouldSwitchToItemDemoMode()
+                // Implement Demo-Mode with info-button only
+                ? ((ToolbarBuilder)CreateItemDemoToolbar()).Render(edit)
+                // Normal render of the current toolbar
+                : Render(edit);
+        }
 
-            //var useDemoMode = ShouldUseDemoMode();
-            //if (!useDemoMode) return Render();
-
-            // Implement Demo-Mode with info-button only
+        /// <summary>
+        /// Create a fresh Toolbar which only shows infos about item being in demo-mode
+        /// </summary>
+        /// <returns></returns>
+        private IToolbarBuilder CreateItemDemoToolbar()
+        {
             var rules = new List<ToolbarRuleBase>();
+
             bool AddRuleIfFound<T>(Func<T, T> tweak = null) where T : ToolbarRuleBase
             {
                 var possibleParams = FindRule<T>();
@@ -60,7 +69,7 @@ namespace ToSic.Sxc.Edit.Toolbar
                 rules.Add(new ToolbarRuleToolbar(Empty));
             AddRuleIfFound<ToolbarRuleForParams>();
             AddRuleIfFound<ToolbarRuleSettings>();
-                
+
             var tlb = new ToolbarBuilder(this, rules) as IToolbarBuilder;
             var keyOrMessage = _configuration?.DemoMessage;
             var message = keyOrMessage == null
@@ -69,10 +78,10 @@ namespace ToSic.Sxc.Edit.Toolbar
                     ? _DynCodeRoot.Resources.Get<string>(keyOrMessage)
                     : keyOrMessage;
             tlb = tlb.Info(tweak: b => b.Note(message));
-            return ((ToolbarBuilder)tlb).Render();
+            return tlb;
         }
 
-        private bool ShouldUseDemoMode()
+        private bool ShouldSwitchToItemDemoMode()
         {
             // If no root provided, we can't check demo mode as of now, so return
             var root = _configuration?.Root?.Entity;
@@ -93,11 +102,9 @@ namespace ToSic.Sxc.Edit.Toolbar
         }
 
 
-        private string Render()
+        private string Render(IEditService edit)
         {
-            var edit = _DynCodeRoot?.Edit;
-            var mode = _configuration?.Mode;
-            mode = (mode ?? ToolbarHtmlModes.OnTag).ToLowerInvariant();
+            var mode = (_configuration?.Mode ?? ToolbarHtmlModes.OnTag).ToLowerInvariant();
             switch (mode)
             {
                 // ReSharper disable AssignNullToNotNullAttribute
