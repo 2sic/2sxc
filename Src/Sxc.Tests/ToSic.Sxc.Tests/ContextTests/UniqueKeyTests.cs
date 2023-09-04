@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ToSic.Sxc.Services;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
-using static ToSic.Sxc.Context.Keys.UniqueKeysServices;
+using static ToSic.Sxc.Services.UniqueKeysServices;
 
 namespace ToSic.Sxc.Tests.ContextTests
 {

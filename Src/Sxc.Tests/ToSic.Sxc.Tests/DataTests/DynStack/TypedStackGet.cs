@@ -7,51 +7,75 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Testing.Shared;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+using static ToSic.Sxc.Tests.DataTests.DynStack.TypedStackTestData;
 
 namespace ToSic.Sxc.Tests.DataTests.DynStack
 {
     [TestClass]
     public class TypedStackGet: DynAndTypedTestsBase
     {
-        private ITypedStack StackForKeysFromAnon => _stackForKeys ?? (_stackForKeys = TypedStackTestData.GetStackForKeysUsingAnon(this));
+        private ITypedStack StackFromAnon => _stackForKeys ?? (_stackForKeys = GetStackForKeysUsingAnon(this));
         private static ITypedStack _stackForKeys;
 
+        private ITypedStack StackFromJson => _stackForKeysTyped ?? (_stackForKeysTyped = GetStackForKeysUsingJson(this));
+        private ITypedStack _stackForKeysTyped;
 
-        private static IEnumerable<object[]> StackProps => TypedStackTestData.StackOrder12PropInfo.ToTestEnum();
+
+        private static IEnumerable<object[]> StackProps => StackOrder12PropInfo.ToTestEnum();
+        private static IEnumerable<object[]> StackPropsWithValue => StackOrder12PropInfo.Where(sp => sp.HasData && sp.Value?.ToString() != ValueNotTestable).ToTestEnum();
+
 
         [TestMethod]
         [DynamicData(nameof(StackProps))]
         public void IsNotEmpty_BasedOnAnon(PropInfo pti)
-        {
-            AreEqual(pti.HasData, StackForKeysFromAnon.IsNotEmpty(pti.Name), pti.ToString());
-        }
+            => AreEqual(pti.HasData, StackFromAnon.IsNotEmpty(pti.Name), pti.ToString());
 
         [TestMethod]
         [DynamicData(nameof(StackProps))]
-        public void Get_AnonObjects_ReqFalse(PropInfo pti) 
-            => AreEqual(pti.Exists, StackForKeysFromAnon.Get(pti.Name, required: false) != null);
+        public void ExistsNotNull_FromAnon_ReqFalse(PropInfo pti) 
+            => AreEqual(pti.Exists, StackFromAnon.Get(pti.Name, required: false) != null);
 
         [TestMethod]
-        public void StackFromAnonWrapsObjectTyped()
+        [DynamicData(nameof(StackPropsWithValue))]
+        public void ExistsNotNull_FromJson_ReqFalse(PropInfo pti)
+            => AreEqual(pti.Exists, StackFromJson.Get(pti.Name, required: false) != null);
+
+        [TestMethod]
+        [DynamicData(nameof(StackProps))]
+        public void IsNotEmpty_FromAnon_ReqFalse(PropInfo pti) 
+            => AreEqual(pti.Exists, StackFromAnon.IsNotEmpty(pti.Name));
+
+        [TestMethod]
+        [DynamicData(nameof(StackPropsWithValue))]
+        public void IsNotEmpty_FromJson_ReqFalse(PropInfo pti)
+            => AreEqual(pti.Exists, StackFromJson.IsNotEmpty(pti.Name));
+
+        [TestMethod]
+        [DynamicData(nameof(StackPropsWithValue))]
+        public void Get_FromJson_ReqFalse(PropInfo pti)
+            => AreEqual(pti.Value, StackFromJson.Get(pti.Name, required: false));
+
+
+        [TestMethod]
+        [DynamicData(nameof(StackPropsWithValue))]
+        public void Get_FromAnon_ReqFalse(PropInfo pti) 
+            => AreEqual(pti.Value, StackFromAnon.Get(pti.Name, required: false));
+
+
+        #region Verify that what's inside the object matches expectation
+
+        [TestMethod]
+        public void Verify_StackFromAnonWrapsObjectTyped()
         {
-            var inspect = (IWrapper<IPropertyStack>)StackForKeysFromAnon;
+            var inspect = (IWrapper<IPropertyStack>)StackFromAnon;
             IsInstanceOfType(inspect.GetContents().Sources.FirstOrDefault().Value, typeof(PreWrapObject));
         }
 
-        #region Stack from Json
-
-        private ITypedStack StackForKeysFromTyped => _stackForKeysTyped ?? (_stackForKeysTyped = TypedStackTestData.GetStackForKeysUsingJson(this));
-        private ITypedStack _stackForKeysTyped;
 
         [TestMethod]
-        [DynamicData(nameof(StackProps))]
-        public void Get_TypedObjects_NewReqFalse(PropInfo pti) 
-            => AreEqual(pti.Exists, StackForKeysFromTyped.Get(pti.Name, required: false) != null);
-
-        [TestMethod]
-        public void StackFromTypedWrapsJacket()
+        public void Verify_StackFromJsonWrapsJacket()
         {
-            var inspect = StackForKeysFromTyped as IWrapper<IPropertyStack>;
+            var inspect = (IWrapper<IPropertyStack>)StackFromJson;
             IsInstanceOfType(inspect.GetContents().Sources.FirstOrDefault().Value, typeof(PreWrapJsonObject));
         }
 
