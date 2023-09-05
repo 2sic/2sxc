@@ -36,6 +36,11 @@ namespace ToSic.Sxc.Data
         /// <returns></returns>
         IEnumerable<IEntity> OfType(string type);
 
-        
+        /// <summary>
+        /// Old property for the ID of the first type.
+        /// It was necessary to re-instate this because it's used in old Apps such as BlueImp Gallery.
+        /// </summary>
+        [PrivateApi]
+        int EntityId { get; }
     }
 }

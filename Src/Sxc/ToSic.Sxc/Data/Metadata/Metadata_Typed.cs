@@ -8,6 +8,7 @@ using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Images;
+using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
@@ -108,6 +109,9 @@ namespace ToSic.Sxc.Data
         #endregion
 
         #region Basic Props like Id, Guid, Title, Type
+
+        [PrivateApi]
+        int IMetadata.EntityId => Cdf.CodeInfo.GetAndWarn(V16To18("IMetadata.EntityId", message: $"Use {nameof(ITypedItem.Id)} instead of {nameof(EntityId)}"), EntityId);
 
         [PrivateApi]
         int ITypedItem.Id => EntityId;
