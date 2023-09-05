@@ -39,16 +39,18 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc cref="IDynamicCode.CmsContext" />
         ICmsContext MyContext { get; }
-
         
-        /// <inheritdoc cref="ICmsContext.User" />
-        ICmsUser MyUser { get; }
-
         /// <inheritdoc cref="ICmsContext.Page" />
         ICmsPage MyPage { get; }
 
+        /// <inheritdoc cref="ICmsContext.User" />
+        ICmsUser MyUser { get; }
+
         /// <inheritdoc cref="ICmsContext.View" />
         ICmsView MyView { get; }
+
+        /// <inheritdoc cref="IKeyService.UniqueKey"/>
+        string UniqueKey { get; }
 
         #endregion
 
@@ -98,7 +100,7 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <param name="data">An original object which can be converted to a TypedItem, such as a <see cref="IEntity"/> .</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertyRequired), default `true`</param>
+        /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertiesRequired), default `true`</param>
         /// <param name="mock">Specify that the data is fake/mock data, which should pretend to be an Item. Default is `false`</param>
         /// <returns></returns>
         /// <remarks>New in v16.02</remarks>
@@ -135,7 +137,7 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <param name="data"></param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertyRequired), default `true`</param>
+        /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertiesRequired), default `true`</param>
         /// <returns></returns>
         ITyped AsTyped(
             object data,
@@ -148,7 +150,7 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <param name="list">List/Enumerable object containing a bunch of items to make typed</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertyRequired), default `true`</param>
+        /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertiesRequired), default `true`</param>
         /// <returns></returns>
         IEnumerable<ITyped> AsTypedList(
             object list,

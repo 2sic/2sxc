@@ -153,6 +153,7 @@ namespace ToSic.Sxc.Services
         /// _new in v15_
         /// </param>
         /// <param name="imgClass">Optional `class` attribute on the created `img` tag</param>
+        /// <param name="toolbar">Provide a custom toolbar or `false` to not show a toolbar</param>
         /// <param name="recipe">
         /// Optional recipe = instructions how to create the various variants of this link.
         /// Can be any one of these:
@@ -166,6 +167,7 @@ namespace ToSic.Sxc.Services
         /// <remarks>
         /// * Added in v13.03
         /// * Extended in v16.03 to also support IFile
+        /// * `toolbar` added in v16.04
         /// </remarks>
         IResponsivePicture Picture(
             object link = null,
@@ -176,6 +178,7 @@ namespace ToSic.Sxc.Services
             string imgAlt = default,
             string imgAltFallback = default,
             string imgClass = default,
+            object toolbar = default,
             object recipe = default
         );
 
@@ -209,6 +212,7 @@ namespace ToSic.Sxc.Services
         /// _new in v15_
         /// </param>
         /// <param name="imgClass">Optional `class` attribute on the created `img` tag</param>
+        /// <param name="toolbar">Provide a custom toolbar or `false` to not show a toolbar</param>
         /// <param name="recipe">
         ///     Optional recipe = instructions how to create the various variants of this link.
         ///     Can be any one of these:
@@ -220,7 +224,8 @@ namespace ToSic.Sxc.Services
         /// </param>
         /// <returns>A ResponsiveImage object which can be rendered directly. See [](xref:NetCode.Images.Index)</returns>
         /// <remarks>
-        /// History: Added in 2sxc 13.03
+        /// * Added in 2sxc 13.03
+        /// * `toolbar` added in v16.04
         /// </remarks>
         IResponsiveImage Img(
             object link = null,
@@ -231,66 +236,10 @@ namespace ToSic.Sxc.Services
             string imgAlt = default,
             string imgAltFallback = default,
             string imgClass = default,
+            object toolbar = default,
             object recipe = default
         );
-
-        /// <summary>
-        /// Determine the best scenario (has multiple formats or not) and then return either an `img` (if it is not resizable and/or not multiple formats) or a `picture`
-        /// 
-        /// The resulting object can just be added to the html, like `@img` or you can work with sub-properties as specified in the <see cref="IResponsiveImage"/>
-        /// </summary>
-        /// <param name="link">
-        ///     What should be in this, can be:
-        /// 
-        ///     - a string url, in which case it would be used if `url` is not specified
-        ///     - a <see cref="IField"/> in which case it would be used if `field` is not specified
-        /// </param>
-        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="settings">
-        ///     - A standardized Image-Settings object like Settings.Images.Content - see https://go.2sxc.org/settings
-        ///     - The name of a settings configuration, like "Content" or "Screen"
-        ///     - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
-        ///     - Or a specially prepared <see cref="IResizeSettings"/> object containing all settings.
-        /// 
-        ///     Note: If you need to construct very custom settings, use <see cref="Settings">ResizeSettings</see> to create them
-        /// </param>
-        /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
-        /// <param name="width">An optional, fixed width of the image</param>
-        /// <param name="imgAlt">
-        /// Optional `alt` attribute on the created `img` tag for SEO etc.
-        /// If supplied, it takes precedence to the alt-description in the image metadata which the editor added themselves.
-        /// If you want to provide a fallback value (in case the metadata has no alt), use `imgAltFallback`.
-        /// </param>
-        /// <param name="imgAltFallback">
-        /// Optional `alt` attribute which is only used if the `imgAlt` or the alt-text in the metadata are empty.
-        /// _new in v15_
-        /// </param>
-        /// <param name="imgClass">Optional `class` attribute on the created `img` tag</param>
-        /// <param name="recipe">
-        ///     Optional recipe = instructions how to create the various variants of this link.
-        ///     Can be any one of these:
-        /// 
-        ///     - string containing variants
-        ///     - Rule object
-        /// 
-        ///     TODO: DOCS not quite ready
-        /// </param>
-        /// <returns>A ResponsiveImage object which can be rendered directly. See [](xref:NetCode.Images.Index)</returns>
-        /// <remarks>
-        /// * Added in v13.03
-        /// * `picClass` added in v15.04
-        /// </remarks>
-        [PrivateApi("Hidden in v16.03 as I think it's not exactly useful, so I won't encourage its use")]
-        IResponsiveImage ImgOrPic(
-            object link = null,
-            object settings = null,
-            string noParamOrder = Parameters.Protector,
-            object factor = null,
-            object width = default,
-            string imgAlt = null,
-            string imgAltFallback = default,
-            string imgClass = null,
-            object recipe = null);
+        
 
     }
 }

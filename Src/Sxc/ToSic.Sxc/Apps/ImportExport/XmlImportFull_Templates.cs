@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Apps.ImportExport
                 try
                 {
                     name = template.Attribute(XmlConstants.Name).Value;
-                    var path = template.Attribute(View.FieldPath).Value;
+                    var path = template.Attribute(/*View.FieldPath*/ nameof(IView.Path)).Value;
 
                     var contentTypeStaticName = template.Attribute(XmlConstants.AttSetStatic).Value;
 
@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Apps.ImportExport
                     }
 
                     var type = template.Attribute(XmlConstants.EntityTypeAttribute).Value;
-                    var isHidden = Boolean.Parse(template.Attribute(View.FieldIsHidden).Value);
+                    var isHidden = Boolean.Parse(template.Attribute(/*View.FieldIsHidden*/nameof(IView.IsHidden)).Value);
                     var location = template.Attribute(View.FieldLocation).Value;
                     var publishData =
                         Boolean.Parse(template.Attribute(View.FieldPublishEnable) == null

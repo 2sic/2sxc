@@ -60,7 +60,8 @@ namespace ToSic.Sxc.Services
         /// <summary>
         /// The Edit service, same as the main Edit service
         /// </summary>
-        public IEditService Edit => _edit.Get(GetService<IEditService>);
+        // Important: must share the Edit from the _DynCodeRoot for scenarios where Enable was set manually
+        public IEditService Edit => _edit.Get(() => _DynCodeRoot.Edit ?? GetService<IEditService>());
         private readonly GetOnce<IEditService> _edit = new GetOnce<IEditService>();
 
 
@@ -159,8 +160,8 @@ namespace ToSic.Sxc.Services
         private readonly GetOnce<IToolbarService> _toolbar = new GetOnce<IToolbarService>();
 
         [PrivateApi("Experimental in v15.03")]
-        public IUsersService Users => _users.Get(GetService<IUsersService>);
-        private readonly GetOnce<IUsersService> _users = new GetOnce<IUsersService>();
+        public IUserService User => _users.Get(GetService<IUserService>);
+        private readonly GetOnce<IUserService> _users = new GetOnce<IUserService>();
     }
 
 }

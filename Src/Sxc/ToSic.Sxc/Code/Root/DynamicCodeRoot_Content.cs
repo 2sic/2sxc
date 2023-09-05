@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Code
 
 
         /// <inheritdoc cref="IDynamicCode.Header" />
-        public dynamic Header => _header.Get(Log, l =>
+        public dynamic Header => _header.GetL(Log, l =>
         {
             var header = TryToBuildFirstOfStream(StreamHeader);
             if (header != null) return header;

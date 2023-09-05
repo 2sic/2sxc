@@ -17,7 +17,7 @@ using ToSic.Sxc.Oqt.Shared.Interfaces;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.App
 {
-  public class ModuleProBase: ModuleBase, IOqtHybridLog
+    public class ModuleProBase: ModuleBase, IOqtHybridLog
   {
         #region Injected Services
 
@@ -39,15 +39,9 @@ namespace ToSic.Sxc.Oqt.App
         public bool IsSafeToRunJs;
         public readonly ConcurrentQueue<object[]> LogMessageQueue = new();
 
+        public bool FirstRender = true;
         #endregion
 
-        //protected override async Task OnInitializedAsync()
-        //{
-        //    await base.OnInitializedAsync();
-        //}
-        public bool IsPreRendering() => 
-            (PageState.Site.RenderMode is "ServerPrerendered" or "WebAssemblyPrerendered") // The render mode for the site.
-            || PageState.QueryString.ContainsKey("prerender"); // used for testing, just add to page url in query string ("?prerender")
 
         protected override async Task OnParametersSetAsync()
         {
@@ -69,8 +63,25 @@ namespace ToSic.Sxc.Oqt.App
                 SxcInterop = new SxcInterop(JSRuntime);
                 // now we are safe to have SxcInterop and run js
                 IsSafeToRunJs = true;
-            } 
+            }
+            FirstRender = firstRender;
         }
+
+        /// <summary>
+        /// Determines if the current page is in the prerendering phase.
+        /// </summary>
+        /// <remarks>
+        /// This is a 2sxc implementation which provides an approximation suitable for PreRendering purposes. 
+        /// However, it may not always return accurate results, especially with "WebAssemblyPrerendered" where it might return an incorrect true value.
+        /// This behavior is acceptable for our PreRendering support.
+        /// It's important to note that we cannot solely rely on Oqtane.Shared.SiteState.IsPrerendering property. 
+        /// In Oqtane, this property indicates that a page isn't prerendering if the response has already started, which differs from our use-case.
+        /// </remarks>
+        /// <returns>True if the page is in the prerendering phase; otherwise, false.</returns>
+        public bool IsPrerendering() =>
+            (PageState.Site.RenderMode is "ServerPrerendered" or "WebAssemblyPrerendered") // Checks the site's render mode.
+            && FirstRender // Ensures this is the first render.
+            && SiteState.IsPrerendering; // Validates the prerendering state of the current page.
 
         #region Log Helpers
         /// <summary>

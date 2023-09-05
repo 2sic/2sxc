@@ -49,17 +49,18 @@ namespace ToSic.Sxc.Code
         #region Get and GetInternal
 
         public object Get(string name, string noParamOrder = Protector, bool? required = default) 
-            => GetInternal(name, required, noParamOrder);
+            => GetInternalObj(name, noParamOrder, required);
 
         public T Get<T>(string name, string noParamOrder = Protector, T fallback = default, bool? required = default) 
-            => GetInternal(name, noParamOrder, fallback, required);
+            => GetInternal(name, noParamOrder, fallback, fallbackAsObj: fallback, required: required);
 
-        private T GetInternal<T>(string name, string noParamOrder, T fallback, bool? required, [CallerMemberName] string method = default)
+        private T GetInternal<T>(string name, string noParamOrder, T fallback, object fallbackAsObj, bool? required, [CallerMemberName] string method = default)
         {
             // If we have a clear fallback, don't make it required
-            if (fallback != null && !EqualityComparer<T>.Default.Equals(fallback, default)) required = false;
+            if (!(fallbackAsObj is null) || (fallback != null && fallback.IsNotDefault())) // EqualityComparer<T>.Default.Equals(fallback, default)))
+                required = false;
 
-            var found = GetInternal(name, required, noParamOrder, method: method);
+            var found = GetInternalObj(name, noParamOrder, required, method: method);
             
             if (found == null) return fallback;
 
@@ -69,7 +70,7 @@ namespace ToSic.Sxc.Code
             return typeof(T).IsInterface ? fallback : found.ConvertOrFallback(fallback);
         }
 
-        private object GetInternal(string name, bool? required, string noParamOrder = Protector, [CallerMemberName] string method = default)
+        private object GetInternalObj(string name, string noParamOrder, bool? required, [CallerMemberName] string method = default)
         {
             Protect(noParamOrder, "required, fallback", method);
 
@@ -91,33 +92,33 @@ Either change the calling Html.Partial(""{_razorFileName}"", {{ {name} = ... }} 
 
         #region Numbers
 
-        public int Int(string name, string noParamOrder = Protector, int fallback = default, bool? required = default) 
-            => GetInternal(name, noParamOrder, fallback, required);
+        public int Int(string name, string noParamOrder = Protector, int? fallback = default, bool? required = default) 
+            => GetInternal(name, noParamOrder, fallback ?? default, fallbackAsObj: fallback, required: required);
 
-        public float Float(string name, string noParamOrder = Protector, float fallback = default, bool? required = default) 
-            => GetInternal(name, noParamOrder, fallback, required);
+        public float Float(string name, string noParamOrder = Protector, float? fallback = default, bool? required = default) 
+            => GetInternal(name, noParamOrder, fallback ?? default, fallbackAsObj: fallback, required: required);
 
-        public double Double(string name, string noParamOrder = Protector, double fallback = default, bool? required = default) 
-            => GetInternal(name, noParamOrder, fallback, required);
+        public double Double(string name, string noParamOrder = Protector, double? fallback = default, bool? required = default) 
+            => GetInternal(name, noParamOrder, fallback ?? default, fallbackAsObj: fallback, required: required);
 
-        public decimal Decimal(string name, string noParamOrder = Protector, decimal fallback = default, bool? required = default) 
-            => GetInternal(name, noParamOrder, fallback, required);
+        public decimal Decimal(string name, string noParamOrder = Protector, decimal? fallback = default, bool? required = default) 
+            => GetInternal(name, noParamOrder, fallback ?? default, fallbackAsObj: fallback, required: required);
 
         #endregion
 
         #region Standard value types
 
         public string String(string name, string noParamOrder = Protector, string fallback = default, bool? required = default) 
-            => GetInternal(name, noParamOrder, fallback, required);
+            => GetInternal(name, noParamOrder, fallback, fallbackAsObj: fallback, required: required);
 
-        public Guid Guid(string name, string noParamOrder = Protector, Guid fallback = default, bool? required = default) 
-            => GetInternal(name, noParamOrder, fallback, required);
+        public Guid Guid(string name, string noParamOrder = Protector, Guid? fallback = default, bool? required = default) 
+            => GetInternal(name, noParamOrder, fallback ?? default, fallbackAsObj: fallback, required: required);
 
-        public bool Bool(string name, string noParamOrder = Protector, bool fallback = default, bool? required = default) 
-            => GetInternal(name, noParamOrder, fallback, required);
+        public bool Bool(string name, string noParamOrder = Protector, bool? fallback = default, bool? required = default) 
+            => GetInternal(name, noParamOrder, fallback ?? default, fallbackAsObj: fallback, required: required);
 
-        public DateTime DateTime(string name, string noParamOrder = Protector, DateTime fallback = default, bool? required = default) 
-            => GetInternal(name, noParamOrder, fallback, required);
+        public DateTime DateTime(string name, string noParamOrder = Protector, DateTime? fallback = default, bool? required = default) 
+            => GetInternal(name, noParamOrder, fallback ?? default, fallbackAsObj: fallback, required: required);
 
         #endregion
 
@@ -132,36 +133,36 @@ Either change the calling Html.Partial(""{_razorFileName}"", {{ {name} = ... }} 
         #region Adam
 
         public IFile File(string name, string noParamOrder = Protector, IFile fallback = default, bool? required = default) 
-            => _converter.File(GetInternal(name, required, noParamOrder), fallback);
+            => _converter.File(GetInternalObj(name, noParamOrder, required), fallback);
 
         public IEnumerable<IFile> Files(string name, string noParamOrder = Protector, IEnumerable<IFile> fallback = default, bool? required = default) 
-            => _converter.Files(GetInternal(name, required, noParamOrder), fallback);
+            => _converter.Files(GetInternalObj(name, noParamOrder, required), fallback);
 
         public IFolder Folder(string name, string noParamOrder = Protector, IFolder fallback = default, bool? required = default)
-            => _converter.Folder(GetInternal(name, required, noParamOrder), fallback);
+            => _converter.Folder(GetInternalObj(name, noParamOrder, required), fallback);
 
         public IEnumerable<IFolder> Folders(string name, string noParamOrder = Protector, IEnumerable<IFolder> fallback = default, bool? required = default)
-            => _converter.Folders(GetInternal(name, required, noParamOrder), fallback);
+            => _converter.Folders(GetInternalObj(name, noParamOrder, required), fallback);
 
         #endregion
 
         #region Entity and Item(s)
 
         public ITypedItem Item(string name, string noParamOrder = Protector, ITypedItem fallback = default, bool? required = default)
-            => _converter.Item(GetInternal(name, required, noParamOrder), noParamOrder, fallback);
+            => _converter.Item(GetInternalObj(name, noParamOrder, required), noParamOrder, fallback);
 
         public IEnumerable<ITypedItem> Items(string name, string noParamOrder = Protector, IEnumerable<ITypedItem> fallback = default, bool? required = default)
-            => _converter.Items(GetInternal(name, required, noParamOrder), noParamOrder, fallback);
+            => _converter.Items(GetInternalObj(name, noParamOrder, required), noParamOrder, fallback);
 
         #endregion
 
         #region HtmlTags
 
         public IHtmlTag HtmlTag(string name, string noParamOrder = Protector, IHtmlTag fallback = default, bool? required = default)
-            => _converter.HtmlTag(GetInternal(name, required, noParamOrder), fallback);
+            => _converter.HtmlTag(GetInternalObj(name, noParamOrder, required), fallback);
 
         public IEnumerable<IHtmlTag> HtmlTags(string name, string noParamOrder = Protector, IEnumerable<IHtmlTag> fallback = default, bool? required = default)
-            => _converter.HtmlTags(GetInternal(name, required, noParamOrder), fallback);
+            => _converter.HtmlTags(GetInternalObj(name, noParamOrder, required), fallback);
 
 
         #endregion
@@ -169,7 +170,7 @@ Either change the calling Html.Partial(""{_razorFileName}"", {{ {name} = ... }} 
         #region Toolbar
 
         public IToolbarBuilder Toolbar(string name, string noParamOrder = Protector, IToolbarBuilder fallback = default, bool? required = default)
-            => _converter.Toolbar(GetInternal(name, required, noParamOrder), fallback);
+            => _converter.Toolbar(GetInternalObj(name, noParamOrder, required), fallback);
 
         #endregion
     }

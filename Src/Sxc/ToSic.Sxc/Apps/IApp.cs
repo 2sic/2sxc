@@ -1,9 +1,7 @@
 ﻿using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Data;
-#if !NETFRAMEWORK
-#pragma warning disable CS0109
-#endif
+
 // ReSharper disable UnusedMemberInSuper.Global
 
 namespace ToSic.Sxc.Apps
@@ -20,11 +18,10 @@ namespace ToSic.Sxc.Apps
 #endif
     {
         /// <summary>
-        /// Configuration object as a DynamicEntity.
+        /// Configuration object with information about the App.
         /// This contains things like app version, path etc.
         /// </summary>
-        /// <returns>An <see cref="IDynamicEntity"/> object</returns>
-        new AppConfiguration Configuration { get; }
+        new IAppConfiguration Configuration { get; }
 
         /// <summary>
         /// All the app settings which are custom for each app. 
@@ -57,20 +54,22 @@ namespace ToSic.Sxc.Apps
         /// </summary>
         /// <returns>Path usually starting with /portals/_default/...</returns>
         /// <remarks>Added v13.01</remarks>
-#pragma warning disable CS0108, CS0114
-        // Important: Repeat definition of base interface for docs and because of Razor-Interface-Inheritance-Problems
+// Important: Repeat definition of base interface for docs and because of Razor-Interface-Inheritance-Problems
+#if NETFRAMEWORK
+        new
+#endif
         string PathShared { get; }
-#pragma warning restore CS0108, CS0114
 
         /// <summary>
         /// The path on the server hard disk for the current apps shared/global folder. 
         /// </summary>
         /// <returns>Path usually starting with c:\...</returns>
         /// <remarks>Added v13.01</remarks>
-#pragma warning disable CS0108, CS0114
         // Important: Repeat definition of base interface for docs and because of Razor-Interface-Inheritance-Problems
+#if NETFRAMEWORK
+        new
+#endif
         string PhysicalPathShared { get; }
-#pragma warning restore CS0108, CS0114
 
         ///// <summary>
         ///// Path relative to the website root.

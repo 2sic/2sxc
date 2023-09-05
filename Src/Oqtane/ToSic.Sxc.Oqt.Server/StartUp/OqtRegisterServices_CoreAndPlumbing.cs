@@ -71,9 +71,10 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
         }
         private static IServiceCollection AddOqtaneBlazorWebAssemblySupport(this IServiceCollection services)
         {
-            services.Replace(ServiceDescriptor.Scoped<IOqtDebugStateService, OqtDebugStateService>());
-            services.TryAddScoped<OqtPageChangesSupportService>();
-            services.TryAddScoped<OqtPrerenderService> ();
+            // following registrations in the server project will override the previous one in client project
+            services.AddScoped<IOqtDebugStateService, OqtDebugStateService>();
+            services.AddScoped<IOqtPageChangesOnServerService, OqtPageChangesOnServerService>();
+            services.AddScoped<IOqtPrerenderService, OqtPrerenderService>(); 
 
             return services;
         }

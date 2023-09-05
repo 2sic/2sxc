@@ -1,6 +1,7 @@
-﻿using ToSic.Eav;
+﻿using System.Collections.Generic;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Services
 {
@@ -68,8 +69,13 @@ namespace ToSic.Sxc.Services
 
         /// <summary>
         /// Creates a <see cref="ITyped"/> object from a json string.
+        ///
+        /// > [!IMPORTANT]
+        /// > This only works on json strings which return an object.
+        /// > If you pass in a simple json such as `27` or `"hello"` or an array like `[1, 2, 3]` it will throw an error.
+        /// > For arrays, use <see cref="ToTypedList"/>.
         /// </summary>
-        /// <param name="json"></param>
+        /// <param name="json">The string containing json</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">
         /// Alternate string to use, if the original json can't parse.
@@ -83,8 +89,32 @@ namespace ToSic.Sxc.Services
         /// <remarks>
         /// New in 16.02
         /// </remarks>
-        /// <returns></returns>
         [WorkInProgressApi("WIP 16.02 - not yet done")]
-        ITyped ToTyped(string json, string noParamOrder = Parameters.Protector, string fallback = default, bool? propsRequired = default);
+        ITyped ToTyped(string json, string noParamOrder = Protector, string fallback = default, bool? propsRequired = default);
+
+        /// <summary>
+        /// Creates a list of <see cref="ITyped"/> wrappers around an json string containing an array of objects.
+        ///
+        /// > [!IMPORTANT]
+        /// > This only works on json strings which return an object.
+        /// > If you pass in a simple json such as `27` or `"hello"` or an array like `[1, 2, 3]` it will throw an error.
+        /// > For arrays, use <see cref="ToTypedList"/>.
+        /// </summary>
+        /// <param name="json">The string containing json</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="fallback">
+        /// Alternate string to use, if the original json can't parse.
+        /// Can also be null or the word "error" if you would prefer an error to be thrown.
+        /// </param>
+        /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertiesRequired), default `true`</param>
+        /// <returns>A dynamic object representing the original json.
+        /// If it can't be parsed, it will parse the fallback, which by default is an empty empty dynamic object.
+        /// If you provide null for the fallback, then you will get null back.
+        /// </returns>
+        /// <remarks>
+        /// New in 16.04
+        /// </remarks>
+        IEnumerable<ITyped> ToTypedList(string json, string noParamOrder = Protector, string fallback = default,
+            bool? propsRequired = default);
     }
 }

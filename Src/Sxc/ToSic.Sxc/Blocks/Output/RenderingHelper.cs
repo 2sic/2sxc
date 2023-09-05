@@ -113,7 +113,7 @@ namespace ToSic.Sxc.Blocks.Output
                 msg = HttpUtility.HtmlEncode(msg);
 
             // Try to spot the code file which caused the problem, and add an emoji to better spot it.
-            msg = msg.Replace(".cshtml:", ".cshtml🎯:");
+            msg = MarkCodeFilesOfApp(msg);
 
             // add dnn-error-div-wrapper together with a special HTML marker so errors can handled better
             msg = $"<div class='dnnFormMessage dnnFormWarning'>{ErrorHtmlMarker}{msg}</div>";
@@ -122,6 +122,15 @@ namespace ToSic.Sxc.Blocks.Output
             if (addContextWrapper)
                 msg = WrapInContext(msg, instanceId: Context.Module.Id, contentBlockId: Context.Module.Id, errorCode: errorCode, exsOrNull: exsOrNull);
 
+            return msg;
+        }
+
+        private static string MarkCodeFilesOfApp(string msg)
+        {
+            const string simpleMatch = ".cshtml:";
+            if (msg.Contains(simpleMatch))
+                msg = msg.Replace(simpleMatch, ".cshtml🎯:");
+            else msg = msg.Replace(".cshtml", ".cshtml🎯");
             return msg;
         }
 

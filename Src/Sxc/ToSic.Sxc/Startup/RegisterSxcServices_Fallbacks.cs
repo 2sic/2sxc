@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<IModuleAndBlockBuilder, ModuleAndBlockBuilderUnknown>();
 
             // v13.04
-            services.TryAddTransient<IUsersService, UsersServiceUnknown>();
+            services.TryAddTransient<IUserService, UsersServiceUnknown>();
 
             // Koi, mainly so tests don't fail
             services.TryAddTransient<ICssFrameworkDetector, CssFrameworkDetectorUnknown>();

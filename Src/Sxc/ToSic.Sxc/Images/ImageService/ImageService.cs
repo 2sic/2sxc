@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using ToSic.Lib.Helpers;
+﻿using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Services;
 
@@ -47,7 +46,7 @@ namespace ToSic.Sxc.Images
 
         private dynamic GetCodeRootSettingsByName(string strName) => Log.Func($"{strName}", () =>
         {
-            var result = _DynCodeRoot?.Settings?.Get("Settings.Images" + "." + strName); ///*.Images*/ as ICanGetByName)?.Get(strName);
+            var result = _DynCodeRoot?.Settings?.Get($"Settings.Images.{strName}");
             return ((object)result, $"found: {result != null}");
         }, enabled: Debug, message: $"code root: {_DynCodeRoot != null}");
 
@@ -70,35 +69,13 @@ namespace ToSic.Sxc.Images
             string imgAlt = null,
             string imgAltFallback = default,
             string imgClass = null,
+            object toolbar = default,
             object recipe = null)
             => new ResponsiveImage(this,
                 new ResponsiveParams(nameof(Img), link, noParamOrder,
                     Settings(settings, factor: factor, width: width, recipe: recipe),
-                    imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass),
+                    imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass, toolbar: toolbar),
                 Log);
-
-
-        /// <inheritdoc />
-        public IResponsiveImage ImgOrPic(
-            object link = null,
-            object settings = null,
-            string noParamOrder = Eav.Parameters.Protector,
-            object factor = null,
-            object width = default,
-            string imgAlt = null,
-            string imgAltFallback = default,
-            string imgClass = null,
-            object recipe = null)
-        {
-            var respParams = new ResponsiveParams(nameof(ImgOrPic), link, noParamOrder,
-                Settings(settings, factor: factor, width: width, recipe: recipe),
-                imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass);
-            var path = respParams.Link.Url;
-            var format = GetFormat(path);
-            return format.ResizeFormats.Any()
-                ? (IResponsiveImage)new ResponsivePicture(this, respParams, Log)
-                : new ResponsiveImage(this, respParams, Log);
-        }
 
 
         /// <inheritdoc />
@@ -111,15 +88,16 @@ namespace ToSic.Sxc.Images
             string imgAlt = default,
             string imgAltFallback = default,
             string imgClass = default,
+            object toolbar = default,
             object recipe = default)
             => new ResponsivePicture(this,
                 new ResponsiveParams(nameof(Picture), link, noParamOrder,
                     Settings(settings, factor: factor, width: width, recipe: recipe),
-                    imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass),
+                    imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass, toolbar: toolbar),
                 Log);
 
         /// <inheritdoc />
-        public bool Debug
+        public override bool Debug
         {
             get => _debug;
             set

@@ -98,5 +98,78 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
             // 2023-08-17 2dm disabled the two-property indexer
             //AreEqual<string>("test", test.Dyn["ObjectProperty", true]["StringProperty", true]);
         }
+
+        private const string ReSerializeExpected = @"{
+  ""TopLevelNumber"": 27,
+  ""ObjectProperty"": {
+    ""StringProperty"": ""test"",
+    ""ObjectProperty"": {
+      ""NumberProperty"": 1,
+      ""ObjectProperty"": {
+        ""BoolProperty"": true
+      }
+    }
+  },
+  ""Array"": [
+    {
+      ""name"": ""zeroth""
+    },
+    {
+      ""Name"": ""first""
+    },
+    {
+      ""Name"": ""second""
+    }
+  ]
+}";
+
+        private const string ReSerializeObjectProperty = @"{
+  ""StringProperty"": ""test"",
+  ""ObjectProperty"": {
+    ""NumberProperty"": 1,
+    ""ObjectProperty"": {
+      ""BoolProperty"": true
+    }
+  }
+}";
+
+        [TestMethod]
+        public void ToStringAll_Dyn()
+        {
+            var dyn = Obj2Json2Dyn(DeepData);
+            AreEqual(ReSerializeExpected, dyn.ToString());
+        }
+        [TestMethod]
+        public void ToStringAll_Typed()
+        {
+            var dyn = Obj2Json2TypedStrict(DeepData);
+            AreEqual(ReSerializeExpected, dyn.ToString());
+        }
+
+        [TestMethod]
+        public void ToStringTopLevelNumber_Dyn()
+        {
+            var dyn = Obj2Json2Dyn(DeepData);
+            AreEqual("27", dyn.TopLevelNumber.ToString());
+        }
+        [TestMethod]
+        public void ToStringTopLevelNumber_Typed()
+        {
+            var dyn = Obj2Json2TypedStrict(DeepData);
+            AreEqual("27", dyn.Get("TopLevelNumber").ToString());
+        }
+
+        [TestMethod]
+        public void ToStringObjectProperty_Dyn()
+        {
+            var dyn = Obj2Json2Dyn(DeepData);
+            AreEqual(ReSerializeObjectProperty, dyn.ObjectProperty.ToString());
+        }
+        [TestMethod]
+        public void ToStringObjectProperty_Typed()
+        {
+            var dyn = Obj2Json2TypedStrict(DeepData);
+            AreEqual(ReSerializeObjectProperty, dyn.Get("ObjectProperty").ToString());
+        }
     }
 }

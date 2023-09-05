@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Search
             if (DnnModule == null) return l.ReturnAsOk("no module");
 
             // This changes site in whole scope
-            DnnSite = ((DnnSite)_siteGenerator.New()).TrySwap(DnnModule, Log);
+            DnnSite = ((DnnSite)_siteGenerator.New()).TryInitModule(DnnModule, Log);
 
             // New Context because Portal-Settings.Current is null
             var appId = module.BlockIdentifier.AppId;

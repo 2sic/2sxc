@@ -77,8 +77,10 @@ namespace ToSic.Sxc.Code
         // 2023-08-17 2dm removed again in 16.03 - don't think this should ever be used
         //dynamic Dynamic(string name, string noParamOrder = Protector, object fallback = default, bool? required = default);
 
+        #region Simple Values: String / Bool / Guid / DateTime
+
         /// <summary>
-        /// Will get the value if specified.
+        /// Will get the value and return in the desired type.
         /// </summary>
         /// <param name="name">The field name</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
@@ -90,52 +92,109 @@ namespace ToSic.Sxc.Code
         /// <returns>typed result if found, `null` if not found.</returns>
         string String(string name, string noParamOrder = Protector, string fallback = default, bool? required = default);
 
-        #region Numbers
-
-        int Int(string name, string noParamOrder = Protector, int fallback = default, bool? required = default);
-        float Float(string name, string noParamOrder = Protector, float fallback = default, bool? required = default);
-        double Double(string name, string noParamOrder = Protector, double fallback = default, bool? required = default);
-        decimal Decimal(string name, string noParamOrder = Protector, decimal fallback = default, bool? required = default);
-        #endregion
-
         /// <summary>
-        /// Will get the value if specified.
+        /// Will get the value and return in the desired type.
         /// </summary>
         /// <param name="name">The field name</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">The optional fallback value.</param>
         /// <param name="required">
         /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
-        /// It is automatically `false` if a `fallback` is not the empty-guid.
-        /// </param>
-        /// <returns>typed result if found, empty-guid if not found.</returns>
-        Guid Guid(string name, string noParamOrder = Protector, Guid fallback = default, bool? required = default);
-
-        /// <summary>
-        /// Will get the value if specified.
-        /// </summary>
-        /// <param name="name">The field name</param>
-        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="fallback">The optional fallback value.</param>
-        /// <param name="required">
-        /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
-        /// It is automatically `false` if a `fallback` is `true`.
+        /// It is automatically `false` if a `fallback` is set / not `null`.
         /// </param>
         /// <returns>typed result if found, false if not found.</returns>
-        bool Bool(string name, string noParamOrder = Protector, bool fallback = default, bool? required = default);
+        bool Bool(string name, string noParamOrder = Protector, bool? fallback = default, bool? required = default);
 
         /// <summary>
-        /// Will get the value if specified.
+        /// Will get the value and return in the desired type.
         /// </summary>
         /// <param name="name">The field name</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">The optional fallback value.</param>
         /// <param name="required">
         /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
-        /// It is automatically `false` if a `fallback` is not the default-date.
+        /// It is automatically `false` if a `fallback` is set / not `null`.
+        /// </param>
+        /// <returns>typed result if found, empty-guid if not found.</returns>
+        Guid Guid(string name, string noParamOrder = Protector, Guid? fallback = default, bool? required = default);
+
+
+        /// <summary>
+        /// Will get the value and return in the desired type.
+        /// </summary>
+        /// <param name="name">The field name</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="fallback">The optional fallback value.</param>
+        /// <param name="required">
+        /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
+        /// It is automatically `false` if a `fallback` is set / not `null`.
         /// </param>
         /// <returns>typed result if found, default-date if not found.</returns>
-        DateTime DateTime(string name, string noParamOrder = Protector, DateTime fallback = default, bool? required = default);
+        DateTime DateTime(string name, string noParamOrder = Protector, DateTime? fallback = default, bool? required = default);
+
+        #endregion
+
+        #region Numbers
+
+        /// <summary>
+        /// Will get the value and return in the desired type.
+        /// </summary>
+        /// <param name="name">The field name</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="fallback">The optional fallback value.</param>
+        /// <param name="required">
+        /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
+        /// It is automatically `false` if a `fallback` is not `null`.
+        /// </param>
+        /// <returns>int result if found, `0` if not found/convertible.</returns>
+        /// <exception cref="ArgumentException">if the name is not found an no fallback provided and required not false</exception>
+        int Int(string name, string noParamOrder = Protector, int? fallback = default, bool? required = default);
+
+        /// <summary>
+        /// Will get the value and return in the desired type.
+        /// </summary>
+        /// <param name="name">The field name</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="fallback">The optional fallback value.</param>
+        /// <param name="required">
+        /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
+        /// It is automatically `false` if a `fallback` is not `null`.
+        /// </param>
+        /// <returns>int result if found, `0` if not found/convertible.</returns>
+        /// <exception cref="ArgumentException">if the name is not found an no fallback provided and required not false</exception>
+        float Float(string name, string noParamOrder = Protector, float? fallback = default, bool? required = default);
+
+        /// <summary>
+        /// Will get the value and return in the desired type.
+        /// </summary>
+        /// <param name="name">The field name</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="fallback">The optional fallback value.</param>
+        /// <param name="required">
+        /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
+        /// It is automatically `false` if a `fallback` is not `null`.
+        /// </param>
+        /// <returns>int result if found, `0` if not found/convertible.</returns>
+        /// <exception cref="ArgumentException">if the name is not found an no fallback provided and required not false</exception>
+        double Double(string name, string noParamOrder = Protector, double? fallback = default, bool? required = default);
+
+        /// <summary>
+        /// Will get the value and return in the desired type.
+        /// </summary>
+        /// <param name="name">The field name</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="fallback">The optional fallback value.</param>
+        /// <param name="required">
+        /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
+        /// It is automatically `false` if a `fallback` is not `null`.
+        /// </param>
+        /// <returns>int result if found, `0` if not found/convertible.</returns>
+        /// <exception cref="ArgumentException">if the name is not found an no fallback provided and required not false</exception>
+        decimal Decimal(string name, string noParamOrder = Protector, decimal? fallback = default, bool? required = default);
+
+        #endregion
+
+        #region ADAM: File/Files, Folder/Folders
 
         /// <summary>
         /// Will get the value if specified.
@@ -146,7 +205,7 @@ namespace ToSic.Sxc.Code
         /// <param name="fallback">The optional fallback value.</param>
         /// <param name="required">
         /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
-        /// It is automatically `false` if a `fallback` is not `null`.
+        /// It is automatically `false` if a `fallback` is set / not `null`.
         /// </param>
         /// <returns>typed result if found, `null` if not found.</returns>
         IFile File(string name, string noParamOrder = Protector, IFile fallback = default, bool? required = default);
@@ -160,7 +219,7 @@ namespace ToSic.Sxc.Code
         /// <param name="fallback">The optional fallback value.</param>
         /// <param name="required">
         /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
-        /// It is automatically `false` if a `fallback` is not `null`.
+        /// It is automatically `false` if a `fallback` is set / not `null`.
         /// </param>
         /// <returns>typed result if found, empty-list if not found.</returns>
         IEnumerable<IFile> Files(string name, string noParamOrder = Protector, IEnumerable<IFile> fallback = default, bool? required = default);
@@ -174,7 +233,7 @@ namespace ToSic.Sxc.Code
         /// <param name="fallback">The optional fallback value.</param>
         /// <param name="required">
         /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
-        /// It is automatically `false` if a `fallback` is not `null`.
+        /// It is automatically `false` if a `fallback` is set / not `null`.
         /// </param>
         /// <returns>typed result if found, `null` if not found.</returns>
         IFolder Folder(string name, string noParamOrder = Protector, IFolder fallback = default, bool? required = default);
@@ -188,10 +247,12 @@ namespace ToSic.Sxc.Code
         /// <param name="fallback">The optional fallback value.</param>
         /// <param name="required">
         /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
-        /// It is automatically `false` if a `fallback` is not `null`.
+        /// It is automatically `false` if a `fallback` is set / not `null`.
         /// </param>
         /// <returns>typed result if found, empty-list if not found.</returns>
         IEnumerable<IFolder> Folders(string name, string noParamOrder = Protector, IEnumerable<IFolder> fallback = default, bool? required = default);
+
+        #endregion
 
         //#region Stacks
 
@@ -218,7 +279,7 @@ namespace ToSic.Sxc.Code
         /// <param name="fallback">The optional fallback value.</param>
         /// <param name="required">
         /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
-        /// It is automatically `false` if a `fallback` is not `null`.
+        /// It is automatically `false` if a `fallback` is set / not `null`.
         /// </param>
         /// <returns>typed result if found, `null` if not found.</returns>
         ITypedItem Item(string name, string noParamOrder = Protector, ITypedItem fallback = default, bool? required = default);
@@ -232,7 +293,7 @@ namespace ToSic.Sxc.Code
         /// <param name="fallback">The optional fallback value.</param>
         /// <param name="required">
         /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
-        /// It is automatically `false` if a `fallback` is not `null`.
+        /// It is automatically `false` if a `fallback` is set / not `null`.
         /// </param>
         /// <returns>typed result if found, empty-list if not found.</returns>
         IEnumerable<ITypedItem> Items(string name, string noParamOrder = Protector, IEnumerable<ITypedItem> fallback = default, bool? required = default);
@@ -245,7 +306,7 @@ namespace ToSic.Sxc.Code
         /// <param name="fallback">The optional fallback value.</param>
         /// <param name="required">
         /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
-        /// It is automatically `false` if a `fallback` is not `null`.
+        /// It is automatically `false` if a `fallback` is set / not `null`.
         /// </param>
         /// <returns>typed result if found, `null` if not found</returns>
         IToolbarBuilder Toolbar(string name, string noParamOrder = Protector, IToolbarBuilder fallback = default, bool? required = default);

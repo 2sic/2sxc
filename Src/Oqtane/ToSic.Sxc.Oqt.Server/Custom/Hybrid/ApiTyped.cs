@@ -162,19 +162,22 @@ namespace Custom.Hybrid
             return _DynCodeRoot.CreateInstance(path, relativePath: (this as IGetCodePath).CreateInstancePath, name: className);
         }
 
-        #region MyContext
+        #region MyContext & UniqueKey
 
         /// <inheritdoc cref="IDynamicCode16.MyContext" />
         public ICmsContext MyContext => _DynCodeRoot.CmsContext;
 
-        /// <inheritdoc cref="IDynamicCode16.MyUser" />
-        public ICmsUser MyUser => _DynCodeRoot.CmsContext.User;
-
         /// <inheritdoc cref="IDynamicCode16.MyPage" />
         public ICmsPage MyPage => _DynCodeRoot.CmsContext.Page;
 
+        /// <inheritdoc cref="IDynamicCode16.MyUser" />
+        public ICmsUser MyUser => _DynCodeRoot.CmsContext.User;
+
         /// <inheritdoc cref="IDynamicCode16.MyView" />
         public ICmsView MyView => _DynCodeRoot.CmsContext.View;
+
+        /// <inheritdoc cref="IDynamicCode16.UniqueKey" />
+        public string UniqueKey => Kit.Key.UniqueKey;
 
         #endregion
 

@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynStack
             Key2 = "goodbye",
             Deep1 = new
             {
-                Sub1 = "hello",
+                Sub1 = "hello deep1.sub",
             }
         };
         public static List<PropInfo> Anon1PropInfo => new List<PropInfo>
@@ -25,30 +25,32 @@ namespace ToSic.Sxc.Tests.DataTests.DynStack
         public static object Anon2 => new
         {
             Key1 = "hello 2",
-            Part1 = "test",
+            Part1 = "part1-text",
             Part2 = "test",
             Deep = new
             {
                 Deeper = new
                 {
-                    Value = "hello",
+                    Value = "hello deep.deeper.value",
                 },
             },
         };
+
+        public static string ValueNotTestable = "value-not-testable";
 
 
         public static List<PropInfo> StackOrder12PropInfo => new List<PropInfo>
         {
             new PropInfo("Key1", true, true, "hello"),
             new PropInfo("dummy", false),
-            new PropInfo("Part1", true, hasData: true),
-            new PropInfo("Deep1", true, hasData: true),
-            new PropInfo("Deep1.Sub1", true, true, "hello"),
-            new PropInfo("Deep", true, hasData : true),
-            new PropInfo("Deep.Deeper", true, hasData : true),
+            new PropInfo("Part1", true, hasData: true, value: "part1-text"),
+            new PropInfo("Deep1", true, hasData: true, value: ValueNotTestable),
+            new PropInfo("Deep1.Sub1", true, true, "hello deep1.sub"),
+            new PropInfo("Deep", true, hasData : true, value: ValueNotTestable),
+            new PropInfo("Deep.Deeper", true, hasData : true, value: ValueNotTestable),
             new PropInfo("Deep.NotDeeper", false),
             new PropInfo("Deep.NotDeeper.ReallyNot", false),
-            new PropInfo("Deep.Deeper.Value", true, hasData : true),
+            new PropInfo("Deep.Deeper.Value", true, hasData : true, value: "hello deep.deeper.value"),
             new PropInfo("Deep.Deeper.NotValue", false)
         };
 

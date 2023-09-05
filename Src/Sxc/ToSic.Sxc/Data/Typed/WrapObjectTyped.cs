@@ -10,6 +10,7 @@ using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Services;
+using static ToSic.Eav.Data.Shared.WrapperEquality;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data.Typed
@@ -18,6 +19,7 @@ namespace ToSic.Sxc.Data.Typed
     [JsonConverter(typeof(DynamicJsonConverter))]
     public class WrapObjectTyped: IWrapper<IPreWrap>, ITyped, IHasPropLookup, IHasJsonSource
     {
+
         private readonly LazySvc<IScrub> _scrubSvc;
         private readonly LazySvc<ConvertForCodeService> _forCodeConverter;
         internal IPreWrap PreWrap { get; private set; }
@@ -34,7 +36,7 @@ namespace ToSic.Sxc.Data.Typed
             return this;
         }
 
-        public IPreWrap GetContents() => PreWrap;
+        IPreWrap IWrapper<IPreWrap>.GetContents() => PreWrap;
 
         IPropertyLookup IHasPropLookup.PropertyLookup => PreWrap;
 
@@ -70,6 +72,8 @@ namespace ToSic.Sxc.Data.Typed
 
         #endregion
 
+        #region ITyped Get
+
         object ITyped.Get(string name, string noParamOrder, bool? required)
         {
             Protect(noParamOrder, nameof(required));
@@ -78,6 +82,10 @@ namespace ToSic.Sxc.Data.Typed
 
         TValue ITyped.Get<TValue>(string name, string noParamOrder, TValue fallback, bool? required)
             => PreWrap.TryGetTyped(name, noParamOrder, fallback, required: required);
+
+        #endregion
+
+        #region ITyped Values: Bool, String, etc.
 
         bool ITyped.Bool(string name, string noParamOrder, bool fallback, bool? required)
             => PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
@@ -106,6 +114,10 @@ namespace ToSic.Sxc.Data.Typed
         double ITyped.Double(string name, string noParamOrder, double fallback, bool? required)
             => PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
+        #endregion
+
+        #region ITyped Specials: Attribute, Url
+
         string ITyped.Url(string name, string noParamOrder, string fallback, bool? required)
         {
             var url = PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback, required: required);
@@ -120,13 +132,39 @@ namespace ToSic.Sxc.Data.Typed
             return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
         }
 
-        #region Explicit interfaces for Json, PropertyLookup etc.
+        #endregion
 
+        #region Equality
+
+        /// <summary>
+        /// This is used by various equality comparison. 
+        /// Since we define two object to be equal when they host the same contents, this determines the hash based on the contents
+        /// </summary>
         [PrivateApi]
-        object IHasJsonSource.JsonSource
-            => PreWrap.JsonSource;
+        // ReSharper disable once NonReadonlyMemberInGetHashCode
+        public override int GetHashCode() => GetWrappedHashCode(PreWrap);
+
+        public override bool Equals(object b)
+        {
+            if (b is null) return false;
+            if (ReferenceEquals(this, b)) return true;
+            if (b.GetType() != GetType()) return false;
+            return EqualsWrapper(PreWrap, ((WrapObjectTyped)b).PreWrap);
+        }
 
         #endregion
 
+        #region Explicit interfaces for Json, PropertyLookup etc.
+
+        [PrivateApi]
+        object IHasJsonSource.JsonSource => PreWrap.JsonSource;
+
+        #endregion
+
+        #region ToString to support Json objects
+
+        public override string ToString() => PreWrap.GetContents().ToString();
+
+        #endregion
     }
 }

@@ -12,7 +12,7 @@ using ToSic.Sxc.Search;
 
 namespace ToSic.Sxc.Engines
 {
-    public partial class RazorEngine
+    public partial class DnnRazorEngine
     {
 
         /// <inheritdoc />

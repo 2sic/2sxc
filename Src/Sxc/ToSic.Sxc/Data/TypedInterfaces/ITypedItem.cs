@@ -48,7 +48,5 @@ namespace ToSic.Sxc.Data
             string noParamOrder = Protector,
             bool? required = default);
 
-
-
     }
 }

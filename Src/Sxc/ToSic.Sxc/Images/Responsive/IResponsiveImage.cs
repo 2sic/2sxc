@@ -2,6 +2,8 @@
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
+using ToSic.Sxc.Edit.Toolbar;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Images
 {
@@ -46,6 +48,12 @@ namespace ToSic.Sxc.Images
         string Description { get; }
 
         /// <summary>
+        /// Extended description, typically used in galleries.
+        /// </summary>
+        [PrivateApi("WIP v16.04")]
+        string DescriptionExtended { get; }
+
+        /// <summary>
         /// The `img` tag which would normally be added to the page automatically.
         /// You can also use the normal RazorBlade API and do things like `.Alt("description")` etc.
         /// See also the [RazorBlade Img docs](https://razor-blade.net/api/ToSic.Razor.Html5.Img.html)
@@ -88,6 +96,14 @@ namespace ToSic.Sxc.Images
         /// It will only be used for normal `img` tags, but not for `img` tags inside `picture` tags.
         /// </summary>
         string Sizes { get; }
+
+        /// <summary>
+        /// Get the toolbar to show it on another tag (typically a `figure` around the `picture`)
+        /// or set another toolbar instead.
+        /// </summary>
+        /// <remarks>Added in v16.04</remarks>
+        [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP 16.04, may still change")]
+        IToolbarBuilder Toolbar();
 
         /// <summary>
         /// The main url, used for main `src` property

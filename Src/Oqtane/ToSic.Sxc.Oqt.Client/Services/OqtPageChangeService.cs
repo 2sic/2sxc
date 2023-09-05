@@ -8,8 +8,8 @@ using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Client.Services
 {
-  public class OqtPageChangeService
-  {
+    public class OqtPageChangeService
+    {
         public async Task AttachScriptsAndStyles(OqtViewResultsDto viewResults, SxcInterop sxcInterop, IOqtHybridLog page)
         {
             var logPrefix = $"{nameof(AttachScriptsAndStyles)}(...) - ";
@@ -74,7 +74,8 @@ namespace ToSic.Sxc.Oqt.Client.Services
                     inline.Content,
                     "body");
         }
-        public async Task UpdatePageProperties(OqtViewResultsDto viewResults, SxcInterop sxcInterop, ModuleProBase page)
+
+        public void UpdatePageProperties(SiteState siteState, OqtViewResultsDto viewResults, ModuleProBase page)
         {
             var logPrefix = $"{nameof(UpdatePageProperties)}(...) - ";
 
@@ -84,21 +85,22 @@ namespace ToSic.Sxc.Oqt.Client.Services
                 switch (p.Property)
                 {
                     case OqtPageProperties.Title:
-                        var title = await sxcInterop.GetTitleValue();
-                        page?.Log($"{logPrefix}UpdateTitle:", title);
-                        await sxcInterop.UpdateTitle(UpdateProperty(title, p.InjectOriginalInValue(title), page));
+                        var currentTitle = siteState.Properties.PageTitle;
+                        var updatedTitle = UpdateProperty(currentTitle, p.InjectOriginalInValue(currentTitle), page);
+                        page?.Log($"{logPrefix}UpdateTitle:", updatedTitle);
+                        siteState.Properties.PageTitle = updatedTitle;
                         break;
                     case OqtPageProperties.Keywords:
-                        var keywords = await sxcInterop.GetMetaTagContentByName("KEYWORDS");
-                        page?.Log($"{logPrefix}Keywords:", keywords);
-                        await sxcInterop.IncludeMeta("MetaKeywords", "name", "KEYWORDS",
-                            UpdateProperty(keywords, p.InjectOriginalInValue(keywords), page)/*, "id"*/);// Oqtane.client 3.3.1
+                        var currentKeywords = HtmlHelper.GetMetaTagContent(siteState.Properties.HeadContent, "KEYWORDS");
+                        var updatedKeywords = UpdateProperty(currentKeywords, p.InjectOriginalInValue(currentKeywords), page);
+                        page?.Log($"{logPrefix}Keywords:", updatedKeywords);
+                        siteState.Properties.HeadContent = HtmlHelper.AddOrUpdateMetaTagContent(siteState.Properties.HeadContent, "KEYWORDS", updatedKeywords);
                         break;
                     case OqtPageProperties.Description:
-                        var description = await sxcInterop.GetMetaTagContentByName("DESCRIPTION");
-                        page?.Log($"{logPrefix}Description:", description);
-                        await sxcInterop.IncludeMeta("MetaDescription", "name", "DESCRIPTION",
-                            UpdateProperty(description, p.InjectOriginalInValue(description), page)/*, "id"*/);// Oqtane.client 3.3.1
+                        var currentDescription = HtmlHelper.GetMetaTagContent(siteState.Properties.HeadContent, "DESCRIPTION");
+                        var updatedDescription = UpdateProperty(currentDescription, p.InjectOriginalInValue(currentDescription), page);
+                        page?.Log($"{logPrefix}Description:", updatedDescription);
+                        siteState.Properties.HeadContent = HtmlHelper.AddOrUpdateMetaTagContent(siteState.Properties.HeadContent, "DESCRIPTION", updatedDescription);
                         break;
                     case OqtPageProperties.Base:
                         // For base - ignore for now as we don't know what side-effects this could have
@@ -110,6 +112,7 @@ namespace ToSic.Sxc.Oqt.Client.Services
                 }
             }
         }
+
         public string UpdateProperty(string original, OqtPagePropertyChanges change, IOqtHybridLog page)
         {
             var logPrefix = $"{nameof(UpdateProperty)}(original:{original}) - ";

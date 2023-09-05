@@ -6,6 +6,9 @@ namespace ToSic.Sxc.Context
 {
     /// <summary>
     /// Information about the page which is the context for the currently running code.
+    /// 
+    /// 🪒 In [Dynamic Razor](xref:Custom.Hybrid.Razor14) it's found on `CmsContext.Page`  
+    /// 🪒 In [Typed Razor](xref:Custom.Hybrid.RazorTyped) it's found on `MyPage`
     /// </summary>
     /// <remarks>
     /// Note that the module context is the module for which the code is currently running.
@@ -18,28 +21,35 @@ namespace ToSic.Sxc.Context
         /// <summary>
         /// The Id of the page.
         /// 
-        /// 🪒 Use in Razor: `CmsContext.Page.Type`
+        /// 🪒 Use in Dynamic Razor: `CmsContext.Page.Id`  
+        /// 🪒 Use in Typed Razor: `MyPage.Id`
         /// </summary>
         /// <remarks>
         /// Corresponds to the Dnn `TabId` or the Oqtane `Page.PageId`
         /// </remarks>
         int Id { get; }
-        
+
         /// <summary>
         /// The page parameters, cross-platform.
         /// Use this for easy access to url parameters like ?id=xyz
         /// with `CmsContext.Page.Parameters["id"]` as a replacement for `Request.QueryString["id"]`
         /// 
-        /// 🪒 Use in Razor: `CmsContext.Page.Parameters["id"]`
+        /// 🪒 Use in Dynamic Razor: `CmsContext.Page.Parameters`  
+        /// 🪒 Use in Typed Razor: `MyPage.Parameters`
         /// </summary>
         IParameters Parameters { get; }
 
-        // unsure if used
         /// <summary>
-        /// The resource specific url, like the one to this page or portal
+        /// The resource specific Url, like the one to this page or portal.
+        ///
+        /// 🪒 Use in Dynamic Razor: `CmsContext.Page.Url`  
+        /// 🪒 Use in Typed Razor: `MyPage.Url`
         /// </summary>
-        [PrivateApi("Not yet official property, must decide if we'll put in on the ICmsPage or maybe on an ICmsUrl or something")]
+        /// <remarks>
+        /// Added ca. v12.
+        /// </remarks>
         string Url { get; }
+        // ^^^ note: property added ca. v12 but was not visible in docs till 16.04
 
         /// <summary>
         /// Metadata of the current page

@@ -21,21 +21,22 @@ namespace ToSic.Sxc.Edit.Toolbar
             return finalTypes;
         }
 
-        private string[] FindMetadataRecommendations(object target) => Log.Func(() =>
+        private string[] FindMetadataRecommendations(object target)
         {
+            var l = Log.Fn<string[]>();
             // ReSharper disable once ConvertIfStatementToSwitchStatement
             if (target == null)
-                return (Array.Empty<string>(), "null");
+                return l.Return(Array.Empty<string>(), "null");
 
             if (target is IHasMetadata withMetadata)
                 target = withMetadata.Metadata;
 
             if (!(target is IMetadataOf mdOf))
-                return (Array.Empty<string>(), "not metadata");
+                return l.Return(Array.Empty<string>(), "not metadata");
 
             var recommendations = mdOf?.Target?.Recommendations ?? Array.Empty<string>();
 
-            return (recommendations, "ok");
-        });
+            return l.Return(recommendations, "ok");
+        }
     }
 }

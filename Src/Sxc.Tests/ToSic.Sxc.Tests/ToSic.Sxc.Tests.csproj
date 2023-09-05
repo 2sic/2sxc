@@ -98,6 +98,7 @@
     <Compile Include="ContentSecurityPolicyTests\CspParameterFinalizerTests.cs" />
     <Compile Include="ContentSecurityPolicyTests\CspPolicyTextProcessorTests.cs" />
     <Compile Include="ContextTests\ParametersTests.cs" />
+    <Compile Include="ContextTests\UniqueKeyTests.cs" />
     <Compile Include="DataForImageTests\ResizeRecipesData.cs" />
     <Compile Include="DataSources\MockRolesDataSource.cs" />
     <Compile Include="DataSources\MockUsersDataSource.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="DataTests\DynConverterTests\AsConverterFakeTests.cs" />
     <Compile Include="DataTests\DynConverterTests\AsConverterTestsBase.cs" />
     <Compile Include="DataTests\DynConverterTests\AsConverterAsItem.cs" />
+    <Compile Include="DataTests\DynWrappers\WrapObjTypedItemEquality.cs" />
     <Compile Include="DataTests\PropInfo.cs" />
     <Compile Include="DataTests\DynJson\WrapAllGps.cs" />
     <Compile Include="DataTests\DynJson\WrapAllKeys.cs" />
@@ -128,6 +130,7 @@
     <Compile Include="DataTests\DynWrappers\WrapObjTypedItem.cs" />
     <Compile Include="DataTests\HasKeysTests.cs" />
     <Compile Include="DataTests\TypedItemTestAccessors.cs" />
+    <Compile Include="LinksAndImages\ParametersTestExtensions.cs" />
     <Compile Include="ServicesTests\CmsService\CmsServiceTest.cs" />
     <Compile Include="ServicesTests\CmsService\CmsServiceTestBase.cs" />
     <Compile Include="DataTests\DynWrappers\WrapObjDeep.cs" />

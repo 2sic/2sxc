@@ -14,8 +14,8 @@ namespace ToSic.Sxc.Apps
 
         /// <inheritdoc />
         // Create config object. Note that AppConfiguration could be null, then it would use default values
-        public AppConfiguration Configuration => _appConfig.Get(() => new AppConfiguration(AppConfiguration, Log));
-        private readonly GetOnce<AppConfiguration> _appConfig = new GetOnce<AppConfiguration>();
+        public IAppConfiguration Configuration => _appConfig.Get(() => new AppConfiguration(AppConfiguration, Log));
+        private readonly GetOnce<IAppConfiguration> _appConfig = new GetOnce<IAppConfiguration>();
 
         private DynamicEntity MakeDynProperty(IEntity contents, bool propsRequired)
         {

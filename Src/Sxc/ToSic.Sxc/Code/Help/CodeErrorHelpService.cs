@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Code.Help
             Log.A("Trying to add help to error, something must have happened");
         }
 
-        public Exception AddHelpForCompileProblems(Exception ex, CodeFileTypes fileType)
+        public Exception AddHelpForCompileProblems(Exception ex, CodeFileInfo fileInfo)
         {
             var l = Log.Fn<Exception>();
             try
@@ -33,10 +33,10 @@ namespace ToSic.Sxc.Code.Help
                 if (ex is IExceptionWithHelp) 
                     return l.Return(ex, "already has help");
 
-                if (!CodeHelpDb.CompileHelp.TryGetValue(fileType, out var list))
+                if (!fileInfo.Help.SafeAny())// !CodeHelpDb.CompileHelp.TryGetValue(fileInfo, out var list))
                     return l.Return(ex, "no additional help found");
 
-                var help = FindManyOrNull(ex, list);
+                var help = FindManyOrNull(ex, fileInfo.Help);
                 return help == null 
                     ? l.Return(ex)
                     : l.Return(new ExceptionWithHelp(help, ex), "added help");
@@ -101,7 +101,12 @@ namespace ToSic.Sxc.Code.Help
         private static CodeHelp FindHelp(Exception ex, List<CodeHelp> errorList)
         {
             var msg = ex?.Message;
-            return msg == null ? null : errorList.FirstOrDefault(help => help.DetectRegex ? Regex.IsMatch(msg, help.Detect) : msg.Contains(help.Detect));
+            return msg == null ? null : errorList.FirstOrDefault(help =>
+            {
+                if (help.DetectRegex)
+                    return Regex.IsMatch(msg, help.Detect);
+                return msg.Contains(help.Detect);
+            });
         }
         private static List<CodeHelp> FindManyOrNull(Exception ex, List<CodeHelp> errorList)
         {

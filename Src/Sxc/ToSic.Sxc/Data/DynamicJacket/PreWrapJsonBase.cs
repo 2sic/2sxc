@@ -3,9 +3,9 @@ using ToSic.Sxc.Data.Wrapper;
 
 namespace ToSic.Sxc.Data
 {
-    internal abstract class PreWrapJsonBase: PreWrapBase, IPreWrap, IPropertyLookup //, IHasKeys
+    internal abstract class PreWrapJsonBase: PreWrapBase, IPreWrap, IPropertyLookup
     {
-        internal PreWrapJsonBase(CodeJsonWrapper wrapper)
+        internal PreWrapJsonBase(CodeJsonWrapper wrapper, object data): base(data)
         {
             Wrapper = wrapper;
         }
@@ -13,11 +13,6 @@ namespace ToSic.Sxc.Data
         public readonly CodeJsonWrapper Wrapper;
 
         public override WrapperSettings Settings => Wrapper.Settings;
-
-        //public bool IsNotEmpty(string name, string noParamOrder = Protector)
-        //    => HasKeysHelper.IsNotEmpty(Get(name), null);
-
-        //public bool IsEmpty(string name, string noParamOrder = Protector) 
-        //    => HasKeysHelper.IsEmpty(Get(name), null);
+        
     }
 }

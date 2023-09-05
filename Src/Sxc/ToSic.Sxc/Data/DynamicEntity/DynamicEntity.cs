@@ -124,7 +124,7 @@ namespace ToSic.Sxc.Data
             bool debug = default
         ) => Cdf.CompatibilityLevel < Constants.CompatibilityLevel12
             // Only do compatibility check if used on DynamicEntity
-            ? throw new NotSupportedException($"{nameof(Html)}(...) not supported in older Razor templates. Use Razor14, RazorPro or newer.")
+            ? throw new NotSupportedException($"{nameof(Html)}(...) not supported in older Razor templates. Use Razor14, RazorTyped or newer.")
             : TypedItemHelpers.Html(Cdf, this.TypedItem, name: name, noParamOrder: noParamOrder, container: container,
                 toolbar: toolbar, imageSettings: imageSettings, required: false, debug: debug);
 

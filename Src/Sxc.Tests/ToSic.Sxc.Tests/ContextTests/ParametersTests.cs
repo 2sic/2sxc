@@ -1,15 +1,64 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
+using System.Linq;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Context.Query;
+using ToSic.Testing.Shared;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+using static ToSic.Sxc.Tests.LinksAndImages.ParametersTestExtensions;
 
 namespace ToSic.Sxc.Tests.ContextTests
 {
     [TestClass]
     public class ParametersTests
     {
+        #region Initial Data and Helper Methods
+
+        private static IParameters GetTestParameters() => NewParameters(new NameValueCollection
+        {
+            { "id", "27" },
+            { "sort", "descending" }
+        });
+
+        private const string Unmodified = "id=27&sort=descending";
+
+        public class ParameterCountTest
+        {
+            public int Count;
+            public Func<IParameters, IParameters> Prepare = p => p;
+        }
+        //private class ParameterTest<TValue>: ParameterCountTest
+        //{
+        //    //public int Count;
+        //    public string Expected = Unmodified;
+        //    public string Key = "id";
+        //    public TValue Value = default;
+        //    //public Func<IParameters, IParameters> Func;
+        //}
+
+        /// <summary>
+        /// Take the default params, modify them in some way, and verify that the count / result matches expectations
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="exp"></param>
+        /// <param name="pFunc"></param>
+        private void ModifyDefAndVerify(int count, string exp, Func<IParameters, IParameters> pFunc)
+        {
+            var p = pFunc(GetTestParameters());
+            AreEqual(count, p.Count);
+            AreEqual(exp, p.ToString());
+        }
+
+        #endregion
+
+        #region Very Basic Tests - ToString etc.
+
+        [TestMethod]
+        public void ParamsToString() => AreEqual(Unmodified, GetTestParameters().ToString());
+
+        #endregion
+
         [TestMethod]
         public void BasicParameters()
         {
@@ -20,7 +69,7 @@ namespace ToSic.Sxc.Tests.ContextTests
         }
 
         [TestMethod]
-        public void NotCaseSensitive()
+        public void BasicCaseSensitivity()
         {
             var p = GetTestParameters();
             IsTrue(p.ContainsKey("id"));
@@ -29,84 +78,63 @@ namespace ToSic.Sxc.Tests.ContextTests
         }
 
 
-        [TestMethod]
-        public void ParamsToString()
-        {
-            var p = GetTestParameters();
-            AreEqual("id=27&sort=descending", p.ToString());
-        }
 
-        private void TestParam(int count, string exp, Func<IParameters, IParameters> pFunc)
-        {
-            var p = pFunc(GetTestParameters());
-            AreEqual(count, p.Count);
-            AreEqual(exp, p.ToString());
-        }
 
         #region Add String / Null
 
         
 
-        [TestMethod] public void ParameterAdd() 
-            => TestParam(3, "id=27&sort=descending&test=wonderful", p => p.Add("test", "wonderful"));
-
-        [TestMethod] public void ParameterAddNull()
-            => TestParam(3, "id=27&sort=descending&test", p => p.Add("test", null));
+        [TestMethod]
+        [DataRow(3, Unmodified + "&test=wonderful", "test", "wonderful")]
+        [DataRow(3, Unmodified + "&test", "test", null, "null")]
+        [DataRow(3, Unmodified + "&test", "test", "", "empty")]
+        public void AddStringNew(int count, string expected, string key = "id", string value = default, string testName = default)
+            => ModifyDefAndVerify(count, expected, p => p.TestAdd(key, value));
 
         [TestMethod]
-        public void ParameterAddNoValue()
-            => TestParam(3, "id=27&sort=descending&test", p => p.Add("test"));
+        public void AddStringNewNoValue()
+            => ModifyDefAndVerify(3, Unmodified + "&test", p => p.TestAdd("test"));
 
         [TestMethod]
-        public void ParameterAddEmptyString()
-            => TestParam(3, "id=27&sort=descending&test", p => p.Add("test", string.Empty));
+        public void AddStringNewMultipleSameKey()
+            => ModifyDefAndVerify(3, Unmodified + "&test=wonderful&test=awesome",
+                p => p.TestAdd("test", "wonderful").TestAdd("Test", "awesome"));
 
-        [TestMethod]
-        public void ParameterAddMultipleSameKey()
-            => TestParam(3, "id=27&sort=descending&test=wonderful&test=awesome",
-                p => p.Add("test", "wonderful").Add("Test", "awesome"));
+
 
         #endregion
 
         #region Add / Set boolean
 
         [TestMethod]
-        public void AddBoolTrue() => TestParam(3, "id=27&sort=descending&test=true", p => p.Add("test", true));
-        [TestMethod]
-        public void AddBoolFalse() => TestParam(3, "id=27&sort=descending&test=false", p => p.Add("test", false));
+        [DataRow(3, Unmodified + "&test=true", "test", true)]
+        [DataRow(3, Unmodified + "&test=false", "test", false)]
+        public void AddBool(int count, string expected, string key, bool value, string testName = default)
+            => ModifyDefAndVerify(count, expected, p => p.TestAdd(key, value));
+
 
         [TestMethod]
-        public void SetAddBoolTrue() => TestParam(3, "id=27&sort=descending&test=true", p => p.Set("test", true));
-        [TestMethod]
-        public void SetAddBoolFalse() => TestParam(3, "id=27&sort=descending&test=false", p => p.Set("test", false));
-
-        [TestMethod]
-        public void SetBoolTrue() => TestParam(2, "id=true&sort=descending", p => p.Set("id", true));
-        [TestMethod]
-        public void SetBoolFalse() => TestParam(2, "id=false&sort=descending", p => p.Set("id", false));
+        [DataRow(3, Unmodified + "&test=true", "test", true)]
+        [DataRow(3, Unmodified + "&test=false", "test", false)]
+        [DataRow(2, "id=true&sort=descending", "id", true, "replace int-id with bool id")]
+        [DataRow(2, "id=false&sort=descending", "id", false, "replace int-id with bool id")]
+        public void SetBool(int count, string expected, string key, bool value, string testName = default)
+            => ModifyDefAndVerify(count, expected, p => p.TestSet(key, value));
 
         #endregion
 
         #region Add Numbers
 
         [TestMethod]
-        public void AddInt7() => TestParam(3, "id=27&sort=descending&test=7", p => p.Add("test", 7));
-        [TestMethod]
-        public void AddIntMinus7() => TestParam(3, "id=27&sort=descending&test=-7", p => p.Add("test", -7));
-        
-        [TestMethod]
-        public void AddLong7() => TestParam(3, "id=27&sort=descending&test=7", p => p.Add("test", 7L));
-        [TestMethod]
-        public void AddLongMinus7() => TestParam(3, "id=27&sort=descending&test=-7", p => p.Add("test", -7L));
-
-        [TestMethod]
-        public void AddFloat7dot7() => TestParam(3, "id=27&sort=descending&test=7.7", p => p.Add("test", 7.7F));
-        [TestMethod]
-        public void AddFloatMinus7dot7() => TestParam(3, "id=27&sort=descending&test=-7.7", p => p.Add("test", -7.7F));
-        [TestMethod]
-        public void AddDouble7dot7() => TestParam(3, "id=27&sort=descending&test=7.7", p => p.Add("test", 7.7));
-        [TestMethod]
-        public void AddDoubleMinus7dot7() => TestParam(3, "id=27&sort=descending&test=-7.7", p => p.Add("test", -7.7));
+        [DataRow(3, Unmodified + "&test=7", "test", 7)]
+        [DataRow(3, Unmodified + "&test=-7", "test", -7)]
+        [DataRow(3, Unmodified + "&test=7", "test", 7L)]
+        [DataRow(3, Unmodified + "&test=7.7", "test", 7.7)]
+        [DataRow(3, Unmodified + "&test=-7.7", "test", -7.7)]
+        [DataRow(3, Unmodified + "&test=7.7", "test", 7.7F)]
+        [DataRow(3, Unmodified + "&test=-7.7", "test", -7.7F)]
+        public void AddNumberObjects(int count, string expected, string key, object value, string testName = default)
+            => ModifyDefAndVerify(count, expected, p => p.TestAdd(key, value));
 
         #endregion
 
@@ -116,93 +144,85 @@ namespace ToSic.Sxc.Tests.ContextTests
         private static readonly DateTime TestDateTime = new DateTime(2042, 4, 2, 3, 4, 56);
 
         [TestMethod]
-        public void AddDate() => TestParam(3, "id=27&sort=descending&test=2042-04-02", p => p.Add("test", TestDate));
+        public void AddNewDate()
+            => ModifyDefAndVerify(3, Unmodified + "&test=2042-04-02", p => p.TestAdd("test", TestDate));
         
         [TestMethod]
-        public void AddDateTime() => TestParam(3, "id=27&sort=descending&test=2042-04-02T03:04:56", p => p.Add("test", TestDateTime));
+        public void AddNewDateTime()
+            => ModifyDefAndVerify(3, Unmodified + "&test=2042-04-02T03:04:56", p => p.TestAdd("test", TestDateTime));
 
         #endregion
 
         [TestMethod]
-        public void ParameterSet()
-        {
-            var p = GetTestParameters().Set("test", "wonderful");
-            AreEqual(3, p.Count);
-            AreEqual("id=27&sort=descending&test=wonderful", p.ToString());
-        }
+        [DataRow(3, Unmodified + "&test=wonderful", "test", "wonderful")]
+        [DataRow(3, Unmodified + "&test", "test", null, "null")]
+        [DataRow(3, Unmodified + "&test", "test", "", "empty")]
+        public void SetNew(int count, string expected, string key = "id", string value = default, string testName = default)
+            => ModifyDefAndVerify(count, expected, p => p.TestSet(key, value));
 
         [TestMethod]
-        public void ParameterSetNullValue()
-        {
-            var p = GetTestParameters().Set("test", null);
-            AreEqual(3, p.Count);
-            AreEqual("id=27&sort=descending&test", p.ToString());
-        }
-        [TestMethod]
-        public void ParameterSetNoValue()
-        {
-            var p = GetTestParameters().Set("test");
-            AreEqual(3, p.Count);
-            AreEqual("id=27&sort=descending&test", p.ToString());
-        }
-        [TestMethod]
-        public void ParameterSetEmptyString()
-        {
-            var p = GetTestParameters().Set("test", string.Empty);
-            AreEqual(3, p.Count);
-            AreEqual("id=27&sort=descending&test", p.ToString());
-        }
-
-        [TestMethod]
-        public void ParameterSetMultipleSameKey()
-        {
-            var p = GetTestParameters().Set("test", "wonderful").Set("test", "awesome");
-            AreEqual(3, p.Count);
-            AreEqual("id=27&sort=descending&test=awesome", p.ToString());
-        }
-
-        [TestMethod]
-        public void ParameterAddExisting()
-        {
-            var p = GetTestParameters().Add("id", "42");
-            AreEqual(2, p.Count);
-            AreEqual("id=27&id=42&sort=descending", p.ToString());
-        }
-
-        [TestMethod]
-        public void ParameterAddExistingEmptyString()
-        {
-            var p = GetTestParameters().Add("id", string.Empty);
-            AreEqual(2, p.Count);
-            AreEqual("id=27&sort=descending", p.ToString());
-        }
-        [TestMethod]
-        public void ParameterAddExistingNull()
-        {
-            var p = GetTestParameters().Add("id", null);
-            AreEqual(2, p.Count);
-            AreEqual("id=27&sort=descending", p.ToString());
-        }
-
-        [TestMethod]
-        public void ParameterSetExisting()
-        {
-            var p = GetTestParameters().Set("id", "42");
-            AreEqual(2, p.Count);
-            AreEqual("id=42&sort=descending", p.ToString());
-        }
+        public void SetNewNoValue()
+            => ModifyDefAndVerify(3, Unmodified + "&test", p=>p.TestSet("test"));
 
 
-        private static Parameters GetTestParameters()
-        {
-            var p = new Parameters(new NameValueCollection
-            {
-                { "id", "27" },
-                { "sort", "descending" }
-            });
-            return p;
-        }
+        [TestMethod]
+        public void SetNewMultipleSameKey()
+            => ModifyDefAndVerify(3, Unmodified + "&test=awesome", p => p.TestSet("test", "wonderful").TestSet("test", "awesome"));
 
+        [TestMethod]
+        [DataRow(2, "id=27&id=42&sort=descending", "id", "42")]
+        [DataRow(2, Unmodified, "id", "", "empty string")]
+        [DataRow(2, Unmodified, "id", null, "null string")]
+        public void AddExisting(int count, string expected, string key = "id", string value = default, string testName = default)
+            => ModifyDefAndVerify(count, expected, p => p.TestAdd(key, value));
+
+
+        [TestMethod]
+        [DataRow(2, "id=42&sort=descending", "id", "42")]
+        [DataRow(2, "id&sort=descending", "id", "", "reset to empty string")]
+        [DataRow(2, "id&sort=descending", "id", null, "reset to null")]
+        public void SetExisting(int count, string expected, string key = "id", string value = default, string testName = default)
+            => ModifyDefAndVerify(count, expected, p => p.TestSet(key, value));
+
+        [TestMethod]
+        [DataRow(1, "sort=descending", "id", "remove existing")]
+        [DataRow(2, Unmodified, "something", "remove non-existing")]
+        public void Remove(int count, string expected, string key, string testName = default)
+            => ModifyDefAndVerify(count, expected, p => p.TestRemove(key));
+
+        [TestMethod]
+        [DataRow(true, "id")]
+        [DataRow(true, "sort")]
+        [DataRow(false, "dummy")]
+        [DataRow(false, "id.xyz")]
+        [DataRow(false, "id.xyz.abc")]
+        public void ContainsKey(bool exists, string key, string testName = default)
+            => AreEqual(exists, GetTestParameters().ContainsKey(key));
+
+        #region Count Tests
+
+        private static IEnumerable<object[]> CountTests => new List<ParameterCountTest>
+        {
+            new ParameterCountTest { Count = 2 },
+            new ParameterCountTest { Count = 2, Prepare = p => p.TestSet("id") },
+            new ParameterCountTest { Count = 3, Prepare = p => p.TestSet("new") },
+            new ParameterCountTest { Count = 1, Prepare = p => p.TestRemove("id") },
+        }.ToTestEnum();
+
+        [TestMethod]
+        [DynamicData(nameof(CountTests))]
+        public void CountKeys(ParameterCountTest pct)
+            => AreEqual(pct.Count, pct.Prepare(GetTestParameters()).Keys().Count());
+
+        #endregion
+
+
+        [TestMethod]
+        [DataRow(true, "id")]
+        [DataRow(true, "sort")]
+        [DataRow(false, "dummy")]
+        public void IsNotEmpty(bool expected, string key, string testName = default)
+            => AreEqual(expected, GetTestParameters().IsNotEmpty(key), testName);
     }
 
 }

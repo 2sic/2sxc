@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Code.Help;
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
@@ -15,7 +17,7 @@ namespace Custom.Hybrid
 {
     [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
     // ReSharper disable once UnusedMember.Global
-    public abstract class RazorTyped: OqtRazorBase<dynamic>, IHasCodeLog, IRazor, ISetDynamicModel, IDynamicCode16
+    public abstract class RazorTyped: OqtRazorBase<dynamic>, IHasCodeLog, IRazor, ISetDynamicModel, IDynamicCode16, IHasCodeHelp
     {
         #region Constructor / DI / SysHelp
 
@@ -102,19 +104,31 @@ namespace Custom.Hybrid
         /// <inheritdoc cref="IDynamicCode16.GetCode"/>
         public dynamic GetCode(string path, string noParamOrder = Protector, string className = default) => SysHlp.GetCode(path, noParamOrder, className);
 
-        #region MyContext
+        #region MyContext & UniqueKey
 
         /// <inheritdoc cref="IDynamicCode16.MyContext" />
         public ICmsContext MyContext => _DynCodeRoot.CmsContext;
 
-        /// <inheritdoc cref="IDynamicCode16.MyUser" />
-        public ICmsUser MyUser => _DynCodeRoot.CmsContext.User;
-
         /// <inheritdoc cref="IDynamicCode16.MyPage" />
         public ICmsPage MyPage => _DynCodeRoot.CmsContext.Page;
 
+        /// <inheritdoc cref="IDynamicCode16.MyUser" />
+        public ICmsUser MyUser => _DynCodeRoot.CmsContext.User;
+
         /// <inheritdoc cref="IDynamicCode16.MyView" />
         public ICmsView MyView => _DynCodeRoot.CmsContext.View;
+
+        /// <inheritdoc cref="IDynamicCode16.UniqueKey" />
+        public string UniqueKey => Kit.Key.UniqueKey;
+
+        #endregion
+
+        #region Dev Tools & Dev Helpers
+
+        [PrivateApi("Not yet ready")]
+        public IDevTools DevTools => CodeHelper.DevTools;
+
+        [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => CodeHelpDbV16.Compile16;
 
         #endregion
 

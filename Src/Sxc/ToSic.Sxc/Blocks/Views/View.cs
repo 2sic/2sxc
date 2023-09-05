@@ -28,13 +28,13 @@ namespace ToSic.Sxc.Blocks
         private IEntity GetBestRelationship(string key) => Entity.Children(key).FirstOrDefault();
 
 
-        public string Name => Get(FieldName, "unknown name");
+        public string Name => GetThis("unknown name");
 
-        public string Identifier => Get(FieldIdentifier, "");
+        public string Identifier => GetThis("");
         
-        public string Icon => Get(FieldIcon, "");
+        public string Icon => GetThis("");
 
-        public string Path => Get(FieldPath, "");
+        public string Path => GetThis("");
 
         public string ContentType => Get(FieldContentType, "");
 
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Blocks
 
         public IEntity HeaderPresentationItem => GetBestRelationship(FieldHeaderPresentationItem);
 
-        public string Type => Get(FieldType, "");
+        public string Type => GetThis("");
 
         [PrivateApi]
         internal string GetTypeStaticName(string groupPart)
@@ -67,14 +67,14 @@ namespace ToSic.Sxc.Blocks
             }
         }
 
-        public bool IsHidden => Get(FieldIsHidden, false);
+        public bool IsHidden => GetThis(false);
 
         public bool IsShared => _isShared ?? (_isShared = AppAssets.IsShared(Get(FieldLocation, AppAssets.AppInSite))).Value;
         private bool? _isShared;
 
-        public bool UseForList => Get(FieldUseList, false);
-        public bool PublishData => Get(FieldPublishEnable, false);
-        public string StreamsToPublish => Get(FieldPublishStreams, "");
+        public bool UseForList => GetThis(false);
+        public bool PublishData => GetThis(false);
+        public string StreamsToPublish => GetThis("");
 
         public IEntity QueryRaw => QueryInfo.Entity;
 

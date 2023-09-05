@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Serialization;
+﻿using System.Collections.Generic;
+using ToSic.Eav.Serialization;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
@@ -9,9 +10,7 @@ namespace ToSic.Sxc.Tests.DataTests
 {
     public class DynAndTypedTestsBase: TestBaseSxcDb
     {
-        protected DynAndTypedTestsBase()
-        {
-        }
+        #region Helper / Factories
 
         public CodeDataFactory Factory => _fac.Get(GetService<CodeDataFactory>);
         private readonly GetOnce<CodeDataFactory> _fac = new GetOnce<CodeDataFactory>();
@@ -21,6 +20,8 @@ namespace ToSic.Sxc.Tests.DataTests
 
         public CodeJsonWrapper JsonWrapper => _codeJson.Get(GetService<Generator<CodeJsonWrapper>>).New();
         private readonly GetOnce<Generator<CodeJsonWrapper>> _codeJson = new GetOnce<Generator<CodeJsonWrapper>>();
+
+        #endregion
 
         public DynamicJacketBase Json2Jacket(string jsonString) => Factory.Json2Jacket(jsonString);
 
@@ -37,11 +38,15 @@ namespace ToSic.Sxc.Tests.DataTests
         }
 
 
-        public WrapObjectDynamic WrapObjFromObject(object data, bool wrapChildren = true, bool realObjectsToo = true)
+        public WrapObjectDynamic Obj2WrapObj(object data, bool wrapChildren = true, bool realObjectsToo = true)
             => Wrapper.FromObject(data, WrapperSettings.Dyn(children: wrapChildren, realObjectsToo: realObjectsToo));
 
-        public dynamic DynFromWrapFromObject(object data) => WrapObjFromObject(data);
+        public dynamic Obj2WrapObjAsDyn(object data) => Obj2WrapObj(data);
 
+        public ITypedItem Obj2Item(object data, WrapperSettings? reWrap = null)
+            => Wrapper.TypedItemFromObject(data, reWrap ?? WrapperSettings.Typed(true, true));
+
+        #region To Json Wrappers
 
         public ITyped Obj2Typed(object data, WrapperSettings? reWrap = null)
             => Wrapper.TypedFromObject(data, reWrap ?? WrapperSettings.Typed(true, true));
@@ -53,10 +58,16 @@ namespace ToSic.Sxc.Tests.DataTests
             => Obj2Json2Typed(data, WrapperSettings.Typed(true, true, propsRequired: false));
 
         private ITyped Obj2Json2Typed(object data, WrapperSettings settings) 
-            => JsonWrapper.Setup(settings).Json2Typed(JsonSerialize(data));
+            => JsonWrapper.Setup(settings).JsonToTyped(JsonSerialize(data));
 
-        public ITypedItem Obj2Item(object data, WrapperSettings? reWrap = null)
-            => Wrapper.TypedItemFromObject(data, reWrap ?? WrapperSettings.Typed(true, true));
+
+        public IEnumerable<ITyped> Obj2Json2TypedListStrict(object data)
+            => Obj2Json2TypedList(data, WrapperSettings.Typed(true, true, propsRequired: true));
+
+        private IEnumerable<ITyped> Obj2Json2TypedList(object data, WrapperSettings settings) 
+            => JsonWrapper.Setup(settings).JsonToTypedList(JsonSerialize(data));
+        #endregion
+
 
     }
 }

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
@@ -12,7 +9,7 @@ using ToSic.Sxc.Code.Help;
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
 {
-    public partial class Api14_Obsolete
+    public abstract partial class Api14
     {
         // Obsolete stuff - not supported any more in after V10 - show helpful error messages
 
@@ -23,7 +20,7 @@ namespace Custom.Hybrid
         [PrivateApi]
         [Obsolete("throws error with fix-instructions. Use CreateSource<type> instead.")]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
-            => CodeHelpDbV12.CreateSourceString();
+            => CodeHelpDbV12.ExCreateSourceString();
 
         #endregion
 
@@ -32,7 +29,7 @@ namespace Custom.Hybrid
         [PrivateApi]
         [Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
         public dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity)
-            => CodeHelpDbV12.AsDynamicInterfacesIEntity();
+            => CodeHelpDbV12.ExAsDynamicInterfacesIEntity();
 
 
         [PrivateApi]
@@ -52,7 +49,7 @@ namespace Custom.Hybrid
 
         [PrivateApi]
         [Obsolete("throws error with fix-instructions. Use AsDynamic(IEnumerable<IEntity>...)")]
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => CodeHelpDbV12.AsDynamicKvp();
+        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => CodeHelpDbV12.ExAsDynamicKvp();
 
         #region Old AsDynamic with correct warnings
         /// <inheritdoc/>
@@ -78,20 +75,20 @@ namespace Custom.Hybrid
 
         [PrivateApi]
         [Obsolete("use Content.Presentation instead")]
-        public dynamic Presentation => CodeHelpDbV12.Presentation();
+        public dynamic Presentation => CodeHelpDbV12.ExPresentation();
 
 
         [PrivateApi]
         [Obsolete("Use Header instead")]
-        public dynamic ListContent => CodeHelpDbV12.ListContent();
+        public dynamic ListContent => CodeHelpDbV12.ExListContent();
 
         [PrivateApi]
         [Obsolete("Use Header.Presentation instead")]
-        public dynamic ListPresentation => CodeHelpDbV12.ListPresentation();
+        public dynamic ListPresentation => CodeHelpDbV12.ExListPresentation();
 
         [PrivateApi]
         [Obsolete("This is an old way used to loop things - removed in RazorComponent")]
-        public IEnumerable<dynamic> List => CodeHelpDbV12.List();
+        public IEnumerable<dynamic> List => CodeHelpDbV12.ExList();
 
         #endregion
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
@@ -41,12 +40,15 @@ namespace ToSic.Sxc.Services
 
         /// <inheritdoc />
         public ITyped ToTyped(string json, string noParamOrder = Protector, string fallback = default, bool? propsRequired = default)
-            => _wrapJsonGenerator.New().Setup(WrapperSettings.Typed(true, true, propsRequired: propsRequired ?? true)).Json2Typed(json, noParamOrder, fallback);
+            => _wrapJsonGenerator.New()
+                .Setup(WrapperSettings.Typed(true, true, propsRequired: propsRequired ?? true))
+                .JsonToTyped(json, noParamOrder, fallback);
 
 
-        public IEnumerable<ITyped> ToTypedList(string json, string noParamOrder = Protector, string fallback = default)
-        {
-            throw new NotImplementedException();
-        }
+        /// <inheritdoc />
+        public IEnumerable<ITyped> ToTypedList(string json, string noParamOrder = Protector, string fallback = default, bool? propsRequired = default)
+            => _wrapJsonGenerator.New()
+                .Setup(WrapperSettings.Typed(true, true, propsRequired: propsRequired ?? true))
+                .JsonToTypedList(json, noParamOrder, fallback);
     }
 }

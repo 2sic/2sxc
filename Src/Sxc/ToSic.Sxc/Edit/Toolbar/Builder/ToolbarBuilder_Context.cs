@@ -70,23 +70,26 @@ namespace ToSic.Sxc.Edit.Toolbar
             return (result, "ok");
         });
 
-        private int FindContextAppId(object target) => Log.Func(() =>
+        private int FindContextAppId(object target)
         {
+            var l = Log.Fn<int>();
             if (target is IEntity entity)
-                return (entity.AppId, "entity-appid");
+                return l.Return(entity.AppId, "entity-appid");
+
             //if (target is IDynamicEntity dynEntity)
             //    return (dynEntity.Entity?.AppId ?? NoAppId, "dyn entity");
             if (target is ICanBeEntity canBeEntity)
-                return (canBeEntity.Entity?.AppId ?? NoAppId, "dyn/typed entity");
+                return l.Return(canBeEntity.Entity?.AppId ?? NoAppId, "dyn/typed entity");
+
             if (target is IHasMetadata md)
             {
                 if (md.Metadata.Any())
-                    return (md.Metadata.FirstOrDefault()?.AppId ?? NoAppId, "metadata");
+                    return l.Return(md.Metadata.FirstOrDefault()?.AppId ?? NoAppId, "metadata");
                 if (md.Metadata is IMetadataInternals mdInternal)
-                    return (mdInternal.Context("todo")?.AppId ?? NoAppId, "metadata internal");
+                    return l.Return(mdInternal.Context("todo")?.AppId ?? NoAppId, "metadata internal");
             }
 
-            return (NoAppId, "no app id");
-        });
+            return l.Return(NoAppId, "no app id");
+        }
     }
 }

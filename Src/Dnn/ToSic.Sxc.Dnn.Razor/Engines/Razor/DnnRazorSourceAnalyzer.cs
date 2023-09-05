@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
@@ -13,19 +13,19 @@ namespace ToSic.Sxc.Engines
     {
         public DnnRazorSourceAnalyzer() : base("Dnn.RzrSrc") { }
 
-        public CodeFileTypes TypeOfVirtualPath(string virtualPath)
+        public CodeFileInfo TypeOfVirtualPath(string virtualPath)
         {
-            var l = Log.Fn<CodeFileTypes>($"{nameof(virtualPath)}: '{virtualPath}'");
+            var l = Log.Fn<CodeFileInfo>($"{nameof(virtualPath)}: '{virtualPath}'");
             try
             {
                 var contents = GetFileContentsOfVirtualPath(virtualPath);
                 return contents == null
-                    ? l.ReturnAndLog(CodeFileTypes.FileNotFound)
+                    ? l.ReturnAndLog(CodeFileInfo.CodeFileNotFound)
                     : l.ReturnAndLog(AnalyzeContent(contents));
             }
             catch
             {
-                return l.ReturnAndLog(CodeFileTypes.Unknown, "error trying to find type");
+                return l.ReturnAndLog(CodeFileInfo.CodeFileUnknown, "error trying to find type");
             }
         }
 
@@ -47,32 +47,27 @@ namespace ToSic.Sxc.Engines
             return l.Return(contents, $"found, {contents?.Length} bytes");
         }
 
-        private CodeFileTypes AnalyzeContent(string contents)
+        public CodeFileInfo AnalyzeContent(string contents)
         {
-            var l = Log.Fn<CodeFileTypes>();
+            var l = Log.Fn<CodeFileInfo>();
             if (contents.Length < 10)
-                return l.Return(CodeFileTypes.Unknown, "file too short");
+                return l.Return(CodeFileInfo.CodeFileUnknown, "file too short");
 
             var inheritsMatch = Regex.Match(contents, @"@inherits\s+(?<BaseName>[\w\.]+)", RegexOptions.Multiline);
 
             if (!inheritsMatch.Success)
-                return l.Return(CodeFileTypes.Unknown, "no namespace found");
+                return l.Return(CodeFileInfo.CodeFileUnknown, "no namespace found");
 
             var ns = inheritsMatch.Groups["BaseName"].Value;
             if (ns.IsEmptyOrWs())
-                return l.Return(CodeFileTypes.Unknown);
+                return l.Return(CodeFileInfo.CodeFileUnknown);
 
-            return RazorMap.TryGetValue(ns, out var razorType)
-                ? l.ReturnAndLog(razorType)
-                : l.Return(CodeFileTypes.Other, $"namespace '{ns}' can't be found");
+            var findMatch = CodeFileInfo.CodeFileList
+                .FirstOrDefault(cf => cf.Inherits.EqualsInsensitive(ns));
+
+            return findMatch != null
+                ? l.ReturnAndLog(findMatch)
+                : l.Return(CodeFileInfo.CodeFileOther, $"namespace '{ns}' can't be found");
         }
-
-        private static readonly Dictionary<string, CodeFileTypes> RazorMap = new Dictionary<string, CodeFileTypes>
-        {
-            { "Custom.Hybrid.Razor12", CodeFileTypes.V12 },
-            { "Custom.Hybrid.Razor14", CodeFileTypes.V14 },
-            { "Custom.Hybrid.Razor16", CodeFileTypes.V16 },
-            { "Custom.Hybrid.RazorPro", CodeFileTypes.V16 }
-        };
     }
 }

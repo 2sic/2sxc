@@ -7,7 +7,7 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.Services
 {
-    public abstract class UsersServiceBase : ServiceForDynamicCode, IUsersService
+    public abstract class UsersServiceBase : ServiceForDynamicCode, IUserService
     {
 
         protected UsersServiceBase(LazySvc<IContextOfSite> context) : base($"{Constants.SxcLogName}.UsrInfoSrv")

@@ -7,8 +7,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using ToSic.Sxc.Oqt.Client;
 using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
 using static System.StringComparison;
 
@@ -21,6 +23,8 @@ namespace ToSic.Sxc.Oqt.App
         [Inject] public OqtSxcRenderService OqtSxcRenderService { get; set; }
         [Inject] public OqtPageChangeService OqtPageChangeService { get; set; }
         [Inject] public IJSRuntime JsRuntime { get; set; }
+        [Inject] public IOqtPageChangesOnServerService OqtPageChangesOnServerService { get; set; }
+        [Inject] public IOqtPrerenderService OqtPrerenderService { get; set; }
 
         #endregion
 
@@ -56,11 +60,17 @@ namespace ToSic.Sxc.Oqt.App
                 if (string.IsNullOrEmpty(RenderedUri) || (!NavigationManager.Uri.Equals(RenderedUri, InvariantCultureIgnoreCase) && NavigationManager.Uri.StartsWith(RenderedPage, InvariantCultureIgnoreCase)))
                 {
                     RenderedUri = NavigationManager.Uri;
-                    Log($"1.1: RenderUri:{RenderedUri}");
                     RenderedPage = NavigationManager.Uri.RemoveQueryAndFragment();
-                    Log($"1.2: Initialize2sxcContentBlock");
+                    Log($"1.1: RenderUri:{RenderedUri}");
+
                     await Initialize2SxcContentBlock();
                     NewDataArrived = true;
+
+                    ProcessPageChanges();
+
+                    // convenient place to apply Csp HttpHeaders to response
+                    var count = OqtPageChangesOnServerService.ApplyHttpHeaders(ViewResults, this);
+                    Log($"1.4: Csp:{count}");
                 }
 
                 Log($"1 end: OnParametersSetAsync(NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
@@ -101,7 +111,7 @@ namespace ToSic.Sxc.Oqt.App
                 LogError(ex);
             }
         }
-        private DotNetObjectReference<Index> _dotNetObjectReference = null;
+        private DotNetObjectReference<Index> _dotNetObjectReference;
 
         // This is called from JS to reload module content from blazor instead of ajax that breaks blazor
         [JSInvokable("ReloadModule")]
@@ -111,6 +121,7 @@ namespace ToSic.Sxc.Oqt.App
             {
                 Log($"3: ReloadModule");
                 await Initialize2SxcContentBlock();
+                ProcessPageChanges();
                 await StandardAssets();
                 StateHasChanged();
             }
@@ -126,42 +137,79 @@ namespace ToSic.Sxc.Oqt.App
         }
  
         /// <summary>
-        /// prepare the html / headers for later rendering
+        /// Prepare the html / headers for later rendering
         /// </summary>
         private async Task Initialize2SxcContentBlock()
         {
-            var culture = CultureInfo.CurrentUICulture.Name;
+            Log($"1.2: Initialize2sxcContentBlock");
 
-            var urlQuery = NavigationManager.ToAbsoluteUri(NavigationManager.Uri).Query;
+            #region ViewResults prepare
             ViewResults = await OqtSxcRenderService.PrepareAsync(
                 PageState.Alias.AliasId,
                 PageState.Page.PageId,
                 ModuleState.ModuleId,
-                culture,
-                urlQuery,
-                IsPreRendering());
+                CultureInfo.CurrentUICulture.Name,
+                NavigationManager.ToAbsoluteUri(NavigationManager.Uri).Query,
+                IsPrerendering());
 
             if (!string.IsNullOrEmpty(ViewResults?.ErrorMessage))
                 LogError(ViewResults.ErrorMessage);
 
-            Content = ViewResults?.FinalHtml;
+            Log($"1.2.1: Html:{ViewResults?.Html?.Length ?? -1}");
+            #endregion
 
-            Log($"1.2.2: Html:{ViewResults?.Html?.Length ?? -1}", ViewResults);
+            #region ViewResults finalization
+            if (ViewResults != null)
+                ViewResults.PrerenderHtml = OqtPrerenderService.GetPrerenderHtml(IsPrerendering(), ViewResults, SiteState, PageState.Page.ThemeType ?? PageState.Site.DefaultThemeType);
+            #endregion
         }
 
+
+        /// <summary>
+        /// Process page changes in html for title, keywords, descriptions and other meta or html tags.
+        /// Oqtane decide to directly render this changes in page html as part of first request, or latter with interop.
+        /// </summary>
+        private void ProcessPageChanges()
+        {
+            Log($"1.3: ProcessPageChanges");
+
+            Log($"1.3.1: module html content set on page");
+            Content = ViewResults?.FinalHtml;
+
+            if (ViewResults?.PageProperties?.Any() ?? false)
+            {
+                Log($"1.3.2: UpdatePageProperties title, keywords, description");
+                OqtPageChangeService.UpdatePageProperties(SiteState, ViewResults, this);
+            }
+
+            // Add Context-Meta first, because it should be available when $2sxc loads
+            if (ViewResults?.SxcContextMetaName != null)
+            {
+                Log($"1.3.3: Context-Meta RenderUri:{RenderedUri}");
+                SiteState.Properties.HeadContent = HtmlHelper.AddOrUpdateMetaTagContent(SiteState.Properties.HeadContent,
+                    ViewResults.SxcContextMetaName, ViewResults.SxcContextMetaContents);
+            }
+
+            //// Lets load all 2sxc js dependencies (js / styles)
+            //var index = 0;
+            //if (ViewResults?.SxcScripts != null)
+            //    foreach (var resource in ViewResults.SxcScripts)
+            //    {
+            //        Log($"1.3.4.{++index}: IncludeScript:{resource}");
+            //        SiteState.Properties.HeadContent = HtmlHelper.AddScript(SiteState.Properties.HeadContent, resource, SiteState.Alias);
+            //    }
+        }
+
+        /// <summary>
+        /// Ensure standard assets like java-scripts and styles.
+        /// This is done with interop after the page is rendered.
+        /// </summary>
+        /// <returns></returns>
         private async Task StandardAssets()
         {
             if (ViewResults == null) return;
 
             #region 2sxc Standard Assets and Header
-
-            // Add Context-Meta first, because it should be available when $2sxc loads
-            if (ViewResults.SxcContextMetaName != null)
-            {
-                Log($"2.2: RenderUri:{RenderedUri}");
-                await SxcInterop.IncludeMeta("sxc-context-meta", "name", ViewResults.SxcContextMetaName,
-                    ViewResults.SxcContextMetaContents /*, "id"*/); // Oqtane.client 3.3.1
-            }
 
             // Lets load all 2sxc js dependencies (js / styles)
             // Not done the official Oqtane way, because that asks for the scripts before
@@ -188,12 +236,6 @@ namespace ToSic.Sxc.Oqt.App
             {
                 Log($"2.5: AttachScriptsAndStyles");
                 await OqtPageChangeService.AttachScriptsAndStyles(ViewResults, SxcInterop, this);
-            }
-
-            if (ViewResults.PageProperties?.Any() ?? false)
-            {
-                Log($"2.6: UpdatePageProperties");
-                await OqtPageChangeService.UpdatePageProperties(ViewResults, SxcInterop, this);
             }
 
             #endregion

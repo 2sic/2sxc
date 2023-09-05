@@ -22,11 +22,11 @@ namespace ToSic.Sxc.Data.Wrapper
     /// Will always return a value even if the property doesn't exist, in which case it resolves to null.
     /// </remarks>
     [JsonConverter(typeof(DynamicJsonConverter))]
-    public partial class PreWrapObject: PreWrapBase, IWrapper<object>, IPropertyLookup, IHasJsonSource, IPreWrap
+    public partial class PreWrapObject: PreWrapBase, /*IWrapper<object>,*/ IPropertyLookup, IHasJsonSource, IPreWrap
     {
         #region Constructor / Setup
 
-        public object GetContents() => _innerObject;
+        //public object GetContents() => _innerObject;
 
         /// <summary>
         /// Case insensitive property dictionary
@@ -36,18 +36,18 @@ namespace ToSic.Sxc.Data.Wrapper
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="item"></param>
+        /// <param name="data"></param>
         /// <param name="settings">
         /// Determines if properties which are objects should again be wrapped.
         /// When using this for DynamicModel it should be false, otherwise usually true.
         /// </param>
         [PrivateApi]
-        internal PreWrapObject(object item, WrapperSettings settings, CodeDataWrapper wrapper)
+        internal PreWrapObject(object data, WrapperSettings settings, CodeDataWrapper wrapper): base(data)
         {
             _wrapper = wrapper;
-            _innerObject = item;
+            _innerObject = data;
             Settings = settings;
-            PropDic = CreateDictionary(item);
+            PropDic = CreateDictionary(data);
         }
 
         private readonly CodeDataWrapper _wrapper;

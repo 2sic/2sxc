@@ -156,7 +156,7 @@ namespace ToSic.Sxc.Dnn
             bool showDrafts = false,
             ILog parentLog = null)
             => App(AppConstants.AutoLookupZone, appId,
-                ((DnnSite)StaticBuild<ISite>()).Swap(ownerPortalSettings, parentLog), showDrafts, parentLog);
+                ((DnnSite)StaticBuild<ISite>()).TryInitPortal(ownerPortalSettings, parentLog), showDrafts, parentLog);
 
         [InternalApi_DoNotUse_MayChangeWithoutNotice]
         private static IApp App(

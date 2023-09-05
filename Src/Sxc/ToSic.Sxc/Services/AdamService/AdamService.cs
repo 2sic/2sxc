@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Data;
-using ToSic.Eav.Plumbing;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;

@@ -10,6 +10,6 @@ namespace ToSic.Sxc.Dnn.StartUp
     {
         private string ToSicSexyContentWebApi => nameof(DynamicApiController);
 
-        private string ToSicSexyContentRazor => nameof(Sxc.Engines.RazorEngine);
+        private string ToSicSexyContentRazor => nameof(Sxc.Engines.DnnRazorEngine);
     }
 }

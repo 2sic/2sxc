@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Web.Hosting;
 using DotNetNuke.Common;
@@ -6,12 +6,18 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
 using ToSic.Lib.DI;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
+using DotNetNuke.Services.Localization;
+using Microsoft.EntityFrameworkCore.Internal;
+using ToSic.Eav.Configuration;
+using static ToSic.Eav.Context.IZoneCultureResolverExtensions;
 
 namespace ToSic.Sxc.Dnn.Context
 {
@@ -19,56 +25,71 @@ namespace ToSic.Sxc.Dnn.Context
     /// This is a DNN implementation of a Tenant-object. 
     /// </summary>
     [PrivateApi("this is just internal, external users don't really have anything to do with this")]
-    public sealed class DnnSite: Site<PortalSettings>
+    public sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     {
+
         #region Constructors and DI
 
         /// <summary>
         /// DI Constructor, will get the current portal settings
         /// #TodoDI not ideal yet, as PortalSettings.current is still retrieved from global
         /// </summary>
-        public DnnSite(LazySvc<IZoneMapper> zoneMapperLazy, LazySvc<ILinkPaths> linkPathsLazy): base(DnnConstants.LogName)
+        public DnnSite(LazySvc<IZoneMapper> zoneMapperLazy, LazySvc<ILinkPaths> linkPathsLazy, LazySvc<IFeaturesService> featuresSvc): base(DnnConstants.LogName)
         {
-            this.ConnectServices(
+            _featuresSvc = featuresSvc;
+            ConnectServices(
                 _zoneMapperLazy = zoneMapperLazy,
                 _linkPathsLazy = linkPathsLazy
             );
-            Swap(null, null);
+            TryInitPortal(null);
         }
         private readonly LazySvc<IZoneMapper> _zoneMapperLazy;
         private readonly LazySvc<ILinkPaths> _linkPathsLazy;
+        private readonly LazySvc<IFeaturesService> _featuresSvc;
         private ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
         /// <inheritdoc />
-        public override ISite Init(int siteId, ILog parentLog) => Swap(new PortalSettings(siteId), parentLog);
+        public override ISite Init(int siteId, ILog parentLog) => TryInitPortal(new PortalSettings(siteId), parentLog);
 
         #endregion
 
         #region Swap new Portal Settings into this object
 
-        public DnnSite Swap(PortalSettings settings, ILog extLogOrNull)
+        internal DnnSite TryInitPortal(PortalSettings settings, ILog extLogOrNull = default)
         {
+            AttachToExternalLog(extLogOrNull);
+
             var l = Log.Fn<DnnSite>();
             UnwrappedSite = KeepBestPortalSettings(settings);
 
             // reset language info to be sure to get it from the latest source
-            _currentCulture = null;
+            _currentCulture.Reset(Log);
+            _currentCodeFallbacks.Reset(Log);
             _defaultLanguage = null;
             _zoneId = null;
 
             return l.Return(this, $"Site Id {Id}");
         }
 
-        public DnnSite TrySwap(ModuleInfo module, ILog extLog)
+        internal DnnSite TryInitModule(ModuleInfo module, ILog extLog)
         {
+            AttachToExternalLog(extLog);
+
             var l = extLog.Fn<DnnSite>($"Owner Site: {module?.OwnerPortalID}, Current Site: {module?.PortalID}");
             if (module == null) return l.Return(this, "no module");
             if (module.OwnerPortalID < 0) return l.Return(this, "no change, owner < 0");
 
             var modulePortalSettings = new PortalSettings(module.OwnerPortalID);
-            Swap(modulePortalSettings, extLog);
+            TryInitPortal(modulePortalSettings);
             return l.Return(this, "ok");
         }
+
+        private void AttachToExternalLog(ILog extLogOrNull)
+        {
+            if (extLogOrNull != null && extLogOrNull != Log)
+                this.LinkLog(extLogOrNull, forceConnect: true);
+        }
+
 
         /// <summary>
         /// Very special helper to work around a DNN issue
@@ -104,22 +125,76 @@ namespace ToSic.Sxc.Dnn.Context
         private string _defaultLanguage;
 
 
-        public override string CurrentCultureCode
+        public override string CurrentCultureCode => _currentCulture.GetM(Log, l =>
         {
-            get
+            // First check if we know more about the site
+            var portal = UnwrappedSite;
+            if (portal == null) return (null, "no portal");
+            var aliasCulture = portal.PortalAlias?.CultureCode ?? "";
+
+            if (aliasCulture.HasValue())
             {
-                if (_currentCulture != null) return _currentCulture;
-
-                // First check if we know more about the site
-                var portal = UnwrappedSite;
-                var aliasCulture = portal?.PortalAlias?.CultureCode;
-                if (!string.IsNullOrWhiteSpace(aliasCulture)) return _currentCulture = aliasCulture.ToLowerInvariant();
-
-                // if alias is unknown, then we might be in search mode or something
-                return _currentCulture = portal?.CultureCode?.ToLowerInvariant();
+                var aliasCult = aliasCulture.ToLowerInvariant();
+                return (aliasCult, $"{nameof(portal.PortalAlias)}: {aliasCult}");
             }
-        }
-        private string _currentCulture;
+
+            // if alias is unknown, then we might be in search mode or something
+            var result = portal.CultureCode?.ToLowerInvariant();
+            return (result, $"Portal.CultureCode: {result}");
+        });
+        private readonly GetOnce<string> _currentCulture = new GetOnce<string>();
+
+        public List<string> CultureCodesWithFallbacks => _currentCodeFallbacks.GetL(Log, l =>
+        {
+            // 2023-08-31 2dm - new code, as it could contain risks, use try/catch/null to default
+            try
+            {
+                // If the feature is not enabled, return null so up-stream can handle defaults
+                if (!_featuresSvc.Value.Enabled(BuiltInFeatures.LanguagesAdvancedFallback.Guid))
+                    return null;
+
+                var lc = LocaleController.Instance;
+                if (lc == null) return null;
+                var list = new List<string>();
+
+                // Top priority is current and fallbacks of it
+                // TODO: verify it uses the one of the current Alias...
+                var current = lc.GetCurrentLocale(Id);
+                if (current != null)
+                {
+                    var currentCode = current.Code;
+                    l.A($"{nameof(currentCode)}: {currentCode}");
+                    ListBuildAddCodeIfNew(list, currentCode);
+
+                    // Try to add fallbacks, and fallbacks of fallbacks...
+                    var fallback = current.FallBackLocale;
+                    for (var i = 0; i < 3 && fallback != null; i++)
+                    {
+                        ListBuildAddCodeIfNew(list, fallback.Code);
+                        fallback = fallback.FallBackLocale;
+                    }
+                }
+
+                // Always add the defaults as well
+                var def = lc.GetDefaultLocale(Id);
+                if (def != null)
+                {
+                    var defCode = def.Code;
+                    l.A($"{nameof(defCode)}: {defCode}");
+                    ListBuildAddCodeIfNew(list, defCode);
+                    // Default should never have another fallback; it's the default!
+                }
+
+                // If the list is empty, return null so upstream can fallback
+                return list.Any() ? list : null;
+            }
+            catch
+            {
+                return null;
+            }
+        });
+        private readonly GetOnce<List<string>> _currentCodeFallbacks = new GetOnce<List<string>>();
+
 
         #endregion
 

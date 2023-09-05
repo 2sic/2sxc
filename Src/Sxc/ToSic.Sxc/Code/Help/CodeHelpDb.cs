@@ -1,17 +1,41 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using ToSic.Eav.Code.Help;
 
 namespace ToSic.Sxc.Code.Help
 {
     public class CodeHelpDb
     {
-        public static Dictionary<CodeFileTypes, List<CodeHelp>> CompileHelp = new Dictionary<CodeFileTypes, List<CodeHelp>>
+        /// <summary>
+        /// Get a list containing the first help and various derived helps
+        /// </summary>
+        /// <param name="first"></param>
+        /// <param name="funcs"></param>
+        /// <returns></returns>
+        public static List<CodeHelp> ManyHelps(CodeHelp first, params Func<CodeHelp, CodeHelp>[] funcs)
         {
-            [CodeFileTypes.Unknown] = CodeHelpDbUnknown.CompileUnknown,
-            [CodeFileTypes.Other] = CodeHelpDbUnknown.CompileUnknown,
-            [CodeFileTypes.V12] = CodeHelpDbV12.Compile12,
-            [CodeFileTypes.V14] = CodeHelpDbV14.Compile14,
-            [CodeFileTypes.V16] = CodeHelpDbV16.Compile16,
-        };
+            var result = new List<CodeHelp> { first };
+            result.AddRange(funcs.Select(func => func(first)));
+            return result;
+        }
+
+
+        /// <summary>
+        /// Generate a list of help using help-objects, generator objects or list of help
+        /// </summary>
+        /// <param name="parts"></param>
+        /// <returns></returns>
+        public static List<CodeHelp> BuildList(params object[] parts) =>
+            parts?.SelectMany(r =>
+            {
+                switch (r)
+                {
+                    case CodeHelp ch: return new[] { ch };
+                    case GenNotExist gen: return new[] { gen.Generate() };
+                    case IEnumerable<CodeHelp> list: return list;
+                    default: return Array.Empty<CodeHelp>();
+                }
+            }).ToList();
     }
 }

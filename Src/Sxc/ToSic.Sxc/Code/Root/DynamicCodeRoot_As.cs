@@ -12,6 +12,7 @@ namespace ToSic.Sxc.Code
 {
     public partial class DynamicCodeRoot
     {
+        [PrivateApi]
         public CodeDataFactory Cdf => _cdf.Get(() =>
         {
             Services.Cdf.ConnectToRoot(this);

@@ -7,7 +7,10 @@ namespace ToSic.Sxc.Context
     /// <summary>
     /// Collection of url parameters of the current page
     ///
-    /// Has a special ToString() implementation, which gives you the parameters for re-use in other scenarios...?
+    /// Note: Has a special ToString() implementation, which gives you the parameters for re-use in other scenarios.
+    /// 
+    /// 🪒 In [Dynamic Razor](xref:Custom.Hybrid.Razor14) it's found on `CmsContext.Page.Parameters`  
+    /// 🪒 In [Typed Razor](xref:Custom.Hybrid.RazorTyped) it's found on `MyPage.Parameters`
     /// </summary>
     /// <remarks>
     /// * uses the [](xref:NetCode.Conventions.Functional)
@@ -16,26 +19,27 @@ namespace ToSic.Sxc.Context
     [PublicApi]
     public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
     {
-        /// <summary>
-        /// ToString is especially implemented, to give you the parameters again as they were originally given on the page.
-        /// </summary>
-        /// <returns></returns>
-        new string ToString();
 
         #region Get (new v15.04)
 
         /// <summary>
         /// Get a parameter.
+        /// 
+        /// 🪒 Use in Dynamic Razor: `CmsContext.Page.Parameters.Get("SortOrder")`  
+        /// 🪒 Use in Typed Razor: `MyPage.Parameters.Get("SortOrder")`
         /// </summary>
         /// <param name="name">the key/name in the url</param>
         /// <returns>a string or null</returns>
         /// <remarks>
         /// Added v15.04
         /// </remarks>
-        new string Get(string name);
+        string Get(string name);
 
         /// <summary>
         /// Get a parameter and convert to the needed type - or return the default.
+        /// 
+        /// 🪒 Use in Dynamic Razor: `CmsContext.Page.Parameters.Get&lt;int&gt;("id")`  
+        /// 🪒 Use in Typed Razor: `MyPage.Parameters.Get&lt;int&gt;("id")`
         /// </summary>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="name">Key/name of the parameter</param>
@@ -47,6 +51,9 @@ namespace ToSic.Sxc.Context
 
         /// <summary>
         /// Get a parameter and convert to the needed type - or return the fallback.
+        /// 
+        /// 🪒 Use in Dynamic Razor: `CmsContext.Page.Parameters.Get("id", fallback: 0)`  
+        /// 🪒 Use in Typed Razor: `MyPage.Parameters.Get("SortOrder", fallback: 0)`
         /// </summary>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="name">Key/name of the parameter</param>
@@ -60,6 +67,8 @@ namespace ToSic.Sxc.Context
         TValue Get<TValue>(string name, string noParamOrder = Eav.Parameters.Protector, TValue fallback = default);
 
         #endregion
+
+        #region Add / Set / Remove
 
         /// <summary>
         /// Add another URL parameter and return a new <see cref="IParameters"/>.
@@ -147,8 +156,24 @@ namespace ToSic.Sxc.Context
         /// <returns></returns>
         IParameters Remove(string name);
 
-        [PrivateApi("experimental v16.03")] 
-        new string this[string name] { get; }
+        #endregion
 
+        #region ToString to easily create url params from this object
+
+        /// <summary>
+        /// ToString() is specially implemented, to give you the parameters again as they were originally given on the page.
+        /// </summary>
+        /// <returns></returns>
+        new string ToString();
+
+        #endregion
+
+        #region Handle duplicate interface methods
+
+        /// <inheritdoc cref="IHasKeys.ContainsKey"/>
+        new bool ContainsKey(string name);
+        // ^^^ this is added, because both Dictionary and ITyped have this method, so it could be unclear
+
+        #endregion
     }
 }

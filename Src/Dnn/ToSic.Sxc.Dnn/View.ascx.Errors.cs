@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Dnn
                     // first get a rendering helper - but since BlockBuilder may be null, create a new one
                     var renderingHelper = GetService<IRenderingHelper>().Init(Block);
                     var msg = renderingHelper.DesignErrorMessage(new List<Exception> { ex }, true,
-                        additionalInfo: $" - CONTEXT: Page: {TabId}; Module: {ModuleId}");
+                        additionalInfo: $" - ℹ️ CONTEXT: Page: {TabId}; Module: {ModuleId}");
 
                     try
                     {

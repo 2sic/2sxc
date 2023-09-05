@@ -1,144 +1,122 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using ToSic.Eav.Code.Help;
-using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Data;
-using static ToSic.Sxc.Code.Help.ObsoleteHelp;
+using ToSic.Sxc.Adam;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Context;
+using static ToSic.Sxc.Code.Help.CodeHelpDb;
+
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Code.Help
 {
     public class CodeHelpDbV16
     {
-        private static readonly CodeHelp ListNotExist16 =
-            HelpNotExistsPro("List", "MyItems", "AsItems(MyData.Get())"); // TODO: NAMING NOT FINAL
+        #region Methods to help build the data
 
-        private static readonly CodeHelp ListObsolete16 =
-            new CodeHelp(ListNotExist16, detect: "does not contain a definition for 'List'");
+        internal const string IsNotSupportedIn16Plus = "is not supported in RazorTyped / CodeTyped";
 
-        private static readonly CodeHelp ListObsolete16MisCompiledAsGenericList = new CodeHelp(ListNotExist16,
-            detect:
-            @"error CS0305: Using the generic type 'System.Collections.Generic.List<T>' requires 1 type arguments");
-
-        private static readonly CodeHelp ListContentNotExist16 = HelpNotExistsPro("ListContent", "MyHeader");
-
-        private static readonly CodeHelp ListPresentationNotExist16 = HelpNotExistsPro("ListPresentation", "MyHeader.Presentation");
-
-        private static readonly CodeHelp ContentNotExist16 = HelpNotExistsPro("Content", "MyItem");
-
-        private static readonly CodeHelp ContentNotExist16Duplicate = HelpNotExistsPro("Content", "You may prefer to use Razor14");
-
-        private static readonly CodeHelp HeaderNotExist16 = HelpNotExistsPro("Header", "MyHeader");
-
-        private static readonly CodeHelp CreateSourceNotExist16 = HelpNotExistsPro("CreateSource", "Kit.Data.CreateSource(...)");
-        private static readonly CodeHelp CreateInstanceShouldBeGetCode = HelpNotExistsPro("CreateInstance", "GetCode(...)");
-
-        private static readonly CodeHelp ResourcesNotExist16 = HelpNotExistsPro("Resources", "App.Resources", "AllResources");
-
-        private static readonly CodeHelp ResourcesNotExist16B = new CodeHelp(ResourcesNotExist16,
-            detect: @"does not exist in the namespace 'Resources' (are you missing an assembly reference?)");
-
-        private static readonly CodeHelp SettingsNotExist16 = HelpNotExistsPro("Settings", "App.Settings", "AllSettings");
-
-        private static readonly CodeHelp PresentationNotExist16 = HelpNotExistsPro("Presentation", "MyItem.Presentation");
-
-        private static readonly CodeHelp DataNotExist = HelpNotExistsPro("Data", "MyData");
-
-        private static readonly CodeHelp EditNotExist = HelpNotExistsPro("Edit",
-            ("Kit.Toolbar.Default()...", "to build a standard toolbar"),
-            ("Kit.Toolbar.Empty()...", "to start with an empty toolbar"),
-            ("MyUser.IsContentAdmin", "to find out if edit is enabled"),
-            ("Kit.Edit", "to really use the Edit object (not often needed, as the replacements are better)"));
-
-        private static readonly CodeHelp AsAdamNotExist = HelpNotExistsPro(("AsAdam", "AsAdam isn't needed any more, since there is an easier syntax."), ("object.Folder(\"FieldName\")", "Use the Folder(...) method on an Item"));
-
-        #region Common Properties on DynamicEntity which are now different
-
-        private static readonly CodeHelp ItemNoEntityId = HelpChangeITypedItem(("EntityId", null), null, ("Id", null));
-        private static readonly CodeHelp ItemNoEntityGuid = HelpChangeITypedItem(("EntityGuid", null), null, ("Guid", null));
-        private static readonly CodeHelp ItemNoEntityTitle = HelpChangeITypedItem(("EntityTitle", null), null, ("Title", null));
-
-        internal static CodeHelp HelpChangeITypedItem((string Name, string Comments) property, string linkCode, params (string Code, string Comment)[] alt)
-        {
-            var first = alt.SafeAny() ? alt[0] : ("unknown", null);
-            var better = alt == null || alt.Length == 1
-                ? HtmlRec(("." + first.Code, first.Comment))
-                : $"<ol>{string.Join("\n", alt.Select(a => HtmlRec(("." + a.Code, a.Comment))))}</ol>";
-
-            return new CodeHelp(name: $"ITypedItem-{property.Name}-DoesNotExist",
-                detect: $"error CS1061: 'ToSic.Sxc.Data.ITypedItem' does not contain a definition for '{property.Name}' and no extension method '{property.Name}' accepting a first argument of type 'ToSic.Sxc.Data.ITypedItem' could be found",
-                linkCode: linkCode,
-                uiMessage: $@"
-You are calling the '{property.Name}' property which was common on DynamicEntities, but not available on {nameof(ITypedItem)} (RazorPro). {property.Comments}
-You should probably use '{first.Code}' {first.Comment}
-",
-                detailsHtml: $@"
-You are probably calling <code>.{property.Name}</code>.
-{(property.Comments.HasValue() ? $"<br><em>{property.Comments}</em><br>" : "")}
-The property <code>.{property.Name}</code> is replaced with: 
-{better}
-"
-            );
-        }
-
-
+        private static CodeHelp NotExists(string property, params string[] replacement)
+            => new GenNotExist(property, replacement) { MsgNotSupportedIn = IsNotSupportedIn16Plus }.Generate();
 
         #endregion
 
-        internal static List<CodeHelp> Compile16 = new List<CodeHelp>
-        {
-            // use `Convert`
-            CodeHelpDbV12.SystemConvertIncorrectUse,
+        /// <summary>
+        /// Compile Help for RazorTyped etc.
+        /// </summary>
+        public static List<CodeHelp> Compile16 => _help ?? (_help = BuildList(
+            // use old `Convert` object
+            CodeHelpDbV14.SystemConvertIncorrectUse,
 
             // Use Dnn
             CodeHelpDbV12.DnnObjectNotInHybrid,
 
             // use `CreateSource(name)
-            CreateSourceNotExist16,
+            NotExists("CreateSource", "Kit.Data.CreateSource(...)"),
+            NotExists("CreateInstance", "GetCode(...)"),
 
-            CreateInstanceShouldBeGetCode,
-
-            // Not handled - can't because the AsDynamic accepts IEntity which works in Razor14
-            // dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity)
-            // dynamic AsDynamic(KeyValuePair<int, ToSic.Eav.Interfaces.IEntity> entityKeyValuePair)
-            // IEnumerable<dynamic> AsDynamic(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities)
-            // dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => Obsolete10.AsDynamicKvp();
+            // Use AsDynamic(...)
+            new GenNotExist("AsDynamic", new[]
+            {
+                ("AsItem(...)", "to get a standard ITypedItem"),
+                ("AsItemList(...)", "to get a list of ITypedItem"),
+                ("AsTyped(...)", "to get a ITyped from an anonymous object"),
+                ("AsStack(...)", "to get a typed stack which merges various objects"),
+                ("Kit.Json.ToTyped(string)", "to get an ITyped from a json string"),
+            })
+            {
+                MsgNotSupportedIn = IsNotSupportedIn16Plus,
+            },
 
             // Access .List
-            ListNotExist16,
+            // TODO: Resulting API NAMING NOT FINAL
+            ManyHelps(
+                NotExists("List", "MyItems", "AsItems(MyData.Get())"),
+                h => new CodeHelp(h, detect: "does not contain a definition for 'List'"),
+                h => new CodeHelp(h, detect: "error CS0305: Using the generic type " +
+                                             "'System.Collections.Generic.List<T>' requires 1 type arguments")
+            ),
 
-            ListObsolete16,
-            ListObsolete16MisCompiledAsGenericList,
-
-            // Access ListContent
-            ListContentNotExist16,
-            ListPresentationNotExist16,
-
-            // Presentation
-            PresentationNotExist16,
-
-            // Content and Header - replaced with MyItem / MyHeader
-            ContentNotExist16,
-            //ContentNotExist16Duplicate,
-            HeaderNotExist16,
-
-            // Skipped, as can't be detected - they are all IEnumerable...
-            //[PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataStream stream) => Obsolete10.AsDynamicForList();
-            //[PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataSource source) => Obsolete10.AsDynamicForList();
-            //[PrivateApi] public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => Obsolete10.AsDynamicForList();
+            // Core data objects like Content, Presentation, List...
+            NotExists("Content", "MyItem"),
+            NotExists("Header", "MyHeader"),
+            NotExists("Presentation", "MyItem.Presentation"),
+            NotExists("ListContent", "MyHeader"),
+            NotExists("ListPresentation", "MyHeader.Presentation"),
 
             // Settings / Resources
-            SettingsNotExist16,
-            ResourcesNotExist16,
-            ResourcesNotExist16B,
+            NotExists("Settings", "App.Settings", "AllSettings"),
+            ManyHelps(
+                NotExists("Resources", "App.Resources", "AllResources"),
+                h => new CodeHelp(h, detect: "does not exist in the namespace " +
+                                             "'Resources' (are you missing an assembly reference?)"),
+                h => new CodeHelp(h, detect: "error CS0118: 'Resources' is a " +
+                                             "'namespace' but is used like a 'variable'"),
+                h => new CodeHelp(h, detectRegex: true, detect: "error CS0234: The type or namespace name " +
+                                                                "'.*' does not exist in the namespace 'Resources' \\(are you missing an assembly reference\\?\\)")
+            ),
 
-            EditNotExist,
-            AsAdamNotExist,
-            DataNotExist,
+            // Edit object
+            new GenNotExist("Edit", new[]
+            {
+                ("Kit.Toolbar.Default()...", "to build a standard toolbar"),
+                ("Kit.Toolbar.Empty()...", "to start with an empty toolbar"),
+                ("MyUser.IsContentAdmin", "to find out if edit is enabled"),
+                ("Kit.Edit", "to really use the Edit object (not often needed, as the replacements are better)")
+            })
+            {
+                MsgNotSupportedIn = IsNotSupportedIn16Plus,
+            },
 
-            ItemNoEntityId,
-            ItemNoEntityGuid,
-            ItemNoEntityTitle,
-        };
+            // AsAdam(...)
+            new GenNotExist("AsAdam", ("object.Folder(\"FieldName\")", "Use the Folder(...) method on an Item"))
+            {
+                Comments = "AsAdam isn't needed any more, since there is an easier syntax.",
+                MsgNotSupportedIn = IsNotSupportedIn16Plus,
+            },
+            NotExists("Data", "MyData"),
 
+            // Renamed properties on ITypedItem
+            new GenChangeOn("ToSic.Sxc.Data.ITypedItem", "EntityId", alt: "Id"),
+            new GenChangeOn("ToSic.Sxc.Data.ITypedItem", "EntityGuid", alt: "Guid"),
+            new GenChangeOn("ToSic.Sxc.Data.ITypedItem", "EntityTitle", alt: "Title"),
+
+            // Renamed properties on IAppTyped: Path, Folder
+            new GenChangeOn("ToSic.Sxc.Apps.IAppTyped", "Path",
+                alt: $".{nameof(IAppTyped.Folder)}.{nameof(IAsset.Url)}"),
+            new GenChangeOn("ToSic.Sxc.Apps.IAppTyped", "PhysicalPath",
+                alt: $".{nameof(IAppTyped.Folder)}.{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}"),
+            new GenChangeOn("ToSic.Sxc.Apps.IAppTyped", "PathShared",
+                alt: $".{nameof(IAppTyped.FolderAdvanced)}(location: \"shared\").{nameof(IAsset.Url)}"),
+            new GenChangeOn("ToSic.Sxc.Apps.IAppTyped", "PhysicalPathShared",
+                alt: $".{nameof(IAppTyped.FolderAdvanced)}(location: \"shared\").{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}"),
+
+            new GenChangeOn("ToSic.Sxc.Context.ICmsView", "PathShared",
+                alt: $"MyView.{nameof(ICmsView.Folder)}.{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}"),
+            new GenChangeOn("ToSic.Sxc.Context.ICmsView", "PhysicalPath",
+                alt: $"MyView.{nameof(ICmsView.Folder)}.{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}"),
+            new GenChangeOn("ToSic.Sxc.Context.ICmsView", "PhysicalPathShared",
+                alt: $"MyView.{nameof(ICmsView.Folder)}.{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}")
+        ));
+        private static List<CodeHelp> _help;
     }
 }
