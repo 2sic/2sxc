@@ -1996,7 +1996,7 @@
       shows when upgrading 2sxc: https://github.com/2sic/2sxc/issues/1555
       -->
 
-	  <package name="ToSic.RazorBlade" type="Library" version="04.04.00.01">
+	  <package name="ToSic.RazorBlade" type="Library" version="04.04.01.01">
 		  <friendlyName>2sic RazorBlade</friendlyName>
 		  <description>2sic RazorBlade</description>
 		  <iconFile>icon.png</iconFile>
