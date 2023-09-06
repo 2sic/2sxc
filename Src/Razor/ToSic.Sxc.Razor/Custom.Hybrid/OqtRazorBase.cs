@@ -22,7 +22,8 @@ namespace Custom.Hybrid
         protected OqtRazorBase(int compatibilityLevel, string logName)
         {
             CompatibilityLevel = compatibilityLevel;
-            SysHlp = new(this, logName ?? "Oqt.Rzr12");;
+            SysHlp = new(this);
+            //Log.Rename(logName);
         }
 
         [PrivateApi] public int CompatibilityLevel { get; }

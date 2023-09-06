@@ -4,18 +4,17 @@ using Custom.Hybrid;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.CodeHelpers;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Engines;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Razor
 {
     internal class OqtRazorHelper<TModel>: RazorHelperBase, ISetDynamicModel
     {
-        public OqtRazorHelper(OqtRazorBase<TModel> owner, string logName) : base(logName)
+        public OqtRazorHelper(OqtRazorBase<TModel> owner) : base("Oqt.RzrHlp")
         {
             _owner = owner;
         }
@@ -26,7 +25,7 @@ namespace ToSic.Sxc.Razor
         public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             base.ConnectToRoot(codeRoot);
-            _DynCodeRootMain = codeRoot;;
+            _DynCodeRootMain = codeRoot;
         }
 
         const string DynCode = "_dynCode";
@@ -55,7 +54,7 @@ namespace ToSic.Sxc.Razor
         }
 
         // ReSharper disable once InconsistentNaming
-        public new IDynamicCodeRoot _DynCodeRoot => base._DynCodeRoot ?? _DynCodeRootMain;
+        public override IDynamicCodeRoot _DynCodeRoot => base._DynCodeRoot ?? _DynCodeRootMain;
 
         #endregion
 
@@ -69,7 +68,6 @@ namespace ToSic.Sxc.Razor
         public void SetDynamicModel(object data)
         {
             _overridePageData = data;
-            //_dynamicModel = _owner.GetService<DynamicWrapperFactory>().FromObject(data, false, false);
         }
 
         public TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
@@ -78,52 +76,37 @@ namespace ToSic.Sxc.Razor
         private TypedCode16Helper CreateCodeHelper()
         {
             var myModelData = (_overridePageData ?? _owner.Model)?.ToDicInvariantInsensitive();
-                              // ?? _owner.Model?.ObjectToDictionary();
             return new(_DynCodeRoot, _DynCodeRoot.Data, myModelData, true, _owner.Path);
         }
 
 
         #endregion
 
-        #region Create Instance
+        #region GetCode / Create Instance
 
-        public object GetCode(string path, string noParamOrder = Protector, string className = default)
+        protected override string GetCodeNormalizePath(string virtualPath)
         {
-            Protect(noParamOrder, nameof(className));
-            return CreateInstance(path, /*_owner.Path,*/ name: className);
+            var directory = Path.GetDirectoryName(_owner.Path)
+                            ?? throw new("Current directory seems to be null");
+            return Path.Combine(directory, virtualPath);
         }
-
 
         /// <summary>
-        /// Creates instances of the shared pages with the given relative path
+        /// Cshtml CreateInstance - just throw error, as not supported in Oqtane
         /// </summary>
-        /// <returns></returns>
-        public object CreateInstance(string virtualPath,
-            //string razorPath,
-            string noParamOrder = Protector,
-            string name = null,
-            string relativePath = null,
-            bool throwOnError = true)
+        /// <exception cref="NotSupportedException"></exception>
+        protected override object GetCodeCshtml(string path) =>
+            throw new NotSupportedException(
+                "CreateInstance with .cshtml files is not supported in Oqtane. Use a .cs file instead.");
+
+
+        protected override string GetCodeFullPathForExistsCheck(string path)
         {
-            var directory = System.IO.Path.GetDirectoryName(_owner.Path)
-                            ?? throw new("Current directory seems to be null");
-            var path = System.IO.Path.Combine(directory, virtualPath);
-            VerifyFileExists(path);
-
-            return path.EndsWith(CodeCompiler.CsFileExtension)
-                ? _DynCodeRoot.CreateInstance(path, noParamOrder, name, null, throwOnError)
-                : throw new NotSupportedException("CreateInstance with .cshtml files is not supported in Oqtane. Use a .cs file instead. ");
-        }
-
-
-        private void VerifyFileExists(string path)
-        {
+            var l = Log.Fn<string>(path);
             var pathFinder = _DynCodeRoot.GetService<IServerPaths>();
-            var finalPath = pathFinder.FullAppPath(path);
-            if (!File.Exists(finalPath))
-                throw new FileNotFoundException("The shared file does not exist.", path);
+            var fullPath = pathFinder.FullAppPath(path);
+            return l.ReturnAndLog(fullPath);
         }
-
 
         #endregion
     }

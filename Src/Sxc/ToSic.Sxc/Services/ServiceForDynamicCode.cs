@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Services
         private bool _alreadyConnected;
 
         [PrivateApi]
-        public IDynamicCodeRoot _DynCodeRoot { get; private set; }
+        public virtual IDynamicCodeRoot _DynCodeRoot { get; private set; }
 
         [PrivateApi]
         public virtual bool Debug { get; set; }
