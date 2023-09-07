@@ -221,11 +221,17 @@ namespace ToSic.Sxc.Code
         /// Create an instance of a class in a `.cs` code file.
         /// Note that the class name in the file must match the file name, so `MyHelpers.cs` must have a `MyHelpers` class.
         /// </summary>
-        /// <param name="path">The path, like `Helper.cs`, `./helper.cs` or `../../Helper.cs`</param>
+        /// <param name="path">The path, like `Helper.cs`, `./helper.cs`, `../../Helper.cs` or `/SomeFolderInApp/Helper.cs` (new 16.05)</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="className">Optional class name, if it doesn't match the file name (new 16.03)</param>
-        /// <returns>Created in 16.02, `className` added in 16.03</returns>
-        /// <remarks>In older code there was a similar `CreateInstance` method</remarks>
+        /// <returns>, </returns>
+        /// <remarks>
+        /// * Created in 16.02
+        /// * `className` added in 16.03
+        /// * Ability to give a path beginning with `/` as app-root in 16.05
+        /// 
+        /// In older code there was a similar `CreateInstance` method
+        /// </remarks>
         dynamic GetCode(string path, string noParamOrder = Protector, string className = default);
 
         #endregion
