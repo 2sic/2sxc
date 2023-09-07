@@ -69,13 +69,17 @@ namespace ToSic.Sxc.Code.CodeHelpers
             var l = Log.Fn<object>($"'{virtualPath}', '{name}'");
 
             if (virtualPath.IsEmptyOrWs())
-                throw l.Done(new ArgumentException("path can't be empty"));
+                return !throwOnError
+                    ? null as object
+                    : throw l.Done(new ArgumentException("path can't be empty"));
 
             var path = ResolvePathIfAbsoluteToApp(virtualPath)?.PrefixSlash()
                        ?? GetCodeNormalizePath(virtualPath);
 
             if (!File.Exists(GetCodeFullPathForExistsCheck(path)))
-                throw l.Done(new FileNotFoundException("The file does not exist.", path));
+                return !throwOnError
+                    ? null as object
+                    : throw l.Done(new FileNotFoundException("The file does not exist.", path));
 
             try
             {
@@ -87,7 +91,8 @@ namespace ToSic.Sxc.Code.CodeHelpers
             catch (Exception ex)
             {
                 l.Done(ex);
-                throw;
+                if (throwOnError) throw;
+                return null;
             }
         }
 
