@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
+using ToSic.Eav.Metadata;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -23,7 +24,7 @@ using static ToSic.Eav.Data.Shared.WrapperEquality;
 namespace ToSic.Sxc.Data
 {
     internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName,
-        IWrapper<IEntity>
+        IWrapper<IEntity>, IHasMetadata
     {
         #region Setup
 
@@ -310,5 +311,6 @@ namespace ToSic.Sxc.Data
         #endregion
 
 
+        IMetadataOf IHasMetadata.Metadata => (DynHelper.Metadata as IHasMetadata)?.Metadata;
     }
 }
