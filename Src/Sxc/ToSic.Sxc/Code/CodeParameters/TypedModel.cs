@@ -54,10 +54,21 @@ namespace ToSic.Sxc.Code
         public T Get<T>(string name, string noParamOrder = Protector, T fallback = default, bool? required = default) 
             => GetInternal(name, noParamOrder, fallback, fallbackAsObj: fallback, required: required);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name"></param>
+        /// <param name="noParamOrder"></param>
+        /// <param name="fallback"></param>
+        /// <param name="fallbackAsObj">Untyped fallback, for special null-checks</param>
+        /// <param name="required"></param>
+        /// <param name="method"></param>
+        /// <returns></returns>
         private T GetInternal<T>(string name, string noParamOrder, T fallback, object fallbackAsObj, bool? required, [CallerMemberName] string method = default)
         {
             // If we have a clear fallback, don't make it required
-            if (!(fallbackAsObj is null) || (fallback != null && fallback.IsNotDefault())) // EqualityComparer<T>.Default.Equals(fallback, default)))
+            if (!(fallbackAsObj is null) || (fallback != null && fallback.IsNotDefault()))
                 required = false;
 
             var found = GetInternalObj(name, noParamOrder, required, method: method);
@@ -87,8 +98,8 @@ Either change the calling Html.Partial(""{_razorFileName}"", {{ {name} = ... }} 
 
         #endregion
 
-        //public dynamic Dynamic(string name, string noParamOrder = Protector, object fallback = default, bool? required = default) 
-        //    => GetInternal(name, noParamOrder, fallback, required);
+        public dynamic Code(string name, string noParamOrder = Protector, object fallback = default, bool? required = default)
+            => GetInternal(name: name, noParamOrder: noParamOrder, fallback: fallback, fallbackAsObj: fallback, required: required);
 
         #region Numbers
 

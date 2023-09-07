@@ -51,19 +51,18 @@ namespace ToSic.Sxc.Data
         public bool ContainsKey(string name) 
             => throw new NotImplementedException($"Not yet implemented on {nameof(ITypedStack)}");
 
-        public bool IsEmpty(string name, string noParamOrder = Protector) //, bool? blankIs = default)
-            => _itemHelper.IsEmpty(name, noParamOrder, default /*blankIs*/);
+        public bool IsEmpty(string name, string noParamOrder = Protector)
+            => _itemHelper.IsEmpty(name, noParamOrder, default);
 
-        public bool IsNotEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default)
-            => _itemHelper.IsFilled(name, noParamOrder, default /*blankIs*/);
+        public bool IsNotEmpty(string name, string noParamOrder = Protector)
+            => _itemHelper.IsFilled(name, noParamOrder, default);
 
         // TODO: Keys()
-        public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default) 
-            => throw new NotImplementedException();
-
-        //[PrivateApi]
-        //dynamic ITyped.Dyn 
-        //    => throw new NotSupportedException($"{nameof(ITyped.Dyn)} is not supported on the {nameof(ITypedStack)} by design");
+        public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default)
+        {
+            //var keys = _stack.Sources;
+            throw new NotImplementedException();
+        }
 
         #endregion
 

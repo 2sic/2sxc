@@ -7,6 +7,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
+using static ToSic.Eav.Parameters;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 // Disable warnings that properties should be marked as new
@@ -24,7 +25,7 @@ namespace ToSic.Sxc.Code
     /// Important for dynamic code files like Razor or WebApi. Note that there are many overloads to ensure that AsDynamic and AsEntity "just work" even if you give them the original data.
     /// </summary>
     [PrivateApi("WIP v14.02")]
-    public partial interface IDynamicCode14<out TModel, out TServiceKit> : /*ICompatibleToCode12,*/ /*IDynamicCode<TModel, TServiceKit>,*/ IDynamicCodeKit<TServiceKit>
+    public interface IDynamicCode14<out TModel, out TServiceKit> : /*ICompatibleToCode12,*/ /*IDynamicCode<TModel, TServiceKit>,*/ IDynamicCodeKit<TServiceKit>
         where TModel : class
         where TServiceKit : ServiceKit
     {
@@ -161,6 +162,10 @@ namespace ToSic.Sxc.Code
         #endregion
 
         #endregion
+
+        /// <inheritdoc cref="IDynamicCode16.GetCode"/>
+        [PrivateApi("added in 16.05, but not sure if it should be public")]
+        dynamic GetCode(string path, string noParamOrder = Protector, string className = default);
 
     }
 }

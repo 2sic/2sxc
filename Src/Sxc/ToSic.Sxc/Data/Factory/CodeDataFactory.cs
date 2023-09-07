@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Context;
+﻿using ToSic.Eav.Code.InfoSystem;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data.Build;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
@@ -13,6 +14,7 @@ namespace ToSic.Sxc.Data
     // todo: make internal once we have an interface
     public partial class CodeDataFactory: ServiceForDynamicCode
     {
+        private readonly LazySvc<CodeInfoService> _codeInfoSvc;
         private readonly Generator<CodeJsonWrapper> _wrapJsonGenerator;
         private readonly LazySvc<CodeDataServices> _codeDataServices;
         private readonly LazySvc<CodeDataWrapper> _codeDataWrapper;
@@ -26,7 +28,8 @@ namespace ToSic.Sxc.Data
             LazySvc<IContextOfApp> contextOfApp,
             LazySvc<DataBuilder> dataBuilderLazy,
             LazySvc<CodeDataWrapper> codeDataWrapper,
-            Generator<CodeJsonWrapper> wrapJsonGenerator) : base("Sxc.AsConv")
+            Generator<CodeJsonWrapper> wrapJsonGenerator,
+            LazySvc<CodeInfoService> codeInfoSvc) : base("Sxc.AsConv")
         {
             ConnectServices(
                 _codeDataServices = codeDataServices,
@@ -34,9 +37,12 @@ namespace ToSic.Sxc.Data
                 _contextOfAppLazy = contextOfApp,
                 _dataBuilderLazy = dataBuilderLazy,
                 _codeDataWrapper = codeDataWrapper,
-                _wrapJsonGenerator = wrapJsonGenerator
+                _wrapJsonGenerator = wrapJsonGenerator,
+                _codeInfoSvc = codeInfoSvc
             );
         }
+
+        internal CodeInfoService CodeInfo => _codeInfoSvc.Value;
 
         public void SetCompatibilityLevel(int compatibilityLevel) => _priorityCompatibilityLevel = compatibilityLevel;
 

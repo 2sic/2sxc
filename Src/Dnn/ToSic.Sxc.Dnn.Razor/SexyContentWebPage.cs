@@ -279,7 +279,7 @@ namespace ToSic.SexyContent.Razor
 
         /// <inheritdoc />
         public virtual dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
-            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
+            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError: throwOnError);
 
         #endregion
 

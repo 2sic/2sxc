@@ -13,6 +13,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
+using static ToSic.Eav.Parameters;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -116,8 +117,12 @@ namespace Custom.Hybrid
         [PrivateApi] string IGetCodePath.CreateInstancePath { get; set; }
 
         /// <inheritdoc />
-        public virtual dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
-            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
+        public virtual dynamic CreateInstance(string virtualPath, string noParamOrder = Protector, string name = null, string relativePath = null, bool throwOnError = true)
+            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError: throwOnError);
+
+        /// <inheritdoc cref="IDynamicCode16.GetCode"/>
+        [PrivateApi("added in 16.05, but not sure if it should be public")]
+        public dynamic GetCode(string path, string noParamOrder = Protector, string className = default) => SysHlp.GetCode(path, noParamOrder, className);
 
         #endregion
 

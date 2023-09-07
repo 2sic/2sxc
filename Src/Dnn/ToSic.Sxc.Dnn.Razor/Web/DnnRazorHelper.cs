@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Web.Hosting;
 using System.Web.WebPages;
 using Custom.Hybrid;
@@ -8,15 +7,11 @@ using ToSic.Eav.Code.Help;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.CodeHelpers;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Engines;
 using ToSic.Sxc.Engines.Razor;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Web
 {
@@ -83,40 +78,10 @@ namespace ToSic.Sxc.Web
 
         #region Create Instance
 
-        public object GetCode(string path, string noParamOrder = Protector, string className = default)
-        {
-            Protect(noParamOrder, nameof(className));
-            return CreateInstance(path, name: className);
-        }
+        protected override string GetCodeNormalizePath(string virtualPath) 
+            => Page.NormalizePath(virtualPath);
 
-        public object CreateInstance(string virtualPath,
-            string noParamOrder = Protector,
-            string name = null,
-            bool throwOnError = true)
-        {
-            var l = Log.Fn<object>($"{virtualPath}, ..., {name}");
-            Protect(noParamOrder, $"{nameof(name)}, {nameof(throwOnError)}");
-
-            var path = Page.NormalizePath(virtualPath);
-            if (!File.Exists(HostingEnvironment.MapPath(path)))
-                throw new FileNotFoundException("The shared file does not exist.", path);
-
-            try
-            {
-                object result = path.EndsWith(CodeCompiler.CsFileExtension)
-                    ? _DynCodeRoot.CreateInstance(path, noParamOrder, name, null, throwOnError)
-                    : CreateInstanceCshtml(path);
-                return l.Return(result, "ok");
-            }
-            catch (Exception ex)
-            {
-                l.Done(ex);
-                throw;
-            }
-
-        }
-
-        private object CreateInstanceCshtml(string path)
+        protected override object GetCodeCshtml(string path)
         {
             // ReSharper disable once ConvertTypeCheckToNullCheck
             if (!(Page is IHasDnn))
@@ -129,6 +94,12 @@ namespace ToSic.Sxc.Web
             return pageAsCode;
         }
 
+        protected override string GetCodeFullPathForExistsCheck(string path)
+        {
+            var l = Log.Fn<string>(path);
+            var fullPath = HostingEnvironment.MapPath(path);
+            return l.ReturnAndLog(fullPath);
+        }
 
         #endregion
 
@@ -139,12 +110,10 @@ namespace ToSic.Sxc.Web
 
         /// <inheritdoc cref="IRazor14{TModel,TServiceKit}.DynamicModel"/>
         public dynamic DynamicModel => _dynamicModel ?? (_dynamicModel = CodeDataWrapper.FromDictionary(Page.PageData));
-        // new DynamicReadDictionary<object, dynamic>(Page.PageData, _DynCodeRoot.GetService<DynamicJacketFactory>()));
         private dynamic _dynamicModel;
 
         internal void SetDynamicModel(object data) =>
             _dynamicModel = CodeDataWrapper.FromObject(data, WrapperSettings.Dyn(children: false, realObjectsToo: false));
-        // new DynamicReadObject(data, false, false, _DynCodeRoot.GetService<DynamicJacketFactory>());
 
         #endregion
     }

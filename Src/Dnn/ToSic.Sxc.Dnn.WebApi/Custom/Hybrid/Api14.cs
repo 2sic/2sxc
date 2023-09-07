@@ -17,6 +17,7 @@ using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
+using static ToSic.Eav.Parameters;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -146,7 +147,7 @@ namespace Custom.Hybrid
         public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot.AsAdam(item, fieldName);
 
         /// <inheritdoc cref="IDynamicWebApi.SaveInAdam" />
-        public new ToSic.Sxc.Adam.IFile SaveInAdam(string noParamOrder = ToSic.Eav.Parameters.Protector,
+        public new ToSic.Sxc.Adam.IFile SaveInAdam(string noParamOrder = Protector,
             Stream stream = null,
             string fileName = null,
             string contentType = null,
@@ -162,8 +163,13 @@ namespace Custom.Hybrid
         string IGetCodePath.CreateInstancePath { get; set; }
 
         /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
-        public dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
+        public dynamic CreateInstance(string virtualPath, string noParamOrder = Protector, string name = null, string relativePath = null, bool throwOnError = true)
             => _DynCodeRoot.CreateInstance(virtualPath, noParamOrder, name, ((IGetCodePath)this).CreateInstancePath, throwOnError);
+
+        /// <inheritdoc cref="IDynamicCode16.GetCode"/>
+        [PrivateApi("added in 16.05, but not sure if it should be public")]
+        public dynamic GetCode(string path, string noParamOrder = Protector, string className = default) =>
+            CreateInstance(path, name: className);
 
         #endregion
 
@@ -171,7 +177,7 @@ namespace Custom.Hybrid
         #region Net Core Compatibility Shims - Copy this entire section to WebApi Files
 
         /// <inheritdoc cref="IDynamicWebApi.File"/>
-        public dynamic File(string noParamOrder = ToSic.Eav.Parameters.Protector,
+        public dynamic File(string noParamOrder = Protector,
             bool? download = null,
             string virtualPath = null,
             string contentType = null,
