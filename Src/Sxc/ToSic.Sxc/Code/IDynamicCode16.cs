@@ -225,6 +225,7 @@ namespace ToSic.Sxc.Code
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="className">Optional class name, if it doesn't match the file name (new 16.03)</param>
         /// <returns>Created in 16.02, `className` added in 16.03</returns>
+        /// <remarks>In older code there was a similar `CreateInstance` method</remarks>
         dynamic GetCode(string path, string noParamOrder = Protector, string className = default);
 
         #endregion

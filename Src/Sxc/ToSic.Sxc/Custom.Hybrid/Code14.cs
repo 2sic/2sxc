@@ -111,6 +111,10 @@ namespace Custom.Hybrid
         public dynamic CreateInstance(string virtualPath, string noParamOrder = Protector, string name = null, string relativePath = null, bool throwOnError = true) =>
             SysHlp.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
 
+        /// <inheritdoc cref="IDynamicCode16.GetCode"/>
+        [PrivateApi("added in 16.05, but not sure if it should be public")]
+        public dynamic GetCode(string path, string noParamOrder = Protector, string className = default) => SysHlp.GetCode(path, noParamOrder, className);
+
         #endregion
 
         #region Context, Settings, Resources
@@ -161,17 +165,6 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="IDynamicCode.AsAdam" />
         public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot?.AsAdam(item, fieldName);
-
-
-        ///// <inheritdoc />
-        //public ITypedItem AsTyped(object original, string noParamOrder = Protector, bool? required = default) => _DynCodeRoot.Cdf.AsItem(original, noParamOrder);
-
-        ///// <inheritdoc />
-        //public IEnumerable<ITypedItem> AsTypedList(object list,
-        //    string noParamOrder = Protector,
-        //    bool? required = default,
-        //    IEnumerable<ITypedItem> fallback = default)
-        //    => _DynCodeRoot.Cdf.AsItems(list, noParamOrder, required: required, fallback: fallback);
 
     }
 }
