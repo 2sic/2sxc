@@ -28,33 +28,36 @@ namespace ToSic.Sxc.Services
             string noParamOrder = Eav.Parameters.Protector,
             object require = default,
             object data = default
-        ) => Log.Func(() =>
+        )
         {
+            var l = Log.Fn<Attribute>();
             var specs = PickOrBuildSpecs(runOrSpecs, require, data);
             var attr = _htmlTagsService.Value.Attr(AttributeName, specs);
-            return attr;
-        });
+            return l.ReturnAsOk(attr);
+        }
 
         public IHtmlTag Run(
             object runOrSpecs,
             string noParamOrder = Eav.Parameters.Protector,
             object require = default,
             object data = default
-        ) => Log.Func(() =>
+        )
         {
+            var l = Log.Fn<IHtmlTag>();
             var specs = PickOrBuildSpecs(runOrSpecs, require, data);
             var tag = _htmlTagsService.Value.Custom(TagName).Attr(AttributeName, specs);
-            return tag;
-        });
+            return l.ReturnAsOk(tag);
+        }
 
-        private static object PickOrBuildSpecs(object runOrSpecs, object require, object data) =>
-            runOrSpecs is string run
-                ? new
-                {
-                    run,
-                    require,
-                    data
-                }
-                : runOrSpecs;
+        private static object PickOrBuildSpecs(object runOrSpecs, object require, object data)
+        {
+            if (!(runOrSpecs is string run)) return runOrSpecs;
+
+            if (require is null && data is null) return new { run };
+            if (require is null) return new { run, data };
+            if (data is null) return new { run, require };
+
+            return new { run, require, data };
+        }
     }
 }

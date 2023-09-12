@@ -10,9 +10,18 @@ namespace ToSic.Sxc.Services
     {
         public ModuleService() : base(Constants.SxcLogName + ".ModSvc") { }
 
-        public void AddToMore(IHtmlTag tag) => _moreTags.Add(tag);
+        public void AddToMore(IHtmlTag tag, string nameId = null, bool noDuplicates = false)
+        {
+            if (tag is null) return;
+            nameId = nameId ?? tag.ToString();
+            if (noDuplicates && ExistingKeys.Contains(nameId)) return;
+            ExistingKeys.Add(nameId);
+            _moreTags.Add(tag);
+        }
 
         public IReadOnlyCollection<IHtmlTag> MoreTags => _moreTags;
         private readonly List<IHtmlTag> _moreTags = new List<IHtmlTag>();
+
+        private readonly HashSet<string> ExistingKeys = new HashSet<string>();
     }
 }
