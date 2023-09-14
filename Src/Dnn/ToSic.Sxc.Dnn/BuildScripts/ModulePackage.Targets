@@ -32,7 +32,7 @@
       <TempPackagePdbFolder>$(MSBuildProjectDirectory)\ModulePackages\TempPdb</TempPackagePdbFolder>
       <FinalZipFolder>../../../InstallPackages/Dnn-Installer</FinalZipFolder>
       <FinalZipFileName>$(PackageName).$(Version)_Install.zip</FinalZipFileName>
-      <SourceMapsFolder>$(Source)\..\$(Version)</SourceMapsFolder>
+      <SourceMapsFolder>$(Source)..\$(Version)</SourceMapsFolder>
     </PropertyGroup>
 
     <ItemGroup>
@@ -255,10 +255,8 @@
     <!-- New in 2020-09 From now on we'll also publish the built js files to sources.2sxc.org and not include them in 2sxc-repo any more -->
     <Message Text="DnnBuild: Copying all Assets to versioned folder $(SourceMapsFolder)" Importance="high" />
     <ItemGroup>
-      <ExternalSourceMaps Include="$(Source)\dist\*ng-edit\**\*.*" />
-      <ExternalSourceMaps Include="$(Source)\dist\*inpage\**\*.*" />
-      <ExternalSourceMaps Include="$(Source)\dist\*ng\**\*.*" />
-      <!--include the js and system folders, but as a subfolder (that's why the strange syntax) -->
+      <!--include the dist, js and system folders, but as a subfolder (that's why the strange syntax) -->
+      <ExternalSourceMaps Include="$(Source)\*dist\**\*.*" />
       <ExternalSourceMaps Include="$(Source)\*js\**\*.*" />
       <ExternalSourceMaps Include="$(Source)\*system\**\*.*" />
     </ItemGroup>
