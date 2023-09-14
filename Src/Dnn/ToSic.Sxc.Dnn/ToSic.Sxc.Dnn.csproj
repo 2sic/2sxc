@@ -301,6 +301,8 @@
     <Message Text="$(DnnTargets)" Importance="high"/>
     <Message Text="Source:" Importance="high"/>
     <Message Text="$(Source)" Importance="high"/>
+    <Message Text="DnnInstallPackage:" Importance="high"/>
+    <Message Text="$(DnnInstallPackage)" Importance="high"/>
     <Message Text="------------------------------------------------------------------------------" Importance="high"/>
 
   </Target>

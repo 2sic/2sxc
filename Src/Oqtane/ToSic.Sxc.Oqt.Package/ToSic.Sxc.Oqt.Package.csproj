@@ -29,7 +29,10 @@
   <Import Project="BuildScripts\LoadBuildConfig.Targets" />
 
   <Target Name="PostBuild" AfterTargets="Build" DependsOnTargets="BuildConfigTarget" Condition="'$(SourceExist)|$(OqtaneExist)' == 'true|true'">
-    <Exec Command="IF $(ConfigurationName) == Release (release.cmd $(Source) $(OqtaneModuleInstallPackages))" />
+    <PropertyGroup>
+      <OqtaneInstallPackage Condition=" '$(OqtaneInstallPackage)' == '' ">$(MSBuildProjectDirectory)\..\..\..\InstallPackages\OqtaneModule\</OqtaneInstallPackage>
+    </PropertyGroup>
+    <Exec Command="IF $(ConfigurationName) == Release (release.cmd $(Source) $(OqtaneInstallPackage))" />
   </Target>
 
   <Target Name="PostBuild2" AfterTargets="Build" DependsOnTargets="BuildConfigTarget" Condition="'$(ConfigurationName)|$(OqtaneExist)' == 'Debug|true' OR '$(ConfigurationName)|$(OqtaneExist)' == 'DebugOqtane|true'">
@@ -57,8 +60,8 @@
     <Message Text="$(OqtaneTargets)" Importance="high"/>
     <Message Text="Source:" Importance="high"/>
     <Message Text="$(Source)" Importance="high"/>
-    <Message Text="OqtaneModuleInstallPackages:" Importance="high"/>
-    <Message Text="$(OqtaneModuleInstallPackages)" Importance="high"/>
+    <Message Text="OqtaneInstallPackage:" Importance="high"/>
+    <Message Text="$(OqtaneInstallPackage)" Importance="high"/>
     <Message Text="------------------------------------------------------------------------------" Importance="high"/>
 
   </Target>

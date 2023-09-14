@@ -19,7 +19,7 @@
       <Output TaskParameter="OqtaneTarget" PropertyName="OqtaneTarget" />
       <Output TaskParameter="Sources" PropertyName="Sources" />
       <Output TaskParameter="Source" PropertyName="Source" />
-      <Output TaskParameter="OqtaneModuleInstallPackages" PropertyName="OqtaneModuleInstallPackages" />
+      <Output TaskParameter="OqtaneInstallPackage" PropertyName="OqtaneInstallPackage" />
     </GetBuildConfig>
 
     <!-- Create a property to capture the result of the Exists function -->
@@ -37,8 +37,8 @@
     <ColorMessage Text="$(OqtaneTargets)" ForegroundColor="Magenta"/>
     <ColorMessage Text="Source:" ForegroundColor="White"/>
     <ColorMessage Text="$(Source)" ForegroundColor="Magenta"/>
-    <ColorMessage Text="OqtaneModuleInstallPackages:" ForegroundColor="White"/>
-    <ColorMessage Text="$(OqtaneModuleInstallPackages)" ForegroundColor="Magenta"/>
+    <ColorMessage Text="OqtaneInstallPackage:" ForegroundColor="White"/>
+    <ColorMessage Text="$(OqtaneInstallPackage)" ForegroundColor="Magenta"/>
     <ColorMessage Text="------------------------------------------------------------------------------" ForegroundColor="White" BackgroundColor="Magenta"/>
 
   </Target>

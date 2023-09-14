@@ -30,7 +30,7 @@
       <TempPackageFolder>$(MSBuildProjectDirectory)\ModulePackages\Temp</TempPackageFolder>
       <TempPackageResourcesFolder>$(MSBuildProjectDirectory)\ModulePackages\TempResources</TempPackageResourcesFolder>
       <TempPackagePdbFolder>$(MSBuildProjectDirectory)\ModulePackages\TempPdb</TempPackagePdbFolder>
-      <FinalZipFolder>../../../InstallPackages/Dnn-Installer</FinalZipFolder>
+      <DnnInstallPackage Condition=" '$(DnnInstallPackage)' == '' ">../../../InstallPackages/Dnn-Installer</DnnInstallPackage>
       <FinalZipFileName>$(PackageName).$(Version)_Install.zip</FinalZipFileName>
       <SourceMapsFolder>$(Source)..\$(Version)</SourceMapsFolder>
     </PropertyGroup>
@@ -230,7 +230,6 @@
     <Copy SourceFiles="@(InstallIncludeJs)" DestinationFolder="$(TempPackageResourcesFolder)\js\%(RecursiveDir)" />
     <Copy SourceFiles="@(InstallIncludeSystem)" DestinationFolder="$(TempPackageResourcesFolder)\system\%(RecursiveDir)" />
     <Copy SourceFiles="@(InstallIncludeDist)" DestinationFolder="$(TempPackageResourcesFolder)\dist\%(RecursiveDir)" />
-    <Message Text="***STV*** DestinationFolder=$(DestinationFolder)" Importance="high" />
 
     <CreateItem Include="$(TempPackageResourcesFolder)\**\*.*">
       <Output TaskParameter="Include" ItemName="ResourcesContent" />
@@ -244,11 +243,11 @@
 
 
     <!-- Create the Install package -->
-    <Message Text="DnnBuild: Creating final Zip file $(FinalZipFileName) in $(FinalZipFolder)" Importance="high" />
+    <Message Text="DnnBuild: Creating final Zip file $(FinalZipFileName) in $(DnnInstallPackage)" Importance="high" />
     <CreateItem Include="$(TempPackageFolder)\**\*.*">
       <Output TaskParameter="Include" ItemName="OutputContent" />
     </CreateItem>
-    <Zip Files="@(OutputContent)" WorkingDirectory="$(TempPackageFolder)" ZipFileName="$(FinalZipFolder)/$(FinalZipFileName)" />
+    <Zip Files="@(OutputContent)" WorkingDirectory="$(TempPackageFolder)" ZipFileName="$(DnnInstallPackage)/$(FinalZipFileName)" />
 
 
     <!-- Auto-deploy the externalized map files to another repo-->

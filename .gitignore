@@ -20,3 +20,6 @@ Src/Integration/SxcEdit01/wwwroot/adam/*
 /Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc.Oqtane/js
 /Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc.Oqtane/system
 *.lutconfig
+
+# Exclude 2sxc-build.config.json
+**/2sxc-build.config.json
