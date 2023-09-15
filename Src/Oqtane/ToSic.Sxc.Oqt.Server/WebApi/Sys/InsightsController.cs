@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using RealController = ToSic.Eav.WebApi.Sys.InsightsControllerReal;
+using RealController = ToSic.Eav.WebApi.Sys.Insights.InsightsControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {

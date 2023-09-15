@@ -1,6 +1,6 @@
 ﻿using System.Web.Http;
 using ToSic.Sxc.Dnn.WebApi.Logging;
-using RealController = ToSic.Eav.WebApi.Sys.InsightsControllerReal;
+using RealController = ToSic.Eav.WebApi.Sys.Insights.InsightsControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
