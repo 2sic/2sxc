@@ -113,6 +113,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="ToSic.Razor">
+      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net472\ToSic.Razor.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs">
