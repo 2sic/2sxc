@@ -36,8 +36,8 @@ XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net7.0\CsvHelper.dll" "%OqtaneB
 
 ECHO(
 ECHO 2sxc Oqtane - Shared
-XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net7.0\ToSic.*.dll" "%OqtaneBin%\" /Y /EXCLUDE:ToSic.Sxc.Oqtane.Package.dll
-XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net7.0\ToSic.*.pdb" "%OqtaneBin%\" /Y /EXCLUDE:ToSic.Sxc.Oqtane.Package.pdb
+XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net7.0\ToSic.*.dll" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net7.0\ToSic.*.pdb" "%OqtaneBin%\" /Y
 
 ECHO(
 ECHO 2sxc Oqtane - Client Assets
