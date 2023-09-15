@@ -182,10 +182,16 @@ namespace ToSic.Sxc.Oqt.App
                 OqtPageChangeService.UpdatePageProperties(SiteState, ViewResults, this);
             }
 
+            if (ViewResults?.HeadChanges?.Any() ?? false)
+            {
+                Log($"1.3.3: AddHeadChanges:{ViewResults.HeadChanges.Count()}");
+                SiteState.Properties.HeadContent = HtmlHelper.AddHeadChanges(SiteState.Properties.HeadContent, ViewResults.HeadChanges);
+            }
+
             // Add Context-Meta first, because it should be available when $2sxc loads
             if (ViewResults?.SxcContextMetaName != null)
             {
-                Log($"1.3.3: Context-Meta RenderUri:{RenderedUri}");
+                Log($"1.3.4: Context-Meta RenderUri:{RenderedUri}");
                 SiteState.Properties.HeadContent = HtmlHelper.AddOrUpdateMetaTagContent(SiteState.Properties.HeadContent,
                     ViewResults.SxcContextMetaName, ViewResults.SxcContextMetaContents);
             }

@@ -43,21 +43,21 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
                         result.Add(new()
                         {
                             Property = OqtPageProperties.Title, Value = p.Value, Placeholder = p.ReplacementIdentifier,
-                            Change = GetOp(p)
+                            Change = GetOp(p.ChangeMode)
                         });
                         break;
                     case PageProperties.Description:
                         result.Add(new()
                         {
                             Property = OqtPageProperties.Description, Value = p.Value, Placeholder = p.ReplacementIdentifier,
-                            Change = GetOp(p)
+                            Change = GetOp(p.ChangeMode)
                         });
                         break;
                     case PageProperties.Keywords:
                         result.Add(new()
                         {
                             Property = OqtPageProperties.Keywords, Value = p.Value, Placeholder = p.ReplacementIdentifier,
-                            Change = GetOp(p)
+                            Change = GetOp(p.ChangeMode)
                         });
                         break;
                     default: // ignore
@@ -69,10 +69,10 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
             return wrapLog.Return(result, $"Changes: {count}");
         }
 
-        private static OqtPagePropertyOperation GetOp(PagePropertyChange change)
+        private static OqtPagePropertyOperation GetOp(PageChangeModes changeMode)
         {
 
-            switch (change.ChangeMode)
+            switch (changeMode)
             {
                 // The core 3 properties default to prefix
                 case PageChangeModes.Default:

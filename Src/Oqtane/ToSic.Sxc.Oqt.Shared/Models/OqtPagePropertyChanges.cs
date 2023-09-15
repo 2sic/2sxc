@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Oqt.Shared.Models
 {
@@ -41,11 +42,30 @@ namespace ToSic.Sxc.Oqt.Shared.Models
         Base
     }
 
+    // equivalent to ToSic.Sxc.Web.PageChangeModes
+    // GetOp convert from PageChangeModes to OqtPagePropertyOperation
+    [PrivateApi("not final yet, probably will not be implemented like this")]
+
     public enum OqtPagePropertyOperation
     {
+        /// <summary>
+        /// Replace the original implementation.
+        /// </summary>
         Replace,
+
+        /// <summary>
+        /// Attempt to replace, otherwise don't apply the change.
+        /// </summary>
         ReplaceOrSkip,
-        Prefix,
-        Suffix
+
+        /// <summary>
+        /// Suffix the change.
+        /// </summary>
+        Suffix,
+
+        /// <summary>
+        /// Prefix the change. 
+        /// </summary>
+        Prefix
     }
 }
