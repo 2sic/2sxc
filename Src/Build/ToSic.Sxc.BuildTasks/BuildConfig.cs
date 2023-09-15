@@ -8,6 +8,7 @@ namespace ToSic.Sxc.BuildTasks
         public List<string> DnnTargets { get; set; }
         public List<string> OqtaneTargets { get; set; }
         public List<string> Sources { get; set; }
-        public string OqtaneModuleInstallPackages { get; set; }
+        public string DnnInstallPackage { get; set; }
+        public string OqtaneInstallPackage { get; set; }
     }
 }

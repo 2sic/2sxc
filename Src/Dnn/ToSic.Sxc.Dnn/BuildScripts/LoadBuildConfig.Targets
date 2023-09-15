@@ -19,6 +19,7 @@
       <Output TaskParameter="DnnTarget" PropertyName="DnnTarget" />
       <Output TaskParameter="Sources" PropertyName="Sources" />
       <Output TaskParameter="Source" PropertyName="Source" />
+      <Output TaskParameter="DnnInstallPackage" PropertyName="DnnInstallPackage" />
     </GetBuildConfig>
 
     <!-- Create a property to capture the result of the Exists function -->
@@ -34,6 +35,8 @@
     <ColorMessage Text="$(DnnTargets)" ForegroundColor="Magenta"/>
     <ColorMessage Text="Source:" ForegroundColor="White"/>
     <ColorMessage Text="$(Source)" ForegroundColor="Magenta"/>
+    <ColorMessage Text="DnnInstallPackage:" ForegroundColor="White"/>
+    <ColorMessage Text="$(DnnInstallPackage)" ForegroundColor="Magenta"/>
     <ColorMessage Text="------------------------------------------------------------------------------" ForegroundColor="White" BackgroundColor="Magenta"/>
 
   </Target>

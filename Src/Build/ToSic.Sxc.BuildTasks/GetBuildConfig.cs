@@ -26,7 +26,10 @@ namespace ToSic.Sxc.BuildTasks
         public string[] Sources { get; private set; }
 
         [Output]
-        public string OqtaneModuleInstallPackages { get; private set; } = string.Empty;
+        public string DnnInstallPackage { get; private set; } = string.Empty;
+
+        [Output]
+        public string OqtaneInstallPackage { get; private set; } = string.Empty;
         #endregion
 
         #region calculated properties
@@ -76,7 +79,9 @@ namespace ToSic.Sxc.BuildTasks
                 OqtaneTargets = FixAllTargets(buildConfig.OqtaneTargets)?.ToArray();
                 OqtaneTarget = OqtaneTargets?.FirstOrDefault();
 
-                OqtaneModuleInstallPackages = FixSingleTarget(buildConfig.OqtaneModuleInstallPackages);
+                DnnInstallPackage = FixSingleTarget(buildConfig.DnnInstallPackage);
+
+                OqtaneInstallPackage = FixSingleTarget(buildConfig.OqtaneInstallPackage);
 
                 return true;
             }
