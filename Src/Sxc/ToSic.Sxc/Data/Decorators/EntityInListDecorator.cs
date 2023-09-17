@@ -12,9 +12,10 @@ namespace ToSic.Sxc.Data.Decorators
     [PrivateApi]
     public abstract class EntityInListDecorator : IDecorator<IEntity>
     {
-        protected EntityInListDecorator(Guid? parentGuid, string field, int index = 0)
+        protected EntityInListDecorator(string field, int index = 0, IEntity parent = default)
         {
-            Parent = parentGuid;
+            Parent = parent;
+            ParentGuid = parent?.EntityGuid; // parentGuid;
             Field = field;
             SortOrder = index;
         }
@@ -46,6 +47,8 @@ namespace ToSic.Sxc.Data.Decorators
         ///
         /// Added in 2sxc 11.01
         /// </remarks>
-        public Guid? Parent { get; set; }
+        public Guid? ParentGuid { get; private set; }
+
+        public IEntity Parent { get; private set; }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Eav.Data;
+﻿using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data.Decorators
@@ -7,16 +6,25 @@ namespace ToSic.Sxc.Data.Decorators
     [PrivateApi]
     public class EntityInBlockDecorator: EntityInListDecorator
     {
-        private EntityInBlockDecorator(Guid? parentGuid, string field, int index = DefIndex, IEntity presentation = DefPresentation, bool isDemoItem = DefDemo)
-            :base(parentGuid, field, index)
+        private EntityInBlockDecorator(string field, 
+            int index = DefIndex,
+            IEntity presentation = DefPresentation, 
+            bool isDemoItem = DefDemo,
+            IEntity parent = default)
+            :base(field, index, parent: parent)
         {
             Presentation = presentation;
             IsDemoItem = isDemoItem;
         }
 
-        public static EntityDecorator12<EntityInBlockDecorator> Wrap(IEntity entity, Guid? parentGuid, string field,
-            int index = DefIndex, IEntity presentation = DefPresentation, bool isDemoItem = DefDemo) =>
-            new EntityDecorator12<EntityInBlockDecorator>(entity, new EntityInBlockDecorator(parentGuid, field, index, presentation, isDemoItem));
+        public static EntityDecorator12<EntityInBlockDecorator> Wrap(
+            IEntity entity,
+            string field,
+            int index = DefIndex,
+            IEntity presentation = DefPresentation,
+            bool isDemoItem = DefDemo, 
+            IEntity parent = default) =>
+            new EntityDecorator12<EntityInBlockDecorator>(entity, new EntityInBlockDecorator(field, index, presentation, isDemoItem, parent: parent));
 
         protected const IEntity DefPresentation = null;
         protected const bool DefDemo = false;

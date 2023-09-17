@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
             // try to get more information about the block
             var decorator = (contentBlock as BlockFromEntity)?.Entity.GetDecorator<EntityInListDecorator>();
             if (decorator == null) return;
-            ParentGuid = decorator.Parent;
+            ParentGuid = decorator.ParentGuid;
             ParentField = decorator.Field;
             ParentIndex = decorator.SortOrder;
         }

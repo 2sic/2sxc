@@ -24,14 +24,14 @@ namespace ToSic.Sxc.Edit.Toolbar
             if (editDecorator != null)
             {
                 sortOrder = editDecorator.SortOrder;
-                if (editDecorator.Parent == null)
+                if (editDecorator.ParentGuid == null)
                 {
                     useModuleList = true;
                 }
                 else 
                 // only set parent if not empty - as it's always a valid int and wouldn't be null
                 {
-                    parent = editDecorator.Parent;
+                    parent = editDecorator.ParentGuid;
                     fields = editDecorator.Field;
                     entityId = entity.EntityId;
                     contentType = entity.Type.Name;
