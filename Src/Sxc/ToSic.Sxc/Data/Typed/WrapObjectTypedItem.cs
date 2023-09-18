@@ -99,7 +99,7 @@ namespace ToSic.Sxc.Data.Typed
             return items;
         }
 
-        public ITypedItem Parent() => throw new NotSupportedException($"You can't access the {nameof(Presentation)} here");
+        public ITypedItem Parent() => throw new NotSupportedException($"You can't access the {nameof(Parent)}() here");
 
 
         /// <summary>

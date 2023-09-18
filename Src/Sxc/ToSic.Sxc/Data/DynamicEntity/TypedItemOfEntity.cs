@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
@@ -238,8 +237,12 @@ namespace ToSic.Sxc.Data
         IMetadata ITypedItem.Metadata => DynHelper.Metadata;
 
 
-        public ITypedItem Parent() => (DynHelper.Parent as DynamicEntity)?.TypedItem
-            ?? throw new Exception($"You tried to access {nameof(Parent)}() but this item doesn't seem to have one. Were you trying to use {nameof(Parents)}(...)?");
+        ITypedItem ITypedItem.Parent() =>
+            (DynHelper.Parent as DynamicEntity)?.TypedItem
+            ?? throw new Exception(
+                $"You tried to access {nameof(ITypedItem.Parent)}() but this item doesn't seem to have one. " +
+                $"It's only set if this Item was created from another Item using {nameof(ITypedItem.Child)}(...) or {nameof(ITypedItem.Children)}(...). " +
+                $"Were you trying to use {nameof(ITypedItem.Parents)}(...)?");
 
         /// <inheritdoc />
         [PrivateApi]
