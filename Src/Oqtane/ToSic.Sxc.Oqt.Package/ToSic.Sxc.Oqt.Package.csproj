@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -18,10 +17,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!--<Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs" Link="Properties\AssemblyInfoInherited.cs" />-->
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="ToSic.Imageflow.Oqtane" Version="1.2.0" />
   </ItemGroup>
 
@@ -31,10 +26,44 @@
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Shared\ToSic.Sxc.Oqt.Shared.csproj" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="IF $(ConfigurationName) == Debug (debug.cmd Debug)" />
-    <Exec Command="IF $(ConfigurationName) == DebugOqtane (debug.cmd DebugOqtane)" />
-    <Exec Command="IF $(ConfigurationName) == Release (release.cmd)" />
+  <Import Project="BuildScripts\LoadBuildConfig.Targets" />
+
+  <Target Name="PostBuild" AfterTargets="Build" DependsOnTargets="BuildConfigTarget" Condition="'$(SourceExist)|$(OqtaneExist)' == 'true|true'">
+    <PropertyGroup>
+      <OqtaneInstallPackage Condition=" '$(OqtaneInstallPackage)' == '' ">$(MSBuildProjectDirectory)\..\..\..\InstallPackages\OqtaneModule\</OqtaneInstallPackage>
+    </PropertyGroup>
+    <Exec Command="IF $(ConfigurationName) == Release (release.cmd $(Source) $(OqtaneInstallPackage))" />
+  </Target>
+
+  <Target Name="PostBuild2" AfterTargets="Build" DependsOnTargets="BuildConfigTarget" Condition="'$(ConfigurationName)|$(OqtaneExist)' == 'Debug|true' OR '$(ConfigurationName)|$(OqtaneExist)' == 'DebugOqtane|true'">
+    <Message Text="OqtaneTargets='$(OqtaneTargets)'" Importance="High"/>
+    <!--Split the paths in OqtaneTargets into individual items-->
+    <ItemGroup>
+      <OqtaneRoot Include="$(OqtaneTargets)"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="PostBuildForEachItem" AfterTargets="PostBuild2" DependsOnTargets="BuildConfigTarget;PostBuild2" Condition="'$(ConfigurationName)|$(OqtaneExist)' == 'Debug|true' OR '$(ConfigurationName)|$(OqtaneExist)' == 'DebugOqtane|true'" Outputs="%(OqtaneRoot.Identity)">
+    <PropertyGroup>
+      <CurrentOqtaneRoot>%(OqtaneRoot.Identity)</CurrentOqtaneRoot>
+    </PropertyGroup>
+    <Message Text="CurrentOqtaneRoot='$(CurrentOqtaneRoot)'" Importance="High"/>
+    <Exec Command="debug.cmd $(ConfigurationName) $(CurrentOqtaneRoot)" />
+  </Target>
+
+  <Target Name="BuildConfigTarget2" AfterTargets="Build" DependsOnTargets="BuildConfigTarget" Condition=" '$(OqtaneExist)' == 'true'">
+
+    <Message Text="------------------------------------------------------------------------------" Importance="high"/>
+    <Message Text="$(BuildConfigPath)" Importance="high"/>
+    <Message Text="------------------------------------------------------------------------------" Importance="high"/>
+    <Message Text="OqtaneTargets:" Importance="high"/>
+    <Message Text="$(OqtaneTargets)" Importance="high"/>
+    <Message Text="Source:" Importance="high"/>
+    <Message Text="$(Source)" Importance="high"/>
+    <Message Text="OqtaneInstallPackage:" Importance="high"/>
+    <Message Text="$(OqtaneInstallPackage)" Importance="high"/>
+    <Message Text="------------------------------------------------------------------------------" Importance="high"/>
+
   </Target>
 
 </Project>

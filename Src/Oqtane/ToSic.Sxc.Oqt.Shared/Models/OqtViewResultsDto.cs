@@ -53,6 +53,16 @@ namespace ToSic.Sxc.Oqt.Shared.Models
         public IEnumerable<OqtPagePropertyChanges> PageProperties { get; set; }
 
         /// <summary>
+        /// Changes to the Page Header like Meta-Tags etc.
+        /// </summary>
+        public IEnumerable<OqtHeadChange> HeadChanges { get; set; }
+
+        /// <summary>
+        /// Features which are defined in the SystemSettings and wer requested by the code and should be enabled.
+        /// </summary>
+        //IList<IPageFeature> FeaturesFromSettings { get; }
+
+        /// <summary>
         /// Prerender HTML fragment
         /// </summary>
         public string PrerenderHtml { get; set; }

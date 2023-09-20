@@ -1,4 +1,5 @@
-﻿using System;
+﻿#pragma warning disable 1591
+using System;
 using System.Linq;
 using System.Web.UI;
 using DotNetNuke.Entities.Modules;
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Dnn
         /// Get the service provider only once - ideally in Dnn9.4 we will get it from Dnn
         /// If we would get it multiple times, there are edge cases where it could be different each time! #2614
         /// </summary>
-        private IServiceProvider ServiceProvider => _serviceProvider.Get(DnnStaticDi.CreateModuleScopedServiceProvider);
+        private IServiceProvider ServiceProvider => _serviceProvider.Get(Log, DnnStaticDi.CreateModuleScopedServiceProvider);
         private readonly GetOnce<IServiceProvider> _serviceProvider = new GetOnce<IServiceProvider>();
         private TService GetService<TService>() => ServiceProvider.Build<TService>(Log);
 
@@ -161,7 +162,8 @@ namespace ToSic.Sxc.Dnn
                             phOutput.Controls.Add(new LiteralControl(data.Html));
 
                         // #Lightspeed
-                        OutputCache?.Save(data);
+                        Log.Do(message: "Lightspeed", timer: true, action: () => OutputCache?.Save(data));
+                        
                         return true; // dummy result
                     });
 
@@ -198,9 +200,7 @@ namespace ToSic.Sxc.Dnn
             return l.ReturnAsOk(result);
         }
 
-
-
-        protected IOutputCache OutputCache => _oc.Get(Log, () => GetService<IOutputCache>().Init(ModuleId, TabId, Block));
+        protected IOutputCache OutputCache => _oc.Get(Log, () => GetService<IOutputCache>().Init(ModuleId, TabId, Block), timer: true);
         private readonly GetOnce<IOutputCache> _oc = new GetOnce<IOutputCache>();
     }
 }

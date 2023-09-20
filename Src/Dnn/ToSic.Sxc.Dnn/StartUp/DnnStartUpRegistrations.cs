@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Configuration;
+﻿#pragma warning disable 1591
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Run;
 using ToSic.Lib.Services;
 

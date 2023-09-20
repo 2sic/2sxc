@@ -10,7 +10,8 @@ namespace ToSic.Sxc.Web.PageService
             string noParamOrder = Eav.Parameters.Protector,
             object require = default,
             object data = default,
-            bool condition = true)
+            bool condition = true,
+            bool? noDuplicates = default)
         {
             var l = Log.Fn<string>($"{runOrSpecs}: {runOrSpecs}; {require}; {data}");
 
@@ -23,7 +24,7 @@ namespace ToSic.Sxc.Web.PageService
 
             // then generate the turn-on and add to module state
             var tag = _turnOn.Value.Run(runOrSpecs, require: require, data: data);
-            _moduleService.Value.AddToMore(tag);
+            _moduleService.Value.AddToMore(tag, noDuplicates: noDuplicates == true);
 
             // Then return empty string
             return l.ReturnAsOk(null);

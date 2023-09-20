@@ -137,22 +137,21 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         IMetadata ITypedItem.Metadata => throw new NotSupportedException($"You can't access the Metadata of Metadata in ITypedItem");
 
+        [PrivateApi]
+        ITypedItem ITypedItem.Parent() => throw new NotSupportedException($"You can't access the {nameof(ITypedItem.Parent)}() of Metadata");
+
         /// <inheritdoc />
         [PrivateApi]
         IEnumerable<ITypedItem> ITypedItem.Parents(string noParamOrder, string type, string field)
         {
-            return TypedItem.Parents(noParamOrder, type, field);
-            //Protect(noParamOrder, nameof(field), message: 
-            //    $" ***IMPORTANT***: The typed '.Parents(...)' method was changed to also make the parameter '{nameof(type)}' required. " +
-            //    "So if you had '.Parents(something)' then change it to '.Parents(type: something)'");
-            //return Cdf.AsItems(GetHelper.Parents(entity: Entity, type: type, field: field), noParamOrder);
+            return TypedItem.Parents(noParamOrder: noParamOrder, type: type, field: field);
         }
 
         /// <inheritdoc />
         [PrivateApi]
         IEnumerable<ITypedItem> ITypedItem.Children(string field, string noParamOrder, string type, bool? required)
         {
-            return TypedItem.Children(field, noParamOrder, type, required);
+            return TypedItem.Children(field: field, noParamOrder: noParamOrder, type: type, required: required);
             //Protect(noParamOrder, $"{nameof(type)}, {nameof(required)}");
 
             //if (IsErrStrict(this, field, required, GetHelper.StrictGet))

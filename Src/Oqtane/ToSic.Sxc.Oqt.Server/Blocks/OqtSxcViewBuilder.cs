@@ -93,12 +93,14 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                     SxcScripts = PageOutput.Scripts().ToList(),
                     SxcStyles = PageOutput.Styles().ToList(),
                     PageProperties = PageOutput.GetOqtPagePropertyChangesList(renderResult.PageChanges),
+                    HeadChanges = PageOutput.GetHeadChanges(),
                     HttpHeaders = ConvertHttpHeaders(renderResult.HttpHeaders),
+                    // CSP settings
                     CspEnabled = renderResult.CspEnabled,
                     CspEnforced = renderResult.CspEnforced,
                     CspParameters = renderResult.CspParameters.Select(c => c.NvcToString())
                         .ToList(), // convert NameValueCollection to (query) string because can't serialize NameValueCollection to json
-            };
+                };
             }));
             LogTimer.Done(OutputCache?.Existing?.Data?.IsError ?? false ? "⚠️" : finalMessage);
 

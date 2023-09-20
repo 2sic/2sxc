@@ -1,4 +1,5 @@
-﻿using DotNetNuke.Entities.Modules;
+﻿#pragma warning disable 1591
+using DotNetNuke.Entities.Modules;
 using ToSic.Sxc.Dnn.StartUp;
 
 // Note about the name

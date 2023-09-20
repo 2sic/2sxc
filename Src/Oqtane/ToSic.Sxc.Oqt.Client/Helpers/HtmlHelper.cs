@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Oqtane.Models;
+using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Text.RegularExpressions;
-using Oqtane.Models;
-using Oqtane.Shared;
-using ToSic.Sxc.Oqt.App;
-using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Client
@@ -111,6 +109,19 @@ namespace ToSic.Sxc.Oqt.Client
 
             // If the meta tag doesn't exist, add it
             return html + $"<meta name=\"{WebUtility.HtmlEncode(name)}\" content=\"{(encode ? WebUtility.HtmlEncode(content) : content)}\">{Environment.NewLine}";
+        }
+
+        public static string AddHeadChanges(string html, IEnumerable<OqtHeadChange> headChanges)
+        {
+            if (html == null || headChanges == null) return html;
+            var rez = string.Empty;
+            foreach (var headChange in headChanges)
+            {
+                // currently we just append the head change to the end of the head
+                if (string.IsNullOrEmpty(headChange.Tag)) continue;
+                rez += $"{headChange.Tag}{Environment.NewLine}";
+            }
+            return $"{html}{Environment.NewLine}{rez}";
         }
     }
 }

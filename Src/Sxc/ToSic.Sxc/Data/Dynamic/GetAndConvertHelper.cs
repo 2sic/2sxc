@@ -164,7 +164,7 @@ namespace ToSic.Sxc.Data
                     return l.Return(dynEnt, "ent-list, now dyn");
                 }
                 l.A($"Convert entity list as {nameof(ITypedItem)}");
-                var converted = Entity2Children(children, parent?.EntityGuid, field)
+                var converted = Entity2Children(entities: children, field: field, parentEntity: parent)
                     .Cast<DynamicEntity>()
                     .Select(de => de.TypedItem)
                     .ToList();
@@ -193,22 +193,12 @@ namespace ToSic.Sxc.Data
             => entity.Parents(type, field).Select(e => SubDataFactory.SubDynEntityOrNull(e)).ToList();
 
 
-        //public List<IEntity> ChildrenDecorated(IEntity entity, string field = null, string type = null)
-        //    => /*Entity2Children(*/entity.Children(field, type) //, entity.EntityGuid, field);
-        //        .Select((e, i) => EntityInBlockDecorator.Wrap(e, entity.EntityGuid, field, i) as IEntity)
-        //        .ToList();
-
-
         public List<IDynamicEntity> Children(IEntity entity, string field = null, string type = null)
-            => // ChildrenDecorated(entity, field, type)
-                Entity2Children( entity.Children(field, type), entity.EntityGuid, field);
-                //.Select((e, i) => EntityInBlockDecorator.Wrap(e, entity.EntityGuid, field, i))
-                //.Select(e => SubDataFactory.SubDynEntityOrNull(e))
-                //.ToList();
+            => Entity2Children( entity.Children(field, type), field, parentEntity: entity);
 
-        private List<IDynamicEntity> Entity2Children(IEnumerable<IEntity> entities, Guid? parentGuid, string field = null)
+        private List<IDynamicEntity> Entity2Children(IEnumerable<IEntity> entities, string field = null, IEntity parentEntity = default)
             => entities
-                .Select((e, i) => EntityInBlockDecorator.Wrap(e, parentGuid, field, i))
+                .Select((e, i) => EntityInBlockDecorator.Wrap(entity: e, field: field, index: i, parent: parentEntity))
                 .Select(e => SubDataFactory.SubDynEntityOrNull(e))
                 .ToList();
 

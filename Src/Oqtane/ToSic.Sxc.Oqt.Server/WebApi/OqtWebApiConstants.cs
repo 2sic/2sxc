@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
         // Dialogs for 2sxc UI
         public static readonly List<(string url, string page, EditUiResourceSettings setting)> SxcDialogs = new(capacity: 2)
         {
-            ($"/Modules/{OqtConstants.PackageName}/dist/quickDialog/", $@"Modules\{OqtConstants.PackageName}\dist\quickDialog\index-raw.html", EditUiResourceSettings.QuickDialog),
+            ($"/Modules/{OqtConstants.PackageName}/dist/quick-dialog/", $@"Modules\{OqtConstants.PackageName}\dist\quick-dialog\index-raw.html", EditUiResourceSettings.QuickDialog),
             ($"/Modules/{OqtConstants.PackageName}/dist/ng-edit/", $@"Modules\{OqtConstants.PackageName}\dist\ng-edit\index-raw.html", EditUiResourceSettings.EditUi)
         };
     }

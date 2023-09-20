@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Data
                     {
                         // If we should re-wrap, we create an Entity with some metadata-decoration, so that toolbars know it's part of a list
                         var blockEntity = reWrapWithListNumbering
-                            ? EntityInBlockDecorator.Wrap(e, ParentOrNull.EntityGuid, FieldOrNull, i)
+                            ? EntityInBlockDecorator.Wrap(entity: e, field: FieldOrNull, index: i, parent: ParentOrNull)
                             : e;
                         return SubDataFactory.SubDynEntityOrNull(blockEntity, _cdf, debug, propsRequired: PropsRequired) as IDynamicEntity;
                     })

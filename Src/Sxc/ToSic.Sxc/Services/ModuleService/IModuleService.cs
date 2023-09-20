@@ -10,6 +10,6 @@ namespace ToSic.Sxc.Services
     {
         IReadOnlyCollection<IHtmlTag> MoreTags { get; }
 
-        void AddToMore(IHtmlTag tag);
+        void AddToMore(IHtmlTag tag, string nameId = null, bool noDuplicates = false);
     }
 }

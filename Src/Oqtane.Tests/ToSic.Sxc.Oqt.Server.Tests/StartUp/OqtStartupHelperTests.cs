@@ -42,14 +42,14 @@ namespace ToSic.Sxc.Oqt.Server.StartUp.Tests
             => Assert.IsFalse(IsSxcEndpoint(invalidPath));
 
         [DataTestMethod]
-        [DataRow("/Modules/" + OqtConstants.PackageName + "/dist/quickDialog/")]
+        [DataRow("/Modules/" + OqtConstants.PackageName + "/dist/quick-dialog/")]
         [DataRow("/Modules/" + OqtConstants.PackageName + "/dist/ng-edit/")]
         public void IsSxcDialog_ShouldReturnTrue_ForValidPath(string validPath)
             => Assert.IsTrue(IsSxcDialog(validPath));
 
         [DataTestMethod]
         [DataRow("/invalid/path/to/dialog")]
-        [DataRow("/Modules/InvalidPackageName/dist/quickDialog/")]
+        [DataRow("/Modules/InvalidPackageName/dist/quick-dialog/")]
         [DataRow("/Modules/InvalidPackageName/dist/ng-edit/")]
         public void IsSxcDialog_ShouldReturnFalse_ForInvalidPath(string invalidPath)
             => Assert.IsFalse(IsSxcDialog(invalidPath));

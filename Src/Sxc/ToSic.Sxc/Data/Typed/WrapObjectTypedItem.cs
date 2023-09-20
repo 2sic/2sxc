@@ -99,6 +99,9 @@ namespace ToSic.Sxc.Data.Typed
             return items;
         }
 
+        public ITypedItem Parent() => throw new NotSupportedException($"You can't access the {nameof(Parent)}() here");
+
+
         /// <summary>
         /// The parents are "fake" so they behave just like children... but under the node "Parents".
         /// If "field" is specified, then it will assume another child-level under the node parents

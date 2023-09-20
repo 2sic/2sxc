@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <Target Name="CheckBuildTool" BeforeTargets="Build">
+    <Message Text="Running on .NET Core MSBuild" Condition="'$(MSBuildRuntimeType)' == 'Core'" Importance="high"/>
+    <Message Text="Running on Full MSBuild" Condition="'$(MSBuildRuntimeType)' != 'Core'" Importance="high"/>
+  </Target>
+
+  <UsingTask TaskName="GetBuildConfig" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net7.0\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' == 'Core'"/>
+  <UsingTask TaskName="GetBuildConfig" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' != 'Core'"/>
+  <UsingTask TaskName="ColorMessage" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net7.0\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' == 'Core'"/>
+  <UsingTask TaskName="ColorMessage" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll" Condition="'$(MSBuildRuntimeType)' != 'Core'"/>
+
+  <Target Name="BuildConfigTarget" BeforeTargets="Build">
+
+    <GetBuildConfig>
+      <Output TaskParameter="BuildConfigPath" PropertyName="BuildConfigPath" />
+      <Output TaskParameter="DnnTargets" PropertyName="DnnTargets" />
+      <Output TaskParameter="DnnTarget" PropertyName="DnnTarget" />
+      <Output TaskParameter="Sources" PropertyName="Sources" />
+      <Output TaskParameter="Source" PropertyName="Source" />
+      <Output TaskParameter="DnnInstallPackage" PropertyName="DnnInstallPackage" />
+    </GetBuildConfig>
+
+    <!-- Create a property to capture the result of the Exists function -->
+    <PropertyGroup>
+      <SourceExist Condition="Exists('$(Source)')">true</SourceExist>
+      <SourceExist Condition="!Exists('$(Source)')">false</SourceExist>
+    </PropertyGroup>
+
+    <ColorMessage Text="------------------------------------------------------------------------------" ForegroundColor="White" BackgroundColor="Magenta"/>
+    <ColorMessage Text="$(BuildConfigPath)" ForegroundColor="Magenta"/>
+    <ColorMessage Text="------------------------------------------------------------------------------" ForegroundColor="White" BackgroundColor="Magenta"/>
+    <ColorMessage Text="DnnTargets:" ForegroundColor="White"/>
+    <ColorMessage Text="$(DnnTargets)" ForegroundColor="Magenta"/>
+    <ColorMessage Text="Source:" ForegroundColor="White"/>
+    <ColorMessage Text="$(Source)" ForegroundColor="Magenta"/>
+    <ColorMessage Text="DnnInstallPackage:" ForegroundColor="White"/>
+    <ColorMessage Text="$(DnnInstallPackage)" ForegroundColor="Magenta"/>
+    <ColorMessage Text="------------------------------------------------------------------------------" ForegroundColor="White" BackgroundColor="Magenta"/>
+
+  </Target>
+
+</Project>

@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Data
         public IEntity PlaceHolderInBlock(int? appIdOrNull, IEntity parent, string field)
         {
             var dummyEntity = FakeEntity(appIdOrNull ?? parent.AppId);
-            return parent == null ? dummyEntity : EntityInBlockDecorator.Wrap(dummyEntity, parent.EntityGuid, field);
+            return parent == null ? dummyEntity : EntityInBlockDecorator.Wrap(entity: dummyEntity, field: field, parent: parent);
         }
 
     }

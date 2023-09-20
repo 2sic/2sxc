@@ -78,7 +78,7 @@ namespace ToSic.Sxc.DataSources
                         {
                             var itm = originals.One(entityId);
                             entitiesToDeliver.Add(EntityInBlockDecorator.Wrap(
-                                itm, null, null, isListHeader ? -1 : i, presentationEntity, isDemoItem));
+                                entity: itm, field: null, index: isListHeader ? -1 : i, presentation: presentationEntity, isDemoItem: isDemoItem, parent: null));
                         }
                         catch (Exception ex)
                         {

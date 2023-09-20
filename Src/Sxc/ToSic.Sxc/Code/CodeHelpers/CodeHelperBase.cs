@@ -1,5 +1,4 @@
 ﻿using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.CodeHelpers
@@ -12,12 +11,9 @@ namespace ToSic.Sxc.Code.CodeHelpers
 
         public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
-            // Do base work
             base.ConnectToRoot(codeRoot);
-            var l = Log.Fn(message: "connected");
             // Make sure the Code-Log is reset, in case it was used before this call
             _codeLog.Reset();
-            l.Done();
         }
 
 

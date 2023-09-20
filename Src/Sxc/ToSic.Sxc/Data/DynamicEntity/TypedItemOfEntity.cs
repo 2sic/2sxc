@@ -236,6 +236,14 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         IMetadata ITypedItem.Metadata => DynHelper.Metadata;
 
+
+        ITypedItem ITypedItem.Parent() =>
+            (DynHelper.Parent as DynamicEntity)?.TypedItem
+            ?? throw new Exception(
+                $"You tried to access {nameof(ITypedItem.Parent)}() but this item doesn't seem to have one. " +
+                $"It's only set if this Item was created from another Item using {nameof(ITypedItem.Child)}(...) or {nameof(ITypedItem.Children)}(...). " +
+                $"Were you trying to use {nameof(ITypedItem.Parents)}(...)?");
+
         /// <inheritdoc />
         [PrivateApi]
         IEnumerable<ITypedItem> ITypedItem.Parents(string noParamOrder, string type, string field)

@@ -6,12 +6,17 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Configuration;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Web.LightSpeed
 {
     [PrivateApi]
-    public class OutputCacheManager
+    public class OutputCacheManager : ServiceBase
     {
+        public OutputCacheManager() : base(Constants.SxcLogName + ".OutputCacheManager")
+        { }
+
         internal const string GlobalCacheRoot = "2sxc.Lightspeed.Module.";
 
         internal string Id(int moduleId, int pageId, int? userId, string view, string suffix, string currentCulture)
@@ -27,6 +32,7 @@ namespace ToSic.Sxc.Web.LightSpeed
         public string Add(string cacheKey, OutputCacheItem data, int duration, IFeaturesInternal features,
             List<AppState> appStates, IList<string> appPaths = null, CacheEntryUpdateCallback updateCallback = null)
         {
+            var l = Log.Fn<string>($"key: {cacheKey}", timer: true);
             try
             {
                 // Never store 0, that's like never-expire
@@ -35,33 +41,36 @@ namespace ToSic.Sxc.Web.LightSpeed
                 var policy = new CacheItemPolicy { SlidingExpiration = expiration };
 
                 // flush cache when any feature is changed
-                policy.ChangeMonitors.Add(new FeaturesResetMonitor(features));
+                Log.Do(message: "changeMonitors add FeaturesResetMonitor", timer: true, action: () => 
+                    policy.ChangeMonitors.Add(new FeaturesResetMonitor(features)));
 
                 // get new instance of ChangeMonitor and insert it to the cache item
                 if (appStates.Any())
-                    foreach(var appState in appStates)
-                        policy.ChangeMonitors.Add(new AppResetMonitor(appState));
+                    foreach (var appState in appStates)
+                        Log.Do(message: "changeMonitors add AppResetMonitor", timer: true, action: () => 
+                            policy.ChangeMonitors.Add(new AppResetMonitor(appState)));
 
                 if (appPaths != null && appPaths.Count > 0)
-                    policy.ChangeMonitors.Add(new FolderChangeMonitor(appPaths));
+                    Log.Do(message: "changeMonitors add FolderChangeMonitor", timer: true, action: () =>
+                        policy.ChangeMonitors.Add(new FolderChangeMonitor(appPaths)));
 
                 if (updateCallback != null)
                     policy.UpdateCallback = updateCallback;
 
-                Cache.Set(new CacheItem(cacheKey, data), policy);
-                return cacheKey;
+                Log.Do(message: $"cache set cacheKey:{cacheKey}", timer: true, action: () => 
+                    Cache.Set(new CacheItem(cacheKey, data), policy));
+
+                return l.ReturnAsOk(cacheKey);
             }
             catch
             {
                 /* ignore for now */
             }
-
-            return "error";
+            return l.ReturnAsError("error");
         }
 
         public OutputCacheItem Get(string key) => Cache[key] as OutputCacheItem;
 
         private static MemoryCache Cache => MemoryCache.Default;
-
     }
 }

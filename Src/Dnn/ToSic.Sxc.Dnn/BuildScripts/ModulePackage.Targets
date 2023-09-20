@@ -8,10 +8,12 @@
   <Import Project="MSBuild.Community.Tasks.Targets" />
 
   <!-- The Dnn Build Package - Should only run after release compile -->
-  <Target Name="PackageModule" AfterTargets="AfterBuild" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <Target Name="PackageModule" AfterTargets="Build" DependsOnTargets="BuildConfigTarget" Condition=" '$(Configuration)|$(Platform)|$(SourceExist)' == 'Release|AnyCPU|true' ">
 
     <Message Text="DnnBuild: Starting DNN Build" Importance="high" />
-    <Message Text="DnnBuild: Will get Assets from $(Dev2sxcAssets)" Importance="high" />
+    <Message Text="DnnBuild: Will get Assets from $(Source)" Importance="high" />
+
+    <Error Condition="!Exists('$(Source)')" Text="DnnBuild: ERROR: Assets folder not found at $(Source)" />
 
     <!-- Properties / Variables for the DNN Build which we need early on-->
     <PropertyGroup>
@@ -28,9 +30,9 @@
       <TempPackageFolder>$(MSBuildProjectDirectory)\ModulePackages\Temp</TempPackageFolder>
       <TempPackageResourcesFolder>$(MSBuildProjectDirectory)\ModulePackages\TempResources</TempPackageResourcesFolder>
       <TempPackagePdbFolder>$(MSBuildProjectDirectory)\ModulePackages\TempPdb</TempPackagePdbFolder>
-      <FinalZipFolder>../../../InstallPackages/Dnn-Installer</FinalZipFolder>
+      <DnnInstallPackage Condition=" '$(DnnInstallPackage)' == '' ">../../../InstallPackages/Dnn-Installer</DnnInstallPackage>
       <FinalZipFileName>$(PackageName).$(Version)_Install.zip</FinalZipFileName>
-      <SourceMapsFolder>$(Dev2sxcAssets)\..\$(Version)</SourceMapsFolder>
+      <SourceMapsFolder>$(Source)..\$(Version)</SourceMapsFolder>
     </PropertyGroup>
 
     <ItemGroup>
@@ -53,19 +55,20 @@
 
     <ItemGroup>
       <InstallInclude Include="**\*.ascx" Exclude="@(DefaultExclude)" />
-
+      <InstallInclude Include="**\*.aspx" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.asmx" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.css" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.html" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.htm" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.resx" Exclude="@(DefaultExclude)" />
 
-      <InstallInclude Include="**\*.aspx" Exclude="@(DefaultExclude)" />
       <!-- all js + css + html etc. stuff from assets-->
-      <InstallInclude Include="$(Dev2sxcAssets)\**\*.*" Exclude="$(Dev2sxcAssets)\**\*.map" />
-
+      <InstallInclude Include="$(Source)readme.md" Exclude="@(DefaultExclude)" />
+      <InstallIncludeJs Include="$(Source)\js\**\*.*" Exclude="$(Source)\js\**\*.map" />
+      <InstallIncludeSystem Include="$(Source)\system\**\*.*" Exclude="$(Source)\system\**\*.map" />
+      <InstallIncludeDist Include="$(Source)\dist\**\*.*" Exclude="$(Source)\dist\**\*.map" />
       <!-- WIP - turnOn map files must be included for now-->
-      <InstallInclude Include="$(Dev2sxcAssets)\**\dist\turnOn\*.*" />
+      <InstallIncludeDist Include="$(Source)\turnOn\*.*" />
 
       <!-- all global types and queries -->
       <InstallInclude Include="..\..\Data\**\App_Data\new-app\**\*.*" />
@@ -224,6 +227,9 @@
 
     <!-- create the INSTALL RESOURCES.ZIP file -->
     <Copy SourceFiles="@(InstallInclude)" DestinationFolder="$(TempPackageResourcesFolder)\%(RecursiveDir)" />
+    <Copy SourceFiles="@(InstallIncludeJs)" DestinationFolder="$(TempPackageResourcesFolder)\js\%(RecursiveDir)" />
+    <Copy SourceFiles="@(InstallIncludeSystem)" DestinationFolder="$(TempPackageResourcesFolder)\system\%(RecursiveDir)" />
+    <Copy SourceFiles="@(InstallIncludeDist)" DestinationFolder="$(TempPackageResourcesFolder)\dist\%(RecursiveDir)" />
 
     <CreateItem Include="$(TempPackageResourcesFolder)\**\*.*">
       <Output TaskParameter="Include" ItemName="ResourcesContent" />
@@ -237,23 +243,21 @@
 
 
     <!-- Create the Install package -->
-    <Message Text="DnnBuild: Creating final Zip file $(FinalZipFileName) in $(FinalZipFolder)" Importance="high" />
+    <Message Text="DnnBuild: Creating final Zip file $(FinalZipFileName) in $(DnnInstallPackage)" Importance="high" />
     <CreateItem Include="$(TempPackageFolder)\**\*.*">
       <Output TaskParameter="Include" ItemName="OutputContent" />
     </CreateItem>
-    <Zip Files="@(OutputContent)" WorkingDirectory="$(TempPackageFolder)" ZipFileName="$(FinalZipFolder)/$(FinalZipFileName)" />
+    <Zip Files="@(OutputContent)" WorkingDirectory="$(TempPackageFolder)" ZipFileName="$(DnnInstallPackage)/$(FinalZipFileName)" />
 
 
     <!-- Auto-deploy the externalized map files to another repo-->
     <!-- New in 2020-09 From now on we'll also publish the built js files to sources.2sxc.org and not include them in 2sxc-repo any more -->
     <Message Text="DnnBuild: Copying all Assets to versioned folder $(SourceMapsFolder)" Importance="high" />
     <ItemGroup>
-      <ExternalSourceMaps Include="$(Dev2sxcAssets)\dist\*ng-edit\**\*.*" />
-      <ExternalSourceMaps Include="$(Dev2sxcAssets)\dist\*inpage\**\*.*" />
-      <ExternalSourceMaps Include="$(Dev2sxcAssets)\dist\*ng\**\*.*" />
-      <!--include the js and system folders, but as a subfolder (that's why the strange syntax) -->
-      <ExternalSourceMaps Include="$(Dev2sxcAssets)\*js\**\*.*" />
-      <ExternalSourceMaps Include="$(Dev2sxcAssets)\*system\**\*.*" />
+      <!--include the dist, js and system folders, but as a subfolder (that's why the strange syntax) -->
+      <ExternalSourceMaps Include="$(Source)\*dist\**\*.*" />
+      <ExternalSourceMaps Include="$(Source)\*js\**\*.*" />
+      <ExternalSourceMaps Include="$(Source)\*system\**\*.*" />
     </ItemGroup>
     <RemoveDir Directories="$(SourceMapsFolder)" />
     <Copy SourceFiles="@(ExternalSourceMaps)" DestinationFolder="$(SourceMapsFolder)\%(RecursiveDir)" />
