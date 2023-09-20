@@ -105,9 +105,22 @@ namespace ToSic.Sxc.Oqt.Server.Services
             // for invalid page numbers just skip that part 
             var relativePath =
                 Utilities.NavigateUrl(alias.Path, page?.Path ?? string.Empty,
-                    parameters ?? string.Empty); // NavigateUrl do not works with absolute links
+                    QueryParametersForOqtane(parameters)); // NavigateUrl do not works with absolute links
 
             return absoluteUrl ? $"{LinkPaths.GetCurrentLinkRoot()}{relativePath}" : relativePath;
         }
+
+        /// <summary>
+        /// Oqtane Utilities.NavigateUrl and Utilities.ParseParameters
+        /// expects queryParameters that starts with '?' so we need to add it.
+        /// This is to ensure that that oqtane will work with / in query string,
+        /// or oqtane will recognize it as special oqtane UrlParameters
+        /// that starts with /!/ separator in page route part of url and
+        /// that is currently not expected in 2sxc apps.
+        /// </summary>
+        /// <param name="queryParameters"></param>
+        /// <returns>query params that starts with ?</returns>
+        private static string QueryParametersForOqtane(string queryParameters) 
+            => string.IsNullOrEmpty(queryParameters) ? string.Empty : $"?{queryParameters?.TrimStart('?')}";
     }
 }
