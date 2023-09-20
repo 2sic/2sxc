@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Web.LightSpeed
 
         public bool Save(IRenderResult data)
         {
-            var wrapLog = Log.Fn<bool>();
+            var wrapLog = Log.Fn<bool>(timer: true);
             if (!IsEnabled) return wrapLog.ReturnFalse("disabled");
             if (data == null) return wrapLog.ReturnFalse("null");
             if (data.IsError) return wrapLog.ReturnFalse("error");
@@ -61,14 +61,17 @@ namespace ToSic.Sxc.Web.LightSpeed
             if (data.DependentApps.SafeNone()) return wrapLog.ReturnFalse("app not initialized");
 
             // get dependent appStates
-            var dependentAppsStates = data.DependentApps.Select(da => AppStates.Get(da.AppId)).ToList();
+            List<AppState> dependentAppsStates = null;
+            Log.Do(message: "dependentAppsStates", timer: true, 
+                action: () => dependentAppsStates = data.DependentApps.Select(da => AppStates.Get(da.AppId)).ToList());
 
             // when dependent apps have disabled caching, parent app should not cache also 
             if (!IsEnabledOnDependentApps(dependentAppsStates)) return wrapLog.ReturnFalse("disabled in dependent app");
 
             // respect primary app (of site) as dependent app to ensure cache invalidation when primary app is changed
             if (AppState?.ZoneId != null)
-                dependentAppsStates.Add(AppStates.Get(AppStates.IdentityOfPrimary(AppState.ZoneId)));
+                Log.Do(message: "dependentAppsStates add", timer: true,
+                    action: () => dependentAppsStates.Add(AppStates.Get(AppStates.IdentityOfPrimary(AppState.ZoneId))));
 
             Log.A($"Found {data.DependentApps.Count} apps: " + string.Join(",", data.DependentApps.Select(da => da.AppId)));
             Fresh.Data = data;
@@ -76,15 +79,24 @@ namespace ToSic.Sxc.Web.LightSpeed
             // only add if we really have a duration; -1 is disabled, 0 is not set...
             if (duration <= 0)
                 return wrapLog.ReturnFalse($"not added as duration is {duration}");
+            
+            IList<string> appPathsToMonitor = null;
+            Log.Do(message: "appPathsToMonitor", timer: true, action: () => 
+                appPathsToMonitor = _features.IsEnabled(LightSpeedOutputCacheAppFileChanges.NameId)
+                ? _appPaths.Get(() => AppPaths(dependentAppsStates))
+                : null);
 
-            var appPathsToMonitor = _features.IsEnabled(LightSpeedOutputCacheAppFileChanges.NameId)
-                ? _appPaths.Get(() =>AppPaths(dependentAppsStates))
-                : null;
-            var cacheKey = Ocm.Add(CacheKey, Fresh, duration, _features, dependentAppsStates, appPathsToMonitor,
-                (x) => LightSpeedStats.Remove(AppState.AppId, data.Size));
+            string cacheKey = null;
+            Log.Do(message: "outputCacheManager add", timer: true, action: () =>
+                cacheKey = Ocm.Add(CacheKey, Fresh, duration, _features, dependentAppsStates, appPathsToMonitor,
+                (x) => LightSpeedStats.Remove(AppState.AppId, data.Size)));
+
             Log.A($"LightSpeed Cache Key: {cacheKey}");
-            if (cacheKey != "error") 
-                LightSpeedStats.Add(AppState.AppId, data.Size);
+
+            if (cacheKey != "error")
+                Log.Do(message: "LightSpeedStats", timer: true,
+                    action: () => LightSpeedStats.Add(AppState.AppId, data.Size));
+
             return wrapLog.ReturnTrue($"added for {duration}s");
         }
 
@@ -93,7 +105,7 @@ namespace ToSic.Sxc.Web.LightSpeed
         /// </summary>
         private bool IsEnabledOnDependentApps(List<AppState> appStates)
         {
-            var cLog = Log.Fn<bool>();
+            var cLog = Log.Fn<bool>(timer: true);
             foreach (var appState in appStates)
             {
                 var appConfig = LightSpeedDecorator.GetFromAppStatePiggyBack(appState, Log);
@@ -206,7 +218,15 @@ namespace ToSic.Sxc.Web.LightSpeed
             return wrapLog.Return(decoFromPiggyBack, $"{decoFromPiggyBack.Entity != null}");
         }
 
-        private OutputCacheManager Ocm => _ocm ?? (_ocm = new OutputCacheManager());
+        private OutputCacheManager Ocm
+        {
+            get
+            {
+                if (_ocm != null) return _ocm;
+                ConnectServices(_ocm = new OutputCacheManager());
+                return _ocm;
+            }
+        }
         private OutputCacheManager _ocm;
     }
 }
