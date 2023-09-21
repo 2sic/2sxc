@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Images;
-using ToSic.Sxc.Services;
+using ToSic.Sxc.Tests.ServicesTests.ImageService;
 
 namespace ToSic.Sxc.Tests.ServicesTests
 {
-    public abstract partial class ImageServiceFormats
+    public abstract partial class ImageServiceFormatsBase
     {
         protected abstract int ExpectedPngFormats { get; }
 
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataTestMethod]
         public void TestBestPng(string path)
         {
-            var formats = GetService<IImageService>().GetFormat(path).ResizeFormats;
+            var formats = this.GetResizeFormatTA(path);
             Assert.IsNotNull(formats);
             Assert.AreEqual(ExpectedPngFormats, formats.Count);
             // If we have many, we expect that the original will be listed as the second alternative
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataTestMethod]
         public void TestBestEmpty(string path)
         {
-            var formats = GetService<IImageService>().GetFormat(path).ResizeFormats;
+            var formats = this.GetResizeFormatTA(path);
             Assert.IsNotNull(formats);
             Assert.AreEqual(0, formats.Count);
         }
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataTestMethod]
         public void TestBestUnknownAvif(string path)
         {
-            var formats = GetService<IImageService>().GetFormat(path).ResizeFormats;
+            var formats = this.GetResizeFormatTA(path);
             Assert.IsNotNull(formats);
             Assert.AreEqual(0, formats.Count);
         }
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataTestMethod]
         public void TestBestSvg(string path)
         {
-            var formats = GetService<IImageService>().GetFormat(path).ResizeFormats;
+            var formats = this.GetResizeFormatTA(path);
             Assert.IsNotNull(formats);
             Assert.AreEqual(0, formats.Count);
         }

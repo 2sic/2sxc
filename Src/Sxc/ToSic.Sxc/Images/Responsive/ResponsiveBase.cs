@@ -1,13 +1,17 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
+using ToSic.Razor.Markup;
 using ToSic.Sxc.Data.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Web;
+using static System.StringComparer;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 using static ToSic.Sxc.Images.ImageDecorator;
 
@@ -52,25 +56,40 @@ namespace ToSic.Sxc.Images
             var imgTag = Razor.Blade.Tag.Img().Src(Src);
 
             // Add all kind of attributes if specified
-            var tag = ThisResize.Recipe;
-            var dic = tag?.Attributes?
-                .Where(pair => !Recipe.SpecialProperties.Contains(pair.Key))
-                .ToDictionary(p => p.Key, p => p.Value);
-            if (dic != null)
-            {
-                l.A(ImgService.Debug, "will add properties from attributes");
-                foreach (var a in dic)
-                    imgTag = imgTag.Attr(a.Key, a.Value);
-            }
+            imgTag = AddAttributes(imgTag, Params.ImgAttributes);
+            imgTag = AddAttributes(imgTag, ThisResize.Recipe?.Attributes);
 
             // Only add these if they were really specified / known
             if (Alt != null) imgTag = imgTag.Alt(Alt);
             if (Class != null) imgTag = imgTag.Class(Class);
+            if (TryGetAttribute(Params.ImgAttributes, Recipe.SpecialPropertyStyle, out var style))
+                imgTag = imgTag.Style(style);
+            if (TryGetAttribute(ThisResize.Recipe?.Attributes, Recipe.SpecialPropertyStyle, out style)) 
+                imgTag = imgTag.Style(style);
             if (Width != null) imgTag = imgTag.Width(Width);
             if (Height != null) imgTag = imgTag.Height(Height);
 
             return imgTag;
         }, enabled: ImgService.Debug);
+
+        [PrivateApi]
+        protected TImg AddAttributes<TImg>(TImg imgTag, IDictionary<string, object> addAttributes) where TImg : Tag<TImg>
+        {
+            var l = Log.Fn<TImg>();
+            if (addAttributes == null || !addAttributes.Any()) return l.Return(imgTag, "nothing to add");
+
+            var dic = addAttributes
+                .Where(pair => !Recipe.SpecialProperties.Contains(pair.Key, comparer: InvariantCultureIgnoreCase))
+                .ToDictionary(p => p.Key, p => p.Value);
+            if (!dic.Any()) return l.Return(imgTag, "only special props");
+
+            l.A(ImgService.Debug, "will add properties from attributes");
+            foreach (var a in dic)
+                imgTag = imgTag.Attr(a.Key, a.Value);
+
+            return l.Return(imgTag, "added");
+        }
+
         private readonly GetOnce<Img> _imgTag = new GetOnce<Img>();
 
         public IHtmlTag Tag => _tag.Get(GetTagWithToolbar);
@@ -152,24 +171,31 @@ namespace ToSic.Sxc.Images
 
 
         /// <inheritdoc />
-        public string Class => _imgClass.Get(ClassGenerator);
+        public string Class => _imgClass.Get(() => StyleOrClassGenerator(Params.ImgClass, Recipe.SpecialPropertyClass));
         private readonly GetOnce<string> _imgClass = new GetOnce<string>();
 
-        private string ClassGenerator() => Log.Func(() =>
+        private string StyleOrClassGenerator(string codePart, string key)
         {
-            var part1 = Params.ImgClass;
-            object attrClass = null;
-            ThisResize.Recipe?.Attributes?.TryGetValue(Recipe.SpecialPropertyClass, out attrClass);
-            // var attrClass = attrClassObj;
-            var hasOnAttrs = !string.IsNullOrWhiteSpace(attrClass?.ToString());
-            var hasOnImgClass = !string.IsNullOrWhiteSpace(Params.ImgClass);
+            var l = (ImgService.Debug ? Log : null).Fn<string>();
+            var hasOnImgClass = codePart.HasValue();
+            var hasOnAttrs = TryGetAttribute(ThisResize.Recipe?.Attributes, key, out var attrValue);
 
             // Must use null if neither are useful
-            if (!hasOnAttrs && !hasOnImgClass) return (null, "null/nothing");
-            var result = part1 + (hasOnImgClass && hasOnAttrs ? " " : "") + attrClass;
-            return (result, "");
-        }, enabled: ImgService.Debug);
+            if (!hasOnAttrs && !hasOnImgClass) return l.Return(null, "null/nothing");
+            if (hasOnImgClass && hasOnAttrs) return l.Return($"{codePart} {attrValue}", "both");
+            if (hasOnImgClass) return l.Return(codePart, "code only");
+            return l.Return(attrValue, "attr only");
+        }
 
+        [PrivateApi]
+        protected bool TryGetAttribute(IDictionary<string, object> attribs, string key, out string value)
+        {
+            value = null;
+            if (attribs == null) return false;
+            var found = attribs.TryGetValue(key, out var attrValue);
+            value = attrValue?.ToString();
+            return found && value.HasValue();
+        }
 
 
         /// <inheritdoc />

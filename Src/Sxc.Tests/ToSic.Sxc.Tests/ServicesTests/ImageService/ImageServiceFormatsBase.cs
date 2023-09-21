@@ -1,10 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Images;
-using ToSic.Sxc.Services;
+using ToSic.Sxc.Tests.ServicesTests.ImageService;
 
 namespace ToSic.Sxc.Tests.ServicesTests
 {
-    public abstract partial  class ImageServiceFormats: TestBaseSxcDb
+    public abstract partial  class ImageServiceFormatsBase: TestBaseSxcDb
     {
         [DataRow("test.png")]
         [DataRow(".png")]
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataTestMethod]
         public void TestPng(string path)
         {
-            var fileInfo = GetService<IImageService>().GetFormat(path);
+            var fileInfo = this.GetFormatTA(path);
             AssertOneFileInfo(ImageConstants.Png, fileInfo);
         }
 
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataTestMethod]
         public void TestJpg(string path)
         {
-            var fileInfo = GetService<IImageService>().GetFormat(path);
+            var fileInfo = this.GetFormatTA(path);
             AssertOneFileInfo(ImageConstants.Jpg, fileInfo);
         }
 
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void TestUnknown(string path, string expected)
         {
-            var typeInfo = GetService<IImageService>().GetFormat(path);
+            var typeInfo = this.GetFormatTA(path);
             AssertUnknownFileInfo(expected, typeInfo);
         }
 

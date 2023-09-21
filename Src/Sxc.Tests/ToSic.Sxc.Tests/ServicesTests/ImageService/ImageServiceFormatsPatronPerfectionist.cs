@@ -6,7 +6,7 @@ using ToSic.Testing.Shared.Platforms;
 namespace ToSic.Sxc.Tests.ServicesTests
 {
     [TestClass]
-    public class ImageServiceFormatsPatronPerfectionist : ImageServiceFormats
+    public class ImageServiceFormatsPatronPerfectionist : ImageServiceFormatsBase
     {
         // Start the test with a platform-info that has a patron
         protected override void SetupServices(IServiceCollection services)

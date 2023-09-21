@@ -29,7 +29,8 @@ namespace ToSic.Sxc.Images
         [PrivateApi] public const string SpecialPropertySizes = "sizes";
         [PrivateApi] public const string SpecialPropertyMedia = "media";
         [PrivateApi] public const string SpecialPropertyClass = "class";
-        [PrivateApi] public static string[] SpecialProperties = { SpecialPropertySizes, SpecialPropertyMedia, SpecialPropertyClass };
+        [PrivateApi] public const string SpecialPropertyStyle = "style";
+        [PrivateApi] public static string[] SpecialProperties = { SpecialPropertySizes, SpecialPropertyMedia, SpecialPropertyClass, SpecialPropertyStyle };
 
 
         /// <summary>

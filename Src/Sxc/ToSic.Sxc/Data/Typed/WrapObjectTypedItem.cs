@@ -13,7 +13,6 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data.Wrapper;
-using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using static ToSic.Eav.Parameters;
@@ -54,10 +53,11 @@ namespace ToSic.Sxc.Data.Typed
 
         IResponsivePicture ITypedItem.Picture(string name, string noParamOrder, object settings,
             object factor, object width, string imgAlt, string imgAltFallback,
-            string imgClass, object toolbar, object recipe
+            string imgClass, object imgAttributes, string pictureClass,
+            object pictureAttributes, object toolbar, object recipe
         ) => TypedItemHelpers.Picture(cdf: _cdf.Value, item: this, name: name, noParamOrder: noParamOrder,
             settings: settings, factor: factor, width: width, imgAlt: imgAlt,
-            imgAltFallback: imgAltFallback, imgClass: imgClass, toolbar: toolbar, recipe: recipe);
+            imgAltFallback: imgAltFallback, imgClass: imgClass, imgAttributes: imgAttributes, pictureClass: pictureClass, pictureAttributes: pictureAttributes, toolbar: toolbar, recipe: recipe);
 
 
         public int Id => PreWrap.TryGetTyped(nameof(Id), noParamOrder: Protector, fallback: 0, required: false);
