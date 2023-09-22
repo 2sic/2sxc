@@ -237,12 +237,18 @@ namespace ToSic.Sxc.Data
         IMetadata ITypedItem.Metadata => DynHelper.Metadata;
 
 
-        ITypedItem ITypedItem.Parent() =>
-            (DynHelper.Parent as DynamicEntity)?.TypedItem
-            ?? throw new Exception(
-                $"You tried to access {nameof(ITypedItem.Parent)}() but this item doesn't seem to have one. " +
-                $"It's only set if this Item was created from another Item using {nameof(ITypedItem.Child)}(...) or {nameof(ITypedItem.Children)}(...). " +
-                $"Were you trying to use {nameof(ITypedItem.Parents)}(...)?");
+        ITypedItem ITypedItem.Parent(string noParamOrder, bool? current, string type, string field)
+        {
+            Protect(noParamOrder, $"{nameof(current)} {nameof(type)}, {nameof(field)}");
+            if (current != true)
+                return (this as ITypedItem).Parents(type: type, field: field).FirstOrDefault();
+            
+            return (DynHelper.Parent as DynamicEntity)?.TypedItem
+                   ?? throw new Exception(
+                       $"You tried to access {nameof(ITypedItem.Parent)}({nameof(current)}: true). This should get the original Item which was used to find this one, but this item doesn't seem to have one. " +
+                       $"It's only set if this Item was created from another Item using {nameof(ITypedItem.Child)}(...) or {nameof(ITypedItem.Children)}(...). " +
+                       $"Were you trying to use {nameof(ITypedItem.Parents)}(...)?");
+        }
 
         /// <inheritdoc />
         [PrivateApi]

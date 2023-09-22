@@ -138,7 +138,8 @@ namespace ToSic.Sxc.Data
         IMetadata ITypedItem.Metadata => throw new NotSupportedException($"You can't access the Metadata of Metadata in ITypedItem");
 
         [PrivateApi]
-        ITypedItem ITypedItem.Parent() => throw new NotSupportedException($"You can't access the {nameof(ITypedItem.Parent)}() of Metadata");
+        ITypedItem ITypedItem.Parent(string noParamOrder, bool? current, string type, string field) =>
+            throw new NotSupportedException($"You can't access the {nameof(ITypedItem.Parent)}() of Metadata");
 
         /// <inheritdoc />
         [PrivateApi]

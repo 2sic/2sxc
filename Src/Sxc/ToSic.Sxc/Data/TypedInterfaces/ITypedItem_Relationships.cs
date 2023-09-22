@@ -14,8 +14,8 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc cref="ITypedRelationships.Children"/>
         IEnumerable<ITypedItem> Children(string field = default, string noParamOrder = Protector, string type = default, bool? required = default);
 
-        [PrivateApi]
-        ITypedItem Parent();
+        /// <inheritdoc cref="ITypedRelationships.Parent"/>
+        ITypedItem Parent(string noParamOrder = Protector, bool? current = default, string type = default, string field = default);
 
         /// <inheritdoc cref="ITypedRelationships.Parents"/>
         IEnumerable<ITypedItem> Parents(string noParamOrder = Protector, string type = default, string field = default);

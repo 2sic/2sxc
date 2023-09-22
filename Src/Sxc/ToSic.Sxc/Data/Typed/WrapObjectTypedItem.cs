@@ -99,7 +99,8 @@ namespace ToSic.Sxc.Data.Typed
             return items;
         }
 
-        public ITypedItem Parent() => throw new NotSupportedException($"You can't access the {nameof(Parent)}() here");
+        public ITypedItem Parent(string noParamOrder = Protector, bool? current = default, string type = default, string field = default) => 
+            throw new NotSupportedException($"You can't access the {nameof(Parent)}() here");
 
 
         /// <summary>
