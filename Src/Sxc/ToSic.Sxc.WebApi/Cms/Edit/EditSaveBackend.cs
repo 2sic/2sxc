@@ -108,7 +108,7 @@ namespace ToSic.Sxc.WebApi.Cms
             #endregion
 
 
-            var items = package.Items.Select(i =>
+            var items = package.Items.Where(i => !i.Header.IsEmpty).Select(i =>
             {
                 var ent = ser.Deserialize(i.Entity, false, false);
 
