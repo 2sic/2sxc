@@ -22,7 +22,10 @@ namespace ToSic.Sxc.Images
         public Picture Picture => _picTag.Get(() =>
         {
             var pic = Razor.Blade.Tag.Picture(Sources, Img);
-            if (Params.PicClass.HasValue()) pic = pic.Class(Params.PicClass);
+            pic = AddAttributes(pic, Params.PictureAttributes);
+            if (Params.PictureClass.HasValue()) pic = pic.Class(Params.PictureClass);
+            if (TryGetAttribute(Params.PictureAttributes, Recipe.SpecialPropertyStyle, out var style))
+                pic = pic.Style(style);
             return pic;
         });
         private readonly GetOnce<Picture> _picTag = new GetOnce<Picture>();

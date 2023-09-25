@@ -98,7 +98,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var permCheck = _saveSecurity.Init(_context)
                 .DoPreSaveSecurityCheck(_appId, package.Items);
 
-            var foundItems = package.Items.Where(i => i.Entity.Id != 0 && i.Entity.Guid != Guid.Empty)
+            var foundItems = package.Items.Where(i => i.Entity.Id != 0 || i.Entity.Guid != Guid.Empty)
                 .Select(i => i.Entity.Guid != Guid.Empty
                         ? appRead.Entities.Get(i.Entity.Guid) // prefer guid access if available
                         : appRead.Entities.Get(i.Entity.Id)  // otherwise id
@@ -108,7 +108,7 @@ namespace ToSic.Sxc.WebApi.Cms
             #endregion
 
 
-            var items = package.Items.Select(i =>
+            var items = package.Items.Where(i => !i.Header.IsEmpty).Select(i =>
             {
                 var ent = ser.Deserialize(i.Entity, false, false);
 

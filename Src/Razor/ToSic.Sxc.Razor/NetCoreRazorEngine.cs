@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Engines;
@@ -23,16 +24,18 @@ namespace ToSic.Sxc.Razor
     {
         private readonly LazySvc<CodeErrorHelpService> _errorHelp;
         private readonly LazySvc<CodeRootFactory> _codeRootFactory;
+        private readonly LazySvc<IRenderingHelper> _renderingHelper;
         public IRazorRenderer RazorRenderer { get; }
 
         #region Constructor / DI
 
-        public NetCoreRazorEngine(MyServices services, IRazorRenderer razorRenderer, LazySvc<CodeRootFactory> codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp) : base(services)
+        public NetCoreRazorEngine(MyServices services, IRazorRenderer razorRenderer, LazySvc<CodeRootFactory> codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<IRenderingHelper> renderingHelper) : base(services)
         {
             ConnectServices(
                 _codeRootFactory = codeRootFactory,
                 RazorRenderer = razorRenderer,
-                _errorHelp = errorHelp
+                _errorHelp = errorHelp,
+                _renderingHelper = renderingHelper
             );
         }
         
@@ -47,11 +50,11 @@ namespace ToSic.Sxc.Razor
             {
                 task.Wait();
                 var result = task.Result;
-                // TODO: not yet clear how to best show errors
-                // ATM we're just showing the exception, but this may show information about the code
-                return result.Exception == null 
-                    ? l.ReturnAsOk((result.TextWriter.ToString(), null))
-                    : l.Return((result.TextWriter?.ToString() ?? result.Exception.ToString(), new() { result.Exception }));
+
+                if (result.Exception == null) return l.ReturnAsOk((result.TextWriter.ToString(), null));
+
+                var errorMessage = _renderingHelper.Value.Init(Block).DesignErrorMessage(new () { result.Exception }, true);
+                return l.Return((errorMessage, new() { result.Exception }));
             }
             catch (Exception ex)
             {

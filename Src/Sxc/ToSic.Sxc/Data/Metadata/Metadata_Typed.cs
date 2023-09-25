@@ -138,7 +138,8 @@ namespace ToSic.Sxc.Data
         IMetadata ITypedItem.Metadata => throw new NotSupportedException($"You can't access the Metadata of Metadata in ITypedItem");
 
         [PrivateApi]
-        ITypedItem ITypedItem.Parent() => throw new NotSupportedException($"You can't access the {nameof(ITypedItem.Parent)}() of Metadata");
+        ITypedItem ITypedItem.Parent(string noParamOrder, bool? current, string type, string field) =>
+            throw new NotSupportedException($"You can't access the {nameof(ITypedItem.Parent)}() of Metadata");
 
         /// <inheritdoc />
         [PrivateApi]
@@ -205,11 +206,14 @@ namespace ToSic.Sxc.Data
             string imgAlt,
             string imgAltFallback,
             string imgClass,
+            object imgAttributes,
+            string pictureClass,
+            object pictureAttributes,
             object toolbar,
             object recipe
         ) => TypedItemHelpers.Picture(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder, settings: settings,
-            factor: factor, width: width, imgAlt: imgAlt,
-            imgAltFallback: imgAltFallback, imgClass: imgClass, toolbar: toolbar, recipe: recipe);
+            factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback, 
+            imgClass: imgClass, imgAttributes: imgAttributes, pictureClass: pictureClass, pictureAttributes: pictureAttributes, toolbar: toolbar, recipe: recipe);
 
         #endregion
 

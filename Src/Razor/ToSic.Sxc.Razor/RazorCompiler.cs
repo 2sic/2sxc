@@ -56,6 +56,7 @@ namespace ToSic.Sxc.Razor
         {
             var l = Log.Fn<IView>($"partialName:{partialName}");
             var searchedLocations = new List<string>();
+            var exceptions = new List<Exception>();
             try
             {
                 List<ApplicationPart> removeThis = null;
@@ -94,6 +95,7 @@ namespace ToSic.Sxc.Razor
             catch (Exception e)
             {
                 l.Ex(e);
+                exceptions.Add(e);
             }
 
             try
@@ -110,7 +112,11 @@ namespace ToSic.Sxc.Razor
             catch (Exception e)
             {
                 l.Ex(e);
+                exceptions.Add(e);
             }
+
+            foreach (var exception in exceptions)
+                throw exception;
 
             var errorMessage = string.Join(
                 Environment.NewLine,

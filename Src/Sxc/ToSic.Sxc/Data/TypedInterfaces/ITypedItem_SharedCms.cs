@@ -83,6 +83,9 @@ namespace ToSic.Sxc.Data
         /// </param>
         /// <param name="imgClass">Optional `class` attribute on the created `img` tag</param>
         /// <param name="toolbar">Provide a custom toolbar or `false` to not show a toolbar</param>
+        /// <param name="imgAttributes">Optional additional attributes - as anonymous object eg `new { style = "padding: 10px" }` or Dictionary (new 16.07)</param>
+        /// <param name="pictureClass">Optional `class` attribute on the created `picture` tag</param>
+        /// <param name="pictureAttributes">Optional additional attributes - as anonymous object eg `new { style = "padding: 10px" }` or Dictionary (new 16.07)</param>
         /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
         /// <param name="recipe">
         /// Optional recipe = instructions how to create the various variants of this link.
@@ -101,6 +104,7 @@ namespace ToSic.Sxc.Data
         /// <remarks>
         /// * Added to ITypedItem in v16.03
         /// * We have this `Picture` method but no `Img` method, as we don't recommended that in responsive HTML5
+        /// * `imgAttributes`, `picClass` and `picAttributes` added in 16.07
         /// </remarks>
         IResponsivePicture Picture(
             string name,
@@ -111,6 +115,9 @@ namespace ToSic.Sxc.Data
             string imgAlt = default,
             string imgAltFallback = default,
             string imgClass = default,
+            object imgAttributes = default,
+            string pictureClass = default,
+            object pictureAttributes = default,
             object toolbar = default,
             object recipe = default
         );

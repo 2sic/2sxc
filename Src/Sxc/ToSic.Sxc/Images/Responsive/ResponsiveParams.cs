@@ -1,8 +1,8 @@
-﻿using ToSic.Eav;
+﻿using System.Collections.Generic;
+using ToSic.Eav;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Edit.Toolbar;
 
 namespace ToSic.Sxc.Images
 {
@@ -26,8 +26,10 @@ namespace ToSic.Sxc.Images
         public string ImgAlt { get; }
         public string ImgAltFallback { get; }
         public string ImgClass { get; }
+        public IDictionary<string, object> ImgAttributes { get; }
+        public IDictionary<string, object> PictureAttributes { get; }
 
-        public string PicClass { get; }
+        public string PictureClass { get; }
 
         public object Toolbar { get; }
 
@@ -39,9 +41,11 @@ namespace ToSic.Sxc.Images
             string imgAlt = default,
             string imgAltFallback = default,
             string imgClass = default,
-            string picClass = default,
+            IDictionary<string, object> imgAttributes = default,
+            string pictureClass = default,
+            IDictionary<string, object> pictureAttributes = default,
             object toolbar = default
-            )
+        )
         {
             Parameters.ProtectAgainstMissingParameterNames(noParamOrder, method,
                 $"{nameof(target)}, {nameof(settings)}, factor, {nameof(imgAlt)}, {nameof(imgClass)}, recipe");
@@ -53,7 +57,9 @@ namespace ToSic.Sxc.Images
             ImgAlt = imgAlt;
             ImgAltFallback = imgAltFallback;
             ImgClass = imgClass;
-            PicClass = picClass;
+            ImgAttributes = imgAttributes;
+            PictureClass = pictureClass;
+            PictureAttributes = pictureAttributes;
             Toolbar = toolbar;
         }
     }

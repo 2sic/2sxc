@@ -153,6 +153,9 @@ namespace ToSic.Sxc.Services
         /// _new in v15_
         /// </param>
         /// <param name="imgClass">Optional `class` attribute on the created `img` tag</param>
+        /// <param name="imgAttributes">Optional additional attributes - as anonymous object eg `new { style = "padding: 10px" }` or Dictionary (new 16.07)</param>
+        /// <param name="pictureClass">Optional `class` attribute on the created `picture` tag</param>
+        /// <param name="pictureAttributes">Optional additional attributes - as anonymous object eg `new { style = "padding: 10px" }` or Dictionary (new 16.07)</param>
         /// <param name="toolbar">Provide a custom toolbar or `false` to not show a toolbar</param>
         /// <param name="recipe">
         /// Optional recipe = instructions how to create the various variants of this link.
@@ -168,6 +171,7 @@ namespace ToSic.Sxc.Services
         /// * Added in v13.03
         /// * Extended in v16.03 to also support IFile
         /// * `toolbar` added in v16.04
+        /// * `imgAttributes`, `picClass` and `picAttributes` added in 16.07
         /// </remarks>
         IResponsivePicture Picture(
             object link = null,
@@ -178,6 +182,9 @@ namespace ToSic.Sxc.Services
             string imgAlt = default,
             string imgAltFallback = default,
             string imgClass = default,
+            object imgAttributes = default,
+            string pictureClass = default,
+            object pictureAttributes = default,
             object toolbar = default,
             object recipe = default
         );
@@ -212,6 +219,7 @@ namespace ToSic.Sxc.Services
         /// _new in v15_
         /// </param>
         /// <param name="imgClass">Optional `class` attribute on the created `img` tag</param>
+        /// <param name="imgAttributes">Optional additional attributes - as anonymous object eg `new { style = "padding: 10px" }` or Dictionary (new 16.07)</param>
         /// <param name="toolbar">Provide a custom toolbar or `false` to not show a toolbar</param>
         /// <param name="recipe">
         ///     Optional recipe = instructions how to create the various variants of this link.
@@ -236,6 +244,7 @@ namespace ToSic.Sxc.Services
             string imgAlt = default,
             string imgAltFallback = default,
             string imgClass = default,
+            object imgAttributes = default,
             object toolbar = default,
             object recipe = default
         );

@@ -1,6 +1,12 @@
-﻿using ToSic.Lib.Helpers;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using ToSic.Eav.Generics;
+using ToSic.Eav.Plumbing;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Services;
+using static System.StringComparer;
 
 namespace ToSic.Sxc.Images
 {
@@ -69,12 +75,13 @@ namespace ToSic.Sxc.Images
             string imgAlt = null,
             string imgAltFallback = default,
             string imgClass = null,
+            object imgAttributes = default,
             object toolbar = default,
             object recipe = null)
             => new ResponsiveImage(this,
                 new ResponsiveParams(nameof(Img), link, noParamOrder,
                     Settings(settings, factor: factor, width: width, recipe: recipe),
-                    imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass, toolbar: toolbar),
+                    imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass, imgAttributes: CreateAttribDic(imgAttributes), toolbar: toolbar),
                 Log);
 
 
@@ -88,12 +95,16 @@ namespace ToSic.Sxc.Images
             string imgAlt = default,
             string imgAltFallback = default,
             string imgClass = default,
+            object imgAttributes = default,
+            string pictureClass = default,
+            object pictureAttributes = default,
             object toolbar = default,
             object recipe = default)
             => new ResponsivePicture(this,
                 new ResponsiveParams(nameof(Picture), link, noParamOrder,
                     Settings(settings, factor: factor, width: width, recipe: recipe),
-                    imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass, toolbar: toolbar),
+                    imgAlt: imgAlt, imgAltFallback: imgAltFallback,
+                    imgClass: imgClass, imgAttributes: CreateAttribDic(imgAttributes), pictureClass: pictureClass, pictureAttributes: CreateAttribDic(pictureAttributes), toolbar: toolbar),
                 Log);
 
         /// <inheritdoc />
@@ -108,5 +119,15 @@ namespace ToSic.Sxc.Images
             }
         }
         private bool _debug;
+
+        private IDictionary<string, object> CreateAttribDic(object attributes)
+        {
+            if (attributes == null) return null;
+            if (attributes is IDictionary<string, object> ok) return ok.ToInvariant();
+            if (attributes is IDictionary<string, string> strDic)
+                return strDic.ToDictionary(pair => pair.Key, pair => pair.Value as object, InvariantCultureIgnoreCase);
+            if (attributes.IsAnonymous()) return attributes.ToDicInvariantInsensitive();
+            throw new ArgumentException("format unknown", nameof(attributes));
+        }
     }
 }
