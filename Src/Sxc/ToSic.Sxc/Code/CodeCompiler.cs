@@ -80,7 +80,8 @@ namespace ToSic.Sxc.Code
             // if no name provided, use the name which is the same as the file name
             className = className ?? Path.GetFileNameWithoutExtension(relativePath) ?? Eav.Constants.NullNameId;
 
-            var (assembly, errorMessages) = GetAssembly(relativePath, className);
+            //var (assembly, errorMessages) = GetAssembly(relativePath, className);
+            var (assembly, errorMessages) = GetAssembly2(relativePath, className);
 
             if (errorMessages != null) return l.Return((null, errorMessages), "error messages");
 
@@ -112,7 +113,9 @@ namespace ToSic.Sxc.Code
             return l.Return((compiledType, errorMessages), errorMessages == null ? "ok" : "errors");
         }
 
-        protected abstract (Assembly Assembly, string ErrorMessages) GetAssembly(string relativePath, string className);
+        protected abstract (Assembly Assembly, string ErrorMessages) GetAssembly(string fileRelativePath, string className);
+
+        public abstract (Assembly Assembly, string ErrorMessages) GetAssembly2(string folderRelativePath, string className = null);
 
 
         protected abstract (Type Type, string ErrorMessage) GetCsHtmlType(string relativePath);
@@ -136,7 +139,7 @@ namespace ToSic.Sxc.Code
             {
                 l.A($"Trying to resolve relative path: '{virtualPath}' using '{relativePath}'");
                 if (relativePath == null)
-                    return l.ReturnAndLog("Unexpected null value on relativePath");
+                    return l.ReturnAndLog("Unexpected null value on fileRelativePath");
 
                 // if necessary, add trailing slash
                 relativePath = relativePath.SuffixSlash();
