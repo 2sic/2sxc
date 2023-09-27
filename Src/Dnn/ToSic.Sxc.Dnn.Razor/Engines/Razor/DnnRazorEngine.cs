@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Web;
@@ -16,6 +17,7 @@ using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Engines.RoslynCompile;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Engines
@@ -33,16 +35,19 @@ namespace ToSic.Sxc.Engines
         private readonly LazySvc<CodeErrorHelpService> _errorHelp;
         private readonly CodeRootFactory _codeRootFactory;
         private readonly LazySvc<DnnRazorSourceAnalyzer> _sourceAnalyzer;
+        private readonly LazySvc<AppCodeLoader> _appCodeLoader;
+        private readonly LazySvc<RoslynBuildManager> _roslynBuildManager;
 
-        public DnnRazorEngine(MyServices helpers, CodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<DnnRazorSourceAnalyzer> sourceAnalyzer) : base(helpers)
+        public DnnRazorEngine(MyServices helpers, CodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<DnnRazorSourceAnalyzer> sourceAnalyzer, LazySvc<AppCodeLoader> appCodeLoader, LazySvc<RoslynBuildManager> roslynBuildManager) : base(helpers)
         {
             ConnectServices(
                 _codeRootFactory = codeRootFactory,
                 _errorHelp = errorHelp,
-                _sourceAnalyzer = sourceAnalyzer
+                _sourceAnalyzer = sourceAnalyzer,
+                _appCodeLoader = appCodeLoader,
+                _roslynBuildManager = roslynBuildManager
             );
         }
-
 
         #endregion
 
@@ -106,6 +111,7 @@ namespace ToSic.Sxc.Engines
 
             try
             {
+                AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
                 page.ExecutePageHierarchy(new WebPageContext(HttpContextCurrent, page, data), writer, page);
             }
             catch (Exception maybeIEntityCast)
@@ -115,8 +121,20 @@ namespace ToSic.Sxc.Engines
                 ExceptionDispatchInfo.Capture(ex).Throw();
                 throw; // fake throw, just so the code shows what happens
             }
+            finally
+            {
+                AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
+            }
             return l.Return((writer, page.SysHlp.ExceptionsOrNull));
         }
+
+        Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            if (args.Name == _appCodeAssembly?.FullName)
+                return _appCodeAssembly;
+            return null;
+        }
+        private Assembly _appCodeAssembly = null;
 
         [PrivateApi]
         protected override (string, List<Exception>) RenderTemplate(object data)
@@ -134,7 +152,9 @@ namespace ToSic.Sxc.Engines
             Type compiledType;
             try
             {
-                compiledType = BuildManager.GetCompiledType(TemplatePath);
+                _appCodeAssembly = _appCodeLoader.Value.GetAppCodeAssemblyOrNull(App.AppId);
+                compiledType = _roslynBuildManager.Value.GetCompiledType(TemplateFullPath, App.AppId);
+                //compiledType = BuildManager.GetCompiledType(TemplatePath)
             }
             catch (Exception compileEx)
             {
@@ -156,6 +176,7 @@ namespace ToSic.Sxc.Engines
                     return l.ReturnNull("type not found");
 
                 page = Activator.CreateInstance(compiledType);
+
                 var pageObjectValue = RuntimeHelpers.GetObjectValue(page);
                 return l.ReturnAsOk(pageObjectValue);
             }
@@ -167,7 +188,6 @@ namespace ToSic.Sxc.Engines
                 throw; // fake throw, just so the code shows what happens
             }
         }
-
 
         private bool InitWebpage()
         {
@@ -224,6 +244,5 @@ namespace ToSic.Sxc.Engines
             }
             l.Done();
         }
-
     }
 }

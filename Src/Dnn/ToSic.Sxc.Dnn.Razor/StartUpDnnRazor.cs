@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Engines.Razor;
+using ToSic.Sxc.Engines.RoslynCompile;
 
 namespace ToSic.Sxc
 {
@@ -12,6 +13,7 @@ namespace ToSic.Sxc
             // Settings / WebApi stuff
             services.TryAddTransient<DnnRazorSourceAnalyzer>();
             services.TryAddTransient<HtmlHelper>();
+            services.TryAddTransient<RoslynBuildManager>();
 
             return services;
         }

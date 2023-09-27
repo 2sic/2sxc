@@ -24,6 +24,8 @@ using static ToSic.Sxc.Blocks.BlockBuildingConstants;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IDataSource = ToSic.Eav.DataSource.IDataSource;
 using ToSic.Eav.Code.Help;
+using ToSic.Razor.Html5;
+using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Engines
 {
@@ -41,6 +43,8 @@ namespace ToSic.Sxc.Engines
         [PrivateApi] protected IBlock Block;
 
         [PrivateApi] public bool CompatibilityAutoLoadJQueryAndRvt { get; protected set; } = true;
+        [PrivateApi] protected string AppCodeFullPath;
+        [PrivateApi] protected string TemplateFullPath;
 
         #region Constructor and DI
 
@@ -87,6 +91,7 @@ namespace ToSic.Sxc.Engines
             var templatePath = polymorphPathOrNull ??
                                Path.Combine(appPathRootInInstallation, subPath).ToAbsolutePathForwardSlash();
 
+
             // Throw Exception if Template does not exist
             if (!File.Exists(Services.ServerPaths.FullAppPath(templatePath)))
                 throw new RenderingException(new CodeHelp(name: "Template File Not Found", detect: "",
@@ -102,6 +107,10 @@ namespace ToSic.Sxc.Engines
 
             // check access permissions - before initializing or running data-code in the template
             CheckTemplatePermissions(Block.Context.User);
+
+            // WIP
+            TemplateFullPath = Path.Combine(Block.App.PathSwitch(view.IsShared, PathTypes.PhysFull), subPath); // TODO: missing PolymorphTryToSwitchPath
+            AppCodeFullPath = Path.Combine(Block.App.PathSwitch(view.IsShared, PathTypes.PhysFull), AppCodeLoader.AppCodeFolder, AppCodeLoader.AssemblyName(App.AppId));
 
             // Run engine-internal init stuff
             Init();

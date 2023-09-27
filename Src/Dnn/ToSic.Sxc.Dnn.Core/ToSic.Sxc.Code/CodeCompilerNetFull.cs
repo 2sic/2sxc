@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using System.Web.Compilation;
 using ToSic.Lib.Documentation;
 
@@ -7,15 +6,15 @@ using ToSic.Lib.Documentation;
 namespace ToSic.Sxc.Code
 {
     [PrivateApi]
-    public class CodeCompilerNetFull: CodeCompiler
+    public class CodeCompilerNetFull : CodeCompiler
     {
         public CodeCompilerNetFull(IServiceProvider serviceProvider) : base(serviceProvider)
         { }
 
-        protected override (Assembly Assembly, string ErrorMessages) GetAssembly(string relativePath, string className)
+        protected internal override AssemblyResult GetAssembly(string relativePath, string className)
         {
             var assembly = BuildManager.GetCompiledAssembly(relativePath);
-            return (assembly, null);
+            return new AssemblyResult(assembly: assembly); ;
         }
 
         protected override (Type Type, string ErrorMessage) GetCsHtmlType(string relativePath)

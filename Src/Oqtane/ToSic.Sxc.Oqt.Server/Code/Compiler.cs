@@ -10,8 +10,10 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Text;
+using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Oqt.Server.Code
 {
@@ -25,98 +27,167 @@ namespace ToSic.Sxc.Oqt.Server.Code
         private static List<MetadataReference> _references;
 
         public Compiler() : base("Sys.CodCpl")
-        {
-
-        }
-
-        public Assembly Compile(string filePath, string dllName)
-        {
-            Log.A($"Starting compilation of: '{filePath}'");
-
-            var sourceCode = File.ReadAllText(filePath);
-
-            var cache = MemoryCache.Default;
-            var assembly = cache[filePath.ToLowerInvariant()] as Assembly;
-            if (assembly != null) return assembly;
-            assembly = CompileSourceCode(filePath, sourceCode, dllName);
-            if (assembly != null)
-                cache.Set(filePath.ToLowerInvariant(), assembly, GetCacheItemPolicy(filePath));
-            return assembly;
-        }
+        { }
 
         // Ensure that can't be kept alive by stack slot references (real- or JIT-introduced locals).
         // That could keep the SimpleUnloadableAssemblyLoadContext alive and prevent the unload.
         [MethodImpl(MethodImplOptions.NoInlining)]
 
-        private Assembly CompileSourceCode(string path, string sourceCode, string dllName)
+        private AssemblyResult Compile(string path, string dllName)
         {
-            var l = Log.Fn<Assembly>($"{nameof(dllName)}: {dllName}.");
+            var l = Log.Fn<AssemblyResult>($"Starting compilation of: '{path}', {nameof(dllName)}: {dllName}.");
+
             var encoding = Encoding.UTF8;
-            var pdbName = $"{dllName}.pdb";
-            using (var peStream = new MemoryStream())
-            using (var pdbStream = new MemoryStream())
+
+            var options = CSharpParseOptions.Default
+                .WithLanguageVersion(LanguageVersion.CSharp11)
+                .WithPreprocessorSymbols("OQTANE", "NETCOREAPP", "NET5_0");
+
+            var syntaxTrees = new List<SyntaxTree>();
+            var embeddedTexts = new List<EmbeddedText>();
+
+            foreach (var sourceFile in GetSourceFiles(path))
             {
-                var options = new EmitOptions(
-                    debugInformationFormat: DebugInformationFormat.PortablePdb,
-                    pdbFilePath: pdbName);
+                var sourceCode = File.ReadAllText(sourceFile);
+                syntaxTrees.Add(SyntaxFactory.ParseSyntaxTree(sourceCode, options));
+                embeddedTexts.Add(EmbeddedText.FromSource(sourceFile, SourceText.From(sourceCode, encoding)));
+            }
 
-                var buffer = encoding.GetBytes(sourceCode);
-                var sourceText = SourceText.From(buffer, buffer.Length, encoding, canBeEmbedded: true);
+            var save = Directory.Exists(path);
+            var assemblyName = dllName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) ? dllName.Substring(0, dllName.Length - 4) : dllName;
+            var assemblyFilePath = Path.Combine(path, $"{assemblyName}.dll");
+            var pdbFilePath = Path.Combine(path, $"{assemblyName}.pdb");
 
-                var embeddedTexts = new List<EmbeddedText>
+            var compilation = CSharpCompilation.Create(
+                $"{assemblyName}.dll",
+                syntaxTrees,
+                references: References,
+                options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
+                    optimizationLevel: OptimizationLevel.Debug,
+                    assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default));
+
+            var assemblyLoadContext = new SimpleUnloadableAssemblyLoadContext();
+            // var assemblyLoadContext = AssemblyLoadContext.Default;
+
+            if (save)
+            {
+                // Create file streams to save the compiled assembly and PDB to disk
+                using (var peFileStream = new FileStream(assemblyFilePath, FileMode.Create, FileAccess.Write))
+                using (var pdbFileStream = new FileStream(pdbFilePath, FileMode.Create, FileAccess.Write))
                 {
-                    EmbeddedText.FromSource(path, sourceText),
-                };
+                    var result = compilation.Emit(peFileStream, pdbFileStream, embeddedTexts: embeddedTexts,
+                        options: new EmitOptions(
+                            debugInformationFormat: DebugInformationFormat.PortablePdb,
+                            pdbFilePath: pdbFilePath));
 
-                var result = GenerateCode(path, sourceText, dllName).Emit(peStream,
-                    pdbStream,
-                    embeddedTexts: embeddedTexts,
-                    options: options);
-
-                if (!result.Success)
-                {
-                    l.E("Compilation done with error.");
-
-                    var errors = new List<string>();
-
-                    var failures = result.Diagnostics.Where(diagnostic =>
-                        diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error);
-
-                    foreach (var diagnostic in failures)
+                    if (!result.Success)
                     {
-                        l.A("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
-                        errors.Add($"{diagnostic.Id}: {diagnostic.GetMessage()}");
+                        l.E("Compilation done with error.");
+
+                        var errors = new List<string>();
+
+                        var failures = result.Diagnostics.Where(diagnostic =>
+                            diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error);
+
+                        foreach (var diagnostic in failures)
+                        {
+                            l.A("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
+                            errors.Add($"{diagnostic.Id}: {diagnostic.GetMessage()}");
+                        }
+
+                        throw l.Done(new IOException(string.Join("\n", errors)));
                     }
 
-                    throw l.Done(new IOException(string.Join("\n", errors)));
+                    peFileStream.Flush();
+                    pdbFileStream.Flush();
                 }
 
-                peStream.Seek(0, SeekOrigin.Begin);
-                pdbStream?.Seek(0, SeekOrigin.Begin);
+                var assembly = assemblyLoadContext.LoadFromAssemblyPath(assemblyFilePath);
+                var assemblyBytes = File.ReadAllBytes(assemblyFilePath);
 
-                var assemblyLoadContext = new SimpleUnloadableAssemblyLoadContext();
-                var assembly = assemblyLoadContext.LoadFromStream(peStream, pdbStream);
+                return l.Return(new AssemblyResult(assembly, assemblyBytes, null), "Compilation done without any error.");
+            }
+            else
+            {
+                // Compile to in-memory streams as before
+                using (var peStream = new MemoryStream())
+                using (var pdbStream = new MemoryStream())
+                {
+                    var result = compilation.Emit(peStream, pdbStream, embeddedTexts: embeddedTexts,
+                        options: new EmitOptions(
+                            debugInformationFormat: DebugInformationFormat.PortablePdb,
+                            pdbFilePath: $"{assemblyName}.pdb"));
 
-                return l.Return(assembly, "Compilation done without any error.");
+                    if (!result.Success)
+                    {
+                        l.E("Compilation done with error.");
+
+                        var errors = new List<string>();
+
+                        var failures = result.Diagnostics.Where(diagnostic =>
+                            diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error);
+
+                        foreach (var diagnostic in failures)
+                        {
+                            l.A("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
+                            errors.Add($"{diagnostic.Id}: {diagnostic.GetMessage()}");
+                        }
+
+                        throw l.Done(new InvalidOperationException(string.Join("\n", errors)));
+                    }
+
+                    peStream.Seek(0, SeekOrigin.Begin);
+                    pdbStream?.Seek(0, SeekOrigin.Begin);
+
+                    var assembly = assemblyLoadContext.LoadFromStream(peStream, pdbStream);
+
+                    return l.Return(new AssemblyResult(assembly, peStream.ToArray(), null), "Compilation done without any error.");
+                }
             }
         }
 
-        private static CSharpCompilation GenerateCode(string path, SourceText sourceCode, string dllName)
+        private static IEnumerable<string> GetSourceFiles(string path)
         {
-            var options = CSharpParseOptions.Default
-                .WithLanguageVersion(LanguageVersion.CSharp9)
-                .WithPreprocessorSymbols("OQTANE", "NETCOREAPP", "NET5_0");
-
-            var parsedSyntaxTree = SyntaxFactory.ParseSyntaxTree(sourceCode, options, path);
-            var peName = $"{dllName}.dll";
-
-            return CSharpCompilation.Create(peName,
-                new[] { parsedSyntaxTree },
-                references: References,
-                options: new(OutputKind.DynamicallyLinkedLibrary,
-                    optimizationLevel: OptimizationLevel.Debug,
-                    assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default));
+            if (File.Exists(path))
+                return new[] { path };
+            if (Directory.Exists(path))
+                return Directory.GetFiles(path, "*.cs", SearchOption.AllDirectories);
+            return Array.Empty<string>();
         }
+
+        //private static CSharpCompilation GenerateCode(string path, SourceText sourceCode, string dllName)
+        //{
+        //    var options = CSharpParseOptions.Default
+        //        .WithLanguageVersion(LanguageVersion.CSharp11)
+        //        .WithPreprocessorSymbols("OQTANE", "NETCOREAPP", "NET5_0");
+
+        //    var parsedSyntaxTree = SyntaxFactory.ParseSyntaxTree(sourceCode, options, path);
+        //    var peName = $"{dllName}.dll";
+
+        //    return CSharpCompilation.Create(peName,
+        //        new[] { parsedSyntaxTree },
+        //        references: References,
+        //        options: new(OutputKind.DynamicallyLinkedLibrary,
+        //            optimizationLevel: OptimizationLevel.Debug,
+        //            assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default));
+        //}
+
+        //private CompilerResults GetCompiledAssemblyFromFolder(string[] sourceFiles)
+        //{
+        //    var provider = new CSharpCodeProvider();
+        //    var parameters = new CompilerParameters
+        //    {
+        //        GenerateInMemory = true,
+        //        GenerateExecutable = false, // Dynamically linked library in Roslyn
+        //        IncludeDebugInformation = true, // Equivalent to OptimizationLevel.Debug in Roslyn
+        //        CompilerOptions = "/langversion:11 /define:OQTANE;NETCOREAPP;NET5_0 /optimize-"
+        //    };
+
+        //    // Add all referenced assemblies
+        //    parameters.ReferencedAssemblies.AddRange(ReferencedAssembliesProvider.Locations());
+
+        //    return provider.CompileAssemblyFromFile(parameters, sourceFiles);
+        //}
 
         private static List<MetadataReference> GetMetadataReferences()
         {
@@ -141,16 +212,17 @@ namespace ToSic.Sxc.Oqt.Server.Code
 
         private CacheItemPolicy GetCacheItemPolicy(string filePath)
         {
-            var filePaths = new List<string> { filePath };
-
             // expire cache item if not used in 30 min
             var cacheItemPolicy = new CacheItemPolicy
             {
                 SlidingExpiration = TimeSpan.FromMinutes(30)
             };
-            // expire cache item on CS file change
-            cacheItemPolicy.ChangeMonitors.Add(new
-                HostFileChangeMonitor(filePaths));
+
+            // expire cache item on file or folder change
+            if (File.Exists(filePath))
+                cacheItemPolicy.ChangeMonitors.Add(new HostFileChangeMonitor(new List<string> { filePath }));
+            else if (Directory.Exists(filePath))
+                cacheItemPolicy.ChangeMonitors.Add(new FolderChangeMonitor(new List<string> { filePath }));
             return cacheItemPolicy;
         }
     }

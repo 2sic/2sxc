@@ -8,6 +8,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Images.ImageflowRewrite;
+using ToSic.Sxc.Code;
 using GlobalConfiguration = System.Web.Http.GlobalConfiguration;
 
 namespace ToSic.Sxc.Dnn.StartUp
@@ -70,6 +71,9 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // Optional registration of query string rewrite functionality implementation for dnn imageflow module
             Imageflow.Dnn.StartUp.RegisterQueryStringRewrite(ImageflowRewrite.QueryStringRewrite);
+
+            // Clean the App_Data/AppCode folder
+            CleanAppCode.CleanAppCodeDirectory();
 
             _alreadyConfigured = true;
         }

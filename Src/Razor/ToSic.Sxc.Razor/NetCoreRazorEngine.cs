@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Razor
 
                         asSxc.ConnectToRoot(dynCode);
                         // Note: Don't set the purpose here any more, it's a deprecated feature in 12+
-                    });
+                    }, AppCodeFullPath, TemplateFullPath);
                 var writer = new StringWriter();
                 await writer.WriteAsync(result);
                 return (writer, null);
