@@ -2677,23 +2677,6 @@
                 "IsTitle": false,
                 "Metadata": [
                   {
-                    "Id": 129746,
-                    "Version": 2,
-                    "Guid": "a70c7a0c-011d-4953-be26-fd1d84f7ab1c",
-                    "Type": {
-                      "Name": "@empty-default",
-                      "Id": "@empty-default"
-                    },
-                    "Attributes": {
-                      "Boolean": {
-                        "DefaultCollapsed": {
-                          "*": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
                     "Id": 129743,
                     "Version": 4,
                     "Guid": "00e026d9-685c-47ac-8c6b-41db9655911b",
@@ -2749,6 +2732,23 @@
                           "*": false
                         },
                         "VisibleInEditUI": {
+                          "*": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 129746,
+                    "Version": 2,
+                    "Guid": "a70c7a0c-011d-4953-be26-fd1d84f7ab1c",
+                    "Type": {
+                      "Name": "@empty-default",
+                      "Id": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
                           "*": true
                         }
                       }
@@ -3037,23 +3037,6 @@
                 "IsTitle": false,
                 "Metadata": [
                   {
-                    "Id": 129742,
-                    "Version": 2,
-                    "Guid": "35750ea4-f0b9-4f63-a6b1-2c31505a8de6",
-                    "Type": {
-                      "Name": "@empty-default",
-                      "Id": "@empty-default"
-                    },
-                    "Attributes": {
-                      "Boolean": {
-                        "DefaultCollapsed": {
-                          "*": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
                     "Id": 129741,
                     "Version": 4,
                     "Guid": "a8486bb9-04cc-4a34-8f7c-62b394553b11",
@@ -3114,6 +3097,23 @@
                       }
                     },
                     "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 129742,
+                    "Version": 2,
+                    "Guid": "35750ea4-f0b9-4f63-a6b1-2c31505a8de6",
+                    "Type": {
+                      "Name": "@empty-default",
+                      "Id": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "*": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
                   }
                 ]
               },
@@ -3125,7 +3125,7 @@
                 "Metadata": [
                   {
                     "Id": 45234,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "a9000056-63c8-4cde-b9b3-472c2113d959",
                     "Type": {
                       "Name": "@All",
@@ -3134,25 +3134,36 @@
                     "Attributes": {
                       "String": {
                         "CustomJavaScript": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "DefaultValue": {
-                          "*": "08.03.00"
+                          "en-us": "16.00.00"
+                        },
+                        "Information": {
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": "string-default"
+                          "en-us": "string-default"
                         },
                         "Name": {
-                          "*": "Required Version"
+                          "en-us": "Required Version"
                         },
                         "Notes": {
-                          "*": "<p>The version of 2sxc required for this app to work. Use it when you rely on 2sxc features which don't&nbsp;exist is other&nbsp;versions. read more on <a href=\"//2sxc.org/en/help?tag=app\" target=\"_blank\">2sxc.org/en/help?tag=app</a></p>"
+                          "en-us": "<p>The version of 2sxc required for this app to work. Use it when you rely on 2sxc features which don't&nbsp;exist is other&nbsp;versions. read more on <a href=\"//2sxc.org/en/help?tag=app\" target=\"_blank\">2sxc.org/en/help?tag=app</a></p>"
                         },
                         "Placeholder": {
-                          "*": ""
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
                         },
                         "ValidationRegExJavaScript": {
-                          "*": ""
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
                         }
                       },
                       "Entity": {
@@ -3168,16 +3179,16 @@
                       },
                       "Boolean": {
                         "Disabled": {
-                          "*": false
+                          "en-us": false
                         },
                         "DisableTranslation": {
-                          "*": true
+                          "en-us": true
                         },
                         "Required": {
-                          "*": false
+                          "en-us": false
                         },
                         "VisibleInEditUI": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -3185,16 +3196,21 @@
                   },
                   {
                     "Id": 45235,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "b4e97da0-cec2-423b-bfd8-42911e5d9351",
                     "Type": {
                       "Name": "@string-default",
                       "Id": "@string-default"
                     },
                     "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": ""
+                        }
+                      },
                       "Number": {
                         "RowCount": {
-                          "*": 1
+                          "en-us": 1
                         }
                       }
                     },
@@ -3202,7 +3218,7 @@
                   },
                   {
                     "Id": 45263,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "73d48c11-9200-4c3f-8555-ae0ff83aa1c0",
                     "Type": {
                       "Name": "@String",
@@ -3211,10 +3227,10 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": ""
+                          "en-us": ""
                         }
                       }
                     },
@@ -3230,7 +3246,7 @@
                 "Metadata": [
                   {
                     "Id": 45236,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "0f314a6f-2588-4f00-9a47-57b995528dc4",
                     "Type": {
                       "Name": "@All",
@@ -3239,25 +3255,36 @@
                     "Attributes": {
                       "String": {
                         "CustomJavaScript": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "DefaultValue": {
-                          "*": "07.02.00"
+                          "en-us": "09.06.01"
+                        },
+                        "Information": {
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": "string-default"
+                          "en-us": "string-default"
                         },
                         "Name": {
-                          "*": "Required DNN Version"
+                          "en-us": "Required DNN Version"
                         },
                         "Notes": {
-                          "*": "<p>The version of DNN&nbsp;required for this app to work. Use it when you rely on DNN&nbsp;features which don't exist is other versions. read more on <a href=\"//2sxc.org/en/help?tag=app\" target=\"_blank\">2sxc.org/en/help?tag=app</a></p>"
+                          "en-us": "<p>The version of DNN&nbsp;required for this app to work. Use it when you rely on DNN&nbsp;features which don't exist is other versions. read more on <a href=\"//2sxc.org/en/help?tag=app\" target=\"_blank\">2sxc.org/en/help?tag=app</a></p>"
                         },
                         "Placeholder": {
-                          "*": ""
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
                         },
                         "ValidationRegExJavaScript": {
-                          "*": ""
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
                         }
                       },
                       "Entity": {
@@ -3273,16 +3300,16 @@
                       },
                       "Boolean": {
                         "Disabled": {
-                          "*": false
+                          "en-us": false
                         },
                         "DisableTranslation": {
-                          "*": true
+                          "en-us": true
                         },
                         "Required": {
-                          "*": false
+                          "en-us": false
                         },
                         "VisibleInEditUI": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -3290,16 +3317,21 @@
                   },
                   {
                     "Id": 45237,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "f2a4fa6d-95f2-4742-b370-b8f6403cb3d9",
                     "Type": {
                       "Name": "@string-default",
                       "Id": "@string-default"
                     },
                     "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": ""
+                        }
+                      },
                       "Number": {
                         "RowCount": {
-                          "*": 1
+                          "en-us": 1
                         }
                       }
                     },
@@ -3307,7 +3339,7 @@
                   },
                   {
                     "Id": 129750,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "6d7a591d-ca6b-456d-92ba-b68fe0785bb9",
                     "Type": {
                       "Name": "@String",
@@ -3316,10 +3348,10 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": ""
+                          "en-us": ""
                         }
                       }
                     },
@@ -3335,7 +3367,7 @@
                 "Metadata": [
                   {
                     "Id": 129740,
-                    "Version": 3,
+                    "Version": 5,
                     "Guid": "b5086140-80de-4b8b-a151-5cfa8114e23a",
                     "Type": {
                       "Name": "@All",
@@ -3344,25 +3376,36 @@
                     "Attributes": {
                       "String": {
                         "CustomJavaScript": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "DefaultValue": {
-                          "*": ""
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": "string-default"
+                          "en-us": "string-default"
                         },
                         "Name": {
-                          "*": "Required Oqtane Version"
+                          "en-us": "Required Oqtane Version"
                         },
                         "Notes": {
-                          "*": "<p>Minimum version of Oqtane supported. Leave empty if it doesn't support Oqtane.&nbsp;</p>"
+                          "en-us": "<p>Minimum version of Oqtane supported. Leave empty if it doesn't support Oqtane.&nbsp;</p>"
                         },
                         "Placeholder": {
-                          "*": ""
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
                         },
                         "ValidationRegExJavaScript": {
-                          "*": ""
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
                         }
                       },
                       "Entity": {
@@ -3378,16 +3421,16 @@
                       },
                       "Boolean": {
                         "Disabled": {
-                          "*": false
+                          "en-us": false
                         },
                         "DisableTranslation": {
-                          "*": true
+                          "en-us": true
                         },
                         "Required": {
-                          "*": false
+                          "en-us": false
                         },
                         "VisibleInEditUI": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -3395,7 +3438,7 @@
                   },
                   {
                     "Id": 129744,
-                    "Version": 2,
+                    "Version": 4,
                     "Guid": "06a055e9-5e5e-4212-ad06-27cb650c82f5",
                     "Type": {
                       "Name": "@String",
@@ -3404,10 +3447,10 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": ""
+                          "en-us": ""
                         }
                       }
                     },
@@ -3415,13 +3458,19 @@
                   },
                   {
                     "Id": 129745,
-                    "Version": 2,
+                    "Version": 4,
                     "Guid": "3a6ca1a4-232b-42ae-a367-a3b70f49770b",
                     "Type": {
                       "Name": "@string-default",
                       "Id": "@string-default"
                     },
-                    "Attributes": {},
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": ""
+                        }
+                      }
+                    },
                     "Owner": "dnn:userid=41"
                   }
                 ]

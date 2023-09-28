@@ -489,61 +489,6 @@
           "Owner": "dnn:userid=41",
           "Metadata": [
             {
-              "Id": 129760,
-              "Version": 1,
-              "Guid": "d540eb1f-f7f9-45cb-8651-8daf71b1bffb",
-              "Type": {
-                "Name": "PermissionConfiguration",
-                "Id": "PermissionConfiguration"
-              },
-              "Attributes": {
-                "String": {
-                  "Condition": {
-                    "*": "SecurityAccessLevel.Edit"
-                  },
-                  "Grant": {
-                    "*": "r"
-                  },
-                  "Identity": {
-                    "*": ""
-                  },
-                  "Title": {
-                    "*": "Accessible for content editors"
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41",
-              "For": {
-                "Target": "Entity",
-                "TargetType": 4,
-                "Guid": "34acb79b-21e1-423e-bdec-b67f4a5c8c85"
-              }
-            },
-            {
-              "Id": 166439,
-              "Version": 1,
-              "Guid": "02d62934-cca2-4c75-bfcb-079297f458ad",
-              "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
-              },
-              "Attributes": {
-                "Entity": {
-                  "Configuration": {
-                    "*": [
-                      "1fac6138-39c7-4ab6-9c54-9cf3e4ffd5ed"
-                    ]
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41",
-              "For": {
-                "Target": "Entity",
-                "TargetType": 4,
-                "Guid": "34acb79b-21e1-423e-bdec-b67f4a5c8c85"
-              }
-            },
-            {
               "Id": 129756,
               "Version": 13,
               "Guid": "b1fa7bee-c137-4e60-b8b5-3588b9c16b9a",
@@ -618,6 +563,61 @@
                   }
                 }
               ]
+            },
+            {
+              "Id": 129760,
+              "Version": 1,
+              "Guid": "d540eb1f-f7f9-45cb-8651-8daf71b1bffb",
+              "Type": {
+                "Name": "PermissionConfiguration",
+                "Id": "PermissionConfiguration"
+              },
+              "Attributes": {
+                "String": {
+                  "Condition": {
+                    "*": "SecurityAccessLevel.Edit"
+                  },
+                  "Grant": {
+                    "*": "r"
+                  },
+                  "Identity": {
+                    "*": ""
+                  },
+                  "Title": {
+                    "*": "Accessible for content editors"
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "34acb79b-21e1-423e-bdec-b67f4a5c8c85"
+              }
+            },
+            {
+              "Id": 166439,
+              "Version": 1,
+              "Guid": "02d62934-cca2-4c75-bfcb-079297f458ad",
+              "Type": {
+                "Name": "SystemExportDecorator",
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "1fac6138-39c7-4ab6-9c54-9cf3e4ffd5ed"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "34acb79b-21e1-423e-bdec-b67f4a5c8c85"
+              }
             }
           ]
         },
