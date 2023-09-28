@@ -1,11 +1,15 @@
 ﻿using Microsoft.CSharp;
 using System;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Caching;
 using System.Web.Compilation;
+using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Web;
+
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Code
@@ -24,11 +28,7 @@ namespace ToSic.Sxc.Code
 
         public override (Assembly Assembly, string ErrorMessages) GetAssembly(string relativePath, string className)
         {
-            // TODO:
-            // - cache assembly in similar way like we do with custom DataSources
-            // - take a care of multi-staging of 2sxc apps
-
-            var fullPath = Path.GetDirectoryName(HostingEnvironment.MapPath(relativePath));
+            var fullPath = NormalizeFullPath(HostingEnvironment.MapPath(relativePath));
 
             // 1. Handle Compile standalone file
             if (File.Exists(fullPath))
@@ -40,6 +40,10 @@ namespace ToSic.Sxc.Code
             // 2. Handle Compile all in folder
             if (Directory.Exists(fullPath))
             {
+                var cache = MemoryCache.Default;
+                if (cache[fullPath.ToLowerInvariant()] is Assembly assemblyCacheItem)
+                    return (assemblyCacheItem, null);
+
                 // Get all C# files in the folder
                 var sourceFiles = Directory.GetFiles(fullPath, "*.cs", SearchOption.AllDirectories);
 
@@ -51,7 +55,10 @@ namespace ToSic.Sxc.Code
 
                 // Compile ok
                 if (!results.Errors.HasErrors)
+                {
+                    cache.Set(fullPath.ToLowerInvariant(), results.CompiledAssembly, GetCacheItemPolicy(fullPath));
                     return (results.CompiledAssembly, null);
+                }
 
                 // Compile error case
                 var errors = "";
@@ -79,6 +86,21 @@ namespace ToSic.Sxc.Code
             parameters.ReferencedAssemblies.AddRange(ReferencedAssembliesProvider.Locations());
 
             return provider.CompileAssemblyFromFile(parameters, sourceFiles);
+        }
+
+        private CacheItemPolicy GetCacheItemPolicy(string filePath)
+        {
+            var filePaths = new List<string> { filePath };
+
+            // expire cache item if not used in 30 min
+            var cacheItemPolicy = new CacheItemPolicy
+            {
+                SlidingExpiration = TimeSpan.FromMinutes(30)
+            };
+
+            // expire cache item on any file change
+            cacheItemPolicy.ChangeMonitors.Add(new FolderChangeMonitor(filePaths));
+            return cacheItemPolicy;
         }
 
         protected override (Type Type, string ErrorMessage) GetCsHtmlType(string relativePath)

@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Oqt.Server.Code
             var l = Log.Fn<(Assembly Assembly, string ErrorMessages)>(
                 $"{nameof(virtualPath)}: '{virtualPath}'; {nameof(className)}: '{className}'");
             var fullContentPath = _serverPaths.Value.FullContentPath(virtualPath.Backslash());
-            var fullPath = NormalizeFullFilePath(fullContentPath);
+            var fullPath = NormalizeFullPath(fullContentPath);
             l.A($"New paths: '{fullContentPath}', '{fullPath}'");
             try
             {
@@ -46,14 +46,6 @@ namespace ToSic.Sxc.Oqt.Server.Code
                     ex.Message;
                 return l.Return((null, errorMessage), "error");
             }
-        }
-
-        /**
-         * Normalize full file path, so it is without redirections like "../" in "dir1/dir2/../file.cs"
-         */
-        public static string NormalizeFullFilePath(string fullPath)
-        {
-            return new FileInfo(fullPath).FullName;
         }
     }
 }

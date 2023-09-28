@@ -167,5 +167,10 @@ namespace ToSic.Sxc.Code
             codeForwarding.CreateInstancePath = Path.GetDirectoryName(virtualPath);
             l.Done("attached");
         }
+
+        /**
+         * Normalize full file or folder path, so it is without redirections like "../" in "dir1/dir2/../file.cs"
+         */
+        protected static string NormalizeFullPath(string fullPath) => new FileInfo(fullPath).FullName;
     }
 }
