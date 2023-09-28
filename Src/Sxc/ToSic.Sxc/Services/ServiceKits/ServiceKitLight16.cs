@@ -74,7 +74,6 @@ namespace ToSic.Sxc.Services
         /// <summary>
         /// The Edit service, same as the main Edit service
         /// </summary>
-        [WorkInProgressApi("Still WIP v15.07")]
         public IDataService Data => _data.Get(() =>
         {
             var dss = GetService<IDataService>();

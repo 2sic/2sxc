@@ -20,7 +20,7 @@ namespace Custom.DataSource
     /// <summary>
     /// The Base Class for any Dynamic DataSources.
     /// </summary>
-    [WorkInProgressApi("almost ready")]
+    [PublicApi]
     public abstract partial class DataSource16: ServiceBase<DataSource16.MyServices>, IDataSource, IAppIdentitySync
     {
         /// <summary>

@@ -31,7 +31,7 @@ namespace Custom.Hybrid
     /// Important: This is very different from Razor12 or Razor14, as it doesn't rely on `dynamic` code any more.
     /// Be aware of this since the APIs are very different.
     /// </remarks>
-    [WorkInProgressApi("WIP 16.02 - not final")]
+    [PublicApi]
     public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IHasCodeHelp, IGetCodePath, ISetDynamicModel
     {
         #region Constructor, Setup, Helpers

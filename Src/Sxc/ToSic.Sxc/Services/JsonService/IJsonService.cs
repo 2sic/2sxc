@@ -89,7 +89,7 @@ namespace ToSic.Sxc.Services
         /// <remarks>
         /// New in 16.02
         /// </remarks>
-        [WorkInProgressApi("WIP 16.02 - not yet done")]
+        [PublicApi]
         ITyped ToTyped(string json, string noParamOrder = Protector, string fallback = default, bool? propsRequired = default);
 
         /// <summary>

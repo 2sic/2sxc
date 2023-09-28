@@ -18,7 +18,7 @@ namespace Custom.Hybrid
     /// <summary>
     /// Base class for v16 Pro Dynamic Code files.
     /// </summary>
-    [WorkInProgressApi("WIP 16.02")]
+    [PublicApi]
     public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
     {
 
