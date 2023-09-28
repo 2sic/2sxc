@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Code
             className = className ?? Path.GetFileNameWithoutExtension(relativePath) ?? Eav.Constants.NullNameId;
 
             //var (assembly, errorMessages) = GetAssembly(relativePath, className);
-            var (assembly, errorMessages) = GetAssembly2(relativePath, className);
+            var (assembly, errorMessages) = GetAssembly(relativePath, className);
 
             if (errorMessages != null) return l.Return((null, errorMessages), "error messages");
 
@@ -113,9 +113,8 @@ namespace ToSic.Sxc.Code
             return l.Return((compiledType, errorMessages), errorMessages == null ? "ok" : "errors");
         }
 
-        protected abstract (Assembly Assembly, string ErrorMessages) GetAssembly(string fileRelativePath, string className);
 
-        public abstract (Assembly Assembly, string ErrorMessages) GetAssembly2(string folderRelativePath, string className = null);
+        public abstract (Assembly Assembly, string ErrorMessages) GetAssembly(string relativePath, string className = null);
 
 
         protected abstract (Type Type, string ErrorMessage) GetCsHtmlType(string relativePath);

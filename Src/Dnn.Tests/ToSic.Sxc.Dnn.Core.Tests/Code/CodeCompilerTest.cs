@@ -1,17 +1,16 @@
-using ToSic.Sxc.BuildTasks;
+//using ToSic.Sxc.BuildTasks;
 using ToSic.Sxc.Dnn.Core.Tests.Web;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.Core.Tests.Code
 {
     [TestClass]
-    [DeploymentItem($"..\\..\\.tests-files", ".tests-files")]
-    public class CodeCompiler : DnnCoreTestsBase
+    public class CodeCompilerTest : DnnCoreTestsBase
     {
         public Sxc.Code.CodeCompiler Compiler;
         public TestContext TestContext { get; set; }
         public HostingEnvironmentMock HostingEnvironment { get; set; }
-        public GetBuildConfig BuildConfig { get; set; }
+        //public GetBuildConfig BuildConfig { get; set; }
 
         [TestInitialize]
         public void Setup()
@@ -19,8 +18,8 @@ namespace ToSic.Sxc.Dnn.Core.Tests.Code
             HostingEnvironment = (HostingEnvironmentMock)GetService<IHostingEnvironmentWrapper>();
             HostingEnvironment.Init(TestContext);
 
-            BuildConfig = new GetBuildConfig();
-            var execute = BuildConfig.Execute();
+            //BuildConfig = new GetBuildConfig();
+            //var execute = BuildConfig.Execute();
 
             Compiler = GetService<Sxc.Code.CodeCompiler>();
         }
@@ -32,7 +31,7 @@ namespace ToSic.Sxc.Dnn.Core.Tests.Code
         public void GetAssembly_ValidFolderPath_ReturnsAssembly()
         {
             // Act
-            var (assembly, errorMessage) = Compiler.GetAssembly2("~/SimpleClass/");
+            var (assembly, errorMessage) = Compiler.GetAssembly("~/SimpleClass/");
 
             // Assert
             Assert.IsNotNull(assembly);
@@ -43,7 +42,7 @@ namespace ToSic.Sxc.Dnn.Core.Tests.Code
         public void GetAssembly_InvalidFolderPath_ReturnsError()
         {
             // Act
-            var (assembly, errorMessage) = Compiler.GetAssembly2("~/path/to/invalid/folder/");
+            var (assembly, errorMessage) = Compiler.GetAssembly("~/path/to/invalid/folder/");
 
             // Assert
             Assert.IsNull(assembly);
@@ -54,7 +53,7 @@ namespace ToSic.Sxc.Dnn.Core.Tests.Code
         public void SimpleClass()
         {
             // Act
-            var (assembly, errorMessage) = Compiler.GetAssembly2("~/SimpleClass/");
+            var (assembly, errorMessage) = Compiler.GetAssembly("~/SimpleClass/");
 
             // Assert
             Assert.IsNotNull(assembly);
@@ -71,7 +70,7 @@ namespace ToSic.Sxc.Dnn.Core.Tests.Code
         public void SimpleClassWithError()
         {
             // Act
-            var (assembly, errorMessage) = Compiler.GetAssembly2("~/SimpleClassWithError/");
+            var (assembly, errorMessage) = Compiler.GetAssembly("~/SimpleClassWithError/");
 
             // Assert
             Assert.IsNull(assembly);
@@ -82,7 +81,7 @@ namespace ToSic.Sxc.Dnn.Core.Tests.Code
         public void TwoClasses()
         {
             // Act
-            var (assembly, errorMessage) = Compiler.GetAssembly2("~/TwoClasses/");
+            var (assembly, errorMessage) = Compiler.GetAssembly("~/TwoClasses/");
 
             // Assert
             Assert.IsNull(errorMessage);
@@ -104,7 +103,7 @@ namespace ToSic.Sxc.Dnn.Core.Tests.Code
         public void ThirdClassDoNotRecognizeSecondClass()
         {
             // Act
-            var (assembly, errorMessage) = Compiler.GetAssembly2("~/ThirdClass/");
+            var (assembly, errorMessage) = Compiler.GetAssembly("~/ThirdClass/");
 
             // Assert
             Assert.IsNull(assembly);
@@ -115,11 +114,11 @@ namespace ToSic.Sxc.Dnn.Core.Tests.Code
         public void ThirdClassWithError()
         {
             // Act
-            var (assembly0, errorMessage0) = Compiler.GetAssembly2("~/TwoClasses/");
+            var (assembly0, errorMessage0) = Compiler.GetAssembly("~/TwoClasses/");
             var secondClass = CreateInstance(assembly0, "SecondClass");
             secondClass.MyProperty = "Hello World";
 
-            var (assembly, errorMessage) = Compiler.GetAssembly2("~/ThirdClass/");
+            var (assembly, errorMessage) = Compiler.GetAssembly("~/ThirdClass/");
 
             // Assert
             Assert.IsNull(assembly);

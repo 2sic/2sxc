@@ -22,33 +22,51 @@ namespace ToSic.Sxc.Code
             ReferencedAssembliesProvider = referencedAssembliesProvider;
         }
 
-        protected override (Assembly Assembly, string ErrorMessages) GetAssembly(string fileRelativePath, string className)
-        {
-            var assembly = BuildManager.GetCompiledAssembly(fileRelativePath);
-            return (assembly, null);
-        }
-
-        public override (Assembly Assembly, string ErrorMessages) GetAssembly2(string folderRelativePath, string className)
+        public override (Assembly Assembly, string ErrorMessages) GetAssembly(string relativePath, string className)
         {
             // TODO:
-            // - compile all *.cs files to assembly only content of the App_Code folder
-            // - fallback to old GetAssembly that will compile single file
             // - cache assembly in similar way like we do with custom DataSources
             // - take a care of multi-staging of 2sxc apps
 
-            var folderPath = Path.GetDirectoryName(HostingEnvironment.MapPath(folderRelativePath));
+            var fullPath = Path.GetDirectoryName(HostingEnvironment.MapPath(relativePath));
 
-            // Check is exists folder path
-            if (!Directory.Exists(folderPath))
-                return (null, $"Error: given path '{folderRelativePath}' doesn't exist");
+            // 1. Handle Compile standalone file
+            if (File.Exists(fullPath))
+            { 
+                var assembly = BuildManager.GetCompiledAssembly(relativePath);
+                return (assembly, null);
+            }
 
-            // Get all C# files in the folder
-            var sourceFiles = Directory.GetFiles(folderPath, "*.cs", SearchOption.AllDirectories);
+            // 2. Handle Compile all in folder
+            if (Directory.Exists(fullPath))
+            {
+                // Get all C# files in the folder
+                var sourceFiles = Directory.GetFiles(fullPath, "*.cs", SearchOption.AllDirectories);
 
-            // Check do we have any C# files
-            if (sourceFiles.Length == 0)
-                return (null, $"Error: given path '{folderRelativePath}' doesn't contain any .cs files");
+                // Validate are there any C# files
+                if (sourceFiles.Length == 0)
+                    return (null, $"Error: given path '{relativePath}' doesn't contain any .cs files");
 
+                var results = GetCompiledAssemblyFromFolder(sourceFiles);
+
+                // Compile ok
+                if (!results.Errors.HasErrors)
+                    return (results.CompiledAssembly, null);
+
+                // Compile error case
+                var errors = "";
+                foreach (CompilerError error in results.Errors)
+                    errors += $"Error ({error.ErrorNumber}): {error.ErrorText}\n";
+
+                return (null, errors);
+            }
+
+            // 3. Path do not exists
+            return (null, $"Error: given path '{relativePath}' doesn't exist");
+        }
+
+        private CompilerResults GetCompiledAssemblyFromFolder(string[] sourceFiles)
+        {
             var provider = new CSharpCodeProvider();
             var parameters = new CompilerParameters
             {
@@ -60,18 +78,7 @@ namespace ToSic.Sxc.Code
             // Add all referenced assemblies
             parameters.ReferencedAssemblies.AddRange(ReferencedAssembliesProvider.Locations());
 
-            var results = provider.CompileAssemblyFromFile(parameters, sourceFiles);
-
-            // Compile ok
-            if (!results.Errors.HasErrors) 
-                return (results.CompiledAssembly, null);
-
-            // Compile error case
-            var errors = "";
-            foreach (CompilerError error in results.Errors)
-                errors += $"Error ({error.ErrorNumber}): {error.ErrorText}\n";
-
-            return (null, errors);
+            return provider.CompileAssemblyFromFile(parameters, sourceFiles);
         }
 
         protected override (Type Type, string ErrorMessage) GetCsHtmlType(string relativePath)

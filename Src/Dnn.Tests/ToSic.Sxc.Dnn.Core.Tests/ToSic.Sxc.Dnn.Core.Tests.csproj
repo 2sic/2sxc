@@ -33,9 +33,9 @@
 
   <ItemGroup>
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
-    <Reference Include="ToSic.Sxc.BuildTasks">
+    <!--<Reference Include="ToSic.Sxc.BuildTasks">
       <HintPath>..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll</HintPath>
-    </Reference>
+    </Reference>-->
   </ItemGroup>
 
 </Project>
