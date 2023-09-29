@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Metadata;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -269,13 +270,34 @@ namespace ToSic.Sxc.Data
             if (IsErrStrict(this, field, required, GetHelper.PropsRequired))
                 throw ErrStrictForTyped(this, field);
 
+            // new 16.08 ability to get child/children using path
+            var dot = PropertyStack.PathSeparator.ToString();
+            if (field.Contains(dot))
+            {
+                var first = field.Before(dot);
+                var rest = Text.After(field, dot);
+                if (first.IsEmptyOrWs() || rest.IsEmptyOrWs())
+                    throw new Exception($"Got path '{field}' but either first or rest are empty");
+                // on the direct child, don't apply type filter, as the intermediate step could be anything
+                var child = (this as ITypedItem).Child(first, required: required);
+                if (child == null) return CreateEmptyChildList();
+                // On the next step, do forward the type filter, as the lowest node should check for that
+                return child.Children(rest, type: type, required: required);
+            }
+
+            // Standard case: just get the direct children
             var dynChildren = GetHelper.Children(entity: Entity, field: field, type: type);
             var list = dynChildren.Cast<DynamicEntity>().Select(d => d.TypedItem).ToList();
             if (list.Any()) return list;
 
-            // Generate a marker/placeholder to remember what field this is etc.
-            var fakeEntity = GetHelper.Cdf.PlaceHolderInBlock(Entity.AppId, Entity, field);
-            return new ListTypedItems(new List<ITypedItem>(), fakeEntity);
+            return CreateEmptyChildList();
+
+            IEnumerable<ITypedItem> CreateEmptyChildList()
+            {
+                // Generate a marker/placeholder to remember what field this is etc.
+                var fakeEntity = GetHelper.Cdf.PlaceHolderInBlock(Entity.AppId, Entity, field);
+                return new ListTypedItems(new List<ITypedItem>(), fakeEntity);
+            }
         }
 
         /// <inheritdoc />
