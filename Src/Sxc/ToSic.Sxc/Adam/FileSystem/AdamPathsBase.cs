@@ -51,14 +51,6 @@ namespace ToSic.Sxc.Adam
         {
             if (string.IsNullOrEmpty(path)) return;
 
-            // ensure only allowed characters are in the path
-            if (path.IndexOfAny(InvalidChars) >= 0) throw new ArgumentException("invalid characters detected in path.", nameof(path));
-
-            // simple guard against directory traversal
-            var normalizedPath = path.ForwardSlash().TrimStart('/');
-            if (normalizedPath.StartsWith("../")) throw new ArgumentException("path may not start with ../", nameof(path));
-            if (normalizedPath.Contains("/../")) throw new ArgumentException("path may not contain ..", nameof(path));
-
             // detect directory traversal
             if (Path.GetFullPath(path).ForwardSlash().IndexOf(path.ForwardSlash(), StringComparison.OrdinalIgnoreCase) == -1) 
                 throw new ArgumentException("path traversal occurred", nameof(path));

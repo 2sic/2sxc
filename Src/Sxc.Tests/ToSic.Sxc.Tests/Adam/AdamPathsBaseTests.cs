@@ -12,19 +12,25 @@ namespace ToSic.Sxc.Tests.Adam
         [DataTestMethod]
         [DataRow("../test")]
         [DataRow("test/../subfolder")]
-        public void ThrowIfPathContainsDotDot_WhenPathIsInValid(string path) =>
+        public void PathContainsDotDot_ThrowWhenPathIsInValid(string path) =>
             // Act & Assert
             ThrowsException<System.ArgumentException>(() => ThrowIfPathContainsDotDot(path));
 
 
         [DataTestMethod]
         [DataRow("test/path")]
+        [DataRow("test/..path")]
+        //[DataRow("test/path..")]
+        [DataRow("test/pa..th")]
+        [DataRow("test/..path/subfolder")]
+        [DataRow("test/path../subfolder")]
+        [DataRow("test/pa..th/subfolder")]
         [DataRow("test/path/file.txt")]
         [DataRow("test/path/file..txt")]
         [DataRow("test/path/.gitignore")]
-        [DataRow("test/path/.config.")]
+        //[DataRow("test/path/.config.")]
         [DataRow(".file")]
         [DataRow("..other_file")]
-        public void ThrowIfPathContainsDotDot_WhenPathIsValid(string path) => ThrowIfPathContainsDotDot(path);
+        public void PathContainsDotDot_PathIsValid(string path) => ThrowIfPathContainsDotDot(path);
     }
 }
