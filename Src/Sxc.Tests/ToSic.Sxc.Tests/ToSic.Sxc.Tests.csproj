@@ -87,6 +87,7 @@
     <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs">
       <Link>Properties\AssemblyInfoInherited.cs</Link>
     </Compile>
+    <Compile Include="Adam\AdamPathsBaseTests.cs" />
     <Compile Include="Adam\AdamSecurity.cs" />
     <Compile Include="Blocks\Output\BlockResourceExtractorGetHtmlAttributesTests.cs" />
     <Compile Include="CodeTests\LoggingTests\LogAdapterTests.cs" />

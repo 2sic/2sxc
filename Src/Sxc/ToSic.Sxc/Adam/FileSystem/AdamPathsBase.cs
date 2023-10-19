@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using ToSic.Eav.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Adam
@@ -47,11 +47,23 @@ namespace ToSic.Sxc.Adam
             return _serverPaths.FullContentPath(path.Backslash());
         }
 
-        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         public static void ThrowIfPathContainsDotDot(string path)
         {
-            if (path.Contains("..")) throw new ArgumentException("path may not contain ..", nameof(path));
+            if (string.IsNullOrEmpty(path)) return;
+
+            // ensure only allowed characters are in the path
+            if (path.IndexOfAny(InvalidChars) >= 0) throw new ArgumentException("invalid characters detected in path.", nameof(path));
+
+            // simple guard against directory traversal
+            var normalizedPath = path.ForwardSlash().TrimStart('/');
+            if (normalizedPath.StartsWith("../")) throw new ArgumentException("path may not start with ../", nameof(path));
+            if (normalizedPath.Contains("/../")) throw new ArgumentException("path may not contain ..", nameof(path));
+
+            // detect directory traversal
+            if (Path.GetFullPath(path).ForwardSlash().IndexOf(path.ForwardSlash(), StringComparison.OrdinalIgnoreCase) == -1) 
+                throw new ArgumentException("path traversal occurred", nameof(path));
         }
+        private static readonly char[] InvalidChars = Path.GetInvalidPathChars();
 
         public string RelativeFromAdam(string path)
         {

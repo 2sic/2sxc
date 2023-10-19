@@ -57,10 +57,11 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 return l.Return(string.Empty, "risky extension");
 
             if (Eav.Security.Files.FileNames.IsKnownCodeExtension(filePath))
-                return l.Return(string.Empty, "code extesion");
+                return l.Return(string.Empty, "code extension");
 
             // Nothing in a ".xyz" folder or a subfolder of this should be allowed (like .data must be protected).
-            if (appName.StartsWith(".") || filePath.StartsWith(".") || filePath.Backslash().Contains(@"\.")) return string.Empty;
+            if (appName.StartsWith(".") || filePath.StartsWith(".") || Path.GetDirectoryName(filePath).Backslash().Contains(@"\.")) 
+                return l.Return(string.Empty, "folders or subfolder that start with . are not allowed");
 
             var fullFilePath = route switch
             {
