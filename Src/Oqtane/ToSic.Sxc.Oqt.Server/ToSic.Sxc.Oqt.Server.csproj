@@ -86,6 +86,7 @@
     <EmbeddedResource Include="Scripts\ToSic.Sxc.13.00.00.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.13.01.00.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.15.00.00.sql" />
+    <EmbeddedResource Include="Scripts\ToSic.Sxc.16.07.01.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.Uninstall.sql" />
   </ItemGroup>
 
