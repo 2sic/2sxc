@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Reflection;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Routing;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Oqt.Server.Code;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -27,7 +27,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
     public class ApiExplorerController : OqtStatefulControllerBase, IApiExplorerController
     {
-        public ApiExplorerController() : base(RealController.LogSuffix) { }
+        public ApiExplorerController() : base(RealController.LogSuffix)
+        { }
 
         private RealController Real => GetService<RealController>();
 
@@ -59,8 +60,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             var controllerFolder = pathFromRoot.Substring(0, pathFromRoot.LastIndexOf(@"\"));
             var dllName = AppApiDynamicRouteValueTransformer.GetDllName(controllerFolder, apiFile);
 
-            return new Compiler().Compile(apiFile, dllName);
+            return new Compiler().Compile(apiFile, dllName)?.Assembly;
         }
     }
-
 }

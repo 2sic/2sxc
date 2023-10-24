@@ -6,6 +6,6 @@ namespace ToSic.Sxc.Razor
 {
     public interface IRazorRenderer
     {
-        Task<string> RenderToStringAsync<TModel>(string partialName, TModel model, Action<RazorView> configure = null);
+        Task<string> RenderToStringAsync<TModel>(string templatePath, TModel model, Action<RazorView> configure = null, string appCodeFullPath = null, string templateFullPath = null);
     }
 }

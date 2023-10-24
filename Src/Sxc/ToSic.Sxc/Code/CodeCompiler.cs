@@ -81,25 +81,25 @@ namespace ToSic.Sxc.Code
             className = className ?? Path.GetFileNameWithoutExtension(relativePath) ?? Eav.Constants.NullNameId;
 
             //var (assembly, errorMessages) = GetAssembly(relativePath, className);
-            var (assembly, errorMessages) = GetAssembly(relativePath, className);
+            var assemblyResult = GetAssembly(relativePath, className);
 
-            if (errorMessages != null) return l.Return((null, errorMessages), "error messages");
+            if (assemblyResult?.ErrorMessages != null) return l.Return((null, assemblyResult.ErrorMessages), "error messages");
 
-            if (assembly == null) return l.Return((null, "assembly is null"), "no assembly");
+            if (assemblyResult?.Assembly == null) return l.Return((null, "assembly is null"), "no assembly");
 
             var possibleErrorMessage = $"Error: Didn't find type '{className}' in {Path.GetFileName(relativePath)}. Maybe the class name doesn't match the file name. ";
             Type compiledType = null;
             try
             {
-                compiledType = assembly.GetType(className, false, true);
+                compiledType = assemblyResult.Assembly.GetType(className, false, true);
                 if (compiledType == null)
                 {
-                    var types = assembly.GetTypes();
+                    var types = assemblyResult.Assembly.GetTypes();
                     compiledType = types.FirstOrDefault(t => t.Name.EqualsInsensitive(className));
                 }
 
                 if (compiledType == null && throwOnError)
-                    assembly.GetType(className, true, true);
+                    assemblyResult.Assembly.GetType(className, true, true);
             }
             catch (Exception ex)
             {
@@ -108,13 +108,13 @@ namespace ToSic.Sxc.Code
             }
 
             if (compiledType == null)
-                errorMessages = possibleErrorMessage;
+                l.ReturnAsError((null, possibleErrorMessage));
 
-            return l.Return((compiledType, errorMessages), errorMessages == null ? "ok" : "errors");
+            return l.ReturnAsOk((compiledType, null));
         }
 
 
-        public abstract (Assembly Assembly, string ErrorMessages) GetAssembly(string relativePath, string className = null);
+        public abstract AssemblyResult GetAssembly(string relativePath, string className = null);
 
 
         protected abstract (Type Type, string ErrorMessage) GetCsHtmlType(string relativePath);

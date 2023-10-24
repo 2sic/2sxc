@@ -3,7 +3,6 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Runtime.Caching;
 using System.Web.Compilation;
 using ToSic.Eav.Caching.CachingMonitors;
@@ -15,49 +14,53 @@ using ToSic.Sxc.Web;
 namespace ToSic.Sxc.Code
 {
     [PrivateApi]
-    public class CodeCompilerNetFull: CodeCompiler
+    public class CodeCompilerNetFull : CodeCompiler
     {
         public IHostingEnvironmentWrapper HostingEnvironment { get; }
         public IReferencedAssembliesProvider ReferencedAssembliesProvider { get; }
 
         public CodeCompilerNetFull(IServiceProvider serviceProvider, IHostingEnvironmentWrapper hostingEnvironment, IReferencedAssembliesProvider referencedAssembliesProvider) : base(serviceProvider)
         {
-            HostingEnvironment = hostingEnvironment;
-            ReferencedAssembliesProvider = referencedAssembliesProvider;
+            ConnectServices(
+                HostingEnvironment = hostingEnvironment,
+                ReferencedAssembliesProvider = referencedAssembliesProvider
+            );
         }
 
-        public override (Assembly Assembly, string ErrorMessages) GetAssembly(string relativePath, string className)
+        public override AssemblyResult GetAssembly(string relativePath, string className)
         {
             var fullPath = NormalizeFullPath(HostingEnvironment.MapPath(relativePath));
 
             // 1. Handle Compile standalone file
             if (File.Exists(fullPath))
-            { 
+            {
                 var assembly = BuildManager.GetCompiledAssembly(relativePath);
-                return (assembly, null);
+                return new AssemblyResult(assembly: assembly);
             }
 
             // 2. Handle Compile all in folder
             if (Directory.Exists(fullPath))
             {
                 var cache = MemoryCache.Default;
-                if (cache[fullPath.ToLowerInvariant()] is Assembly assemblyCacheItem)
-                    return (assemblyCacheItem, null);
+                if (cache[fullPath.ToLowerInvariant()] is AssemblyResult assemblyResultCacheItem)
+                    return assemblyResultCacheItem;
 
                 // Get all C# files in the folder
                 var sourceFiles = Directory.GetFiles(fullPath, "*.cs", SearchOption.AllDirectories);
 
                 // Validate are there any C# files
                 if (sourceFiles.Length == 0)
-                    return (null, $"Error: given path '{relativePath}' doesn't contain any .cs files");
+                    return new AssemblyResult(errorMessages: $"Error: given path '{relativePath}' doesn't contain any .cs files");
 
                 var results = GetCompiledAssemblyFromFolder(sourceFiles);
 
                 // Compile ok
                 if (!results.Errors.HasErrors)
                 {
-                    cache.Set(fullPath.ToLowerInvariant(), results.CompiledAssembly, GetCacheItemPolicy(fullPath));
-                    return (results.CompiledAssembly, null);
+                    // TODO: stv# missing assemblyBinary in cache
+                    var cacheItem = new AssemblyResult(results.CompiledAssembly);
+                    cache.Set(fullPath.ToLowerInvariant(), cacheItem, GetCacheItemPolicy(fullPath));
+                    return cacheItem;
                 }
 
                 // Compile error case
@@ -65,11 +68,11 @@ namespace ToSic.Sxc.Code
                 foreach (CompilerError error in results.Errors)
                     errors += $"Error ({error.ErrorNumber}): {error.ErrorText}\n";
 
-                return (null, errors);
+                return new AssemblyResult(errorMessages: errors);
             }
 
             // 3. Path do not exists
-            return (null, $"Error: given path '{relativePath}' doesn't exist");
+            return new AssemblyResult(errorMessages: $"Error: given path '{relativePath}' doesn't exist");
         }
 
         private CompilerResults GetCompiledAssemblyFromFolder(string[] sourceFiles)
@@ -80,6 +83,7 @@ namespace ToSic.Sxc.Code
                 GenerateInMemory = true,
                 GenerateExecutable = false,
                 IncludeDebugInformation = true,
+                CompilerOptions = "/define:OQTANE;NETCOREAPP;NET5_0 /optimize-"
             };
 
             // Add all referenced assemblies

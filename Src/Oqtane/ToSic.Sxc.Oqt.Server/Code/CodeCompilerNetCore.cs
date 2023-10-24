@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using System;
 using System.IO;
-using System.Reflection;
+using System.Linq;
 using ToSic.Eav.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Oqt.Server.Code
@@ -24,19 +25,18 @@ namespace ToSic.Sxc.Oqt.Server.Code
 
         protected override (Type Type, string ErrorMessage) GetCsHtmlType(string virtualPath) 
             => throw new("Runtime Compile of .cshtml is Not Implemented in .net standard / core");
-        public override (Assembly Assembly, string ErrorMessages) GetAssembly(string virtualPath, string className)
+        public override AssemblyResult GetAssembly(string virtualPath, string className = null)
         {
             // TODO: stv# compile from folder, etc...
             
-            var l = Log.Fn<(Assembly Assembly, string ErrorMessages)>(
+            var l = Log.Fn<AssemblyResult>(
                 $"{nameof(virtualPath)}: '{virtualPath}'; {nameof(className)}: '{className}'");
-            var fullContentPath = _serverPaths.Value.FullContentPath(virtualPath.Backslash());
-            var fullPath = NormalizeFullPath(fullContentPath);
-            l.A($"New paths: '{fullContentPath}', '{fullPath}'");
+            var fullPath = GetFullPath(virtualPath);
+            l.A($"New path: '{fullPath}'");
             try
             {
-                var assembly = new Compiler().Compile(fullPath, className);
-                return l.Return((assembly, null), "ok");
+                var assemblyResult = new Compiler().Compile(fullPath, className ?? ConvertToSafeFileName(fullPath));
+                return l.ReturnAsOk(assemblyResult);
             }
             catch (Exception ex)
             {
@@ -44,8 +44,19 @@ namespace ToSic.Sxc.Oqt.Server.Code
                 var errorMessage =
                     $"Error: Can't compile '{className}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. " +
                     ex.Message;
-                return l.Return((null, errorMessage), "error");
+                return l.ReturnAsError(new AssemblyResult(errorMessages: errorMessage));
             }
+        }
+
+        public string GetFullPath(string virtualPath) => NormalizeFullPath(_serverPaths.Value.FullContentPath(virtualPath.Backslash()));
+
+        private static string ConvertToSafeFileName(string fullPath)
+        {
+            // Get the invalid file name characters from the system
+            var invalidChars = Path.GetInvalidFileNameChars();
+
+            // Replace each invalid character with '_'
+            return new string(fullPath.Select(ch => invalidChars.Contains(ch) ? '_' : ch).ToArray());
         }
     }
 }

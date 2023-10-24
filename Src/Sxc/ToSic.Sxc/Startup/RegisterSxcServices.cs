@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataSource.Catalog;
 using ToSic.Eav.Run;
@@ -12,7 +13,6 @@ using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Helpers;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.DataSources;
@@ -30,6 +30,7 @@ using ToSic.Sxc.Web.JsContext;
 using ToSic.Sxc.Web.LightSpeed;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
+using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Startup
 {
@@ -180,6 +181,9 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<CodeJsonWrapper>();
             services.TryAddTransient<WrapObjectTyped>();
             services.TryAddTransient<WrapObjectTypedItem>();
+
+            // v16
+            services.TryAddTransient<IAppCodeLoader, AppCodeLoader>();
 
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need

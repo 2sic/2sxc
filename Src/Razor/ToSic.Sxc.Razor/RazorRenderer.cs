@@ -26,15 +26,15 @@ namespace ToSic.Sxc.Razor
         }
         #endregion
 
-        public async Task<string> RenderToStringAsync<TModel>(string partialName, TModel model, Action<RazorView> configure = null)
+        public async Task<string> RenderToStringAsync<TModel>(string templatePath, TModel model, Action<RazorView> configure = null, string appCodeFullPath = null, string templateFullPath = null)
         {
-            var l = Log.Fn<string>($"partialName:{partialName}");
+            var l = Log.Fn<string>($"partialName:{templatePath},appCodePath:{appCodeFullPath}");
             //var actionContext = _actionContextAccessor.ActionContext;
             //var partial = FindView(actionContext, partialName);
             //// do callback to configure the object we received
             //if (partial is RazorView rzv) configure?.Invoke(rzv);
 
-            var (view, actionContext) = _razorCompiler.CompileView(partialName, configure);
+            var (view, actionContext) = await _razorCompiler.CompileView(templatePath, configure, appCodeFullPath, templateFullPath);
 
             // Prepare to render
             await using var output = new StringWriter();
