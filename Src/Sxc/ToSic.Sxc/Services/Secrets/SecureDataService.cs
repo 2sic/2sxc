@@ -85,7 +85,8 @@ namespace ToSic.Sxc.Services
             }
             catch (Exception ex)
             {
-                throw l.Done(ex);
+                l.Done(ex);
+                throw;
             }
         });
 
