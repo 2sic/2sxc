@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data.Build;
+using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.ImportExport.Serialization;
 using ToSic.Lib.Logging;
@@ -128,7 +129,12 @@ namespace ToSic.Sxc.WebApi.Cms
             var serializerForTypes = _jsonSerializerGenerator.New().SetApp(entityApi.AppRead.AppState);
             serializerForTypes.ValueConvertHyperlinks = true;
             var usedTypes = UsedTypes(list, typeRead);
-            var jsonTypes = usedTypes.Select(t => serializerForTypes.ToPackage(t, true)).ToList();
+            var serSettings = new JsonSerializationSettings
+            {
+                CtIncludeInherited = true,
+                CtAttributeIncludeInheritedMetadata = true
+            };
+            var jsonTypes = usedTypes.Select(t => serializerForTypes.ToPackage(t, /*true,*/ serSettings)).ToList();
             result.ContentTypes = jsonTypes.Select(t => t.ContentType).ToList();
             // Also add global Entities like Formulas which would not be included otherwise
             result.ContentTypeItems = jsonTypes.SelectMany(t => t.Entities).ToList();
