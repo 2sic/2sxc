@@ -74,6 +74,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpPost]
         public bool InputType(int appId, int attributeId, string inputType) => Real.InputType(appId, attributeId, inputType);
 
+
         #endregion
 
         /// <summary>
@@ -84,6 +85,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
 
         #region Sharing and Inheriting
+
+        [HttpGet]
+        public IEnumerable<ContentTypeFieldDto> GetSharedFields(int appId) => Real.GetSharedFields(appId);
 
         [HttpPost]
         public void Share(int appId, int attributeId, bool share, bool hide = false) => Real.Share(appId, attributeId, share, hide);

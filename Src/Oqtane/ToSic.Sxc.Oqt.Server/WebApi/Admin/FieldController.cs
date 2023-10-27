@@ -10,6 +10,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Eav.WebApi.Admin.FieldControllerReal;
+// ReSharper disable RouteTemplates.MethodMissingRouteParameters
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -86,6 +87,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public void Rename(int appId, int contentTypeId, int attributeId, string newName) => Real.Rename(appId, contentTypeId, attributeId, newName);
 
         #region Sharing and Inheriting
+
+        [HttpGet]
+        public IEnumerable<ContentTypeFieldDto> GetSharedFields(int appId) => Real.GetSharedFields(appId);
 
         [HttpPost]
         public void Share(int appId, int attributeId, bool share, bool hide = false) => Real.Share(appId, attributeId, share, hide);
