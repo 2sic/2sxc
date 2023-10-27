@@ -1,4 +1,5 @@
-﻿using DotNetNuke.Security;
+﻿using System;
+using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using System.Collections.Generic;
 using System.Web.Http;
@@ -81,5 +82,15 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpPost]
         public void Rename(int appId, int contentTypeId, int attributeId, string newName) => Real.Rename(appId, contentTypeId, attributeId, newName);
 
-	}
+
+        #region Sharing and Inheriting
+
+        [HttpPost]
+        public void Share(int appId, int attributeId, bool share, bool hide = false) => Real.Share(appId, attributeId, share, hide);
+
+        [HttpPost]
+        public void Inherit(int appId, int attributeId, Guid inheritMetadataOf) => Real.Inherit(appId, attributeId, inheritMetadataOf);
+
+        #endregion
+    }
 }

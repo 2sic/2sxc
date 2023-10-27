@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using System;
 using System.Collections.Generic;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
@@ -83,5 +84,16 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// </summary>
         [HttpPost]
         public void Rename(int appId, int contentTypeId, int attributeId, string newName) => Real.Rename(appId, contentTypeId, attributeId, newName);
+
+        #region Sharing and Inheriting
+
+        [HttpPost]
+        public void Share(int appId, int attributeId, bool share, bool hide = false) => Real.Share(appId, attributeId, share, hide);
+
+        [HttpPost]
+        public void Inherit(int appId, int attributeId, Guid inheritMetadataOf) => Real.Inherit(appId, attributeId, inheritMetadataOf);
+
+        #endregion
+
     }
 }
