@@ -171,7 +171,9 @@ namespace ToSic.Sxc.Razor
 
         public async Task<ViewEngineResult> GetViewWithAppCodeAsync(ApplicationPart applicationPart, string templatePath, string appCodeFullPath, string templateFullPath = null)
         {
-
+            _assemblyLoadContext = new AssemblyLoadContext("UnLoadableAssemblyLoadContext", isCollectible: true);
+            // _assemblyLoadContext = AssemblyLoadContext.Default;
+            var refs = GetMetadataReferences(appCodeFullPath);
             //await _semaphore.WaitAsync();  // acquire the semaphore
             //try
             //{
@@ -179,6 +181,9 @@ namespace ToSic.Sxc.Razor
             //        _applicationPartManager.ApplicationParts.Add(applicationPart);
 
             //var firstAttempt = _viewEngine.GetView(null, templatePath, false);
+
+            //_assemblyLoadContext.Unload();
+
             //return firstAttempt;
 
             //    if (applicationPart != null)
@@ -191,10 +196,12 @@ namespace ToSic.Sxc.Razor
             //    _semaphore.Release();  // release the semaphore
             //}
 
-            var viewsFeature = new ViewsFeature();
-            _applicationPartManager.PopulateFeature(viewsFeature);
 
-            EnsureCompiledViews();
+
+            //var viewsFeature = new ViewsFeature();
+            //_applicationPartManager.PopulateFeature(viewsFeature);
+
+            //EnsureCompiledViews();
 
             //return Task.FromResult(new CompiledViewDescriptor
             //{
@@ -205,7 +212,7 @@ namespace ToSic.Sxc.Razor
 
 
 
-            _assemblyLoadContext = new AssemblyLoadContext("UnLoadableAssemblyLoadContext", isCollectible: true);
+
 
             var appProjectRoot = new DirectoryInfo(appCodeFullPath)?.Parent?.Parent?.FullName ?? Path.GetDirectoryName(templateFullPath ?? templatePath); ;
             var fileSystem = RazorProjectFileSystem.Create(appProjectRoot);
@@ -213,34 +220,34 @@ namespace ToSic.Sxc.Razor
             {
                 builder.AddDefaultImports(new[]
                 {
-                    //"@using Microsoft.AspNetCore.Html",
-                    //"@using Microsoft.AspNetCore.Http",
-                    //"@using Microsoft.AspNetCore.Mvc",
-                    //"@using Microsoft.AspNetCore.Mvc.Abstractions",
-                    //"@using Microsoft.AspNetCore.Mvc.ApplicationParts",
-                    //"@using Microsoft.AspNetCore.Mvc.Infrastructure",
-                    //"@using Microsoft.AspNetCore.Mvc.ModelBinding",
-                    //"@using Microsoft.AspNetCore.Mvc.Razor",
-                    //"@using Microsoft.AspNetCore.Mvc.RazorPages",
-                    //"@using Microsoft.AspNetCore.Mvc.Rendering",
-                    //"@using Microsoft.AspNetCore.Mvc.ViewEngines",
-                    //"@using Microsoft.AspNetCore.Mvc.ViewFeatures",
-                    //"@using Microsoft.AspNetCore.Razor.Language",
-                    //"@using Microsoft.AspNetCore.Routing",
-                    //"@using Microsoft.CodeAnalysis",
-                    //"@using Microsoft.CodeAnalysis.CSharp",
-                    //"@using Microsoft.CodeAnalysis.Emit",
-                    "@using System",
-                    "@using System.Collections.Generic",
-                    "@using System.IO",
-                    //"@using System.Linq",
-                    //"@using System.Reflection",
-                    //"@using System.Runtime.Loader",
-                    //"@using System.Text",
-                    //"@using System.Text.Encodings.Web",
-                    //"@using System.Threading",
-                    //"@using System.Threading.Tasks",
-                });
+                        //"@using Microsoft.AspNetCore.Html",
+                        //"@using Microsoft.AspNetCore.Http",
+                        //"@using Microsoft.AspNetCore.Mvc",
+                        //"@using Microsoft.AspNetCore.Mvc.Abstractions",
+                        //"@using Microsoft.AspNetCore.Mvc.ApplicationParts",
+                        //"@using Microsoft.AspNetCore.Mvc.Infrastructure",
+                        //"@using Microsoft.AspNetCore.Mvc.ModelBinding",
+                        //"@using Microsoft.AspNetCore.Mvc.Razor",
+                        //"@using Microsoft.AspNetCore.Mvc.RazorPages",
+                        //"@using Microsoft.AspNetCore.Mvc.Rendering",
+                        "@using Microsoft.AspNetCore.Mvc.ViewEngines",
+                        //"@using Microsoft.AspNetCore.Mvc.ViewFeatures",
+                        //"@using Microsoft.AspNetCore.Razor.Language",
+                        //"@using Microsoft.AspNetCore.Routing",
+                        //"@using Microsoft.CodeAnalysis",
+                        //"@using Microsoft.CodeAnalysis.CSharp",
+                        //"@using Microsoft.CodeAnalysis.Emit",
+                        "@using System",
+                        //"@using System.Collections.Generic",
+                        //"@using System.IO",
+                        //"@using System.Linq",
+                        //"@using System.Reflection",
+                        //"@using System.Runtime.Loader",
+                        //"@using System.Text",
+                        //"@using System.Text.Encodings.Web",
+                        //"@using System.Threading",
+                        //"@using System.Threading.Tasks",
+                    });
             });
             var projectItem = fileSystem.GetItem(templateFullPath);
             var codeDocument = projectEngine.Process(projectItem);
@@ -264,7 +271,7 @@ namespace ToSic.Sxc.Razor
 
             var compilation = CSharpCompilation.Create(Path.GetFileNameWithoutExtension(templatePath))
                 .WithOptions(compilationOptions)
-                .AddReferences(GetMetadataReferences(appCodeFullPath))
+                .AddReferences(/*GetMetadataReferences(appCodeFullPath)*/refs)
                 .AddSyntaxTrees(syntaxTree);
 
             using var peStream = new MemoryStream();
@@ -323,7 +330,7 @@ namespace ToSic.Sxc.Razor
                 return ViewEngineResult.NotFound(templatePath, new string[] { "View not found" });
 
             page.Path = templatePath;
-
+            
             // Create an IView instance from the compiled assembly
             var viewInstance = new RazorView(_viewEngine, _pageActivator, Array.Empty<IRazorPage>(), page, HtmlEncoder.Default, new DiagnosticListener(templatePath));
             return ViewEngineResult.Found(templatePath, viewInstance);
@@ -353,22 +360,64 @@ namespace ToSic.Sxc.Razor
             if (File.Exists(appCodeFullPath))
                 references.Add(MetadataReference.CreateFromFile(_assemblyLoadContext.LoadFromAssemblyPath(appCodeFullPath).Location));
 
+            // RazorReferencedAssemblies().ToList().ForEach(a => references.Add(MetadataReference.CreateFromFile(Assembly.Load(a).Location)));
+
             Assembly.GetEntryAssembly()?.GetReferencedAssemblies().ToList()
                 .ForEach(a => references.Add(MetadataReference.CreateFromFile(Assembly.Load(a).Location)));
-
-            return references;
 
             // Add references to all dll's in bin folder.
             var dllLocation = AppContext.BaseDirectory;
             var dllPath = Path.GetDirectoryName(dllLocation);
             foreach (string dllFile in Directory.GetFiles(dllPath, "*.dll"))
-                references.Add(MetadataReference.CreateFromFile(dllFile));
+                references.Add(MetadataReference.CreateFromFile(Assembly.LoadFile(dllFile).Location));
             foreach (string dllFile in Directory.GetFiles(Path.Combine(dllPath, "refs"), "*.dll"))
-                references.Add(MetadataReference.CreateFromFile(dllFile));
+                references.Add(MetadataReference.CreateFromFile(Assembly.Load(Path.GetFileNameWithoutExtension(dllFile)).Location));
 
 
 
             return references;
+        }
+
+        private static string[] RazorReferencedAssemblies()
+        {
+
+            return new string[] {
+              "Microsoft.AspNetCore",
+              "Microsoft.AspNetCore.Authorization.Policy",
+              "Microsoft.AspNetCore.Diagnostics",
+              "Microsoft.AspNetCore.Hosting.Abstractions",
+              "Microsoft.AspNetCore.Html.Abstractions",
+              "Microsoft.AspNetCore.Http.Abstractions",
+              "Microsoft.AspNetCore.HttpsPolicy",
+              "Microsoft.AspNetCore.Mvc",
+              "Microsoft.AspNetCore.Mvc.Abstractions",
+              "Microsoft.AspNetCore.Mvc.Core",
+              "Microsoft.AspNetCore.Mvc.Razor",
+              "Microsoft.AspNetCore.Mvc.RazorPages",
+              "Microsoft.AspNetCore.Mvc.TagHelpers",
+              "Microsoft.AspNetCore.Mvc.ViewFeatures",
+              "Microsoft.AspNetCore.Razor",
+              "Microsoft.AspNetCore.Razor.Runtime",
+              "Microsoft.AspNetCore.Routing",
+              "Microsoft.AspNetCore.StaticFiles",
+              "Microsoft.Extensions.DependencyInjection.Abstractions",
+              "Microsoft.Extensions.Hosting.Abstractions",
+              "Microsoft.Extensions.Logging.Abstractions",
+              "System.Diagnostics.DiagnosticSource",
+              "System.Linq.Expressions",
+              "System.Runtime",
+              "System.Runtime.Loader",
+              "System.Text.Encodings.Web",
+            };
+
+            //var razorAssemblyNames = new string[] { };
+            //// add the assembly containing the RazorViewEngine
+            //razorAssemblyNames[0] = typeof(Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine).Assembly.Location;
+            //// add the assembly containing the IHostingEnvironment
+            //razorAssemblyNames[1] = typeof(Microsoft.AspNetCore.Hosting.IHostingEnvironment).Assembly.Location;
+            //// add the assembly containing the IHtmlHelper
+            //razorAssemblyNames[2] = typeof(Microsoft.AspNetCore.Mvc.Rendering.IHtmlHelper).Assembly.Location;
+            //return razorAssemblyNames;
         }
 
         private void EnsureCompiledViews(/*ILogger logger*/)
