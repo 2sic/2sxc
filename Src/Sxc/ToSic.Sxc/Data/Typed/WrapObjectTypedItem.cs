@@ -186,13 +186,13 @@ namespace ToSic.Sxc.Data.Typed
                     // Note: id/guid don't really work, but it's never used in metadata context
                     //var id = values.TryGetValue(nameof(Id), out var maybeId) ? maybeId.ConvertOrFallback(0) : 0;
                     //var guid = values.TryGetValue(nameof(Guid), out var maybeGuid) ? maybeGuid.ConvertOrFallback(Guid.Empty) : Guid.Empty;
-                    return df.Create(values); //, id: id, guid: guid);
+                    return df.Create(values);
                 })
                 .ToList();
 
             var mdOf = new MetadataOf<int>(0, 0, "virtual", mdEntities);
             // TODO: @2dm - this probably won't work yet, without an entity (null) #todoTyped
-            var metadata = _cdf.Value.Metadata(mdOf/*, mdOf.FirstOrDefault()*/); // new Metadata(mdOf, parentOrNull: null, _cdf.Value);
+            var metadata = _cdf.Value.Metadata(mdOf);
             return metadata;
         }
 
