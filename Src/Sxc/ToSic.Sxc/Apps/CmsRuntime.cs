@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -16,10 +15,9 @@ namespace ToSic.Sxc.Apps
             LazySvc<EntityRuntime> entityRuntime,
             LazySvc<MetadataRuntime> metadataRuntime,
             LazySvc<ContentTypeRuntime> contentTypeRuntime,
-            LazySvc<QueryRuntime> queryRuntime, 
             LazySvc<ViewsRuntime> viewsRuntime, 
             LazySvc<BlocksRuntime> blocksRuntime) 
-            : base(services, entityRuntime, metadataRuntime, contentTypeRuntime, queryRuntime, "Sxc.CmsRt")
+            : base(services, entityRuntime, metadataRuntime, contentTypeRuntime, "Sxc.CmsRt")
         {
             ConnectServices(
                 _blocksRuntime = blocksRuntime.SetInit(r => r.ConnectTo(this)),
