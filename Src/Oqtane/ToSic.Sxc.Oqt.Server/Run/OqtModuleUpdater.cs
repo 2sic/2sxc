@@ -3,7 +3,6 @@ using Oqtane.Shared;
 using System;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
@@ -20,10 +19,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     internal class OqtModuleUpdater: ServiceBase, IPlatformModuleUpdater
     {
+        private readonly LazySvc<AppWorkSxc> _appSysSxc;
         private readonly SettingsHelper _settingsHelper;
         private readonly IPageModuleRepository _pageModuleRepository;
-        private readonly LazySvc<CmsRuntime> _lazyCmsRuntime;
-        private readonly IAppStates _appStates;
         private readonly ISite _site;
 
         /// <summary>
@@ -32,13 +30,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
         // ReSharper disable once UnusedMember.Global
         public OqtModuleUpdater(SettingsHelper settingsHelper,
             IPageModuleRepository pageModuleRepository,
-            LazySvc<CmsRuntime> lazyCmsRuntime, IAppStates appStates, ISite site) : base($"{OqtConstants.OqtLogPrefix}.MapA2I")
+            LazySvc<AppWorkSxc> appSysSxc, ISite site) : base($"{OqtConstants.OqtLogPrefix}.MapA2I")
         {
             ConnectServices(
+                _appSysSxc = appSysSxc,
                 _settingsHelper = settingsHelper,
                 _pageModuleRepository = pageModuleRepository,
-                _lazyCmsRuntime = lazyCmsRuntime,
-                _appStates = appStates,
                 _site = site
             );
         }
@@ -55,7 +52,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 UpdateInstanceSetting(instance.Id, Settings.ModuleSettingApp, null, Log);
             else
             {
-                var appName = _appStates.AppIdentifier(_site.ZoneId, appId.Value);
+                var appName = _appSysSxc.Value.AppWork.AppStates.AppIdentifier(_site.ZoneId, appId.Value);
                 UpdateInstanceSetting(instance.Id, Settings.ModuleSettingApp, appName, Log);
             }
 
@@ -63,8 +60,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (appId.HasValue)
             {
                 var appIdentity = new AppIdentity(_site.ZoneId, appId.Value);
-                var cms = _lazyCmsRuntime.Value.InitQ(appIdentity/*, true*/);
-                var templateGuid = cms.Views.GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
+                var templateGuid = _appSysSxc.Value.AppViews(identity: appIdentity).GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);
             }
         }

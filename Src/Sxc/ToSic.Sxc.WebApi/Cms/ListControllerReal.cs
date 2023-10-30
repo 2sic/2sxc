@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.AppSys;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
@@ -21,17 +22,23 @@ namespace ToSic.Sxc.WebApi.Cms
         #region constructor / DI
 
         public ListControllerReal(
+            AppWork appWork,
             Generator<MultiPermissionsApp> multiPermissionsApp,
             IPagePublishing publishing,
             LazySvc<CmsManager> cmsManagerLazy,
+            LazySvc<AppWorkSxc> appSysSxc,
             IContextResolver ctxResolver,
             Generator<IPagePublishing> versioning
-        ) : base(multiPermissionsApp, cmsManagerLazy, ctxResolver, "Api.LstRl")
-            => ConnectServices(
+        ) : base(multiPermissionsApp, cmsManagerLazy, appSysSxc, ctxResolver, "Api.LstRl")
+        {
+            ConnectServices(
+                _appWork = appWork,
                 _publishing = publishing,
                 _versioning = versioning
             );
+        }
 
+        private readonly AppWork _appWork;
         private readonly Generator<IPagePublishing> _versioning;
         private readonly IPagePublishing _publishing;
 

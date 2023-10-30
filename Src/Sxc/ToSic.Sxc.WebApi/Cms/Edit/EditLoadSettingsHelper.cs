@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.AppSys;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json;
@@ -18,19 +20,23 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public class EditLoadSettingsHelper: ServiceBase
     {
+
         #region Constructor / DI
 
         private readonly IEnumerable<ILoadSettingsProvider> _loadSettingsProviders;
         private readonly LazySvc<JsonSerializer> _jsonSerializerGenerator;
+        private readonly LazySvc<AppEntityRead> _appEntityRead;
 
         public EditLoadSettingsHelper(
             LazySvc<JsonSerializer> jsonSerializerGenerator,
-            IEnumerable<ILoadSettingsProvider> loadSettingsProviders
+            IEnumerable<ILoadSettingsProvider> loadSettingsProviders,
+            LazySvc<AppEntityRead> appEntityRead
             ) : base(Constants.SxcLogName + ".LodSet")
         {
             ConnectServices(
                 _jsonSerializerGenerator = jsonSerializerGenerator,
-                _loadSettingsProviders = loadSettingsProviders
+                _loadSettingsProviders = loadSettingsProviders,
+                _appEntityRead = appEntityRead
             );
         }
 
@@ -94,11 +100,12 @@ namespace ToSic.Sxc.WebApi.Cms
                 if (!hasWysiwyg)
                     return (new List<JsonEntity>(), "no wysiwyg field");
 
-                var entities = appRuntime.Entities
-                    .GetWithParentAppsExperimental("StringWysiwygConfiguration")
+                var context = appRuntime.GetContextWip();
+                var entities = _appEntityRead.Value // appRuntime.Entities
+                    .GetWithParentAppsExperimental(context, "StringWysiwygConfiguration")
                     .ToList();
 
-                var jsonSerializer = _jsonSerializerGenerator.Value.SetApp(appRuntime.AppState);
+                var jsonSerializer = _jsonSerializerGenerator.Value.SetApp(context.AppState);
                 var result = entities.Select(e => jsonSerializer.ToJson(e)).ToList();
 
                 return (result, $"{result.Count}");

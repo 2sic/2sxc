@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.AppSys;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
@@ -22,6 +23,7 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public class EditSaveBackend : ServiceBase
     {
+        private readonly AppWork _appWork;
         private readonly DataBuilder _dataBuilder;
         private readonly SaveEntities _saveBackendHelper;
         private readonly SaveSecurity _saveSecurity;
@@ -32,6 +34,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public EditSaveBackend(
             SxcPagePublishing pagePublishing, 
             LazySvc<AppManager> appManagerLazy,
+            AppWork appWork,
             Sxc.Context.IContextResolver ctxResolver,
             JsonSerializer jsonSerializer,
             SaveSecurity saveSecurity,
@@ -42,6 +45,7 @@ namespace ToSic.Sxc.WebApi.Cms
             ConnectServices(
                 _pagePublishing = pagePublishing,
                 _appManagerLazy = appManagerLazy,
+                _appWork = appWork,
                 _ctxResolver = ctxResolver,
                 _jsonSerializer = jsonSerializer,
                 _saveSecurity = saveSecurity,
@@ -86,12 +90,16 @@ namespace ToSic.Sxc.WebApi.Cms
             //    appId = targetAppId;
             //}
 
+            // new API WIP
+            var appCtx = _appWork.Context(_appId);
+            var appEntities = _appWork.EntityRead();
+
             var appMan = _appManagerLazy.Value.Init(_appId);
-            var appRead = appMan.Read;
-            var ser = _jsonSerializer.SetApp(appRead.AppState);
+
+            var ser = _jsonSerializer.SetApp(appCtx.AppState);
             // Since we're importing directly into this app, we would prefer local content-types
             ser.PreferLocalAppTypes = true;
-            validator.PrepareForEntityChecks(appRead);
+            validator.PrepareForEntityChecks(appCtx, appEntities);
 
             #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
             // basic permission checks
@@ -100,8 +108,9 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var foundItems = package.Items.Where(i => i.Entity.Id != 0 || i.Entity.Guid != Guid.Empty)
                 .Select(i => i.Entity.Guid != Guid.Empty
-                        ? appRead.Entities.Get(i.Entity.Guid) // prefer guid access if available
-                        : appRead.Entities.Get(i.Entity.Id)  // otherwise id
+                    ? _appWork.Entities.Get(appCtx,
+                        i.Entity.Guid) // appRead.Entities.Get(i.Entity.Guid) // prefer guid access if available
+                    : _appWork.Entities.Get(appCtx, i.Entity.Id) // appRead.Entities.Get(i.Entity.Id)  // otherwise id
                 );
             if (foundItems.Any(i => i != null) && !permCheck.EnsureAll(GrantSets.UpdateSomething, out var error))
                 throw HttpException.PermissionDenied(error);
@@ -151,12 +160,12 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.A("items to save generated, all data tests passed");
 
             return _pagePublishing.SaveInPagePublishing(_ctxResolver.BlockOrNull(), _appId, items, partOfPage,
-                    forceSaveAsDraft => DoSave(appMan, items, forceSaveAsDraft),
+                    forceSaveAsDraft => DoSave(appCtx, appMan, items, forceSaveAsDraft),
                     permCheck);
         }
 
 
-        private Dictionary<Guid, int> DoSave(AppManager appMan, List<BundleWithHeader<IEntity>> items, bool forceSaveAsDraft)
+        private Dictionary<Guid, int> DoSave(IAppWorkCtx appCtx, AppManager appMan, List<BundleWithHeader<IEntity>> items, bool forceSaveAsDraft)
         {
             // only save entities that are
             // a) not in a group
@@ -165,10 +174,8 @@ namespace ToSic.Sxc.WebApi.Cms
                 .Where(e => !e.Header.IsContentBlockMode || !e.Header.IsEmpty)
                 .ToList();
 
-            var save = _saveBackendHelper;// new Eav.WebApi.SaveHelpers.SaveEntities(Log);
-            save.UpdateGuidAndPublishedAndSaveMany(appMan, entitiesToSave, forceSaveAsDraft);
-            var appState = appMan.Read.AppState;
-            return save.GenerateIdList(appMan.Read.Entities, items, appState);
+            _saveBackendHelper.UpdateGuidAndPublishedAndSaveMany(appMan, entitiesToSave, forceSaveAsDraft);
+            return _saveBackendHelper.GenerateIdList(appCtx, _appWork.Entities, items);
         }
     }
 }

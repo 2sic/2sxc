@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.AppSys;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Security;
@@ -13,6 +14,7 @@ namespace ToSic.Sxc.WebApi
 {
     public abstract class BlockWebApiBackendBase : ServiceBase
     {
+        public LazySvc<AppWorkSxc> AppSysSxc { get; }
         private readonly Generator<MultiPermissionsApp> _multiPermissionsApp;
         public Sxc.Context.IContextResolver CtxResolver { get; }
         protected readonly LazySvc<CmsManager> CmsManagerLazy;
@@ -28,16 +30,22 @@ namespace ToSic.Sxc.WebApi
         protected CmsManager CmsManagerOfBlock => _cmsManager ?? (_cmsManager = CmsManagerLazy.Value.Init(Block.Context));
         private CmsManager _cmsManager;
 
+        protected IAppWorkCtx AppWorkCtx => _appWorkCtx ?? (_appWorkCtx = AppSysSxc.Value.AppWork.Context(Block.Context.AppState));
+        private IAppWorkCtx _appWorkCtx;
+
         #endregion
 
 
         protected BlockWebApiBackendBase(
             Generator<MultiPermissionsApp> multiPermissionsApp,
             LazySvc<CmsManager> cmsManagerLazy,
-            Sxc.Context.IContextResolver ctxResolver, string logName
+            LazySvc<AppWorkSxc> appSysSxc,
+            Sxc.Context.IContextResolver ctxResolver,
+            string logName
             ) : base(logName)
         {
             ConnectServices(
+                AppSysSxc = appSysSxc,
                 _multiPermissionsApp = multiPermissionsApp,
                 CtxResolver = ctxResolver,
                 CmsManagerLazy = cmsManagerLazy

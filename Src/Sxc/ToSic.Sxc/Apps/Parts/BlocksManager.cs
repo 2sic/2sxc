@@ -6,6 +6,7 @@ using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Apps.CmsSys;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Apps
 		    if (!blockConfiguration.Exists)
 		    {
 		        Log.A($"doesn't exist, will create new CG with template#{templateId}");
-		        return appMan.Entities.Create(BlocksRuntime.BlockTypeName, new Dictionary<string, object>
+		        return appMan.Entities.Create(AppBlocks.BlockTypeName, new Dictionary<string, object>
 		        {
 		            {ViewParts.TemplateContentType, new List<int> {templateId}},
 		            {ViewParts.Content, new List<int>()},

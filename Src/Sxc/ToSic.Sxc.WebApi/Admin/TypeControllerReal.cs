@@ -49,7 +49,7 @@ namespace ToSic.Sxc.WebApi.Admin
 
 
         public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
-            => _ctApiLazy.Value.Init(appId).Get(scope, withStatistics);
+            => _ctApiLazy.Value.Init(appId).List(scope, withStatistics);
 
         /// <summary>
         /// Used to be GET ContentTypes/Scopes

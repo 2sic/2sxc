@@ -13,8 +13,7 @@ namespace ToSic.Sxc.Blocks.Edit
             // ...but for now we'll just update the current modules title
             // note: it also correctly handles published/unpublished, but I'm not sure why :)
 
-            var cms = Services.CmsRuntime.Value;
-            var contentGroup = cms.Blocks.GetBlockConfig(BlockConfiguration.Guid);
+            var contentGroup = Services.AppBlocks.Value.GetBlockConfig(Services.AppSys.Value.Context(Block.App), BlockConfiguration.Guid);
 
             var titleItem = contentGroup.Header.FirstOrDefault() ?? contentGroup.Content.FirstOrDefault();
             

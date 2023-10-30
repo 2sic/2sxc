@@ -31,26 +31,26 @@ namespace ToSic.Sxc.DataSources
         private readonly GetOnce<ResultOrError<(BlockConfiguration blockConfiguration, IView view)>> _everything =
             new GetOnce<ResultOrError<(BlockConfiguration blockConfiguration, IView view)>>();
 
-        private ResultOrError<BlockConfiguration> LoadBlockConfiguration() => Log.Func(l =>
+        private ResultOrError<BlockConfiguration> LoadBlockConfiguration()
         {
+            var l = Log.Fn<ResultOrError<BlockConfiguration>>();
             if (UseSxcInstanceContentGroup)
-                return (new ResultOrError<BlockConfiguration>(true, Block.Configuration), "need content-group, will use from Sxc Instance ContentGroup");
+                return l.Return(new ResultOrError<BlockConfiguration>(true, Block.Configuration), "need content-group, will use from Sxc Instance ContentGroup");
 
             // If we don't have a context, then look it up based on the InstanceId
             l.A("need content-group, will construct as cannot use context");
             Configuration.Parse();
             if (!ModuleId.HasValue)
-                return (new ResultOrError<BlockConfiguration>(false, null,
+                return l.Return(new ResultOrError<BlockConfiguration>(false, null,
                     Error.Create(title: $"{nameof(CmsBlock)} cannot find Block Configuration",
                         message: $"Neither InstanceContext nor {nameof(ModuleId)} found")), "Error, no module-id");
 
-            var cms = _services.LazyCmsRuntime.IsValueCreated
-                ? _services.LazyCmsRuntime.Value
-                : _services.LazyCmsRuntime.Value.InitQ(this);
             var container = _services.ModuleLazy.Value.Init(ModuleId.Value);
             var blockId = container.BlockIdentifier;
-            return (new ResultOrError<BlockConfiguration>(true, cms.Blocks.GetOrGeneratePreviewConfig(blockId)), "ok");
-        });
+            var appCtx = _services.AppWork.Context(this);
+            var blockConfig = _services.AppBlocks.GetOrGeneratePreviewConfig(appCtx, blockId);
+            return l.Return(new ResultOrError<BlockConfiguration>(true, blockConfig), "ok");
+        }
 
 
         /// <summary>

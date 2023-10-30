@@ -27,21 +27,19 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 
         #region constructor / DI
 
-        public ContentBlockBackend(Generator<MultiPermissionsApp> multiPermissionsApp, 
+        public ContentBlockBackend(
+            LazySvc<AppWorkSxc> appSysSxc,
+            Generator<MultiPermissionsApp> multiPermissionsApp, 
             IPagePublishing publishing, 
             LazySvc<CmsManager> cmsManagerLazy, 
             IContextResolver ctxResolver, 
             LazySvc<IBlockResourceExtractor> optimizerLazy,
             LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
-            //Generator<BlockEditorForModule> blkEdtForMod,
-            //Generator<BlockEditorForEntity> blkEdtForEnt,
             Generator<BlockFromEntity> entityBlockGenerator)
-            : base(multiPermissionsApp, cmsManagerLazy, ctxResolver, "Bck.FldLst")
+            : base(multiPermissionsApp, cmsManagerLazy, appSysSxc, ctxResolver, "Bck.FldLst")
         {
             ConnectServices(
                 _optimizer = optimizerLazy,
-                //_blkEdtForMod = blkEdtForMod,
-                //_blkEdtForEnt = blkEdtForEnt,
                 _publishing = publishing,
                 _entityBlockGenerator = entityBlockGenerator,
                 _blockEditorSelectorLazy = blockEditorSelectorLazy
@@ -49,8 +47,6 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
         }
 
         private readonly LazySvc<IBlockResourceExtractor> _optimizer;
-        //private readonly IGenerator<BlockEditorForModule> _blkEdtForMod;
-        //private readonly IGenerator<BlockEditorForEntity> _blkEdtForEnt;
         private readonly IPagePublishing _publishing;
 
         #endregion
@@ -136,12 +132,11 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
         private IRenderResult RenderToResult(int templateId, string lang, string edition)
         {
             var callLog = Log.Fn<IRenderResult>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
-            //SetThreadCulture(lang);
 
             // if a preview templateId was specified, swap to that
             if (templateId > 0)
             {
-                var template = CmsManagerOfBlock.Read.Views.Get(templateId);
+                var template = AppSysSxc.Value.AppViews(AppWorkCtx).Get(templateId); // CmsManagerOfBlock.Read.Views.Get(templateId);
                 template.Edition = edition;
                 Block.View = template;
             }

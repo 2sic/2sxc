@@ -3,7 +3,6 @@ using DotNetNuke.Services.Localization;
 using System;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
@@ -21,22 +20,23 @@ namespace ToSic.Sxc.Dnn.Run
 {
     public class DnnModuleUpdater : ServiceBase, IPlatformModuleUpdater
     {
+
         #region Constructor and DI
 
         /// <summary>
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public DnnModuleUpdater(LazySvc<CmsRuntime> cmsRuntimeLazy, IZoneMapper zoneMapper, IAppStates appStates, ISite site) : base("Dnn.MapA2I")
+        public DnnModuleUpdater(LazySvc<AppWorkSxc> appSysSxc, IZoneMapper zoneMapper, IAppStates appStates, ISite site) : base("Dnn.MapA2I")
         {
             ConnectServices(
-                _cmsRuntimeLazy = cmsRuntimeLazy,
+                _appSysSxc = appSysSxc,
                 _appStates = appStates,
                 _site = site,
                 _zoneMapper = zoneMapper
             );
         }
-        private readonly LazySvc<CmsRuntime> _cmsRuntimeLazy;
+        private readonly LazySvc<AppWorkSxc> _appSysSxc;
         private readonly IAppStates _appStates;
         private readonly ISite _site;
         private readonly IZoneMapper _zoneMapper;
@@ -67,9 +67,8 @@ namespace ToSic.Sxc.Dnn.Run
             if (appId.HasValue)
             {
                 var appIdentity = new AppIdentity(zoneId, appId.Value);
-                var cms = _cmsRuntimeLazy.Value.InitQ(appIdentity/*, true*/);
 
-                var templateGuid = cms.Views.GetAll()
+                var templateGuid = _appSysSxc.Value.AppViews(identity: appIdentity).GetAll()
                     .OrderByDescending(v => v.Metadata.HasType(Decorators.IsDefaultDecorator)) // first sort by IsDefaultDecorator DESC
                     .ThenBy(v => v.Name) // than by Name ASC
                     .FirstOrDefault(t => !t.IsHidden)?.Guid;

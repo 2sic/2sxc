@@ -1,15 +1,7 @@
 ﻿using System;
 using System.Linq;
-#if NETFRAMEWORK
-using System.IO;
-using System.Net.Http;
-using ToSic.Eav.WebApi.ImportExport;
-#else
-using Microsoft.AspNetCore.Mvc;
-#endif
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data.Shared;
@@ -24,39 +16,49 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.WebApi.App;
 using ISite = ToSic.Eav.Context.ISite;
 
+#if NETFRAMEWORK
+using System.IO;
+using System.Net.Http;
+using ToSic.Eav.WebApi.ImportExport;
+#else
+using Microsoft.AspNetCore.Mvc;
+#endif
+
 namespace ToSic.Sxc.WebApi.ImportExport
 {
     public class ExportApp: ServiceBase
     {
+
         #region Constructor / DI
 
-        public ExportApp(
-            IZoneMapper zoneMapper, 
-            ZipExport zipExport, 
-            CmsRuntime cmsRuntime, 
-            ISite site, 
-            IUser user, 
-            Generator<ImpExpHelpers> impExpHelpers, 
-            IFeaturesInternal features
-            ) : base("Bck.Export") =>
-            ConnectServices(
-                _zoneMapper = zoneMapper,
-                _zipExport = zipExport,
-                _cmsRuntime = cmsRuntime,
-                _site = site,
-                _user = user,
-                _features = features,
-                _impExpHelpers = impExpHelpers
-            );
-
+        private readonly AppWorkSxc _appWorkSxc;
         private readonly IZoneMapper _zoneMapper;
         private readonly ZipExport _zipExport;
-        private readonly CmsRuntime _cmsRuntime;
         private readonly ISite _site;
         private readonly IUser _user;
         private readonly IFeaturesInternal _features;
         private readonly Generator<ImpExpHelpers> _impExpHelpers;
 
+        public ExportApp(
+            IZoneMapper zoneMapper, 
+            ZipExport zipExport,
+            AppWorkSxc appWorkSxc,
+            ISite site, 
+            IUser user, 
+            Generator<ImpExpHelpers> impExpHelpers, 
+            IFeaturesInternal features
+            ) : base("Bck.Export")
+        {
+            ConnectServices(
+                _appWorkSxc = appWorkSxc,
+                _zoneMapper = zoneMapper,
+                _zipExport = zipExport,
+                _site = site,
+                _user = user,
+                _features = features,
+                _impExpHelpers = impExpHelpers
+            );
+        }
 
         #endregion
 
@@ -69,18 +71,20 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared);
             var cultCount = _zoneMapper.CulturesWithState(_site).Count(c => c.IsEnabled);
 
-            var cms = _cmsRuntime.InitQ(currentApp);
+            var appCtx = _appWorkSxc.AppWork.Context(currentApp);
+            var appEntities = _appWorkSxc.AppWork.Entities;
+            var appViews = _appWorkSxc.AppViews(appCtx);
 
             return new AppExportInfoDto
             {
                 Name = currentApp.Name,
                 Guid = currentApp.NameId,
                 Version = currentApp.VersionSafe(),
-                EntitiesCount = cms.Entities.All.Count(e => !e.HasAncestor()),
+                EntitiesCount = appEntities.All(appCtx).Count(e => !e.HasAncestor()),
                 LanguagesCount = cultCount,
-                TemplatesCount = cms.Views.GetAll().Count(),
-                HasRazorTemplates = cms.Views.GetRazor().Any(),
-                HasTokenTemplates = cms.Views.GetToken().Any(),
+                TemplatesCount = appViews.GetAll().Count(),
+                HasRazorTemplates = appViews.GetRazor().Any(),
+                HasTokenTemplates = appViews.GetToken().Any(),
                 FilesCount = zipExport.FileManager.AllFiles().Count() // PortalFilesCount
                     + (currentApp.AppState.HasCustomParentApp() ? 0 : zipExport.FileManagerGlobal.AllFiles().Count()), // GlobalFilesCount
                 TransferableFilesCount = zipExport.FileManager.GetAllTransferableFiles().Count() // TransferablePortalFilesCount

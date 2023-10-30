@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Apps.AppSys;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Security.Permissions;
@@ -11,6 +12,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Apps.CmsSys;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 
@@ -18,20 +20,23 @@ namespace ToSic.Sxc.WebApi.Usage
 {
     public class UsageBackend: ServiceBase
     {
-        private readonly CmsRuntime _cmsRuntime;
+        private readonly AppWorkSxc _appWorkSxc;
+        private readonly AppBlocks _appBlocks;
         private readonly Generator<MultiPermissionsApp> _appPermissions;
         private readonly IContextResolver _ctxResolver;
 
         public UsageBackend(
-            CmsRuntime cmsRuntime,
+            AppWorkSxc appWorkSxc,
+            AppBlocks appBlocks,
             Generator<MultiPermissionsApp> appPermissions,
             IContextResolver ctxResolver
             ) : base("Bck.Usage")
         {
             ConnectServices(
-                _cmsRuntime = cmsRuntime,
                 _appPermissions = appPermissions,
-                _ctxResolver = ctxResolver
+                _ctxResolver = ctxResolver,
+                _appWorkSxc = appWorkSxc,
+                _appBlocks = appBlocks
             );
         }
 
@@ -45,11 +50,12 @@ namespace ToSic.Sxc.WebApi.Usage
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
-            var cms = _cmsRuntime.InitQ(context.AppState);
+            var appSysCtx = _appWorkSxc.AppWork.Context(appId);
+            var appViews = _appWorkSxc.AppViews(appSysCtx);
             // treat view as a list - in case future code will want to analyze many views together
-            var views = new List<IView> { cms.Views.Get(guid) };
+            var views = new List<IView> { appViews.Get(guid) };
 
-            var blocks = cms.Blocks.AllWithView();
+            var blocks = _appBlocks.AllWithView(appSysCtx);
 
             Log.A($"Found {blocks.Count} content blocks");
 

@@ -87,7 +87,8 @@ namespace ToSic.Sxc.WebApi.App
             // verify that read-access to these content-types is permitted
             var permCheck = ThrowIfNotAllowedInType(contentType, GrantSets.ReadSomething, AppState);
 
-            var result = _entityApi.Init(AppState.AppId, permCheck.EnsureAny(GrantSets.ReadDraft))
+            var result = _entityApi
+                .Init(AppState.AppId, permCheck.EnsureAny(GrantSets.ReadDraft))
                 .GetEntities(contentType)
                 ?.ToList();
             return wrapLog.Return(result, "found: " + result?.Count);
@@ -271,7 +272,7 @@ namespace ToSic.Sxc.WebApi.App
             if (contentType == "any")
                 throw new Exception("type any not allowed with id-only, requires guid");
 
-            var entityApi = _entityApi.Init(AppState.AppId/*, true*/);
+            var entityApi = _entityApi.Init(AppState.AppId);
             var itm = entityApi.AppRead.AppState.List.GetOrThrow(contentType, id);
             ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppState);
             entityApi.Delete(itm.Type.Name, id);
@@ -282,7 +283,7 @@ namespace ToSic.Sxc.WebApi.App
             Log.A($"delete guid:{guid}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
 
-            var entityApi = _entityApi.Init(AppState.AppId/*, Context.UserMayEdit*/);
+            var entityApi = _entityApi.Init(AppState.AppId);
             var itm = AppState.List.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
             ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppState);

@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
@@ -13,14 +12,14 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtEnvironmentInstaller: ServiceBase, IEnvironmentInstaller, IPlatformAppInstaller
     {
-        private readonly LazySvc<CmsRuntime> _cmsRuntimeLazy;
+        private readonly LazySvc<AppWorkSxc> _appSysSxc;
         private readonly RemoteRouterLink _remoteRouterLink;
         private readonly IAppStates _appStates;
 
-        public OqtEnvironmentInstaller(LazySvc<CmsRuntime> cmsRuntimeLazy, RemoteRouterLink remoteRouterLink, IAppStates appStates) : base($"{OqtConstants.OqtLogPrefix}.Instll")
+        public OqtEnvironmentInstaller(LazySvc<AppWorkSxc> appSysSxc, RemoteRouterLink remoteRouterLink, IAppStates appStates) : base($"{OqtConstants.OqtLogPrefix}.Instll")
         {
             ConnectServices(
-                _cmsRuntimeLazy = cmsRuntimeLazy,
+                _appSysSxc = appSysSxc,
                 _remoteRouterLink = remoteRouterLink,
                 _appStates = appStates
             );
@@ -53,9 +52,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 {
                     var contentAppId = _appStates.IdentityOfDefault(site.ZoneId);
                     // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
-                    var contentViews = _cmsRuntimeLazy.Value
-                        .InitQ(contentAppId/*, false*/)
-                        .Views.GetAll();
+                    var contentViews = _appSysSxc.Value.AppViews(identity: contentAppId).GetAll();
                     if (contentViews.Any()) return null;
                 }
                 catch { /* ignore */ }

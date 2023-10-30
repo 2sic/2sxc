@@ -5,6 +5,7 @@ using ToSic.Eav.DataSource.Catalog;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.CmsSys;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
@@ -12,7 +13,6 @@ using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Helpers;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.DataSources;
@@ -38,15 +38,17 @@ namespace ToSic.Sxc.Startup
         public static IServiceCollection AddSxcCore(this IServiceCollection services)
         {
             // Runtimes
-            services.TryAddTransient<CmsRuntime>();
             services.TryAddTransient<CmsManager>();
             services.TryAddTransient<CmsZones>();
             services.TryAddTransient<AppsRuntime>();
             services.TryAddTransient<AppsManager>();
-            services.TryAddTransient<ViewsRuntime>();
             services.TryAddTransient<ViewsManager>();
-            services.TryAddTransient<BlocksRuntime>();
             services.TryAddTransient<BlocksManager>();
+
+            // New runtimes, better architecture v16.07+
+            services.TryAddTransient<AppWorkSxc>();
+            services.TryAddTransient<AppBlocks>();
+            services.TryAddTransient<AppViews>();
 
             // Code
             services.TryAddTransient<DynamicCodeRoot.MyServices>();

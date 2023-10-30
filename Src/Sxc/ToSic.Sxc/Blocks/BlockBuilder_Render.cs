@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
@@ -36,7 +37,9 @@ namespace ToSic.Sxc.Blocks
                 {
                     IsError = isErr,
                     ModuleId = Block.ParentId,
-                    CanCache = !isErr && exsOrNull.SafeNone() && (Block.ContentGroupExists || Block.Configuration?.PreviewTemplateId.HasValue == true),
+                    // Note 2023-10-30 2dm changed the handling of the preview template and checks if it's set. In case caching is too aggressive this can be the problem. Remove early 2024
+                    //CanCache = !isErr && exsOrNull.SafeNone() && (Block.ContentGroupExists || Block.Configuration?.PreviewTemplateId.HasValue == true),
+                    CanCache = !isErr && exsOrNull.SafeNone() && (Block.ContentGroupExists || Block.Configuration?.PreviewTemplate != null),
                 };
 
                 // case when we do not have an app

@@ -8,20 +8,19 @@ using ToSic.Lib.Helpers;
 
 namespace ToSic.Sxc.Apps
 {
-    public class CmsManager: AppManager //, IAppIdentityWithPublishingState
+    public class CmsManager: AppManager
     {
         private readonly LazySvc<ViewsManager> _viewsManager;
         private readonly LazySvc<BlocksManager> _blocksManager;
-        private readonly LazySvc<CmsRuntime> _cmsRuntime;
 
         public CmsManager(
-            MyServices services, LazySvc<CmsRuntime> cmsRuntime,
+            MyServices services,
             LazySvc<ViewsManager> viewsManager,
             LazySvc<BlocksManager> blocksManager
             ) : base(services, "Sxc.CmsMan")
         {
             ConnectServices(
-                _cmsRuntime = cmsRuntime.SetInit(r => r.InitWithState(AppState, ShowDrafts)),
+                //_cmsRuntime = cmsRuntime.SetInit(r => r.InitWithState(AppState, ShowDrafts)),
                 _viewsManager = viewsManager.SetInit(v => v.ConnectTo(this)),
                 _blocksManager = blocksManager.SetInit(b => b.ConnectTo(this))
             );
@@ -44,8 +43,6 @@ namespace ToSic.Sxc.Apps
             base.InitWithState(app);
             return this;
         }
-
-        public new CmsRuntime Read => _cmsRuntime.Value;
 
         public ViewsManager Views => _views.Get(() => _viewsManager.Value);
         private readonly GetOnce<ViewsManager> _views = new GetOnce<ViewsManager>();

@@ -10,7 +10,11 @@ namespace ToSic.Sxc.Apps
     /// </summary>
     public class ViewsManager: PartOf<CmsManager>
     {
-        public ViewsManager() : base("Cms.ViewMn") { }
+        private readonly AppWorkSxc _appWorkSxc;
+        public ViewsManager(AppWorkSxc appWorkSxc) : base("Cms.ViewMn")
+        {
+            _appWorkSxc = appWorkSxc;
+        }
 
         /// <summary>
         /// Adds or updates a template - will create a new template if templateId is not specified
@@ -54,8 +58,8 @@ namespace ToSic.Sxc.Apps
         public bool DeleteView(int viewId)
         {
             // really get template first, to be sure it is a template
-            var template = Parent.Read.Views.Get(viewId);
-            return Parent .Entities.Delete(template.Id);
+            var template = _appWorkSxc.AppViews(identity: Parent).Get(viewId); // Parent.Read.Views.Get(viewId);
+            return Parent.Entities.Delete(template.Id);
         }
     }
 }

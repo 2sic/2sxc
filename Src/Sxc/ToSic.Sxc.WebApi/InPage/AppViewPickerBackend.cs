@@ -17,54 +17,38 @@ namespace ToSic.Sxc.WebApi.InPage
     {
         private readonly LazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
 
-        public AppViewPickerBackend(Generator<MultiPermissionsApp> multiPermissionsApp, 
+        public AppViewPickerBackend(
+            Generator<MultiPermissionsApp> multiPermissionsApp,
             LazySvc<CmsManager> cmsManagerLazy, 
             IContextResolver ctxResolver,
-            LazySvc<BlockEditorSelector> blockEditorSelectorLazy
-            //Generator<BlockEditorForModule> blkEdtForMod,
-            //Generator<BlockEditorForEntity> blkEdtForEnt
-            ) : base(multiPermissionsApp, cmsManagerLazy, ctxResolver,"Bck.ViwApp")
+            LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
+            LazySvc<AppWorkSxc> appSysSxc
+            ) : base(multiPermissionsApp, cmsManagerLazy, appSysSxc, ctxResolver,"Bck.ViwApp")
         {
             ConnectServices(
                 _blockEditorSelectorLazy = blockEditorSelectorLazy
-                //_blkEdtForMod = blkEdtForMod,
-                //_blkEdtForEnt = blkEdtForEnt
             );
         }
 
-        //private readonly IGenerator<BlockEditorForModule> _blkEdtForMod;
-        //private readonly IGenerator<BlockEditorForEntity> _blkEdtForEnt;
-
-        public void SetAppId(int? appId) => _blockEditorSelectorLazy.Value.GetEditor(Block) /*BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt)*/.SetAppId(appId);
+        public void SetAppId(int? appId) => _blockEditorSelectorLazy.Value.GetEditor(Block).SetAppId(appId);
 
         public IEnumerable<TemplateUiInfo> Templates() =>
             Block?.App == null 
                 ? Array.Empty<TemplateUiInfo>()
-                : CmsManagerOfBlock?.Read.Views.GetCompatibleViews(Block?.App, Block?.Configuration);
-
-        // 2022-12-20 2dm - doesn't seem to be in use?
-        //public IEnumerable<AppUiInfo> Apps(string apps = null)
-        //{
-        //    // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
-        //    var tenant = ContextOfBlock.Site;
-        //    return GetService<CmsZones>().Init(Log).SetId(tenant.ZoneId)
-        //        .AppsRt
-        //        .GetSelectableApps(tenant, apps)
-        //        .ToList();
-        //}
+                : AppSysSxc.Value.AppViews(AppWorkCtx) /*CmsManagerOfBlock?.Read.Views*/.GetCompatibleViews(Block?.App, Block?.Configuration);
 
         public IEnumerable<ContentTypeUiInfo> ContentTypes()
         {
             // nothing to do without app
             if (Block?.App == null) return null;
-            return CmsManagerOfBlock?.Read.Views.GetContentTypesWithStatus(Block.App.Path ?? "", Block.App.PathShared ?? "");
+            return AppSysSxc.Value.AppViews(AppWorkCtx) /*CmsManagerOfBlock?.Read.Views*/.GetContentTypesWithStatus(Block.App.Path ?? "", Block.App.PathShared ?? "");
         }
 
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
             var callLog = Log.Fn<Guid?>($"{templateId}, {forceCreateContentGroup}");
             ThrowIfNotAllowedInApp(GrantSets.WriteSomething);
-            return callLog.ReturnAsOk(_blockEditorSelectorLazy.Value.GetEditor(Block) /*BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt)*/.SaveTemplateId(templateId, forceCreateContentGroup));
+            return callLog.ReturnAsOk(_blockEditorSelectorLazy.Value.GetEditor(Block).SaveTemplateId(templateId, forceCreateContentGroup));
         }
 
         public bool Publish(int id)

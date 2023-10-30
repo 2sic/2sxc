@@ -59,8 +59,9 @@ namespace ToSic.Sxc.WebApi.Cms
                 return l.ReturnNull("no type name, so no data");
 
             var ct = Context.AppState.GetContentType(typeName);
+            var appCtx = _appWork.Context(Context.AppState);
 
-            var listTemp = CmsManagerOfBlock.Read.Entities.Get(typeName);
+            var listTemp = _appWork.Entities.Get(appCtx, typeName).ToList();
 
             var results = listTemp.Select(Context.AppState.GetDraftOrKeep).ToDictionary(
                 p => p.EntityId,

@@ -1,12 +1,13 @@
 ﻿using System;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Apps.AppSys;
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Apps.CmsSys;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
@@ -18,31 +19,34 @@ namespace ToSic.Sxc.Blocks.Edit
 
         public class MyServices : MyServicesBase
         {
-            public LazySvc<CmsRuntime> CmsRuntime { get; }
+            public LazySvc<AppWork> AppSys { get; }
+            public LazySvc<AppBlocks> AppBlocks { get; }
             public LazySvc<CmsManager> CmsManager { get; }
             public LazySvc<AppManager> AppManager { get; }
             public Generator<BlockEditorForModule> BlkEdtForMod { get; }
             public Generator<BlockEditorForEntity> BlkEdtForEnt { get; }
 
-            public MyServices(LazySvc<CmsRuntime> cmsRuntime,
+            public MyServices(
+                LazySvc<AppWork> appSys,
+                LazySvc<AppBlocks> appBlocks,
                 LazySvc<CmsManager> cmsManager,
                 LazySvc<AppManager> appManager,
                 Generator<BlockEditorForModule> blkEdtForMod,
                 Generator<BlockEditorForEntity> blkEdtForEnt)
             {
                 ConnectServices(
-                    CmsRuntime = cmsRuntime,
                     CmsManager = cmsManager,
                     AppManager = appManager,
                     BlkEdtForMod = blkEdtForMod,
-                    BlkEdtForEnt = blkEdtForEnt
+                    BlkEdtForEnt = blkEdtForEnt,
+                    AppSys = appSys,
+                    AppBlocks = appBlocks
                 );
             }
         }
 
         internal BlockEditorBase(MyServices services) : base(services, "CG.RefMan")
         {
-            Services.CmsRuntime.SetInit(r => r.InitQ(Block?.App/*, true*/));
             Services.CmsManager.SetInit(r => r.Init(Block?.App));
             Services.AppManager.SetInit(r => r.Init(Block?.App));
         }

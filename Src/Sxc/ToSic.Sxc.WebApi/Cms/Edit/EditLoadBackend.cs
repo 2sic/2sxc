@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.AppSys;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.ImportExport.Json;
@@ -28,6 +29,7 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public partial class EditLoadBackend: ServiceBase
     {
+        private readonly AppWork _appWork;
         private readonly EditLoadSettingsHelper _loadSettings;
         private readonly EntityApi _entityApi;
         private readonly ContentGroupList _contentGroupList;
@@ -51,6 +53,7 @@ namespace ToSic.Sxc.WebApi.Cms
             ITargetTypes mdTargetTypes,
             IAppStates appStates,
             IUiData uiData,
+            AppWork appWork,
             Generator<JsonSerializer> jsonSerializerGenerator,
             Generator<MultiPermissionsTypes> typesPermissions,
             EditLoadPrefetchHelper prefetch,
@@ -66,6 +69,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 _mdTargetTypes = mdTargetTypes,
                 _appStates = appStates,
                 _uiData = uiData,
+                _appWork = appWork,
                 _jsonSerializerGenerator = jsonSerializerGenerator,
                 _typesPermissions = typesPermissions,
                 _prefetch = prefetch,
@@ -85,7 +89,7 @@ namespace ToSic.Sxc.WebApi.Cms
             // do early permission check - but at this time it may be that we don't have the types yet
             // because they may be group/id combinations, without type information which we'll look up afterwards
             var appIdentity = _appStates.IdentityOfApp(appId);
-            items = _contentGroupList.Init(appIdentity/*, showDrafts*/)
+            items = _contentGroupList.Init(appIdentity)
                 .ConvertGroup(items)
                 .ConvertListIndexToId(items);
             TryToAutoFindMetadataSingleton(items, context.AppState);
@@ -96,16 +100,16 @@ namespace ToSic.Sxc.WebApi.Cms
                 throw HttpException.PermissionDenied(error);
 
             // load items - similar
+            var appSysCtx = _appWork.Context(appId);
             var result = new EditDto();
             var entityApi = _entityApi.Init(appId, permCheck.EnsureAny(GrantSets.ReadDraft));
-            var typeRead = entityApi.AppRead.ContentTypes;
-            var list = entityApi.GetEntitiesForEditing(items);
-            var jsonSerializer = _jsonSerializerGenerator.New().SetApp(entityApi.AppRead.AppState);
             var appState = _appStates.Get(appIdentity);
+            var list = entityApi.GetEntitiesForEditing(items);
+            var jsonSerializer = _jsonSerializerGenerator.New().SetApp(appState);
             result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
             {
                 Header = e.Header,
-                Entity = GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, typeRead, appState)
+                Entity = GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, appState, appSysCtx)
             }).ToList();
 
             // set published if some data already exists
@@ -115,7 +119,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 result.IsPublished = entity?.IsPublished ?? true; // Entity could be null (new), then true
                 // only set draft-should-branch if this draft already has a published item
                 if (!result.IsPublished)
-                    result.DraftShouldBranch = (entity == null ? null : entityApi.AppRead.AppState.GetPublished(entity)) != null;
+                    result.DraftShouldBranch = (entity == null ? null : appState.GetPublished(entity)) != null;
             }
 
             // since we're retrieving data - make sure we're allowed to
@@ -126,15 +130,15 @@ namespace ToSic.Sxc.WebApi.Cms
                     throw HttpException.PermissionDenied(error);
 
             // load content-types
-            var serializerForTypes = _jsonSerializerGenerator.New().SetApp(entityApi.AppRead.AppState);
+            var serializerForTypes = _jsonSerializerGenerator.New().SetApp(appState);
             serializerForTypes.ValueConvertHyperlinks = true;
-            var usedTypes = UsedTypes(list, typeRead);
+            var usedTypes = UsedTypes(list, appSysCtx);
             var serSettings = new JsonSerializationSettings
             {
                 CtIncludeInherited = true,
                 CtAttributeIncludeInheritedMetadata = true
             };
-            var jsonTypes = usedTypes.Select(t => serializerForTypes.ToPackage(t, /*true,*/ serSettings)).ToList();
+            var jsonTypes = usedTypes.Select(t => serializerForTypes.ToPackage(t, serSettings)).ToList();
             result.ContentTypes = jsonTypes.Select(t => t.ContentType).ToList();
             // Also add global Entities like Formulas which would not be included otherwise
             result.ContentTypeItems = jsonTypes.SelectMany(t => t.Entities).ToList();
@@ -145,7 +149,7 @@ namespace ToSic.Sxc.WebApi.Cms
                     .ForEach(at => at.InputType = Compatibility.InputTypes.MapInputTypeV10(at.InputType)));
 
             // load input-field configurations
-            result.InputTypes = GetNecessaryInputTypes(result.ContentTypes, typeRead);
+            result.InputTypes = GetNecessaryInputTypes(result.ContentTypes, appSysCtx);
 
             // also include UI features
             result.Features = _uiData.Features(permCheck);

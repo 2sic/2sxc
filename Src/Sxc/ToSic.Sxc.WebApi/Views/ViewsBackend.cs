@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Apps.AppSys;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
@@ -18,13 +18,28 @@ namespace ToSic.Sxc.WebApi.Views
 {
     public class ViewsBackend: ServiceBase
     {
-        public ViewsBackend(LazySvc<CmsManager> cmsManagerLazy, IContextOfSite context, IAppStates appStates,
-            LazySvc<IConvertToEavLight> convertToEavLight, Generator<ImpExpHelpers> impExpHelpers)
-            : base("Bck.Views")
+        private readonly AppWorkSxc _appWorkSxc;
+        private readonly AppWork _appWork;
+        private readonly LazySvc<CmsManager> _cmsManagerLazy;
+        private readonly LazySvc<IConvertToEavLight> _convertToEavLight;
+        private readonly Generator<ImpExpHelpers> _impExpHelpers;
+        private readonly ISite _site;
+        private readonly IUser _user;
+
+        public ViewsBackend(
+            AppWorkSxc appWorkSxc,
+            AppWork appWork,
+            LazySvc<CmsManager> cmsManagerLazy,
+            IContextOfSite context,
+            IAppStates appStates,
+            LazySvc<IConvertToEavLight> convertToEavLight,
+            Generator<ImpExpHelpers> impExpHelpers
+        ) : base("Bck.Views")
         {
             ConnectServices(
+                _appWorkSxc = appWorkSxc,
+                _appWork = appWork,
                 _cmsManagerLazy = cmsManagerLazy,
-                _appStates = appStates,
                 _convertToEavLight = convertToEavLight,
                 _impExpHelpers = impExpHelpers,
                 _site = context.Site,
@@ -32,29 +47,22 @@ namespace ToSic.Sxc.WebApi.Views
             );
         }
 
-        private readonly LazySvc<CmsManager> _cmsManagerLazy;
-        private readonly IAppStates _appStates;
-        private readonly LazySvc<IConvertToEavLight> _convertToEavLight;
-        private readonly Generator<ImpExpHelpers> _impExpHelpers;
-        private readonly ISite _site;
-        private readonly IUser _user;
-
-
         public IEnumerable<ViewDetailsDto> GetAll(int appId)
         {
-            Log.A($"get all a#{appId}");
-            var cms = _cmsManagerLazy.Value.InitQ(_appStates.IdentityOfApp(appId)/*, true*/).Read;
+            var l = Log.Fn<IEnumerable<ViewDetailsDto>>($"get all a#{appId}");
 
-            var attributeSetList = cms.ContentTypes.All.OfScope(Scopes.Default).ToList();
-            var viewList = cms.Views.GetAll().ToList();
-            Log.A($"attribute list count:{attributeSetList.Count}, template count:{viewList.Count}");
-            var ser = (_convertToEavLight.Value as ConvertToEavLight);
+            var appSysCtx = _appWorkSxc.AppWork.Context(appId);
+            var contentTypes = _appWork.ContentTypes.All(appSysCtx).OfScope(Scopes.Default).ToList();
+
+            var viewList = _appWorkSxc.AppViews(appSysCtx).GetAll().ToList();
+            Log.A($"attribute list count:{contentTypes.Count}, template count:{viewList.Count}");
+            var ser = _convertToEavLight.Value as ConvertToEavLight;
             var views = viewList.Select(view => new ViewDetailsDto
             {
-                Id = view.Id, Name = view.Name, ContentType = TypeSpecs(attributeSetList, view.ContentType, view.ContentItem),
-                PresentationType = TypeSpecs(attributeSetList, view.PresentationType, view.PresentationItem),
-                ListContentType = TypeSpecs(attributeSetList, view.HeaderType, view.HeaderItem),
-                ListPresentationType = TypeSpecs(attributeSetList, view.HeaderPresentationType, view.HeaderPresentationItem),
+                Id = view.Id, Name = view.Name, ContentType = TypeSpecs(contentTypes, view.ContentType, view.ContentItem),
+                PresentationType = TypeSpecs(contentTypes, view.PresentationType, view.PresentationItem),
+                ListContentType = TypeSpecs(contentTypes, view.HeaderType, view.HeaderItem),
+                ListPresentationType = TypeSpecs(contentTypes, view.HeaderPresentationType, view.HeaderPresentationItem),
                 TemplatePath = view.Path,
                 IsHidden = view.IsHidden,
                 ViewNameInUrl = view.UrlIdentifier,
@@ -66,8 +74,8 @@ namespace ToSic.Sxc.WebApi.Views
                 EditInfo = new EditInfoDto(view.Entity),
                 Metadata = ser?.CreateListOfSubEntities(view.Metadata, SubEntitySerialization.AllTrue()),
                 Permissions = new HasPermissionsDto {Count = view.Entity.Metadata.Permissions.Count()},
-            });
-            return views;
+            }).ToList();
+            return l.Return(views, $"{views.Count}");
         }
 
 

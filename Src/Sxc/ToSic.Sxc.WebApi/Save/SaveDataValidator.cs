@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.AppSys;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Lib.Logging;
@@ -16,14 +17,23 @@ namespace ToSic.Sxc.WebApi.Save
     internal class SaveDataValidator: ValidatorBase
     {
         public EditDto Package;
-        internal AppRuntime AppRead;
 
         public SaveDataValidator(EditDto package, ILog parentLog = null) : base(parentLog, "Val.Save")
         {
             Package = package;
         }
 
-        public void PrepareForEntityChecks(AppRuntime appRead) => AppRead = appRead;
+        public void PrepareForEntityChecks(IAppWorkCtx appCtx, AppEntityRead appEntities)
+        {
+            AppCtx = appCtx;
+            AppEntities = appEntities;
+
+        }
+
+        public IAppWorkCtx AppCtx { get; private set; }
+        public AppEntityRead AppEntities { get; private set; }
+
+
 
         /// <summary>
         /// The package format for loading and saving are the same, but we want to make sure
@@ -115,14 +125,15 @@ namespace ToSic.Sxc.WebApi.Save
         });
 
         internal (int? ResetId, HttpExceptionAbstraction Exception)
-            IfUpdateValidateAndCorrectIds(int count, IEntity newEntity) => Log.Func(l =>
+            IfUpdateValidateAndCorrectIds(int count, IEntity newEntity)
         {
-            var previousEntity = AppRead.Entities.Get(newEntity.EntityId)
-                                 ?? AppRead.Entities.Get(newEntity.EntityGuid);
+            var l = Log.Fn<(int?, HttpExceptionAbstraction)>();
+            var previousEntity = AppEntities.Get(AppCtx, newEntity.EntityId) // AppRead.Entities.Get(newEntity.EntityId)
+                                 ?? AppEntities.Get(AppCtx, newEntity.EntityGuid); //  AppRead.Entities.Get(newEntity.EntityGuid);
 
             int? resetId = default;
             if (previousEntity == null)
-                return ((null, null), "no previous entity found");
+                return l.Return((null, null), "no previous entity found");
 
 
             l.A("found previous entity, will check types/ids/attributes");
@@ -133,7 +144,6 @@ namespace ToSic.Sxc.WebApi.Save
             {
                 l.A("found existing entity - will set the ID to that to overwrite");
                 resetId = previousEntity.EntityId;
-                //newEntity.ResetEntityId(previousEntity.EntityId);
             }
 
             CompareIdentities(count, previousEntity, newEntity);
@@ -141,8 +151,8 @@ namespace ToSic.Sxc.WebApi.Save
 
             BuildExceptionIfHasIssues(out var exception, "EntityIsOk() done");
 
-            return ((resetId, exception), "ok");
-        });
+            return l.Return((resetId, exception), "ok");
+        }
 
 
         private void CompareTypes(int count, IEntityLight originalEntity, IEntityLight newEntity) =>

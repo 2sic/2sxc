@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps.AppSys;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
@@ -20,12 +22,14 @@ namespace ToSic.Sxc.Adam
 
         public class MyServices: MyServicesBase
         {
+            public LazySvc<AppWork> AppSys { get; }
             public Generator<AppPermissionCheck> AppPermissionChecks { get; }
 
-            public MyServices(Generator<AppPermissionCheck> appPermissionChecks)
+            public MyServices(Generator<AppPermissionCheck> appPermissionChecks, LazySvc<AppWork> appSys)
             {
                 ConnectServices(
-                    AppPermissionChecks = appPermissionChecks
+                    AppPermissionChecks = appPermissionChecks,
+                    AppSys = appSys
                 );
             }
         }
@@ -74,7 +78,7 @@ namespace ToSic.Sxc.Adam
                 return false;
             }
 
-            if (FileNames.IsKnownRiskyExtension(fileName))// AdamSecurityCheckHelpers.IsKnownRiskyExtension(fileName))
+            if (FileNames.IsKnownRiskyExtension(fileName))
             {
                 preparedException = HttpException.NotAllowedFileType(fileName, "This is a known risky file type.");
                 return false;
@@ -95,7 +99,8 @@ namespace ToSic.Sxc.Adam
             if (!UserIsRestricted || FieldPermissionOk(GrantSets.ReadPublished)) return true;
 
             // check if the data is public
-            var itm = AdamContext.AppRuntime.Entities.Get(guid);
+            var appCtx = AdamContext.AppRuntime.GetContextWip();
+            var itm = Services.AppSys.Value.Entities.Get(appCtx, guid); // AdamContext.AppRuntime.Entities.Get(guid);
             if (!(itm?.IsPublished ?? false)) return true;
 
             const string msg = "User is restricted and may not see published, but item exists and is published - not allowed";

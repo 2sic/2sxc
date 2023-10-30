@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
@@ -8,6 +7,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Apps.CmsSys;
 using ToSic.Sxc.Blocks.Problems;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -24,11 +24,15 @@ namespace ToSic.Sxc.Blocks
 
         public class MyServices: MyServicesBase
         {
+            public AppWorkSxc AppWorkSxc { get; }
+            public AppBlocks AppBlocks { get; }
+
             public MyServices(
+                AppWorkSxc appWorkSxc,
+                AppBlocks appBlocks,
                 LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
                 LazySvc<App> appLazy,
                 LazySvc<AppConfigDelegate> appConfigDelegateLazy,
-                LazySvc<CmsRuntime> cmsLazy,
                 LazySvc<BlockBuilder> blockBuilder
             )
             {
@@ -36,15 +40,15 @@ namespace ToSic.Sxc.Blocks
                     BdsFactoryLazy = bdsFactoryLazy,
                     AppLazy = appLazy,
                     AppConfigDelegateLazy = appConfigDelegateLazy,
-                    CmsLazy = cmsLazy,
-                    BlockBuilder = blockBuilder
+                    BlockBuilder = blockBuilder,
+                    AppWorkSxc = appWorkSxc,
+                    AppBlocks = appBlocks
                 );
             }
 
             internal LazySvc<BlockDataSourceFactory> BdsFactoryLazy { get; }
             internal LazySvc<App> AppLazy { get; }
             internal LazySvc<AppConfigDelegate> AppConfigDelegateLazy { get; }
-            internal LazySvc<CmsRuntime> CmsLazy { get; }
             public LazySvc<BlockBuilder> BlockBuilder { get; }
         }
 
@@ -93,9 +97,8 @@ namespace ToSic.Sxc.Blocks
             l.A("App created");
 
             // note: requires EditAllowed, which isn't ready till App is created
-            var cms = Services.CmsLazy.Value.InitQ(App);
-
-            Configuration = cms.Blocks.GetOrGeneratePreviewConfig(blockId);
+            var appSysCtx = Services.AppWorkSxc.AppWork.Context(this);
+            Configuration = Services.AppBlocks.GetOrGeneratePreviewConfig(appSysCtx, blockId);
 
             // handle cases where the content group is missing - usually because of incomplete import
             if (Configuration.DataIsMissing)
@@ -106,7 +109,7 @@ namespace ToSic.Sxc.Blocks
             }
 
             // use the content-group template, which already covers stored data + module-level stored settings
-            View = new BlockViewLoader(Log).PickView(this, Configuration.View, Context, cms);
+            View = new BlockViewLoader(Log).PickView(this, Configuration.View, Context, Services.AppWorkSxc.AppViews(appSysCtx));
             return l.ReturnTrue($"ok a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
         }
 

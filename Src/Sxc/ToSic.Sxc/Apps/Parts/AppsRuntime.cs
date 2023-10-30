@@ -11,7 +11,7 @@ using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.Apps
 {
-    public class AppsRuntime: ZonePartRuntimeBase //</*CmsZones,*/ AppsRuntime>
+    public class AppsRuntime: ZonePartRuntimeBase
     {
         #region Constructor / DI
 
