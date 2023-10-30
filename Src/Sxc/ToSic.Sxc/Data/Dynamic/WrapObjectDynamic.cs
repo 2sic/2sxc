@@ -29,14 +29,6 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         internal readonly Wrapper.PreWrapObject PreWrap;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="item"></param>
-        /// <param name="wrapChildren">
-        /// Determines if properties which are objects should again be wrapped.
-        /// When using this for DynamicModel it should be false, otherwise usually true.
-        /// </param>
         [PrivateApi]
         internal WrapObjectDynamic(Wrapper.PreWrapObject preWrap, CodeDataWrapper wrapper)
         {

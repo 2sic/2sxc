@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Data.Decorators
 
         /// <summary>
         /// Presentation entity of this content-item.
-        /// Important to keep content & presentation linked together
+        /// Important to keep content and presentation linked together
         /// </summary>
         public IEntity Presentation { get; set; }
 

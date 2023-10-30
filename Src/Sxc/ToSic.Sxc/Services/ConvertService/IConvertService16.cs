@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Services
         /// ```
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
+        /// <param name="value">value to convert</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">The value used if conversion fails.</param>
         /// <returns></returns>
@@ -86,9 +86,9 @@ namespace ToSic.Sxc.Services
         /// 
         /// _Note that it's called ToBool, not ToBoolean, because the core type is also called bool, not boolean. This is different from `System.Convert.ToBoolean(...)`_
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">value to convert</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="fallback"></param>
+        /// <param name="fallback">The value used if conversion fails.</param>
         /// <returns></returns>
         bool ToBool(object value, string noParamOrder = Protector, bool fallback = default);
 
@@ -102,7 +102,9 @@ namespace ToSic.Sxc.Services
         /// Convert any object safely to decimal, or if that fails, return the fallback value.
         /// This does the same as <see cref="To{T}(object)"/> but this is easier to type in Razor.
         /// </summary>
+        /// <param name="value">value to convert</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="fallback">The value used if conversion fails.</param>
         decimal ToDecimal(object value, string noParamOrder = Protector, decimal fallback = default);
 
         /// <summary>
@@ -115,6 +117,9 @@ namespace ToSic.Sxc.Services
         /// Convert any object safely to double, or if that fails, return the fallback value.
         /// This does the same as <see cref="To{T}(object)"/> but this is easier to type in Razor.
         /// </summary>
+        /// <param name="value">value to convert</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="fallback">The value used if conversion fails.</param>
         double ToDouble(object value, string noParamOrder = Protector, double fallback = default);
 
         /// <summary>
@@ -131,7 +136,9 @@ namespace ToSic.Sxc.Services
         ///
         /// _Note that it's called ToFloat, not ToSingle, because the core type is also called float, not single. This is different from `System.Convert.ToSingle(...)`_
         /// </summary>
+        /// <param name="value">value to convert</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="fallback">The value used if conversion fails.</param>
         float ToFloat(object value, string noParamOrder = Protector, float fallback = default);
 
         /// <summary>
@@ -144,7 +151,9 @@ namespace ToSic.Sxc.Services
         /// Convert any object safely to standard int, or if that fails, return the fallback value.
         /// This does the same as <see cref="To{T}(object)"/> but this is easier to type in Razor.
         /// </summary>
+        /// <param name="value">value to convert</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="fallback">The value used if conversion fails.</param>
         int ToInt(object value, string noParamOrder = Protector, int fallback = default);
 
         /// <summary>
@@ -157,7 +166,9 @@ namespace ToSic.Sxc.Services
         /// Convert any object safely to standard guid, or if that fails, return the fallback value.
         /// This does the same as <see cref="To{T}(object)"/> but this is easier to type in Razor.
         /// </summary>
+        /// <param name="value">value to convert</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="fallback">The value used if conversion fails.</param>
         Guid ToGuid(object value, string noParamOrder = Protector, Guid fallback = default);
 
 
@@ -199,6 +210,9 @@ namespace ToSic.Sxc.Services
         /// Same as <see cref="ForCode(object)"/>, but with fallback, in case the conversion fails.
         /// </summary>
         /// <returns></returns>
+        /// <param name="value">value to convert</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="fallback">The value used if conversion fails.</param>
         string ForCode(object value, string noParamOrder = Protector, string fallback = default);
 
         /// <summary>

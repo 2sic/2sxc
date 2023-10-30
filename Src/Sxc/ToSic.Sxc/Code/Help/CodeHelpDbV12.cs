@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Code.Help
         #endregion
 
         /// <summary>
-        /// List re-used in v12 & v14
+        /// List re-used in v12 and v14
         /// </summary>
         internal static List<CodeHelp> Issues12To14 => _help12And14 ?? (_help12And14 = BuildList(
             // Access .List

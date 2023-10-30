@@ -86,7 +86,6 @@ namespace ToSic.Sxc.Data
         /// <param name="imgAttributes">Optional additional attributes - as anonymous object eg `new { style = "padding: 10px" }` or Dictionary (new 16.07)</param>
         /// <param name="pictureClass">Optional `class` attribute on the created `picture` tag</param>
         /// <param name="pictureAttributes">Optional additional attributes - as anonymous object eg `new { style = "padding: 10px" }` or Dictionary (new 16.07)</param>
-        /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
         /// <param name="recipe">
         /// Optional recipe = instructions how to create the various variants of this link.
         /// Can be any one of these:

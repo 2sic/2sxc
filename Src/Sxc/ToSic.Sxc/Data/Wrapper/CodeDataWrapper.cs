@@ -58,6 +58,7 @@ namespace ToSic.Sxc.Data.Wrapper
         /// </summary>
         /// <param name="data"></param>
         /// <param name="wrapNonAnon">if true and the contents isn't already a dynamic object, it will also wrap real objects; otherwise only anonymous</param>
+        /// <param name="settings"></param>
         /// <returns></returns>
         [PrivateApi]
         internal object ChildNonJsonWrapIfPossible(object data, bool wrapNonAnon, WrapperSettings settings)

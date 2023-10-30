@@ -21,19 +21,28 @@ namespace ToSic.Sxc.Apps
         /// Configuration object with information about the App.
         /// This contains things like app version, path etc.
         /// </summary>
-        new IAppConfiguration Configuration { get; }
+#if NETFRAMEWORK
+        new
+#endif
+        IAppConfiguration Configuration { get; }
 
         /// <summary>
         /// All the app settings which are custom for each app. 
         /// </summary>
         /// <returns>An <see cref="IDynamicEntity"/> object</returns>
-        new dynamic Settings { get;  }
+#if NETFRAMEWORK
+        new
+#endif
+        dynamic Settings { get;  }
 
         /// <summary>
         /// All the app resources (usually used for multi-language labels etc.)
         /// </summary>
         /// <returns>An <see cref="IDynamicEntity"/> object</returns>
-        new dynamic Resources { get;  }
+#if NETFRAMEWORK
+        new
+#endif
+        dynamic Resources { get;  }
 
         /// <summary>
         /// The path to the current app, for linking JS/CSS files and
@@ -55,10 +64,7 @@ namespace ToSic.Sxc.Apps
         /// <returns>Path usually starting with /portals/_default/...</returns>
         /// <remarks>Added v13.01</remarks>
 // Important: Repeat definition of base interface for docs and because of Razor-Interface-Inheritance-Problems
-#if NETFRAMEWORK
-        new
-#endif
-        string PathShared { get; }
+        new string PathShared { get; }
 
         /// <summary>
         /// The path on the server hard disk for the current apps shared/global folder. 
@@ -66,10 +72,7 @@ namespace ToSic.Sxc.Apps
         /// <returns>Path usually starting with c:\...</returns>
         /// <remarks>Added v13.01</remarks>
         // Important: Repeat definition of base interface for docs and because of Razor-Interface-Inheritance-Problems
-#if NETFRAMEWORK
-        new
-#endif
-        string PhysicalPathShared { get; }
+        new string PhysicalPathShared { get; }
 
         ///// <summary>
         ///// Path relative to the website root.
@@ -97,7 +100,10 @@ namespace ToSic.Sxc.Apps
         /// The thumbnail path for the current app. 
         /// </summary>
         /// <returns>path + app-icon.png if there is an icon there. </returns>
-        new string Thumbnail { get; }
+#if NETFRAMEWORK
+        new
+#endif
+        string Thumbnail { get; }
 
 
     }

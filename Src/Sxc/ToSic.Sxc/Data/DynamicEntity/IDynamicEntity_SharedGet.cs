@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Data
     public partial interface IDynamicEntity
     {
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */
-        /// <inheritdoc cref=DynamicEntityDocss.Get(string)"/>
+        /// <inheritdoc cref="DynamicEntityDocs.Get(string)"/>
 #if NETFRAMEWORK
         new
 #endif

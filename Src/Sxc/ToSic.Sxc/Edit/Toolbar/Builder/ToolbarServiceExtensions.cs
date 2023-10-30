@@ -8,7 +8,6 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <summary>
         /// Add one or more rules (as strings or ToolbarRule objects) according to the conventions of the [js toolbar](xref:JsCode.Toolbars.Simple)
         /// </summary>
-        /// <param name="rules"></param>
         /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
         /// <remarks>
         /// History

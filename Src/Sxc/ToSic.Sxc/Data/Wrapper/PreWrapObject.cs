@@ -41,6 +41,7 @@ namespace ToSic.Sxc.Data.Wrapper
         /// Determines if properties which are objects should again be wrapped.
         /// When using this for DynamicModel it should be false, otherwise usually true.
         /// </param>
+        /// <param name="wrapper"></param>
         [PrivateApi]
         internal PreWrapObject(object data, WrapperSettings settings, CodeDataWrapper wrapper): base(data)
         {

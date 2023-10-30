@@ -39,10 +39,14 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             var a = Obj2Typed(anon);
             var b = Obj2Typed(anon);
             var c = Obj2Typed(anon) as WrapObjectTyped;
+            // ReSharper disable EqualExpressionComparison
+            // ReSharper disable PossibleUnintendedReferenceComparison
             var x = c == c;
             IsTrue(a == a, "Test basic comparison");
             IsTrue(a as WrapObjectTyped == b, "a as ... == b should work");
             IsTrue(a == b, "a == b should work");
+            // ReSharper restore EqualExpressionComparison
+            // ReSharper restore PossibleUnintendedReferenceComparison
         }
 
         [TestMethod]

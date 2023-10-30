@@ -22,6 +22,7 @@ namespace ToSic.Sxc.Data
         /// <summary>
         /// Primary constructor expecting a internal data object
         /// </summary>
+        /// <param name="wrapper">Wrapper helper</param>
         /// <param name="originalData">the original data we're wrapping</param>
         [PrivateApi]
         internal DynamicJacketBase(CodeJsonWrapper wrapper, T originalData): base(wrapper)

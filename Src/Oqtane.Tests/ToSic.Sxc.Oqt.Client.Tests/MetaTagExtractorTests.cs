@@ -49,7 +49,9 @@
         [TestMethod]
         public void Test_NullHtml_ReturnsNull()
         {
+#pragma warning disable CS8625
             var result = GetMetaTagContent(null, "keywords");
+#pragma warning restore CS8625
             Assert.IsNull(result);
         }
 
@@ -64,7 +66,9 @@
         public void Test_NullMetaTagName_ReturnsNull()
         {
             var html = @"<meta name=""keywords"" content=""apple, banana, cherry"">";
+#pragma warning disable CS8625
             var result = GetMetaTagContent(html, null);
+#pragma warning restore CS8625
             Assert.IsNull(result);
         }
 

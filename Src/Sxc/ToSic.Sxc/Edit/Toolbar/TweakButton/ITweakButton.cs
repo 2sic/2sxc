@@ -153,7 +153,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         /// <summary>
         /// Add parameters to the button - which are usually used when executing the command.
-
+        ///
         /// > [!TIP]
         /// > These parameters are used in the page itself and not forwarded to the form.
         /// > Use <see cref="FormParameters(object)"/> for that purpose.

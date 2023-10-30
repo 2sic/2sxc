@@ -18,7 +18,6 @@ namespace ToSic.Sxc.DataSources
         /// <summary>
         /// The inner list retrieving the users.
         /// </summary>
-        /// <param name="options"></param>
         /// <returns></returns>
         [PrivateApi]
         public abstract IEnumerable<CmsUserRaw> GetUsersInternal();

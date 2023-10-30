@@ -33,8 +33,8 @@ namespace ToSic.Sxc.Data
         #region Get and Get<T>
 
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */
-        /// <inheritdoc cref=DynamicEntityDocss.Get(string)"/>
-        dynamic Get(string name);
+        /// <inheritdoc cref="DynamicEntityDocs.Get(string)"/>
+        new dynamic Get(string name);
 
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */
         /// <inheritdoc cref="DynamicEntityDocs.Get(string, string, string, bool, bool?)"/>

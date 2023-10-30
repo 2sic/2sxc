@@ -90,7 +90,7 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         string IGetCodePath.CreateInstancePath { get; set; }
 
-        /// <inheritdoc cref="IDynamicCode.CreateInstance" />
+        /// <inheritdoc cref="IDynamicCode.CreateInstance(string, string, string, string, bool)" />
         public dynamic CreateInstance(string virtualPath, string noParamOrder = Protector, string name = null, string relativePath = null, bool throwOnError = true) =>
             SysHlp.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
 
