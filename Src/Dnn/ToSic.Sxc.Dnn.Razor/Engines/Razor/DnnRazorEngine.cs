@@ -1,7 +1,10 @@
 ﻿using System;
+using System.CodeDom.Compiler;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Web;
@@ -134,7 +137,54 @@ namespace ToSic.Sxc.Engines
             Type compiledType;
             try
             {
+                if (File.Exists(base.AppCodeFullPath))
+                {
+                    var assembly = Assembly.LoadFrom(AppCodeFullPath);
+                    BuildManager.AddReferencedAssembly(assembly);
+                }
                 compiledType = BuildManager.GetCompiledType(TemplatePath);
+
+
+                //string outputAssemblyName = "App_Web_" + BuildManager.GenerateRandomAssemblyName(BuildManager.GetGeneratedAssemblyBaseName(virtualPath), false);
+                //BuildProvidersCompiler providersCompiler = new System.Web.Compilation.BuildProvidersCompiler(virtualPath, outputAssemblyName);
+                //BuildProvider buildProvider = BuildManager.CreateBuildProvider(virtualPath, providersCompiler.CompConfig, providersCompiler.ReferencedAssemblies, true);
+                //providersCompiler.SetBuildProviders((ICollection)new SingleObjectCollection((object)buildProvider));
+                //BuildResult result1;
+                //try
+                //{
+                //    CompilerResults results = providersCompiler.PerformBuild();
+                //    result1 = buildProvider.GetBuildResult(results);
+                //}
+                //catch (HttpCompileException ex)
+                //{
+                //    if (ex.DontCache)
+                //    {
+                //        throw;
+                //    }
+                //    else
+                //    {
+                //        BuildResult result2 = (BuildResult)new BuildResultCompileError(virtualPath, ex);
+                //        buildProvider.SetBuildResultDependencies(result2);
+                //        ex.VirtualPathDependencies = buildProvider.VirtualPathDependencies;
+                //        this.CacheVPathBuildResultInternal(virtualPath, result2, utcNow);
+                //        ex.DontCache = true;
+                //        throw;
+                //    }
+                //}
+                //if (result1 == null)
+                //    return (BuildResult)null;
+                //this.CacheVPathBuildResultInternal(virtualPath, result1, utcNow);
+                //if (!this._precompilingApp && BuildResultCompiledType.UsesDelayLoadType(result1))
+                //{
+                //    if (cacheKey == null)
+                //        cacheKey = BuildManager.GetCacheKeyFromVirtualPath(virtualPath);
+                //    result1 = BuildManager.GetBuildResultFromCache(cacheKey);
+                //}
+                //return result1;
+
+
+
+                // TODO: remove assembly
             }
             catch (Exception compileEx)
             {

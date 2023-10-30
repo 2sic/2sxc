@@ -4,6 +4,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Caching;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Web.Compilation;
 using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Lib.Documentation;
@@ -16,6 +17,10 @@ namespace ToSic.Sxc.Code
     [PrivateApi]
     public class CodeCompilerNetFull : CodeCompiler
     {
+        private bool _save;
+        private string _assemblyName;
+        private string _assemblyFilePath;
+        private string _pdbFilePath;
         public IHostingEnvironmentWrapper HostingEnvironment { get; }
         public IReferencedAssembliesProvider ReferencedAssembliesProvider { get; }
 
@@ -38,9 +43,15 @@ namespace ToSic.Sxc.Code
                 return new AssemblyResult(assembly: assembly);
             }
 
+            _save = Directory.Exists(fullPath);
+
             // 2. Handle Compile all in folder
-            if (Directory.Exists(fullPath))
+            if (_save)
             {
+                _assemblyName = className.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) ? className.Substring(0, className.Length - 4) : className;
+                _assemblyFilePath = Path.Combine(fullPath, $"{_assemblyName}.dll");
+                _pdbFilePath = Path.Combine(fullPath, $"{_assemblyName}.pdb");
+
                 var cache = MemoryCache.Default;
                 if (cache[fullPath.ToLowerInvariant()] is AssemblyResult assemblyResultCacheItem)
                     return assemblyResultCacheItem;
@@ -57,8 +68,7 @@ namespace ToSic.Sxc.Code
                 // Compile ok
                 if (!results.Errors.HasErrors)
                 {
-                    // TODO: stv# missing assemblyBinary in cache
-                    var cacheItem = new AssemblyResult(results.CompiledAssembly);
+                    var cacheItem = new AssemblyResult(results.CompiledAssembly, /*dllAsArray*/null);
                     cache.Set(fullPath.ToLowerInvariant(), cacheItem, GetCacheItemPolicy(fullPath));
                     return cacheItem;
                 }
@@ -78,13 +88,21 @@ namespace ToSic.Sxc.Code
         private CompilerResults GetCompiledAssemblyFromFolder(string[] sourceFiles)
         {
             var provider = new CSharpCodeProvider();
-            var parameters = new CompilerParameters
-            {
-                GenerateInMemory = true,
-                GenerateExecutable = false,
-                IncludeDebugInformation = true,
-                CompilerOptions = "/define:OQTANE;NETCOREAPP;NET5_0 /optimize-"
-            };
+            var parameters = _save
+                ? new CompilerParameters(null, _assemblyFilePath)
+                {
+                    GenerateInMemory = false,
+                    GenerateExecutable = false,
+                    IncludeDebugInformation = true,
+                    CompilerOptions = "/define:OQTANE;NETCOREAPP;NET5_0 /optimize-",
+                }
+                : new CompilerParameters
+                {
+                    GenerateInMemory = true,
+                    GenerateExecutable = false,
+                    IncludeDebugInformation = true,
+                    CompilerOptions = "/define:OQTANE;NETCOREAPP;NET5_0 /optimize-",
+                };
 
             // Add all referenced assemblies
             parameters.ReferencedAssemblies.AddRange(ReferencedAssembliesProvider.Locations());

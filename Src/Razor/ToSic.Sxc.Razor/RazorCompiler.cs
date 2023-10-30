@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Razor
         }
         #endregion
 
-        public async Task<(IView view, ActionContext context)> CompileView(string templatePath, Action<RazorView> configure = null, 
+        public async Task<(IView view, ActionContext context)> CompileView(string templatePath, Action<RazorView> configure = null,
             string appCodeFullPath = null, string templateFullPath = null)
         {
             var l = Log.Fn<(IView view, ActionContext context)>($"partialName:{templatePath},appCodePath:{appCodeFullPath}");
@@ -220,34 +220,16 @@ namespace ToSic.Sxc.Razor
             {
                 builder.AddDefaultImports(new[]
                 {
-                        //"@using Microsoft.AspNetCore.Html",
-                        //"@using Microsoft.AspNetCore.Http",
-                        //"@using Microsoft.AspNetCore.Mvc",
-                        //"@using Microsoft.AspNetCore.Mvc.Abstractions",
-                        //"@using Microsoft.AspNetCore.Mvc.ApplicationParts",
-                        //"@using Microsoft.AspNetCore.Mvc.Infrastructure",
-                        //"@using Microsoft.AspNetCore.Mvc.ModelBinding",
-                        //"@using Microsoft.AspNetCore.Mvc.Razor",
-                        //"@using Microsoft.AspNetCore.Mvc.RazorPages",
-                        //"@using Microsoft.AspNetCore.Mvc.Rendering",
-                        "@using Microsoft.AspNetCore.Mvc.ViewEngines",
-                        //"@using Microsoft.AspNetCore.Mvc.ViewFeatures",
-                        //"@using Microsoft.AspNetCore.Razor.Language",
-                        //"@using Microsoft.AspNetCore.Routing",
-                        //"@using Microsoft.CodeAnalysis",
-                        //"@using Microsoft.CodeAnalysis.CSharp",
-                        //"@using Microsoft.CodeAnalysis.Emit",
-                        "@using System",
-                        //"@using System.Collections.Generic",
-                        //"@using System.IO",
-                        //"@using System.Linq",
-                        //"@using System.Reflection",
-                        //"@using System.Runtime.Loader",
-                        //"@using System.Text",
-                        //"@using System.Text.Encodings.Web",
-                        //"@using System.Threading",
-                        //"@using System.Threading.Tasks",
-                    });
+                    "@using Microsoft.AspNetCore.Mvc;",
+                    "@using Microsoft.AspNetCore.Mvc.Razor.Internal;",
+                    "@using Microsoft.AspNetCore.Mvc.Rendering;",
+                    "@using Microsoft.AspNetCore.Mvc.ViewFeatures;",
+                    "@using Microsoft.AspNetCore.Razor.Hosting;",
+                    "@using System.Runtime.CompilerServices;",
+                    "@using System.Threading.Tasks;",
+                    //
+                    "@using System.Linq;",
+                });
             });
             var projectItem = fileSystem.GetItem(templateFullPath);
             var codeDocument = projectEngine.Process(projectItem);
@@ -264,10 +246,10 @@ namespace ToSic.Sxc.Razor
 
             var compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
                 .WithGeneralDiagnosticOption(ReportDiagnostic.Suppress); // suppress all warning, to not be treated as compile errors
-                //.WithSpecificDiagnosticOptions(new Dictionary<string, ReportDiagnostic>
-                //{
-                //    { "CS1701", ReportDiagnostic.Suppress }
-                //});
+                                                                         //.WithSpecificDiagnosticOptions(new Dictionary<string, ReportDiagnostic>
+                                                                         //{
+                                                                         //    { "CS1701", ReportDiagnostic.Suppress }
+                                                                         //});
 
             var compilation = CSharpCompilation.Create(Path.GetFileNameWithoutExtension(templatePath))
                 .WithOptions(compilationOptions)
@@ -330,7 +312,7 @@ namespace ToSic.Sxc.Razor
                 return ViewEngineResult.NotFound(templatePath, new string[] { "View not found" });
 
             page.Path = templatePath;
-            
+
             // Create an IView instance from the compiled assembly
             var viewInstance = new RazorView(_viewEngine, _pageActivator, Array.Empty<IRazorPage>(), page, HtmlEncoder.Default, new DiagnosticListener(templatePath));
             return ViewEngineResult.Found(templatePath, viewInstance);
@@ -352,15 +334,15 @@ namespace ToSic.Sxc.Razor
 
             var references = new List<MetadataReference>
             {
-                MetadataReference.CreateFromFile(typeof(object).Assembly.Location), // Commented because it solves error when "refs" are referenced.
-                //MetadataReference.CreateFromFile(Assembly.Load("netstandard, Version=2.0.0.0").Location),
+                // MetadataReference.CreateFromFile(typeof(object).Assembly.Location), // Commented because it solves error when "refs" are referenced.
+                MetadataReference.CreateFromFile(Assembly.Load("netstandard, Version=2.0.0.0").Location),
                 MetadataReference.CreateFromFile(Assembly.LoadFile(typeof(Microsoft.AspNetCore.Mvc.Razor.RazorPage).Assembly.Location).Location),
             };
 
             if (File.Exists(appCodeFullPath))
                 references.Add(MetadataReference.CreateFromFile(_assemblyLoadContext.LoadFromAssemblyPath(appCodeFullPath).Location));
 
-            // RazorReferencedAssemblies().ToList().ForEach(a => references.Add(MetadataReference.CreateFromFile(Assembly.Load(a).Location)));
+            RazorReferencedAssemblies().ToList().ForEach(a => references.Add(MetadataReference.CreateFromFile(Assembly.Load(a).Location)));
 
             Assembly.GetEntryAssembly()?.GetReferencedAssemblies().ToList()
                 .ForEach(a => references.Add(MetadataReference.CreateFromFile(Assembly.Load(a).Location)));
@@ -371,7 +353,7 @@ namespace ToSic.Sxc.Razor
             foreach (string dllFile in Directory.GetFiles(dllPath, "*.dll"))
                 references.Add(MetadataReference.CreateFromFile(Assembly.LoadFile(dllFile).Location));
             foreach (string dllFile in Directory.GetFiles(Path.Combine(dllPath, "refs"), "*.dll"))
-                references.Add(MetadataReference.CreateFromFile(Assembly.Load(Path.GetFileNameWithoutExtension(dllFile)).Location));
+                references.Add(MetadataReference.CreateFromFile(/*Assembly.Load(Path.GetFileNameWithoutExtension(dllFile)).Location*/dllFile));
 
 
 

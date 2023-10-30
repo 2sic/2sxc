@@ -77,7 +77,7 @@ namespace ToSic.Sxc.Code
 
             var assemblyResult = compiler.GetAssembly(relativePath, dllName);
 
-            //SaveToDisk(assemblyResult, AssemblyLocation(appId, physicalPath));
+            // SaveToDisk(assemblyResult, AssemblyLocation(appId, physicalPath));
 
             return !assemblyResult.ErrorMessages.HasValue() ? l.ReturnTrue("Ok") : l.ReturnFalse(assemblyResult.ErrorMessages);
         }
@@ -97,7 +97,6 @@ namespace ToSic.Sxc.Code
                 stream.Write(assemblyResult.AssemblyBytes, 0,
                     assemblyResult.AssemblyBytes.Length);
             }
-
 
             //var assemblyPart = new CompilationReferencesProvider(assembly);
             //applicationPartManager.ApplicationParts.Add(assemblyPart);
