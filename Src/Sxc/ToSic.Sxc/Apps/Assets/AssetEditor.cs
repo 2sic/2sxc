@@ -36,18 +36,6 @@ namespace ToSic.Sxc.Apps.Assets
         private AssetEditInfo EditInfo { get; set; }
 
 
-        // TODO: REMOVE THIS once we release v13 #cleanUp EOY 2021
-        // Commented out 2022-12-21 / 2dm
-        //public AssetEditor Init(AppState app, int templateId, ILog parentLog)
-        //{
-        //    InitShared(app, parentLog);
-        //    var view = _cmsRuntime.Views.Get(templateId);
-        //    var t = new AssetEditInfo(_appState.AppId, _appState.Name, view.Path, view.IsShared);
-        //    EditInfo = AddViewDetailsAndTypes(t, view);
-
-        //    return this;
-        //}
-
         public AssetEditor Init(AppState app, string path, bool global, int viewId)
         {
             InitShared(app);

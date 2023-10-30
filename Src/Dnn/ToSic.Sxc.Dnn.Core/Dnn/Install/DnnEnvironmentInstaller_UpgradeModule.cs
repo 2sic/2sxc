@@ -61,11 +61,6 @@ namespace ToSic.Sxc.Dnn.Install
 
                 switch (version)
                 {
-                    // 2021-12-08 v13 turned this off now - believe not used since 2sxc 7 - hope everything works - #cleanUp 2022 Q2
-                    //case "01.00.00": // Make sure that log folder empty on new installations (could happen if 2sxc was already installed on a system)
-                    //    MaybeResetUpgradeLogsToStartAgainFromV1();
-                    //    break;
-
                     // All versions before 8.11 should trigger this
                     case "08.11.00":
                         throw new Exception("Trying to upgrade a 7 or 8 version - which isn't supported in v9.20+. Please upgrade to the latest 8.12 or 9.15before trying to upgrade to a 9.20+");
