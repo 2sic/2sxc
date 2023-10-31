@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Adam
         /// <inheritdoc />
         [JsonIgnore]
         public IMetadata Metadata => _metadata 
-            ?? (_metadata = AdamMetadataMaker.Create(AdamManager, CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations));
+            ?? (_metadata = AdamManager.Create(CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations));
         private IMetadata _metadata;
 
         /// <summary>

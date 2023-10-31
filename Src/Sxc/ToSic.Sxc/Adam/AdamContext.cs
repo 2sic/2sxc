@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.AppSys;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
@@ -98,7 +99,7 @@ namespace ToSic.Sxc.Adam
 
 
         // Temp
-        public abstract AppRuntime AppRuntime { get; }
+        public abstract IAppWorkCtx AppWorkCtx { get; }
 
         /// <summary>
         /// Determines if the files come from the root (shared files).

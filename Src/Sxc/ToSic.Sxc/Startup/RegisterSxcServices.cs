@@ -101,10 +101,11 @@ namespace ToSic.Sxc.Startup
             services.TryAddScoped<JsApiCache>(); // v16.01
 
             // Adam stuff
-            services.TryAddTransient<AdamMetadataMaker>();
             services.TryAddTransient<AdamSecurityChecksBase, AdamSecurityChecksBasic>();
             services.TryAddTransient<IAdamPaths, AdamPathsBase>();
             services.TryAddTransient<AdamConfiguration>();
+
+            services.AddTransient<AdamManager.MyServices>();
 
             // WIP - add net-core specific stuff
             services.AddNetVariations();

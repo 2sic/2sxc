@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
@@ -15,12 +14,10 @@ namespace ToSic.Sxc.Adam
 
         #region Constructor / DI
         public AdamManager(
-            LazySvc<AppRuntime> appRuntime,
-            LazySvc<CodeDataFactory> cdf,
-            AdamConfiguration adamConfiguration,
+            MyServices services,
             LazySvc<IAdamFileSystem<TFolderId, TFileId>> adamFsLazy,
             Generator<AdamStorageOfField<TFolderId, TFileId>> fieldStorageGenerator)
-            : base(appRuntime, cdf, adamConfiguration, "Adm.MngrTT")
+            : base(services, "Adm.MngrTT")
         {
             ConnectServices(
                 _adamFsLazy = adamFsLazy.SetInit(f => f.Init(this)),

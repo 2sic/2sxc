@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.AppSys;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
@@ -48,7 +49,7 @@ namespace ToSic.Sxc.Adam
 
 
         // temp
-        public override AppRuntime AppRuntime => AdamManager.AppRuntime;
 
+        public override IAppWorkCtx AppWorkCtx => AdamManager.AppWorkCtx;
     }
 }
