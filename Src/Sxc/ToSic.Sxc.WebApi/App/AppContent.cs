@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using ToSic.Eav.Api.Api01;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Api.Api01;
+using ToSic.Eav.Apps.AppSys;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
@@ -23,24 +23,28 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
+using static ToSic.Eav.Apps.Api.Api01.SaveApiAttributes;
 
 namespace ToSic.Sxc.WebApi.App
 {
     public class AppContent : ServiceBase
     {
+        private readonly LazySvc<AppWork> _appWork;
         private readonly Generator<Apps.App> _app;
         private readonly Generator<MultiPermissionsTypes> _typesPermissions;
         private readonly Generator<MultiPermissionsItems> _itemsPermissions;
 
         #region Constructor / DI
 
-        public AppContent(Generator<Apps.App> app,
+        public AppContent(
+            Generator<Apps.App> app,
             EntityApi entityApi,
             LazySvc<IConvertToEavLight> entToDicLazy,
             Sxc.Context.IContextResolver ctxResolver,
             Generator<MultiPermissionsTypes> typesPermissions,
             Generator<MultiPermissionsItems> itemsPermissions,
             LazySvc<AppManager> appManagerLazy,
+            LazySvc<AppWork> appWork,
             LazySvc<SimpleDataController> dataControllerLazy) : base("Sxc.ApiApC")
         {
             ConnectServices(
@@ -51,7 +55,8 @@ namespace ToSic.Sxc.WebApi.App
                 _appManagerLazy = appManagerLazy,
                 _typesPermissions = typesPermissions,
                 _itemsPermissions = itemsPermissions,
-                _dataControllerLazy = dataControllerLazy
+                _dataControllerLazy = dataControllerLazy,
+                _appWork = appWork
             );
         }
 
@@ -179,31 +184,32 @@ namespace ToSic.Sxc.WebApi.App
         {
             var wrapLog = Log.Fn<bool>($"item dictionary key count: {valuesCaseInsensitive.Count}");
 
-            if (!valuesCaseInsensitive.Keys.Contains(SaveApiAttributes.ParentRelationship))
-                return wrapLog.ReturnFalse($"'{SaveApiAttributes.ParentRelationship}' key is missing");
+            if (!valuesCaseInsensitive.Keys.Contains(ParentRelationship))
+                return wrapLog.ReturnFalse($"'{ParentRelationship}' key is missing");
 
-            var objectOrNull = valuesCaseInsensitive[SaveApiAttributes.ParentRelationship];
+            var objectOrNull = valuesCaseInsensitive[ParentRelationship];
             if (objectOrNull == null) 
-                return wrapLog.ReturnFalse($"'{SaveApiAttributes.ParentRelationship}' value is null");
+                return wrapLog.ReturnFalse($"'{ParentRelationship}' value is null");
 
             if (!(objectOrNull is JsonObject parentRelationship))
-                return wrapLog.ReturnNull($"'{SaveApiAttributes.ParentRelationship}' value is not JsonObject");
+                return wrapLog.ReturnNull($"'{ParentRelationship}' value is not JsonObject");
 
-            var parentGuid = (Guid?)parentRelationship[SaveApiAttributes.ParentRelParent];
+            var parentGuid = (Guid?)parentRelationship[ParentRelParent];
             if (!parentGuid.HasValue) 
-                return wrapLog.ReturnFalse($"'{SaveApiAttributes.ParentRelParent}' guid is missing");
+                return wrapLog.ReturnFalse($"'{ParentRelParent}' guid is missing");
 
             var parentEntity = AppState.GetDraftOrPublished(parentGuid.Value);
             if (parentEntity == null) 
                 return wrapLog.ReturnFalse("Parent entity is missing");
 
             var ids = new[] { addedEntityId as int? };
-            var index = (int)parentRelationship[SaveApiAttributes.ParentRelIndex];
+            var index = (int)parentRelationship[ParentRelIndex];
 
-            var field = (string)parentRelationship[SaveApiAttributes.ParentRelField];
+            var field = (string)parentRelationship[ParentRelField];
             var fields = new[] { field };
 
-            AppManager.Entities.FieldListAdd(parentEntity, fields, index, ids, asDraft: false, forceAddToEnd: false);
+            _appWork.Value.EntityFieldList(appState: AppState)
+            /*AppManager.Entities*/.FieldListAdd(parentEntity, fields, index, ids, asDraft: false, forceAddToEnd: false);
 
             return wrapLog.ReturnTrue($"new ParentRelationship p:{parentGuid},f:{field},i:{index}");
         }

@@ -66,9 +66,7 @@ namespace ToSic.Sxc.WebApi.Save
                 : (true, "no additional group processing necessary");
         });
 
-        private bool PostSaveUpdateIdsInParent(IBlock block,
-            Dictionary<Guid, int> postSaveIds,
-            IEnumerable<IGrouping<string, BundleWithHeader<IEntity>>> pairsOrSingleItems)
+        private bool PostSaveUpdateIdsInParent(IBlock block, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, BundleWithHeader<IEntity>>> pairsOrSingleItems)
         {
             var l = Log.Fn<bool>($"{_appIdentity.AppId}");
 
@@ -82,7 +80,7 @@ namespace ToSic.Sxc.WebApi.Save
 
                 if (bundle.First().Header.Parent == null) continue;
 
-                var parent = AppCtx /*CmsManager.Read*/.AppState.GetDraftOrPublished(bundle.First().Header.GetParentEntityOrError());
+                var parent = AppCtx.AppState.GetDraftOrPublished(bundle.First().Header.GetParentEntityOrError());
                 var targetIsContentBlock = parent.Type.Name == AppBlocks.BlockTypeName;
                 
                 var primaryItem = targetIsContentBlock ? FindContentItem(bundle) : bundle.First();
@@ -104,6 +102,7 @@ namespace ToSic.Sxc.WebApi.Save
                     ? ViewParts.PickFieldPair(primaryItem.Header.Field)
                     : new[] {primaryItem.Header.Field};
 
+                var fieldList = _appWork.EntityFieldList(null, appState: AppCtx.AppState);
                 if (willAdd) // this cannot be auto-detected, it must be specified
                 {
 
@@ -111,10 +110,12 @@ namespace ToSic.Sxc.WebApi.Save
                     // fix https://github.com/2sic/2sxc/issues/2943 
                     if (!parent.Children(fieldPair.First()).Any() && !targetIsContentBlock) indexNullAddToEnd = true;
                     
-                    CmsManager.Entities.FieldListAdd(parent, fieldPair, index, ids, block.Context.Publishing.ForceDraft, indexNullAddToEnd, targetIsContentBlock);
+                    fieldList
+                    /*CmsManager.Entities*/.FieldListAdd(parent, fieldPair, index, ids, block.Context.Publishing.ForceDraft, indexNullAddToEnd, targetIsContentBlock);
                 }
                 else
-                    CmsManager.Entities.FieldListReplaceIfModified(parent, fieldPair, index, ids, block.Context.Publishing.ForceDraft);
+                    fieldList
+                    /*CmsManager.Entities*/.FieldListReplaceIfModified(parent, fieldPair, index, ids, block.Context.Publishing.ForceDraft);
 
             }
 

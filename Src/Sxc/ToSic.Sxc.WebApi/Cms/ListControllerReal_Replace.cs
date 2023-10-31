@@ -28,15 +28,19 @@ namespace ToSic.Sxc.WebApi.Cms
                 // Make sure we have the correct casing for the field names
                 part = entity.Type[part].Name;
 
+                var fList = _appWork.EntityFieldList(null, appState: Context.AppState);
+
                 var forceDraft = Context.Publishing.ForceDraft;
                 if (add)
                 {
                     var fields = isContentPair ? ViewParts.ContentPair : new[] { part };
                     var values = isContentPair ? new int?[] { entityId, null } : new int?[] { entityId };
-                    CmsManagerOfBlock.Entities.FieldListAdd(entity, fields, index, values, forceDraft, false);
+                    fList
+                    /*CmsManagerOfBlock.Entities*/.FieldListAdd(entity, fields, index, values, forceDraft, false);
                 }
                 else
-                    CmsManagerOfBlock.Entities.FieldListReplaceIfModified(entity, new[] { part }, index, new int?[] { entityId },
+                    fList
+                    /*CmsManagerOfBlock.Entities*/.FieldListReplaceIfModified(entity, new[] { part }, index, new int?[] { entityId },
                         forceDraft);
             }
 

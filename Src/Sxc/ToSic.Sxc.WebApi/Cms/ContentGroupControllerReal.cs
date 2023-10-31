@@ -150,7 +150,8 @@ namespace ToSic.Sxc.WebApi.Cms
                 var entity = AppCtx.AppState.GetDraftOrPublished(guid);
                 var sequence = list.Select(i => i.Index).ToArray();
                 var fields = part == ViewParts.ContentLower ? ViewParts.ContentPair : new[] {part};
-                CmsManager.Entities.FieldListReorder(entity, fields, sequence, Context.Publishing.ForceDraft);
+                _appWork.EntityFieldList(null, appState: AppCtx.AppState)
+                /*CmsManager.Entities*/.FieldListReorder(entity, fields, sequence, Context.Publishing.ForceDraft);
             });
 
             return true;

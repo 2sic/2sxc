@@ -52,17 +52,19 @@ namespace ToSic.Sxc.WebApi.Cms
         public void Move(Guid? parent, string fields, int index, int toIndex
         ) => Log.Do($"change order sort:{index}, dest:{toIndex}", () =>
         {
-            var entMan = CmsManagerOfBlock.Entities;
+            //var entMan = CmsManagerOfBlock.Entities;
+            var fList = _appWork.EntityFieldList(null, appState: Context.AppState);
             ModifyList(FindOrThrow(parent), fields,
-                (entity, fieldList, versioning) => entMan.FieldListMove(entity, fieldList, index, toIndex, versioning));
+                (entity, fieldList, versioning) => fList /*entMan*/.FieldListMove(entity, fieldList, index, toIndex, versioning));
         });
 
 
         public void Delete(Guid? parent, string fields, int index) => Log.Do($"remove from index:{index}", () =>
         {
-            var entMan = CmsManagerOfBlock.Entities;
+            //var entMan = CmsManagerOfBlock.Entities;
+            var fList = _appWork.EntityFieldList(null, appState: Context.AppState);
             ModifyList(FindOrThrow(parent), fields,
-                (entity, fieldList, versioning) => entMan.FieldListRemove(entity, fieldList, index, versioning));
+                (entity, fieldList, versioning) => fList /*entMan*/.FieldListRemove(entity, fieldList, index, versioning));
         });
 
 

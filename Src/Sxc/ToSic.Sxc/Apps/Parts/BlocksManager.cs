@@ -57,7 +57,8 @@ namespace ToSic.Sxc.Apps
 
         public void AddEmptyItem(BlockConfiguration block, int? index, bool forceDraft)
         {
-            Parent.Entities.FieldListUpdate(block.Entity, ViewParts.ContentPair, forceDraft,
+            _appWork.Value.EntityFieldList(appState: Parent.AppState)
+                .FieldListUpdate(block.Entity, ViewParts.ContentPair, forceDraft,
                 lists =>
                 {
                     // hitting (+) if the list is empty add two demo items (because we already see one demo item)
