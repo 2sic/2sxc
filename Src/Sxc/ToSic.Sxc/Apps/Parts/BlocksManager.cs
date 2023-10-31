@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.AppSys;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Apps.CmsSys;
@@ -13,16 +15,28 @@ namespace ToSic.Sxc.Apps
 {
 	public class BlocksManager: PartOf<CmsManager>
 	{
-        public BlocksManager() : base("CG.Manage") { }
+        private readonly LazySvc<AppWork> _appWork;
+        public BlocksManager(LazySvc<AppWork> appWork) : base("CG.Manage")
+        {
+            ConnectServices(
+                _appWork = appWork
+            );
+        }
 
 	    public Guid UpdateOrCreateContentGroup(BlockConfiguration blockConfiguration, int templateId)
-		{
+        {
+            var l = Log.Fn<Guid>();
+
 		    var appMan = Parent;
+
+            // #ExtractEntitySave - context
+            var workCtx = _appWork.Value.CtxWithDb(Parent.AppState);
 
 		    if (!blockConfiguration.Exists)
 		    {
-		        Log.A($"doesn't exist, will create new CG with template#{templateId}");
-		        return appMan.Entities.Create(AppBlocks.BlockTypeName, new Dictionary<string, object>
+                l.A($"doesn't exist, will create new CG with template#{templateId}");
+                // #ExtractEntitySave - verified
+                var guid = _appWork.Value.EntityCreate(workCtx).Create(AppBlocks.BlockTypeName, new Dictionary<string, object>
 		        {
 		            {ViewParts.TemplateContentType, new List<int> {templateId}},
 		            {ViewParts.Content, new List<int>()},
@@ -30,16 +44,16 @@ namespace ToSic.Sxc.Apps
 		            {ViewParts.FieldHeader, new List<int>()},
 		            {ViewParts.FieldHeaderPresentation, new List<int>()}
 		        }).EntityGuid; // new guid
-		    }
-		    else
-		    {
-		        Log.A($"exists, create for group#{blockConfiguration.Guid} with template#{templateId}");
-		        appMan.Entities.UpdateParts(blockConfiguration.Entity.EntityId,
-		            new Dictionary<string, object> {{ ViewParts.TemplateContentType, new List<int?> {templateId}}});
+                return l.ReturnAndLog(guid, "created");
+            }
 
-		        return blockConfiguration.Guid; // guid didn't change
-		    }
-		}
+            l.A($"exists, create for group#{blockConfiguration.Guid} with template#{templateId}");
+            // #ExtractEntitySave - verified
+            _appWork.Value.EntityUpdate(workCtx).UpdateParts(blockConfiguration.Entity.EntityId,
+                new Dictionary<string, object> {{ ViewParts.TemplateContentType, new List<int?> {templateId}}});
+
+            return l.ReturnAndLog(blockConfiguration.Guid); // guid didn't change
+        }
 
         public void AddEmptyItem(BlockConfiguration block, int? index, bool forceDraft)
         {
@@ -56,7 +70,7 @@ namespace ToSic.Sxc.Apps
 
         public int NewBlockReference(int parentId, string field, int index, string app = "", Guid? guid = null)
         {
-            Log.A($"get CB parent:{parentId}, field:{field}, order:{index}, app:{app}, guid:{guid}");
+            var l = Log.Fn<int>($"get CB parent:{parentId}, field:{field}, order:{index}, app:{app}, guid:{guid}");
             var contentTypeName = AppConstants.ContentGroupRefTypeName;
             var values = new Dictionary<string, object>
             {
@@ -66,14 +80,18 @@ namespace ToSic.Sxc.Apps
             var newGuid = guid ?? Guid.NewGuid();
             var entityId = CreateItemAndAddToList(parentId, field, index, contentTypeName, values, newGuid);
 
-            return entityId;
+            return l.ReturnAndLog(entityId);
         }
 
-        private int CreateItemAndAddToList(int parentId, string field, int index, string typeName, Dictionary<string, object> values, Guid newGuid
-        ) => Log.Func($"{nameof(parentId)}:{parentId}, {nameof(field)}:{field}, {nameof(index)}, {index}, {nameof(typeName)}:{typeName}", () =>
+        private int CreateItemAndAddToList(int parentId, string field, int index, string typeName, Dictionary<string, object> values, Guid newGuid) 
         {
+            var l = Log.Fn<int>($"{nameof(parentId)}:{parentId}, {nameof(field)}:{field}, {nameof(index)}, {index}, {nameof(typeName)}:{typeName}");
+            // #ExtractEntitySave - context
+            var workCtx = _appWork.Value.CtxWithDb(Parent.AppState);
+
             // create the new entity 
-            var entityId = Parent.Entities.GetOrCreate(newGuid, typeName, values);
+            // #ExtractEntitySave - should be ok
+            var entityId = _appWork.Value.EntityCreate(workCtx).GetOrCreate(newGuid, typeName, values);
 
             #region attach to the current list of items
 
@@ -88,11 +106,12 @@ namespace ToSic.Sxc.Apps
                 intList.Insert(index, entityId);
             }
             var updateDic = new Dictionary<string, object> { { field, intList } };
-            Parent.Entities.UpdateParts(cbEnt.EntityId, updateDic);
+            // #ExtractEntitySave - should be ok
+            _appWork.Value.EntityUpdate(workCtx).UpdateParts(cbEnt.EntityId, updateDic);
             #endregion
 
-            return entityId;
-        });
+            return l.ReturnAndLog(entityId);
+        }
 
 
     }

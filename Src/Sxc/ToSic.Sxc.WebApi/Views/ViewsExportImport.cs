@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.AppSys;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
@@ -37,6 +38,7 @@ namespace ToSic.Sxc.WebApi.Views
 {
     public class ViewsExportImport : ServiceBase
     {
+        private readonly AppWork _appWork;
         private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
         private readonly IServerPaths _serverPaths;
         private readonly IEnvironmentLogger _envLogger;
@@ -49,7 +51,9 @@ namespace ToSic.Sxc.WebApi.Views
         private readonly ISite _site;
         private readonly IUser _user;
 
-        public ViewsExportImport(IServerPaths serverPaths,
+        public ViewsExportImport(
+            AppWork appWork,
+            IServerPaths serverPaths,
             IEnvironmentLogger envLogger,
             LazySvc<CmsManager> cmsManagerLazy, 
             LazySvc<JsonSerializer> jsonSerializerLazy, 
@@ -61,6 +65,7 @@ namespace ToSic.Sxc.WebApi.Views
             LazySvc<QueryDefinitionBuilder> qDefBuilder) : base("Bck.Views")
         {
             ConnectServices(
+                _appWork = appWork,
                 _serverPaths = serverPaths,
                 _envLogger = envLogger,
                 _cmsManagerLazy = cmsManagerLazy,
@@ -147,7 +152,9 @@ namespace ToSic.Sxc.WebApi.Views
 
                 // 2. Import the views
                 // todo: construction of this should go into init
-                _cmsManagerLazy.Value.Init(app.AppId).Entities.Import(bundles.Select(v => v.Entity).ToList());
+                // #ExtractEntitySave - verified
+                //_cmsManagerLazy.Value.Init(app.AppId).Entities.Import(bundles.Select(v => v.Entity).ToList());
+                _appWork.EntitySave(app.AppState).Import(bundles.Select(v => v.Entity).ToList());
 
                 // 3. Import the attachments
                 var assets = bundles.SelectMany(b => b.Assets);

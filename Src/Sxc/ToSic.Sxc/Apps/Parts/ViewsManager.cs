@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Apps.Parts;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps
@@ -13,7 +14,9 @@ namespace ToSic.Sxc.Apps
         private readonly AppWorkSxc _appWorkSxc;
         public ViewsManager(AppWorkSxc appWorkSxc) : base("Cms.ViewMn")
         {
-            _appWorkSxc = appWorkSxc;
+            ConnectServices(
+                _appWorkSxc = appWorkSxc
+            );
         }
 
         /// <summary>
@@ -25,6 +28,7 @@ namespace ToSic.Sxc.Apps
             int? listPresentationDemoEntity, string templateType, bool isHidden, string location, bool useForList,
             bool publishData, string streamsToPublish, int? queryEntity, string viewNameInUrl)
         {
+            var l = Log.Fn($"{nameof(name)}: {name}");
             var values = new Dictionary<string, object>
             {
                 {nameof(IView.Name) /*View.FieldName*/, name },
@@ -47,10 +51,16 @@ namespace ToSic.Sxc.Apps
                 {View.FieldNameInUrl, viewNameInUrl }
             };
 
+            // #ExtractEntitySave - context
+            var workCtx = _appWorkSxc.AppWork.CtxWithDb(Parent.AppState);
+
+            // #ExtractEntitySave - looks good
             if (templateId.HasValue)
-                Parent.Entities.UpdateParts(templateId.Value, values);
+                _appWorkSxc.AppWork.EntityUpdate(workCtx).UpdateParts(templateId.Value, values);
             else
-                Parent.Entities.Create(Eav.Apps.AppConstants.TemplateContentType, values);
+                _appWorkSxc.AppWork.EntityCreate(workCtx).Create(Eav.Apps.AppConstants.TemplateContentType, values);
+
+            l.Done();
         }
 
 
@@ -58,7 +68,7 @@ namespace ToSic.Sxc.Apps
         public bool DeleteView(int viewId)
         {
             // really get template first, to be sure it is a template
-            var template = _appWorkSxc.AppViews(identity: Parent).Get(viewId); // Parent.Read.Views.Get(viewId);
+            var template = _appWorkSxc.AppViews(identity: Parent).Get(viewId);
             return Parent.Entities.Delete(template.Id);
         }
     }
