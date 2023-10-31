@@ -100,16 +100,17 @@ namespace ToSic.Sxc.WebApi.Cms
                 throw HttpException.PermissionDenied(error);
 
             // load items - similar
-            var appSysCtx = _appWork.Context(appId);
+            var showDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
+            var appWorkCtx = _appWork.Context(appId, showDrafts: showDrafts);
             var result = new EditDto();
-            var entityApi = _entityApi.Init(appId, permCheck.EnsureAny(GrantSets.ReadDraft));
+            var entityApi = _entityApi.Init(appId, showDrafts);
             var appState = _appStates.Get(appIdentity);
             var list = entityApi.GetEntitiesForEditing(items);
             var jsonSerializer = _jsonSerializerGenerator.New().SetApp(appState);
             result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
             {
                 Header = e.Header,
-                Entity = GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, appState, appSysCtx)
+                Entity = GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, appState, appWorkCtx)
             }).ToList();
 
             // set published if some data already exists
@@ -132,7 +133,7 @@ namespace ToSic.Sxc.WebApi.Cms
             // load content-types
             var serializerForTypes = _jsonSerializerGenerator.New().SetApp(appState);
             serializerForTypes.ValueConvertHyperlinks = true;
-            var usedTypes = UsedTypes(list, appSysCtx);
+            var usedTypes = UsedTypes(list, appWorkCtx);
             var serSettings = new JsonSerializationSettings
             {
                 CtIncludeInherited = true,
@@ -149,7 +150,7 @@ namespace ToSic.Sxc.WebApi.Cms
                     .ForEach(at => at.InputType = Compatibility.InputTypes.MapInputTypeV10(at.InputType)));
 
             // load input-field configurations
-            result.InputTypes = GetNecessaryInputTypes(result.ContentTypes, appSysCtx);
+            result.InputTypes = GetNecessaryInputTypes(result.ContentTypes, appWorkCtx);
 
             // also include UI features
             result.Features = _uiData.Features(permCheck);
@@ -158,11 +159,11 @@ namespace ToSic.Sxc.WebApi.Cms
             result.Context = _contextBuilder.InitApp(context.AppState)
                 .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features, CtxEnable.EditUi);
 
-            result.Settings = _loadSettings.GetSettings(context, usedTypes, result.ContentTypes, entityApi.AppRead);
+            result.Settings = _loadSettings.GetSettings(context, usedTypes, result.ContentTypes, appWorkCtx);
 
             try
             {
-                result.Prefetch = _prefetch.TryToPrefectAdditionalData(appId, result, entityApi.AppRead);
+                result.Prefetch = _prefetch.TryToPrefectAdditionalData(appId, result);
             }
             catch (Exception ex) // Log and Ignore
             {

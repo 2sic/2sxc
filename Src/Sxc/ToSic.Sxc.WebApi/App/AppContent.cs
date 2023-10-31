@@ -87,9 +87,10 @@ namespace ToSic.Sxc.WebApi.App
             // verify that read-access to these content-types is permitted
             var permCheck = ThrowIfNotAllowedInType(contentType, GrantSets.ReadSomething, AppState);
 
+            var includeDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
             var result = _entityApi
-                .Init(AppState.AppId, permCheck.EnsureAny(GrantSets.ReadDraft))
-                .GetEntities(contentType)
+                //.Init(AppState.AppId, includeDrafts)
+                .GetEntities(AppState, contentType, includeDrafts)
                 ?.ToList();
             return wrapLog.Return(result, "found: " + result?.Count);
         }
@@ -265,23 +266,24 @@ namespace ToSic.Sxc.WebApi.App
 
         public void Delete(string contentType, int id, string appPath)
         {
-            Log.A($"delete id:{id}, type:{contentType}, path:{appPath}");
-            // if app-path specified, use that app, otherwise use from context
+            var l = Log.Fn($"id:{id}, type:{contentType}, path:{appPath}");
+            // Note: if app-path specified, use that app, otherwise use from context - probably automatic based on headers?
 
             // don't allow type "any" on this
             if (contentType == "any")
-                throw new Exception("type any not allowed with id-only, requires guid");
+                throw l.Done(new Exception("type any not allowed with id-only, requires guid"));
 
             var entityApi = _entityApi.Init(AppState.AppId);
-            var itm = entityApi.AppRead.AppState.List.GetOrThrow(contentType, id);
+            var itm = entityApi.AppCtx.AppState.List.GetOrThrow(contentType, id);
             ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppState);
             entityApi.Delete(itm.Type.Name, id);
+            l.Done();
         }
 
         public void Delete(string contentType, Guid guid, string appPath)
         {
-            Log.A($"delete guid:{guid}, type:{contentType}, path:{appPath}");
-            // if app-path specified, use that app, otherwise use from context
+            var l = Log.Fn($"guid:{guid}, type:{contentType}, path:{appPath}");
+            // Note: if app-path specified, use that app, otherwise use from context - probably automatic based on headers?
 
             var entityApi = _entityApi.Init(AppState.AppId);
             var itm = AppState.List.GetOrThrow(contentType == "any" ? null : contentType, guid);
@@ -289,6 +291,7 @@ namespace ToSic.Sxc.WebApi.App
             ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppState);
 
             entityApi.Delete(itm.Type.Name, guid);
+            l.Done();
         }
 
 

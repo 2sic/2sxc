@@ -30,22 +30,16 @@ namespace ToSic.Sxc.Adam
 
         protected AdamManager(
             LazySvc<AppRuntime> appRuntimeLazy,
-            LazySvc<AdamMetadataMaker> metadataMakerLazy,
             LazySvc<CodeDataFactory> cdf,
             AdamConfiguration adamConfiguration,
             string logName) : base(logName ?? "Adm.Managr")
         {
             ConnectServices(
                 _appRuntimeLazy = appRuntimeLazy,
-                _metadataMakerLazy = metadataMakerLazy,
                 _adamConfiguration = adamConfiguration,
                 _cdf = cdf.SetInit(asc => asc.SetFallbacks(AppContext?.Site, CompatibilityLevel, this))
             );
         }
-        
-        public AdamMetadataMaker MetadataMaker => _adamMetadataMaker ?? (_adamMetadataMaker = _metadataMakerLazy.Value);
-        private AdamMetadataMaker _adamMetadataMaker;
-        private readonly LazySvc<AdamMetadataMaker> _metadataMakerLazy;
 
         private readonly AdamConfiguration _adamConfiguration;
 

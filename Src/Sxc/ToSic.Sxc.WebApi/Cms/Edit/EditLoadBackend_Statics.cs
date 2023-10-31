@@ -63,7 +63,7 @@ namespace ToSic.Sxc.WebApi.Cms
             => list.Select(i
                     // try to get the entity type, but if there is none (new), look it up according to the header
                     => i.Entity?.Type
-                       ?? _appWork.ContentTypes.Get(appSysCtx, i.Header.ContentTypeName))
+                       ?? appSysCtx.AppState.GetContentType(i.Header.ContentTypeName))
                 .ToList();
 
         internal List<InputTypeInfo> GetNecessaryInputTypes(List<JsonContentType> contentTypes, IAppWorkCtx appCtx)
@@ -106,7 +106,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, IAppWorkCtx appSysCtx)
         {
             var l = Log.Fn<IEntity>();
-            var type = _appWork.ContentTypes.Get(appSysCtx, header.ContentTypeName);
+            var type = appSysCtx.AppState.GetContentType(header.ContentTypeName);
             var ent = _entityBuilder.EmptyOfType(appId, header.Guid, header.EntityId, type);
             return l.Return(ent);
         }

@@ -50,7 +50,7 @@ namespace ToSic.Sxc.WebApi.Cms
         /// </summary>
         /// <returns></returns>
         public EditSettingsDto GetSettings(IContextOfApp contextOfApp, List<IContentType> contentTypes,
-            List<JsonContentType> jsonTypes, AppRuntime appRuntime) => Log.Func(l =>
+            List<JsonContentType> jsonTypes, IAppWorkCtx appWorkCtx) => Log.Func(l =>
         {
             var allInputTypes = jsonTypes
                 .SelectMany(ct => ct.Attributes.Select(at => at.InputType))
@@ -86,13 +86,13 @@ namespace ToSic.Sxc.WebApi.Cms
             var settings = new EditSettingsDto
             {
                 Values = finalSettings,
-                Entities = SettingsEntities(appRuntime, allInputTypes),
+                Entities = SettingsEntities(appWorkCtx, allInputTypes),
             };
             return settings;
         });
         
 
-        public List<JsonEntity> SettingsEntities(AppRuntime appRuntime, List<string> allInputTypes) => Log.Func(l =>
+        public List<JsonEntity> SettingsEntities(IAppWorkCtx appWorkCtx, List<string> allInputTypes) => Log.Func(l =>
         {
             try
             {
@@ -100,12 +100,11 @@ namespace ToSic.Sxc.WebApi.Cms
                 if (!hasWysiwyg)
                     return (new List<JsonEntity>(), "no wysiwyg field");
 
-                var context = appRuntime.GetContextWip();
-                var entities = _appEntityRead.Value // appRuntime.Entities
-                    .GetWithParentAppsExperimental(context, "StringWysiwygConfiguration")
+                var entities = _appEntityRead.Value
+                    .GetWithParentAppsExperimental(appWorkCtx, "StringWysiwygConfiguration")
                     .ToList();
 
-                var jsonSerializer = _jsonSerializerGenerator.Value.SetApp(context.AppState);
+                var jsonSerializer = _jsonSerializerGenerator.Value.SetApp(appWorkCtx.AppState);
                 var result = entities.Select(e => jsonSerializer.ToJson(e)).ToList();
 
                 return (result, $"{result.Count}");

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Apps;
-using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.DI;
@@ -34,7 +32,7 @@ namespace ToSic.Sxc.WebApi.Cms
             );
         }
 
-        public EditPrefetchDto TryToPrefectAdditionalData(int appId, EditDto editData, AppRuntime appRuntime) => Log.Func(() =>
+        public EditPrefetchDto TryToPrefectAdditionalData(int appId, EditDto editData) => Log.Func(() =>
             new EditPrefetchDto
             {
                 Links = PrefetchLinks(appId, editData),
