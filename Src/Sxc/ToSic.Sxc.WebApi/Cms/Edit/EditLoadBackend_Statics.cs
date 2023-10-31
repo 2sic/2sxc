@@ -66,7 +66,7 @@ namespace ToSic.Sxc.WebApi.Cms
                        ?? appSysCtx.AppState.GetContentType(i.Header.ContentTypeName))
                 .ToList();
 
-        internal List<InputTypeInfo> GetNecessaryInputTypes(List<JsonContentType> contentTypes, IAppWorkCtx appCtx)
+        internal List<InputTypeInfo> GetNecessaryInputTypes(List<JsonContentType> contentTypes, IAppWorkCtxPlus appCtx)
         {
             var l = Log.Fn<List<InputTypeInfo>>($"{nameof(contentTypes)}: {contentTypes.Count}");
             var fields = contentTypes
@@ -77,7 +77,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             l.A("Found these input types to load: " + string.Join(", ", fields));
 
-            var allInputType = _appWork.InputTypes.GetInputTypes(appCtx);// typeRead.GetInputTypes();
+            var allInputType = _appWork.InputTypes.GetInputTypes(appCtx);
 
             var found = allInputType
                 .Where(it => fields.Contains(it.Type))

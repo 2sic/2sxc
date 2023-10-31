@@ -71,7 +71,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared);
             var cultCount = _zoneMapper.CulturesWithState(_site).Count(c => c.IsEnabled);
 
-            var appCtx = _appWorkSxc.AppWork.Context(currentApp);
+            var appCtx = _appWorkSxc.AppWork.ContextPlus(currentApp);
             var appEntities = _appWorkSxc.AppWork.Entities;
             var appViews = _appWorkSxc.AppViews(appCtx);
 

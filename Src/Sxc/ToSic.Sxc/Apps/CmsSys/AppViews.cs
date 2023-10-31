@@ -49,17 +49,18 @@ namespace ToSic.Sxc.Apps.CmsSys
             );
         }
 
-        public AppViews Setup(IAppWorkCtx appSysCtx)
+        public AppViews Setup(IAppWorkCtxPlus appSysCtx)
         {
             AppSysCtx = appSysCtx;
             return this;
         }
 
-        private IAppWorkCtx AppSysCtx
+        private IAppWorkCtxPlus AppSysCtx
         {
             get => _appSysCtx ?? throw new Exception($"Can't use {nameof(AppSysCtx)} before running Setup(...)");
             set => _appSysCtx = value;
         }
+        private IAppWorkCtxPlus _appSysCtx;
 
         #endregion
 
@@ -69,7 +70,6 @@ namespace ToSic.Sxc.Apps.CmsSys
         public IList<IView> GetAll()
             => _all ?? (_all = ViewEntities.Select(p => ViewOfEntity(p, "")).OrderBy(p => p.Name).ToList());
         private IList<IView> _all;
-        private IAppWorkCtx _appSysCtx;
 
         public IEnumerable<IView> GetRazor() => GetAll().Where(t => t.IsRazor);
         public IEnumerable<IView> GetToken() => GetAll().Where(t => !t.IsRazor);

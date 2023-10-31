@@ -47,7 +47,7 @@ namespace ToSic.Sxc.DataSources
 
             var container = _services.ModuleLazy.Value.Init(ModuleId.Value);
             var blockId = container.BlockIdentifier;
-            var appCtx = _services.AppWork.Context(this);
+            var appCtx = _services.AppWork.ContextPlus(this);
             var blockConfig = _services.AppBlocks.GetOrGeneratePreviewConfig(appCtx, blockId);
             return l.Return(new ResultOrError<BlockConfiguration>(true, blockConfig), "ok");
         }

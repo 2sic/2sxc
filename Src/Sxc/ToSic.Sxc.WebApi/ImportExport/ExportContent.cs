@@ -52,7 +52,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
-            var appCtx = _appWorkSxc.AppWork.Context(currentApp);
+            var appCtx = _appWorkSxc.AppWork.ContextPlus(currentApp);
             var contentTypes = _appWorkSxc.AppWork.ContentTypes.All(appCtx).OfScope(scope);
             var entities = _appWorkSxc.AppWork.Entities.All(appCtx);
             var templates = _appWorkSxc.AppViews(appCtx).GetAll();

@@ -56,8 +56,8 @@ namespace ToSic.Sxc.WebApi.Cms
         private IContextOfBlock Context => _context ?? (_context = CtxResolver.BlockContextRequired());
         private IContextOfBlock _context;
 
-        private IAppWorkCtx AppCtx => _appCtx.Get(() => _appWork.Context(Context.AppState));
-        private GetOnce<IAppWorkCtx> _appCtx = new GetOnce<IAppWorkCtx>();
+        private IAppWorkCtxPlus AppCtx => _appCtx.Get(() => _appWork.ContextPlus(Context.AppState));
+        private GetOnce<IAppWorkCtxPlus> _appCtx = new GetOnce<IAppWorkCtxPlus>();
         #endregion
 
         public EntityInListDto Header(Guid guid)

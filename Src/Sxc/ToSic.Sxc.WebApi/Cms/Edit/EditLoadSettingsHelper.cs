@@ -50,7 +50,7 @@ namespace ToSic.Sxc.WebApi.Cms
         /// </summary>
         /// <returns></returns>
         public EditSettingsDto GetSettings(IContextOfApp contextOfApp, List<IContentType> contentTypes,
-            List<JsonContentType> jsonTypes, IAppWorkCtx appWorkCtx) => Log.Func(l =>
+            List<JsonContentType> jsonTypes, IAppWorkCtxPlus appWorkCtx) => Log.Func(l =>
         {
             var allInputTypes = jsonTypes
                 .SelectMany(ct => ct.Attributes.Select(at => at.InputType))
@@ -92,7 +92,7 @@ namespace ToSic.Sxc.WebApi.Cms
         });
         
 
-        public List<JsonEntity> SettingsEntities(IAppWorkCtx appWorkCtx, List<string> allInputTypes) => Log.Func(l =>
+        public List<JsonEntity> SettingsEntities(IAppWorkCtxPlus appWorkCtx, List<string> allInputTypes) => Log.Func(l =>
         {
             try
             {

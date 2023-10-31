@@ -33,9 +33,9 @@ namespace ToSic.Sxc.Apps.CmsSys
         }
 
         // ReSharper disable once ConvertToNullCoalescingCompoundAssignment
-        private IImmutableList<IEntity> ContentGroups(IAppWorkCtx appCtx) => _appWork.Entities.Get(appCtx, BlockTypeName).ToImmutableList();
+        private IImmutableList<IEntity> ContentGroups(IAppWorkCtxPlus appCtx) => _appWork.Entities.Get(appCtx, BlockTypeName).ToImmutableList();
 
-        public List<BlockConfiguration> AllWithView(IAppWorkCtx appCtx)
+        public List<BlockConfiguration> AllWithView(IAppWorkCtxPlus appCtx)
         {
             return ContentGroups(appCtx)
                 .Select(b =>
@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Apps.CmsSys
         /// 
         /// </summary>
         /// <returns>Will always return an object, even if the group doesn't exist yet. The .Entity would be null then</returns>
-        public BlockConfiguration GetBlockConfig(IAppWorkCtx appCtx, Guid contentGroupGuid)
+        public BlockConfiguration GetBlockConfig(IAppWorkCtxPlus appCtx, Guid contentGroupGuid)
         {
             var l = Log.Fn<BlockConfiguration>($"get CG#{contentGroupGuid}");
             var groupEntity = ContentGroups(appCtx).One(contentGroupGuid);
@@ -66,21 +66,20 @@ namespace ToSic.Sxc.Apps.CmsSys
                         .WarnIfMissingData()
                     : new BlockConfiguration(null, appCtx, null, _qDefBuilder, _cultureResolver.CurrentCultureCode, Log)
                     {
-                        // PreviewTemplateId = Guid.Empty,
                         DataIsMissing = true
                     },
                 found ? "found" : "missing");
         }
 
 
-        internal BlockConfiguration GetOrGeneratePreviewConfig(IAppWorkCtx appCtx, IBlockIdentifier blockId)
+        internal BlockConfiguration GetOrGeneratePreviewConfig(IAppWorkCtxPlus appCtx, IBlockIdentifier blockId)
         {
             var l = Log.Fn<BlockConfiguration>($"grp#{blockId.Guid}, preview#{blockId.PreviewView}");
             // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
             var createTempBlockForPreview = blockId.Guid == Guid.Empty;
             l.A($"{nameof(createTempBlockForPreview)}:{createTempBlockForPreview}");
             var result = createTempBlockForPreview
-                ? new BlockConfiguration(null, appCtx, appCtx.Data.List.One(blockId.PreviewView), _qDefBuilder, _cultureResolver.CurrentCultureCode, Log) // { PreviewTemplateId = blockId.PreviewView }
+                ? new BlockConfiguration(null, appCtx, appCtx.Data.List.One(blockId.PreviewView), _qDefBuilder, _cultureResolver.CurrentCultureCode, Log)
                 : GetBlockConfig(appCtx, blockId.Guid);
             result.BlockIdentifierOrNull = blockId;
             return l.Return(result);

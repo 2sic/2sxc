@@ -50,7 +50,7 @@ namespace ToSic.Sxc.WebApi.Usage
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
-            var appSysCtx = _appWorkSxc.AppWork.Context(appId);
+            var appSysCtx = _appWorkSxc.AppWork.ContextPlus(appId);
             var appViews = _appWorkSxc.AppViews(appSysCtx);
             // treat view as a list - in case future code will want to analyze many views together
             var views = new List<IView> { appViews.Get(guid) };

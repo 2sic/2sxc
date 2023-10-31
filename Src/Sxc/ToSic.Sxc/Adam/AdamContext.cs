@@ -132,7 +132,7 @@ namespace ToSic.Sxc.Adam
         /// </summary>
         private IContentTypeAttribute AttributeDefinition(AppState appState, string contentType, string fieldName)
         {
-            var type = appState /*State.Get(appId)*/.GetContentType(contentType);
+            var type = appState.GetContentType(contentType);
             return type[fieldName];
         }
 

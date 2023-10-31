@@ -48,7 +48,7 @@ namespace ToSic.Sxc.WebApi.Save
             return this;
         }
         private IAppIdentity _appIdentity;
-        private IAppWorkCtx AppCtx;
+        private IAppWorkCtx AppCtx { get; set; }
         #endregion
 
         internal bool IfChangesAffectListUpdateIt(IBlock block, List<BundleWithHeader<IEntity>> items,
@@ -183,7 +183,7 @@ namespace ToSic.Sxc.WebApi.Save
                     if (!identifier.Parent.HasValue) continue;
 
                     //var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(identifier.GetParentEntityOrError());
-                    var contentGroup = _appBlocks.GetBlockConfig(AppCtx, identifier.GetParentEntityOrError());
+                    var contentGroup = _appBlocks.GetBlockConfig(_appWork.ToCtxPlus(AppCtx), identifier.GetParentEntityOrError());
                     var contentTypeName = (contentGroup.View as View)?.GetTypeStaticName(identifier.Field) ?? "";
 
                     // if there is no content-type for this, then skip it (don't deliver anything)

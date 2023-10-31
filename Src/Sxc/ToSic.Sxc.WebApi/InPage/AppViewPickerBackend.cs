@@ -35,13 +35,13 @@ namespace ToSic.Sxc.WebApi.InPage
         public IEnumerable<TemplateUiInfo> Templates() =>
             Block?.App == null 
                 ? Array.Empty<TemplateUiInfo>()
-                : AppSysSxc.Value.AppViews(AppWorkCtx) /*CmsManagerOfBlock?.Read.Views*/.GetCompatibleViews(Block?.App, Block?.Configuration);
+                : AppSysSxc.Value.AppViews(AppWorkCtxPlus).GetCompatibleViews(Block?.App, Block?.Configuration);
 
         public IEnumerable<ContentTypeUiInfo> ContentTypes()
         {
             // nothing to do without app
             if (Block?.App == null) return null;
-            return AppSysSxc.Value.AppViews(AppWorkCtx) /*CmsManagerOfBlock?.Read.Views*/.GetContentTypesWithStatus(Block.App.Path ?? "", Block.App.PathShared ?? "");
+            return AppSysSxc.Value.AppViews(AppWorkCtxPlus).GetContentTypesWithStatus(Block.App.Path ?? "", Block.App.PathShared ?? "");
         }
 
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)

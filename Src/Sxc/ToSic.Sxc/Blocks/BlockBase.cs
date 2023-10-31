@@ -97,7 +97,7 @@ namespace ToSic.Sxc.Blocks
             l.A("App created");
 
             // note: requires EditAllowed, which isn't ready till App is created
-            var appSysCtx = Services.AppWorkSxc.AppWork.Context(this);
+            var appSysCtx = Services.AppWorkSxc.AppWork.ContextPlus(this);
             Configuration = Services.AppBlocks.GetOrGeneratePreviewConfig(appSysCtx, blockId);
 
             // handle cases where the content group is missing - usually because of incomplete import

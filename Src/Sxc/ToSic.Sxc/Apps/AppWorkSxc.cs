@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Apps
         }
 
         
-        public AppViews AppViews(IAppWorkCtx ctx = default, AppState state = default, IAppIdentity identity = default, int? appId = default)
-            => _appViewGen.New().Setup(AppWork.Ctx(ctx: ctx, identity: identity, state: state, appId: appId));
+        public AppViews AppViews(IAppWorkCtxPlus ctx = default, AppState state = default, IAppIdentity identity = default, int? appId = default)
+            => _appViewGen.New().Setup(AppWork.CtxPlus(ctx: ctx, identity: identity, state: state, appId: appId));
     }
 }

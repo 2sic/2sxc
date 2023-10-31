@@ -136,7 +136,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             // if a preview templateId was specified, swap to that
             if (templateId > 0)
             {
-                var template = AppSysSxc.Value.AppViews(AppWorkCtx).Get(templateId); // CmsManagerOfBlock.Read.Views.Get(templateId);
+                var template = AppSysSxc.Value.AppViews(AppWorkCtxPlus).Get(templateId);
                 template.Edition = edition;
                 Block.View = template;
             }

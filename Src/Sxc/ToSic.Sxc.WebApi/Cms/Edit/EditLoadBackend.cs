@@ -101,7 +101,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // load items - similar
             var showDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
-            var appWorkCtx = _appWork.Context(appId, showDrafts: showDrafts);
+            var appWorkCtx = _appWork.ContextPlus(appId, showDrafts: showDrafts);
             var result = new EditDto();
             var entityApi = _entityApi.Init(appId, showDrafts);
             var appState = _appStates.Get(appIdentity);

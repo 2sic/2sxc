@@ -51,7 +51,7 @@ namespace ToSic.Sxc.WebApi.Views
         {
             var l = Log.Fn<IEnumerable<ViewDetailsDto>>($"get all a#{appId}");
 
-            var appSysCtx = _appWorkSxc.AppWork.Context(appId);
+            var appSysCtx = _appWorkSxc.AppWork.ContextPlus(appId);
             var contentTypes = _appWork.ContentTypes.All(appSysCtx).OfScope(Scopes.Default).ToList();
 
             var viewList = _appWorkSxc.AppViews(appSysCtx).GetAll().ToList();

@@ -100,7 +100,7 @@ namespace ToSic.Sxc.Adam
 
             // check if the data is public
             var appCtx = AdamContext.AppRuntime.GetContextWip();
-            var itm = Services.AppSys.Value.Entities.Get(appCtx, guid); // AdamContext.AppRuntime.Entities.Get(guid);
+            var itm = Services.AppSys.Value.Entities.Get(appCtx, guid);
             if (!(itm?.IsPublished ?? false)) return true;
 
             const string msg = "User is restricted and may not see published, but item exists and is published - not allowed";
