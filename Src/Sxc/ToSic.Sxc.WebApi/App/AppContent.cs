@@ -280,7 +280,7 @@ namespace ToSic.Sxc.WebApi.App
                 throw l.Done(new Exception("type any not allowed with id-only, requires guid"));
 
             var entityApi = _entityApi.Init(AppState.AppId);
-            var itm = entityApi.AppCtx.AppState.List.GetOrThrow(contentType, id);
+            var itm = entityApi.AppWorkSvc.AppState.List.GetOrThrow(contentType, id);
             ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppState);
             entityApi.Delete(itm.Type.Name, id);
             l.Done();

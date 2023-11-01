@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Apps
         {
             // really get template first, to be sure it is a template
             var template = _appWorkSxc.AppViews(identity: Parent).Get(viewId);
-            return Parent.Entities.Delete(template.Id);
+            return _appWorkSxc.AppWork.EntityDelete(_appWorkSxc.AppWork.CtxWithDb(Parent.AppState)).Delete(template.Id);
         }
     }
 }
