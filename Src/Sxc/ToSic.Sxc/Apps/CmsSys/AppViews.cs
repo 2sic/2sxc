@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.AppSys;
 using ToSic.Eav.Apps.Ui;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
@@ -20,7 +20,7 @@ using ToSic.Sxc.Blocks;
 // note: not sure if the final namespace should be Sxc.Apps or Sxc.Views
 namespace ToSic.Sxc.Apps.CmsSys
 {
-	public class AppViews: ServiceBase
+    public class AppViews: ServiceBase
     {
         #region Constructor / DI
 

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.AppSys;
 using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
@@ -13,7 +13,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps
 {
-	public class BlocksManager: PartOf<CmsManager>
+    public class BlocksManager: PartOf<CmsManager>
 	{
         private readonly LazySvc<AppWork> _appWork;
         public BlocksManager(LazySvc<AppWork> appWork) : base("CG.Manage")
