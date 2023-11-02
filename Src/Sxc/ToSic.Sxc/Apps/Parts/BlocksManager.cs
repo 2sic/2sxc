@@ -27,10 +27,8 @@ namespace ToSic.Sxc.Apps
         {
             var l = Log.Fn<Guid>();
 
-		    var appMan = Parent;
-
             // #ExtractEntitySave - context
-            var workCtx = _appWork.Value.CtxWithDb(Parent.AppState);
+            var workCtx = _appWork.Value.CtxSvc.CtxWithDb(Parent.AppState);
 
 		    if (!blockConfiguration.Exists)
 		    {
