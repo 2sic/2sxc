@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.AppSys;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
@@ -21,23 +18,23 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public class EditLoadSettingsHelper: ServiceBase
     {
+        private readonly Generator<WorkEntities> _appEntities;
 
         #region Constructor / DI
 
         private readonly IEnumerable<ILoadSettingsProvider> _loadSettingsProviders;
         private readonly LazySvc<JsonSerializer> _jsonSerializerGenerator;
-        private readonly LazySvc<AppEntityRead> _appEntityRead;
 
         public EditLoadSettingsHelper(
             LazySvc<JsonSerializer> jsonSerializerGenerator,
             IEnumerable<ILoadSettingsProvider> loadSettingsProviders,
-            LazySvc<AppEntityRead> appEntityRead
-            ) : base(Constants.SxcLogName + ".LodSet")
+            Generator<WorkEntities> appEntities
+        ) : base(Constants.SxcLogName + ".LodSet")
         {
             ConnectServices(
                 _jsonSerializerGenerator = jsonSerializerGenerator,
                 _loadSettingsProviders = loadSettingsProviders,
-                _appEntityRead = appEntityRead
+                _appEntities = appEntities
             );
         }
 
@@ -101,8 +98,8 @@ namespace ToSic.Sxc.WebApi.Cms
                 if (!hasWysiwyg)
                     return (new List<JsonEntity>(), "no wysiwyg field");
 
-                var entities = _appEntityRead.Value
-                    .GetWithParentAppsExperimental(appWorkCtx, "StringWysiwygConfiguration")
+                var entities = _appEntities.New().InitContext(appWorkCtx)// _appEntityRead.Value
+                    .GetWithParentAppsExperimental("StringWysiwygConfiguration")
                     .ToList();
 
                 var jsonSerializer = _jsonSerializerGenerator.Value.SetApp(appWorkCtx.AppState);

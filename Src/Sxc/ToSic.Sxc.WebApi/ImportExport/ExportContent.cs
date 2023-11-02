@@ -54,7 +54,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
             var appCtx = _appWorkSxc.AppWork.ContextPlus(currentApp);
             var contentTypes = appCtx.AppState.ContentTypes.OfScope(scope);
-            var entities = _appWorkSxc.AppWork.Entities.All(appCtx);
+            var entities = _appWorkSxc.AppWork.Entities(appCtx).All();
             var templates = _appWorkSxc.AppViews(appCtx).GetAll();
 
             return new ExportPartsOverviewDto

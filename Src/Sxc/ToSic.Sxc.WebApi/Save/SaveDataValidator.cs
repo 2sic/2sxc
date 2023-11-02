@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.AppSys;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Lib.Logging;
@@ -24,16 +22,12 @@ namespace ToSic.Sxc.WebApi.Save
             Package = package;
         }
 
-        public void PrepareForEntityChecks(IAppWorkCtx appCtx, AppEntityRead appEntities)
+        public void PrepareForEntityChecks(WorkEntities workEntities)
         {
-            AppCtx = appCtx;
-            AppEntities = appEntities;
-
+            WorkEntities = workEntities;
         }
 
-        public IAppWorkCtx AppCtx { get; private set; }
-        public AppEntityRead AppEntities { get; private set; }
-
+        public WorkEntities WorkEntities { get; private set; }
 
 
         /// <summary>
@@ -125,12 +119,10 @@ namespace ToSic.Sxc.WebApi.Save
             return (preparedException2, "second test");
         });
 
-        internal (int? ResetId, HttpExceptionAbstraction Exception)
-            IfUpdateValidateAndCorrectIds(int count, IEntity newEntity)
+        internal (int? ResetId, HttpExceptionAbstraction Exception) IfUpdateValidateAndCorrectIds(int count, IEntity newEntity)
         {
             var l = Log.Fn<(int?, HttpExceptionAbstraction)>();
-            var previousEntity = AppEntities.Get(AppCtx, newEntity.EntityId) // AppRead.Entities.Get(newEntity.EntityId)
-                                 ?? AppEntities.Get(AppCtx, newEntity.EntityGuid); //  AppRead.Entities.Get(newEntity.EntityGuid);
+            var previousEntity = WorkEntities.Get(newEntity.EntityId) ?? WorkEntities.Get(newEntity.EntityGuid);
 
             int? resetId = default;
             if (previousEntity == null)

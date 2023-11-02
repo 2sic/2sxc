@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Apps.CmsSys
 
         #endregion
 
-        private List<IEntity> ViewEntities => _viewDs.Get(() => _appWork.Entities.Get(AppSysCtx, AppConstants.TemplateContentType).ToList());
+        private List<IEntity> ViewEntities => _viewDs.Get(() => _appWork.Entities(AppSysCtx).Get(AppConstants.TemplateContentType).ToList());
         private readonly GetOnce<List<IEntity>> _viewDs = new GetOnce<List<IEntity>>();
 
         public IList<IView> GetAll()

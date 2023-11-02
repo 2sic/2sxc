@@ -77,7 +77,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             l.A("Found these input types to load: " + string.Join(", ", fields));
 
-            var allInputType = _appWork.InputTypes.GetInputTypes(appCtx);
+            var allInputType = _appWork.InputTypesNew(appCtx).GetInputTypes();
 
             var found = allInputType
                 .Where(it => fields.Contains(it.Type))

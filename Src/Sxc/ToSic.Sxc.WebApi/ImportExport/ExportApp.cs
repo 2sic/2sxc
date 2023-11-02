@@ -72,7 +72,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var cultCount = _zoneMapper.CulturesWithState(_site).Count(c => c.IsEnabled);
 
             var appCtx = _appWorkSxc.AppWork.ContextPlus(currentApp);
-            var appEntities = _appWorkSxc.AppWork.Entities;
+            var appEntities = _appWorkSxc.AppWork.Entities(appCtx);
             var appViews = _appWorkSxc.AppViews(appCtx);
 
             return new AppExportInfoDto
@@ -80,7 +80,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 Name = currentApp.Name,
                 Guid = currentApp.NameId,
                 Version = currentApp.VersionSafe(),
-                EntitiesCount = appEntities.All(appCtx).Count(e => !e.HasAncestor()),
+                EntitiesCount = appEntities.All().Count(e => !e.HasAncestor()),
                 LanguagesCount = cultCount,
                 TemplatesCount = appViews.GetAll().Count(),
                 HasRazorTemplates = appViews.GetRazor().Any(),

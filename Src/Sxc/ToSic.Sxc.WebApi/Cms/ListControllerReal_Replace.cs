@@ -65,7 +65,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var ct = Context.AppState.GetContentType(typeName);
             var appCtx = _appWork.CtxSvc.ContextPlus(Context.AppState);
 
-            var listTemp = _appWork.Entities.Get(appCtx, typeName).ToList();
+            var listTemp = _appWork.Entities(appCtx).Get(typeName).ToList();
 
             var results = listTemp.Select(Context.AppState.GetDraftOrKeep).ToDictionary(
                 p => p.EntityId,
