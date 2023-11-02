@@ -7,6 +7,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
@@ -27,16 +28,20 @@ namespace ToSic.Sxc.Dnn.Cms
 {
     public partial class DnnPagePublishing : ServiceBase, IPagePublishing
     {
+        private readonly Generator<AppWorkService> _appWorkSvcGen;
+
         #region DI Constructors and More
 
         private readonly LazySvc<AppManager> _appManager;
         private readonly LazySvc<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
 
-        public DnnPagePublishing(LazySvc<AppManager> appManager, LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder) : base("Dnn.Publsh")
+        public DnnPagePublishing(LazySvc<AppManager> appManager, LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder, Generator<AppWorkService> appWorkSvcGen) : base("Dnn.Publsh")
         {
             ConnectServices(
                 _appManager = appManager,
-                _moduleAndBlockBuilder = moduleAndBlockBuilder
+                _moduleAndBlockBuilder = moduleAndBlockBuilder,
+                _appWorkSvcGen = appWorkSvcGen
+
             );
         }
         
@@ -90,7 +95,7 @@ namespace ToSic.Sxc.Dnn.Cms
 
         public void Publish(int instanceId, int version)
         {
-            Log.A($"Publish(m:{instanceId}, v:{version})");
+            var l = Log.Fn($"Publish(m:{instanceId}, v:{version})");
             try
             {
                 // publish all entities of this content block
@@ -98,11 +103,10 @@ namespace ToSic.Sxc.Dnn.Cms
                 // must find tenant through module, as the Portal-Settings.Current is null in search mode
                 var cb = _moduleAndBlockBuilder.Value.GetProvider(dnnModule, null).LoadBlock();
 
-                Log.A($"found dnn mod {cb.Context.Module.Id}, tenant {cb.Context.Site.Id}, cb exists: {cb.ContentGroupExists}");
+                l.A($"found dnn mod {cb.Context.Module.Id}, tenant {cb.Context.Site.Id}, cb exists: {cb.ContentGroupExists}");
                 if (cb.ContentGroupExists)
                 {
-                    Log.A("cb exists");
-                    var appManager = _appManager.Value.Init(cb);
+                    l.A("cb exists");
 
                     // Add content entities
                     IEnumerable<IEntity> list = new List<IEntity>();
@@ -115,7 +119,7 @@ namespace ToSic.Sxc.Dnn.Cms
                     var attachedPresItems = list
                         .Select(e => e.GetDecorator<EntityInBlockDecorator>()?.Presentation)
                         .Where(p => p != null);
-                    Log.A($"adding presentation item⋮{attachedPresItems.Count()}");
+                    l.A($"adding presentation item⋮{attachedPresItems.Count()}");
                     list = list.Concat(attachedPresItems);
                     // ReSharper restore PossibleMultipleEnumeration
 
@@ -124,26 +128,33 @@ namespace ToSic.Sxc.Dnn.Cms
                     // publish BlockConfiguration as well - if there already is one
                     if (cb.Configuration != null)
                     {
-                        Log.A($"add group id:{cb.Configuration.Id}");
+                        l.A($"add group id:{cb.Configuration.Id}");
                         ids.Add(cb.Configuration.Id);
                     }
 
-                    Log.A(Log.Try(() => $"will publish id⋮{ids.Count} ids:[{ string.Join(",", ids.Select(i => i.ToString()).ToArray()) }]"));
+                    l.A(Log.Try(() => $"will publish id⋮{ids.Count} ids:[{ string.Join(",", ids.Select(i => i.ToString()).ToArray()) }]"));
 
                     if (ids.Any())
-                        appManager.Entities.Publish(ids.ToArray());
+                    {
+                        //var appManager = _appManager.Value.Init(cb);
+                        //appManager.Entities.Publish(ids.ToArray());
+
+                        var appWorkSvc = _appWorkSvcGen.New().Init(cb.Context.AppState);
+                        appWorkSvc.Publish.Publish(ids.ToArray());
+                    }
                     else
-                        Log.A("no ids found, won\'t publish items");
+                        l.A("no ids found, won\'t publish items");
                 }
 
                 // Set published version
                 new ModuleVersions(instanceId, Log).PublishLatestVersion();
-                Log.A("publish completed");
+                l.Done("publish completed");
             }
             catch (Exception ex)
             {
                 DnnLogging.LogToDnn("exception", "publishing", Log, force: true);
                 DotNetNuke.Services.Exceptions.Exceptions.LogException(ex);
+                l.Done(ex);
                 throw;
             }
 

@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 UpdateInstanceSetting(instance.Id, Settings.ModuleSettingApp, null, Log);
             else
             {
-                var appName = _appSysSxc.Value.AppWork.AppStates.AppIdentifier(_site.ZoneId, appId.Value);
+                var appName = _appSysSxc.Value.AppWork.CtxSvc.AppStates.AppIdentifier(_site.ZoneId, appId.Value);
                 UpdateInstanceSetting(instance.Id, Settings.ModuleSettingApp, appName, Log);
             }
 

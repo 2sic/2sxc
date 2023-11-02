@@ -30,7 +30,7 @@ namespace ToSic.Sxc.WebApi
         protected CmsManager CmsManagerOfBlock => _cmsManager ?? (_cmsManager = CmsManagerLazy.Value.Init(Block.Context));
         private CmsManager _cmsManager;
 
-        protected IAppWorkCtx AppWorkCtx => _appWorkCtx ?? (_appWorkCtx = AppSysSxc.Value.AppWork.Context(Block.Context.AppState));
+        protected IAppWorkCtx AppWorkCtx => _appWorkCtx ?? (_appWorkCtx = AppSysSxc.Value.AppWork.CtxSvc.Context(Block.Context.AppState));
         private IAppWorkCtx _appWorkCtx;
         protected IAppWorkCtxPlus AppWorkCtxPlus => _appWorkCtxPlus ?? (_appWorkCtxPlus = AppSysSxc.Value.AppWork.ToCtxPlus(AppWorkCtx));
         private IAppWorkCtxPlus _appWorkCtxPlus;

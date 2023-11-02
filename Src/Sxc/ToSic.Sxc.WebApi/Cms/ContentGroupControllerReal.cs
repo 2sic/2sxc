@@ -56,7 +56,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private IContextOfBlock Context => _context ?? (_context = CtxResolver.BlockContextRequired());
         private IContextOfBlock _context;
 
-        private IAppWorkCtxPlus AppCtx => _appCtx.Get(() => _appWork.ContextPlus(Context.AppState));
+        private IAppWorkCtxPlus AppCtx => _appCtx.Get(() => _appWork.CtxSvc.ContextPlus(Context.AppState));
         private GetOnce<IAppWorkCtxPlus> _appCtx = new GetOnce<IAppWorkCtxPlus>();
         #endregion
 

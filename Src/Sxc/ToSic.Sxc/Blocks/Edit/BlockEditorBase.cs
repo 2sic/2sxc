@@ -1,6 +1,8 @@
 ﻿using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.AppSys;
+using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
@@ -19,10 +21,11 @@ namespace ToSic.Sxc.Blocks.Edit
 
         public class MyServices : MyServicesBase
         {
+            public LazySvc<AppWorkUnit<EntityWorkPublish, IAppWorkCtxWithDb>> Publisher { get; }
             public LazySvc<AppWork> AppSys { get; }
             public LazySvc<AppBlocks> AppBlocks { get; }
             public LazySvc<CmsManager> CmsManager { get; }
-            public LazySvc<AppManager> AppManager { get; }
+            //public LazySvc<AppManager> AppManager { get; }
             public Generator<BlockEditorForModule> BlkEdtForMod { get; }
             public Generator<BlockEditorForEntity> BlkEdtForEnt { get; }
 
@@ -31,16 +34,18 @@ namespace ToSic.Sxc.Blocks.Edit
                 LazySvc<AppBlocks> appBlocks,
                 LazySvc<CmsManager> cmsManager,
                 LazySvc<AppManager> appManager,
+                LazySvc<AppWorkUnit<EntityWorkPublish, IAppWorkCtxWithDb>> publisher,
                 Generator<BlockEditorForModule> blkEdtForMod,
                 Generator<BlockEditorForEntity> blkEdtForEnt)
             {
                 ConnectServices(
                     CmsManager = cmsManager,
-                    AppManager = appManager,
+                    //AppManager = appManager,
                     BlkEdtForMod = blkEdtForMod,
                     BlkEdtForEnt = blkEdtForEnt,
                     AppSys = appSys,
-                    AppBlocks = appBlocks
+                    AppBlocks = appBlocks,
+                    Publisher = publisher
                 );
             }
         }
@@ -48,7 +53,7 @@ namespace ToSic.Sxc.Blocks.Edit
         internal BlockEditorBase(MyServices services) : base(services, "CG.RefMan")
         {
             Services.CmsManager.SetInit(r => r.Init(Block?.App));
-            Services.AppManager.SetInit(r => r.Init(Block?.App));
+            //Services.AppManager.SetInit(r => r.Init(Block?.App));
         }
 
         internal void Init(IBlock block) => Block = block;
@@ -56,7 +61,7 @@ namespace ToSic.Sxc.Blocks.Edit
         #endregion
 
         private CmsManager CmsManager => Services.CmsManager.Value;
-        private AppManager AppManager => Services.AppManager.Value;
+        //private AppManager AppManager => Services.AppManager.Value;
 
         protected IBlock Block;
 
@@ -95,7 +100,7 @@ namespace ToSic.Sxc.Blocks.Edit
 
         public bool Publish(string part, int index)
         {
-            Log.A($"publish part{part}, order:{index}");
+            var l = Log.Fn<bool>($"publish part{part}, order:{index}");
             var contentGroup = BlockConfiguration;
             var contEntity = contentGroup[part][index];
             var presKey = part.ToLowerInvariant() == ViewParts.ContentLower 
@@ -106,19 +111,21 @@ namespace ToSic.Sxc.Blocks.Edit
             var hasPresentation = presEntity != null;
 
             // make sure we really have the draft item an not the live one
-            var contDraft = contEntity.IsPublished ? AppManager.AppState.GetDraft(contEntity) : contEntity;
-            AppManager.Entities.Publish(contDraft.RepositoryId);
+            var appState = Block.Context.AppState;
+            var publisher = Services.Publisher.Value.New(state: appState);
+            var contDraft = contEntity.IsPublished ? appState.GetDraft(contEntity) : contEntity;
+            publisher.Publish(contDraft.RepositoryId);
+            // AppManager.Entities.Publish(contDraft.RepositoryId);
             
             if (hasPresentation)
             {
-                var presDraft = presEntity.IsPublished ? AppManager.AppState.GetDraft(presEntity) : presEntity;
-                AppManager.Entities.Publish(presDraft.RepositoryId);
+                var presDraft = presEntity.IsPublished ? appState.GetDraft(presEntity) : presEntity;
+                publisher.Publish(presDraft.RepositoryId);
+                //AppManager.Entities.Publish(presDraft.RepositoryId);
             }
 
-            return true;
+            return l.ReturnTrue();
         }
-
-        private AppManager BlockAppManager => Services.AppManager.Value;
 
         #endregion
 

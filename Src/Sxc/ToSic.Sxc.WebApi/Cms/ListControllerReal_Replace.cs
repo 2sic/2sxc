@@ -63,7 +63,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 return l.ReturnNull("no type name, so no data");
 
             var ct = Context.AppState.GetContentType(typeName);
-            var appCtx = _appWork.ContextPlus(Context.AppState);
+            var appCtx = _appWork.CtxSvc.ContextPlus(Context.AppState);
 
             var listTemp = _appWork.Entities.Get(appCtx, typeName).ToList();
 

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using ToSic.Eav.Apps.AppSys;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Apps.Ui;
+using ToSic.Eav.Apps.Work;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Lib.DI;
@@ -15,20 +16,23 @@ namespace ToSic.Sxc.WebApi.InPage
 {
     public class AppViewPickerBackend: BlockWebApiBackendBase
     {
-        private readonly LazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
-
         public AppViewPickerBackend(
             Generator<MultiPermissionsApp> multiPermissionsApp,
-            LazySvc<CmsManager> cmsManagerLazy, 
+            LazySvc<CmsManager> cmsManagerLazy,
             IContextResolver ctxResolver,
             LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
-            LazySvc<AppWorkSxc> appSysSxc
+            LazySvc<AppWorkSxc> appSysSxc,
+            LazySvc<AppWorkUnit<EntityWorkPublish, IAppWorkCtxWithDb>> publisher
             ) : base(multiPermissionsApp, cmsManagerLazy, appSysSxc, ctxResolver,"Bck.ViwApp")
         {
+            _publisher = publisher;
             ConnectServices(
                 _blockEditorSelectorLazy = blockEditorSelectorLazy
             );
         }
+
+        private readonly LazySvc<AppWorkUnit<EntityWorkPublish, IAppWorkCtxWithDb>> _publisher;
+        private readonly LazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
 
         public void SetAppId(int? appId) => _blockEditorSelectorLazy.Value.GetEditor(Block).SetAppId(appId);
 
@@ -55,7 +59,7 @@ namespace ToSic.Sxc.WebApi.InPage
         {
             var callLog = Log.Fn<bool>($"{id}");
             ThrowIfNotAllowedInApp(GrantSets.WritePublished);
-            CmsManagerOfBlock.Entities.Publish(id);
+            _publisher.Value.New(AppWorkCtx).Publish(id);
             return callLog.ReturnTrue("ok");
         }
     }
