@@ -52,7 +52,7 @@ namespace ToSic.Sxc.WebApi.Views
             var l = Log.Fn<IEnumerable<ViewDetailsDto>>($"get all a#{appId}");
 
             var appSysCtx = _appWorkSxc.AppWork.ContextPlus(appId);
-            var contentTypes = _appWork.ContentTypes.All(appSysCtx).OfScope(Scopes.Default).ToList();
+            var contentTypes = appSysCtx.AppState.ContentTypes.OfScope(Scopes.Default).ToList();
 
             var viewList = _appWorkSxc.AppViews(appSysCtx).GetAll().ToList();
             Log.A($"attribute list count:{contentTypes.Count}, template count:{viewList.Count}");

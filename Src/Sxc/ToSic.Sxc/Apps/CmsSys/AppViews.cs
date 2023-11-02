@@ -145,7 +145,7 @@ namespace ToSic.Sxc.Apps.CmsSys
 
             var valConverter = _valConverterLazy.Value;
 
-            return _appWork.ContentTypes.All(AppSysCtx).OfScope(Scopes.Default) 
+            return AppSysCtx.AppState.ContentTypes.OfScope(Scopes.Default) 
                 .Where(ct => templates.Any(t => t.ContentType == ct.NameId)) // must exist in at least 1 template
                 .OrderBy(ct => ct.Name)
                 .Select(ct =>
