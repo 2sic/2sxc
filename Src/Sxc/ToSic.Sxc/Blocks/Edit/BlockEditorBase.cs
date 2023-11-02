@@ -1,7 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.AppSys;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
@@ -21,7 +20,7 @@ namespace ToSic.Sxc.Blocks.Edit
 
         public class MyServices : MyServicesBase
         {
-            public LazySvc<AppWorkUnit<EntityWorkPublish, IAppWorkCtxWithDb>> Publisher { get; }
+            public LazySvc<AppWorkUnit<WorkEntityPublish, IAppWorkCtxWithDb>> Publisher { get; }
             public LazySvc<AppWork> AppSys { get; }
             public LazySvc<AppBlocks> AppBlocks { get; }
             public LazySvc<CmsManager> CmsManager { get; }
@@ -34,7 +33,7 @@ namespace ToSic.Sxc.Blocks.Edit
                 LazySvc<AppBlocks> appBlocks,
                 LazySvc<CmsManager> cmsManager,
                 LazySvc<AppManager> appManager,
-                LazySvc<AppWorkUnit<EntityWorkPublish, IAppWorkCtxWithDb>> publisher,
+                LazySvc<AppWorkUnit<WorkEntityPublish, IAppWorkCtxWithDb>> publisher,
                 Generator<BlockEditorForModule> blkEdtForMod,
                 Generator<BlockEditorForEntity> blkEdtForEnt)
             {

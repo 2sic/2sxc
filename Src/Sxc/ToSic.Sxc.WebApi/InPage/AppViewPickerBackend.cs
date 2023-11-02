@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Apps.AppSys;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Apps.Work;
@@ -22,7 +21,7 @@ namespace ToSic.Sxc.WebApi.InPage
             IContextResolver ctxResolver,
             LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
             LazySvc<AppWorkSxc> appSysSxc,
-            LazySvc<AppWorkUnit<EntityWorkPublish, IAppWorkCtxWithDb>> publisher
+            LazySvc<AppWorkUnit<WorkEntityPublish, IAppWorkCtxWithDb>> publisher
             ) : base(multiPermissionsApp, cmsManagerLazy, appSysSxc, ctxResolver,"Bck.ViwApp")
         {
             _publisher = publisher;
@@ -31,7 +30,7 @@ namespace ToSic.Sxc.WebApi.InPage
             );
         }
 
-        private readonly LazySvc<AppWorkUnit<EntityWorkPublish, IAppWorkCtxWithDb>> _publisher;
+        private readonly LazySvc<AppWorkUnit<WorkEntityPublish, IAppWorkCtxWithDb>> _publisher;
         private readonly LazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
 
         public void SetAppId(int? appId) => _blockEditorSelectorLazy.Value.GetEditor(Block).SetAppId(appId);
