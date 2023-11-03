@@ -1,11 +1,8 @@
 ﻿using System.Linq;
 using System;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
@@ -18,24 +15,18 @@ namespace ToSic.Sxc.WebApi.Admin.Query
         private readonly AppWorkSxc _appWorkSxc;
         public const string LogSuffix = "Query";
 
-        private readonly LazySvc<CmsManager> _cmsManagerLazy;
-        private readonly IAppStates _appStates;
         private readonly IContextResolver _contextResolver;
         private readonly AppConfigDelegate _appConfigMaker;
 
         public QueryControllerReal(
             MyServices services,
             AppWorkSxc appWorkSxc,
-            LazySvc<CmsManager> cmsManagerLazy,
-            IAppStates appStates,
             IContextResolver contextResolver,
             AppConfigDelegate appConfigMaker
         ) : base(services, "Api." + LogSuffix)
         {
             ConnectServices(
                 _appWorkSxc = appWorkSxc,
-                _cmsManagerLazy = cmsManagerLazy,
-                _appStates = appStates,
                 _contextResolver = contextResolver,
                 _appConfigMaker = appConfigMaker
             );
@@ -57,8 +48,8 @@ namespace ToSic.Sxc.WebApi.Admin.Query
             if (viewUsingQuery.Any())
                 throw l.Done(new Exception($"Query is used by Views and cant be deleted. Query ID: {id}. TemplateIds: {string.Join(", ", viewUsingQuery)}"));
 
-            var cms = _cmsManagerLazy.Value.InitQ(_appStates.IdentityOfApp(appId));
-            return l.Return(cms.Queries.Delete(id));
+            var queryMod = Services.WorkUnitQueryMod.New(appId: appId);
+            return l.Return( queryMod /*cms.Queries*/.Delete(id));
         }
         
 
@@ -75,8 +66,7 @@ namespace ToSic.Sxc.WebApi.Admin.Query
         private LookUpEngine LookUpEngineWithBlockRequired()
         {
             var block = _contextResolver.BlockRequired();
-            var lookUps = _appConfigMaker
-                .GetLookupEngineForContext(block.Context, block.App, block);
+            var lookUps = _appConfigMaker.GetLookupEngineForContext(block.Context, block.App, block);
             return lookUps;
         }
 
