@@ -32,7 +32,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         public ImportContent(
             IEnvironmentLogger envLogger,
-            LazySvc<Import> importerLazy,
+            LazySvc<ImportService> importerLazy,
             LazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
             ZipImport zipImport,
             Generator<JsonSerializer> jsonSerializerGenerator, 
@@ -57,7 +57,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         }
 
         private readonly IEnvironmentLogger _envLogger;
-        private readonly LazySvc<Import> _importerLazy;
+        private readonly LazySvc<ImportService> _importerLazy;
         private readonly LazySvc<XmlImportWithFiles> _xmlImportWithFilesLazy;
         private readonly ZipImport _zipImport;
         private readonly Generator<JsonSerializer> _jsonSerializerGenerator;
