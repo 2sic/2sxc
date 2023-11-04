@@ -7,6 +7,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.CmsSys;
 using ToSic.Sxc.Apps.Paths;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Blocks.Output;
@@ -42,13 +43,13 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<CmsZones>();
             services.TryAddTransient<AppsRuntime>();
             services.TryAddTransient<AppsManager>();
-            services.TryAddTransient<ViewsManager>();
             services.TryAddTransient<BlocksManager>();
 
             // New runtimes, better architecture v16.07+
             services.TryAddTransient<AppWorkSxc>();
             services.TryAddTransient<AppBlocks>();
-            services.TryAddTransient<AppViews>();
+            services.TryAddTransient<WorkViews>();
+            services.TryAddTransient<WorkViewsMod>();
 
             // Code
             services.TryAddTransient<DynamicCodeRoot.MyServices>();

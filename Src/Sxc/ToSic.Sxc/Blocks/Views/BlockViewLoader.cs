@@ -2,6 +2,7 @@
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.CmsSys;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Blocks
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.Blocks
     {
         public BlockViewLoader(ILog parentLog) : base(parentLog, "Blk.ViewLd") { }
 
-        internal IView PickView(IBlock block, IView configView, IContextOfBlock context, AppViews views)
+        internal IView PickView(IBlock block, IView configView, IContextOfBlock context, WorkViews views)
         {
             //View = configView;
             // skip on ContentApp (not a feature there) or if not relevant or not yet initialized
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.Blocks
             return viewFromUrlParam ?? configView;
         }
 
-        private IView TryGetViewBasedOnUrlParams(IContextOfBlock context, AppViews views)
+        private IView TryGetViewBasedOnUrlParams(IContextOfBlock context, WorkViews views)
         {
             var wrapLog = Log.Fn<IView>("template override - check");
             if (context.Page.Parameters == null) return wrapLog.ReturnNull("no params");

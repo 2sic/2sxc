@@ -13,13 +13,15 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.WebApi.ImportExport;
 using ToSic.Eav.Apps.Work;
+using ToSic.Sxc.Apps.Work;
 
 namespace ToSic.Sxc.WebApi.Views
 {
     public class ViewsBackend: ServiceBase
     {
+        private readonly AppWorkContextService _appWorkCtxSvc;
+        private readonly LazySvc<WorkViewsMod> _workViewsMod;
         private readonly AppWorkSxc _appWorkSxc;
-        private readonly AppWork _appWork;
         private readonly LazySvc<CmsManager> _cmsManagerLazy;
         private readonly LazySvc<IConvertToEavLight> _convertToEavLight;
         private readonly Generator<ImpExpHelpers> _impExpHelpers;
@@ -27,18 +29,19 @@ namespace ToSic.Sxc.WebApi.Views
         private readonly IUser _user;
 
         public ViewsBackend(
+            AppWorkContextService appWorkCtxSvc,
             AppWorkSxc appWorkSxc,
-            AppWork appWork,
             LazySvc<CmsManager> cmsManagerLazy,
+            LazySvc<WorkViewsMod> workViewsMod,
             IContextOfSite context,
-            IAppStates appStates,
             LazySvc<IConvertToEavLight> convertToEavLight,
             Generator<ImpExpHelpers> impExpHelpers
         ) : base("Bck.Views")
         {
+            _appWorkCtxSvc = appWorkCtxSvc;
             ConnectServices(
+                _workViewsMod = workViewsMod,
                 _appWorkSxc = appWorkSxc,
-                _appWork = appWork,
                 _cmsManagerLazy = cmsManagerLazy,
                 _convertToEavLight = convertToEavLight,
                 _impExpHelpers = impExpHelpers,
@@ -102,8 +105,9 @@ namespace ToSic.Sxc.WebApi.Views
             // todo: extra security to only allow zone change if host user
             Log.A($"delete a{appId}, t:{id}");
             var app = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
-            var cms = _cmsManagerLazy.Value.Init(app);
-            cms.Views.DeleteView(id);
+            //var cms = _cmsManagerLazy.Value.Init(app);
+            //cms.Views.DeleteView(id);
+            _workViewsMod.Value.InitContext(_appWorkCtxSvc.Context(app)).DeleteView(id);
             return true;
         }
     }

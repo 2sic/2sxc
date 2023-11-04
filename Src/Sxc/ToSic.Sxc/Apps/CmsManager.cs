@@ -10,18 +10,16 @@ namespace ToSic.Sxc.Apps
 {
     public class CmsManager: AppManager
     {
-        private readonly LazySvc<ViewsManager> _viewsManager;
         private readonly LazySvc<BlocksManager> _blocksManager;
 
         public CmsManager(
             MyServices services,
-            LazySvc<ViewsManager> viewsManager,
             LazySvc<BlocksManager> blocksManager
             ) : base(services, "Sxc.CmsMan")
         {
             ConnectServices(
                 //_cmsRuntime = cmsRuntime.SetInit(r => r.InitWithState(AppState, ShowDrafts)),
-                _viewsManager = viewsManager.SetInit(v => v.ConnectTo(this)),
+                // _viewsManager = viewsManager.SetInit(v => v.ConnectTo(this)),
                 _blocksManager = blocksManager.SetInit(b => b.ConnectTo(this))
             );
         }
@@ -37,15 +35,6 @@ namespace ToSic.Sxc.Apps
             this.InitQ(context.AppState);
             return this;
         }
-
-        public new CmsManager InitWithState(AppState app, bool? showDrafts = null)
-        {
-            base.InitWithState(app);
-            return this;
-        }
-
-        public ViewsManager Views => _views.Get(() => _viewsManager.Value);
-        private readonly GetOnce<ViewsManager> _views = new GetOnce<ViewsManager>();
 
         public BlocksManager Blocks => _blocks.Get(() => _blocksManager.Value);
         private readonly GetOnce<BlocksManager> _blocks = new GetOnce<BlocksManager>();

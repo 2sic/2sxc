@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.ImportExport;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.Apps.ImportExport
 
         protected void ImportXmlTemplates(XElement root)
         {
-            Log.A("import xml templates");
+            var l = Log.Fn("import xml templates");
             var templates = root.Element(XmlConstants.Templates);
             if (templates == null) return;
 
@@ -25,7 +26,8 @@ namespace ToSic.Sxc.Apps.ImportExport
             // Otherwise it will auto-initialize, which it shouldn't do when importing data
             var appState = _repositoryLoader.AppState(AppId, false);
 
-            var viewsManager = _cmsManagerLazy.Value.InitWithState(appState).Views;
+            //var viewsManager = _cmsManagerLazy.Value.InitWithState(appState).Views;
+            var viewsMod = _workViewsMod.Value.InitContext(_appWork.Context(appState));
 
             foreach (var template in templates.Elements(XmlConstants.Template))
             {
@@ -33,11 +35,11 @@ namespace ToSic.Sxc.Apps.ImportExport
                 try
                 {
                     name = template.Attribute(XmlConstants.Name).Value;
-                    var path = template.Attribute(/*View.FieldPath*/ nameof(IView.Path)).Value;
+                    var path = template.Attribute(nameof(IView.Path)).Value;
 
                     var contentTypeStaticName = template.Attribute(XmlConstants.AttSetStatic).Value;
 
-                    Log.A($"template:{name}, type:{contentTypeStaticName}, path:{path}");
+                    l.A($"template:{name}, type:{contentTypeStaticName}, path:{path}");
 
                     if (!string.IsNullOrEmpty(contentTypeStaticName) && appState.GetContentType(contentTypeStaticName) == null)
                     {
@@ -49,7 +51,7 @@ namespace ToSic.Sxc.Apps.ImportExport
                     var demoEntityGuid = template.Attribute(XmlConstants.TemplateDemoItemGuid).Value;
                     var demoEntityId = new int?();
 
-                    if (!String.IsNullOrEmpty(demoEntityGuid))
+                    if (!string.IsNullOrEmpty(demoEntityGuid))
                     {
                         var entityGuid = Guid.Parse(demoEntityGuid);
                         if (RepositoryHasEntity(entityGuid))
@@ -60,10 +62,10 @@ namespace ToSic.Sxc.Apps.ImportExport
                     }
 
                     var type = template.Attribute(XmlConstants.EntityTypeAttribute).Value;
-                    var isHidden = Boolean.Parse(template.Attribute(/*View.FieldIsHidden*/nameof(IView.IsHidden)).Value);
+                    var isHidden = bool.Parse(template.Attribute(nameof(IView.IsHidden)).Value);
                     var location = template.Attribute(View.FieldLocation).Value;
                     var publishData =
-                        Boolean.Parse(template.Attribute(View.FieldPublishEnable) == null
+                        bool.Parse(template.Attribute(View.FieldPublishEnable) == null
                             ? "False"
                             : template.Attribute(View.FieldPublishEnable).Value);
                     var streamsToPublish = template.Attribute(View.FieldPublishStreams) == null
@@ -76,7 +78,7 @@ namespace ToSic.Sxc.Apps.ImportExport
                     var queryEntityGuid = template.Attribute(XmlConstants.TemplateQueryGuidField);
                     var queryEntityId = new int?();
 
-                    if (!String.IsNullOrEmpty(queryEntityGuid?.Value))
+                    if (!string.IsNullOrEmpty(queryEntityGuid?.Value))
                     {
                         var entityGuid = Guid.Parse(queryEntityGuid.Value);
                         if (RepositoryHasEntity(entityGuid))
@@ -87,7 +89,7 @@ namespace ToSic.Sxc.Apps.ImportExport
 
                     var useForList = false;
                     if (template.Attribute(View.FieldUseList) != null)
-                        useForList = Boolean.Parse(template.Attribute(View.FieldUseList).Value);
+                        useForList = bool.Parse(template.Attribute(View.FieldUseList).Value);
 
                     var lstTemplateDefaults = template.Elements(XmlConstants.Entity).Select(e =>
                     {
@@ -166,7 +168,8 @@ namespace ToSic.Sxc.Apps.ImportExport
                         listPresentationDemoEntityId = listPresentationDefault.DemoEntityId;
                     }
 
-                    viewsManager.CreateOrUpdate(
+                    viewsMod
+                    /*viewsManager*/.CreateOrUpdate(
                         null, name, path, contentTypeStaticName, demoEntityId, presentationTypeStaticName,
                         presentationDemoEntityId, listContentTypeStaticName, listContentDemoEntityId,
                         listPresentationTypeStaticName, listPresentationDemoEntityId, type, isHidden, location,
@@ -183,7 +186,8 @@ namespace ToSic.Sxc.Apps.ImportExport
                 }
 
             }
-            Log.A("import xml templates - completed");
+
+            l.Done();
         }
 
 	}

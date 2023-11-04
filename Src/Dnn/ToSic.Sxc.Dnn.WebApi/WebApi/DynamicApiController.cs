@@ -61,9 +61,6 @@ namespace ToSic.Sxc.WebApi
 
         #region Services / Properties to share
 
-        ///// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
-        //public virtual TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
-
         /// <inheritdoc cref="IHasDnn.Dnn"/>
         public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
 

@@ -2,25 +2,33 @@
 using System.Linq;
 using System.Xml.Linq;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.ImportExport;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Repositories;
 using ToSic.Lib.DI;
+using ToSic.Sxc.Apps.Work;
 
 namespace ToSic.Sxc.Apps.ImportExport
 {
     public partial class XmlImportFull: XmlImportWithFiles
     {
+        private readonly AppWork _appWork;
+        private readonly LazySvc<WorkViewsMod> _workViewsMod;
         private readonly LazySvc<CmsManager> _cmsManagerLazy;
         private readonly IRepositoryLoader _repositoryLoader;
 
         public XmlImportFull(
             MyServices services,
+            AppWork appWork,
             LazySvc<CmsManager> cmsManagerLazy,
+            LazySvc<WorkViewsMod> workViewsMod,
             IRepositoryLoader repositoryLoader
             ) : base(services, "Sxc.XmlImp")
         {
             ConnectServices(
+                _appWork = appWork,
+                _workViewsMod = workViewsMod,
                 _cmsManagerLazy = cmsManagerLazy,
                 _repositoryLoader = repositoryLoader
             );

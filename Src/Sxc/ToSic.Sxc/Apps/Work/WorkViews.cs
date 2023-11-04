@@ -12,27 +12,27 @@ using ToSic.Eav.Metadata;
 using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 
 // note: not sure if the final namespace should be Sxc.Apps or Sxc.Views
-namespace ToSic.Sxc.Apps.CmsSys
+namespace ToSic.Sxc.Apps.Work
 {
-    public class AppViews: ServiceBase
+    public class WorkViews: WorkUnitBase<IAppWorkCtxPlus>
     {
+
         #region Constructor / DI
 
-        private readonly AppWork _appWork;
+        private readonly LazySvc<AppWorkUnitPlus<WorkEntities>> _appEntities;
         private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
         private readonly LazySvc<IValueConverter> _valConverterLazy;
         private readonly IZoneCultureResolver _cultureResolver;
         private readonly IConvertToEavLight _dataToFormatLight;
         private readonly LazySvc<AppIconHelpers> _appIconHelpers;
 
-        public AppViews(
-            AppWork appWork,
+        public WorkViews(
+            LazySvc<AppWorkUnitPlus<WorkEntities>> appEntities,
             LazySvc<IValueConverter> valConverterLazy,
             IZoneCultureResolver cultureResolver,
             IConvertToEavLight dataToFormatLight,
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Apps.CmsSys
             LazySvc<QueryDefinitionBuilder> qDefBuilder) : base("Cms.ViewRd")
         {
             ConnectServices(
-                _appWork = appWork,
+                _appEntities = appEntities,
                 _valConverterLazy = valConverterLazy,
                 _cultureResolver = cultureResolver,
                 _dataToFormatLight = dataToFormatLight,
@@ -49,22 +49,9 @@ namespace ToSic.Sxc.Apps.CmsSys
             );
         }
 
-        public AppViews Setup(IAppWorkCtxPlus appSysCtx)
-        {
-            AppSysCtx = appSysCtx;
-            return this;
-        }
-
-        private IAppWorkCtxPlus AppSysCtx
-        {
-            get => _appSysCtx ?? throw new Exception($"Can't use {nameof(AppSysCtx)} before running Setup(...)");
-            set => _appSysCtx = value;
-        }
-        private IAppWorkCtxPlus _appSysCtx;
-
         #endregion
 
-        private List<IEntity> ViewEntities => _viewDs.Get(() => _appWork.Entities(AppSysCtx).Get(AppConstants.TemplateContentType).ToList());
+        private List<IEntity> ViewEntities => _viewDs.Get(() => _appEntities.Value.New(AppWorkCtx).Get(AppConstants.TemplateContentType).ToList());
         private readonly GetOnce<List<IEntity>> _viewDs = new GetOnce<List<IEntity>>();
 
         public IList<IView> GetAll()
@@ -145,7 +132,7 @@ namespace ToSic.Sxc.Apps.CmsSys
 
             var valConverter = _valConverterLazy.Value;
 
-            return AppSysCtx.AppState.ContentTypes.OfScope(Scopes.Default) 
+            return AppWorkCtx.AppState.ContentTypes.OfScope(Scopes.Default) 
                 .Where(ct => templates.Any(t => t.ContentType == ct.NameId)) // must exist in at least 1 template
                 .OrderBy(ct => ct.Name)
                 .Select(ct =>
