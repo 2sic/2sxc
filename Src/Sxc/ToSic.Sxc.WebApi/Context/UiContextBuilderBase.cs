@@ -198,6 +198,8 @@ namespace ToSic.Sxc.WebApi.Context
 
             result.IsShared = AppState.IsShared();
             result.IsInherited = AppState.IsInherited();
+
+            result.Icon = App?.Thumbnail;
             return result;
         }
 
