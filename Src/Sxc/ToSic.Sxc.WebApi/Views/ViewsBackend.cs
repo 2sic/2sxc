@@ -22,7 +22,6 @@ namespace ToSic.Sxc.WebApi.Views
         private readonly AppWorkContextService _appWorkCtxSvc;
         private readonly LazySvc<WorkViewsMod> _workViewsMod;
         private readonly AppWorkSxc _appWorkSxc;
-        private readonly LazySvc<CmsManager> _cmsManagerLazy;
         private readonly LazySvc<IConvertToEavLight> _convertToEavLight;
         private readonly Generator<ImpExpHelpers> _impExpHelpers;
         private readonly ISite _site;
@@ -31,7 +30,6 @@ namespace ToSic.Sxc.WebApi.Views
         public ViewsBackend(
             AppWorkContextService appWorkCtxSvc,
             AppWorkSxc appWorkSxc,
-            LazySvc<CmsManager> cmsManagerLazy,
             LazySvc<WorkViewsMod> workViewsMod,
             IContextOfSite context,
             LazySvc<IConvertToEavLight> convertToEavLight,
@@ -42,7 +40,6 @@ namespace ToSic.Sxc.WebApi.Views
             ConnectServices(
                 _workViewsMod = workViewsMod,
                 _appWorkSxc = appWorkSxc,
-                _cmsManagerLazy = cmsManagerLazy,
                 _convertToEavLight = convertToEavLight,
                 _impExpHelpers = impExpHelpers,
                 _site = context.Site,

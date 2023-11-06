@@ -16,12 +16,11 @@ namespace ToSic.Sxc.WebApi.InPage
     {
         public AppViewPickerBackend(
             Generator<MultiPermissionsApp> multiPermissionsApp,
-            LazySvc<CmsManager> cmsManagerLazy,
             IContextResolver ctxResolver,
             LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
             LazySvc<AppWorkSxc> appSysSxc,
             LazySvc<AppWorkUnit<WorkEntityPublish, IAppWorkCtxWithDb>> publisher
-            ) : base(multiPermissionsApp, cmsManagerLazy, appSysSxc, ctxResolver,"Bck.ViwApp")
+            ) : base(multiPermissionsApp, appSysSxc, ctxResolver,"Bck.ViwApp")
         {
             _publisher = publisher;
             ConnectServices(

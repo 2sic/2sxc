@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Work;
-using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.CmsSys;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
@@ -28,7 +26,6 @@ namespace ToSic.Sxc.WebApi.Cms
             AppWork appWork,
             AppBlocks appBlocks,
             LazySvc<IPagePublishing> publishing, 
-            LazySvc<CmsManager> cmsManagerLazy, 
             IContextResolver ctxResolver, 
             LazySvc<ListControllerReal> listController) : base("Api.CntGrpRl")
         {
@@ -36,7 +33,6 @@ namespace ToSic.Sxc.WebApi.Cms
                 _appWork = appWork,
                 _appBlocks = appBlocks,
                 CtxResolver = ctxResolver,
-                _cmsManagerLazy = cmsManagerLazy,
                 _publishing = publishing,
                 _listController = listController
             );
@@ -47,10 +43,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly AppWork _appWork;
         private readonly AppBlocks _appBlocks;
         private readonly LazySvc<ListControllerReal> _listController;
-        private readonly LazySvc<CmsManager> _cmsManagerLazy;
         private readonly LazySvc<IPagePublishing> _publishing;
-        private CmsManager CmsManager => _cmsManager.Get(() => _cmsManagerLazy.Value.Init(Context));
-        private readonly GetOnce<CmsManager> _cmsManager = new GetOnce<CmsManager>();
 
 
         private IContextOfBlock Context => _context ?? (_context = CtxResolver.BlockContextRequired());

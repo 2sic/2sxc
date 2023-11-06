@@ -42,7 +42,6 @@ namespace ToSic.Sxc.WebApi.Views
         private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
         private readonly IServerPaths _serverPaths;
         private readonly IEnvironmentLogger _envLogger;
-        private readonly LazySvc<CmsManager> _cmsManagerLazy;
         private readonly LazySvc<JsonSerializer> _jsonSerializerLazy;
         private readonly IAppStates _appStates;
         private readonly AppIconHelpers _appIconHelpers;
@@ -55,7 +54,6 @@ namespace ToSic.Sxc.WebApi.Views
             AppWork appWork,
             IServerPaths serverPaths,
             IEnvironmentLogger envLogger,
-            LazySvc<CmsManager> cmsManagerLazy, 
             LazySvc<JsonSerializer> jsonSerializerLazy, 
             IContextOfSite context,
             IAppStates appStates,
@@ -68,7 +66,6 @@ namespace ToSic.Sxc.WebApi.Views
                 _appWork = appWork,
                 _serverPaths = serverPaths,
                 _envLogger = envLogger,
-                _cmsManagerLazy = cmsManagerLazy,
                 _jsonSerializerLazy = jsonSerializerLazy,
                 _appStates = appStates,
                 _appIconHelpers = appIconHelpers,
@@ -85,7 +82,6 @@ namespace ToSic.Sxc.WebApi.Views
             var logCall = Log.Fn<THttpResponseType>($"{appId}, {viewId}");
             SecurityHelpers.ThrowIfNotSiteAdmin(_user, Log);
             var app = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
-            var cms = _cmsManagerLazy.Value.Init(app);
             var bundle = new BundleEntityWithAssets
             {
                 Entity = app.Data[Eav.ImportExport.Settings.TemplateContentType].One(viewId)
@@ -105,7 +101,7 @@ namespace ToSic.Sxc.WebApi.Views
                 }
             }
 
-            var serializer = _jsonSerializerLazy.Value.SetApp(cms.AppState);
+            var serializer = _jsonSerializerLazy.Value.SetApp(app.AppState);
             var serialized = serializer.Serialize(bundle, 0);
 
             return logCall.ReturnAsOk(_responseMaker.File(serialized,

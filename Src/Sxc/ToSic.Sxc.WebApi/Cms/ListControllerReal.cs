@@ -25,11 +25,10 @@ namespace ToSic.Sxc.WebApi.Cms
             AppWork appWork,
             Generator<MultiPermissionsApp> multiPermissionsApp,
             IPagePublishing publishing,
-            LazySvc<CmsManager> cmsManagerLazy,
             LazySvc<AppWorkSxc> appSysSxc,
             IContextResolver ctxResolver,
             Generator<IPagePublishing> versioning
-        ) : base(multiPermissionsApp, cmsManagerLazy, appSysSxc, ctxResolver, "Api.LstRl")
+        ) : base(multiPermissionsApp, appSysSxc, ctxResolver, "Api.LstRl")
         {
             ConnectServices(
                 _appWork = appWork,

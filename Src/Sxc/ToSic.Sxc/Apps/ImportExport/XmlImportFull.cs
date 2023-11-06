@@ -15,13 +15,11 @@ namespace ToSic.Sxc.Apps.ImportExport
     {
         private readonly AppWork _appWork;
         private readonly LazySvc<WorkViewsMod> _workViewsMod;
-        private readonly LazySvc<CmsManager> _cmsManagerLazy;
         private readonly IRepositoryLoader _repositoryLoader;
 
         public XmlImportFull(
             MyServices services,
             AppWork appWork,
-            LazySvc<CmsManager> cmsManagerLazy,
             LazySvc<WorkViewsMod> workViewsMod,
             IRepositoryLoader repositoryLoader
             ) : base(services, "Sxc.XmlImp")
@@ -29,7 +27,6 @@ namespace ToSic.Sxc.Apps.ImportExport
             ConnectServices(
                 _appWork = appWork,
                 _workViewsMod = workViewsMod,
-                _cmsManagerLazy = cmsManagerLazy,
                 _repositoryLoader = repositoryLoader
             );
         }

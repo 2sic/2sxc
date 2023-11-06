@@ -34,13 +34,12 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             LazySvc<AppWorkSxc> appSysSxc,
             Generator<MultiPermissionsApp> multiPermissionsApp, 
             IPagePublishing publishing, 
-            LazySvc<CmsManager> cmsManagerLazy,
             LazySvc<WorkBlocksMod> workBlocksMod,
             IContextResolver ctxResolver, 
             LazySvc<IBlockResourceExtractor> optimizerLazy,
             LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
             Generator<BlockFromEntity> entityBlockGenerator)
-            : base(multiPermissionsApp, cmsManagerLazy, appSysSxc, ctxResolver, "Bck.FldLst")
+            : base(multiPermissionsApp, appSysSxc, ctxResolver, "Bck.FldLst")
         {
             ConnectServices(
                 _optimizer = optimizerLazy,

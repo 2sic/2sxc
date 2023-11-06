@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Apps.CmsSys;
 using ToSic.Sxc.Blocks;
@@ -26,18 +24,14 @@ namespace ToSic.Sxc.WebApi.Save
         private readonly AppWork _appWork;
         private readonly AppBlocks _appBlocks;
         private readonly LazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
-        private readonly LazySvc<CmsManager> _cmsManagerLazy;
-        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.InitQ(_appIdentity));
-        private CmsManager _cmsManager;
 
-        public ContentGroupList(AppWork appWork, AppBlocks appBlocks, LazySvc<CmsManager> cmsManagerLazy, LazySvc<BlockEditorSelector> blockEditorSelectorLazy) : base("Api.GrpPrc")
+        public ContentGroupList(AppWork appWork, AppBlocks appBlocks, LazySvc<BlockEditorSelector> blockEditorSelectorLazy) : base("Api.GrpPrc")
         {
             
             ConnectServices(
                 _appWork = appWork,
                 _appBlocks = appBlocks,
-                _blockEditorSelectorLazy = blockEditorSelectorLazy,
-                _cmsManagerLazy = cmsManagerLazy
+                _blockEditorSelectorLazy = blockEditorSelectorLazy
             );
         }
 

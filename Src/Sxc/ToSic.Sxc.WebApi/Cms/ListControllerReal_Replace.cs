@@ -22,7 +22,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             void InternalSave(VersioningActionInfo _)
             {
-                var entity = CmsManagerOfBlock.AppState.GetDraftOrPublished(guid)
+                var entity = AppWorkCtx.AppState.GetDraftOrPublished(guid)
                              ?? throw l.Done( new Exception($"Can't find item '{guid}'"));
 
                 // Make sure we have the correct casing for the field names
