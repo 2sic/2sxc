@@ -5,7 +5,6 @@ using System.Linq;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
@@ -28,22 +27,18 @@ namespace ToSic.Sxc.Dnn.Cms
 {
     public partial class DnnPagePublishing : ServiceBase, IPagePublishing
     {
-        private readonly Generator<AppWorkService> _appWorkSvcGen;
-
         #region DI Constructors and More
 
-        private readonly LazySvc<AppManager> _appManager;
-        private readonly LazySvc<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
-
-        public DnnPagePublishing(LazySvc<AppManager> appManager, LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder, Generator<AppWorkService> appWorkSvcGen) : base("Dnn.Publsh")
+        public DnnPagePublishing(LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder, Generator<AppWorkService> appWorkSvcGen) : base("Dnn.Publsh")
         {
             ConnectServices(
-                _appManager = appManager,
                 _moduleAndBlockBuilder = moduleAndBlockBuilder,
                 _appWorkSvcGen = appWorkSvcGen
-
             );
         }
+
+        private readonly Generator<AppWorkService> _appWorkSvcGen;
+        private readonly LazySvc<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
         
         #endregion
 

@@ -5,7 +5,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using ToSic.Eav.Api.Api01;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
@@ -19,7 +18,6 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.App;
 using ToSic.Eav.WebApi.Errors;
-using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
 using static ToSic.Eav.Apps.Api.Api01.SaveApiAttributes;
@@ -43,7 +41,6 @@ namespace ToSic.Sxc.WebApi.App
             Sxc.Context.IContextResolver ctxResolver,
             Generator<MultiPermissionsTypes> typesPermissions,
             Generator<MultiPermissionsItems> itemsPermissions,
-            LazySvc<AppManager> appManagerLazy,
             LazySvc<AppWork> appWork,
             LazySvc<SimpleDataController> dataControllerLazy) : base("Sxc.ApiApC")
         {
@@ -52,7 +49,6 @@ namespace ToSic.Sxc.WebApi.App
                 _entityApi = entityApi,
                 _entToDicLazy = entToDicLazy,
                 _ctxResolver = ctxResolver,
-                _appManagerLazy = appManagerLazy,
                 _typesPermissions = typesPermissions,
                 _itemsPermissions = itemsPermissions,
                 _dataControllerLazy = dataControllerLazy,
@@ -63,10 +59,7 @@ namespace ToSic.Sxc.WebApi.App
         private readonly EntityApi _entityApi;
         private readonly LazySvc<IConvertToEavLight> _entToDicLazy;
         private readonly Sxc.Context.IContextResolver _ctxResolver;
-        private readonly LazySvc<AppManager> _appManagerLazy;
         private readonly LazySvc<SimpleDataController> _dataControllerLazy;
-        private AppManager AppManager => _appManager.Get(() => _appManagerLazy.Value.InitQ(AppState));
-        private readonly GetOnce<AppManager> _appManager = new GetOnce<AppManager>();
 
         public AppContent Init(string appName)
         {
