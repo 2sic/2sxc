@@ -38,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Admin
             LazySvc<ImportApp> importAppLazy,
             LazySvc<AppCreator> appBuilderLazy,
             LazySvc<ResetApp> resetAppLazy,
-            LazySvc<SystemManager> systemManagerLazy,
+            LazySvc<AppCachePurger> systemManagerLazy,
             LazySvc<LanguagesBackend> languagesBackendLazy,
             LazySvc<IAppStates> appStatesLazy,
             LazySvc<AppStackBackend> appStackBackendLazy
@@ -65,7 +65,7 @@ namespace ToSic.Sxc.WebApi.Admin
         private readonly LazySvc<ImportApp> _importAppLazy;
         private readonly LazySvc<AppCreator> _appBuilderLazy;
         private readonly LazySvc<ResetApp> _resetAppLazy;
-        private readonly LazySvc<SystemManager> _systemManagerLazy;
+        private readonly LazySvc<AppCachePurger> _systemManagerLazy;
         private readonly LazySvc<LanguagesBackend> _languagesBackendLazy;
         private readonly LazySvc<IAppStates> _appStatesLazy;
         private readonly LazySvc<AppStackBackend> _appStackBackendLazy;

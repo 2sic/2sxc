@@ -39,7 +39,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             IGlobalConfiguration globalConfiguration,
             IAppStates appStates,
             LazySvc<IUser> userLazy,
-            SystemManager systemManager,
+            AppCachePurger appCachePurger,
             LazySvc<IFeaturesInternal> features) : base("Bck.Export")
         {
             ConnectServices(
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 _jsonSerializerGenerator = jsonSerializerGenerator,
                 _globalConfiguration = globalConfiguration,
                 _appStates = appStates,
-                SystemManager = systemManager,
+                AppCachePurger = appCachePurger,
                 _userLazy = userLazy,
                 _features = features
             );
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly IGlobalConfiguration _globalConfiguration;
         private readonly IAppStates _appStates;
         private readonly LazySvc<IUser> _userLazy;
-        protected readonly SystemManager SystemManager;
+        protected readonly AppCachePurger AppCachePurger;
 
         #endregion
 
@@ -149,7 +149,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                     import.ImportIntoDb(types, null);
 
                     l.A($"Purging {zoneId}/{appId}");
-                    SystemManager.Purge(zoneId, appId);
+                    AppCachePurger.Purge(zoneId, appId);
                 }
 
                 // are there any entities from bundles for import?
@@ -192,7 +192,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                     import.ImportIntoDb(null, entities.Cast<Entity>().ToList());
 
                     l.A($"Purging {zoneId}/{appId}");
-                    SystemManager.Purge(zoneId, appId);
+                    AppCachePurger.Purge(zoneId, appId);
                     
                     //foreach (var entity in entities)
                     //    appState.Add(entity as Entity, null, true);
