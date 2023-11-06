@@ -1,4 +1,6 @@
-﻿using System.Web.WebPages;
+﻿using System;
+using System.Runtime.Serialization;
+using System.Web.WebPages;
 using Custom.Hybrid;
 using ToSic.Eav.Run;
 using ToSic.Lib.Documentation;
@@ -16,7 +18,7 @@ namespace ToSic.Sxc.Web
     /// It only contains internal wiring stuff, so not to be published
     /// </summary>
     [PrivateApi("internal class only!")]
-    public abstract class RazorComponentBase: WebPageBase, IRazor, IHasCodeLog, IHasLog, IDnnRazorCompatibility, ICompatibilityLevel
+    public abstract class RazorComponentBase: WebPageBase, IRazor, IHasCodeLog, IHasLog, IDnnRazorCompatibility, ICompatibilityLevel/*, ISerializable*/
     {
         #region Constructor / Setup
 
@@ -83,5 +85,15 @@ namespace ToSic.Sxc.Web
 
         #endregion
 
+        //public void GetObjectData(SerializationInfo info, StreamingContext context)
+        //{
+        //    //throw new System.NotImplementedException();
+        //    if (info == null)
+        //        throw new ArgumentNullException(nameof(info));
+
+        //    // Use the AddValue method to add the properties you want to serialize.
+        //    info.AddValue("Property1", "Property1");
+        //    info.AddValue("Property2", "Property2");
+        //}
     }
 }
