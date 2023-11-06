@@ -90,7 +90,7 @@ namespace ToSic.Sxc.Web.LightSpeed
 
             string cacheKey = null;
             l.Do(message: "outputCacheManager add", timer: true, action: () =>
-                cacheKey = Ocm.Add(CacheKey, Fresh, duration, _features, dependentAppsStates, appPathsToMonitor,
+                cacheKey = OutCacheMan.Add(CacheKey, Fresh, duration, _features, dependentAppsStates, appPathsToMonitor,
                 (x) => LightSpeedStats.Remove(appState.AppId, data.Size)));
 
             l.A($"LightSpeed Cache Key: {cacheKey}");
@@ -155,9 +155,6 @@ namespace ToSic.Sxc.Web.LightSpeed
         private string Suffix => _suffix.Get(GetSuffix);
         private readonly GetOnce<string> _suffix = new GetOnce<string>();
 
-        private string CurrentCulture => _currentCulture.Get(() => _cmsContext.Value.Culture.CurrentCode);
-        private readonly GetOnce<string> _currentCulture = new GetOnce<string>();
-
         private string GetSuffix()
         {
             if (!AppConfig.ByUrlParam) return null;
@@ -167,7 +164,11 @@ namespace ToSic.Sxc.Web.LightSpeed
             return urlParams;
         }
 
-        private string CacheKey => _key.Get(() => Log.Func(() => Ocm.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, Suffix, CurrentCulture)));
+        private string CurrentCulture => _currentCulture.Get(() => _cmsContext.Value.Culture.CurrentCode);
+        private readonly GetOnce<string> _currentCulture = new GetOnce<string>();
+
+
+        private string CacheKey => _key.Get(() => Log.Func(() => OutCacheMan.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, Suffix, CurrentCulture)));
         private readonly GetOnce<string> _key = new GetOnce<string>();
 
         private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? (int?)null : _block.Context.User.Id);
@@ -187,7 +188,7 @@ namespace ToSic.Sxc.Web.LightSpeed
             {
                 if (AppState == null) return l.ReturnNull("no app");
 
-                var result = IsEnabled ? Ocm.Get(CacheKey) : null;
+                var result = IsEnabled ? OutCacheMan.Get(CacheKey) : null;
                 if (result == null) return l.ReturnNull("not in cache");
 
                 // compare cache time-stamps
@@ -219,15 +220,18 @@ namespace ToSic.Sxc.Web.LightSpeed
             return l.Return(ok, $"app config: {ok}");
         }
 
-        internal LightSpeedDecorator AppConfig => _lsd.Get(() => {
+        internal LightSpeedDecorator AppConfig => _lsd.Get(AppConfigGenerator);
+        private readonly GetOnce<LightSpeedDecorator> _lsd = new GetOnce<LightSpeedDecorator>();
+
+        private LightSpeedDecorator AppConfigGenerator()
+        {
             var l = Log.Fn<LightSpeedDecorator>();
             var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(AppState, Log);
             return l.Return(decoFromPiggyBack, $"{decoFromPiggyBack.Entity != null}");
-        });
-        private readonly GetOnce<LightSpeedDecorator> _lsd = new GetOnce<LightSpeedDecorator>();
-        
+        }
 
-        private OutputCacheManager Ocm
+
+        private OutputCacheManager OutCacheMan
         {
             get
             {
