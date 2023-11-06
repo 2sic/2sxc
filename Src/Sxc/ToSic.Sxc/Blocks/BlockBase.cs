@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Apps.Work;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
-using ToSic.Sxc.Apps.CmsSys;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Blocks.Problems;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -25,11 +26,11 @@ namespace ToSic.Sxc.Blocks
         public class MyServices: MyServicesBase
         {
             public AppWorkSxc AppWorkSxc { get; }
-            public AppBlocks AppBlocks { get; }
+            public WorkBlocks AppBlocks { get; }
 
             public MyServices(
                 AppWorkSxc appWorkSxc,
-                AppBlocks appBlocks,
+                WorkBlocks appBlocks,
                 LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
                 LazySvc<App> appLazy,
                 LazySvc<AppConfigDelegate> appConfigDelegateLazy,
@@ -98,7 +99,7 @@ namespace ToSic.Sxc.Blocks
 
             // note: requires EditAllowed, which isn't ready till App is created
             var appSysCtx = Services.AppWorkSxc.AppWork.ContextPlus(this);
-            Configuration = Services.AppBlocks.GetOrGeneratePreviewConfig(appSysCtx, blockId);
+            Configuration = Services.AppBlocks.InitContext(appSysCtx).GetOrGeneratePreviewConfig(blockId);
 
             // handle cases where the content group is missing - usually because of incomplete import
             if (Configuration.DataIsMissing)

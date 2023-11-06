@@ -6,7 +6,6 @@ using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps.Blocks;
-using ToSic.Sxc.Apps.CmsSys;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps.Work
@@ -33,7 +32,7 @@ namespace ToSic.Sxc.Apps.Work
             {
                 l.A($"doesn't exist, will create new CG with template#{templateId}");
                 // #ExtractEntitySave - verified
-                var guid = _appWork.EntityCreate(AppWorkCtx).Create(AppBlocks.BlockTypeName, new Dictionary<string, object>
+                var guid = _appWork.EntityCreate(AppWorkCtx).Create(WorkBlocks.BlockTypeName, new Dictionary<string, object>
                 {
                     {ViewParts.TemplateContentType, new List<int> {templateId}},
                     {ViewParts.Content, new List<int>()},

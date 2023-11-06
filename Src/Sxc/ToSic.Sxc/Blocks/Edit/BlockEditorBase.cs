@@ -5,7 +5,6 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Blocks;
-using ToSic.Sxc.Apps.CmsSys;
 using ToSic.Sxc.Apps.Work;
 
 namespace ToSic.Sxc.Blocks.Edit
@@ -21,7 +20,7 @@ namespace ToSic.Sxc.Blocks.Edit
             public AppWorkUnitWithDb<WorkBlocksMod> WorkBlocksMod { get; }
             public LazySvc<AppWorkUnit<WorkEntityPublish, IAppWorkCtxWithDb>> Publisher { get; }
             public LazySvc<AppWork> AppSys { get; }
-            public LazySvc<AppBlocks> AppBlocks { get; }
+            public LazySvc<WorkBlocks> AppBlocks { get; }
             //public LazySvc<CmsManager> CmsManager { get; }
             //public LazySvc<AppManager> AppManager { get; }
             public Generator<BlockEditorForModule> BlkEdtForMod { get; }
@@ -29,7 +28,7 @@ namespace ToSic.Sxc.Blocks.Edit
 
             public MyServices(
                 LazySvc<AppWork> appSys,
-                LazySvc<AppBlocks> appBlocks,
+                LazySvc<WorkBlocks> appBlocks,
                 AppWorkUnitWithDb<WorkBlocksMod> workBlocksMod,
                 //LazySvc<CmsManager> cmsManager,
                 //LazySvc<AppManager> appManager,

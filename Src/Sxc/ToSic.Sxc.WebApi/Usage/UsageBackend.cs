@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Apps.Security;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Errors;
@@ -9,7 +10,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
-using ToSic.Sxc.Apps.CmsSys;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 
@@ -18,13 +19,13 @@ namespace ToSic.Sxc.WebApi.Usage
     public class UsageBackend: ServiceBase
     {
         private readonly AppWorkSxc _appWorkSxc;
-        private readonly AppBlocks _appBlocks;
+        private readonly WorkBlocks _appBlocks;
         private readonly Generator<MultiPermissionsApp> _appPermissions;
         private readonly IContextResolver _ctxResolver;
 
         public UsageBackend(
             AppWorkSxc appWorkSxc,
-            AppBlocks appBlocks,
+            WorkBlocks appBlocks,
             Generator<MultiPermissionsApp> appPermissions,
             IContextResolver ctxResolver
             ) : base("Bck.Usage")
@@ -52,7 +53,7 @@ namespace ToSic.Sxc.WebApi.Usage
             // treat view as a list - in case future code will want to analyze many views together
             var views = new List<IView> { appViews.Get(guid) };
 
-            var blocks = _appBlocks.AllWithView(appSysCtx);
+            var blocks = _appBlocks.InitContext(appSysCtx).AllWithView();
 
             Log.A($"Found {blocks.Count} content blocks");
 

@@ -1,24 +1,88 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
+using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Apps.Work;
+using ToSic.Eav.Context;
+using ToSic.Eav.Data;
+using ToSic.Eav.DataSource.Query;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Metadata;
-using ToSic.Eav.Data.Build;
+using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Blocks;
 
-namespace ToSic.Eav.Apps.Work
+namespace ToSic.Sxc.Apps.Work
 {
-    public class WorkBlocks : WorkUnitBase<IAppWorkCtxWithDb>
+    public class WorkBlocks: WorkUnitBase<IAppWorkCtxPlus>
     {
-        private readonly AppWork _appWork;
-        private readonly DataBuilder _builder;
+        public const string BlockTypeName = "2SexyContent-ContentGroup";
 
-        public WorkBlocks(AppWork appWork, DataBuilder builder) : base("AWk.EntCre")
+        private readonly AppWork _appWork;
+        private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
+        private readonly IZoneCultureResolver _cultureResolver;
+
+        public WorkBlocks(IZoneCultureResolver cultureResolver, LazySvc<QueryDefinitionBuilder> qDefBuilder, AppWork appWork) : base("SxS.Blocks")
         {
             ConnectServices(
-                _appWork = appWork,
-                _builder = builder
+                _cultureResolver = cultureResolver,
+                _qDefBuilder = qDefBuilder,
+                _appWork = appWork
             );
         }
-        
+
+        // ReSharper disable once ConvertToNullCoalescingCompoundAssignment
+        private IImmutableList<IEntity> ContentGroups() => _appWork.Entities(AppWorkCtx).Get(BlockTypeName).ToImmutableList();
+
+        public List<BlockConfiguration> AllWithView()
+        {
+            return ContentGroups()
+                .Select(b =>
+                {
+                    var templateGuid = b.Children(ViewParts.ViewFieldInContentBlock)
+                        .FirstOrDefault()
+                        ?.EntityGuid;
+                    return templateGuid != null
+                        ? new { Entity = b, ViewGuid = templateGuid }
+                        : null;
+                })
+                .Where(b => b != null)
+                .Select(e => new BlockConfiguration(e.Entity, AppWorkCtx, null, _qDefBuilder, _cultureResolver.CurrentCultureCode, Log))
+                .ToList();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Will always return an object, even if the group doesn't exist yet. The .Entity would be null then</returns>
+        public BlockConfiguration GetBlockConfig(Guid contentGroupGuid)
+        {
+            var l = Log.Fn<BlockConfiguration>($"get CG#{contentGroupGuid}");
+            var groupEntity = ContentGroups().One(contentGroupGuid);
+            var found = groupEntity != null;
+            return l.Return(found
+                    ? new BlockConfiguration(groupEntity, AppWorkCtx, null, _qDefBuilder, _cultureResolver.CurrentCultureCode, Log)
+                        .WarnIfMissingData()
+                    : new BlockConfiguration(null, AppWorkCtx, null, _qDefBuilder, _cultureResolver.CurrentCultureCode, Log)
+                    {
+                        DataIsMissing = true
+                    },
+                found ? "found" : "missing");
+        }
+
+
+        internal BlockConfiguration GetOrGeneratePreviewConfig(IBlockIdentifier blockId)
+        {
+            var l = Log.Fn<BlockConfiguration>($"grp#{blockId.Guid}, preview#{blockId.PreviewView}");
+            // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
+            var createTempBlockForPreview = blockId.Guid == Guid.Empty;
+            l.A($"{nameof(createTempBlockForPreview)}:{createTempBlockForPreview}");
+            var result = createTempBlockForPreview
+                ? new BlockConfiguration(null, AppWorkCtx, AppWorkCtx.Data.List.One(blockId.PreviewView), _qDefBuilder, _cultureResolver.CurrentCultureCode, Log)
+                : GetBlockConfig(blockId.Guid);
+            result.BlockIdentifierOrNull = blockId;
+            return l.Return(result);
+        }
+
     }
 }

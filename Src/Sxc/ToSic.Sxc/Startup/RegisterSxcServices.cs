@@ -6,7 +6,6 @@ using ToSic.Eav.DataSource.Catalog;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Apps.CmsSys;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Blocks;
@@ -41,10 +40,9 @@ namespace ToSic.Sxc.Startup
         {
             // Runtimes - new: better architecture v16.07+
             services.TryAddTransient<AppWorkSxc>();
-            services.TryAddTransient<AppBlocks>();
+            services.TryAddTransient<WorkBlocks>();
             services.TryAddTransient<WorkViews>();
             services.TryAddTransient<WorkViewsMod>();
-            services.TryAddTransient<WorkBlocks>();
             services.TryAddTransient<WorkBlocksMod>();
             services.TryAddTransient<WorkApps>();
             services.TryAddTransient<WorkAppsRemove>();

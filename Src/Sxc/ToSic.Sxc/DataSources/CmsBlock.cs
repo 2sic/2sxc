@@ -7,7 +7,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.CmsSys;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.DataSources
         public new class MyServices: MyServicesBase<DataSourceBase.MyServices>
         {
             public AppWork AppWork { get; }
-            public AppBlocks AppBlocks { get; }
+            public WorkBlocks AppBlocks { get; }
             public LazySvc<IModule> ModuleLazy { get; }
             public LazySvc<IDataSourcesService> DataSourceFactory { get; }
 
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.DataSources
                 LazySvc<IModule> moduleLazy,
                 LazySvc<IDataSourcesService> dataSourceFactory,
                 AppWork appWork,
-                AppBlocks appBlocks
+                WorkBlocks appBlocks
                 ) : base(parentServices)
             {
                 ConnectServices(

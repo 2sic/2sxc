@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using ToSic.Eav.Apps.Work;
 using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Blocks.Edit
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Blocks.Edit
             // ...but for now we'll just update the current modules title
             // note: it also correctly handles published/unpublished, but I'm not sure why :)
 
-            var contentGroup = Services.AppBlocks.Value.GetBlockConfig(Services.AppSys.Value.ContextPlus(Block.App), BlockConfiguration.Guid);
+            var contentGroup = Services.AppBlocks.Value.InitContext(Services.AppSys.Value.ContextPlus(Block.App)).GetBlockConfig(BlockConfiguration.Guid);
 
             var titleItem = contentGroup.Header.FirstOrDefault() ?? contentGroup.Content.FirstOrDefault();
             

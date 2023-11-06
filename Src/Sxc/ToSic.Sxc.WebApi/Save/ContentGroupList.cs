@@ -8,11 +8,11 @@ using ToSic.Eav.WebApi.Formats;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Blocks;
-using ToSic.Sxc.Apps.CmsSys;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using static System.StringComparison;
 using ToSic.Eav.Apps.Work;
+using ToSic.Sxc.Apps.Work;
 
 namespace ToSic.Sxc.WebApi.Save
 {
@@ -22,10 +22,10 @@ namespace ToSic.Sxc.WebApi.Save
         #region Constructor / DI
 
         private readonly AppWork _appWork;
-        private readonly AppBlocks _appBlocks;
+        private readonly WorkBlocks _appBlocks;
         private readonly LazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
 
-        public ContentGroupList(AppWork appWork, AppBlocks appBlocks, LazySvc<BlockEditorSelector> blockEditorSelectorLazy) : base("Api.GrpPrc")
+        public ContentGroupList(AppWork appWork, WorkBlocks appBlocks, LazySvc<BlockEditorSelector> blockEditorSelectorLazy) : base("Api.GrpPrc")
         {
             
             ConnectServices(
@@ -75,7 +75,7 @@ namespace ToSic.Sxc.WebApi.Save
                 if (bundle.First().Header.Parent == null) continue;
 
                 var parent = AppCtx.AppState.GetDraftOrPublished(bundle.First().Header.GetParentEntityOrError());
-                var targetIsContentBlock = parent.Type.Name == AppBlocks.BlockTypeName;
+                var targetIsContentBlock = parent.Type.Name == WorkBlocks.BlockTypeName;
                 
                 var primaryItem = targetIsContentBlock ? FindContentItem(bundle) : bundle.First();
                 var primaryId = GetIdFromGuidOrError(postSaveIds, primaryItem.Entity.EntityGuid);
@@ -170,6 +170,7 @@ namespace ToSic.Sxc.WebApi.Save
         internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers) => Log.Func(() =>
         {
             var newItems = new List<ItemIdentifier>();
+            var ctxPlus = _appWork.ToCtxPlus(AppCtx);
             foreach (var identifier in identifiers)
             {
                 // Case one, it's a Content-Group - in this case the content-type name comes from View configuration
@@ -178,7 +179,7 @@ namespace ToSic.Sxc.WebApi.Save
                     if (!identifier.Parent.HasValue) continue;
 
                     //var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(identifier.GetParentEntityOrError());
-                    var contentGroup = _appBlocks.GetBlockConfig(_appWork.ToCtxPlus(AppCtx), identifier.GetParentEntityOrError());
+                    var contentGroup = _appBlocks.InitContext(ctxPlus).GetBlockConfig(identifier.GetParentEntityOrError());
                     var contentTypeName = (contentGroup.View as View)?.GetTypeStaticName(identifier.Field) ?? "";
 
                     // if there is no content-type for this, then skip it (don't deliver anything)
@@ -222,7 +223,7 @@ namespace ToSic.Sxc.WebApi.Save
 
             // get the entity and determine if it's a content-block. If yes, that should affect the differences in load/save
             var entity = AppCtx.AppState.List.One(identifier.Parent.Value);
-            return (entity.Type.Name == AppBlocks.BlockTypeName, "type name should match");
+            return (entity.Type.Name == WorkBlocks.BlockTypeName, "type name should match");
         });
 
 

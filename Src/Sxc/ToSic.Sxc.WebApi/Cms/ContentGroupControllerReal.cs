@@ -8,7 +8,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.CmsSys;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public const string LogSuffix = "CntGrp";
         public ContentGroupControllerReal(
             AppWork appWork,
-            AppBlocks appBlocks,
+            WorkBlocks appBlocks,
             LazySvc<IPagePublishing> publishing, 
             IContextResolver ctxResolver, 
             LazySvc<ListControllerReal> listController) : base("Api.CntGrpRl")
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public IContextResolver CtxResolver { get; }
 
         private readonly AppWork _appWork;
-        private readonly AppBlocks _appBlocks;
+        private readonly WorkBlocks _appBlocks;
         private readonly LazySvc<ListControllerReal> _listController;
         private readonly LazySvc<IPagePublishing> _publishing;
 
@@ -57,11 +57,11 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             Log.A($"header for:{guid}");
             //var cg = CmsManager.Read.Blocks.GetBlockConfig(guid);
-            var cg = _appBlocks.GetBlockConfig(AppCtx, guid);
+            var cg = _appBlocks.InitContext(AppCtx).GetBlockConfig(guid);
 
             // new in v11 - this call might be run on a non-content-block, in which case we return null
             if (cg.Entity == null) return null;
-            if (cg.Entity.Type.Name != AppBlocks.BlockTypeName) return null;
+            if (cg.Entity.Type.Name != WorkBlocks.BlockTypeName) return null;
 
             var header = cg.Header.FirstOrDefault();
 
@@ -97,7 +97,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var wrapLog = Log.Fn<string>($"{guid}, {part}");
 
             //var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(guid);
-            var contentGroup = _appBlocks.GetBlockConfig(AppCtx, guid);
+            var contentGroup = _appBlocks.InitContext(AppCtx).GetBlockConfig(guid);
             if (contentGroup?.Entity == null || contentGroup.View == null)
                 return wrapLog.ReturnNull("Doesn't seem to be a content-group. Cancel.");
 
