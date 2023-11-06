@@ -27,17 +27,18 @@ namespace ToSic.Sxc.Dnn.Cms
 {
     public partial class DnnPagePublishing : ServiceBase, IPagePublishing
     {
+
         #region DI Constructors and More
 
-        public DnnPagePublishing(LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder, Generator<AppWorkService> appWorkSvcGen) : base("Dnn.Publsh")
+        public DnnPagePublishing(LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder, GenWorkDb<WorkEntityPublish> entPublish) : base("Dnn.Publsh")
         {
             ConnectServices(
                 _moduleAndBlockBuilder = moduleAndBlockBuilder,
-                _appWorkSvcGen = appWorkSvcGen
+                _entPublish = entPublish
             );
         }
 
-        private readonly Generator<AppWorkService> _appWorkSvcGen;
+        private readonly GenWorkDb<WorkEntityPublish> _entPublish;
         private readonly LazySvc<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
         
         #endregion
@@ -130,13 +131,7 @@ namespace ToSic.Sxc.Dnn.Cms
                     l.A(Log.Try(() => $"will publish id⋮{ids.Count} ids:[{ string.Join(",", ids.Select(i => i.ToString()).ToArray()) }]"));
 
                     if (ids.Any())
-                    {
-                        //var appManager = _appManager.Value.Init(cb);
-                        //appManager.Entities.Publish(ids.ToArray());
-
-                        var appWorkSvc = _appWorkSvcGen.New().Init(cb.Context.AppState);
-                        appWorkSvc.Publish.Publish(ids.ToArray());
-                    }
+                        _entPublish.New(cb.Context.AppState).Publish(ids.ToArray());
                     else
                         l.A("no ids found, won\'t publish items");
                 }

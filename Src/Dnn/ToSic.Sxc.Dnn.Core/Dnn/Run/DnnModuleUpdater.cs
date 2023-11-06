@@ -3,14 +3,14 @@ using DotNetNuke.Services.Localization;
 using System;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Run;
-using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Run;
@@ -20,23 +20,23 @@ namespace ToSic.Sxc.Dnn.Run
 {
     public class DnnModuleUpdater : ServiceBase, IPlatformModuleUpdater
     {
-
         #region Constructor and DI
 
         /// <summary>
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public DnnModuleUpdater(LazySvc<AppWorkSxc> appSysSxc, IZoneMapper zoneMapper, IAppStates appStates, ISite site) : base("Dnn.MapA2I")
+        public DnnModuleUpdater(GenWorkPlus<WorkViews> workViews, IZoneMapper zoneMapper, IAppStates appStates, ISite site) : base("Dnn.MapA2I")
         {
             ConnectServices(
-                _appSysSxc = appSysSxc,
+                _workViews = workViews,
                 _appStates = appStates,
                 _site = site,
                 _zoneMapper = zoneMapper
             );
         }
-        private readonly LazySvc<AppWorkSxc> _appSysSxc;
+
+        private readonly GenWorkPlus<WorkViews> _workViews;
         private readonly IAppStates _appStates;
         private readonly ISite _site;
         private readonly IZoneMapper _zoneMapper;
@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Dnn.Run
             {
                 var appIdentity = new AppIdentity(zoneId, appId.Value);
 
-                var templateGuid = _appSysSxc.Value.AppViews(identity: appIdentity).GetAll()
+                var templateGuid = _workViews.New(appIdentity).GetAll()
                     .OrderByDescending(v => v.Metadata.HasType(Decorators.IsDefaultDecorator)) // first sort by IsDefaultDecorator DESC
                     .ThenBy(v => v.Name) // than by Name ASC
                     .FirstOrDefault(t => !t.IsHidden)?.Guid;

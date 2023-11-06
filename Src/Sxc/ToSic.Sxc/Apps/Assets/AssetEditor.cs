@@ -3,10 +3,12 @@ using System.IO;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Paths;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Paths;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Blocks;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -14,21 +16,22 @@ namespace ToSic.Sxc.Apps.Assets
 {
     public class AssetEditor : ServiceBase
     {
+
         #region Constructor / DI
 
-        private readonly AppWorkSxc _appWorkSxc;
+        private readonly GenWorkPlus<WorkViews> _workViews;
         private readonly IUser _user;
         private readonly LazySvc<AppFolderInitializer> _appFolderInitializer;
         private readonly ISite _site;
         private readonly AppPaths _appPaths;
         private AppState _appState;
 
-        public AssetEditor(AppWorkSxc appWorkSxc, IUser user, LazySvc<AppFolderInitializer> appFolderInitializer, ISite site, AppPaths appPaths) : base("Sxc.AstEdt")
+        public AssetEditor(GenWorkPlus<WorkViews> workViews, IUser user, LazySvc<AppFolderInitializer> appFolderInitializer, ISite site, AppPaths appPaths) : base("Sxc.AstEdt")
         {
             ConnectServices(
-                _appWorkSxc = appWorkSxc,
                 _user = user,
                 _appFolderInitializer = appFolderInitializer,
+                _workViews = workViews,
                 _site = site,
                 _appPaths = appPaths
             );
@@ -36,13 +39,13 @@ namespace ToSic.Sxc.Apps.Assets
         private AssetEditInfo EditInfo { get; set; }
 
 
-        public AssetEditor Init(AppState app, string path, bool global, int viewId)
+        public AssetEditor Init(AppState appState, string path, bool global, int viewId)
         {
-            InitShared(app);
+            InitShared(appState);
             EditInfo = new AssetEditInfo(_appState.AppId, _appState.Name, path, global);
             if (viewId == 0) return this;
 
-            var view = _appWorkSxc.AppViews(state: app).Get(viewId);
+            var view = _workViews.New(appState).Get(viewId);
             AddViewDetailsAndTypes(EditInfo, view);
             return this;
         }

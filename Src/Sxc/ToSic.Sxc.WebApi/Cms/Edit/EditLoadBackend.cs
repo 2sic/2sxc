@@ -29,7 +29,8 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public partial class EditLoadBackend: ServiceBase
     {
-        private readonly AppWork _appWork;
+        private readonly GenWorkPlus<WorkInputTypes> _inputTypes;
+        private readonly AppWorkContextService _workCtxSvc;
         private readonly EditLoadSettingsHelper _loadSettings;
         private readonly EntityApi _entityApi;
         private readonly ContentGroupList _contentGroupList;
@@ -45,7 +46,9 @@ namespace ToSic.Sxc.WebApi.Cms
 
         #region DI Constructor
 
-        public EditLoadBackend(EntityApi entityApi,
+        public EditLoadBackend(
+            AppWorkContextService workCtxSvc,
+            EntityApi entityApi,
             ContentGroupList contentGroupList,
             EntityBuilder entityBuilder,
             IUiContextBuilder contextBuilder,
@@ -53,7 +56,7 @@ namespace ToSic.Sxc.WebApi.Cms
             ITargetTypes mdTargetTypes,
             IAppStates appStates,
             IUiData uiData,
-            AppWork appWork,
+            GenWorkPlus<WorkInputTypes> inputTypes,
             Generator<JsonSerializer> jsonSerializerGenerator,
             Generator<MultiPermissionsTypes> typesPermissions,
             EditLoadPrefetchHelper prefetch,
@@ -61,6 +64,8 @@ namespace ToSic.Sxc.WebApi.Cms
             ) : base("Cms.LoadBk")
         {
             ConnectServices(
+                _workCtxSvc = workCtxSvc,
+                _inputTypes = inputTypes,
                 _entityApi = entityApi,
                 _contentGroupList = contentGroupList,
                 _entityBuilder = entityBuilder,
@@ -69,7 +74,6 @@ namespace ToSic.Sxc.WebApi.Cms
                 _mdTargetTypes = mdTargetTypes,
                 _appStates = appStates,
                 _uiData = uiData,
-                _appWork = appWork,
                 _jsonSerializerGenerator = jsonSerializerGenerator,
                 _typesPermissions = typesPermissions,
                 _prefetch = prefetch,
@@ -101,7 +105,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // load items - similar
             var showDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
-            var appWorkCtx = _appWork.ContextPlus(appId, showDrafts: showDrafts);
+            var appWorkCtx = _workCtxSvc.ContextPlus(appId, showDrafts: showDrafts);
             var result = new EditDto();
             var entityApi = _entityApi.Init(appId, showDrafts);
             var appState = _appStates.Get(appIdentity);

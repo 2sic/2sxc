@@ -1,7 +1,5 @@
-﻿using ToSic.Eav.Apps.Parts;
-using ToSic.Eav.Apps.Work;
+﻿using ToSic.Eav.Apps.Work;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSources;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps.Blocks;
@@ -48,8 +46,7 @@ namespace ToSic.Sxc.DataSources
 
             var container = _services.ModuleLazy.Value.Init(ModuleId.Value);
             var blockId = container.BlockIdentifier;
-            var appCtx = _services.AppWork.ContextPlus(this);
-            var blockConfig = _services.AppBlocks.InitContext(appCtx).GetOrGeneratePreviewConfig(blockId);
+            var blockConfig = _services.AppBlocks.New(this).GetOrGeneratePreviewConfig(blockId);
             return l.Return(new ResultOrError<BlockConfiguration>(true, blockConfig), "ok");
         }
 

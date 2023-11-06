@@ -28,19 +28,17 @@ namespace ToSic.Sxc.WebApi.Cms
                 // Make sure we have the correct casing for the field names
                 part = entity.Type[part].Name;
 
-                var fList = _appWork.EntityFieldList(null, appState: Context.AppState);
+                var fList = _workFieldList.New(Context.AppState);
 
                 var forceDraft = Context.Publishing.ForceDraft;
                 if (add)
                 {
                     var fields = isContentPair ? ViewParts.ContentPair : new[] { part };
                     var values = isContentPair ? new int?[] { entityId, null } : new int?[] { entityId };
-                    fList
-                    /*CmsManagerOfBlock.Entities*/.FieldListAdd(entity, fields, index, values, forceDraft, false);
+                    fList.FieldListAdd(entity, fields, index, values, forceDraft, false);
                 }
                 else
-                    fList
-                    /*CmsManagerOfBlock.Entities*/.FieldListReplaceIfModified(entity, new[] { part }, index, new int?[] { entityId },
+                    fList.FieldListReplaceIfModified(entity, new[] { part }, index, new int?[] { entityId },
                         forceDraft);
             }
 
@@ -63,9 +61,8 @@ namespace ToSic.Sxc.WebApi.Cms
                 return l.ReturnNull("no type name, so no data");
 
             var ct = Context.AppState.GetContentType(typeName);
-            var appCtx = _appWork.CtxSvc.ContextPlus(Context.AppState);
 
-            var listTemp = _appWork.Entities(appCtx).Get(typeName).ToList();
+            var listTemp = _workEntities.New(Context.AppState).Get(typeName).ToList();
 
             var results = listTemp.Select(Context.AppState.GetDraftOrKeep).ToDictionary(
                 p => p.EntityId,

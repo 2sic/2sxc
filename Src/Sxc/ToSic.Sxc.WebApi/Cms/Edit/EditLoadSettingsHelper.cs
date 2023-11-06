@@ -18,7 +18,7 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public class EditLoadSettingsHelper: ServiceBase
     {
-        private readonly Generator<WorkEntities> _appEntities;
+        private readonly GenWorkPlus<WorkEntities> _appEntities;
 
         #region Constructor / DI
 
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public EditLoadSettingsHelper(
             LazySvc<JsonSerializer> jsonSerializerGenerator,
             IEnumerable<ILoadSettingsProvider> loadSettingsProviders,
-            Generator<WorkEntities> appEntities
+            GenWorkPlus<WorkEntities> appEntities
         ) : base(Constants.SxcLogName + ".LodSet")
         {
             ConnectServices(
@@ -98,7 +98,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 if (!hasWysiwyg)
                     return (new List<JsonEntity>(), "no wysiwyg field");
 
-                var entities = _appEntities.New().InitContext(appWorkCtx)// _appEntityRead.Value
+                var entities = _appEntities.New(appWorkCtx)
                     .GetWithParentAppsExperimental("StringWysiwygConfiguration")
                     .ToList();
 

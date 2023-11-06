@@ -38,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Views
 {
     public class ViewsExportImport : ServiceBase
     {
-        private readonly AppWork _appWork;
+        private readonly GenWorkDb<WorkEntitySave> _workEntSave;
         private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
         private readonly IServerPaths _serverPaths;
         private readonly IEnvironmentLogger _envLogger;
@@ -51,7 +51,7 @@ namespace ToSic.Sxc.WebApi.Views
         private readonly IUser _user;
 
         public ViewsExportImport(
-            AppWork appWork,
+            GenWorkDb<WorkEntitySave> workEntSave,
             IServerPaths serverPaths,
             IEnvironmentLogger envLogger,
             LazySvc<JsonSerializer> jsonSerializerLazy, 
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.WebApi.Views
             LazySvc<QueryDefinitionBuilder> qDefBuilder) : base("Bck.Views")
         {
             ConnectServices(
-                _appWork = appWork,
+                _workEntSave = workEntSave,
                 _serverPaths = serverPaths,
                 _envLogger = envLogger,
                 _jsonSerializerLazy = jsonSerializerLazy,
@@ -149,8 +149,7 @@ namespace ToSic.Sxc.WebApi.Views
                 // 2. Import the views
                 // todo: construction of this should go into init
                 // #ExtractEntitySave - verified
-                //_cmsManagerLazy.Value.Init(app.AppId).Entities.Import(bundles.Select(v => v.Entity).ToList());
-                _appWork.EntitySave(app.AppState).Import(bundles.Select(v => v.Entity).ToList());
+                _workEntSave.New(app.AppState).Import(bundles.Select(v => v.Entity).ToList());
 
                 // 3. Import the attachments
                 var assets = bundles.SelectMany(b => b.Assets);

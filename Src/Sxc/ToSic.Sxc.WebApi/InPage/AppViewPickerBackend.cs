@@ -6,7 +6,7 @@ using ToSic.Eav.Apps.Work;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Context;
 
@@ -18,17 +18,20 @@ namespace ToSic.Sxc.WebApi.InPage
             Generator<MultiPermissionsApp> multiPermissionsApp,
             IContextResolver ctxResolver,
             LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
-            LazySvc<AppWorkSxc> appSysSxc,
-            LazySvc<AppWorkUnit<WorkEntityPublish, IAppWorkCtxWithDb>> publisher
-            ) : base(multiPermissionsApp, appSysSxc, ctxResolver,"Bck.ViwApp")
+            GenWorkPlus<WorkViews> workViews,
+            AppWorkContextService appWorkCtxService,
+            GenWorkDb<WorkEntityPublish> publisher
+            ) : base(multiPermissionsApp, appWorkCtxService, ctxResolver,"Bck.ViwApp")
         {
-            _publisher = publisher;
             ConnectServices(
+                _workViews = workViews,
+                _publisher = publisher,
                 _blockEditorSelectorLazy = blockEditorSelectorLazy
             );
         }
 
-        private readonly LazySvc<AppWorkUnit<WorkEntityPublish, IAppWorkCtxWithDb>> _publisher;
+        private readonly GenWorkPlus<WorkViews> _workViews;
+        private readonly GenWorkDb<WorkEntityPublish> _publisher;
         private readonly LazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
 
         public void SetAppId(int? appId) => _blockEditorSelectorLazy.Value.GetEditor(Block).SetAppId(appId);
@@ -36,13 +39,13 @@ namespace ToSic.Sxc.WebApi.InPage
         public IEnumerable<TemplateUiInfo> Templates() =>
             Block?.App == null 
                 ? Array.Empty<TemplateUiInfo>()
-                : AppSysSxc.Value.AppViews(AppWorkCtxPlus).GetCompatibleViews(Block?.App, Block?.Configuration);
+                : _workViews.New(AppWorkCtxPlus).GetCompatibleViews(Block?.App, Block?.Configuration);
 
         public IEnumerable<ContentTypeUiInfo> ContentTypes()
         {
             // nothing to do without app
             if (Block?.App == null) return null;
-            return AppSysSxc.Value.AppViews(AppWorkCtxPlus).GetContentTypesWithStatus(Block.App.Path ?? "", Block.App.PathShared ?? "");
+            return _workViews.New(AppWorkCtxPlus).GetContentTypesWithStatus(Block.App.Path ?? "", Block.App.PathShared ?? "");
         }
 
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
@@ -56,7 +59,7 @@ namespace ToSic.Sxc.WebApi.InPage
         {
             var callLog = Log.Fn<bool>($"{id}");
             ThrowIfNotAllowedInApp(GrantSets.WritePublished);
-            _publisher.Value.New(AppWorkCtx).Publish(id);
+            _publisher.New(AppWorkCtx).Publish(id);
             return callLog.ReturnTrue("ok");
         }
     }

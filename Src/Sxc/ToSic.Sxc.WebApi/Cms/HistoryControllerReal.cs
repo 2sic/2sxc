@@ -12,14 +12,14 @@ namespace ToSic.Sxc.WebApi.Cms
         public const string LogSuffix = "Hist";
 
         // #UnusedFeatureHistoryOfGroup 2022-07-05 2dm removed - probably clean up ca. Q4 2022
-        public HistoryControllerReal(AppWorkUnit<WorkEntityVersioning, IAppWorkCtxWithDb> versioner) : base("Api.CmsHistoryRl")
+        public HistoryControllerReal(GenWorkDb<WorkEntityVersioning> versioner) : base("Api.CmsHistoryRl")
         {
             ConnectServices(
                 _versioner = versioner
             );
         }
 
-        private readonly AppWorkUnit<WorkEntityVersioning, IAppWorkCtxWithDb> _versioner;
+        private readonly GenWorkDb<WorkEntityVersioning> _versioner;
 
 
         public List<ItemHistory> Get(int appId, ItemIdentifier item)

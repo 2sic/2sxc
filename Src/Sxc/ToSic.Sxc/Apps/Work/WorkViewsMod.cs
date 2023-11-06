@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Apps.Work;
-using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 
@@ -8,17 +7,16 @@ namespace ToSic.Sxc.Apps.Work
 {
     public class WorkViewsMod : WorkUnitBase<IAppWorkCtx>
     {
-        private readonly LazySvc<AppWorkUnitPlus<WorkViews>> _appViews;
-        private readonly LazySvc<AppWorkUnitWithDb<WorkEntityCreate>> _entityCreate;
-        private readonly LazySvc<AppWorkUnitWithDb<WorkEntityUpdate>> _entityUpdate;
-        private readonly LazySvc<AppWorkUnitWithDb<WorkEntityDelete>> _entityDelete;
+        private readonly GenWorkPlus<WorkViews> _appViews;
+        private readonly GenWorkDb<WorkEntityCreate> _entityCreate;
+        private readonly GenWorkDb<WorkEntityUpdate> _entityUpdate;
+        private readonly GenWorkDb<WorkEntityDelete> _entityDelete;
 
         public WorkViewsMod(
-            LazySvc<AppWorkUnitPlus<WorkViews>> appViews,
-            LazySvc<AppWorkUnitWithDb<WorkEntityCreate>> entityCreate,
-            LazySvc<AppWorkUnitWithDb<WorkEntityUpdate>> entityUpdate,
-            LazySvc<AppWorkUnitWithDb<WorkEntityDelete>> entityDelete
-            ) : base("AWk.EntCre")
+            GenWorkPlus<WorkViews> appViews,
+            GenWorkDb<WorkEntityCreate> entityCreate,
+            GenWorkDb<WorkEntityUpdate> entityUpdate,
+            GenWorkDb<WorkEntityDelete> entityDelete) : base("AWk.EntCre")
         {
             ConnectServices(
                 _appViews = appViews,
@@ -64,11 +62,9 @@ namespace ToSic.Sxc.Apps.Work
 
             // #ExtractEntitySave - looks good
             if (templateId.HasValue)
-                _entityUpdate.Value.New(AppWorkCtx)
-                /*_appWork.EntityUpdate(AppWorkCtx)*/.UpdateParts(templateId.Value, values);
+                _entityUpdate.New(AppWorkCtx).UpdateParts(templateId.Value, values);
             else
-                _entityCreate.Value.New(AppWorkCtx)
-                /*_appWork.EntityCreate(AppWorkCtx)*/.Create(Eav.Apps.AppConstants.TemplateContentType, values);
+                _entityCreate.New(AppWorkCtx).Create(Eav.Apps.AppConstants.TemplateContentType, values);
 
             l.Done();
         }
@@ -78,8 +74,8 @@ namespace ToSic.Sxc.Apps.Work
         public bool DeleteView(int viewId)
         {
             // really get template first, to be sure it is a template
-            var template = _appViews.Value.New(AppWorkCtx) /*_appWorkSxc.AppViews(identity: AppWorkCtx)*/.Get(viewId);
-            return _entityDelete.Value.New(AppWorkCtx)/* _appWork.EntityDelete(AppWorkCtx)*/.Delete(template.Id);
+            var template = _appViews.New(AppWorkCtx).Get(viewId);
+            return _entityDelete.New(AppWorkCtx).Delete(template.Id);
         }
     }
 }

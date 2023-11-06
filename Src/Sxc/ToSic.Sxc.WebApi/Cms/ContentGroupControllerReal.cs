@@ -19,18 +19,19 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public class ContentGroupControllerReal: ServiceBase, IContentGroupController
     {
-
         #region Constructor / di
+
         public const string LogSuffix = "CntGrp";
+
         public ContentGroupControllerReal(
-            AppWork appWork,
-            WorkBlocks appBlocks,
+            GenWorkDb<WorkFieldList> workFieldList,
+            GenWorkPlus<WorkBlocks> appBlocks,
             LazySvc<IPagePublishing> publishing, 
-            IContextResolver ctxResolver, 
+            IContextResolver ctxResolver,
             LazySvc<ListControllerReal> listController) : base("Api.CntGrpRl")
         {
             ConnectServices(
-                _appWork = appWork,
+                _workFieldList = workFieldList,
                 _appBlocks = appBlocks,
                 CtxResolver = ctxResolver,
                 _publishing = publishing,
@@ -38,10 +39,11 @@ namespace ToSic.Sxc.WebApi.Cms
             );
         }
 
+
         public IContextResolver CtxResolver { get; }
 
-        private readonly AppWork _appWork;
-        private readonly WorkBlocks _appBlocks;
+        private readonly GenWorkDb<WorkFieldList> _workFieldList;
+        private readonly GenWorkPlus<WorkBlocks> _appBlocks;
         private readonly LazySvc<ListControllerReal> _listController;
         private readonly LazySvc<IPagePublishing> _publishing;
 
@@ -49,7 +51,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private IContextOfBlock Context => _context ?? (_context = CtxResolver.BlockContextRequired());
         private IContextOfBlock _context;
 
-        private IAppWorkCtxPlus AppCtx => _appCtx.Get(() => _appWork.CtxSvc.ContextPlus(Context.AppState));
+        private IAppWorkCtxPlus AppCtx => _appCtx.Get(() => _appBlocks.CtxSvc.ContextPlus(Context.AppState));
         private GetOnce<IAppWorkCtxPlus> _appCtx = new GetOnce<IAppWorkCtxPlus>();
         #endregion
 
@@ -57,7 +59,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             Log.A($"header for:{guid}");
             //var cg = CmsManager.Read.Blocks.GetBlockConfig(guid);
-            var cg = _appBlocks.InitContext(AppCtx).GetBlockConfig(guid);
+            var cg = _appBlocks.New(AppCtx).GetBlockConfig(guid);
 
             // new in v11 - this call might be run on a non-content-block, in which case we return null
             if (cg.Entity == null) return null;
@@ -97,7 +99,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var wrapLog = Log.Fn<string>($"{guid}, {part}");
 
             //var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(guid);
-            var contentGroup = _appBlocks.InitContext(AppCtx).GetBlockConfig(guid);
+            var contentGroup = _appBlocks.New(AppCtx).GetBlockConfig(guid);
             if (contentGroup?.Entity == null || contentGroup.View == null)
                 return wrapLog.ReturnNull("Doesn't seem to be a content-group. Cancel.");
 
@@ -140,11 +142,10 @@ namespace ToSic.Sxc.WebApi.Cms
 
             _publishing.Value.DoInsidePublishing(Context, args =>
             {
-                var entity = AppCtx.AppState.GetDraftOrPublished(guid);
+                var entity = Context.AppState.GetDraftOrPublished(guid);
                 var sequence = list.Select(i => i.Index).ToArray();
                 var fields = part == ViewParts.ContentLower ? ViewParts.ContentPair : new[] {part};
-                _appWork.EntityFieldList(null, appState: AppCtx.AppState)
-                /*CmsManager.Entities*/.FieldListReorder(entity, fields, sequence, Context.Publishing.ForceDraft);
+                _workFieldList.New(Context.AppState).FieldListReorder(entity, fields, sequence, Context.Publishing.ForceDraft);
             });
 
             return true;

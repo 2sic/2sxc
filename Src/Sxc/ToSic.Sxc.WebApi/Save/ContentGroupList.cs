@@ -18,19 +18,17 @@ namespace ToSic.Sxc.WebApi.Save
 {
     public class ContentGroupList: ServiceBase
     {
-
         #region Constructor / DI
 
-        private readonly AppWork _appWork;
-        private readonly WorkBlocks _appBlocks;
+        private readonly GenWorkDb<WorkFieldList> _workFieldList;
+        private readonly GenWorkPlus<WorkBlocks> _appBlocks;
         private readonly LazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
 
-        public ContentGroupList(AppWork appWork, WorkBlocks appBlocks, LazySvc<BlockEditorSelector> blockEditorSelectorLazy) : base("Api.GrpPrc")
+        public ContentGroupList(GenWorkPlus<WorkBlocks> appBlocks, LazySvc<BlockEditorSelector> blockEditorSelectorLazy, GenWorkDb<WorkFieldList> workFieldList) : base("Api.GrpPrc")
         {
-            
             ConnectServices(
-                _appWork = appWork,
                 _appBlocks = appBlocks,
+                _workFieldList = workFieldList,
                 _blockEditorSelectorLazy = blockEditorSelectorLazy
             );
         }
@@ -38,7 +36,7 @@ namespace ToSic.Sxc.WebApi.Save
         public ContentGroupList Init(IAppIdentity appIdentity)
         {
             _appIdentity = appIdentity;
-            AppCtx = _appWork.Context(appIdentity);
+            AppCtx = _appBlocks.CtxSvc.Context(appIdentity);
             return this;
         }
         private IAppIdentity _appIdentity;
@@ -96,7 +94,7 @@ namespace ToSic.Sxc.WebApi.Save
                     ? ViewParts.PickFieldPair(primaryItem.Header.Field)
                     : new[] {primaryItem.Header.Field};
 
-                var fieldList = _appWork.EntityFieldList(null, appState: AppCtx.AppState);
+                var fieldList = _workFieldList.New(AppCtx.AppState);
                 if (willAdd) // this cannot be auto-detected, it must be specified
                 {
 
@@ -170,7 +168,7 @@ namespace ToSic.Sxc.WebApi.Save
         internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers) => Log.Func(() =>
         {
             var newItems = new List<ItemIdentifier>();
-            var ctxPlus = _appWork.ToCtxPlus(AppCtx);
+            var appBlocks = _appBlocks.New(AppCtx);
             foreach (var identifier in identifiers)
             {
                 // Case one, it's a Content-Group - in this case the content-type name comes from View configuration
@@ -179,7 +177,7 @@ namespace ToSic.Sxc.WebApi.Save
                     if (!identifier.Parent.HasValue) continue;
 
                     //var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(identifier.GetParentEntityOrError());
-                    var contentGroup = _appBlocks.InitContext(ctxPlus).GetBlockConfig(identifier.GetParentEntityOrError());
+                    var contentGroup = appBlocks.GetBlockConfig(identifier.GetParentEntityOrError());
                     var contentTypeName = (contentGroup.View as View)?.GetTypeStaticName(identifier.Field) ?? "";
 
                     // if there is no content-type for this, then skip it (don't deliver anything)

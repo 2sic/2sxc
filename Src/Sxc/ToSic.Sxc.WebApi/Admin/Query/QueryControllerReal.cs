@@ -1,10 +1,11 @@
 ﻿using System.Linq;
 using System;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.LookUp;
 
@@ -12,7 +13,7 @@ namespace ToSic.Sxc.WebApi.Admin.Query
 {
     public class QueryControllerReal: QueryControllerBase<QueryControllerReal>
     {
-        private readonly AppWorkSxc _appWorkSxc;
+        private readonly GenWorkPlus<WorkViews> _workViews;
         public const string LogSuffix = "Query";
 
         private readonly IContextResolver _contextResolver;
@@ -20,13 +21,13 @@ namespace ToSic.Sxc.WebApi.Admin.Query
 
         public QueryControllerReal(
             MyServices services,
-            AppWorkSxc appWorkSxc,
+            GenWorkPlus<WorkViews> workViews,
             IContextResolver contextResolver,
             AppConfigDelegate appConfigMaker
         ) : base(services, "Api." + LogSuffix)
         {
             ConnectServices(
-                _appWorkSxc = appWorkSxc,
+                _workViews = workViews,
                 _contextResolver = contextResolver,
                 _appConfigMaker = appConfigMaker
             );
@@ -40,7 +41,8 @@ namespace ToSic.Sxc.WebApi.Admin.Query
             var l = Log.Fn<bool>($"{nameof(appId)}: {appId}; {nameof(id)}: {id}");
 
             // Stop if views still use this Query
-            var viewUsingQuery = _appWorkSxc.AppViews(appId: appId).GetAll()
+            var viewUsingQuery = _workViews.New(appId)
+                .GetAll()
                 .Where(t => t.Query?.Id == id)
                 .Select(t => t.Id)
                 .ToArray();
@@ -49,7 +51,7 @@ namespace ToSic.Sxc.WebApi.Admin.Query
                 throw l.Done(new Exception($"Query is used by Views and cant be deleted. Query ID: {id}. TemplateIds: {string.Join(", ", viewUsingQuery)}"));
 
             var queryMod = Services.WorkUnitQueryMod.New(appId: appId);
-            return l.Return( queryMod /*cms.Queries*/.Delete(id));
+            return l.Return( queryMod.Delete(id));
         }
         
 

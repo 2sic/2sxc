@@ -54,22 +54,19 @@ namespace ToSic.Sxc.DataSources
 
         public new class MyServices: MyServicesBase<DataSourceBase.MyServices>
         {
-            public AppWork AppWork { get; }
-            public WorkBlocks AppBlocks { get; }
+            public GenWorkPlus<WorkBlocks> AppBlocks { get; }
             public LazySvc<IModule> ModuleLazy { get; }
             public LazySvc<IDataSourcesService> DataSourceFactory { get; }
 
             public MyServices(DataSourceBase.MyServices parentServices,
                 LazySvc<IModule> moduleLazy,
                 LazySvc<IDataSourcesService> dataSourceFactory,
-                AppWork appWork,
-                WorkBlocks appBlocks
+                GenWorkPlus<WorkBlocks> appBlocks
                 ) : base(parentServices)
             {
                 ConnectServices(
                     ModuleLazy = moduleLazy,
                     DataSourceFactory = dataSourceFactory,
-                    AppWork = appWork,
                     AppBlocks = appBlocks
                 );
             }

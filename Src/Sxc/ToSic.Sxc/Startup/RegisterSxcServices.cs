@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataSource.Catalog;
 using ToSic.Eav.Run;
@@ -39,7 +38,6 @@ namespace ToSic.Sxc.Startup
         public static IServiceCollection AddSxcCore(this IServiceCollection services)
         {
             // Runtimes - new: better architecture v16.07+
-            services.TryAddTransient<AppWorkSxc>();
             services.TryAddTransient<WorkBlocks>();
             services.TryAddTransient<WorkViews>();
             services.TryAddTransient<WorkViewsMod>();

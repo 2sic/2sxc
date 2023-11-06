@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Security;
@@ -9,7 +10,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.WebApi.App;
 
 #if NETFRAMEWORK
@@ -22,14 +23,17 @@ namespace ToSic.Sxc.WebApi.ImportExport
 {
     public class ExportContent : ServiceBase
     {
+        private readonly GenWorkPlus<WorkEntities> _workEntities;
+
         #region Constructor / DI
 
-        public ExportContent(XmlExporter xmlExporter, AppWorkSxc appWorkSxc, ISite site, IUser user, Generator<ImpExpHelpers> impExpHelpers, IResponseMaker responseMaker)
+        public ExportContent(XmlExporter xmlExporter, GenWorkPlus<WorkViews> workViews, GenWorkPlus<WorkEntities> workEntities, ISite site, IUser user, Generator<ImpExpHelpers> impExpHelpers, IResponseMaker responseMaker)
             : base("Bck.Export")
         {
             ConnectServices(
                 _xmlExporter = xmlExporter,
-                _appWorkSxc = appWorkSxc,
+                _workViews = workViews,
+                _workEntities = workEntities,
                 _site = site,
                 _user = user,
                 _impExpHelpers = impExpHelpers,
@@ -37,12 +41,12 @@ namespace ToSic.Sxc.WebApi.ImportExport
             );
         }
 
+        private readonly GenWorkPlus<WorkViews> _workViews;
         private readonly XmlExporter _xmlExporter;
         private readonly ISite _site;
         private readonly IUser _user;
         private readonly Generator<ImpExpHelpers> _impExpHelpers;
         private readonly IResponseMaker _responseMaker;
-        private readonly AppWorkSxc _appWorkSxc;
 
         #endregion
 
@@ -52,10 +56,10 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
-            var appCtx = _appWorkSxc.AppWork.ContextPlus(currentApp);
-            var contentTypes = appCtx.AppState.ContentTypes.OfScope(scope);
-            var entities = _appWorkSxc.AppWork.Entities(appCtx).All();
-            var templates = _appWorkSxc.AppViews(appCtx).GetAll();
+            var appCtx = _workEntities.CtxSvc.ContextPlus(currentApp);
+            var contentTypes = currentApp.AppState.ContentTypes.OfScope(scope);
+            var entities = _workEntities.New(appCtx).All();
+            var templates = _workViews.New(appCtx).GetAll();
 
             return new ExportPartsOverviewDto
             {

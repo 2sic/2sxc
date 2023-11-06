@@ -17,32 +17,23 @@ namespace ToSic.Sxc.Blocks.Edit
 
         public class MyServices : MyServicesBase
         {
-            public AppWorkUnitWithDb<WorkBlocksMod> WorkBlocksMod { get; }
-            public LazySvc<AppWorkUnit<WorkEntityPublish, IAppWorkCtxWithDb>> Publisher { get; }
-            public LazySvc<AppWork> AppSys { get; }
-            public LazySvc<WorkBlocks> AppBlocks { get; }
-            //public LazySvc<CmsManager> CmsManager { get; }
-            //public LazySvc<AppManager> AppManager { get; }
+            public GenWorkDb<WorkBlocksMod> WorkBlocksMod { get; }
+            public GenWorkDb<WorkEntityPublish> Publisher { get; }
+            public GenWorkPlus<WorkBlocks> AppBlocks { get; }
             public Generator<BlockEditorForModule> BlkEdtForMod { get; }
             public Generator<BlockEditorForEntity> BlkEdtForEnt { get; }
 
             public MyServices(
-                LazySvc<AppWork> appSys,
-                LazySvc<WorkBlocks> appBlocks,
-                AppWorkUnitWithDb<WorkBlocksMod> workBlocksMod,
-                //LazySvc<CmsManager> cmsManager,
-                //LazySvc<AppManager> appManager,
-                LazySvc<AppWorkUnit<WorkEntityPublish, IAppWorkCtxWithDb>> publisher,
+                GenWorkPlus<WorkBlocks> appBlocks,
+                GenWorkDb<WorkBlocksMod> workBlocksMod,
+                GenWorkDb<WorkEntityPublish> publisher,
                 Generator<BlockEditorForModule> blkEdtForMod,
                 Generator<BlockEditorForEntity> blkEdtForEnt)
             {
                 ConnectServices(
-                    //CmsManager = cmsManager,
                     WorkBlocksMod = workBlocksMod,
-                    //AppManager = appManager,
                     BlkEdtForMod = blkEdtForMod,
                     BlkEdtForEnt = blkEdtForEnt,
-                    AppSys = appSys,
                     AppBlocks = appBlocks,
                     Publisher = publisher
                 );
@@ -51,16 +42,11 @@ namespace ToSic.Sxc.Blocks.Edit
 
         internal BlockEditorBase(MyServices services) : base(services, "CG.RefMan")
         {
-            //Services.CmsManager.SetInit(r => r.Init(Block?.App));
-            //Services.AppManager.SetInit(r => r.Init(Block?.App));
         }
 
         internal void Init(IBlock block) => Block = block;
 
         #endregion
-
-        //private CmsManager CmsManager => Services.CmsManager.Value;
-        //private AppManager AppManager => Services.AppManager.Value;
 
         protected IBlock Block;
 
@@ -78,7 +64,7 @@ namespace ToSic.Sxc.Blocks.Edit
             if (BlockConfiguration.Exists || forceCreateContentGroup)
             {
                 var existedBeforeSettingTemplate = BlockConfiguration.Exists;
-                var contentGroupGuid = Services.WorkBlocksMod.New(Block.Context.AppState)/* CmsManager.Blocks*/.UpdateOrCreateContentGroup(BlockConfiguration, templateId);
+                var contentGroupGuid = Services.WorkBlocksMod.New(Block.Context.AppState).UpdateOrCreateContentGroup(BlockConfiguration, templateId);
 
                 if (!existedBeforeSettingTemplate) EnsureLinkToContentGroup(contentGroupGuid);
 
@@ -106,16 +92,14 @@ namespace ToSic.Sxc.Blocks.Edit
 
             // make sure we really have the draft item an not the live one
             var appState = Block.Context.AppState;
-            var publisher = Services.Publisher.Value.New(state: appState);
+            var publisher = Services.Publisher.New(appState: appState);
             var contDraft = contEntity.IsPublished ? appState.GetDraft(contEntity) : contEntity;
             publisher.Publish(contDraft.RepositoryId);
-            // AppManager.Entities.Publish(contDraft.RepositoryId);
-            
+
             if (hasPresentation)
             {
                 var presDraft = presEntity.IsPublished ? appState.GetDraft(presEntity) : presEntity;
                 publisher.Publish(presDraft.RepositoryId);
-                //AppManager.Entities.Publish(presDraft.RepositoryId);
             }
 
             return l.ReturnTrue();

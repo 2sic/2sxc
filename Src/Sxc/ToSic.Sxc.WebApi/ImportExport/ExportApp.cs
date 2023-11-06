@@ -2,6 +2,7 @@
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data.Shared;
@@ -12,7 +13,7 @@ using ToSic.Eav.Security;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.WebApi.App;
 using ISite = ToSic.Eav.Context.ISite;
 
@@ -31,7 +32,9 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         #region Constructor / DI
 
-        private readonly AppWorkSxc _appWorkSxc;
+        private readonly GenWorkPlus<WorkEntities> _workEntities;
+        private readonly AppWorkContextService _appWorkCtxSvc;
+        private readonly GenWorkPlus<WorkViews> _workViews;
         private readonly IZoneMapper _zoneMapper;
         private readonly ZipExport _zipExport;
         private readonly ISite _site;
@@ -42,7 +45,9 @@ namespace ToSic.Sxc.WebApi.ImportExport
         public ExportApp(
             IZoneMapper zoneMapper, 
             ZipExport zipExport,
-            AppWorkSxc appWorkSxc,
+            AppWorkContextService appWorkCtxSvc,
+            GenWorkPlus<WorkViews> workViews,
+            GenWorkPlus<WorkEntities> workEntities,
             ISite site, 
             IUser user, 
             Generator<ImpExpHelpers> impExpHelpers, 
@@ -50,7 +55,9 @@ namespace ToSic.Sxc.WebApi.ImportExport
             ) : base("Bck.Export")
         {
             ConnectServices(
-                _appWorkSxc = appWorkSxc,
+                _workEntities = workEntities,
+                _appWorkCtxSvc = appWorkCtxSvc,
+                _workViews = workViews,
                 _zoneMapper = zoneMapper,
                 _zipExport = zipExport,
                 _site = site,
@@ -64,18 +71,18 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         public AppExportInfoDto GetAppInfo(int zoneId, int appId)
         {
-            Log.A($"get app info for app:{appId} and zone:{zoneId}");
+            var l = Log.Fn<AppExportInfoDto>($"get app info for app:{appId} and zone:{zoneId}");
             var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
             var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared);
             var cultCount = _zoneMapper.CulturesWithState(_site).Count(c => c.IsEnabled);
 
-            var appCtx = _appWorkSxc.AppWork.ContextPlus(currentApp);
-            var appEntities = _appWorkSxc.AppWork.Entities(appCtx);
-            var appViews = _appWorkSxc.AppViews(appCtx);
+            var appCtx = _appWorkCtxSvc.ContextPlus(currentApp);
+            var appEntities = _workEntities.New(appCtx);
+            var appViews = _workViews.New(appCtx);
 
-            return new AppExportInfoDto
+            return l.Return(new AppExportInfoDto
             {
                 Name = currentApp.Name,
                 Guid = currentApp.NameId,
@@ -89,12 +96,12 @@ namespace ToSic.Sxc.WebApi.ImportExport
                     + (currentApp.AppState.HasCustomParentApp() ? 0 : zipExport.FileManagerGlobal.AllFiles().Count()), // GlobalFilesCount
                 TransferableFilesCount = zipExport.FileManager.GetAllTransferableFiles().Count() // TransferablePortalFilesCount
                     + (currentApp.AppState.HasCustomParentApp() ? 0 : zipExport.FileManagerGlobal.GetAllTransferableFiles().Count()), // TransferableGlobalFilesCount
-            };
+            });
         }
 
         internal bool SaveDataForVersionControl(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withSiteFiles)
         {
-            Log.A($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
+            var l = Log.Fn<bool>($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
             SecurityHelpers.ThrowIfNotSiteAdmin(_user, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
             // Ensure feature available...
@@ -106,7 +113,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared);
             zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid, withSiteFiles);
 
-            return true;
+            return l.ReturnTrue();
         }
 
         internal static void SyncWithSiteFilesVerifyFeaturesOrThrow(IFeaturesInternal features, bool withSiteFiles)

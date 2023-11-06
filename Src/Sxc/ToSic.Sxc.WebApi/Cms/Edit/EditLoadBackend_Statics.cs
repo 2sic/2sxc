@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
@@ -77,7 +76,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             l.A("Found these input types to load: " + string.Join(", ", fields));
 
-            var allInputType = _appWork.InputTypes(appCtx).GetInputTypes();
+            var allInputType = _inputTypes.New(appCtx).GetInputTypes();
 
             var found = allInputType
                 .Where(it => fields.Contains(it.Type))

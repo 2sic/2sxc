@@ -27,32 +27,29 @@ namespace ToSic.Sxc.WebApi.App
 {
     public class AppContent : ServiceBase
     {
-        private readonly LazySvc<AppWork> _appWork;
-        private readonly Generator<Apps.App> _app;
+        private readonly GenWorkDb<WorkFieldList> _workFieldList;
         private readonly Generator<MultiPermissionsTypes> _typesPermissions;
         private readonly Generator<MultiPermissionsItems> _itemsPermissions;
 
         #region Constructor / DI
 
         public AppContent(
-            Generator<Apps.App> app,
             EntityApi entityApi,
             LazySvc<IConvertToEavLight> entToDicLazy,
             Sxc.Context.IContextResolver ctxResolver,
             Generator<MultiPermissionsTypes> typesPermissions,
             Generator<MultiPermissionsItems> itemsPermissions,
-            LazySvc<AppWork> appWork,
+            GenWorkDb<WorkFieldList> workFieldList,
             LazySvc<SimpleDataController> dataControllerLazy) : base("Sxc.ApiApC")
         {
             ConnectServices(
-                _app = app,
+                _workFieldList = workFieldList,
                 _entityApi = entityApi,
                 _entToDicLazy = entToDicLazy,
                 _ctxResolver = ctxResolver,
                 _typesPermissions = typesPermissions,
                 _itemsPermissions = itemsPermissions,
-                _dataControllerLazy = dataControllerLazy,
-                _appWork = appWork
+                _dataControllerLazy = dataControllerLazy
             );
         }
 
@@ -86,9 +83,7 @@ namespace ToSic.Sxc.WebApi.App
             var permCheck = ThrowIfNotAllowedInType(contentType, GrantSets.ReadSomething, AppState);
 
             var includeDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
-            var result = _entityApi
-                //.Init(AppState.AppId, includeDrafts)
-                .GetEntities(AppState, contentType, includeDrafts)
+            var result = _entityApi.GetEntities(AppState, contentType, includeDrafts)
                 ?.ToList();
             return wrapLog.Return(result, "found: " + result?.Count);
         }
@@ -201,8 +196,7 @@ namespace ToSic.Sxc.WebApi.App
             var field = (string)parentRelationship[ParentRelField];
             var fields = new[] { field };
 
-            _appWork.Value.EntityFieldList(appState: AppState)
-            /*AppManager.Entities*/.FieldListAdd(parentEntity, fields, index, ids, asDraft: false, forceAddToEnd: false);
+            _workFieldList.New(AppState).FieldListAdd(parentEntity, fields, index, ids, asDraft: false, forceAddToEnd: false);
 
             return wrapLog.ReturnTrue($"new ParentRelationship p:{parentGuid},f:{field},i:{index}");
         }
@@ -273,7 +267,7 @@ namespace ToSic.Sxc.WebApi.App
                 throw l.Done(new Exception("type any not allowed with id-only, requires guid"));
 
             var entityApi = _entityApi.Init(AppState.AppId);
-            var itm = entityApi.AppWorkSvc.AppState.List.GetOrThrow(contentType, id);
+            var itm = AppState.List.GetOrThrow(contentType, id);
             ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppState);
             entityApi.Delete(itm.Type.Name, id);
             l.Done();

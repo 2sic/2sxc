@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
@@ -13,17 +12,15 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.SaveHelpers;
-using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Save;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
     public class EditSaveBackend : ServiceBase
     {
-        private readonly AppWork _appWork;
+        private readonly GenWorkPlus<WorkEntities> _workEntities;
         private readonly DataBuilder _dataBuilder;
         private readonly SaveEntities _saveBackendHelper;
         private readonly SaveSecurity _saveSecurity;
@@ -32,8 +29,8 @@ namespace ToSic.Sxc.WebApi.Cms
         #region DI Constructor and Init
 
         public EditSaveBackend(
-            SxcPagePublishing pagePublishing, 
-            AppWork appWork,
+            SxcPagePublishing pagePublishing,
+            GenWorkPlus<WorkEntities> workEntities,
             Sxc.Context.IContextResolver ctxResolver,
             JsonSerializer jsonSerializer,
             SaveSecurity saveSecurity,
@@ -43,7 +40,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             ConnectServices(
                 _pagePublishing = pagePublishing,
-                _appWork = appWork,
+                _workEntities = workEntities,
                 _ctxResolver = ctxResolver,
                 _jsonSerializer = jsonSerializer,
                 _saveSecurity = saveSecurity,
@@ -88,8 +85,8 @@ namespace ToSic.Sxc.WebApi.Cms
             //}
 
             // new API WIP
-            var appCtx = _appWork.Context(_appId);
-            var appEntities = _appWork.Entities(appState: appCtx.AppState);
+            var appEntities = _workEntities.New(_appId);
+            var appCtx = appEntities.AppWorkCtx;
 
             var ser = _jsonSerializer.SetApp(appCtx.AppState);
             // Since we're importing directly into this app, we would prefer local content-types
@@ -153,12 +150,12 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.A("items to save generated, all data tests passed");
 
             return _pagePublishing.SaveInPagePublishing(_ctxResolver.BlockOrNull(), _appId, items, partOfPage,
-                    forceSaveAsDraft => DoSave(appEntities, appCtx, items, forceSaveAsDraft),
+                    forceSaveAsDraft => DoSave(appEntities, items, forceSaveAsDraft),
                     permCheck);
         }
 
 
-        private Dictionary<Guid, int> DoSave(WorkEntities workEntities, IAppWorkCtx appCtx, List<BundleWithHeader<IEntity>> items, bool forceSaveAsDraft)
+        private Dictionary<Guid, int> DoSave(WorkEntities workEntities, List<BundleWithHeader<IEntity>> items, bool forceSaveAsDraft)
         {
             // only save entities that are
             // a) not in a group

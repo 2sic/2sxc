@@ -6,7 +6,6 @@ using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
@@ -18,26 +17,30 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         public const string LogSuffix = "Lst";
 
-
         #region constructor / DI
 
         public ListControllerReal(
-            AppWork appWork,
             Generator<MultiPermissionsApp> multiPermissionsApp,
+            GenWorkPlus<WorkEntities> workEntities,
+            GenWorkDb<WorkFieldList> workFieldList,
             IPagePublishing publishing,
-            LazySvc<AppWorkSxc> appSysSxc,
             IContextResolver ctxResolver,
+            AppWorkContextService appWorkCtxService,
             Generator<IPagePublishing> versioning
-        ) : base(multiPermissionsApp, appSysSxc, ctxResolver, "Api.LstRl")
+        ) : base(multiPermissionsApp, appWorkCtxService, ctxResolver, "Api.LstRl")
         {
             ConnectServices(
-                _appWork = appWork,
+                _workFieldList = workFieldList,
+                _workEntities = workEntities,
                 _publishing = publishing,
                 _versioning = versioning
             );
         }
 
-        private readonly AppWork _appWork;
+
+
+        private readonly GenWorkDb<WorkFieldList> _workFieldList;
+        private readonly GenWorkPlus<WorkEntities> _workEntities;
         private readonly Generator<IPagePublishing> _versioning;
         private readonly IPagePublishing _publishing;
 
@@ -51,19 +54,17 @@ namespace ToSic.Sxc.WebApi.Cms
         public void Move(Guid? parent, string fields, int index, int toIndex
         ) => Log.Do($"change order sort:{index}, dest:{toIndex}", () =>
         {
-            //var entMan = CmsManagerOfBlock.Entities;
-            var fList = _appWork.EntityFieldList(null, appState: Context.AppState);
+            var fList = _workFieldList.New(Context.AppState);
             ModifyList(FindOrThrow(parent), fields,
-                (entity, fieldList, versioning) => fList /*entMan*/.FieldListMove(entity, fieldList, index, toIndex, versioning));
+                (entity, fieldList, versioning) => fList.FieldListMove(entity, fieldList, index, toIndex, versioning));
         });
 
 
         public void Delete(Guid? parent, string fields, int index) => Log.Do($"remove from index:{index}", () =>
         {
-            //var entMan = CmsManagerOfBlock.Entities;
-            var fList = _appWork.EntityFieldList(null, appState: Context.AppState);
+            var fList = _workFieldList.New(Context.AppState);
             ModifyList(FindOrThrow(parent), fields,
-                (entity, fieldList, versioning) => fList /*entMan*/.FieldListRemove(entity, fieldList, index, versioning));
+                (entity, fieldList, versioning) => fList.FieldListRemove(entity, fieldList, index, versioning));
         });
 
 

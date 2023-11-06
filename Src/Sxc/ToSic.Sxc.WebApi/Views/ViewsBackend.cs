@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
@@ -10,7 +9,6 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.WebApi.ImportExport;
 using ToSic.Eav.Apps.Work;
 using ToSic.Sxc.Apps.Work;
@@ -19,29 +17,27 @@ namespace ToSic.Sxc.WebApi.Views
 {
     public class ViewsBackend: ServiceBase
     {
-        private readonly AppWorkContextService _appWorkCtxSvc;
-        private readonly LazySvc<WorkViewsMod> _workViewsMod;
-        private readonly AppWorkSxc _appWorkSxc;
+        private readonly GenWorkPlus<WorkViews> _workViews;
+        private readonly GenWorkBasic<WorkViewsMod> _workViewsMod;
         private readonly LazySvc<IConvertToEavLight> _convertToEavLight;
         private readonly Generator<ImpExpHelpers> _impExpHelpers;
         private readonly ISite _site;
         private readonly IUser _user;
 
         public ViewsBackend(
-            AppWorkContextService appWorkCtxSvc,
-            AppWorkSxc appWorkSxc,
-            LazySvc<WorkViewsMod> workViewsMod,
+            GenWorkBasic<WorkViewsMod> workViewsMod,
+            GenWorkPlus<WorkViews> workViews,
             IContextOfSite context,
             LazySvc<IConvertToEavLight> convertToEavLight,
             Generator<ImpExpHelpers> impExpHelpers
         ) : base("Bck.Views")
         {
-            _appWorkCtxSvc = appWorkCtxSvc;
             ConnectServices(
                 _workViewsMod = workViewsMod,
-                _appWorkSxc = appWorkSxc,
                 _convertToEavLight = convertToEavLight,
                 _impExpHelpers = impExpHelpers,
+                _workViews = workViews,
+
                 _site = context.Site,
                 _user = context.User
             );
@@ -51,10 +47,10 @@ namespace ToSic.Sxc.WebApi.Views
         {
             var l = Log.Fn<IEnumerable<ViewDetailsDto>>($"get all a#{appId}");
 
-            var appSysCtx = _appWorkSxc.AppWork.ContextPlus(appId);
-            var contentTypes = appSysCtx.AppState.ContentTypes.OfScope(Scopes.Default).ToList();
+            var appViews = _workViews.New(appId);
+            var contentTypes = appViews.AppWorkCtx.AppState.ContentTypes.OfScope(Scopes.Default).ToList();
 
-            var viewList = _appWorkSxc.AppViews(appSysCtx).GetAll().ToList();
+            var viewList = appViews.GetAll().ToList();
             Log.A($"attribute list count:{contentTypes.Count}, template count:{viewList.Count}");
             var ser = _convertToEavLight.Value as ConvertToEavLight;
             var views = viewList.Select(view => new ViewDetailsDto
@@ -102,9 +98,7 @@ namespace ToSic.Sxc.WebApi.Views
             // todo: extra security to only allow zone change if host user
             Log.A($"delete a{appId}, t:{id}");
             var app = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
-            //var cms = _cmsManagerLazy.Value.Init(app);
-            //cms.Views.DeleteView(id);
-            _workViewsMod.Value.InitContext(_appWorkCtxSvc.Context(app)).DeleteView(id);
+            _workViewsMod.New(app.AppState).DeleteView(id);
             return true;
         }
     }

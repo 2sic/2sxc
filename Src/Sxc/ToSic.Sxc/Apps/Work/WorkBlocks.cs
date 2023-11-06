@@ -16,23 +16,23 @@ namespace ToSic.Sxc.Apps.Work
 {
     public class WorkBlocks: WorkUnitBase<IAppWorkCtxPlus>
     {
+        private readonly GenWorkPlus<WorkEntities> _workEntities;
         public const string BlockTypeName = "2SexyContent-ContentGroup";
 
-        private readonly AppWork _appWork;
         private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
         private readonly IZoneCultureResolver _cultureResolver;
 
-        public WorkBlocks(IZoneCultureResolver cultureResolver, LazySvc<QueryDefinitionBuilder> qDefBuilder, AppWork appWork) : base("SxS.Blocks")
+        public WorkBlocks(IZoneCultureResolver cultureResolver, LazySvc<QueryDefinitionBuilder> qDefBuilder, GenWorkPlus<WorkEntities> workEntities) : base("SxS.Blocks")
         {
             ConnectServices(
                 _cultureResolver = cultureResolver,
                 _qDefBuilder = qDefBuilder,
-                _appWork = appWork
+                _workEntities = workEntities
             );
         }
 
         // ReSharper disable once ConvertToNullCoalescingCompoundAssignment
-        private IImmutableList<IEntity> ContentGroups() => _appWork.Entities(AppWorkCtx).Get(BlockTypeName).ToImmutableList();
+        private IImmutableList<IEntity> ContentGroups() => _workEntities.New(AppWorkCtx).Get(BlockTypeName).ToImmutableList();
 
         public List<BlockConfiguration> AllWithView()
         {

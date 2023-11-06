@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
@@ -11,7 +10,6 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Eav.Apps.Work;
 
 namespace ToSic.Sxc.Adam
 {
@@ -22,14 +20,12 @@ namespace ToSic.Sxc.Adam
 
         public class MyServices: MyServicesBase
         {
-            public LazySvc<AppWork> AppSys { get; }
             public Generator<AppPermissionCheck> AppPermissionChecks { get; }
 
-            public MyServices(Generator<AppPermissionCheck> appPermissionChecks, LazySvc<AppWork> appSys)
+            public MyServices(Generator<AppPermissionCheck> appPermissionChecks)
             {
                 ConnectServices(
-                    AppPermissionChecks = appPermissionChecks,
-                    AppSys = appSys
+                    AppPermissionChecks = appPermissionChecks
                 );
             }
         }

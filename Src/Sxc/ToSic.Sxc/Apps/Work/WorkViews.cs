@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Apps.Work
 
         #region Constructor / DI
 
-        private readonly LazySvc<AppWorkUnitPlus<WorkEntities>> _appEntities;
+        private readonly GenWorkPlus<WorkEntities> _appEntities;
         private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
         private readonly LazySvc<IValueConverter> _valConverterLazy;
         private readonly IZoneCultureResolver _cultureResolver;
@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Apps.Work
         private readonly LazySvc<AppIconHelpers> _appIconHelpers;
 
         public WorkViews(
-            LazySvc<AppWorkUnitPlus<WorkEntities>> appEntities,
+            GenWorkPlus<WorkEntities> appEntities,
             LazySvc<IValueConverter> valConverterLazy,
             IZoneCultureResolver cultureResolver,
             IConvertToEavLight dataToFormatLight,
@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Apps.Work
 
         #endregion
 
-        private List<IEntity> ViewEntities => _viewDs.Get(() => _appEntities.Value.New(AppWorkCtx).Get(AppConstants.TemplateContentType).ToList());
+        private List<IEntity> ViewEntities => _viewDs.Get(() => _appEntities.New(AppWorkCtx).Get(AppConstants.TemplateContentType).ToList());
         private readonly GetOnce<List<IEntity>> _viewDs = new GetOnce<List<IEntity>>();
 
         public IList<IView> GetAll()

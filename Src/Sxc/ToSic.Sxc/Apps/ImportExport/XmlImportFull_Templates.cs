@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Apps.ImportExport
             var appState = _repositoryLoader.AppState(AppId, false);
 
             //var viewsManager = _cmsManagerLazy.Value.InitWithState(appState).Views;
-            var viewsMod = _workViewsMod.Value.InitContext(_appWork.Context(appState));
+            var viewsMod = _workViewsMod.New(appState);
 
             foreach (var template in templates.Elements(XmlConstants.Template))
             {

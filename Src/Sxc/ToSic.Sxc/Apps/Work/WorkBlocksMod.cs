@@ -12,12 +12,19 @@ namespace ToSic.Sxc.Apps.Work
 {
     public class WorkBlocksMod : WorkUnitBase<IAppWorkCtxWithDb>
     {
-        private readonly AppWork _appWork;
+        private readonly GenWorkDb<WorkEntityUpdate> _workEntUpdate;
+        private readonly GenWorkDb<WorkEntityCreate> _workEntCreate;
+        private readonly GenWorkDb<WorkFieldList> _workFieldList;
 
-        public WorkBlocksMod(AppWork appWork) : base("AWk.EntCre")
+        public WorkBlocksMod(
+            GenWorkDb<WorkFieldList> workFieldList, 
+            GenWorkDb<WorkEntityCreate> workEntCreate,
+            GenWorkDb<WorkEntityUpdate> workEntUpdate) : base("AWk.EntCre")
         {
             ConnectServices(
-                _appWork = appWork
+                _workFieldList = workFieldList,
+                _workEntCreate = workEntCreate,
+                _workEntUpdate = workEntUpdate
             );
         }
 
@@ -32,7 +39,7 @@ namespace ToSic.Sxc.Apps.Work
             {
                 l.A($"doesn't exist, will create new CG with template#{templateId}");
                 // #ExtractEntitySave - verified
-                var guid = _appWork.EntityCreate(AppWorkCtx).Create(WorkBlocks.BlockTypeName, new Dictionary<string, object>
+                var guid = _workEntCreate.New(AppWorkCtx).Create(WorkBlocks.BlockTypeName, new Dictionary<string, object>
                 {
                     {ViewParts.TemplateContentType, new List<int> {templateId}},
                     {ViewParts.Content, new List<int>()},
@@ -45,7 +52,7 @@ namespace ToSic.Sxc.Apps.Work
 
             l.A($"exists, create for group#{blockConfiguration.Guid} with template#{templateId}");
             // #ExtractEntitySave - verified
-            _appWork.EntityUpdate(AppWorkCtx).UpdateParts(blockConfiguration.Entity.EntityId,
+            _workEntUpdate.New(AppWorkCtx).UpdateParts(blockConfiguration.Entity.EntityId,
                 new Dictionary<string, object> { { ViewParts.TemplateContentType, new List<int?> { templateId } } });
 
             return l.ReturnAndLog(blockConfiguration.Guid); // guid didn't change
@@ -53,7 +60,7 @@ namespace ToSic.Sxc.Apps.Work
 
         public void AddEmptyItem(BlockConfiguration block, int? index, bool forceDraft)
         {
-            _appWork.EntityFieldList(appState: AppWorkCtx.AppState)
+            _workFieldList.New(AppWorkCtx.AppState)
                 .FieldListUpdate(block.Entity, ViewParts.ContentPair, forceDraft,
                 lists =>
                 {
@@ -83,12 +90,10 @@ namespace ToSic.Sxc.Apps.Work
         private int CreateItemAndAddToList(int parentId, string field, int index, string typeName, Dictionary<string, object> values, Guid newGuid)
         {
             var l = Log.Fn<int>($"{nameof(parentId)}:{parentId}, {nameof(field)}:{field}, {nameof(index)}, {index}, {nameof(typeName)}:{typeName}");
-            // #ExtractEntitySave - context
-            var workCtx = _appWork.CtxWithDb(AppWorkCtx.AppState);
 
             // create the new entity 
             // #ExtractEntitySave - should be ok
-            var entityId = _appWork.EntityCreate(workCtx).GetOrCreate(newGuid, typeName, values);
+            var entityId = _workEntCreate.New(AppWorkCtx.AppState).GetOrCreate(newGuid, typeName, values);
 
             #region attach to the current list of items
 
@@ -104,7 +109,7 @@ namespace ToSic.Sxc.Apps.Work
             }
             var updateDic = new Dictionary<string, object> { { field, intList } };
             // #ExtractEntitySave - should be ok
-            _appWork.EntityUpdate(workCtx).UpdateParts(cbEnt.EntityId, updateDic);
+            _workEntUpdate.New(AppWorkCtx.AppState).UpdateParts(cbEnt.EntityId, updateDic);
 
             #endregion
 
