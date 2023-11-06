@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps.Security;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Blocks.Output;
@@ -22,6 +24,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 {
     public class ContentBlockBackend : BlockWebApiBackendBase
     {
+        private readonly LazySvc<WorkBlocksMod> _workBlocksMod;
         private readonly LazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
         private readonly Generator<BlockFromEntity> _entityBlockGenerator;
 
@@ -31,7 +34,8 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             LazySvc<AppWorkSxc> appSysSxc,
             Generator<MultiPermissionsApp> multiPermissionsApp, 
             IPagePublishing publishing, 
-            LazySvc<CmsManager> cmsManagerLazy, 
+            LazySvc<CmsManager> cmsManagerLazy,
+            LazySvc<WorkBlocksMod> workBlocksMod,
             IContextResolver ctxResolver, 
             LazySvc<IBlockResourceExtractor> optimizerLazy,
             LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
@@ -40,6 +44,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
         {
             ConnectServices(
                 _optimizer = optimizerLazy,
+                _workBlocksMod = workBlocksMod,
                 _publishing = publishing,
                 _entityBlockGenerator = entityBlockGenerator,
                 _blockEditorSelectorLazy = blockEditorSelectorLazy
@@ -48,6 +53,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 
         private readonly LazySvc<IBlockResourceExtractor> _optimizer;
         private readonly IPagePublishing _publishing;
+
 
         #endregion
 
@@ -63,14 +69,14 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 
         // todo: probably move to CmsManager.Block
         public int NewBlock(int parentId, string field, int sortOrder, string app = "", Guid? guid = null) 
-            => CmsManagerOfBlock.Blocks.NewBlockReference(parentId, field, sortOrder, app, guid);
+            => _workBlocksMod.Value.InitContext(AppWorkCtxDb)/* CmsManagerOfBlock.Blocks*/.NewBlockReference(parentId, field, sortOrder, app, guid);
 
         public void AddItem(int? index = null)
         {
             Log.A($"add order:{index}");
             // use dnn versioning - this is always part of page
             _publishing.DoInsidePublishing(ContextOfBlock, _ 
-                => CmsManagerOfBlock.Blocks.AddEmptyItem(Block.Configuration, index, Block.Context.Publishing.ForceDraft));
+                => _workBlocksMod.Value.InitContext(AppWorkCtxDb)/*CmsManagerOfBlock.Blocks*/.AddEmptyItem(Block.Configuration, index, Block.Context.Publishing.ForceDraft));
         }
 
         

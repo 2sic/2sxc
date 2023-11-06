@@ -1,13 +1,12 @@
 ﻿using System;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Apps.CmsSys;
+using ToSic.Sxc.Apps.Work;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
@@ -19,10 +18,11 @@ namespace ToSic.Sxc.Blocks.Edit
 
         public class MyServices : MyServicesBase
         {
+            public AppWorkUnitWithDb<WorkBlocksMod> WorkBlocksMod { get; }
             public LazySvc<AppWorkUnit<WorkEntityPublish, IAppWorkCtxWithDb>> Publisher { get; }
             public LazySvc<AppWork> AppSys { get; }
             public LazySvc<AppBlocks> AppBlocks { get; }
-            public LazySvc<CmsManager> CmsManager { get; }
+            //public LazySvc<CmsManager> CmsManager { get; }
             //public LazySvc<AppManager> AppManager { get; }
             public Generator<BlockEditorForModule> BlkEdtForMod { get; }
             public Generator<BlockEditorForEntity> BlkEdtForEnt { get; }
@@ -30,14 +30,16 @@ namespace ToSic.Sxc.Blocks.Edit
             public MyServices(
                 LazySvc<AppWork> appSys,
                 LazySvc<AppBlocks> appBlocks,
-                LazySvc<CmsManager> cmsManager,
-                LazySvc<AppManager> appManager,
+                AppWorkUnitWithDb<WorkBlocksMod> workBlocksMod,
+                //LazySvc<CmsManager> cmsManager,
+                //LazySvc<AppManager> appManager,
                 LazySvc<AppWorkUnit<WorkEntityPublish, IAppWorkCtxWithDb>> publisher,
                 Generator<BlockEditorForModule> blkEdtForMod,
                 Generator<BlockEditorForEntity> blkEdtForEnt)
             {
                 ConnectServices(
-                    CmsManager = cmsManager,
+                    //CmsManager = cmsManager,
+                    WorkBlocksMod = workBlocksMod,
                     //AppManager = appManager,
                     BlkEdtForMod = blkEdtForMod,
                     BlkEdtForEnt = blkEdtForEnt,
@@ -50,7 +52,7 @@ namespace ToSic.Sxc.Blocks.Edit
 
         internal BlockEditorBase(MyServices services) : base(services, "CG.RefMan")
         {
-            Services.CmsManager.SetInit(r => r.Init(Block?.App));
+            //Services.CmsManager.SetInit(r => r.Init(Block?.App));
             //Services.AppManager.SetInit(r => r.Init(Block?.App));
         }
 
@@ -58,7 +60,7 @@ namespace ToSic.Sxc.Blocks.Edit
 
         #endregion
 
-        private CmsManager CmsManager => Services.CmsManager.Value;
+        //private CmsManager CmsManager => Services.CmsManager.Value;
         //private AppManager AppManager => Services.AppManager.Value;
 
         protected IBlock Block;
@@ -71,29 +73,24 @@ namespace ToSic.Sxc.Blocks.Edit
         
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
-            Guid? result;
-            Log.A($"save template#{templateId}, CG-exists:{BlockConfiguration.Exists} forceCreateCG:{forceCreateContentGroup}");
+            var l = Log.Fn<Guid?>($"save template#{templateId}, CG-exists:{BlockConfiguration.Exists} forceCreateCG:{forceCreateContentGroup}");
 
             // if it exists or has a force-create, then write to the Content-Group, otherwise it's just a preview
             if (BlockConfiguration.Exists || forceCreateContentGroup)
             {
                 var existedBeforeSettingTemplate = BlockConfiguration.Exists;
-                var contentGroupGuid = CmsManager.Blocks.UpdateOrCreateContentGroup(BlockConfiguration, templateId);
+                var contentGroupGuid = Services.WorkBlocksMod.New(Block.Context.AppState)/* CmsManager.Blocks*/.UpdateOrCreateContentGroup(BlockConfiguration, templateId);
 
                 if (!existedBeforeSettingTemplate) EnsureLinkToContentGroup(contentGroupGuid);
 
-                result = contentGroupGuid;
-            }
-            else
-            {
-                // only set preview / content-group-reference - but must use the guid
-                var dataSource = Block.App.Data;
-                var templateGuid = dataSource.List.One(templateId).EntityGuid;
-                SavePreviewTemplateId(templateGuid);
-                result = null; // send null back
+                return l.ReturnAndLog(contentGroupGuid);
             }
 
-            return result;
+            // only set preview / content-group-reference - but must use the guid
+            var dataSource = Block.App.Data;
+            var templateGuid = dataSource.List.One(templateId).EntityGuid;
+            SavePreviewTemplateId(templateGuid);
+            return l.Return(null, "only set preview, return null");
         }
 
         public bool Publish(string part, int index)

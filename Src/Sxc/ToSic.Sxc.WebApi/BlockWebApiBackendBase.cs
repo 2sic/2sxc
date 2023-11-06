@@ -34,6 +34,8 @@ namespace ToSic.Sxc.WebApi
         private IAppWorkCtx _appWorkCtx;
         protected IAppWorkCtxPlus AppWorkCtxPlus => _appWorkCtxPlus ?? (_appWorkCtxPlus = AppSysSxc.Value.AppWork.ToCtxPlus(AppWorkCtx));
         private IAppWorkCtxPlus _appWorkCtxPlus;
+        protected IAppWorkCtxWithDb AppWorkCtxDb => _appWorkCtxDb ?? (_appWorkCtxDb = AppSysSxc.Value.AppWork.CtxWithDb(AppWorkCtx.AppState));
+        private IAppWorkCtxWithDb _appWorkCtxDb;
 
         #endregion
 

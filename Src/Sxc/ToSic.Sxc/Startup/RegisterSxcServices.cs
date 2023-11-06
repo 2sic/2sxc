@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataSource.Catalog;
 using ToSic.Eav.Run;
@@ -43,13 +44,15 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<CmsZones>();
             services.TryAddTransient<AppsRuntime>();
             services.TryAddTransient<AppsManager>();
-            services.TryAddTransient<BlocksManager>();
+            //services.TryAddTransient<BlocksManager>();
 
             // New runtimes, better architecture v16.07+
             services.TryAddTransient<AppWorkSxc>();
             services.TryAddTransient<AppBlocks>();
             services.TryAddTransient<WorkViews>();
             services.TryAddTransient<WorkViewsMod>();
+            services.TryAddTransient<WorkBlocks>();
+            services.TryAddTransient<WorkBlocksMod>();
 
             // Code
             services.TryAddTransient<DynamicCodeRoot.MyServices>();
