@@ -32,14 +32,14 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         public ImportContent(
             IEnvironmentLogger envLogger,
-            LazySvc<Import> importerLazy,
+            LazySvc<ImportService> importerLazy,
             LazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
             ZipImport zipImport,
             Generator<JsonSerializer> jsonSerializerGenerator, 
             IGlobalConfiguration globalConfiguration,
             IAppStates appStates,
             LazySvc<IUser> userLazy,
-            SystemManager systemManager,
+            AppCachePurger appCachePurger,
             LazySvc<IFeaturesInternal> features) : base("Bck.Export")
         {
             ConnectServices(
@@ -50,21 +50,21 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 _jsonSerializerGenerator = jsonSerializerGenerator,
                 _globalConfiguration = globalConfiguration,
                 _appStates = appStates,
-                SystemManager = systemManager,
+                AppCachePurger = appCachePurger,
                 _userLazy = userLazy,
                 _features = features
             );
         }
 
         private readonly IEnvironmentLogger _envLogger;
-        private readonly LazySvc<Import> _importerLazy;
+        private readonly LazySvc<ImportService> _importerLazy;
         private readonly LazySvc<XmlImportWithFiles> _xmlImportWithFilesLazy;
         private readonly ZipImport _zipImport;
         private readonly Generator<JsonSerializer> _jsonSerializerGenerator;
         private readonly IGlobalConfiguration _globalConfiguration;
         private readonly IAppStates _appStates;
         private readonly LazySvc<IUser> _userLazy;
-        protected readonly SystemManager SystemManager;
+        protected readonly AppCachePurger AppCachePurger;
 
         #endregion
 
@@ -149,7 +149,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                     import.ImportIntoDb(types, null);
 
                     l.A($"Purging {zoneId}/{appId}");
-                    SystemManager.Purge(zoneId, appId);
+                    AppCachePurger.Purge(zoneId, appId);
                 }
 
                 // are there any entities from bundles for import?
@@ -192,7 +192,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                     import.ImportIntoDb(null, entities.Cast<Entity>().ToList());
 
                     l.A($"Purging {zoneId}/{appId}");
-                    SystemManager.Purge(zoneId, appId);
+                    AppCachePurger.Purge(zoneId, appId);
                     
                     //foreach (var entity in entities)
                     //    appState.Add(entity as Entity, null, true);

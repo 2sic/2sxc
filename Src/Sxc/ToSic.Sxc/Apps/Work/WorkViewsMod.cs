@@ -1,16 +1,31 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Apps.Work;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.Apps
+namespace ToSic.Sxc.Apps.Work
 {
-    /// <inheritdoc />
-    /// <summary>
-    /// Views manager for the app engine - in charge of importing / modifying templates at app-level
-    /// </summary>
-    public class ViewsManager: PartOf<CmsManager>
+    public class WorkViewsMod : WorkUnitBase<IAppWorkCtx>
     {
-        public ViewsManager() : base("Cms.ViewMn") { }
+        private readonly GenWorkPlus<WorkViews> _appViews;
+        private readonly GenWorkDb<WorkEntityCreate> _entityCreate;
+        private readonly GenWorkDb<WorkEntityUpdate> _entityUpdate;
+        private readonly GenWorkDb<WorkEntityDelete> _entityDelete;
+
+        public WorkViewsMod(
+            GenWorkPlus<WorkViews> appViews,
+            GenWorkDb<WorkEntityCreate> entityCreate,
+            GenWorkDb<WorkEntityUpdate> entityUpdate,
+            GenWorkDb<WorkEntityDelete> entityDelete) : base("AWk.EntCre")
+        {
+            ConnectServices(
+                _appViews = appViews,
+                _entityCreate = entityCreate,
+                _entityUpdate = entityUpdate,
+                _entityDelete = entityDelete
+            );
+        }
+
 
         /// <summary>
         /// Adds or updates a template - will create a new template if templateId is not specified
@@ -21,6 +36,7 @@ namespace ToSic.Sxc.Apps
             int? listPresentationDemoEntity, string templateType, bool isHidden, string location, bool useForList,
             bool publishData, string streamsToPublish, int? queryEntity, string viewNameInUrl)
         {
+            var l = Log.Fn($"{nameof(name)}: {name}");
             var values = new Dictionary<string, object>
             {
                 {nameof(IView.Name) /*View.FieldName*/, name },
@@ -43,10 +59,14 @@ namespace ToSic.Sxc.Apps
                 {View.FieldNameInUrl, viewNameInUrl }
             };
 
+
+            // #ExtractEntitySave - looks good
             if (templateId.HasValue)
-                Parent.Entities.UpdateParts(templateId.Value, values);
+                _entityUpdate.New(AppWorkCtx).UpdateParts(templateId.Value, values);
             else
-                Parent.Entities.Create(Eav.Apps.AppConstants.TemplateContentType, values);
+                _entityCreate.New(AppWorkCtx).Create(Eav.Apps.AppConstants.TemplateContentType, values);
+
+            l.Done();
         }
 
 
@@ -54,8 +74,8 @@ namespace ToSic.Sxc.Apps
         public bool DeleteView(int viewId)
         {
             // really get template first, to be sure it is a template
-            var template = Parent.Read.Views.Get(viewId);
-            return Parent .Entities.Delete(template.Id);
+            var template = _appViews.New(AppWorkCtx).Get(viewId);
+            return _entityDelete.New(AppWorkCtx).Delete(template.Id);
         }
     }
 }

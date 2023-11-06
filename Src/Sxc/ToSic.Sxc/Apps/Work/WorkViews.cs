@@ -1,96 +1,75 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Ui;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Query;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Run;
-using ToSic.Eav.Services;
 using ToSic.Lib.DI;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 
 // note: not sure if the final namespace should be Sxc.Apps or Sxc.Views
-namespace ToSic.Sxc.Apps
+namespace ToSic.Sxc.Apps.Work
 {
-	public class ViewsRuntime: PartOf<CmsRuntime>
+    public class WorkViews: WorkUnitBase<IAppWorkCtxPlus>
     {
-        private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
-        private readonly IDataSourceGenerator<EntityTypeFilter> _typeFilterGenerator;
 
         #region Constructor / DI
 
+        private readonly GenWorkPlus<WorkEntities> _appEntities;
+        private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
         private readonly LazySvc<IValueConverter> _valConverterLazy;
         private readonly IZoneCultureResolver _cultureResolver;
         private readonly IConvertToEavLight _dataToFormatLight;
         private readonly LazySvc<AppIconHelpers> _appIconHelpers;
 
-        public ViewsRuntime(LazySvc<IValueConverter> valConverterLazy,
+        public WorkViews(
+            GenWorkPlus<WorkEntities> appEntities,
+            LazySvc<IValueConverter> valConverterLazy,
             IZoneCultureResolver cultureResolver,
             IConvertToEavLight dataToFormatLight,
             LazySvc<AppIconHelpers> appIconHelpers,
-            LazySvc<QueryDefinitionBuilder> qDefBuilder,
-            IDataSourceGenerator<EntityTypeFilter> typeFilterGenerator) : base("Cms.ViewRd")
+            LazySvc<QueryDefinitionBuilder> qDefBuilder) : base("Cms.ViewRd")
         {
             ConnectServices(
+                _appEntities = appEntities,
                 _valConverterLazy = valConverterLazy,
                 _cultureResolver = cultureResolver,
                 _dataToFormatLight = dataToFormatLight,
                 _appIconHelpers = appIconHelpers,
-                _typeFilterGenerator = typeFilterGenerator,
                 _qDefBuilder = qDefBuilder
             );
         }
 
         #endregion
 
-        private IDataSource _viewDs;
-		private IDataSource ViewsDataSource()
-        {
-            if (_viewDs != null) return _viewDs;
-		    // ReSharper disable once RedundantArgumentDefaultValue
-            var dataSource = Parent.Data;
-			var typeFilter = _typeFilterGenerator.New(attach: dataSource);
-		    typeFilter.TypeName = Eav.Apps.AppConstants.TemplateContentType;
-		    return _viewDs = typeFilter;
-		}
+        private List<IEntity> ViewEntities => _viewDs.Get(() => _appEntities.New(AppWorkCtx).Get(AppConstants.TemplateContentType).ToList());
+        private readonly GetOnce<List<IEntity>> _viewDs = new GetOnce<List<IEntity>>();
 
-        public IEnumerable<IView> GetAll() 
-            => _all ?? (_all = ViewsDataSource().List
-                   .Select(p => new View(p, new[] { _cultureResolver.CurrentCultureCode }, Log, _qDefBuilder))
-                   .OrderBy(p => p.Name));
-        private IEnumerable<IView> _all;
+        public IList<IView> GetAll()
+            => _all ?? (_all = ViewEntities.Select(p => ViewOfEntity(p, "")).OrderBy(p => p.Name).ToList());
+        private IList<IView> _all;
 
         public IEnumerable<IView> GetRazor() => GetAll().Where(t => t.IsRazor);
         public IEnumerable<IView> GetToken() => GetAll().Where(t => !t.IsRazor);
 
 
-        public IView Get(int templateId)
-		{
-            var templateEntity = ViewsDataSource().List.One(templateId);
+        public IView Get(int templateId) => ViewOfEntity(ViewEntities.One(templateId), templateId);
 
-            if(templateEntity == null)
-				throw new Exception("The template with id " + templateId + " does not exist.");
+        public IView Get(Guid guid) => ViewOfEntity(ViewEntities.One(guid), guid);
 
-			return new View(templateEntity, new[] { _cultureResolver.CurrentCultureCode }, Log, _qDefBuilder);
-		}
-
-        public IView Get(Guid guid)
-        {
-            var templateEntity = ViewsDataSource().List.One(guid);
-
-            if (templateEntity == null)
-                throw new Exception("The template with id " + guid + " does not exist.");
-
-            return new View(templateEntity, new[] { _cultureResolver.CurrentCultureCode }, Log, _qDefBuilder);
-        }
+        private IView ViewOfEntity(IEntity templateEntity, object templateId) =>
+            templateEntity == null
+                ? throw new Exception("The template with id '" + templateId + "' does not exist.")
+                : new View(templateEntity, new[] { _cultureResolver.CurrentCultureCode }, Log, _qDefBuilder);
 
 
         internal IEnumerable<TemplateUiInfo> GetCompatibleViews(IApp app, BlockConfiguration blockConfiguration)
@@ -153,7 +132,7 @@ namespace ToSic.Sxc.Apps
 
             var valConverter = _valConverterLazy.Value;
 
-            return Parent.ContentTypes.All.OfScope(Scopes.Default) 
+            return AppWorkCtx.AppState.ContentTypes.OfScope(Scopes.Default) 
                 .Where(ct => templates.Any(t => t.ContentType == ct.NameId)) // must exist in at least 1 template
                 .OrderBy(ct => ct.Name)
                 .Select(ct =>

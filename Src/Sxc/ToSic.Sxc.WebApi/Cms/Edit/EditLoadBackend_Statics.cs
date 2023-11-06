@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Eav.Apps.Work;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -19,8 +19,8 @@ namespace ToSic.Sxc.WebApi.Cms
         /// based on the header (if none already existed)
         /// </summary>
         /// <returns></returns>
-        private JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleWithHeader<IEntity> bundle, JsonSerializer jsonSerializer,
-            ContentTypeRuntime typeRead, AppState appState) => Log.Func(l =>
+        private JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleWithHeader<IEntity> bundle,
+            JsonSerializer jsonSerializer, AppState appState, IAppWorkCtx appSysCtx) => Log.Func(l =>
         {
             // attach original metadata assignment when creating a new one
             JsonEntity ent;
@@ -31,7 +31,7 @@ namespace ToSic.Sxc.WebApi.Cms
             }
             else
             {
-                ent = jsonSerializer.ToJson(ConstructEmptyEntity(appId, bundle.Header, typeRead), 0);
+                ent = jsonSerializer.ToJson(ConstructEmptyEntity(appId, bundle.Header, appSysCtx), 0);
 
                 // only attach metadata, if no metadata already exists
                 if (ent.For == null && bundle.Header?.For != null) ent.For = bundle.Header.For;
@@ -58,54 +58,56 @@ namespace ToSic.Sxc.WebApi.Cms
             return (ent);
         });
 
-        internal static List<IContentType> UsedTypes(List<BundleWithHeader<IEntity>> list, ContentTypeRuntime typeRead)
+        internal List<IContentType> UsedTypes(List<BundleWithHeader<IEntity>> list, IAppWorkCtx appSysCtx)
             => list.Select(i
                     // try to get the entity type, but if there is none (new), look it up according to the header
                     => i.Entity?.Type
-                       ?? typeRead.Get(i.Header.ContentTypeName))
+                       ?? appSysCtx.AppState.GetContentType(i.Header.ContentTypeName))
                 .ToList();
 
-        internal List<InputTypeInfo> GetNecessaryInputTypes(List<JsonContentType> contentTypes, ContentTypeRuntime typeRead)
+        internal List<InputTypeInfo> GetNecessaryInputTypes(List<JsonContentType> contentTypes, IAppWorkCtxPlus appCtx)
         {
-            var wrapLog = Log.Fn<List<InputTypeInfo>>($"{nameof(contentTypes)}: {contentTypes.Count}");
+            var l = Log.Fn<List<InputTypeInfo>>($"{nameof(contentTypes)}: {contentTypes.Count}");
             var fields = contentTypes
                 .SelectMany(t => t.Attributes)
                 .Select(a => a.InputType)
                 .Distinct()
                 .ToList();
 
-            Log.A("Found these input types to load: " + string.Join(", ", fields));
+            l.A("Found these input types to load: " + string.Join(", ", fields));
 
-            var allInputType = typeRead.GetInputTypes();
+            var allInputType = _inputTypes.New(appCtx).GetInputTypes();
 
             var found = allInputType
                 .Where(it => fields.Contains(it.Type))
                 .ToList();
 
-            if (found.Count == fields.Count) Log.A("Found all");
+            if (found.Count == fields.Count) 
+                l.A("Found all");
             else
             {
-                Log.A(
-                    $"It seems some input types were not found. Needed {fields.Count}, found {found.Count}. Will try to log details for this.");
+                l.A($"It seems some input types were not found. Needed {fields.Count}, found {found.Count}. Will try to log details for this.");
                 try
                 {
                     var notFound = fields.Where(field => found.All(fnd => fnd.Type != field));
-                    Log.A("Didn't find: " + string.Join(",", notFound));
+                    l.A("Didn't find: " + string.Join(",", notFound));
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    Log.A("Ran into problems logging missing input types.");
+                    l.Ex(ex);
+                    l.A("Ran into problems logging missing input types.");
                 }
             }
 
-            return wrapLog.Return(found, $"{found.Count}");
+            return l.Return(found, $"{found.Count}");
         }
 
-        private IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, ContentTypeRuntime typeRead) => Log.Func(() =>
+        private IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, IAppWorkCtx appSysCtx)
         {
-            var type = typeRead.Get(header.ContentTypeName);
+            var l = Log.Fn<IEntity>();
+            var type = appSysCtx.AppState.GetContentType(header.ContentTypeName);
             var ent = _entityBuilder.EmptyOfType(appId, header.Guid, header.EntityId, type);
-            return ent;
-        });
+            return l.Return(ent);
+        }
     }
 }

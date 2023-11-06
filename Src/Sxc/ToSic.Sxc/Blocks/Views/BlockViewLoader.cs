@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Blocks
@@ -14,18 +14,18 @@ namespace ToSic.Sxc.Blocks
     {
         public BlockViewLoader(ILog parentLog) : base(parentLog, "Blk.ViewLd") { }
 
-        internal IView PickView(IBlock block, IView configView, IContextOfBlock context, CmsRuntime cms)
+        internal IView PickView(IBlock block, IView configView, IContextOfBlock context, WorkViews views)
         {
             //View = configView;
             // skip on ContentApp (not a feature there) or if not relevant or not yet initialized
             if (block.IsContentApp || block.App == null) return configView;
 
             // #2 Change Template if URL contains the part in the metadata "ViewNameInUrl"
-            var viewFromUrlParam = TryToGetTemplateBasedOnUrlParams(context, cms);
+            var viewFromUrlParam = TryGetViewBasedOnUrlParams(context, views);
             return viewFromUrlParam ?? configView;
         }
 
-        private IView TryToGetTemplateBasedOnUrlParams(IContextOfBlock context, CmsRuntime cms)
+        private IView TryGetViewBasedOnUrlParams(IContextOfBlock context, WorkViews views)
         {
             var wrapLog = Log.Fn<IView>("template override - check");
             if (context.Page.Parameters == null) return wrapLog.ReturnNull("no params");
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Blocks
             var urlParameterDict = context.Page.Parameters.ToDictionary(pair => pair.Key?.ToLowerInvariant() ?? "", pair =>
                 $"{pair.Key}/{pair.Value}".ToLowerInvariant());
 
-            var allTemplates = cms.Views.GetAll();
+            var allTemplates = views.GetAll();
 
             foreach (var template in allTemplates.Where(t => !string.IsNullOrEmpty(t.UrlIdentifier)))
             {

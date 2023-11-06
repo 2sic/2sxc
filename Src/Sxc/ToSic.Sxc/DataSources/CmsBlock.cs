@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Services;
@@ -6,7 +7,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -53,19 +54,20 @@ namespace ToSic.Sxc.DataSources
 
         public new class MyServices: MyServicesBase<DataSourceBase.MyServices>
         {
-            public LazySvc<CmsRuntime> LazyCmsRuntime { get; }
+            public GenWorkPlus<WorkBlocks> AppBlocks { get; }
             public LazySvc<IModule> ModuleLazy { get; }
             public LazySvc<IDataSourcesService> DataSourceFactory { get; }
 
             public MyServices(DataSourceBase.MyServices parentServices,
-                LazySvc<CmsRuntime> lazyCmsRuntime,
                 LazySvc<IModule> moduleLazy,
-                LazySvc<IDataSourcesService> dataSourceFactory) : base(parentServices)
+                LazySvc<IDataSourcesService> dataSourceFactory,
+                GenWorkPlus<WorkBlocks> appBlocks
+                ) : base(parentServices)
             {
                 ConnectServices(
-                    LazyCmsRuntime = lazyCmsRuntime,
                     ModuleLazy = moduleLazy,
-                    DataSourceFactory = dataSourceFactory
+                    DataSourceFactory = dataSourceFactory,
+                    AppBlocks = appBlocks
                 );
             }
         }

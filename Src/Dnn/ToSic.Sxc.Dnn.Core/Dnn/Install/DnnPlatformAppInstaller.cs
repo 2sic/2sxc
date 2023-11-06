@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Run;
@@ -15,16 +15,19 @@ namespace ToSic.Sxc.Dnn.Install
 {
     public class DnnPlatformAppInstaller: ServiceBase, IPlatformAppInstaller
     {
+        private readonly GenWorkPlus<WorkViews> _workViews;
         private readonly LazySvc<IAppStates> _appStatesLazy;
-        private readonly LazySvc<CmsRuntime> _cmsRuntimeLazy;
         private readonly LazySvc<RemoteRouterLink> _remoteRouterLazy;
 
-        public DnnPlatformAppInstaller(LazySvc<IAppStates> appStatesLazy,
-            LazySvc<CmsRuntime> cmsRuntimeLazy, LazySvc<RemoteRouterLink> remoteRouterLazy) : base("Dnn.AppIns")
+        public DnnPlatformAppInstaller(
+            LazySvc<IAppStates> appStatesLazy,
+            GenWorkPlus<WorkViews> workViews,
+            LazySvc<RemoteRouterLink> remoteRouterLazy
+        ) : base("Dnn.AppIns")
         {
             ConnectServices(
+                _workViews = workViews,
                 _appStatesLazy = appStatesLazy,
-                _cmsRuntimeLazy = cmsRuntimeLazy,
                 _remoteRouterLazy = remoteRouterLazy
             );
         }
@@ -46,9 +49,7 @@ namespace ToSic.Sxc.Dnn.Install
                 {
                     var primaryAppId = _appStatesLazy.Value.IdentityOfDefault(site.ZoneId);
                     // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
-                    var contentViews = _cmsRuntimeLazy.Value
-                        .InitQ(primaryAppId)
-                        .Views.GetAll();
+                    var contentViews = _workViews.New(primaryAppId).GetAll();
                     if (contentViews.Any()) return null;
                 }
                 catch

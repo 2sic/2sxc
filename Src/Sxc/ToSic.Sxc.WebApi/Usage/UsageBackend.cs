@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Security;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Errors;
-using ToSic.Eav.WebApi.Security;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 
@@ -18,20 +17,23 @@ namespace ToSic.Sxc.WebApi.Usage
 {
     public class UsageBackend: ServiceBase
     {
-        private readonly CmsRuntime _cmsRuntime;
+        private readonly GenWorkPlus<WorkViews> _workViews;
+        private readonly GenWorkPlus<WorkBlocks> _appBlocks;
         private readonly Generator<MultiPermissionsApp> _appPermissions;
         private readonly IContextResolver _ctxResolver;
 
         public UsageBackend(
-            CmsRuntime cmsRuntime,
+            GenWorkPlus<WorkBlocks> appBlocks,
+            GenWorkPlus<WorkViews> workViews,
             Generator<MultiPermissionsApp> appPermissions,
             IContextResolver ctxResolver
             ) : base("Bck.Usage")
         {
             ConnectServices(
-                _cmsRuntime = cmsRuntime,
                 _appPermissions = appPermissions,
-                _ctxResolver = ctxResolver
+                _ctxResolver = ctxResolver,
+                _workViews = workViews,
+                _appBlocks = appBlocks
             );
         }
 
@@ -45,11 +47,12 @@ namespace ToSic.Sxc.WebApi.Usage
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
-            var cms = _cmsRuntime.InitQ(context.AppState);
+            var appWorkCtxPlus = _appBlocks.CtxSvc.ContextPlus(appId);
+            var appViews = _workViews.New(appWorkCtxPlus);
             // treat view as a list - in case future code will want to analyze many views together
-            var views = new List<IView> { cms.Views.Get(guid) };
+            var views = new List<IView> { appViews.Get(guid) };
 
-            var blocks = cms.Blocks.AllWithView();
+            var blocks = _appBlocks.New(appWorkCtxPlus).AllWithView();
 
             Log.A($"Found {blocks.Count} content blocks");
 

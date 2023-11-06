@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
@@ -11,50 +9,56 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.WebApi.ImportExport;
+using ToSic.Eav.Apps.Work;
+using ToSic.Sxc.Apps.Work;
 
 namespace ToSic.Sxc.WebApi.Views
 {
     public class ViewsBackend: ServiceBase
     {
-        public ViewsBackend(LazySvc<CmsManager> cmsManagerLazy, IContextOfSite context, IAppStates appStates,
-            LazySvc<IConvertToEavLight> convertToEavLight, Generator<ImpExpHelpers> impExpHelpers)
-            : base("Bck.Views")
-        {
-            ConnectServices(
-                _cmsManagerLazy = cmsManagerLazy,
-                _appStates = appStates,
-                _convertToEavLight = convertToEavLight,
-                _impExpHelpers = impExpHelpers,
-                _site = context.Site,
-                _user = context.User
-            );
-        }
-
-        private readonly LazySvc<CmsManager> _cmsManagerLazy;
-        private readonly IAppStates _appStates;
+        private readonly GenWorkPlus<WorkViews> _workViews;
+        private readonly GenWorkBasic<WorkViewsMod> _workViewsMod;
         private readonly LazySvc<IConvertToEavLight> _convertToEavLight;
         private readonly Generator<ImpExpHelpers> _impExpHelpers;
         private readonly ISite _site;
         private readonly IUser _user;
 
+        public ViewsBackend(
+            GenWorkBasic<WorkViewsMod> workViewsMod,
+            GenWorkPlus<WorkViews> workViews,
+            IContextOfSite context,
+            LazySvc<IConvertToEavLight> convertToEavLight,
+            Generator<ImpExpHelpers> impExpHelpers
+        ) : base("Bck.Views")
+        {
+            ConnectServices(
+                _workViewsMod = workViewsMod,
+                _convertToEavLight = convertToEavLight,
+                _impExpHelpers = impExpHelpers,
+                _workViews = workViews,
+
+                _site = context.Site,
+                _user = context.User
+            );
+        }
 
         public IEnumerable<ViewDetailsDto> GetAll(int appId)
         {
-            Log.A($"get all a#{appId}");
-            var cms = _cmsManagerLazy.Value.InitQ(_appStates.IdentityOfApp(appId)/*, true*/).Read;
+            var l = Log.Fn<IEnumerable<ViewDetailsDto>>($"get all a#{appId}");
 
-            var attributeSetList = cms.ContentTypes.All.OfScope(Scopes.Default).ToList();
-            var viewList = cms.Views.GetAll().ToList();
-            Log.A($"attribute list count:{attributeSetList.Count}, template count:{viewList.Count}");
-            var ser = (_convertToEavLight.Value as ConvertToEavLight);
+            var appViews = _workViews.New(appId);
+            var contentTypes = appViews.AppWorkCtx.AppState.ContentTypes.OfScope(Scopes.Default).ToList();
+
+            var viewList = appViews.GetAll().ToList();
+            Log.A($"attribute list count:{contentTypes.Count}, template count:{viewList.Count}");
+            var ser = _convertToEavLight.Value as ConvertToEavLight;
             var views = viewList.Select(view => new ViewDetailsDto
             {
-                Id = view.Id, Name = view.Name, ContentType = TypeSpecs(attributeSetList, view.ContentType, view.ContentItem),
-                PresentationType = TypeSpecs(attributeSetList, view.PresentationType, view.PresentationItem),
-                ListContentType = TypeSpecs(attributeSetList, view.HeaderType, view.HeaderItem),
-                ListPresentationType = TypeSpecs(attributeSetList, view.HeaderPresentationType, view.HeaderPresentationItem),
+                Id = view.Id, Name = view.Name, ContentType = TypeSpecs(contentTypes, view.ContentType, view.ContentItem),
+                PresentationType = TypeSpecs(contentTypes, view.PresentationType, view.PresentationItem),
+                ListContentType = TypeSpecs(contentTypes, view.HeaderType, view.HeaderItem),
+                ListPresentationType = TypeSpecs(contentTypes, view.HeaderPresentationType, view.HeaderPresentationItem),
                 TemplatePath = view.Path,
                 IsHidden = view.IsHidden,
                 ViewNameInUrl = view.UrlIdentifier,
@@ -66,8 +70,8 @@ namespace ToSic.Sxc.WebApi.Views
                 EditInfo = new EditInfoDto(view.Entity),
                 Metadata = ser?.CreateListOfSubEntities(view.Metadata, SubEntitySerialization.AllTrue()),
                 Permissions = new HasPermissionsDto {Count = view.Entity.Metadata.Permissions.Count()},
-            });
-            return views;
+            }).ToList();
+            return l.Return(views, $"{views.Count}");
         }
 
 
@@ -94,8 +98,7 @@ namespace ToSic.Sxc.WebApi.Views
             // todo: extra security to only allow zone change if host user
             Log.A($"delete a{appId}, t:{id}");
             var app = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
-            var cms = _cmsManagerLazy.Value.Init(app);
-            cms.Views.DeleteView(id);
+            _workViewsMod.New(app.AppState).DeleteView(id);
             return true;
         }
     }

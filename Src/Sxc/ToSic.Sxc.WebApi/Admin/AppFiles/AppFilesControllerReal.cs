@@ -88,10 +88,6 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
 
             EnsureRequiredFolder(assetFromTemplateDto);
 
-            // ensure all .cshtml start with "_"
-            // 2022-12-15 2dm - disabled, as we don't require this any more #2963
-            //EnsureCshtmlStartWithUnderscore(assetFromTemplateDto);
-
             var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(assetFromTemplateDto);
 
             // get and prepare template content
@@ -155,12 +151,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
             var app = _appStates.Get(appId);
             var assetEditor = _assetEditorGenerator.New();
 
-            // TODO: simplify once we release v13 #cleanUp EOY 2021
-            // Commented out 2022-12-21 / 2dm
-            //if (path == null)
-            //    assetEditor.Init(app, templateId, Log);
-            //else
-                assetEditor.Init(app, path, global, templateId);
+            assetEditor.Init(app, path, global, templateId);
             assetEditor.EnsureUserMayEditAssetOrThrow();
             return wrapLog.Return(assetEditor);
         }
@@ -190,10 +181,6 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
                 };
 
                 EnsureRequiredFolder(assetFromTemplateDto);
-
-                // ensure all .cshtml start with "_"
-                // 2022-12-15 2dm - disabled, as we don't require this any more #2963
-                //EnsureCshtmlStartWithUnderscore(assetFromTemplateDto);
 
                 // check if file can be created
                 var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(assetFromTemplateDto);

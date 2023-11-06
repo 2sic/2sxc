@@ -22,21 +22,23 @@ namespace ToSic.Sxc.WebApi.Cms
 
             void InternalSave(VersioningActionInfo _)
             {
-                var entity = CmsManagerOfBlock.AppState.GetDraftOrPublished(guid)
+                var entity = AppWorkCtx.AppState.GetDraftOrPublished(guid)
                              ?? throw l.Done( new Exception($"Can't find item '{guid}'"));
 
                 // Make sure we have the correct casing for the field names
                 part = entity.Type[part].Name;
+
+                var fList = _workFieldList.New(Context.AppState);
 
                 var forceDraft = Context.Publishing.ForceDraft;
                 if (add)
                 {
                     var fields = isContentPair ? ViewParts.ContentPair : new[] { part };
                     var values = isContentPair ? new int?[] { entityId, null } : new int?[] { entityId };
-                    CmsManagerOfBlock.Entities.FieldListAdd(entity, fields, index, values, forceDraft, false);
+                    fList.FieldListAdd(entity, fields, index, values, forceDraft, false);
                 }
                 else
-                    CmsManagerOfBlock.Entities.FieldListReplaceIfModified(entity, new[] { part }, index, new int?[] { entityId },
+                    fList.FieldListReplaceIfModified(entity, new[] { part }, index, new int?[] { entityId },
                         forceDraft);
             }
 
@@ -60,7 +62,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var ct = Context.AppState.GetContentType(typeName);
 
-            var listTemp = CmsManagerOfBlock.Read.Entities.Get(typeName);
+            var listTemp = _workEntities.New(Context.AppState).Get(typeName).ToList();
 
             var results = listTemp.Select(Context.AppState.GetDraftOrKeep).ToDictionary(
                 p => p.EntityId,

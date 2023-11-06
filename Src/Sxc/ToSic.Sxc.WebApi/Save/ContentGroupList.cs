@@ -2,46 +2,45 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using static System.StringComparison;
+using ToSic.Eav.Apps.Work;
+using ToSic.Sxc.Apps.Work;
 
 namespace ToSic.Sxc.WebApi.Save
 {
     public class ContentGroupList: ServiceBase
     {
-
         #region Constructor / DI
 
+        private readonly GenWorkDb<WorkFieldList> _workFieldList;
+        private readonly GenWorkPlus<WorkBlocks> _appBlocks;
         private readonly LazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
-        private readonly LazySvc<CmsManager> _cmsManagerLazy;
-        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.InitQ(_appIdentity/*, _withDrafts*/));
-        private CmsManager _cmsManager;
-        //private bool? _withDrafts = false;
 
-        public ContentGroupList(LazySvc<CmsManager> cmsManagerLazy, LazySvc<BlockEditorSelector> blockEditorSelectorLazy) : base("Api.GrpPrc")
+        public ContentGroupList(GenWorkPlus<WorkBlocks> appBlocks, LazySvc<BlockEditorSelector> blockEditorSelectorLazy, GenWorkDb<WorkFieldList> workFieldList) : base("Api.GrpPrc")
         {
             ConnectServices(
-                _blockEditorSelectorLazy = blockEditorSelectorLazy,
-                _cmsManagerLazy = cmsManagerLazy
+                _appBlocks = appBlocks,
+                _workFieldList = workFieldList,
+                _blockEditorSelectorLazy = blockEditorSelectorLazy
             );
         }
 
-        public ContentGroupList Init(IAppIdentity appIdentity/*, bool? withDraftsTemp*/)
+        public ContentGroupList Init(IAppIdentity appIdentity)
         {
             _appIdentity = appIdentity;
-            //_withDrafts = withDraftsTemp;
+            AppCtx = _appBlocks.CtxSvc.Context(appIdentity);
             return this;
         }
         private IAppIdentity _appIdentity;
+        private IAppWorkCtx AppCtx { get; set; }
         #endregion
 
         internal bool IfChangesAffectListUpdateIt(IBlock block, List<BundleWithHeader<IEntity>> items,
@@ -59,14 +58,12 @@ namespace ToSic.Sxc.WebApi.Save
                 : (true, "no additional group processing necessary");
         });
 
-        private bool PostSaveUpdateIdsInParent(IBlock block,
-            Dictionary<Guid, int> postSaveIds,
-            IEnumerable<IGrouping<string, BundleWithHeader<IEntity>>> pairsOrSingleItems)
+        private bool PostSaveUpdateIdsInParent(IBlock block, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, BundleWithHeader<IEntity>>> pairsOrSingleItems)
         {
-            var wrapLog = Log.Fn<bool>($"{_appIdentity.AppId}");
+            var l = Log.Fn<bool>($"{_appIdentity.AppId}");
 
             // If no content block given, skip all this
-            if (block == null) return wrapLog.ReturnTrue("no block, nothing to update");
+            if (block == null) return l.ReturnTrue("no block, nothing to update");
 
 
             foreach (var bundle in pairsOrSingleItems)
@@ -75,8 +72,8 @@ namespace ToSic.Sxc.WebApi.Save
 
                 if (bundle.First().Header.Parent == null) continue;
 
-                var parent = CmsManager.Read.AppState.GetDraftOrPublished(bundle.First().Header.GetParentEntityOrError());
-                var targetIsContentBlock = parent.Type.Name == BlocksRuntime.BlockTypeName;
+                var parent = AppCtx.AppState.GetDraftOrPublished(bundle.First().Header.GetParentEntityOrError());
+                var targetIsContentBlock = parent.Type.Name == WorkBlocks.BlockTypeName;
                 
                 var primaryItem = targetIsContentBlock ? FindContentItem(bundle) : bundle.First();
                 var primaryId = GetIdFromGuidOrError(postSaveIds, primaryItem.Entity.EntityGuid);
@@ -97,6 +94,7 @@ namespace ToSic.Sxc.WebApi.Save
                     ? ViewParts.PickFieldPair(primaryItem.Header.Field)
                     : new[] {primaryItem.Header.Field};
 
+                var fieldList = _workFieldList.New(AppCtx.AppState);
                 if (willAdd) // this cannot be auto-detected, it must be specified
                 {
 
@@ -104,16 +102,18 @@ namespace ToSic.Sxc.WebApi.Save
                     // fix https://github.com/2sic/2sxc/issues/2943 
                     if (!parent.Children(fieldPair.First()).Any() && !targetIsContentBlock) indexNullAddToEnd = true;
                     
-                    CmsManager.Entities.FieldListAdd(parent, fieldPair, index, ids, block.Context.Publishing.ForceDraft, indexNullAddToEnd, targetIsContentBlock);
+                    fieldList
+                    /*CmsManager.Entities*/.FieldListAdd(parent, fieldPair, index, ids, block.Context.Publishing.ForceDraft, indexNullAddToEnd, targetIsContentBlock);
                 }
                 else
-                    CmsManager.Entities.FieldListReplaceIfModified(parent, fieldPair, index, ids, block.Context.Publishing.ForceDraft);
+                    fieldList
+                    /*CmsManager.Entities*/.FieldListReplaceIfModified(parent, fieldPair, index, ids, block.Context.Publishing.ForceDraft);
 
             }
 
             // update-module-title
             _blockEditorSelectorLazy.Value.GetEditor(block).UpdateTitle();
-            return wrapLog.ReturnTrue("ok");
+            return l.ReturnTrue("ok");
         }
 
         private static BundleWithHeader<T> FindContentItem<T>(IGrouping<string, BundleWithHeader<T>> bundle)
@@ -168,6 +168,7 @@ namespace ToSic.Sxc.WebApi.Save
         internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers) => Log.Func(() =>
         {
             var newItems = new List<ItemIdentifier>();
+            var appBlocks = _appBlocks.New(AppCtx);
             foreach (var identifier in identifiers)
             {
                 // Case one, it's a Content-Group - in this case the content-type name comes from View configuration
@@ -175,7 +176,8 @@ namespace ToSic.Sxc.WebApi.Save
                 {
                     if (!identifier.Parent.HasValue) continue;
 
-                    var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(identifier.GetParentEntityOrError());
+                    //var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(identifier.GetParentEntityOrError());
+                    var contentGroup = appBlocks.GetBlockConfig(identifier.GetParentEntityOrError());
                     var contentTypeName = (contentGroup.View as View)?.GetTypeStaticName(identifier.Field) ?? "";
 
                     // if there is no content-type for this, then skip it (don't deliver anything)
@@ -193,7 +195,7 @@ namespace ToSic.Sxc.WebApi.Save
                 if (identifier.Parent != null && identifier.Field != null)
                 {
                     // look up type
-                    var target = CmsManager.Read.AppState.List.One(identifier.Parent.Value);
+                    var target = AppCtx/* CmsManager.Read*/.AppState.List.One(identifier.Parent.Value);
                     var field = target.Type[identifier.Field];
                     identifier.ContentTypeName = field.EntityFieldItemTypePrimary();
                     newItems.Add(identifier);
@@ -218,8 +220,8 @@ namespace ToSic.Sxc.WebApi.Save
             if (!identifier.Parent.HasValue) return (false, "no parent");
 
             // get the entity and determine if it's a content-block. If yes, that should affect the differences in load/save
-            var entity = CmsManager.Read.AppState.List.One(identifier.Parent.Value);
-            return (entity.Type.Name == BlocksRuntime.BlockTypeName, "type name should match");
+            var entity = AppCtx.AppState.List.One(identifier.Parent.Value);
+            return (entity.Type.Name == WorkBlocks.BlockTypeName, "type name should match");
         });
 
 

@@ -10,6 +10,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
 using static ToSic.Eav.Configuration.BuiltInFeatures;
+using ToSic.Eav.Apps.Work;
 
 namespace ToSic.Sxc.Adam
 {
@@ -98,7 +99,7 @@ namespace ToSic.Sxc.Adam
 
 
         // Temp
-        public abstract AppRuntime AppRuntime { get; }
+        public abstract IAppWorkCtx AppWorkCtx { get; }
 
         /// <summary>
         /// Determines if the files come from the root (shared files).
@@ -132,7 +133,7 @@ namespace ToSic.Sxc.Adam
         /// </summary>
         private IContentTypeAttribute AttributeDefinition(AppState appState, string contentType, string fieldName)
         {
-            var type = appState /*State.Get(appId)*/.GetContentType(contentType);
+            var type = appState.GetContentType(contentType);
             return type[fieldName];
         }
 

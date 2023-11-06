@@ -1,12 +1,11 @@
 ﻿using System;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Apps.Work;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
@@ -18,41 +17,36 @@ namespace ToSic.Sxc.Blocks.Edit
 
         public class MyServices : MyServicesBase
         {
-            public LazySvc<CmsRuntime> CmsRuntime { get; }
-            public LazySvc<CmsManager> CmsManager { get; }
-            public LazySvc<AppManager> AppManager { get; }
+            public GenWorkDb<WorkBlocksMod> WorkBlocksMod { get; }
+            public GenWorkDb<WorkEntityPublish> Publisher { get; }
+            public GenWorkPlus<WorkBlocks> AppBlocks { get; }
             public Generator<BlockEditorForModule> BlkEdtForMod { get; }
             public Generator<BlockEditorForEntity> BlkEdtForEnt { get; }
 
-            public MyServices(LazySvc<CmsRuntime> cmsRuntime,
-                LazySvc<CmsManager> cmsManager,
-                LazySvc<AppManager> appManager,
+            public MyServices(
+                GenWorkPlus<WorkBlocks> appBlocks,
+                GenWorkDb<WorkBlocksMod> workBlocksMod,
+                GenWorkDb<WorkEntityPublish> publisher,
                 Generator<BlockEditorForModule> blkEdtForMod,
                 Generator<BlockEditorForEntity> blkEdtForEnt)
             {
                 ConnectServices(
-                    CmsRuntime = cmsRuntime,
-                    CmsManager = cmsManager,
-                    AppManager = appManager,
+                    WorkBlocksMod = workBlocksMod,
                     BlkEdtForMod = blkEdtForMod,
-                    BlkEdtForEnt = blkEdtForEnt
+                    BlkEdtForEnt = blkEdtForEnt,
+                    AppBlocks = appBlocks,
+                    Publisher = publisher
                 );
             }
         }
 
         internal BlockEditorBase(MyServices services) : base(services, "CG.RefMan")
         {
-            Services.CmsRuntime.SetInit(r => r.InitQ(Block?.App/*, true*/));
-            Services.CmsManager.SetInit(r => r.Init(Block?.App));
-            Services.AppManager.SetInit(r => r.Init(Block?.App));
         }
 
         internal void Init(IBlock block) => Block = block;
 
         #endregion
-
-        private CmsManager CmsManager => Services.CmsManager.Value;
-        private AppManager AppManager => Services.AppManager.Value;
 
         protected IBlock Block;
 
@@ -64,34 +58,29 @@ namespace ToSic.Sxc.Blocks.Edit
         
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
-            Guid? result;
-            Log.A($"save template#{templateId}, CG-exists:{BlockConfiguration.Exists} forceCreateCG:{forceCreateContentGroup}");
+            var l = Log.Fn<Guid?>($"save template#{templateId}, CG-exists:{BlockConfiguration.Exists} forceCreateCG:{forceCreateContentGroup}");
 
             // if it exists or has a force-create, then write to the Content-Group, otherwise it's just a preview
             if (BlockConfiguration.Exists || forceCreateContentGroup)
             {
                 var existedBeforeSettingTemplate = BlockConfiguration.Exists;
-                var contentGroupGuid = CmsManager.Blocks.UpdateOrCreateContentGroup(BlockConfiguration, templateId);
+                var contentGroupGuid = Services.WorkBlocksMod.New(Block.Context.AppState).UpdateOrCreateContentGroup(BlockConfiguration, templateId);
 
                 if (!existedBeforeSettingTemplate) EnsureLinkToContentGroup(contentGroupGuid);
 
-                result = contentGroupGuid;
-            }
-            else
-            {
-                // only set preview / content-group-reference - but must use the guid
-                var dataSource = Block.App.Data;
-                var templateGuid = dataSource.List.One(templateId).EntityGuid;
-                SavePreviewTemplateId(templateGuid);
-                result = null; // send null back
+                return l.ReturnAndLog(contentGroupGuid);
             }
 
-            return result;
+            // only set preview / content-group-reference - but must use the guid
+            var dataSource = Block.App.Data;
+            var templateGuid = dataSource.List.One(templateId).EntityGuid;
+            SavePreviewTemplateId(templateGuid);
+            return l.Return(null, "only set preview, return null");
         }
 
         public bool Publish(string part, int index)
         {
-            Log.A($"publish part{part}, order:{index}");
+            var l = Log.Fn<bool>($"publish part{part}, order:{index}");
             var contentGroup = BlockConfiguration;
             var contEntity = contentGroup[part][index];
             var presKey = part.ToLowerInvariant() == ViewParts.ContentLower 
@@ -102,19 +91,19 @@ namespace ToSic.Sxc.Blocks.Edit
             var hasPresentation = presEntity != null;
 
             // make sure we really have the draft item an not the live one
-            var contDraft = contEntity.IsPublished ? AppManager.AppState.GetDraft(contEntity) : contEntity;
-            AppManager.Entities.Publish(contDraft.RepositoryId);
-            
+            var appState = Block.Context.AppState;
+            var publisher = Services.Publisher.New(appState: appState);
+            var contDraft = contEntity.IsPublished ? appState.GetDraft(contEntity) : contEntity;
+            publisher.Publish(contDraft.RepositoryId);
+
             if (hasPresentation)
             {
-                var presDraft = presEntity.IsPublished ? AppManager.AppState.GetDraft(presEntity) : presEntity;
-                AppManager.Entities.Publish(presDraft.RepositoryId);
+                var presDraft = presEntity.IsPublished ? appState.GetDraft(presEntity) : presEntity;
+                publisher.Publish(presDraft.RepositoryId);
             }
 
-            return true;
+            return l.ReturnTrue();
         }
-
-        private AppManager BlockAppManager => Services.AppManager.Value;
 
         #endregion
 

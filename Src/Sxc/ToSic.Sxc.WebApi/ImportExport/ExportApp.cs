@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Linq;
-#if NETFRAMEWORK
-using System.IO;
-using System.Net.Http;
-using ToSic.Eav.WebApi.ImportExport;
-#else
-using Microsoft.AspNetCore.Mvc;
-#endif
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
-using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data.Shared;
@@ -20,77 +13,95 @@ using ToSic.Eav.Security;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.WebApi.App;
 using ISite = ToSic.Eav.Context.ISite;
+
+#if NETFRAMEWORK
+using System.IO;
+using System.Net.Http;
+using ToSic.Eav.WebApi.ImportExport;
+#else
+using Microsoft.AspNetCore.Mvc;
+#endif
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
     public class ExportApp: ServiceBase
     {
+
         #region Constructor / DI
 
-        public ExportApp(
-            IZoneMapper zoneMapper, 
-            ZipExport zipExport, 
-            CmsRuntime cmsRuntime, 
-            ISite site, 
-            IUser user, 
-            Generator<ImpExpHelpers> impExpHelpers, 
-            IFeaturesInternal features
-            ) : base("Bck.Export") =>
-            ConnectServices(
-                _zoneMapper = zoneMapper,
-                _zipExport = zipExport,
-                _cmsRuntime = cmsRuntime,
-                _site = site,
-                _user = user,
-                _features = features,
-                _impExpHelpers = impExpHelpers
-            );
-
+        private readonly GenWorkPlus<WorkEntities> _workEntities;
+        private readonly AppWorkContextService _appWorkCtxSvc;
+        private readonly GenWorkPlus<WorkViews> _workViews;
         private readonly IZoneMapper _zoneMapper;
         private readonly ZipExport _zipExport;
-        private readonly CmsRuntime _cmsRuntime;
         private readonly ISite _site;
         private readonly IUser _user;
         private readonly IFeaturesInternal _features;
         private readonly Generator<ImpExpHelpers> _impExpHelpers;
 
+        public ExportApp(
+            IZoneMapper zoneMapper, 
+            ZipExport zipExport,
+            AppWorkContextService appWorkCtxSvc,
+            GenWorkPlus<WorkViews> workViews,
+            GenWorkPlus<WorkEntities> workEntities,
+            ISite site, 
+            IUser user, 
+            Generator<ImpExpHelpers> impExpHelpers, 
+            IFeaturesInternal features
+            ) : base("Bck.Export")
+        {
+            ConnectServices(
+                _workEntities = workEntities,
+                _appWorkCtxSvc = appWorkCtxSvc,
+                _workViews = workViews,
+                _zoneMapper = zoneMapper,
+                _zipExport = zipExport,
+                _site = site,
+                _user = user,
+                _features = features,
+                _impExpHelpers = impExpHelpers
+            );
+        }
 
         #endregion
 
         public AppExportInfoDto GetAppInfo(int zoneId, int appId)
         {
-            Log.A($"get app info for app:{appId} and zone:{zoneId}");
+            var l = Log.Fn<AppExportInfoDto>($"get app info for app:{appId} and zone:{zoneId}");
             var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
             var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared);
             var cultCount = _zoneMapper.CulturesWithState(_site).Count(c => c.IsEnabled);
 
-            var cms = _cmsRuntime.InitQ(currentApp);
+            var appCtx = _appWorkCtxSvc.ContextPlus(currentApp);
+            var appEntities = _workEntities.New(appCtx);
+            var appViews = _workViews.New(appCtx);
 
-            return new AppExportInfoDto
+            return l.Return(new AppExportInfoDto
             {
                 Name = currentApp.Name,
                 Guid = currentApp.NameId,
                 Version = currentApp.VersionSafe(),
-                EntitiesCount = cms.Entities.All.Count(e => !e.HasAncestor()),
+                EntitiesCount = appEntities.All().Count(e => !e.HasAncestor()),
                 LanguagesCount = cultCount,
-                TemplatesCount = cms.Views.GetAll().Count(),
-                HasRazorTemplates = cms.Views.GetRazor().Any(),
-                HasTokenTemplates = cms.Views.GetToken().Any(),
+                TemplatesCount = appViews.GetAll().Count(),
+                HasRazorTemplates = appViews.GetRazor().Any(),
+                HasTokenTemplates = appViews.GetToken().Any(),
                 FilesCount = zipExport.FileManager.AllFiles().Count() // PortalFilesCount
                     + (currentApp.AppState.HasCustomParentApp() ? 0 : zipExport.FileManagerGlobal.AllFiles().Count()), // GlobalFilesCount
                 TransferableFilesCount = zipExport.FileManager.GetAllTransferableFiles().Count() // TransferablePortalFilesCount
                     + (currentApp.AppState.HasCustomParentApp() ? 0 : zipExport.FileManagerGlobal.GetAllTransferableFiles().Count()), // TransferableGlobalFilesCount
-            };
+            });
         }
 
         internal bool SaveDataForVersionControl(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withSiteFiles)
         {
-            Log.A($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
+            var l = Log.Fn<bool>($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
             SecurityHelpers.ThrowIfNotSiteAdmin(_user, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
             // Ensure feature available...
@@ -102,7 +113,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared);
             zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid, withSiteFiles);
 
-            return true;
+            return l.ReturnTrue();
         }
 
         internal static void SyncWithSiteFilesVerifyFeaturesOrThrow(IFeaturesInternal features, bool withSiteFiles)

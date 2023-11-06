@@ -5,17 +5,32 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Security;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Lib.Services;
+using ToSic.Eav.Apps.Work;
 
 namespace ToSic.Sxc.WebApi
 {
     public abstract class BlockWebApiBackendBase : ServiceBase
     {
+        protected BlockWebApiBackendBase(
+            Generator<MultiPermissionsApp> multiPermissionsApp,
+            AppWorkContextService appWorkCtxService,
+            Sxc.Context.IContextResolver ctxResolver,
+            string logName
+            ) : base(logName)
+        {
+            ConnectServices(
+                _multiPermissionsApp = multiPermissionsApp,
+                CtxResolver = ctxResolver,
+                AppWorkCtxService = appWorkCtxService
+            );
+        }
+
+
+        public AppWorkContextService AppWorkCtxService { get; }
         private readonly Generator<MultiPermissionsApp> _multiPermissionsApp;
         public Sxc.Context.IContextResolver CtxResolver { get; }
-        protected readonly LazySvc<CmsManager> CmsManagerLazy;
 
         protected IContextOfApp ContextOfBlock =>
             _contextOfAppOrBlock ?? (_contextOfAppOrBlock = CtxResolver.BlockContextRequired());
@@ -25,24 +40,15 @@ namespace ToSic.Sxc.WebApi
         public IBlock Block => _block ?? (_block = CtxResolver.BlockRequired());
         private IBlock _block;
 
-        protected CmsManager CmsManagerOfBlock => _cmsManager ?? (_cmsManager = CmsManagerLazy.Value.Init(Block.Context));
-        private CmsManager _cmsManager;
+        protected IAppWorkCtx AppWorkCtx => _appWorkCtx ?? (_appWorkCtx = AppWorkCtxService.Context(Block.Context.AppState));
+        private IAppWorkCtx _appWorkCtx;
+        protected IAppWorkCtxPlus AppWorkCtxPlus => _appWorkCtxPlus ?? (_appWorkCtxPlus = AppWorkCtxService.ToCtxPlus(AppWorkCtx));
+        private IAppWorkCtxPlus _appWorkCtxPlus;
+        protected IAppWorkCtxWithDb AppWorkCtxDb => _appWorkCtxDb ?? (_appWorkCtxDb = AppWorkCtxService.CtxWithDb(AppWorkCtx.AppState));
+        private IAppWorkCtxWithDb _appWorkCtxDb;
 
         #endregion
 
-
-        protected BlockWebApiBackendBase(
-            Generator<MultiPermissionsApp> multiPermissionsApp,
-            LazySvc<CmsManager> cmsManagerLazy,
-            Sxc.Context.IContextResolver ctxResolver, string logName
-            ) : base(logName)
-        {
-            ConnectServices(
-                _multiPermissionsApp = multiPermissionsApp,
-                CtxResolver = ctxResolver,
-                CmsManagerLazy = cmsManagerLazy
-            );
-        }
 
         protected void ThrowIfNotAllowedInApp(List<Grants> requiredGrants, IAppIdentity alternateApp = null)
         {

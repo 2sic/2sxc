@@ -2,12 +2,13 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Paths;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Paths;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Blocks;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -15,48 +16,36 @@ namespace ToSic.Sxc.Apps.Assets
 {
     public class AssetEditor : ServiceBase
     {
+
         #region Constructor / DI
 
-        private AssetEditInfo EditInfo { get; set; }
-
-        private readonly LazySvc<CmsRuntime> _cmsRuntimeLazy;
+        private readonly GenWorkPlus<WorkViews> _workViews;
         private readonly IUser _user;
         private readonly LazySvc<AppFolderInitializer> _appFolderInitializer;
         private readonly ISite _site;
         private readonly AppPaths _appPaths;
-        private CmsRuntime _cmsRuntime;
         private AppState _appState;
 
-        public AssetEditor(LazySvc<CmsRuntime> cmsRuntimeLazy, IUser user, LazySvc<AppFolderInitializer> appFolderInitializer, ISite site, AppPaths appPaths) : base("Sxc.AstEdt")
+        public AssetEditor(GenWorkPlus<WorkViews> workViews, IUser user, LazySvc<AppFolderInitializer> appFolderInitializer, ISite site, AppPaths appPaths) : base("Sxc.AstEdt")
         {
             ConnectServices(
-                _cmsRuntimeLazy = cmsRuntimeLazy,
                 _user = user,
                 _appFolderInitializer = appFolderInitializer,
+                _workViews = workViews,
                 _site = site,
                 _appPaths = appPaths
             );
         }
+        private AssetEditInfo EditInfo { get; set; }
 
-        // TODO: REMOVE THIS once we release v13 #cleanUp EOY 2021
-        // Commented out 2022-12-21 / 2dm
-        //public AssetEditor Init(AppState app, int templateId, ILog parentLog)
-        //{
-        //    InitShared(app, parentLog);
-        //    var view = _cmsRuntime.Views.Get(templateId);
-        //    var t = new AssetEditInfo(_appState.AppId, _appState.Name, view.Path, view.IsShared);
-        //    EditInfo = AddViewDetailsAndTypes(t, view);
 
-        //    return this;
-        //}
-
-        public AssetEditor Init(AppState app, string path, bool global, int viewId)
+        public AssetEditor Init(AppState appState, string path, bool global, int viewId)
         {
-            InitShared(app);
+            InitShared(appState);
             EditInfo = new AssetEditInfo(_appState.AppId, _appState.Name, path, global);
             if (viewId == 0) return this;
 
-            var view = _cmsRuntime.Views.Get(viewId);
+            var view = _workViews.New(appState).Get(viewId);
             AddViewDetailsAndTypes(EditInfo, view);
             return this;
         }
@@ -66,7 +55,6 @@ namespace ToSic.Sxc.Apps.Assets
         {
             _appState = app;
             _appPaths.Init(_site, _appState);
-            _cmsRuntime = _cmsRuntimeLazy.Value.InitQ(_appState/*, true*/);
         }
 
         #endregion

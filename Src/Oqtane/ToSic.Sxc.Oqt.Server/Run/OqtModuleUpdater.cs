@@ -3,13 +3,13 @@ using Oqtane.Shared;
 using System;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Integration;
@@ -20,32 +20,36 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     internal class OqtModuleUpdater: ServiceBase, IPlatformModuleUpdater
     {
+        private readonly LazySvc<IAppStates> _appStates;
+        private readonly GenWorkPlus<WorkViews> _workViews;
         private readonly SettingsHelper _settingsHelper;
         private readonly IPageModuleRepository _pageModuleRepository;
-        private readonly LazySvc<CmsRuntime> _lazyCmsRuntime;
-        private readonly IAppStates _appStates;
         private readonly ISite _site;
 
         /// <summary>
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public OqtModuleUpdater(SettingsHelper settingsHelper,
+        public OqtModuleUpdater(
+            SettingsHelper settingsHelper,
             IPageModuleRepository pageModuleRepository,
-            LazySvc<CmsRuntime> lazyCmsRuntime, IAppStates appStates, ISite site) : base($"{OqtConstants.OqtLogPrefix}.MapA2I")
+            GenWorkPlus<WorkViews> workViews,
+            LazySvc<IAppStates> appStates,
+            ISite site
+            ) : base($"{OqtConstants.OqtLogPrefix}.MapA2I")
         {
             ConnectServices(
                 _settingsHelper = settingsHelper,
                 _pageModuleRepository = pageModuleRepository,
-                _lazyCmsRuntime = lazyCmsRuntime,
                 _appStates = appStates,
+                _workViews = workViews,
                 _site = site
             );
         }
 
         public void SetAppId(IModule instance, int? appId)
         {
-            Log.A($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
+            var l = Log.Fn($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
             // Reset temporary template
             ClearPreview(instance.Id);
 
@@ -55,7 +59,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 UpdateInstanceSetting(instance.Id, Settings.ModuleSettingApp, null, Log);
             else
             {
-                var appName = _appStates.AppIdentifier(_site.ZoneId, appId.Value);
+                var appName = _appStates.Value.AppIdentifier(_site.ZoneId, appId.Value);
                 UpdateInstanceSetting(instance.Id, Settings.ModuleSettingApp, appName, Log);
             }
 
@@ -63,10 +67,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (appId.HasValue)
             {
                 var appIdentity = new AppIdentity(_site.ZoneId, appId.Value);
-                var cms = _lazyCmsRuntime.Value.InitQ(appIdentity/*, true*/);
-                var templateGuid = cms.Views.GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
+                var templateGuid = _workViews.New(appIdentity).GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);
             }
+
+            l.Done();
         }
 
         protected void ClearPreview(int instanceId)

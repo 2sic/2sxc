@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Decorators;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Context;
-using ToSic.Lib.Logging;
 using ToSic.Lib.DI;
+using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Apps
+namespace ToSic.Sxc.Apps.Work
 {
-    public class AppsRuntime: ZonePartRuntimeBase //</*CmsZones,*/ AppsRuntime>
+    public class WorkApps : ServiceBase
     {
         #region Constructor / DI
 
-        public AppsRuntime(IAppStates appStates, Generator<App> appGenerator) : base("Cms.AppsRt")
+        public WorkApps(IAppStates appStates, Generator<App> appGenerator) : base("Cms.AppsRt")
         {
             ConnectServices(
                 _appStates = appStates,
@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Apps
         public List<IApp> GetApps(ISite site, Func<Eav.Apps.App, IAppDataConfiguration> buildConfig)
         {
             // todo: unclear if this is the right way to do this - probably the ZoneId should come from the site?
-            var zId = ZoneRuntime.ZoneId;
+            var zId = site.ZoneId;
             var appIds = _appStates.Apps(zId);
             return appIds
                 .Select(a => _appGenerator.New()

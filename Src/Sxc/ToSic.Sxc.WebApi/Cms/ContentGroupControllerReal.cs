@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Data;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
@@ -20,41 +20,50 @@ namespace ToSic.Sxc.WebApi.Cms
     public class ContentGroupControllerReal: ServiceBase, IContentGroupController
     {
         #region Constructor / di
+
         public const string LogSuffix = "CntGrp";
+
         public ContentGroupControllerReal(
+            GenWorkDb<WorkFieldList> workFieldList,
+            GenWorkPlus<WorkBlocks> appBlocks,
             LazySvc<IPagePublishing> publishing, 
-            LazySvc<CmsManager> cmsManagerLazy, 
-            IContextResolver ctxResolver, 
-            LazySvc<ListControllerReal> listController) : base("Api.CntGrpRl") =>
+            IContextResolver ctxResolver,
+            LazySvc<ListControllerReal> listController) : base("Api.CntGrpRl")
+        {
             ConnectServices(
+                _workFieldList = workFieldList,
+                _appBlocks = appBlocks,
                 CtxResolver = ctxResolver,
-                _cmsManagerLazy = cmsManagerLazy,
                 _publishing = publishing,
                 _listController = listController
             );
+        }
+
 
         public IContextResolver CtxResolver { get; }
 
+        private readonly GenWorkDb<WorkFieldList> _workFieldList;
+        private readonly GenWorkPlus<WorkBlocks> _appBlocks;
         private readonly LazySvc<ListControllerReal> _listController;
-        private readonly LazySvc<CmsManager> _cmsManagerLazy;
         private readonly LazySvc<IPagePublishing> _publishing;
-        private CmsManager CmsManager => _cmsManager.Get(() => _cmsManagerLazy.Value.Init(Context));
-        private readonly GetOnce<CmsManager> _cmsManager = new GetOnce<CmsManager>();
 
 
         private IContextOfBlock Context => _context ?? (_context = CtxResolver.BlockContextRequired());
         private IContextOfBlock _context;
 
+        private IAppWorkCtxPlus AppCtx => _appCtx.Get(() => _appBlocks.CtxSvc.ContextPlus(Context.AppState));
+        private GetOnce<IAppWorkCtxPlus> _appCtx = new GetOnce<IAppWorkCtxPlus>();
         #endregion
 
         public EntityInListDto Header(Guid guid)
         {
             Log.A($"header for:{guid}");
-            var cg = CmsManager.Read.Blocks.GetBlockConfig(guid);
+            //var cg = CmsManager.Read.Blocks.GetBlockConfig(guid);
+            var cg = _appBlocks.New(AppCtx).GetBlockConfig(guid);
 
             // new in v11 - this call might be run on a non-content-block, in which case we return null
             if (cg.Entity == null) return null;
-            if (cg.Entity.Type.Name != BlocksRuntime.BlockTypeName) return null;
+            if (cg.Entity.Type.Name != WorkBlocks.BlockTypeName) return null;
 
             var header = cg.Header.FirstOrDefault();
 
@@ -89,7 +98,8 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             var wrapLog = Log.Fn<string>($"{guid}, {part}");
 
-            var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(guid);
+            //var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(guid);
+            var contentGroup = _appBlocks.New(AppCtx).GetBlockConfig(guid);
             if (contentGroup?.Entity == null || contentGroup.View == null)
                 return wrapLog.ReturnNull("Doesn't seem to be a content-group. Cancel.");
 
@@ -132,10 +142,10 @@ namespace ToSic.Sxc.WebApi.Cms
 
             _publishing.Value.DoInsidePublishing(Context, args =>
             {
-                var entity = CmsManager.Read.AppState.GetDraftOrPublished(guid);
+                var entity = Context.AppState.GetDraftOrPublished(guid);
                 var sequence = list.Select(i => i.Index).ToArray();
                 var fields = part == ViewParts.ContentLower ? ViewParts.ContentPair : new[] {part};
-                CmsManager.Entities.FieldListReorder(entity, fields, sequence, Context.Publishing.ForceDraft);
+                _workFieldList.New(Context.AppState).FieldListReorder(entity, fields, sequence, Context.Publishing.ForceDraft);
             });
 
             return true;

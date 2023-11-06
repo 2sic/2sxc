@@ -15,20 +15,20 @@ namespace ToSic.Sxc.Apps.Blocks
     {
         public  int ZoneId { get; }
         public  int AppId { get; }
-        internal Guid? PreviewTemplateId;
+
+        internal IEntity PreviewTemplate { get; set; }
 
         internal IBlockIdentifier BlockIdentifierOrNull;
 
-        private readonly IEnumerable<IEntity> _data;
         private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
 
-        public BlockConfiguration(IEntity entity, IAppIdentity cmsRuntime, IEnumerable<IEntity> data, LazySvc<QueryDefinitionBuilder> qDefBuilder, string languageCode, ILog parentLog): base(entity, languageCode, parentLog, "Blk.Config")
+        public BlockConfiguration(IEntity entity, IAppIdentity cmsRuntime, IEntity previewTemplate, LazySvc<QueryDefinitionBuilder> qDefBuilder, string languageCode, ILog parentLog): base(entity, languageCode, parentLog, "Blk.Config")
         {
             Log.A("Entity is " + (entity == null ? "" : "not") + " null");
-            _data = data;
             _qDefBuilder = qDefBuilder;
             ZoneId = cmsRuntime.ZoneId;
             AppId = cmsRuntime.AppId;
+            PreviewTemplate = previewTemplate;
         }
         
         internal BlockConfiguration WarnIfMissingData()
@@ -57,10 +57,7 @@ namespace ToSic.Sxc.Apps.Blocks
                 if (_view != null) return _view;
 
                 // if we're previewing another template, look that up
-                var templateEntity = PreviewTemplateId.HasValue
-                    ? _data.One(PreviewTemplateId.Value) // ToDo: Should use an indexed Guid filter
-                    : Entity?.Children(ViewParts.ViewFieldInContentBlock).FirstOrDefault();
-
+                var templateEntity = PreviewTemplate ?? Entity?.Children(ViewParts.ViewFieldInContentBlock).FirstOrDefault();
                 return _view = templateEntity == null ? null : new View(templateEntity, LookupLanguages, Log, _qDefBuilder);
             }
         }

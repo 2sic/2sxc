@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json;
@@ -18,6 +18,8 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public class EditLoadSettingsHelper: ServiceBase
     {
+        private readonly GenWorkPlus<WorkEntities> _appEntities;
+
         #region Constructor / DI
 
         private readonly IEnumerable<ILoadSettingsProvider> _loadSettingsProviders;
@@ -25,12 +27,14 @@ namespace ToSic.Sxc.WebApi.Cms
 
         public EditLoadSettingsHelper(
             LazySvc<JsonSerializer> jsonSerializerGenerator,
-            IEnumerable<ILoadSettingsProvider> loadSettingsProviders
-            ) : base(Constants.SxcLogName + ".LodSet")
+            IEnumerable<ILoadSettingsProvider> loadSettingsProviders,
+            GenWorkPlus<WorkEntities> appEntities
+        ) : base(Constants.SxcLogName + ".LodSet")
         {
             ConnectServices(
                 _jsonSerializerGenerator = jsonSerializerGenerator,
-                _loadSettingsProviders = loadSettingsProviders
+                _loadSettingsProviders = loadSettingsProviders,
+                _appEntities = appEntities
             );
         }
 
@@ -44,7 +48,7 @@ namespace ToSic.Sxc.WebApi.Cms
         /// </summary>
         /// <returns></returns>
         public EditSettingsDto GetSettings(IContextOfApp contextOfApp, List<IContentType> contentTypes,
-            List<JsonContentType> jsonTypes, AppRuntime appRuntime) => Log.Func(l =>
+            List<JsonContentType> jsonTypes, IAppWorkCtxPlus appWorkCtx) => Log.Func(l =>
         {
             var allInputTypes = jsonTypes
                 .SelectMany(ct => ct.Attributes.Select(at => at.InputType))
@@ -80,13 +84,13 @@ namespace ToSic.Sxc.WebApi.Cms
             var settings = new EditSettingsDto
             {
                 Values = finalSettings,
-                Entities = SettingsEntities(appRuntime, allInputTypes),
+                Entities = SettingsEntities(appWorkCtx, allInputTypes),
             };
             return settings;
         });
         
 
-        public List<JsonEntity> SettingsEntities(AppRuntime appRuntime, List<string> allInputTypes) => Log.Func(l =>
+        public List<JsonEntity> SettingsEntities(IAppWorkCtxPlus appWorkCtx, List<string> allInputTypes) => Log.Func(l =>
         {
             try
             {
@@ -94,11 +98,11 @@ namespace ToSic.Sxc.WebApi.Cms
                 if (!hasWysiwyg)
                     return (new List<JsonEntity>(), "no wysiwyg field");
 
-                var entities = appRuntime.Entities
+                var entities = _appEntities.New(appWorkCtx)
                     .GetWithParentAppsExperimental("StringWysiwygConfiguration")
                     .ToList();
 
-                var jsonSerializer = _jsonSerializerGenerator.Value.SetApp(appRuntime.AppState);
+                var jsonSerializer = _jsonSerializerGenerator.Value.SetApp(appWorkCtx.AppState);
                 var result = entities.Select(e => jsonSerializer.ToJson(e)).ToList();
 
                 return (result, $"{result.Count}");

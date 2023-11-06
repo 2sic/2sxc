@@ -5,8 +5,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using ToSic.Eav.Api.Api01;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Api.Api01;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
@@ -20,35 +18,35 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.App;
 using ToSic.Eav.WebApi.Errors;
-using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
+using static ToSic.Eav.Apps.Api.Api01.SaveApiAttributes;
+using ToSic.Eav.Apps.Work;
 
 namespace ToSic.Sxc.WebApi.App
 {
     public class AppContent : ServiceBase
     {
-        private readonly Generator<Apps.App> _app;
+        private readonly GenWorkDb<WorkFieldList> _workFieldList;
         private readonly Generator<MultiPermissionsTypes> _typesPermissions;
         private readonly Generator<MultiPermissionsItems> _itemsPermissions;
 
         #region Constructor / DI
 
-        public AppContent(Generator<Apps.App> app,
+        public AppContent(
             EntityApi entityApi,
             LazySvc<IConvertToEavLight> entToDicLazy,
             Sxc.Context.IContextResolver ctxResolver,
             Generator<MultiPermissionsTypes> typesPermissions,
             Generator<MultiPermissionsItems> itemsPermissions,
-            LazySvc<AppManager> appManagerLazy,
+            GenWorkDb<WorkFieldList> workFieldList,
             LazySvc<SimpleDataController> dataControllerLazy) : base("Sxc.ApiApC")
         {
             ConnectServices(
-                _app = app,
+                _workFieldList = workFieldList,
                 _entityApi = entityApi,
                 _entToDicLazy = entToDicLazy,
                 _ctxResolver = ctxResolver,
-                _appManagerLazy = appManagerLazy,
                 _typesPermissions = typesPermissions,
                 _itemsPermissions = itemsPermissions,
                 _dataControllerLazy = dataControllerLazy
@@ -58,10 +56,7 @@ namespace ToSic.Sxc.WebApi.App
         private readonly EntityApi _entityApi;
         private readonly LazySvc<IConvertToEavLight> _entToDicLazy;
         private readonly Sxc.Context.IContextResolver _ctxResolver;
-        private readonly LazySvc<AppManager> _appManagerLazy;
         private readonly LazySvc<SimpleDataController> _dataControllerLazy;
-        private AppManager AppManager => _appManager.Get(() => _appManagerLazy.Value.InitQ(AppState));
-        private readonly GetOnce<AppManager> _appManager = new GetOnce<AppManager>();
 
         public AppContent Init(string appName)
         {
@@ -87,8 +82,8 @@ namespace ToSic.Sxc.WebApi.App
             // verify that read-access to these content-types is permitted
             var permCheck = ThrowIfNotAllowedInType(contentType, GrantSets.ReadSomething, AppState);
 
-            var result = _entityApi.Init(AppState.AppId, permCheck.EnsureAny(GrantSets.ReadDraft))
-                .GetEntities(contentType)
+            var includeDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
+            var result = _entityApi.GetEntities(AppState, contentType, includeDrafts)
                 ?.ToList();
             return wrapLog.Return(result, "found: " + result?.Count);
         }
@@ -177,31 +172,31 @@ namespace ToSic.Sxc.WebApi.App
         {
             var wrapLog = Log.Fn<bool>($"item dictionary key count: {valuesCaseInsensitive.Count}");
 
-            if (!valuesCaseInsensitive.Keys.Contains(SaveApiAttributes.ParentRelationship))
-                return wrapLog.ReturnFalse($"'{SaveApiAttributes.ParentRelationship}' key is missing");
+            if (!valuesCaseInsensitive.Keys.Contains(ParentRelationship))
+                return wrapLog.ReturnFalse($"'{ParentRelationship}' key is missing");
 
-            var objectOrNull = valuesCaseInsensitive[SaveApiAttributes.ParentRelationship];
+            var objectOrNull = valuesCaseInsensitive[ParentRelationship];
             if (objectOrNull == null) 
-                return wrapLog.ReturnFalse($"'{SaveApiAttributes.ParentRelationship}' value is null");
+                return wrapLog.ReturnFalse($"'{ParentRelationship}' value is null");
 
             if (!(objectOrNull is JsonObject parentRelationship))
-                return wrapLog.ReturnNull($"'{SaveApiAttributes.ParentRelationship}' value is not JsonObject");
+                return wrapLog.ReturnNull($"'{ParentRelationship}' value is not JsonObject");
 
-            var parentGuid = (Guid?)parentRelationship[SaveApiAttributes.ParentRelParent];
+            var parentGuid = (Guid?)parentRelationship[ParentRelParent];
             if (!parentGuid.HasValue) 
-                return wrapLog.ReturnFalse($"'{SaveApiAttributes.ParentRelParent}' guid is missing");
+                return wrapLog.ReturnFalse($"'{ParentRelParent}' guid is missing");
 
             var parentEntity = AppState.GetDraftOrPublished(parentGuid.Value);
             if (parentEntity == null) 
                 return wrapLog.ReturnFalse("Parent entity is missing");
 
             var ids = new[] { addedEntityId as int? };
-            var index = (int)parentRelationship[SaveApiAttributes.ParentRelIndex];
+            var index = (int)parentRelationship[ParentRelIndex];
 
-            var field = (string)parentRelationship[SaveApiAttributes.ParentRelField];
+            var field = (string)parentRelationship[ParentRelField];
             var fields = new[] { field };
 
-            AppManager.Entities.FieldListAdd(parentEntity, fields, index, ids, asDraft: false, forceAddToEnd: false);
+            _workFieldList.New(AppState).FieldListAdd(parentEntity, fields, index, ids, asDraft: false, forceAddToEnd: false);
 
             return wrapLog.ReturnTrue($"new ParentRelationship p:{parentGuid},f:{field},i:{index}");
         }
@@ -264,30 +259,32 @@ namespace ToSic.Sxc.WebApi.App
 
         public void Delete(string contentType, int id, string appPath)
         {
-            Log.A($"delete id:{id}, type:{contentType}, path:{appPath}");
-            // if app-path specified, use that app, otherwise use from context
+            var l = Log.Fn($"id:{id}, type:{contentType}, path:{appPath}");
+            // Note: if app-path specified, use that app, otherwise use from context - probably automatic based on headers?
 
             // don't allow type "any" on this
             if (contentType == "any")
-                throw new Exception("type any not allowed with id-only, requires guid");
+                throw l.Done(new Exception("type any not allowed with id-only, requires guid"));
 
-            var entityApi = _entityApi.Init(AppState.AppId/*, true*/);
-            var itm = entityApi.AppRead.AppState.List.GetOrThrow(contentType, id);
+            var entityApi = _entityApi.Init(AppState.AppId);
+            var itm = AppState.List.GetOrThrow(contentType, id);
             ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppState);
             entityApi.Delete(itm.Type.Name, id);
+            l.Done();
         }
 
         public void Delete(string contentType, Guid guid, string appPath)
         {
-            Log.A($"delete guid:{guid}, type:{contentType}, path:{appPath}");
-            // if app-path specified, use that app, otherwise use from context
+            var l = Log.Fn($"guid:{guid}, type:{contentType}, path:{appPath}");
+            // Note: if app-path specified, use that app, otherwise use from context - probably automatic based on headers?
 
-            var entityApi = _entityApi.Init(AppState.AppId/*, Context.UserMayEdit*/);
+            var entityApi = _entityApi.Init(AppState.AppId);
             var itm = AppState.List.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
             ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppState);
 
             entityApi.Delete(itm.Type.Name, guid);
+            l.Done();
         }
 
 

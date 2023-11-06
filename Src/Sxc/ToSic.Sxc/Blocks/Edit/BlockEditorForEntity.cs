@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.Lib.DI;
-using ToSic.Sxc.Apps;
-using ToSic.Lib.Logging;
+using ToSic.Eav.Apps.Work;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
     public class BlockEditorForEntity : BlockEditorBase
     {
-        public BlockEditorForEntity(MyServices services, LazySvc<CmsManager> parentCmsManager, IAppStates appStates) 
+        private readonly GenWorkDb<WorkEntityUpdate> _entityUpdate;
+
+        public BlockEditorForEntity(MyServices services, IAppStates appStates, GenWorkDb<WorkEntityUpdate> entityUpdate) 
             : base(services)
         {
             ConnectServices(
-                _parentCmsManager = parentCmsManager.SetInit(p => p.Init(((BlockBase)Block).Parent.App)),
+                _entityUpdate = entityUpdate,
                 _appStates = appStates
             );
         }
@@ -57,11 +57,11 @@ namespace ToSic.Sxc.Blocks.Edit
         private void UpdateValue(string key, object value) 
             => Update(new Dictionary<string, object> { { key, value } });
 
-        private void Update(Dictionary<string, object> newValues) 
-            => ParentBlockAppManager().Entities.UpdateParts(Math.Abs(Block.ContentBlockId), newValues);
+        private void Update(Dictionary<string, object> newValues)
+        {
+            _entityUpdate.New(Block.Context.AppState).UpdateParts(Math.Abs(Block.ContentBlockId), newValues);
+        }
 
-        protected AppManager ParentBlockAppManager() => _parentCmsManager.Value;
-        private readonly LazySvc<CmsManager> _parentCmsManager;
         private readonly IAppStates _appStates;
 
         #endregion

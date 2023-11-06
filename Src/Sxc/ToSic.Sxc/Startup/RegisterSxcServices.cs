@@ -6,13 +6,13 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Paths;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Helpers;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.DataSources;
@@ -37,16 +37,13 @@ namespace ToSic.Sxc.Startup
     {
         public static IServiceCollection AddSxcCore(this IServiceCollection services)
         {
-            // Runtimes
-            services.TryAddTransient<CmsRuntime>();
-            services.TryAddTransient<CmsManager>();
-            services.TryAddTransient<CmsZones>();
-            services.TryAddTransient<AppsRuntime>();
-            services.TryAddTransient<AppsManager>();
-            services.TryAddTransient<ViewsRuntime>();
-            services.TryAddTransient<ViewsManager>();
-            services.TryAddTransient<BlocksRuntime>();
-            services.TryAddTransient<BlocksManager>();
+            // Runtimes - new: better architecture v16.07+
+            services.TryAddTransient<WorkBlocks>();
+            services.TryAddTransient<WorkViews>();
+            services.TryAddTransient<WorkViewsMod>();
+            services.TryAddTransient<WorkBlocksMod>();
+            services.TryAddTransient<WorkApps>();
+            services.TryAddTransient<WorkAppsRemove>();
 
             // Code
             services.TryAddTransient<DynamicCodeRoot.MyServices>();
@@ -99,10 +96,11 @@ namespace ToSic.Sxc.Startup
             services.TryAddScoped<JsApiCache>(); // v16.01
 
             // Adam stuff
-            services.TryAddTransient<AdamMetadataMaker>();
             services.TryAddTransient<AdamSecurityChecksBase, AdamSecurityChecksBasic>();
             services.TryAddTransient<IAdamPaths, AdamPathsBase>();
             services.TryAddTransient<AdamConfiguration>();
+
+            services.AddTransient<AdamManager.MyServices>();
 
             // WIP - add net-core specific stuff
             services.AddNetVariations();

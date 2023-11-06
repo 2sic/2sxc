@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Adam
 
         /// <inheritdoc />
         [JsonIgnore]
-        public IMetadata Metadata => _metadata ?? (_metadata = AdamMetadataMaker.Create(AdamManager, CmsMetadata.FolderPrefix + SysId, Name));
+        public IMetadata Metadata => _metadata ?? (_metadata = AdamManager.Create(CmsMetadata.FolderPrefix + SysId, Name));
         private IMetadata _metadata;
 
         IMetadataOf IHasMetadata.Metadata => (Metadata as IHasMetadata)?.Metadata;

@@ -13,6 +13,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Work;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         public ResetApp(
             LazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
             ImpExpHelpers impExpHelpers,
-            CmsZones cmsZones,
+            WorkAppsRemove workAppsRemove,
             ISite site,
             IUser user,
             IImportExportEnvironment env,
@@ -37,7 +38,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             ConnectServices(
                 _xmlImportWithFilesLazy = xmlImportWithFilesLazy,
                 _impExpHelpers = impExpHelpers,
-                _cmsZones = cmsZones,
+                _workAppsRemove = workAppsRemove,
                 _site = site,
                 _user = user,
                 _env = env,
@@ -46,9 +47,10 @@ namespace ToSic.Sxc.WebApi.ImportExport
             );
         }
 
+        private readonly WorkAppsRemove _workAppsRemove;
+
         private readonly LazySvc<XmlImportWithFiles> _xmlImportWithFilesLazy;
         private readonly ImpExpHelpers _impExpHelpers;
-        private readonly CmsZones _cmsZones;
         private readonly ISite _site;
         private readonly IUser _user;
         private readonly IImportExportEnvironment _env;
@@ -92,7 +94,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             }
 
             // 2. Now we can delete the app before we prepare the import
-            _cmsZones.SetId(zoneId).AppsMan.RemoveAppInSiteAndEav(appId, false);
+            _workAppsRemove.RemoveAppInSiteAndEav(zoneId, appId, false);
 
             // 3. Optional reset SiteFiles
             if (withSiteFiles)

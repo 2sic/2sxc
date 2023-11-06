@@ -4,6 +4,7 @@ using DotNetNuke.Web.Api;
 using System.Collections.Generic;
 using System.Web.Http;
 using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Data;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;

@@ -27,6 +27,7 @@ using ToSic.Sxc.WebApi.ImportExport;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Security;
 using ToSic.Eav.WebApi.Infrastructure;
+using ToSic.Eav.Apps.Work;
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;
 #else
@@ -37,10 +38,10 @@ namespace ToSic.Sxc.WebApi.Views
 {
     public class ViewsExportImport : ServiceBase
     {
+        private readonly GenWorkDb<WorkEntitySave> _workEntSave;
         private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
         private readonly IServerPaths _serverPaths;
         private readonly IEnvironmentLogger _envLogger;
-        private readonly LazySvc<CmsManager> _cmsManagerLazy;
         private readonly LazySvc<JsonSerializer> _jsonSerializerLazy;
         private readonly IAppStates _appStates;
         private readonly AppIconHelpers _appIconHelpers;
@@ -49,9 +50,10 @@ namespace ToSic.Sxc.WebApi.Views
         private readonly ISite _site;
         private readonly IUser _user;
 
-        public ViewsExportImport(IServerPaths serverPaths,
+        public ViewsExportImport(
+            GenWorkDb<WorkEntitySave> workEntSave,
+            IServerPaths serverPaths,
             IEnvironmentLogger envLogger,
-            LazySvc<CmsManager> cmsManagerLazy, 
             LazySvc<JsonSerializer> jsonSerializerLazy, 
             IContextOfSite context,
             IAppStates appStates,
@@ -61,9 +63,9 @@ namespace ToSic.Sxc.WebApi.Views
             LazySvc<QueryDefinitionBuilder> qDefBuilder) : base("Bck.Views")
         {
             ConnectServices(
+                _workEntSave = workEntSave,
                 _serverPaths = serverPaths,
                 _envLogger = envLogger,
-                _cmsManagerLazy = cmsManagerLazy,
                 _jsonSerializerLazy = jsonSerializerLazy,
                 _appStates = appStates,
                 _appIconHelpers = appIconHelpers,
@@ -80,7 +82,6 @@ namespace ToSic.Sxc.WebApi.Views
             var logCall = Log.Fn<THttpResponseType>($"{appId}, {viewId}");
             SecurityHelpers.ThrowIfNotSiteAdmin(_user, Log);
             var app = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
-            var cms = _cmsManagerLazy.Value.Init(app);
             var bundle = new BundleEntityWithAssets
             {
                 Entity = app.Data[Eav.ImportExport.Settings.TemplateContentType].One(viewId)
@@ -100,7 +101,7 @@ namespace ToSic.Sxc.WebApi.Views
                 }
             }
 
-            var serializer = _jsonSerializerLazy.Value.SetApp(cms.AppState);
+            var serializer = _jsonSerializerLazy.Value.SetApp(app.AppState);
             var serialized = serializer.Serialize(bundle, 0);
 
             return logCall.ReturnAsOk(_responseMaker.File(serialized,
@@ -147,7 +148,8 @@ namespace ToSic.Sxc.WebApi.Views
 
                 // 2. Import the views
                 // todo: construction of this should go into init
-                _cmsManagerLazy.Value.Init(app.AppId).Entities.Import(bundles.Select(v => v.Entity).ToList());
+                // #ExtractEntitySave - verified
+                _workEntSave.New(app.AppState).Import(bundles.Select(v => v.Entity).ToList());
 
                 // 3. Import the attachments
                 var assets = bundles.SelectMany(b => b.Assets);
