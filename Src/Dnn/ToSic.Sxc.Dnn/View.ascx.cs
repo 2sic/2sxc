@@ -54,7 +54,6 @@ namespace ToSic.Sxc.Dnn
             {
                 // add to insights-history for analytic
                 _logInStore = GetService<ILogStore>().Add("module", Log);
-                //LogTimer.Timer.Start();
 
                 Log.Do(timer: true, action: () =>
                 {
@@ -110,13 +109,15 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void Page_PreRender(object sender, EventArgs e) => Log.Do(() =>
+        protected void Page_PreRender(object sender, EventArgs e)
         {
+            var l = Log.Fn();
             var finalMessage = "";
             LogTimer.DoInTimer(() =>
             {
                 // #lightspeed
-                if (OutputCache?.Existing != null) Log.A("Lightspeed hit - will use cached");
+                if (OutputCache?.Existing != null) 
+                    l.A("Lightspeed hit - will use cached");
 
                 IRenderResult data = null;
                 var headersAndScriptsAdded = false;
@@ -172,7 +173,8 @@ namespace ToSic.Sxc.Dnn
                     DnnClientResources?.AddEverything(data?.Features);
             });
             LogTimer.Done(IsError ? "⚠️" : finalMessage);
-        });
+            l.Done();
+        }
 
         private IRenderResult RenderViewAndGatherJsCssSpecs()
         {
