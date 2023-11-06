@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.WebApi.ContentBlocks;
 using ToSic.Sxc.WebApi.InPage;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
@@ -21,21 +20,21 @@ namespace ToSic.Sxc.WebApi.Cms
             LazySvc<IContextOfSite> context,
             LazySvc<ContentBlockBackend> blockBackend,
             LazySvc<AppViewPickerBackend> viewsBackend,
-            LazySvc<CmsZones> cmsZones
+            LazySvc<WorkApps> workApps
             ): base($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl")
         {
             ConnectServices(
                 _context = context,
                 _blockBackendLazy = blockBackend,
                 _viewsBackendLazy = viewsBackend,
-                _cmsZones = cmsZones
+                _workApps = workApps
             );
         }
 
+        private readonly LazySvc<WorkApps> _workApps;
         private readonly LazySvc<IContextOfSite> _context;
         private readonly LazySvc<ContentBlockBackend> _blockBackendLazy;
         private readonly LazySvc<AppViewPickerBackend> _viewsBackendLazy;
-        private readonly LazySvc<CmsZones> _cmsZones;
 
 
         #region Block
@@ -77,8 +76,8 @@ namespace ToSic.Sxc.WebApi.Cms
         public IEnumerable<AppUiInfo> Apps(string apps = null)
         {
             // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
-            var tenant = _context.Value.Site;
-            return _cmsZones.Value.SetId(tenant.ZoneId).AppsRt.GetSelectableApps(tenant, apps)
+            var site = _context.Value.Site;
+            return _workApps.Value/* _cmsZones.Value.SetId(site.ZoneId).AppsRt*/.GetSelectableApps(site, apps)
                 .ToList();
         }
 

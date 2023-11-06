@@ -39,18 +39,15 @@ namespace ToSic.Sxc.Startup
     {
         public static IServiceCollection AddSxcCore(this IServiceCollection services)
         {
-            // Runtimes
-            services.TryAddTransient<CmsZones>();
-            services.TryAddTransient<AppsRuntime>();
-            services.TryAddTransient<AppsManager>();
-
-            // New runtimes, better architecture v16.07+
+            // Runtimes - new: better architecture v16.07+
             services.TryAddTransient<AppWorkSxc>();
             services.TryAddTransient<AppBlocks>();
             services.TryAddTransient<WorkViews>();
             services.TryAddTransient<WorkViewsMod>();
             services.TryAddTransient<WorkBlocks>();
             services.TryAddTransient<WorkBlocksMod>();
+            services.TryAddTransient<WorkApps>();
+            services.TryAddTransient<WorkAppsRemove>();
 
             // Code
             services.TryAddTransient<DynamicCodeRoot.MyServices>();

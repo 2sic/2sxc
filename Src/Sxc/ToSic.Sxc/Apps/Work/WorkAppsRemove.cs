@@ -6,15 +6,15 @@ using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Apps
+namespace ToSic.Sxc.Apps.Work
 {
-    public class AppsManager: ZonePartRuntimeBase 
+    public class WorkAppsRemove: ServiceBase 
     {
         #region Constructor / DI
 
-        public AppsManager(LazySvc<ZoneManager> zoneManagerLazy, IAppStates appStates, ISite site, AppPaths appPaths) : base("Cms.AppsRt")
+        public WorkAppsRemove(LazySvc<ZoneManager> zoneManagerLazy, IAppStates appStates, ISite site, AppPaths appPaths) : base("Cms.AppsRt")
         {
             ConnectServices(
                 _zoneManagerLazy = zoneManagerLazy,
@@ -31,9 +31,8 @@ namespace ToSic.Sxc.Apps
         #endregion
 
 
-        internal void RemoveAppInSiteAndEav(int appId, bool fullDelete)
+        internal void RemoveAppInSiteAndEav(int zoneId, int appId, bool fullDelete)
         {
-            var zoneId = ZoneRuntime.ZoneId;
             // check portal assignment and that it's not the default app
             // enable restore for DefaultApp
             if (appId == _appStates.DefaultAppId(zoneId) && fullDelete)

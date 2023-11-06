@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.DataSources.Sys;
@@ -11,7 +10,7 @@ using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Eav.WebApi.Languages;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.AppStack;
 using ToSic.Sxc.WebApi.ImportExport;
@@ -34,7 +33,7 @@ namespace ToSic.Sxc.WebApi.Admin
 
         public AppControllerReal(
             LazySvc<AppsBackend> appsBackendLazy,
-            LazySvc<CmsZones> cmsZonesLazy,
+            LazySvc<WorkAppsRemove> workAppsRemove,
             LazySvc<ExportApp> exportAppLazy,
             LazySvc<ImportApp> importAppLazy,
             LazySvc<AppCreator> appBuilderLazy,
@@ -47,7 +46,7 @@ namespace ToSic.Sxc.WebApi.Admin
         {
             ConnectServices(
                 _appsBackendLazy = appsBackendLazy,
-                _cmsZonesLazy = cmsZonesLazy,
+                _workAppsRemove = workAppsRemove,
                 _exportAppLazy = exportAppLazy,
                 _importAppLazy = importAppLazy,
                 _appBuilderLazy = appBuilderLazy,
@@ -59,8 +58,9 @@ namespace ToSic.Sxc.WebApi.Admin
             );
         }
 
+        private readonly LazySvc<WorkAppsRemove> _workAppsRemove;
+
         private readonly LazySvc<AppsBackend> _appsBackendLazy;
-        private readonly LazySvc<CmsZones> _cmsZonesLazy;
         private readonly LazySvc<ExportApp> _exportAppLazy;
         private readonly LazySvc<ImportApp> _importAppLazy;
         private readonly LazySvc<AppCreator> _appBuilderLazy;
@@ -76,7 +76,7 @@ namespace ToSic.Sxc.WebApi.Admin
         public List<AppDto> InheritableApps() => _appsBackendLazy.Value.GetInheritableApps();
 
         public void App(int zoneId, int appId, bool fullDelete = true)
-            => _cmsZonesLazy.Value.SetId(zoneId).AppsMan.RemoveAppInSiteAndEav(appId, fullDelete);
+            => _workAppsRemove.Value /*_cmsZonesLazy.Value.SetId(zoneId).AppsMan*/.RemoveAppInSiteAndEav(zoneId, appId, fullDelete);
 
         public void App(int zoneId, string name, int? inheritAppId = null)
             => _appBuilderLazy.Value.Init(zoneId).Create(name, null, inheritAppId);
