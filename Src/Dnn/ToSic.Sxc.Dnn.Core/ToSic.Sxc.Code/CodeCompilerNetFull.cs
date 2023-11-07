@@ -93,7 +93,8 @@ namespace ToSic.Sxc.Code
                 {
                     GenerateInMemory = false,
                     GenerateExecutable = false,
-                    IncludeDebugInformation = true,
+                    IncludeDebugInformation = false,
+                    TreatWarningsAsErrors = false,
                     CompilerOptions = "/define:OQTANE;NETCOREAPP;NET5_0 /optimize-",
                 }
                 : new CompilerParameters
@@ -101,6 +102,7 @@ namespace ToSic.Sxc.Code
                     GenerateInMemory = true,
                     GenerateExecutable = false,
                     IncludeDebugInformation = true,
+                    TreatWarningsAsErrors = false,
                     CompilerOptions = "/define:OQTANE;NETCOREAPP;NET5_0 /optimize-",
                 };
 
