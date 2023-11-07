@@ -59,7 +59,9 @@ namespace ToSic.Sxc.Blocks.Edit
 
         private void Update(Dictionary<string, object> newValues)
         {
-            _entityUpdate.New(Block.Context.AppState).UpdateParts(Math.Abs(Block.ContentBlockId), newValues);
+            var parentAppState = ((BlockBase)Block).Parent.App.AppState;
+            _entityUpdate.New(parentAppState)
+                .UpdateParts(Math.Abs(Block.ContentBlockId), newValues);
         }
 
         private readonly IAppStates _appStates;
