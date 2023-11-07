@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Web;
+using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn
@@ -61,7 +63,7 @@ namespace ToSic.Sxc.Dnn
         private void TryToBuildCode() => Log.Do(() =>
         {
             if (BuildComplete) return;
-            var codeFile = Parent.VirtualPath.Replace(".cshtml", ".code.cshtml");
+            var codeFile = Parent.VirtualPath.Replace(".cshtml", ".code.cshtml").Backslash().AfterLast("\\");
             Log.A($"Will try to load code from '{codeFile}");
             try
             {
