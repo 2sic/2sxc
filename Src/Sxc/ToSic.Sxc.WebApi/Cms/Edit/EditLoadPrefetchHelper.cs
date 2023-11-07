@@ -41,8 +41,9 @@ namespace ToSic.Sxc.WebApi.Cms
             });
 
 
-        private List<EntityForPickerDto> PrefetchEntities(int appId, EditDto editData) => Log.Func(() =>
+        private List<EntityForPickerDto> PrefetchEntities(int appId, EditDto editData)
         {
+            var l = Log.Fn<List<EntityForPickerDto>>();
             try
             {
                 // Step 1: try to find entity fields
@@ -53,7 +54,8 @@ namespace ToSic.Sxc.WebApi.Cms
                     {
                         b.Entity.Guid,
                         b.Entity.Attributes.Entity
-                    });
+                    })
+                    .ToList();
 
                 var entities = bundlesHavingEntities.SelectMany(set
                         => set.Entity.SelectMany(e
@@ -64,18 +66,18 @@ namespace ToSic.Sxc.WebApi.Cms
                     .ToArray();
 
                 // stop here if nothing found, otherwise the backend will return all entities
-                if (!entities.Any()) return new List<EntityForPickerDto>();
+                if (!entities.Any()) return l.Return(new List<EntityForPickerDto>(), "none found");
 
-                var items = _entityPickerBackend.GetForEntityPicker(appId, entities, null, false);
-                return items.ToList();
+                var items = _entityPickerBackend.GetForEntityPicker(appId, entities, null, false, allowFromAllScopes: true);
+                return l.Return(items, $"{items.Count}");
             }
             catch
             {
-                return new List<EntityForPickerDto>
+                return l.Return(new List<EntityForPickerDto>
                 {
                     new EntityForPickerDto {Id = -1, Text = "Error occurred pre-fetching entities", Value = Guid.Empty}
-                };
+                }, "error");
             }
-        });
+        }
     }
 }
