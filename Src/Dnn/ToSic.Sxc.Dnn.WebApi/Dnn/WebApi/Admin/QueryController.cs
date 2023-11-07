@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Web;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource.Query;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
@@ -21,7 +23,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [ValidateAntiForgeryToken]
 	public class QueryController : SxcApiControllerBase, IQueryController
     {
-        public QueryController() : base(RealController.LogSuffix, RealController.LogGroup) { }
+        public QueryController() : base(RealController.LogSuffix, RealController.LogGroup,
+            firstMessage: $"Query: {HttpContext.Current?.Request.Url.AbsoluteUri.After("/query/")}") { }
 
         private RealController Real => SysHlp.GetService<RealController>();
 

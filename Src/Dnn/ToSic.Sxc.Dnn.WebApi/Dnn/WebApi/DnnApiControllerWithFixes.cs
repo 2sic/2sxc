@@ -15,11 +15,11 @@ namespace ToSic.Sxc.Dnn.WebApi
     {
         internal const string DnnSupportedModuleNames = "2sxc,2sxc-app";
 
-        protected DnnApiControllerWithFixes(string logSuffix, string insightsGroup = default)
+        protected DnnApiControllerWithFixes(string logSuffix, string insightsGroup = default, string firstMessage = default)
         {
             Log = new Log("Api." + logSuffix);
             // ReSharper disable once VirtualMemberCallInConstructor
-            SysHlp = new DnnWebApiHelper(this, insightsGroup ?? HistoryLogGroup);
+            SysHlp = new DnnWebApiHelper(this, insightsGroup ?? HistoryLogGroup, firstMessage);
         }
 
         /// <summary>

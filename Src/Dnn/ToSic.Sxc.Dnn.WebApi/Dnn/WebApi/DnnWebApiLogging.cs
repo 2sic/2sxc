@@ -14,10 +14,10 @@ namespace ToSic.Sxc.Dnn.WebApi
     /// </summary>
     internal class DnnWebApiLogging
     {
-        public DnnWebApiLogging(ILog log, ILogStore logStore, string logGroup)
+        public DnnWebApiLogging(ILog log, ILogStore logStore, string logGroup, string firstMessage = default)
         {
             // Add the first message with the current path
-            _timerWrapLog = log.Fn(message: $"Path: {HttpContext.Current?.Request.Url.AbsoluteUri}", timer: true);
+            _timerWrapLog = log.Fn(message: firstMessage ?? $"Path: {HttpContext.Current?.Request.Url.AbsoluteUri}", timer: true);
 
             // Add it to the log store
             LogStoreEntry = logStore.Add(logGroup ?? EavWebApiConstants.HistoryNameWebApi, log);
