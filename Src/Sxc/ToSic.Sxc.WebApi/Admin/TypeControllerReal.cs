@@ -66,16 +66,22 @@ namespace ToSic.Sxc.WebApi.Admin
         public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => _ctApiLazy.Value.Init(appId).GetSingle(contentTypeId, scope);
 
 
-        public bool Delete(int appId, string staticName) => _typeMod.New(appId)/* _ctApiLazy.Value.Init(appId)*/.Delete(staticName);
+        public bool Delete(int appId, string staticName) => _typeMod.New(appId).Delete(staticName);
 
 
         // 2019-11-15 2dm special change: item to be Dictionary<string, object> because in DNN 9.4
-        // it causes problems when a content-type has metadata, where a value then is a deeper object
+        // it causes problems when a content-type has additional metadata, where a value then is a deeper object
         // in future, the JS front-end should send something clearer and not the whole object
         public bool Save(int appId, Dictionary<string, object> item)
         {
-            var cleanList = item.ToDictionary(i => i.Key, i => i.Value?.ToString());
-            return _ctApiLazy.Value.Init(appId).Save(cleanList);
+            var l = Log.Fn<bool>();
+            
+            if (item == null) return l.ReturnFalse("item was null, will cancel");
+
+            var dic = item.ToDictionary(i => i.Key, i => i.Value?.ToString());
+            var result = _typeMod.New(appId).AddOrUpdate(dic["StaticName"], dic["Scope"], dic["Name"], null, false);
+            
+            return l.ReturnAndLog(result);
         }
 
         /// <summary>
@@ -85,12 +91,11 @@ namespace ToSic.Sxc.WebApi.Admin
         /// <param name="sourceStaticName"></param>
         /// <returns></returns>
 
-        public bool AddGhost(int appId, string sourceStaticName) => _typeMod.New(appId)/* _ctApiLazy.Value.Init(appId)*/.CreateGhost(sourceStaticName);
+        public bool AddGhost(int appId, string sourceStaticName) => _typeMod.New(appId).CreateGhost(sourceStaticName);
 
 
         public void SetTitle(int appId, int contentTypeId, int attributeId)
             => _typeMod.New(appId).SetTitle(contentTypeId, attributeId);
-            //=> _ctApiLazy.Value.Init(appId).SetTitle(contentTypeId, attributeId);
 
         /// <summary>
         /// Used to be GET ContentExport/DownloadTypeAsJson
