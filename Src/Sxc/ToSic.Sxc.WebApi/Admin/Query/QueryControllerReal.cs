@@ -2,6 +2,7 @@
 using System;
 using ToSic.Eav.Apps.Work;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.Logging;
@@ -15,6 +16,7 @@ namespace ToSic.Sxc.WebApi.Admin.Query
     {
         private readonly GenWorkPlus<WorkViews> _workViews;
         public const string LogSuffix = "Query";
+        public const string LogGroup = EavWebApiConstants.HistoryNameWebApi + "-query";
 
         private readonly IContextResolver _contextResolver;
         private readonly AppConfigDelegate _appConfigMaker;

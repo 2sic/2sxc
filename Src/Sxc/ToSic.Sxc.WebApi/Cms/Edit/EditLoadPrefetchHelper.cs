@@ -68,7 +68,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 // stop here if nothing found, otherwise the backend will return all entities
                 if (!entities.Any()) return l.Return(new List<EntityForPickerDto>(), "none found");
 
-                var items = _entityPickerBackend.GetForEntityPicker(appId, entities, null, false, allowFromAllScopes: true);
+                var items = _entityPickerBackend.GetForEntityPicker(appId, entities, null, allowFromAllScopes: true);
                 return l.Return(items, $"{items.Count}");
             }
             catch

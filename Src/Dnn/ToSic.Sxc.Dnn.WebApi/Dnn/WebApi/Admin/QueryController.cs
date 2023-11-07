@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [ValidateAntiForgeryToken]
 	public class QueryController : SxcApiControllerBase, IQueryController
     {
-        public QueryController() : base(RealController.LogSuffix) { }
+        public QueryController() : base(RealController.LogSuffix, RealController.LogGroup) { }
 
         private RealController Real => SysHlp.GetService<RealController>();
 
