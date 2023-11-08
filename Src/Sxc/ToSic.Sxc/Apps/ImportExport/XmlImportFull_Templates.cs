@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
-using ToSic.Eav.Apps.Work;
 using ToSic.Eav.ImportExport;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
@@ -24,9 +23,8 @@ namespace ToSic.Sxc.Apps.ImportExport
 
             // The state must come from the DB, and not from the cache
             // Otherwise it will auto-initialize, which it shouldn't do when importing data
-            var appState = _repositoryLoader.AppState(AppId, false);
+            var appState = _repositoryLoader.AppStateRaw(AppId);
 
-            //var viewsManager = _cmsManagerLazy.Value.InitWithState(appState).Views;
             var viewsMod = _workViewsMod.New(appState);
 
             foreach (var template in templates.Elements(XmlConstants.Template))
