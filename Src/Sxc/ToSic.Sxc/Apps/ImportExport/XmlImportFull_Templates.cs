@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Apps.ImportExport
 
             // The state must come from the DB, and not from the cache
             // Otherwise it will auto-initialize, which it shouldn't do when importing data
-            var appState = _repositoryLoader.AppStateRaw(AppId, new CodeRef());
+            var appState = _repositoryLoader.AppStateRaw(AppId, new CodeRefTrail());
 
             var viewsMod = _workViewsMod.New(appState);
 
