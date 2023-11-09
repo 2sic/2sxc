@@ -63,20 +63,23 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// Used to be GET ContentType/DeleteField
         /// </summary>
         [HttpDelete]
-        public bool Delete(int appId, int contentTypeId, int attributeId) => Real.Delete(appId, contentTypeId, attributeId);
+        public bool Delete(int appId, int contentTypeId, int attributeId)
+            => Real.Delete(appId, contentTypeId, attributeId);
 
         /// <summary>
         /// Used to be GET ContentType/Reorder
         /// </summary>
 	    [HttpPost]
-        public bool Sort(int appId, int contentTypeId, string order) => Real.Sort(appId, contentTypeId, order);
+        public bool Sort(int appId, int contentTypeId, string order)
+            => Real.Sort(appId, contentTypeId, order);
 
 
         /// <summary>
         /// Used to be GET ContentType/UpdateInputType
         /// </summary>
         [HttpPost]
-        public bool InputType(int appId, int attributeId, string inputType) => Real.InputType(appId, attributeId, inputType);
+        public bool InputType(int appId, int attributeId, string inputType)
+            => Real.InputType(appId, attributeId, inputType);
 
         #endregion
 
@@ -84,18 +87,26 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// Used to be GET ContentType/Rename
         /// </summary>
         [HttpPost]
-        public void Rename(int appId, int contentTypeId, int attributeId, string newName) => Real.Rename(appId, contentTypeId, attributeId, newName);
+        public void Rename(int appId, int contentTypeId, int attributeId, string newName)
+            => Real.Rename(appId, contentTypeId, attributeId, newName);
 
         #region Sharing and Inheriting
 
         [HttpGet]
-        public IEnumerable<ContentTypeFieldDto> GetSharedFields(int appId) => Real.GetSharedFields(appId);
+        public IEnumerable<ContentTypeFieldDto> GetSharedFields(int appId)
+            => Real.GetSharedFields(appId);
 
         [HttpPost]
-        public void Share(int appId, int attributeId, bool share, bool hide = false) => Real.Share(appId, attributeId, share, hide);
+        public bool Share(int appId, int attributeId, bool share, bool hide = false)
+            => Real.Share(appId, attributeId, share, hide);
 
         [HttpPost]
-        public void Inherit(int appId, int attributeId, Guid inheritMetadataOf) => Real.Inherit(appId, attributeId, inheritMetadataOf);
+        public bool Inherit(int appId, int attributeId, Guid inheritMetadataOf)
+            => Real.Inherit(appId, attributeId, inheritMetadataOf);
+
+        [HttpPost]
+        public bool AddInheritedField(int appId, int contentTypeId, string sourceType, Guid sourceField)
+            => Real.AddInheritedField(appId, contentTypeId, sourceType, sourceField);
 
         #endregion
 
