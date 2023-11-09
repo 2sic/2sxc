@@ -1,4 +1,7 @@
 {
+  "_": {
+    "V": 1
+  },
   "Bundles": [
     {
       "Name": "default",
@@ -8,7 +11,56 @@
             "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
             "Name": "UiFormula",
             "Scope": "System.Fields",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 120074,
+                "Version": 13,
+                "Guid": "ba7533db-4b2d-48fa-bbd1-56405b2f42a6",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": "Formula for a UI element"
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p><a href=\"https://r.2sxc.org/formulas\" target=\"_blank\" rel=\"noopener\"><img src=\"https://sources.2sxc.org/assets/v12/content-types/formulas-banner.svg?12.01\" height=\"100px\"></a></p>\n<p>Use Formulas to calculate values or settings like visibility of fields. See <a href=\"https://r.2sxc.org/formulas\" target=\"_blank\" rel=\"noopener\">documentation</a>.</p>\n<p><strong><span style=\"color: rgb(224, 62, 45);\">⚠️ Important: Do not edit the formulas here! ⚠️</span></strong></p>\n<p>The formulas are stored here as simple data, but it's not the right place to edit them, unless you have to fix a formula that breaks your form.&nbsp;<a href=\"https://r.2sxc.org/formulas\" target=\"_blank\" rel=\"noopener\">The right place to edit formulas is directly in the Edit Form</a>.</p>"
+                    },
+                    "Label": {
+                      "en-us": "UI Formula Σ"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=1",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "VarOverride",
@@ -21,8 +73,8 @@
                     "Version": 3,
                     "Guid": "5996894a-ce5f-4ed7-94c8-e2486b44b5eb",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -84,8 +136,8 @@
                     "Version": 2,
                     "Guid": "c36ae328-ccdd-42a9-bfdc-aa6e02359b5c",
                     "Type": {
-                      "Name": "@Boolean",
-                      "Id": "@Boolean"
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
                     },
                     "Attributes": {
                       "String": {
@@ -120,8 +172,8 @@
                     "Version": 7,
                     "Guid": "a5aca5c0-4e4f-41ff-b6f6-61d74d73c2ed",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -186,8 +238,8 @@
                     "Version": 5,
                     "Guid": "543dea87-6ebc-4bf4-9623-b801bf41ec1b",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -206,8 +258,8 @@
                     "Version": 5,
                     "Guid": "f158d3d7-d401-4e63-be40-0cfd25feeae6",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {},
                     "Owner": "dnn:userid=41"
@@ -225,8 +277,8 @@
                     "Version": 16,
                     "Guid": "6e0db16d-261c-43d7-a9af-9801d11ccbc0",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -287,8 +339,8 @@
                     "Version": 15,
                     "Guid": "1d4a41de-2b2d-4dd3-8c90-10c12d6b76e6",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -307,8 +359,8 @@
                     "Version": 15,
                     "Guid": "c3a1471f-4c34-4cad-baf1-325b04f91287",
                     "Type": {
-                      "Name": "@string-dropdown",
-                      "Id": "@string-dropdown"
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
                     },
                     "Attributes": {
                       "String": {
@@ -340,8 +392,8 @@
                     "Version": 16,
                     "Guid": "377a1d4e-5131-4ce4-904c-07ac0801fcf2",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -402,8 +454,8 @@
                     "Version": 15,
                     "Guid": "17f5e665-ac5a-45d5-bb13-b2633302ef58",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -422,8 +474,8 @@
                     "Version": 15,
                     "Guid": "aef05229-76ff-4ae6-955b-4c5adaec58cb",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -452,8 +504,8 @@
                     "Version": 4,
                     "Guid": "afe6ca1e-d1f8-4b2f-8c15-cbfa14fa7da8",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -512,8 +564,8 @@
                     "Version": 3,
                     "Guid": "72946d4a-7cdc-45c7-8038-627ed4af792b",
                     "Type": {
-                      "Name": "@Boolean",
-                      "Id": "@Boolean"
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
                     },
                     "Attributes": {
                       "String": {
@@ -543,8 +595,8 @@
                     "Version": 7,
                     "Guid": "134a5c7d-a1bb-4c7f-a519-53d1b0dbf64d",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -612,8 +664,8 @@
                     "Version": 5,
                     "Guid": "27f21419-c0a3-4ca5-a9f9-000de0dc2554",
                     "Type": {
-                      "Name": "@Boolean",
-                      "Id": "@Boolean"
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
                     },
                     "Attributes": {
                       "String": {
@@ -643,8 +695,8 @@
                     "Version": 7,
                     "Guid": "db877d55-b910-415c-bfda-a474178c3727",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -708,8 +760,8 @@
                     "Version": 6,
                     "Guid": "6f952f1c-289e-4aba-afa8-30cdfd0ff756",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -728,8 +780,8 @@
                     "Version": 6,
                     "Guid": "1c339a04-2e98-4a54-b259-2c5ade275979",
                     "Type": {
-                      "Name": "@string-wysiwyg",
-                      "Id": "@string-wysiwyg"
+                      "Id": "@string-wysiwyg",
+                      "Name": "@string-wysiwyg"
                     },
                     "Attributes": {
                       "String": {
@@ -759,56 +811,6 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 120074,
-                "Version": 13,
-                "Guid": "ba7533db-4b2d-48fa-bbd1-56405b2f42a6",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "AdditionalSettings": {
-                      "en-us": ""
-                    },
-                    "Description": {
-                      "en-us": "Formula for a UI element"
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": "<p><a href=\"https://r.2sxc.org/formulas\" target=\"_blank\" rel=\"noopener\"><img src=\"https://sources.2sxc.org/assets/v12/content-types/formulas-banner.svg?12.01\" height=\"100px\"></a></p>\n<p>Use Formulas to calculate values or settings like visibility of fields. See <a href=\"https://r.2sxc.org/formulas\" target=\"_blank\" rel=\"noopener\">documentation</a>.</p>\n<p><strong><span style=\"color: rgb(224, 62, 45);\">⚠️ Important: Do not edit the formulas here! ⚠️</span></strong></p>\n<p>The formulas are stored here as simple data, but it's not the right place to edit them, unless you have to fix a formula that breaks your form.&nbsp;<a href=\"https://r.2sxc.org/formulas\" target=\"_blank\" rel=\"noopener\">The right place to edit formulas is directly in the Edit Form</a>.</p>"
-                    },
-                    "Label": {
-                      "en-us": "UI Formula Σ"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=1",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
-                }
-              }
             ]
           },
           "Entities": [
@@ -817,8 +819,8 @@
               "Version": 1,
               "Guid": "d04909fa-1c34-4b2f-93cc-b680a3a2b756",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -845,8 +847,8 @@
               "Version": 12,
               "Guid": "a17611a7-e0d7-4340-a73c-7e0fee146ded",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -876,8 +878,8 @@
               "Version": 6,
               "Guid": "eee175b1-cd81-4e85-a813-5be709ac612a",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -907,8 +909,8 @@
               "Version": 7,
               "Guid": "1c6def89-b2bc-42bb-a63f-53d0e5658b39",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -938,8 +940,8 @@
               "Version": 8,
               "Guid": "9cffa304-1340-4531-83e5-ae01622ba0bb",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -969,8 +971,8 @@
               "Version": 3,
               "Guid": "b1f61471-c6aa-4b7d-86a4-ca0d7eb3d526",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -1000,8 +1002,8 @@
               "Version": 3,
               "Guid": "fc41eb73-7f0f-4507-8830-b487bc56c202",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -1033,7 +1035,50 @@
             "Id": "ContentType-InputType",
             "Name": "ContentType-InputType",
             "Scope": "System.Fields",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 53701,
+                "Version": 3,
+                "Guid": "787d547a-85c0-485f-9f69-00570397e928",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "Description": {
+                      "*": "Input type definition for a content-type"
+                    },
+                    "EditInstructions": {
+                      "*": "<p>These objects must be attached to the content type to have an affect - so create them as metadata for a content type so they will be exported together with the content-type definition.&nbsp;</p>\n<p>You only need to create this object for content-types which need extra configuration, so you won't find an input type in this list for every type which exists.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "*": "Custom InputType Configuration"
+                    },
+                    "ListInstructions": {
+                      "*": "<p>These objects must be attached to the content type to have an affect - so create them as metadata for a content type so they will be exported together with the content-type definition.&nbsp;</p>\n<p>Note that the primary list for input-types is all global types with @ in front of the name, so you&nbsp;only need to create this object (as metadata) for content-types which need extra configuration. You won't find an input type in this list for every type which exists.&nbsp;</p>"
+                    },
+                    "Notes": {
+                      "*": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "*": ""
+                    },
+                    "Link": {
+                      "*": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=1",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "ContentType-InputType"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "Type",
@@ -1046,8 +1091,8 @@
                     "Version": 1,
                     "Guid": "49c736a3-4103-4556-a0f1-588b613f1ce2",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1090,8 +1135,8 @@
                     "Version": 1,
                     "Guid": "55a65d8e-7978-4fdc-8394-405a2b006f97",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1134,8 +1179,8 @@
                     "Version": 1,
                     "Guid": "b106e124-b054-4c76-bd14-ab0e57d83a2a",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1178,8 +1223,8 @@
                     "Version": 2,
                     "Guid": "3e4556ef-b52d-4080-a0ba-06a313320fd7",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1232,8 +1277,8 @@
                     "Version": 1,
                     "Guid": "c5b45f7c-3e12-4b38-846e-ecaa097f9540",
                     "Type": {
-                      "Name": "@empty-default",
-                      "Id": "@empty-default"
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
                     },
                     "Attributes": {
                       "Boolean": {
@@ -1257,8 +1302,8 @@
                     "Version": 3,
                     "Guid": "11a0e6e2-c856-4a3d-86dd-572f477311b7",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1317,8 +1362,8 @@
                     "Version": 2,
                     "Guid": "b669c659-8956-4fcc-a23e-f4b385994ca1",
                     "Type": {
-                      "Name": "@Boolean",
-                      "Id": "@Boolean"
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
                     },
                     "Attributes": {
                       "String": {
@@ -1348,8 +1393,8 @@
                     "Version": 3,
                     "Guid": "69d1698b-e8c5-4a80-b59a-a7dde42412dc",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1408,8 +1453,8 @@
                     "Version": 2,
                     "Guid": "9da27e0d-a5c5-49a8-9a65-cd12569939dc",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -1428,8 +1473,8 @@
                     "Version": 2,
                     "Guid": "902ad7b8-de5d-465f-b1f9-836201aefa81",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "Number": {
@@ -1453,8 +1498,8 @@
                     "Version": 2,
                     "Guid": "b9a18505-0bac-4579-8e17-7466a8882176",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1507,37 +1552,295 @@
                     "Version": 1,
                     "Guid": "6dcf4ef3-3228-4f65-bd76-b475dc9d230a",
                     "Type": {
-                      "Name": "@Boolean",
-                      "Id": "@Boolean"
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
                     },
                     "Attributes": {},
                     "Owner": "dnn:userid=1"
                   }
                 ]
+              },
+              {
+                "Name": "GroupCustomConfig",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 182568,
+                    "Version": 2,
+                    "Guid": "b9ecd6c9-4785-4c6a-9fda-0a0438c9b6b9",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-default"
+                        },
+                        "Name": {
+                          "en-us": "Custom Configuration of Input"
+                        },
+                        "Notes": {
+                          "en-us": "<p>This will override the default behavior to determine which content-types are used to configure this input type (new ca. 16.10).</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 182570,
+                    "Version": 1,
+                    "Guid": "f796d14c-996c-464b-b23c-984b8d90727d",
+                    "Type": {
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "CustomConfigTypes",
+                "Type": "String",
+                "InputType": "string-dropdown-query",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 182569,
+                    "Version": 4,
+                    "Guid": "6160ff26-0910-4649-860c-aae7dab1cd39",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-dropdown-query"
+                        },
+                        "Name": {
+                          "en-us": "Custom Configuration Types"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Select custom types to configure this input type.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 182571,
+                    "Version": 3,
+                    "Guid": "995d4aef-97a3-4871-9b29-286fe701df17",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 182572,
+                    "Version": 3,
+                    "Guid": "ec4933d4-2601-4642-a4f9-05a632a031b7",
+                    "Type": {
+                      "Id": "@string-dropdown-query",
+                      "Name": "@string-dropdown-query"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "EntityType": {
+                          "en-us": ""
+                        },
+                        "Label": {
+                          "en-us": "Name"
+                        },
+                        "MoreFields": {
+                          "en-us": ""
+                        },
+                        "Query": {
+                          "en-us": "System.ContentTypes"
+                        },
+                        "Separator": {
+                          "en-us": ","
+                        },
+                        "StreamName": {
+                          "en-us": "Default"
+                        },
+                        "UrlParameters": {
+                          "en-us": "Scope=System.Fields"
+                        },
+                        "Value": {
+                          "en-us": "StaticName"
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": true
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": true
+                        },
+                        "EnableTextEntry": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
               }
-            ],
+            ]
+          },
+          "Entities": []
+        },
+        {
+          "ContentType": {
+            "Id": "4a8eded3-727e-4990-b986-019d84b3d220",
+            "Name": "RegExCheck",
+            "Scope": "System.Fields",
             "Metadata": [
               {
-                "Id": 53701,
-                "Version": 3,
-                "Guid": "787d547a-85c0-485f-9f69-00570397e928",
+                "Id": 63410,
+                "Version": 2,
+                "Guid": "498f424b-db24-4a79-aab7-056ad5e410d6",
                 "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
+                  "Id": "ContentType",
+                  "Name": "ContentType"
                 },
                 "Attributes": {
                   "String": {
                     "Description": {
-                      "*": "Input type definition for a content-type"
+                      "*": "Used to validate fields"
                     },
                     "EditInstructions": {
-                      "*": "<p>These objects must be attached to the content type to have an affect - so create them as metadata for a content type so they will be exported together with the content-type definition.&nbsp;</p>\n<p>You only need to create this object for content-types which need extra configuration, so you won't find an input type in this list for every type which exists.&nbsp;</p>"
+                      "*": "<p>Configur a regular expression check here. It will usually be used in JavaScript, so make sure your RegEx adheres to the JavaScript RegEx standard. You can develop/test your regex in online tools like the <a href=\"https://regexr.com/\" target=\"_blank\" rel=\"noopener\">RegExr</a>.</p>"
                     },
                     "Label": {
-                      "*": "Custom InputType Configuration"
+                      "*": "Regular Expression (BETA, not final)"
                     },
                     "ListInstructions": {
-                      "*": "<p>These objects must be attached to the content type to have an affect - so create them as metadata for a content type so they will be exported together with the content-type definition.&nbsp;</p>\n<p>Note that the primary list for input-types is all global types with @ in front of the name, so you&nbsp;only need to create this object (as metadata) for content-types which need extra configuration. You won't find an input type in this list for every type which exists.&nbsp;</p>"
+                      "*": ""
                     },
                     "Notes": {
                       "*": ""
@@ -1556,19 +1859,10 @@
                 "For": {
                   "Target": "ContentType",
                   "TargetType": 5,
-                  "String": "ContentType-InputType"
+                  "String": "4a8eded3-727e-4990-b986-019d84b3d220"
                 }
               }
-            ]
-          },
-          "Entities": []
-        },
-        {
-          "ContentType": {
-            "Id": "4a8eded3-727e-4990-b986-019d84b3d220",
-            "Name": "RegExCheck",
-            "Scope": "System.Fields",
-            "Description": null,
+            ],
             "Attributes": [
               {
                 "Name": "Title",
@@ -1581,8 +1875,8 @@
                     "Version": 2,
                     "Guid": "2e6fcfd2-9a79-4332-9c8b-e2722c6b63fd",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1635,8 +1929,8 @@
                     "Version": 1,
                     "Guid": "84e67299-b1cb-4713-935e-57e5d039df4c",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -1655,8 +1949,8 @@
                     "Version": 1,
                     "Guid": "ffc53071-f755-4296-ab7d-d596a926ec01",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {},
                     "Owner": "dnn:userid=1"
@@ -1674,8 +1968,8 @@
                     "Version": 3,
                     "Guid": "c69b94bb-9421-425c-99be-806f03bc20ed",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1728,8 +2022,8 @@
                     "Version": 2,
                     "Guid": "75d70f0e-9e16-4f18-bfff-971695cb6473",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -1748,8 +2042,8 @@
                     "Version": 2,
                     "Guid": "957493e7-138b-43b7-8584-373b1054fedd",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "Number": {
@@ -1773,8 +2067,8 @@
                     "Version": 2,
                     "Guid": "a1d9cc4f-ffb3-49af-8e1a-fb403984c7a9",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1827,8 +2121,8 @@
                     "Version": 1,
                     "Guid": "3dd50a69-dc2b-4b7a-976e-aba713ff2ffa",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -1847,8 +2141,8 @@
                     "Version": 1,
                     "Guid": "5720d287-635c-4297-86fd-de40f4f190df",
                     "Type": {
-                      "Name": "@string-wysiwyg",
-                      "Id": "@string-wysiwyg"
+                      "Id": "@string-wysiwyg",
+                      "Name": "@string-wysiwyg"
                     },
                     "Attributes": {
                       "String": {
@@ -1878,8 +2172,8 @@
                     "Version": 2,
                     "Guid": "7bde51e5-b169-4da3-b09d-56d150f93a05",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1929,58 +2223,11 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 63410,
-                "Version": 2,
-                "Guid": "498f424b-db24-4a79-aab7-056ad5e410d6",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "Description": {
-                      "*": "Used to validate fields"
-                    },
-                    "EditInstructions": {
-                      "*": "<p>Configur a regular expression check here. It will usually be used in JavaScript, so make sure your RegEx adheres to the JavaScript RegEx standard. You can develop/test your regex in online tools like the <a href=\"https://regexr.com/\" target=\"_blank\" rel=\"noopener\">RegExr</a>.</p>"
-                    },
-                    "Label": {
-                      "*": "Regular Expression (BETA, not final)"
-                    },
-                    "ListInstructions": {
-                      "*": ""
-                    },
-                    "Notes": {
-                      "*": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "*": ""
-                    },
-                    "Link": {
-                      "*": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=1",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "4a8eded3-727e-4990-b986-019d84b3d220"
-                }
-              }
             ]
           },
           "Entities": []
         }
       ]
     }
-  ],
-  "_": {
-    "V": 1
-  }
+  ]
 }
