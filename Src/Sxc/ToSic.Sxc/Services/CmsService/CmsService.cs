@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Services.CmsService
                 var inputType = attribute.InputType();
                 if (debug) l.A($"Field type is: {ValueTypes.String}:{inputType}");
                 // ...wysiwyg
-                if (inputType == InputTypes.InputTypeWysiwyg)
+                if (inputType == ToSic.Sxc.Compatibility.InputTypes.InputTypeWysiwyg)
                 {
                     var fieldAdam = _DynCodeRoot.AsAdam(field.Parent, field.Name);
                     var htmlResult = _stringWysiwyg.New()

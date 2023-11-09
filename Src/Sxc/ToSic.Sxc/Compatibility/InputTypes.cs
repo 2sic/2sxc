@@ -4,6 +4,8 @@ namespace ToSic.Sxc.Compatibility
 {
     public class InputTypes
     {
+        public static string InputTypeWysiwyg = "string-wysiwyg";
+
         /// <summary>
         /// This lists old, obsolete or never-used input types and what the new name should be
         /// It's used because historically and for future-features, some input-types have been defined
@@ -15,15 +17,15 @@ namespace ToSic.Sxc.Compatibility
         {
             // This one would be used once multiple wysiwyg implementations would need
             // to explicitly say TinyMCE. As of now, the default is the same
-            { "string-wysiwyg-tinymce", Eav.Data.InputTypes.InputTypeWysiwyg },
+            { "string-wysiwyg-tinymce", InputTypeWysiwyg },
 
             // This one used to say "use the wysiwyg of DNN" 
             // this is currently not supported in 2sxc 10
-            { "string-wysiwyg-dnn", Eav.Data.InputTypes.InputTypeWysiwyg },
+            { "string-wysiwyg-dnn", InputTypeWysiwyg },
 
             // This one was thought to be a configurable wysiwyg
             // ATM this feature doesn't exist yet, so just fall back to default
-            { "string-wysiwyg-adv", Eav.Data.InputTypes.InputTypeWysiwyg },
+            { "string-wysiwyg-adv", InputTypeWysiwyg },
         };
 
         public static string MapInputTypeV10(string original) =>
