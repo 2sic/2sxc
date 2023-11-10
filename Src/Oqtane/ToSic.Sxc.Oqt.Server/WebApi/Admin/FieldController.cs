@@ -105,8 +105,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             => Real.Inherit(appId, attributeId, inheritMetadataOf);
 
         [HttpPost]
-        public bool AddInheritedField(int appId, int contentTypeId, string sourceType, Guid sourceField)
-            => Real.AddInheritedField(appId, contentTypeId, sourceType, sourceField);
+        public bool AddInheritedField(int appId, int contentTypeId, string sourceType, Guid sourceField, string name)
+            => Real.AddInheritedField(appId, contentTypeId, sourceType, sourceField, name);
 
         #endregion
 
