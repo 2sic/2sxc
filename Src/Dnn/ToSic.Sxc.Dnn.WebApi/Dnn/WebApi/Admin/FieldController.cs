@@ -88,8 +88,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         #region Sharing and Inheriting
 
         [HttpGet]
-        public IEnumerable<ContentTypeFieldDto> GetSharedFields(int appId)
-            => Real.GetSharedFields(appId);
+        public IEnumerable<ContentTypeFieldDto> GetSharedFields(int appId, int attributeId = default)
+            => Real.GetSharedFields(appId, attributeId);
 
         [HttpPost]
         public bool Share(int appId, int attributeId, bool share, bool hide = false)
