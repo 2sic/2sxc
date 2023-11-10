@@ -7,8 +7,16 @@ namespace ToSic.Sxc.Dnn.Run.Capabilities
     {
         public SystemCapabilityCSharp7() : base(CSharp7) { }
 
-        // TODO: DETECT based on installed stuff
-        public override bool IsEnabled => false;
+        public override bool IsEnabled => _isEnabledCache ?? (_isEnabledCache = DetectIfCs73IsInstalled()).Value;
+        private static bool? _isEnabledCache;
+
+        // TODO: @STV DETECT based on installed stuff (DLLs, available APIs?)
+        // Goal is that it can tell if the newer CodeDom library has been installed or not
+        // I'll then use it to build a config in the App, so the app can warn if a feature is missing
+        private static bool DetectIfCs73IsInstalled()
+        {
+            return false;
+        }
     }
 
     public class SystemCapabilityCSharp8: SystemCapabilityBase
