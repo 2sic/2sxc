@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.WebApi.Adam.AdamControllerReal<int>;
@@ -39,11 +40,17 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
 
         [HttpGet("items")]
         public IEnumerable</*AdamItemDto*/object> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
-            => Real.Items(appId, contentType, guid, field, subfolder, usePortalRoot);
+            => Real.Items(appId, contentType, guid, field, subfolder, usePortalRoot)
+                // Fix bug with .net 7 so that we really return a fresh IEnumerable and not the initial list
+                // Otherwise System.Text.Json sees the List<AdamItemDto> and will not convert additional properties on the objects
+                .Select(e => e); 
 
         [HttpPost("folder")]
         public IEnumerable</*AdamItemDto*/object> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
-            => Real.Folder(appId, contentType, guid, field, subfolder, newFolder, usePortalRoot);
+            => Real.Folder(appId, contentType, guid, field, subfolder, newFolder, usePortalRoot)
+                // Fix bug with .net 7 so that we really return a fresh IEnumerable and not the initial list
+                // Otherwise System.Text.Json sees the List<AdamItemDto> and will not convert additional properties on the objects
+                .Select(e => e);
 
         [HttpGet("delete")]
         public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot)
