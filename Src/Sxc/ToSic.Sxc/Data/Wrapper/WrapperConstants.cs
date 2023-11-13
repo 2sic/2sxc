@@ -1,5 +1,6 @@
 ﻿namespace ToSic.Sxc.Data.Wrapper
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class WrapperConstants
     {
         public const string EmptyJson = "{}";

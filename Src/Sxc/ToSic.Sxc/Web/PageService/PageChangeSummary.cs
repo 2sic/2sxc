@@ -19,6 +19,7 @@ namespace ToSic.Sxc.Web.PageService
     /// This should bundle all the page changes once a module is done.
     /// Usually used at the top-level of render-result, and in future also on page-level dynamic code
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class PageChangeSummary: ServiceBase
     {
 

@@ -1,5 +1,6 @@
 ﻿namespace ToSic.Sxc.Services.CmsService
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class CmsProcessed
     {
         public bool IsProcessed { get; set; }

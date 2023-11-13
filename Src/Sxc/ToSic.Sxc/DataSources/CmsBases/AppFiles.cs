@@ -35,6 +35,7 @@ namespace ToSic.Sxc.DataSources
         Type = DataSourceType.Source,
         Audience = Audience.Advanced,
         UiHint = "Files and folders in the App folder")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AppFiles: CustomDataSourceAdvanced
     {
         private readonly IDataFactory _dataFactory;

@@ -12,9 +12,10 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Web.LightSpeed
 {
     [PrivateApi]
-    public class OutputCacheManager : ServiceBase
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    internal class OutputCacheManager : ServiceBase
     {
-        public OutputCacheManager() : base(Constants.SxcLogName + ".OutputCacheManager")
+        internal OutputCacheManager() : base(Constants.SxcLogName + ".OutputCacheManager")
         { }
 
         internal const string GlobalCacheRoot = "2sxc.Lightspeed.Module.";

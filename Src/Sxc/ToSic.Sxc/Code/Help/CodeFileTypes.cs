@@ -1,5 +1,6 @@
 ﻿namespace ToSic.Sxc.Code.Help
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public enum CodeFileTypes
     {
         Unknown,

@@ -5,6 +5,7 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ToolbarContext: IAppIdentity
     {
         internal const string CtxZone = "context:zoneId";
@@ -28,6 +29,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         [JsonPropertyName("custom")][JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public string Custom { get; } = null;
     }
 
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static class ToolbarContextExtensions
     {
         public static string ToRuleString(this ToolbarContext tlbCtx) => tlbCtx == null 

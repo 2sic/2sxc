@@ -3,6 +3,7 @@
 namespace ToSic.Sxc.Services.GoogleMaps
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class MapsCoordinates
     {
         public double Latitude { get; set; }

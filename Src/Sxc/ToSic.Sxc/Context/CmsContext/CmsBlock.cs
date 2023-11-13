@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Data;
-using ToSic.Eav.Metadata;
+﻿using ToSic.Eav.Metadata;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
@@ -9,7 +8,8 @@ using ToSic.Sxc.Blocks;
 namespace ToSic.Sxc.Context
 {
     [PrivateApi("Hide implementation")]
-    public class CmsBlock: Wrapper<IBlock>, ICmsBlock
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    internal class CmsBlock: Wrapper<IBlock>, ICmsBlock
     {
         public CmsBlock(IBlock block): base(block) { }
 

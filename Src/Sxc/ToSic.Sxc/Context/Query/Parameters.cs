@@ -15,6 +15,7 @@ namespace ToSic.Sxc.Context.Query
     /// This should provide cross-platform, neutral way to have page parameters in the Razor
     /// </summary>
     [PrivateApi("Hide implementation")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public partial class Parameters : IParameters
     {
         #region Constructor

@@ -5,7 +5,7 @@ using ToSic.Sxc.Context.Raw;
 
 namespace ToSic.Sxc.DataSources
 {
-    public class UsersDataSourceProviderUnknown : UsersDataSourceProvider
+    internal class UsersDataSourceProviderUnknown : UsersDataSourceProvider
     {
         public UsersDataSourceProviderUnknown(WarnUseOfUnknown<UsersDataSourceProviderUnknown> _): base($"{Constants.SxcLogName}.{LogConstants.NameUnknown}")
         {

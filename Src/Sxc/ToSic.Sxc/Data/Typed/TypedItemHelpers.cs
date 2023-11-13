@@ -7,6 +7,7 @@ using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data.Typed
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class TypedItemHelpers
     {
         public static IHtmlTag Html(

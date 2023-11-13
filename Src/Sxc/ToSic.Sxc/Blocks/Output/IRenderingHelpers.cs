@@ -6,6 +6,7 @@ using ToSic.Lib.Logging;
 namespace ToSic.Sxc.Blocks.Output
 {
     [PrivateApi("Internal only")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IRenderingHelper: IHasLog
     {
         IRenderingHelper Init(IBlock block);

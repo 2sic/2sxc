@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Services;
 
@@ -10,6 +9,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
     /// Very experimental, do not use
     /// </summary>
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ContentSecurityPolicyServiceBase : ServiceBase, IContentSecurityPolicyService
     {
         public ContentSecurityPolicyServiceBase(): base($"{Constants.SxcLogName}.CspSvc") { }

@@ -6,12 +6,10 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Eav.DataSources;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using static ToSic.Eav.DataSource.DataSourceConstants;
-using static ToSic.Sxc.DataSources.RoleDataRaw;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -33,6 +31,7 @@ namespace ToSic.Sxc.DataSources
         Type = DataSourceType.Source,
         ConfigurationType = "1b9fd9d1-dde0-40ad-bb66-5cd7f30de18d"
     )]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class Roles : CustomDataSourceAdvanced
     {
         private readonly IDataFactory _rolesFactory;

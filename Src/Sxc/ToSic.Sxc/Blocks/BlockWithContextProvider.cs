@@ -12,6 +12,7 @@ namespace ToSic.Sxc.Blocks
     /// 3. which would cause a StackOverflow because it needs to be created first
     /// 4. which in turn requires the context - so it would loop and die
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class BlockWithContextProvider
     {
 

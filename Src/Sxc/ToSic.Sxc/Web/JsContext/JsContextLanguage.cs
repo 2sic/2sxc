@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Run;
@@ -7,6 +6,7 @@ using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.Web.JsContext
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class JsContextLanguage
     {
         public string Current { get; private set; }

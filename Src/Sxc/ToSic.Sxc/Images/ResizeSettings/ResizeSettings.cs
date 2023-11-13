@@ -8,7 +8,8 @@ using static ToSic.Sxc.Images.ImageConstants;
 namespace ToSic.Sxc.Images
 {
     [PrivateApi("Hide implementation")]
-    public class ResizeSettings : IResizeSettings
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    internal class ResizeSettings : IResizeSettings
     {
         public int Width { get; } = IntIgnore;
         public int Height { get; } = IntIgnore;

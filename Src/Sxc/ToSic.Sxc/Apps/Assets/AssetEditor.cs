@@ -14,6 +14,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps.Assets
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AssetEditor : ServiceBase
     {
 

@@ -11,6 +11,7 @@ using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.DataSources
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class BlockDataSourceFactory: ServiceBase
     {
         #region Constructor

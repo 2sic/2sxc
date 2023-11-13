@@ -12,6 +12,8 @@ using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
+    // TODO: try to make internal
+    [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsDynamicCodeRoot
     {
 

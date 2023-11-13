@@ -4,6 +4,7 @@ using ToSic.Eav.LookUp;
 
 namespace ToSic.Sxc.LookUp
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class TicksLookUp : LookUpBase
     {
         public TicksLookUp()

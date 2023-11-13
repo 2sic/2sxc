@@ -21,6 +21,7 @@ using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data.Typed
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
     {
         private ILazyLike<CodeDataFactory> _cdf { get; set; }

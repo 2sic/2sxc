@@ -4,6 +4,7 @@ using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Code.Help
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class GenChangeOn : GenNotExist
     {
 

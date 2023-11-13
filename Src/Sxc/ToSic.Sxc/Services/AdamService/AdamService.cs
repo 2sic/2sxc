@@ -6,6 +6,7 @@ using ToSic.Sxc.Data;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("hide implementation")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class AdamService: IAdamService, INeedsDynamicCodeRoot
     {
         #region Constructor etc.

@@ -9,6 +9,7 @@ namespace ToSic.Sxc.Cms.Publishing
 {
     // Note: maybe some day this should go into a .Cms namespace
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IPagePublishing: IHasLog
     {
         /// <summary>

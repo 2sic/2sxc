@@ -20,6 +20,7 @@ namespace ToSic.Sxc.Blocks
     /// See also [](xref:Basics.Cms.InnerContent.Index)
     /// </summary>
     [PrivateApi("Hide Implementation")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class RenderService: ServiceForDynamicCode,
         ToSic.Sxc.Services.IRenderService,
 #pragma warning disable CS0618

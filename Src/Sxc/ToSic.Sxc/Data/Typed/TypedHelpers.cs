@@ -8,9 +8,9 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
 using static ToSic.Eav.Parameters;
 
-// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Data.Typed
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal static class TypedHelpers
     {
         public static bool ContainsKey<TNode>(string name, TNode start, Func<TNode, string, bool> checkNode, Func<TNode, string, TNode> dig) where TNode: class

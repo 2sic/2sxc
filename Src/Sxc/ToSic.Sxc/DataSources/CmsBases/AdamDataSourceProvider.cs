@@ -8,8 +8,6 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Context;
-
 
 namespace ToSic.Sxc.DataSources
 {
@@ -18,6 +16,7 @@ namespace ToSic.Sxc.DataSources
     ///
     /// Must be overriden in each platform.
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSourceProvider<TFolderId, TFileId>.MyServices>
     {
         private readonly MyServices _services;

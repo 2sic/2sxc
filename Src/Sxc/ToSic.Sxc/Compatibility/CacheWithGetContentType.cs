@@ -6,6 +6,7 @@ using ToSic.Eav.Data;
 namespace ToSic.Sxc.Compatibility
 {
     [Obsolete("this is just a workaround so that old code still works - especially Mobius forms which used this in V3")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CacheWithGetContentType
     {
         private readonly AppState _app;

@@ -5,6 +5,7 @@ using ToSic.Lib.Documentation;
 namespace ToSic.Sxc.Web
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class HtmlDialog
     {
         public const string PageIdInUrl = "pageId";

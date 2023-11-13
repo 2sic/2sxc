@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using ToSic.Sxc.Adam;
 
 // Obsolete class / namespace
@@ -10,6 +11,7 @@ namespace ToSic.SexyContent.Adam
 {
     // ReSharper disable once InconsistentNaming
     [Obsolete("use ToSic.Sxc.Adam.IFile instead")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public interface AdamFile: IFile
     {
         [Obsolete("use FullName instead")]

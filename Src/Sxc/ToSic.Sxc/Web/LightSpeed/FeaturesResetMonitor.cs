@@ -8,10 +8,10 @@ namespace ToSic.Sxc.Web.LightSpeed
     /// Signal that some items in an app cache should be flushed
     /// Idea from here: https://stackoverflow.com/questions/25269338/is-this-a-good-solution-to-clear-a-c-sharp-memorycache
     /// </summary>
-    public class FeaturesResetMonitor : ChangeMonitor
+    internal class FeaturesResetMonitor : ChangeMonitor
     {
         
-        public FeaturesResetMonitor(IFeaturesInternal featuresService)
+        internal FeaturesResetMonitor(IFeaturesInternal featuresService)
         {
             _featuresService = featuresService;
             _featuresService.FeaturesChanged += HandleFeaturesChanged;

@@ -14,6 +14,7 @@ namespace ToSic.Sxc.Data
     /// To make sure that APIs which use this have a consistent structure, these objects all implement this interface.
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("Just FYI")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface ICanBeItem: ICanBeEntity
     {
         [PrivateApi]

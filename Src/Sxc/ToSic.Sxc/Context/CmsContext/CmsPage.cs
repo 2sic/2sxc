@@ -9,6 +9,7 @@ using ToSic.Lib.Documentation;
 namespace ToSic.Sxc.Context
 {
     [PrivateApi("hide implementation")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CmsPage: CmsContextPartBase<IPage>, ICmsPage
     {
         public CmsPage(CmsContext parent, AppState appState, LazySvc<IPage> fallbackPage)

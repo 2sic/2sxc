@@ -4,6 +4,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Web.JsContext
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class JsApiCache : ServiceBase
     {
         private const string JsApiKey = "JsApi";

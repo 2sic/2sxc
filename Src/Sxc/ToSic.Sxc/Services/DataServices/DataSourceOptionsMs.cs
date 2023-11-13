@@ -8,6 +8,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Services.DataServices
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class DataSourceOptionsMs: ServiceBase
     {
         internal DataSourceOptionsMs(IAppIdentity appIdentity, Func<ILookUpEngine> getLookup): base(Constants.SxcLogName + "DtOptH")

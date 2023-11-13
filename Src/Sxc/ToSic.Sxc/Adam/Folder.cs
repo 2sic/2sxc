@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Metadata;
@@ -10,7 +11,7 @@ using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Adam
 {
-
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class Folder<TFolderId, TFileId> : Eav.Apps.Assets.Folder<TFolderId, TFileId>, IFolder
     {
         public Folder(AdamManager<TFolderId, TFileId> adamManager) => AdamManager = adamManager;

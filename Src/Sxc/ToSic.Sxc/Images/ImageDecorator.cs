@@ -6,6 +6,7 @@ using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.Images
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ImageDecorator: EntityBasedType
     {
         // Marks Requirements Metadata 13.04

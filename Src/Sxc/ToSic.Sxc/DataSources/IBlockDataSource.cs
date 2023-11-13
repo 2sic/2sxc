@@ -10,6 +10,7 @@ namespace ToSic.Sxc.DataSources
     /// They have some internal functionality which isn't published as of now.
     /// </summary>
     [PrivateApi("used to be PublicApi_Stable_ForUseInYourCode till 16.01, but replaced by IContextData")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IBlockDataSource: IDataSource
     {
 

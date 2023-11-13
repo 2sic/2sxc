@@ -7,6 +7,7 @@ namespace ToSic.Sxc.Blocks.Output
     /// <summary>
     /// System to automatically pick up JS/CSS files which should be bundled
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IBlockResourceExtractor: IHasLog
     {
         RenderEngineResult Process(string html);

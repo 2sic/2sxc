@@ -3,14 +3,6 @@
 
     public partial class View 
     {
-        //public const string ContentTypeFieldIcon = "Icon"; // temp public, needed in 2sxc for now...
-
-        //internal const string FieldName = "Name";
-        
-        //internal const string FieldIdentifier = "Identifier";
-        //internal const string FieldIcon = "Icon";
-       
-        //internal const string FieldPath = "Path";
         internal const string FieldContentType = "ContentTypeStaticName";
         internal const string FieldContentDemo = "ContentDemoEntity";
         internal const string FieldPresentationType = "PresentationTypeStaticName";
@@ -19,8 +11,7 @@
         internal const string FieldHeaderItem = "ListContentDemoEntity";
         internal const string FieldHeaderPresentationType = "ListPresentationTypeStaticName";
         internal const string FieldHeaderPresentationItem = "ListPresentationDemoEntity";
-        //internal const string FieldType = "Type";
-        //internal const string FieldIsHidden = "IsHidden";
+
         internal const string FieldLocation = "Location";
         internal const string FieldUseList = "UseForList";
 

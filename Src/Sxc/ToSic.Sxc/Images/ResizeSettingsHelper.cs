@@ -4,9 +4,10 @@ using static ToSic.Sxc.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images
 {
-    public static class ResizeSettingsExtensions
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    internal static class ResizeSettingsExtensions
     {
-        public static Recipe Find(this ResizeSettings resizeSettings, SrcSetType srcSetType, bool useFactors, string cssFramework)
+        internal static Recipe Find(this ResizeSettings resizeSettings, SrcSetType srcSetType, bool useFactors, string cssFramework)
         {
             var advanced = resizeSettings?.Advanced;
             var mainRecipe = advanced?.Recipe;
@@ -55,7 +56,7 @@ namespace ToSic.Sxc.Images
         }
     }
 
-    public enum SrcSetType
+    internal enum SrcSetType
     {
         Img,
         Source

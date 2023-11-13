@@ -10,6 +10,7 @@ using static ToSic.Sxc.Blocks.Problems.ProblemReport;
 
 namespace ToSic.Sxc.Edit.ClientContextInfo
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ErrorDto
     {
         [JsonPropertyName("type")]

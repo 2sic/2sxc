@@ -1,6 +1,7 @@
 ﻿namespace ToSic.Sxc.Edit.Toolbar
 {
-    public class ToolbarRuleContext: ToolbarRuleTargeted
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    internal class ToolbarRuleContext: ToolbarRuleTargeted
     {
         internal const string CommandName = "context";
 

@@ -4,6 +4,7 @@ using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Code.Help
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class GenNotExist
     {
         public GenNotExist(string name, params string[] alt) : this(name, alt?.Select(r => (r, null as string)).ToArray()) { }

@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Images
     /// Helper class to handle all kinds of parameters passed to a responsive tag
     /// </summary>
     [PrivateApi]
-    public class ResponsiveParams
+    internal class ResponsiveParams
     {
         /// <summary>
         /// The only reliable object which knows about the url - can never be null

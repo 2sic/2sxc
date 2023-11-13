@@ -5,6 +5,7 @@ using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Context
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class CmsContextPartBase<T> : Wrapper<T>, IHasMetadata where T : class
     {
         protected CmsContextPartBase(CmsContext parent, T contents) : base(contents)

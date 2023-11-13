@@ -3,6 +3,7 @@ using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code.CodeHelpers
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CodeHelper: CodeHelperBase
     {
         #region Setup

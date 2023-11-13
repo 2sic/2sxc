@@ -1,5 +1,6 @@
 ﻿namespace ToSic.Sxc.Web.PageService
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class HttpHeader
     {
         public HttpHeader(string name, string value)

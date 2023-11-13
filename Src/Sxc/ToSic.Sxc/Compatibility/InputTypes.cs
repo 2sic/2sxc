@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Compatibility
         /// to keep things streamlined, we don't want to clutter the system with additional type definitions
         /// even though they are the same.
         /// </summary>
-        public static Dictionary<string, string> InputTypeMap = new Dictionary<string, string>
+        private static Dictionary<string, string> _inputTypeMap = new Dictionary<string, string>
         {
             // This one would be used once multiple wysiwyg implementations would need
             // to explicitly say TinyMCE. As of now, the default is the same
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Compatibility
         };
 
         public static string MapInputTypeV10(string original) =>
-            InputTypeMap.TryGetValue(original, out var result)
+            _inputTypeMap.TryGetValue(original, out var result)
                 ? result
                 : original;
     }

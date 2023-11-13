@@ -3,6 +3,7 @@
 namespace ToSic.Sxc
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class Constants : Eav.Constants // inherit from EAV constants to make coding easier
     {
         public const string SxcLogName = "Sxc";

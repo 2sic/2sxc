@@ -12,6 +12,7 @@ namespace ToSic.Sxc.Code
     /// <summary>
     /// Helper to convert some unknown object into the possible result.
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class TypedConverter
     {
         public CodeDataFactory Cdf { get; }

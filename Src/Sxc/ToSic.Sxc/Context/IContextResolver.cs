@@ -7,6 +7,7 @@ namespace ToSic.Sxc.Context
     /// This provides other systems with a context
     /// Note that it's important to always make this **Scoped**, not transient, as there is some re-use after initialization
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IContextResolver: Eav.Context.IContextResolver
     {
         /// <summary>

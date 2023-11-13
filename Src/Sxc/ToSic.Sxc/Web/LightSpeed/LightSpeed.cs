@@ -18,7 +18,8 @@ using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Web.LightSpeed
 {
-    public class LightSpeed : ServiceBase, IOutputCache
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    internal class LightSpeed : ServiceBase, IOutputCache
     {
 
         public LightSpeed(IFeaturesInternal features, LazySvc<IAppStates> appStatesLazy, LazySvc<AppPaths> appPathsLazy, LightSpeedStats lightSpeedStats, LazySvc<ICmsContext> cmsContext) : base(Constants.SxcLogName + ".Lights")

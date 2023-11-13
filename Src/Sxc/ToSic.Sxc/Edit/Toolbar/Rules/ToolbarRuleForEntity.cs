@@ -6,7 +6,8 @@ using ToSic.Sxc.Web.Url;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
-    public class ToolbarRuleForEntity: ToolbarRuleTargeted
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    internal class ToolbarRuleForEntity: ToolbarRuleTargeted
     {
         public const string PrefixPrefill = "prefill:";
         public const string PrefixForm = "form:";

@@ -13,6 +13,7 @@ using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class GetAndConvertHelper
     {
         #region Setup and Log

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
@@ -7,6 +8,7 @@ using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Adam
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class AdamManager<TFolderId, TFileId>: AdamManager
     {
         private readonly Generator<AdamStorageOfField<TFolderId, TFileId>> _fieldStorageGenerator;

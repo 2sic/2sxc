@@ -2,6 +2,7 @@
 
 namespace ToSic.Sxc.Web.LightSpeed
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class OutputCacheItem
     {
         public IRenderResult Data;

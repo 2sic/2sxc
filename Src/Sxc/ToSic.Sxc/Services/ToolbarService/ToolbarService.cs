@@ -9,6 +9,7 @@ using System;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("Hide implementation")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class ToolbarService: ServiceForDynamicCode, IToolbarService
     {
         #region Constructor & Init

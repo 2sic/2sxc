@@ -3,6 +3,7 @@ using ToSic.Eav.Code.Help;
 
 namespace ToSic.Sxc.Code.Help
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CodeFileInfo
     {
         private CodeFileInfo(string inherits, CodeFileTypes type, List<CodeHelp> help)

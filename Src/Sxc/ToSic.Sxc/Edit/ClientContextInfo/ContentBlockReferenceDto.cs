@@ -3,11 +3,11 @@ using System.Text.Json.Serialization;
 using ToSic.Eav.Apps.Enums;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Decorators;
 
 namespace ToSic.Sxc.Edit.ClientContextInfo
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ContentBlockReferenceDto
     {
         /// <summary>

@@ -1,6 +1,4 @@
 ﻿#if NETFRAMEWORK
-using System.Collections;
-using System.Collections.Generic;
 using System.Web;
 using System.Collections.Specialized;
 using ToSic.Sxc.Web;
@@ -8,6 +6,7 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.DotNet
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class HttpNetFramework: HttpAbstractionBase, IHttp
     {
         /// <summary>

@@ -6,6 +6,7 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class BlockEditorForModule : BlockEditorBase
     {
         public BlockEditorForModule(MyServices services,

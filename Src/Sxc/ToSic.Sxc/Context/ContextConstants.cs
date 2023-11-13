@@ -3,6 +3,7 @@
 namespace ToSic.Sxc.Context
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ContextConstants
     {
         public const string AppIdKey = "appId";

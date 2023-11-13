@@ -8,6 +8,7 @@ namespace ToSic.SexyContent.Interfaces
     /// But this interface shouldn't be enhanced or documented publicly
     /// </summary>
 
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IApp: Eav.Apps.IApp
     {
         dynamic Configuration { get;  }

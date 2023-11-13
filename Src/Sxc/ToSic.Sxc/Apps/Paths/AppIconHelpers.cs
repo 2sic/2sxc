@@ -11,7 +11,7 @@ using static ToSic.Eav.Apps.AppConstants;
 
 namespace ToSic.Sxc.Apps.Paths
 {
-
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AppIconHelpers : ServiceBase
     {
         #region Constructor / DI

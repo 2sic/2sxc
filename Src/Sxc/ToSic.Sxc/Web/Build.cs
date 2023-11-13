@@ -5,7 +5,7 @@ using ToSic.Razor.Markup;
 namespace ToSic.Sxc.Web
 {
     [PrivateApi("internal use only, may be removed/changed some day")]
-    public class Build
+    internal class Build
     {
         /// <summary>
         /// Generate an HTML attribute
@@ -21,11 +21,6 @@ namespace ToSic.Sxc.Web
         /// so we just manually replace all apos to make sure it doesn't create invalid html
         /// </remarks>
         public static IRawHtmlString Attribute(string name, string value)
-            //=> new HybridHtmlString($" {name}='{MinimalHtmlAttributeEncode(value)}'");
-            => new RawHtmlString($" {Tag.Attr(name, value)} "); // $"{name}='{MinimalHtmlAttributeEncode(value)}'");
-
-        //private static string MinimalHtmlAttributeEncode(string value) => value?
-        //    //.Replace("\"", "&quot;")
-        //    .Replace("'", "&apos;");
+            => new RawHtmlString($" {Tag.Attr(name, value)} ");
     }
 }

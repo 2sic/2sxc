@@ -5,6 +5,7 @@ using ToSic.Sxc.Web.Parameters;
 
 namespace ToSic.Sxc.Context
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class Page: IPage
     {
         #region Constructor / DI

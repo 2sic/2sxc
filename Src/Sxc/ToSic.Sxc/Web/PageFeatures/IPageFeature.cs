@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.Data;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Web.PageFeatures
 {
     [PrivateApi("Internal / not final - neither name, namespace or anything")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IPageFeature : IHasIdentityNameId, IHasRequirements
     {
         /// <summary>

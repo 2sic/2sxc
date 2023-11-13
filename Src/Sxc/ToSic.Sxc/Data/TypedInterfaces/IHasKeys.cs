@@ -9,6 +9,7 @@ namespace ToSic.Sxc.Data
     /// The name isn't quite ideal, but it's not too important as it's not public. 
     /// </summary>
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IHasKeys
     {
         /// <summary>

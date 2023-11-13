@@ -20,6 +20,7 @@ namespace ToSic.Sxc.Engines
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     [EngineDefinition(Name = "Token")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class TokenEngine : EngineBase
     {
 

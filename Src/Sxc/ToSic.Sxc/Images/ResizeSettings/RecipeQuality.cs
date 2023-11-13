@@ -8,6 +8,7 @@ namespace ToSic.Sxc.Images
     /// This is so WebP can use different quality params, or very small JGPs need a higher quality than lager JPGs
     /// </summary>
     [PublicApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class RecipeQuality
     {
         public RecipeQuality(RecipeQuality original, int forWidth, string forFormat, int quality)

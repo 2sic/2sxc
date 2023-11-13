@@ -4,6 +4,7 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Code
 {
     [PrivateApi("v14")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IDynamicCodeKit<out TServiceKit> where TServiceKit : ServiceKit
     {
         /// <summary>
@@ -13,6 +14,7 @@ namespace ToSic.Sxc.Code
         TServiceKit Kit { get; }
     }
 
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static class IDynamicCodeKitExtensions
     {
         public static TServiceKit GetKit<TServiceKit>(this IDynamicCodeRoot codeRoot) where TServiceKit : ServiceKit

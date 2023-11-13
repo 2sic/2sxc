@@ -19,7 +19,8 @@ using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.DataSources
 {
-    public class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
     {
         private const string DataSourcesFolder = "DataSources";
 

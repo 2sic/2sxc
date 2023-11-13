@@ -7,6 +7,7 @@ using ToSic.Sxc.Images;
 namespace ToSic.Sxc.Data
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class Field: IField
     {
 

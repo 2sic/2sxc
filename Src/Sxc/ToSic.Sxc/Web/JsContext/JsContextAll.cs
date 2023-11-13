@@ -13,6 +13,7 @@ using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Web.JsContext
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class JsContextAll : ServiceBase
     {
         private readonly CodeInfosInScope _codeWarnings;
@@ -53,7 +54,7 @@ namespace ToSic.Sxc.Web.JsContext
             // New in v13 - if the view is from remote, don't allow design
             var blockCanDesign = block.View?.Entity.HasAncestor() ?? false ? (bool?)false : null;
 
-            User = new JsContextUser(ctx.User, blockCanDesign);
+            User = new JsContextUser(ctx.User);
 
             ContentBlockReference = new ContentBlockReferenceDto(block, ctx.Publishing.Mode);
             ContentBlock = new ContentBlockDto(block);

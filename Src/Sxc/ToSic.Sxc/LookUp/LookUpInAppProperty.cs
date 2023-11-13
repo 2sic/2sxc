@@ -9,6 +9,7 @@ namespace ToSic.Sxc.LookUp
     /// Look up things in app-settings, app-resources etc.
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class LookUpInAppProperty : LookUpBase
     {
         private readonly IApp _app;

@@ -6,7 +6,6 @@ using System.Text.Json;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
-using ToSic.Eav.Code;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
@@ -31,6 +30,7 @@ namespace ToSic.Sxc.Engines
     /// The foundation for engines - must be inherited by other engines
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract partial class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
     {
         [PrivateApi] protected IView Template;

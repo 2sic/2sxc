@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Context;
-using ToSic.Lib;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
@@ -13,6 +12,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
     /// This object reads the CSP settings of an app and passes it to the <see cref="CspOfModule"/>.
     /// This is important because a module can have multiple apps in it, so it must merge the Csp Settings
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CspOfApp : ServiceForDynamicCode
     {
         public int AppId => _DynCodeRoot?.Block?.AppId ?? 0;

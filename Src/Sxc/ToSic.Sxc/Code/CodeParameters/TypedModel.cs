@@ -14,6 +14,7 @@ using static ToSic.Eav.Parameters;
 namespace ToSic.Sxc.Code
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class TypedModel : ITypedModel
     {
         private readonly bool _isRazor;
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Code
         private readonly IDictionary<string, object> _paramsDictionary;
         private readonly TypedConverter _converter;
 
-        public TypedModel(IDictionary<string, object> paramsDictionary, IDynamicCodeRoot codeRoot, bool isRazor, string razorFileName)
+        internal TypedModel(IDictionary<string, object> paramsDictionary, IDynamicCodeRoot codeRoot, bool isRazor, string razorFileName)
         {
             _isRazor = isRazor;
             _razorFileName = razorFileName;

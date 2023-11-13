@@ -3,6 +3,7 @@ using ToSic.Sxc.Web.ContentSecurityPolicy;
 
 namespace ToSic.Sxc.Web
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ClientAssetConstants
     {
         #region Constants for placement in resulting HTML

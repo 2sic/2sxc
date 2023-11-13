@@ -14,6 +14,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps.Work
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class WorkBlocks: WorkUnitBase<IAppWorkCtxPlus>
     {
         private readonly GenWorkPlus<WorkEntities> _workEntities;

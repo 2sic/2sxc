@@ -12,6 +12,7 @@ using static ToSic.Eav.Parameters;
 namespace ToSic.Sxc.Code.Helpers
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class DynamicCodeDataSources
     {
         public readonly LazySvc<IDataSourcesService> DataSources;

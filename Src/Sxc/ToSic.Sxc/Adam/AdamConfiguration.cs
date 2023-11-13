@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Apps;
@@ -7,6 +8,7 @@ using static ToSic.Eav.Apps.Adam.AdamConstants;
 
 namespace ToSic.Sxc.Adam
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class AdamConfiguration
     {
         public AdamConfiguration(IAppStates appStates)

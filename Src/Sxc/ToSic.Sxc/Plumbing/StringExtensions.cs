@@ -2,6 +2,7 @@
 
 namespace ToSic.Sxc.Plumbing
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static class StringExtensions
     {
         /// <summary>

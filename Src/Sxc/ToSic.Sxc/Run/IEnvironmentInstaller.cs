@@ -3,6 +3,7 @@
 
 namespace ToSic.Sxc.Run
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IEnvironmentInstaller: IHasLog
     {
         /// <summary>

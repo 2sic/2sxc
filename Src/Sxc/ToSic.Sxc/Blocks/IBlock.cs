@@ -12,7 +12,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 namespace ToSic.Sxc.Blocks
 {
     /// <summary>
-    /// A unit / block of output in a CMS. 
+    /// INTERNAL: A unit / block of output in a CMS. 
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public interface IBlock: IAppIdentity, IHasLog

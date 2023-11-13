@@ -5,7 +5,6 @@ using System.Text.Json.Serialization;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
@@ -22,6 +21,7 @@ namespace ToSic.Sxc.Data.Wrapper
     /// Will always return a value even if the property doesn't exist, in which case it resolves to null.
     /// </remarks>
     [JsonConverter(typeof(DynamicJsonConverter))]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public partial class PreWrapObject: PreWrapBase, /*IWrapper<object>,*/ IPropertyLookup, IHasJsonSource, IPreWrap
     {
         #region Constructor / Setup

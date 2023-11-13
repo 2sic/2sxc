@@ -3,6 +3,7 @@ using ToSic.Eav.Run.Unknown;
 
 namespace ToSic.Sxc.Polymorphism
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CssFrameworkDetectorUnknown: ICssFrameworkDetector
     {
         public CssFrameworkDetectorUnknown(WarnUseOfUnknown<CssFrameworkDetectorUnknown> _) { }

@@ -5,6 +5,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Edit.ClientContextInfo
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ContentBlockDto : EntityDto
     {
         public bool IsCreated { get; }

@@ -6,7 +6,7 @@ using ToSic.Sxc.Web.PageService;
 namespace ToSic.Sxc.Web
 {
     // ReSharper disable once UnusedMember.Global
-    public class BlockResourceExtractorUnknown: BlockResourceExtractor
+    internal class BlockResourceExtractorUnknown: BlockResourceExtractor
     {
         public BlockResourceExtractorUnknown(WarnUseOfUnknown<BlockResourceExtractorUnknown> _, PageServiceShared pageServiceShared): base(pageServiceShared)
         { }

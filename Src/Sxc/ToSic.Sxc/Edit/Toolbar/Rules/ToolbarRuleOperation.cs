@@ -25,7 +25,8 @@ namespace ToSic.Sxc.Edit.Toolbar
     /// It's only here for documentation. 
     /// </summary>
     [PrivateApi("hide, documented in a better way")]
-    public class ToolbarRuleOperation
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    internal class ToolbarRuleOperation
     {
         /// <summary>
         /// Symbol to make sure a button is explicitly added.

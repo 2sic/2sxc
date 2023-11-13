@@ -10,9 +10,11 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
+using System.ComponentModel;
 
 namespace ToSic.Sxc.Adam
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public abstract class AdamSecurityChecksBase: ServiceBase<AdamSecurityChecksBase.MyServices>
     {
 

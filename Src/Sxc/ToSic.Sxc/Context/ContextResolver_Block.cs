@@ -4,7 +4,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Context
 {
-    public partial class ContextResolver
+    internal partial class ContextResolver
     {
         public void AttachBlock(BlockWithContextProvider blockWithContextProvider)
         {

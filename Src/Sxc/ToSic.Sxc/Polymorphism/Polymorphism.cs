@@ -8,6 +8,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Polymorphism
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class Polymorphism: ServiceBase
     {
         private readonly IServiceProvider _serviceProvider;

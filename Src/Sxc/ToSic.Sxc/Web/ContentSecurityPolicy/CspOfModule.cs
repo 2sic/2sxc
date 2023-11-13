@@ -12,7 +12,8 @@ using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
-    public  class CspOfModule: ServiceForDynamicCode
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public class CspOfModule: ServiceForDynamicCode
     {
         #region Constructor
 

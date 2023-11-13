@@ -9,6 +9,7 @@ using System;
 
 namespace ToSic.Sxc.Run
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class LinkPaths: ILinkPaths
     {
 #if !NETFRAMEWORK

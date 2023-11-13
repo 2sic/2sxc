@@ -6,6 +6,7 @@ namespace ToSic.Sxc.Code
     /// Marks objects which have DynCodeRoot which is passed around to sub-objects as needed
     /// </summary>
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IHasDynamicCodeRoot
     {
         /// <summary>

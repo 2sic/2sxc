@@ -10,6 +10,7 @@ using ToSic.Sxc.Utils;
 
 namespace ToSic.Sxc.Services.CmsService
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class CmsServiceImageExtractor: ServiceBase
     {
         public CmsServiceImageExtractor() : base("Sxc.ImgExt")

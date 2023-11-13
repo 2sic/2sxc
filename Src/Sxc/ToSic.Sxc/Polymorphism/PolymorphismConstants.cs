@@ -1,5 +1,6 @@
 ﻿namespace ToSic.Sxc.Polymorphism
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class PolymorphismConstants
     {
         public const string StaticName = "3937fa17-ef2d-40a7-b089-64164eb10bab";

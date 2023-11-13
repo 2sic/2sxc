@@ -3,6 +3,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Web.LightSpeed
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IOutputCache: IHasLog
     {
         bool IsEnabled { get; }

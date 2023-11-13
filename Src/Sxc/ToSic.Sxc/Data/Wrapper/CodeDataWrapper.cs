@@ -7,28 +7,25 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data.Typed;
-using static ToSic.Sxc.Data.Wrapper.WrapperConstants;
 
 namespace ToSic.Sxc.Data.Wrapper
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CodeDataWrapper: ServiceBase
     {
         private readonly Generator<WrapObjectTyped> _wrapTypeGenerator;
         private readonly Generator<WrapObjectTypedItem> _wrapItemGenerator;
-        private readonly Generator<CodeJsonWrapper> _wrapJsonGenerator;
         private readonly LazySvc<CodeDataFactory> _cdf;
 
         public CodeDataWrapper(LazySvc<CodeDataFactory> cdf,
             Generator<WrapObjectTyped> wrapTypeGenerator,
-            Generator<WrapObjectTypedItem> wrapItemGenerator,
-            Generator<CodeJsonWrapper> wrapJsonGenerator
+            Generator<WrapObjectTypedItem> wrapItemGenerator
             ): base("Sxc.DWrpFk")
         {
             ConnectServices(
                 _wrapTypeGenerator = wrapTypeGenerator,
                 _wrapItemGenerator = wrapItemGenerator,
-                _wrapJsonGenerator = wrapJsonGenerator,
                 _cdf = cdf
             );
         }

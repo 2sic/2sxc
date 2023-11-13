@@ -10,6 +10,7 @@ namespace ToSic.Sxc.Data.Decorators
     /// So for now, only the EntityInBlockDecorator should be used anywhere explicitly
     /// </summary>
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class EntityInListDecorator : IDecorator<IEntity>
     {
         protected EntityInListDecorator(string field, int index = 0, IEntity parent = default)

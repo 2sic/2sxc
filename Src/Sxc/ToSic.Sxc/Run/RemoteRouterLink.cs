@@ -11,6 +11,7 @@ namespace ToSic.Sxc.Run
     /// WIP - single location for building router links for installer and app/content infos
     /// </summary>
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class RemoteRouterLink
     {
         public RemoteRouterLink(SystemFingerprint fingerprint, IPlatformInfo platformInfo)

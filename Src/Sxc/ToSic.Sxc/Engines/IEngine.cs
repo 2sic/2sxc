@@ -5,7 +5,6 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Search;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Engines
 {
@@ -16,6 +15,7 @@ namespace ToSic.Sxc.Engines
     /// and using all that to produce an html-string for the browser. 
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IEngine: IHasLog
     {
 #if NETFRAMEWORK

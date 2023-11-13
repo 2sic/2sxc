@@ -10,6 +10,7 @@ using static ToSic.Eav.Parameters;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("Hide implementation")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class ConvertService16: ServiceBase, IConvertService16
     {
         private readonly LazySvc<ConvertForCodeService> _code;

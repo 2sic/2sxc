@@ -9,6 +9,7 @@ using static ToSic.Sxc.Code.Help.CodeHelpDb;
 
 namespace ToSic.Sxc.Code.Help
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CodeHelpDbV16
     {
         #region Methods to help build the data

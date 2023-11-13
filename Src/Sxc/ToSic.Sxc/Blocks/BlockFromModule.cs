@@ -5,6 +5,7 @@ using ToSic.Sxc.Context;
 namespace ToSic.Sxc.Blocks
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public sealed class BlockFromModule: BlockBase
     {
         #region Constructor for DI

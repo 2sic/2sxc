@@ -12,6 +12,7 @@ using static ToSic.Sxc.Blocks.RenderService;
 
 namespace ToSic.Sxc.Services.CmsService
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class CmsServiceStringWysiwyg: ServiceForDynamicCode
     {
 

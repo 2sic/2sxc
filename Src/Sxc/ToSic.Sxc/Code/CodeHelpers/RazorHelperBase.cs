@@ -11,6 +11,7 @@ using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code.CodeHelpers
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class RazorHelperBase: CodeHelperBase
     {
         protected RazorHelperBase(string logName) : base(logName)

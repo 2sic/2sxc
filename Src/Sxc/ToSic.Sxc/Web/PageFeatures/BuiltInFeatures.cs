@@ -4,6 +4,7 @@ using static ToSic.Eav.Configuration.BuiltInFeatures;
 
 namespace ToSic.Sxc.Web.PageFeatures
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class BuiltInFeatures
     {
         /// <summary>

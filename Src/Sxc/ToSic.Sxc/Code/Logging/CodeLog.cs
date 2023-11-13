@@ -8,6 +8,7 @@ using ToSic.Lib.Logging;
 namespace ToSic.Sxc.Code
 {
     [PrivateApi("Hide implementation")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CodeLog : Wrapper<ILog>, ICodeLog
     {
         public CodeLog(ILog log) : base(log ?? new Log(LogConstants.NameUnknown))

@@ -15,6 +15,7 @@ using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.LookUp
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AppConfigDelegate : ServiceBase
     {
         #region Constructor / DI

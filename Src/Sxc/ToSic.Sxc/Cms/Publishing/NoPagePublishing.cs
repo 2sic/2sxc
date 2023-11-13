@@ -11,6 +11,7 @@ namespace ToSic.Sxc.Cms.Publishing
     /// NOTE: It is currently not in use, and that's ok. 
     /// </summary>
     // ReSharper disable once UnusedMember.Global
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class NoPagePublishing : ServiceBase, IPagePublishing
     {
         #region Constructors

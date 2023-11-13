@@ -9,6 +9,7 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Data
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CodeDataServices: MyServicesBase
     {
         public CodeDataServices(

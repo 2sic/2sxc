@@ -9,6 +9,7 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("Hide implementation")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class ConvertService: ServiceBase, IConvertService
     {
         private readonly LazySvc<ConvertForCodeService> _code;

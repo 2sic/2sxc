@@ -10,6 +10,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps.Work
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class WorkBlocksMod : WorkUnitBase<IAppWorkCtxWithDb>
     {
         private readonly GenWorkDb<WorkEntityUpdate> _workEntUpdate;

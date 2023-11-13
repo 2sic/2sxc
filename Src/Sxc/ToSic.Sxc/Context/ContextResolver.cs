@@ -1,11 +1,11 @@
-﻿using System;
-using ToSic.Eav.Context;
+﻿using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 
 namespace ToSic.Sxc.Context
 {
-    public partial class ContextResolver: Eav.Context.ContextResolver, IContextResolver
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    internal partial class ContextResolver: Eav.Context.ContextResolver, IContextResolver
     {
         #region Constructor / DI
         

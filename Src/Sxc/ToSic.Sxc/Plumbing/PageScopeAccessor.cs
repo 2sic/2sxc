@@ -5,6 +5,7 @@ namespace ToSic.Sxc.Plumbing
     /// <summary>
     /// Special helper to get a ServiceProvider of the page scope, in scenarios where each module has an own scope. 
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class PageScopeAccessor
     {
         /// <summary>

@@ -6,7 +6,8 @@ using ToSic.Lib.Logging;
 namespace ToSic.Sxc.Web.PageFeatures
 {
     [PrivateApi("Internal stuff, hide implementation")]
-    public class PageFeatures: IPageFeatures
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    internal class PageFeatures: IPageFeatures
     {
         public PageFeatures(IPageFeaturesManager pfm) => _pfm = pfm;
         private readonly IPageFeaturesManager _pfm;

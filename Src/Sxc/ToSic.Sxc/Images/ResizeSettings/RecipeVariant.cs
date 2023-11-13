@@ -4,6 +4,7 @@ using ToSic.Lib.Documentation;
 namespace ToSic.Sxc.Images
 {
     [PrivateApi("Hide implementation")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class RecipeVariant
     {
         public const char SizeDefault = 'd';

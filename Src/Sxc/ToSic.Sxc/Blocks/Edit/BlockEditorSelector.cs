@@ -5,6 +5,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class BlockEditorSelector: ServiceBase
     {
         private readonly LazySvc<BlockEditorForModule> _blkEdtForMod;

@@ -1,10 +1,10 @@
-﻿using ToSic.Eav;
-using ToSic.Eav.Apps.Enums;
+﻿using ToSic.Eav.Apps.Enums;
 using ToSic.Eav.Run.Unknown;
 using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Cms.Publishing
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class PagePublishingGetSettingsUnknown : PagePublishingGetSettingsBase
     {
         public PagePublishingGetSettingsUnknown(WarnUseOfUnknown<PagePublishingGetSettingsUnknown> _) : base(LogScopes.NotImplemented) { }

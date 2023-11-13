@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Web
 {
-    public class ClientAsset : IClientAsset
+    internal class ClientAsset : IClientAsset
     {
         /// <inheritdoc />
         public string Id { get; set; }

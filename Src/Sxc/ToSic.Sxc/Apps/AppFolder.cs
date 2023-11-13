@@ -5,6 +5,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Apps
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AppFolder: ServiceBase
     {
         public AppFolder(IContextResolver ctxResolver) : base("AppFolder") 

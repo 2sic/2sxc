@@ -18,6 +18,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract partial class BlockBase : ServiceBase<BlockBase.MyServices>, IBlock
     {
         #region Constructor and DI

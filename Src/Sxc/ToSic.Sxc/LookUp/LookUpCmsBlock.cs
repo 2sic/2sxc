@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Query;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Blocks;
@@ -10,6 +9,7 @@ namespace ToSic.Sxc.LookUp
     /// <summary>
     /// special "fake" value provider, which also transports the Sxc-dependency to underlying layers
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class LookUpCmsBlock : LookUpInDictionary
     {
         /// <inheritdoc />

@@ -22,6 +22,7 @@ namespace ToSic.Sxc.DataSources
     ///
     /// Must be overriden in each platform.
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AppFilesDataSourceProvider : ServiceBase<AppFilesDataSourceProvider.MyServices>
     {
         public class MyServices : MyServicesBase

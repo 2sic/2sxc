@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Helpers;
@@ -7,6 +8,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Adam
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class AdamFileSystemHelpers: ServiceBase
     {
         private readonly IAdamPaths _adamPaths;

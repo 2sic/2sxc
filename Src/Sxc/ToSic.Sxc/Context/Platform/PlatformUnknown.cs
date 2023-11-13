@@ -4,7 +4,8 @@ using ToSic.Eav.Run.Unknown;
 
 namespace ToSic.Sxc.Context
 {
-    public class PlatformUnknown: Platform, IIsUnknown
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    internal class PlatformUnknown: Platform, IIsUnknown
     {
         public PlatformUnknown(WarnUseOfUnknown<PlatformUnknown> _) { }
         public override PlatformType Type => PlatformType.Unknown;

@@ -6,6 +6,7 @@ using static ToSic.Eav.Parameters;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("Hide implementation")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ConvertValueService: ServiceBase
     {
         public ConvertValueService(): base("Sxc.CnvSrv")

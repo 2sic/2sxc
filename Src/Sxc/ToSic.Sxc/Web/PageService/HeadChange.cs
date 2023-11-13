@@ -2,6 +2,7 @@
 
 namespace ToSic.Sxc.Web.PageService
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public struct HeadChange
     {
         public PageChangeModes ChangeMode { get; set; }

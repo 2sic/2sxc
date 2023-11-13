@@ -11,12 +11,11 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data.Typed;
 using static ToSic.Eav.Parameters;
-using static ToSic.Eav.Serialization.JsonOptions;
 using static ToSic.Sxc.Data.Wrapper.JsonProcessingHelpers;
-using static ToSic.Sxc.Data.Wrapper.WrapperConstants;
 
 namespace ToSic.Sxc.Data.Wrapper
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CodeJsonWrapper: ServiceBase
     {
         #region Constructor / Setup

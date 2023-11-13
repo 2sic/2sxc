@@ -9,6 +9,7 @@ using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class CodeItemHelper
     {
         public ITyped Data { get; }

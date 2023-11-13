@@ -2,10 +2,8 @@
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
 
 // ReSharper disable UnusedMember.Global
@@ -16,6 +14,7 @@ namespace ToSic.Sxc.Web
     /// </summary>
     [PrivateApi("Moved to Services.IEditService is v13.05 - must remain here to not break old code, but probably never referenced by exact type, so low risk.")]
     [Obsolete("Please use Services.IEditService. This will be removed probably in v14")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IInPageEditingSystem: IHasLog, INeedsDynamicCodeRoot
     {
         /// <summary>

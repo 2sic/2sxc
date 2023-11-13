@@ -11,6 +11,7 @@ using static ToSic.Eav.Serialization.JsonOptions;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("Hide implementation")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class JsonService: ServiceBase, IJsonService
     {
         private readonly Generator<CodeJsonWrapper> _wrapJsonGenerator;

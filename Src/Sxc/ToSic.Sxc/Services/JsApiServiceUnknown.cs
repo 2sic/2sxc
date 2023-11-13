@@ -7,6 +7,7 @@ using ToSic.Sxc.Web.JsContext;
 
 namespace ToSic.Sxc.Services
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class JsApiServiceUnknown : ServiceBase, IJsApiService, IIsUnknown
     {
         public JsApiServiceUnknown(WarnUseOfUnknown<BasicEnvironmentInstaller> _) : base($"{LogScopes.NotImplemented}.JsApi")

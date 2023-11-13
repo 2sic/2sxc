@@ -11,6 +11,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
 using static ToSic.Eav.Configuration.BuiltInFeatures;
 using ToSic.Eav.Apps.Work;
+using System.ComponentModel;
 
 namespace ToSic.Sxc.Adam
 {
@@ -20,6 +21,7 @@ namespace ToSic.Sxc.Adam
     /// <remarks>
     /// It's abstract, because there will be a typed implementation inheriting this
     /// </remarks>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public abstract class AdamContext: ServiceBase<AdamContext.MyServices>
     {
         #region Constructor and DI

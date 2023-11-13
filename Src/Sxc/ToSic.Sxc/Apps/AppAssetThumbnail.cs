@@ -9,6 +9,7 @@ using static ToSic.Eav.Apps.AppConstants;
 
 namespace ToSic.Sxc.Apps
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class AppAssetThumbnail : AppAssetFile
     {
         public AppPaths AppPaths { get; }

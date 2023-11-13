@@ -5,6 +5,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps.Work
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class WorkViewsMod : WorkUnitBase<IAppWorkCtx>
     {
         private readonly GenWorkPlus<WorkViews> _appViews;

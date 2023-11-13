@@ -5,6 +5,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Run
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class LinkPathsUnknown : ILinkPaths, IIsUnknown
     {
         public LinkPathsUnknown(WarnUseOfUnknown<LinkServiceUnknown> _)

@@ -9,6 +9,7 @@ namespace ToSic.Sxc.Services
     /// Internal special base class for services which link to the dynamic code root
     /// </summary>
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class ServiceForDynamicCode: ServiceBase, INeedsDynamicCodeRoot, IHasDynamicCodeRoot, ICanDebug
     {
         [PrivateApi]

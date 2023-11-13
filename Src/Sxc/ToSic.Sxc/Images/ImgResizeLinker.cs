@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Images
 
         public bool Debug { get; set; }
 
-        public readonly ResizeDimensionGenerator DimGen;
+        internal readonly ResizeDimensionGenerator DimGen;
 
         /// <summary>
         /// Make sure this is in sync with the Link.Image
@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Images
             return wrapLog.Return(result, "built:" + result);
         }
         
-        public OneResize ImageOnly(string url, ResizeSettings settings, IHasMetadata field)
+        internal OneResize ImageOnly(string url, ResizeSettings settings, IHasMetadata field)
         {
             var wrapLog = Log.Fn<OneResize>();
             var srcSetSettings = settings.Find(SrcSetType.Img, _features.Value.IsEnabled(ImageServiceUseFactors), _koi.Value.Framework);
@@ -87,7 +87,7 @@ namespace ToSic.Sxc.Images
         }
         
 
-        public string SrcSet(string url, ResizeSettings settings, SrcSetType srcSetType, IHasMetadata field = null)
+        internal string SrcSet(string url, ResizeSettings settings, SrcSetType srcSetType, IHasMetadata field = null)
         {
             var wrapLog = Log.Fn<string>();
 

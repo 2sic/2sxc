@@ -11,6 +11,7 @@ namespace ToSic.Sxc.Code
     /// We create another interface to ensure we don't accidentally pass around a sub-object where the root is really needed.
     /// </summary>
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IDynamicCodeRoot : IDynamicCode12
     {
         [PrivateApi("WIP")] IBlock Block { get; }

@@ -17,6 +17,7 @@ namespace ToSic.Sxc.Data
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic(...), don't use this directly")]
     [JsonConverter(typeof(DynamicJsonConverter))]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class DynamicJacket: DynamicJacketBase<JsonObject>
     {
         /// <inheritdoc />

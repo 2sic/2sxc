@@ -3,6 +3,7 @@ using static ToSic.Eav.Code.Infos.CodeInfoWarning;
 
 namespace ToSic.Sxc.Code
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class DynamicCode16Warnings
     {
         public static ICodeInfo AvoidSettingsResources = Warn("no-settings-resources-on-code16",

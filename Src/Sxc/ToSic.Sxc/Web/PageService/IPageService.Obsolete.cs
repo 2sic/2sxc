@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NETFRAMEWORK
+using System;
 using System.Collections.Generic;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
@@ -21,6 +22,7 @@ namespace ToSic.Sxc.Web
     /// Will continue to work, but shouldn't be used. Please use <see cref="ToSic.Sxc.Services.IPageService"/>  instead
     /// </summary>
     [Obsolete("Use ToSic.Sxc.Services.IPageService instead")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IPageService: ToSic.Sxc.Services.IPageService
     {
         // This repeats the definition on the IPage Service
@@ -51,3 +53,4 @@ namespace ToSic.Sxc.Web
 
     }
 }
+#endif

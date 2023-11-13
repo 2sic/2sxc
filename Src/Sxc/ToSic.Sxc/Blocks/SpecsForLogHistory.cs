@@ -4,6 +4,7 @@ using static System.StringComparer;
 
 namespace ToSic.Sxc.Blocks
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class SpecsForLogHistory
     {
         internal IDictionary<string, string> BuildSpecsForLogHistory(IBlock block, IApp app = default, string entry = default, bool addView = true)

@@ -4,6 +4,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Startup
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class SxcStartUpRegistrations: ServiceBase, IStartUpRegistrations
     {
         public string NameId => Log.NameId;

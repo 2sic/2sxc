@@ -3,6 +3,7 @@ using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Web
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class RazorServiceUnknown : IRazorService
     {
         public RazorServiceUnknown(WarnUseOfUnknown<RazorServiceUnknown> _) { }

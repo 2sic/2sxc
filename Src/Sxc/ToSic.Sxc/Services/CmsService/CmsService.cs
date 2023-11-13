@@ -8,6 +8,7 @@ using ToSic.Sxc.Data;
 namespace ToSic.Sxc.Services.CmsService
 {
     [PrivateApi("WIP + Hide Implementation")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class CmsService: ServiceForDynamicCode, ICmsService
     {
         private readonly Generator<CmsServiceStringWysiwyg> _stringWysiwyg;

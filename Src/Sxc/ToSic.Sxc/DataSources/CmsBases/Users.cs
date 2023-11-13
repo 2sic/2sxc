@@ -9,7 +9,6 @@ using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Data.Source;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.Services;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -37,6 +36,7 @@ namespace ToSic.Sxc.DataSources
         Type = DataSourceType.Source,
         ConfigurationType = "ac11fae7-1916-4d2d-8583-09872e1e6966"
     )]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public partial class Users : CustomDataSourceAdvanced
     {
         private readonly IDataSourceGenerator<Roles> _rolesGenerator;

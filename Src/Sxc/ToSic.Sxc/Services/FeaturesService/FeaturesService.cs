@@ -4,6 +4,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Services
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class FeaturesService: ServiceBase, IFeaturesService, ICanDebug
     {
         public FeaturesService(Eav.Configuration.IFeaturesInternal root) : base($"{Constants.SxcLogName}.FeatSv")

@@ -5,6 +5,7 @@ using ToSic.Lib.Documentation;
 namespace ToSic.Sxc.Images
 {
     [PrivateApi("Can and will change any time, don't use outside of 2sxc")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ImageConstants
     {
         internal const int MaxSize = 3200;

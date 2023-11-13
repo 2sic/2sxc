@@ -4,6 +4,7 @@ using ToSic.Lib.Documentation;
 namespace ToSic.Sxc.Data
 {
     [PrivateApi("hide implementation")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class SecureData<T>: ISecureData<T>
     {
         public SecureData(T result, bool isSecure)

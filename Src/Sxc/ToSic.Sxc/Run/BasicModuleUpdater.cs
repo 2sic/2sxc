@@ -9,6 +9,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Run
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class BasicModuleUpdater: ServiceBase, IPlatformModuleUpdater
     {
         /// <summary>

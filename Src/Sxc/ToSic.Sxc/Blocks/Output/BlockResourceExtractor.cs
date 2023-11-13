@@ -15,6 +15,7 @@ using static System.StringComparer;
 
 namespace ToSic.Sxc.Blocks.Output
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract partial class BlockResourceExtractor: ServiceBase, IBlockResourceExtractor
     {
         #region Construction / DI

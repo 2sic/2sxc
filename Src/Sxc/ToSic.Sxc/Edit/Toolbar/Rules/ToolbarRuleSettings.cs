@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Edit.Toolbar
 {
-    public class ToolbarRuleSettings: ToolbarRule
+    internal class ToolbarRuleSettings: ToolbarRule
     {
         private const string CommandName = "settings";
 

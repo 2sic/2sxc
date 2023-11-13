@@ -10,6 +10,7 @@ using static System.StringComparer;
 
 namespace ToSic.Sxc.Images
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public partial class ImageService: ServiceForDynamicCode, IImageService
     {
         #region Constructor and Inits

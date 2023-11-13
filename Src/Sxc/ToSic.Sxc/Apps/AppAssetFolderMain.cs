@@ -3,6 +3,7 @@ using ToSic.Eav.Apps.Paths;
 
 namespace ToSic.Sxc.Apps
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class AppAssetFolderMain: AppAssetFolder
     {
         internal const string LocationSite = "site";

@@ -9,6 +9,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
     /// <summary>
     /// Helper class to read the dynamic settings for the current site or global to be used in CSP
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CspSettingsReader: HelperBase
     {
         private const string FieldIsEnabled = "IsEnabled";

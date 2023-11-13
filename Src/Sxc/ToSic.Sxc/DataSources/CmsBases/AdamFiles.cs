@@ -4,7 +4,6 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
@@ -37,7 +36,7 @@ namespace ToSic.Sxc.DataSources
         DynamicOut = false,
         ConfigurationType = "" // TODO: ...
         )]
-    [InternalApi_DoNotUse_MayChangeWithoutNotice]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AdamFiles : DataSourceBase
     {
         private readonly IDataFactory _dataFactory;

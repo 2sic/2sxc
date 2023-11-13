@@ -3,6 +3,7 @@ using System.Linq;
 
 namespace ToSic.Sxc.Code.Documentation
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class DocsAttribute: Attribute
     {
         public string[] Messages { get; set; }

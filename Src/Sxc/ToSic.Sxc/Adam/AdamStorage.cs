@@ -1,7 +1,9 @@
-﻿using ToSic.Lib.Services;
+﻿using System.ComponentModel;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Adam
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public abstract class AdamStorage: ServiceBase
     {
         protected AdamStorage(string logName) : base(logName)

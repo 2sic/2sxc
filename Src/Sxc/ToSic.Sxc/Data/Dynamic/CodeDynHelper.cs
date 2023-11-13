@@ -7,6 +7,7 @@ using ToSic.Sxc.Data.Typed;
 
 namespace ToSic.Sxc.Data
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class CodeDynHelper
     {
         public IEntity Entity { get; }

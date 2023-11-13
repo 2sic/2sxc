@@ -6,6 +6,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Blocks
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class ModuleAndBlockBuilder: ServiceBase, IModuleAndBlockBuilder
     {
         private readonly Generator<BlockFromModule> _blockGenerator;

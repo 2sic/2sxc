@@ -8,6 +8,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Blocks
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public sealed class BlockFromEntity: BlockBase
     {
         internal const string CbPropertyApp = "App";

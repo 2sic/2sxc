@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
 
 namespace ToSic.Sxc.Apps.Assets
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class Purpose
     {
         // TODO: Once the UIs are updated, we'll kill the 'auto' case
@@ -19,6 +19,7 @@ namespace ToSic.Sxc.Apps.Assets
     }
 
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public partial class AssetTemplates : ServiceBase
     {
         #region Constants

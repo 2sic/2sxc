@@ -15,6 +15,7 @@ using static ToSic.Sxc.Blocks.BlockBuildingConstants;
 
 namespace ToSic.Sxc.Blocks.Output
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class RenderingHelper: ServiceBase, IRenderingHelper
     {
         #region Constructors and DI

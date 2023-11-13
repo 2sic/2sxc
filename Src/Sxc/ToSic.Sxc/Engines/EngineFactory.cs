@@ -1,10 +1,10 @@
-﻿using ToSic.Eav.Plumbing;
-using ToSic.Lib.DI;
+﻿using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Engines
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class EngineFactory: ServiceBase
     {
 

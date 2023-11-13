@@ -31,6 +31,7 @@ namespace ToSic.Sxc.DataSources
         NiceName = "Pages",
         Type = DataSourceType.Source,
         UiHint = "Pages in this site")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class Pages: CustomDataSourceAdvanced
     {
         private readonly ITreeMapper _treeMapper;

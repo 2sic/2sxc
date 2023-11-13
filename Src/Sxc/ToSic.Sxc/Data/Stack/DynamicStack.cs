@@ -14,6 +14,7 @@ using static ToSic.Eav.Parameters;
 namespace ToSic.Sxc.Data
 {
     [PrivateApi("Keep implementation hidden, only publish interface")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class DynamicStack: DynamicObject,
         /*IDynamicEntityBase,*/
         IWrapper<IPropertyStack>,

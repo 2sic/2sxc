@@ -4,7 +4,8 @@ using ToSic.Razor.Markup;
 
 namespace ToSic.Sxc.Web
 {
-    public abstract class HybridHtmlStringLog: RawHtmlString, IHasLog
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    internal abstract class HybridHtmlStringLog: RawHtmlString, IHasLog
     {
         protected HybridHtmlStringLog(string logName)
         {

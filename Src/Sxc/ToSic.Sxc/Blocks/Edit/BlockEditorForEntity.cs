@@ -6,6 +6,7 @@ using ToSic.Eav.Apps.Work;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class BlockEditorForEntity : BlockEditorBase
     {
         private readonly GenWorkDb<WorkEntityUpdate> _entityUpdate;

@@ -2,6 +2,7 @@
 
 namespace ToSic.Sxc.Blocks
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ViewParts
     {
         public const string ViewFieldInContentBlock = "Template";

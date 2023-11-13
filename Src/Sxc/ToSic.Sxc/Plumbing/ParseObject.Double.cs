@@ -3,6 +3,7 @@ using System.Globalization;
 
 namespace ToSic.Sxc.Plumbing
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal static partial class ParseObject
     {
 

@@ -16,6 +16,7 @@ using MailMessage = System.Net.Mail.MailMessage;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Services
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
     {
         private static readonly Regex HtmlDetectionRegex = new Regex("<(.*\\s*)>", RegexOptions.Compiled);

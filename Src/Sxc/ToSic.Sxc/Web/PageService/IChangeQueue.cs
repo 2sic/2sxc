@@ -3,6 +3,7 @@ using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Web.PageService
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IChangeQueue
     {
         /// <summary>

@@ -11,6 +11,7 @@ using System.Linq;
 
 namespace ToSic.Sxc.Web
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class HttpAbstractionBase: IHttp
     {
         /// <inheritdoc />

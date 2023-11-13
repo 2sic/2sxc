@@ -9,11 +9,13 @@ namespace ToSic.Sxc.Web.PageService
     [PrivateApi]
     public partial class PageService: ServiceForDynamicCode, 
             // Important: Write with namespace, because it's easy to confuse with IPageService it supports
-            ToSic.Sxc.Services.IPageService,
+            ToSic.Sxc.Services.IPageService
+#if NETFRAMEWORK
 #pragma warning disable CS0618
             // Important: Write with namespace, because it's easy to confuse with IPageService it supports
-            ToSic.Sxc.Web.IPageService    // Keep for compatibility with some Apps released in v12
+            , ToSic.Sxc.Web.IPageService    // Keep for compatibility with some Apps released in v12
 #pragma warning restore CS0618
+#endif
     {
 
         public PageService(

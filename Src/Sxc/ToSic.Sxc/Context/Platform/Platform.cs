@@ -10,6 +10,7 @@ namespace ToSic.Sxc.Context
     /// This must be provided through Dependency Injection, Singleton, as it cannot change at runtime.
     /// </remarks>
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class Platform: IPlatform
     {
 

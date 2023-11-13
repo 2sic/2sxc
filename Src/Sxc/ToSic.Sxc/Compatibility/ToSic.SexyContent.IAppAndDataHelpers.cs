@@ -15,6 +15,7 @@ namespace ToSic.SexyContent
     /// This will force developers to use the new interface without breaking compatibility
     /// </remarks>
     [Obsolete("Avoid this - it's in an old namespace. Use the ToSic.Sxc.Web.IDynamicCode")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IAppAndDataHelpers
     {
         IApp App { get; }

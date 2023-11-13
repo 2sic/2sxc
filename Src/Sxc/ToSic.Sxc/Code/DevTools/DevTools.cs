@@ -6,6 +6,7 @@ using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class DevTools: ServiceBase, IDevTools
     {
         public bool IsRazor { get; }

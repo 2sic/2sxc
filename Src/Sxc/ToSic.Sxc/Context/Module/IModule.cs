@@ -1,7 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Apps.Run;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Context
 {
@@ -9,7 +8,7 @@ namespace ToSic.Sxc.Context
     /// A unit / block within the CMS. Contains all necessary identification to pass around.
     /// </summary>
     [PrivateApi]
-
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IModule
 #if NETFRAMEWORK
 #pragma warning disable 618

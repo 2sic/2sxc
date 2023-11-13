@@ -5,6 +5,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps.Paths
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static class AppPathExtensions
     {
         public static string PhysicalPathSwitch(this IAppPaths app, bool isShared) => isShared ? app.PhysicalPathShared : app.PhysicalPath;

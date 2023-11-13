@@ -18,6 +18,7 @@ namespace Custom.Hybrid
     /// * `CodePro` should be `CodeTyped` see [](xref:Custom.Hybrid.CodeTyped)
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class CodePro: CodeTyped
     {
         [PrivateApi]

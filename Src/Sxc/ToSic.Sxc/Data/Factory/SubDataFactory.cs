@@ -6,6 +6,7 @@ namespace ToSic.Sxc.Data
     /// <summary>
     /// This helps create sub-items for a specific context, obeying the rules of the context
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class SubDataFactory
     {
         private readonly ICanDebug _canDebug;

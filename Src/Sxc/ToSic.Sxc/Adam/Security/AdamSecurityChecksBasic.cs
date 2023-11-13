@@ -1,4 +1,5 @@
-﻿using ToSic.Lib.Logging;
+﻿using System.ComponentModel;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Adam
 {
@@ -6,6 +7,7 @@ namespace ToSic.Sxc.Adam
     /// This is a simple AdamSecurityChecks which doesn't know much about the environment but works to get started.
     /// 
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class AdamSecurityChecksBasic: AdamSecurityChecksBase
     {
         public AdamSecurityChecksBasic(MyServices services) : base(services, LogScopes.Base) { }

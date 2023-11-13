@@ -9,6 +9,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Apps.Paths
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AppFolderInitializer : ServiceBase
     {
         #region Constructor / DI

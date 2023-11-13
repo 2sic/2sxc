@@ -10,6 +10,7 @@ namespace ToSic.Sxc.Context
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [PrivateApi("this is just fyi")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class Module<T>: ServiceBase, IModule, IWrapper<T> where T: class
     {
         #region Constructors and DI

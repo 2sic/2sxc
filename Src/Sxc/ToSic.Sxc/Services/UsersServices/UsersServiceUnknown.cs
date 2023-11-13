@@ -6,6 +6,7 @@ using ToSic.Sxc.Context.Raw;
 
 namespace ToSic.Sxc.Services
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class UsersServiceUnknown : UsersServiceBase, IIsUnknown
     {
         public UsersServiceUnknown(WarnUseOfUnknown<UsersServiceUnknown> _, LazySvc<IContextOfSite> context) : base(context)

@@ -8,23 +8,17 @@ namespace ToSic.Sxc.Edit.Toolbar
     /// <remarks>
     /// WIP new in v14; as of now only used on NoteDecorator, should have more soon
     /// </remarks>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ToolbarButtonDecorator : EntityBasedType
     {
         public static string TypeName = "ToolbarButtonDecorator";
         public static string TypeNameId = "acc185a7-f300-4468-bce8-d6a64038989d";
-
-        //public static string FieldCommand = "Command";
-        //public static string FieldUi = "Ui";
-        //public static string FieldUiIcon = "UiIcon";
-        //public static string FieldUiColor = "UiColor";
-        //public static string FieldUiData = "UiData";
 
         public static string KeyColor = "color";
         public static string KeyIcon = "icon";
         public static string KeyData = "data";
         public static string KeyNote = "note";
         //public static string KeyIconSvgPrefix = "svg:";
-
 
         public ToolbarButtonDecorator(IEntity entity) : base(entity)
         {

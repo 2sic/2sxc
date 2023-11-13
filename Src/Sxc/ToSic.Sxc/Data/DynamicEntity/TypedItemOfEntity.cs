@@ -24,6 +24,7 @@ using static ToSic.Eav.Data.Shared.WrapperEquality;
 
 namespace ToSic.Sxc.Data
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName,
         IWrapper<IEntity>, IHasMetadata
     {

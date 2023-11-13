@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Run
     /// In the default implementation, all things have the same root so content-path and app-path
     /// are calculated the same way.
     /// </summary>
-    public class ServerPaths: ServerPathsBase
+    internal class ServerPaths: ServerPathsBase
     {
 #if !NETFRAMEWORK
 

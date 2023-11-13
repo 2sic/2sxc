@@ -11,6 +11,7 @@ namespace ToSic.Sxc.Blocks.Edit
 {
     // todo: create interface
     // todo: move some parts out into a BlockManagement
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.MyServices>
     {
         #region DI and Construction

@@ -17,6 +17,7 @@ namespace ToSic.Sxc.Code
     /// WIP - goal is to have a DI factory which creates DynamicCode objects for use in Skins and other external controls
     /// Not sure how to get this to work, since normally we always start with a code-file, and here we don't have one!
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public partial class DynamicCodeService: ServiceBase<DynamicCodeService.MyServices>, IDynamicCodeService, ILogWasConnected
     {
         #region Constructor and Init

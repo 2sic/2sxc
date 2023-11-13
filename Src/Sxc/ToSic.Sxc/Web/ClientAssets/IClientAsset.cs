@@ -2,6 +2,7 @@
 
 namespace ToSic.Sxc.Web
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IClientAsset
     {
         /// <summary>

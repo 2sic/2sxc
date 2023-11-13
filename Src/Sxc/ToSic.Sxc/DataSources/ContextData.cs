@@ -19,6 +19,7 @@ namespace ToSic.Sxc.DataSources
     /// It's based on the <see cref="PassThrough"/> data source, because it's just a coordination-wrapper.
     /// </summary>
     [PrivateApi("used to be Internal... till 16.01, then changed to private to hide implementation")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal partial class ContextData : PassThrough, IContextData
     {
         #region Constructor and Init

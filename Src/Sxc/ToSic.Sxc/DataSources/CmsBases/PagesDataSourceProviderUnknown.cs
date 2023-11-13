@@ -4,7 +4,7 @@ using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.DataSources
 {
-    public class PagesDataSourceProviderUnknown: PagesDataSourceProvider
+    internal class PagesDataSourceProviderUnknown: PagesDataSourceProvider
     {
         public PagesDataSourceProviderUnknown(WarnUseOfUnknown<PagesDataSourceProviderUnknown> _): base($"{Constants.SxcLogName}.{LogConstants.NameUnknown}")
         { }

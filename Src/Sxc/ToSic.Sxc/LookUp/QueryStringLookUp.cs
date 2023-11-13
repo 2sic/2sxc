@@ -6,6 +6,7 @@ using ToSic.Sxc.Web.Parameters;
 
 namespace ToSic.Sxc.LookUp
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class QueryStringLookUp : LookUpBase
     {
         /// <summary>

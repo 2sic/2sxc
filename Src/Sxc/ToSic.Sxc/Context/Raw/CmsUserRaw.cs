@@ -26,6 +26,7 @@ namespace ToSic.Sxc.Context.Raw
     /// They must also match the ICmsUser interface
     /// </remarks>
     [PrivateApi("this is only internal - public access is always through interface")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CmsUserRaw: RawEntityBase, IUser, IRawEntity, IHasIdentityNameId
     {
         #region Types and Names for Raw Entities

@@ -3,6 +3,7 @@ using ToSic.Eav.Code.Help;
 
 namespace ToSic.Sxc.Code.Help
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class CodeHelpList
     {
         public static CodeHelp IEntityOnEavNamespace = new CodeHelp(name: "ToSic.Eav.IEntity",

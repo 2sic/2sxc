@@ -7,6 +7,7 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.Services
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class UsersServiceBase : ServiceForDynamicCode, IUserService
     {
 

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.Run;
+﻿using ToSic.Eav.Run;
 using ToSic.Eav.Run.Unknown;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Context.Query;
@@ -7,6 +6,7 @@ using ToSic.Sxc.Context.Query;
 namespace ToSic.Sxc.Context
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class PageUnknown: IPage, IIsUnknown
     {
         public PageUnknown(WarnUseOfUnknown<PageUnknown> _) { }

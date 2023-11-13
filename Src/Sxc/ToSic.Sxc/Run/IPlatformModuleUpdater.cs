@@ -9,6 +9,7 @@ using ToSic.Sxc.Context;
 namespace ToSic.Sxc.Run
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IPlatformModuleUpdater: IHasLog
     {
         /// <summary>

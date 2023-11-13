@@ -1,12 +1,12 @@
 ﻿using System;
 using ToSic.Eav.Apps.Run;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Run.Unknown;
 
 namespace ToSic.Sxc.Context
 {
-    public class ModuleUnknown: IModule, IIsUnknown
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    internal class ModuleUnknown: IModule, IIsUnknown
     {
         // ReSharper disable once UnusedParameter.Local
         public ModuleUnknown(WarnUseOfUnknown<ModuleUnknown> _) { }

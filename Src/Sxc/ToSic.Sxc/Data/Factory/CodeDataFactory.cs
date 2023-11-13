@@ -12,6 +12,7 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Data
 {
     // todo: make internal once we have an interface
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public partial class CodeDataFactory: ServiceForDynamicCode
     {
         private readonly LazySvc<CodeInfoService> _codeInfoSvc;

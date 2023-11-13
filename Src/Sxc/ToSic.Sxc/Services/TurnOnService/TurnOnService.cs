@@ -6,6 +6,7 @@ using Attribute = ToSic.Razor.Markup.Attribute;
 
 namespace ToSic.Sxc.Services
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class TurnOnService: ServiceBase, ITurnOnService
     {
         private const string TagName = "turnOn";

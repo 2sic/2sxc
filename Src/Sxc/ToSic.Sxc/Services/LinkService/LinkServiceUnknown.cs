@@ -10,6 +10,7 @@ using ToSic.Sxc.Web;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("for testing / un-implemented use")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class LinkServiceUnknown: LinkServiceBase, IIsUnknown
     {
         public const string DefDomain = "unknown.2sxc.org";

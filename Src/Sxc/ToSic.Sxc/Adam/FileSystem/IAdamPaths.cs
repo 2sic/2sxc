@@ -9,11 +9,7 @@ namespace ToSic.Sxc.Adam
         string PhysicalPath(string path);
 
         string RelativeFromAdam(string path);
-        
-        //string PhysicalPath(IAsset asset);
 
         string Url(string path);
-        
-        //string Url(IAsset asset);
     }
 }

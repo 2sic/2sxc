@@ -8,6 +8,7 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.EditService
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public partial class EditService : ServiceForDynamicCode, IEditService
     {
 

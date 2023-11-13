@@ -32,6 +32,7 @@ namespace ToSic.Sxc.DataSources
         In = new []{DataSourceConstants.StreamDefaultName},
         HelpLink = "https://docs.2sxc.org/api/dot-net/ToSic.Sxc.DataSources.CmsBlock.html",
         NameIds = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public sealed partial class CmsBlock : DataSourceBase
     {
         [PrivateApi] internal const string InstanceLookupName = "module";

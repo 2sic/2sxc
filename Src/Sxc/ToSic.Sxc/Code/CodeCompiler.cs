@@ -13,6 +13,7 @@ using static System.StringComparison;
 namespace ToSic.Sxc.Code
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class CodeCompiler: ServiceBase
     {
         private readonly IServiceProvider _serviceProvider;

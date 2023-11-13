@@ -12,6 +12,7 @@ namespace ToSic.Sxc.Blocks
     /// Incl. all the features that are activated, page changes etc.
     /// It's kind of like a bundle of things the CMS must then do to deliver to the page
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IRenderResult
     {
         /// <summary>

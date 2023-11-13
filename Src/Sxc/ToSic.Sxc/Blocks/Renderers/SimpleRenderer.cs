@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
@@ -7,16 +6,16 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Blocks.Renderers
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class SimpleRenderer: ServiceBase
     {
         private readonly Generator<BlockFromEntity> _blkFrmEntGen;
-        private static string EmptyMessage = "<!-- auto-render of item {0} -->";
+        private static readonly string _emptyMessage = "<!-- auto-render of item {0} -->";
 
         public SimpleRenderer(Generator<BlockFromEntity> blkFrmEntGen): base(Constants.SxcLogName + "RndSmp")
         {
@@ -33,7 +32,7 @@ namespace ToSic.Sxc.Blocks.Renderers
             if (entity.Type.Name != AppConstants.ContentGroupRefTypeName)
             {
                 l.A("empty, will return hidden html placeholder");
-                return string.Format(EmptyMessage, entity.EntityId);
+                return string.Format(_emptyMessage, entity.EntityId);
             }
 
             // render it

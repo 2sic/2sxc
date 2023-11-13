@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Web.WebResources
 {
-    public class WebResourceConstants
+    internal class WebResourceConstants
     {
         public static string WebResourcesNode = "WebResources";
 

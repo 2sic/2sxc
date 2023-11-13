@@ -4,7 +4,6 @@ using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Data;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Plumbing.ParseObject;
 

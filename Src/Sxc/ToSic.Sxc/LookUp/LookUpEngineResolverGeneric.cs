@@ -9,6 +9,7 @@ namespace ToSic.Sxc.LookUp
     /// <summary>
     /// Generic Lookup Resolver - will provide all lookups which are registered in DI
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class LookUpEngineResolverGeneric : ServiceBase, ILookUpEngineResolver
     {
         #region Constructor and DI

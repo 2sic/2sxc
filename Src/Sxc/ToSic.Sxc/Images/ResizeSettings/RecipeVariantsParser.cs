@@ -6,7 +6,7 @@ using static ToSic.Sxc.Plumbing.ParseObject;
 namespace ToSic.Sxc.Images
 {
     [PrivateApi("Hide implementation")]
-    public class RecipeVariantsParser
+    internal class RecipeVariantsParser
     {
         public const char KeyValueSeparator = '=';
         public const char PartSeparator = ',';

@@ -1,5 +1,8 @@
-﻿namespace ToSic.Sxc.Adam
+﻿using System.ComponentModel;
+
+namespace ToSic.Sxc.Adam
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     internal class Classification
     {
         public const string Folder = "folder";

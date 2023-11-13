@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class TypedCode16Helper: CodeHelperXxBase
     {
         public bool DefaultStrict = true;

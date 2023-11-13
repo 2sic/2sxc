@@ -12,6 +12,7 @@ namespace ToSic.Sxc.Data
     /// Mainly used for serialization scenarios, like in WebApis.
     /// </summary>
     [PrivateApi("Hide implementation; this was never public; the DataToDictionary was with empty constructor, but that's already polyfilled")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ConvertToEavLightWithCmsInfo : ConvertToEavLight
     {
         /// <summary>

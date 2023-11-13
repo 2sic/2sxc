@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Metadata;
-using ToSic.Lib;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -13,6 +12,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 namespace ToSic.Sxc.Context
 {
     [PrivateApi("Hide implementation")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CmsSite: CmsContextPartBase<ISite>, ICmsSite
     {
         public CmsSite(LazySvc<App> siteAppLazy) => _siteAppLazy = siteAppLazy;

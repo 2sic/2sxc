@@ -6,6 +6,7 @@ using ToSic.Sxc.Web.Url;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class FilterValueProcessor : UrlValueProcess
     {
 

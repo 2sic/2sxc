@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Web.Url
     /// Helper to process url values - and keep or skip certain properties.
     /// Note that it is case-insensitive
     /// </summary>
-    public class UrlValueFilterNames: UrlValueProcess
+    internal class UrlValueFilterNames: UrlValueProcess
     {
         /// <summary>
         /// Determine names of properties to preserve in the final parameters

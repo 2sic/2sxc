@@ -8,6 +8,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Run
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class BasicEnvironmentInstaller: ServiceBase, IEnvironmentInstaller, IIsUnknown, IPlatformAppInstaller
     {
         public BasicEnvironmentInstaller(WarnUseOfUnknown<BasicEnvironmentInstaller> _) : base($"{LogScopes.NotImplemented}.Instll")

@@ -11,6 +11,7 @@ namespace ToSic.Sxc.Blocks
 {
     /// <inheritdoc />
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class RenderResult : TagText, IRenderResult
     {
         public RenderResult(string html) : base(null)

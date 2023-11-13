@@ -16,6 +16,7 @@ using static ToSic.Eav.Parameters;
 namespace ToSic.Sxc.Services.DataServices
 {
     [PrivateApi("hide implementation")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal partial class DataService: ServiceForDynamicCode, IDataService
     {
         private readonly LazySvc<IDataSourcesService> _dataSources;

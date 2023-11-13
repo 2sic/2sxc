@@ -6,6 +6,7 @@ using ToSic.Lib.Documentation;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("Hide implementation")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class KeyService : IKeyService
     {
         private UniqueKeysServices UniqueKeysSvc => _uniqueKeysServices ?? (_uniqueKeysServices = new UniqueKeysServices());

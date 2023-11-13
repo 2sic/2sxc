@@ -19,17 +19,18 @@ using static ToSic.Sxc.Images.ImageDecorator;
 
 namespace ToSic.Sxc.Images
 {
-    public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    internal abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     {
 
-        protected ResponsiveBase(ImageService imgService, ResponsiveParams callParams, ILog parentLog, string logName)
+        internal ResponsiveBase(ImageService imgService, ResponsiveParams callParams, ILog parentLog, string logName)
             : base(parentLog, $"Img.{logName}")
         {
             Params = callParams;
             ImgService = imgService;
             ImgLinker = imgService.ImgLinker;
         }
-        protected ResponsiveParams Params { get; }
+        internal ResponsiveParams Params { get; }
         protected readonly ImgResizeLinker ImgLinker;
         protected readonly ImageService ImgService;
 

@@ -4,6 +4,7 @@ using ToSic.Lib.Documentation;
 namespace ToSic.Sxc.Context
 {
     [PrivateApi("WIP v13")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface ICmsBlock: IHasMetadata
     {
         /// <summary>

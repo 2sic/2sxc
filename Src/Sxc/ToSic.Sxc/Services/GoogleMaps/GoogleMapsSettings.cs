@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
@@ -8,6 +7,7 @@ using ToSic.Lib.Logging;
 namespace ToSic.Sxc.Services.GoogleMaps
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class GoogleMapsSettings: EntityBasedService<GoogleMapsSettings>
     {
         public static string TypeIdentifier = "f5764f60-2621-4a5d-9391-100fbe664640";

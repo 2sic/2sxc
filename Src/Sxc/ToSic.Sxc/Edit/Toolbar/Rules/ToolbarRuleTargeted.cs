@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Plumbing;
-using ToSic.Lib;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Web;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
@@ -9,7 +8,7 @@ namespace ToSic.Sxc.Edit.Toolbar
     /// <summary>
     /// A toolbar rule for a specific target
     /// </summary>
-    public abstract class ToolbarRuleTargeted: ToolbarRule
+    internal abstract class ToolbarRuleTargeted: ToolbarRule
     {
         protected ToolbarRuleTargeted(
             object target, 

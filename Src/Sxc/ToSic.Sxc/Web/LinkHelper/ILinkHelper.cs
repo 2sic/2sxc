@@ -11,6 +11,7 @@ namespace ToSic.Sxc.Web
     /// </summary>
     [PrivateApi("Hide from 2022-03-29 v13.05 as it shouldn't be used any more. Keep for a while for compatibility, but we don't believe anybody is using this interface directly.")]
     [Obsolete("This shouldn't be used any more and will be removed ca. v14. Use the ILinkService instead.")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface ILinkHelper: INeedsDynamicCodeRoot
     {
         /// <summary>

@@ -5,7 +5,8 @@ using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
-    public class ToolbarRuleMetadata: ToolbarRuleTargeted
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    internal class ToolbarRuleMetadata: ToolbarRuleTargeted
     {
         internal const string CommandName = "metadata";
 

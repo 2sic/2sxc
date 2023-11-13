@@ -7,7 +7,8 @@ using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleForEntity;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
-    public class TweakButton: ITweakButton
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    internal class TweakButton: ITweakButton
     {
         public IImmutableList<object> UiMerge { get; }
         public IImmutableList<object> ParamsMerge { get; }

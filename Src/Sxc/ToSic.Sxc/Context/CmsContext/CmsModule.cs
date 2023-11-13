@@ -7,6 +7,7 @@ using ToSic.Sxc.Blocks;
 namespace ToSic.Sxc.Context
 {
     [PrivateApi("WIP / hide implementation")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CmsModule: CmsContextPartBase<IModule>, ICmsModule
     {
         public CmsModule(CmsContext parent, IModule module, IBlock block) : base(parent, module)

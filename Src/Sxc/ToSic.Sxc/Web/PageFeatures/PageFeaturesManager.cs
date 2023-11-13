@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ToSic.Sxc.Web.PageFeatures
 {
-    public class PageFeaturesManager: IPageFeaturesManager
+    internal class PageFeaturesManager: IPageFeaturesManager
     {
         /// <summary>
         /// Constructor - ATM we'll just add our known services here. 

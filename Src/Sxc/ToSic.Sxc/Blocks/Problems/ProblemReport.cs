@@ -3,6 +3,7 @@ using static System.Text.Json.Serialization.JsonIgnoreCondition;
 
 namespace ToSic.Sxc.Blocks.Problems
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ProblemReport
     {
         public enum ErrorSeverity

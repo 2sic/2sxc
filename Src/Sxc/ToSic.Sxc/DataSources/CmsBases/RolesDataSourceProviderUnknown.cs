@@ -4,7 +4,7 @@ using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.DataSources
 {
-    public class RolesDataSourceProviderUnknown : RolesDataSourceProvider
+    internal class RolesDataSourceProviderUnknown : RolesDataSourceProvider
     {
         public RolesDataSourceProviderUnknown(WarnUseOfUnknown<RolesDataSourceProviderUnknown> _): base($"{Constants.SxcLogName}.{LogConstants.NameUnknown}")
         {

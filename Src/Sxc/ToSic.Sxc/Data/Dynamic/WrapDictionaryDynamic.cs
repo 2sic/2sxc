@@ -19,6 +19,7 @@ namespace ToSic.Sxc.Data
     /// <remarks>
     /// Will always return true even if the property doesn't exist, in which case it resolves to null.
     /// </remarks>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class WrapDictionaryDynamic<TKey, TVal>: DynamicObject, IWrapper<IDictionary<TKey, TVal>>, IHasKeys
     {
         protected readonly IDictionary<TKey, TVal> UnwrappedDictionary;

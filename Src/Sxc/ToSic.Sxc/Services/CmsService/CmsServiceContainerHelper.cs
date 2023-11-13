@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
@@ -13,6 +12,7 @@ using ToSic.Sxc.Edit.Toolbar;
 
 namespace ToSic.Sxc.Services.CmsService
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class CmsServiceContainerHelper: ServiceBase
     {
         private readonly IDynamicCodeRoot _dynCodeRoot;

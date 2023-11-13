@@ -22,6 +22,7 @@ namespace ToSic.Sxc.LookUp
     /// use in other systems.
     /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public partial class LookUpForTokenTemplate : ILookUp
 	{
 

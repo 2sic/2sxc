@@ -3,6 +3,7 @@ using ToSic.Sxc.Web.Url;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CspParameters: NameValueCollection
     {
         public CspParameters() { }

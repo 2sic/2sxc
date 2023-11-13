@@ -5,8 +5,7 @@ using ToSic.Eav.Serialization;
 
 namespace ToSic.Sxc.Web.Parameters
 {
-
-    public class OriginalParameters
+    internal class OriginalParameters
     {
         public static string NameInUrlForOriginalParameters = "originalparameters";
 

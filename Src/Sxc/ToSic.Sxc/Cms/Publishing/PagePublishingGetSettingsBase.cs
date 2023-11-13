@@ -5,6 +5,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Cms.Publishing
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class PagePublishingGetSettingsBase: ServiceBase, IPagePublishingGetSettings
     {
         protected PagePublishingGetSettingsBase(string logPrefix) : base(logPrefix + ".PubRes") { }

@@ -3,6 +3,7 @@
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("The service isn't publicly documented, as the functionality happens on the IPageService object")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IContentSecurityPolicyService
     {
         /// <summary>

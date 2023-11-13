@@ -6,6 +6,7 @@ using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Apps
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal abstract class AppAssetFolder: IFolder
     {
         protected const string NotImplemented = "not implemented";

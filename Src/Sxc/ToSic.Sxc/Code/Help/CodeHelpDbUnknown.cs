@@ -3,6 +3,7 @@ using ToSic.Eav.Code.Help;
 
 namespace ToSic.Sxc.Code.Help
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class CodeHelpDbUnknown
     {
         internal static CodeHelp UnknownNamespace = new CodeHelp(name: "unknown-ns",

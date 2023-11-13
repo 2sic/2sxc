@@ -5,6 +5,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CspParameterFinalizer: ServiceBase
     {
         public CspParameterFinalizer(): base($"{CspConstants.LogPrefix}.ParFin")

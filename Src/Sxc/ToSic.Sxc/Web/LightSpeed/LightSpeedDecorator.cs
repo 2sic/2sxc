@@ -4,17 +4,15 @@ using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Web.LightSpeed
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class LightSpeedDecorator: EntityBasedType
     {
         public static string TypeNameId = "be34f64b-7d1f-4ad0-b488-dabbbb01a186";
-        //public const string FieldIsEnabled = "IsEnabled";
-        //public const string FieldDuration = "Duration";
         public const string FieldDurationUser = "DurationUsers";
         public const string FieldDurationEditor = "DurationEditors";
         public const string FieldDurationSysAdmin = "DurationSystemAdmin";
         public const string FieldByUrlParameters = "ByUrlParameters";
         public const string FieldUrlCaseSensitive = "UrlParametersCaseSensitive";
-        //public const string FieldAdvanced = "Advanced";
 
         public LightSpeedDecorator(IEntity entity) : base(entity)
         {

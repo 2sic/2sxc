@@ -1,6 +1,7 @@
 ﻿// ReSharper disable InconsistentNaming
 namespace ToSic.Sxc.Web.JsContext
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class JsApi
     {
         public string platform { get; set; }

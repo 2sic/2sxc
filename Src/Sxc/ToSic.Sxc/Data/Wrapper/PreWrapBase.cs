@@ -11,6 +11,7 @@ using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data.Wrapper
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class PreWrapBase: IWrapper<object>
     {
         protected PreWrapBase(object data)

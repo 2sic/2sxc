@@ -8,12 +8,13 @@ namespace ToSic.Sxc.Web.LightSpeed
     /// Experimental way to signal that all the items in an app cache should be flushed
     /// Idea from here: https://stackoverflow.com/questions/25269338/is-this-a-good-solution-to-clear-a-c-sharp-memorycache
     /// </summary>
-    public class AppResetMonitor: ChangeMonitor
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    internal class AppResetMonitor: ChangeMonitor
     {
 
         public int AppId => _appState.AppId;
         
-        public AppResetMonitor(AppState appState)
+        internal AppResetMonitor(AppState appState)
         {
             _appState = appState;
             _appState.AppStateChanged += HandleAppStateChanged;

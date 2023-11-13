@@ -1,5 +1,5 @@
 ﻿using System;
-using ToSic.Eav.Apps;
+using System.ComponentModel;
 using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
@@ -9,6 +9,7 @@ using ToSic.Sxc.Data;
 namespace ToSic.Sxc.Adam
 {
     /// <inheritdoc />
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class AdamContext<TFolderId, TFileId>: AdamContext
     {
         private readonly Generator<AdamStorageOfSite<TFolderId, TFileId>> _siteStoreGenerator;

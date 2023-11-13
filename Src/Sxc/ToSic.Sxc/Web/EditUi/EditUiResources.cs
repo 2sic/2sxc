@@ -10,6 +10,7 @@ using static ToSic.Sxc.Web.WebResources.WebResourceProcessor;
 
 namespace ToSic.Sxc.Web.EditUi
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class EditUiResources: ServiceBase
     {
 

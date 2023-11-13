@@ -2,7 +2,6 @@
 using System.IO;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
@@ -10,6 +9,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Apps.Work
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class WorkAppsRemove: ServiceBase 
     {
         #region Constructor / DI

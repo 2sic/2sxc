@@ -6,11 +6,12 @@ using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Web.Url
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ObjectToUrl
     {
         public ObjectToUrl() { }
 
-        public ObjectToUrl(string prefix = null, IEnumerable<UrlValueProcess> preProcessors = null): this()
+        internal ObjectToUrl(string prefix = null, IEnumerable<UrlValueProcess> preProcessors = null): this()
         {
             Prefix = prefix;
             _preProcessors = preProcessors;

@@ -6,6 +6,7 @@ using ToSic.Razor.Blade;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class ModuleService: ServiceBase, IModuleService
     {
         public ModuleService() : base(Constants.SxcLogName + ".ModSvc") { }

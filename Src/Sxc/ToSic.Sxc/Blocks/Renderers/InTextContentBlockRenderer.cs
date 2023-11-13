@@ -5,11 +5,11 @@ using System.Text.RegularExpressions;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Blocks.Renderers
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class InTextContentBlockRenderer: ServiceBase
     {
         private readonly SimpleRenderer _simpleRenderer;

@@ -20,6 +20,7 @@ namespace ToSic.Sxc.Blocks
     /// Note that it also adds the current-user to the state, so that the system can log data-changes to this user
     /// </summary>
     [PrivateApi("not sure yet what to call this, maybe BlockHost or something")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public partial class BlockBuilder : ServiceBase<BlockBuilder.MyServices>, IBlockBuilder
     {
         public class MyServices: MyServicesBase

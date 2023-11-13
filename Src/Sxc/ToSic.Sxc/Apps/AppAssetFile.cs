@@ -7,6 +7,7 @@ using IFile = ToSic.Sxc.Adam.IFile;
 
 namespace ToSic.Sxc.Apps
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal abstract class AppAssetFile: IFile
     {
         protected const string NotImplemented = "not implemented";

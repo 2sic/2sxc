@@ -2,6 +2,7 @@
 
 namespace ToSic.Sxc.Edit.ClientContextInfo
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class UiDto
     {
         public bool AutoToolbar { get; }

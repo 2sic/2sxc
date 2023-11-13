@@ -8,6 +8,7 @@ using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Data
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class PropLookupStack: IPropertyLookup
     {
         private readonly Func<bool> _getDebug;

@@ -14,6 +14,7 @@ using static ToSic.Eav.Parameters;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class LinkServiceBase : ServiceForDynamicCode, ILinkService
     {
         protected LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy) : base(

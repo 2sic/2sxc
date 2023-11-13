@@ -1,11 +1,11 @@
 ﻿using System;
-using ToSic.Eav.Apps;
 
 namespace ToSic.Sxc.Apps.Assets
 {
     /// <summary>
     /// Constants for App Assets
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AppAssets
     {
         /// <summary>

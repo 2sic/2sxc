@@ -5,7 +5,7 @@
     /// which seems to be a issue in some Newtonsoft.Json versions: http://stackoverflow.com/questions/11266695/json-net-case-insensitive-property-deserialization
     /// </summary>
     // ReSharper disable once ClassNeverInstantiated.Local
-    public class UpperCaseStringKeyValuePair
+    internal class UpperCaseStringKeyValuePair
     {
         // ReSharper disable UnusedAutoPropertyAccessor.Local
         public string Key { get; set; }

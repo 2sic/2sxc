@@ -12,6 +12,7 @@ using IEntity = ToSic.Eav.Data.IEntity;
 namespace ToSic.Sxc.Blocks
 {
     [PrivateApi("Internal implementation - don't publish")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public partial class View: EntityBasedWithLog, IView
     {
 

@@ -17,6 +17,7 @@ namespace ToSic.Sxc.Apps
     /// name, folder, data, metadata etc.
     /// </summary>
     [PrivateApi("hide implementation - IMPORTANT: was PublicApi_Stable_ForUseInYourCode up to 16.03!")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public partial class App : EavApp, IApp
     {
         #region DI Constructors

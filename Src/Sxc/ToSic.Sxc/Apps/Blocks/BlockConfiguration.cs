@@ -11,6 +11,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps.Blocks
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
     {
         public  int ZoneId { get; }

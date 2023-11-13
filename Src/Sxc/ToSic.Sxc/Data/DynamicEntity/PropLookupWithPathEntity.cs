@@ -9,6 +9,7 @@ using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Data
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class PropLookupWithPathEntity:
         ICanBeEntity,       // This is important, to ensure that when used in a stack it can be converted to something else again
         IPropertyLookup

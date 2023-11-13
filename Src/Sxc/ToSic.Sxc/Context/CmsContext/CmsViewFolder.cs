@@ -7,6 +7,7 @@ using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Context
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class CmsViewFolder: AppAssetFolder
     {
         private readonly CmsView _cmsView;

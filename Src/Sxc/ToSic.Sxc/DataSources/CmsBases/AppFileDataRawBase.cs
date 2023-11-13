@@ -7,6 +7,7 @@ namespace ToSic.Sxc.DataSources
 {
 
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
     {
         public int Id { get; set; }

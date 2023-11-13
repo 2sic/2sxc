@@ -2,6 +2,7 @@
 
 namespace ToSic.Sxc.Edit.ClientContextInfo
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class EntityDto
     {
         public int ZoneId { get; protected set; }  // the zone of the content-block

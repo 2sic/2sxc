@@ -5,6 +5,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Apps.Assets
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class TemplateInfo
     {
         public TemplateInfo(string key, string name, string extension, string suggestedFileName, string purpose, string type)

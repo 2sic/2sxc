@@ -4,6 +4,7 @@ using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Data
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class HasKeysHelper
     {
         public static bool IsEmpty(ITyped item, string name, string noParamOrder, bool? blankIs)

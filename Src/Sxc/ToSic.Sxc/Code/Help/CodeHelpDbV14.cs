@@ -5,6 +5,7 @@ using static ToSic.Sxc.Code.Help.CodeHelpDbV12;
 
 namespace ToSic.Sxc.Code.Help
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class CodeHelpDbV14
     {
         internal static List<CodeHelp> Compile14 => _help ?? (_help = CodeHelpDb.BuildList(

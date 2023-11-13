@@ -13,6 +13,7 @@ using static ToSic.Eav.Parameters;
 namespace ToSic.Sxc.Context
 {
     [PrivateApi("Hide implementation")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CmsView: CmsContextPartBase<IView>, ICmsView
     {
         public CmsView(CmsContext parent, IBlock block) : base(parent, block.View)

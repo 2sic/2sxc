@@ -4,6 +4,7 @@ using ToSic.Lib.Documentation;
 namespace ToSic.Sxc.Data.Decorators
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class EntityInBlockDecorator: EntityInListDecorator
     {
         private EntityInBlockDecorator(string field, 

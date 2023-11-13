@@ -3,6 +3,7 @@
 namespace ToSic.Sxc.Web
 {
     [PrivateApi("not final yet, probably will not be implemented like this")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public enum PageChangeModes
     {
         /// <summary>

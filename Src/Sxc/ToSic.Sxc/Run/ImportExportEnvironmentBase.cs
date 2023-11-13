@@ -8,6 +8,7 @@ using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Run
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class ImportExportEnvironmentBase: Eav.Apps.Run.ImportExportEnvironmentBase
     {
         #region constructor / DI

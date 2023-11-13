@@ -2,13 +2,14 @@
 
 namespace ToSic.Sxc.Web.JsContext
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class JsContextUser
     {
         public bool CanDevelop { get; }
 
         public bool CanAdmin { get; }
 
-        public JsContextUser(IUser user, bool? overrideDesign = null)
+        public JsContextUser(IUser user)
         {
             CanAdmin = user.IsSiteAdmin;
             CanDevelop = user.IsSystemAdmin;

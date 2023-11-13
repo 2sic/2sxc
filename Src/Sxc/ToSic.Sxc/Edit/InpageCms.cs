@@ -2,6 +2,7 @@
 
 namespace ToSic.Sxc.Edit
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class InpageCms
     {
         public const string MetaName = "_jsApi";

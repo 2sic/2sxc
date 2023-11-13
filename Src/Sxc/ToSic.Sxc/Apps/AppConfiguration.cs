@@ -10,16 +10,11 @@ namespace ToSic.Sxc.Apps
     /// <summary>
     /// The configuration of the app, as you can set it in the app-package definition.
     /// </summary>
-    [PublicApi]
+    [PrivateApi("Note: was public till 16.08")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AppConfiguration: EntityBasedWithLog, IAppConfiguration
     {
         // todo: probably move most to Eav.Apps.AppConstants
-        //[PrivateApi] public const string FieldDescription = "Description";
-        //[PrivateApi] public const string FieldName = "DisplayName";
-        //[PrivateApi] public const string FieldFolder = "Folder";
-        //[PrivateApi] public const string FieldOriginalId = "OriginalId";
-        //[PrivateApi] public const string FieldVersion = "Version";
-        //[PrivateApi] public const string FieldHidden = "Hidden";
         [PrivateApi] public const string FieldAllowRazor = "AllowRazorTemplates";
         [PrivateApi] public const string FieldAllowToken = "AllowTokenTemplates";
         [PrivateApi] public const string FieldRequiredSxcVersion = "RequiredVersion";

@@ -33,6 +33,7 @@ using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Startup
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static partial class RegisterSxcServices
     {
         public static IServiceCollection AddSxcCore(this IServiceCollection services)

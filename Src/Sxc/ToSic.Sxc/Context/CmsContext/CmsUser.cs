@@ -4,6 +4,7 @@ using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Context
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CmsUser: CmsContextPartBase<IUser>, ICmsUser
     {
         public CmsUser(CmsContext parent, AppState appState) : base(parent, parent.CtxSite.User)

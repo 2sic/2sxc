@@ -3,7 +3,8 @@
 namespace ToSic.Sxc.Context
 {
     // ReSharper disable once InconsistentNaming
-    public static class ICmsContextExtensions
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    internal static class ICmsContextExtensions
     {
         public static string[] SafeLanguagePriorityCodes(this ICmsContext context)
         {

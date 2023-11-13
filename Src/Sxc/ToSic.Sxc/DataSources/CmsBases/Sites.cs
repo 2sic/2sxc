@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
 
 // Important Info to people working with this
@@ -26,6 +25,7 @@ namespace ToSic.Sxc.DataSources
         NiceName = "Sites",
         Type = DataSourceType.Source,
         UiHint = "Sites in this CMS")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class Sites: CustomDataSource
     {
         [PrivateApi]

@@ -19,6 +19,7 @@ using ToSic.Sxc.Blocks;
 // note: not sure if the final namespace should be Sxc.Apps or Sxc.Views
 namespace ToSic.Sxc.Apps.Work
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class WorkViews: WorkUnitBase<IAppWorkCtxPlus>
     {
 

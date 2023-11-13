@@ -7,6 +7,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CspOfPage: ServiceBase
     {
         private readonly Generator<CspParameterFinalizer> _cspParameterFinalizer;

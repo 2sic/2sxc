@@ -1,6 +1,4 @@
 ﻿#if !NETFRAMEWORK
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +7,7 @@ using ToSic.Sxc.Web;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DotNet
 {
-
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class HttpNetCore : HttpAbstractionBase, IHttp
     {
         public HttpNetCore(IHttpContextAccessor contextAccessor) => Current = contextAccessor.HttpContext;
@@ -29,9 +27,6 @@ namespace ToSic.Sxc.DotNet
             }
         }
         private NameValueCollection _queryStringValues;
-
-        //public override IDictionary<object, object> Items => Current.Items;
-
 
     }
 }

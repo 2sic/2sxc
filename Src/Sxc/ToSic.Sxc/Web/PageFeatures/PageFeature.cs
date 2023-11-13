@@ -10,6 +10,7 @@ namespace ToSic.Sxc.Web.PageFeatures
     /// This is just the information which is prepared. It will be in a list of features to activate.
     /// </summary>
     [PrivateApi("Internal / not final - neither name, namespace or anything")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class PageFeature : IPageFeature
     {
         public const string ConditionIsPageFeature = "pagefeature";

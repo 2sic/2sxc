@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
 using ToSic.Eav.LookUp;
 
@@ -13,6 +12,7 @@ namespace ToSic.Sxc.Compatibility
 	/// <summary>
     /// Old interface for the SexyContent Web Page
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IDynamicCodeBeforeV10
     {
 

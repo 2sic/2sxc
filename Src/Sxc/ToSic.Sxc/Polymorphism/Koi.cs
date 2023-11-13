@@ -6,7 +6,7 @@ using static System.StringComparison;
 namespace ToSic.Sxc.Polymorphism
 {
     [PolymorphResolver("Koi")]
-
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class Koi: IResolver
     {
         private readonly ICss _pageCss;

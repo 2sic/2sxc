@@ -7,8 +7,9 @@ using System.Collections.Generic;
 namespace ToSic.Sxc.Data
 {
     /* IMPORTANT: These are just fake properties for documentation - Keep in Sync between IDynamicEntity and IDynamicStack */
-    
-    public partial interface IDynamicAnythingDocs
+
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public interface IDynamicAnythingDocs
     {
 
         /// <summary>

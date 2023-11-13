@@ -1,5 +1,6 @@
 ﻿namespace ToSic.Sxc.Web.PageService
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class PagePropertyChange
     {
         public PagePropertyChange()  { }

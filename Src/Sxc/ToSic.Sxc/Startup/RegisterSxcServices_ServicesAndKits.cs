@@ -24,9 +24,11 @@ namespace ToSic.Sxc.Startup
 
             // new in v12.02 - PageService & Page Features
             services.TryAddTransient<Services.IPageService, PageService>();  // must be unique per module where it's used
+#if NETFRAMEWORK
 #pragma warning disable CS0618
             services.TryAddTransient<Web.IPageService, PageService>();  // Obsolete version, needed to keep old Apps working which used this
 #pragma warning restore CS0618
+#endif
 
             services.TryAddTransient<Services.IRenderService, RenderService>();  // new 12.05
             services.TryAddTransient<RenderService.MyServices>();

@@ -11,6 +11,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Apps.Work
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class WorkApps : ServiceBase
     {
         #region Constructor / DI

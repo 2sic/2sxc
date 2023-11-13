@@ -1,5 +1,6 @@
 ﻿namespace ToSic.Sxc.Web.ClientAssets
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ClientAssetsExtractSettings
     {
         public ClientAssetsExtractSettings(

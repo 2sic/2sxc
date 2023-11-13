@@ -10,6 +10,7 @@ using ToSic.Sxc.Apps.Work;
 
 namespace ToSic.Sxc.Apps.ImportExport
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public partial class XmlImportFull: XmlImportWithFiles
     {
         private readonly GenWorkBasic<WorkViewsMod> _workViewsMod;

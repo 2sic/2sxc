@@ -11,6 +11,7 @@ using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class PreWrapJsonArray: PreWrapJsonBase, IWrapper<JsonArray>
     {
         public PreWrapJsonArray(CodeJsonWrapper wrapper, JsonArray jsonArray): base(wrapper, jsonArray)

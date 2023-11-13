@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Web.Url
     /// Helper to process url values - and keep or skip certain properties.
     /// Note that it is case-insensitive
     /// </summary>
-    public class UrlValueCamelCase : UrlValueProcess
+    internal class UrlValueCamelCase : UrlValueProcess
     {
         public override NameObjectSet Process(NameObjectSet set)
         {

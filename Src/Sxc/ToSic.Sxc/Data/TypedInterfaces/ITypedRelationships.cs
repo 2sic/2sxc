@@ -5,6 +5,7 @@ using static ToSic.Eav.Parameters;
 namespace ToSic.Sxc.Data
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface ITypedRelationships
     {
         /// <summary>

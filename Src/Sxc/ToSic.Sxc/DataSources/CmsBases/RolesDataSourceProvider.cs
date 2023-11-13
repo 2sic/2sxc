@@ -9,6 +9,7 @@ namespace ToSic.Sxc.DataSources
     ///
     /// Must be overriden in each platform.
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class RolesDataSourceProvider: ServiceBase
     {
         protected RolesDataSourceProvider(string logName) : base(logName)

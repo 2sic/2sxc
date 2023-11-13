@@ -4,6 +4,7 @@ using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Context
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IContextOfBlock: IContextOfApp
     {
         /// <summary>

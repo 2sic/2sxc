@@ -7,6 +7,7 @@ using ToSic.Sxc.Web.Parameters;
 
 namespace ToSic.Sxc.Web.JsContext
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class JsContextEnvironment
     {
         public int WebsiteId { get; }       // aka PortalId
