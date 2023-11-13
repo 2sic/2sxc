@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
+using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.WebApi;
@@ -24,9 +26,10 @@ namespace ToSic.Sxc.WebApi.Admin
 {
     public class TypeControllerReal : ServiceBase, ITypeController
     {
+        private readonly IAppStates _appStates;
         private readonly GenWorkDb<WorkContentTypesMod> _typeMod;
         private readonly LazySvc<IContextOfSite> _context;
-        private readonly LazySvc<ContentTypeApi> _ctApiLazy;
+        private readonly LazySvc<ContentTypeDtoService> _ctApiLazy;
         private readonly LazySvc<ContentExportApi> _contentExportLazy;
         private readonly LazySvc<IUser> _userLazy;
         private readonly Generator<ImportContent> _importContent;
@@ -34,12 +37,14 @@ namespace ToSic.Sxc.WebApi.Admin
 
         public TypeControllerReal(
             LazySvc<IContextOfSite> context,
-            LazySvc<ContentTypeApi> ctApiLazy, 
+            LazySvc<ContentTypeDtoService> ctApiLazy, 
             LazySvc<ContentExportApi> contentExportLazy,
             GenWorkDb<WorkContentTypesMod> typeMod,
             LazySvc<IUser> userLazy,
+            IAppStates appStates,
             Generator<ImportContent> importContent) : base("Api.TypesRl")
         {
+            _appStates = appStates;
             ConnectServices(
                 _context = context,
                 _ctApiLazy = ctApiLazy,
@@ -53,17 +58,22 @@ namespace ToSic.Sxc.WebApi.Admin
 
 
         public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
-            => _ctApiLazy.Value.Init(appId).List(scope, withStatistics);
+            => _ctApiLazy.Value/*.Init(appId)*/.List(appId, scope, withStatistics);
 
         /// <summary>
         /// Used to be GET ContentTypes/Scopes
         /// </summary>
-        public IDictionary<string, string> Scopes(int appId) => _ctApiLazy.Value.Init(appId).Scopes();
+        public IDictionary<string, string> Scopes(int appId)
+        {
+            var wrapLog = Log.Fn<IDictionary<string, string>>();
+            var results = _appStates.Get(appId).ContentTypes.GetAllScopesWithLabels();
+            return wrapLog.Return(results);
+        }
 
         /// <summary>
         /// Used to be GET ContentTypes/Scopes
         /// </summary>
-        public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => _ctApiLazy.Value.Init(appId).GetSingle(contentTypeId, scope);
+        public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => _ctApiLazy.Value/*.Init(appId)*/.GetSingle(appId, contentTypeId, scope);
 
 
         public bool Delete(int appId, string staticName) => _typeMod.New(appId).Delete(staticName);
