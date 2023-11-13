@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Services.Tweaks
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
     [WorkInProgressApi("WIP 16.08")]
-    public class TweakValue<TValue>
+    public class TweakValue<TValue>: ITweakValue<TValue>
     {
         internal TweakValue(string name, string step, TValue initial)
         {
@@ -41,9 +41,7 @@ namespace ToSic.Sxc.Services.Tweaks
         ///// </summary>
         //public TValue Initial { get; }
 
-        /// <summary>
-        /// Current value
-        /// </summary>
+        /// <inheritdoc />
         public TValue Value { get; }
 
         /// <summary>
