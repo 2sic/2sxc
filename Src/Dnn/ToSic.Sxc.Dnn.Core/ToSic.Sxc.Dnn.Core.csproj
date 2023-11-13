@@ -85,7 +85,7 @@
     <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.2.3">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Collections.Immutable" Version="7.0.0">
+    <PackageReference Include="System.Collections.Immutable" Version="8.0.0-*">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>

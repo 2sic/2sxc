@@ -8,36 +8,36 @@ SET OqtaneTarget=%2
 ECHO BuildFolder=%BuildFolder%
 ECHO OqtaneTarget=%OqtaneTarget%
 
-SET OqtaneBin=%OqtaneTarget%bin\%BuildFolder%\net7.0
+SET OqtaneBin=%OqtaneTarget%bin\%BuildFolder%\net8.0
 SET PackageName=ToSic.Sxc.Oqtane
 SET BuildTarget=%OqtaneTarget%wwwroot\Modules\%PackageName%
 ECHO The target folder is: %OqtaneBin%
 
 ECHO(
 ECHO 2sxc Oqtane - Client
-XCOPY "..\ToSic.Sxc.Oqt.Client\bin\%BuildFolder%\net7.0\ToSic.*.dll" "%OqtaneBin%\" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Client\bin\%BuildFolder%\net7.0\ToSic.*.pdb" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Client\bin\%BuildFolder%\net8.0\ToSic.*.dll" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Client\bin\%BuildFolder%\net8.0\ToSic.*.pdb" "%OqtaneBin%\" /Y
 
 ECHO(
 ECHO 2sxc Oqtane - Server
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net7.0\ToSic.*.dll" "%OqtaneBin%\" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net7.0\ToSic.*.pdb" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net8.0\ToSic.*.dll" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net8.0\ToSic.*.pdb" "%OqtaneBin%\" /Y
 
 ECHO(
 ECHO 2sxc Oqtane - Server Framework DLLs
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net7.0\Microsoft.AspNetCore.Mvc.Razor.*.dll" "%OqtaneBin%\" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net7.0\Microsoft.AspNetCore.Razor.*" "%OqtaneBin%\" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net7.0\Microsoft.CodeAnalys*.*" "%OqtaneBin%\" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net7.0\Microsoft.Extensions.DependencyModel.dll" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net8.0\Microsoft.AspNetCore.Mvc.Razor.*.dll" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net8.0\Microsoft.AspNetCore.Razor.*" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net8.0\Microsoft.CodeAnalys*.*" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net8.0\Microsoft.Extensions.DependencyModel.dll" "%OqtaneBin%\" /Y
 
 ECHO(
 ECHO 2sxc Oqtane - 3rd party deps
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net7.0\CsvHelper.dll" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net8.0\CsvHelper.dll" "%OqtaneBin%\" /Y
 
 ECHO(
 ECHO 2sxc Oqtane - Shared
-XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net7.0\ToSic.*.dll" "%OqtaneBin%\" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net7.0\ToSic.*.pdb" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net8.0\ToSic.*.dll" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net8.0\ToSic.*.pdb" "%OqtaneBin%\" /Y
 
 ECHO(
 ECHO 2sxc Oqtane - Client Assets

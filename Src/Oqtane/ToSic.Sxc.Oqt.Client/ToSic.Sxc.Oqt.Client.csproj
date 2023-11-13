@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RazorLangVersion>3.0</RazorLangVersion>
     <AssemblyName>ToSic.Sxc.Oqtane.Client</AssemblyName>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
@@ -29,20 +29,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.5" /><!-- from Oqtane.Client.csproj -->
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.5" PrivateAssets="all" /><!-- from Oqtane.Client.csproj -->
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="7.0.5" /><!-- from Oqtane.Client.csproj -->
-    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.5" /><!-- from Oqtane.Maui.csproj -->
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.5" /><!-- from Oqtane.Client.csproj -->
-    <PackageReference Include="System.Net.Http.Json" Version="7.0.1" /><!-- from Oqtane.Client.csproj -->
-    <PackageReference Include="Oqtane.Client" Version="4.0.0" />
-    <PackageReference Include="Oqtane.Shared" Version="4.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0-*" /><!-- from Oqtane.Client.csproj -->
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.0-*" PrivateAssets="all" /><!-- from Oqtane.Client.csproj -->
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.0-*" /><!-- from Oqtane.Client.csproj -->
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.0-*" /><!-- from Oqtane.Maui.csproj -->
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.0-*" /><!-- from Oqtane.Client.csproj -->
+    <PackageReference Include="System.Net.Http.Json" Version="8.0.0-*" /><!-- from Oqtane.Client.csproj -->
+    <!--<PackageReference Include="Oqtane.Client" Version="4.0.0" />
+    <PackageReference Include="Oqtane.Shared" Version="4.0.0" />-->
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj" />
-    <!--<ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Client\Oqtane.Client.csproj" />
-    <ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Server\Oqtane.Server.csproj" />-->
+    <ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Client\Oqtane.Client.csproj" />
+    <ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Server\Oqtane.Server.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Shared\ToSic.Sxc.Oqt.Shared.csproj" />
   </ItemGroup>
 
