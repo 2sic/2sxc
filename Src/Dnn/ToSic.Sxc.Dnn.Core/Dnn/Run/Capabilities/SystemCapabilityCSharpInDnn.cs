@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Run.Capabilities;
+﻿using ToSic.Eav.Plumbing;
+using ToSic.Eav.Run.Capabilities;
 using static ToSic.Eav.Run.Capabilities.SystemCapabilityListForImplementation;
 
 namespace ToSic.Sxc.Dnn.Run.Capabilities
@@ -10,13 +11,10 @@ namespace ToSic.Sxc.Dnn.Run.Capabilities
         public override bool IsEnabled => _isEnabledCache ?? (_isEnabledCache = DetectIfCs73IsInstalled()).Value;
         private static bool? _isEnabledCache;
 
-        // TODO: @STV DETECT based on installed stuff (DLLs, available APIs?)
+        // DETECT based on installed stuff (DLLs, available APIs?)
         // Goal is that it can tell if the newer CodeDom library has been installed or not
         // I'll then use it to build a config in the App, so the app can warn if a feature is missing
-        private static bool DetectIfCs73IsInstalled()
-        {
-            return false;
-        }
+        private static bool DetectIfCs73IsInstalled() => AssemblyHandling.HasType("Microsoft.CodeDom.Providers.DotNetCompilerPlatform");
     }
 
     public class SystemCapabilityCSharp8: SystemCapabilityBase
