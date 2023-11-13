@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Code
     /// <summary>
     /// Marks all Razor / WebAPI classes which provide logging functionality
     /// </summary>
-    [PrivateApi("This is internal for documentation only, you should never access this interface, was 'Internal' till 16.07")]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("This is internal for documentation only, you should never access this interface")]
     public interface IHasCodeLog
     {
         /// <summary>

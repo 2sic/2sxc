@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Services.Tweaks
     /// WIP 16.08 Helper to let a tweak operation modify a value
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
-    [WorkInProgressApi("WIP 16.08")]
+    [PrivateApi("WIP 16.08")]
     public class TweakValue<TValue>: ITweakValue<TValue>
     {
         internal TweakValue(string name, string step, TValue initial)

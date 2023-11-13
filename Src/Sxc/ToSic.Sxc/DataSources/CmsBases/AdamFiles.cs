@@ -21,9 +21,9 @@ namespace ToSic.Sxc.DataSources
     ///
     /// As of now there are no parameters to set.
     ///
-    /// To figure out the properties returned and what they match up to, see <see cref="PageDataRaw"/> TODO
+    /// To figure out the properties returned and what they match up to, see <see cref="AdamItemDataRaw"/> TODO
     /// </summary>
-    [PrivateApi("still wip / finishing specs etc.")]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("still wip / finishing specs etc.")]
     [VisualQuery(
         NiceName = "Adam",
         UiHint = "Files and folders in the Adam",
