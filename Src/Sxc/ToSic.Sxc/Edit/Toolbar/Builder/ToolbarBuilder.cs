@@ -12,7 +12,16 @@ using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
-    // TODO: try to make internal
+    /// <summary>
+    /// INTERNAL: Toolbar Builder implementation.
+    /// </summary>
+    /// <remarks>
+    /// We cannot make this internal :(
+    /// Reason is that as soon as we run something like `Kit.Toolbar.Empty(Content)` in a razor file,
+    /// the result is dynamic - so the compiler evaluates the final object at runtime.
+    /// If the ToolbarBuilder is internal, things start to fail.
+    /// So for now :( it must remain public.
+    /// </remarks>
     [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsDynamicCodeRoot
     {
