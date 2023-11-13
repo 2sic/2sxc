@@ -23,6 +23,8 @@ using static ToSic.Sxc.Blocks.BlockBuildingConstants;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IDataSource = ToSic.Eav.DataSource.IDataSource;
 using ToSic.Eav.Code.Help;
+using ToSic.Eav.Data.PiggyBack;
+using ToSic.Eav.Run.Requirements;
 
 namespace ToSic.Sxc.Engines
 {
@@ -46,12 +48,12 @@ namespace ToSic.Sxc.Engines
 
         public class MyServices : MyServicesBase
         {
-
             public MyServices(IServerPaths serverPaths,
                 IBlockResourceExtractor blockResourceExtractor,
                 LazySvc<AppPermissionCheck> appPermCheckLazy,
                 Polymorphism.Polymorphism polymorphism,
-                LazySvc<IAppStates> appStatesLazy
+                LazySvc<IAppStates> appStatesLazy,
+                IRequirementsService requirements
             )
             {
                 ConnectServices(
@@ -59,6 +61,7 @@ namespace ToSic.Sxc.Engines
                     AppStatesLazy = appStatesLazy,
                     ServerPaths = serverPaths,
                     BlockResourceExtractor = blockResourceExtractor,
+                    Requirements = requirements,
                     AppPermCheckLazy = appPermCheckLazy
                 );
             }
@@ -68,6 +71,8 @@ namespace ToSic.Sxc.Engines
             internal readonly LazySvc<AppPermissionCheck> AppPermCheckLazy;
             internal Polymorphism.Polymorphism Polymorphism { get; }
             internal LazySvc<IAppStates> AppStatesLazy { get; }
+            internal IRequirementsService Requirements { get; }
+
         }
         /// <summary>
         /// Empty constructor, so it can be used in dependency injection
@@ -99,6 +104,7 @@ namespace ToSic.Sxc.Engines
 
             // check common errors
             CheckExpectedTemplateErrors();
+            CheckAppRequirements();
 
             // check access permissions - before initializing or running data-code in the template
             CheckTemplatePermissions(Block.Context.User);
@@ -182,6 +188,8 @@ namespace ToSic.Sxc.Engines
             return l.ReturnAsOk(result);
         }
 
+        #region Template Exceptions like missing configuration or defined type not found
+
         private void CheckExpectedTemplateErrors()
         {
             if (Template == null)
@@ -196,6 +204,33 @@ namespace ToSic.Sxc.Engines
 
         private static CodeHelp ErrHelpTypeMissing = new CodeHelp(name: "Content Type Missing", detect: "", linkCode: "err-view-type-missing", 
             uiMessage: "The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
+
+        #endregion
+
+        #region App Requirements not met
+
+        private bool CheckAppRequirements()
+        {
+            var l = Log.Fn<bool>();
+            // 1. Preflight
+            // 1.1. make sure we have an App-State
+            var appState = Block.Context?.AppState;
+            if (appState == null) return l.ReturnTrue("no appState");
+
+            var reqStatus = appState.PiggyBack.GetOrGenerate(appState, "AppRequirementsStatus", 
+                () => Services.Requirements.UnfulfilledRequirements(appState.Metadata));
+
+            if (reqStatus.SafeAny())
+                throw new RenderingException(ErrHelpRequirementsNotMet);
+
+            return l.ReturnTrue("all seems ok");
+        }
+
+        private static CodeHelp ErrHelpRequirementsNotMet = new CodeHelp(name: "Requirement Not Met", detect: "",
+            linkCode: "err-view-config-missing", uiMessage: "Important Requirements not Met");
+
+
+        #endregion
 
         private (RenderStatusType RenderStatus, string Message, string ErrorCode, List<Exception> exOrNull) CheckExpectedNoRenderConditions()
         {
