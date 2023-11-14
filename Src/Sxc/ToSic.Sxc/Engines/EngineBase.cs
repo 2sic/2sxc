@@ -23,7 +23,6 @@ using static ToSic.Sxc.Blocks.BlockBuildingConstants;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IDataSource = ToSic.Eav.DataSource.IDataSource;
 using ToSic.Eav.Code.Help;
-using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Run.Requirements;
 
 namespace ToSic.Sxc.Engines
@@ -33,7 +32,7 @@ namespace ToSic.Sxc.Engines
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public abstract partial class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
+    public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
     {
         [PrivateApi] protected IView Template;
         [PrivateApi] protected string TemplatePath;
@@ -41,8 +40,6 @@ namespace ToSic.Sxc.Engines
         [PrivateApi] protected IDataSource DataSource;
 
         [PrivateApi] protected IBlock Block;
-
-        [PrivateApi] public bool CompatibilityAutoLoadJQueryAndRvt { get; protected set; } = true;
 
         #region Constructor and DI
 
@@ -165,15 +162,10 @@ namespace ToSic.Sxc.Engines
         protected virtual void Init() {}
 
         /// <inheritdoc />
-        public RenderEngineResult Render(object data)
+        public virtual RenderEngineResult Render(object data)
         {
             var l = Log.Fn<RenderEngineResult>(timer: true);
-            // call engine internal feature to optionally change what data is actually used or prepared for search...
-#if NETFRAMEWORK
-#pragma warning disable CS0618
-            CustomizeData();
-#pragma warning restore CS0618
-#endif
+            
             // check if rendering is possible, or throw exceptions...
             var (renderStatus, message, errorCode, exOrNull) = CheckExpectedNoRenderConditions();
 

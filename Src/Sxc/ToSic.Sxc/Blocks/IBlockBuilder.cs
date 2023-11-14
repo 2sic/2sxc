@@ -48,5 +48,11 @@ namespace ToSic.Sxc.Blocks
         /// </summary>
         /// <returns></returns>
         IEngine GetEngine();
+
+        ///// <summary>
+        ///// Get the engine which will render a block
+        ///// </summary>
+        ///// <returns></returns>
+        //IEngine Engine { get; }
     }
 }

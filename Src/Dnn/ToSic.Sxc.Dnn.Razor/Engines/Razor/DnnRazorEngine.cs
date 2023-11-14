@@ -16,6 +16,7 @@ using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Engines
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.Engines
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     [EngineDefinition(Name = "Razor")]
     // ReSharper disable once UnusedMember.Global
-    public partial class DnnRazorEngine : EngineBase, IRazorEngine
+    public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCompatibility
     {
         #region Constructor / DI
 
@@ -185,25 +186,17 @@ namespace ToSic.Sxc.Engines
 
             pageToInit.Context = HttpContextCurrent;
             pageToInit.VirtualPath = TemplatePath;
-            //var compatibility = Constants.CompatibilityLevel9Old;
             if (pageToInit is RazorComponent rzrPage)
             {
 #pragma warning disable CS0618
                 rzrPage.Purpose = Purpose;
 #pragma warning restore CS0618
-                //compatibility = Constants.CompatibilityLevel10;
             }
 
-            //var compatibility = (pageToInit as ICompatibilityLevel)?.CompatibilityLevel ?? Constants.CompatibilityLevel9Old;
-            //if (pageToInit is IDynamicCode16)
-            //    compatibility = Constants.CompatibilityLevel16;
-            //else if (pageToInit is ICompatibleToCode12)
-            //    compatibility = Constants.CompatibilityLevel12;
-
-            if (pageToInit is SexyContentWebPage oldPage)
 #pragma warning disable 618, CS0612
-                oldPage.InstancePurpose = (InstancePurposes)Purpose;
+            if (pageToInit is SexyContentWebPage oldPage) oldPage.InstancePurpose = (InstancePurposes)Purpose;
 #pragma warning restore 618, CS0612
+
             InitHelpers(pageToInit);
             return l.ReturnTrue("ok");
         }
@@ -212,18 +205,14 @@ namespace ToSic.Sxc.Engines
         {
             var l = Log.Fn();
             var dynCode = _codeRootFactory.BuildCodeRoot(webPage, Block, Log, compatibilityFallback: Constants.CompatibilityLevel9Old);
-            //dynCode.InitDynCodeRoot(Block, Log); //, compatibility)
-                //.SetCompatibility(compatibility);
             webPage.ConnectToRoot(dynCode);
-
-            // New in 10.25 - ensure jquery is not included by default
-            if (dynCode.Cdf.CompatibilityLevel > Constants.MaxLevelForAutoJQuery)
-            {
-                l.A("Compatibility is new, don't need AutoJQuery");
-                CompatibilityAutoLoadJQueryAndRvt = false;
-            }
             l.Done();
         }
 
+        /// <summary>
+        /// Special old mechanism to always request jQuery and Rvt
+        /// </summary>
+        public bool OldAutoLoadJQueryAndRvt => Webpage._DynCodeRoot.Cdf.CompatibilityLevel <= Constants.MaxLevelForAutoJQuery;
     }
+
 }

@@ -274,5 +274,20 @@ namespace ToSic.Sxc.Blocks
         }
         private IEngine _engine;
 
+        // 2023-11-14 2dm - nicer implementation
+        // but not sure about side effects
+        // as the note below mentions edge cases where the view hasn't been built yet...
+        // so don't use until you're ready to test all use cases
+        //public IEngine Engine => _engine.Get(() =>
+        //{
+        //    var l = Log.Fn<IEngine>(timer: true);
+        //    // edge case: view hasn't been built/configured yet, so no engine to find/attach
+        //    if (Block.View == null) return l.ReturnNull("no view");
+        //    var engine = Services.EngineFactory.CreateEngine(Block.View);
+        //    engine.Init(Block);
+        //    return l.Return(engine, "created");
+        //});
+
+        //private readonly GetOnce<IEngine> _engine = new GetOnce<IEngine>();
     }
 }

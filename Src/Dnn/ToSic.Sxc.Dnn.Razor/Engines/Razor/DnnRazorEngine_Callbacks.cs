@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Modules;
+using ToSic.Lib.Logging;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Search;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn;
@@ -14,10 +16,30 @@ namespace ToSic.Sxc.Engines
 {
     public partial class DnnRazorEngine
     {
+        /// <inheritdoc />
+        public void Init(IBlock block, Purpose purpose) => Log.Do($"{nameof(purpose)}:{purpose}", () =>
+        {
+            Purpose = purpose;
+            Init(block);
+        });
+
+        public override RenderEngineResult Render(object data)
+        {
+            var l = Log.Fn<RenderEngineResult>();
+
+            // call engine internal feature to optionally change what data is actually used or prepared for search...
+#pragma warning disable CS0618
+            CustomizeData();
+#pragma warning restore CS0618
+            return l.Return(base.Render(data));
+        }
+
+        protected Purpose Purpose = Purpose.WebView;
+
 
         /// <inheritdoc />
         [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
-        public override void CustomizeData()
+        public void CustomizeData()
         {
             if (!(Webpage is IDnnRazorCustomize old)) return;
             if (!(old.Data is IBlockDataSource isOld)) return;
@@ -27,7 +49,7 @@ namespace ToSic.Sxc.Engines
 
         /// <inheritdoc />
         [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
-        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate)
+        public void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate)
         {
             if (Webpage == null || searchInfos == null || searchInfos.Count <= 0) return;
 

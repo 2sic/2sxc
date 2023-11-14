@@ -23,6 +23,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.LookUp;
+using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines;
 using static System.StringComparer;
 
@@ -172,18 +173,23 @@ namespace ToSic.Sxc.Search
                     /* Old mode v06.02 - 12.01 using the Engine or Razor which customizes */
                     // Build the engine, as that's responsible for calling inner search stuff
                     var engine = _engineFactory.CreateEngine(Block.View);
-                    engine.Init(Block, Purpose.IndexingForSearch);
+                    if (engine is IEngineDnnOldCompatibility oldEngine)
+                    {
+                        oldEngine.Init(Block, Purpose.IndexingForSearch);
 
 #pragma warning disable CS0618
-                    // Only run CustomizeData() if we're in the older, classic model of search-indexing
-                    // The new model v12.02 won't need this
-                    l.A("Will run CustomizeData() in the Razor Engine which will call it in the Razor if exists");
-                    engine.CustomizeData();
+                        // Only run CustomizeData() if we're in the older, classic model of search-indexing
+                        // The new model v12.02 won't need this
+                        l.A("Will run CustomizeData() in the Razor Engine which will call it in the Razor if exists");
+                        oldEngine.CustomizeData();
 
-                    // check if the cshtml has search customizations
-                    l.A("Will run CustomizeSearch() in the Razor Engine which will call it in the Razor if exists");
-                    engine.CustomizeSearch(SearchItems, Block.Context.Module, beginDate);
+                        // check if the cshtml has search customizations
+                        l.A("Will run CustomizeSearch() in the Razor Engine which will call it in the Razor if exists");
+                        oldEngine.CustomizeSearch(SearchItems, Block.Context.Module, beginDate);
 #pragma warning restore CS0618
+                    } else
+                        engine.Init(Block);
+
                 }
             }
             catch (Exception e)

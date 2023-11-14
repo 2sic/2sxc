@@ -88,7 +88,7 @@ namespace ToSic.Sxc.Dnn.Web
         /// </summary>
         /// <returns></returns>
         public bool NeedsPre1025Behavior() => _forcePre1025Behavior
-                                              ?? BlockBuilder?.GetEngine()?.CompatibilityAutoLoadJQueryAndRvt
+                                              ?? (BlockBuilder?.GetEngine() as IEngineDnnOldCompatibility)?.OldAutoLoadJQueryAndRvt
                                               ?? true;
 
 
