@@ -3,7 +3,7 @@ using static ToSic.Eav.Run.Capabilities.SystemCapabilityListForImplementation;
 
 namespace ToSic.Sxc.Oqt.Server.Run.Capabilities
 {
-    internal class SystemCapabilityBlazor: SystemCapabilityBase
+    internal class SystemCapabilityBlazor: SystemCapability
     {
         public SystemCapabilityBlazor() : base(Blazor, true)
         {

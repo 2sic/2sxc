@@ -4,7 +4,7 @@ using static ToSic.Eav.Run.Capabilities.SystemCapabilityListForImplementation;
 
 namespace ToSic.Sxc.Dnn.Run.Capabilities
 {
-    public class SystemCapabilityCSharp7: SystemCapabilityBase
+    public class SystemCapabilityCSharp7: SystemCapability
     {
         public SystemCapabilityCSharp7() : base(CSharp07) { }
 
@@ -17,27 +17,27 @@ namespace ToSic.Sxc.Dnn.Run.Capabilities
         private static bool DetectIfCs73IsInstalled() => AssemblyHandling.HasType("Microsoft.CodeDom.Providers.DotNetCompilerPlatform");
     }
 
-    public class SystemCapabilityCSharp8: SystemCapabilityBase
+    public class SystemCapabilityCSharp8: SystemCapability
     {
         public SystemCapabilityCSharp8() : base(CSharp08.Clone(name: CSharp08.Name + " - not available in Dnn."), false) { }
     }
 
-    public class SystemCapabilityCSharp9: SystemCapabilityBase
+    public class SystemCapabilityCSharp9: SystemCapability
     {
         public SystemCapabilityCSharp9() : base(CSharp09.Clone(name: CSharp09.Name + " - not available in Dnn."), false) { }
     }
 
-    public class SystemCapabilityCSharp10: SystemCapabilityBase
+    public class SystemCapabilityCSharp10: SystemCapability
     {
         public SystemCapabilityCSharp10() : base(CSharp10.Clone(name: CSharp10.Name + " - not available in Dnn."), false) { }
     }
 
-    public class SystemCapabilityCSharp11: SystemCapabilityBase
+    public class SystemCapabilityCSharp11: SystemCapability
     {
         public SystemCapabilityCSharp11() : base(CSharp11.Clone(name: CSharp11.Name + " - not available in Dnn."), false) { }
     }
 
-    public class SystemCapabilityCSharp12: SystemCapabilityBase
+    public class SystemCapabilityCSharp12: SystemCapability
     {
         public SystemCapabilityCSharp12() : base(CSharp12.Clone(name: CSharp12.Name + " - not available in Dnn."), false) { }
     }
