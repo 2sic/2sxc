@@ -2,6 +2,7 @@
 using System;
 using System.Buffers;
 using System.Linq;
+using System.Text.Json.Serialization.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -81,7 +82,9 @@ namespace ToSic.Sxc.WebApi.ActionFilters
             var eavJsonConverterFactory = GetEavJsonConverterFactory(jsonFormatterAttribute?.EntityFormat, context);
 
             var jsonSerializerOptions = JsonOptions.UnsafeJsonWithoutEncodingHtmlOptionsFactory(eavJsonConverterFactory);
+            jsonSerializerOptions.TypeInfoResolver = new DefaultJsonTypeInfoResolver();
 
+            //AppContext.SetSwitch("System.Text.Json.Serialization.Metadata", true);
             JsonFormatterHelpers.SetCasing(jsonFormatterAttribute?.Casing ?? Casing.Unspecified, jsonSerializerOptions);
 
             return new(jsonSerializerOptions);
