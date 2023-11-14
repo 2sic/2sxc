@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Oqt.App
         public bool IsPrerendering() =>
             (PageState.Site.RenderMode is "ServerPrerendered" or "WebAssemblyPrerendered") // Checks the site's render mode.
             && FirstRender // Ensures this is the first render.
-            && SiteState.IsPrerendering; // Validates the prerendering state of the current page.
+            /*&& SiteState.IsPrerendering*/; // Validates the prerendering state of the current page.
 
         #region Log Helpers
         /// <summary>
