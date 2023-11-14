@@ -1,5 +1,5 @@
 ﻿using ToSic.Lib.Documentation;
-using static ToSic.Eav.Parameters;
+using static ToSic.Lib.Coding.StableApi;
 
 namespace ToSic.Sxc.Services.Tweaks
 {
