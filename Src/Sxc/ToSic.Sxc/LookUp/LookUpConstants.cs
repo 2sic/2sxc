@@ -4,7 +4,7 @@ namespace ToSic.Sxc.LookUp
 {
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    class LookUpConstants
+    public class LookUpConstants
     {
 
         /// <summary>

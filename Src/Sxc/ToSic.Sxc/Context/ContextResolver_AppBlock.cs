@@ -4,7 +4,7 @@ using ToSic.Eav.Context;
 
 namespace ToSic.Sxc.Context
 {
-    internal partial class ContextResolver
+    partial class ContextResolver
     {
 
         public IContextOfApp GetBlockOrSetApp(int appId)
