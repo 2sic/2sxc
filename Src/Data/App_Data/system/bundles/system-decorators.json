@@ -5995,6 +5995,42 @@
                   "TargetType": 5,
                   "String": "19655377-6626-4986-aea0-ec3c187186ad"
                 }
+              },
+              {
+                "Id": 182589,
+                "Version": 2,
+                "Guid": "ee57b531-b480-4687-bb6d-3a482ad062aa",
+                "Type": {
+                  "Id": "4c88d78f-5f3e-4b66-95f2-6d63b7858847",
+                  "Name": "MetadataForDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "DeleteWarning": {
+                      "en-us": ""
+                    },
+                    "TargetName": {
+                      "en-us": ""
+                    },
+                    "Title": {
+                      "en-us": "Requirement Metadata for Apps"
+                    }
+                  },
+                  "Number": {
+                    "Amount": {
+                      "en-us": 100
+                    },
+                    "TargetType": {
+                      "en-us": 3
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "19655377-6626-4986-aea0-ec3c187186ad"
+                }
               }
             ],
             "Attributes": [
@@ -6671,7 +6707,7 @@
                     "Version": 1,
                     "Guid": "c478de3f-273c-4c59-b995-1658d17fe42a",
                     "Type": {
-                      "Id": "@string-picker",
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
                       "Name": "@string-picker"
                     },
                     "Attributes": {
