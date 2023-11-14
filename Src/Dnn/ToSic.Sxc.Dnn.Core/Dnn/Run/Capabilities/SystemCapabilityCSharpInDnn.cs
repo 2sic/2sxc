@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Dnn.Run.Capabilities
 {
     public class SystemCapabilityCSharp7: SystemCapabilityBase
     {
-        public SystemCapabilityCSharp7() : base(CSharp7) { }
+        public SystemCapabilityCSharp7() : base(CSharp07) { }
 
         public override bool IsEnabled => _isEnabledCache ?? (_isEnabledCache = DetectIfCs73IsInstalled()).Value;
         private static bool? _isEnabledCache;
@@ -19,12 +19,12 @@ namespace ToSic.Sxc.Dnn.Run.Capabilities
 
     public class SystemCapabilityCSharp8: SystemCapabilityBase
     {
-        public SystemCapabilityCSharp8() : base(CSharp8.Clone(name: CSharp8.Name + " - not available in Dnn."), false) { }
+        public SystemCapabilityCSharp8() : base(CSharp08.Clone(name: CSharp08.Name + " - not available in Dnn."), false) { }
     }
 
     public class SystemCapabilityCSharp9: SystemCapabilityBase
     {
-        public SystemCapabilityCSharp9() : base(CSharp9.Clone(name: CSharp9.Name + " - not available in Dnn."), false) { }
+        public SystemCapabilityCSharp9() : base(CSharp09.Clone(name: CSharp09.Name + " - not available in Dnn."), false) { }
     }
 
     public class SystemCapabilityCSharp10: SystemCapabilityBase
