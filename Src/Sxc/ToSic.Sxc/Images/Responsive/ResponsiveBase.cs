@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Images
     /// Note: this could also affect .Picture and .Image base classes
     /// </summary>
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    internal abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
+    public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     {
 
         internal ResponsiveBase(ImageService imgService, ResponsiveParams callParams, ILog parentLog, string logName)
