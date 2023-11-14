@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
@@ -21,6 +22,8 @@ namespace ToSic.Sxc.Polymorphism
         {
             _serviceProvider = serviceProvider;
         }
+
+        public Polymorphism Init(AppState appState) => Init(appState.List);
 
         public Polymorphism Init(IEnumerable<IEntity> list)
         {

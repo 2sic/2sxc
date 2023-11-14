@@ -29,10 +29,10 @@ namespace ToSic.Sxc.Dnn.Web
         {
             _forcePre1025Behavior = forcePre1025Behavior;
             Page = page;
-            BlockBuilder = blockBuilder as BlockBuilder;
+            BlockBuilder = blockBuilder;
             return this;
         }
-        protected BlockBuilder BlockBuilder;
+        protected IBlockBuilder BlockBuilder;
         protected Page Page;
         protected DnnJsApiHeader Header;
         private bool? _forcePre1025Behavior;
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Dnn.Web
         {
             var l = Log.Fn<IList<IPageFeature>>();
             // temporary solution, till the features are correctly activated in the block
-            // auto-detect Blockbuilder params
+            // auto-detect BlockBuilder params
             features = features ?? Features;
 
             // normal scripts

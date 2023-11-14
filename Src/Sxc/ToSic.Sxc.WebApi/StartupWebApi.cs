@@ -43,6 +43,9 @@ namespace ToSic.Sxc.WebApi
             services.TryAddScoped<ILinkPaths, LinkPaths>();
             services.TryAddTransient<XmlImportWithFiles, XmlImportFull>();
             services.TryAddTransient<EngineBase.MyServices>();
+            services.TryAddTransient<EngineCheckTemplate>();
+            services.TryAddTransient<EnginePolymorphism>();
+            services.TryAddTransient<EngineAppRequirements>();
 
             // These are usually replaced by the target platform
             services.TryAddTransient<IBlockResourceExtractor, BlockResourceExtractorUnknown>();

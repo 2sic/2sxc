@@ -13,6 +13,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Dnn;
@@ -51,25 +52,17 @@ namespace ToSic.Sxc.Engines
         [PrivateApi]
         protected RazorComponentBase Webpage
         {
-            get
-            {
-                Log.A($"Webpage get: {_webpage}");
-                return _webpage;
-            }
-            set
-            {
-                Log.A($"Webpage set: {value}");
-                _webpage = value;
-            }
-            
+            get => Log.Getter(() => _webpage);
+            set => Log.Setter(() => _webpage = value);
         }
         private RazorComponentBase _webpage;
 
         /// <inheritdoc />
         [PrivateApi]
-        protected override void Init()
+        public override void Init(IBlock block)
         {
             var l = Log.Fn();
+            base.Init(block);
             try
             {
                 InitWebpage();
@@ -120,7 +113,7 @@ namespace ToSic.Sxc.Engines
         }
 
         [PrivateApi]
-        protected override (string, List<Exception>) RenderTemplate(object data)
+        protected override (string, List<Exception>) RenderImplementation(object data)
         {
             var l = Log.Fn<(string, List<Exception>)>();
             var writer = new StringWriter();

@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Razor
         #endregion
 
         /// <inheritdoc/>
-        protected override (string, List<Exception>) RenderTemplate(object data)
+        protected override (string, List<Exception>) RenderImplementation(object data)
         {
             var l = Log.Fn<(string, List<Exception>)>();
             var task = RenderTask();

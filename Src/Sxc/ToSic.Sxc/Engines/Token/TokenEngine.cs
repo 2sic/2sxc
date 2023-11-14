@@ -91,9 +91,9 @@ namespace ToSic.Sxc.Engines
         private TokenReplace _tokenReplace;
 
         [PrivateApi]
-        protected override void Init()
+        public override void Init(IBlock block)
         {
-            base.Init();
+            base.Init(block);
             InitDataHelper();
             InitTokenReplace();
         }
@@ -112,7 +112,7 @@ namespace ToSic.Sxc.Engines
         }
 
         [PrivateApi]
-        protected override (string, List<Exception>) RenderTemplate(object data)
+        protected override (string, List<Exception>) RenderImplementation(object data)
         {
             var templateSource = File.ReadAllText(Services.ServerPaths.FullAppPath(TemplatePath));
             // Convert old <repeat> elements to the new ones
