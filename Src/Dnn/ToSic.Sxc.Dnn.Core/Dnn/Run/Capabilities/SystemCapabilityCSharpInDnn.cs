@@ -4,6 +4,20 @@ using static ToSic.Eav.Run.Capabilities.SystemCapabilityListForImplementation;
 
 namespace ToSic.Sxc.Dnn.Run.Capabilities
 {
+    // todo: @stv
+    public class SystemCapabilityCSharp6 : SystemCapability
+    {
+        public SystemCapabilityCSharp6() : base(CSharp06) { }
+
+        public override bool IsEnabled => _isEnabledCache ?? (_isEnabledCache = DetectIfCs6IsInstalled()).Value;
+        private static bool? _isEnabledCache;
+
+        // DETECT based on installed stuff (DLLs, available APIs?)
+        // Goal is that it can tell if the newer CodeDom library has been installed or not
+        // I'll then use it to build a config in the App, so the app can warn if a feature is missing
+        private static bool DetectIfCs6IsInstalled() => AssemblyHandling.HasType("Microsoft.CodeDom.Providers.DotNetCompilerPlatform");
+    }
+
     public class SystemCapabilityCSharp7: SystemCapability
     {
         public SystemCapabilityCSharp7() : base(CSharp07) { }

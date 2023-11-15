@@ -3,6 +3,10 @@ using static ToSic.Eav.Run.Capabilities.SystemCapabilityListForImplementation;
 
 namespace ToSic.Sxc.Oqt.Server.Run.Capabilities
 {
+    public class SystemCapabilityCSharp6: SystemCapability
+    {
+        public SystemCapabilityCSharp6() : base(CSharp06, true) { }
+    }
     public class SystemCapabilityCSharp7: SystemCapability
     {
         public SystemCapabilityCSharp7() : base(CSharp07, true) { }
