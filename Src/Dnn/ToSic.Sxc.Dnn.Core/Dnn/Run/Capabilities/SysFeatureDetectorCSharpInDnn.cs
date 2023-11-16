@@ -4,9 +4,9 @@ using static ToSic.Eav.Run.Capabilities.SystemCapabilityListForImplementation;
 
 namespace ToSic.Sxc.Dnn.Run.Capabilities
 {
-    public class SystemCapabilityCSharp6 : SystemCapability
+    public class SysFeatureDetectorCSharp6 : SysFeatureDetector
     {
-        public SystemCapabilityCSharp6() : base(CSharp06) { }
+        public SysFeatureDetectorCSharp6() : base(CSharp06.Clone(name: " optional in Dnn 9.6.1+")) { }
 
         public override bool IsEnabled => _isEnabledCache ?? (_isEnabledCache = DetectIfCs6IsInstalled()).Value;
         private static bool? _isEnabledCache;
@@ -17,9 +17,9 @@ namespace ToSic.Sxc.Dnn.Run.Capabilities
         private static bool DetectIfCs6IsInstalled() => AssemblyHandling.HasType("Microsoft.CodeDom.Providers.DotNetCompilerPlatform") && RoslynCompilerCapability.CheckCsharpLangVersion("6");
     }
 
-    public class SystemCapabilityCSharp7 : SystemCapability
+    public class SysFeatureDetectorCSharp7 : SysFeatureDetector
     {
-        public SystemCapabilityCSharp7() : base(CSharp07) { }
+        public SysFeatureDetectorCSharp7() : base(CSharp07.Clone(name: CSharp07.Name + " optional in Dnn 9.? (todo)")) { }
 
         public override bool IsEnabled => _isEnabledCache ?? (_isEnabledCache = DetectIfCs73IsInstalled()).Value;
         private static bool? _isEnabledCache;
@@ -30,29 +30,29 @@ namespace ToSic.Sxc.Dnn.Run.Capabilities
         private static bool DetectIfCs73IsInstalled() => AssemblyHandling.HasType("Microsoft.CodeDom.Providers.DotNetCompilerPlatform") && RoslynCompilerCapability.CheckCsharpLangVersion("7.3");
     }
 
-    public class SystemCapabilityCSharp8 : SystemCapability
+    public class SysFeatureDetectorCSharp8 : SysFeatureDetector
     {
-        public SystemCapabilityCSharp8() : base(CSharp08.Clone(name: CSharp08.Name + " - not available in Dnn."), false) { }
+        public SysFeatureDetectorCSharp8() : base(CSharp08.Clone(name: CSharp08.Name + " optional in Dnn 9.13+ (ca. todo)"), false) { }
     }
 
-    public class SystemCapabilityCSharp9 : SystemCapability
+    public class SysFeatureDetectorCSharp9 : SysFeatureDetector
     {
-        public SystemCapabilityCSharp9() : base(CSharp09.Clone(name: CSharp09.Name + " - not available in Dnn."), false) { }
+        public SysFeatureDetectorCSharp9() : base(CSharp09.Clone(name: CSharp09.Name + " (not available in Dnn)"), false) { }
     }
 
-    public class SystemCapabilityCSharp10 : SystemCapability
+    public class SysFeatureDetectorCSharp10 : SysFeatureDetector
     {
-        public SystemCapabilityCSharp10() : base(CSharp10.Clone(name: CSharp10.Name + " - not available in Dnn."), false) { }
+        public SysFeatureDetectorCSharp10() : base(CSharp10.Clone(name: CSharp10.Name + " (not available in Dnn)"), false) { }
     }
 
-    public class SystemCapabilityCSharp11 : SystemCapability
+    public class SysFeatureDetectorCSharp11 : SysFeatureDetector
     {
-        public SystemCapabilityCSharp11() : base(CSharp11.Clone(name: CSharp11.Name + " - not available in Dnn."), false) { }
+        public SysFeatureDetectorCSharp11() : base(CSharp11.Clone(name: CSharp11.Name + " (not available in Dnn)"), false) { }
     }
 
-    public class SystemCapabilityCSharp12 : SystemCapability
+    public class SysFeatureDetectorCSharp12 : SysFeatureDetector
     {
-        public SystemCapabilityCSharp12() : base(CSharp12.Clone(name: CSharp12.Name + " - not available in Dnn."), false) { }
+        public SysFeatureDetectorCSharp12() : base(CSharp12.Clone(name: CSharp12.Name + " (not available in Dnn)"), false) { }
     }
 
 }

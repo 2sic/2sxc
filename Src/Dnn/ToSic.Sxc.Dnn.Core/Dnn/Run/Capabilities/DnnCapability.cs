@@ -3,7 +3,7 @@ using ToSic.Eav.Run.Capabilities;
 
 namespace ToSic.Sxc.Dnn.Run.Capabilities
 {
-    public class DnnCapability: SystemCapability
+    public class DnnCapability: SysFeatureDetector
     {
 
         private static readonly SystemCapabilityDefinition DefStatic = new SystemCapabilityDefinition(

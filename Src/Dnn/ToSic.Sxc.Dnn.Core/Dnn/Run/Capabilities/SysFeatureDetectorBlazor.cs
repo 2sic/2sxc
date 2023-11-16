@@ -3,9 +3,9 @@ using static ToSic.Eav.Run.Capabilities.SystemCapabilityListForImplementation;
 
 namespace ToSic.Sxc.Dnn.Run.Capabilities
 {
-    internal class SystemCapabilityBlazor: SystemCapability
+    internal class SysFeatureDetectorBlazor: SysFeatureDetector
     {
-        public SystemCapabilityBlazor() : base(Blazor.Clone(name: Blazor.Name + " not available in Dnn."), false)
+        public SysFeatureDetectorBlazor() : base(Blazor.Clone(name: Blazor.Name + " (not available in Dnn)"), false)
         {
         }
     }

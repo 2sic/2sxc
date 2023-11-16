@@ -3,9 +3,9 @@ using static ToSic.Eav.Run.Capabilities.SystemCapabilityListForImplementation;
 
 namespace ToSic.Sxc.Oqt.Server.Run.Capabilities
 {
-    internal class SystemCapabilityBlazor: SystemCapability
+    internal class SysFeatureDetectorBlazor: SysFeatureDetector
     {
-        public SystemCapabilityBlazor() : base(Blazor, true)
+        public SysFeatureDetectorBlazor() : base(Blazor, true)
         {
         }
     }
