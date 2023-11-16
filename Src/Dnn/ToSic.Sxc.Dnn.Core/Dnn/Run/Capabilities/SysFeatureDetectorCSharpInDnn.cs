@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Dnn.Run.Capabilities
         // DETECT based on installed stuff (DLLs, available APIs?)
         // Goal is that it can tell if the newer CodeDom library has been installed or not
         // I'll then use it to build a config in the App, so the app can warn if a feature is missing
-        private static bool DetectIfCs6IsInstalled() => AssemblyHandling.HasType("Microsoft.CodeDom.Providers.DotNetCompilerPlatform") && RoslynCompilerCapability.CheckCsharpLangVersion("6");
+        private static bool DetectIfCs6IsInstalled() => RoslynCompilerCapability.CheckCsharpLangVersion(6); // C# 6
     }
 
     public class SysFeatureDetectorCSharp7 : SysFeatureDetector
@@ -27,12 +27,21 @@ namespace ToSic.Sxc.Dnn.Run.Capabilities
         // DETECT based on installed stuff (DLLs, available APIs?)
         // Goal is that it can tell if the newer CodeDom library has been installed or not
         // I'll then use it to build a config in the App, so the app can warn if a feature is missing
-        private static bool DetectIfCs73IsInstalled() => AssemblyHandling.HasType("Microsoft.CodeDom.Providers.DotNetCompilerPlatform") && RoslynCompilerCapability.CheckCsharpLangVersion("7.3");
+        private static bool DetectIfCs73IsInstalled() => RoslynCompilerCapability.CheckCsharpLangVersion(703); // C# 7.3;
     }
 
     public class SysFeatureDetectorCSharp8 : SysFeatureDetector
     {
-        public SysFeatureDetectorCSharp8() : base(CSharp08.Clone(name: CSharp08.Name + " optional in Dnn 9.13+ (ca. todo)"), false) { }
+        // public SysFeatureDetectorCSharp8() : base(CSharp08.Clone(name: CSharp08.Name + " optional in Dnn 9.13+ (ca. todo)"), false) { }
+        public SysFeatureDetectorCSharp8() : base(CSharp08.Clone(name: CSharp08.Name + " optional in Dnn 9.? (todo)")) { }
+
+        public override bool IsEnabled => _isEnabledCache ?? (_isEnabledCache = DetectIfCs73IsInstalled()).Value;
+        private static bool? _isEnabledCache;
+
+        // DETECT based on installed stuff (DLLs, available APIs?)
+        // Goal is that it can tell if the newer CodeDom library has been installed or not
+        // I'll then use it to build a config in the App, so the app can warn if a feature is missing
+        private static bool DetectIfCs73IsInstalled() => RoslynCompilerCapability.CheckCsharpLangVersion(8); // C# 8;
     }
 
     public class SysFeatureDetectorCSharp9 : SysFeatureDetector
