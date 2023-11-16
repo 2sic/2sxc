@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Dnn.Run
 
         #region DI Constructor
 
-        public DnnValueConverter(ISite site, LazySvc<IFeaturesService> featuresLazy, LazySvc<PageScopedService<ISite>> siteFromPageLazy, LazySvc<INavigationManager> navigationManager) : base(
+        public DnnValueConverter(ISite site, LazySvc<IFeaturesInternal> featuresLazy, LazySvc<PageScopedService<ISite>> siteFromPageLazy, LazySvc<INavigationManager> navigationManager) : base(
             $"{DnnConstants.LogName}.ValCnv")
         {
             ConnectServices(
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Dnn.Run
         }
 
         private readonly ISite _site;
-        private readonly LazySvc<IFeaturesService> _featuresLazy;
+        private readonly LazySvc<IFeaturesInternal> _featuresLazy;
         private readonly LazySvc<PageScopedService<ISite>> _siteFromPageLazy;
         private readonly LazySvc<INavigationManager> _navigationManager;
         private int PageSiteId => _siteFromPageLazy.Value.Value.Id; // PortalId from page di scope
@@ -124,7 +124,7 @@ namespace ToSic.Sxc.Dnn.Run
                 var result = fileInfo.StorageLocation == 0 ? filePath : FileLinkClickController.Instance.GetFileLinkClick(fileInfo);
 
                 // optionally do extra security checks (new in 10.02)
-                if (!_featuresLazy.Value.Enabled(BuiltInFeatures.AdamRestrictLookupToEntity.Guid)) return result;
+                if (!_featuresLazy.Value.IsEnabled(BuiltInFeatures.AdamRestrictLookupToEntity.Guid)) return result;
 
                 // check if it's in this item. We won't check the field, just the item, so the field is ""
                 return !Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", filePath)

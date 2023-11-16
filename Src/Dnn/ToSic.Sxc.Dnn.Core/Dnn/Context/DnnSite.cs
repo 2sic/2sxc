@@ -34,10 +34,10 @@ namespace ToSic.Sxc.Dnn.Context
         /// DI Constructor, will get the current portal settings
         /// #TodoDI not ideal yet, as PortalSettings.current is still retrieved from global
         /// </summary>
-        public DnnSite(LazySvc<IZoneMapper> zoneMapperLazy, LazySvc<ILinkPaths> linkPathsLazy, LazySvc<IFeaturesService> featuresSvc): base(DnnConstants.LogName)
+        public DnnSite(LazySvc<IZoneMapper> zoneMapperLazy, LazySvc<ILinkPaths> linkPathsLazy, LazySvc<IFeaturesInternal> featuresSvc): base(DnnConstants.LogName)
         {
-            _featuresSvc = featuresSvc;
             ConnectServices(
+                _featuresSvc = featuresSvc,
                 _zoneMapperLazy = zoneMapperLazy,
                 _linkPathsLazy = linkPathsLazy
             );
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Dnn.Context
         }
         private readonly LazySvc<IZoneMapper> _zoneMapperLazy;
         private readonly LazySvc<ILinkPaths> _linkPathsLazy;
-        private readonly LazySvc<IFeaturesService> _featuresSvc;
+        private readonly LazySvc<IFeaturesInternal> _featuresSvc;
         private ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
         /// <inheritdoc />
@@ -150,7 +150,7 @@ namespace ToSic.Sxc.Dnn.Context
             try
             {
                 // If the feature is not enabled, return null so up-stream can handle defaults
-                if (!_featuresSvc.Value.Enabled(BuiltInFeatures.LanguagesAdvancedFallback.Guid))
+                if (!_featuresSvc.Value.IsEnabled(BuiltInFeatures.LanguagesAdvancedFallback.Guid))
                     return null;
 
                 var lc = LocaleController.Instance;

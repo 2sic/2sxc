@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Adam
 
             Log.A("check if feature enabled");
             var sysFeatures = Services.FeaturesSvc.Value;
-            if (Security.UserIsRestricted && !sysFeatures.Enabled(FeaturesForRestrictedUsers))
+            if (Security.UserIsRestricted && !sysFeatures.IsEnabled(FeaturesForRestrictedUsers))
             {
                 var msg = sysFeatures.MsgMissingSome(FeaturesForRestrictedUsers);
                 throw HttpException.PermissionDenied(

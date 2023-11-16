@@ -39,7 +39,7 @@ namespace ToSic.Eav.Configuration
         /// <param name="guid">The feature Guid</param>
         /// <returns>true if the feature is enabled</returns>
         [Obsolete("Do not use anymore, get the IFeaturesService for this. Will not remove for a long time, because in use in public Apps like Mobius")]
-        public static bool Enabled(Guid guid) => FeaturesFromDi.Enabled(guid);
+        public static bool Enabled(Guid guid) => FeaturesFromDi.IsEnabled(guid);
 
         /// <summary>
         /// Checks if a list of features are enabled, in case you need many features to be activated.
@@ -47,7 +47,7 @@ namespace ToSic.Eav.Configuration
         /// <param name="guids">list/array of Guids</param>
         /// <returns>true if all features are enabled, false if any one of them is not</returns>
         [Obsolete("Do not use anymore, get the IFeaturesService for this. Will not remove for a long time, because in use in public Apps like Mobius")]
-        public static bool Enabled(IEnumerable<Guid> guids) => FeaturesFromDi.Enabled(guids);
+        public static bool Enabled(IEnumerable<Guid> guids) => FeaturesFromDi.IsEnabled(guids);
 
     }
 }

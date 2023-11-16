@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.Data
     [PrivateApi]
     public class OqtValueConverter : ValueConverterBase
     {
-        private readonly LazySvc<IFeaturesService> _featuresLazy;
+        private readonly LazySvc<IFeaturesInternal> _featuresLazy;
         public LazySvc<IFileRepository> FileRepository { get; }
         public LazySvc<IFolderRepository> FolderRepository { get; }
         public LazySvc<ITenantResolver> TenantResolver { get; }
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Oqt.Server.Data
             LazySvc<IPageRepository> pageRepository,
             LazySvc<IServerPaths> serverPaths,
             LazySvc<SiteStateInitializer> siteStateInitializerLazy,
-            LazySvc<IFeaturesService> featuresLazy) : base("Oqt.ValCn")
+            LazySvc<IFeaturesInternal> featuresLazy) : base("Oqt.ValCn")
         {
             ConnectServices(
                 _featuresLazy = featuresLazy,
@@ -159,7 +159,7 @@ namespace ToSic.Sxc.Oqt.Server.Data
                 var result = $"{Alias.Path}/app/{appName}/adam/{filePath}".PrefixSlash();
 
                 // optionally do extra security checks (new in 10.02)
-                if (!_featuresLazy.Value.Enabled(AdamRestrictLookupToEntity.Guid)) return result;
+                if (!_featuresLazy.Value.IsEnabled(AdamRestrictLookupToEntity.Guid)) return result;
 
                 // check if it's in this item. We won't check the field, just the item, so the field is ""
                 return !Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", pathInAdam)

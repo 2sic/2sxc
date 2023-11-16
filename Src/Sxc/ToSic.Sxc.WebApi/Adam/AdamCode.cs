@@ -44,7 +44,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
             var feats = new[] { SaveInAdamApi.Guid, PublicUploadFiles.Guid };
 
-            if (!_featuresLazy.Value.Enabled(feats, "can't save in ADAM", out var exp))
+            if (!_featuresLazy.Value.IsEnabled(feats, "can't save in ADAM", out var exp))
                 throw exp;
 
             var appId = _DynCodeRoot?.Block?.AppId ?? _DynCodeRoot?.App?.AppId ?? throw new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
