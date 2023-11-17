@@ -7,7 +7,6 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using static ToSic.Eav.Configuration.ConfigurationStack;
 using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 

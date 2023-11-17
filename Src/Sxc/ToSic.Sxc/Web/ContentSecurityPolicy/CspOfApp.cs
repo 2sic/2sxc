@@ -5,7 +5,6 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using static ToSic.Eav.Configuration.ConfigurationStack;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
