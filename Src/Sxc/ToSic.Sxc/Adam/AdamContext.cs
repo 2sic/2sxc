@@ -1,7 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
@@ -9,9 +8,10 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
-using static ToSic.Eav.Configuration.BuiltInFeatures;
+using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 using ToSic.Eav.Apps.Work;
 using System.ComponentModel;
+using ToSic.Eav.Internal.Features;
 
 namespace ToSic.Sxc.Adam
 {
@@ -28,14 +28,14 @@ namespace ToSic.Sxc.Adam
 
         public class MyServices: MyServicesBase
         {
-            public LazySvc<IFeaturesInternal> FeaturesSvc { get; }
+            public LazySvc<IEavFeaturesService> FeaturesSvc { get; }
             public Generator<AdamSecurityChecksBase> AdamSecurityGenerator { get; }
             public Generator<MultiPermissionsTypes> TypesPermissions { get; }
 
             public MyServices(
                 Generator<MultiPermissionsTypes> typesPermissions,
                 Generator<AdamSecurityChecksBase> adamSecurityGenerator,
-                LazySvc<IFeaturesInternal> featuresSvc)
+                LazySvc<IEavFeaturesService> featuresSvc)
             {
                 ConnectServices(
                     TypesPermissions = typesPermissions,

@@ -3,15 +3,15 @@ using System.IO;
 using System.Linq;
 using Oqtane.Models;
 using Oqtane.Repository;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Server.Plumbing;
-using static ToSic.Eav.Configuration.BuiltInFeatures;
+using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Oqt.Server.Data
 {
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.Data
     [PrivateApi]
     public class OqtValueConverter : ValueConverterBase
     {
-        private readonly LazySvc<IFeaturesInternal> _featuresLazy;
+        private readonly LazySvc<IEavFeaturesService> _featuresLazy;
         public LazySvc<IFileRepository> FileRepository { get; }
         public LazySvc<IFolderRepository> FolderRepository { get; }
         public LazySvc<ITenantResolver> TenantResolver { get; }
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Oqt.Server.Data
             LazySvc<IPageRepository> pageRepository,
             LazySvc<IServerPaths> serverPaths,
             LazySvc<SiteStateInitializer> siteStateInitializerLazy,
-            LazySvc<IFeaturesInternal> featuresLazy) : base("Oqt.ValCn")
+            LazySvc<IEavFeaturesService> featuresLazy) : base("Oqt.ValCn")
         {
             ConnectServices(
                 _featuresLazy = featuresLazy,

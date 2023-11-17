@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Configuration;
+using ToSic.Eav.SysData;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 

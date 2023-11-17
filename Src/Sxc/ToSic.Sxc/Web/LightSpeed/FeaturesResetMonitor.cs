@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.Caching;
-using ToSic.Eav.Configuration;
+using ToSic.Eav.Internal.Features;
 
 namespace ToSic.Sxc.Web.LightSpeed
 {
@@ -11,14 +11,14 @@ namespace ToSic.Sxc.Web.LightSpeed
     internal class FeaturesResetMonitor : ChangeMonitor
     {
         
-        internal FeaturesResetMonitor(IFeaturesInternal featuresService)
+        internal FeaturesResetMonitor(IEavFeaturesService featuresService)
         {
             _featuresService = featuresService;
             _featuresService.FeaturesChanged += HandleFeaturesChanged;
             // https://docs.microsoft.com/en-us/dotnet/api/system.runtime.caching.changemonitor?view=dotnet-plat-ext-6.0
             InitializationComplete(); // necessary for ChangeMonitors
         }
-        private IFeaturesInternal _featuresService;
+        private IEavFeaturesService _featuresService;
 
         ~FeaturesResetMonitor() => _featuresService.FeaturesChanged -= HandleFeaturesChanged;
 

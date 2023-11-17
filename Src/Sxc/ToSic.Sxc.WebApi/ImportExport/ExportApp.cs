@@ -3,9 +3,9 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Work;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data.Shared;
+using ToSic.Eav.Internal.Features;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly ZipExport _zipExport;
         private readonly ISite _site;
         private readonly IUser _user;
-        private readonly IFeaturesInternal _features;
+        private readonly IEavFeaturesService _features;
         private readonly Generator<ImpExpHelpers> _impExpHelpers;
 
         public ExportApp(
@@ -51,7 +51,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             ISite site, 
             IUser user, 
             Generator<ImpExpHelpers> impExpHelpers, 
-            IFeaturesInternal features
+            IEavFeaturesService features
             ) : base("Bck.Export")
         {
             ConnectServices(
@@ -116,7 +116,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             return l.ReturnTrue();
         }
 
-        internal static void SyncWithSiteFilesVerifyFeaturesOrThrow(IFeaturesInternal features, bool withSiteFiles)
+        internal static void SyncWithSiteFilesVerifyFeaturesOrThrow(IEavFeaturesService features, bool withSiteFiles)
         {
             if (!withSiteFiles) return;
             features.ThrowIfNotEnabled("Requires features enabled to sync with site files ",

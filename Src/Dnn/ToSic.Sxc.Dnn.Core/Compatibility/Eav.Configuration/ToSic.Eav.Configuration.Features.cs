@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Internal.Features;
 using ToSic.Lib.Documentation;
 
 // ReSharper disable once CheckNamespace
@@ -22,9 +23,9 @@ namespace ToSic.Eav.Configuration
         /// <returns>true if the features were signed correctly</returns>
         [PrivateApi]
         [Obsolete("Deprecated in 2sxc 12 - use IFeatures.Valid")]
-        public static bool Valid => FeaturesService.ValidInternal;
+        public static bool Valid => EavFeaturesService.ValidInternal;
 
-        public static IFeaturesInternal FeaturesFromDi = null;
+        public static IEavFeaturesService FeaturesFromDi = null;
 
         // 2022-01-24 2dm disabled, remove ca. April 2022 if all is fine
         //[Obsolete("Was private before, now deprecated in 12.05, will remove in v13 as it should never have been used outside")]

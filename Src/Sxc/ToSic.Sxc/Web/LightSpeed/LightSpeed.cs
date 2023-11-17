@@ -5,7 +5,7 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Caching;
-using ToSic.Eav.Configuration;
+using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Web.LightSpeed
     internal class LightSpeed : ServiceBase, IOutputCache
     {
 
-        public LightSpeed(IFeaturesInternal features, LazySvc<IAppStates> appStatesLazy, LazySvc<AppPaths> appPathsLazy, LightSpeedStats lightSpeedStats, LazySvc<ICmsContext> cmsContext) : base(Constants.SxcLogName + ".Lights")
+        public LightSpeed(IEavFeaturesService features, LazySvc<IAppStates> appStatesLazy, LazySvc<AppPaths> appPathsLazy, LightSpeedStats lightSpeedStats, LazySvc<ICmsContext> cmsContext) : base(Constants.SxcLogName + ".Lights")
         {
             ConnectServices(
                 LightSpeedStats = lightSpeedStats,
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Web.LightSpeed
             );
         }
         public LightSpeedStats LightSpeedStats { get; }
-        private readonly IFeaturesInternal _features;
+        private readonly IEavFeaturesService _features;
         private readonly LazySvc<IAppStates> _appStatesLazy;
         private readonly LazySvc<AppPaths> _appPathsLazy;
         private readonly LazySvc<ICmsContext> _cmsContext;

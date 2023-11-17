@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Enums;
+using ToSic.Eav.Internal.Features;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Services;
 
@@ -29,7 +30,7 @@ namespace ToSic.Sxc.Cms.Publishing
 
         public string NameId => "DraftForbidden";
 
-        public bool IsViable() => _featuresService.IsEnabled(Eav.Configuration.BuiltInFeatures.EditUiDisableDraft.NameId);
+        public bool IsViable() => _featuresService.IsEnabled(BuiltInFeatures.EditUiDisableDraft.NameId);
 
         public int Priority => (int)PagePublishingPriorities.DraftForbidden;
     }

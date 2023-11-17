@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using ToSic.Eav.Configuration;
+using ToSic.Eav.Internal.Features;
 using ToSic.Razor.Internals.Documentation;
 
 namespace ToSic.Sxc.Configuration.Features

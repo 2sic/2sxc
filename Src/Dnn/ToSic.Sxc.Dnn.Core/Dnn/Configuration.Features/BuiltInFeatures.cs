@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Configuration;
+﻿using ToSic.Eav.Internal.Features;
 
 namespace ToSic.Sxc.Dnn.Configuration.Features
 {

@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Oqtane.Extensions;
 using Oqtane.Infrastructure;
 using System.IO;
-using ToSic.Eav.Configuration;
+using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Run;
 using ToSic.Eav.StartUp;
 using ToSic.Eav.WebApi;

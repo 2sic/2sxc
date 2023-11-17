@@ -2,7 +2,8 @@
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.Configuration;
+using ToSic.Eav.Internal.Features;
+using ToSic.Eav.SysData;
 using ToSic.Eav.WebApi.Admin.Features;
 using RealController = ToSic.Eav.WebApi.Admin.Features.FeatureControllerReal;
 

@@ -2,9 +2,8 @@
 using System.IO;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.ImportExport.ImportHelpers;
-using ToSic.Eav.Apps.Parts;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
+using ToSic.Eav.Internal.Features;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Persistence.Logging;
@@ -12,7 +11,6 @@ using ToSic.Eav.Security;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Work;
 
 namespace ToSic.Sxc.WebApi.ImportExport
@@ -32,7 +30,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             IUser user,
             IImportExportEnvironment env,
             ZipImport zipImport,
-            IFeaturesInternal features
+            IEavFeaturesService features
             ) : base("Bck.Export")
         {
             ConnectServices(
@@ -55,7 +53,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly IUser _user;
         private readonly IImportExportEnvironment _env;
         private readonly ZipImport _zipImport;
-        private readonly IFeaturesInternal _features;
+        private readonly IEavFeaturesService _features;
 
         #endregion
 

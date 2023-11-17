@@ -1,12 +1,13 @@
 ﻿using System;
-using ToSic.Eav.Configuration;
+using ToSic.Eav.Internal.Features;
+using ToSic.Eav.SysData;
 
 namespace ToSic.Sxc.Configuration.Features
 {
     public partial class BuiltInFeatures
     {
 
-        public static readonly FeatureDefinition ImageServiceMultipleSizes = new FeatureDefinition(
+        public static readonly Feature ImageServiceMultipleSizes = new Feature(
             "ImageServiceMultipleSizes",
             new Guid("9dab12db-85e5-4fb8-a100-2f009bf32f72"),
             "Image Service - Multiple Sizes",
@@ -14,10 +15,10 @@ namespace ToSic.Sxc.Configuration.Features
             false,
             "Enables the ImageService to provide multiple sizes on <code>srcset</code> for <code>img</code> or <code>source</code> tags on a <code>picture</code>",
             FeaturesCatalogRules.Security0Improved,
-            Eav.Configuration.BuiltInFeatures.ForPatronsPerfectionist
+            Eav.Internal.Features.BuiltInFeatures.ForPatronsPerfectionist
         );
 
-        public static readonly FeatureDefinition ImageServiceUseFactors = new FeatureDefinition(
+        public static readonly Feature ImageServiceUseFactors = new Feature(
             "ImageServiceUseFactors",
             new Guid("7d2ce824-b249-466f-928b-21567f4fa5da"),
             "Image Service - Optimize Sizes by Factor",
@@ -25,11 +26,11 @@ namespace ToSic.Sxc.Configuration.Features
             false,
             "Will change how the size of images is calculated to vary by factor. So a 1/2 image will not be 670px but 600 when using Bootstrap5. The exact values are configured in the settings.",
             FeaturesCatalogRules.Security0Improved,
-            Eav.Configuration.BuiltInFeatures.ForPatronsPerfectionist
+            Eav.Internal.Features.BuiltInFeatures.ForPatronsPerfectionist
         );
 
 
-        public static readonly FeatureDefinition ImageServiceSetSizes = new FeatureDefinition(
+        public static readonly Feature ImageServiceSetSizes = new Feature(
             "ImageServiceSetSizes",
             new Guid("31c2c0b6-87c2-4014-89ba-98543858bb8a"),
             "Image Service - Set sizes-attribute on Image Tags",
@@ -37,11 +38,11 @@ namespace ToSic.Sxc.Configuration.Features
             false,
             "The browser can pre-load faster if the img-tag has additional information about the final sizes of the image. The exact configuration can be adjusted in the settings.",
             FeaturesCatalogRules.Security0Improved,
-            Eav.Configuration.BuiltInFeatures.ForPatronsPerfectionist
+            Eav.Internal.Features.BuiltInFeatures.ForPatronsPerfectionist
         );
 
 
-        public static readonly FeatureDefinition ImageServiceMultiFormat = new FeatureDefinition(
+        public static readonly Feature ImageServiceMultiFormat = new Feature(
             "ImageServiceMultiFormat",
             new Guid("4262df94-3877-4a5a-ac86-20b4f9b38e87"),
             "Image Service - Multiple Formats",
@@ -49,7 +50,7 @@ namespace ToSic.Sxc.Configuration.Features
             false,
             "Enables the ImageService to also provide WebP as better alternatives to Jpg and Png",
             FeaturesCatalogRules.Security0Improved,
-            Eav.Configuration.BuiltInFeatures.ForPatronsPerfectionist
+            Eav.Internal.Features.BuiltInFeatures.ForPatronsPerfectionist
         );
     }
 }

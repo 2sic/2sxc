@@ -6,13 +6,14 @@ using System.Xml.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Source;
 using ToSic.Eav.Identity;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Serialization;
+using ToSic.Eav.Internal.Configuration;
+using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Assets;
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 {
     public class ImportContent: ServiceBase
     {
-        private readonly LazySvc<IFeaturesInternal> _features;
+        private readonly LazySvc<IEavFeaturesService> _features;
 
         #region DI Constructor
 
@@ -40,7 +41,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             IAppStates appStates,
             LazySvc<IUser> userLazy,
             AppCachePurger appCachePurger,
-            LazySvc<IFeaturesInternal> features) : base("Bck.Export")
+            LazySvc<IEavFeaturesService> features) : base("Bck.Export")
         {
             ConnectServices(
                 _envLogger = envLogger,

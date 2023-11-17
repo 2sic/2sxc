@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Caching;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Caching.CachingMonitors;
-using ToSic.Eav.Configuration;
+using ToSic.Eav.Internal.Features;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Web.LightSpeed
             return id;
         }
 
-        public string Add(string cacheKey, OutputCacheItem data, int duration, IFeaturesInternal features,
+        public string Add(string cacheKey, OutputCacheItem data, int duration, IEavFeaturesService features,
             List<AppState> appStates, IList<string> appPaths = null, CacheEntryUpdateCallback updateCallback = null)
         {
             var l = Log.Fn<string>($"key: {cacheKey}", timer: true);

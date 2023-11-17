@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Eav.Configuration;
+using ToSic.Eav.Internal.Loaders;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Images;

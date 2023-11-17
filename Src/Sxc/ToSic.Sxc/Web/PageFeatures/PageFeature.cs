@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Configuration;
+using ToSic.Eav.SysData;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Web.PageFeatures
@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Web.PageFeatures
             string description = default,
             string[] needs = default,
             string html = default,
-            List<Condition> requirements = default,
+            List<Requirement> requirements = default,
             string urlWip = default)
         {
             NameId = key ?? throw new Exception("key is required");
@@ -31,8 +31,8 @@ namespace ToSic.Sxc.Web.PageFeatures
             Html = html;
             Description = description ?? "";
             Needs = needs ?? Array.Empty<string>();
-            Condition = new Condition(ConditionIsPageFeature, key);
-            Requirements = requirements ?? new List<Condition>();
+            Requirement = new Requirement(ConditionIsPageFeature, key);
+            Requirements = requirements ?? new List<Requirement>();
             UrlWip = urlWip;
         }
 
@@ -60,9 +60,9 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// </summary>
         public IEnumerable<string> Needs { get; }
 
-        public Condition Condition { get; }
+        public Requirement Requirement { get; }
 
-        public List<Condition> Requirements { get; }
+        public List<Requirement> Requirements { get; }
 
         /// <summary>
         /// Temporary URL for internal features which need to store the URL someplace

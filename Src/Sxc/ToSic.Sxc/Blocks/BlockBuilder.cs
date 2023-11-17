@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Code.InfoSystem;
-using ToSic.Eav.Configuration.Licenses;
+using ToSic.Eav.Internal.Licenses;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;

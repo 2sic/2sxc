@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Eav.Configuration;
-using BuiltInFeatures = ToSic.Eav.Configuration.BuiltInFeatures;
+using BuiltInFeatures = ToSic.Eav.Internal.Features.BuiltInFeatures;
 
 #pragma warning disable 618
 

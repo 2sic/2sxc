@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Internal.Features;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Eav.Configuration
@@ -11,9 +12,9 @@ namespace ToSic.Eav.Configuration
 
     internal class FeaturesServiceCompatibility: IFeaturesService
     {
-        private readonly IFeaturesInternal _featsInternal;
+        private readonly IEavFeaturesService _featsInternal;
 
-        public FeaturesServiceCompatibility(IFeaturesInternal featsInternal)
+        public FeaturesServiceCompatibility(IEavFeaturesService featsInternal)
         {
             _featsInternal = featsInternal;
         }

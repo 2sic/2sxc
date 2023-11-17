@@ -3,8 +3,8 @@ using System.Linq;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Decorators;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
+using ToSic.Eav.Internal.Features;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Languages;
@@ -12,7 +12,7 @@ using ToSic.Eav.WebApi.Security;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Web.JsContext;
-using static ToSic.Eav.Configuration.BuiltInFeatures;
+using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.WebApi.Context
 {
@@ -27,14 +27,14 @@ namespace ToSic.Sxc.WebApi.Context
             public Apps.IApp AppToLaterInitialize { get; }
             public IAppStates AppStates { get; }
             public LazySvc<LanguagesBackend> LanguagesBackend { get; }
-            public LazySvc<IFeaturesInternal> Features { get; }
+            public LazySvc<IEavFeaturesService> Features { get; }
             public LazySvc<IUiData> UiDataLazy { get; }
 
             public MyServices(
                 IContextOfSite siteCtx,
                 Apps.App appToLaterInitialize,
                 IAppStates appStates,
-                LazySvc<IFeaturesInternal> features,
+                LazySvc<IEavFeaturesService> features,
                 LazySvc<IUiData> uiDataLazy,
                 LazySvc<LanguagesBackend> languagesBackend
                 )

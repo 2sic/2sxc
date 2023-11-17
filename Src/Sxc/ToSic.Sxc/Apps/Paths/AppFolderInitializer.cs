@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
+using ToSic.Eav.Internal.Configuration;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
 using ToSic.Lib.Services;

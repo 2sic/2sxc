@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Configuration;
-using static ToSic.Eav.Configuration.BuiltInFeatures;
+using ToSic.Eav.SysData;
+using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Web.PageFeatures
 {
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Web.PageFeatures
                 ContextModule.NameId,
             }, urlWip: "dist/inpage/inpage.min.js");
 
-        private static readonly List<Condition> RequiresPublicEditForm = new List<Condition> { PublicEditForm.Condition };
+        private static readonly List<Requirement> RequiresPublicEditForm = new List<Requirement> { PublicEditForm.Requirement };
 
         /// <summary>
         /// The 2sxc JS libraries for cms / edit actions

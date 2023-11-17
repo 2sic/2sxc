@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Configuration;
+﻿using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Run;
 using ToSic.Lib.Services;
 

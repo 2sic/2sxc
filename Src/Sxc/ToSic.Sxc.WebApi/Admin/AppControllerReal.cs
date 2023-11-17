@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Work;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.DataSources.Sys;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;

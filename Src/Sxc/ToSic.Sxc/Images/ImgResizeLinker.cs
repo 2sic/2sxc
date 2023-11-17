@@ -3,8 +3,8 @@ using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.Linq;
 using Connect.Koi;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
+using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Images
     public class ImgResizeLinker : ServiceBase, ICanDebug
     {
 
-        public ImgResizeLinker(LazySvc<IFeaturesInternal> features, LazySvc<ICss> koi, LazySvc<ISite> siteLazy)
+        public ImgResizeLinker(LazySvc<IEavFeaturesService> features, LazySvc<ICss> koi, LazySvc<ISite> siteLazy)
             : base($"{Constants.SxcLogName}.ImgRes")
         {
             ConnectServices(
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Images
             );
             _siteLazy = siteLazy;
         }
-        private readonly LazySvc<IFeaturesInternal> _features;
+        private readonly LazySvc<IEavFeaturesService> _features;
         private readonly LazySvc<ICss> _koi;
         private readonly LazySvc<ISite> _siteLazy;
 
