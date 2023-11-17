@@ -152,4 +152,7 @@
       <Name>ToSic.Sxc</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Compatibility\Eav\Configuration\" />
+  </ItemGroup>
 </Project>

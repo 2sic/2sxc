@@ -111,7 +111,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Oqtane (Framework)", "Oqtan
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dnn Tests", "Dnn Tests", "{213B9552-34DA-492B-ABA8-E4085C57665B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Dnn.Tests", "Dnn.Tests\ToSic.Dnn.Tests\ToSic.Dnn.Tests.csproj", "{A29BB034-BAFC-4B2B-BF2B-58E1693E062C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Dnn.Core.Tests", "Dnn.Tests\ToSic.Dnn.Tests\ToSic.Dnn.Core.Tests.csproj", "{A29BB034-BAFC-4B2B-BF2B-58E1693E062C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Oqt.Client.Tests", "Oqtane.Tests\ToSic.Sxc.Oqt.Client.Tests\ToSic.Sxc.Oqt.Client.Tests.csproj", "{E191B2A2-519B-4243-A37F-DF80392DEFE9}"
 EndProject
@@ -1149,7 +1149,7 @@ Global
 		{B8DC61F4-CA64-441E-8508-206F2432AADB} = {B39F27D8-8D23-4FE4-8007-0A744BBD0645}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
+		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 	EndGlobalSection
 EndGlobal
