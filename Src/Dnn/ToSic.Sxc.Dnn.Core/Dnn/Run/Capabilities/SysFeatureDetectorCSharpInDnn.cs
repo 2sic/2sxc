@@ -1,6 +1,6 @@
-﻿using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run.Capabilities;
-using static ToSic.Eav.Run.Capabilities.SystemCapabilityListForImplementation;
+﻿using ToSic.Eav.Internal.Features;
+using ToSic.Eav.Plumbing;
+using static ToSic.Eav.Internal.Features.SysFeatureSuggestions;
 
 namespace ToSic.Sxc.Dnn.Run.Capabilities
 {

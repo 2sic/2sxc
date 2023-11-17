@@ -1,5 +1,6 @@
 ﻿using System;
-using ToSic.Eav.Run.Capabilities;
+using ToSic.Eav.Internal.Features;
+using ToSic.Eav.SysData;
 
 namespace ToSic.Sxc.Dnn.Run.Capabilities
 {
