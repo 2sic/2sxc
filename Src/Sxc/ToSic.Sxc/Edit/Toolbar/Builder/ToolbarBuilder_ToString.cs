@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.Serialization;
@@ -73,8 +74,8 @@ namespace ToSic.Sxc.Edit.Toolbar
             var tlb = new ToolbarBuilder(this, rules) as IToolbarBuilder;
             var keyOrMessage = _configuration?.DemoMessage;
             var message = keyOrMessage == null
-                ? _DynCodeRoot.Resources.Get<string>($"{ConfigurationConstants.RootNameResources}.Toolbar.IsDemoSubItem")
-                : keyOrMessage.StartsWith($"{ConfigurationConstants.RootNameResources}.")
+                ? _DynCodeRoot.Resources.Get<string>($"{AppStackConstants.RootNameResources}.Toolbar.IsDemoSubItem")
+                : keyOrMessage.StartsWith($"{AppStackConstants.RootNameResources}.")
                     ? _DynCodeRoot.Resources.Get<string>(keyOrMessage)
                     : keyOrMessage;
             tlb = tlb.Info(tweak: b => b.Note(message));

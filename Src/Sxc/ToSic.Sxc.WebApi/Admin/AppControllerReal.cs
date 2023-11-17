@@ -100,7 +100,7 @@ namespace ToSic.Sxc.WebApi.Admin
             => _exportAppLazy.Value.SaveDataForVersionControl(zoneId, appId, includeContentGroups, resetAppGuid, withPortalFiles);
 
         public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
-            => _appStackBackendLazy.Value.GetAll(appId, part ?? ConfigurationConstants.RootNameSettings, key, view, null);
+            => _appStackBackendLazy.Value.GetAll(appId, part ?? AppStackConstants.RootNameSettings, key, view, null);
 
         public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage, bool withPortalFiles) 
             => _resetAppLazy.Value.Reset(zoneId, appId, defaultLanguage, withPortalFiles);

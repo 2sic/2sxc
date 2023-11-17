@@ -4,7 +4,7 @@ using ToSic.Eav.Run;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Configuration.Features;
 using ToSic.Sxc.Services;
-using static ToSic.Eav.Configuration.ConfigurationConstants;
+using static ToSic.Eav.Apps.AppStackConstants;
 using static ToSic.Sxc.Web.WebResources.WebResourceConstants;
 using static ToSic.Sxc.Web.WebResources.WebResourceProcessor;
 

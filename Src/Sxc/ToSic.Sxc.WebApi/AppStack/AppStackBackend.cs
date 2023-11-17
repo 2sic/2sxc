@@ -11,7 +11,7 @@ using ToSic.Eav.DataSources.Sys;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
-using static ToSic.Eav.Configuration.ConfigurationConstants;
+using static ToSic.Eav.Apps.AppStackConstants;
 
 namespace ToSic.Sxc.WebApi.AppStack
 {

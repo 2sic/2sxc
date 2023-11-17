@@ -1,8 +1,9 @@
-﻿using ToSic.Eav.Configuration;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Configuration;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
-using static ToSic.Eav.Configuration.ConfigurationConstants;
+using static ToSic.Eav.Apps.AppStackConstants;
 using SettingsSources = System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, ToSic.Eav.Data.PropertyLookup.IPropertyLookup>>;
 
 namespace ToSic.Sxc.Code
@@ -20,13 +21,13 @@ namespace ToSic.Sxc.Code
 
         private SettingsSources ResSrc => _resSrc.Get(() =>
             Services.SettingsStack.Init(App.AppState)
-                .GetStack(ConfigurationConstants.Resources, Block?.View?.Resources));
+                .GetStack(AppStackConstants.Resources, Block?.View?.Resources));
         private readonly GetOnce<SettingsSources> _resSrc = new GetOnce<SettingsSources>();
 
 
         private SettingsSources SetSrc => _setSrc.Get(() =>
             Services.SettingsStack.Init(App.AppState)
-                .GetStack(ConfigurationConstants.Settings, Block?.View?.Settings));
+                .GetStack(AppStackConstants.Settings, Block?.View?.Settings));
         private readonly GetOnce<SettingsSources> _setSrc = new GetOnce<SettingsSources>();
 
         /// <inheritdoc />

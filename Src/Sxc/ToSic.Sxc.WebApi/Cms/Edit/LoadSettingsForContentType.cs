@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Lib.Logging;
 using static System.String;
@@ -23,7 +24,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 .Where(c => !IsNullOrWhiteSpace(c))
                 // Only include settings which have the full path
                 // so in future we can add other roots like resources
-                .Where(s => s.StartsWith($"{ConfigurationConstants.RootNameSettings}."))
+                .Where(s => s.StartsWith($"{AppStackConstants.RootNameSettings}."))
                 .ToList();
 
             // Try to find each setting

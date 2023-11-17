@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
@@ -102,7 +103,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         /// </summary>
         private CspSettingsReader SiteCspSettings => _siteCspSettings.Get(Log, () =>
         {
-            var pageSettings = CodeRootSettings()?.GetStack(PartSiteSystem, PartGlobalSystem, PartPresetSystem);
+            var pageSettings = CodeRootSettings()?.GetStack(AppStackConstants.PartSiteSystem, AppStackConstants.PartGlobalSystem, AppStackConstants.PartPresetSystem);
             return new CspSettingsReader(pageSettings, _user, UrlIsDevMode, Log);
         });
         private readonly GetOnce<CspSettingsReader> _siteCspSettings = new GetOnce<CspSettingsReader>();

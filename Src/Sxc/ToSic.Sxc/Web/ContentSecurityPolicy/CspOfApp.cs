@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Context;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
@@ -60,7 +61,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             //stack.Debug = true;
 
             // Dynamic Stack of the App Settings
-            var appSettings = stack.GetStack(PartAppSystem) as DynamicStack;
+            var appSettings = stack.GetStack(AppStackConstants.PartAppSystem) as DynamicStack;
             Log.A($"has {nameof(appSettings)}: {appSettings != null}");
 
             // CSP Settings Reader from Dynamic Entity for the App
