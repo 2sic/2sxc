@@ -1,8 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ToSic.Dnn.Tests.ToSic.Eav.Configuration.Features_Compatibility;
 using ToSic.Eav.Configuration;
-using ToSic.Sxc.Dnn.Configuration.Features;
-using ToSic.Testing.Shared;
 using BuiltInFeatures = ToSic.Eav.Configuration.BuiltInFeatures;
 
 #pragma warning disable 618

@@ -8,7 +8,7 @@ using ToSic.Eav.Run;
 using ToSic.Testing.Shared;
 using ToSic.Testing.Shared.Mocks;
 
-namespace ToSic.Eav.ImportExport.Tests.FeatureTests
+namespace ToSic.Dnn.Tests.ToSic.Eav.Configuration.Features_Compatibility
 {
     public class FeatureTestsBase: TestBaseEav
     {
