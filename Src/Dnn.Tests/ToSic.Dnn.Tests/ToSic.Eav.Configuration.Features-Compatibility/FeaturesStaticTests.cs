@@ -1,12 +1,11 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Dnn.Tests.ToSic.Eav.Configuration.Features_Compatibility;
 using ToSic.Eav.Configuration;
 using BuiltInFeatures = ToSic.Eav.Configuration.BuiltInFeatures;
 
 #pragma warning disable 618
 
-namespace ToSic.Eav.ImportExport.Tests.FeatureTests
+namespace ToSic.Dnn.Tests.ToSic.Eav.Configuration.Features_Compatibility
 {
     [TestClass]
     // ReSharper disable once InconsistentNaming
