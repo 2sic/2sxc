@@ -23,7 +23,7 @@ namespace ToSic.Dnn.Tests.ToSic.Eav.Configuration.Features_Compatibility
         protected override void SetupServices(IServiceCollection services)
         {
             base.SetupServices(services);
-            services.AddTransient<IRuntime, Runtime>();
+            services.AddTransient<IAppLoader, AppLoader>();
             services.TryAddTransient<IValueConverter, MockValueConverter>();
             services.TryAddTransient<IZoneMapper, MockZoneMapper>();
         }

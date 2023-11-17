@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
         protected override void SetupServices(IServiceCollection services)
         {
             base.SetupServices(services);
-            services.AddTransient<IRuntime, Runtime>();
+            services.AddTransient<IAppLoader, AppLoader>();
             services.TryAddTransient<IValueConverter, MockValueConverter>();
         }
 

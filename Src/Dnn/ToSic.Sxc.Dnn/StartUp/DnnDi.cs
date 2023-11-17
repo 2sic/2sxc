@@ -7,6 +7,8 @@ using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.Internal.Environment;
+using ToSic.Eav.Internal.Loaders;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Repositories;
@@ -106,7 +108,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             // new for .net standard
             // todo: find out why we have both - do they have a different function? probably yes....
             services.TryAddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
-            services.TryAddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
+            services.TryAddTransient<IAppContentTypesLoader, DnnAppFileSystemLoader>();
 
             services.TryAddTransient<IZoneMapper, DnnZoneMapper>();
 

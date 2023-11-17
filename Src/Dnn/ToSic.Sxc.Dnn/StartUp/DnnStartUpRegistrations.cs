@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Run;
+using ToSic.Eav.StartUp;
 using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Dnn.StartUp
