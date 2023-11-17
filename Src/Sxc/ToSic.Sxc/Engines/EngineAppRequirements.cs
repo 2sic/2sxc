@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Engines
             {
                 var exList2 = reqStatus
                 .Select(r => new RenderingException(
-                        new CodeHelp(ErrHelpRequirementsNotMet, name: r.Aspect.Name, uiMessage: $"Requirement <em>{r.Aspect.Name}</em> is missing ({r.Aspect.NameId})", linkCode: "dnn-syscap")))
+                        new CodeHelp(ErrHelpRequirementsNotMet, name: r.Aspect.Name, uiMessage: $"Requirement <em>{r.Aspect.Name}</em> is missing ({r.Aspect.NameId})", linkCode: "sysfeats")))
                     .Cast<Exception>()
                     .ToList();
 
@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Engines
                     string.Join("", aspectMessages) +
                     "</ol>" +
                     "<div>" +
-                    "To install please follow these ➡️ <a href='https://go.2sxc.org/dnn-syscap' target='_blank'>instructions</a>." +
+                    "To install please follow these ➡️ <a href='https://go.2sxc.org/sysfeats' target='_blank'>instructions</a>." +
                     "</div>",
                     EngineMessages.Warning);
 

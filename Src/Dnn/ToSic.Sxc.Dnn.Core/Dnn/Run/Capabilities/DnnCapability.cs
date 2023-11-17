@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Dnn.Run.Capabilities
     public class DnnCapability: SysFeatureDetector
     {
 
-        private static readonly SystemCapabilityDefinition DefStatic = new SystemCapabilityDefinition(
+        private static readonly SysFeature DefStatic = new SysFeature(
                 "Dnn",
                 new Guid("00cb8d98-bfac-4a18-b7de-b1237498f183"),
                 "Dnn"
