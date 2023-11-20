@@ -1,17 +1,12 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Dnn.Run.Capabilities
 {
     internal class RoslynCompilerCapability
     {
-        
         internal static bool CheckCsharpLangVersion(int version) => CsharpLangVersions.Contains(value: version);
-
-
-        //public static int[] CsharpLangVersions => _csharpLangVersions ?? (_csharpLangVersions = GetCsharpLangVersions());
 
         // Uses a double-check locking pattern to ensure thread safety and performance.
         private static int[] CsharpLangVersions
