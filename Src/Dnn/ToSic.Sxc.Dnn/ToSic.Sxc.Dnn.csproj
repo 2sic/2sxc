@@ -81,7 +81,7 @@
     <NoWarn>$(NoWarn);MSB3277</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="DnnPackageBuilder\SqlDataProvider\16.07.01.SqlDataProvider" />
+    <None Remove="DnnPackageBuilder\SqlDataProvider\16.09.00.SqlDataProvider" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetNuke.Core" Version="9.6.1">
