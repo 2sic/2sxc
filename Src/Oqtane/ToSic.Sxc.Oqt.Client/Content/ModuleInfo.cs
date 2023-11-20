@@ -21,12 +21,14 @@ namespace ToSic.Sxc.Oqt.Content
          * 12-02-01 - SQL - Oqtane 2.1.0
          * 12-04-00 -  -  - Compatible with Oqtane 2.2.0
          * 12-05-00 - SQL - Oqtane db fix for folders
+         * ...
+         * 16-07-01 - SQL - add Json for Attribute and ContentType configuration + Guid for Attribute
          */
 
         /// <summary>
         /// The SQL versions must use a "-" to avoid being replaced on search/replace when releasing a new version
         /// </summary>
-        internal static string[] SqlScriptVersions = { "0-0-1", "12-00-00", "12-02-01", "12-05-00", "13-00-00", "13-01-00", "15-00-00" };
+        internal static string[] SqlScriptVersions = { "0-0-1", "12-00-00", "12-02-01", "12-05-00", "13-00-00", "13-01-00", "15-00-00","16-07-01" };
 
         /// <summary>
         /// Merge versions for use in Oqtane version list
