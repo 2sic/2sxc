@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Images;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -49,7 +50,7 @@ namespace ToSic.Sxc.Data
                 if (!(Raw is string rawString) || string.IsNullOrWhiteSpace(rawString)) return null;
                 var appState = _cdf?.BlockOrNull?.Context?.AppState;
                 var md = appState?.GetMetadataOf(TargetTypes.CmsItem, rawString, "");
-                ImageDecorator.AddRecommendations(md, Url); // needs the url so it can check if we use image recommendations
+                ImageDecorator.AddRecommendations(md, Url, _cdf?._DynCodeRoot); // needs the url so it can check if we use image recommendations
                 return md;
             });
         private readonly GetOnce<IMetadataOf> _itemMd = new GetOnce<IMetadataOf>();

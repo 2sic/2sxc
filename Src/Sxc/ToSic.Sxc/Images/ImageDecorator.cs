@@ -1,8 +1,11 @@
 ﻿using System.IO;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Code;
+using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Images
 {
@@ -94,14 +97,30 @@ namespace ToSic.Sxc.Images
         /// <summary>
         /// Optionally add image-metadata recommendations
         /// </summary>
-        public static void AddRecommendations(IMetadataOf mdOf, string path)
+        public static void AddRecommendations(IMetadataOf mdOf, string path, IDynamicCodeRoot codeRoot)
         {
             if (mdOf?.Target == null || !path.HasValue()) return;
             var ext = Path.GetExtension(path);
             if (ext.HasValue() && Classification.IsImage(ext))
-                mdOf.Target.Recommendations = new[] { TypeNameId };
+                mdOf.Target.Recommendations = GetImageRecommendations(codeRoot);
         }
 
+        // TODO: THIS IS ALL very temporary - it should be in a proper service, 
+        // but because we'll need to merge the code with v17, we try do keep it this way.
+        public static string[] GetImageRecommendations(IDynamicCodeRoot codeRoot)
+        {
+            if (!(codeRoot is DynamicCodeRoot codeRootTyped)) return ImageRecommendationsBasic;
+
+            if (!codeRootTyped.GetService<IFeaturesService>().IsEnabled(BuiltInFeatures.CopyrightManagement.NameId))
+                return ImageRecommendationsBasic;
+
+            var useCopyright = codeRootTyped.AllSettings?.Bool($"Copyright.{nameof(CopyrightSettings.ImagesInputEnabled)}") ?? false;
+            return useCopyright
+                ? ImageRecommendationsCopyright
+                : ImageRecommendationsBasic;
+        }
+        private static string[] ImageRecommendationsBasic => new[] { TypeNameId };
+        private static string[] ImageRecommendationsCopyright => new[] { CopyrightDecorator.TypeNameId, TypeNameId };
 
         #endregion
     }

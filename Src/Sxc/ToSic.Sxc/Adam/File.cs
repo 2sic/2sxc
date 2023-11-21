@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
 
@@ -36,7 +37,7 @@ namespace ToSic.Sxc.Adam
         {
             if (mdOf?.Target == null) return;
             if (Type == Classification.Image)
-                mdOf.Target.Recommendations = new[] { ImageDecorator.TypeNameId };
+                mdOf.Target.Recommendations = ImageDecorator.GetImageRecommendations(AdamManager?.Cdf?._DynCodeRoot);
         }
 
         IMetadataOf IHasMetadata.Metadata => (Metadata as IHasMetadata)?.Metadata;
