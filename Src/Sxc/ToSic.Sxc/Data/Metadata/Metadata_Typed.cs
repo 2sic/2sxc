@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
@@ -139,44 +140,56 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         ITypedItem ITypedItem.Parent(string noParamOrder, bool? current, string type, string field) =>
-            throw new NotSupportedException($"You can't access the {nameof(ITypedItem.Parent)}() of Metadata");
+            throw new NotSupportedException($"You can't access the {nameof(ITypedItem.Parent)}() of Metadata as it usually does not make sense to do this");
 
         /// <inheritdoc />
         [PrivateApi]
         IEnumerable<ITypedItem> ITypedItem.Parents(string noParamOrder, string type, string field)
         {
-            return TypedItem.Parents(noParamOrder: noParamOrder, type: type, field: field);
+            // Protect & no Strict (as that's not really possible, since it's not a field)
+            Protect(noParamOrder, $"{nameof(type)}, {nameof(field)}");
+
+            // Exit if no metadata items available to get parents from
+            var mdEntities = _metadata.ToList();
+            if (!mdEntities.Any()) return new List<ITypedItem>(0);
+
+            // Get children from first metadata item which matches the criteria
+            var parents = mdEntities
+                .Select(e => e.Parents(type: type, field: field)?.ToList())
+                .FirstOrDefault(l => l.SafeAny());
+            if (parents == null) return new List<ITypedItem>(0);
+
+            var list = Cdf.AsItems(parents, noParamOrder).ToList();
+            return list.Any() ? list : new List<ITypedItem>(0);
         }
 
         /// <inheritdoc />
         [PrivateApi]
         IEnumerable<ITypedItem> ITypedItem.Children(string field, string noParamOrder, string type, bool? required)
         {
-            return TypedItem.Children(field: field, noParamOrder: noParamOrder, type: type, required: required);
-            //Protect(noParamOrder, $"{nameof(type)}, {nameof(required)}");
+            // Protect & Strict
+            Protect(noParamOrder, $"{nameof(type)}, {nameof(required)}");
+            if (IsErrStrict(this, field, required, GetHelper.PropsRequired))
+                throw ErrStrict(field);
 
-            //if (IsErrStrict(this, field, required, GetHelper.StrictGet))
-            //    throw ErrStrict(field);
+            // Exit if no metadata items available to get children from
+            var mdEntities = _metadata.ToList();
+            if (!mdEntities.Any()) return new List<ITypedItem>(0);
 
-            //var dynChildren = Children(field, type);
-            //var list = Cdf.AsItems(dynChildren, noParamOrder).ToList();
-            //if (list.Any()) return list;
+            // Get children from first metadata item which matches the criteria
+            var children = mdEntities
+                .Select(e => e.Children(field: field, type: type)?.ToList())
+                .FirstOrDefault(l => l.SafeAny());
+            if (children == null) return new List<ITypedItem>(0);
 
-            //// Generate a marker/placeholder to remember what field this is etc.
-            //var fakeEntity = GetHelper.Cdf.PlaceHolderInBlock(Entity.AppId, Entity, field);
-            //return new ListTypedItems(new List<ITypedItem>(), fakeEntity);
+            var list = Cdf.AsItems(children, noParamOrder).ToList();
+            return list.Any() ? list : new List<ITypedItem>(0);
         }
 
         /// <inheritdoc />
         [PrivateApi]
-        ITypedItem ITypedItem.Child(string name, string noParamOrder, bool? required)
-        {
-            return TypedItem.Child(name, noParamOrder, required);
-            //Protect(noParamOrder, nameof(required));
-            //return IsErrStrict(this, name, required, GetHelper.StrictGet)
-            //    ? throw ErrStrict(name)
-            //    : (this as ITypedItem).Children(name).FirstOrDefault();
-        }
+        ITypedItem ITypedItem.Child(string name, string noParamOrder, bool? required) 
+            => (this as ITypedItem).Children(name, noParamOrder: noParamOrder, required:required).FirstOrDefault();
 
         #endregion
 
