@@ -634,6 +634,131 @@
                 ]
               },
               {
+                "Name": "Copyright",
+                "Type": "Entity",
+                "InputType": "entity-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 182642,
+                    "Version": 3,
+                    "Guid": "ffbc2df0-83a1-4883-b7bc-68fbffc1b0a5",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "entity-default"
+                        },
+                        "Name": {
+                          "en-us": "Copyright (WIP v17)"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 182643,
+                    "Version": 2,
+                    "Guid": "6bc5d0cb-be03-4138-8d46-3bb960a63d42",
+                    "Type": {
+                      "Name": "@Entity",
+                      "Id": "@Entity"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "EntityType": {
+                          "en-us": "⚙️CopyrightSettings"
+                        },
+                        "Label": {
+                          "en-us": ""
+                        },
+                        "MoreFields": {
+                          "en-us": ""
+                        },
+                        "Prefill": {
+                          "en-us": ""
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
+                        },
+                        "EnableCreate": {
+                          "en-us": true
+                        },
+                        "EnableDelete": {
+                          "en-us": true
+                        },
+                        "EnableEdit": {
+                          "en-us": true
+                        },
+                        "EnableRemove": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "GroupThirdParty",
                 "Type": "Empty",
                 "InputType": "empty-default",
@@ -8902,12 +9027,291 @@
               "Owner": "dnn:userid=41"
             }
           ]
+        },
+        {
+          "ContentType": {
+            "Id": "aed871cf-220b-4330-b368-f1259981c9c8",
+            "Name": "⚙️CopyrightSettings",
+            "Scope": "System.Configuration",
+            "Description": null,
+            "Attributes": [
+              {
+                "Name": "SettingsIdentifier",
+                "Type": "String",
+                "InputType": "string-default",
+                "IsTitle": true,
+                "Metadata": [
+                  {
+                    "Id": 182632,
+                    "Version": 6,
+                    "Guid": "61220dc2-2824-4ef1-adad-a28373be49bc",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "Copyright"
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-default"
+                        },
+                        "Name": {
+                          "en-us": "SettingsIdentifier"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": true
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 182635,
+                    "Version": 5,
+                    "Guid": "680db639-cb65-4e13-9b6f-5024bd8d40a0",
+                    "Type": {
+                      "Name": "@String",
+                      "Id": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 182636,
+                    "Version": 5,
+                    "Guid": "3e4678e5-0250-457f-adef-289e0b5a885a",
+                    "Type": {
+                      "Name": "@string-default",
+                      "Id": "@string-default"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "ImagesInputEnabled",
+                "Type": "Boolean",
+                "InputType": "boolean-tristate",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 182634,
+                    "Version": 5,
+                    "Guid": "514cbecb-0063-43c1-a8a6-4f0703d746fb",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "boolean-tristate"
+                        },
+                        "Name": {
+                          "en-us": "Images - Copyright Input"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 182639,
+                    "Version": 4,
+                    "Guid": "750733f6-9673-4df9-8b0f-b2a558eac401",
+                    "Type": {
+                      "Name": "@Boolean",
+                      "Id": "@Boolean"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "TitleFalse": {
+                          "en-us": "no copyright input for images"
+                        },
+                        "TitleIndeterminate": {
+                          "en-us": "inherit default setting (no copyright input for images)"
+                        },
+                        "TitleTrue": {
+                          "en-us": "enable copyright input for images (toolbar-buttons)"
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              }
+            ],
+            "Metadata": [
+              {
+                "Id": 182640,
+                "Version": 2,
+                "Guid": "08208884-69bd-4448-8fd9-4f0f7cef5f50",
+                "Type": {
+                  "Name": "ContentType",
+                  "Id": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": ""
+                    },
+                    "Label": {
+                      "en-us": "⚙️Copyright Settings"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "aed871cf-220b-4330-b368-f1259981c9c8"
+                }
+              }
+            ]
+          },
+          "Entities": []
         }
       ],
       "Entities": [
         {
           "Id": 130583,
-          "Version": 16,
+          "Version": 17,
           "Guid": "8c87f24f-959c-4ff1-b537-077556e8d439",
           "Type": {
             "Name": "SettingsSystem",
@@ -8926,6 +9330,11 @@
               "ContentSecurityPolicies": {
                 "*": [
                   "285c4a83-7fa2-4732-b1a2-da945b94c3dd"
+                ]
+              },
+              "Copyright": {
+                "*": [
+                  "7116c320-769d-4d7c-94ef-76c176a17ba2"
                 ]
               },
               "GoogleMaps": {
@@ -10159,6 +10568,49 @@
                 "Target": "Entity",
                 "TargetType": 4,
                 "Guid": "6c155e30-43a4-4564-bf3f-0d80c925c4d7"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 182644,
+          "Version": 2,
+          "Guid": "7116c320-769d-4d7c-94ef-76c176a17ba2",
+          "Type": {
+            "Name": "⚙️CopyrightSettings",
+            "Id": "aed871cf-220b-4330-b368-f1259981c9c8"
+          },
+          "Attributes": {
+            "String": {
+              "SettingsIdentifier": {
+                "en-us": "Copyright"
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 182645,
+              "Version": 1,
+              "Guid": "e6913d5f-d209-4dce-af00-a8dd39140f1b",
+              "Type": {
+                "Name": "SystemExportDecorator",
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "48e9f943-45da-49b4-9ceb-2b91bb6a54be"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "7116c320-769d-4d7c-94ef-76c176a17ba2"
               }
             }
           ]
