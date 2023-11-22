@@ -18,6 +18,7 @@ namespace ToSic.Sxc.Web
     /// It only contains internal wiring stuff, so not to be published
     /// </summary>
     [PrivateApi("internal class only!")]
+    [Serializable]
     public abstract class RazorComponentBase: WebPageBase, IRazor, IHasCodeLog, IHasLog, IDnnRazorCompatibility, ICompatibilityLevel/*, ISerializable*/
     {
         #region Constructor / Setup

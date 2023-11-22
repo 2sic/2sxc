@@ -77,7 +77,7 @@ namespace ToSic.Sxc.Code
 
             var assemblyResult = compiler.GetAssembly(relativePath, dllName);
 
-            // SaveToDisk(assemblyResult, AssemblyLocation(appId, physicalPath));
+            SaveToDisk(assemblyResult, AssemblyLocation(appId, physicalPath));
 
             return !assemblyResult.ErrorMessages.HasValue() ? l.ReturnTrue("Ok") : l.ReturnFalse(assemblyResult.ErrorMessages);
         }

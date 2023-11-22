@@ -1,33 +1,16 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Configuration.Assemblies;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
-using System.Runtime.Serialization;
-using System.Security;
-using System.Security.Permissions;
-using System.Security.Policy;
+using System.Runtime.Remoting;
 using System.Web;
-using System.Web.Compilation;
-using System.Web.WebPages;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
-using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.Razor;
-using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Help;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Engines
@@ -37,6 +20,7 @@ namespace ToSic.Sxc.Engines
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     [EngineDefinition(Name = "Razor")]
+    [Serializable]
     // ReSharper disable once UnusedMember.Global
     public partial class DnnRazorEngine : EngineBase, IRazorEngine
     {
@@ -51,9 +35,7 @@ namespace ToSic.Sxc.Engines
         /// running in a separate AppDomain. Ensures the AppDomain
         /// stays alive.
         /// </summary>
-        public AppDomain LocalAppDomain = null;
-        public Assembly GeneratedAssembly;
-        public string SafeClassName;
+        private AppDomain _customAppDomain = null;
 
         public DnnRazorEngine(MyServices helpers, CodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<DnnRazorSourceAnalyzer> sourceAnalyzer) : base(helpers)
         {
@@ -64,12 +46,11 @@ namespace ToSic.Sxc.Engines
             );
         }
 
-
         #endregion
 
 
         [PrivateApi]
-        protected RazorComponentBase Webpage
+        private RazorComponentBase Webpage
         {
             get
             {
@@ -85,6 +66,11 @@ namespace ToSic.Sxc.Engines
         }
         private RazorComponentBase _webpage;
 
+        [PrivateApi]
+        protected HttpContextBase HttpContextCurrent =>
+            _httpContext.Get(() => HttpContext.Current == null ? null : new HttpContextWrapper(HttpContext.Current));
+        private readonly GetOnce<HttpContextBase> _httpContext = new GetOnce<HttpContextBase>();
+
         /// <inheritdoc />
         [PrivateApi]
         protected override void Init()
@@ -92,7 +78,8 @@ namespace ToSic.Sxc.Engines
             var l = Log.Fn();
             try
             {
-                InitWebpage();
+                //CreateWebPageInstance();
+                //InitWebpage();
             }
             // Catch web.config Error on DNNs upgraded to 7
             catch (ConfigurationErrorsException exc)
@@ -105,109 +92,29 @@ namespace ToSic.Sxc.Engines
             l.Done();
         }
 
-        [PrivateApi]
-        protected HttpContextBase HttpContextCurrent =>
-            _httpContext.Get(() => HttpContext.Current == null ? null : new HttpContextWrapper(HttpContext.Current));
-        private readonly GetOnce<HttpContextBase> _httpContext = new GetOnce<HttpContextBase>();
-
-
-        [PrivateApi]
-        private (TextWriter writer, List<Exception> exception) Render(TextWriter writer, object data)
-        {
-            var l = Log.Fn<(TextWriter writer, List<Exception> exception)>(message: "will render into TextWriter");
-            var page = Webpage; // access the property once only
-            try
-            {
-                if (data != null && page is ISetDynamicModel setDyn)
-                    setDyn.SetDynamicModel(data);
-            }
-            catch (Exception e)
-            {
-                l.Ex("Problem with setting dynamic model, error will be ignored.", e);
-            }
-
-            try
-            {
-                page.ExecutePageHierarchy(new WebPageContext(HttpContextCurrent, page, data), writer, page);
-            }
-            catch (Exception maybeIEntityCast)
-            {
-                var ex = l.Ex(_errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast, page));
-                // Special form of throw to preserve details about the call stack
-                ExceptionDispatchInfo.Capture(ex).Throw();
-                throw; // fake throw, just so the code shows what happens
-            }
-            return l.Return((writer, page.SysHlp.ExceptionsOrNull));
-        }
-
-        [PrivateApi]
         protected override (string, List<Exception>) RenderTemplate(object data)
         {
-            var l = Log.Fn<(string, List<Exception>)>();
-            var writer = new StringWriter();
-            var result = Render(writer, data);
-            return l.ReturnAsOk((result.writer.ToString(), result.exception));
-        }
-
-        private object CreateWebPageInstance()
-        {
-            // create new application domain
-            LocalAppDomain = CreateAppDomain(null);
-
             var l = Log.Fn<object>();
             object page = null;
-            Type compiledType;
+
+
+
+
+
+            // create new application domain
+            _customAppDomain = CreateNewAppDomain("RazorEngineAssemblyAppDomain");
+            //_customAppDomain = AppDomain.CurrentDomain;
+
             try
             {
                 //compiledType = BuildManager.GetCompiledType(TemplatePath);
+                var proxyType = typeof(RazorEngineProxy);
+                var razorEngineProxy = (RazorEngineProxy)_customAppDomain.CreateInstanceAndUnwrap(proxyType.Assembly.FullName, proxyType.FullName);
+                razorEngineProxy.Init(AppCodeFullPath, TemplateFullPath, TemplatePath, Purpose/*, InitHelpers*/, HttpRuntime.BinDirectory);
 
-                var razorEngineProxy = new RazorEngineProxy(AppCodeFullPath, TemplateFullPath, LocalAppDomain);
+                // create an instance in the original application domain
 
-                SafeClassName = GetSafeClassName(TemplateFullPath);
-                var template = File.ReadAllText(TemplateFullPath);
-                string assemblyId;
-                using (var reader = new StringReader(template))
-                {
-                    assemblyId = razorEngineProxy.CompileTemplate(reader, SafeClassName, null);
-                    if (assemblyId == null)
-                        throw new Exception(razorEngineProxy.ErrorMessage);
-                }
-
-                //GeneratedAssembly = razorEngineProxy.GetAssembly(razorEngineProxy.AssemblyCache[assemblyId].Location);
-                GeneratedAssembly = razorEngineProxy.AssemblyCache[assemblyId];
-
-                // find the generated type to instantiate
-                compiledType = GeneratedAssembly.GetTypes().FirstOrDefault(t => t.Name.StartsWith(SafeClassName));
-
-            }
-            catch (Exception compileEx)
-            {
-                // TODO: ADD MORE compile error help
-                // 1. Read file
-                // 2. Try to find base type - or warn if not found
-                // 3. ...
-                var razorType = _sourceAnalyzer.Value.TypeOfVirtualPath(TemplatePath);
-                l.A($"Razor Type: {razorType}");
-                var ex = l.Ex(_errorHelp.Value.AddHelpForCompileProblems(compileEx, razorType));
-                // Special form of throw to preserve details about the call stack
-                ExceptionDispatchInfo.Capture(ex).Throw();
-                throw; // fake throw, just so the code shows what happens
-            }
-
-            try
-            {
-                if (compiledType == null)
-                    return l.ReturnNull("type not found");
-
-                page = Activator.CreateInstance(compiledType);
-                //LocalAppDomain.CreateInstanceAndUnwrap(GeneratedAssembly.FullName, SafeClassName);
-                //LocalAppDomain.CreateInstanceFrom(GeneratedAssembly.Location, $"Razor.{SafeClassName}", false, BindingFlags.Default, null,
-                //        new object[] { null }, CultureInfo.CurrentCulture, null)
-                //LocalAppDomain.CreateInstanceFromAndUnwrap(GeneratedAssembly.Location, $"Razor.{SafeClassName}", null);
-
-
-                var pageObjectValue = RuntimeHelpers.GetObjectValue(page);
-                return l.ReturnAsOk(pageObjectValue);
+                return razorEngineProxy.RenderTemplate(data, proxy, Current);
             }
             catch (Exception createInstanceException)
             {
@@ -218,49 +125,11 @@ namespace ToSic.Sxc.Engines
             }
             finally
             {
-                AppDomain.Unload(LocalAppDomain);
-                //DeleteAssembly(GeneratedAssembly.Location);
+                Unload();
             }
         }
 
-        private bool InitWebpage()
-        {
-            var l = Log.Fn<bool>();
-            if (string.IsNullOrEmpty(TemplatePath)) return l.ReturnFalse("null path");
-
-            var objectValue = RuntimeHelpers.GetObjectValue(CreateWebPageInstance());
-            // ReSharper disable once JoinNullCheckWithUsage
-            if (objectValue == null)
-                throw new InvalidOperationException($"The webpage found at '{TemplatePath}' was not created.");
-
-            if (!(objectValue is RazorComponentBase pageToInit))
-                throw new InvalidOperationException($"The webpage at '{TemplatePath}' must derive from RazorComponentBase.");
-            Webpage = pageToInit;
-
-            pageToInit.Context = HttpContextCurrent;
-            pageToInit.VirtualPath = TemplatePath;
-            //var compatibility = Constants.CompatibilityLevel9Old;
-            if (pageToInit is RazorComponent rzrPage)
-            {
-#pragma warning disable CS0618
-                rzrPage.Purpose = Purpose;
-#pragma warning restore CS0618
-                //compatibility = Constants.CompatibilityLevel10;
-            }
-
-            //var compatibility = (pageToInit as ICompatibilityLevel)?.CompatibilityLevel ?? Constants.CompatibilityLevel9Old;
-            //if (pageToInit is IDynamicCode16)
-            //    compatibility = Constants.CompatibilityLevel16;
-            //else if (pageToInit is ICompatibleToCode12)
-            //    compatibility = Constants.CompatibilityLevel12;
-
-            if (pageToInit is SexyContentWebPage oldPage)
-#pragma warning disable 618, CS0612
-                oldPage.InstancePurpose = (InstancePurposes)Purpose;
-#pragma warning restore 618, CS0612
-            InitHelpers(pageToInit);
-            return l.ReturnTrue("ok");
-        }
+        public static Func<HttpContextBase> Current = () => new HttpContextWrapper(HttpContext.Current);
 
         private void InitHelpers(RazorComponentBase webPage)
         {
@@ -278,8 +147,6 @@ namespace ToSic.Sxc.Engines
             }
             l.Done();
         }
-
-
 
         // ------------ POC -----
 
@@ -353,19 +220,7 @@ namespace ToSic.Sxc.Engines
         //        ReferencedAssemblies.AddRange(additionalAssemblies);
         //}
 
-        /// <summary>
-        /// Returns a unique ClassName for a template to execute
-        /// Optionally pass in an objectId on which the code is based
-        /// or null to get default behavior.
-        /// 
-        /// Default implementation just returns Guid as string
-        /// </summary>
-        /// <param name="objectId"></param>
-        /// <returns></returns>
-        protected string GetSafeClassName(object objectId)
-        {
-            return "_" + Guid.NewGuid().ToString().Replace("-", "_");
-        }
+
 
 
         /// <summary>
@@ -374,32 +229,52 @@ namespace ToSic.Sxc.Engines
         /// </summary>
         /// <param name="appDomainName"></param>
         /// <returns></returns>
-        private AppDomain CreateAppDomain(string appDomainName)
+        //private AppDomain CreateAppDomainOld(string appDomainName)
+        //{
+        //    if (appDomainName == null)
+        //        appDomainName = "RazorHost_" + Guid.NewGuid().ToString("n");
+
+
+        //    var evidence = AppDomain.CurrentDomain.Evidence;
+
+        //    var setup = new AppDomainSetup();
+
+        //    var appCodeFolder = Path.GetDirectoryName(AppCodeFullPath);
+        //    var appFolder = Path.GetDirectoryName(appCodeFolder);
+        //    setup.ApplicationBase = AppDomain.CurrentDomain.BaseDirectory/*appFolder*/;
+        //    setup.PrivateBinPath = $"{AppDomain.CurrentDomain.BaseDirectory};{HttpRuntime.BinDirectory};{appFolder};{appCodeFolder}";
+        //    //setup.ShadowCopyFiles = "true";
+        //    setup.LoaderOptimization = LoaderOptimization.SingleDomain;
+
+        //    var ps = new PermissionSet(PermissionState.Unrestricted);
+
+        //    var localDomain = AppDomain.CreateDomain(appDomainName, evidence, setup, ps);
+
+        //    // *** Need a custom resolver so we can load assembly from non current path
+        //    //AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+
+        //    return localDomain;
+        //}
+        private AppDomain CreateNewAppDomain(string appDomain)
         {
-            if (appDomainName == null)
-                appDomainName = "RazorHost_" + Guid.NewGuid().ToString("n");
-
-
-            var evidence = AppDomain.CurrentDomain.Evidence;
-
-            var setup = new AppDomainSetup();
-
             var appCodeFolder = Path.GetDirectoryName(AppCodeFullPath);
             var appFolder = Path.GetDirectoryName(appCodeFolder);
-            setup.ApplicationBase = AppDomain.CurrentDomain.BaseDirectory/*appFolder*/;
-            setup.PrivateBinPath = $"{AppDomain.CurrentDomain.BaseDirectory};{HttpRuntime.BinDirectory};{appFolder};{appCodeFolder}";
-            //setup.ShadowCopyFiles = "true";
-            setup.LoaderOptimization = LoaderOptimization.SingleDomain;
 
-            var ps = new PermissionSet(PermissionState.Unrestricted);
+            var domainSetup = new AppDomainSetup
+            {
+                ApplicationName = appDomain,
+                ApplicationBase = AppDomain.CurrentDomain.BaseDirectory,
+                PrivateBinPath = $"{AppDomain.CurrentDomain.BaseDirectory};{HttpRuntime.BinDirectory};{appFolder};{appCodeFolder}",
+                ShadowCopyFiles = "true",
 
-            var localDomain = AppDomain.CreateDomain(appDomainName, evidence, setup, ps);
-
-            // *** Need a custom resolver so we can load assembly from non current path
-            //AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
-
-            return localDomain;
+            };
+            return AppDomain.CreateDomain(appDomain, null, domainSetup);
         }
-
+        private void Unload()
+        {
+            if (_customAppDomain == null || _customAppDomain == AppDomain.CurrentDomain) return;
+            AppDomain.Unload(_customAppDomain);
+            _customAppDomain = null;
+        }
     }
 }

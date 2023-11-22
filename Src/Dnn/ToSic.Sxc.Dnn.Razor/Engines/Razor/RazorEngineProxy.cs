@@ -4,29 +4,45 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
+using System.Runtime.Loader;
+using System.Runtime.Remoting;
 using System.Text;
 using System.Web;
 using System.Web.Razor;
 using System.Web.Razor.Generator;
+using System.Web.WebPages;
 using Microsoft.CSharp;
-using Microsoft.EntityFrameworkCore.Internal;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Logging;
+using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.Razor;
+using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Engines
 {
     public class RazorEngineProxy : MarshalByRefObject
     {
-        public string AppCodeFullPath { get; }
-        public string TemplateFullPath { get; }
-        public AppDomain LocalAppDomain { get; }
-        public Type BaseClassType;
+        private string AppCodeFullPath { get; set; }
+        private string TemplateFullPath { get; set; }
+        private string TemplatePath { get; set; }
+        private Purpose Purpose { get; set; }
 
-        public string LastGeneratedCode
+        public delegate void InitHelpersDelegate(RazorComponentBase webpage);
+
+        //private InitHelpersDelegate InitHelpers { get; set; }
+        private Type BaseClassType { get; set; }
+
+        private string LastGeneratedCode
         {
-            get => GetTextWithLineNumbers(_LastGeneratedCode);
-            set => _LastGeneratedCode = value;
+            get => GetTextWithLineNumbers(_lastGeneratedCode);
+            set => _lastGeneratedCode = value;
         }
-        private string _LastGeneratedCode;
+        private string _lastGeneratedCode;
 
         /// <summary>
         /// A list of default namespaces to include
@@ -34,7 +50,7 @@ namespace ToSic.Sxc.Engines
         /// Defaults already included:
         /// System, System.Text, System.IO, System.Collections.Generic, System.Linq
         /// </summary>
-        internal List<string> ReferencedNamespaces { get; set; }
+        private List<string> ReferencedNamespaces { get; set; }
 
         /// <summary>
         /// A list of default assemblies referenced during compilation
@@ -42,35 +58,45 @@ namespace ToSic.Sxc.Engines
         /// Defaults already included:
         /// System, System.Text, System.IO, System.Collections.Generic, System.Linq
         /// </summary>
-        internal List<string> ReferencedAssemblies { get; set; }
+        private List<string> ReferencedAssemblies { get; set; }
 
         /// <summary>
         /// The code provider used with this instance
         /// </summary>
-        internal CSharpCodeProvider CodeProvider { get; set; }
+        private CSharpCodeProvider CodeProvider { get; set; }
 
-
+        private string CompiledClassName { get; set; }
+        public Type CompiledType { get; private set; }
+        private Assembly CompiledAssembly { get; set; }
+        private RazorComponentBase Webpage { get; set; }
 
         /// <summary>
         /// Internally cache assemblies loaded with ParseAndCompileTemplate.        
         /// Assemblies are cached in the EngineHost so they don't have
         /// to cross AppDomains for invocation when running in a separate AppDomain
         /// </summary>
-        public Dictionary<string, Assembly> AssemblyCache { get; set; }
+        private Dictionary<string, Assembly> AssemblyCache { get; set; }
 
         /// <summary>
         /// Any errors that occurred during template execution
         /// </summary>
-        public string ErrorMessage { get; set; }
+        public string ErrorMessage { get; private set; }
 
-        public RazorEngineProxy(string appCodeFullPath, string templateFullPath, AppDomain localAppDomain)
+        public RazorEngineProxy()
+        {
+
+        }
+
+        public void Init(string appCodeFullPath, string templateFullPath, string templatePath, Purpose purpose/*, InitHelpersDelegate initHelpers*/, string binDirectory)
         {
             AppCodeFullPath = appCodeFullPath;
             TemplateFullPath = templateFullPath;
-            LocalAppDomain = localAppDomain;
+            TemplatePath = templatePath;
+            Purpose = purpose;
+            //InitHelpers = initHelpers;
             BaseClassType = typeof(System.Web.WebPages.WebPageBase/*Custom.Hybrid.RazorTyped*/); // TODO: Read from @inherits OR fallback to ???
-            CodeProvider = new Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider();
-
+            BinDirectory = binDirectory;
+            CompiledClassName = GetSafeClassName(TemplateFullPath);
             AssemblyCache = new Dictionary<string, Assembly>();
             ErrorMessage = string.Empty;
 
@@ -93,7 +119,7 @@ namespace ToSic.Sxc.Engines
             };
 
             // reference all assemblies form bin folder
-            foreach (var dll in Directory.GetFiles(HttpRuntime.BinDirectory, "*.dll"))
+            foreach (var dll in Directory.GetFiles(BinDirectory, "*.dll"))
                 ReferencedAssemblies.Add(dll);
 
             var lc = 0;
@@ -102,7 +128,6 @@ namespace ToSic.Sxc.Engines
             {
                 try
                 {
-                    //LocalAppDomain.Load(File.ReadAllBytes(dll));
                     GetAssembly(dll);
                     lc++;
                 }
@@ -113,15 +138,12 @@ namespace ToSic.Sxc.Engines
                 }
             }
 
-            var x = $"{lc}-{ec.Join(", ")}";
+            //var x = $"{lc}-{ec.Join(", ")}";
 
             if (File.Exists(AppCodeFullPath))
             {
                 ReferencedAssemblies.Add(AppCodeFullPath);
-                // load referenced Assemblies to LocalAppDomain
-                //GetAssembly(AppCodeFullPath);
-                //Assembly.LoadFrom(AppCodeFullPath);
-                //LocalAppDomain.Load(AssemblyName.GetAssemblyName(AppCodeFullPath));
+                GetAssembly(AppCodeFullPath);
             }
         }
 
@@ -141,15 +163,13 @@ namespace ToSic.Sxc.Engines
         /// calls.
         /// </remarks>
         /// <returns>An assembly Id. The Assembly is cached in memory and can be used with RenderFromAssembly.</returns>
-        public string CompileTemplate(TextReader templateReader,
-            string generatedClassName,
-            string generatedNamespace = null)
+        private string CompileTemplate(TextReader templateReader, string generatedNamespace = null)
         {
             //if (string.IsNullOrEmpty(generatedNamespace)) generatedNamespace = "__RazorHost";
 
             //generatedClassName = GetSafeClassName(string.IsNullOrEmpty(generatedClassName) ? null : generatedClassName);
 
-            var engine = CreateHost(generatedClassName, generatedNamespace);
+            var engine = CreateHost(CompiledClassName, generatedNamespace);
 
             var template = templateReader.ReadToEnd();
 
@@ -181,7 +201,7 @@ namespace ToSic.Sxc.Engines
             //method.Statements.Add(new CodeMethodInvokeExpression(new CodeBaseReferenceExpression(), "GetObjectData", new CodeExpression[] { new CodeVariableReferenceExpression("info"), new CodeVariableReferenceExpression("context") }));
             //razorResults.GeneratedCode.Namespaces[0].Types[0].Members.Add(method);
 
-
+            CodeProvider = new Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider();
             var options = new CodeGeneratorOptions();
 
             // Capture Code Generated as a string for error info
@@ -198,7 +218,7 @@ namespace ToSic.Sxc.Engines
             compilerParameters.GenerateInMemory = true;
 
             if (!compilerParameters.GenerateInMemory)
-                compilerParameters.OutputAssembly = Path.Combine(Path.GetDirectoryName(TemplateFullPath), /*"_" + Guid.NewGuid().ToString("n")*/ generatedClassName + ".dll");
+                compilerParameters.OutputAssembly = Path.Combine(Path.GetDirectoryName(TemplateFullPath), CompiledClassName + ".dll");
 
             var compilerResults = CodeProvider.CompileAssemblyFromDom(compilerParameters, razorResults.GeneratedCode);
             if (compilerResults.Errors.Count > 0)
@@ -214,10 +234,19 @@ namespace ToSic.Sxc.Engines
                 return null;
             }
 
-            AssemblyCache.Add(compilerResults.CompiledAssembly.FullName, compilerResults.CompiledAssembly);
+            CompiledAssembly = compilerResults.CompiledAssembly;
+            AssemblyCache.Add(CompiledAssembly.FullName, CompiledAssembly);
 
-            return compilerResults.CompiledAssembly.FullName;
+            // find the generated type to instantiate
+            CompiledType = CompiledAssembly.GetTypes().FirstOrDefault(t => t.Name.StartsWith(CompiledClassName));
+
+            return CompiledAssembly.FullName;
         }
+
+        // Ensure that can't be kept alive by stack slot references (real- or JIT-introduced locals).
+        // That could keep the SimpleUnloadableAssemblyLoadContext alive and prevent the unload.
+        [MethodImpl(MethodImplOptions.NoInlining)]
+
 
         /// <summary>
         /// Creates an instance of the RazorHost with various options applied.
@@ -227,7 +256,7 @@ namespace ToSic.Sxc.Engines
         /// <param name="generatedNamespace"></param>
         /// <param name="baseClassType"></param>
         /// <returns></returns>
-        protected RazorTemplateEngine CreateHost(string generatedClass, string generatedNamespace = null)
+        private RazorTemplateEngine CreateHost(string generatedClass, string generatedNamespace = null)
         {
             var host = new RazorEngineHost(new CSharpRazorCodeLanguage());
             host.DefaultBaseClass = BaseClassType.FullName;
@@ -252,7 +281,7 @@ namespace ToSic.Sxc.Engines
         /// </summary>
         /// <param name="template"></param>
         /// <returns></returns>
-        protected string FixupTemplate(string template)
+        private string FixupTemplate(string template)
         {
             // @model fixup
             if (template.Contains("@model "))
@@ -277,7 +306,7 @@ namespace ToSic.Sxc.Engines
         /// <param name="text"></param>
         /// <param name="lineFormat">Line format used to create the line. 0 is the line number, 1 is the text.</param>
         /// <returns></returns>
-        public string GetTextWithLineNumbers(string text, string lineFormat = "{0}.  {1}")
+        private string GetTextWithLineNumbers(string text, string lineFormat = "{0}.  {1}")
         {
             if (string.IsNullOrEmpty(text)) return text;
 
@@ -312,18 +341,18 @@ namespace ToSic.Sxc.Engines
         /// <param name="s">String to check for lines</param>
         /// <param name="maxLines">Optional - max number of lines to return</param>
         /// <returns>array of strings, or null if the string passed was a null</returns>
-        public string[] GetLines(string s, int maxLines = 0)
+        private string[] GetLines(string s, int maxLines = 0)
         {
             if (s == null) return null;
             s = s.Replace("\r\n", "\n");
             return maxLines < 1 ? s.Split(new char[] { '\n' }) : s.Split(new char[] { '\n' }).Take(maxLines).ToArray();
         }
 
-        public Assembly GetAssembly(string assemblyPath, string pdbPath = null)
+        private Assembly GetAssembly(string assemblyPath, string pdbPath = null)
         {
             try
             {
-                return LoadAssembly2(assemblyPath, pdbPath);
+                return LoadAssembly(assemblyPath, pdbPath);
             }
             catch (Exception)
             {
@@ -340,12 +369,145 @@ namespace ToSic.Sxc.Engines
                 : Assembly.Load(File.ReadAllBytes(assemblyPath));
         }
 
-        private Assembly LoadAssembly2(string assemblyPath, string pdbPath = null)
+        /// <summary>
+        /// Returns a unique ClassName for a template to execute
+        /// Optionally pass in an objectId on which the code is based
+        /// or null to get default behavior.
+        /// 
+        /// Default implementation just returns Guid as string
+        /// </summary>
+        /// <param name="objectId"></param>
+        /// <returns></returns>
+        private string GetSafeClassName(object objectId)
         {
-            pdbPath = string.IsNullOrEmpty(pdbPath) ? Path.ChangeExtension(assemblyPath, "pdb") : pdbPath;
-            return File.Exists(pdbPath)
-                ? LocalAppDomain.Load(File.ReadAllBytes(assemblyPath), File.ReadAllBytes(pdbPath))
-                : LocalAppDomain.Load(File.ReadAllBytes(assemblyPath));
+            return "_" + Guid.NewGuid().ToString().Replace("-", "_");
+        }
+
+        private string BinDirectory { get; set; }
+        private HttpContextBase HttpContextWrapper { get; set; }
+
+        public (string, List<Exception>) RenderTemplate(object data, HttpContextProxy proxyInNewDomain, Func<HttpContextBase> current)
+        {
+            // Use the proxy object to access HttpContext.Current from the new application domain
+            //var context = (HttpContext)proxyInNewDomain.GetCurrentHttpContext();
+            proxyInNewDomain.SyncContext();
+            //var c = HttpContext.Current;
+            //var w = new HttpContextWrapper(c);
+            //var z = current.Invoke();
+            try
+            {
+                using (var reader = new StringReader(File.ReadAllText(TemplateFullPath)))
+                {
+                    var assemblyId = CompileTemplate(reader, null);
+                    if (assemblyId == null)
+                        throw new Exception(ErrorMessage);
+                }
+            }
+            catch (Exception compileEx)
+            {
+                // TODO: ADD MORE compile error help
+                // 1. Read file
+                // 2. Try to find base type - or warn if not found
+                // 3. ...
+                //var razorType = _sourceAnalyzer.Value.TypeOfVirtualPath(TemplatePath);
+                //l.A($"Razor Type: {razorType}");
+                //var ex = l.Ex(_errorHelp.Value.AddHelpForCompileProblems(compileEx, razorType));
+                // Special form of throw to preserve details about the call stack
+                ExceptionDispatchInfo.Capture(compileEx).Throw();
+                throw; // fake throw, just so the code shows what happens
+            }
+
+            if (CompiledType == null)
+                return (null, new List<Exception>()); //  l.ReturnNull("type not found");
+
+            var writer = new StringWriter();
+            var result = Render(writer, data);
+            return (result.writer.ToString(), result.exception);
+        }
+
+        private (TextWriter writer, List<Exception> exception) Render(TextWriter writer, object data)
+        {
+            var page = InitWebpage(); // access the property once only
+            try
+            {
+                if (data != null && page is ISetDynamicModel setDyn)
+                    setDyn.SetDynamicModel(data);
+            }
+            catch (Exception e)
+            {
+                // l.Ex("Problem with setting dynamic model, error will be ignored.", e);
+            }
+
+            try
+            {
+                page.ExecutePageHierarchy(new WebPageContext(HttpContextWrapper, page, data), writer, page);
+            }
+            catch (Exception ex)
+            {
+                // Special form of throw to preserve details about the call stack
+                ExceptionDispatchInfo.Capture(ex).Throw();
+                throw; // fake throw, just so the code shows what happens
+            }
+            return (writer, page.SysHlp.ExceptionsOrNull);
+        }
+
+        private RazorComponentBase InitWebpage()
+        {
+            var objectValue = RuntimeHelpers.GetObjectValue(GetPageInstance());
+            // ReSharper disable once JoinNullCheckWithUsage
+            if (objectValue == null)
+                throw new InvalidOperationException($"The webpage found at '{TemplatePath}' was not created.");
+
+            if (!(objectValue is RazorComponentBase pageToInit))
+                throw new InvalidOperationException($"The webpage at '{TemplatePath}' must derive from RazorComponentBase.");
+            Webpage = pageToInit;
+
+            pageToInit.Context = HttpContextWrapper;
+            pageToInit.VirtualPath = TemplatePath;
+            //var compatibility = Constants.CompatibilityLevel9Old;
+            if (pageToInit is RazorComponent rzrPage)
+            {
+#pragma warning disable CS0618
+                rzrPage.Purpose = Purpose;
+#pragma warning restore CS0618
+                //compatibility = Constants.CompatibilityLevel10;
+            }
+
+            //var compatibility = (pageToInit as ICompatibilityLevel)?.CompatibilityLevel ?? Constants.CompatibilityLevel9Old;
+            //if (pageToInit is IDynamicCode16)
+            //    compatibility = Constants.CompatibilityLevel16;
+            //else if (pageToInit is ICompatibleToCode12)
+            //    compatibility = Constants.CompatibilityLevel12;
+
+            if (pageToInit is SexyContentWebPage oldPage)
+#pragma warning disable 618, CS0612
+                oldPage.InstancePurpose = (InstancePurposes)Purpose;
+#pragma warning restore 618, CS0612
+            //InitHelpers(pageToInit); // HACK: stv commented
+            //return l.ReturnTrue("ok");
+            return Webpage;
+        }
+
+        private object GetPageInstance(/*string assemblyId*/)
+        {
+            //var assembly = GetAssembly(assemblyId);
+            //if (assembly == null) return null;
+
+            //var type = assembly.GetTypes().FirstOrDefault(t => t.Name.StartsWith(CompiledClassName));
+            //if (type == null) return null;
+
+            var instance = new ObjectHandle(Activator.CreateInstance(CompiledType)).Unwrap();
+
+            //page = new ObjectHandle(Activator.CreateInstance(razorEngineProxy.CompiledType)).Unwrap();
+            //page = Activator.CreateInstance(razorEngineProxy.CompiledAssembly.FullName, razorEngineProxy.CompiledClassName).Unwrap();
+            //page = CustomAppDomain.CreateInstanceAndUnwrap(razorEngineProxy.CompiledAssembly.FullName, razorEngineProxy.CompiledClassName);
+            //CustomAppDomain.CreateInstanceFrom(GeneratedAssembly.Location, $"Razor.{SafeClassName}", false, BindingFlags.Default, null,
+            //        new object[] { null }, CultureInfo.CurrentCulture, null)
+            //CustomAppDomain.CreateInstanceFromAndUnwrap(GeneratedAssembly.Location, $"Razor.{SafeClassName}", null);
+
+
+
+            return instance;
         }
     }
 }

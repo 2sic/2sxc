@@ -88,6 +88,7 @@
     <PackageReference Include="System.Collections.Immutable" Version="7.0.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
+    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

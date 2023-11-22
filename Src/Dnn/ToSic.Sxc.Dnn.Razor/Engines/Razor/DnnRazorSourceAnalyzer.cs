@@ -6,9 +6,11 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using System.Web.Hosting;
 using ToSic.Sxc.Code.Help;
+using System;
 
 namespace ToSic.Sxc.Engines
 {
+    [Serializable]
     public class DnnRazorSourceAnalyzer: ServiceBase
     {
         public DnnRazorSourceAnalyzer() : base("Dnn.RzrSrc") { }

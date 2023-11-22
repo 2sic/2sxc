@@ -17,6 +17,7 @@ using HttpCompileException = System.Exception;
 
 namespace ToSic.Sxc.Code.Help
 {
+    [Serializable]
     public class CodeErrorHelpService: ServiceBase
     {
         public CodeErrorHelpService() : base("Sxc.CErrHS")

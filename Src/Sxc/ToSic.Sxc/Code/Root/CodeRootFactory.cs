@@ -13,6 +13,7 @@ namespace ToSic.Sxc.Code
     /// Special helper which will create the code-root based on the parent class requesting it.
     /// If the parent is generic supporting IDynamicModel[Model, Kit] it will create the generic root
     /// </summary>
+    [Serializable]
     public class CodeRootFactory: ServiceBase
     {
         public CodeRootFactory(IServiceProvider serviceProvider): base($"{Constants.SxcLogName}.CDRFac")

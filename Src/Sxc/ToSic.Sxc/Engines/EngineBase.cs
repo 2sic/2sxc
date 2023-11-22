@@ -33,6 +33,7 @@ namespace ToSic.Sxc.Engines
     /// The foundation for engines - must be inherited by other engines
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
+    [Serializable]
     public abstract partial class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
     {
         [PrivateApi] protected IView Template;

@@ -342,7 +342,7 @@ namespace ToSic.Sxc.Razor
             if (File.Exists(appCodeFullPath))
                 references.Add(MetadataReference.CreateFromFile(_assemblyLoadContext.LoadFromAssemblyPath(appCodeFullPath).Location));
 
-            RazorReferencedAssemblies().ToList().ForEach(a => references.Add(MetadataReference.CreateFromFile(Assembly.Load(a).Location)));
+            RazorReferencedAssemblies().ToList().ForEach(a => references.Add(MetadataReference.CreateFromFile(Assembly.Load(File.ReadAllBytes(a)).Location)));
 
             Assembly.GetEntryAssembly()?.GetReferencedAssemblies().ToList()
                 .ForEach(a => references.Add(MetadataReference.CreateFromFile(Assembly.Load(a).Location)));
@@ -351,9 +351,9 @@ namespace ToSic.Sxc.Razor
             var dllLocation = AppContext.BaseDirectory;
             var dllPath = Path.GetDirectoryName(dllLocation);
             foreach (string dllFile in Directory.GetFiles(dllPath, "*.dll"))
-                references.Add(MetadataReference.CreateFromFile(Assembly.LoadFile(dllFile).Location));
+                references.Add(MetadataReference.CreateFromFile(Assembly.Load(File.ReadAllBytes(dllFile)).Location));
             foreach (string dllFile in Directory.GetFiles(Path.Combine(dllPath, "refs"), "*.dll"))
-                references.Add(MetadataReference.CreateFromFile(/*Assembly.Load(Path.GetFileNameWithoutExtension(dllFile)).Location*/dllFile));
+                references.Add(MetadataReference.CreateFromFile(Assembly.Load(File.ReadAllBytes(dllFile)).Location));
 
 
 
