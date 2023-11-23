@@ -44,7 +44,7 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="IDynamicCodeKit{ServiceKit14}.Kit" />
         public ServiceKit14 Kit => _kit.Get(() => _DynCodeRoot.GetKit<ServiceKit14>());
-        private readonly GetOnce<ServiceKit14> _kit = new GetOnce<ServiceKit14>();
+        private readonly GetOnce<ServiceKit14> _kit = new();
 
         /// <inheritdoc cref="IHasCodeLog.Log" />
         public new ICodeLog Log => SysHlp.CodeLog;
@@ -185,7 +185,7 @@ namespace Custom.Hybrid
             object contents = null)
             => Shim.File(noParamOrder, download, virtualPath, contentType, fileDownloadName, contents);
 
-        private WebApiCoreShim Shim => new WebApiCoreShim(Request);
+        private WebApiCoreShim Shim => new(Request);
 
         /// <inheritdoc cref="WebApiCoreShim.Ok()"/>
         [NonAction] public new dynamic Ok() => Shim.Ok();

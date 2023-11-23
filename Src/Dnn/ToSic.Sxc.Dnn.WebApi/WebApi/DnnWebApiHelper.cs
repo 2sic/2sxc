@@ -52,7 +52,7 @@ namespace ToSic.Sxc.WebApi
             ? _DynCodeRoot.GetService<TService>()
             : _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);
         // Must cache it, to be really sure we use the same ServiceProvider in the same request
-        private readonly GetOnce<IServiceProvider> _serviceProvider = new GetOnce<IServiceProvider>();
+        private readonly GetOnce<IServiceProvider> _serviceProvider = new();
 
         public void SetupResponseMaker(System.Web.Http.ApiController apiController) => GetService<IResponseMaker>().Init(apiController);
 
@@ -66,7 +66,7 @@ namespace ToSic.Sxc.WebApi
 
         public BlockWithContextProvider GetBlockAndContext(HttpRequestMessage request) 
             => _blcCtx.Get(() => GetService<DnnGetBlock>().GetCmsBlock(request));
-        private readonly GetOnce<BlockWithContextProvider> _blcCtx = new GetOnce<BlockWithContextProvider>();
+        private readonly GetOnce<BlockWithContextProvider> _blcCtx = new();
 
 
     }

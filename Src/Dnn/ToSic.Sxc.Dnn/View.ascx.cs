@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Dnn
         /// If we would get it multiple times, there are edge cases where it could be different each time! #2614
         /// </summary>
         private IServiceProvider ServiceProvider => _serviceProvider.Get(Log, DnnStaticDi.CreateModuleScopedServiceProvider);
-        private readonly GetOnce<IServiceProvider> _serviceProvider = new GetOnce<IServiceProvider>();
+        private readonly GetOnce<IServiceProvider> _serviceProvider = new();
         private TService GetService<TService>() => ServiceProvider.Build<TService>(Log);
 
         #endregion
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Dnn
         /// which runs before page-load
         /// </summary>
         private IBlock Block => _blockGetOnce.Get(Log, () => LogTimer.DoInTimer(() => GetService<IModuleAndBlockBuilder>().GetProvider(ModuleConfiguration, null).LoadBlock()), timer: true);
-        private readonly GetOnce<IBlock> _blockGetOnce = new GetOnce<IBlock>();
+        private readonly GetOnce<IBlock> _blockGetOnce = new();
 
         #region Logging
 
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Dnn
         private LogStoreEntry _logInStore;
 
         protected ILogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"Module: '{ModuleConfiguration.ModuleTitle}'"));
-        private readonly GetOnce<ILogCall> _logTimer = new GetOnce<ILogCall>();
+        private readonly GetOnce<ILogCall> _logTimer = new();
 
         #endregion
 
@@ -203,6 +203,6 @@ namespace ToSic.Sxc.Dnn
         }
 
         protected IOutputCache OutputCache => _oc.Get(Log, () => GetService<IOutputCache>().Init(ModuleId, TabId, Block), timer: true);
-        private readonly GetOnce<IOutputCache> _oc = new GetOnce<IOutputCache>();
+        private readonly GetOnce<IOutputCache> _oc = new();
     }
 }

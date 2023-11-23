@@ -7,20 +7,20 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
     {
         public static RootId[] QueryRoots =
         {
-            new RootId("qry-auto", AppRoots.AppAuto + "/" + AppParts.Query), 
-            new RootId("qry-name", AppRoots.AppNamed + "/" + AppParts.Query)
+            new("qry-auto", AppRoots.AppAuto + "/" + AppParts.Query), 
+            new("qry-name", AppRoots.AppNamed + "/" + AppParts.Query)
         };
         public static RootId[] AppAutoAndNamed =
         {
-            new RootId("app-auto", AppRoots.AppAuto), 
-            new RootId("app-name",  AppRoots.AppNamed)
+            new("app-auto", AppRoots.AppAuto), 
+            new("app-name",  AppRoots.AppNamed)
         };
         public static RootId[] Content =
         {
-            new RootId("cont-auto", AppRoots.AppAutoContent), 
-            new RootId("cont-name", AppRoots.AppNamedContent),
-            new RootId("data-auto", AppRoots.AppAutoData), // new, v13
-            new RootId("data-name", AppRoots.AppNamedData) // new, v13
+            new("cont-auto", AppRoots.AppAutoContent), 
+            new("cont-name", AppRoots.AppNamedContent),
+            new("data-auto", AppRoots.AppAutoData), // new, v13
+            new("data-name", AppRoots.AppNamedData) // new, v13
         };
 
         public static RootId[] AppAutoNamedInclEditions = AppAutoAndNamed

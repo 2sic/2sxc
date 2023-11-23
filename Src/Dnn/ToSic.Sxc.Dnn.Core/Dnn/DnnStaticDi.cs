@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Dnn
 
         [PrivateApi("Very internal, to use at startup, so singletons are not lost")]
         private /*public*/ static IServiceProvider GetGlobalServiceProvider() => Sp.Get(() => _getGlobalDnnServiceProvider?.Invoke() ?? throw new Exception("can't access global DNN service provider"));
-        private static readonly GetOnce<IServiceProvider> Sp = new GetOnce<IServiceProvider>();
+        private static readonly GetOnce<IServiceProvider> Sp = new();
 
         [PrivateApi("This is just a temporary solution - shouldn't be used long term")]
         public static IServiceProvider GetPageScopedServiceProvider()

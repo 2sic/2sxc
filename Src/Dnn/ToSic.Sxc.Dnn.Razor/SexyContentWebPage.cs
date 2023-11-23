@@ -109,7 +109,7 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         IContextData IDynamicCode.Data => _DynCodeRoot.Data;
 
-        public RazorPermissions Permissions => new RazorPermissions(_DynCodeRoot.Block?.Context.UserMayEdit ?? false);
+        public RazorPermissions Permissions => new(_DynCodeRoot.Block?.Context.UserMayEdit ?? false);
 
         #region AsDynamic in many variations
 

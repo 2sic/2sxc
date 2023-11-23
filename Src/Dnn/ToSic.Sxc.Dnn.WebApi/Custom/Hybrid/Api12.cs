@@ -169,7 +169,7 @@ namespace Custom.Hybrid
             object contents = null)
             => Shim.File(noParamOrder, download, virtualPath, contentType, fileDownloadName, contents);
 
-        private WebApiCoreShim Shim => new WebApiCoreShim(Request);
+        private WebApiCoreShim Shim => new(Request);
 
         /// <inheritdoc cref="WebApiCoreShim.Ok()"/>
         [NonAction] public new dynamic Ok() => Shim.Ok();

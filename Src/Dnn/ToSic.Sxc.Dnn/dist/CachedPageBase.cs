@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Dnn.dist
         /// If we would get it multiple times, there are edge cases where it could be different each time! #2614
         /// </summary>
         private IServiceProvider ServiceProvider => _serviceProvider.Get(Log, DnnStaticDi.CreateModuleScopedServiceProvider);
-        private readonly GetOnce<IServiceProvider> _serviceProvider = new GetOnce<IServiceProvider>();
+        private readonly GetOnce<IServiceProvider> _serviceProvider = new();
         private TService GetService<TService>() => ServiceProvider.Build<TService>(Log);
 
         #endregion
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Dnn.dist
 
         private ILog Log { get; } = new Log("Sxc.Dnn.CachedPageBase");
         private IEnvironmentLogger EnvLogger => _envLogger.Get(Log, GetService<IEnvironmentLogger>);
-        private readonly GetOnce<IEnvironmentLogger> _envLogger = new GetOnce<IEnvironmentLogger>();
+        private readonly GetOnce<IEnvironmentLogger> _envLogger = new();
         #endregion
 
         protected string PageOutputCached(string virtualPath, EditUiResourceSettings settings)

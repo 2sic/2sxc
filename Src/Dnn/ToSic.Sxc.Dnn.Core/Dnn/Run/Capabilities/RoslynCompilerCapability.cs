@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Dnn.Run.Capabilities
         }
         // Volatile keyword ensures that the most up-to-date value is always read from memory, which is crucial for the correct functioning of the double-check locking pattern.
         private static volatile int[] _csharpLangVersions = null;
-        private static readonly object LangVersionLock = new object();
+        private static readonly object LangVersionLock = new();
 
         // DETECT based on installed stuff (DLLs, available APIs?)
         // Goal is that it can tell if the newer CodeDom library has been installed or not

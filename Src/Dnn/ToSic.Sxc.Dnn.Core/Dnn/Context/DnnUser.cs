@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Dnn.Context
         public string IdentityToken => GetUserIdentityToken();
 
         public List<int> Roles => _roles.Get(BuildRoleList);
-        private readonly GetOnce<List<int>> _roles = new GetOnce<List<int>>();
+        private readonly GetOnce<List<int>> _roles = new();
 
         public bool IsSystemAdmin => UnwrappedContents?.IsSuperUser ?? false;
 
@@ -51,11 +51,11 @@ namespace ToSic.Sxc.Dnn.Context
                 ? _dnnSecurity.Value.UserMayAdminThis(UnwrappedContents) 
                 : new DnnSiteAdminPermissions(false)
             );
-        private readonly GetOnce<DnnSiteAdminPermissions> _adminPermissions = new GetOnce<DnnSiteAdminPermissions>();
+        private readonly GetOnce<DnnSiteAdminPermissions> _adminPermissions = new();
 
 
         public UserInfo UnwrappedContents => _user.Get(() => PortalSettings.Current?.UserInfo);
-        private readonly GetOnce<UserInfo> _user = new GetOnce<UserInfo>();
+        private readonly GetOnce<UserInfo> _user = new();
 
         public UserInfo GetContents() => UnwrappedContents;
 

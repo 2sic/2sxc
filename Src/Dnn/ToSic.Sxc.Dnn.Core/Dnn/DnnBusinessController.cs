@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Dnn
         /// If we would get it multiple times, there are edge cases where it could be different each time! #2614
         /// </summary>
         private IServiceProvider ServiceProvider => _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider);
-        private readonly GetOnce<IServiceProvider> _serviceProvider = new GetOnce<IServiceProvider>();
+        private readonly GetOnce<IServiceProvider> _serviceProvider = new();
 
         #endregion
 

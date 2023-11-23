@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Dnn.Configuration.Features
 {
     public partial class BuiltInFeatures
     {
-        public static readonly Feature DnnPageWorkflow = new Feature(
+        public static readonly Feature DnnPageWorkflow = new(
             "DnnPageWorkflow",
             new Guid("da68d954-5220-4f9c-a485-86f16b98629a"),
             "Support for Dnn / Evoq Page Workflow",

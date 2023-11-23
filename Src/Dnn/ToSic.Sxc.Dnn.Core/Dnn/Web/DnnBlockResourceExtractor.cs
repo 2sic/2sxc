@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Dnn.Web
             extractAll: false,
             cssPriority: (int)FileOrder.Css.DefaultPriority,
             jsPriority: (int)FileOrder.Js.DefaultPriority));
-        private readonly GetOnce<ClientAssetsExtractSettings> _settings = new GetOnce<ClientAssetsExtractSettings>();
+        private readonly GetOnce<ClientAssetsExtractSettings> _settings = new();
 
 
         protected override (string Template, bool Include2sxcJs) ExtractFromHtml(string html, ClientAssetsExtractSettings settings)

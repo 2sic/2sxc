@@ -92,6 +92,6 @@ namespace ToSic.Sxc.Dnn.Install
             return $"Completed init for module {module.ModuleId} showing {block.AppId}";
         });
 
-        internal static ConcurrentDictionary<int, bool> CachedModuleResults = new ConcurrentDictionary<int, bool>();
+        internal static ConcurrentDictionary<int, bool> CachedModuleResults = new();
     }
 }

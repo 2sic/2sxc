@@ -220,7 +220,7 @@ namespace ToSic.Sxc.Dnn.DataSources
     {
         internal const string TypeName = "UserProfile";
 
-        internal static DataFactoryOptions Options = new DataFactoryOptions(typeName: TypeName, titleField: nameof(Name));
+        internal static DataFactoryOptions Options = new(typeName: TypeName, titleField: nameof(Name));
         public int Id { get; set; }
         public Guid Guid { get; set; }
         public string Name { get; set; } // aka DisplayName
@@ -228,7 +228,7 @@ namespace ToSic.Sxc.Dnn.DataSources
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
 
-        public Dictionary<string, object> Properties { get; } = new Dictionary<string, object>();
+        public Dictionary<string, object> Properties { get; } = new();
 
         /// <summary>
         /// Data but without Id, Guid, Created, Modified

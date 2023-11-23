@@ -106,7 +106,7 @@ namespace ToSic.Sxc.Web
         #region DynamicModel and Factory
 
         private CodeDataWrapper CodeDataWrapper => _dynJacketFactory.Get(() => _DynCodeRoot.GetService<CodeDataWrapper>());
-        private readonly GetOnce<CodeDataWrapper> _dynJacketFactory = new GetOnce<CodeDataWrapper>();
+        private readonly GetOnce<CodeDataWrapper> _dynJacketFactory = new();
 
         /// <inheritdoc cref="IRazor14{TModel,TServiceKit}.DynamicModel"/>
         public dynamic DynamicModel => _dynamicModel ??= CodeDataWrapper.FromDictionary(Page.PageData);

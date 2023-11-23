@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Engines
         [PrivateApi]
         protected HttpContextBase HttpContextCurrent => 
             _httpContext.Get(() => HttpContext.Current == null ? null : new HttpContextWrapper(HttpContext.Current));
-        private readonly GetOnce<HttpContextBase> _httpContext = new GetOnce<HttpContextBase>();
+        private readonly GetOnce<HttpContextBase> _httpContext = new();
 
         [PrivateApi]
         private (TextWriter writer, List<Exception> exception) Render(TextWriter writer, object data)

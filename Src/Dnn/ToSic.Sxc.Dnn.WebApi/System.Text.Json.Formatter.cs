@@ -33,7 +33,7 @@ namespace System.Net.Http.Formatting
         /// <summary>
         /// Gets or sets the <see cref="JsonSerializerOptions" /> used to format data. Configured using <see cref="JsonSerializerDefaults.Web" />.
         /// </summary>
-        public JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+        public JsonSerializerOptions JsonSerializerOptions = new(JsonSerializerDefaults.Web);
 
         public override Task<object> ReadFromStreamAsync(Type type, Stream readStream, HttpContent content, IFormatterLogger formatterLogger)
             => ReadFromStreamAsync(type, readStream, content, formatterLogger, default);

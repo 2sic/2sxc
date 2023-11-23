@@ -64,11 +64,9 @@ namespace ToSic.Sxc.Dnn.ImportExport
                 {
                     try
                     {
-                        using (var stream = File.OpenRead(sourceFilePath))
-                        {
-                            var fileInfo = dnnFileManager.AddFile(folderInfo, destinationFileName, stream, false);
-                            MassLog($"Transferred '{destinationFileName}', dnn-id is now {fileInfo?.FileId}", null);
-                        }
+                        using var stream = File.OpenRead(sourceFilePath);
+                        var fileInfo = dnnFileManager.AddFile(folderInfo, destinationFileName, stream, false);
+                        MassLog($"Transferred '{destinationFileName}', dnn-id is now {fileInfo?.FileId}", null);
                     }
                     catch (InvalidFileExtensionException e)
                     {

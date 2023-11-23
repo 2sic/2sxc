@@ -142,7 +142,7 @@ namespace ToSic.Sxc.Dnn.Context
             var result = portal.CultureCode?.ToLowerInvariant();
             return (result, $"Portal.CultureCode: {result}");
         });
-        private readonly GetOnce<string> _currentCulture = new GetOnce<string>();
+        private readonly GetOnce<string> _currentCulture = new();
 
         public List<string> CultureCodesWithFallbacks => _currentCodeFallbacks.GetL(Log, l =>
         {
@@ -193,7 +193,7 @@ namespace ToSic.Sxc.Dnn.Context
                 return null;
             }
         });
-        private readonly GetOnce<List<string>> _currentCodeFallbacks = new GetOnce<List<string>>();
+        private readonly GetOnce<List<string>> _currentCodeFallbacks = new();
 
 
         #endregion

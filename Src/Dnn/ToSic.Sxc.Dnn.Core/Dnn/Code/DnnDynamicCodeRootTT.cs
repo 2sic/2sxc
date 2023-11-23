@@ -17,6 +17,6 @@ namespace ToSic.Sxc.Dnn.Code
         /// Dnn context with module, page, portal etc.
         /// </summary>
         public IDnnContext Dnn => _dnn.Get(GetService<IDnnContext>);
-        private readonly GetOnce<IDnnContext> _dnn = new GetOnce<IDnnContext>();
+        private readonly GetOnce<IDnnContext> _dnn = new();
     }
 }
