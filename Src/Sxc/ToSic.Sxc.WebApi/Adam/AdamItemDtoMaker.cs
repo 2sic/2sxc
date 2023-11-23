@@ -103,8 +103,7 @@ namespace ToSic.Sxc.WebApi.Adam
         /// Do this check once only, as the result will never change during one lifecycle
         /// </summary>
         private bool ContextAllowsEdit 
-            => _contextAllowsEdit 
-               ?? (_contextAllowsEdit = !AdamContext.Security.UserIsRestricted || AdamContext.Security.FieldPermissionOk(GrantSets.WriteSomething)).Value;
+            => _contextAllowsEdit ??= !AdamContext.Security.UserIsRestricted || AdamContext.Security.FieldPermissionOk(GrantSets.WriteSomething);
         private bool? _contextAllowsEdit;
 
 

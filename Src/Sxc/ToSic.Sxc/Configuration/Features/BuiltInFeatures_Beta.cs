@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Configuration.Features
 {
     public partial class BuiltInFeatures
     {
-        public static readonly Feature RazorThrowPartial = new Feature(
+        public static readonly Feature RazorThrowPartial = new(
             "RazorThrowPartial",
             new Guid("d5a327c5-db0f-472b-93b2-94e66b15e16b"),
             "Razor: Handle Errors in sub-components for all users",
@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Configuration.Features
             Eav.Internal.Features.BuiltInFeatures.ForCorePlusEnabled
         );
 
-        public static readonly Feature RenderThrowPartialSystemAdmin = new Feature(
+        public static readonly Feature RenderThrowPartialSystemAdmin = new(
             "RenderThrowPartialSystemAdmin",
             new Guid("5b0c9379-2fef-4f6e-9022-4d3c50e894e5"),
             "Razor: Handle Errors in sub-components for system admins only (host users)",

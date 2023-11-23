@@ -39,23 +39,23 @@ namespace ToSic.Sxc.Utils
         public const string PriorityKey = "Priority";
         public const string PositionKey = "Position";
 
-        public static readonly Lazy<Regex> AttributesDetection = new Lazy<Regex>(() => new Regex(AttributesFormula, RegexOptions.IgnoreCase));
-        public static readonly Lazy<Regex> ImagesDetection = new Lazy<Regex>(() => new Regex(ImagesWithDataCmsidFormula, RegexOptions.IgnoreCase));
-        public static readonly Lazy<Regex> ScriptSrcDetection = new Lazy<Regex>(() => new Regex(ScriptSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline));
+        public static readonly Lazy<Regex> AttributesDetection = new(() => new Regex(AttributesFormula, RegexOptions.IgnoreCase));
+        public static readonly Lazy<Regex> ImagesDetection = new(() => new Regex(ImagesWithDataCmsidFormula, RegexOptions.IgnoreCase));
+        public static readonly Lazy<Regex> ScriptSrcDetection = new(() => new Regex(ScriptSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline));
         // note: 2dm created this, because I wasn't sure if changing the original to ML would have side effects
         public static Regex ScriptSrcDetectionMultiLine => ScriptSrcDetMl.Get(() => new Regex(ScriptSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline));
-        private static readonly GetOnce<Regex> ScriptSrcDetMl = new GetOnce<Regex>();
+        private static readonly GetOnce<Regex> ScriptSrcDetMl = new();
 
-        public static readonly Lazy<Regex> ScriptContentDetection = new Lazy<Regex>(() => new Regex(ScriptContentFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline));
-        public static readonly Lazy<Regex> StyleDetection = new Lazy<Regex>(() => new Regex(StyleSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline));
+        public static readonly Lazy<Regex> ScriptContentDetection = new(() => new Regex(ScriptContentFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline));
+        public static readonly Lazy<Regex> StyleDetection = new(() => new Regex(StyleSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline));
         // note: 2dm created this, because I wasn't sure if changing the original to ML would have side effects
         public static Regex StyleDetectionMultiLine => StyleSrcDetMl.Get(() => new Regex(StyleSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline));
-        private static readonly GetOnce<Regex> StyleSrcDetMl = new GetOnce<Regex>();
+        private static readonly GetOnce<Regex> StyleSrcDetMl = new();
         public static Regex IntegrityAttribute => IntegrAttr.Get(() => new Regex(IntegrityAttributeFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline));
-        private static readonly GetOnce<Regex> IntegrAttr = new GetOnce<Regex>();
-        public static readonly Lazy<Regex> StyleRelDetect = new Lazy<Regex>(() => new Regex(StyleRelFormula, RegexOptions.IgnoreCase));
-        public static readonly Lazy<Regex> OptimizeDetection = new Lazy<Regex>(() => new Regex(ClientDependencyRegex, RegexOptions.IgnoreCase));
-        public static readonly Lazy<Regex> IdDetection = new Lazy<Regex>(() => new Regex(IdFormula, RegexOptions.IgnoreCase));
+        private static readonly GetOnce<Regex> IntegrAttr = new();
+        public static readonly Lazy<Regex> StyleRelDetect = new(() => new Regex(StyleRelFormula, RegexOptions.IgnoreCase));
+        public static readonly Lazy<Regex> OptimizeDetection = new(() => new Regex(ClientDependencyRegex, RegexOptions.IgnoreCase));
+        public static readonly Lazy<Regex> IdDetection = new(() => new Regex(IdFormula, RegexOptions.IgnoreCase));
 
         //// language=regex
         //private const string WysiwygWidthNumFormula = "wysiwyg-width(?<num>\\d+)of(?<all>\\d+)";
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Utils
 
         // language=regex
         private const string WysiwygWidthFormula = "wysiwyg-(?<percent>\\d+)";
-        public static readonly Lazy<Regex> WysiwygWidthLazy = new Lazy<Regex>(() => new Regex(WysiwygWidthFormula, RegexOptions.IgnoreCase));
+        public static readonly Lazy<Regex> WysiwygWidthLazy = new(() => new Regex(WysiwygWidthFormula, RegexOptions.IgnoreCase));
 
     }
 }

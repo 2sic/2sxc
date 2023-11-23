@@ -75,7 +75,7 @@ namespace ToSic.Sxc.WebApi.Cms
             {
                 return l.Return(new List<EntityForPickerDto>
                 {
-                    new EntityForPickerDto {Id = -1, Text = "Error occurred pre-fetching entities", Value = Guid.Empty}
+                    new() {Id = -1, Text = "Error occurred pre-fetching entities", Value = Guid.Empty}
                 }, "error");
             }
         }

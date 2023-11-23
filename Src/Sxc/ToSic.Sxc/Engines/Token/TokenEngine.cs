@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Engines
                     (?<template>.*?)
                 </repeat>";
 
-        private static Regex RepeatRegex = new Regex(RepeatPattern, 
+        private static Regex RepeatRegex = new(RepeatPattern, 
                 RegexOptions.IgnoreCase 
                 | RegexOptions.Multiline 
                 | RegexOptions.Singleline 

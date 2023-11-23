@@ -7,8 +7,6 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using static ToSic.Eav.Parameters;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 namespace ToSic.Sxc.Code.CodeHelpers
 {
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -22,7 +20,7 @@ namespace ToSic.Sxc.Code.CodeHelpers
 
         public List<Exception> ExceptionsOrNull { get; private set; }
 
-        public void Add(Exception ex) => (ExceptionsOrNull ?? (ExceptionsOrNull = new List<Exception>())).Add(ex);
+        public void Add(Exception ex) => (ExceptionsOrNull ??= new List<Exception>()).Add(ex);
 
         /// <summary>
         /// 

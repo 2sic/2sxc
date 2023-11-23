@@ -44,7 +44,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly Generator<IPagePublishing> _versioning;
         private readonly IPagePublishing _publishing;
 
-        private IContextOfBlock Context => _context ?? (_context = CtxResolver.BlockContextRequired());
+        private IContextOfBlock Context => _context ??= CtxResolver.BlockContextRequired();
         private IContextOfBlock _context;
 
 

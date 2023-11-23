@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Adam
         /// </summary>
         /// <returns></returns>
         internal Folder<TFolderId, TFileId> Folder(bool autoCreate = false) => _folder.Get(() => Folder("", autoCreate));
-        private readonly GetOnce<Folder<TFolderId, TFileId>> _folder = new GetOnce<Folder<TFolderId, TFileId>>();
+        private readonly GetOnce<Folder<TFolderId, TFileId>> _folder = new();
 
     }
 }

@@ -4,7 +4,7 @@
     {
         // Place each definition in an own static variable.
         // Place the keys, etc. here and use these objects for the constant (don't create separate template-key object etc).
-        public static readonly TemplateInfo RazorHybrid = new TemplateInfo("cshtml-hybrid", "Razor Hybrid", ".cshtml", "DetailsTemplate", ForTemplate, TypeRazor)
+        public static readonly TemplateInfo RazorHybrid = new("cshtml-hybrid", "Razor Hybrid", ".cshtml", "DetailsTemplate", ForTemplate, TypeRazor)
         {
             Body = @"@inherits Custom.Hybrid.Razor14
 @* This inherits statement gets you features like App, CmsContext, Data etc. - you can delete this comment *@
@@ -16,7 +16,7 @@
         };
 
         public static readonly TemplateInfo CsHybrid =
-            new TemplateInfo("cs-code-hybrid", "C# Code Hybrid", ".cs", "Helpers", ForCode, TypeNone)
+            new("cs-code-hybrid", "C# Code Hybrid", ".cs", "Helpers", ForCode, TypeNone)
             {
                 Body = @"// Important notes:
 // - This class should have the same name as the file it's in
@@ -37,7 +37,7 @@ public class " + CsCodeTemplateName + @" : Custom.Hybrid.Code14 {
 
 
         public static readonly TemplateInfo ApiHybrid =
-            new TemplateInfo("cs-api-hybrid", "WebApi Hybrid", ".cs", "My", ForApi, TypeNone)
+            new("cs-api-hybrid", "WebApi Hybrid", ".cs", "My", ForApi, TypeNone)
             {
                 Body = @"#if NETCOREAPP // Oqtane
 using Microsoft.AspNetCore.Authorization;
@@ -76,7 +76,7 @@ public class " + CsApiTemplateControllerName + @" : Custom.Hybrid.Api14
 
 
         public static readonly TemplateInfo DataSourceHybrid =
-            new TemplateInfo("data-source-hybrid", "DataSource Hybrid", ".cs", "MyDataSource", ForDataSource, TypeNone)
+            new("data-source-hybrid", "DataSource Hybrid", ".cs", "MyDataSource", ForDataSource, TypeNone)
             {
                 Body = @"// Template Dynamic DataSource - learn about this on https://go.2sxc.org/DsCustom
 using System;

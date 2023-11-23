@@ -30,8 +30,8 @@ namespace ToSic.Sxc.Data.Wrapper
             );
         }
 
-        internal WrapDictionaryDynamic<TKey, TValue> FromDictionary<TKey, TValue>(IDictionary<TKey, TValue> original) 
-            => new WrapDictionaryDynamic<TKey, TValue>(original, this);
+        internal WrapDictionaryDynamic<TKey, TValue> FromDictionary<TKey, TValue>(IDictionary<TKey, TValue> original) =>
+            new(original, this);
 
         public WrapObjectDynamic FromObject(object data, WrapperSettings settings)
         {

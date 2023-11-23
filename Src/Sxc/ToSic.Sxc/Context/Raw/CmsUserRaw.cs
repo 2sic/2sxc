@@ -32,15 +32,15 @@ namespace ToSic.Sxc.Context.Raw
         #region Types and Names for Raw Entities
 
         internal static string TypeName = "User";
-        internal static DataFactoryOptions Options = new DataFactoryOptions(typeName: TypeName, titleField: nameof(Name));
+        internal static DataFactoryOptions Options = new(typeName: TypeName, titleField: nameof(Name));
 
         #endregion
 
         #region Constant user objects for Unknown/Anonymous
 
-        public static readonly CmsUserRaw AnonymousUser = new CmsUserRaw { Id = -1, Name = Constants.Anonymous };
+        public static readonly CmsUserRaw AnonymousUser = new() { Id = -1, Name = Constants.Anonymous };
 
-        public static readonly CmsUserRaw UnknownUser = new CmsUserRaw { Id = -2, Name = Eav.Constants.NullNameId };
+        public static readonly CmsUserRaw UnknownUser = new() { Id = -2, Name = Eav.Constants.NullNameId };
 
 
         #endregion

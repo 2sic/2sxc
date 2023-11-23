@@ -7,13 +7,13 @@
 
         public bool FontRoboto { get; set; }
 
-        public static EditUiResourceSettings EditUi => new EditUiResourceSettings
+        public static EditUiResourceSettings EditUi => new()
         {
             IconsMaterial = true,
             FontRoboto = true,
         };
 
-        public static EditUiResourceSettings QuickDialog = new EditUiResourceSettings
+        public static EditUiResourceSettings QuickDialog = new()
         {
             IconsMaterial = true,
             FontRoboto = true,

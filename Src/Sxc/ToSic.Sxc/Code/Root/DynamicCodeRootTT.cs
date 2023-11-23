@@ -15,6 +15,6 @@ namespace ToSic.Sxc.Code
         //public TModel Model => default;
 
         public TServiceKit Kit => _kit.Get(GetService<TServiceKit>);
-        private readonly GetOnce<TServiceKit> _kit = new GetOnce<TServiceKit>();
+        private readonly GetOnce<TServiceKit> _kit = new();
     }
 }

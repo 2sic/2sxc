@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Services.DataServices
         }
 
         private DataSourceOptionsMs OptionsMs => _optionsHandler.Get(() => new DataSourceOptionsMs(_appIdentity, _getLookup));
-        private readonly GetOnce<DataSourceOptionsMs> _optionsHandler = new GetOnce<DataSourceOptionsMs>();
+        private readonly GetOnce<DataSourceOptionsMs> _optionsHandler = new();
 
         private Func<ILookUpEngine> _getLookup;
 

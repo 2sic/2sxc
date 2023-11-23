@@ -4,7 +4,6 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.Services;
 using App = ToSic.Sxc.Apps.App;
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Run
 {
@@ -52,9 +51,8 @@ namespace ToSic.Sxc.Run
         public override string GlobalTemplatesRoot(int zoneId, int appId) 
             => AppPaths(zoneId, appId).PhysicalPathShared;
 
-        private AppPaths AppPaths(int zoneId, int appId) =>
-            _appPaths ?? (_appPaths =_services.AppPaths.Init(_services.Site,
-                _services.AppStates.Get(new AppIdentity(zoneId, appId))));
+        private AppPaths AppPaths(int zoneId, int appId) => _appPaths ??= _services.AppPaths.Init(_services.Site,
+            _services.AppStates.Get(new AppIdentity(zoneId, appId)));
         private AppPaths _appPaths;
 
 

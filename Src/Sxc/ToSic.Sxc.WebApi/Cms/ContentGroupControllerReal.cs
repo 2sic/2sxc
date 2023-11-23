@@ -48,11 +48,11 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly LazySvc<IPagePublishing> _publishing;
 
 
-        private IContextOfBlock Context => _context ?? (_context = CtxResolver.BlockContextRequired());
+        private IContextOfBlock Context => _context ??= CtxResolver.BlockContextRequired();
         private IContextOfBlock _context;
 
         private IAppWorkCtxPlus AppCtx => _appCtx.Get(() => _appBlocks.CtxSvc.ContextPlus(Context.AppState));
-        private GetOnce<IAppWorkCtxPlus> _appCtx = new GetOnce<IAppWorkCtxPlus>();
+        private readonly GetOnce<IAppWorkCtxPlus> _appCtx = new();
         #endregion
 
         public EntityInListDto Header(Guid guid)

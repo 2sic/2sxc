@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Configuration.Features
     public partial class BuiltInFeatures
     {
 
-        public static readonly Feature ImageServiceMultipleSizes = new Feature(
+        public static readonly Feature ImageServiceMultipleSizes = new(
             "ImageServiceMultipleSizes",
             new Guid("9dab12db-85e5-4fb8-a100-2f009bf32f72"),
             "Image Service - Multiple Sizes",
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Configuration.Features
             Eav.Internal.Features.BuiltInFeatures.ForPatronsPerfectionist
         );
 
-        public static readonly Feature ImageServiceUseFactors = new Feature(
+        public static readonly Feature ImageServiceUseFactors = new(
             "ImageServiceUseFactors",
             new Guid("7d2ce824-b249-466f-928b-21567f4fa5da"),
             "Image Service - Optimize Sizes by Factor",
@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Configuration.Features
         );
 
 
-        public static readonly Feature ImageServiceSetSizes = new Feature(
+        public static readonly Feature ImageServiceSetSizes = new(
             "ImageServiceSetSizes",
             new Guid("31c2c0b6-87c2-4014-89ba-98543858bb8a"),
             "Image Service - Set sizes-attribute on Image Tags",
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Configuration.Features
         );
 
 
-        public static readonly Feature ImageServiceMultiFormat = new Feature(
+        public static readonly Feature ImageServiceMultiFormat = new(
             "ImageServiceMultiFormat",
             new Guid("4262df94-3877-4a5a-ac86-20b4f9b38e87"),
             "Image Service - Multiple Formats",

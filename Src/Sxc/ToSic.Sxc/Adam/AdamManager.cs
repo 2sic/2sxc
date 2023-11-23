@@ -11,8 +11,6 @@ using ToSic.Eav.Plumbing;
 using ToSic.Eav.Apps.Work;
 using ToSic.Sxc.Code;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 namespace ToSic.Sxc.Adam
 {
     /// <summary>
@@ -72,7 +70,7 @@ namespace ToSic.Sxc.Adam
 
         public ISite Site { get; private set; }
 
-        internal CodeDataFactory Cdf => _cdf ?? (_cdf = Services.Cdf.Value);
+        internal CodeDataFactory Cdf => _cdf ??= Services.Cdf.Value;
         private CodeDataFactory _cdf;
         #endregion
 
@@ -92,7 +90,7 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         /// Path to the app assets
         /// </summary>
-        public string Path => _path ?? (_path = Services.AdamConfiguration.PathForApp(AppContext.AppState));
+        public string Path => _path ??= Services.AdamConfiguration.PathForApp(AppContext.AppState);
         private string _path;
 
 

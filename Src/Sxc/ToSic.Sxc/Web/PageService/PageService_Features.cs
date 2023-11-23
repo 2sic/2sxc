@@ -86,12 +86,12 @@ namespace ToSic.Sxc.Web.PageService
         }
 
         private string CdnSource => _cdnSource.Get(() => WebResources.Get<string>(CdnSourcePublicField));
-        private readonly GetOnce<string> _cdnSource = new GetOnce<string>();
+        private readonly GetOnce<string> _cdnSource = new();
 
         private DynamicEntity WebResources => _webResources.Get(() => Settings?.Get(WebResourcesNode) as DynamicEntity);
-        private readonly GetOnce<DynamicEntity> _webResources = new GetOnce<DynamicEntity>();
+        private readonly GetOnce<DynamicEntity> _webResources = new();
 
         private DynamicStack Settings => _settings.Get(() => _DynCodeRoot?.Settings as DynamicStack);
-        private readonly GetOnce<DynamicStack> _settings = new GetOnce<DynamicStack>();
+        private readonly GetOnce<DynamicStack> _settings = new();
     }
 }

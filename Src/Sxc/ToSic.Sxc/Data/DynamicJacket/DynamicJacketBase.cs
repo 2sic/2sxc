@@ -5,7 +5,6 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data.Wrapper;
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Data
 {

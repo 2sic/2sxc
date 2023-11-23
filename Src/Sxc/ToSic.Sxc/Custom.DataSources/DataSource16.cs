@@ -72,7 +72,7 @@ namespace Custom.DataSource
 
         /// <inheritdoc cref="IHasCodeLog.Log" />
         public new ICodeLog Log => _codeLog.Get(() => new CodeLog(_inner.Log));
-        private readonly GetOnce<ICodeLog> _codeLog = new GetOnce<ICodeLog>();
+        private readonly GetOnce<ICodeLog> _codeLog = new();
 
         #endregion
 

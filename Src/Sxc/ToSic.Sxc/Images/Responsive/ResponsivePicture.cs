@@ -8,8 +8,6 @@ using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 namespace ToSic.Sxc.Images
 {
     public class ResponsivePicture: ResponsiveBase, IResponsivePicture
@@ -28,12 +26,12 @@ namespace ToSic.Sxc.Images
                 pic = pic.Style(style);
             return pic;
         });
-        private readonly GetOnce<Picture> _picTag = new GetOnce<Picture>();
+        private readonly GetOnce<Picture> _picTag = new();
 
         protected override IHtmlTag GetOutermostTag() => Picture;
 
         public TagList Sources => _sourceTags.Get(() => SourceTagsInternal(Params.Link.Url, Settings));
-        private readonly GetOnce<TagList> _sourceTags = new GetOnce<TagList>();
+        private readonly GetOnce<TagList> _sourceTags = new();
 
         private TagList SourceTagsInternal(string url, IResizeSettings resizeSettings)
         {

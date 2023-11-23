@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Code
 
 
         public IDevTools DevTools => _devTools.Get(() => new DevTools(IsRazor, CodeFileName, Log));
-        private readonly GetOnce<IDevTools> _devTools = new GetOnce<IDevTools>();
+        private readonly GetOnce<IDevTools> _devTools = new();
 
     }
 }

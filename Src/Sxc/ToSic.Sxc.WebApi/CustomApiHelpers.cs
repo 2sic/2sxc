@@ -86,32 +86,28 @@ namespace ToSic.Sxc.WebApi
         public static bool IsValidXml(byte[] body)
         {
             // load the data into a memory stream
-            using (var stream = new MemoryStream(body))
-            {
-                return IsValidXml(stream);
-            }
+            using var stream = new MemoryStream(body);
+            return IsValidXml(stream);
         }
 
         public static bool IsMinimallyValidXml(XmlReader disposable)
         {
-            using (var xmlReader = disposable)
+            using var xmlReader = disposable;
+            try
             {
-                try
+                while (xmlReader.Read())
                 {
-                    while (xmlReader.Read())
-                    {
-                        ; // Intentionally left blank.
-                    }
-                    return true;
+                    ; // Intentionally left blank.
                 }
-                catch (XmlException)
-                {
-                    return false;
-                }
+                return true;
+            }
+            catch (XmlException)
+            {
+                return false;
             }
         }
 
-        private static readonly XmlReaderSettings _settings = new XmlReaderSettings
+        private static readonly XmlReaderSettings _settings = new()
         {
             CheckCharacters = true,
             ConformanceLevel = ConformanceLevel.Document,
@@ -141,20 +137,16 @@ namespace ToSic.Sxc.WebApi
 
         public static Encoding GetEncoding(Stream stream)
         {
-            using (var reader = new StreamReader(stream, detectEncodingFromByteOrderMarks: true))
-            {
-                reader.ReadToEnd();
-                stream.Position = 0;
-                return reader.CurrentEncoding; // the reader detects the encoding!
-            }
+            using var reader = new StreamReader(stream, detectEncodingFromByteOrderMarks: true);
+            reader.ReadToEnd();
+            stream.Position = 0;
+            return reader.CurrentEncoding; // the reader detects the encoding!
         }
 
         public static Encoding GetEncoding(byte[] charBody)
         {
-            using (var memoryStream = new MemoryStream(charBody))
-            {
-                return GetEncoding(memoryStream);
-            }
+            using var memoryStream = new MemoryStream(charBody);
+            return GetEncoding(memoryStream);
         }
 
         public static MediaTypeHeaderValue PrepareMediaTypeHeaderValue(string contentType, Encoding encoding)

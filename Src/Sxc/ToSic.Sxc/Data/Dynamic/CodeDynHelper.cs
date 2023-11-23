@@ -3,7 +3,6 @@ using ToSic.Eav.Data;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data.Decorators;
 using ToSic.Sxc.Data.Typed;
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Data
 {
@@ -20,12 +19,12 @@ namespace ToSic.Sxc.Data
         }
 
         public IDynamicEntity Presentation => _prs.Get(() => SubDataFactory.SubDynEntityOrNull(Entity.GetDecorator<EntityInBlockDecorator>()?.Presentation));
-        private readonly GetOnce<IDynamicEntity> _prs = new GetOnce<IDynamicEntity>();
+        private readonly GetOnce<IDynamicEntity> _prs = new();
 
         public IMetadata Metadata => _md.Get(() => SubDataFactory.Cdf.Metadata(Entity?.Metadata));
-        private readonly GetOnce<IMetadata> _md = new GetOnce<IMetadata>();
+        private readonly GetOnce<IMetadata> _md = new();
         public IDynamicEntity Parent => _dp.Get(() => SubDataFactory.SubDynEntityOrNull(Entity.GetDecorator<EntityInBlockDecorator>()?.Parent));
-        private readonly GetOnce<IDynamicEntity> _dp = new GetOnce<IDynamicEntity>();
+        private readonly GetOnce<IDynamicEntity> _dp = new();
 
 
 

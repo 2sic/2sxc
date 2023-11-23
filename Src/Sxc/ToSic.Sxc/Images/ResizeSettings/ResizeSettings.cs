@@ -3,8 +3,6 @@ using System.Collections.Specialized;
 using ToSic.Lib.Documentation;
 using static ToSic.Sxc.Images.ImageConstants;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 namespace ToSic.Sxc.Images
 {
     [PrivateApi("Hide implementation")]

@@ -135,7 +135,7 @@ namespace ToSic.Sxc.Web.Url
             // Case #2: Already a string, return that
             if (data is string str)
                 return str.HasValue()
-                    ? new List<UrlValuePair> { new UrlValuePair(null, str, true) }
+                    ? new List<UrlValuePair> { new(null, str, true) }
                     : null;
 
             // Case #3: It's an object or an array of objects (but not a string)

@@ -15,13 +15,11 @@ using static System.StringComparer;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 using static ToSic.Sxc.Images.ImageDecorator;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 namespace ToSic.Sxc.Images
 {
     /// <summary>
     /// IMPORTANT: Changed to internal for v16.08. #InternalMaybeSideEffectDynamicRazor
-    /// This is how it should be done, but it could have a side-effect in dynamic razor in edge cases where interface-type is "forgotton" by Razor.
+    /// This is how it should be done, but it could have a side-effect in dynamic razor in edge cases where interface-type is "forgotten" by Razor.
     /// Keep unless we run into trouble.
     /// Remove this comment 2024 end of Q1 if all works, otherwise re-document why it must be public
     ///
@@ -47,7 +45,7 @@ namespace ToSic.Sxc.Images
             Log.A(ImgService.Debug, $"{nameof(ThisResize)}: " + t?.Dump());
             return t;
         });
-        private readonly GetOnce<OneResize> _thisResize = new GetOnce<OneResize>();
+        private readonly GetOnce<OneResize> _thisResize = new();
 
 
         internal IResizeSettings Settings => Params.Settings;
@@ -99,10 +97,10 @@ namespace ToSic.Sxc.Images
             return l.Return(imgTag, "added");
         }
 
-        private readonly GetOnce<Img> _imgTag = new GetOnce<Img>();
+        private readonly GetOnce<Img> _imgTag = new();
 
         public IHtmlTag Tag => _tag.Get(GetTagWithToolbar);
-        private readonly GetOnce<IHtmlTag> _tag = new GetOnce<IHtmlTag>();
+        private readonly GetOnce<IHtmlTag> _tag = new();
 
         protected virtual IHtmlTag GetOutermostTag() => Img;
 
@@ -132,7 +130,7 @@ namespace ToSic.Sxc.Images
         /// <inheritdoc />
         public IToolbarBuilder Toolbar() => _toolbar.Get(() =>
         {
-            if (Params.Toolbar is bool toggle && !toggle) return null;
+            if (Params.Toolbar is false) return null;
             if (Params.Toolbar is IToolbarBuilder customToolbar) return customToolbar;
 
             // If we're creating an image for a string value, it won't have a field or parent.
@@ -159,13 +157,13 @@ namespace ToSic.Sxc.Images
             return imgTlb;
         });
 
-        private readonly GetOnce<IToolbarBuilder> _toolbar = new GetOnce<IToolbarBuilder>();
+        private readonly GetOnce<IToolbarBuilder> _toolbar = new();
 
         public string Description => _description.Get(() => Params.Field?.ImageDecoratorOrNull?.Description);
-        private readonly GetOnce<string> _description = new GetOnce<string>();
+        private readonly GetOnce<string> _description = new();
 
         public string DescriptionExtended => _descriptionDet.Get(() => Params.Field?.ImageDecoratorOrNull?.DescriptionExtended);
-        private readonly GetOnce<string> _descriptionDet = new GetOnce<string>();
+        private readonly GetOnce<string> _descriptionDet = new();
 
         /// <inheritdoc />
         public string Alt => _alt.Get(() =>
@@ -176,12 +174,12 @@ namespace ToSic.Sxc.Images
             // If all else fails, take the fallback specified in the call - IF it's allowed
             ?? (Params.Field?.ImageDecoratorOrNull?.SkipFallbackTitle ?? false ? null : Params.ImgAltFallback)
             );
-        private readonly GetOnce<string> _alt = new GetOnce<string>();
+        private readonly GetOnce<string> _alt = new();
 
 
         /// <inheritdoc />
         public string Class => _imgClass.Get(() => StyleOrClassGenerator(Params.ImgClass, Recipe.SpecialPropertyClass));
-        private readonly GetOnce<string> _imgClass = new GetOnce<string>();
+        private readonly GetOnce<string> _imgClass = new();
 
         private string StyleOrClassGenerator(string codePart, string key)
         {
@@ -212,7 +210,7 @@ namespace ToSic.Sxc.Images
 
         /// <inheritdoc />
         public string SrcSet => _srcSet.Get(SrcSetGenerator);
-        private readonly GetOnce<string> _srcSet = new GetOnce<string>();
+        private readonly GetOnce<string> _srcSet = new();
         private string SrcSetGenerator()
         {
             var isEnabled = ImgService.Features.IsEnabled(ImageServiceMultipleSizes.NameId);
@@ -228,15 +226,15 @@ namespace ToSic.Sxc.Images
 
         /// <inheritdoc />
         public string Width => _width.Get(() => UseIfActive(ThisResize.Recipe?.SetWidth, ThisResize.Width));
-        private readonly GetOnce<string> _width = new GetOnce<string>();
+        private readonly GetOnce<string> _width = new();
 
         /// <inheritdoc />
         public string Height => _height.Get(() => UseIfActive(ThisResize.Recipe?.SetHeight, ThisResize.Height));
-        private readonly GetOnce<string> _height = new GetOnce<string>();
+        private readonly GetOnce<string> _height = new();
 
         /// <inheritdoc />
         public string Sizes => _sizes.Get(() => UseIfActive(ImgService.Features.IsEnabled(ImageServiceSetSizes.NameId), ThisResize.Recipe?.Sizes));
-        private readonly GetOnce<string> _sizes = new GetOnce<string>();
+        private readonly GetOnce<string> _sizes = new();
 
         private string UseIfActive<T>(bool? active, T value, [CallerMemberName] string name = default)
         {

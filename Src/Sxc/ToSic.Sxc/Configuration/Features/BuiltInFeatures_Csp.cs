@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Configuration.Features
 {
     public partial class BuiltInFeatures
     {
-        public static readonly Feature ContentSecurityPolicy = new Feature(
+        public static readonly Feature ContentSecurityPolicy = new(
             "ContentSecurityPolicy",
             new Guid("e5c99abf-9bc4-4e6c-9cc4-4bda22c0ab85"),
             "Enable Content Security Policy and related APIs. ",
@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Configuration.Features
             Eav.Internal.Features.BuiltInFeatures.ForPatronsSentinelDisabled
         );
         
-        public static readonly Feature ContentSecurityPolicyTestUrl = new Feature(
+        public static readonly Feature ContentSecurityPolicyTestUrl = new(
             "ContentSecurityPolicyTestUrl",
             new Guid("94c3d7e5-5d89-4a68-b710-95bfc29199ba"),
             "Enable the parameter ?csp=true in URL for testing.",
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Configuration.Features
             FeaturesCatalogRules.Security0Improved,
             Eav.Internal.Features.BuiltInFeatures.ForPatronsSentinelDisabled
         );
-        public static readonly Feature ContentSecurityPolicyEnforceTemp = new Feature(
+        public static readonly Feature ContentSecurityPolicyEnforceTemp = new(
             "ContentSecurityPolicyEnforceTemp",
             new Guid("ece0943d-f3c0-422c-9d06-c20b9b83df8d"),
             "Enable CSP on all pages (temporary setting).",
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Configuration.Features
             Eav.Internal.Features.BuiltInFeatures.ForPatronsSentinelDisabled
         );
 
-        public static readonly Feature CdnSourcePublic = new Feature(
+        public static readonly Feature CdnSourcePublic = new(
             nameof(CdnSourcePublic),
             new Guid("b8b993d3-a02b-4099-a2a8-c06bf8961a66"),
             "Change CDN source for public Web Resources",
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Configuration.Features
             FeaturesCatalogRules.Security0Improved,
             Eav.Internal.Features.BuiltInFeatures.ForPatronsSentinelEnabled
         );
-        public static readonly Feature CdnSourceEdit = new Feature(
+        public static readonly Feature CdnSourceEdit = new(
             nameof(CdnSourceEdit),
             new Guid("34dce40e-30fc-4d4f-b1ab-8fcface90e61"),
             "Change CDN source for Edit Web Resources",
@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Configuration.Features
         );
 
         // Note: not in use ATM
-        public static readonly Feature CdnSourceAdmin = new Feature(
+        public static readonly Feature CdnSourceAdmin = new(
             nameof(CdnSourceAdmin),
             new Guid("c799c71e-aa4a-4a30-ae8a-e177e615a36c"),
             "Change CDN source for Admin Web Resources",
@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Configuration.Features
         );
 
         // Note: not in use ATM
-        public static readonly Feature CdnSourceDev = new Feature(
+        public static readonly Feature CdnSourceDev = new(
             nameof(CdnSourceDev),
             new Guid("81a51003-ad55-491e-9749-d74529496465"),
             "Change CDN source for Development Web Resources",

@@ -82,10 +82,10 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         private ToolbarBuilderConfiguration _configuration;
 
-        private ToolbarBuilderUtilities Utils => _utils ?? (_utils = new ToolbarBuilderUtilities());
+        private ToolbarBuilderUtilities Utils => _utils ??= new ToolbarBuilderUtilities();
         private ToolbarBuilderUtilities _utils;
 
-        public List<ToolbarRuleBase> Rules { get; } = new List<ToolbarRuleBase>();
+        public List<ToolbarRuleBase> Rules { get; } = new();
 
         public IToolbarBuilder Toolbar(
             string toolbarTemplate,

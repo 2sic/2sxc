@@ -104,7 +104,7 @@ namespace ToSic.Sxc.DataSources
                 { StreamFiles, files }
             };
         })[streamName];
-        private readonly GetOnce<Dictionary<string, IImmutableList<IEntity>>> _multiAccess = new GetOnce<Dictionary<string, IImmutableList<IEntity>>>();
+        private readonly GetOnce<Dictionary<string, IImmutableList<IEntity>>> _multiAccess = new();
 
         /// <summary>
         /// Get both the files and folders stream

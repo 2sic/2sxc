@@ -1,9 +1,7 @@
 ﻿using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Images;
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Data
 {
@@ -36,7 +34,7 @@ namespace ToSic.Sxc.Data
             // the string before using it for Cms.Html(...)
             set => _raw.Reset(value);
         }
-        private readonly GetOnce<object> _raw = new GetOnce<object>();
+        private readonly GetOnce<object> _raw = new();
 
 
         /// <inheritdoc />
@@ -47,7 +45,7 @@ namespace ToSic.Sxc.Data
             // WIP 2023-10-28 2dm Experimental Setter #FieldSetExperimental
             set => _value.Reset(value);
         }
-        private readonly GetOnce<object> _value = new GetOnce<object>();
+        private readonly GetOnce<object> _value = new();
 
         /// <inheritdoc />
         public string Url
@@ -56,12 +54,12 @@ namespace ToSic.Sxc.Data
             // WIP 2023-10-28 2dm Experimental Setter #FieldSetExperimental
             set => _url.Reset(value);
         }
-        private readonly GetOnce<string> _url = new GetOnce<string>();
+        private readonly GetOnce<string> _url = new();
 
 
         // 2023-08-14 v16.03 removed by 2dm as never used; KISS
         public IMetadata Metadata => _dynMeta.Get(() => new Metadata(MetadataOfValue, _cdf));
-        private readonly GetOnce<IMetadata> _dynMeta = new GetOnce<IMetadata>();
+        private readonly GetOnce<IMetadata> _dynMeta = new();
 
 
         private IMetadataOf MetadataOfValue => _itemMd.Get(() =>
@@ -72,12 +70,12 @@ namespace ToSic.Sxc.Data
                 ImageDecorator.AddRecommendations(md, Url, _cdf?._DynCodeRoot); // needs the url so it can check if we use image recommendations
                 return md;
             });
-        private readonly GetOnce<IMetadataOf> _itemMd = new GetOnce<IMetadataOf>();
+        private readonly GetOnce<IMetadataOf> _itemMd = new();
 
         [PrivateApi("Internal use only, may change at any time")]
         public ImageDecorator ImageDecoratorOrNull =>
             _imgDec2.Get(() => ImageDecorator.GetOrNull(this, _cdf.Dimensions));
-        private readonly GetOnce<ImageDecorator> _imgDec2 = new GetOnce<ImageDecorator>();
+        private readonly GetOnce<ImageDecorator> _imgDec2 = new();
 
         IMetadataOf IHasMetadata.Metadata => MetadataOfValue;
     }

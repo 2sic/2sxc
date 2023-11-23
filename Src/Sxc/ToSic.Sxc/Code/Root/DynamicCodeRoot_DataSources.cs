@@ -20,11 +20,11 @@ namespace ToSic.Sxc.Code
             // show explanation what went wrong
             ?? throw new Exception("Tried to get Lookups for creating data-sources; neither module-context nor app is known.")
         );
-        private readonly GetOnce<ILookUpEngine> _lookupEngine = new GetOnce<ILookUpEngine>();
+        private readonly GetOnce<ILookUpEngine> _lookupEngine = new();
 
         [PrivateApi]
         public DynamicCodeDataSources DataSources => _dataSources.Get(() => Services.DataSources.Value.Setup(App, () => LookUpForDataSources));
-        private readonly GetOnce<DynamicCodeDataSources> _dataSources = new GetOnce<DynamicCodeDataSources>();
+        private readonly GetOnce<DynamicCodeDataSources> _dataSources = new();
 
 
         /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />

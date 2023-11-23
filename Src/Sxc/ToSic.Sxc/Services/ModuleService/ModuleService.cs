@@ -21,8 +21,8 @@ namespace ToSic.Sxc.Services
         }
 
         public IReadOnlyCollection<IHtmlTag> MoreTags => _moreTags;
-        private readonly List<IHtmlTag> _moreTags = new List<IHtmlTag>();
+        private readonly List<IHtmlTag> _moreTags = new();
 
-        private readonly HashSet<string> ExistingKeys = new HashSet<string>();
+        private readonly HashSet<string> ExistingKeys = new();
     }
 }

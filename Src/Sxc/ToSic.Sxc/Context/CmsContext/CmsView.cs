@@ -8,8 +8,6 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using static ToSic.Eav.Parameters;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 namespace ToSic.Sxc.Context
 {
     [PrivateApi("Hide implementation")]
@@ -38,7 +36,7 @@ namespace ToSic.Sxc.Context
         protected override IMetadataOf GetMetadataOf()
             => ExtendWithRecommendations(GetContents()?.Metadata);
 
-        public IFolder Folder => _folder ?? (_folder = FolderAdvanced());
+        public IFolder Folder => _folder ??= FolderAdvanced();
         private IFolder _folder;
 
         [PrivateApi]
@@ -51,7 +49,7 @@ namespace ToSic.Sxc.Context
 
         /// <inheritdoc />
         public string Path => _path.Get(() => FigureOutPath(_block?.App.Path));
-        private readonly GetOnce<string> _path = new GetOnce<string>();
+        private readonly GetOnce<string> _path = new();
 
         ///// <inheritdoc />
         //public string PathShared => _pathShared.Get(() => FigureOutPath(_block?.App.PathShared));

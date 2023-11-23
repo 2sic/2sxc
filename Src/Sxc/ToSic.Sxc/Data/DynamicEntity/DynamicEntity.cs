@@ -14,8 +14,6 @@ using static ToSic.Eav.Parameters;
 using System.Dynamic;
 using ToSic.Sxc.Blocks;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 namespace ToSic.Sxc.Data
 {
     /// <summary>
@@ -68,23 +66,23 @@ namespace ToSic.Sxc.Data
         private readonly bool _propsRequired;
 
         [PrivateApi]
-        IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ?? (_propLookup = new PropLookupWithPathEntity(Entity, canDebug: this));
+        IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= new PropLookupWithPathEntity(Entity, canDebug: this);
         private PropLookupWithPathEntity _propLookup;
 
         [PrivateApi]
-        internal GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, _propsRequired, childrenShouldBeDynamic: true, canDebug: this));
+        internal GetAndConvertHelper GetHelper => _getHelper ??= new GetAndConvertHelper(this, Cdf, _propsRequired, childrenShouldBeDynamic: true, canDebug: this);
         private GetAndConvertHelper _getHelper;
 
         [PrivateApi]
-        internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, _propsRequired, canDebug: this));
+        internal SubDataFactory SubDataFactory => _subData ??= new SubDataFactory(Cdf, _propsRequired, canDebug: this);
         private SubDataFactory _subData;
 
         [PrivateApi]
-        internal CodeDynHelper DynHelper => _dynHelper ?? (_dynHelper = new CodeDynHelper(Entity, SubDataFactory));
+        internal CodeDynHelper DynHelper => _dynHelper ??= new CodeDynHelper(Entity, SubDataFactory);
         private CodeDynHelper _dynHelper;
 
         [PrivateApi]
-        internal ITypedItem TypedItem => _typedItem ?? (_typedItem = new TypedItemOfEntity(this, Entity, Cdf, _propsRequired));
+        internal ITypedItem TypedItem => _typedItem ??= new TypedItemOfEntity(this, Entity, Cdf, _propsRequired);
         private TypedItemOfEntity _typedItem;
 
 

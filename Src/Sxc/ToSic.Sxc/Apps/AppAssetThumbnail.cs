@@ -43,6 +43,6 @@ namespace ToSic.Sxc.Apps
             return null;
 
         });
-        private readonly GetOnce<string> _url = new GetOnce<string>();
+        private readonly GetOnce<string> _url = new();
     }
 }

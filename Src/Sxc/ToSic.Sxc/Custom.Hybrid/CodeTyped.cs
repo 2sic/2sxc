@@ -10,8 +10,6 @@ using ToSic.Sxc.Services;
 using static ToSic.Eav.Parameters;
 using Constants = ToSic.Sxc.Constants;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
 {
@@ -37,7 +35,7 @@ namespace Custom.Hybrid
         public TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
 
         private TypedCode16Helper CodeHelper 
-            => _codeHelper ?? (_codeHelper = new TypedCode16Helper(_DynCodeRoot, MyData, null, false, "c# code file"));
+            => _codeHelper ??= new TypedCode16Helper(_DynCodeRoot, MyData, null, false, "c# code file");
         private TypedCode16Helper _codeHelper;
 
         [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel16;
@@ -46,7 +44,7 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="IDynamicCode16.Kit"/>
         public ServiceKit16 Kit => _kit.Get(() => _DynCodeRoot.GetKit<ServiceKit16>());
-        private readonly GetOnce<ServiceKit16> _kit = new GetOnce<ServiceKit16>();
+        private readonly GetOnce<ServiceKit16> _kit = new();
 
         #region Stuff added by Code12
 

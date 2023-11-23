@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using ToSic.Eav.Code.Help;
 using static ToSic.Sxc.Code.Help.CodeHelpDb;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 namespace ToSic.Sxc.Code.Help
 {
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -25,7 +23,7 @@ namespace ToSic.Sxc.Code.Help
         /// <summary>
         /// List re-used in v12 and v14
         /// </summary>
-        internal static List<CodeHelp> Issues12To14 => _help12And14 ?? (_help12And14 = BuildList(
+        internal static List<CodeHelp> Issues12To14 => _help12And14 ??= BuildList(
             // Access .List
             ManyHelps(
                 HelpNotExists12("List", "AsDynamic(Data)"),
@@ -73,7 +71,7 @@ You are probably calling <code>CreateSource(stringNameOfSource, ...)</code> whic
             //[PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataStream stream) => Obsolete10.AsDynamicForList();
             //[PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataSource source) => Obsolete10.AsDynamicForList();
             //[PrivateApi] public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => Obsolete10.AsDynamicForList();
-        ));
+        );
         private static List<CodeHelp> _help12And14;
 
         /// <summary>
@@ -84,7 +82,7 @@ You are probably calling <code>CreateSource(stringNameOfSource, ...)</code> whic
 
         #region Help which is used in various places
 
-        internal static CodeHelp DnnObjectNotInHybrid = new CodeHelp(name: "Object-Dnn-Not-In-Hybrid",
+        internal static CodeHelp DnnObjectNotInHybrid = new(name: "Object-Dnn-Not-In-Hybrid",
             detect: @"error CS0118: 'Dnn' is a 'namespace' but is used like a 'variable'",
             uiMessage: $@"
 You are probably trying to use the 'Dnn' object which is not supported in 'Custom.Hybrid.Razor' templates. 

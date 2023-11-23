@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Data
         // There are cases where these were supplied using SetFallbacks, but in some cases none of this is known
         internal string[] Dimensions => _dimensions.Get(() => _DynCodeRoot?.CmsContext.SafeLanguagePriorityCodes()
                                                               ?? _siteOrNull.SafeLanguagePriorityCodes());
-        private readonly GetOnce<string[]> _dimensions = new GetOnce<string[]>();
+        private readonly GetOnce<string[]> _dimensions = new();
 
         internal IBlock BlockOrNull => _DynCodeRoot?.Block;
 

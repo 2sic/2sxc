@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc cref="IDynamicCode.Content" />
         public dynamic Content => _contentGo.Get(() => TryToBuildFirstOfStream(StreamDefaultName));
-        private readonly GetOnce<object> _contentGo = new GetOnce<object>();
+        private readonly GetOnce<object> _contentGo = new();
 
 
         /// <inheritdoc cref="IDynamicCode.Header" />
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Code
             l.A($"Header not yet found in {StreamHeader}, will try {StreamHeaderOld}");
             return TryToBuildFirstOfStream(StreamHeaderOld);
         });
-        private readonly GetOnce<object> _header = new GetOnce<object>();
+        private readonly GetOnce<object> _header = new();
 
         private dynamic TryToBuildFirstOfStream(string sourceStream)
         {

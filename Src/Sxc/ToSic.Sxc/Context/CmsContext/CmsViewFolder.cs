@@ -3,7 +3,6 @@ using ToSic.Eav.Helpers;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps;
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Context
 {
@@ -24,15 +23,15 @@ namespace ToSic.Sxc.Context
 
 
         public override string Path => _path.Get(() => FigureOutPath(_shared ? _app.RelativePathShared : _app.RelativePath).Backslash());
-        private readonly GetOnce<string> _path = new GetOnce<string>();
+        private readonly GetOnce<string> _path = new();
 
         public override string Url => _url.Get(() => FigureOutPath(_shared ? _app.PathShared : _app.Path));
-        private readonly GetOnce<string> _url = new GetOnce<string>();
+        private readonly GetOnce<string> _url = new();
 
         public override string PhysicalPath => _physPath.Get(() => FigureOutPath(_shared ? _app.PhysicalPathShared : _app.PhysicalPath).Backslash());
-        private readonly GetOnce<string> _physPath = new GetOnce<string>();
+        private readonly GetOnce<string> _physPath = new();
 
-        public override string Name => _name ?? (_name = new DirectoryInfo(Path).Name);
+        public override string Name => _name ??= new DirectoryInfo(Path).Name;
         private string _name;
 
         /// <summary>

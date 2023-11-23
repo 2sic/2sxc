@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Compatibility
         /// to keep things streamlined, we don't want to clutter the system with additional type definitions
         /// even though they are the same.
         /// </summary>
-        private static Dictionary<string, string> _inputTypeMap = new Dictionary<string, string>
+        private static Dictionary<string, string> _inputTypeMap = new()
         {
             // This one would be used once multiple wysiwyg implementations would need
             // to explicitly say TinyMCE. As of now, the default is the same

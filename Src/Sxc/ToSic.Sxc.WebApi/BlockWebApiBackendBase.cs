@@ -33,18 +33,18 @@ namespace ToSic.Sxc.WebApi
         public Sxc.Context.IContextResolver CtxResolver { get; }
 
         protected IContextOfApp ContextOfBlock =>
-            _contextOfAppOrBlock ?? (_contextOfAppOrBlock = CtxResolver.BlockContextRequired());
+            _contextOfAppOrBlock ??= CtxResolver.BlockContextRequired();
         private IContextOfApp _contextOfAppOrBlock;
         #region Block-Context Requiring properties
 
-        public IBlock Block => _block ?? (_block = CtxResolver.BlockRequired());
+        public IBlock Block => _block ??= CtxResolver.BlockRequired();
         private IBlock _block;
 
-        protected IAppWorkCtx AppWorkCtx => _appWorkCtx ?? (_appWorkCtx = AppWorkCtxService.Context(Block.Context.AppState));
+        protected IAppWorkCtx AppWorkCtx => _appWorkCtx ??= AppWorkCtxService.Context(Block.Context.AppState);
         private IAppWorkCtx _appWorkCtx;
-        protected IAppWorkCtxPlus AppWorkCtxPlus => _appWorkCtxPlus ?? (_appWorkCtxPlus = AppWorkCtxService.ToCtxPlus(AppWorkCtx));
+        protected IAppWorkCtxPlus AppWorkCtxPlus => _appWorkCtxPlus ??= AppWorkCtxService.ToCtxPlus(AppWorkCtx);
         private IAppWorkCtxPlus _appWorkCtxPlus;
-        protected IAppWorkCtxWithDb AppWorkCtxDb => _appWorkCtxDb ?? (_appWorkCtxDb = AppWorkCtxService.CtxWithDb(AppWorkCtx.AppState));
+        protected IAppWorkCtxWithDb AppWorkCtxDb => _appWorkCtxDb ??= AppWorkCtxService.CtxWithDb(AppWorkCtx.AppState);
         private IAppWorkCtxWithDb _appWorkCtxDb;
 
         #endregion

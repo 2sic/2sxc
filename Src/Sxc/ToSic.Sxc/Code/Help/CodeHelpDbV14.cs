@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Code.Help;
 using static ToSic.Sxc.Code.Help.CodeHelpDbV12;
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Code.Help
 {
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class CodeHelpDbV14
     {
-        internal static List<CodeHelp> Compile14 => _help ?? (_help = CodeHelpDb.BuildList(
+        internal static List<CodeHelp> Compile14 => _help ??= CodeHelpDb.BuildList(
             // All which are common in 12 and 14
             Issues12To14,
 
@@ -21,7 +20,7 @@ namespace ToSic.Sxc.Code.Help
             // v16.01 AsTyped / AsTypedList
             HelpRemoved14("AsTyped", "brc-1602", null),
             HelpRemoved14("AsTypedList", "brc-1602", null)
-        ));
+        );
         private static List<CodeHelp> _help;
 
 
@@ -33,7 +32,7 @@ namespace ToSic.Sxc.Code.Help
             }.Generate();
 
 
-        internal static CodeHelp SystemConvertIncorrectUse = new CodeHelp(name: "System.Convert-Incorrect-Use",
+        internal static CodeHelp SystemConvertIncorrectUse = new(name: "System.Convert-Incorrect-Use",
             detect: "error CS0117: 'System.Convert' does not contain a definition for",
             linkCode: null,
             uiMessage: @"

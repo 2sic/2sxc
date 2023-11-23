@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
     {
         public ContentSecurityPolicyServiceBase(): base($"{Constants.SxcLogName}.CspSvc") { }
 
-        public CspParameters Policy = new CspParameters();
+        public CspParameters Policy = new();
 
         public virtual bool IsEnforced => false;
 

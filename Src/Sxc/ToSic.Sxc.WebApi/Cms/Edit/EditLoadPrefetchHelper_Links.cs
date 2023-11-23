@@ -60,7 +60,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 return new LinkInfoDto { Value = "error" };
             }
         }
-        private readonly GetOnce<HyperlinkBackend<int, int>> _hyperlinkBackend = new GetOnce<HyperlinkBackend<int, int>>();
+        private readonly GetOnce<HyperlinkBackend<int, int>> _hyperlinkBackend = new();
 
 
         private static List<BundleWithLinkField> BundleWithLinkFields(EditDto editData, bool includeStringFields = false)

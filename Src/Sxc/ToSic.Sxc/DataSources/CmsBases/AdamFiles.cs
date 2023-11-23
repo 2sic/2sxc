@@ -112,7 +112,7 @@ namespace ToSic.Sxc.DataSources
 
             return (entities, "ok");
         }));
-        private readonly GetOnce<IImmutableList<IEntity>> _getInternal = new GetOnce<IImmutableList<IEntity>>();
+        private readonly GetOnce<IImmutableList<IEntity>> _getInternal = new();
 
     }
 }

@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Edit.Toolbar
     // The current setup is quite complex as it handles many different scenarios and skips certain values in those scenarios
     internal class ItemToolbar: ItemToolbarBase
     {
-        protected readonly List<ItemToolbarAction> Actions = new List<ItemToolbarAction>();
+        protected readonly List<ItemToolbarAction> Actions = new();
         protected readonly object ClassicToolbarOrNull;
         protected readonly object Settings;
 

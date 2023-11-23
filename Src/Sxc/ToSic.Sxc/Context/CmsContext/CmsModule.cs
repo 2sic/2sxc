@@ -2,7 +2,6 @@
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Context
 {
@@ -17,7 +16,7 @@ namespace ToSic.Sxc.Context
 
         public int Id => GetContents()?.Id ?? 0;
 
-        public ICmsBlock Block => _cmsBlock ?? (_cmsBlock = new CmsBlock(_block.BlockBuilder.RootBuilder.Block));
+        public ICmsBlock Block => _cmsBlock ??= new CmsBlock(_block.BlockBuilder.RootBuilder.Block);
         private ICmsBlock _cmsBlock;
         private readonly IBlock _block;
 

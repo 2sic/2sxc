@@ -1,7 +1,4 @@
-﻿
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
-using ToSic.Lib.Documentation;
+﻿using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Services
 {
@@ -9,7 +6,7 @@ namespace ToSic.Sxc.Services
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class KeyService : IKeyService
     {
-        private UniqueKeysServices UniqueKeysSvc => _uniqueKeysServices ?? (_uniqueKeysServices = new UniqueKeysServices());
+        private UniqueKeysServices UniqueKeysSvc => _uniqueKeysServices ??= new UniqueKeysServices();
         private UniqueKeysServices _uniqueKeysServices;
 
         /// <inheritdoc cref="IKeyService.UniqueKey"/>

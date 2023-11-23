@@ -12,10 +12,10 @@
         }
 
         public static WrapperSettings Dyn(bool children, bool realObjectsToo, bool propsRequired = false)
-            => new WrapperSettings(wrapChildren: children, wrapRealObjects: realObjectsToo, wrapToDynamic: true, propsRequired: propsRequired);
+            => new(wrapChildren: children, wrapRealObjects: realObjectsToo, wrapToDynamic: true, propsRequired: propsRequired);
 
         public static WrapperSettings Typed(bool children, bool realObjectsToo, bool propsRequired = true)
-            => new WrapperSettings(wrapChildren: children, wrapRealObjects: realObjectsToo, wrapToDynamic: false, propsRequired: propsRequired);
+            => new(wrapChildren: children, wrapRealObjects: realObjectsToo, wrapToDynamic: false, propsRequired: propsRequired);
 
         /// <summary>
         /// Determine if children of this object should be re wrapped into special objects,

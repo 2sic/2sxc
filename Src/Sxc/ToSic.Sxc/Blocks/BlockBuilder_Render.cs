@@ -11,8 +11,6 @@ using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web.PageFeatures;
 using static ToSic.Sxc.Blocks.BlockBuildingConstants;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 namespace ToSic.Sxc.Blocks
 {
     public partial class BlockBuilder
@@ -22,7 +20,7 @@ namespace ToSic.Sxc.Blocks
 
         [PrivateApi]
         public IRenderingHelper RenderingHelper => _rendHelp.Get(() => Services.RenderHelpGen.New().Init(Block));
-        private readonly GetOnce<IRenderingHelper> _rendHelp = new GetOnce<IRenderingHelper>();
+        private readonly GetOnce<IRenderingHelper> _rendHelp = new();
 
         public IRenderResult Run(bool topLevel, object data)
         {
@@ -226,7 +224,7 @@ namespace ToSic.Sxc.Blocks
             if (!string.IsNullOrEmpty(notReady))
             {
                 Log.A("system isn't ready,show upgrade message");
-                var result = RenderingHelper.DesignErrorMessage(new List<Exception>{new Exception(notReady)}, true, encodeMessage: false); // don't encode, as it contains special links
+                var result = RenderingHelper.DesignErrorMessage(new List<Exception>{new(notReady)}, true, encodeMessage: false); // don't encode, as it contains special links
                 return (result, true);
             }
 
@@ -239,7 +237,7 @@ namespace ToSic.Sxc.Blocks
         /// license ok state
         /// </summary>
         protected bool AnyLicenseOk => _licenseOk.Get(() => Services.LicenseService.Value.HaveValidLicense);
-        private readonly GetOnce<bool> _licenseOk = new GetOnce<bool>();
+        private readonly GetOnce<bool> _licenseOk = new();
 
         private string GenerateWarningMsgIfLicenseNotOk()
         {

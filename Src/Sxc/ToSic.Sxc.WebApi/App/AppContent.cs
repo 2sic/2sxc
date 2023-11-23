@@ -236,7 +236,7 @@ namespace ToSic.Sxc.WebApi.App
             }
         }
 
-        private SimpleDataController DataController(IAppIdentity app) => _dataController ?? (_dataController = _dataControllerLazy.Value.Init(app.ZoneId, app.AppId));
+        private SimpleDataController DataController(IAppIdentity app) => _dataController ??= _dataControllerLazy.Value.Init(app.ZoneId, app.AppId);
         private SimpleDataController _dataController;
 
         #endregion

@@ -4,7 +4,6 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Data
 {
@@ -16,11 +15,11 @@ namespace ToSic.Sxc.Data
         {
             _metadata = metadata;
         }
-        IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ?? (_propLookup = new PropLookupMetadata(this, () => Debug));
+        IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= new PropLookupMetadata(this, () => Debug);
         private PropLookupMetadata _propLookup;
 
         [PrivateApi]
-        private CodeItemHelper ItemHelper => _itemHelper ?? (_itemHelper = new CodeItemHelper(GetHelper, this));
+        private CodeItemHelper ItemHelper => _itemHelper ??= new CodeItemHelper(GetHelper, this);
         private CodeItemHelper _itemHelper;
 
         [PrivateApi("Hide this")]

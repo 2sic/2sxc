@@ -54,10 +54,10 @@ namespace ToSic.Sxc.Apps.Work
         #endregion
 
         private List<IEntity> ViewEntities => _viewDs.Get(() => _appEntities.New(AppWorkCtx).Get(AppConstants.TemplateContentType).ToList());
-        private readonly GetOnce<List<IEntity>> _viewDs = new GetOnce<List<IEntity>>();
+        private readonly GetOnce<List<IEntity>> _viewDs = new();
 
         public IList<IView> GetAll()
-            => _all ?? (_all = ViewEntities.Select(p => ViewOfEntity(p, "")).OrderBy(p => p.Name).ToList());
+            => _all ??= ViewEntities.Select(p => ViewOfEntity(p, "")).OrderBy(p => p.Name).ToList();
         private IList<IView> _all;
 
         public IEnumerable<IView> GetRazor() => GetAll().Where(t => t.IsRazor);

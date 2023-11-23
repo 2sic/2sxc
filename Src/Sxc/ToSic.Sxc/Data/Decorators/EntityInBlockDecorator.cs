@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Data.Decorators
             IEntity presentation = DefPresentation,
             bool isDemoItem = DefDemo, 
             IEntity parent = default) =>
-            new EntityDecorator12<EntityInBlockDecorator>(entity, new EntityInBlockDecorator(field, index, presentation, isDemoItem, parent: parent));
+            new(entity, new EntityInBlockDecorator(field, index, presentation, isDemoItem, parent: parent));
 
         protected const IEntity DefPresentation = null;
         protected const bool DefDemo = false;

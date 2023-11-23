@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Images
         internal IEditService EditOrNull => _DynCodeRoot?.Edit;
 
         internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => _DynCodeRoot?.GetService<IToolbarService>());
-        private readonly GetOnce<IToolbarService> _toolbarSvc = new GetOnce<IToolbarService>();
+        private readonly GetOnce<IToolbarService> _toolbarSvc = new();
 
         #endregion
 

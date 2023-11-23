@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Services.GoogleMaps
         /// The default coordinates have a trailing 1.
         /// This way we can detect if it's using the default or the configured values
         /// </summary>
-        internal static MapsCoordinates Defaults = new MapsCoordinates
+        internal static MapsCoordinates Defaults = new()
         {
             Latitude = 47.17471,
             Longitude = 9.46921,

@@ -12,6 +12,6 @@ namespace ToSic.Sxc.Data.Decorators
         }
 
         public static EntityDecorator12<CmsEditDecorator> Wrap(IEntity entity, bool enableEdit) =>
-            new EntityDecorator12<CmsEditDecorator>(entity, new CmsEditDecorator(enableEdit));
+            new(entity, new CmsEditDecorator(enableEdit));
     }
 }

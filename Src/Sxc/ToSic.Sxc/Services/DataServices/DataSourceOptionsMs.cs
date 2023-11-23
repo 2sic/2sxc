@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Services.DataServices
         private readonly Func<ILookUpEngine> _getLookup;
 
         private ILookUpEngine LookUpEngine => _lookupEngine.Get(() => _getLookup?.Invoke());
-        private readonly GetOnce<ILookUpEngine> _lookupEngine = new GetOnce<ILookUpEngine>();
+        private readonly GetOnce<ILookUpEngine> _lookupEngine = new();
 
         public IDataSourceOptions SafeOptions(object parameters, object options, bool identityRequired = false)
         {

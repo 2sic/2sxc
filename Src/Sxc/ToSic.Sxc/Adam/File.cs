@@ -4,11 +4,8 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
-
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Adam
 {
@@ -27,8 +24,7 @@ namespace ToSic.Sxc.Adam
 
         /// <inheritdoc />
         [JsonIgnore]
-        public IMetadata Metadata => _metadata 
-            ?? (_metadata = AdamManager.Create(CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations));
+        public IMetadata Metadata => _metadata ??= AdamManager.Create(CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations);
         private IMetadata _metadata;
 
         /// <summary>

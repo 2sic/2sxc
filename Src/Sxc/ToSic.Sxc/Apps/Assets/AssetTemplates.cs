@@ -43,24 +43,20 @@ namespace ToSic.Sxc.Apps.Assets
         {
         }
 
-        // ReSharper disable once ConvertToNullCoalescingCompoundAssignment
-        public List<TemplateInfo> GetTemplates()
+        public List<TemplateInfo> GetTemplates() => _templates ??= new List<TemplateInfo>
         {
-            return _templates ?? (_templates = new List<TemplateInfo>
-            {
-                RazorHybrid,
-                RazorDnn,
-                DnnCsCode,
-                CsHybrid,
-                ApiHybrid,
-                DataSourceHybrid,
-                Token,
-                DnnSearch,
-                Markdown,
-                EmptyTextFile,
-                EmptyFile,
-            });
-        }
+            RazorHybrid,
+            RazorDnn,
+            DnnCsCode,
+            CsHybrid,
+            ApiHybrid,
+            DataSourceHybrid,
+            Token,
+            DnnSearch,
+            Markdown,
+            EmptyTextFile,
+            EmptyFile,
+        };
         private static List<TemplateInfo> _templates;
 
         // TODO: @STV This should probably become obsolete once you change the objects above

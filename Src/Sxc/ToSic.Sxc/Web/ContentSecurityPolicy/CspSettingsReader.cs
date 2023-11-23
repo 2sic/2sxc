@@ -61,16 +61,16 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             if (_user.IsAnonymous) return GetName("Anonymous");
             return ("none", null);
         });
-        private readonly GetOnce<(string Name, DynamicEntity Settings)> _preferred = new GetOnce<(string, DynamicEntity)>();
+        private readonly GetOnce<(string Name, DynamicEntity Settings)> _preferred = new();
 
         /// <summary>
         /// The fallback settings, which will be null if in devMode, because then we shouldn't do a fallback
         /// </summary>
         private DynamicEntity SettingsDefault => _devMode ? null : _default.Get(() => SettingsRoot?.Get("Default") as DynamicEntity);
-        private readonly GetOnce<DynamicEntity> _default = new GetOnce<DynamicEntity>();
+        private readonly GetOnce<DynamicEntity> _default = new();
 
         private DynamicEntity SettingsRoot => _settingsRoot.Get(Log, () => _settingsOrNull?.Get(FieldCSPs) as DynamicEntity);
-        private readonly GetOnce<DynamicEntity> _settingsRoot = new GetOnce<DynamicEntity>();
+        private readonly GetOnce<DynamicEntity> _settingsRoot = new();
 
     }
 }

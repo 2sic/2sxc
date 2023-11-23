@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Apps
         #region Properties which are simply not implemented ATM
 
         public int Size => 0;
-        public SizeInfo SizeInfo => new SizeInfo(0);
+        public SizeInfo SizeInfo => new(0);
         public int FolderId => -1;
 
         public IField Field { get; set; }

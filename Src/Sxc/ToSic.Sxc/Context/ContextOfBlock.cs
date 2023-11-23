@@ -5,7 +5,6 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Web.PageService;
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Context
 {
@@ -63,7 +62,7 @@ namespace ToSic.Sxc.Context
         public PageServiceShared PageServiceShared { get; }
 
         /// <inheritdoc />
-        public BlockPublishingSettings Publishing => _publishing ?? (_publishing = _publishingResolver.Value.Value.SettingsOfModule(Module?.Id ?? -1));
+        public BlockPublishingSettings Publishing => _publishing ??= _publishingResolver.Value.Value.SettingsOfModule(Module?.Id ?? -1);
         private BlockPublishingSettings _publishing;
 
         /// <inheritdoc />

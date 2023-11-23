@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         public IDictionary<TKey, TVal> GetContents() => UnwrappedDictionary;
-        private readonly Dictionary<string, object> _ignoreCaseLookup = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+        private readonly Dictionary<string, object> _ignoreCaseLookup = new(StringComparer.InvariantCultureIgnoreCase);
 
         public WrapDictionaryDynamic(IDictionary<TKey, TVal> dictionary, CodeDataWrapper factory)
         {

@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Adam
 
         #region Type specific results which the base class already offers the interface to
 
-        public Export<TFolderId, TFileId> Export => new Export<TFolderId, TFileId>(this);
+        public Export<TFolderId, TFileId> Export => new(this);
 
         public override IFolder Folder(Guid entityGuid, string fieldName, IField field = default)
         {

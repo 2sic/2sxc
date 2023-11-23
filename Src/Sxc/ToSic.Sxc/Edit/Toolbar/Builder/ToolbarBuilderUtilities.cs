@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// Helper to process 'parameters' to url, ensuring lower-case etc. 
         /// </summary>
         public ObjectToUrl Par2Url => _par2U.Get(() => new ObjectToUrl(null, new[] { new UrlValueCamelCase() }));
-        private readonly GetOnce<ObjectToUrl> _par2U = new GetOnce<ObjectToUrl>();
+        private readonly GetOnce<ObjectToUrl> _par2U = new();
 
 
         /// <summary>
@@ -33,14 +33,14 @@ namespace ToSic.Sxc.Edit.Toolbar
             ArrayBoxStart = "[",
             ArrayBoxEnd = "]"
         });
-        private readonly GetOnce<ObjectToUrl> _f2U = new GetOnce<ObjectToUrl>();
+        private readonly GetOnce<ObjectToUrl> _f2U = new();
 
 
         /// <summary>
         /// Helper to process 'prefill' - should not change the case of the properties
         /// </summary>
         public ObjectToUrl Prefill2Url => _pref2U.Get(() => new ObjectToUrl(null));
-        private readonly GetOnce<ObjectToUrl> _pref2U = new GetOnce<ObjectToUrl>();
+        private readonly GetOnce<ObjectToUrl> _pref2U = new();
 
         public string PrepareParams(object parameters, ITweakButton tweaks = null)
         {
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         #region UI Processing
 
-        internal static ObjectToUrl GetUi2Url() => new ObjectToUrl(null, new UrlValueProcess[]
+        internal static ObjectToUrl GetUi2Url() => new(null, new UrlValueProcess[]
         {
             new UrlValueCamelCase(),
             new UiValueProcessor()
@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             return MergeWithTweaks(uiString, tweaks);
         }
         private ObjectToUrl Ui2Url => _ui2Url.Get(GetUi2Url);
-        private readonly GetOnce<ObjectToUrl> _ui2Url = new GetOnce<ObjectToUrl>();
+        private readonly GetOnce<ObjectToUrl> _ui2Url = new();
 
         #endregion
 

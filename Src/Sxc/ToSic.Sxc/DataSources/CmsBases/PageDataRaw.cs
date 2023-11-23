@@ -26,7 +26,7 @@ namespace ToSic.Sxc.DataSources
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class PageDataRaw: IRawEntity
     {
-        public static DataFactoryOptions Option = new DataFactoryOptions(typeName: "Page", titleField: nameof(Name));
+        public static DataFactoryOptions Option = new(typeName: "Page", titleField: nameof(Name));
 
         /// <summary>
         /// The page ID.

@@ -12,8 +12,8 @@ namespace ToSic.Sxc.Adam
     {
         private readonly Folder<TFolderId, TFileId> _root;
         // todo #adamid - should use TFile/TFolder
-        private readonly List<TFileId> _fileIds = new List<TFileId>();
-        private readonly List<TFolderId> _folderIds = new List<TFolderId>();
+        private readonly List<TFileId> _fileIds = new();
+        private readonly List<TFolderId> _folderIds = new();
 
         private readonly IAdamFileSystem<TFolderId, TFileId> _envFs;
 

@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Lib.Documentation;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 namespace ToSic.Sxc.Web.PageService
 {
     public partial class PageServiceShared
@@ -19,7 +17,7 @@ namespace ToSic.Sxc.Web.PageService
             HttpHeaders.Add(new HttpHeader(name, value));
 
         [PrivateApi]
-        public List<HttpHeader> HttpHeaders { get; } = new List<HttpHeader>();
+        public List<HttpHeader> HttpHeaders { get; } = new();
 
         #endregion
 

@@ -42,6 +42,6 @@ namespace ToSic.Sxc.Services.GoogleMaps
             }
         });
 
-        private readonly GetOnce<MapsCoordinates> _defCoords = new GetOnce<MapsCoordinates>();
+        private readonly GetOnce<MapsCoordinates> _defCoords = new();
     }
 }

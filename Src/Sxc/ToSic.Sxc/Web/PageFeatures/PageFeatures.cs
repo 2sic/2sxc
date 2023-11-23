@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Web.PageFeatures
             return realKeys;
         }
 
-        private List<PageFeatureFromSettings> FeaturesFromSettings { get; } = new List<PageFeatureFromSettings>();
+        private List<PageFeatureFromSettings> FeaturesFromSettings { get; } = new();
 
         public void FeaturesFromSettingsAdd(PageFeatureFromSettings newFeature) => FeaturesFromSettings.Add(newFeature);
 
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Web.PageFeatures
 
 
 
-        private List<string> FeatureKeys { get; } = new List<string>();
+        private List<string> FeatureKeys { get; } = new();
 
 
         public List<IPageFeature> GetFeaturesWithDependentsAndFlush(ILog log) => log.Func(() =>

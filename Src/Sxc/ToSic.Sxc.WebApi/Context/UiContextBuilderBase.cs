@@ -137,7 +137,7 @@ namespace ToSic.Sxc.WebApi.Context
         }
 
         protected virtual WebResourceDto GetPage() =>
-            new WebResourceDto
+            new()
             {
                 Id = Eav.Constants.NullId,
             };

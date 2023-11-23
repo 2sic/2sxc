@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Code.CodeHelpers
         #region CodeLog / Html Helper
 
         public ICodeLog CodeLog => _codeLog.Get(() => new CodeLog(Log));
-        private readonly GetOnce<ICodeLog> _codeLog = new GetOnce<ICodeLog>();
+        private readonly GetOnce<ICodeLog> _codeLog = new();
 
         #endregion
     }

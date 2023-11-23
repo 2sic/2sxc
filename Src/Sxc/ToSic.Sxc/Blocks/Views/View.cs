@@ -90,8 +90,7 @@ namespace ToSic.Sxc.Blocks
             return (queryRaw, query);
         });
 
-        private readonly GetOnce<(IEntity Entity, QueryDefinition Definition)> _queryInfo =
-            new GetOnce<(IEntity Entity, QueryDefinition Definition)>();
+        private readonly GetOnce<(IEntity Entity, QueryDefinition Definition)> _queryInfo = new();
 
         public string UrlIdentifier => Entity.Value<string>(FieldNameInUrl);
 

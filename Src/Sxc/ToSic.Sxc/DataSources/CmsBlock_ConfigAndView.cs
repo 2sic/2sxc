@@ -1,11 +1,8 @@
-﻿using ToSic.Eav.Apps.Work;
-using ToSic.Eav.DataSource;
+﻿using ToSic.Eav.DataSource;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 
 namespace ToSic.Sxc.DataSources
 {
@@ -27,8 +24,7 @@ namespace ToSic.Sxc.DataSources
             return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(true, (config.Result, view));
         });
 
-        private readonly GetOnce<ResultOrError<(BlockConfiguration blockConfiguration, IView view)>> _everything =
-            new GetOnce<ResultOrError<(BlockConfiguration blockConfiguration, IView view)>>();
+        private readonly GetOnce<ResultOrError<(BlockConfiguration blockConfiguration, IView view)>> _everything = new();
 
         private ResultOrError<BlockConfiguration> LoadBlockConfiguration()
         {

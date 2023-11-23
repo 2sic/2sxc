@@ -91,14 +91,13 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 }
             }
             else
-            {   // XML
-                using (var fileStreamReader = new StreamReader(stream))
-                {
-                    var xmlImport = _xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges);
-                    var xmlDocument = XDocument.Parse(fileStreamReader.ReadToEnd());
-                    result.Success = xmlImport.ImportXml(zoneId, appId, xmlDocument);
-                    result.Messages.AddRange(xmlImport.Messages);
-                }
+            {
+                // XML
+                using var fileStreamReader = new StreamReader(stream);
+                var xmlImport = _xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges);
+                var xmlDocument = XDocument.Parse(fileStreamReader.ReadToEnd());
+                result.Success = xmlImport.ImportXml(zoneId, appId, xmlDocument);
+                result.Messages.AddRange(xmlImport.Messages);
             }
             return result;
         });

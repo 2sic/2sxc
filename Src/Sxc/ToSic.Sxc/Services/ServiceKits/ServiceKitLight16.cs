@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Services
         /// The Convert Service, used to convert any kind of data type to another data type
         /// </summary>
         public IConvertService Convert => _convert.Get(GetService<IConvertService>);
-        private readonly GetOnce<IConvertService> _convert = new GetOnce<IConvertService>();
+        private readonly GetOnce<IConvertService> _convert = new();
 
         ///// <summary>
         ///// The Koi CSS Service, used to detect the current CSS framework and other features.
@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Services
             (dss as DataService)?.Setup(_appIdentity, _getLookup);
             return dss;
         });
-        private readonly GetOnce<IDataService> _data = new GetOnce<IDataService>();
+        private readonly GetOnce<IDataService> _data = new();
 
         ///// <summary>
         ///// The Edit service, same as the main Edit service
@@ -93,7 +93,7 @@ namespace ToSic.Sxc.Services
         /// The Features services, used to check if features are enabled
         /// </summary>
         public IFeaturesService Feature => _features.Get(GetService<IFeaturesService>);
-        private readonly GetOnce<IFeaturesService> _features = new GetOnce<IFeaturesService>();
+        private readonly GetOnce<IFeaturesService> _features = new();
 
         /// <summary>
         /// The Razor Blade 4 HtmlTags service, to fluidly create Tags.
@@ -109,7 +109,7 @@ namespace ToSic.Sxc.Services
         /// </summary>
         /// <remarks>Added in v15</remarks>
         public IHtmlTagsService HtmlTags => _ht.Get(GetService<IHtmlTagsService>);
-        private readonly GetOnce<IHtmlTagsService> _ht = new GetOnce<IHtmlTagsService>();
+        private readonly GetOnce<IHtmlTagsService> _ht = new();
 
         ///// <summary>
         ///// The Images service, used to create `img` and `picture` tags
@@ -122,7 +122,7 @@ namespace ToSic.Sxc.Services
         /// The JSON service, used to convert data to-and-from JSON
         /// </summary>
         public IJsonService Json => _json.Get(GetService<IJsonService>);
-        private readonly GetOnce<IJsonService> _json = new GetOnce<IJsonService>();
+        private readonly GetOnce<IJsonService> _json = new();
 
 
         ///// <summary>
@@ -135,7 +135,7 @@ namespace ToSic.Sxc.Services
         /// The System Log service, used to add log messages to the system (Dnn/Oqtane)
         /// </summary>
         public ISystemLogService SystemLog => _sysLog.Get(GetService<ISystemLogService>);
-        private readonly GetOnce<ISystemLogService> _sysLog = new GetOnce<ISystemLogService>();
+        private readonly GetOnce<ISystemLogService> _sysLog = new();
 
 
         ///// <summary>
@@ -162,14 +162,14 @@ namespace ToSic.Sxc.Services
         /// The Secure Data service - mainly for reading / decrypting secrets. 
         /// </summary>
         public ISecureDataService SecureData => _secureData.Get(GetService<ISecureDataService>);
-        private readonly GetOnce<ISecureDataService> _secureData = new GetOnce<ISecureDataService>();
+        private readonly GetOnce<ISecureDataService> _secureData = new();
 
         /// <summary>
         /// The Razor-Blade Scrub service, used to clean up HTML.
         /// See [](xref:ToSic.Razor.Blade.IScrub)
         /// </summary>
         public IScrub Scrub => _scrub.Get(GetService<IScrub>);
-        private readonly GetOnce<IScrub> _scrub = new GetOnce<IScrub>();
+        private readonly GetOnce<IScrub> _scrub = new();
 
 
         ///// <summary>

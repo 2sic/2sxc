@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Services
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
     {
-        private static readonly Regex HtmlDetectionRegex = new Regex("<(.*\\s*)>", RegexOptions.Compiled);
+        private static readonly Regex HtmlDetectionRegex = new("<(.*\\s*)>", RegexOptions.Compiled);
 
         [PrivateApi] protected IApp App;
 
@@ -46,8 +46,8 @@ namespace ToSic.Sxc.Services
         {
             try
             {
-                using (var client = SmtpClient())
-                    client.Send(message);
+                using var client = SmtpClient();
+                client.Send(message);
             }
             catch (Exception ex)
             {

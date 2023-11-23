@@ -1,10 +1,7 @@
-﻿using System;
-using ToSic.Eav.Apps;
+﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
-
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Context
 {

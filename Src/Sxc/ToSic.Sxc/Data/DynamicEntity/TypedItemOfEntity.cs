@@ -20,8 +20,6 @@ using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
 using static ToSic.Eav.Data.Shared.WrapperEquality;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 namespace ToSic.Sxc.Data
 {
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -53,19 +51,19 @@ namespace ToSic.Sxc.Data
         #region Helpers / Services
 
         [PrivateApi]
-        private GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, _propsRequired, childrenShouldBeDynamic: false, canDebug: this));
+        private GetAndConvertHelper GetHelper => _getHelper ??= new GetAndConvertHelper(this, Cdf, _propsRequired, childrenShouldBeDynamic: false, canDebug: this);
         private GetAndConvertHelper _getHelper;
 
         [PrivateApi]
-        private SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, _propsRequired, canDebug: this));
+        private SubDataFactory SubDataFactory => _subData ??= new SubDataFactory(Cdf, _propsRequired, canDebug: this);
         private SubDataFactory _subData;
 
         [PrivateApi]
-        private CodeDynHelper DynHelper => _dynHelper ?? (_dynHelper = new CodeDynHelper(Entity, SubDataFactory));
+        private CodeDynHelper DynHelper => _dynHelper ??= new CodeDynHelper(Entity, SubDataFactory);
         private CodeDynHelper _dynHelper;
 
         [PrivateApi]
-        private CodeItemHelper ItemHelper => _itemHelper ?? (_itemHelper = new CodeItemHelper(GetHelper, this));
+        private CodeItemHelper ItemHelper => _itemHelper ??= new CodeItemHelper(GetHelper, this);
         private CodeItemHelper _itemHelper;
 
         #endregion
@@ -73,7 +71,7 @@ namespace ToSic.Sxc.Data
         #region Special Interface Implementations: IHasPropLookup, IJsonSource, ICanBeItem
 
         [PrivateApi]
-        IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ?? (_propLookup = new PropLookupWithPathEntity(Entity, canDebug: this));
+        IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= new PropLookupWithPathEntity(Entity, canDebug: this);
         private PropLookupWithPathEntity _propLookup;
 
         [PrivateApi] IBlock ICanBeItem.TryGetBlockContext() => Cdf?.BlockOrNull;
@@ -214,7 +212,7 @@ namespace ToSic.Sxc.Data
                 ? throw ErrStrictForTyped(this, name)
                 : _adamCache.Get(name, () => Cdf.Folder(Entity, name, (this as ITypedItem).Field(name, required: false)));
         }
-        private readonly GetOnceNamed<IFolder> _adamCache = new GetOnceNamed<IFolder>();
+        private readonly GetOnceNamed<IFolder> _adamCache = new();
 
         IFile ITypedItem.File(string name, string noParamOrder, bool? required)
         {

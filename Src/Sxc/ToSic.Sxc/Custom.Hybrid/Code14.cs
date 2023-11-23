@@ -45,13 +45,13 @@ namespace Custom.Hybrid
 
         [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel12;
 
-        private CodeHelper14 CodeHelper => _codeHelper ?? (_codeHelper = new CodeHelper14(_DynCodeRoot, false, "c# code file"));
+        private CodeHelper14 CodeHelper => _codeHelper ??= new CodeHelper14(_DynCodeRoot, false, "c# code file");
         private CodeHelper14 _codeHelper;
 
         #endregion
 
         public ServiceKit14 Kit => _kit.Get(() => _DynCodeRoot.GetKit<ServiceKit14>());
-        private readonly GetOnce<ServiceKit14> _kit = new GetOnce<ServiceKit14>();
+        private readonly GetOnce<ServiceKit14> _kit = new();
 
         #region Stuff added by Code12
 

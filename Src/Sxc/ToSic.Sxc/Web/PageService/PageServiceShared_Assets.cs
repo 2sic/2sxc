@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Web.PageService
         /// <summary>
         /// Assets consolidated from all render-results 
         /// </summary>
-        public List<IClientAsset> Assets { get; } = new List<IClientAsset>();
+        public List<IClientAsset> Assets { get; } = new();
 
 
         public void AddAssets(RenderEngineResult result)

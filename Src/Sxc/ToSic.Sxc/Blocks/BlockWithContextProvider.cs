@@ -25,6 +25,6 @@ namespace ToSic.Sxc.Blocks
 
         public IContextOfBlock ContextOfBlock { get; }
         public IBlock LoadBlock() => _block.Get(_delayedBlockGen);
-        private readonly GetOnce<IBlock> _block = new GetOnce<IBlock>();
+        private readonly GetOnce<IBlock> _block = new();
     }
 }

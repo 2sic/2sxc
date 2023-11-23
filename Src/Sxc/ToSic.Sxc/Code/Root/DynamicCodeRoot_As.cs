@@ -6,7 +6,6 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Code
 {
@@ -18,7 +17,7 @@ namespace ToSic.Sxc.Code
             Services.Cdf.ConnectToRoot(this);
             return Services.Cdf;
         });
-        private readonly GetOnce<CodeDataFactory> _cdf = new GetOnce<CodeDataFactory>();
+        private readonly GetOnce<CodeDataFactory> _cdf = new();
 
         #region AsDynamic Implementations
 
@@ -50,7 +49,7 @@ namespace ToSic.Sxc.Code
         #region Convert
 
         /// <inheritdoc />
-        public IConvertService Convert => _convert ?? (_convert = Services.ConvertService.Value);
+        public IConvertService Convert => _convert ??= Services.ConvertService.Value;
         private IConvertService _convert;
 
         #endregion

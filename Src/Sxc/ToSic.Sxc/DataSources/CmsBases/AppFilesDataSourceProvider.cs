@@ -115,7 +115,7 @@ namespace ToSic.Sxc.DataSources
 
             return (files, $"files:{files.Count}");
         });
-        private readonly GetOnce<List<AppFileDataRaw>> _files = new GetOnce<List<AppFileDataRaw>>();
+        private readonly GetOnce<List<AppFileDataRaw>> _files = new();
 
         public List<AppFolderDataRaw> Folders => _folders.GetM(Log, l =>
         {
@@ -145,9 +145,9 @@ namespace ToSic.Sxc.DataSources
 
             return (folders, $"found:{folders.Count}");
         });
-        private readonly GetOnce<List<AppFolderDataRaw>> _folders = new GetOnce<List<AppFolderDataRaw>>();
+        private readonly GetOnce<List<AppFolderDataRaw>> _folders = new();
 
-        private readonly AppFolderDataRaw _rootFolder = new AppFolderDataRaw
+        private readonly AppFolderDataRaw _rootFolder = new()
         {
             Name = "Root",
             FullName = "",

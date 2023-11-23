@@ -21,6 +21,7 @@
 
     <!-- Experimental: generate xml docs -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

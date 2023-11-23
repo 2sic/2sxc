@@ -11,6 +11,6 @@ namespace ToSic.Sxc.Context
         public PlatformUnknown(WarnUseOfUnknown<PlatformUnknown> _) { }
         public override PlatformType Type => PlatformType.Unknown;
 
-        public override Version Version => new Version(0, 0, 0);
+        public override Version Version => new(0, 0, 0);
     }
 }

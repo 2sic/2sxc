@@ -28,7 +28,7 @@ namespace ToSic.Sxc.DataSources
         internal static string TypeName = "Role";
         internal static string TitleFieldName = nameof(Name);
 
-        internal static DataFactoryOptions Options = new DataFactoryOptions(typeName: "Role", titleField: nameof(Name), autoId: false);
+        internal static DataFactoryOptions Options = new(typeName: "Role", titleField: nameof(Name), autoId: false);
 
         public string Name { get; set; }
 

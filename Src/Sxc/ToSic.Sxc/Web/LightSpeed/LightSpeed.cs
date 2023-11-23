@@ -14,7 +14,6 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Web.LightSpeed
 {
@@ -141,7 +140,7 @@ namespace ToSic.Sxc.Web.LightSpeed
 
             return paths;
         }
-        private readonly GetOnce<IList<string>> _appPaths = new GetOnce<IList<string>>();
+        private readonly GetOnce<IList<string>> _appPaths = new();
 
         private int Duration => _duration.Get(() =>
         {
@@ -151,10 +150,10 @@ namespace ToSic.Sxc.Web.LightSpeed
             if (!user.IsAnonymous) return AppConfig.DurationUser;
             return AppConfig.Duration;
         });
-        private readonly GetOnce<int> _duration = new GetOnce<int>();
+        private readonly GetOnce<int> _duration = new();
 
         private string Suffix => _suffix.Get(GetSuffix);
-        private readonly GetOnce<string> _suffix = new GetOnce<string>();
+        private readonly GetOnce<string> _suffix = new();
 
         private string GetSuffix()
         {
@@ -166,21 +165,21 @@ namespace ToSic.Sxc.Web.LightSpeed
         }
 
         private string CurrentCulture => _currentCulture.Get(() => _cmsContext.Value.Culture.CurrentCode);
-        private readonly GetOnce<string> _currentCulture = new GetOnce<string>();
+        private readonly GetOnce<string> _currentCulture = new();
 
 
         private string CacheKey => _key.Get(() => Log.Func(() => OutCacheMan.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, Suffix, CurrentCulture)));
-        private readonly GetOnce<string> _key = new GetOnce<string>();
+        private readonly GetOnce<string> _key = new();
 
         private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? (int?)null : _block.Context.User.Id);
-        private readonly GetOnce<int?> _userId = new GetOnce<int?>();
+        private readonly GetOnce<int?> _userId = new();
 
         // Note 2023-10-30 2dm changed the handling of the preview template and checks if it's set. In case caching is too aggressive this can be the problem. Remove early 2024
         private string ViewKey => _viewKey.Get(() => _block.Configuration?.PreviewTemplate != null ? $"{_block.Configuration.AppId}:{_block.Configuration.View?.Id}" : null);
-        private readonly GetOnce<string> _viewKey = new GetOnce<string>();
+        private readonly GetOnce<string> _viewKey = new();
 
         public OutputCacheItem Existing => _existing.Get(ExistingGenerator);
-        private readonly GetOnce<OutputCacheItem> _existing = new GetOnce<OutputCacheItem>();
+        private readonly GetOnce<OutputCacheItem> _existing = new();
 
         private OutputCacheItem ExistingGenerator()
         {
@@ -205,12 +204,12 @@ namespace ToSic.Sxc.Web.LightSpeed
             }
         }
 
-        public OutputCacheItem Fresh => _fresh ?? (_fresh = new OutputCacheItem());
+        public OutputCacheItem Fresh => _fresh ??= new OutputCacheItem();
         private OutputCacheItem _fresh;
 
 
         public bool IsEnabled => _enabled.Get(IsEnabledGenerator);
-        private readonly GetOnce<bool> _enabled = new GetOnce<bool>();
+        private readonly GetOnce<bool> _enabled = new();
 
         private bool IsEnabledGenerator()
         {
@@ -222,7 +221,7 @@ namespace ToSic.Sxc.Web.LightSpeed
         }
 
         internal LightSpeedDecorator AppConfig => _lsd.Get(AppConfigGenerator);
-        private readonly GetOnce<LightSpeedDecorator> _lsd = new GetOnce<LightSpeedDecorator>();
+        private readonly GetOnce<LightSpeedDecorator> _lsd = new();
 
         private LightSpeedDecorator AppConfigGenerator()
         {

@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Blocks
         public string Html { get; set; }
 
         public int Size => _size.Get(() => Html?.Length ?? 0);
-        private readonly GetOnce<int> _size = new GetOnce<int>();
+        private readonly GetOnce<int> _size = new();
 
         /// <inheritdoc />
         public bool CanCache { get; set; }
@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Blocks
         public string HttpStatusMessage { get; set; }
 
         /// <inheritdoc />
-        public List<IDependentApp> DependentApps { get; } = new List<IDependentApp>();
+        public List<IDependentApp> DependentApps { get; } = new();
 
 
         public int ModuleId { get; set; }

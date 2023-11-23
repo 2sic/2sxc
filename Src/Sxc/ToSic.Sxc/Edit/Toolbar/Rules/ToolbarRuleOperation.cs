@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         protected internal const string RemoveVerb = "remove";
 
         internal static Dictionary<string, ToolbarRuleOps> ToolbarRuleOpSynonyms =
-            new Dictionary<string, ToolbarRuleOps>(StringComparer.InvariantCultureIgnoreCase)
+            new(StringComparer.InvariantCultureIgnoreCase)
             {
                 { ModifyVerb, OprModify },
                 { AddVerb, OprAdd },

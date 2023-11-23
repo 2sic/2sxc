@@ -36,14 +36,14 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <summary>
         /// The filter for what entity properties to keep in the params. By default, keep all.
         /// </summary>
-        private readonly UrlValueFilterNames _urlValueFilterNames = new UrlValueFilterNames(true, Array.Empty<string>());
+        private readonly UrlValueFilterNames _urlValueFilterNames = new(true, Array.Empty<string>());
 
 
         protected IEntity TargetEntity => _entity.Get(() => Target as IEntity ?? (Target as ICanBeEntity)?.Entity);
-        private readonly GetOnce<IEntity> _entity = new GetOnce<IEntity>();
+        private readonly GetOnce<IEntity> _entity = new();
 
         internal EntityEditInfo EditInfo => _editInfo.Get(() => new EntityEditInfo(TargetEntity));
-        private readonly GetOnce<EntityEditInfo> _editInfo = new GetOnce<EntityEditInfo>();
+        private readonly GetOnce<EntityEditInfo> _editInfo = new();
 
         protected override string DecoratorTypeName => TargetEntity?.Type?.Name;
 

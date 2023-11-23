@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Apps.Assets
     {
         public const string CsCodeTemplateName = "PleaseRenameClass";
 
-        public static readonly TemplateInfo RazorDnn = new TemplateInfo("cshtml-dnn", "Razor Dnn", ".cshtml", "DetailsTemplate", ForTemplate, TypeRazor)
+        public static readonly TemplateInfo RazorDnn = new("cshtml-dnn", "Razor Dnn", ".cshtml", "DetailsTemplate", ForTemplate, TypeRazor)
         {
             Body = @"@inherits Custom.Dnn.Razor12
 @* This inherits statement gets you features like App, CmsContext, Data etc. - you can delete this comment *@
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Apps.Assets
         /// This only works for Dnn, Hybrid doesn't have this concept as we can't access functions from outside
         /// </summary>
         public static readonly TemplateInfo DnnCsCode =
-            new TemplateInfo("cshtml-code-hybrid", "Razor Code (Dnn only)", ".code.cshtml", "DetailsTemplate", ForTemplate, TypeRazor)
+            new("cshtml-code-hybrid", "Razor Code (Dnn only)", ".code.cshtml", "DetailsTemplate", ForTemplate, TypeRazor)
             {
                 Body = @"@inherits Custom.Dnn.Razor12
 @* This inherits statement gets you features like App, CmsContext, Data as well as Dnn etc. - you can delete this comment *@
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Apps.Assets
 
 
         public static readonly TemplateInfo DnnSearch =
-            new TemplateInfo("cs-code-custom-search-dnn", "Dnn Search Integration (c#)", ".cs", "DnnSearch", ForSearch, TypeNone)
+            new("cs-code-custom-search-dnn", "Dnn Search Integration (c#)", ".cs", "DnnSearch", ForSearch, TypeNone)
             {
                 Body = @"using System;
 using System.Collections.Generic;

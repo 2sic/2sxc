@@ -2,7 +2,7 @@
 {
     public partial class AssetTemplates
     {
-        private static readonly TemplateInfo Markdown = new TemplateInfo("markdown-readme", "Markdown Readme", ".md", "readme", ForDocs, TypeNone)
+        private static readonly TemplateInfo Markdown = new("markdown-readme", "Markdown Readme", ".md", "readme", ForDocs, TypeNone)
         {
             Body = @"# Readme
 

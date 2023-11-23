@@ -32,7 +32,7 @@ namespace ToSic.Sxc.DataSources
 #pragma warning restore 618
 
         [PrivateApi("older use case, probably don't publish")]
-        public DataPublishing Publish { get; } = new DataPublishing();
+        public DataPublishing Publish { get; } = new();
 
 
         #region Prepared code if we need to reactivate some old APIs #DataInAddWontWork

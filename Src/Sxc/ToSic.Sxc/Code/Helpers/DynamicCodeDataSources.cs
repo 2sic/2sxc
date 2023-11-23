@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Code.Helpers
         public IAppIdentity AppIdentity { get; private set; }
 
         public ILookUpEngine LookUpEngine => _lookupEngine.Get(() => _getLookup?.Invoke());
-        private readonly GetOnce<ILookUpEngine> _lookupEngine = new GetOnce<ILookUpEngine>();
+        private readonly GetOnce<ILookUpEngine> _lookupEngine = new();
         private Func<ILookUpEngine> _getLookup;
 
         // note: this code is almost identical to the IDataService code, except that `immutable` is a parameter

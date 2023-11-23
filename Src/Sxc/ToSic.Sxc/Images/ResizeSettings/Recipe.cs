@@ -6,7 +6,6 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Plumbing;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Images
 {
@@ -208,17 +207,17 @@ namespace ToSic.Sxc.Images
         [PrivateApi]
         internal virtual Recipe InitAfterLoad(Recipe parent)
         {
-            ForFactor = ForFactor ?? parent?.ForFactor;
+            ForFactor ??= parent?.ForFactor;
             FactorParsed = ParseObject.DoubleOrNullWithCalculation(ForFactor) ?? parent?.FactorParsed ?? 0;
             if (Width == 0) Width = parent?.Width ?? 0;
-            ForTag = ForTag ?? parent?.ForTag;
+            ForTag ??= parent?.ForTag;
             var hasVariants = Variants != null;
-            Variants = Variants ?? parent?.Variants;
-            SetWidth = SetWidth ?? parent?.SetWidth;
-            SetHeight = SetHeight ?? parent?.SetHeight;
+            Variants ??= parent?.Variants;
+            SetWidth ??= parent?.SetWidth;
+            SetHeight ??= parent?.SetHeight;
             Attributes = RecipeHelpers.MergeDics(parent?.Attributes, Attributes);
-            Name = Name ?? parent?.Name;
-            ForCss = ForCss ?? parent?.ForCss;
+            Name ??= parent?.Name;
+            ForCss ??= parent?.ForCss;
             VariantsParsed = hasVariants ? RecipeVariantsParser.ParseSet(Variants) : parent?.VariantsParsed;
 
             foreach (var s in Recipes) s?.InitAfterLoad(this);

@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Blocks.Edit
         
         #region methods which are fairly stable / the same across content-block implementations
 
-        protected BlockConfiguration BlockConfiguration => _cGroup ?? (_cGroup = Block.Configuration);
+        protected BlockConfiguration BlockConfiguration => _cGroup ??= Block.Configuration;
         
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {

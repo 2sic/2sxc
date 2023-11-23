@@ -97,8 +97,7 @@ namespace ToSic.Sxc.Data
         #endregion
 
         /// <inheritdoc />
-        // ReSharper disable once ConvertToNullCoalescingCompoundAssignment
-        public override object this[int index] => (_propertyArray ?? (_propertyArray = UnwrappedContents.Select(p => p.Value).ToArray()))[index];
+        public override object this[int index] => (_propertyArray ??= UnwrappedContents.Select(p => p.Value).ToArray())[index];
         private JsonNode[] _propertyArray;
 
     }

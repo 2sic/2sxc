@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Blocks.Output
         protected virtual ClientAssetsExtractSettings Settings => _settings.Get(() => new ClientAssetsExtractSettings(
             extractAll: false
         ));
-        private readonly GetOnce<ClientAssetsExtractSettings> _settings = new GetOnce<ClientAssetsExtractSettings>();
+        private readonly GetOnce<ClientAssetsExtractSettings> _settings = new();
 
         #endregion
 

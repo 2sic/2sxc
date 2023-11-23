@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Cms.Publishing
             Cache.TryAdd(instanceId, decision);
             return (decision, $"decision:{decision}");
         });
-        protected static readonly ConcurrentDictionary<int, PublishingMode> Cache = new ConcurrentDictionary<int, PublishingMode>();
+        protected static readonly ConcurrentDictionary<int, PublishingMode> Cache = new();
 
         /// <summary>
         /// The lookup must be implemented for each platform

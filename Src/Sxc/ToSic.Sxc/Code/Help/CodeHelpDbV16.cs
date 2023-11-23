@@ -5,7 +5,6 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using static ToSic.Sxc.Code.Help.CodeHelpDb;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Code.Help
 {
@@ -24,7 +23,7 @@ namespace ToSic.Sxc.Code.Help
         /// <summary>
         /// Compile Help for RazorTyped etc.
         /// </summary>
-        public static List<CodeHelp> Compile16 => _help ?? (_help = BuildList(
+        public static List<CodeHelp> Compile16 => _help ??= BuildList(
             // use old `Convert` object
             CodeHelpDbV14.SystemConvertIncorrectUse,
 
@@ -117,7 +116,7 @@ namespace ToSic.Sxc.Code.Help
                 alt: $"MyView.{nameof(ICmsView.Folder)}.{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}"),
             new GenChangeOn("ToSic.Sxc.Context.ICmsView", "PhysicalPathShared",
                 alt: $"MyView.{nameof(ICmsView.Folder)}.{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}")
-        ));
+        );
         private static List<CodeHelp> _help;
     }
 }

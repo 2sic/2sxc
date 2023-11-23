@@ -52,6 +52,6 @@ namespace ToSic.Sxc.Services.Tweaks
         /// <param name="value"></param>
         /// <returns></returns>
         public TweakValue<TValue> New(NoParamOrder noParamOrder = default, TValue value = default)
-            => new TweakValue<TValue>(this, value);
+            => new(this, value);
     }
 }

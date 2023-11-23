@@ -10,8 +10,6 @@ using ToSic.Razor.Markup;
 using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 namespace ToSic.Sxc.Data
 {
     [PrivateApi]

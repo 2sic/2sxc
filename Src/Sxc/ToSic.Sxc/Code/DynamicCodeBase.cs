@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Code
         /// For architecture of Composition over Inheritance.
         /// </summary>
         [PrivateApi]
-        protected internal CodeHelper SysHlp => _sysHlp ?? (_sysHlp = new CodeHelper().Init(this));
+        protected internal CodeHelper SysHlp => _sysHlp ??= new CodeHelper().Init(this);
         private CodeHelper _sysHlp;
 
 

@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Web
         /// that we need to skip from adding in general HtmlAttributes dictionary
         /// because this special attributes are handled in custom way.
         /// </summary>
-        internal static readonly List<string> SpecialHtmlAttributes = new List<string> { "src", "id", PageService.PageService.AssetOptimizationsAttributeName, CspConstants.CspWhitelistAttribute };
+        internal static readonly List<string> SpecialHtmlAttributes = new() { "src", "id", PageService.PageService.AssetOptimizationsAttributeName, CspConstants.CspWhitelistAttribute };
 
     }
 }

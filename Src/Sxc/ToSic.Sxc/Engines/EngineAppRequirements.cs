@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Engines
         }
         
 
-        private static CodeHelp ErrHelpRequirementsNotMet = new CodeHelp(name: "Requirement Not Met", detect: "",
+        private static CodeHelp ErrHelpRequirementsNotMet = new(name: "Requirement Not Met", detect: "",
             linkCode: "err-view-config-missing", uiMessage: "Important Requirements not Met");
 
 

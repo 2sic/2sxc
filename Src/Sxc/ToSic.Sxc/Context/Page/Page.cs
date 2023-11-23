@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Context
         public int Id { get; private set; } = Eav.Constants.NullId;
 
 
-        public IParameters Parameters => _parameters ?? (_parameters = new Parameters(OriginalParameters.GetOverrideParams(_httpLazy.Value?.QueryStringParams)));
+        public IParameters Parameters => _parameters ??= new Parameters(OriginalParameters.GetOverrideParams(_httpLazy.Value?.QueryStringParams));
         private IParameters _parameters;
 
 

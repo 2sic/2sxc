@@ -104,11 +104,11 @@ namespace ToSic.Sxc.Data.Wrapper
             IfJsonTryConvertTo<DynamicJacketBase>(original, CreateDynJacketObject, CreateDynJacketList);
 
 
-        internal DynamicJacket CreateDynJacketObject(JsonObject jsonObject) => 
-            new DynamicJacket(this, new PreWrapJsonObject(this, jsonObject));
+        internal DynamicJacket CreateDynJacketObject(JsonObject jsonObject) =>
+            new(this, new PreWrapJsonObject(this, jsonObject));
 
-        private DynamicJacketList CreateDynJacketList(JsonArray jsonArray) => 
-            new DynamicJacketList(this, new PreWrapJsonArray(this, jsonArray));
+        private DynamicJacketList CreateDynJacketList(JsonArray jsonArray) =>
+            new(this, new PreWrapJsonArray(this, jsonArray));
 
         //private WrapObjectTyped CreateTypedList(JsonArray jsonArray) => 
         //    _wrapTypeGenerator.New().Setup(new PreWrapJsonArray(this, jsonArray));

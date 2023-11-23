@@ -7,8 +7,6 @@ using ToSic.Lib.Helpers;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 namespace ToSic.Sxc.Context
 {
     [PrivateApi("Hide implementation")]
@@ -33,7 +31,7 @@ namespace ToSic.Sxc.Context
 
         
         private IApp App => _app.Get(() => _siteAppLazy.Value.Init(_appState, null));
-        private readonly GetOnce<IApp> _app = new GetOnce<IApp>();
+        private readonly GetOnce<IApp> _app = new();
 
         protected override IMetadataOf GetMetadataOf() 
             => ExtendWithRecommendations(_appState.GetMetadataOf(TargetTypes.Site, Id, Url));

@@ -25,7 +25,7 @@ namespace ToSic.Sxc.WebApi.Sys
 
         public string Url => GetThis("");
 
-        public AppInstallRuleDto GetRuleDto() => new AppInstallRuleDto
+        public AppInstallRuleDto GetRuleDto() => new()
         {
             name = Title,
             appGuid = AppGuid,

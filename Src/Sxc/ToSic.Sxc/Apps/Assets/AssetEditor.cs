@@ -10,7 +10,6 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Blocks;
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Apps.Assets
 {
@@ -59,8 +58,6 @@ namespace ToSic.Sxc.Apps.Assets
         }
 
         #endregion
-
-        public const string CshtmlPrefix = "_";
 
         public AssetEditInfo EditInfoWithSource
         {
@@ -115,8 +112,8 @@ namespace ToSic.Sxc.Apps.Assets
             return t;
         }
 
-        public string InternalPath => _internalPath ?? (_internalPath = NormalizePath(Path.Combine(
-            _appPaths.PhysicalPathSwitch(EditInfo.IsShared), EditInfo.FileName)));
+        public string InternalPath => _internalPath ??= NormalizePath(Path.Combine(
+            _appPaths.PhysicalPathSwitch(EditInfo.IsShared), EditInfo.FileName));
         private string _internalPath;
 
         private static string NormalizePath(string path) => Path.GetFullPath(new Uri(path).LocalPath);
@@ -185,12 +182,10 @@ namespace ToSic.Sxc.Apps.Assets
 
         private static void CreateAsset(string absolutePath, string contents)
         {
-            using (var stream = new StreamWriter(File.Create(absolutePath)))
-            {
-                stream.Write(contents);
-                stream.Flush();
-                stream.Close();
-            }
+            using var stream = new StreamWriter(File.Create(absolutePath));
+            stream.Write(contents);
+            stream.Flush();
+            stream.Close();
         }
 
         public bool SanitizeFileNameAndCheckIfAssetAlreadyExists()

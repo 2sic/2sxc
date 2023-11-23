@@ -6,8 +6,6 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 namespace ToSic.Sxc.Services
 {
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -36,7 +34,7 @@ namespace ToSic.Sxc.Services
         /// (currently 8 characters)
         /// </summary>
         [PrivateApi]
-        public string UniqueKey => _uniqueKey ?? (_uniqueKey = UniqueKeyGen());
+        public string UniqueKey => _uniqueKey ??= UniqueKeyGen();
         private string _uniqueKey;
 
 

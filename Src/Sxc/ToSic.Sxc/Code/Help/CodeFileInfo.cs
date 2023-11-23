@@ -19,14 +19,12 @@ namespace ToSic.Sxc.Code.Help
         public List<CodeHelp> Help { get; }
 
         public static CodeFileInfo CodeFileUnknown =
-            new CodeFileInfo("unknown", CodeFileTypes.Unknown, CodeHelpDbUnknown.CompileUnknown);
-        public static CodeFileInfo CodeFileOther =
-            new CodeFileInfo("other", CodeFileTypes.Other, CodeHelpDbUnknown.CompileUnknown);
+            new("unknown", CodeFileTypes.Unknown, CodeHelpDbUnknown.CompileUnknown);
+        public static CodeFileInfo CodeFileOther = new("other", CodeFileTypes.Other, CodeHelpDbUnknown.CompileUnknown);
 
-        public static CodeFileInfo CodeFileNotFound =
-            new CodeFileInfo("", CodeFileTypes.FileNotFound, new List<CodeHelp>());
+        public static CodeFileInfo CodeFileNotFound = new("", CodeFileTypes.FileNotFound, new List<CodeHelp>());
 
-        public static List<CodeFileInfo> CodeFileList = new List<CodeFileInfo>
+        public static List<CodeFileInfo> CodeFileList = new()
         {
             CodeFileUnknown,
             CodeFileOther,

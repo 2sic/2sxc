@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Apps.Assets
         public bool HasApp;
         public int AppId;
         public bool IsShared;
-        public Dictionary<string, string> Streams = new Dictionary<string, string>();
+        public Dictionary<string, string> Streams = new();
 
         public string Extension => Path.GetExtension(FileName);
 

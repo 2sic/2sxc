@@ -3,8 +3,6 @@ using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 namespace ToSic.Sxc.Context
 {
     [PrivateApi("Hide implementation")]

@@ -22,8 +22,8 @@ namespace ToSic.Sxc.Blocks.Renderers
         }
 
         // RegEx formulas
-        static readonly Regex InlineCbDetector = new Regex("<hr[^>]+sxc[^>]+>", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
-        static readonly Regex  GuidExtractor = new Regex("guid=\\\"([^\\\"]*)\\\"", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
+        static readonly Regex InlineCbDetector = new("<hr[^>]+sxc[^>]+>", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
+        static readonly Regex  GuidExtractor = new("guid=\\\"([^\\\"]*)\\\"", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
 
         public string RenderMerge(IBlock block, IEntity parent, string field, string textTemplate, IEditService edit)
         {

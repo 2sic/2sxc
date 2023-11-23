@@ -17,7 +17,6 @@ using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Data.Typed
 {
@@ -66,7 +65,7 @@ namespace ToSic.Sxc.Data.Typed
         public Guid Guid => PreWrap.TryGetTyped(nameof(Guid), noParamOrder: Protector, fallback: Guid.Empty, required: false);
 
         public string Title => _title.Get(() => PreWrap.TryGetTyped<string>(nameof(ITypedItem.Title), noParamOrder: Protector, fallback: null, required: false));
-        private readonly GetOnce<string> _title = new GetOnce<string>();
+        private readonly GetOnce<string> _title = new();
 
         #region Properties which return null or empty
 
@@ -123,7 +122,7 @@ namespace ToSic.Sxc.Data.Typed
         }
 
         public ITypedItem Presentation => _presentation.Get(() => CreateItemFromProperty(nameof(Presentation)));
-        private readonly GetOnce<ITypedItem> _presentation = new GetOnce<ITypedItem>();
+        private readonly GetOnce<ITypedItem> _presentation = new();
 
         private ITypedItem CreateItemFromProperty(string name)
         {
@@ -166,7 +165,7 @@ namespace ToSic.Sxc.Data.Typed
 
         #region Not Supported Properties such as Entity, Type, Child, Folder, Presentation, Metadata
 
-        IMetadata ITypedItem.Metadata => _metadata ?? (_metadata = BuildMetadata(PreWrap.TryGetWrap(nameof(Metadata)).Raw));
+        IMetadata ITypedItem.Metadata => _metadata ??= BuildMetadata(PreWrap.TryGetWrap(nameof(Metadata)).Raw);
         private IMetadata _metadata;
 
         private IMetadata BuildMetadata(object raw)

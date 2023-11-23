@@ -24,10 +24,10 @@ namespace ToSic.Sxc.Context
 
         public IMetadata Metadata =>
             _dynMeta.Get(() => _parent._DynCodeRoot.Cdf.Metadata((this as IHasMetadata).Metadata)); // new Metadata((this as IHasMetadata).Metadata, null, _parent.DEDeps));
-        private readonly GetOnce<IMetadata> _dynMeta = new GetOnce<IMetadata>();
+        private readonly GetOnce<IMetadata> _dynMeta = new();
 
         IMetadataOf IHasMetadata.Metadata => _md.Get(GetMetadataOf);
-        private readonly GetOnce<IMetadataOf> _md = new GetOnce<IMetadataOf>();
+        private readonly GetOnce<IMetadataOf> _md = new();
 
         protected abstract IMetadataOf GetMetadataOf();
 

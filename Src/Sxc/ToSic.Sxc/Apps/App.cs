@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Internal.Environment;
-using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -9,7 +8,6 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.LookUp;
 using CodeInfoService = ToSic.Eav.Code.InfoSystem.CodeInfoService;
 using EavApp = ToSic.Eav.Apps.App;
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Apps
 {
@@ -52,7 +50,7 @@ namespace ToSic.Sxc.Apps
 
 
         private AppPaths AppPaths => _appPaths.Get(() => _appPathsLazy.Value.Init(Site, AppState));
-        private readonly GetOnce<AppPaths> _appPaths = new GetOnce<AppPaths>();
+        private readonly GetOnce<AppPaths> _appPaths = new();
 
         #endregion
 
@@ -62,27 +60,27 @@ namespace ToSic.Sxc.Apps
 
         /// <inheritdoc cref="IApp.Path" />
         public string Path => _path.Get(() => AppPaths.Path);
-        private readonly GetOnce<string> _path = new GetOnce<string>();
+        private readonly GetOnce<string> _path = new();
 
         /// <inheritdoc cref="IApp.Thumbnail" />
         public string Thumbnail => (this as IAppTyped).Thumbnail.Url;
 
         /// <inheritdoc cref="IApp.PathShared" />
         public string PathShared => _pathShared.Get(() => AppPaths.PathShared);
-        private readonly GetOnce<string> _pathShared = new GetOnce<string>();
+        private readonly GetOnce<string> _pathShared = new();
 
         /// <inheritdoc cref="IApp.PhysicalPathShared" />
         public string PhysicalPathShared => _physicalPathGlobal.Get(() => AppPaths.PhysicalPathShared);
-        private readonly GetOnce<string> _physicalPathGlobal = new GetOnce<string>();
+        private readonly GetOnce<string> _physicalPathGlobal = new();
 
         [PrivateApi("not public, not sure if we should surface this")]
         public string RelativePath => _relativePath.Get(() => AppPaths.RelativePath);
-        private readonly GetOnce<string> _relativePath = new GetOnce<string>();
+        private readonly GetOnce<string> _relativePath = new();
 
 
         [PrivateApi("not public, not sure if we should surface this")]
         public string RelativePathShared => _relativePathShared.Get(() => AppPaths.RelativePathShared);
-        private readonly GetOnce<string> _relativePathShared = new GetOnce<string>();
+        private readonly GetOnce<string> _relativePathShared = new();
 
 
         #endregion

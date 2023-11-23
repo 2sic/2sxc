@@ -9,7 +9,6 @@ using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using static ToSic.Eav.Parameters;
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Data
 {
@@ -42,11 +41,11 @@ namespace ToSic.Sxc.Data
         public IPropertyLookup PropertyLookup { get; }
 
         [PrivateApi]
-        internal GetAndConvertHelper GetHelper => _getHelper ?? (_getHelper = new GetAndConvertHelper(this, Cdf, Strict, childrenShouldBeDynamic: true, canDebug: this));
+        internal GetAndConvertHelper GetHelper => _getHelper ??= new GetAndConvertHelper(this, Cdf, Strict, childrenShouldBeDynamic: true, canDebug: this);
         private GetAndConvertHelper _getHelper;
 
         [PrivateApi]
-        internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, Strict, canDebug: this));
+        internal SubDataFactory SubDataFactory => _subData ??= new SubDataFactory(Cdf, Strict, canDebug: this);
         private SubDataFactory _subData;
 
         /// <inheritdoc />
@@ -118,10 +117,10 @@ namespace ToSic.Sxc.Data
 
         #region IEnumerable<IDynamicEntity>
 
-        private List<IDynamicEntity> List => _list ?? (_list = _stack.Sources
+        private List<IDynamicEntity> List => _list ??= _stack.Sources
             .Select(src => SourceToDynamicEntity(src.Value))
             .Where(e => e != null)
-            .ToList());
+            .ToList();
 
         private List<IDynamicEntity> _list;
 

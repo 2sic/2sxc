@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Services.CmsService
 
 
         private ServiceKit14 ServiceKit => _svcKit.Get(() => _dynCodeRoot.GetKit<ServiceKit14>());
-        private readonly GetOnce<ServiceKit14> _svcKit = new GetOnce<ServiceKit14>();
+        private readonly GetOnce<ServiceKit14> _svcKit = new();
 
 
         public IHtmlTag Wrap(CmsProcessed result, bool defaultToolbar)

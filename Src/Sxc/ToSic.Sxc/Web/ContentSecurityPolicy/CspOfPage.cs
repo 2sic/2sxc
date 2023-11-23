@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
                 );
         }
 
-        public List<CspParameters> CspParameters { get; } = new List<CspParameters>();
+        public List<CspParameters> CspParameters { get; } = new();
 
         public void Add(IList<CspParameters> additional) => CspParameters.AddRange(additional);
 

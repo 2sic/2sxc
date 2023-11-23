@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Cms.Publishing
 
         #endregion
 
-        public BlockPublishingSettings SettingsOfModule(int moduleId) => new BlockPublishingSettings
+        public BlockPublishingSettings SettingsOfModule(int moduleId) => new()
         {
             AllowDraft = false,
             ForceDraft = false,

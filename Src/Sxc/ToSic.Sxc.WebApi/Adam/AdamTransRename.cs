@@ -10,7 +10,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         public bool Rename(string parentSubfolder, bool isFolder, TFolderId folderId, TFileId fileId, string newName)
         {
-            Log.A($"");
+            Log.A("");
 
             if (!AdamContext.Security.UserIsPermittedOnField(GrantSets.WriteSomething, out var exp))
                 throw exp;
@@ -20,7 +20,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 throw permissionException;
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var parent = AdamContext.AdamRoot.Folder(parentSubfolder, false); // as IFolder<TFolderId, TFileId>;
+            var parent = AdamContext.AdamRoot.Folder(parentSubfolder, false);
 
             var fs = AdamContext.AdamManager.AdamFs;
             if (isFolder)

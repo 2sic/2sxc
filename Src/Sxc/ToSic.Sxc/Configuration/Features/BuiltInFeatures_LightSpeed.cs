@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Configuration.Features
 {
     public partial class BuiltInFeatures
     {
-        public static readonly Feature LightSpeedOutputCache = new Feature(
+        public static readonly Feature LightSpeedOutputCache = new(
             "LightSpeedOutputCache",
             new Guid("61654bca-b76b-4c15-9173-5643de6b4baa"),
             "LightSpeed Output Cache",
@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Configuration.Features
             Eav.Internal.Features.BuiltInFeatures.ForPatronsPerfectionist
         );
 
-        public static readonly Feature LightSpeedOutputCacheAppFileChanges = new Feature(
+        public static readonly Feature LightSpeedOutputCacheAppFileChanges = new(
             "LightSpeedOutputCacheAppFileChanges",
             new Guid("3f4c7d29-568d-44de-bd76-77e8572560f7"),
             "LightSpeed Output Cache - Monitor App file changes",

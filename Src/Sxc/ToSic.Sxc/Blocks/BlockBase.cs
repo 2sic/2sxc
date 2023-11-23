@@ -126,13 +126,13 @@ namespace ToSic.Sxc.Blocks
 
         public bool ContentGroupExists => Configuration?.Exists ?? false;
 
-        public List<string> BlockFeatureKeys { get; } = new List<string>();
+        public List<string> BlockFeatureKeys { get; } = new();
 
 
         public int ParentId { get; protected set; }
 
         public bool DataIsMissing { get; private set; }
-        public List<ProblemReport> Problems { get; } = new List<ProblemReport>();
+        public List<ProblemReport> Problems { get; } = new();
 
         public int ContentBlockId { get; protected set; }
         
@@ -170,7 +170,7 @@ namespace ToSic.Sxc.Blocks
             var dataSource = Services.BdsFactoryLazy.Value.GetContextDataSource(this, App?.ConfigurationProvider);
             return dataSource;
         });
-        private readonly GetOnce<IContextData> _data = new GetOnce<IContextData>();
+        private readonly GetOnce<IContextData> _data = new();
 
         public BlockConfiguration Configuration { get; protected set; }
         

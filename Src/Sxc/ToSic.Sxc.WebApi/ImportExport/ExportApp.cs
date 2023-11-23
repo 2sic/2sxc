@@ -143,18 +143,15 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 $"2sxcApp_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}{addOnWhenContainingContent}.zip";
             Log.A($"file name:{fileName}");
 
-            using (var fileStream = zipExport.ExportApp(includeContentGroups, resetAppGuid))
-            {
-
-                var fileBytes = fileStream.ToArray();
-                Log.A("will stream so many bytes:" + fileBytes.Length);
-                var mimeType = MimeHelper.FallbackType;
+            using var fileStream = zipExport.ExportApp(includeContentGroups, resetAppGuid);
+            var fileBytes = fileStream.ToArray();
+            Log.A("will stream so many bytes:" + fileBytes.Length);
+            var mimeType = MimeHelper.FallbackType;
 #if NETFRAMEWORK
-                return HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, mimeType, new MemoryStream(fileBytes));
+            return HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, mimeType, new MemoryStream(fileBytes));
 #else
                 return new FileContentResult(fileBytes, mimeType) { FileDownloadName = fileName };
 #endif
-            }
         }
     }
 }

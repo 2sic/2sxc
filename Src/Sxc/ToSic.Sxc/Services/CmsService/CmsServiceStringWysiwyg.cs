@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Services.CmsService
             );
         }
         private ServiceKit14 ServiceKit => _svcKit.Get(() => _DynCodeRoot.GetKit<ServiceKit14>());
-        private readonly GetOnce<ServiceKit14> _svcKit = new GetOnce<ServiceKit14>();
+        private readonly GetOnce<ServiceKit14> _svcKit = new();
 
         #endregion
 

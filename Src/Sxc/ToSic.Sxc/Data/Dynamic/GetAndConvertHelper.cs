@@ -9,7 +9,6 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Data.Decorators;
 using static System.StringComparer;
 using static ToSic.Eav.Parameters;
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Data
 {
@@ -37,14 +36,14 @@ namespace ToSic.Sxc.Data
         private readonly bool _childrenShouldBeDynamic;
         private readonly ICanDebug _canDebug;
 
-        internal SubDataFactory SubDataFactory => _subData ?? (_subData = new SubDataFactory(Cdf, PropsRequired, _canDebug));
+        internal SubDataFactory SubDataFactory => _subData ??= new SubDataFactory(Cdf, PropsRequired, _canDebug);
         private SubDataFactory _subData;
 
 
         public IHasPropLookup Parent { get; }
 
         public ILog LogOrNull => _logOrNull.Get(() => Cdf?.Log?.SubLogOrNull("DynEnt", Debug));
-        private readonly GetOnce<ILog> _logOrNull = new GetOnce<ILog>();
+        private readonly GetOnce<ILog> _logOrNull = new();
 
         #endregion
 
@@ -119,7 +118,7 @@ namespace ToSic.Sxc.Data
 
             return l.Return(final, "ok");
         }
-        private readonly Dictionary<string, TryGetResult> _rawValCache = new Dictionary<string, TryGetResult>(InvariantCultureIgnoreCase);
+        private readonly Dictionary<string, TryGetResult> _rawValCache = new(InvariantCultureIgnoreCase);
 
         //public string StringAsPossibleLinkOrNull(PropReqResult original, ILog logOrNull)
         //{

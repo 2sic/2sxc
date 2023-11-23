@@ -12,30 +12,30 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         [PublicApi]
         public DynamicStack Resources => _resources.Get(() => Cdf.AsDynStack(RootNameResources, ResSrc));
-        private readonly GetOnce<DynamicStack> _resources = new GetOnce<DynamicStack>();
+        private readonly GetOnce<DynamicStack> _resources = new();
 
         [PrivateApi]
         public ITypedStack AllResources => _allRes.Get(() => Cdf.AsTypedStack(RootNameResources, ResSrc));
-        private readonly GetOnce<ITypedStack> _allRes= new GetOnce<ITypedStack>();
+        private readonly GetOnce<ITypedStack> _allRes= new();
 
         private SettingsSources ResSrc => _resSrc.Get(() =>
             Services.SettingsStack.Init(App.AppState)
                 .GetStack(AppStackConstants.Resources, Block?.View?.Resources));
-        private readonly GetOnce<SettingsSources> _resSrc = new GetOnce<SettingsSources>();
+        private readonly GetOnce<SettingsSources> _resSrc = new();
 
 
         private SettingsSources SetSrc => _setSrc.Get(() =>
             Services.SettingsStack.Init(App.AppState)
                 .GetStack(AppStackConstants.Settings, Block?.View?.Settings));
-        private readonly GetOnce<SettingsSources> _setSrc = new GetOnce<SettingsSources>();
+        private readonly GetOnce<SettingsSources> _setSrc = new();
 
         /// <inheritdoc />
         [PublicApi]
         public DynamicStack Settings => _settings.Get(() => Cdf.AsDynStack(RootNameSettings, SetSrc));
-        private readonly GetOnce<DynamicStack> _settings = new GetOnce<DynamicStack>();
+        private readonly GetOnce<DynamicStack> _settings = new();
 
         public ITypedStack AllSettings => _allSettings.Get(() => Cdf.AsTypedStack(RootNameSettings, SetSrc));
-        private readonly GetOnce<ITypedStack> _allSettings = new GetOnce<ITypedStack>();
+        private readonly GetOnce<ITypedStack> _allSettings = new();
 
         dynamic IDynamicCode12.Resources => Resources;
         dynamic IDynamicCode12.Settings => Settings;

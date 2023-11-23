@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Data
         }
 
         public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
-            => new List<PropertyDumpItem> { new PropertyDumpItem { Path = $"Not supported on {nameof(DynamicJacketList)}" } };
+            => new() { new PropertyDumpItem { Path = $"Not supported on {nameof(DynamicJacketList)}" } };
 
 
     }

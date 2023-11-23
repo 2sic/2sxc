@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Images
         }
 
         /// <inheritdoc />
-        public Recipe Recipe(string variants) => new Recipe(variants: variants);
+        public Recipe Recipe(string variants) => new(variants: variants);
 
         /// <inheritdoc />
         public Recipe Recipe(
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Images
             string forFactor = default,
             string forCss = default
         )
-            => new Recipe(recipe, name: name, width: width, variants: variants, attributes: attributes, recipes: recipes, 
+            => new(recipe, name: name, width: width, variants: variants, attributes: attributes, recipes: recipes, 
                 setWidth: setWidth, setHeight: setHeight, forTag: forTag, forFactor: forFactor, forCss: forCss);
     }
 }

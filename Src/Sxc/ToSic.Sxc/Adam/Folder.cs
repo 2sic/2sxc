@@ -7,8 +7,6 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 namespace ToSic.Sxc.Adam
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -20,7 +18,7 @@ namespace ToSic.Sxc.Adam
 
         /// <inheritdoc />
         [JsonIgnore]
-        public IMetadata Metadata => _metadata ?? (_metadata = AdamManager.Create(CmsMetadata.FolderPrefix + SysId, Name));
+        public IMetadata Metadata => _metadata ??= AdamManager.Create(CmsMetadata.FolderPrefix + SysId, Name);
         private IMetadata _metadata;
 
         IMetadataOf IHasMetadata.Metadata => (Metadata as IHasMetadata)?.Metadata;
@@ -53,7 +51,7 @@ namespace ToSic.Sxc.Adam
             folders?.ForEach(f => f.Field = Field);
             return folders;
         });
-        private readonly GetOnce<IEnumerable<IFolder>> _folders = new GetOnce<IEnumerable<IFolder>>();
+        private readonly GetOnce<IEnumerable<IFolder>> _folders = new();
 
 
         /// <inheritdoc/>
@@ -63,7 +61,7 @@ namespace ToSic.Sxc.Adam
             files?.ForEach(f => f.Field = Field);
             return files;
         });
-        private readonly GetOnce<IEnumerable<IFile>> _files = new GetOnce<IEnumerable<IFile>>();
+        private readonly GetOnce<IEnumerable<IFile>> _files = new();
 
         [PrivateApi]
         public IField Field { get; set; }

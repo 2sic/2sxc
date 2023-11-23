@@ -9,8 +9,6 @@ using ToSic.Eav.Serialization;
 using ToSic.Lib.Documentation;
 using ToSic.Eav.Plumbing;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 namespace ToSic.Sxc.Images
 {
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -74,8 +72,7 @@ namespace ToSic.Sxc.Images
         });
 
         [PrivateApi]
-        public ReadOnlyCollection<Recipe> AllSubRecipes
-            => _recipesFlat ?? (_recipesFlat = GetAllRecipesRecursive(Recipe?.Recipes).AsReadOnly());
+        public ReadOnlyCollection<Recipe> AllSubRecipes => _recipesFlat ??= GetAllRecipesRecursive(Recipe?.Recipes).AsReadOnly();
         private ReadOnlyCollection<Recipe> _recipesFlat;
 
         private static List<Recipe> GetAllRecipesRecursive(IEnumerable<Recipe> recipes)
@@ -98,7 +95,7 @@ namespace ToSic.Sxc.Images
         /// </summary>
         [PrivateApi("internal use only")]
         [JsonIgnore]
-        public PiggyBack PiggyBack => _piggyBack ?? (_piggyBack = new PiggyBack());
+        public PiggyBack PiggyBack => _piggyBack ??= new PiggyBack();
         private PiggyBack _piggyBack;
     }
 }

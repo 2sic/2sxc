@@ -13,7 +13,6 @@ using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using IApp = ToSic.Sxc.Apps.IApp;
 // ReSharper disable InheritdocInvalidUsage
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Code
 {
@@ -95,18 +94,16 @@ namespace ToSic.Sxc.Code
         }
 
         [PrivateApi]
-        public virtual IDynamicCodeRoot InitDynCodeRoot(IBlock block, ILog parentLog) //, int compatibility)
+        public virtual IDynamicCodeRoot InitDynCodeRoot(IBlock block, ILog parentLog)
         {
             this.LinkLog(parentLog ?? block?.Log);
-            var cLog = Log.Fn<IDynamicCodeRoot>(); //$"{nameof(compatibility)}: {compatibility}");
+            var cLog = Log.Fn<IDynamicCodeRoot>();
 
-            //AsC.SetCompatibilityLevel(compatibility);
             if (block == null)
                 return cLog.Return(this, "no block");
 
             Block = block;
             Data = block.Data;
-            // Data.ConnectToRoot(this);
             AttachApp(block.App);
 
 
@@ -121,14 +118,14 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc cref="IDynamicCode.Link" />
         // Note that ILinkHelper uses INeedsCodeRoot, so if initialized in GetService this will be auto-provided
-        public ILinkService Link => _link ?? (_link = GetService<ILinkService>());
+        public ILinkService Link => _link ??= GetService<ILinkService>();
         private ILinkService _link;
 
 
         #region Edit
 
         /// <inheritdoc />
-        public IEditService Edit => _edit ?? (_edit = GetService<IEditService>());
+        public IEditService Edit => _edit ??= GetService<IEditService>();
         private IEditService _edit;
 
         #endregion

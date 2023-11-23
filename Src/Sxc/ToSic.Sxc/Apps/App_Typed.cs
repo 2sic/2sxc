@@ -8,7 +8,6 @@ using ToSic.Sxc.Data.Decorators;
 using ToSic.Sxc.Services.DataServices;
 using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Apps.AppAssetFolderMain;
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Apps
 {
@@ -16,7 +15,7 @@ namespace ToSic.Sxc.Apps
     {
         #region IAppTyped Folder / Thumbnail (replaces Paths)
 
-        IFolder IAppTyped.Folder => _folder ?? (_folder = (this as IAppTyped).FolderAdvanced());
+        IFolder IAppTyped.Folder => _folder ??= (this as IAppTyped).FolderAdvanced();
         private IFolder _folder;
 
         IFolder IAppTyped.FolderAdvanced(string noParamOrder, string location)
@@ -26,7 +25,7 @@ namespace ToSic.Sxc.Apps
         }
 
         IFile IAppTyped.Thumbnail => _thumbnailFile.Get(() => new AppAssetThumbnail(this, AppPaths, _globalPaths));
-        private readonly GetOnce<IFile> _thumbnailFile = new GetOnce<IFile>();
+        private readonly GetOnce<IFile> _thumbnailFile = new();
 
         #endregion
 
@@ -42,11 +41,11 @@ namespace ToSic.Sxc.Apps
 
         /// <inheritdoc cref="IAppTyped.Settings"/>
         ITypedItem IAppTyped.Settings => AppSettings == null ? null : _typedSettings.Get(() => MakeTyped(AppSettings, propsRequired: true));
-        private readonly GetOnce<ITypedItem> _typedSettings = new GetOnce<ITypedItem>();
+        private readonly GetOnce<ITypedItem> _typedSettings = new();
 
         /// <inheritdoc cref="IAppTyped.Resources"/>
         ITypedItem IAppTyped.Resources => _typedRes.Get(() => MakeTyped(AppResources, propsRequired: true));
-        private readonly GetOnce<ITypedItem> _typedRes = new GetOnce<ITypedItem>();
+        private readonly GetOnce<ITypedItem> _typedRes = new();
 
         private ITypedItem MakeTyped(IEntity contents, bool propsRequired)
         {

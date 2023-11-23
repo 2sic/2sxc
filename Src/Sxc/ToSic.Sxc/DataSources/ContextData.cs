@@ -47,10 +47,10 @@ namespace ToSic.Sxc.DataSources
         #region New v16
 
         internal IEnumerable<IEntity> MyItem => _myContent.Get(() => _blockSource.GetStream(emptyIfNotFound: true).List);
-        private readonly GetOnce<IEnumerable<IEntity>> _myContent = new GetOnce<IEnumerable<IEntity>>();
+        private readonly GetOnce<IEnumerable<IEntity>> _myContent = new();
 
         internal IEnumerable<IEntity> MyHeader => _header.Get(() => _blockSource.GetStream(ViewParts.StreamHeader, emptyIfNotFound: true).List);
-        private readonly GetOnce<IEnumerable<IEntity>> _header = new GetOnce<IEnumerable<IEntity>>();
+        private readonly GetOnce<IEnumerable<IEntity>> _header = new();
         
         #endregion
 

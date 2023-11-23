@@ -30,10 +30,8 @@ namespace ToSic.Sxc.Adam
             var fullContentPath = _adamPaths.PhysicalPath(parent.Path);
             Directory.CreateDirectory(fullContentPath);
             var filePath = Path.Combine(fullContentPath, fileName);
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                body.CopyTo(stream);
-            }
+            using var stream = new FileStream(filePath, FileMode.Create);
+            body.CopyTo(stream);
             var fileInfo = GetFile(filePath);
 
             return callLog.ReturnAsOk(fileInfo);

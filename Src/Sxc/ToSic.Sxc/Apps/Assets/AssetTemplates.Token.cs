@@ -3,7 +3,7 @@
     public partial class AssetTemplates
     {
         public static TemplateInfo Token =
-            new TemplateInfo("html-token", "HTML Token Template", ".html", "DetailsTemplate", ForTemplate, TypeToken)
+            new("html-token", "HTML Token Template", ".html", "DetailsTemplate", ForTemplate, TypeToken)
             {
                 Body = @"
 <p>

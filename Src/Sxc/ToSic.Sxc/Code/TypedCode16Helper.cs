@@ -28,16 +28,16 @@ namespace ToSic.Sxc.Code
         }
 
         public ITypedItem MyItem => _myItem.Get(() => CodeRoot.Cdf.AsItem(Data.MyItem, Protector, propsRequired: DefaultStrict));
-        private readonly GetOnce<ITypedItem> _myItem = new GetOnce<ITypedItem>();
+        private readonly GetOnce<ITypedItem> _myItem = new();
 
         public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => CodeRoot.Cdf.AsItems(Data.MyItem, Protector, propsRequired: DefaultStrict));
-        private readonly GetOnce<IEnumerable<ITypedItem>> _myItems = new GetOnce<IEnumerable<ITypedItem>>();
+        private readonly GetOnce<IEnumerable<ITypedItem>> _myItems = new();
 
         public ITypedItem MyHeader => _myHeader.Get(() => CodeRoot.Cdf.AsItem(Data.MyHeader, Protector, propsRequired: DefaultStrict));
-        private readonly GetOnce<ITypedItem> _myHeader = new GetOnce<ITypedItem>();
+        private readonly GetOnce<ITypedItem> _myHeader = new();
 
         public ITypedModel MyModel => _myModel.Get(() => new TypedModel(_myModelData, CodeRoot, IsRazor, CodeFileName));
-        private readonly GetOnce<ITypedModel> _myModel = new GetOnce<ITypedModel>();
+        private readonly GetOnce<ITypedModel> _myModel = new();
 
 
         public ITypedStack AllResources => (CodeRoot as DynamicCodeRoot)?.AllResources;

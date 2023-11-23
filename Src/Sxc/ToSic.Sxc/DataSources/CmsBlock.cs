@@ -87,7 +87,7 @@ namespace ToSic.Sxc.DataSources
         public override IDataSourceLink Link => _link.Get(() => new DataSourceLink(null, dataSource: this)
             .AddStream(name: ViewParts.StreamHeader)
             .AddStream(name: ViewParts.StreamHeaderOld));
-        private readonly GetOnce<IDataSourceLink> _link = new GetOnce<IDataSourceLink>();
+        private readonly GetOnce<IDataSourceLink> _link = new();
 
 
         private IImmutableList<IEntity> GetContent()

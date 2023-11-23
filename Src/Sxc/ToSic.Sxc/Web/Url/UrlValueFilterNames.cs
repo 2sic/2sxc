@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Web.Url
         /// Determine if not-found properties should be preserved or not - default is preserve, but init can reverse this
         /// </summary>
         internal bool PropSerializeDefault;
-        internal Dictionary<string, bool> PropSerializeMap = new Dictionary<string, bool>(StringComparer.InvariantCultureIgnoreCase);
+        internal Dictionary<string, bool> PropSerializeMap = new(StringComparer.InvariantCultureIgnoreCase);
 
 
         public override NameObjectSet Process(NameObjectSet set)

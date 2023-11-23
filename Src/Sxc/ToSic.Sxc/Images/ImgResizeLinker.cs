@@ -156,7 +156,7 @@ namespace ToSic.Sxc.Images
         }
 
         // cache buffer settings which had already been looked up
-        private ConcurrentDictionary<IHasMetadata, ImageDecorator> _imgDecCache = new ConcurrentDictionary<IHasMetadata, ImageDecorator>();
+        private ConcurrentDictionary<IHasMetadata, ImageDecorator> _imgDecCache = new();
 
 
         private bool ImgAddIfRelevant(NameValueCollection resizer, string key, object value, string irrelevant = "")

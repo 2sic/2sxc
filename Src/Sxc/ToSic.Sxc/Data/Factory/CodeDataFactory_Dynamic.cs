@@ -20,17 +20,17 @@ namespace ToSic.Sxc.Data
         /// <param name="entity"></param>
         /// <returns></returns>
         public DynamicEntity CodeAsDyn(IEntity entity)
-            => new DynamicEntity(entity, this, propsRequired: false);
+            => new(entity, this, propsRequired: false);
 
-        public DynamicEntity AsDynamic(IEntity entity, bool propsRequired)
-            => new DynamicEntity(entity, this, propsRequired: propsRequired);
+        public DynamicEntity AsDynamic(IEntity entity, bool propsRequired) =>
+            new(entity, this, propsRequired: propsRequired);
 
         /// <summary>
         /// Convert a list of Entities into a DynamicEntity.
         /// Only used in DynamicCodeRoot.
         /// </summary>
         internal DynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, bool propsRequired) 
-            => new DynamicEntity(list: list, parent: null, field: null, appIdOrNull: null, propsRequired: propsRequired, cdf: this);
+            => new(list: list, parent: null, field: null, appIdOrNull: null, propsRequired: propsRequired, cdf: this);
 
         /// <summary>
         /// Convert any object into a dynamic list.

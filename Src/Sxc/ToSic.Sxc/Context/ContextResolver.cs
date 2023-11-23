@@ -31,6 +31,6 @@ namespace ToSic.Sxc.Context
         /// </summary>
         /// <returns></returns>
         public IContextOfUserPermissions UserPermissions() => _ctxUserPerm.Get(() => BlockContextOrNull() ?? LatestAppContext ?? Site());
-        private readonly GetOnce<IContextOfUserPermissions> _ctxUserPerm = new GetOnce<IContextOfUserPermissions>();
+        private readonly GetOnce<IContextOfUserPermissions> _ctxUserPerm = new();
     }
 }

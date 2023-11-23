@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         #region Read Settings
 
         public string AppPolicies => _appPolicies.Get(GetAppPolicies);
-        private readonly GetOnce<string> _appPolicies = new GetOnce<string>();
+        private readonly GetOnce<string> _appPolicies = new();
 
         private string GetAppPolicies()
         {

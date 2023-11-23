@@ -32,7 +32,6 @@ namespace ToSic.Sxc.Apps.Work
             );
         }
 
-        // ReSharper disable once ConvertToNullCoalescingCompoundAssignment
         private IImmutableList<IEntity> ContentGroups() => _workEntities.New(AppWorkCtx).Get(BlockTypeName).ToImmutableList();
 
         public List<BlockConfiguration> AllWithView()
