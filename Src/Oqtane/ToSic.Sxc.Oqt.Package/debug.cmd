@@ -8,7 +8,7 @@ SET OqtaneTarget=%2
 ECHO BuildFolder=%BuildFolder%
 ECHO OqtaneTarget=%OqtaneTarget%
 
-SET OqtaneBin=%OqtaneTarget%bin\%BuildFolder%\net7.0
+SET OqtaneBin=%OqtaneTarget%bin\%BuildFolder%\net8.0
 SET PackageName=ToSic.Sxc.Oqtane
 SET BuildTarget=%OqtaneTarget%wwwroot\Modules\%PackageName%
 ECHO The target folder is: %OqtaneBin%
