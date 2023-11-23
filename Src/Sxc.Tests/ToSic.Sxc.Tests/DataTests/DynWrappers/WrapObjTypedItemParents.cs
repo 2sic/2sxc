@@ -23,13 +23,13 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
         }
         private static readonly TestTag[] TestTagList =
         {
-            new TestTag
+            new()
             {
                 Id = 1001,
                 Title = "Web",
                 Field = "Tags",
             },
-            new TestTag
+            new()
             {
                 Id = 1002,
                 Title = "IT",
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
         {
             public TestTag[] Parents => TestTagList;
         }
-        private static readonly TestDataParents DataParent = new TestDataParents();
+        private static readonly TestDataParents DataParent = new();
         private ITypedItem Item => Obj2Item(DataParent);
 
         private IEnumerable<ITypedItem> TagsFlat => Item.Parents();

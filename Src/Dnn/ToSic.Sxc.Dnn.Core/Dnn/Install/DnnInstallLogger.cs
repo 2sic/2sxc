@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Dnn.Install
             {
                 var fileHandle = new FileStream(logFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite,
                     FileShare.Read);
-                streamWriter = new StreamWriter(fileHandle);
+                streamWriter = new(fileHandle);
             }
             catch (Exception ex)
             {

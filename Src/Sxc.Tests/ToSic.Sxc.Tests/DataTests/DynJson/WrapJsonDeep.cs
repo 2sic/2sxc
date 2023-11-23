@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
             }
         };
 
-        private ITyped DataTyped => _dataTyped ?? (_dataTyped = Obj2Json2TypedStrict(DeepData));
+        private ITyped DataTyped => _dataTyped ??= Obj2Json2TypedStrict(DeepData);
         private ITyped _dataTyped;
 
         [TestMethod]

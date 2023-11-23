@@ -196,7 +196,7 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         IContentType ITypedItem.Type => Entity?.Type;
 
-        public bool IsDemoItem => _isDemoItem ?? (_isDemoItem = Entity.IsDemoItemSafe()).Value;
+        public bool IsDemoItem => _isDemoItem ??= Entity.IsDemoItemSafe();
         private bool? _isDemoItem;
 
         #endregion

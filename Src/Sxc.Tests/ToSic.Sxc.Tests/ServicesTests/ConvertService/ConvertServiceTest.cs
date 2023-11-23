@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
     public class ConvertServiceTest:TestBaseSxc
     {
         private const string strGuid = "424e56ce-570a-4747-aee2-44c04caf7f12";
-        private static readonly Guid expGuid = new Guid(strGuid);
+        private static readonly Guid expGuid = new(strGuid);
         [TestMethod] public void ToGuidNull() => AreEqual(Guid.Empty, Csvc().ToGuid(null));
         [TestMethod] public void ToGuidEmpty() => AreEqual(Guid.Empty, Csvc().ToGuid(""));
         [TestMethod] public void ToGuidBasic() => AreEqual(expGuid, Csvc().ToGuid(strGuid));

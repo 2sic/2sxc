@@ -36,9 +36,6 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         object IHasJsonSource.JsonSource => PreWrap.JsonSource;
 
-        //[PrivateApi] internal ITyped Typed => _typed ?? (_typed = new WrapObjectTyped(PreWrap, Wrapper));
-        //private ITyped _typed;
-
         #endregion
 
         /// <summary>

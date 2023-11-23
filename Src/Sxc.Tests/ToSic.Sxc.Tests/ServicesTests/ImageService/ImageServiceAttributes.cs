@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             public override string ToString() => $"Test: '{Name}";
         }
 
-        private static List<TestCase> TestCasesClass = new List<TestCase>
+        private static List<TestCase> TestCasesClass = new()
         {
             new TestCase("Call Only", "class='img-class'", "img-class"),
             new TestCase("Call Only multiple", "class='img-class img-class2'", "img-class img-class2"),
@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         }
 
 
-        private static List<TestCase> TestCasesStyles = new List<TestCase>
+        private static List<TestCase> TestCasesStyles = new()
         {
             new TestCase("Call Only", "style='img-style: 50px'", "img-style: 50px"),
             new TestCase("Call Only multiple", "style='img-style: 50px; width: 10px'", "img-style: 50px; width: 10px"),

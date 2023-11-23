@@ -37,9 +37,9 @@ namespace ToSic.Sxc.Adam
 
 
         /// <inheritdoc />
-        public override bool HasChildren 
-            => _hasChildren ?? (_hasChildren = AdamManager.AdamFs.GetFiles(this).Any() 
-                                               || AdamManager.AdamFs.GetFolders(this).Any()).Value;
+        public override bool HasChildren
+            => _hasChildren ??= AdamManager.AdamFs.GetFiles(this).Any()
+                                || AdamManager.AdamFs.GetFolders(this).Any();
         private bool? _hasChildren;
 
 

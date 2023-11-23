@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
             return IsImagePath(path);
         }
 
-        private static readonly string[] Suffixes = new string[] {
+        private static readonly string[] Suffixes = {
             ".png",
             ".jpg",
             ".jpeg",

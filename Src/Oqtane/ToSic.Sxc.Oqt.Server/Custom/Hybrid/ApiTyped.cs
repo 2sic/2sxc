@@ -65,7 +65,7 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="IDynamicCode16.Kit"/>
         public ServiceKit16 Kit => _kit.Get(() => _DynCodeRoot.GetKit<ServiceKit16>());
-        private readonly GetOnce<ServiceKit16> _kit = new GetOnce<ServiceKit16>();
+        private readonly GetOnce<ServiceKit16> _kit = new();
 
         [PrivateApi("Not yet ready")]
         public IDevTools DevTools => CodeHelper.DevTools;

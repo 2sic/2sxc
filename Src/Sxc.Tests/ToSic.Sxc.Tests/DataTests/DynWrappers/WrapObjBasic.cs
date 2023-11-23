@@ -17,10 +17,10 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             /// <summary> This one is not a real property but just a value! </summary>
             public string DescriptionAsProperty = "Some description";
             public int Founded => 2012;
-            public DateTime Birthday { get; } = new DateTime(2012, 5, 4);
+            public DateTime Birthday { get; } = new(2012, 5, 4);
             public bool Truthy => true;
         }
-        public static TestData Data = new TestData();
+        public static TestData Data = new();
 
         [TestMethod]
         public void SourceAnonymous()

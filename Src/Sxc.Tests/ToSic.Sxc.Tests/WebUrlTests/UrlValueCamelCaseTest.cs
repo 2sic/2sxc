@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Tests.WebUrlTests
     [TestClass]
     public class UrlValueCamelCaseTest
     {
-        private UrlValueCamelCase TestProcess() => new UrlValueCamelCase();
+        private UrlValueCamelCase TestProcess() => new();
 
         [TestMethod]
         [DataRow("original", "original", "all lower case")]

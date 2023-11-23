@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Razor.Engine.DbgWip
     {
         private readonly ApplicationPartManager _partManager;
         private readonly MvcRazorRuntimeCompilationOptions _options;
-        private object _compilationReferencesLock = new object();
+        private object _compilationReferencesLock = new();
         private bool _compilationReferencesInitialized;
         private IReadOnlyList<MetadataReference> _compilationReferences;
 

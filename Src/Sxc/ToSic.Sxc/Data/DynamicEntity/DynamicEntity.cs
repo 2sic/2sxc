@@ -133,11 +133,11 @@ namespace ToSic.Sxc.Data
 
         // ReSharper disable once InheritdocInvalidUsage
         /// <inheritdoc />
-        public virtual bool IsDemoItem => _isDemoItem ?? (_isDemoItem = Entity.IsDemoItemSafe()).Value;
+        public virtual bool IsDemoItem => _isDemoItem ??= Entity.IsDemoItemSafe();
         private bool? _isDemoItem;
 
         [PrivateApi("Not in use yet, and I believe not communicated")]
-        public bool IsFake => _isFake ?? (_isFake = (Entity?.EntityId ?? DataConstants.DataFactoryDefaultEntityId) == DataConstants.DataFactoryDefaultEntityId).Value;
+        public bool IsFake => _isFake ??= (Entity?.EntityId ?? DataConstants.DataFactoryDefaultEntityId) == DataConstants.DataFactoryDefaultEntityId;
         private bool? _isFake;
 
         #endregion

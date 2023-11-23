@@ -53,52 +53,50 @@ namespace ToSic.Sxc.Oqt.Server.Code
             var l = Log.Fn<Assembly>($"{nameof(dllName)}: {dllName}.");
             var encoding = Encoding.UTF8;
             var pdbName = $"{dllName}.pdb";
-            using (var peStream = new MemoryStream())
-            using (var pdbStream = new MemoryStream())
+            using var peStream = new MemoryStream();
+            using var pdbStream = new MemoryStream();
+            var options = new EmitOptions(
+                debugInformationFormat: DebugInformationFormat.PortablePdb,
+                pdbFilePath: pdbName);
+
+            var buffer = encoding.GetBytes(sourceCode);
+            var sourceText = SourceText.From(buffer, buffer.Length, encoding, canBeEmbedded: true);
+
+            var embeddedTexts = new List<EmbeddedText>
             {
-                var options = new EmitOptions(
-                    debugInformationFormat: DebugInformationFormat.PortablePdb,
-                    pdbFilePath: pdbName);
+                EmbeddedText.FromSource(path, sourceText),
+            };
 
-                var buffer = encoding.GetBytes(sourceCode);
-                var sourceText = SourceText.From(buffer, buffer.Length, encoding, canBeEmbedded: true);
+            var result = GenerateCode(path, sourceText, dllName).Emit(peStream,
+                pdbStream,
+                embeddedTexts: embeddedTexts,
+                options: options);
 
-                var embeddedTexts = new List<EmbeddedText>
+            if (!result.Success)
+            {
+                l.E("Compilation done with error.");
+
+                var errors = new List<string>();
+
+                var failures = result.Diagnostics.Where(diagnostic =>
+                    diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error);
+
+                foreach (var diagnostic in failures)
                 {
-                    EmbeddedText.FromSource(path, sourceText),
-                };
-
-                var result = GenerateCode(path, sourceText, dllName).Emit(peStream,
-                    pdbStream,
-                    embeddedTexts: embeddedTexts,
-                    options: options);
-
-                if (!result.Success)
-                {
-                    l.E("Compilation done with error.");
-
-                    var errors = new List<string>();
-
-                    var failures = result.Diagnostics.Where(diagnostic =>
-                        diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error);
-
-                    foreach (var diagnostic in failures)
-                    {
-                        l.A("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
-                        errors.Add($"{diagnostic.Id}: {diagnostic.GetMessage()}");
-                    }
-
-                    throw l.Done(new IOException(string.Join("\n", errors)));
+                    l.A("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
+                    errors.Add($"{diagnostic.Id}: {diagnostic.GetMessage()}");
                 }
 
-                peStream.Seek(0, SeekOrigin.Begin);
-                pdbStream?.Seek(0, SeekOrigin.Begin);
-
-                var assemblyLoadContext = new SimpleUnloadableAssemblyLoadContext();
-                var assembly = assemblyLoadContext.LoadFromStream(peStream, pdbStream);
-
-                return l.Return(assembly, "Compilation done without any error.");
+                throw l.Done(new IOException(string.Join("\n", errors)));
             }
+
+            peStream.Seek(0, SeekOrigin.Begin);
+            pdbStream?.Seek(0, SeekOrigin.Begin);
+
+            var assemblyLoadContext = new SimpleUnloadableAssemblyLoadContext();
+            var assembly = assemblyLoadContext.LoadFromStream(peStream, pdbStream);
+
+            return l.Return(assembly, "Compilation done without any error.");
         }
 
         private static CSharpCompilation GenerateCode(string path, SourceText sourceCode, string dllName)

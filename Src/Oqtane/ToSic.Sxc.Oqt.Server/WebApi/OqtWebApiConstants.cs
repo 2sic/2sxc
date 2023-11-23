@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
         // 6. `(.+)` : API endpoint path 'controller/action'
         //             This captures one or more of any characters (except a new line).
         //             This part must be present and could match strings like "get-data", "123", "user/data", etc.
-        public static readonly Regex SxcEndpointPathRegex = new Regex(@"(.*/)?app/([\w-]+)(/([\w-]+))?/api/(.+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        public static readonly Regex SxcEndpointPathRegex = new(@"(.*/)?app/([\w-]+)(/([\w-]+))?/api/(.+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         // Regex patterns to match endpoint mappings
         //public static readonly string[] SxcEndpointPathRegexPatterns = new[]

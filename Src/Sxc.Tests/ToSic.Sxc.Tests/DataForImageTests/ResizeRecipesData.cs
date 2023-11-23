@@ -16,12 +16,12 @@ namespace ToSic.Sxc.Tests.DataForImageTests
 
         public const string CssNone = null;
         public const string CssUnknown = "unk";
-        private static Dictionary<string, object> Attributes75MixIn = new Dictionary<string, object>
+        private static Dictionary<string, object> Attributes75MixIn = new()
         {
             { "loading", "lazy" },
             { "toReset", "parent" }
         };
-        private static Dictionary<string, object> Attributes75 = new Dictionary<string, object>
+        private static Dictionary<string, object> Attributes75 = new()
         {
             { "class", "img-fluid" },
             { "test", "value" },
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Tests.DataForImageTests
         };
 
         public static AdvancedSettings TestRecipeSet() =>
-            new AdvancedSettings(new Recipe(recipes: new[]
+            new(new Recipe(recipes: new[]
             {
                 new Recipe(forFactor: "1", width: W100),
                 new Recipe(forFactor: "3/4", width: W75, attributes: Attributes75MixIn, recipes: new[]

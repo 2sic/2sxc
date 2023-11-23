@@ -14,10 +14,10 @@ namespace ToSic.Sxc.Tests.DataTests.DynStack
     [TestClass]
     public class TypedStackGet: DynAndTypedTestsBase
     {
-        private ITypedStack StackFromAnon => _stackForKeys ?? (_stackForKeys = GetStackForKeysUsingAnon(this));
+        private ITypedStack StackFromAnon => _stackForKeys ??= GetStackForKeysUsingAnon(this);
         private static ITypedStack _stackForKeys;
 
-        private ITypedStack StackFromJson => _stackForKeysTyped ?? (_stackForKeysTyped = GetStackForKeysUsingJson(this));
+        private ITypedStack StackFromJson => _stackForKeysTyped ??= GetStackForKeysUsingJson(this);
         private ITypedStack _stackForKeysTyped;
 
 

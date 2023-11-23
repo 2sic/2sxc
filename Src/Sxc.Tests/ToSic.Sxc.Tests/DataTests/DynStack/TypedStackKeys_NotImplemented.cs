@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynStack
         public void Keys_AnonObjects(PropInfo pti) => AreEqual(pti.Exists, StackForKeysFromAnon.ContainsKey(pti.Name));
 
 
-        private ITypedStack StackForKeysFromAnon => _stackForKeys ?? (_stackForKeys = TypedStackTestData.GetStackForKeysUsingAnon(this));
+        private ITypedStack StackForKeysFromAnon => _stackForKeys ??= TypedStackTestData.GetStackForKeysUsingAnon(this);
         private ITypedStack _stackForKeys;
 
 

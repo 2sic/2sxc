@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Blocks
 
         public bool IsHidden => GetThis(false);
 
-        public bool IsShared => _isShared ?? (_isShared = AppAssets.IsShared(Get(FieldLocation, AppAssets.AppInSite))).Value;
+        public bool IsShared => _isShared ??= AppAssets.IsShared(Get(FieldLocation, AppAssets.AppInSite));
         private bool? _isShared;
 
         public bool UseForList => GetThis(false);

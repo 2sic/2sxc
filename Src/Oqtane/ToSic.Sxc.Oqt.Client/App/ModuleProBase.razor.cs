@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Oqt.App
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
-                SxcInterop = new SxcInterop(JSRuntime);
+                SxcInterop = new(JSRuntime);
                 // now we are safe to have SxcInterop and run js
                 IsSafeToRunJs = true;
             }
