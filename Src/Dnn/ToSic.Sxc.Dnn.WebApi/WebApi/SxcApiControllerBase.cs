@@ -23,7 +23,7 @@ namespace ToSic.Sxc.WebApi
         }
 
         [PrivateApi]
-        internal DynamicApiCodeHelpers DynHlp => _dynHlp ?? (_dynHlp = new DynamicApiCodeHelpers(this, SysHlp));
+        internal DynamicApiCodeHelpers DynHlp => _dynHlp ??= new DynamicApiCodeHelpers(this, SysHlp);
         private DynamicApiCodeHelpers _dynHlp;
         
     }

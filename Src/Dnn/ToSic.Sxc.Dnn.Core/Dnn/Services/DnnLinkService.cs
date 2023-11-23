@@ -29,9 +29,9 @@ namespace ToSic.Sxc.Dnn.Services
         private readonly LazySvc<DnnValueConverter> _dnnValueConverterLazy;
         private readonly LazySvc<INavigationManager> _navigationManager;
 
-        [PrivateApi] private IDnnContext Dnn => _dnn ?? (_dnn = _DynCodeRoot.GetService<IDnnContext>());
+        [PrivateApi] private IDnnContext Dnn => _dnn ??= _DynCodeRoot.GetService<IDnnContext>();
         private IDnnContext _dnn;
-        [PrivateApi] private DnnValueConverter DnnValueConverter => _dnnValueConverter ?? (_dnnValueConverter = _dnnValueConverterLazy.Value);
+        [PrivateApi] private DnnValueConverter DnnValueConverter => _dnnValueConverter ??= _dnnValueConverterLazy.Value;
         private DnnValueConverter _dnnValueConverter;
 
         protected override string ToApi(string api, string parameters = null) 

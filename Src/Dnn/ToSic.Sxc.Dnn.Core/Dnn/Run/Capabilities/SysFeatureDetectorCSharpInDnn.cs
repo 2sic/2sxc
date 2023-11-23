@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Dnn.Run.Capabilities
     {
         public SysFeatureDetectorCSharp6() : base(CSharp06.Clone(name: " optional in Dnn 9.6.1+")) { }
 
-        public override bool IsEnabled => _isEnabledCache ?? (_isEnabledCache = DetectIfCs6IsInstalled()).Value;
+        public override bool IsEnabled => _isEnabledCache ??= DetectIfCs6IsInstalled();
         private static bool? _isEnabledCache;
 
         // DETECT based on installed stuff (DLLs, available APIs?)
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.Run.Capabilities
     {
         public SysFeatureDetectorCSharp7() : base(CSharp07.Clone(name: CSharp07.Name + " optional in Dnn 9.? (todo)")) { }
 
-        public override bool IsEnabled => _isEnabledCache ?? (_isEnabledCache = DetectIfCs73IsInstalled()).Value;
+        public override bool IsEnabled => _isEnabledCache ??= DetectIfCs73IsInstalled();
         private static bool? _isEnabledCache;
 
         // DETECT based on installed stuff (DLLs, available APIs?)
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Dnn.Run.Capabilities
         // public SysFeatureDetectorCSharp8() : base(CSharp08.Clone(name: CSharp08.Name + " optional in Dnn 9.13+ (ca. todo)"), false) { }
         public SysFeatureDetectorCSharp8() : base(CSharp08.Clone(name: CSharp08.Name + " optional in Dnn 9.? (todo)")) { }
 
-        public override bool IsEnabled => _isEnabledCache ?? (_isEnabledCache = DetectIfCs73IsInstalled()).Value;
+        public override bool IsEnabled => _isEnabledCache ??= DetectIfCs73IsInstalled();
         private static bool? _isEnabledCache;
 
         // DETECT based on installed stuff (DLLs, available APIs?)

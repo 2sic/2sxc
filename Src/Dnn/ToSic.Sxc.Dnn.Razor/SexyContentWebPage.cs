@@ -77,7 +77,7 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         [PrivateApi("never public, shouldn't be in use elsewhere")]
         [Obsolete]
-        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(_DynCodeRoot.Block?.Context.UserMayEdit ?? false, GetService<IConvertToEavLight>()));
+        public SxcHelper Sxc => _sxc ??= new SxcHelper(_DynCodeRoot.Block?.Context.UserMayEdit ?? false, GetService<IConvertToEavLight>());
         [Obsolete]
         private SxcHelper _sxc;
 #pragma warning restore 612
@@ -226,7 +226,7 @@ namespace ToSic.SexyContent.Razor
         public dynamic ListPresentation => _DynCodeRoot.Header?.Presentation;
 
         [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
-        public List<Element> List => _list ?? (_list =new DynamicCodeObsolete(_DynCodeRoot).ElementList);
+        public List<Element> List => _list ??= new DynamicCodeObsolete(_DynCodeRoot).ElementList;
         [Obsolete("don't use any more")]
         private List<Element> _list;
 #pragma warning restore 618

@@ -60,7 +60,7 @@ namespace ToSic.SexyContent.WebApi
 
         [Obsolete]
         [PrivateApi]
-        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(_DynCodeRoot?.Block?.Context?.UserMayEdit ?? false, SysHlp.GetService<IConvertToEavLight> ()));
+        public SxcHelper Sxc => _sxc ??= new SxcHelper(_DynCodeRoot?.Block?.Context?.UserMayEdit ?? false, SysHlp.GetService<IConvertToEavLight> ());
         [Obsolete]
         private SxcHelper _sxc;
 

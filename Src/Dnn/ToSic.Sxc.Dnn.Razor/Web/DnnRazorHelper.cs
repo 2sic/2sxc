@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Web
 
         #region Html Helper
 
-        internal IHtmlHelper Html => _html ?? (_html = _DynCodeRoot.GetService<HtmlHelper>().Init(Page, this, _DynCodeRoot.Block?.Context.User.IsSystemAdmin ?? false, _renderPage));
+        internal IHtmlHelper Html => _html ??= _DynCodeRoot.GetService<HtmlHelper>().Init(Page, this, _DynCodeRoot.Block?.Context.User.IsSystemAdmin ?? false, _renderPage);
         private IHtmlHelper _html;
 
         #endregion
@@ -109,7 +109,7 @@ namespace ToSic.Sxc.Web
         private readonly GetOnce<CodeDataWrapper> _dynJacketFactory = new GetOnce<CodeDataWrapper>();
 
         /// <inheritdoc cref="IRazor14{TModel,TServiceKit}.DynamicModel"/>
-        public dynamic DynamicModel => _dynamicModel ?? (_dynamicModel = CodeDataWrapper.FromDictionary(Page.PageData));
+        public dynamic DynamicModel => _dynamicModel ??= CodeDataWrapper.FromDictionary(Page.PageData);
         private dynamic _dynamicModel;
 
         internal void SetDynamicModel(object data) =>

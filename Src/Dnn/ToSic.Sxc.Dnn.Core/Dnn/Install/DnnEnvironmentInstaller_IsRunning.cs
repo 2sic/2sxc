@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Dnn.Install
             get
             {
                 var l = Log.Fn<bool>($"Was already set: {_running.HasValue}");
-                var result = _running ?? (_running = new DnnFileLock().IsSet).Value;
+                var result = _running ??= new DnnFileLock().IsSet;
                 return l.ReturnAndLog(result);
             }
             set

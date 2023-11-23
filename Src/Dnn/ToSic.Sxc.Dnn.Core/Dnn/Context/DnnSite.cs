@@ -121,7 +121,7 @@ namespace ToSic.Sxc.Dnn.Context
         #region Culture / Languages
 
         /// <inheritdoc />
-        public override string DefaultCultureCode => _defaultLanguage ?? (_defaultLanguage = UnwrappedSite?.DefaultLanguage?.ToLowerInvariant());
+        public override string DefaultCultureCode => _defaultLanguage ??= UnwrappedSite?.DefaultLanguage?.ToLowerInvariant();
         private string _defaultLanguage;
 
 
@@ -231,9 +231,9 @@ namespace ToSic.Sxc.Dnn.Context
         /// but the current one. Just keep this in mind in case anything ever breaks.
         /// </remarks>
         public override string UrlRoot
-            => _urlRoot ?? (_urlRoot = UnwrappedSite?.PortalAlias?.HTTPAlias
-                                       ?? PortalSettings.Current?.PortalAlias?.HTTPAlias
-                                       ?? "err-portal-alias-not-loaded");
+            => _urlRoot ??= UnwrappedSite?.PortalAlias?.HTTPAlias
+                            ?? PortalSettings.Current?.PortalAlias?.HTTPAlias
+                            ?? "err-portal-alias-not-loaded";
         private string _urlRoot;
 
         [PrivateApi]

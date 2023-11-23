@@ -167,7 +167,7 @@ namespace Custom.Hybrid
 
         #region My... Stuff
 
-        private TypedCode16Helper CodeHelper => _codeHelper ?? (_codeHelper = CreateCodeHelper());
+        private TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
         private TypedCode16Helper _codeHelper;
 
         private TypedCode16Helper CreateCodeHelper()

@@ -52,7 +52,7 @@ namespace Custom.Hybrid
         public ServiceKit16 Kit => _kit.Get(() => _DynCodeRoot.GetKit<ServiceKit16>());
         private readonly GetOnce<ServiceKit16> _kit = new GetOnce<ServiceKit16>();
 
-        private TypedCode16Helper CodeHelper => _codeHelper ?? (_codeHelper = CreateCodeHelper());
+        private TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
         private TypedCode16Helper _codeHelper;
 
         void ISetDynamicModel.SetDynamicModel(object data) => _overridePageData = data;

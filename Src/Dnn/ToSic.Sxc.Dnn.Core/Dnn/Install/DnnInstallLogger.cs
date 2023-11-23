@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Dnn.Install
             l.Done();
         }
 
-        private StreamWriter FileStreamWriter => _fileStreamWriterCached ?? (_fileStreamWriterCached = OpenLogFiles(0));
+        private StreamWriter FileStreamWriter => _fileStreamWriterCached ??= OpenLogFiles(0);
         private StreamWriter _fileStreamWriterCached;
 
 

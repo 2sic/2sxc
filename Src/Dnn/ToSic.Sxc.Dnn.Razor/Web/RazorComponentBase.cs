@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Web
         /// For architecture of Composition over Inheritance.
         /// </summary>
         [PrivateApi]
-        internal DnnRazorHelper SysHlp => _sysHlp ?? (_sysHlp = new DnnRazorHelper().Init(this, (path, data) => base.RenderPage(path, data)));
+        internal DnnRazorHelper SysHlp => _sysHlp ??= new DnnRazorHelper().Init(this, (path, data) => base.RenderPage(path, data));
         private DnnRazorHelper _sysHlp;
 
 
