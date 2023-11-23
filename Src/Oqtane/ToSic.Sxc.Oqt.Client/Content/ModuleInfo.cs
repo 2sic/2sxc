@@ -24,6 +24,7 @@ namespace ToSic.Sxc.Oqt.Content
          * 13-00-00 - SQL - update TargetTypes Metadata
          * 13-01-00 - SQL - add SysSettings column to Apps table + add TargetTypes Metadata
          * 15-00-00 - SQL - updates for DataTimeline table
+         * ...
          * 16-07-01 - SQL - add Json for Attribute and ContentType configuration + Guid for Attribute
          */
 
