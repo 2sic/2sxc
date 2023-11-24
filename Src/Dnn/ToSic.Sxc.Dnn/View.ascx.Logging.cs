@@ -1,11 +1,10 @@
-﻿#pragma warning disable 1591
-using System.Web.Http;
+﻿using System.Web.Http;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Dnn.Run;
 
 namespace ToSic.Sxc.Dnn
 {
-    public partial class View
+    partial class View
     {
         /// <summary>
         /// Html Comment containing the log for the current module

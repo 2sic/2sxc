@@ -1,5 +1,4 @@
-﻿#pragma warning disable 1591
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Web.UI;
 using DotNetNuke.Services.Exceptions;
@@ -8,7 +7,7 @@ using ToSic.Sxc.Blocks.Output;
 
 namespace ToSic.Sxc.Dnn
 {
-    public partial class View
+    partial class View
     {
         internal bool IsError;
 

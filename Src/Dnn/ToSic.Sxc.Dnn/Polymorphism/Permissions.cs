@@ -1,5 +1,4 @@
-﻿#pragma warning disable 1591
-using DotNetNuke.Entities.Portals;
+﻿using DotNetNuke.Entities.Portals;
 using ToSic.Lib.Logging;
 using static System.StringComparison;
 
@@ -7,6 +6,7 @@ using static System.StringComparison;
 namespace ToSic.Sxc.Polymorphism
 {
     [PolymorphResolver("Permissions")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class Permissions : IResolver
     {
         public string Name => "Permissions";

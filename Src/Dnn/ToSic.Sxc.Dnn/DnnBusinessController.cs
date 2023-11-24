@@ -1,5 +1,4 @@
-﻿#pragma warning disable 1591
-using DotNetNuke.Entities.Modules;
+﻿using DotNetNuke.Entities.Modules;
 using ToSic.Sxc.Dnn.StartUp;
 
 // Note about the name
@@ -14,6 +13,7 @@ using ToSic.Sxc.Dnn.StartUp;
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class DnnBusinessController: ToSic.Sxc.Dnn.DnnBusinessController, IUpgradeable, IVersionable
     {
         public new string UpgradeModule(string version)

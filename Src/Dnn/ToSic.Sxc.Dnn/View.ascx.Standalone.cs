@@ -1,10 +1,9 @@
-﻿#pragma warning disable 1591
-using System.Web;
+﻿using System.Web;
 using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Dnn
 {
-    public partial class View
+    partial class View
     {
         public bool RenderNaked
             => _renderNaked ??= Request.QueryString["standalone"] == "true";

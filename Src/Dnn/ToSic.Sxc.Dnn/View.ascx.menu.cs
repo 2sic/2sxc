@@ -8,7 +8,7 @@ using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Dnn
 {
-    public partial class View
+    partial class View
     {
         #region ModuleActions on THIS DNN-Module
 

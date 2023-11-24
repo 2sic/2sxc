@@ -1,5 +1,4 @@
-﻿#pragma warning disable 1591
-using System;
+﻿using System;
 using System.Linq;
 using System.Web.UI;
 using DotNetNuke.Entities.Modules;
@@ -14,6 +13,7 @@ using ToSic.Sxc.Web.LightSpeed;
 
 namespace ToSic.Sxc.Dnn
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public partial class View : PortalModuleBase, IActionable
     {
         #region GetService and Service Provider

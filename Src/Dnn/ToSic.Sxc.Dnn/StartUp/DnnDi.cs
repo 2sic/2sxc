@@ -15,6 +15,7 @@ using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn.StartUp
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static class DnnDi
     {
         private static bool _alreadyRegistered;
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // If this is called from Dnn 7 - 9.3 it won't have services, so we must create our own
             // This is because the old Dnn wasn't DI aware
-            if (services == null) services = new ServiceCollection();
+            services ??= new ServiceCollection();
 
             services
                 .AddDnnPlugins()
