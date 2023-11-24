@@ -3,18 +3,17 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Engines;
 
-namespace ToSic.Sxc
+namespace ToSic.Sxc;
+
+public static class StartUpDnnRazor
 {
-    public static class StartUpDnnRazor
+    public static IServiceCollection AddDnnRazor(this IServiceCollection services)
     {
-        public static IServiceCollection AddDnnRazor(this IServiceCollection services)
-        {
-            // Settings / WebApi stuff
-            services.TryAddTransient<DnnRazorSourceAnalyzer>();
-            services.TryAddTransient<HtmlHelper>();
+        // Settings / WebApi stuff
+        services.TryAddTransient<DnnRazorSourceAnalyzer>();
+        services.TryAddTransient<HtmlHelper>();
 
-            return services;
-        }
-
+        return services;
     }
+
 }

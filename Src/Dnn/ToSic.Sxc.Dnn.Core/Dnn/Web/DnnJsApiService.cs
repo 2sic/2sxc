@@ -10,67 +10,66 @@ using ToSic.Sxc.Edit;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.JsContext;
 
-namespace ToSic.Sxc.Dnn.Web
+namespace ToSic.Sxc.Dnn.Web;
+
+[PrivateApi]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class DnnJsApiService : ServiceBase, IJsApiService
 {
-    [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public class DnnJsApiService : ServiceBase, IJsApiService
+    public const string PortalIdParamName = "portalId";
+
+    public DnnJsApiService(JsApiCache jsApiCache) : base("DnnJsAPi")
     {
-        public const string PortalIdParamName = "portalId";
+        ConnectServices(_jsApiCache = jsApiCache);
+    }
 
-        public DnnJsApiService(JsApiCache jsApiCache) : base("DnnJsAPi")
-        {
-            ConnectServices(_jsApiCache = jsApiCache);
-        }
+    private readonly JsApiCache _jsApiCache;
 
-        private readonly JsApiCache _jsApiCache;
+    public string GetJsApiJson(int? pageId = null, string siteRoot = null, string rvt = null) 
+        => InpageCms.JsApiJson(GetJsApi(pageId, siteRoot, rvt));
 
-        public string GetJsApiJson(int? pageId = null, string siteRoot = null, string rvt = null) 
-            => InpageCms.JsApiJson(GetJsApi(pageId, siteRoot, rvt));
+    public JsApi GetJsApi(int? pageId = null, string siteRoot = null, string rvt = null)
+    {
+        // pageId and siteRoot are normally null when called from razor, api, custom cs
+        // pageId and siteRoot are provided only in very special case for EditUI in /DesktopModules/.../...aspx
 
-        public JsApi GetJsApi(int? pageId = null, string siteRoot = null, string rvt = null)
-        {
-            // pageId and siteRoot are normally null when called from razor, api, custom cs
-            // pageId and siteRoot are provided only in very special case for EditUI in /DesktopModules/.../...aspx
+        string SiteRootFn() => siteRoot ?? ServicesFramework.GetServiceFrameworkRoot();
 
-            string SiteRootFn() => siteRoot ?? ServicesFramework.GetServiceFrameworkRoot();
+        return _jsApiCache.JsApiJson(
+            platform: PlatformType.Dnn.ToString(),
+            pageId: pageId ?? PortalSettings.Current.ActiveTab.TabID,
+            siteRoot: SiteRootFn,
+            apiRoot: () => GetApiRoots(SiteRootFn()).SiteApiRoot,
+            appApiRoot: () => GetApiRoots(SiteRootFn()).AppApiRoot,
+            uiRoot: () => VirtualPathUtility.ToAbsolute(DnnConstants.SysFolderRootVirtual),
+            rvtHeader: DnnConstants.AntiForgeryTokenHeaderName,
+            rvt: AntiForgeryToken,
+            dialogQuery: $"{PortalIdParamName}={PortalSettings.Current.PortalId}"
+        );
+    }
 
-            return _jsApiCache.JsApiJson(
-                platform: PlatformType.Dnn.ToString(),
-                pageId: pageId ?? PortalSettings.Current.ActiveTab.TabID,
-                siteRoot: SiteRootFn,
-                apiRoot: () => GetApiRoots(SiteRootFn()).SiteApiRoot,
-                appApiRoot: () => GetApiRoots(SiteRootFn()).AppApiRoot,
-                uiRoot: () => VirtualPathUtility.ToAbsolute(DnnConstants.SysFolderRootVirtual),
-                rvtHeader: DnnConstants.AntiForgeryTokenHeaderName,
-                rvt: AntiForgeryToken,
-                dialogQuery: $"{PortalIdParamName}={PortalSettings.Current.PortalId}"
-            );
-        }
-
-        internal static (string SiteApiRoot, string AppApiRoot) GetApiRoots(string siteRoot = null)
-        {
-            siteRoot = siteRoot ?? ServicesFramework.GetServiceFrameworkRoot();
-            var apiRoot = siteRoot + $"api/{InpageCms.ExtensionPlaceholder}/";
+    internal static (string SiteApiRoot, string AppApiRoot) GetApiRoots(string siteRoot = null)
+    {
+        siteRoot = siteRoot ?? ServicesFramework.GetServiceFrameworkRoot();
+        var apiRoot = siteRoot + $"api/{InpageCms.ExtensionPlaceholder}/";
             
-            // appApiRoot is the same as apiRoot - the UI will add "app" to it later on 
-            // but app-api root shouldn't contain generic modules-name, as it's always 2sxc
-            var appApiRoot = apiRoot;
-            appApiRoot = appApiRoot.Replace(InpageCms.ExtensionPlaceholder, "2sxc");
+        // appApiRoot is the same as apiRoot - the UI will add "app" to it later on 
+        // but app-api root shouldn't contain generic modules-name, as it's always 2sxc
+        var appApiRoot = apiRoot;
+        appApiRoot = appApiRoot.Replace(InpageCms.ExtensionPlaceholder, "2sxc");
 
-            return (apiRoot, appApiRoot);
-        }
+        return (apiRoot, appApiRoot);
+    }
 
-        private static string AntiForgeryToken()
-        {
-            var tag = AntiForgery.GetHtml().ToString();
-            return GetAttribute(tag, "value");
-        }
+    private static string AntiForgeryToken()
+    {
+        var tag = AntiForgery.GetHtml().ToString();
+        return GetAttribute(tag, "value");
+    }
 
-        private static string GetAttribute(string tag, string attribute)
-        {
-            return new Regex(@"(?<=\b" + attribute + @"="")[^""]*")
-                .Match(tag).Value;
-        }
+    private static string GetAttribute(string tag, string attribute)
+    {
+        return new Regex(@"(?<=\b" + attribute + @"="")[^""]*")
+            .Match(tag).Value;
     }
 }

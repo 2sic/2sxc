@@ -2,18 +2,17 @@
 using System.IO;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Dnn.Compile.AppDomain
+namespace ToSic.Sxc.Dnn.Compile.AppDomain;
+
+[PrivateApi]
+internal class CSharpAssemblyLoader : AssemblyLoader
 {
-    [PrivateApi]
-    internal class CSharpAssemblyLoader : AssemblyLoader
+    internal string GetLanguageVersions()
     {
-        internal string GetLanguageVersions()
-        {
-            var assemblyPath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "roslyn", "Microsoft.CodeAnalysis.CSharp.dll");
-            if (!File.Exists(assemblyPath)) return string.Empty;
-            var enumType = LoadAssemblyAndGetTypeInfo(assemblyPath, "Microsoft.CodeAnalysis.CSharp.LanguageVersion");
-            if (enumType == null || enumType.IsEnum == false) return string.Empty;
-            return string.Join(",", (int[])Enum.GetValues(enumType));
-        }
+        var assemblyPath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "roslyn", "Microsoft.CodeAnalysis.CSharp.dll");
+        if (!File.Exists(assemblyPath)) return string.Empty;
+        var enumType = LoadAssemblyAndGetTypeInfo(assemblyPath, "Microsoft.CodeAnalysis.CSharp.LanguageVersion");
+        if (enumType == null || enumType.IsEnum == false) return string.Empty;
+        return string.Join(",", (int[])Enum.GetValues(enumType));
     }
 }

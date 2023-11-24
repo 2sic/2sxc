@@ -3,14 +3,13 @@ using DotNetNuke.Application;
 using ToSic.Eav.Context;
 using ToSic.Sxc.Context;
 
-namespace ToSic.Sxc.Dnn.Run
+namespace ToSic.Sxc.Dnn.Run;
+
+internal class DnnPlatformContext: Platform, IPlatformInfo
 {
-    internal class DnnPlatformContext: Platform, IPlatformInfo
-    {
-        public override PlatformType Type => PlatformType.Dnn;
+    public override PlatformType Type => PlatformType.Dnn;
 
-        public override Version Version => DotNetNukeContext.Current.Application.Version;
+    public override Version Version => DotNetNukeContext.Current.Application.Version;
 
-        string IPlatformInfo.Identity => DotNetNuke.Entities.Host.Host.GUID;
-    }
+    string IPlatformInfo.Identity => DotNetNuke.Entities.Host.Host.GUID;
 }

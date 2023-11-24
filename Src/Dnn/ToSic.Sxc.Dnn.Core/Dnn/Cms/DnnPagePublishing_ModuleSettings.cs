@@ -3,54 +3,52 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.SexyContent.Environment.Dnn7;
 
-namespace ToSic.Sxc.Dnn.Cms
+namespace ToSic.Sxc.Dnn.Cms;
+
+partial class DnnPagePublishing
 {
-    partial class DnnPagePublishing
+    internal class ModuleVersions: HelperBase
     {
-        internal class ModuleVersions: HelperBase
+        private const string LatestVersionSettingsKey = "LatestVersion";
+
+        private const string PublishedVersionSettingsKey = "PublishedVersion";
+
+        private readonly ModuleSettingsHelper _settingsHelper;
+
+
+        public ModuleInfo ModuleInfo => _settingsHelper.ModuleInfo;
+
+
+        public ModuleVersions(int instanceId, ILog parentLog): base(parentLog, "Dnn.ModVer")
         {
-            private const string LatestVersionSettingsKey = "LatestVersion";
-
-            private const string PublishedVersionSettingsKey = "PublishedVersion";
-
-            private readonly ModuleSettingsHelper _settingsHelper;
-
-
-            public ModuleInfo ModuleInfo => _settingsHelper.ModuleInfo;
-
-
-            public ModuleVersions(int instanceId, ILog parentLog): base(parentLog, "Dnn.ModVer")
-            {
-                _settingsHelper = new ModuleSettingsHelper(instanceId);
-            }
-
-
-            public int GetPublishedVersion()
-                => int.Parse(_settingsHelper.GetModuleSetting(PublishedVersionSettingsKey, "0"));
-
-            public int GetLatestVersion()
-                => int.Parse(_settingsHelper.GetModuleSetting(LatestVersionSettingsKey, "0"));
-
-            public int IncreaseLatestVersion()
-            {
-                var version = GetLatestVersion() + 1;
-                _settingsHelper.SetModuleSetting(LatestVersionSettingsKey, version.ToString());
-                return version;
-            }
-
-
-            public void PublishLatestVersion()
-            {
-                // 2017-09-13 must check maybe don't do anything, because 
-                // this setting is already published by DNN when releasing the module
-                _settingsHelper.SetModuleSetting(PublishedVersionSettingsKey, GetLatestVersion().ToString());
-            }
-
-            public void DeleteLatestVersion()
-                => _settingsHelper.SetModuleSetting(LatestVersionSettingsKey, GetPublishedVersion().ToString());
-
-            public bool IsLatestVersionPublished() => GetLatestVersion() == GetPublishedVersion();
+            _settingsHelper = new ModuleSettingsHelper(instanceId);
         }
-    }
 
+
+        public int GetPublishedVersion()
+            => int.Parse(_settingsHelper.GetModuleSetting(PublishedVersionSettingsKey, "0"));
+
+        public int GetLatestVersion()
+            => int.Parse(_settingsHelper.GetModuleSetting(LatestVersionSettingsKey, "0"));
+
+        public int IncreaseLatestVersion()
+        {
+            var version = GetLatestVersion() + 1;
+            _settingsHelper.SetModuleSetting(LatestVersionSettingsKey, version.ToString());
+            return version;
+        }
+
+
+        public void PublishLatestVersion()
+        {
+            // 2017-09-13 must check maybe don't do anything, because 
+            // this setting is already published by DNN when releasing the module
+            _settingsHelper.SetModuleSetting(PublishedVersionSettingsKey, GetLatestVersion().ToString());
+        }
+
+        public void DeleteLatestVersion()
+            => _settingsHelper.SetModuleSetting(LatestVersionSettingsKey, GetPublishedVersion().ToString());
+
+        public bool IsLatestVersionPublished() => GetLatestVersion() == GetPublishedVersion();
+    }
 }

@@ -5,22 +5,21 @@ using ToSic.Eav.WebApi.Admin.Metadata;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Eav.WebApi.Admin.Metadata.MetadataControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Admin
+namespace ToSic.Sxc.Dnn.WebApi.Admin;
+
+/// <inheritdoc cref="IMetadataController" />
+[SupportedModules(DnnSupportedModuleNames)]
+[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+[ValidateAntiForgeryToken]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class MetadataController : SxcApiControllerBase, IMetadataController
 {
-    /// <inheritdoc cref="IMetadataController" />
-    [SupportedModules(DnnSupportedModuleNames)]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    [ValidateAntiForgeryToken]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public class MetadataController : SxcApiControllerBase, IMetadataController
-    {
-        public MetadataController() : base(RealController.LogSuffix) { }
+    public MetadataController() : base(RealController.LogSuffix) { }
 
-        private RealController Real => SysHlp.GetService<RealController>();
+    private RealController Real => SysHlp.GetService<RealController>();
 
-        [HttpGet]
-        public MetadataListDto Get(int appId, int targetType, string keyType, string key, string contentType = null)
-            => Real.Get(appId, targetType, keyType, key, contentType);
+    [HttpGet]
+    public MetadataListDto Get(int appId, int targetType, string keyType, string key, string contentType = null)
+        => Real.Get(appId, targetType, keyType, key, contentType);
 
-    }
 }

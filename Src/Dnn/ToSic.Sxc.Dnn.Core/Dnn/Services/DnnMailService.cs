@@ -7,56 +7,55 @@ using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Dnn.Services
+namespace ToSic.Sxc.Dnn.Services;
+
+internal class DnnMailService : MailServiceBase
 {
-    internal class DnnMailService : MailServiceBase
-    {
-        public DnnMailService(LazySvc<IUser> userLazy) : base(userLazy)
-        { }
+    public DnnMailService(LazySvc<IUser> userLazy) : base(userLazy)
+    { }
         
-        protected override SmtpClient SmtpClient()
+    protected override SmtpClient SmtpClient()
+    {
+        var smtpServer = Host.SMTPServer;
+        if (string.IsNullOrEmpty(smtpServer)) 
+            throw new ConfigurationErrorsException(DotNetNuke.Services.Localization.Localization.GetString("SMTPConfigurationProblem"));
+
+        try
         {
-            var smtpServer = Host.SMTPServer;
-            if (string.IsNullOrEmpty(smtpServer)) 
-                throw new ConfigurationErrorsException(DotNetNuke.Services.Localization.Localization.GetString("SMTPConfigurationProblem"));
+            var client = new SmtpClient();
 
-            try
+            var strArray = smtpServer.Split(':');
+            client.Host = strArray[0];
+            client.Port = strArray.Length > 1 ? Convert.ToInt32(strArray[1]) : 25;
+            client.ServicePoint.MaxIdleTime = Host.SMTPMaxIdleTime;
+            client.ServicePoint.ConnectionLimit = Host.SMTPConnectionLimit;
+
+            var smtpAuthentication = Host.SMTPAuthentication;
+            var smtpUsername = Host.SMTPUsername;
+            var smtpPassword = Host.SMTPPassword;
+
+            switch (smtpAuthentication)
             {
-                var client = new SmtpClient();
-
-                var strArray = smtpServer.Split(':');
-                client.Host = strArray[0];
-                client.Port = strArray.Length > 1 ? Convert.ToInt32(strArray[1]) : 25;
-                client.ServicePoint.MaxIdleTime = Host.SMTPMaxIdleTime;
-                client.ServicePoint.ConnectionLimit = Host.SMTPConnectionLimit;
-
-                var smtpAuthentication = Host.SMTPAuthentication;
-                var smtpUsername = Host.SMTPUsername;
-                var smtpPassword = Host.SMTPPassword;
-
-                switch (smtpAuthentication)
-                {
-                    case "1":
-                        if (!string.IsNullOrEmpty(smtpUsername) && !string.IsNullOrEmpty(smtpPassword))
-                        {
-                            client.UseDefaultCredentials = false;
-                            client.Credentials = (ICredentialsByHost)new NetworkCredential(smtpUsername, smtpPassword);
-                            break;
-                        }
+                case "1":
+                    if (!string.IsNullOrEmpty(smtpUsername) && !string.IsNullOrEmpty(smtpPassword))
+                    {
+                        client.UseDefaultCredentials = false;
+                        client.Credentials = (ICredentialsByHost)new NetworkCredential(smtpUsername, smtpPassword);
                         break;
-                    case "2":
-                        client.UseDefaultCredentials = true;
-                        break;
-                }
-
-                client.EnableSsl = Host.EnableSMTPSSL;
-
-                return client;
+                    }
+                    break;
+                case "2":
+                    client.UseDefaultCredentials = true;
+                    break;
             }
-            catch (Exception ex)
-            {
-                throw new ConfigurationErrorsException(DotNetNuke.Services.Localization.Localization.GetString("SMTPConfigurationProblem"), ex);
-            }
+
+            client.EnableSsl = Host.EnableSMTPSSL;
+
+            return client;
+        }
+        catch (Exception ex)
+        {
+            throw new ConfigurationErrorsException(DotNetNuke.Services.Localization.Localization.GetString("SMTPConfigurationProblem"), ex);
         }
     }
 }

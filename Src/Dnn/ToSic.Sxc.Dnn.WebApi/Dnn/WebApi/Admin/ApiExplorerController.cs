@@ -12,43 +12,38 @@ using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.ApiExplorer;
 using RealController = ToSic.Eav.WebApi.ApiExplorer.ApiExplorerControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Admin
+namespace ToSic.Sxc.Dnn.WebApi.Admin;
+
+[ValidateAntiForgeryToken]
+[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class ApiExplorerController : DnnApiControllerWithFixes, IApiExplorerController
 {
-    [ValidateAntiForgeryToken]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public class ApiExplorerController : DnnApiControllerWithFixes, IApiExplorerController
+    public ApiExplorerController() : base(RealController.LogSuffix) { }
+
+    private RealController Real => SysHlp.GetService<RealController>();
+
+    [HttpGet]
+    public HttpResponseMessage Inspect(string path)
     {
-        public ApiExplorerController() : base(RealController.LogSuffix) { }
-
-        private RealController Real => SysHlp.GetService<RealController>();
-
-        [HttpGet]
-        public HttpResponseMessage Inspect(string path)
-        {
-            // Make sure the Scoped ResponseMaker has this controller context
-            SysHlp.SetupResponseMaker(this);
-            return Real.Inspect(path, GetCompiledAssembly);
-        }
-
-        private Assembly GetCompiledAssembly(string path)
-        {
-            var controllerVirtualPath =
-                Path.Combine(
-                    SysHlp.GetService<DnnAppFolderUtilities>().GetAppFolderVirtualPath(Request, SysHlp.GetService<ISite>()), 
-                    path);
-
-            Log.A($"Controller Virtual Path: {controllerVirtualPath}");
-
-            if (!File.Exists(HostingEnvironment.MapPath(controllerVirtualPath)))
-                throw new Exception($"Error: can't find controller file: {controllerVirtualPath}");
-
-            return BuildManager.GetCompiledAssembly(controllerVirtualPath);
-        }
-
+        // Make sure the Scoped ResponseMaker has this controller context
+        SysHlp.SetupResponseMaker(this);
+        return Real.Inspect(path, GetCompiledAssembly);
     }
 
+    private Assembly GetCompiledAssembly(string path)
+    {
+        var controllerVirtualPath =
+            Path.Combine(
+                SysHlp.GetService<DnnAppFolderUtilities>().GetAppFolderVirtualPath(Request, SysHlp.GetService<ISite>()), 
+                path);
+
+        Log.A($"Controller Virtual Path: {controllerVirtualPath}");
+
+        if (!File.Exists(HostingEnvironment.MapPath(controllerVirtualPath)))
+            throw new Exception($"Error: can't find controller file: {controllerVirtualPath}");
+
+        return BuildManager.GetCompiledAssembly(controllerVirtualPath);
+    }
 
 }
-
-

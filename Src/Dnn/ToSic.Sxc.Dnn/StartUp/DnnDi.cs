@@ -13,58 +13,57 @@ using ToSic.Sxc.Startup;
 using ToSic.Sxc.WebApi;
 
 
-namespace ToSic.Sxc.Dnn.StartUp
+namespace ToSic.Sxc.Dnn.StartUp;
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public static class DnnDi
 {
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public static class DnnDi
+    private static bool _alreadyRegistered;
+
+    public static IServiceCollection RegisterServices(IServiceCollection services)
     {
-        private static bool _alreadyRegistered;
+        if (_alreadyRegistered)
+            return OriginalServiceCollection;
 
-        public static IServiceCollection RegisterServices(IServiceCollection services)
-        {
-            if (_alreadyRegistered)
-                return OriginalServiceCollection;
+        // If this is called from Dnn 7 - 9.3 it won't have services, so we must create our own
+        // This is because the old Dnn wasn't DI aware
+        services ??= new ServiceCollection();
 
-            // If this is called from Dnn 7 - 9.3 it won't have services, so we must create our own
-            // This is because the old Dnn wasn't DI aware
-            services ??= new ServiceCollection();
+        services
+            .AddDnnPlugins()
+            .AddDnnCore() // TODO: Move core stuff from AddDnn to AddDnnCore and make implementations internal
+            .AddDnnSxcDataSources()
+            .AddDnnDataSources()
+            .AddDnnWebApi()
+            .AddDnnRazor()
+            .AddDnnCompatibility()
+            .AddAdamWebApi<int, int>()
+            .AddSxcWebApi()
+            .AddSxcCore()
+            .AddEav()
+            .AddEavWebApiTypedAfterEav()
+            .AddRazorBlade();
 
-            services
-                .AddDnnPlugins()
-                .AddDnnCore() // TODO: Move core stuff from AddDnn to AddDnnCore and make implementations internal
-                .AddDnnSxcDataSources()
-                .AddDnnDataSources()
-                .AddDnnWebApi()
-                .AddDnnRazor()
-                .AddDnnCompatibility()
-                .AddAdamWebApi<int, int>()
-                .AddSxcWebApi()
-                .AddSxcCore()
-                .AddEav()
-                .AddEavWebApiTypedAfterEav()
-                .AddRazorBlade();
+        // temp polymorphism - later put into AddPolymorphism
+        services.TryAddTransient<Koi>();
+        services.TryAddTransient<Permissions>();
 
-            // temp polymorphism - later put into AddPolymorphism
-            services.TryAddTransient<Koi>();
-            services.TryAddTransient<Permissions>();
+        // Remember this for later, when we must start the Static Dependency Injection
+        OriginalServiceCollection = services;
 
-            // Remember this for later, when we must start the Static Dependency Injection
-            OriginalServiceCollection = services;
+        _alreadyRegistered = true;
+        return services;
+    }
 
-            _alreadyRegistered = true;
-            return services;
-        }
+    public static IServiceCollection OriginalServiceCollection;
 
-        public static IServiceCollection OriginalServiceCollection;
+    public static IServiceCollection AddDnnPlugins(this IServiceCollection services)
+    {
+        services.TryAddTransient<IRazorEngine, DnnRazorEngine>();
 
-        public static IServiceCollection AddDnnPlugins(this IServiceCollection services)
-        {
-            services.TryAddTransient<IRazorEngine, DnnRazorEngine>();
+        // Integrate KOI Dnn-Parts
+        services.TryAddTransient<Connect.Koi.Detectors.ICssFrameworkDetector, Connect.Koi.Dnn.DetectAndCacheDnnThemeCssFramework>();
 
-            // Integrate KOI Dnn-Parts
-            services.TryAddTransient<Connect.Koi.Detectors.ICssFrameworkDetector, Connect.Koi.Dnn.DetectAndCacheDnnThemeCssFramework>();
-
-            return services;
-        }
+        return services;
     }
 }

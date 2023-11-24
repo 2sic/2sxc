@@ -7,84 +7,83 @@ using ToSic.Eav.Persistence.Xml;
 using ToSic.Sxc.Adam;
 using IContextResolver = ToSic.Sxc.Context.IContextResolver;
 
-namespace ToSic.Sxc.Dnn.ImportExport
+namespace ToSic.Sxc.Dnn.ImportExport;
+
+internal class DnnXmlExporter: XmlExporter
 {
-    internal class DnnXmlExporter: XmlExporter
+    #region Constructor / DI
+
+    public DnnXmlExporter(AdamManager<int, int> adamManager, IContextResolver ctxResolver, XmlSerializer xmlSerializer, IAppStates appStates)
+        : base(xmlSerializer, appStates, ctxResolver, DnnConstants.LogName)
     {
-        #region Constructor / DI
+        ConnectServices(
+            AdamManager = adamManager
+        );
+    }
 
-        public DnnXmlExporter(AdamManager<int, int> adamManager, IContextResolver ctxResolver, XmlSerializer xmlSerializer, IAppStates appStates)
-            : base(xmlSerializer, appStates, ctxResolver, DnnConstants.LogName)
+
+    private readonly IFileManager _dnnFiles = FileManager.Instance;
+    internal AdamManager<int, int> AdamManager { get; }
+
+
+    protected override void PostContextInit(IContextOfApp appContext)
+    {
+        AdamManager.Init(ctx: appContext, compatibility: Constants.CompatibilityLevel10, cdf: null);
+    }
+
+    #endregion
+
+    public override void AddFilesToExportQueue()
+    {
+        // Add Adam Files To Export Queue
+        var adamIds = AdamManager.Export.AppFiles;
+        adamIds.ForEach(AddFileAndFolderToQueue);
+
+        // also add folders in adam - because empty folders may also have metadata assigned
+        var adamFolders = AdamManager.Export.AppFolders;
+        adamFolders.ForEach(ReferencedFolderIds.Add);
+    }
+
+    protected override void AddFileAndFolderToQueue(int fileNum)
+    {
+        try
         {
-            ConnectServices(
-                AdamManager = adamManager
-            );
-        }
+            ReferencedFileIds.Add(fileNum);
 
-
-        private readonly IFileManager _dnnFiles = FileManager.Instance;
-        internal AdamManager<int, int> AdamManager { get; }
-
-
-        protected override void PostContextInit(IContextOfApp appContext)
-        {
-            AdamManager.Init(ctx: appContext, compatibility: Constants.CompatibilityLevel10, cdf: null);
-        }
-
-        #endregion
-
-        public override void AddFilesToExportQueue()
-        {
-            // Add Adam Files To Export Queue
-            var adamIds = AdamManager.Export.AppFiles;
-            adamIds.ForEach(AddFileAndFolderToQueue);
-
-            // also add folders in adam - because empty folders may also have metadata assigned
-            var adamFolders = AdamManager.Export.AppFolders;
-            adamFolders.ForEach(ReferencedFolderIds.Add);
-        }
-
-        protected override void AddFileAndFolderToQueue(int fileNum)
-        {
+            // also try to remember the folder
             try
             {
-                ReferencedFileIds.Add(fileNum);
-
-                // also try to remember the folder
-                try
-                {
-                    var file = _dnnFiles.GetFile(fileNum);
-                    ReferencedFolderIds.Add(file.FolderId);
-                }
-                catch
-                {
-                    // don't do anything, because if the file doesn't exist, its FOLDER should also not land in the queue
-                }
+                var file = _dnnFiles.GetFile(fileNum);
+                ReferencedFolderIds.Add(file.FolderId);
             }
             catch
             {
-                // don't do anything, because if the file doesn't exist, it should also not land in the queue
+                // don't do anything, because if the file doesn't exist, its FOLDER should also not land in the queue
             }
         }
-
-        protected override string ResolveFolderId(int folderId)
+        catch
         {
-            var folderController = FolderManager.Instance;
-            var folder = folderController.GetFolder(folderId);
-            return folder?.FolderPath;
+            // don't do anything, because if the file doesn't exist, it should also not land in the queue
         }
-
-        protected override TenantFileItem ResolveFile(int fileId)
-        {
-            var fileController = FileManager.Instance;
-            var file = fileController.GetFile(fileId);
-            return new TenantFileItem
-            {
-                Id = fileId,
-                RelativePath = file?.RelativePath.Replace('/', '\\'),
-                Path = file?.PhysicalPath
-            };
-        }
-
     }
+
+    protected override string ResolveFolderId(int folderId)
+    {
+        var folderController = FolderManager.Instance;
+        var folder = folderController.GetFolder(folderId);
+        return folder?.FolderPath;
+    }
+
+    protected override TenantFileItem ResolveFile(int fileId)
+    {
+        var fileController = FileManager.Instance;
+        var file = fileController.GetFile(fileId);
+        return new TenantFileItem
+        {
+            Id = fileId,
+            RelativePath = file?.RelativePath.Replace('/', '\\'),
+            Path = file?.PhysicalPath
+        };
+    }
+
 }
