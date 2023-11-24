@@ -5,6 +5,7 @@ using RealController = ToSic.Eav.WebApi.Sys.Insights.InsightsControllerReal;
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
     [DnnLogExceptions]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class InsightsController : DnnApiControllerWithFixes
     {
         public InsightsController() : base(RealController.LogSuffix) { }

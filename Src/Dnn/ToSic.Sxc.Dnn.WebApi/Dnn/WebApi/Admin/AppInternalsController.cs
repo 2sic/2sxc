@@ -13,7 +13,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// Proxy Class to the AppInternalsController (Web API Controller)
     /// </summary>
     [DnnLogExceptions]
-	public class AppInternalsController : SxcApiControllerBase, IAppInternalsController
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public class AppInternalsController : SxcApiControllerBase, IAppInternalsController
 	{
         public AppInternalsController(): base(RealController.LogSuffix) { }
 

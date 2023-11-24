@@ -17,6 +17,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// </remarks>
     [SupportedModules(DnnSupportedModuleNames)]
     [ValidateAntiForgeryToken]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class FeatureController : DnnApiControllerWithFixes, IFeatureController
     {
         public FeatureController(): base(RealController.LogSuffix) { }

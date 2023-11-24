@@ -19,6 +19,7 @@ namespace ToSic.Sxc.WebApi
     [PrivateApi("This is an internal base class used for the App ApiControllers. Make sure the implementations don't break")]
     // Note: 2022-02 2dm I'm not sure if this was ever published as the official api controller, but it may have been?
     [DnnLogExceptions]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class DynamicApiController : SxcApiControllerBase, IHasDynamicCodeRoot
     {
         #region Constructor & DI / Setup

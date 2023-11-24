@@ -21,6 +21,7 @@ using RealController = ToSic.Sxc.WebApi.Admin.ViewControllerReal;
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
     [DnnLogExceptions]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ViewController : SxcApiControllerBase, IViewController
     {
         public ViewController() : base(RealController.LogSuffix) { }

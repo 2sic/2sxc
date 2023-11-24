@@ -3,7 +3,7 @@
 // ReSharper disable once CheckNamespace
 namespace System.Net.Http.Formatting
 {
-    public class JsonFormatters
+    internal class JsonFormatters
     {
         public static SystemTextJsonMediaTypeFormatter SystemTextJsonMediaTypeFormatter =>
             _systemTextJsonMediaTypeFormatter ??= new SystemTextJsonMediaTypeFormatter

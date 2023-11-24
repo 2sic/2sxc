@@ -9,6 +9,7 @@ using RealController = ToSic.Sxc.WebApi.App.AppQueryControllerReal;
 namespace ToSic.Sxc.Dnn.WebApi.App
 {
     [AllowAnonymous] // All functions will check security internally, so assume no requirements
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AppQueryController : SxcApiControllerBase, IAppQueryController
     {
         public AppQueryController() : base(RealController.LogSuffix) { }

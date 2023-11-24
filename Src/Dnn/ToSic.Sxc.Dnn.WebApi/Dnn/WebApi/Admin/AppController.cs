@@ -21,6 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     // [ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab) 
     // we can't set this globally (only needed for imports)
     [DnnLogExceptions]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AppController : SxcApiControllerBase, IAppController<HttpResponseMessage>
     {
         public AppController() : base(RealController.LogSuffix) { }

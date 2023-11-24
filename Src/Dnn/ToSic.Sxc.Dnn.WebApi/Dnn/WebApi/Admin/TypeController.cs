@@ -27,6 +27,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// Security checking is possible, because the cookie still contains user information
     /// </remarks>
     [DnnLogExceptions]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class TypeController : SxcApiControllerBase, ITypeController
     {
         public TypeController() : base(RealController.LogSuffix) { }

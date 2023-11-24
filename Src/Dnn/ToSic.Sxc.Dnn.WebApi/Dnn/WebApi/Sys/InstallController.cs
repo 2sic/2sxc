@@ -9,6 +9,7 @@ using RealController = ToSic.Sxc.WebApi.Sys.InstallControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class InstallController : DnnApiControllerWithFixes, IInstallController<HttpResponseMessage>
     {
         public InstallController() : base(RealController.LogSuffix) { }

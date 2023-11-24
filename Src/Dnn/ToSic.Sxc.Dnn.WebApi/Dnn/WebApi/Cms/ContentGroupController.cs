@@ -10,6 +10,7 @@ using RealController = ToSic.Sxc.WebApi.Cms.ContentGroupControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ContentGroupController : SxcApiControllerBase, IContentGroupController
     {
         public ContentGroupController(): base(RealController.LogSuffix) { }

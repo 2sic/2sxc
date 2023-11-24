@@ -10,6 +10,7 @@ using RealController = ToSic.Eav.WebApi.Sys.Licenses.LicenseControllerReal;
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class LicenseController : DnnApiControllerWithFixes, ILicenseController
     {
         public LicenseController() : base("License") { }

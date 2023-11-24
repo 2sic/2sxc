@@ -12,6 +12,7 @@ namespace ToSic.Sxc.WebApi
     /// </summary>
     [DnnLogExceptions]
     [PrivateApi("This was only ever used as an internal base class, so it can be modified as needed - just make sure the derived types don't break")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class SxcApiControllerBase: DnnApiControllerWithFixes
     {
         protected SxcApiControllerBase(string logSuffix, string insightsGroup = default, string firstMessage = default) : base(logSuffix, insightsGroup, firstMessage) { }

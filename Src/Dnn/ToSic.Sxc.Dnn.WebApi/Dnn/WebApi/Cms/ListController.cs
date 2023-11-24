@@ -10,6 +10,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ListController: SxcApiControllerBase, IListController
     {
         public ListController() : base(RealController.LogSuffix) { }

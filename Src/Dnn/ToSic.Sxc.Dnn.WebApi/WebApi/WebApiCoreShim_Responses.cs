@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace ToSic.Sxc.WebApi
 {
-    public partial class WebApiCoreShim
+    partial class WebApiCoreShim
     {
 
         /// <summary>

@@ -16,6 +16,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ApiExplorerController : DnnApiControllerWithFixes, IApiExplorerController
     {
         public ApiExplorerController() : base(RealController.LogSuffix) { }

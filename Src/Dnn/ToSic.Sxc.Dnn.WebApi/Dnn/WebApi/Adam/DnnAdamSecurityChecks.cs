@@ -10,7 +10,7 @@ using IFolder = ToSic.Eav.Apps.Assets.IFolder;
 
 namespace ToSic.Sxc.Dnn.WebApi
 {
-    public class DnnAdamSecurityChecks: AdamSecurityChecksBase
+    internal class DnnAdamSecurityChecks: AdamSecurityChecksBase
     {
         public DnnAdamSecurityChecks(MyServices services) : base(services, DnnConstants.LogName) { }
 

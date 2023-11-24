@@ -14,6 +14,7 @@ using ToSic.Sxc.Dnn.WebApiRouting;
 
 namespace ToSic.Sxc.Dnn
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class DnnAppFolderUtilities: ServiceBase
     {
         private readonly LazySvc<CodeErrorHelpService> _errorHelp;

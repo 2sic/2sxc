@@ -14,6 +14,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
     //[SupportedModules(DnnSupportedModuleNames)]
     [ValidateAntiForgeryToken]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class EditController : SxcApiControllerBase, IEditController
     {
         #region Setup / Infrastructure
@@ -28,7 +29,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 
         /// <inheritdoc />
         [HttpPost]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         [AllowAnonymous] // will check security internally, so assume no requirements
         public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
         {
@@ -39,7 +39,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 
         /// <inheritdoc />
         [HttpPost]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         [AllowAnonymous] // will check security internally, so assume no requirements
         public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
         {

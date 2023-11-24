@@ -8,6 +8,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
 {
     /// <inheritdoc />
     [AllowAnonymous]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AppDataController : SxcApiControllerBase, IAppDataController
     {
         public AppDataController(): base(RealController.LogSuffix) { }

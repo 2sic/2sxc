@@ -13,6 +13,7 @@ using ToSic.Sxc.Dnn.WebApi.Sys;
 namespace ToSic.Sxc.Dnn.WebApiRouting
 {
     // ReSharper disable once UnusedMember.Global
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class RouteMapper : IServiceRouteMapper
     {
         // DNN Module Name used in the route

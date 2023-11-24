@@ -21,6 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [DnnLogExceptions]
     [ValidateAntiForgeryToken]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 	public class QueryController : SxcApiControllerBase, IQueryController
     {
         public QueryController() : base(RealController.LogSuffix, RealController.LogGroup,

@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
     /// ...and if yes, compile / run the app-specific api controllers
     /// ...otherwise hand processing back to next api controller up-stream
     /// </summary>
-    public class AppApiControllerSelector : IHttpControllerSelector
+    internal class AppApiControllerSelector : IHttpControllerSelector
     {
         private readonly HttpConfiguration _config;
         public IHttpControllerSelector PreviousSelector { get; set; }

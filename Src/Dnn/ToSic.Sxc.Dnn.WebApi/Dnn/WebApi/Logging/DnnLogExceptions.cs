@@ -4,11 +4,11 @@ using System.Web.Http;
 using System.Web.Http.Filters;
 using ToSic.Eav.Generics;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 
 namespace ToSic.Sxc.Dnn.WebApi.Logging
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class DnnLogExceptions : ExceptionFilterAttribute
     {
         public override void OnException(HttpActionExecutedContext context)

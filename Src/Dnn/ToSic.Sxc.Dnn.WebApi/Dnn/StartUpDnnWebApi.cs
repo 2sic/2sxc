@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Newtonsoft.Json;
+using System.Net.Http.Formatting;
+using System.Web.Http;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Sxc.Adam;
@@ -10,6 +13,7 @@ using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static class StartUpDnnWebApi
     {
         public static IServiceCollection AddDnnWebApi(this IServiceCollection services)
@@ -29,6 +33,16 @@ namespace ToSic.Sxc.Dnn
             services.TryAddTransient<DynamicApiServices>();
 
             return services;
+        }
+
+        public static void Configure()
+        {
+            // Configure Newtonsoft Time zone handling
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+
+            // System.Text.Json supports ISO 8601-1:2019, including the RFC 3339 profile
+            GlobalConfiguration.Configuration.Formatters.Add(JsonFormatters.SystemTextJsonMediaTypeFormatter);
+
         }
     }
 }

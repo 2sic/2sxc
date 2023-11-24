@@ -7,6 +7,7 @@ namespace ToSic.Sxc.WebApi
     /// <summary>
     /// </summary>
     [DnnLogExceptions]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class ApiTempShimmed : DynamicApiController, IDynamicWebApi, IHasDynamicCodeRoot, INetCoreCompatibility
     {
 

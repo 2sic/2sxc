@@ -9,7 +9,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
-    public class DnnApiInspector: ServiceBase, IApiInspector
+    internal class DnnApiInspector: ServiceBase, IApiInspector
     {
         public DnnApiInspector(): base(DnnConstants.LogName)
         {

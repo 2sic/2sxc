@@ -3,7 +3,7 @@ using ToSic.Eav.WebApi.Routing;
 
 namespace ToSic.Sxc.Dnn.WebApiRouting
 {
-    public class Roots
+    internal class Roots
     {
         public static RootId[] QueryRoots =
         {
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             .ToArray();
     }
 
-    public struct RootId
+    internal struct RootId
     {
         public string Name;
         public string Path;

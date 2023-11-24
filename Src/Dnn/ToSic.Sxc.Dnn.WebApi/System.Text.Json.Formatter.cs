@@ -14,7 +14,7 @@ namespace System.Net.Http.Formatting
     /// <summary>
     /// <see cref="MediaTypeFormatter"/> class to handle Json.
     /// </summary>
-    public class SystemTextJsonMediaTypeFormatter : MediaTypeFormatter
+    internal class SystemTextJsonMediaTypeFormatter : MediaTypeFormatter
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="JsonMediaTypeFormatter"/> class.

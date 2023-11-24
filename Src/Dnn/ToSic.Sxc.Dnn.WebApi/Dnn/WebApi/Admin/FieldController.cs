@@ -18,6 +18,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [SupportedModules(DnnSupportedModuleNames)]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class FieldController : SxcApiControllerBase, IFieldController
     {
         public FieldController() : base(RealController.LogSuffix) { }

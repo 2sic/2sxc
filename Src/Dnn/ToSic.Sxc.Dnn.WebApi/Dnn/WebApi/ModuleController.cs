@@ -9,6 +9,7 @@ namespace ToSic.Sxc.Dnn.WebApi
     [SupportedModules(DnnSupportedModuleNames)]
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ModuleController: DnnApiControllerWithFixes
     {
         public ModuleController() : base("Mod") { }

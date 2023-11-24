@@ -19,6 +19,7 @@ namespace ToSic.Sxc.Dnn.WebApi
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]    // use view, all methods must re-check permissions
     [ValidateAntiForgeryToken]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AdamController : SxcApiControllerBase, IAdamController<int>
     {
 

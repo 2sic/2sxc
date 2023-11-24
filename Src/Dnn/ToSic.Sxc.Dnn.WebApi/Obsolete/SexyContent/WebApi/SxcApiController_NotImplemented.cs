@@ -8,7 +8,7 @@ using ToSic.Sxc.Dnn;
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.WebApi
 {
-    public abstract partial class SxcApiController
+    partial class SxcApiController
     {
 
         #region new AsDynamic - not supported

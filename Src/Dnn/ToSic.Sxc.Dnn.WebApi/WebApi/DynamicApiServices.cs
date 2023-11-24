@@ -11,6 +11,7 @@ namespace ToSic.Sxc.WebApi
     /// This doesn't work in DNN.
     /// But for consistency, we're building a comparable structure here.
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class DynamicApiServices : MyServicesBase
     {
         public LazySvc<AppConfigDelegate> AppConfigDelegateLazy { get; }

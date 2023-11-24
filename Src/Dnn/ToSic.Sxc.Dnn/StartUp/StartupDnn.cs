@@ -1,14 +1,11 @@
 ﻿using DotNetNuke.Web.Api;
-using Newtonsoft.Json;
 using System.Configuration;
-using System.Net.Http.Formatting;
 using System.Web.Hosting;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Internal.Loaders;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Images.ImageflowRewrite;
-using GlobalConfiguration = System.Web.Http.GlobalConfiguration;
 
 namespace ToSic.Sxc.Dnn.StartUp
 {
@@ -38,18 +35,14 @@ namespace ToSic.Sxc.Dnn.StartUp
             // In some cases this may be called 2x - so we must avoid doing it again
             if (_alreadyConfigured) return;
 
-            // Configure Newtonsoft Time zone handling
-            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-
-            // System.Text.Json supports ISO 8601-1:2019, including the RFC 3339 profile
-            GlobalConfiguration.Configuration.Formatters.Add(JsonFormatters.SystemTextJsonMediaTypeFormatter);
+            // Configure Newtonsoft Time zone handling etc. - part of WebApi
+            StartUpDnnWebApi.Configure();
 
             // Getting the service provider in Configure is tricky business, because
             // of .net core 2.1 bugs
             // ATM it appears that the service provider will get destroyed after startup, so we MUST get an additional one to use here
             // 2023-06-15 2dm - making sure that even if we use the global DI, we're always using it in a scope to never bleed global objects
             var transientSp = DnnStaticDi.GetGlobalScopedServiceProvider();
-            //var transientSp = DnnStaticDi.GetGlobalServiceProvider();
 
             // now we should be able to instantiate registration of DB
             transientSp.Build<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;

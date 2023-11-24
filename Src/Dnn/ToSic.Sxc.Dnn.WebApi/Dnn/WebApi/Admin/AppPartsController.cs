@@ -13,6 +13,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)] can't be used, because it forces the security
     // token, which fails in the cases where the url is called using get, which should result in a download
 
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AppPartsController : DnnApiControllerWithFixes, IAppPartsController
     {
         public AppPartsController() : base(RealController.LogSuffix) { }

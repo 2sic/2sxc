@@ -27,6 +27,7 @@ namespace ToSic.Sxc.Dnn
     [DnnLogExceptions]
     [Obsolete("This will continue to work, but you should use the Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.")]
     [DefaultToNewtonsoftForHttpJson]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class ApiController : DynamicApiController, 
         IDnnDynamicWebApi,
         ICreateInstance,

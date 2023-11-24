@@ -12,6 +12,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
     [SupportedModules(DnnSupportedModuleNames)]
     [ValidateAntiForgeryToken]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class HistoryController : SxcApiControllerBase, IHistoryController
     {
         public HistoryController() : base(RealController.LogSuffix) { }

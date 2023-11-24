@@ -15,6 +15,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
     [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class LogController : DnnApiControllerWithFixes, ILogController
     {
         public LogController() : base(RealController.LogSuffix) { }

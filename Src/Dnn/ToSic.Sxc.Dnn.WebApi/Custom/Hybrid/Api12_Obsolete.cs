@@ -9,7 +9,7 @@ using ToSic.Sxc.Code.Help;
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
 {
-    public partial class Api12
+    partial class Api12
     {
         // Obsolete stuff - not supported any more in after V10 - show helpful error messages
 

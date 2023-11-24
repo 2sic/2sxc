@@ -8,11 +8,10 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.Context;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Dnn.WebApi.Context
 {
-    public sealed class DnnUiContextBuilder : UiContextBuilderBase
+    internal sealed class DnnUiContextBuilder : UiContextBuilderBase
     {
         #region Constructor / DI
 

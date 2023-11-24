@@ -11,6 +11,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class MetadataController : SxcApiControllerBase, IMetadataController
     {
         public MetadataController() : base(RealController.LogSuffix) { }

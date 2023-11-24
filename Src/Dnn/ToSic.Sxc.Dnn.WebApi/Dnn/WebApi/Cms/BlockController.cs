@@ -13,6 +13,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
     [ValidateAntiForgeryToken]
     // cannot use this, as most requests now come from a lone page [SupportedModules(DnnSupportedModuleNames)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class BlockController : SxcApiControllerBase, IBlockController
     {
         public BlockController() : base(RealController.LogSuffix) { }
