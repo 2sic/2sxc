@@ -1,11 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data
 {
     [Flags]
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public enum SecretAuthorities
     {
         /// <summary>

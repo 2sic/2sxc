@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Helpers;
@@ -8,7 +7,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Adam
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class AdamFileSystemBasic<TFolder, TFile>: ServiceBase, IAdamFileSystem<TFolder, TFile>
     {
         #region Setup

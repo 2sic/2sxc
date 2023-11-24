@@ -1,7 +1,6 @@
 ﻿using DotNetNuke.Entities.Modules;
 using System;
 using System.Collections.Concurrent;
-using System.ComponentModel;
 using System.IO;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;

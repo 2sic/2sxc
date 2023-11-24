@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
 

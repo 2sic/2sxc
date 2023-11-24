@@ -1,10 +1,9 @@
-﻿using System.ComponentModel;
-using ToSic.Lib.Helpers;
+﻿using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Adam
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class AdamStorage<TFolderId, TFileId>: AdamStorage
     {
         protected AdamStorage(): base("Adm.Base")

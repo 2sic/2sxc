@@ -1,12 +1,10 @@
-﻿using System.ComponentModel;
-
-namespace ToSic.Sxc.Adam
+﻿namespace ToSic.Sxc.Adam
 {
     /// <summary>
     /// The ADAM Navigator creates a folder object for an entity/field combination
     /// This is the root folder where all files for this field are stored
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class FolderOfField<TFolderId, TFileId> : Folder<TFolderId, TFileId>
     {
         public FolderOfField(AdamManager<TFolderId, TFileId> adamManager, AdamStorageOfField<TFolderId, TFileId> adamStorageOfField) : base(adamManager)

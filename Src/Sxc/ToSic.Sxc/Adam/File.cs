@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Metadata;
@@ -9,7 +8,7 @@ using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Adam
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class File<TFolderId, TFileId> : Eav.Apps.Assets.File<TFolderId, TFileId>,
 #pragma warning disable 618
         ToSic.SexyContent.Adam.AdamFile, 

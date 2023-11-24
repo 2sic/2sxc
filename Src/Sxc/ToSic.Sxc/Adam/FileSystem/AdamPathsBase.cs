@@ -1,15 +1,13 @@
 ﻿using System;
-using System.ComponentModel;
 using System.IO;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Internal.Environment;
-using ToSic.Eav.Run;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Adam
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AdamPathsBase : ServiceBase, IAdamPaths
     {
         #region DI Constructor & Init

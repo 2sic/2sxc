@@ -1,6 +1,5 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Framework;
-using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Helpers;

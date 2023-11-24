@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using ToSic.Eav.Internal.Features;
+﻿using ToSic.Eav.Internal.Features;
 using ToSic.Razor.Internals.Documentation;
 
 namespace ToSic.Sxc.Configuration.Features
@@ -7,7 +6,7 @@ namespace ToSic.Sxc.Configuration.Features
     /// <summary>
     /// Internal - built-in features.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     [PrivateApi]
     public partial class BuiltInFeatures
     {

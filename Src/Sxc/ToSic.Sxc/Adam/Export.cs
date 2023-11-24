@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace ToSic.Sxc.Adam
 {
@@ -7,7 +6,7 @@ namespace ToSic.Sxc.Adam
     /// Export helper
     /// provides a list of all files / folders in ADAM for export
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class Export<TFolderId, TFileId>
     {
         private readonly Folder<TFolderId, TFileId> _root;

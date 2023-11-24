@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Identity;
 using ToSic.Lib.Logging;
@@ -10,7 +9,7 @@ namespace ToSic.Sxc.Adam
     /// Container of the assets of a field
     /// each entity+field combination has its own container for assets
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AdamStorageOfField<TFolderId, TFileId>: AdamStorage<TFolderId, TFileId>
     {
         private Guid _entityGuid;

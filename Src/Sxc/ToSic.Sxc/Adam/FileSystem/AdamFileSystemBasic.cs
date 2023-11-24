@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using ToSic.Lib.Logging;
+﻿using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Adam
 {
@@ -8,7 +7,7 @@ namespace ToSic.Sxc.Adam
     /// This is string-based, not with environment IDs.
     /// It's primarily meant for standalone implementations or as a template for other integrations. 
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public partial class AdamFileSystemBasic: AdamFileSystemBasic<string, string>, IAdamFileSystem<string, string>
     {
         #region Constructor / DI / Init
