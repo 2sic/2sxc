@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Web.UI;
 using DotNetNuke.Framework;
@@ -7,6 +8,7 @@ using DotNetNuke.Web.Client;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using DotNetNuke.Web.Client.Providers;
 using ToSic.Eav;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
@@ -15,6 +17,8 @@ using ToSic.Sxc.Web.Url;
 
 namespace ToSic.Sxc.Dnn.Web
 {
+    [PrivateApi]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class DnnClientResources: ServiceBase
     {
         /// <summary>

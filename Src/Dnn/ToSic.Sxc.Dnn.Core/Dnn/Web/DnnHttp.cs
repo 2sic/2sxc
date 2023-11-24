@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Dnn.Web
     /// It needs this, because DNN automatically creates invisible parameters like tabid=323 and language=en-US
     /// But if we want to create a link to the same page again, then this would result in wrong paths. 
     /// </summary>
-    public class DnnHttp: HttpNetFramework
+    internal class DnnHttp: HttpNetFramework
     {
         public override NameValueCollection QueryStringParams
         {

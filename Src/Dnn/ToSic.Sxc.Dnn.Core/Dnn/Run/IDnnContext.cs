@@ -6,6 +6,8 @@ using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Dnn.Run
 {
+    // Internal note: this is being used publicly, so as we phase it out, make sure the Namespace etc. doesn't change!
+
     /// <summary>
     /// Provides information about the current context within DNN.
     /// This only applies to 2sxc running inside DNN, not inside another platform.

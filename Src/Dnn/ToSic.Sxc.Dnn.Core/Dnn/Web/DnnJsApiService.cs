@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Framework;
+using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Helpers;
@@ -13,6 +14,7 @@ using ToSic.Sxc.Web.JsContext;
 namespace ToSic.Sxc.Dnn.Web
 {
     [PrivateApi]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class DnnJsApiService : ServiceBase, IJsApiService
     {
         public const string PortalIdParamName = "portalId";

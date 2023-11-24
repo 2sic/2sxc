@@ -7,7 +7,7 @@ using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Dnn.Web
 {
-    public class DnnBlockResourceExtractor: BlockResourceExtractor
+    internal class DnnBlockResourceExtractor: BlockResourceExtractor
     {
         public DnnBlockResourceExtractor(PageServiceShared pageServiceShared): base(pageServiceShared) { }
 

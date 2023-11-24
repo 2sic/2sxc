@@ -1,4 +1,5 @@
 ﻿using DotNetNuke.Common;
+using System.ComponentModel;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
@@ -9,6 +10,7 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Dnn.Web
 {
     [PrivateApi]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class DnnJsApiHeader: HelperBase
     {
         private readonly IJsApiService _dnnJsApiService;

@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Dnn.Search
             Generator<CodeRootFactory> codeRootFactory,
             Generator<ISite> siteGenerator,
             LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
-            LazySvc<DnnLookUpEngineResolver> dnnLookUpEngineResolver,
+            LazySvc<ILookUpEngineResolver> dnnLookUpEngineResolver,
             EngineFactory engineFactory,
             LazySvc<IAppLoaderTools> loaderTools,
             LazySvc<ILogStore> logStore) : base("DNN.Search")
@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Dnn.Search
         private readonly Generator<ISite> _siteGenerator;
         private readonly EngineFactory _engineFactory;
         private readonly LazySvc<IAppLoaderTools> _loaderTools;
-        private readonly LazySvc<DnnLookUpEngineResolver> _dnnLookUpEngineResolver;
+        private readonly LazySvc<ILookUpEngineResolver> _dnnLookUpEngineResolver;
         private readonly LazySvc<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
 
 
@@ -290,7 +290,7 @@ namespace ToSic.Sxc.Dnn.Search
                 try
                 {
                     var getLookups = _dnnLookUpEngineResolver.Value;
-                    var dnnLookUps = getLookups.GenerateDnnBasedLookupEngine(site.GetContents(), dnnModule.ModuleID);
+                    var dnnLookUps = (getLookups as DnnLookUpEngineResolver)?.GenerateDnnBasedLookupEngine(site.GetContents(), dnnModule.ModuleID);
                     ((LookUpEngine) dataSource.Configuration.LookUpEngine).Link(dnnLookUps);
                 }
                 catch (Exception e)

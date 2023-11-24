@@ -14,8 +14,7 @@ namespace ToSic.Sxc.Dnn.LookUp
     /// Retrieves the current engine for a specific module. <br/>
     /// Internally it asks DNN for the current Property-Access objects and prepares them for use in EAV.
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class DnnLookUpEngineResolver : ServiceBase, ILookUpEngineResolver
+    internal class DnnLookUpEngineResolver : ServiceBase, ILookUpEngineResolver
     {
         #region Constructor / Dependency Injection
 

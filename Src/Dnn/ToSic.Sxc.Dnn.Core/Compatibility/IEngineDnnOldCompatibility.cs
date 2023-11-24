@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Search;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Dnn.Web
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public interface IEngineDnnOldCompatibility
     {
         bool OldAutoLoadJQueryAndRvt { get; }

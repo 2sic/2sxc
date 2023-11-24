@@ -9,6 +9,11 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Dnn.Pages
 {
+    /// <summary>
+    /// Temporary solutions - minor service which ATM is only used in WebAPI.
+    /// Goal is that this will be more standardized and work across all platforms.
+    /// So when we do that, this should implement that interface and become internal.
+    /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public class DnnPages: HelperBase
     {
