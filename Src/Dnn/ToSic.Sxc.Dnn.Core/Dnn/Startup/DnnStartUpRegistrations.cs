@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Internal.Features;
 using ToSic.Eav.StartUp;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Dnn.Features;
 
 namespace ToSic.Sxc.Dnn.StartUp
 {
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Dnn.StartUp
         /// <summary>
         /// Register Dnn features before loading
         /// </summary>
-        public void Register() => Configuration.Features.BuiltInFeatures.Register(_featuresCatalog);
+        public void Register() => DnnBuiltInFeatures.Register(_featuresCatalog);
 
     }
 }

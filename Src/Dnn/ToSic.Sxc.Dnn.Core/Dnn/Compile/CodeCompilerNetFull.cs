@@ -2,9 +2,9 @@
 using System.Reflection;
 using System.Web.Compilation;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Code;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Code
+namespace ToSic.Sxc.Dnn.Compile
 {
     [PrivateApi]
     internal class CodeCompilerNetFull: CodeCompiler

@@ -3,8 +3,7 @@ using System.IO;
 using System.Reflection;
 using ToSic.Lib.Documentation;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Code
+namespace ToSic.Sxc.Dnn.Compile.AppDomain
 {
     [PrivateApi]
     internal abstract class AssemblyLoader : MarshalByRefObject

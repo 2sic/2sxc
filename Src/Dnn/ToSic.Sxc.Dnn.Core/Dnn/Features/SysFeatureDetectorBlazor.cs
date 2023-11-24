@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Internal.Features;
 using static ToSic.Eav.Internal.Features.SysFeatureSuggestions;
 
-namespace ToSic.Sxc.Dnn.Run.Capabilities
+namespace ToSic.Sxc.Dnn.Features
 {
     internal class SysFeatureDetectorBlazor: SysFeatureDetector
     {

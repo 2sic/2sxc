@@ -1,7 +1,6 @@
 ﻿using ToSic.Lib.Documentation;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Code
+namespace ToSic.Sxc.Dnn.Compile.AppDomain
 {
     [PrivateApi]
     internal class CSharpAssemblyHandling : AppDomainHandling

@@ -2,9 +2,9 @@
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.SysData;
 
-namespace ToSic.Sxc.Dnn.Run.Capabilities
+namespace ToSic.Sxc.Dnn.Features
 {
-    public class DnnCapability: SysFeatureDetector
+    public class SysFeatureDnn: SysFeatureDetector
     {
 
         private static readonly SysFeature DefStatic = new(
@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Dnn.Run.Capabilities
                 "Dnn"
             );
 
-        public DnnCapability() : base(DefStatic, true) { }
+        public SysFeatureDnn() : base(DefStatic, true) { }
 
     }
 }

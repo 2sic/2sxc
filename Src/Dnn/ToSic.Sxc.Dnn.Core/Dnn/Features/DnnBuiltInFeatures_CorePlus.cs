@@ -2,9 +2,9 @@
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.SysData;
 
-namespace ToSic.Sxc.Dnn.Configuration.Features
+namespace ToSic.Sxc.Dnn.Features
 {
-    public partial class BuiltInFeatures
+    partial class DnnBuiltInFeatures
     {
         public static readonly Feature DnnPageWorkflow = new(
             "DnnPageWorkflow",

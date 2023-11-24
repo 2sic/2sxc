@@ -4,10 +4,8 @@ using System.Configuration;
 using System.Net.Http.Formatting;
 using System.Web.Hosting;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Internal.Loaders;
-using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Images.ImageflowRewrite;
 using GlobalConfiguration = System.Web.Http.GlobalConfiguration;
@@ -67,7 +65,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             // After the SysLoader got the features, we must attach it to an old API which had was public
             // This was used in Mobius etc. to see if features are activated
 #pragma warning disable CS0618
-            Features.FeaturesFromDi = sxcSysLoader.EavSystemLoader.Features;
+            Eav.Configuration.Features.FeaturesFromDi = sxcSysLoader.EavSystemLoader.Features;
 #pragma warning restore CS0618
 
             // Optional registration of query string rewrite functionality implementation for dnn imageflow module

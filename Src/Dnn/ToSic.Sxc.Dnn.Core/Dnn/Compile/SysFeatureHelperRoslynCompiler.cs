@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using ToSic.Sxc.Code;
+using ToSic.Sxc.Dnn.Compile.AppDomain;
 
-namespace ToSic.Sxc.Dnn.Run.Capabilities
+namespace ToSic.Sxc.Dnn.Compile
 {
     internal class RoslynCompilerCapability
     {

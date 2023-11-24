@@ -5,6 +5,7 @@ using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.Apps.Enums;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Dnn.Features;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Dnn.Cms
@@ -52,7 +53,7 @@ namespace ToSic.Sxc.Dnn.Cms
         /// It's viable if it has not been turned off, which is the default
         /// </summary>
         /// <returns></returns>
-        public override bool IsViable() => _featuresService.IsEnabled(Configuration.Features.BuiltInFeatures.DnnPageWorkflow.NameId);
+        public override bool IsViable() => _featuresService.IsEnabled(DnnBuiltInFeatures.DnnPageWorkflow.NameId);
 
         #endregion
     }

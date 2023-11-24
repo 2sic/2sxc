@@ -1,8 +1,8 @@
 ﻿using ToSic.Eav.Internal.Features;
-using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Dnn.Compile;
 using static ToSic.Eav.Internal.Features.SysFeatureSuggestions;
 
-namespace ToSic.Sxc.Dnn.Run.Capabilities
+namespace ToSic.Sxc.Dnn.Features
 {
     public class SysFeatureDetectorCSharp6 : SysFeatureDetector
     {
