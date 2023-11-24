@@ -13,8 +13,7 @@ namespace ToSic.Sxc.LookUp
         /// * a special property which is not a lookup but contains the Instance object which is sometimes needed passed on
         /// * a lookup value ShowDrafts which informs if the user may see drafts or not
         /// </summary>
-        // todo: rename sometime to be more generic
-        public const string InstanceContext = Eav.LookUp.LookUpConstants.InstanceContext;
+        public const string InstanceContext = "SxcInstance";
 
         // !Important - these must all always be lower case, as they are often used in comparisons
         public const string SourceModule = "module";

@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             if (!(toolbar is IEnumerable<object> objEnum)) return null;
             var asArray = objEnum.ToArray();
-            return !asArray.All(o => o is string || o is IString || o is IRawHtmlString)
+            return !asArray.All(o => o is string || o is IRawHtmlString)
                 ? null
                 : asArray.Select(o => o.ToString()).ToList();
         }

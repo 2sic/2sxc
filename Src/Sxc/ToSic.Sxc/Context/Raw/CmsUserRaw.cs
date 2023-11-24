@@ -87,7 +87,7 @@ namespace ToSic.Sxc.Context.Raw
                 { nameof(Username), Username },
                 { nameof(Email), Email },
             };
-            if (options.AddKey(nameof(Roles)))
+            if (options.ShouldAddKey(nameof(Roles)))
                 data.Add("Roles", new RawRelationship(keys: Roles?.Select(r => $"{RoleRelationshipPrefix}{r}" as object)
                                                             ?? new List<object>())
                 );
