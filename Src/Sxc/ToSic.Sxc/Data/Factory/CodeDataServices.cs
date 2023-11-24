@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Data
             Generator<IRenderService> renderServiceGenerator,
             LazySvc<IScrub> scrub,
             LazySvc<ConvertForCodeService> forCode,
-            LazySvc<DataFactory> dataFactory)
+            LazySvc<IDataFactory> dataFactory)
         {
             ConnectServices(
                 _valueConverterLazy = valueConverterLazy,
@@ -42,8 +42,8 @@ namespace ToSic.Sxc.Data
         internal ConvertForCodeService ForCode => _forCode.Value;
         private readonly LazySvc<ConvertForCodeService> _forCode;
 
-        internal DataFactory DataFactory => _dataFactory.Value;
-        private readonly LazySvc<DataFactory> _dataFactory;
+        internal IDataFactory DataFactory => _dataFactory.Value;
+        private readonly LazySvc<IDataFactory> _dataFactory;
 
     }
 }

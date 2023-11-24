@@ -157,7 +157,7 @@ namespace ToSic.Sxc.DataSources
             // Try to add Navigation properties
             try
             {
-                var asTree = ((TreeMapper)_treeMapper).AddParentChild(pages, "EntityId", "ParentId");
+                var asTree = _treeMapper.AddParentChild(pages, "EntityId", "ParentId");
                 return (asTree, $"As Tree: {asTree.Count}");
             }
             catch (Exception ex)

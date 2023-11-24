@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Apps.Work
                 .ToList();
 
             var zones = _appStates.Zones;
-            var appStateWithCacheInfo = (AppStates)_appStates;
+            var appStateWithCacheInfo = _appStates;
             var result = zones
                 // Skip all global apps on the current site, as they shouldn't be inheritable
                 .Where(z => z.Key != site.ZoneId)
