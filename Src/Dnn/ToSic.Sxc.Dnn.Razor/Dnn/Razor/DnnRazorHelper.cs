@@ -11,9 +11,9 @@ using ToSic.Sxc.Code.CodeHelpers;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Engines.Razor;
+using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Web
+namespace ToSic.Sxc.Dnn.Razor
 {
     [PrivateApi]
     internal class DnnRazorHelper: RazorHelperBase

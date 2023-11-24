@@ -5,6 +5,7 @@ using ToSic.Eav.WebApi;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Startup;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Polymorphism;

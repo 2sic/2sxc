@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.WebApi;
+﻿using ToSic.Sxc.Dnn.Razor;
+using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn.StartUp
 {
@@ -10,6 +11,6 @@ namespace ToSic.Sxc.Dnn.StartUp
     {
         private string ToSicSexyContentWebApi => nameof(DynamicApiController);
 
-        private string ToSicSexyContentRazor => nameof(Sxc.Engines.DnnRazorEngine);
+        private string ToSicSexyContentRazor => nameof(DnnRazorEngine);
     }
 }

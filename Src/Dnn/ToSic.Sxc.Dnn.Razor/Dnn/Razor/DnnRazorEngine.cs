@@ -16,11 +16,11 @@ using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Help;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Engines
+namespace ToSic.Sxc.Dnn.Razor
 {
     /// <summary>
     /// The razor engine, which compiles / runs engine templates

@@ -1,13 +1,13 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web.Hosting;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using System.Web.Hosting;
 using ToSic.Sxc.Code.Help;
 
-namespace ToSic.Sxc.Engines
+namespace ToSic.Sxc.Dnn.Razor
 {
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class DnnRazorSourceAnalyzer: ServiceBase

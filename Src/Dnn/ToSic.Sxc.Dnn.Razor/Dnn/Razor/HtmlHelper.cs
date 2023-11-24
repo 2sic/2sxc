@@ -15,7 +15,7 @@ using static System.StringComparer;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
-namespace ToSic.Sxc.Engines.Razor
+namespace ToSic.Sxc.Dnn.Razor
 {
     /// <summary>
     /// helper to quickly "raw" some html.

@@ -8,11 +8,11 @@ using ToSic.SexyContent.Search;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Engines;
 using ToSic.Sxc.Search;
 
-namespace ToSic.Sxc.Engines
+namespace ToSic.Sxc.Dnn.Razor
 {
     partial class DnnRazorEngine
     {
@@ -41,9 +41,8 @@ namespace ToSic.Sxc.Engines
         [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
         public void CustomizeData()
         {
-            if (!(Webpage is IDnnRazorCustomize old)) return;
-            if (!(old.Data is IBlockDataSource isOld)) return;
-            //(isOld as ContextData)?.ToggleOldMode();
+            if (Webpage is not IDnnRazorCustomize old) return;
+            if (old.Data is not IBlockDataSource) return;
             old.CustomizeData();
         }
 

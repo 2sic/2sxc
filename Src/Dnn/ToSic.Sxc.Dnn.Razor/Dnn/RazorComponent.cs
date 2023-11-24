@@ -25,8 +25,12 @@ namespace ToSic.Sxc.Dnn
     /// The base class for Razor-Components in 2sxc 10+ to 2sxc 11 - deprecated now<br/>
     /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
     /// </summary>
-    [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class RazorComponent : RazorComponentBase, IDnnRazorCustomize, IDnnRazorCompatibility, IDnnRazor11, ICreateInstance
+    [PublicApi("...but deprecated! use Razor14, RazorTyped or newer")]
+    public abstract partial class RazorComponent : RazorComponentBase, 
+#pragma warning disable CS0618
+        IDnnRazorCustomize, 
+#pragma warning restore CS0618
+        IDnnRazorCompatibility, IDnnRazor11, ICreateInstance
     {
         /// <inheritdoc />
         public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
