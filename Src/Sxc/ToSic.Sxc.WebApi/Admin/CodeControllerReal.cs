@@ -9,6 +9,7 @@ using ToSic.Sxc.Code.Documentation;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CodeControllerReal : ServiceBase
     {
         public const string LogSuffix = "Code";

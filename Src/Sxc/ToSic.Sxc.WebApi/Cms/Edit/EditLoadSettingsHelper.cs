@@ -16,6 +16,7 @@ using static System.StringComparer;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class EditLoadSettingsHelper: ServiceBase
     {
         private readonly GenWorkPlus<WorkEntities> _appEntities;

@@ -4,7 +4,6 @@ using ToSic.Eav;
 using ToSic.Eav.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Edit;
 using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.WebApi.InPage
@@ -14,6 +13,7 @@ namespace ToSic.Sxc.WebApi.InPage
     /// - v0.1 for 2sxc 12.05 will just rebuild the necessary tags and add them to the HTML
     /// - v0.2 should later on include the relevant assets so that the JS in the can add them as best possible
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AjaxPreviewHelperWIP
     {
         public string ReconstructHtml(IRenderResult renderResult, string root)

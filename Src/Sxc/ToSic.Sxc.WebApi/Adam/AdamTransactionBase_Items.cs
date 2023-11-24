@@ -7,7 +7,7 @@ using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    public partial class AdamTransactionBase<T, TFolderId, TFileId>
+    partial class AdamTransactionBase<T, TFolderId, TFileId>
     {
         /// <inheritdoc />
         public IList<AdamItemDto> ItemsInField(string subFolderName, bool autoCreate = false)

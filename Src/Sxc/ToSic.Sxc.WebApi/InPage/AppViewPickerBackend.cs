@@ -12,6 +12,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.InPage
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AppViewPickerBackend: BlockWebApiBackendBase
     {
         public AppViewPickerBackend(

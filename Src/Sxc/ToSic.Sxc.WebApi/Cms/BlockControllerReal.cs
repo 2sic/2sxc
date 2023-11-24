@@ -12,6 +12,7 @@ using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class BlockControllerReal : ServiceBase, IBlockController
     {
         public const string LogSuffix = "Block";

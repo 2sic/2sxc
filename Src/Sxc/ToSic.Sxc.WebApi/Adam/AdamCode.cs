@@ -15,6 +15,7 @@ namespace ToSic.Sxc.WebApi.Adam
     /// See docs of official interface <see cref="IDynamicWebApi"/>
     /// </summary>
     [PrivateApi("Used by DynamicApiController and Hybrid.Api12_DynCode")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AdamCode: ServiceForDynamicCode
     {
         public AdamCode(Generator<AdamTransUpload<int, int>> adamUploadGenerator, LazySvc<IEavFeaturesService> featuresLazy) : base("AdamCode")

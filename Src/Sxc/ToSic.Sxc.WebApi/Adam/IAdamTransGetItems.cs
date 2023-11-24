@@ -3,6 +3,7 @@ using ToSic.Eav.WebApi.Dto;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IAdamTransGetItems: IAdamTransactionBase
     {
         /// <summary>

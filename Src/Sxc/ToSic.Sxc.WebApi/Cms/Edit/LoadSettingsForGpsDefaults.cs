@@ -11,7 +11,7 @@ using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public class LoadSettingsForGpsDefaults: ServiceBase, ILoadSettingsProvider
+    internal class LoadSettingsForGpsDefaults: ServiceBase, ILoadSettingsProvider
     {
         private readonly GoogleMapsSettings _googleMapsSettings;
         private readonly LazySvc<IFeaturesService> _features;

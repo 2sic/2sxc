@@ -31,6 +31,7 @@ using ToSic.Sxc.WebApi.Views;
 
 namespace ToSic.Sxc.WebApi
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static class StartupWebApi
     {
         public static IServiceCollection AddSxcWebApi(this IServiceCollection services)
@@ -113,10 +114,6 @@ namespace ToSic.Sxc.WebApi
 
             services.AddLoadSettingsProviders();
 
-//#if NETCOREAPP
-//            services.AddNetCore();
-//#endif
-
             services.AddFallbacks();
 
             return services;
@@ -162,18 +159,6 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<IWebApiContextBuilder, WebApiContextBuilderUnknown>();
             return services;
         }
-
-//#if NETCOREAPP
-//        public static IServiceCollection AddNetCore(this IServiceCollection services)
-//        {
-//            // Helper to get header, query string and route information from current request
-//            services.TryAddScoped<RequestHelper>();
-
-//            //// This ensures that generic backends (.net framework/core) can create a response object
-//            //services.TryAddScoped<ResponseMaker<Microsoft.AspNetCore.Mvc.IActionResult>, ResponseMakerNetCore>();
-
-//            return services;
-//        }
-//#endif
+        
     }
 }

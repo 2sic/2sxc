@@ -12,6 +12,7 @@ using ToSic.Sxc.Cms.Publishing;
 
 namespace ToSic.Sxc.WebApi.Save
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class SxcPagePublishing: SaveHelperBase
     {
         #region Constructor / DI

@@ -5,7 +5,7 @@ using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public partial class EditLoadPrefetchHelper
+    partial class EditLoadPrefetchHelper
     {
         private Dictionary<string, Dictionary<string, IEnumerable< /*AdamItemDto*/object>>> PrefetchAdam(int appId, EditDto editData) => Log.Func(() =>
         {

@@ -11,7 +11,7 @@ using ToSic.Sxc.WebApi.ItemLists;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public partial class ListControllerReal
+    partial class ListControllerReal
     {
 
         public void Replace(Guid guid, string part, int index, int entityId, bool add)

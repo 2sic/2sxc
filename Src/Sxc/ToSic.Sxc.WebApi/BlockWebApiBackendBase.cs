@@ -11,6 +11,7 @@ using ToSic.Eav.Apps.Work;
 
 namespace ToSic.Sxc.WebApi
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class BlockWebApiBackendBase : ServiceBase
     {
         protected BlockWebApiBackendBase(

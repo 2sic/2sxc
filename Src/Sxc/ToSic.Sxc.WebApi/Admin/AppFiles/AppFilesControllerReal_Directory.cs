@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ToSic.Sxc.WebApi.Admin.AppFiles
 {
-    public partial class AppFilesControllerReal
+    partial class AppFilesControllerReal
     {
 
         private void FullDirList(DirectoryInfo dir, string searchPattern, List<DirectoryInfo> folders, List<FileInfo> files, SearchOption opt)

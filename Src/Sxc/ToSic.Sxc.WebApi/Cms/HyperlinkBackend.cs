@@ -11,6 +11,7 @@ using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class HyperlinkBackend<TFolderId, TFileId>: ServiceBase
     {
         private readonly Generator<AdamItemDtoMaker<TFolderId, TFileId>> _adamDtoMaker;

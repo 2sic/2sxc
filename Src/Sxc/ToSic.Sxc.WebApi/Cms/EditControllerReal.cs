@@ -9,6 +9,7 @@ using ToSic.Sxc.WebApi.InPage;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class EditControllerReal: ServiceBase, IEditController
     {
         public const string LogSuffix = "Edit";

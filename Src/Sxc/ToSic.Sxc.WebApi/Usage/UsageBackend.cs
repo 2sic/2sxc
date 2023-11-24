@@ -15,6 +15,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Usage
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class UsageBackend: ServiceBase
     {
         private readonly GenWorkPlus<WorkViews> _workViews;

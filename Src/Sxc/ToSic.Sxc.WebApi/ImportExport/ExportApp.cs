@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ExportApp: ServiceBase
     {
 

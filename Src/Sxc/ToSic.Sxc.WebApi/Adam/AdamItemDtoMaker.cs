@@ -10,6 +10,7 @@ using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AdamItemDtoMaker<TFolderId, TFileId>
     {
         #region Constructor / DI

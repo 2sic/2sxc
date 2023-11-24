@@ -25,6 +25,7 @@ using ToSic.Eav.Apps.Work;
 
 namespace ToSic.Sxc.WebApi.App
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AppContent : ServiceBase
     {
         private readonly GenWorkDb<WorkFieldList> _workFieldList;

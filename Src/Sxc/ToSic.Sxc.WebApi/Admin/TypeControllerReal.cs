@@ -24,6 +24,7 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class TypeControllerReal : ServiceBase, ITypeController
     {
         private readonly IAppStates _appStates;

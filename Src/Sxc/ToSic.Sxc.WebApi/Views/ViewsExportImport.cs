@@ -37,6 +37,7 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 
 namespace ToSic.Sxc.WebApi.Views
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ViewsExportImport : ServiceBase
     {
         private readonly GenWorkDb<WorkEntitySave> _workEntSave;

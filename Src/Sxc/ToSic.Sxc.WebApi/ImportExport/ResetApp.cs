@@ -6,7 +6,6 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Internal.Features;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Security;
 using ToSic.Eav.WebApi.Dto;
@@ -19,6 +18,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
     /// <summary>
     /// This object will ensure that an app is reset to the state it was in when the app.xml was last exported
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ResetApp: ServiceBase
     {
         #region Constructor / DI

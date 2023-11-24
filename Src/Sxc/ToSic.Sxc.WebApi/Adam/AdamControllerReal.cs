@@ -9,7 +9,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AdamControllerReal<TIdentifier>: ServiceBase
     {
         public AdamControllerReal(

@@ -9,6 +9,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class DialogControllerReal: ServiceBase, IDialogController
     {
         private readonly Generator<MultiPermissionsApp> _appPermissions;

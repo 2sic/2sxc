@@ -11,7 +11,7 @@ using ToSic.Eav.Apps.Work;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public partial class EditLoadBackend
+    partial class EditLoadBackend
     {
 
         /// <summary>

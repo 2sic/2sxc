@@ -10,22 +10,20 @@ using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public partial class EditLoadPrefetchHelper: ServiceBase
     {
-        //private readonly LazySvc<JsonSerializer> _jsonSerializerGenerator;
         private readonly EntityPickerApi _entityPickerBackend;
         private readonly Generator<HyperlinkBackend<int, int>> _hyperlinkBackendGenerator;
         private readonly Generator<IAdamTransGetItems> _adamTransGetItems;
 
         public EditLoadPrefetchHelper(
-            //LazySvc<JsonSerializer> jsonSerializerGenerator,
             Generator<HyperlinkBackend<int, int>> hyperlinkBackend,
             Generator<IAdamTransGetItems> adamTransGetItems,
             EntityPickerApi entityPickerBackend
             ) : base(Constants.SxcLogName + ".Prefetch")
         {
             ConnectServices(
-                //_jsonSerializerGenerator = jsonSerializerGenerator,
                 _adamTransGetItems = adamTransGetItems,
                 _hyperlinkBackendGenerator = hyperlinkBackend,
                 _entityPickerBackend = entityPickerBackend

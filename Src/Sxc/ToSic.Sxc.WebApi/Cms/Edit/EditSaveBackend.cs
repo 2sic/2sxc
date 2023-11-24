@@ -18,6 +18,7 @@ using ToSic.Sxc.WebApi.Save;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class EditSaveBackend : ServiceBase
     {
         private readonly GenWorkPlus<WorkEntities> _workEntities;

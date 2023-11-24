@@ -6,7 +6,7 @@ using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    public partial class AdamTransUpload<TFolderId, TFileId>
+    partial class AdamTransUpload<TFolderId, TFileId>
     {
         #region More Checks
 

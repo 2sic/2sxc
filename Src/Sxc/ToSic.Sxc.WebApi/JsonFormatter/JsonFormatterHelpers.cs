@@ -2,6 +2,7 @@
 
 namespace ToSic.Sxc.WebApi
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class JsonFormatterHelpers
     {
         public static void SetCasing(Casing casing, JsonSerializerOptions jsonSerializerOptions)

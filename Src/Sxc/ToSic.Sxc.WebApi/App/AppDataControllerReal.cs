@@ -8,6 +8,7 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.WebApi.App
 {
     /// <inheritdoc />
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AppDataControllerReal: ServiceBase, IAppDataController
     {
         public const string LogSuffix = "Data";

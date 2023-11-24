@@ -10,6 +10,7 @@ using ToSic.Eav.WebApi.Errors;
 
 namespace ToSic.Sxc.WebApi
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CustomApiHelpers
     {
         public static string FileParamsInitialCheck(string noParamOrder, bool? download, string virtualPath,

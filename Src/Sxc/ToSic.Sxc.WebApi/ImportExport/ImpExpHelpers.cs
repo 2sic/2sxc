@@ -7,6 +7,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ImpExpHelpers: ServiceBase
     {
         #region Constructor / DI

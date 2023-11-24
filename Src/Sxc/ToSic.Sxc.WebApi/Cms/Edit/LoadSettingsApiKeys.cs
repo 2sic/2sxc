@@ -7,7 +7,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public class LoadSettingsApiKeys: LoadSettingsProviderBase, ILoadSettingsProvider
+    internal class LoadSettingsApiKeys: LoadSettingsProviderBase, ILoadSettingsProvider
     {
         private readonly LazySvc<ISecureDataService> _secureDataService;
 

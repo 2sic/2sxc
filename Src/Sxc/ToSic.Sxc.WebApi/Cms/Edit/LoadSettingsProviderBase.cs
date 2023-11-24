@@ -6,6 +6,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class LoadSettingsProviderBase: ServiceBase
     {
         protected LoadSettingsProviderBase(string logName) : base(logName)

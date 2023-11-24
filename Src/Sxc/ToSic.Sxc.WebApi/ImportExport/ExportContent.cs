@@ -21,6 +21,7 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ExportContent : ServiceBase
     {
         private readonly GenWorkPlus<WorkEntities> _workEntities;

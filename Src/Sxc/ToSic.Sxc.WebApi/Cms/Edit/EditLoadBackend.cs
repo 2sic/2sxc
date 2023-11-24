@@ -27,6 +27,7 @@ using ToSic.Eav.Apps.Work;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public partial class EditLoadBackend: ServiceBase
     {
         private readonly GenWorkPlus<WorkInputTypes> _inputTypes;

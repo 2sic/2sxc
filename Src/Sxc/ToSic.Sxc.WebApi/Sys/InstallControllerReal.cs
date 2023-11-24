@@ -25,6 +25,7 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 
 namespace ToSic.Sxc.WebApi.Sys
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class InstallControllerReal : ServiceBase
     {
         private readonly LazySvc<IPlatformAppInstaller> _platformAppInstaller;

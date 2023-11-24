@@ -15,6 +15,7 @@ using ToSic.Sxc.Apps.Work;
 
 namespace ToSic.Sxc.WebApi.Views
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ViewsBackend: ServiceBase
     {
         private readonly GenWorkPlus<WorkViews> _workViews;

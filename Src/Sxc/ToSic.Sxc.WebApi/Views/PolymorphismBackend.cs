@@ -5,6 +5,7 @@ using ToSic.Sxc.Polymorphism;
 
 namespace ToSic.Sxc.WebApi.Views
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class PolymorphismBackend : ServiceBase
     {
         public PolymorphismBackend(Polymorphism.Polymorphism polymorphism, IAppStates appStates) : base("Bck.Views")

@@ -7,7 +7,7 @@ using ToSic.Eav.WebApi.Assets;
 
 namespace ToSic.Sxc.WebApi.Admin.AppFiles
 {
-    public partial class AppFilesControllerReal
+    partial class AppFilesControllerReal
     {
         public List<string> All(int appId, bool global = false, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
         {

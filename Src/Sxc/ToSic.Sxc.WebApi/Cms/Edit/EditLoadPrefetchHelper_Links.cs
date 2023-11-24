@@ -7,7 +7,7 @@ using ToSic.Lib.Helpers;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public partial class EditLoadPrefetchHelper
+    partial class EditLoadPrefetchHelper
     {
         private Dictionary<string, LinkInfoDto> PrefetchLinks(int appId, EditDto editData)
         {

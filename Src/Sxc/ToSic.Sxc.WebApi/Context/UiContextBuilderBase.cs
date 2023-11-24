@@ -16,6 +16,7 @@ using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.WebApi.Context
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>, IUiContextBuilder
     {
 

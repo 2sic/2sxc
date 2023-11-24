@@ -12,6 +12,7 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.WebApi.Admin.AppFiles
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
     {
         public const string LogSuffix = "AppAss";
@@ -77,7 +78,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
         /// <returns></returns>
         public bool Create(int appId, string path, bool global, string templateKey)
         {
-            var assetFromTemplateDto = new AppFile
+            var assetFromTemplateDto = new AppFileDto
             {
                 AppId = appId,
                 Path = path,
@@ -96,7 +97,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
             return wrapLog.Return(assetEditor.Create(body), "Created");
         }
 
-        private static void EnsureRequiredFolder(AppFile assetFromTemplateDto)
+        private static void EnsureRequiredFolder(AppFileDto assetFromTemplateDto)
         {
             assetFromTemplateDto.Path = assetFromTemplateDto.Path.Replace("/", "\\");
 
@@ -156,7 +157,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
             return wrapLog.Return(assetEditor);
         }
 
-        private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(AppFile assetFromTemplateDto)
+        private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(AppFileDto assetFromTemplateDto)
         {
             var wrapLog = Log.Fn<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
             var app = _appStates.Get(assetFromTemplateDto.AppId);
@@ -172,7 +173,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
 
             try
             {
-                var assetFromTemplateDto = new AppFile
+                var assetFromTemplateDto = new AppFileDto
                 {
                     AppId = appId,
                     Path = path?.Replace("/", "\\") ?? string.Empty,

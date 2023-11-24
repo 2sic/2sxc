@@ -11,6 +11,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class EntityPickerBackend: ServiceBase
     {
         #region DI Constructor

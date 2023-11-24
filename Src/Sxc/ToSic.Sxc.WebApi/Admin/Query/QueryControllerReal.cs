@@ -12,6 +12,7 @@ using ToSic.Sxc.LookUp;
 
 namespace ToSic.Sxc.WebApi.Admin.Query
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class QueryControllerReal: QueryControllerBase<QueryControllerReal>
     {
         private readonly GenWorkPlus<WorkViews> _workViews;

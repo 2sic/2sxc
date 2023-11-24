@@ -12,6 +12,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>
         : ServiceBase<AdamTransactionBase<T, TFolderId, TFileId>.MyServices>, IAdamTransactionBase
         where T : AdamTransactionBase<T, TFolderId, TFileId>

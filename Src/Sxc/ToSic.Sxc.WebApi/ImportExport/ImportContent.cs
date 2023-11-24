@@ -25,6 +25,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ImportContent: ServiceBase
     {
         private readonly LazySvc<IEavFeaturesService> _features;

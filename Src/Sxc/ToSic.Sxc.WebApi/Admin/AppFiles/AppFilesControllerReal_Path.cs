@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.WebApi.Admin.AppFiles
 {
-    public partial class AppFilesControllerReal
+    partial class AppFilesControllerReal
     {
         private string ResolveAppPath(int appId, bool global) =>
             (_appPaths.InitDone

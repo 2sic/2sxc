@@ -12,6 +12,7 @@ using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.WebApi.Save
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class SaveSecurity: SaveHelperBase
     {
         private readonly Generator<Apps.App> _appGen;

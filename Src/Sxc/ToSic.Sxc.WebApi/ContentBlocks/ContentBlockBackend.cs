@@ -21,6 +21,7 @@ using ToSic.Sxc.WebApi.InPage;
 
 namespace ToSic.Sxc.WebApi.ContentBlocks
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ContentBlockBackend : BlockWebApiBackendBase
     {
         private readonly GenWorkPlus<WorkViews> _workViews;

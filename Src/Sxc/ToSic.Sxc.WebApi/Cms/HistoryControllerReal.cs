@@ -7,6 +7,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class HistoryControllerReal : ServiceBase, IHistoryController
     {
         public const string LogSuffix = "Hist";

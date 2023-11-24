@@ -15,6 +15,7 @@ using static ToSic.Eav.Apps.AppStackConstants;
 
 namespace ToSic.Sxc.WebApi.AppStack
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AppStackBackend: ServiceBase
     {
 

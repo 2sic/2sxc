@@ -7,6 +7,7 @@ using ToSic.Eav.WebApi.Errors;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AdamTransFolder<TFolderId, TFileId> : AdamTransactionBase<AdamTransFolder<TFolderId, TFileId>, TFolderId, TFileId>
     {
         public AdamTransFolder(MyServices services) : base(services, "Adm.TrnFld") { }
