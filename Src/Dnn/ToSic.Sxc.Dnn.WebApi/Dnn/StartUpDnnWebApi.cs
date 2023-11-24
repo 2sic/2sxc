@@ -23,6 +23,8 @@ namespace ToSic.Sxc.Dnn
 
             services.TryAddTransient<DnnGetBlock>();
 
+            services.TryAddTransient<DnnAppFolderUtilities>(); // v14.12-01
+
             // new v15
             services.TryAddTransient<DynamicApiServices>();
 
