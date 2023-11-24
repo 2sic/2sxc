@@ -1,44 +1,43 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.Context
+namespace ToSic.Sxc.Context;
+
+/// <summary>
+/// This provides other systems with a context
+/// Note that it's important to always make this **Scoped**, not transient, as there is some re-use after initialization
+/// </summary>
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public interface IContextResolver: Eav.Context.IContextResolver
 {
     /// <summary>
-    /// This provides other systems with a context
-    /// Note that it's important to always make this **Scoped**, not transient, as there is some re-use after initialization
+    /// Return the block or throw an error
     /// </summary>
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public interface IContextResolver: Eav.Context.IContextResolver
-    {
-        /// <summary>
-        /// Return the block or throw an error
-        /// </summary>
-        IContextOfBlock BlockContextRequired();
+    IContextOfBlock BlockContextRequired();
 
-        /// <summary>
-        /// Return the block if known, or null if not
-        /// </summary>
-        /// <returns>The current block or null</returns>
-        IContextOfBlock BlockContextOrNull();
+    /// <summary>
+    /// Return the block if known, or null if not
+    /// </summary>
+    /// <returns>The current block or null</returns>
+    IContextOfBlock BlockContextOrNull();
 
-        /// <summary>
-        /// Return the block if known, or an app context if not
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <returns></returns>
-        IContextOfApp GetBlockOrSetApp(int appId);
+    /// <summary>
+    /// Return the block if known, or an app context if not
+    /// </summary>
+    /// <param name="appId"></param>
+    /// <returns></returns>
+    IContextOfApp GetBlockOrSetApp(int appId);
 
-        IContextOfApp SetAppOrGetBlock(string nameOrPath);
+    IContextOfApp SetAppOrGetBlock(string nameOrPath);
 
-        IContextOfApp SetAppOrNull(string nameOrPath);
+    IContextOfApp SetAppOrNull(string nameOrPath);
 
-        IContextOfApp AppNameRouteBlock(string nameOrPath);
+    IContextOfApp AppNameRouteBlock(string nameOrPath);
 
-        void AttachBlock(BlockWithContextProvider blockWithContextProvider);
+    void AttachBlock(BlockWithContextProvider blockWithContextProvider);
 
-        IBlock BlockOrNull();
+    IBlock BlockOrNull();
 
-        IBlock BlockRequired();
+    IBlock BlockRequired();
 
-    }
 }

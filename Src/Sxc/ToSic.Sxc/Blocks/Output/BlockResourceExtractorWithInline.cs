@@ -2,53 +2,51 @@
 using ToSic.Sxc.Web.ClientAssets;
 using ToSic.Sxc.Web.PageService;
 
-namespace ToSic.Sxc.Blocks.Output
+namespace ToSic.Sxc.Blocks.Output;
+
+/// <summary>
+/// ATM only used in Oqtane, where external and internal scripts must be extracted
+/// </summary>
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class BlockResourceExtractorWithInline: BlockResourceExtractor
 {
-    /// <summary>
-    /// ATM only used in Oqtane, where external and internal scripts must be extracted
-    /// </summary>
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public class BlockResourceExtractorWithInline: BlockResourceExtractor
+    public BlockResourceExtractorWithInline(PageServiceShared pageServiceShared): base(pageServiceShared) { }
+
+    protected override ClientAssetsExtractSettings Settings => _settings.Get(() => new ClientAssetsExtractSettings(extractAll: true));
+    private readonly GetOnce<ClientAssetsExtractSettings> _settings = new();
+
+    protected override (string Template, bool Include2sxcJs) ExtractFromHtml(string html, ClientAssetsExtractSettings settings)
     {
-        public BlockResourceExtractorWithInline(PageServiceShared pageServiceShared): base(pageServiceShared) { }
+        var include2SxcJs = false;
 
-        protected override ClientAssetsExtractSettings Settings => _settings.Get(() => new ClientAssetsExtractSettings(extractAll: true));
-        private readonly GetOnce<ClientAssetsExtractSettings> _settings = new();
+        // Handle Client Dependency injection
+        html = ExtractExternalScripts(html, ref include2SxcJs, settings);
 
-        protected override (string Template, bool Include2sxcJs) ExtractFromHtml(string html, ClientAssetsExtractSettings settings)
+        // Handle inline JS
+        html = ExtractInlineScripts(html);
+
+        // Handle Styles
+        html = ExtractStyles(html, settings);
+
+        Assets.ForEach(a => a.PosInPage = PositionNameUnchanged(a.PosInPage));
+
+        return (html, include2SxcJs);
+    }
+
+
+
+    private string PositionNameUnchanged(string position)
+    {
+        position = position.ToLowerInvariant();
+
+        switch (position)
         {
-            var include2SxcJs = false;
-
-            // Handle Client Dependency injection
-            html = ExtractExternalScripts(html, ref include2SxcJs, settings);
-
-            // Handle inline JS
-            html = ExtractInlineScripts(html);
-
-            // Handle Styles
-            html = ExtractStyles(html, settings);
-
-            Assets.ForEach(a => a.PosInPage = PositionNameUnchanged(a.PosInPage));
-
-            return (html, include2SxcJs);
+            case "body":
+            case "head":
+                return position;
+            default:
+                return "body";
         }
-
-
-
-        private string PositionNameUnchanged(string position)
-        {
-            position = position.ToLowerInvariant();
-
-            switch (position)
-            {
-                case "body":
-                case "head":
-                    return position;
-                default:
-                    return "body";
-            }
-        }
-
     }
 
 }

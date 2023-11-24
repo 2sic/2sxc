@@ -2,65 +2,64 @@
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Web
+namespace ToSic.Sxc.Web;
+
+[PrivateApi]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class HtmlDialog
 {
-    [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public class HtmlDialog
+    public const string PageIdInUrl = "pageId";
+
+    public const string BasePlaceholder = "@base";
+    public const string CustomBodyPlaceholder = "@custombody";
+    public const string CacheBreakPlaceholder = "@sxcver";
+    public const string CustomHeadersPlaceholder = "@customheaders";
+    public const string JsApiPlaceholder = "@jsapi";
+
+    public static string[] Placeholders = {
+        BasePlaceholder,
+        CacheBreakPlaceholder,
+        CustomBodyPlaceholder,
+        CustomHeadersPlaceholder,
+        JsApiPlaceholder,
+    };
+
+    public static string CleanImport(string html)
     {
-        public const string PageIdInUrl = "pageId";
+        if (!html.HasValue()) return html;
 
-        public const string BasePlaceholder = "@base";
-        public const string CustomBodyPlaceholder = "@custombody";
-        public const string CacheBreakPlaceholder = "@sxcver";
-        public const string CustomHeadersPlaceholder = "@customheaders";
-        public const string JsApiPlaceholder = "@jsapi";
+        // Placeholders may be wrapped in <!-- --> because of angular compiler - we should first strip these
+        foreach (var ph in Placeholders)
+            html = html.Replace($"<!--{ph}-->", ph);
 
-        public static string[] Placeholders = {
-            BasePlaceholder,
-            CacheBreakPlaceholder,
-            CustomBodyPlaceholder,
-            CustomHeadersPlaceholder,
-            JsApiPlaceholder,
-        };
+        // Correct quotes, as the index-raw will always have double quotes (angular-compiler replaces single quotes)
+        html = html.Replace($"\"{JsApiPlaceholder}\"", $"'{JsApiPlaceholder}'");
 
-        public static string CleanImport(string html)
-        {
-            if (!html.HasValue()) return html;
+        return html;
+    }
 
-            // Placeholders may be wrapped in <!-- --> because of angular compiler - we should first strip these
-            foreach (var ph in Placeholders)
-                html = html.Replace($"<!--{ph}-->", ph);
+    public static string UpdatePlaceholders(string html, string content, int pageId, string customBaseParams, string customHeaders, string customBody)
+    {
+        if (!html.HasValue()) return html;
 
-            // Correct quotes, as the index-raw will always have double quotes (angular-compiler replaces single quotes)
-            html = html.Replace($"\"{JsApiPlaceholder}\"", $"'{JsApiPlaceholder}'");
+        var result = html;
 
-            return html;
-        }
+        // Add context variables
+        result = result.Replace(JsApiPlaceholder, content);
 
-        public static string UpdatePlaceholders(string html, string content, int pageId, string customBaseParams, string customHeaders, string customBody)
-        {
-            if (!html.HasValue()) return html;
+        // Add version cachebreak
+        result = result.Replace(CacheBreakPlaceholder, EavSystemInfo.VersionWithStartUpBuild);
 
-            var result = html;
+        // Replace base url
+        result = result.Replace(BasePlaceholder, $"./?{PageIdInUrl}={pageId}{customBaseParams}");
 
-            // Add context variables
-            result = result.Replace(JsApiPlaceholder, content);
-
-            // Add version cachebreak
-            result = result.Replace(CacheBreakPlaceholder, EavSystemInfo.VersionWithStartUpBuild);
-
-            // Replace base url
-            result = result.Replace(BasePlaceholder, $"./?{PageIdInUrl}={pageId}{customBaseParams}");
-
-            // Custom Headers - Experimental WIP
+        // Custom Headers - Experimental WIP
 
 
-            // Add any custom headers / body - like for the Oqtane Request Verification Token
-            result = result.Replace(CustomHeadersPlaceholder, customHeaders);
-            result = result.Replace(CustomBodyPlaceholder, customBody);
+        // Add any custom headers / body - like for the Oqtane Request Verification Token
+        result = result.Replace(CustomHeadersPlaceholder, customHeaders);
+        result = result.Replace(CustomBodyPlaceholder, customBody);
 
-            return result;
-        }
+        return result;
     }
 }

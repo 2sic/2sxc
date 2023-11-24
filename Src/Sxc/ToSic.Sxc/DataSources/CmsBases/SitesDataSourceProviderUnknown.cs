@@ -2,13 +2,12 @@
 using ToSic.Eav.Internal.Unknown;
 using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.DataSources
-{
-    internal class SitesDataSourceProviderUnknown: SitesDataSourceProvider
-    {
-        public SitesDataSourceProviderUnknown(MyServices services, WarnUseOfUnknown<SitesDataSourceProviderUnknown> _): base(services, $"{Constants.SxcLogName}.{LogConstants.NameUnknown}")
-        { }
+namespace ToSic.Sxc.DataSources;
 
-        public override List<SiteDataRaw> GetSitesInternal() => new();
-    }
+internal class SitesDataSourceProviderUnknown: SitesDataSourceProvider
+{
+    public SitesDataSourceProviderUnknown(MyServices services, WarnUseOfUnknown<SitesDataSourceProviderUnknown> _): base(services, $"{Constants.SxcLogName}.{LogConstants.NameUnknown}")
+    { }
+
+    public override List<SiteDataRaw> GetSitesInternal() => new();
 }

@@ -6,21 +6,20 @@ using ToSic.Sxc.Adam;
 // Leave for compatibility
 
 // ReSharper disable once CheckNamespace
-namespace ToSic.SexyContent.Adam
+namespace ToSic.SexyContent.Adam;
+
+// ReSharper disable once InconsistentNaming
+[Obsolete("use ToSic.Sxc.Adam.IFile instead")]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public interface AdamFile: IFile
 {
-    // ReSharper disable once InconsistentNaming
-    [Obsolete("use ToSic.Sxc.Adam.IFile instead")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public interface AdamFile: IFile
-    {
-        [Obsolete("use FullName instead")]
-        string FileName { get; }
+    [Obsolete("use FullName instead")]
+    string FileName { get; }
 
-        [Obsolete("use Created instead")]
-        DateTime CreatedOnDate { get; }
+    [Obsolete("use Created instead")]
+    DateTime CreatedOnDate { get; }
 
-        [Obsolete("use Id instead")]
-        int FileId { get; }
+    [Obsolete("use Id instead")]
+    int FileId { get; }
 
-    }
 }

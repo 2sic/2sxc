@@ -1,28 +1,27 @@
 ﻿using System;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
-namespace ToSic.Sxc.Edit.Toolbar
+namespace ToSic.Sxc.Edit.Toolbar;
+
+public partial class ToolbarBuilder
 {
-    public partial class ToolbarBuilder
+
+    /// <inheritdoc />
+    public IToolbarBuilder Button(
+        string name,
+        object target = null,
+        string noParamOrder = Eav.Parameters.Protector,
+        Func<ITweakButton, ITweakButton> tweak = default,
+        object ui = null,
+        object parameters = null,
+        string operation = null,
+        string context = null
+    )
     {
+        Eav.Parameters.Protect(noParamOrder, "See docs");
+        var pars = PreCleanParams(tweak, defOp: OprNone, operation: operation, ui: ui, parameters: parameters);
 
-        /// <inheritdoc />
-        public IToolbarBuilder Button(
-            string name,
-            object target = null,
-            string noParamOrder = Eav.Parameters.Protector,
-            Func<ITweakButton, ITweakButton> tweak = default,
-            object ui = null,
-            object parameters = null,
-            string operation = null,
-            string context = null
-        )
-        {
-            Eav.Parameters.Protect(noParamOrder, "See docs");
-            var pars = PreCleanParams(tweak, defOp: OprNone, operation: operation, ui: ui, parameters: parameters);
-
-            return EntityRule(name, target, pars).Builder;
-        }
-        
+        return EntityRule(name, target, pars).Builder;
     }
+        
 }

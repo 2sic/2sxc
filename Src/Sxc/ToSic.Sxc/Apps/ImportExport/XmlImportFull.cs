@@ -8,50 +8,49 @@ using ToSic.Lib.Logging;
 using ToSic.Eav.Repositories;
 using ToSic.Sxc.Apps.Work;
 
-namespace ToSic.Sxc.Apps.ImportExport
+namespace ToSic.Sxc.Apps.ImportExport;
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public partial class XmlImportFull: XmlImportWithFiles
 {
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public partial class XmlImportFull: XmlImportWithFiles
+    private readonly GenWorkBasic<WorkViewsMod> _workViewsMod;
+    private readonly IRepositoryLoader _repositoryLoader;
+
+    public XmlImportFull(
+        MyServices services,
+        GenWorkBasic<WorkViewsMod> workViewsMod,
+        IRepositoryLoader repositoryLoader
+    ) : base(services, "Sxc.XmlImp")
     {
-        private readonly GenWorkBasic<WorkViewsMod> _workViewsMod;
-        private readonly IRepositoryLoader _repositoryLoader;
-
-        public XmlImportFull(
-            MyServices services,
-            GenWorkBasic<WorkViewsMod> workViewsMod,
-            IRepositoryLoader repositoryLoader
-            ) : base(services, "Sxc.XmlImp")
-        {
-            ConnectServices(
-                _workViewsMod = workViewsMod,
-                _repositoryLoader = repositoryLoader
-            );
-        }
-
-        // ReSharper disable once UnusedMember.Global
-        // The system says it's never used, but it's provided through DI as the base class
-        public new bool ImportXml(int zoneId, int appId, XDocument doc, bool leaveExistingValuesUntouched = true)
-        {
-            var l = Log.Fn<bool>($"{zoneId}, {appId}, ..., {leaveExistingValuesUntouched}");
-            var ok = base.ImportXml(zoneId, appId, doc, leaveExistingValuesUntouched);
-            if (!ok)
-                return l.ReturnFalse("error");
-
-            l.A("Now import templates - if found");
-
-            var xmlSource = doc.Element(XmlConstants.RootNode)
-                            ?? throw new Exception("error import - xmlSource should always exist");
-
-            if (xmlSource.Elements(XmlConstants.Templates).Any())
-            {
-                l.A("found some templates");
-                ImportXmlTemplates(xmlSource);
-            }
-            else
-                l.A("No templates found");
-
-            return l.ReturnTrue("ok");
-        }
-
+        ConnectServices(
+            _workViewsMod = workViewsMod,
+            _repositoryLoader = repositoryLoader
+        );
     }
+
+    // ReSharper disable once UnusedMember.Global
+    // The system says it's never used, but it's provided through DI as the base class
+    public new bool ImportXml(int zoneId, int appId, XDocument doc, bool leaveExistingValuesUntouched = true)
+    {
+        var l = Log.Fn<bool>($"{zoneId}, {appId}, ..., {leaveExistingValuesUntouched}");
+        var ok = base.ImportXml(zoneId, appId, doc, leaveExistingValuesUntouched);
+        if (!ok)
+            return l.ReturnFalse("error");
+
+        l.A("Now import templates - if found");
+
+        var xmlSource = doc.Element(XmlConstants.RootNode)
+                        ?? throw new Exception("error import - xmlSource should always exist");
+
+        if (xmlSource.Elements(XmlConstants.Templates).Any())
+        {
+            l.A("found some templates");
+            ImportXmlTemplates(xmlSource);
+        }
+        else
+            l.A("No templates found");
+
+        return l.ReturnTrue("ok");
+    }
+
 }

@@ -3,15 +3,14 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using static ToSic.Eav.Parameters;
 
-namespace ToSic.Sxc.Data
-{
-    [PublicApi]
-    public interface ITypedStack: ITyped, ICanDebug
-    {
-        /// <inheritdoc cref="ITypedRelationships.Child"/>
-        ITypedItem Child(string name, string noParamOrder = Protector, bool? required = default);
+namespace ToSic.Sxc.Data;
 
-        /// <inheritdoc cref="ITypedRelationships.Children"/>
-        IEnumerable<ITypedItem> Children(string field = default, string noParamOrder = Protector, string type = default, bool? required = default);
-    }
+[PublicApi]
+public interface ITypedStack: ITyped, ICanDebug
+{
+    /// <inheritdoc cref="ITypedRelationships.Child"/>
+    ITypedItem Child(string name, string noParamOrder = Protector, bool? required = default);
+
+    /// <inheritdoc cref="ITypedRelationships.Children"/>
+    IEnumerable<ITypedItem> Children(string field = default, string noParamOrder = Protector, string type = default, bool? required = default);
 }

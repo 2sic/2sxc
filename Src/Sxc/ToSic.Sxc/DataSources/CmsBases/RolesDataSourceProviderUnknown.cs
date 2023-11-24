@@ -2,15 +2,14 @@
 using ToSic.Eav.Internal.Unknown;
 using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.DataSources
+namespace ToSic.Sxc.DataSources;
+
+internal class RolesDataSourceProviderUnknown : RolesDataSourceProvider
 {
-    internal class RolesDataSourceProviderUnknown : RolesDataSourceProvider
+    public RolesDataSourceProviderUnknown(WarnUseOfUnknown<RolesDataSourceProviderUnknown> _): base($"{Constants.SxcLogName}.{LogConstants.NameUnknown}")
     {
-        public RolesDataSourceProviderUnknown(WarnUseOfUnknown<RolesDataSourceProviderUnknown> _): base($"{Constants.SxcLogName}.{LogConstants.NameUnknown}")
-        {
-        }
-        
-        public override IEnumerable<RoleDataRaw> GetRolesInternal(
-        ) => new List<RoleDataRaw>();
     }
+        
+    public override IEnumerable<RoleDataRaw> GetRolesInternal(
+    ) => new List<RoleDataRaw>();
 }

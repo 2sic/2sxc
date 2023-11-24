@@ -13,83 +13,82 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using static ToSic.Eav.Apps.AppStackConstants;
 
-namespace ToSic.Sxc.WebApi.AppStack
+namespace ToSic.Sxc.WebApi.AppStack;
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class AppStackBackend: ServiceBase
 {
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public class AppStackBackend: ServiceBase
+
+    #region Constructor / DI
+
+    public AppStackBackend(AppSettingsStack settingsStack, IZoneCultureResolver zoneCulture, IAppStates appStates, LazySvc<QueryDefinitionBuilder> qDefBuilder) : base("Sxc.ApiApQ")
     {
+        ConnectServices(
+            _settingsStack = settingsStack,
+            _zoneCulture = zoneCulture,
+            _appStates = appStates,
+            _qDefBuilder = qDefBuilder
+        );
+    }
 
-        #region Constructor / DI
+    private readonly IAppStates _appStates;
+    private readonly IZoneCultureResolver _zoneCulture;
+    private readonly AppSettingsStack _settingsStack;
+    private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
 
-        public AppStackBackend(AppSettingsStack settingsStack, IZoneCultureResolver zoneCulture, IAppStates appStates, LazySvc<QueryDefinitionBuilder> qDefBuilder) : base("Sxc.ApiApQ")
-        {
-            ConnectServices(
-                _settingsStack = settingsStack,
-                _zoneCulture = zoneCulture,
-                _appStates = appStates,
-                _qDefBuilder = qDefBuilder
-            );
-        }
+    #endregion
 
-        private readonly IAppStates _appStates;
-        private readonly IZoneCultureResolver _zoneCulture;
-        private readonly AppSettingsStack _settingsStack;
-        private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
+    public List<AppStackDataRaw> GetAll(int appId, string part, string key, Guid? viewGuid, string[] languages)
+    {
+        // Correct languages
+        if (languages == null || !languages.Any())
+            languages = _zoneCulture.SafeLanguagePriorityCodes();
+        // Get app 
+        var appState = _appStates.Get(appId);
+        // Ensure we have the correct stack name
+        var partName = SystemStackHelpers.GetStackNameOrNull(part);
+        if (partName == null)
+            throw new Exception($"Parameter '{nameof(part)}' must be {RootNameSettings} or {RootNameResources}");
+        var viewMixin = GetViewSettingsForMixin(viewGuid, languages, appState, partName);
+        var results = GetStackDump(appState, partName, languages, viewMixin);
 
-        #endregion
+        results = SystemStackHelpers.ApplyKeysFilter(results, key);
+        if (!results.Any())
+            return new List<AppStackDataRaw>();
 
-        public List<AppStackDataRaw> GetAll(int appId, string part, string key, Guid? viewGuid, string[] languages)
-        {
-            // Correct languages
-            if (languages == null || !languages.Any())
-                languages = _zoneCulture.SafeLanguagePriorityCodes();
-            // Get app 
-            var appState = _appStates.Get(appId);
-            // Ensure we have the correct stack name
-            var partName = SystemStackHelpers.GetStackNameOrNull(part);
-            if (partName == null)
-                throw new Exception($"Parameter '{nameof(part)}' must be {RootNameSettings} or {RootNameResources}");
-            var viewMixin = GetViewSettingsForMixin(viewGuid, languages, appState, partName);
-            var results = GetStackDump(appState, partName, languages, viewMixin);
-
-            results = SystemStackHelpers.ApplyKeysFilter(results, key);
-            if (!results.Any())
-                return new List<AppStackDataRaw>();
-
-            var final = SystemStackHelpers.ReducePropertiesToRelevantOnes(results);
+        var final = SystemStackHelpers.ReducePropertiesToRelevantOnes(results);
 
                 
 
-            return final.Select(r => new AppStackDataRaw(r))
-                .ToList();
-        }
+        return final.Select(r => new AppStackDataRaw(r))
+            .ToList();
+    }
 
 
 
-        public List<PropertyDumpItem> GetStackDump(AppState appState, string partName, string[] languages, IEntity viewSettingsMixin)
+    public List<PropertyDumpItem> GetStackDump(AppState appState, string partName, string[] languages, IEntity viewSettingsMixin)
+    {
+        // Build Sources List
+        var settings = _settingsStack.Init(appState).GetStack(partName, viewSettingsMixin);
+
+        // Dump results
+        var results = settings._Dump(new PropReqSpecs(null, languages, Log), null);
+        return results;
+    }
+
+
+    private IEntity GetViewSettingsForMixin(Guid? viewGuid, string[] languages, AppState appState, string realName)
+    {
+        IEntity viewStackPart = null;
+        if (viewGuid != null)
         {
-            // Build Sources List
-            var settings = _settingsStack.Init(appState).GetStack(partName, viewSettingsMixin);
+            var viewEnt = appState.List.One(viewGuid.Value);
+            if (viewEnt == null) throw new Exception($"Tried to get view but not found. Guid was {viewGuid}");
+            var view = new View(viewEnt, languages, Log, _qDefBuilder);
 
-            // Dump results
-            var results = settings._Dump(new PropReqSpecs(null, languages, Log), null);
-            return results;
+            viewStackPart = realName == RootNameSettings ? view.Settings : view.Resources;
         }
 
-
-        private IEntity GetViewSettingsForMixin(Guid? viewGuid, string[] languages, AppState appState, string realName)
-        {
-            IEntity viewStackPart = null;
-            if (viewGuid != null)
-            {
-                var viewEnt = appState.List.One(viewGuid.Value);
-                if (viewEnt == null) throw new Exception($"Tried to get view but not found. Guid was {viewGuid}");
-                var view = new View(viewEnt, languages, Log, _qDefBuilder);
-
-                viewStackPart = realName == RootNameSettings ? view.Settings : view.Resources;
-            }
-
-            return viewStackPart;
-        }
+        return viewStackPart;
     }
 }

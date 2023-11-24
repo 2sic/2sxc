@@ -7,36 +7,35 @@ using Microsoft.AspNetCore.Http.Extensions;
 using System;
 
 
-namespace ToSic.Sxc.Run
+namespace ToSic.Sxc.Run;
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class LinkPaths: ILinkPaths
 {
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public class LinkPaths: ILinkPaths
-    {
 #if !NETFRAMEWORK
         public LinkPaths(IUrlHelper urlHelper) => _urlHelper = urlHelper;
         private readonly IUrlHelper _urlHelper;
 #endif
 
-        public string AsSeenFromTheDomainRoot(string virtualPath)
-        {
+    public string AsSeenFromTheDomainRoot(string virtualPath)
+    {
 #if NETFRAMEWORK
-            return VirtualPathUtility.ToAbsolute(virtualPath);
+        return VirtualPathUtility.ToAbsolute(virtualPath);
 #else
             return _urlHelper.Content(virtualPath);
 #endif
-        }
+    }
 
 #if NETFRAMEWORK
-        public string GetCurrentRequestUrl() => HttpContext.Current?.Request?.Url?.AbsoluteUri ?? string.Empty;
+    public string GetCurrentRequestUrl() => HttpContext.Current?.Request?.Url?.AbsoluteUri ?? string.Empty;
 #else
         public string GetCurrentRequestUrl() => _urlHelper.ActionContext.HttpContext.Request.GetEncodedUrl();
 #endif
 
 #if NETFRAMEWORK
-        public string GetCurrentLinkRoot() => HttpContext.Current?.Request?.Url?.GetLeftPart(UriPartial.Authority) ?? string.Empty;
+    public string GetCurrentLinkRoot() => HttpContext.Current?.Request?.Url?.GetLeftPart(UriPartial.Authority) ?? string.Empty;
 #else
         public string GetCurrentLinkRoot() => new Uri(_urlHelper.ActionContext.HttpContext.Request.GetEncodedUrl()).GetLeftPart(UriPartial.Authority);
 #endif
 
-        }
-    }
+}

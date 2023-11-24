@@ -1,17 +1,16 @@
-﻿namespace ToSic.Sxc.Apps.Assets
+﻿namespace ToSic.Sxc.Apps.Assets;
+
+public partial class AssetTemplates
 {
-    public partial class AssetTemplates
-    {
-        public static TemplateInfo Token =
-            new("html-token", "HTML Token Template", ".html", "DetailsTemplate", ForTemplate, TypeToken)
-            {
-                Body = @"
+    public static TemplateInfo Token =
+        new("html-token", "HTML Token Template", ".html", "DetailsTemplate", ForTemplate, TypeToken)
+        {
+            Body = @"
 <p>
     You successfully created your own template.
     Start editing it by hovering the ""Manage"" button and opening the ""Edit Template"" dialog.
 </p>",
-                Description = "html token template",
-            };
+            Description = "html token template",
+        };
 
-    }
 }

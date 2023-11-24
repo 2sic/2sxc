@@ -1,19 +1,18 @@
 ﻿using System;
 using ToSic.Eav.Data;
 
-namespace ToSic.Sxc.Blocks.Edit
+namespace ToSic.Sxc.Blocks.Edit;
+
+public partial class BlockEditorBase
 {
-    public partial class BlockEditorBase
-    {
-        // methods which the entity-implementation must customize - so it's virtual
+    // methods which the entity-implementation must customize - so it's virtual
 
-        protected abstract void SavePreviewTemplateId(Guid templateGuid);
+    protected abstract void SavePreviewTemplateId(Guid templateGuid);
 
-        internal abstract void SetAppId(int? appId);
+    internal abstract void SetAppId(int? appId);
 
-        internal abstract void EnsureLinkToContentGroup(Guid cgGuid);
+    internal abstract void EnsureLinkToContentGroup(Guid cgGuid);
 
-        internal abstract void UpdateTitle(IEntity titleItem);
+    internal abstract void UpdateTitle(IEntity titleItem);
 
-    }
 }

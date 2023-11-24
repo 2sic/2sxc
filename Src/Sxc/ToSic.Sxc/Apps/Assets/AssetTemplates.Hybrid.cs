@@ -1,24 +1,24 @@
-﻿namespace ToSic.Sxc.Apps.Assets
+﻿namespace ToSic.Sxc.Apps.Assets;
+
+public partial class AssetTemplates
 {
-    public partial class AssetTemplates
+    // Place each definition in an own static variable.
+    // Place the keys, etc. here and use these objects for the constant (don't create separate template-key object etc).
+    public static readonly TemplateInfo RazorHybrid = new("cshtml-hybrid", "Razor Hybrid", ".cshtml", "DetailsTemplate", ForTemplate, TypeRazor)
     {
-        // Place each definition in an own static variable.
-        // Place the keys, etc. here and use these objects for the constant (don't create separate template-key object etc).
-        public static readonly TemplateInfo RazorHybrid = new("cshtml-hybrid", "Razor Hybrid", ".cshtml", "DetailsTemplate", ForTemplate, TypeRazor)
-        {
-            Body = @"@inherits Custom.Hybrid.Razor14
+        Body = @"@inherits Custom.Hybrid.Razor14
 @* This inherits statement gets you features like App, CmsContext, Data etc. - you can delete this comment *@
 
 <div @Edit.TagToolbar(Content)>
     Put your content here
 </div>",
-            Description = "razor page hybrid template",
-        };
+        Description = "razor page hybrid template",
+    };
 
-        public static readonly TemplateInfo CsHybrid =
-            new("cs-code-hybrid", "C# Code Hybrid", ".cs", "Helpers", ForCode, TypeNone)
-            {
-                Body = @"// Important notes:
+    public static readonly TemplateInfo CsHybrid =
+        new("cs-code-hybrid", "C# Code Hybrid", ".cs", "Helpers", ForCode, TypeNone)
+        {
+            Body = @"// Important notes:
 // - This class should have the same name as the file it's in
 // - This inherits from Custom.Hybrid.Code14
 //   which will automatically provide the common objects like App, CmsContext, Data etc.
@@ -31,15 +31,15 @@ public class " + CsCodeTemplateName + @" : Custom.Hybrid.Code14 {
   }
 }
 ",
-                Description = "c# code hybrid template",
-            };
+            Description = "c# code hybrid template",
+        };
 
 
 
-        public static readonly TemplateInfo ApiHybrid =
-            new("cs-api-hybrid", "WebApi Hybrid", ".cs", "My", ForApi, TypeNone)
-            {
-                Body = @"#if NETCOREAPP // Oqtane
+    public static readonly TemplateInfo ApiHybrid =
+        new("cs-api-hybrid", "WebApi Hybrid", ".cs", "My", ForApi, TypeNone)
+        {
+            Body = @"#if NETCOREAPP // Oqtane
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 #else // DNN
@@ -69,16 +69,16 @@ public class " + CsApiTemplateControllerName + @" : Custom.Hybrid.Api14
     }
 }
 ",
-                Description = "c# WebApi controller hybrid template",
-                Suffix = "Controller",
-            };
+            Description = "c# WebApi controller hybrid template",
+            Suffix = "Controller",
+        };
 
 
 
-        public static readonly TemplateInfo DataSourceHybrid =
-            new("data-source-hybrid", "DataSource Hybrid", ".cs", "MyDataSource", ForDataSource, TypeNone)
-            {
-                Body = @"// Template Dynamic DataSource - learn about this on https://go.2sxc.org/DsCustom
+    public static readonly TemplateInfo DataSourceHybrid =
+        new("data-source-hybrid", "DataSource Hybrid", ".cs", "MyDataSource", ForDataSource, TypeNone)
+        {
+            Body = @"// Template Dynamic DataSource - learn about this on https://go.2sxc.org/DsCustom
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -115,10 +115,9 @@ public string Greeting { get { return Configuration.GetThis(); } }
 public int AmountOfItems { get { return Configuration.GetThis(3); } }
 }
 ",
-                Description = "c# DataSource hybrid template",
-                Suffix = "",
-                Folder = "DataSources",
-            };
+            Description = "c# DataSource hybrid template",
+            Suffix = "",
+            Folder = "DataSources",
+        };
 
-    }
 }

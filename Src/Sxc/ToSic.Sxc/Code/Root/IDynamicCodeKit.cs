@@ -1,34 +1,32 @@
 ﻿using ToSic.Lib.Documentation;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Code
+namespace ToSic.Sxc.Code;
+
+[PrivateApi("v14")]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public interface IDynamicCodeKit<out TServiceKit> where TServiceKit : ServiceKit
 {
-    [PrivateApi("v14")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public interface IDynamicCodeKit<out TServiceKit> where TServiceKit : ServiceKit
+    /// <summary>
+    /// The Service Kit containing all kinds of services which are commonly used.
+    /// The services on the Kit are context-aware, so they know what App is currently being used etc.
+    /// </summary>
+    TServiceKit Kit { get; }
+}
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public static class IDynamicCodeKitExtensions
+{
+    public static TServiceKit GetKit<TServiceKit>(this IDynamicCodeRoot codeRoot) where TServiceKit : ServiceKit
     {
-        /// <summary>
-        /// The Service Kit containing all kinds of services which are commonly used.
-        /// The services on the Kit are context-aware, so they know what App is currently being used etc.
-        /// </summary>
-        TServiceKit Kit { get; }
+        if (codeRoot is IDynamicCodeKit<TServiceKit> withKit && withKit.Kit != null)
+            return withKit.Kit;
+        return codeRoot.GetService<TServiceKit>();
     }
 
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public static class IDynamicCodeKitExtensions
+    public static IDynamicCodeRoot SetCompatibility(this IDynamicCodeRoot codeRoot, int compatibility)
     {
-        public static TServiceKit GetKit<TServiceKit>(this IDynamicCodeRoot codeRoot) where TServiceKit : ServiceKit
-        {
-            if (codeRoot is IDynamicCodeKit<TServiceKit> withKit && withKit.Kit != null)
-                return withKit.Kit;
-            return codeRoot.GetService<TServiceKit>();
-        }
-
-        public static IDynamicCodeRoot SetCompatibility(this IDynamicCodeRoot codeRoot, int compatibility)
-        {
-            codeRoot.Cdf.SetCompatibilityLevel(compatibility);
-            return codeRoot;
-        }
+        codeRoot.Cdf.SetCompatibilityLevel(compatibility);
+        return codeRoot;
     }
-
 }

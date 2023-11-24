@@ -2,15 +2,14 @@
 using ToSic.Eav.Internal.Unknown;
 using ToSic.Sxc.Context;
 
-namespace ToSic.Sxc.WebApi.Infrastructure
-{
-    internal class WebApiContextBuilderUnknown: IWebApiContextBuilder
-    {
-        public WebApiContextBuilderUnknown(WarnUseOfUnknown<WebApiContextBuilderUnknown> _) { }
+namespace ToSic.Sxc.WebApi.Infrastructure;
 
-        public IContextResolver PrepareContextResolverForApiRequest()
-        {
-            throw new NotImplementedException();
-        }
+internal class WebApiContextBuilderUnknown: IWebApiContextBuilder
+{
+    public WebApiContextBuilderUnknown(WarnUseOfUnknown<WebApiContextBuilderUnknown> _) { }
+
+    public IContextResolver PrepareContextResolverForApiRequest()
+    {
+        throw new NotImplementedException();
     }
 }

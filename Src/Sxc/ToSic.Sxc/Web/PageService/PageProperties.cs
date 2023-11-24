@@ -1,10 +1,9 @@
-﻿namespace ToSic.Sxc.Web.PageService
+﻿namespace ToSic.Sxc.Web.PageService;
+
+internal enum PageProperties
 {
-    internal enum PageProperties
-    {
-        Title,
-        Description,
-        Keywords,
-        Base,
-    }
+    Title,
+    Description,
+    Keywords,
+    Base,
 }

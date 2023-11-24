@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using ToSic.Sxc.Apps.Assets;
 
-namespace ToSic.Sxc.WebApi.Admin.AppFiles
+namespace ToSic.Sxc.WebApi.Admin.AppFiles;
+
+public class TemplatesDto
 {
-    public class TemplatesDto
-    {
-        public string Default { get; set; }
-        public List<TemplateInfo> Templates;
-    }
+    public string Default { get; set; }
+    public List<TemplateInfo> Templates;
 }

@@ -1,11 +1,10 @@
 ﻿using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Code
+namespace ToSic.Sxc.Code;
+
+[PrivateApi]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public interface INeedsDynamicCodeRoot
 {
-    [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public interface INeedsDynamicCodeRoot
-    {
-        void ConnectToRoot(IDynamicCodeRoot codeRoot);
-    }
+    void ConnectToRoot(IDynamicCodeRoot codeRoot);
 }

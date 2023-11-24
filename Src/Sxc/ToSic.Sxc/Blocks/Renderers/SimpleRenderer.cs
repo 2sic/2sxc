@@ -8,79 +8,78 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Blocks.Renderers
+namespace ToSic.Sxc.Blocks.Renderers;
+
+[PrivateApi]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class SimpleRenderer: ServiceBase
 {
-    [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public class SimpleRenderer: ServiceBase
+    private readonly Generator<BlockFromEntity> _blkFrmEntGen;
+    private static readonly string _emptyMessage = "<!-- auto-render of item {0} -->";
+
+    public SimpleRenderer(Generator<BlockFromEntity> blkFrmEntGen): base(Constants.SxcLogName + "RndSmp")
     {
-        private readonly Generator<BlockFromEntity> _blkFrmEntGen;
-        private static readonly string _emptyMessage = "<!-- auto-render of item {0} -->";
+        ConnectServices(
+            _blkFrmEntGen = blkFrmEntGen
+        );
+    }
 
-        public SimpleRenderer(Generator<BlockFromEntity> blkFrmEntGen): base(Constants.SxcLogName + "RndSmp")
+    public string Render(IBlock parentBlock, IEntity entity, object data = default)
+    {
+        var l = Log.Fn<string>();
+
+        // if not the expected content-type, just output a hidden html placeholder
+        if (entity.Type.Name != AppConstants.ContentGroupRefTypeName)
         {
-            ConnectServices(
-                _blkFrmEntGen = blkFrmEntGen
-            );
+            l.A("empty, will return hidden html placeholder");
+            return string.Format(_emptyMessage, entity.EntityId);
         }
 
-        public string Render(IBlock parentBlock, IEntity entity, object data = default)
+        // render it
+        l.A("found, will render");
+        var cb = _blkFrmEntGen.New().Init(parentBlock, entity);
+        var result = cb.BlockBuilder.Run(false, data);
+
+        // Special: during Run() various things are picked up like header changes, activations etc.
+        // Depending on the code flow, it could have picked up changes of other templates (not this one)
+        // because these were scoped, 
+        // must attach additional info to the parent block, so it doesn't loose header changes and similar
+
+        return l.Return(result.Html);
+    }
+
+    private const string WrapperTemplate = "<div class='{0}' {1}>{2}</div>";
+    private const string WrapperMultiItems = "sc-content-block-list"; // tells quickE that it's an editable area
+    private const string WrapperSingleItem = WrapperMultiItems + " show-placeholder single-item"; // enables a placeholder when empty, and limits one entry
+
+    internal string RenderWithEditContext(IBlock block, ICanBeEntity parent, ICanBeEntity subItem, string cbFieldName, Guid? newGuid, IEditService edit, object data = default)
+    {
+        var l = Log.Fn<string>();
+        var attribs = edit.ContextAttributes(parent, field: cbFieldName, newGuid: newGuid);
+        var inner = subItem == null ? "": Render(block, subItem.Entity, data: data);
+        var cbClasses = edit.Enabled ? WrapperSingleItem : "";
+        return l.Return(string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner}));
+    }
+
+    public string RenderListWithContext(IBlock block, IEntity parent, string fieldName, string apps, int max, IEditService edit)
+    {
+        var l = Log.Fn<string>();
+        var innerBuilder = new StringBuilder();
+        var children = parent.Entity.Children(fieldName);
+        foreach (var child in children)
+            innerBuilder.Append(Render(block, child));
+
+        //var found = parent.TryGetMember(fieldName, out var objFound);
+        //if (found && objFound is IList<DynamicEntity> items)
+        //    foreach (var cb in items)
+        //        innerBuilder.Append(Render(block, cb.Entity));
+
+        var result = string.Format(WrapperTemplate, new object[]
         {
-            var l = Log.Fn<string>();
-
-            // if not the expected content-type, just output a hidden html placeholder
-            if (entity.Type.Name != AppConstants.ContentGroupRefTypeName)
-            {
-                l.A("empty, will return hidden html placeholder");
-                return string.Format(_emptyMessage, entity.EntityId);
-            }
-
-            // render it
-            l.A("found, will render");
-            var cb = _blkFrmEntGen.New().Init(parentBlock, entity);
-            var result = cb.BlockBuilder.Run(false, data);
-
-            // Special: during Run() various things are picked up like header changes, activations etc.
-            // Depending on the code flow, it could have picked up changes of other templates (not this one)
-            // because these were scoped, 
-            // must attach additional info to the parent block, so it doesn't loose header changes and similar
-
-            return l.Return(result.Html);
-        }
-
-        private const string WrapperTemplate = "<div class='{0}' {1}>{2}</div>";
-        private const string WrapperMultiItems = "sc-content-block-list"; // tells quickE that it's an editable area
-        private const string WrapperSingleItem = WrapperMultiItems + " show-placeholder single-item"; // enables a placeholder when empty, and limits one entry
-
-        internal string RenderWithEditContext(IBlock block, ICanBeEntity parent, ICanBeEntity subItem, string cbFieldName, Guid? newGuid, IEditService edit, object data = default)
-        {
-            var l = Log.Fn<string>();
-            var attribs = edit.ContextAttributes(parent, field: cbFieldName, newGuid: newGuid);
-            var inner = subItem == null ? "": Render(block, subItem.Entity, data: data);
-            var cbClasses = edit.Enabled ? WrapperSingleItem : "";
-            return l.Return(string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner}));
-        }
-
-        public string RenderListWithContext(IBlock block, IEntity parent, string fieldName, string apps, int max, IEditService edit)
-        {
-            var l = Log.Fn<string>();
-            var innerBuilder = new StringBuilder();
-            var children = parent.Entity.Children(fieldName);
-            foreach (var child in children)
-                innerBuilder.Append(Render(block, child));
-
-            //var found = parent.TryGetMember(fieldName, out var objFound);
-            //if (found && objFound is IList<DynamicEntity> items)
-            //    foreach (var cb in items)
-            //        innerBuilder.Append(Render(block, cb.Entity));
-
-            var result = string.Format(WrapperTemplate, new object[]
-            {
-                edit.Enabled ? WrapperMultiItems : "",
-                edit.ContextAttributes(parent, field: fieldName, apps: apps, max: max),
-                innerBuilder
-            });
-            return l.Return(result);
-        }
+            edit.Enabled ? WrapperMultiItems : "",
+            edit.ContextAttributes(parent, field: fieldName, apps: apps, max: max),
+            innerBuilder
+        });
+        return l.Return(result);
     }
 }

@@ -4,39 +4,38 @@ using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Metadata;
 
-namespace ToSic.Sxc.Edit.Toolbar
+namespace ToSic.Sxc.Edit.Toolbar;
+
+public partial class ToolbarBuilder
 {
-    public partial class ToolbarBuilder
+    private List<string> GetMetadataTypeNames(object target, string contentTypes)
     {
-        private List<string> GetMetadataTypeNames(object target, string contentTypes)
-        {
-            var types = contentTypes?.Split(',').Select(s => s.Trim()).ToArray() ?? Array.Empty<string>();
-            if (!types.Any())
-                types = FindMetadataRecommendations(target);
+        var types = contentTypes?.Split(',').Select(s => s.Trim()).ToArray() ?? Array.Empty<string>();
+        if (!types.Any())
+            types = FindMetadataRecommendations(target);
 
-            var finalTypes = new List<string>();
-            foreach (var type in types)
-                if (type == "*") finalTypes.AddRange(FindMetadataRecommendations(target));
-                else finalTypes.Add(type);
-            return finalTypes;
-        }
+        var finalTypes = new List<string>();
+        foreach (var type in types)
+            if (type == "*") finalTypes.AddRange(FindMetadataRecommendations(target));
+            else finalTypes.Add(type);
+        return finalTypes;
+    }
 
-        private string[] FindMetadataRecommendations(object target)
-        {
-            var l = Log.Fn<string[]>();
-            // ReSharper disable once ConvertIfStatementToSwitchStatement
-            if (target == null)
-                return l.Return(Array.Empty<string>(), "null");
+    private string[] FindMetadataRecommendations(object target)
+    {
+        var l = Log.Fn<string[]>();
+        // ReSharper disable once ConvertIfStatementToSwitchStatement
+        if (target == null)
+            return l.Return(Array.Empty<string>(), "null");
 
-            if (target is IHasMetadata withMetadata)
-                target = withMetadata.Metadata;
+        if (target is IHasMetadata withMetadata)
+            target = withMetadata.Metadata;
 
-            if (!(target is IMetadataOf mdOf))
-                return l.Return(Array.Empty<string>(), "not metadata");
+        if (!(target is IMetadataOf mdOf))
+            return l.Return(Array.Empty<string>(), "not metadata");
 
-            var recommendations = mdOf?.Target?.Recommendations ?? Array.Empty<string>();
+        var recommendations = mdOf?.Target?.Recommendations ?? Array.Empty<string>();
 
-            return l.Return(recommendations, "ok");
-        }
+        return l.Return(recommendations, "ok");
     }
 }

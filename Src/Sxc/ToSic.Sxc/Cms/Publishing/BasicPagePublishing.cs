@@ -6,30 +6,29 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
 
-namespace ToSic.Sxc.Cms.Publishing
+namespace ToSic.Sxc.Cms.Publishing;
+
+internal class BasicPagePublishing : ServiceBase, IPagePublishing
 {
-    internal class BasicPagePublishing : ServiceBase, IPagePublishing
+    public BasicPagePublishing(WarnUseOfUnknown<BasicPagePublishing> _) : base($"{LogScopes.NotImplemented}.Publsh") { }
+
+    public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action) => Log.Do(() =>
     {
-        public BasicPagePublishing(WarnUseOfUnknown<BasicPagePublishing> _) : base($"{LogScopes.NotImplemented}.Publsh") { }
-
-        public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action) => Log.Do(() =>
-        {
-            var versioningActionInfo = new VersioningActionInfo();
-            action.Invoke(versioningActionInfo);
-        });
+        var versioningActionInfo = new VersioningActionInfo();
+        action.Invoke(versioningActionInfo);
+    });
 
 
 
-        public int GetLatestVersion(int instanceId) => 0;
+    public int GetLatestVersion(int instanceId) => 0;
 
-        public int GetPublishedVersion(int instanceId) => 0;
+    public int GetPublishedVersion(int instanceId) => 0;
 
 
-        public void Publish(int instanceId, int version)
-        {
-            Log.A($"Publish(m:{instanceId}, v:{version})");
-            Log.A("publish never happened ");
-        }
-
+    public void Publish(int instanceId, int version)
+    {
+        Log.A($"Publish(m:{instanceId}, v:{version})");
+        Log.A("publish never happened ");
     }
+
 }

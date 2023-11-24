@@ -1,15 +1,14 @@
 ﻿using ToSic.Sxc.Apps.Paths;
 
-namespace ToSic.Sxc.WebApi.Admin.AppFiles
+namespace ToSic.Sxc.WebApi.Admin.AppFiles;
+
+partial class AppFilesControllerReal
 {
-    partial class AppFilesControllerReal
-    {
-        private string ResolveAppPath(int appId, bool global) =>
-            (
-                _appPaths.InitDone
-                    ? _appPaths
-                    : _appPaths.Init(_site, _appStates.Get(appId))
-            )
-            .PhysicalPathSwitch(global);
-    }
+    private string ResolveAppPath(int appId, bool global) =>
+        (
+            _appPaths.InitDone
+                ? _appPaths
+                : _appPaths.Init(_site, _appStates.Get(appId))
+        )
+        .PhysicalPathSwitch(global);
 }

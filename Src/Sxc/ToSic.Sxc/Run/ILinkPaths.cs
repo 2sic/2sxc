@@ -1,12 +1,11 @@
-﻿namespace ToSic.Sxc.Run
+﻿namespace ToSic.Sxc.Run;
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public interface ILinkPaths
 {
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public interface ILinkPaths
-    {
-        string AsSeenFromTheDomainRoot(string virtualPath);
+    string AsSeenFromTheDomainRoot(string virtualPath);
 
-        string GetCurrentRequestUrl();
+    string GetCurrentRequestUrl();
 
-        string GetCurrentLinkRoot();
-    }
+    string GetCurrentLinkRoot();
 }

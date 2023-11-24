@@ -1,11 +1,10 @@
 ﻿using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Data
+namespace ToSic.Sxc.Data;
+
+[PrivateApi]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public interface IFromField
 {
-    [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public interface IFromField
-    {
-        IField Field { get; set; }
-    }
+    IField Field { get; set; }
 }

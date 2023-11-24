@@ -33,204 +33,203 @@ using ToSic.Sxc.Web.LightSpeed;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
 
-namespace ToSic.Sxc.Startup
+namespace ToSic.Sxc.Startup;
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public static partial class RegisterSxcServices
 {
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public static partial class RegisterSxcServices
+    public static IServiceCollection AddSxcCore(this IServiceCollection services)
     {
-        public static IServiceCollection AddSxcCore(this IServiceCollection services)
-        {
-            // Runtimes - new: better architecture v16.07+
-            services.TryAddTransient<WorkBlocks>();
-            services.TryAddTransient<WorkViews>();
-            services.TryAddTransient<WorkViewsMod>();
-            services.TryAddTransient<WorkBlocksMod>();
-            services.TryAddTransient<WorkApps>();
-            services.TryAddTransient<WorkAppsRemove>();
+        // Runtimes - new: better architecture v16.07+
+        services.TryAddTransient<WorkBlocks>();
+        services.TryAddTransient<WorkViews>();
+        services.TryAddTransient<WorkViewsMod>();
+        services.TryAddTransient<WorkBlocksMod>();
+        services.TryAddTransient<WorkApps>();
+        services.TryAddTransient<WorkAppsRemove>();
 
-            // Code
-            services.TryAddTransient<DynamicCodeRoot.MyServices>();
+        // Code
+        services.TryAddTransient<DynamicCodeRoot.MyServices>();
 
-            // Block Editors
-            services.TryAddTransient<BlockEditorForEntity>();
-            services.TryAddTransient<BlockEditorForModule>();
-            services.TryAddTransient<BlockEditorBase.MyServices>();
+        // Block Editors
+        services.TryAddTransient<BlockEditorForEntity>();
+        services.TryAddTransient<BlockEditorForModule>();
+        services.TryAddTransient<BlockEditorBase.MyServices>();
 
-            // Engine and Rendering
-            services.TryAddTransient<EngineFactory>();
-            services.TryAddTransient<BlockBuilder>();
-            services.TryAddTransient<BlockBuilder.MyServices>();
+        // Engine and Rendering
+        services.TryAddTransient<EngineFactory>();
+        services.TryAddTransient<BlockBuilder>();
+        services.TryAddTransient<BlockBuilder.MyServices>();
 
-            // Block functionality
-            services.TryAddTransient<BlockDataSourceFactory>();
-            services.TryAddTransient<DataSources.CmsBlock.MyServices>(); // new v15
-            services.TryAddTransient<BlockFromModule>();
-            services.TryAddTransient<BlockFromEntity>();
-            services.TryAddTransient<BlockBase.MyServices>();
+        // Block functionality
+        services.TryAddTransient<BlockDataSourceFactory>();
+        services.TryAddTransient<DataSources.CmsBlock.MyServices>(); // new v15
+        services.TryAddTransient<BlockFromModule>();
+        services.TryAddTransient<BlockFromEntity>();
+        services.TryAddTransient<BlockBase.MyServices>();
 
-            // Configuration Provider WIP
-            services.TryAddTransient<AppConfigDelegate>();
-            services.TryAddTransient<App>();
-            services.TryAddTransient<ImportExportEnvironmentBase.MyServices>();
+        // Configuration Provider WIP
+        services.TryAddTransient<AppConfigDelegate>();
+        services.TryAddTransient<App>();
+        services.TryAddTransient<ImportExportEnvironmentBase.MyServices>();
 
-            // Rendering
-            services.TryAddTransient<IRenderingHelper, RenderingHelper>();
-            services.TryAddTransient<TokenEngine>();
+        // Rendering
+        services.TryAddTransient<IRenderingHelper, RenderingHelper>();
+        services.TryAddTransient<TokenEngine>();
 
-            // Context stuff in general
-            services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
+        // Context stuff in general
+        services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
 
-            // Context stuff for the page (not EAV)
-            services.TryAddTransient<IPage, Page>();
-            services.TryAddTransient<Page>();
+        // Context stuff for the page (not EAV)
+        services.TryAddTransient<IPage, Page>();
+        services.TryAddTransient<Page>();
 
 
-            // Context stuff, which is explicitly scoped
-            services.TryAddScoped<Context.IContextResolver, Context.ContextResolver>();
-            // New v15.04 WIP
-            services.TryAddScoped<Eav.Context.IContextResolver>(x => x.GetRequiredService<Context.IContextResolver>());
-            services.TryAddScoped<IContextResolverUserPermissions>(x => x.GetRequiredService<Context.IContextResolver>());
-            services.TryAddScoped<AppIdResolver>();
+        // Context stuff, which is explicitly scoped
+        services.TryAddScoped<Context.IContextResolver, Context.ContextResolver>();
+        // New v15.04 WIP
+        services.TryAddScoped<Eav.Context.IContextResolver>(x => x.GetRequiredService<Context.IContextResolver>());
+        services.TryAddScoped<IContextResolverUserPermissions>(x => x.GetRequiredService<Context.IContextResolver>());
+        services.TryAddScoped<AppIdResolver>();
 
 
-            // JS UI Context
-            services.TryAddTransient<JsContextAll>();
-            services.TryAddTransient<JsContextLanguage>();
-            services.TryAddScoped<JsApiCache>(); // v16.01
+        // JS UI Context
+        services.TryAddTransient<JsContextAll>();
+        services.TryAddTransient<JsContextLanguage>();
+        services.TryAddScoped<JsApiCache>(); // v16.01
 
-            // Adam stuff
-            services.TryAddTransient<AdamSecurityChecksBase, AdamSecurityChecksBasic>();
-            services.TryAddTransient<IAdamPaths, AdamPathsBase>();
-            services.TryAddTransient<AdamConfiguration>();
+        // Adam stuff
+        services.TryAddTransient<AdamSecurityChecksBase, AdamSecurityChecksBasic>();
+        services.TryAddTransient<IAdamPaths, AdamPathsBase>();
+        services.TryAddTransient<AdamConfiguration>();
 
-            services.AddTransient<AdamManager.MyServices>();
+        services.AddTransient<AdamManager.MyServices>();
 
-            // WIP - add net-core specific stuff
-            services.AddNetVariations();
+        // WIP - add net-core specific stuff
+        services.AddNetVariations();
 
-            // Polymorphism
-            services.TryAddTransient<Polymorphism.Polymorphism>();
-
-
-            // 2022-02-07 2dm experimental
-            // The PageServiceShared must always be generated from the PageScope
-            // I previously thought the PageServiceShared must be scoped at page level, but this is wrong
-            // Reason is that it seems to collect specs per module, and then actually only flushes it
-            // Because it shouldn't remain in the list for the second module
-            // So it actually looks like it's very module-scoped already, but had workarounds for it.
-            // So I think it really doesn't need to be have workarounds for it
-            services.TryAddScoped<PageServiceShared>();
-            services.TryAddTransient<PageChangeSummary>();
-
-            // CSP
-            services.TryAddTransient<CspOfApp>();   // must be transient
-            services.TryAddScoped<CspOfModule>();   // important: must be scoped!
-            services.TryAddTransient<CspOfPage>();
-            services.TryAddTransient<CspParameterFinalizer>();
-
-            // Page Features
-            services.TryAddTransient<IPageFeatures, PageFeatures>();
-            services.TryAddTransient<IPageFeaturesManager, PageFeaturesManager>();
-            services.TryAddSingleton<PageFeaturesCatalog>();
-
-            // new in v12.02/12.04 Image Link Resize Helper
-            services.TryAddTransient<ImgResizeLinker>();
-
-            // WIP - objects which are not really final
-            services.TryAddTransient<RemoteRouterLink>();
+        // Polymorphism
+        services.TryAddTransient<Polymorphism.Polymorphism>();
 
 
-            // 12.06.01 moved here from WebApi, but it should probably be in Dnn as it's probably just used there
-            services.TryAddTransient<IServerPaths, ServerPaths>();
+        // 2022-02-07 2dm experimental
+        // The PageServiceShared must always be generated from the PageScope
+        // I previously thought the PageServiceShared must be scoped at page level, but this is wrong
+        // Reason is that it seems to collect specs per module, and then actually only flushes it
+        // Because it shouldn't remain in the list for the second module
+        // So it actually looks like it's very module-scoped already, but had workarounds for it.
+        // So I think it really doesn't need to be have workarounds for it
+        services.TryAddScoped<PageServiceShared>();
+        services.TryAddTransient<PageChangeSummary>();
+
+        // CSP
+        services.TryAddTransient<CspOfApp>();   // must be transient
+        services.TryAddScoped<CspOfModule>();   // important: must be scoped!
+        services.TryAddTransient<CspOfPage>();
+        services.TryAddTransient<CspParameterFinalizer>();
+
+        // Page Features
+        services.TryAddTransient<IPageFeatures, PageFeatures>();
+        services.TryAddTransient<IPageFeaturesManager, PageFeaturesManager>();
+        services.TryAddSingleton<PageFeaturesCatalog>();
+
+        // new in v12.02/12.04 Image Link Resize Helper
+        services.TryAddTransient<ImgResizeLinker>();
+
+        // WIP - objects which are not really final
+        services.TryAddTransient<RemoteRouterLink>();
+
+
+        // 12.06.01 moved here from WebApi, but it should probably be in Dnn as it's probably just used there
+        services.TryAddTransient<IServerPaths, ServerPaths>();
 
             
-            // 13 - cleaning up handling of app paths
-            services.TryAddTransient<AppFolderInitializer>();
-            services.TryAddTransient<AppIconHelpers>();
+        // 13 - cleaning up handling of app paths
+        services.TryAddTransient<AppFolderInitializer>();
+        services.TryAddTransient<AppIconHelpers>();
 
-            // v13 Provide page scoped services
-            // This is important, as most services are module scoped, but very few are actually scoped one level higher
-            services.TryAddScoped<PageScopeAccessor>();
-            services.TryAddScoped(typeof(PageScopedService<>));
+        // v13 Provide page scoped services
+        // This is important, as most services are module scoped, but very few are actually scoped one level higher
+        services.TryAddScoped<PageScopeAccessor>();
+        services.TryAddScoped(typeof(PageScopedService<>));
 
 
-            // v13 LightSpeed
-            services.TryAddTransient<IOutputCache, LightSpeed>();
+        // v13 LightSpeed
+        services.TryAddTransient<IOutputCache, LightSpeed>();
 
-            services.TryAddTransient<BlockEditorSelector>();
+        services.TryAddTransient<BlockEditorSelector>();
 
-            // Sxc StartUp Routines - MUST be AddTransient, not TryAddTransient so many start-ups can be registered
-            services.AddTransient<IStartUpRegistrations, SxcStartUpRegistrations>();
+        // Sxc StartUp Routines - MUST be AddTransient, not TryAddTransient so many start-ups can be registered
+        services.AddTransient<IStartUpRegistrations, SxcStartUpRegistrations>();
 
-            // v15 DataSource Dependencies
-            services.TryAddTransient<SitesDataSourceProvider.MyServices>();
-            services.TryAddTransient<AppFilesDataSourceProvider>();
-            services.TryAddTransient<AppFilesDataSourceProvider.MyServices>();
-            services.TryAddTransient(typeof(AdamDataSourceProvider<,>));
-            services.TryAddTransient(typeof(AdamDataSourceProvider<,>.MyServices));
-            services.TryAddTransient<IAppDataSourcesLoader, AppDataSourcesLoader>();
+        // v15 DataSource Dependencies
+        services.TryAddTransient<SitesDataSourceProvider.MyServices>();
+        services.TryAddTransient<AppFilesDataSourceProvider>();
+        services.TryAddTransient<AppFilesDataSourceProvider.MyServices>();
+        services.TryAddTransient(typeof(AdamDataSourceProvider<,>));
+        services.TryAddTransient(typeof(AdamDataSourceProvider<,>.MyServices));
+        services.TryAddTransient<IAppDataSourcesLoader, AppDataSourcesLoader>();
 
-            // v15 EditUi Resources
-            services.TryAddTransient<EditUiResources>();
+        // v15 EditUi Resources
+        services.TryAddTransient<EditUiResources>();
 
-            // v15
-            services.TryAddTransient<DynamicCodeDataSources>();
+        // v15
+        services.TryAddTransient<DynamicCodeDataSources>();
 
-            // v16 DynamicJacket and DynamicRead factories
-            services.TryAddTransient<CodeDataWrapper>();
-            services.TryAddTransient<CodeJsonWrapper>();
-            services.TryAddTransient<WrapObjectTyped>();
-            services.TryAddTransient<WrapObjectTypedItem>();
+        // v16 DynamicJacket and DynamicRead factories
+        services.TryAddTransient<CodeDataWrapper>();
+        services.TryAddTransient<CodeJsonWrapper>();
+        services.TryAddTransient<WrapObjectTyped>();
+        services.TryAddTransient<WrapObjectTypedItem>();
 
-            // Add possibly missing fallback services
-            // This must always be at the end here so it doesn't accidentally replace something we actually need
-            services
-                .AddSxcCoreLookUps()
-                .AddServicesAndKits()
-                .AddCmsContext()
-                .ExternalConfig()
-                .AddKoi()
-                .AddSxcCoreFallbackServices();
+        // Add possibly missing fallback services
+        // This must always be at the end here so it doesn't accidentally replace something we actually need
+        services
+            .AddSxcCoreLookUps()
+            .AddServicesAndKits()
+            .AddCmsContext()
+            .ExternalConfig()
+            .AddKoi()
+            .AddSxcCoreFallbackServices();
 
-            return services;
-        }
+        return services;
+    }
 
-        public static IServiceCollection AddCmsContext(this IServiceCollection services)
-        {
-            services.TryAddTransient<ICmsContext, CmsContext>();
+    public static IServiceCollection AddCmsContext(this IServiceCollection services)
+    {
+        services.TryAddTransient<ICmsContext, CmsContext>();
 
-            // v13 Site
-            services.TryAddTransient<ICmsSite, CmsSite>();
+        // v13 Site
+        services.TryAddTransient<ICmsSite, CmsSite>();
 
-            return services;
-        }
+        return services;
+    }
 
-        public static IServiceCollection ExternalConfig(this IServiceCollection services)
-        {
-            // new v15
-            services.TryAddTransient<GoogleMapsSettings>();
-            return services;
-        }
+    public static IServiceCollection ExternalConfig(this IServiceCollection services)
+    {
+        // new v15
+        services.TryAddTransient<GoogleMapsSettings>();
+        return services;
+    }
 
-        public static IServiceCollection AddKoi(this IServiceCollection services)
-        {
-            services.TryAddTransient<Connect.Koi.KoiCss.Dependencies>();
-            services.TryAddTransient<Connect.Koi.ICss, Connect.Koi.KoiCss>();
+    public static IServiceCollection AddKoi(this IServiceCollection services)
+    {
+        services.TryAddTransient<Connect.Koi.KoiCss.Dependencies>();
+        services.TryAddTransient<Connect.Koi.ICss, Connect.Koi.KoiCss>();
 
-            return services;
-        }
+        return services;
+    }
 
         
-        public static IServiceCollection AddNetVariations(this IServiceCollection services)
-        {
+    public static IServiceCollection AddNetVariations(this IServiceCollection services)
+    {
 #if NETFRAMEWORK
-            // WebForms implementations
-            services.TryAddScoped<IHttp, HttpNetFramework>();
+        // WebForms implementations
+        services.TryAddScoped<IHttp, HttpNetFramework>();
 #else
             services.TryAddTransient<IHttp, HttpNetCore>();
 #endif
-            return services;
-        }
-        
+        return services;
     }
+        
 }
