@@ -151,7 +151,4 @@
       <Name>ToSic.Sxc</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Dnn\Run\Capabilities\" />
-  </ItemGroup>
 </Project>

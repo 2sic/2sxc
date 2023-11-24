@@ -5,7 +5,7 @@ using DotNetNuke.Entities.Tabs;
 
 namespace ToSic.Sxc.Dnn.Pages
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ModuleWithContent
     {
         public Guid ContentGroup;

@@ -2,7 +2,6 @@
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Eav.Helpers;
@@ -10,7 +9,6 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Help;
-using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApiRouting;
 
@@ -35,7 +33,7 @@ namespace ToSic.Sxc.Dnn
         {
             var l = Log.Fn<string>();
             var appFolder = GetAppFolder(request, true);
-            var appFolderVirtualPath = Path.Combine(((DnnSite)site).AppsRootRelative, appFolder).ForwardSlash();
+            var appFolderVirtualPath = Path.Combine(site.AppsRootPhysical, appFolder).ForwardSlash();
             return l.Return(appFolderVirtualPath, $"Ok, AppFolder Virtual Path: {appFolderVirtualPath}");
         }
 

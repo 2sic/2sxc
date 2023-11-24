@@ -100,7 +100,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
                 var edition = GetEdition(routeData);
                 l.A($"Edition: {edition}");
 
-                var site = (DnnSite)sp.Build<ISite>(log);
+                var site = sp.Build<ISite>(log);
 
                 // First check local app (in this site), then global
                 var descriptor = DescriptorIfExists(log, request, site, appFolder, edition, controllerTypeName, false);
@@ -123,11 +123,11 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
         }
 
-        private HttpControllerDescriptor DescriptorIfExists(ILog log, HttpRequestMessage request, DnnSite site, string appFolder, string edition, string controllerTypeName, bool shared)
+        private HttpControllerDescriptor DescriptorIfExists(ILog log, HttpRequestMessage request, ISite site, string appFolder, string edition, string controllerTypeName, bool shared)
         {
             var l = log.Fn<HttpControllerDescriptor>();
             var controllerFolder = Path
-                .Combine(shared ? site.SharedAppsRootRelative : site.AppsRootRelative, appFolder, edition + "api/")
+                .Combine(shared ? site.SharedAppsRootRelative() : site.AppsRootPhysical, appFolder, edition + "api/")
                 .ForwardSlash();
             var controllerPath = Path.Combine(controllerFolder, $"{controllerTypeName}.cs");
             l.A($"Controller Folder: '{controllerFolder}' Path: '{controllerPath}'");

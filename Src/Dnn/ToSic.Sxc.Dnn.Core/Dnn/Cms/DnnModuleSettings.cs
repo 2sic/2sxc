@@ -1,7 +1,7 @@
 ﻿using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 
-namespace ToSic.SexyContent.Environment.Dnn7
+namespace ToSic.Sxc.Dnn.Cms
 {
     internal class ModuleSettingsHelper 
     {

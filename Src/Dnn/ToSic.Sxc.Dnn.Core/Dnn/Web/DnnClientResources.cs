@@ -18,7 +18,7 @@ using ToSic.Sxc.Web.Url;
 namespace ToSic.Sxc.Dnn.Web
 {
     [PrivateApi]
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class DnnClientResources: ServiceBase
     {
         /// <summary>

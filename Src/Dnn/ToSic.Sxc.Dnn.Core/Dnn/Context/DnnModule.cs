@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Apps;
@@ -15,7 +14,7 @@ namespace ToSic.Sxc.Dnn.Context
     /// <summary>
     /// The DNN implementation of a Block Container (a Module).
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     [PrivateApi("this is just internal, external users don't really have anything to do with this")]
     public class DnnModule: Module<ModuleInfo>
     {

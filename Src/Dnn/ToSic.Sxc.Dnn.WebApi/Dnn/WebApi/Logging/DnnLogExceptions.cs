@@ -26,8 +26,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Logging
                 {
                     // must to ContainsKey checks, otherwise we get too many errors which is a problem while debugging
                     // var log = logEntry.Log; // context.Request.Properties[DnnConstants.EavLogKey] as ILog;
-                    var dnnContext = context.Request.Properties.TryGetValue(DnnConstants.DnnContextKey, out var ctxObj) // .ContainsKey(DnnConstants.DnnContextKey) 
-                        ? ctxObj as DnnContext // context.Request.Properties[DnnConstants.DnnContextKey] as DnnContext
+                    var dnnContext = context.Request.Properties.TryGetValue(DnnConstants.DnnContextKey, out var ctxObj)
+                        ? ctxObj as IDnnContext
                         : null;
                     DnnLogging.LogToDnn("2sxc-Api", "Auto-Log Exception", logEntry.Log, dnnContext, force: true);
                 }

@@ -10,7 +10,7 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Dnn.Web
 {
     [PrivateApi]
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class DnnJsApiHeader: HelperBase
     {
         private readonly IJsApiService _dnnJsApiService;

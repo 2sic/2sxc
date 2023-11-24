@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using DotNetNuke.Entities.Portals;
+﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.DI;
@@ -13,9 +12,7 @@ namespace ToSic.Sxc.Dnn.Context
     /// A Dnn Page which will be auto-initialized on creation
     /// Important for scenarios where we don't have a module to fill in the details
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [PrivateApi("this is just internal, external users don't really have anything to do with this")]
-    public class DnnPage: Page
+    internal class DnnPage: Page
     {
         public DnnPage(LazySvc<IHttp> httpLazy) : base(httpLazy)
         {

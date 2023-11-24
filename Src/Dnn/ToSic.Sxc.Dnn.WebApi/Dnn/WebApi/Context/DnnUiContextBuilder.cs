@@ -3,8 +3,8 @@ using DotNetNuke.Entities.Portals;
 using System.Web;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Lib.Data;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.Context;
@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         private readonly RemoteRouterLink _remoteRouterLink;
         private readonly PortalSettings _portal = PortalSettings.Current;
 
-        private ModuleInfo Module => (_ctxResolver.BlockContextOrNull()?.Module as DnnModule)?.GetContents();
+        private ModuleInfo Module => (_ctxResolver.BlockContextOrNull()?.Module as IWrapper<ModuleInfo>)?.GetContents();
 
         public DnnUiContextBuilder(IContextResolver ctxResolver, RemoteRouterLink remoteRouterLink, MyServices deps) : base(deps)
         {
@@ -78,7 +78,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         /// <returns></returns>
         protected override string GetGettingStartedUrl()
         {
-            if (!(App is IApp app)) return "";
+            if (App is not { } app) return "";
 
             var gsUrl = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.GettingStarted,

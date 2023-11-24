@@ -25,7 +25,7 @@ using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Dnn.Services
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     [PrivateApi]
     public class DnnPageChanges : ServiceBase
     {

@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Logging
                 DnnLogging.LogToDnn("2sxc-Api", 
                     actionContext.Request.RequestUri.PathAndQuery,
                     logStoreEntry.Log, 
-                    dnnContext as DnnContext);
+                    dnnContext as IDnnContext);
             }
             catch
             {

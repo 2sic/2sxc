@@ -10,7 +10,7 @@ using System.Web.Http.Dispatcher;
 namespace ToSic.Sxc.Dnn940
 {
     // ReSharper disable once UnusedMember.Global
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class RegisterWebApiActivator : IServiceRouteMapper
     {
         /// <summary>

@@ -9,7 +9,7 @@ using ToSic.Sxc.Search;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Dnn.Web
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IEngineDnnOldCompatibility
     {
         bool OldAutoLoadJQueryAndRvt { get; }

@@ -1,22 +1,21 @@
-﻿using DotNetNuke.Entities.Modules;
-using DotNetNuke.Services.Localization;
-using System;
+﻿using System;
 using System.Linq;
+using DotNetNuke.Entities.Modules;
+using DotNetNuke.Services.Localization;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Run;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Run;
 
-
-namespace ToSic.Sxc.Dnn.Run
+namespace ToSic.Sxc.Dnn.Cms
 {
     internal class DnnModuleUpdater : ServiceBase, IPlatformModuleUpdater
     {

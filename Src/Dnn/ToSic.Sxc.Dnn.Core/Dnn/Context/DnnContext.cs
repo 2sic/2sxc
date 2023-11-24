@@ -2,17 +2,13 @@
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Entities.Users;
-using System.ComponentModel;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
 
 namespace ToSic.Sxc.Dnn.Context
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [PrivateApi("this is just internal, external users don't really have anything to do with this")]
-    public class DnnContext : IDnnContext, INeedsDynamicCodeRoot
+    internal class DnnContext : IDnnContext, INeedsDynamicCodeRoot
     {
         /// <summary>
         /// Build DNN Helper

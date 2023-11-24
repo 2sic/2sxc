@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Web.Hosting;
-using DotNetNuke.Common;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
@@ -18,7 +17,6 @@ using DotNetNuke.Services.Localization;
 using Microsoft.EntityFrameworkCore.Internal;
 using ToSic.Eav.Internal.Features;
 using static ToSic.Eav.Context.IZoneCultureResolverExtensions;
-using System.ComponentModel;
 using ISite = ToSic.Eav.Context.ISite;
 
 namespace ToSic.Sxc.Dnn.Context
@@ -26,9 +24,7 @@ namespace ToSic.Sxc.Dnn.Context
     /// <summary>
     /// This is a DNN implementation of a Tenant-object. 
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [PrivateApi("this is just internal, external users don't really have anything to do with this")]
-    public sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
+    internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     {
 
         #region Constructors and DI
@@ -240,17 +236,14 @@ namespace ToSic.Sxc.Dnn.Context
         private string _urlRoot;
 
         [PrivateApi]
-        public override string AppsRootPhysical => AppsRootRelative;
+        public override string AppsRootPhysical => Path.Combine(UnwrappedSite.HomeDirectory, AppConstants.AppsRootFolder);
 
 
         [PrivateApi]
         public override string AppAssetsLinkTemplate => AppsRootPhysical + "/" + AppConstants.AppFolderPlaceholder;
         
-        internal string AppsRootRelative => Path.Combine(UnwrappedSite.HomeDirectory, AppConstants.AppsRootFolder);
-        internal string SharedAppsRootRelative => Path.Combine(Globals.HostPath, AppConstants.AppsRootFolder);
-
         [PrivateApi]
-        public override string AppsRootPhysicalFull => HostingEnvironment.MapPath(AppsRootRelative);
+        public override string AppsRootPhysicalFull => HostingEnvironment.MapPath(AppsRootPhysical);
 
         /// <inheritdoc />
         public override string ContentPath => UnwrappedSite.HomeDirectory;

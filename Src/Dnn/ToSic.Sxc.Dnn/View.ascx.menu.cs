@@ -1,11 +1,10 @@
-﻿#pragma warning disable 1591
-using System;
+﻿using System;
 using DotNetNuke.Entities.Modules.Actions;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
+using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Dnn.Context;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -59,7 +58,7 @@ namespace ToSic.Sxc.Dnn
                     SecurityAccessLevel.Edit, true, false);
             }
 
-            var user = GetService<DnnUser>();
+            var user = GetService<IUser>();
 
             // Edit Template Button
             if (user.IsSiteDeveloper && appIsKnown && block.View != null)

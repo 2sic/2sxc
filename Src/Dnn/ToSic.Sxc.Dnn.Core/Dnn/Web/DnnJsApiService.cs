@@ -14,7 +14,7 @@ using ToSic.Sxc.Web.JsContext;
 namespace ToSic.Sxc.Dnn.Web
 {
     [PrivateApi]
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class DnnJsApiService : ServiceBase, IJsApiService
     {
         public const string PortalIdParamName = "portalId";

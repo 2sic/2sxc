@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Dnn.Pages
     /// Goal is that this will be more standardized and work across all platforms.
     /// So when we do that, this should implement that interface and become internal.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class DnnPages: HelperBase
     {
         public DnnPages(ILog parentLog) : base(parentLog, "Dnn.Pages")

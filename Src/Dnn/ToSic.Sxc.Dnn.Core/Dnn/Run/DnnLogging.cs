@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.ComponentModel;
 using System.Web.Http;
 using DotNetNuke.Services.Log.EventLog;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Dnn.Context;
 
 namespace ToSic.Sxc.Dnn.Run
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static class DnnLogging
     {
         public const int MaxDuration = 10;
 
-        public static void LogToDnn(string key, string message, ILog log = null, DnnContext dnnContext = null, bool force = false)
+        public static void LogToDnn(string key, string message, ILog log = null, IDnnContext dnnContext = null, bool force = false)
         {
             if (!force || !EnableLogging(GlobalConfiguration.Configuration.Properties)) return;
 
@@ -56,7 +54,7 @@ namespace ToSic.Sxc.Dnn.Run
             catch { /* ignore */ }
         }
 
-        private static void AttachDnnStateIfPossible(DnnContext dnn, LogInfo logInfo)
+        private static void AttachDnnStateIfPossible(IDnnContext dnn, LogInfo logInfo)
         {
             try
             {
@@ -97,7 +95,7 @@ namespace ToSic.Sxc.Dnn.Run
             var prop = GlobalConfiguration.Configuration.Properties;
             prop.GetOrAdd(DnnConstants.AdvancedLoggingEnabledKey, duration > 0);
             var timeout = DateTime.Now.AddMinutes(duration);
-            prop.AddOrUpdate(DnnConstants.AdvancedLoggingTillKey, timeout, (a, b) => timeout);
+            prop.AddOrUpdate(DnnConstants.AdvancedLoggingTillKey, timeout, (_, _) => timeout);
             return $"Extended logging activated for {duration} minutes to {timeout}";
         }
     }

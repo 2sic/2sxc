@@ -327,12 +327,12 @@ namespace ToSic.Sxc.Dnn.Search
             return l.Return(streamsToIndex, $"{streamsToIndex.Length}");
         }
 
-        private ICustomizeSearch CreateAndInitViewController(DnnSite site, IBlock block)
+        private ICustomizeSearch CreateAndInitViewController(ISite site, IBlock block)
         {
             var l = Log.Fn<ICustomizeSearch>();
             // 1. Get and compile the view.ViewController
             var path = Path
-                .Combine(Block.View.IsShared ? site.SharedAppsRootRelative : site.AppsRootRelative, block.Context.AppState.Folder)
+                .Combine(Block.View.IsShared ? site.SharedAppsRootRelative() : site.AppsRootPhysical, block.Context.AppState.Folder)
                 .ForwardSlash();
             l.A($"compile ViewController class on path: {path}/{Block.View.ViewController}");
             var instance = _codeCompiler.New().InstantiateClass(virtualPath: block.View.ViewController, 

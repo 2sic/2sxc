@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Dnn.Install
     /// Helper class to ensure that the an app is ready.
     /// It will have to do various file accesses - so once it knows a module is ready, it will cache the result.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class DnnReadyCheckTurbo : ServiceBase
     {
         private readonly LazySvc<AppFolderInitializer> _appFolderInitializerLazy;
