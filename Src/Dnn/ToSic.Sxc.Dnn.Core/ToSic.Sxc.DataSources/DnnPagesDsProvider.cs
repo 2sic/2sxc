@@ -12,7 +12,7 @@ using ToSic.Lib.Logging;
 namespace ToSic.Sxc.DataSources
 {
     [PrivateApi]
-    public class DnnPagesDsProvider: PagesDataSourceProvider
+    internal class DnnPagesDsProvider: PagesDataSourceProvider
     {
         private const int DnnNoParent = -1;
         private const int DnnLevelOffset = 1;

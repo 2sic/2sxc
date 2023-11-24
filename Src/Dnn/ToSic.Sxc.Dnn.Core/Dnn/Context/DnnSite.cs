@@ -18,12 +18,15 @@ using DotNetNuke.Services.Localization;
 using Microsoft.EntityFrameworkCore.Internal;
 using ToSic.Eav.Internal.Features;
 using static ToSic.Eav.Context.IZoneCultureResolverExtensions;
+using System.ComponentModel;
+using ISite = ToSic.Eav.Context.ISite;
 
 namespace ToSic.Sxc.Dnn.Context
 {
     /// <summary>
     /// This is a DNN implementation of a Tenant-object. 
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [PrivateApi("this is just internal, external users don't really have anything to do with this")]
     public sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     {

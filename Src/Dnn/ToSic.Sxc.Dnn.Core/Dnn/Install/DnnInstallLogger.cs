@@ -9,7 +9,7 @@ using static System.IO.Directory;
 
 namespace ToSic.Sxc.Dnn.Install
 {
-    public class DnnInstallLogger: ServiceBase
+    internal class DnnInstallLogger: ServiceBase
     {
         private readonly bool _saveUnimportantDetails;
 

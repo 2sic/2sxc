@@ -5,7 +5,7 @@ using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.Sxc.Dnn.Cms
 {
-    public partial class DnnPagePublishing
+    partial class DnnPagePublishing
     {
         internal class ModuleVersions: HelperBase
         {

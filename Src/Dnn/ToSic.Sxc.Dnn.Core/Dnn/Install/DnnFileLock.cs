@@ -9,12 +9,7 @@ namespace ToSic.Sxc.Dnn.Install
         internal string LockFolder => HostingEnvironment.MapPath(DnnConstants.LogDirectory);
         private FileStream _lockFile;
         // Acquire lock
-        internal FileStream Set()
-        {
-            return _lockFile ??
-                   (_lockFile =
-                       new FileStream(LockFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read));
-        }
+        internal FileStream Set() => _lockFile ??= new FileStream(LockFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
 
         // Close and dispose lock
         internal void Release()

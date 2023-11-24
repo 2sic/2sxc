@@ -9,7 +9,7 @@ using IContextResolver = ToSic.Sxc.Context.IContextResolver;
 
 namespace ToSic.Sxc.Dnn.ImportExport
 {
-    public class DnnXmlExporter: XmlExporter
+    internal class DnnXmlExporter: XmlExporter
     {
         #region Constructor / DI
 

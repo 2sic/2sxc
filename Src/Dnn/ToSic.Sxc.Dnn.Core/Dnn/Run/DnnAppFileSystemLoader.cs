@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Dnn.Run
     /// <summary>
     /// Special replacement of the FileSystemLoader - makes sure that unreliable Dnn initialization happens if necessary
     /// </summary>
-    public class DnnAppFileSystemLoader : AppFileSystemLoader
+    internal class DnnAppFileSystemLoader : AppFileSystemLoader
     {
         /// <summary>
         /// Constructor for DI - you must always call Init(...) afterwards

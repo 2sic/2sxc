@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
@@ -8,6 +9,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Dnn.Pages
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class DnnPages: HelperBase
     {
         public DnnPages(ILog parentLog) : base(parentLog, "Dnn.Pages")

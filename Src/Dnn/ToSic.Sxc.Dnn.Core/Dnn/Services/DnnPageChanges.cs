@@ -2,6 +2,7 @@
 using DotNetNuke.Web.Client.Providers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -24,6 +25,7 @@ using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Dnn.Services
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [PrivateApi]
     public class DnnPageChanges : ServiceBase
     {

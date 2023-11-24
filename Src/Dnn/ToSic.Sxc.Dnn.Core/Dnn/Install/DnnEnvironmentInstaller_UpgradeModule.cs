@@ -10,7 +10,7 @@ using Exception = System.Exception;
 
 namespace ToSic.Sxc.Dnn.Install
 {
-    public partial class DnnEnvironmentInstaller
+    partial class DnnEnvironmentInstaller
     {
         internal string UpgradeModule(string version, bool closeWhenDone)
         {

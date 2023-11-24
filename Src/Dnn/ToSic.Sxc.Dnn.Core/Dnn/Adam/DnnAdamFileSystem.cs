@@ -13,7 +13,7 @@ using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.Dnn.Adam
 {
-    public class DnnAdamFileSystem : ServiceBase, IAdamFileSystem<int, int>
+    internal class DnnAdamFileSystem : ServiceBase, IAdamFileSystem<int, int>
     {
         #region Constructor / DI / Init
 

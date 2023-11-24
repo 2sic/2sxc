@@ -1,6 +1,7 @@
 ﻿using DotNetNuke.Entities.Modules;
 using System;
 using System.Collections.Concurrent;
+using System.ComponentModel;
 using System.IO;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
@@ -14,6 +15,7 @@ namespace ToSic.Sxc.Dnn.Install
     /// Helper class to ensure that the an app is ready.
     /// It will have to do various file accesses - so once it knows a module is ready, it will cache the result.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class DnnReadyCheckTurbo : ServiceBase
     {
         private readonly LazySvc<AppFolderInitializer> _appFolderInitializerLazy;

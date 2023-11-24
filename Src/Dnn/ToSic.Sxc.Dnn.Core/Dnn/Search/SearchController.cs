@@ -12,24 +12,22 @@ using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
-using ToSic.Lib.DI;
 using ToSic.Eav.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.DI;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Search;
 using static System.StringComparer;
 
-
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Search
+namespace ToSic.Sxc.Dnn.Search
 {
     /// <summary>
     /// This will construct data for the search indexer in DNN.
@@ -40,7 +38,7 @@ namespace ToSic.Sxc.Search
     /// But the code is 99% clean, so it would be easy to split into dnn/Oqtane versions once ready.
     /// The only difference seems to be exception logging. 
     /// </remarks>
-    public class SearchController : ServiceBase
+    internal class SearchController : ServiceBase
     {
         private readonly LazySvc<ILogStore> _logStore;
 

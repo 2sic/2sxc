@@ -6,7 +6,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Dnn.Services
 {
-    public class DnnUsersService : UsersServiceBase
+    internal class DnnUsersService : UsersServiceBase
     {
         private readonly LazySvc<DnnSecurity> _dnnSecurity;
 

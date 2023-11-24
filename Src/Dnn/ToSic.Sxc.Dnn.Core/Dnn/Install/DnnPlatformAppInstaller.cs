@@ -13,7 +13,7 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Dnn.Install
 {
-    public class DnnPlatformAppInstaller: ServiceBase, IPlatformAppInstaller
+    internal class DnnPlatformAppInstaller: ServiceBase, IPlatformAppInstaller
     {
         private readonly GenWorkPlus<WorkViews> _workViews;
         private readonly LazySvc<IAppStates> _appStatesLazy;

@@ -10,7 +10,7 @@ using ToSic.Lib.Logging;
 namespace ToSic.Sxc.DataSources
 {
     [PrivateApi]
-    public class DnnSitesDsProvider: SitesDataSourceProvider
+    internal class DnnSitesDsProvider: SitesDataSourceProvider
     {
         public DnnSitesDsProvider(MyServices services) : base(services, "Dnn.Sites")
         { }

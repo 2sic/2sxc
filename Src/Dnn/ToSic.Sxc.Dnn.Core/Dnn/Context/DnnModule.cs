@@ -1,19 +1,21 @@
 ﻿using System;
+using System.ComponentModel;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
+using ISite = ToSic.Eav.Context.ISite;
 
 namespace ToSic.Sxc.Dnn.Context
 {
     /// <summary>
     /// The DNN implementation of a Block Container (a Module).
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [PrivateApi("this is just internal, external users don't really have anything to do with this")]
     public class DnnModule: Module<ModuleInfo>
     {

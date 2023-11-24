@@ -10,7 +10,7 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Dnn.ImportExport
 {
-    public class DnnImportExportEnvironment : ImportExportEnvironmentBase
+    internal class DnnImportExportEnvironment : ImportExportEnvironmentBase
     {
         #region Constructors
 

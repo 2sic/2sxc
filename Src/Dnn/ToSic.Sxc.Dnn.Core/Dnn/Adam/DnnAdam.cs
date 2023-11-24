@@ -11,14 +11,14 @@ namespace ToSic.Sxc.Dnn.Adam
         internal static File<int, int> AsDnn(this IFile file)
         {
             if (file == null) return null;
-            if (!(file is File<int, int> recast)) throw new Exception("Tried to cast IFile to internal type, failed");
+            if (file is not File<int, int> recast) throw new Exception("Tried to cast IFile to internal type, failed");
             return recast;
         }
 
         internal static Folder<int, int> AsDnn(this IFolder folder)
         {
             if (folder == null) return null;
-            if (!(folder is Folder<int, int> recast))
+            if (folder is not Folder<int, int> recast)
                 throw new Exception("Tried to cast IFolder to internal type, failed");
             return recast;
 

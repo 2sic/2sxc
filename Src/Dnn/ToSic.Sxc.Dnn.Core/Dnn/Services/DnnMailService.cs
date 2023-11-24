@@ -9,7 +9,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Dnn.Services
 {
-    public class DnnMailService : MailServiceBase
+    internal class DnnMailService : MailServiceBase
     {
         public DnnMailService(LazySvc<IUser> userLazy) : base(userLazy)
         { }

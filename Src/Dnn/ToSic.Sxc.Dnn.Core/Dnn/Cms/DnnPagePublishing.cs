@@ -25,7 +25,7 @@ using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.Dnn.Cms
 {
-    public partial class DnnPagePublishing : ServiceBase, IPagePublishing
+    internal partial class DnnPagePublishing : ServiceBase, IPagePublishing
     {
 
         #region DI Constructors and More

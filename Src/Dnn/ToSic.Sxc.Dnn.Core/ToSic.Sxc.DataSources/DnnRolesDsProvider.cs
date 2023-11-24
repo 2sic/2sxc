@@ -12,7 +12,7 @@ namespace ToSic.Sxc.DataSources
     /// <summary>
     /// Deliver a list of roles from the Dnn.
     /// </summary>
-    public class DnnRolesDsProvider : RolesDataSourceProvider
+    internal class DnnRolesDsProvider : RolesDataSourceProvider
     {
         public DnnRolesDsProvider() : base("Dnn.Roles")
         { }

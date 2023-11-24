@@ -18,7 +18,7 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Dnn.Run
 {
-    public class DnnModuleUpdater : ServiceBase, IPlatformModuleUpdater
+    internal class DnnModuleUpdater : ServiceBase, IPlatformModuleUpdater
     {
         #region Constructor and DI
 

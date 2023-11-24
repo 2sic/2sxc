@@ -12,7 +12,7 @@ using ToSic.Sxc.Dnn.Run;
 namespace ToSic.Sxc.DataSources
 {
 
-    public class DnnUsersDsProvider : UsersDataSourceProvider
+    internal class DnnUsersDsProvider : UsersDataSourceProvider
     {
         private readonly LazySvc<DnnSecurity> _dnnSecurity;
 

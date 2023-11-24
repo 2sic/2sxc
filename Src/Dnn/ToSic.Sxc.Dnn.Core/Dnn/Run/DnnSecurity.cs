@@ -12,6 +12,7 @@ using static ToSic.Sxc.Dnn.DnnSxcSettings;
 
 namespace ToSic.Sxc.Dnn.Run
 {
+    // TODO: probably change this to use an interface so we can make it internal
     public class DnnSecurity : ServiceBase
     {
         private readonly LazySvc<RoleController> _roleController;

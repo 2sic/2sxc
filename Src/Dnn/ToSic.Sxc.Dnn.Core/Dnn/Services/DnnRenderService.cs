@@ -8,7 +8,7 @@ using Page = System.Web.UI.Page;
 
 namespace ToSic.Sxc.Dnn.Services
 {
-    public class DnnRenderService : RenderService
+    internal class DnnRenderService : RenderService
     {
         private readonly LazySvc<DnnPageChanges> _dnnPageChanges;
         private readonly LazySvc<DnnClientResources> _dnnClientResources;

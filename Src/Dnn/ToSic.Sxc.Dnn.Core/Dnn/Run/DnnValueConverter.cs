@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Dnn.Run
     /// The DNN implementation of the <see cref="IValueConverter"/> which converts "file:22" or "page:5" to the url,
     /// </summary>
     [PrivateApi("Hide implementation - not useful for external documentation")]
-    public class DnnValueConverter : ValueConverterBase
+    internal class DnnValueConverter : ValueConverterBase
     {
         public const string CurrentLanguage = "current";
 
@@ -79,27 +79,7 @@ namespace ToSic.Sxc.Dnn.Run
                 ? PrefixPage + Separator + tabInfo.TabID
                 : potentialFilePath;
         }
-
-        ///// <summary>
-        ///// Will take a link like "File:17" and convert to "Faq/screenshot1.jpg"
-        ///// It will always deliver a relative path to the portal root
-        ///// </summary>
-        ///// <param name="itemGuid">the item we're in - important for the feature which checks if the file is in this items ADAM</param>
-        ///// <param name="originalValue"></param>
-        ///// <returns></returns>
-        //private string TryToResolveDnnCodeToLink(Guid itemGuid, string originalValue)
-        //{
-        //    try
-        //    {
-        //        return TryToResolveCodeToLink(itemGuid, originalValue);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        LogConversionExceptions(originalValue, e);
-        //        return originalValue;
-        //    }
-
-        //}
+        
 
         protected override void LogConversionExceptions(string originalValue, Exception e)
         {

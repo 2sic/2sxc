@@ -9,7 +9,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Dnn.Cms
 {
-    public class DnnPagePublishingGetSettings : PagePublishingGetSettingsBase
+    internal class DnnPagePublishingGetSettings : PagePublishingGetSettingsBase
     {
         #region DI Constructors and More
         

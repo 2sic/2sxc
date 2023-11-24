@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Dnn.Code
     /// goal is that we can hook into certain page lifecycle events to ensure changes
     /// happen to the page when necessary
     /// </summary>
-    public class DnnDynamicCodeService: DynamicCodeService
+    internal class DnnDynamicCodeService: DynamicCodeService
     {
         public new class MyScopedServices: MyServicesBase
         {

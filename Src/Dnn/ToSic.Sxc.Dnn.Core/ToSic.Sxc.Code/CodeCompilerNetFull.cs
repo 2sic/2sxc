@@ -7,7 +7,7 @@ using ToSic.Lib.Documentation;
 namespace ToSic.Sxc.Code
 {
     [PrivateApi]
-    public class CodeCompilerNetFull: CodeCompiler
+    internal class CodeCompilerNetFull: CodeCompiler
     {
         public CodeCompilerNetFull(IServiceProvider serviceProvider) : base(serviceProvider)
         { }

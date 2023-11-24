@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.ComponentModel;
 using System.Web.Http;
 using DotNetNuke.Services.Log.EventLog;
 using ToSic.Lib.Logging;
@@ -7,6 +8,7 @@ using ToSic.Sxc.Dnn.Context;
 
 namespace ToSic.Sxc.Dnn.Run
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static class DnnLogging
     {
         public const int MaxDuration = 10;

@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Abstractions;
 using System;
+using ToSic.Eav.Data;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
@@ -15,9 +16,9 @@ namespace ToSic.Sxc.Dnn.Services
     /// The DNN implementation of the <see cref="ILinkService"/>.
     /// </summary>
     [PrivateApi("This implementation shouldn't be visible")]
-    public class DnnLinkService : LinkServiceBase
+    internal class DnnLinkService : LinkServiceBase
     {
-        public DnnLinkService(ImgResizeLinker imgLinker, LazySvc<DnnValueConverter> dnnValueConverterLazy,
+        public DnnLinkService(ImgResizeLinker imgLinker, LazySvc<IValueConverter> dnnValueConverterLazy,
             LazySvc<ILinkPaths> linkPathsLazy, LazySvc<INavigationManager> navigationManager) : base(imgLinker, linkPathsLazy)
         {
             ConnectServices(
@@ -26,12 +27,12 @@ namespace ToSic.Sxc.Dnn.Services
             );
         }
 
-        private readonly LazySvc<DnnValueConverter> _dnnValueConverterLazy;
+        private readonly LazySvc<IValueConverter> _dnnValueConverterLazy;
         private readonly LazySvc<INavigationManager> _navigationManager;
 
         [PrivateApi] private IDnnContext Dnn => _dnn ??= _DynCodeRoot.GetService<IDnnContext>();
         private IDnnContext _dnn;
-        [PrivateApi] private DnnValueConverter DnnValueConverter => _dnnValueConverter ??= _dnnValueConverterLazy.Value;
+        [PrivateApi] private DnnValueConverter DnnValueConverter => _dnnValueConverter ??= _dnnValueConverterLazy.Value as DnnValueConverter;
         private DnnValueConverter _dnnValueConverter;
 
         protected override string ToApi(string api, string parameters = null) 

@@ -6,7 +6,7 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Dnn.Install
 {
-    public partial class DnnEnvironmentInstaller: ServiceBase, IEnvironmentInstaller
+    internal partial class DnnEnvironmentInstaller: ServiceBase, IEnvironmentInstaller
     {
         public static bool SaveUnimportantDetails = true;
 

@@ -5,7 +5,7 @@ using static ToSic.Sxc.Dnn.DnnSxcSettings.Installation;
 
 namespace ToSic.Sxc.Dnn.Install
 {
-    public partial class DnnEnvironmentInstaller
+    partial class DnnEnvironmentInstaller
     {
 
         public bool ResumeAbortedUpgrade()

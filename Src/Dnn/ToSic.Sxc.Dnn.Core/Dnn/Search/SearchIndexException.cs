@@ -2,13 +2,13 @@
 using DotNetNuke.Entities.Modules;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Search
+namespace ToSic.Sxc.Dnn.Search
 {
     /// <summary>
     /// Special search exception, so these exceptions can be handled in a special way if necessary.
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class SearchIndexException : Exception
+    internal class SearchIndexException : Exception
     {
         public SearchIndexException(ModuleInfo module, Exception innerException, string source, int count, int max)
             : base(

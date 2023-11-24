@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Web.Security;
 using DotNetNuke.Entities.Portals;
@@ -14,6 +15,7 @@ using static ToSic.Sxc.Dnn.Run.DnnSecurity;
 
 namespace ToSic.Sxc.Dnn.Context
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [PrivateApi("this is just internal, external users don't really have anything to do with this")]
     public class DnnUser: ServiceBase, IUser<UserInfo>
     {

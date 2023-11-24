@@ -12,7 +12,7 @@ using ToSic.Sxc.WebApi;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Dnn940
 {
-    public class WebApiHttpControllerActivator : IHttpControllerActivator
+    internal class WebApiHttpControllerActivator : IHttpControllerActivator
     {
         public IHttpControllerActivator PreviousActivator { get; set; }
 

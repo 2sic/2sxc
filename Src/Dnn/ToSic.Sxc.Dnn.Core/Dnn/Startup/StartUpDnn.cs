@@ -24,11 +24,11 @@ using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Dnn.Search;
 using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.StartUp;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.Search;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 

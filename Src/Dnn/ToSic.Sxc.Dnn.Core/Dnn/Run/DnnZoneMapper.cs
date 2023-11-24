@@ -5,7 +5,6 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Languages;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
@@ -14,7 +13,7 @@ using ToSic.Sxc.Dnn.Context;
 
 namespace ToSic.Sxc.Dnn.Run
 {
-    public class DnnZoneMapper : ZoneMapperBase
+    internal class DnnZoneMapper : ZoneMapperBase
     {
 
 

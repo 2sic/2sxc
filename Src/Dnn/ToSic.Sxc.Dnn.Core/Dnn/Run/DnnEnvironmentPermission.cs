@@ -9,7 +9,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Dnn.Run
 {
-    public class DnnEnvironmentPermission : EnvironmentPermission
+    internal class DnnEnvironmentPermission : EnvironmentPermission
     {
         public DnnEnvironmentPermission() : base(DnnConstants.LogName) { }
 

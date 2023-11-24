@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn.Run
     /// <remarks>
     /// It is currently on `ToSic.Sxc.Run.IDnnContext` but we plan to move it elsewhere
     /// </remarks>
-    [PublicApi("This is DNN only, if possibly, try to use the hybrid CmsContext instead.")]
+    [PublicApi("This is DNN only, if possibly, try to use the hybrid CmsContext (v14) / MyContext (v16+) instead.")]
     public interface IDnnContext
     {
         /// <summary>

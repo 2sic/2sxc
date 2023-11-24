@@ -10,7 +10,7 @@ using ToSic.Sxc.Dnn.Context;
 
 namespace ToSic.Sxc.Dnn
 {
-    public class DnnModuleAndBlockBuilder: ModuleAndBlockBuilder
+    internal class DnnModuleAndBlockBuilder: ModuleAndBlockBuilder
     {
         public DnnModuleAndBlockBuilder(Generator<IModule> moduleGenerator, Generator<IContextOfBlock> contextGenerator, Generator<BlockFromModule> blockGenerator) : base(blockGenerator, DnnConstants.LogName)
         {

@@ -7,7 +7,7 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Dnn.Code
 {
     [PrivateApi]
-    public class DnnDynamicCodeRoot<TModel, TServiceKit> : DynamicCodeRoot<TModel, TServiceKit>, Sxc.Code.IDynamicCode, IDnnDynamicCode, IHasDynamicCodeRoot
+    internal class DnnDynamicCodeRoot<TModel, TServiceKit> : DynamicCodeRoot<TModel, TServiceKit>, Sxc.Code.IDynamicCode, IDnnDynamicCode, IHasDynamicCodeRoot
         where TModel : class
         where TServiceKit : ServiceKit
     {
