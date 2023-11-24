@@ -3,7 +3,6 @@ using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Internal.Environment;
-using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using static ToSic.Eav.Apps.AppConstants;
@@ -13,11 +12,11 @@ namespace ToSic.Sxc.Apps
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal class AppAssetThumbnail : AppAssetFile
     {
-        public AppPaths AppPaths { get; }
+        public IAppPaths AppPaths { get; }
         private readonly IApp _app;
         private readonly LazySvc<GlobalPaths> _globalPaths;
 
-        public AppAssetThumbnail(IApp app, AppPaths appPaths, LazySvc<GlobalPaths> globalPaths)
+        public AppAssetThumbnail(IApp app, IAppPaths appPaths, LazySvc<GlobalPaths> globalPaths)
         {
             AppPaths = appPaths;
             _app = app;

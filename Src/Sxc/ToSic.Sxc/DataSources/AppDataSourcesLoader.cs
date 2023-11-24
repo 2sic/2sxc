@@ -24,7 +24,7 @@ namespace ToSic.Sxc.DataSources
     {
         private const string DataSourcesFolder = "DataSources";
 
-        public AppDataSourcesLoader(ILogStore logStore, ISite site, IAppStates appStates, LazySvc<AppPaths> appPathsLazy, LazySvc<CodeCompiler> codeCompilerLazy) : base("Eav.AppDtaSrcLoad")
+        public AppDataSourcesLoader(ILogStore logStore, ISite site, IAppStates appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, LazySvc<CodeCompiler> codeCompilerLazy) : base("Eav.AppDtaSrcLoad")
         {
             ConnectServices(
                 _logStore = logStore,
@@ -37,7 +37,7 @@ namespace ToSic.Sxc.DataSources
         private readonly ILogStore _logStore;
         private readonly ISite _site;
         private readonly IAppStates _appStates;
-        private readonly LazySvc<AppPaths> _appPathsLazy;
+        private readonly LazySvc<IAppPathsMicroSvc> _appPathsLazy;
         private readonly LazySvc<CodeCompiler> _codeCompilerLazy;
 
         public (List<DataSourceInfo> data, CacheItemPolicy policy) CompileDynamicDataSources(int appId)

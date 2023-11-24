@@ -14,12 +14,12 @@ namespace ToSic.Sxc.Run
 
         public class MyServices: MyServicesBase
         {
-            internal readonly AppPaths AppPaths;
+            internal readonly IAppPathsMicroSvc AppPaths;
             internal readonly IAppStates AppStates;
             internal readonly ISite Site;
             internal readonly App NewApp;
 
-            public MyServices(ISite site, App newApp, IAppStates appStates, AppPaths appPaths)
+            public MyServices(ISite site, App newApp, IAppStates appStates, IAppPathsMicroSvc appPaths)
             {
                 ConnectServices(
                     AppPaths = appPaths,
@@ -51,9 +51,9 @@ namespace ToSic.Sxc.Run
         public override string GlobalTemplatesRoot(int zoneId, int appId) 
             => AppPaths(zoneId, appId).PhysicalPathShared;
 
-        private AppPaths AppPaths(int zoneId, int appId) => _appPaths ??= _services.AppPaths.Init(_services.Site,
+        private IAppPaths AppPaths(int zoneId, int appId) => _appPaths ??= _services.AppPaths.Init(_services.Site,
             _services.AppStates.Get(new AppIdentity(zoneId, appId)));
-        private AppPaths _appPaths;
+        private IAppPaths _appPaths;
 
 
     }

@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Web.LightSpeed
     internal class LightSpeed : ServiceBase, IOutputCache
     {
 
-        public LightSpeed(IEavFeaturesService features, LazySvc<IAppStates> appStatesLazy, LazySvc<AppPaths> appPathsLazy, LightSpeedStats lightSpeedStats, LazySvc<ICmsContext> cmsContext) : base(Constants.SxcLogName + ".Lights")
+        public LightSpeed(IEavFeaturesService features, LazySvc<IAppStates> appStatesLazy, LazySvc<IAppPathsMicroSvc> appPathsLazy, LightSpeedStats lightSpeedStats, LazySvc<ICmsContext> cmsContext) : base(Constants.SxcLogName + ".Lights")
         {
             ConnectServices(
                 LightSpeedStats = lightSpeedStats,
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Web.LightSpeed
         public LightSpeedStats LightSpeedStats { get; }
         private readonly IEavFeaturesService _features;
         private readonly LazySvc<IAppStates> _appStatesLazy;
-        private readonly LazySvc<AppPaths> _appPathsLazy;
+        private readonly LazySvc<IAppPathsMicroSvc> _appPathsLazy;
         private readonly LazySvc<ICmsContext> _cmsContext;
 
         public IOutputCache Init(int moduleId, int pageId, IBlock block)

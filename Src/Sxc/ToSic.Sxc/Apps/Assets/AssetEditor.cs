@@ -23,10 +23,10 @@ namespace ToSic.Sxc.Apps.Assets
         private readonly IUser _user;
         private readonly LazySvc<AppFolderInitializer> _appFolderInitializer;
         private readonly ISite _site;
-        private readonly AppPaths _appPaths;
+        private readonly IAppPathsMicroSvc _appPaths;
         private AppState _appState;
 
-        public AssetEditor(GenWorkPlus<WorkViews> workViews, IUser user, LazySvc<AppFolderInitializer> appFolderInitializer, ISite site, AppPaths appPaths) : base("Sxc.AstEdt")
+        public AssetEditor(GenWorkPlus<WorkViews> workViews, IUser user, LazySvc<AppFolderInitializer> appFolderInitializer, ISite site, IAppPathsMicroSvc appPaths) : base("Sxc.AstEdt")
         {
             ConnectServices(
                 _user = user,

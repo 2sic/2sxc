@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Apps
         [PrivateApi]
         public App(MyServices services, 
             LazySvc<GlobalPaths> globalPaths, 
-            LazySvc<AppPaths> appPathsLazy,
+            LazySvc<IAppPathsMicroSvc> appPathsLazy,
             Generator<IAppStates> appStates,
             Generator<AppConfigDelegate> appConfigDelegate, 
             LazySvc<CodeDataFactory> cdf,
@@ -42,15 +42,15 @@ namespace ToSic.Sxc.Apps
         }
 
         private readonly LazySvc<GlobalPaths> _globalPaths;
-        private readonly LazySvc<AppPaths> _appPathsLazy;
+        private readonly LazySvc<IAppPathsMicroSvc> _appPathsLazy;
         private readonly Generator<IAppStates> _appStates;
         private readonly Generator<AppConfigDelegate> _appConfigDelegate;
         private readonly LazySvc<CodeInfoService> _codeChanges;
         private readonly LazySvc<CodeDataFactory> _cdfLazy;
 
 
-        private AppPaths AppPaths => _appPaths.Get(() => _appPathsLazy.Value.Init(Site, AppState));
-        private readonly GetOnce<AppPaths> _appPaths = new();
+        private IAppPaths AppPaths => _appPaths.Get(() => _appPathsLazy.Value.Init(Site, AppState));
+        private readonly GetOnce<IAppPaths> _appPaths = new();
 
         #endregion
 

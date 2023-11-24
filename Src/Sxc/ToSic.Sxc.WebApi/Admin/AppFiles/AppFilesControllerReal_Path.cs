@@ -5,9 +5,11 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
     partial class AppFilesControllerReal
     {
         private string ResolveAppPath(int appId, bool global) =>
-            (_appPaths.InitDone
-                ? _appPaths
-                : _appPaths.Init(_site, _appStates.Get(appId)))
+            (
+                _appPaths.InitDone
+                    ? _appPaths
+                    : _appPaths.Init(_site, _appStates.Get(appId))
+            )
             .PhysicalPathSwitch(global);
     }
 }

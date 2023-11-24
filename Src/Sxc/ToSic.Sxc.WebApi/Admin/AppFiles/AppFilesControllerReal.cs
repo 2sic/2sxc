@@ -23,7 +23,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
             IUser user, 
             Generator<AssetEditor> assetEditorGenerator,
             IAppStates appStates,
-            AppPaths appPaths
+            IAppPathsMicroSvc appPaths
             ) : base("Bck.Assets")
         {
             
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
         private readonly Generator<AssetEditor> _assetEditorGenerator;
         private readonly AssetTemplates _assetTemplates;
         private readonly IAppStates _appStates;
-        private readonly AppPaths _appPaths;
+        private readonly IAppPathsMicroSvc _appPaths;
         private readonly IUser _user;
 
         #endregion

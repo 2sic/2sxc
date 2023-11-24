@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Apps.Work
     {
         #region Constructor / DI
 
-        public WorkAppsRemove(LazySvc<ZoneManager> zoneManagerLazy, IAppStates appStates, ISite site, AppPaths appPaths) : base("Cms.AppsRt")
+        public WorkAppsRemove(LazySvc<ZoneManager> zoneManagerLazy, IAppStates appStates, ISite site, IAppPathsMicroSvc appPaths) : base("Cms.AppsRt")
         {
             ConnectServices(
                 _zoneManagerLazy = zoneManagerLazy,
@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Apps.Work
         private readonly LazySvc<ZoneManager> _zoneManagerLazy;
         private readonly IAppStates _appStates;
         private readonly ISite _site;
-        private readonly AppPaths _appPaths;
+        private readonly IAppPathsMicroSvc _appPaths;
 
         #endregion
 

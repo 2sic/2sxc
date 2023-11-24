@@ -28,10 +28,10 @@ namespace ToSic.Sxc.Apps
         }
 
 
-        internal readonly AppPaths AppPaths;
+        internal readonly IAppPaths AppPaths;
         private readonly bool _shared;
 
-        public AppAssetFolderMain(AppPaths appPaths, string folder, bool shared)
+        public AppAssetFolderMain(IAppPaths appPaths, string folder, bool shared)
         {
             Name = folder;
             AppPaths = appPaths;
