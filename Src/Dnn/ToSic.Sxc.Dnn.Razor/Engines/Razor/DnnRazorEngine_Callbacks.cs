@@ -14,7 +14,7 @@ using ToSic.Sxc.Search;
 
 namespace ToSic.Sxc.Engines
 {
-    public partial class DnnRazorEngine
+    partial class DnnRazorEngine
     {
         /// <inheritdoc />
         public void Init(IBlock block, Purpose purpose) => Log.Do($"{nameof(purpose)}:{purpose}", () =>

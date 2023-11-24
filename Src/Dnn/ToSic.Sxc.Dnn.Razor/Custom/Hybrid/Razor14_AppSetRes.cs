@@ -4,7 +4,7 @@ using ToSic.Sxc.Code;
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
 {
-    public abstract partial class Razor14
+    abstract partial class Razor14
     {
         /// <inheritdoc cref="IDynamicCode.App" />
         public new IApp App => _DynCodeRoot.App;

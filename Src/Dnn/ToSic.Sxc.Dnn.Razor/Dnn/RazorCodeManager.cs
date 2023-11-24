@@ -6,10 +6,11 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Web;
+#pragma warning disable CS0618
 
 namespace ToSic.Sxc.Dnn
 {
-    public class RazorCodeManager: HelperBase
+    internal class RazorCodeManager: HelperBase
     {
         public RazorComponentBase Parent;
         public RazorCodeManager(RazorComponentBase parent, ILog parentLog): base(parentLog, "Rzr.Code")

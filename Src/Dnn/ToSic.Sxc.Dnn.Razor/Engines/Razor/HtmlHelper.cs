@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Engines.Razor
     /// helper to quickly "raw" some html.
     /// </summary>
     [PrivateApi]
-    public class HtmlHelper: ServiceBase, IHtmlHelper
+    internal class HtmlHelper: ServiceBase, IHtmlHelper
     {
         private readonly LazySvc<DnnRazorSourceAnalyzer> _codeAnalysis;
         private readonly LazySvc<IFeaturesService> _featureSvc;

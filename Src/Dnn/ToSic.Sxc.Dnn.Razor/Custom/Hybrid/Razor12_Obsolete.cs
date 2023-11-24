@@ -12,7 +12,7 @@ using ToSic.Lib.Documentation;
     // The new hybrid implementation doesn't actually need this
     // But if we add these overloads in an inherited class, they will be preferred to the real working ones
     // which would result in errors on AsDynamic(some-object) even though it should just work
-    public partial class Razor12
+    partial class Razor12
     {
         // Obsolete stuff - not supported any more in RazorPage10 - maybe re-activate to show helpful error messages
 

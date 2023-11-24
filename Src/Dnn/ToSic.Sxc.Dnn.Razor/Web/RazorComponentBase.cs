@@ -1,6 +1,5 @@
 ﻿using System.Web.WebPages;
 using Custom.Hybrid;
-using ToSic.Eav.Run;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
@@ -16,6 +15,7 @@ namespace ToSic.Sxc.Web
     /// It only contains internal wiring stuff, so not to be published
     /// </summary>
     [PrivateApi("internal class only!")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract class RazorComponentBase: WebPageBase, IRazor, IHasCodeLog, IHasLog, IDnnRazorCompatibility, ICompatibilityLevel
     {
         #region Constructor / Setup

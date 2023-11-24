@@ -3,7 +3,7 @@ using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Dnn
 {
-    public abstract partial class RazorComponent
+    abstract partial class RazorComponent
     {
         #region Code Behind - a Dnn feature which probably won't exist in Oqtane
 

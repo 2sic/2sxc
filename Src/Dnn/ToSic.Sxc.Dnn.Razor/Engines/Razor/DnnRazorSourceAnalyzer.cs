@@ -9,6 +9,7 @@ using ToSic.Sxc.Code.Help;
 
 namespace ToSic.Sxc.Engines
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class DnnRazorSourceAnalyzer: ServiceBase
     {
         public DnnRazorSourceAnalyzer() : base("Dnn.RzrSrc") { }

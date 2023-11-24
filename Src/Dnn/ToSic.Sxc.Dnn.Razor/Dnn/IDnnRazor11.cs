@@ -3,6 +3,7 @@
 namespace ToSic.Sxc.Dnn
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IDnnRazor11
     {
         /// <summary>

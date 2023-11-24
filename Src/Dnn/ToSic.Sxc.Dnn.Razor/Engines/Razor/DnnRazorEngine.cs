@@ -25,8 +25,9 @@ namespace ToSic.Sxc.Engines
     /// <summary>
     /// The razor engine, which compiles / runs engine templates
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
+    [PrivateApi("used to be InternalApi_DoNotUse_MayChangeWithoutNotice till v16.09")]
     [EngineDefinition(Name = "Razor")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     // ReSharper disable once UnusedMember.Global
     public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCompatibility
     {

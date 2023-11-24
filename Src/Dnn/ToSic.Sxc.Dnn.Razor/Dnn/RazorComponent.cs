@@ -31,6 +31,8 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc />
         public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
 
+        public const string NotImplementedUseCustomBase = "Use a newer base class like Custom.Hybrid.Razor12 or Custom.Dnn.Razor12 to leverage this.";
+
         #region Core Properties which should appear in docs
 
         /// <inheritdoc />

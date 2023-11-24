@@ -6,7 +6,7 @@ using ToSic.Sxc.Code;
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
 {
-    public abstract partial class Razor14
+    abstract partial class Razor14
     {
         #region AsDynamic in many variations
 

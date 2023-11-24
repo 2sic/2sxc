@@ -5,6 +5,7 @@ namespace ToSic.Sxc.Dnn
     /// <summary>
     /// Modify any objects on DNN Razor to match the newer .net core conventions.
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IDnnRazorCompatibility
     {
         /// <summary>

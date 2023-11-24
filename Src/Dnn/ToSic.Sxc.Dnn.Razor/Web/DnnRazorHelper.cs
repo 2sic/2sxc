@@ -16,7 +16,7 @@ using ToSic.Sxc.Engines.Razor;
 namespace ToSic.Sxc.Web
 {
     [PrivateApi]
-    public class DnnRazorHelper: RazorHelperBase
+    internal class DnnRazorHelper: RazorHelperBase
     {
         #region Constructor / Init
 

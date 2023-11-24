@@ -4,7 +4,7 @@ using ToSic.Sxc.Engines;
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
 {
-    public partial class Razor12: ISetDynamicModel
+    partial class Razor12: ISetDynamicModel
     {
         /// <inheritdoc cref="IRazor14{TModel,TServiceKit}.DynamicModel"/>
         public dynamic DynamicModel => SysHlp.DynamicModel;
