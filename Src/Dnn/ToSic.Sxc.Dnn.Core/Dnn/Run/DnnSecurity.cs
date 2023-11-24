@@ -6,6 +6,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Security.Roles;
 using ToSic.Lib.DI;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Context.Raw;
 using static ToSic.Sxc.Dnn.DnnSxcSettings;
@@ -13,6 +14,8 @@ using static ToSic.Sxc.Dnn.DnnSxcSettings;
 namespace ToSic.Sxc.Dnn.Run
 {
     // TODO: probably change this to use an interface so we can make it internal
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [PrivateApi]
     public class DnnSecurity : ServiceBase
     {
         private readonly LazySvc<RoleController> _roleController;

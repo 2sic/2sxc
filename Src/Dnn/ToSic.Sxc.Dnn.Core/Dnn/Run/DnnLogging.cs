@@ -73,13 +73,10 @@ namespace ToSic.Sxc.Dnn.Run
         {
             if (props == null) return false;
             if (!props.TryGetValue(DnnConstants.AdvancedLoggingEnabledKey, out var enabled)) return false;
-            if (!(enabled is bool boolEnabled) || !boolEnabled) return false;
-//            if (!boolEnabled) return false;
+            if (enabled is not true) return false;
 
             if (!props.TryGetValue(DnnConstants.AdvancedLoggingTillKey, out var till)) return false;
-            if (!(till is DateTime dtmTill) || dtmTill.CompareTo(DateTime.Now) <= 0) return false;
-            // if (dtmTill.CompareTo(DateTime.Now) <= 0) return false;
-            return true;
+            return till is DateTime dtmTill && dtmTill.CompareTo(DateTime.Now) > 0;
         }
 
         /// <summary>
