@@ -1,5 +1,5 @@
-﻿using ToSic.Lib.Documentation;
-using static ToSic.Lib.Coding.StableApi;
+﻿using ToSic.Lib.Coding;
+using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Services.Tweaks;
 

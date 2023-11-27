@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSources;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
@@ -48,7 +48,7 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.MyServices>
     /// <param name="logName">Optional name for logging such as `My.JsonDS`</param>
     protected DataSource16(MyServices services, string logName = default): base(services, logName ?? "Cus.HybDs")
     {
-        _inner = BreachExtensions.CustomDataSourceLight(services.ParentServices, this, logName ?? "Cus.HybDs");
+        _inner = BreachExtensions.CustomDataSourceLight(services.ParentServices, this, logName: logName ?? "Cus.HybDs");
         _inner.BreachProvideOut(GetDefault);
         Kit = services.Kit.Setup(this, () => Configuration.LookUpEngine);
     }
@@ -61,7 +61,7 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.MyServices>
 
     protected void ProvideOut(
         Func<object> getList,
-        string noParamOrder = Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         string name = DataSourceConstants.StreamDefaultName,
         Func<DataFactoryOptions> options = default
     )

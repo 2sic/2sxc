@@ -4,6 +4,7 @@ using ToSic.Eav.Caching;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Caching;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
 
 // ReSharper disable once CheckNamespace
@@ -24,8 +25,7 @@ public abstract partial class DataSource16
     //void ICanPurgeListCache.PurgeList(bool cascade) => _inner.PurgeList(cascade);
     IReadOnlyDictionary<string, IDataStream> IDataSource.Out => _inner.Out;
     IDataStream IDataSource.this[string outName] => _inner[outName];
-    IDataStream IDataSource.GetStream(string name, string noParamOrder, bool nullIfNotFound,
-        bool emptyIfNotFound) =>
+    IDataStream IDataSource.GetStream(string name, NoParamOrder noParamOrder, bool nullIfNotFound, bool emptyIfNotFound) =>
         _inner.GetStream(name, noParamOrder, nullIfNotFound, emptyIfNotFound);
     IEnumerable<IEntity> IDataSource.List => _inner.List;
     public void Setup(IDataSourceOptions options, IDataSourceLinkable attach) => _inner.Setup(options, attach);
