@@ -1,4 +1,5 @@
 ﻿using Custom.Hybrid;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Code;
@@ -12,13 +13,6 @@ namespace ToSic.Sxc.Code;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface ICreateInstance: IGetCodePath
 {
-    ///// <summary>
-    ///// Location of the current code. This is important when trying to create instances for
-    ///// other code in relative folders - as this is usually not known. 
-    ///// </summary>
-    ///// <returns>The real path to the currently executed code - important for dynamically compiled code like WebApis</returns>
-    //string CreateInstancePath { get; set; }
-
     /// <summary>
     /// Create an instance of code lying in a file near this
     /// </summary>
@@ -32,8 +26,8 @@ public interface ICreateInstance: IGetCodePath
     /// Note that the C# code which we are creating inherits from a standard base class such as <see cref="Code12"/> or <see cref="DynamicCode"/>
     /// then it will automatically be initialized to support App, AsDynamic etc.
     /// </remarks>
-    dynamic CreateInstance(string virtualPath, 
-        string noParamOrder = Eav.Parameters.Protector, 
+    dynamic CreateInstance(string virtualPath,
+        NoParamOrder noParamOrder = default,
         string name = null,
         string relativePath = null,
         bool throwOnError = true);

@@ -4,6 +4,7 @@ using ToSic.Eav.Code.Help;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc;
 using ToSic.Sxc.Adam;
@@ -166,7 +167,7 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
     [PrivateApi] string IGetCodePath.CreateInstancePath { get; set; }
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
-    public virtual dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
+    public virtual dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
         => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError: throwOnError);
 
     #endregion

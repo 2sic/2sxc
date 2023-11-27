@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data;
 
@@ -9,8 +9,8 @@ namespace ToSic.Sxc.Data;
 public interface ITypedStack: ITyped, ICanDebug
 {
     /// <inheritdoc cref="ITypedRelationships.Child"/>
-    ITypedItem Child(string name, string noParamOrder = Protector, bool? required = default);
+    ITypedItem Child(string name, NoParamOrder noParamOrder = default, bool? required = default);
 
     /// <inheritdoc cref="ITypedRelationships.Children"/>
-    IEnumerable<ITypedItem> Children(string field = default, string noParamOrder = Protector, string type = default, bool? required = default);
+    IEnumerable<ITypedItem> Children(string field = default, NoParamOrder noParamOrder = default, string type = default, bool? required = default);
 }

@@ -50,7 +50,7 @@ public partial class App: IAppTyped
     private ITypedItem MakeTyped(IEntity contents, bool propsRequired)
     {
         var wrapped = CmsEditDecorator.Wrap(contents, false);
-        return _cdfLazy.Value.AsItem(wrapped, Protector, propsRequired: propsRequired);
+        return _cdfLazy.Value.AsItem(wrapped, default, propsRequired: propsRequired);
     }
 
 }

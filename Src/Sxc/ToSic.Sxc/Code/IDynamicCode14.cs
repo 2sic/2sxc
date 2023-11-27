@@ -2,12 +2,12 @@
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using static ToSic.Eav.Parameters;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 // Disable warnings that properties should be marked as new
@@ -166,6 +166,6 @@ public interface IDynamicCode14<out TModel, out TServiceKit> : /*ICompatibleToCo
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
     [PrivateApi("added in 16.05, but not sure if it should be public")]
-    dynamic GetCode(string path, string noParamOrder = Protector, string className = default);
+    dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default);
 
 }

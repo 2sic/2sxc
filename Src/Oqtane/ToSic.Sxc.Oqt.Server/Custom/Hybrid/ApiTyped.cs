@@ -13,11 +13,11 @@ using Constants = ToSic.Sxc.Constants;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.Oqt.Server.Custom;
-using static ToSic.Eav.Parameters;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using ToSic.Sxc.Adam;
 using Microsoft.AspNetCore.Mvc.Filters;
+using ToSic.Lib.Coding;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -84,7 +84,7 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
         [NonAction]
-        public IFile SaveInAdam(string noParamOrder = Protector,
+        public IFile SaveInAdam(NoParamOrder noParamOrder = default,
             Stream stream = null,
             string fileName = null,
             string contentType = null,
@@ -130,22 +130,22 @@ namespace Custom.Hybrid
         #region As Conversions
 
         /// <inheritdoc cref="IDynamicCode16.AsItem" />
-        public ITypedItem AsItem(object data, string noParamOrder = Protector, bool? propsRequired = default, bool? mock = default)
+        public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
             => _DynCodeRoot.Cdf.AsItem(data, noParamOrder, propsRequired: propsRequired ?? true, mock: mock);
 
         /// <inheritdoc cref="IDynamicCode16.AsItems" />
-        public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Protector, bool? propsRequired = default)
+        public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
             => _DynCodeRoot.Cdf.AsItems(list, noParamOrder, propsRequired: propsRequired ?? true);
 
         /// <inheritdoc cref="IDynamicCode16.AsEntity" />
         public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot.Cdf.AsEntity(thing);
 
         /// <inheritdoc cref="IDynamicCode16.AsTyped" />
-        public ITyped AsTyped(object original, string noParamOrder = Protector, bool? propsRequired = default)
+        public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
             => _DynCodeRoot.Cdf.AsTyped(original, propsRequired: propsRequired);
 
         /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
-        public IEnumerable<ITyped> AsTypedList(object list, string noParamOrder = Protector, bool? propsRequired = default)
+        public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
             => _DynCodeRoot.Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
 
         /// <inheritdoc cref="IDynamicCode16.AsStack" />
@@ -156,9 +156,8 @@ namespace Custom.Hybrid
         public ITypedModel MyModel => CodeHelper.MyModel;
 
         /// <inheritdoc cref="IDynamicCode16.GetCode"/>
-        public dynamic GetCode(string path, string noParamOrder = Protector, string className = default)
+        public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
         {
-            Protect(noParamOrder, nameof(className));
             return _DynCodeRoot.CreateInstance(path, relativePath: (this as IGetCodePath).CreateInstancePath, name: className);
         }
 
@@ -185,18 +184,13 @@ namespace Custom.Hybrid
 
         string IGetCodePath.CreateInstancePath { get; set; }
 
-        ///// <inheritdoc cref="ICreateInstance.CreateInstance"/>
-        //[NonAction]
-        //public dynamic CreateInstance(string virtualPath, string noParamOrder = Protector, string name = null, string relativePath = null, bool throwOnError = true)
-        //    => _DynCodeRoot.CreateInstance(virtualPath, noParamOrder, name, (this as IGetCodePath).CreateInstancePath, throwOnError);
-
         #endregion
 
 
         #region File Response / Download
 
         /// <inheritdoc cref="IDynamicWebApi.File"/>
-        public dynamic File(string noParamOrder = Protector,
+        public dynamic File(NoParamOrder noParamOrder = default,
             bool? download = null,
             string virtualPath = null,
             string contentType = null,

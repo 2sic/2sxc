@@ -1,5 +1,5 @@
-﻿using ToSic.Sxc.Adam;
-using static ToSic.Eav.Parameters;
+﻿using ToSic.Lib.Coding;
+using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.Data;
 
@@ -15,7 +15,7 @@ public partial interface ITypedItem
     /// <returns>The Folder object</returns>
     /// <remarks>Added in 16.02</remarks>
     IFolder Folder(string name,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         bool? required = default);
 
     /// <summary>
@@ -33,6 +33,6 @@ public partial interface ITypedItem
     /// <remarks>Added in 16.02</remarks>
     /// <returns></returns>
     IFile File(string name,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         bool? required = default);
 }

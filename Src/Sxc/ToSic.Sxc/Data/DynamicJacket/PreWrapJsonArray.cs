@@ -4,6 +4,7 @@ using System.Text.Json.Nodes;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Data;
 using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Data.Wrapper;
@@ -27,7 +28,7 @@ internal class PreWrapJsonArray: PreWrapJsonBase, IWrapper<JsonArray>
 
     #region Keys
 
-    public override IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default)
+    public override IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default)
         => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, UnwrappedContents?.Select((p, i) => i.ToString()));
 
     public override bool ContainsKey(string name)

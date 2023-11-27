@@ -14,6 +14,7 @@ using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using DotNetNuke.Web.Api;
+using ToSic.Lib.Coding;
 using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.WebApi;
@@ -133,7 +134,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
 
     public AdamCode AdamCode { get; private set; }
 
-    public Sxc.Adam.IFile SaveInAdam(string noParamOrder = Eav.Parameters.Protector,
+    public Sxc.Adam.IFile SaveInAdam(NoParamOrder noParamOrder = default,
         Stream stream = null,
         string fileName = null,
         string contentType = null,

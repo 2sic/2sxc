@@ -1,7 +1,7 @@
-﻿using ToSic.Razor.Blade;
+﻿using ToSic.Lib.Coding;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data;
 
@@ -41,7 +41,7 @@ public partial interface ITypedItem
     /// </remarks>
     IHtmlTag Html(
         string name,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         object container = default,
         bool? toolbar = default,
         object imageSettings = default,
@@ -107,7 +107,7 @@ public partial interface ITypedItem
     /// </remarks>
     IResponsivePicture Picture(
         string name,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         object settings = default,
         object factor = default,
         object width = default,

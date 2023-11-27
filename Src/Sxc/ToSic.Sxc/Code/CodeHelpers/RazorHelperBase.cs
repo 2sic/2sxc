@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using static ToSic.Eav.Parameters;
@@ -47,18 +48,15 @@ public abstract class RazorHelperBase: CodeHelperBase
 
     #region CreateInstance / GetCode
 
-    public object GetCode(string path, string noParamOrder = Protector, string className = default)
-    {
-        Protect(noParamOrder, nameof(className));
-        return GetCode(path, noParamOrder: noParamOrder, name: className, throwOnError: true);
-    }
+    public object GetCode(string path, NoParamOrder noParamOrder = default, string className = default) 
+        => GetCode(path, noParamOrder: noParamOrder, name: className, throwOnError: true);
 
     /// <summary>
     /// Creates instances of the shared pages with the given relative path
     /// </summary>
     /// <returns></returns>
     private object GetCode(string virtualPath,
-        string noParamOrder,
+        NoParamOrder noParamOrder,
         string name,
         bool throwOnError)
     {
@@ -97,14 +95,11 @@ public abstract class RazorHelperBase: CodeHelperBase
 
 
     public object CreateInstance(string virtualPath,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         string name = null,
         string relativePath = null,
-        bool throwOnError = true)
-    {
-        Protect(noParamOrder, $"{nameof(name)}, {nameof(throwOnError)}");
-        return GetCode(virtualPath: virtualPath, noParamOrder: noParamOrder, name: name, throwOnError: throwOnError);
-    }
+        bool throwOnError = true
+    ) => GetCode(virtualPath: virtualPath, noParamOrder: noParamOrder, name: name, throwOnError: throwOnError);
 
     protected abstract object GetCodeCshtml(string path);
 

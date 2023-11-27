@@ -10,7 +10,7 @@ public class SpecsForLogHistory
     internal IDictionary<string, string> BuildSpecsForLogHistory(IBlock block, IApp app = default, string entry = default, bool addView = true)
     {
         // use app provided or try to use from block
-        app = app ?? block?.App;
+        app ??= block?.App;
 
         if (block == default && app == default) return null;
 

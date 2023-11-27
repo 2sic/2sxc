@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
@@ -108,17 +108,7 @@ public abstract class ApiController : DynamicApiController,
     /// <inheritdoc cref="IDynamicCode.AsAdam" />
     public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot.AsAdam(item, fieldName);
 
-    ///// <inheritdoc />
-    //public new ToSic.Sxc.Adam.IFile SaveInAdam(string noParamOrder = ToSic.Eav.Parameters.Protector,
-    //    Stream stream = null,
-    //    string fileName = null,
-    //    string contentType = null,
-    //    Guid? guid = null,
-    //    string field = null,
-    //    string subFolder = "")
-    //    => base.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
-
-    public dynamic File(string noParamOrder = Parameters.Protector, bool? download = null, string virtualPath = null,
+    public dynamic File(NoParamOrder noParamOrder = default, bool? download = null, string virtualPath = null,
         string contentType = null, string fileDownloadName = null, object contents = null) =>
         throw new NotSupportedException("Not implemented. " + ErrRecommendedNamespaces);
 
@@ -145,7 +135,7 @@ public abstract class ApiController : DynamicApiController,
     string IGetCodePath.CreateInstancePath { get; set; }
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
-    public dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
+    public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
         => _DynCodeRoot.CreateInstance(virtualPath, noParamOrder, name, ((IGetCodePath)this).CreateInstancePath, throwOnError);
 
     #endregion

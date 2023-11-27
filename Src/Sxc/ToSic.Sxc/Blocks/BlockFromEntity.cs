@@ -34,7 +34,7 @@ public sealed class BlockFromEntity: BlockBase
         var ctx = parent.Context.Clone(Log) as IContextOfBlock;
         base.Init(ctx, parent);
         var l = Log.Fn<BlockFromEntity>($"{nameof(contentBlockId)}:{contentBlockId}; {nameof(blockEntity)}:{blockEntity?.EntityId}", timer: true);
-        blockEntity = blockEntity ?? GetBlockEntity(parent, contentBlockId);
+        blockEntity ??= GetBlockEntity(parent, contentBlockId);
 
         Entity = blockEntity;
         Parent = parent;

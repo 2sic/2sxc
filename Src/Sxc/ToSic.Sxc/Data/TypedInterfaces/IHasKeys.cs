@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data;
 
@@ -33,7 +33,7 @@ public interface IHasKeys
     /// </param>
     /// <returns></returns>
     /// <remarks>Added in 16.03</remarks>
-    IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default);
+    IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default);
 
     #region IsEmpty / IsNotEmpty
 
@@ -60,7 +60,7 @@ public interface IHasKeys
     ///// `true` means that empty and whitespace strings return `true`,
     ///// `false` means every whitespace incl. empty strings return `false`.
     ///// </param>
-    bool IsEmpty(string name, string noParamOrder = Protector); //, bool? blankIs = default);
+    bool IsEmpty(string name, NoParamOrder noParamOrder = default); //, bool? blankIs = default);
 
     /// <summary>
     /// Check if this typed object has a property of this specified name, and has real data.
@@ -85,7 +85,7 @@ public interface IHasKeys
     ///// `true` means that empty and whitespace strings return `true`,
     ///// `false` means every whitespace incl. empty strings return `false`.
     ///// </param>
-    bool IsNotEmpty(string name, string noParamOrder = Protector);//, bool? blankIs = default);
+    bool IsNotEmpty(string name, NoParamOrder noParamOrder = default);//, bool? blankIs = default);
 
     #endregion
 }

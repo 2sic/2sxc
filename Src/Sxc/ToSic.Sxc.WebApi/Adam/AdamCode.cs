@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
-using ToSic.Eav;
 using ToSic.Eav.Internal.Features;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
@@ -29,7 +29,7 @@ public class AdamCode: ServiceForDynamicCode
     private readonly Generator<AdamTransUpload<int, int>> _adamUploadGenerator;
     private readonly LazySvc<IEavFeaturesService> _featuresLazy;
 
-    public IFile SaveInAdam(string noParamOrder = Parameters.Protector,
+    public IFile SaveInAdam(NoParamOrder noParamOrder = default,
         Stream stream = null,
         string fileName = null,
         string contentType = null,
@@ -37,9 +37,6 @@ public class AdamCode: ServiceForDynamicCode
         string field = null,
         string subFolder = "")
     {
-        Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "SaveInAdam",
-            $"{nameof(stream)},{nameof(fileName)},{nameof(contentType)},{nameof(guid)},{nameof(field)},{nameof(subFolder)} (optional)");
-
         if (stream == null || fileName == null || contentType == null || guid == null || field == null)
             throw new Exception();
 

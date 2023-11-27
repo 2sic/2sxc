@@ -106,7 +106,7 @@ public class RenderService: ServiceForDynamicCode,
         Guid? newGuid = null)
     {
         Protect(noParamOrder, $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
-        item = item ?? parent.Item;
+        item ??= parent.Item;
         MakeSureLogIsInHistory();
         var simpleRenderer = _Deps.SimpleRenderer.New();
         var block = parent.TryGetBlockContext();

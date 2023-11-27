@@ -4,9 +4,9 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
-using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data.Wrapper;
@@ -40,7 +40,7 @@ public abstract class PreWrapBase: IWrapper<object>
 
     #region Abstract: Keys
 
-    public abstract IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default);
+    public abstract IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default);
 
     public abstract bool ContainsKey(string name);
 
@@ -48,18 +48,16 @@ public abstract class PreWrapBase: IWrapper<object>
 
     #region TryGet and FindPropertyInternals
 
-    public object TryGetObject(string name, string noParamOrder, bool? required, [CallerMemberName] string cName = default)
+    public object TryGetObject(string name, NoParamOrder noParamOrder, bool? required, [CallerMemberName] string cName = default)
     {
-        Protect(noParamOrder, nameof(required));
         var result = TryGetWrap(name, true);
         return IsErrStrict(result.Found, required, Settings.PropsRequired)
             ? throw ErrStrict(name, cName: cName)
             : result.Result;
     }
 
-    public TValue TryGetTyped<TValue>(string name, string noParamOrder, TValue fallback, bool? required, [CallerMemberName] string cName = default)
+    public TValue TryGetTyped<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, [CallerMemberName] string cName = default)
     {
-        Protect(noParamOrder, nameof(fallback), methodName: cName);
         var result = TryGetWrap(name, false);
         return IsErrStrict(result.Found, required, Settings.PropsRequired)
             ? throw ErrStrict(name, cName: cName)

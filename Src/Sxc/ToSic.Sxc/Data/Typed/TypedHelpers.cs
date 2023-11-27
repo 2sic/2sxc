@@ -6,7 +6,7 @@ using ToSic.Eav;
 using ToSic.Eav.Code.Help;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
-using static ToSic.Eav.Parameters;
+using ToSic.Lib.Coding;
 
 namespace ToSic.Sxc.Data.Typed;
 
@@ -37,9 +37,8 @@ internal static class TypedHelpers
 
     }
 
-    public static IEnumerable<string> FilterKeysIfPossible(string noParamOrder, IEnumerable<string> only, IEnumerable<string> result)
+    public static IEnumerable<string> FilterKeysIfPossible(NoParamOrder noParamOrder, IEnumerable<string> only, IEnumerable<string> result)
     {
-        Protect(noParamOrder, nameof(only), methodName: nameof(IHasKeys.Keys));
         if (result == null) return Array.Empty<string>();
 
         if (only == default || !only.Any()) return result;

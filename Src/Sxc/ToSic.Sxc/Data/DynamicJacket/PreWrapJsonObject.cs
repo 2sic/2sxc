@@ -5,10 +5,10 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Data;
 using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Data.Wrapper;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data;
 
@@ -29,7 +29,7 @@ internal class PreWrapJsonObject: PreWrapJsonBase, IWrapper<JsonObject>
 
     #region Keys
 
-    public override IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default) 
+    public override IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default) 
         => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, _jObject.Select(p => p.Key));
 
     public override bool ContainsKey(string name)

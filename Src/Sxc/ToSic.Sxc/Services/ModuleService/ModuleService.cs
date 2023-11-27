@@ -14,7 +14,7 @@ internal class ModuleService: ServiceBase, IModuleService
     public void AddToMore(IHtmlTag tag, string nameId = null, bool noDuplicates = false)
     {
         if (tag is null) return;
-        nameId = nameId ?? tag.ToString();
+        nameId ??= tag.ToString();
         if (noDuplicates && ExistingKeys.Contains(nameId)) return;
         ExistingKeys.Add(nameId);
         _moreTags.Add(tag);

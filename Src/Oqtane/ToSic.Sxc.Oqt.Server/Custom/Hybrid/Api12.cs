@@ -7,6 +7,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.WebApi;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
@@ -158,7 +159,7 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
         [NonAction]
-        public IFile SaveInAdam(string noParamOrder = Protector,
+        public IFile SaveInAdam(NoParamOrder noParamOrder = default,
             Stream stream = null,
             string fileName = null,
             string contentType = null,
@@ -185,7 +186,7 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
         [NonAction]
-        public dynamic CreateInstance(string virtualPath, string noParamOrder = Protector, string name = null, string relativePath = null, bool throwOnError = true)
+        public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
             => _DynCodeRoot.CreateInstance(virtualPath, noParamOrder, name, (this as IGetCodePath).CreateInstancePath, throwOnError);
 
         #endregion
@@ -193,7 +194,7 @@ namespace Custom.Hybrid
         #region File Response / Download
 
         /// <inheritdoc cref="IDynamicWebApi.File"/>
-        public dynamic File(string noParamOrder = Protector,
+        public dynamic File(NoParamOrder noParamOrder = default,
             bool? download = null,
             string virtualPath = null,
             string contentType = null,

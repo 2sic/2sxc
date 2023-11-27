@@ -17,8 +17,8 @@ public static class StringExtensions
     /// <returns></returns>
     public static string ReplaceIgnoreCase(this string value, string oldValue, string newValue, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
     {
-        oldValue = oldValue ?? string.Empty;
-        newValue = newValue ?? string.Empty;
+        oldValue ??= string.Empty;
+        newValue ??= string.Empty;
         if (string.IsNullOrEmpty(value) || string.IsNullOrEmpty(oldValue) || oldValue.Equals(newValue, comparisonType))
             return value;
 

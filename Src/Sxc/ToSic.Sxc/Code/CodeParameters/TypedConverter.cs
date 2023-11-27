@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Lib.Coding;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
@@ -36,17 +37,15 @@ internal class TypedConverter
         return ok ? typed : Cdf.AsEntity(untyped);
     }
 
-    public ITypedItem Item(object data, string noParamOrder, ITypedItem fallback)
+    public ITypedItem Item(object data, NoParamOrder noParamOrder, ITypedItem fallback)
     {
-        Eav.Parameters.Protect(noParamOrder);
         var (typed, untyped, ok) = EvalInterface(data, fallback);
         // Try to convert, in case it's an IEntity or something; could also result in error
         return ok ? typed : Cdf.AsItem(untyped, noParamOrder);
     }
 
-    public IEnumerable<ITypedItem> Items(object maybe, string noParamOrder, IEnumerable<ITypedItem> fallback)
+    public IEnumerable<ITypedItem> Items(object maybe, NoParamOrder noParamOrder, IEnumerable<ITypedItem> fallback)
     {
-        Eav.Parameters.Protect(noParamOrder);
         var (typed, untyped, ok) = EvalInterface(maybe, fallback);
         // Try to convert, in case it's an IEntity or something; could also result in error
         return ok ? typed : Cdf.AsItems(untyped, noParamOrder);
@@ -102,7 +101,7 @@ internal class TypedConverter
         return ok ? typed : null;
     }
 
-    public ITyped Typed(object maybe, string noParamOrder, ITyped fallback)
+    public ITyped Typed(object maybe, NoParamOrder noParamOrder, ITyped fallback)
     {
         var (typed, untyped, ok) = EvalInterface(maybe, fallback);
         // Try to convert, in case it's an IEntity or something; could also result in error

@@ -12,6 +12,7 @@ using ToSic.Sxc.Data.Typed;
 using IEntity = ToSic.Eav.Data.IEntity;
 using static ToSic.Eav.Parameters;
 using System.Dynamic;
+using ToSic.Lib.Coding;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Data;
@@ -116,7 +117,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     [PrivateApi("Should not be documented here, as it should only be used on ITyped")]
     public IHtmlTag Html(
         string name,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         object container = default,
         bool? toolbar = default,
         object imageSettings = default,

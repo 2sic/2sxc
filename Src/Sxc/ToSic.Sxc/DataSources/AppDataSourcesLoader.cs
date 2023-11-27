@@ -113,7 +113,7 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
                 // Optionally set the star-icon if none is set
                 vq.Icon = vq.Icon.NullIfNoValue() ?? "star";
                 // If In has not been set, make sure we show the Default In as an option
-                vq.In = vq.In ?? new[] { DataSourceConstants.StreamDefaultName };
+                vq.In ??= new[] { DataSourceConstants.StreamDefaultName };
                 // Only set dynamic in if it was never set
                 if (!vq._DynamicInWasSet) vq.DynamicIn = true;
 

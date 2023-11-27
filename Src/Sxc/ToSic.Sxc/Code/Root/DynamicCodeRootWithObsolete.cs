@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Code
                 // try to find with assembly name, or otherwise with GlobalName / previous names
                 //var catalog = _root.GetService<DataSourceCatalog>();
                 var type = dataSources.Catalog.Value.FindDataSourceInfo(typeName, _root.App.AppId)?.Type;
-                configuration = configuration ?? dataSources.LookUpEngine; // _root.ConfigurationProvider;
+                configuration ??= dataSources.LookUpEngine; // _root.ConfigurationProvider;
                 var cnf2Wip = new DataSourceOptions(lookUp: configuration);
                 if (links != null)
                     return dataSources.DataSources.Value/*_root.DataSourceFactory*/.Create(type: type, attach: links, options: cnf2Wip);

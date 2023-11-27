@@ -20,7 +20,7 @@ public class ToolbarButtonDecoratorHelper: ServiceBase
     public ToolbarButtonDecorator GetDecorator(IAppIdentity appIdentity, string typeName, string command)
     {
         // If no special context was given, use the main one from the current context
-        appIdentity = appIdentity ?? MainAppIdentity;
+        appIdentity ??= MainAppIdentity;
 
         if (appIdentity == null || !typeName.HasValue() || !command.HasValue()) return null;
 

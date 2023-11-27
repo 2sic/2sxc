@@ -5,13 +5,14 @@ using System.Text;
 using System.Web;
 using System.Xml;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 
 namespace ToSic.Sxc.WebApi;
 
 partial class WebApiCoreShim
 {
     /// <inheritdoc />
-    public dynamic File(string noParamOrder = ToSic.Eav.Parameters.Protector,
+    public dynamic File(NoParamOrder noParamOrder = default,
         // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
         bool? download = null,
         string virtualPath = null, // important: this is the virtualPath, but it should not have the same name, to not confuse the compiler with same sounding param names
@@ -21,7 +22,6 @@ partial class WebApiCoreShim
     )
     {
         // fileDownloadName becomes null when download != true
-        fileDownloadName = CustomApiHelpers.FileParamsInitialCheck(noParamOrder, download, virtualPath, fileDownloadName, contents);
 
         // Try to figure out file mime type as needed
         if (string.IsNullOrWhiteSpace(contentType))

@@ -1,4 +1,5 @@
-﻿using ToSic.Razor.Blade;
+﻿using ToSic.Lib.Coding;
+using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Data;
 
@@ -38,7 +39,7 @@ public partial interface IDynamicEntity
     /// </remarks>
     IHtmlTag Html(
         string name,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object container = default,
         bool? toolbar = default,
         object imageSettings = default,

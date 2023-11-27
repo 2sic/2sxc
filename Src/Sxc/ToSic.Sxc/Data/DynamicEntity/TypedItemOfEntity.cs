@@ -5,6 +5,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -108,14 +109,14 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
             (e, k) => e.Children(k)?.FirstOrDefault()
         );
 
-    public bool IsEmpty(string name, string noParamOrder = Protector)
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default)
         => ItemHelper.IsEmpty(name, noParamOrder, default);
 
-    public bool IsNotEmpty(string name, string noParamOrder = Protector)
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default)
         => ItemHelper.IsFilled(name, noParamOrder, default);
 
     [PrivateApi]
-    public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default)
+    public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default)
         => FilterKeysIfPossible(noParamOrder, only, Entity?.Attributes.Keys);
 
     #endregion
@@ -123,15 +124,15 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
     #region ITyped
 
     [PrivateApi]
-    object ITyped.Get(string name, string noParamOrder, bool? required)
+    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required)
         => ItemHelper.Get(name, noParamOrder, required);
 
     [PrivateApi]
-    TValue ITyped.Get<TValue>(string name, string noParamOrder, TValue fallback, bool? required)
+    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback, bool? required)
+    IRawHtmlString ITyped.Attribute(string name, NoParamOrder noParamOrder, string fallback, bool? required)
         => ItemHelper.Attribute(name, noParamOrder, fallback, required);
 
     [PrivateApi]
@@ -139,39 +140,39 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
 
 
     [PrivateApi]
-    DateTime ITyped.DateTime(string name, string noParamOrder, DateTime fallback, bool? required)
+    DateTime ITyped.DateTime(string name, NoParamOrder noParamOrder, DateTime fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    string ITyped.String(string name, string noParamOrder, string fallback, bool? required, object scrubHtml)
+    string ITyped.String(string name, NoParamOrder noParamOrder, string fallback, bool? required, object scrubHtml)
         => ItemHelper.String(name, noParamOrder, fallback, required, scrubHtml);
 
     [PrivateApi]
-    int ITyped.Int(string name, string noParamOrder, int fallback, bool? required)
+    int ITyped.Int(string name, NoParamOrder noParamOrder, int fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    bool ITyped.Bool(string name, string noParamOrder, bool fallback, bool? required)
+    bool ITyped.Bool(string name, NoParamOrder noParamOrder, bool fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    long ITyped.Long(string name, string noParamOrder, long fallback, bool? required)
+    long ITyped.Long(string name, NoParamOrder noParamOrder, long fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    float ITyped.Float(string name, string noParamOrder, float fallback, bool? required)
+    float ITyped.Float(string name, NoParamOrder noParamOrder, float fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    decimal ITyped.Decimal(string name, string noParamOrder, decimal fallback, bool? required)
+    decimal ITyped.Decimal(string name, NoParamOrder noParamOrder, decimal fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    double ITyped.Double(string name, string noParamOrder, double fallback, bool? required)
+    double ITyped.Double(string name, NoParamOrder noParamOrder, double fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    string ITyped.Url(string name, string noParamOrder, string fallback, bool? required)
+    string ITyped.Url(string name, NoParamOrder noParamOrder, string fallback, bool? required)
         => ItemHelper.Url(name, noParamOrder, fallback, required);
 
 
@@ -205,18 +206,16 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
 
     /// <inheritdoc />
     [PrivateApi]
-    IFolder ITypedItem.Folder(string name, string noParamOrder, bool? required)
+    IFolder ITypedItem.Folder(string name, NoParamOrder noParamOrder, bool? required)
     {
-        Protect(noParamOrder, nameof(required));
         return IsErrStrict(this, name, required, GetHelper.PropsRequired)
             ? throw ErrStrictForTyped(this, name)
             : _adamCache.Get(name, () => Cdf.Folder(Entity, name, (this as ITypedItem).Field(name, required: false)));
     }
     private readonly GetOnceNamed<IFolder> _adamCache = new();
 
-    IFile ITypedItem.File(string name, string noParamOrder, bool? required)
+    IFile ITypedItem.File(string name, NoParamOrder noParamOrder, bool? required)
     {
-        Protect(noParamOrder, nameof(required));
         var typedThis = this as ITypedItem;
         // Case 1: The field contains a direct reference to a file
         var field = typedThis.Field(name, required: required);
@@ -237,9 +236,8 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
     IMetadata ITypedItem.Metadata => DynHelper.Metadata;
 
 
-    ITypedItem ITypedItem.Parent(string noParamOrder, bool? current, string type, string field)
+    ITypedItem ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string type, string field)
     {
-        Protect(noParamOrder, $"{nameof(current)} {nameof(type)}, {nameof(field)}");
         if (current != true)
             return (this as ITypedItem).Parents(type: type, field: field).FirstOrDefault();
             
@@ -252,20 +250,18 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
 
     /// <inheritdoc />
     [PrivateApi]
-    IEnumerable<ITypedItem> ITypedItem.Parents(string noParamOrder, string type, string field)
+    IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string type, string field)
     {
-        Protect(noParamOrder, nameof(field), message:
-            $" ***IMPORTANT***: The typed '.Parents(...)' method was changed to also make the parameter '{nameof(type)}' required. " +
-            "So if you had '.Parents(something)' then change it to '.Parents(type: something)'. See https://r.2sxc.org/brc-1603");
+        //Protect(noParamOrder, nameof(field), message:
+        //    $" ***IMPORTANT***: The typed '.Parents(...)' method was changed to also make the parameter '{nameof(type)}' required. " +
+        //    "So if you had '.Parents(something)' then change it to '.Parents(type: something)'. See https://r.2sxc.org/brc-1603");
         return Cdf.AsItems(GetHelper.Parents(entity: Entity, type: type, field: field), noParamOrder);
     }
 
     /// <inheritdoc />
     [PrivateApi]
-    IEnumerable<ITypedItem> ITypedItem.Children(string field, string noParamOrder, string type, bool? required)
+    IEnumerable<ITypedItem> ITypedItem.Children(string field, NoParamOrder noParamOrder, string type, bool? required)
     {
-        Protect(noParamOrder, $"{nameof(type)}, {nameof(required)}");
-
         if (IsErrStrict(this, field, required, GetHelper.PropsRequired))
             throw ErrStrictForTyped(this, field);
 
@@ -301,9 +297,8 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
 
     /// <inheritdoc />
     [PrivateApi]
-    ITypedItem ITypedItem.Child(string name, string noParamOrder, bool? required)
+    ITypedItem ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required)
     {
-        Protect(noParamOrder, nameof(required));
         return IsErrStrict(this, name, required, GetHelper.PropsRequired)
             ? throw ErrStrictForTyped(this, name)
             : (this as ITypedItem).Children(name).FirstOrDefault();
@@ -314,11 +309,11 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
     #region Fields, Html, Picture
 
     [PrivateApi]
-    IField ITypedItem.Field(string name, string noParamOrder, bool? required) => Cdf.Field(this, name, _propsRequired, noParamOrder, required);
+    IField ITypedItem.Field(string name, NoParamOrder noParamOrder, bool? required) => Cdf.Field(this, name, _propsRequired, noParamOrder, required);
 
     IHtmlTag ITypedItem.Html(
         string name,
-        string noParamOrder,
+        NoParamOrder noParamOrder,
         object container,
         bool? toolbar,
         object imageSettings,
@@ -330,7 +325,7 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
     /// <inheritdoc/>
     IResponsivePicture ITypedItem.Picture(
         string name,
-        string noParamOrder,
+        NoParamOrder noParamOrder,
         object settings,
         object factor,
         object width,

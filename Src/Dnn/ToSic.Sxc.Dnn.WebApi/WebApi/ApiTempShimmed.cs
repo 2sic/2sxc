@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+using ToSic.Lib.Coding;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 
@@ -14,7 +15,7 @@ public abstract class ApiTempShimmed : DynamicApiController, IDynamicWebApi, IHa
     #region Net Core Compatibility Shims - Copy this entire section to WebApi Files
 
     /// <inheritdoc cref="IDynamicWebApi.File"/>
-    public dynamic File(string noParamOrder = ToSic.Eav.Parameters.Protector,
+    public dynamic File(NoParamOrder noParamOrder = default,
         bool? download = null,
         string virtualPath = null,
         string contentType = null,

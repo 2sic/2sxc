@@ -41,7 +41,7 @@ public partial class ToolbarBuilder
         (target, parameters) = FixTargetIsParameters(target, parameters);
 
         // Use new or previous target
-        target = target ?? previous?.Target;
+        target ??= previous?.Target;
 
         // Must create a new one, to not change the original which is still in the original object
         var uiWithPrevious = PrepareUi(previous?.Ui, ui);

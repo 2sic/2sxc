@@ -44,7 +44,7 @@ public partial class DynamicCodeService
 
     private AppState GetPrimaryApp(int? siteId, ISite site)
     {
-        siteId = siteId ?? site?.Id ?? Services.Site.Value.Id;
+        siteId ??= site?.Id ?? Services.Site.Value.Id;
         var zoneId = Services.ZoneMapper.Value.GetZoneId(siteId.Value);
         var primaryApp = Services.AppStates.Value.GetPrimaryApp(zoneId, Log);
         return primaryApp;

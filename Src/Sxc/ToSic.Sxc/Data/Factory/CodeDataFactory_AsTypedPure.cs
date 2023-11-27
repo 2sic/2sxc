@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data.Wrapper;
@@ -32,10 +33,8 @@ public partial class CodeDataFactory
     }
 
     private const string NameOfAsTypedList = nameof(IDynamicCode16.AsTypedList) + "(...)";
-    public IEnumerable<ITyped> AsTypedList(object list, string noParamOrder, bool? required = false, bool? propsRequired = default)
+    public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder, bool? required = false, bool? propsRequired = default)
     {
-        Eav.Parameters.Protect(noParamOrder, nameof(propsRequired));
-
         var l = Log.Fn<IEnumerable<ITyped>>();
 
         if (AsTypedPreflightReturnNull(list, NameOfAsTypedList, required == true))

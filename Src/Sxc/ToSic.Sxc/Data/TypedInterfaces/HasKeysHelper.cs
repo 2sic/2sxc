@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Linq;
+using ToSic.Lib.Coding;
 using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Data;
@@ -7,13 +8,13 @@ namespace ToSic.Sxc.Data;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class HasKeysHelper
 {
-    public static bool IsEmpty(ITyped item, string name, string noParamOrder, bool? blankIs)
+    public static bool IsEmpty(ITyped item, string name, NoParamOrder noParamOrder, bool? blankIs)
     {
         var value = item.Get(name, noParamOrder, required: false);
         return IsEmpty(value, blankIs);
     }
 
-    public static bool IsNotEmpty(ITyped item, string name, string noParamOrder, bool? blankIs)
+    public static bool IsNotEmpty(ITyped item, string name, NoParamOrder noParamOrder, bool? blankIs)
     {
         var value = item.Get(name, noParamOrder, required: false);
         return IsNotEmpty(value, blankIs);

@@ -5,8 +5,8 @@ using System.Text.Json.Serialization;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
-using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data.Wrapper;
@@ -71,7 +71,7 @@ public partial class PreWrapObject: PreWrapBase, /*IWrapper<object>,*/ IProperty
 
     public override bool ContainsKey(string name) => PropDic.ContainsKey(name);
 
-    public override IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default)
+    public override IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default)
         => FilterKeysIfPossible(noParamOrder, only, PropDic?.Keys);
 
     #endregion

@@ -79,7 +79,7 @@ public abstract class CodeCompiler: ServiceBase
         var l = Log.Fn<(Type Type, string ErrorMessages)>($"'{relativePath}', '{className}', throw: {throwOnError}");
 
         // if no name provided, use the name which is the same as the file name
-        className = className ?? Path.GetFileNameWithoutExtension(relativePath) ?? Eav.Constants.NullNameId;
+        className ??= Path.GetFileNameWithoutExtension(relativePath) ?? Eav.Constants.NullNameId;
 
         var (assembly, errorMessages) = GetAssembly(relativePath, className);
 

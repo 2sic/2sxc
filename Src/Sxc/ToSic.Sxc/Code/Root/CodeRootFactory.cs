@@ -31,7 +31,7 @@ public class CodeRootFactory: ServiceBase
         var codeRoot = customCodeOrNull != null ? BuildGenericCodeRoot(customCodeOrNull.GetType()) : null;
 
         // Default case / old case - just a non-generic DnnDynamicCodeRoot
-        codeRoot = codeRoot ?? _serviceProvider.Build<DynamicCodeRoot>(Log);
+        codeRoot ??= _serviceProvider.Build<DynamicCodeRoot>(Log);
 
         codeRoot.InitDynCodeRoot(blockOrNull, parentLog).SetCompatibility(compatibility);
 

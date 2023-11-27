@@ -7,6 +7,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Code;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Infrastructure;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
@@ -65,8 +66,6 @@ namespace ToSic.Sxc.WebApi.Infrastructure
             ConnectToRoot(codeRoot);
 
             AdamCode = codeRoot.GetService<AdamCode>();
-            // 2023-07-18 2dm - shouldn't needed any more, verify and remove
-            //AdamCode.ConnectToRoot(_DynCodeRoot, Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (_DynCodeRoot.App == null)
@@ -139,7 +138,7 @@ namespace ToSic.Sxc.WebApi.Infrastructure
 
         public AdamCode AdamCode { get; private set; }
 
-        public Sxc.Adam.IFile SaveInAdam(string noParamOrder = Eav.Parameters.Protector,
+        public Sxc.Adam.IFile SaveInAdam(NoParamOrder noParamOrder = default,
             Stream stream = null,
             string fileName = null,
             string contentType = null,

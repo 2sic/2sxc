@@ -41,7 +41,7 @@ internal class CmsServiceImageExtractor: ServiceBase
                     src = parts.IsMatch ? $"{folder.Url}{parts.Name}" : value;
                     break;
                 case "src":
-                    src = src ?? value; // should not overwrite data-cmsid
+                    src ??= value; // should not overwrite data-cmsid
                     break;
                 case "width":
                     width = value;

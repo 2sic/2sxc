@@ -6,6 +6,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -15,7 +16,6 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
-using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data.Typed;
@@ -44,14 +44,14 @@ public class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
     dynamic ITypedItem.Dyn
         => throw new NotSupportedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(ITypedStack)} by design");
 
-    bool ITypedItem.IsDemoItem => PreWrap.TryGetTyped(nameof(ITypedItem.IsDemoItem), noParamOrder: Protector, fallback: false, required: false);
+    bool ITypedItem.IsDemoItem => PreWrap.TryGetTyped(nameof(ITypedItem.IsDemoItem), noParamOrder: default, fallback: false, required: false);
 
-    IHtmlTag ITypedItem.Html(string name, string noParamOrder, object container, bool? toolbar,
+    IHtmlTag ITypedItem.Html(string name, NoParamOrder noParamOrder, object container, bool? toolbar,
         object imageSettings, bool? required, bool debug
     ) => TypedItemHelpers.Html(_cdf.Value, this, name: name, noParamOrder: noParamOrder, container: container,
         toolbar: toolbar, imageSettings: imageSettings, required: required, debug: debug);
 
-    IResponsivePicture ITypedItem.Picture(string name, string noParamOrder, object settings,
+    IResponsivePicture ITypedItem.Picture(string name, NoParamOrder noParamOrder, object settings,
         object factor, object width, string imgAlt, string imgAltFallback,
         string imgClass, object imgAttributes, string pictureClass,
         object pictureAttributes, object toolbar, object recipe
@@ -60,11 +60,11 @@ public class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
         imgAltFallback: imgAltFallback, imgClass: imgClass, imgAttributes: imgAttributes, pictureClass: pictureClass, pictureAttributes: pictureAttributes, toolbar: toolbar, recipe: recipe);
 
 
-    public int Id => PreWrap.TryGetTyped(nameof(Id), noParamOrder: Protector, fallback: 0, required: false);
+    public int Id => PreWrap.TryGetTyped(nameof(Id), noParamOrder: default, fallback: 0, required: false);
 
-    public Guid Guid => PreWrap.TryGetTyped(nameof(Guid), noParamOrder: Protector, fallback: Guid.Empty, required: false);
+    public Guid Guid => PreWrap.TryGetTyped(nameof(Guid), noParamOrder: default, fallback: Guid.Empty, required: false);
 
-    public string Title => _title.Get(() => PreWrap.TryGetTyped<string>(nameof(ITypedItem.Title), noParamOrder: Protector, fallback: null, required: false));
+    public string Title => _title.Get(() => PreWrap.TryGetTyped<string>(nameof(ITypedItem.Title), noParamOrder: default, fallback: null, required: false));
     private readonly GetOnce<string> _title = new();
 
     #region Properties which return null or empty
@@ -74,9 +74,9 @@ public class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
 
     #region Relationships - Child, Children, Parents, Presentation
 
-    public ITypedItem Child(string name, string noParamOrder, bool? required) => CreateItemFromProperty(name);
+    public ITypedItem Child(string name, NoParamOrder noParamOrder, bool? required) => CreateItemFromProperty(name);
 
-    public IEnumerable<ITypedItem> Children(string field, string noParamOrder, string type, bool? required)
+    public IEnumerable<ITypedItem> Children(string field, NoParamOrder noParamOrder, string type, bool? required)
     {
         var blank = Enumerable.Empty<ITypedItem>();
         var r = PreWrap.TryGetWrap(field);
@@ -99,7 +99,7 @@ public class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
         return items;
     }
 
-    public ITypedItem Parent(string noParamOrder = Protector, bool? current = default, string type = default, string field = default) => 
+    public ITypedItem Parent(NoParamOrder noParamOrder = default, bool? current = default, string type = default, string field = default) => 
         throw new NotSupportedException($"You can't access the {nameof(Parent)}() here");
 
 
@@ -107,7 +107,7 @@ public class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
     /// The parents are "fake" so they behave just like children... but under the node "Parents".
     /// If "field" is specified, then it will assume another child-level under the node parents
     /// </summary>
-    public IEnumerable<ITypedItem> Parents(string noParamOrder, string type, string field)
+    public IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder, string type, string field)
     {
         var blank = Enumerable.Empty<ITypedItem>();
         var typed = this as ITypedItem;
@@ -138,17 +138,17 @@ public class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
     #endregion
 
 
-    public IFolder Folder(string name, string noParamOrder, bool? required)
+    public IFolder Folder(string name, NoParamOrder noParamOrder, bool? required)
     {
-        Protect(noParamOrder, nameof(required));
+        //Protect(noParamOrder, nameof(required));
         return IsErrStrict(this, name, required, PreWrap.Settings.PropsRequired)
             ? throw ErrStrictForTyped(this, name)
-            : _cdf.Value.AdamManager.Folder(Guid, name, Field(name, noParamOrder, required));
+            : _cdf.Value.AdamManager.Folder(Guid, name, Field(name: name, noParamOrder: default, required: required));
     }
 
-    public IFile File(string name, string noParamOrder, bool? required)
+    public IFile File(string name, NoParamOrder noParamOrder, bool? required)
     {
-        Protect(noParamOrder, nameof(required));
+        //Protect(noParamOrder, nameof(required));
         if (IsErrStrict(this, name, required, PreWrap.Settings.PropsRequired))
             throw ErrStrictForTyped(this, name);
         var typed = this as ITypedItem;
@@ -197,13 +197,13 @@ public class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
     }
 
 
-    public IField Field(string name, string noParamOrder, bool? required) 
+    public IField Field(string name, NoParamOrder noParamOrder, bool? required) 
         => new Field(this, name, _cdf.Value);
 
     /// <summary>
     /// Override the URL, to also support checks for "file:72"
     /// </summary>
-    string ITyped.Url(string name, string noParamOrder, string fallback, bool? required)
+    string ITyped.Url(string name, NoParamOrder noParamOrder, string fallback, bool? required)
     {
         var url = PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback, required: required);
         if (url == null) return null;

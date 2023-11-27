@@ -5,6 +5,7 @@ using System.Web.Http;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc;
 using ToSic.Sxc.Adam;
@@ -135,7 +136,7 @@ public abstract partial class Api12: DynamicApiController, IDynamicCode12, IDyna
     public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot.AsAdam(item, fieldName);
 
     /// <inheritdoc cref="IDynamicWebApi.SaveInAdam" />
-    public new ToSic.Sxc.Adam.IFile SaveInAdam(string noParamOrder = ToSic.Eav.Parameters.Protector,
+    public new ToSic.Sxc.Adam.IFile SaveInAdam(NoParamOrder noParamOrder = default,
         Stream stream = null,
         string fileName = null,
         string contentType = null,
@@ -151,7 +152,7 @@ public abstract partial class Api12: DynamicApiController, IDynamicCode12, IDyna
     string IGetCodePath.CreateInstancePath { get; set; }
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
-    public dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
+    public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
         => _DynCodeRoot.CreateInstance(virtualPath, noParamOrder, name, ((IGetCodePath)this).CreateInstancePath, throwOnError);
 
     #endregion
@@ -161,7 +162,7 @@ public abstract partial class Api12: DynamicApiController, IDynamicCode12, IDyna
     #region Net Core Compatibility Shims - Copy this entire section to WebApi Files
 
     /// <inheritdoc cref="IDynamicWebApi.File"/>
-    public dynamic File(string noParamOrder = ToSic.Eav.Parameters.Protector,
+    public dynamic File(NoParamOrder noParamOrder = default,
         bool? download = null,
         string virtualPath = null,
         string contentType = null,

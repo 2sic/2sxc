@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
@@ -10,7 +11,6 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Images;
 using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
-using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data;
@@ -26,14 +26,14 @@ internal partial class Metadata: ITypedItem
             (e, k) => e.Children(k)?.FirstOrDefault()
         );
 
-    public bool IsEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default)
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default)//, bool? blankIs = default)
         => ItemHelper.IsEmpty(name, noParamOrder, default /*blankIs*/);
 
-    public bool IsNotEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default)
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default)//, bool? blankIs = default)
         => ItemHelper.IsFilled(name, noParamOrder, default /*blankIs*/);
 
     [PrivateApi]
-    public IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default)
+    public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default)
         => FilterKeysIfPossible(noParamOrder, only, Entity?.Attributes.Keys);
 
     #endregion
@@ -41,15 +41,15 @@ internal partial class Metadata: ITypedItem
     #region ITyped
 
     [PrivateApi]
-    object ITyped.Get(string name, string noParamOrder, bool? required)
+    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required)
         => ItemHelper.Get(name, noParamOrder, required);
 
     [PrivateApi]
-    TValue ITyped.Get<TValue>(string name, string noParamOrder, TValue fallback, bool? required)
+    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback, bool? required)
+    IRawHtmlString ITyped.Attribute(string name, NoParamOrder noParamOrder, string fallback, bool? required)
         => ItemHelper.Attribute(name, noParamOrder, fallback, required);
 
     [PrivateApi]
@@ -57,39 +57,39 @@ internal partial class Metadata: ITypedItem
 
 
     [PrivateApi]
-    DateTime ITyped.DateTime(string name, string noParamOrder, DateTime fallback, bool? required)
+    DateTime ITyped.DateTime(string name, NoParamOrder noParamOrder, DateTime fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    string ITyped.String(string name, string noParamOrder, string fallback, bool? required, object scrubHtml)
+    string ITyped.String(string name, NoParamOrder noParamOrder, string fallback, bool? required, object scrubHtml)
         => ItemHelper.String(name, noParamOrder, fallback, required, scrubHtml);
 
     [PrivateApi]
-    int ITyped.Int(string name, string noParamOrder, int fallback, bool? required)
+    int ITyped.Int(string name, NoParamOrder noParamOrder, int fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    bool ITyped.Bool(string name, string noParamOrder, bool fallback, bool? required)
+    bool ITyped.Bool(string name, NoParamOrder noParamOrder, bool fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    long ITyped.Long(string name, string noParamOrder, long fallback, bool? required)
+    long ITyped.Long(string name, NoParamOrder noParamOrder, long fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    float ITyped.Float(string name, string noParamOrder, float fallback, bool? required)
+    float ITyped.Float(string name, NoParamOrder noParamOrder, float fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    decimal ITyped.Decimal(string name, string noParamOrder, decimal fallback, bool? required)
+    decimal ITyped.Decimal(string name, NoParamOrder noParamOrder, decimal fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    double ITyped.Double(string name, string noParamOrder, double fallback, bool? required)
+    double ITyped.Double(string name, NoParamOrder noParamOrder, double fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    string ITyped.Url(string name, string noParamOrder, string fallback, bool? required)
+    string ITyped.Url(string name, NoParamOrder noParamOrder, string fallback, bool? required)
         => ItemHelper.Url(name, noParamOrder, fallback, required);
 
     [PrivateApi]
@@ -101,10 +101,10 @@ internal partial class Metadata: ITypedItem
 
     /// <inheritdoc />
     [PrivateApi]
-    IFolder ITypedItem.Folder(string name, string noParamOrder, bool? required) 
+    IFolder ITypedItem.Folder(string name, NoParamOrder noParamOrder, bool? required) 
         => TypedItem.Folder(name, noParamOrder, required);
 
-    IFile ITypedItem.File(string name, string noParamOrder, bool? required) 
+    IFile ITypedItem.File(string name, NoParamOrder noParamOrder, bool? required) 
         => TypedItem.File(name, noParamOrder, required);
 
     #endregion
@@ -139,15 +139,14 @@ internal partial class Metadata: ITypedItem
     IMetadata ITypedItem.Metadata => throw new NotSupportedException($"You can't access the Metadata of Metadata in ITypedItem");
 
     [PrivateApi]
-    ITypedItem ITypedItem.Parent(string noParamOrder, bool? current, string type, string field) =>
+    ITypedItem ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string type, string field) =>
         throw new NotSupportedException($"You can't access the {nameof(ITypedItem.Parent)}() of Metadata as it usually does not make sense to do this");
 
     /// <inheritdoc />
     [PrivateApi]
-    IEnumerable<ITypedItem> ITypedItem.Parents(string noParamOrder, string type, string field)
+    IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string type, string field)
     {
         // Protect & no Strict (as that's not really possible, since it's not a field)
-        Protect(noParamOrder, $"{nameof(type)}, {nameof(field)}");
 
         // Exit if no metadata items available to get parents from
         var mdEntities = _metadata.ToList();
@@ -165,10 +164,9 @@ internal partial class Metadata: ITypedItem
 
     /// <inheritdoc />
     [PrivateApi]
-    IEnumerable<ITypedItem> ITypedItem.Children(string field, string noParamOrder, string type, bool? required)
+    IEnumerable<ITypedItem> ITypedItem.Children(string field, NoParamOrder noParamOrder, string type, bool? required)
     {
         // Protect & Strict
-        Protect(noParamOrder, $"{nameof(type)}, {nameof(required)}");
         if (IsErrStrict(this, field, required, GetHelper.PropsRequired))
             throw ErrStrict(field);
 
@@ -188,7 +186,7 @@ internal partial class Metadata: ITypedItem
 
     /// <inheritdoc />
     [PrivateApi]
-    ITypedItem ITypedItem.Child(string name, string noParamOrder, bool? required) 
+    ITypedItem ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required) 
         => (this as ITypedItem).Children(name, noParamOrder: noParamOrder, required:required).FirstOrDefault();
 
     #endregion
@@ -196,11 +194,11 @@ internal partial class Metadata: ITypedItem
     #region Fields, Html, Picture
 
     [PrivateApi]
-    IField ITypedItem.Field(string name, string noParamOrder, bool? required) => Cdf.Field(this, name, GetHelper.PropsRequired, noParamOrder, required);
+    IField ITypedItem.Field(string name, NoParamOrder noParamOrder, bool? required) => Cdf.Field(this, name, GetHelper.PropsRequired, noParamOrder, required);
 
     IHtmlTag ITypedItem.Html(
         string name,
-        string noParamOrder,
+        NoParamOrder noParamOrder,
         object container,
         bool? toolbar,
         object imageSettings,
@@ -212,7 +210,7 @@ internal partial class Metadata: ITypedItem
     /// <inheritdoc/>
     IResponsivePicture ITypedItem.Picture(
         string name,
-        string noParamOrder,
+        NoParamOrder noParamOrder,
         object settings,
         object factor,
         object width,

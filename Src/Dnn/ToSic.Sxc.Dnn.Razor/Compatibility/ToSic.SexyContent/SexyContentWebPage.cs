@@ -7,6 +7,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Search;
@@ -279,7 +280,7 @@ public abstract class SexyContentWebPage :
     [PrivateApi] string IGetCodePath.CreateInstancePath { get; set; }
 
     /// <inheritdoc />
-    public virtual dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
+    public virtual dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
         => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError: throwOnError);
 
     #endregion

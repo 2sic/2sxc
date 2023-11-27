@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
-using static ToSic.Eav.Parameters;
 
 // ReSharper disable UnusedMember.Global
 
@@ -27,7 +27,7 @@ public interface IDynamicWebApi
     /// <param name="field"></param>
     /// <param name="subFolder"></param>
     /// <returns></returns>
-    IFile SaveInAdam(string noParamOrder = Protector,
+    IFile SaveInAdam(NoParamOrder noParamOrder = default,
         Stream stream = null,
         string fileName = null,
         string contentType = null,
@@ -52,7 +52,7 @@ public interface IDynamicWebApi
     /// <remarks>
     /// Added in 2sxc 12.05
     /// </remarks>
-    dynamic File(string noParamOrder = Protector,
+    dynamic File(NoParamOrder noParamOrder = default,
         // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
         bool? download = null,
         // important: this is the virtualPath, but it should not have the same name, to not confuse the compiler with same sounding param names

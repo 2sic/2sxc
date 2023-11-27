@@ -16,7 +16,7 @@ public partial class CodeDataFactory
 
     public TStackType AsStack<TStackType>(string name, object[] parts, bool strictTypes, Func<string, List<KeyValuePair<string, IPropertyLookup>>, TStackType> generate)
     {
-        name = name ?? Eav.Constants.NullNameId;
+        name ??= Eav.Constants.NullNameId;
         var l = Log.Fn<TStackType>($"'{name}', {parts?.Length}");
 
         // Error if nothing

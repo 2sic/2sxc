@@ -1,5 +1,5 @@
-﻿using ToSic.Razor.Markup;
-using static ToSic.Eav.Parameters;
+﻿using ToSic.Lib.Coding;
+using ToSic.Razor.Markup;
 
 namespace ToSic.Sxc.Data;
 
@@ -19,5 +19,5 @@ public partial interface ITyped
     /// <param name="fallback">Value to use if the property specified by `name` doesn't exist</param>
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns></returns>
-    IRawHtmlString Attribute(string name, string noParamOrder = Protector, string fallback = default, bool? required = default);
+    IRawHtmlString Attribute(string name, NoParamOrder noParamOrder = default, string fallback = default, bool? required = default);
 }

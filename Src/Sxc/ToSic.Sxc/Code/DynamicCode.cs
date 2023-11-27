@@ -3,6 +3,7 @@ using Custom.Hybrid;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
@@ -71,7 +72,7 @@ public abstract class DynamicCode : DynamicCodeBase, IHasCodeLog, IDynamicCode
     string IGetCodePath.CreateInstancePath { get; set; }
 
     /// <inheritdoc />
-    public dynamic CreateInstance(string virtualPath, string noParamOrder = Protector, string name = null, string relativePath = null, bool throwOnError = true) =>
+    public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true) =>
         SysHlp.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
 
     #endregion

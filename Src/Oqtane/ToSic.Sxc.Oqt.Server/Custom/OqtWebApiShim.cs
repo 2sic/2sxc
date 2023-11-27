@@ -5,6 +5,7 @@ using System.Xml;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav;
+using ToSic.Lib.Coding;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.WebApi;
 
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.Custom
             Response = response;
         }
 
-        public dynamic File(string noParamOrder = Parameters.Protector,
+        public dynamic File(NoParamOrder noParamOrder = default,
             // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
             bool? download = null,
             string virtualPath = null, // important: this is the virtualPath, but it should not have the same name, to not confuse the compiler with same sounding param names

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using static ToSic.Eav.Parameters;
+using ToSic.Lib.Coding;
 
 namespace ToSic.Sxc.Data;
 
@@ -9,15 +9,15 @@ public partial interface ITyped : IHasKeys
     new bool ContainsKey(string name);
 
     /// <inheritdoc cref="IHasKeys.IsEmpty"/>
-    new bool IsEmpty(string name, string noParamOrder = Protector);
+    new bool IsEmpty(string name, NoParamOrder noParamOrder = default);
     // ^^^ new is just so it's in the docs
 
     /// <inheritdoc cref="IHasKeys.IsNotEmpty"/>
-    new bool IsNotEmpty(string name, string noParamOrder = Protector);
+    new bool IsNotEmpty(string name, NoParamOrder noParamOrder = default);
     // ^^^ new is just so it's in the docs
 
     /// <inheritdoc cref="IHasKeys.Keys"/>
-    new IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default);
+    new IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default);
 
 
     /// <summary>
@@ -28,7 +28,7 @@ public partial interface ITyped : IHasKeys
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>The result if found or null; or error if the object is in strict mode</returns>
     object Get(string name,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         bool? required = default);
 
     // 2023-08-04 2dm removed/disabled, not useful as we should always be able to specify strict
@@ -60,7 +60,7 @@ public partial interface ITyped : IHasKeys
     /// <returns>The typed value, or the `default` like `null` or `0` if casting isn't possible.</returns>
     /// <remarks>Added in v15</remarks>
     TValue Get<TValue>(string name,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         TValue fallback = default,
         bool? required = default);
 

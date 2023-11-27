@@ -141,7 +141,7 @@ public abstract class LinkServiceBase : ServiceForDynamicCode, ILinkService
         var strParams = ParametersToString(parameters);
 
         // If the url should be expanded to have a full root or something, do this first
-        url = url ?? field?.Parent.Url(field.Name);
+        url ??= field?.Parent.Url(field.Name);
         var expandedUrl = ExpandUrlIfNecessary(type, url);
 
         // Get the image-url(s) as needed

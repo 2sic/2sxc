@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.Url;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Context.Query;
 
@@ -35,18 +35,17 @@ public partial class Parameters : IParameters
 
     public string Get(string name) => OriginalsAsDic.TryGetValue(name, out var value) ? value : null;
 
-    public TValue Get<TValue>(string name) => GetV<TValue>(name, noParamOrder: Protector, fallback: default);
+    public TValue Get<TValue>(string name) => GetV<TValue>(name, noParamOrder: default, fallback: default);
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public TValue Get<TValue>(string name, string noParamOrder = Protector, TValue fallback = default) 
+    public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default) 
         => GetV(name, noParamOrder, fallback);
 
-    TValue ITyped.Get<TValue>(string name, string noParamOrder, TValue fallback, bool? required) 
+    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required) 
         => GetV(name, noParamOrder, fallback);
 
-    private TValue GetV<TValue>(string name, string noParamOrder, TValue fallback, bool? required = default, [CallerMemberName] string cName = default)
+    private TValue GetV<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required = default, [CallerMemberName] string cName = default)
     {
-        Protect(noParamOrder, nameof(fallback), methodName: cName);
         return OriginalsAsDic.TryGetValue(name, out var value)
             ? value.ConvertOrFallback(fallback)
             : (required ?? false)

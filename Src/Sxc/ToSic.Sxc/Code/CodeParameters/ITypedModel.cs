@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code;
 
@@ -42,7 +42,7 @@ public interface ITypedModel: IHasKeys
 
 
     /// <inheritdoc cref="IHasKeys.Keys"/>
-    new IEnumerable<string> Keys(string noParamOrder = Protector, IEnumerable<string> only = default);
+    new IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default);
         
     #endregion
 
@@ -55,7 +55,7 @@ public interface ITypedModel: IHasKeys
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>Object if found, `null` if not found.</returns>
-    object Get(string name, string noParamOrder = Protector, bool? required = default);
+    object Get(string name, NoParamOrder noParamOrder = default, bool? required = default);
 
     /// <summary>
     /// Will get the value and return as type T as specified.
@@ -70,7 +70,7 @@ public interface ITypedModel: IHasKeys
     /// So eg. `Get&lt;string&gt;(..., fallback: false)` can't be detected, but `..., fallback: "hello"` can.
     /// </param>
     /// <returns>Object of type T if found, `null` if not found.</returns>
-    T Get<T>(string name, string noParamOrder = Protector, T fallback = default, bool? required = default);
+    T Get<T>(string name, NoParamOrder noParamOrder = default, T fallback = default, bool? required = default);
 
     #endregion
 
@@ -89,12 +89,12 @@ public interface ITypedModel: IHasKeys
     /// </param>
     /// <returns>The resulting object is `dynamic` which is necessary for making calls to methods etc.</returns>
     /// <remarks>New in 16.05</remarks>
-    dynamic Code(string name, string noParamOrder = Protector, object fallback = default, bool? required = default);
+    dynamic Code(string name, NoParamOrder noParamOrder = default, object fallback = default, bool? required = default);
 
     #endregion
 
     // 2023-08-17 2dm removed again in 16.03 - don't think this should ever be used
-    //dynamic Dynamic(string name, string noParamOrder = Protector, object fallback = default, bool? required = default);
+    //dynamic Dynamic(string name, NoParamOrder noParamOrder = default, object fallback = default, bool? required = default);
 
     #region Simple Values: String / Bool / Guid / DateTime
 
@@ -109,7 +109,7 @@ public interface ITypedModel: IHasKeys
     /// It is automatically `false` if a `fallback` is not `null`.
     /// </param>
     /// <returns>typed result if found, `null` if not found.</returns>
-    string String(string name, string noParamOrder = Protector, string fallback = default, bool? required = default);
+    string String(string name, NoParamOrder noParamOrder = default, string fallback = default, bool? required = default);
 
     /// <summary>
     /// Will get the value and return in the desired type.
@@ -122,7 +122,7 @@ public interface ITypedModel: IHasKeys
     /// It is automatically `false` if a `fallback` is set / not `null`.
     /// </param>
     /// <returns>typed result if found, false if not found.</returns>
-    bool Bool(string name, string noParamOrder = Protector, bool? fallback = default, bool? required = default);
+    bool Bool(string name, NoParamOrder noParamOrder = default, bool? fallback = default, bool? required = default);
 
     /// <summary>
     /// Will get the value and return in the desired type.
@@ -135,7 +135,7 @@ public interface ITypedModel: IHasKeys
     /// It is automatically `false` if a `fallback` is set / not `null`.
     /// </param>
     /// <returns>typed result if found, empty-guid if not found.</returns>
-    Guid Guid(string name, string noParamOrder = Protector, Guid? fallback = default, bool? required = default);
+    Guid Guid(string name, NoParamOrder noParamOrder = default, Guid? fallback = default, bool? required = default);
 
 
     /// <summary>
@@ -149,7 +149,7 @@ public interface ITypedModel: IHasKeys
     /// It is automatically `false` if a `fallback` is set / not `null`.
     /// </param>
     /// <returns>typed result if found, default-date if not found.</returns>
-    DateTime DateTime(string name, string noParamOrder = Protector, DateTime? fallback = default, bool? required = default);
+    DateTime DateTime(string name, NoParamOrder noParamOrder = default, DateTime? fallback = default, bool? required = default);
 
     #endregion
 
@@ -167,7 +167,7 @@ public interface ITypedModel: IHasKeys
     /// </param>
     /// <returns>int result if found, `0` if not found/convertible.</returns>
     /// <exception cref="ArgumentException">if the name is not found an no fallback provided and required not false</exception>
-    int Int(string name, string noParamOrder = Protector, int? fallback = default, bool? required = default);
+    int Int(string name, NoParamOrder noParamOrder = default, int? fallback = default, bool? required = default);
 
     /// <summary>
     /// Will get the value and return in the desired type.
@@ -181,7 +181,7 @@ public interface ITypedModel: IHasKeys
     /// </param>
     /// <returns>int result if found, `0` if not found/convertible.</returns>
     /// <exception cref="ArgumentException">if the name is not found an no fallback provided and required not false</exception>
-    float Float(string name, string noParamOrder = Protector, float? fallback = default, bool? required = default);
+    float Float(string name, NoParamOrder noParamOrder = default, float? fallback = default, bool? required = default);
 
     /// <summary>
     /// Will get the value and return in the desired type.
@@ -195,7 +195,7 @@ public interface ITypedModel: IHasKeys
     /// </param>
     /// <returns>int result if found, `0` if not found/convertible.</returns>
     /// <exception cref="ArgumentException">if the name is not found an no fallback provided and required not false</exception>
-    double Double(string name, string noParamOrder = Protector, double? fallback = default, bool? required = default);
+    double Double(string name, NoParamOrder noParamOrder = default, double? fallback = default, bool? required = default);
 
     /// <summary>
     /// Will get the value and return in the desired type.
@@ -209,7 +209,7 @@ public interface ITypedModel: IHasKeys
     /// </param>
     /// <returns>int result if found, `0` if not found/convertible.</returns>
     /// <exception cref="ArgumentException">if the name is not found an no fallback provided and required not false</exception>
-    decimal Decimal(string name, string noParamOrder = Protector, decimal? fallback = default, bool? required = default);
+    decimal Decimal(string name, NoParamOrder noParamOrder = default, decimal? fallback = default, bool? required = default);
 
     #endregion
 
@@ -227,7 +227,7 @@ public interface ITypedModel: IHasKeys
     /// It is automatically `false` if a `fallback` is set / not `null`.
     /// </param>
     /// <returns>typed result if found, `null` if not found.</returns>
-    IFile File(string name, string noParamOrder = Protector, IFile fallback = default, bool? required = default);
+    IFile File(string name, NoParamOrder noParamOrder = default, IFile fallback = default, bool? required = default);
 
     /// <summary>
     /// Will get the value if specified.
@@ -241,7 +241,7 @@ public interface ITypedModel: IHasKeys
     /// It is automatically `false` if a `fallback` is set / not `null`.
     /// </param>
     /// <returns>typed result if found, empty-list if not found.</returns>
-    IEnumerable<IFile> Files(string name, string noParamOrder = Protector, IEnumerable<IFile> fallback = default, bool? required = default);
+    IEnumerable<IFile> Files(string name, NoParamOrder noParamOrder = default, IEnumerable<IFile> fallback = default, bool? required = default);
 
     /// <summary>
     /// Will get the value if specified.
@@ -255,7 +255,7 @@ public interface ITypedModel: IHasKeys
     /// It is automatically `false` if a `fallback` is set / not `null`.
     /// </param>
     /// <returns>typed result if found, `null` if not found.</returns>
-    IFolder Folder(string name, string noParamOrder = Protector, IFolder fallback = default, bool? required = default);
+    IFolder Folder(string name, NoParamOrder noParamOrder = default, IFolder fallback = default, bool? required = default);
 
     /// <summary>
     /// Will get the value if specified.
@@ -269,7 +269,7 @@ public interface ITypedModel: IHasKeys
     /// It is automatically `false` if a `fallback` is set / not `null`.
     /// </param>
     /// <returns>typed result if found, empty-list if not found.</returns>
-    IEnumerable<IFolder> Folders(string name, string noParamOrder = Protector, IEnumerable<IFolder> fallback = default, bool? required = default);
+    IEnumerable<IFolder> Folders(string name, NoParamOrder noParamOrder = default, IEnumerable<IFolder> fallback = default, bool? required = default);
 
     #endregion
 
@@ -283,7 +283,7 @@ public interface ITypedModel: IHasKeys
     ///// <param name="fallback"></param>
     ///// <param name="required"></param>
     ///// <returns></returns>
-    //ITypedStack Stack(string name, string noParamOrder = Protector, ITypedStack fallback = default, bool? required = default);
+    //ITypedStack Stack(string name, NoParamOrder noParamOrder = default, ITypedStack fallback = default, bool? required = default);
 
     //#endregion
 
@@ -301,7 +301,7 @@ public interface ITypedModel: IHasKeys
     /// It is automatically `false` if a `fallback` is set / not `null`.
     /// </param>
     /// <returns>typed result if found, `null` if not found.</returns>
-    ITypedItem Item(string name, string noParamOrder = Protector, ITypedItem fallback = default, bool? required = default);
+    ITypedItem Item(string name, NoParamOrder noParamOrder = default, ITypedItem fallback = default, bool? required = default);
 
     /// <summary>
     /// Will get the value if specified.
@@ -315,7 +315,7 @@ public interface ITypedModel: IHasKeys
     /// It is automatically `false` if a `fallback` is set / not `null`.
     /// </param>
     /// <returns>typed result if found, empty-list if not found.</returns>
-    IEnumerable<ITypedItem> Items(string name, string noParamOrder = Protector, IEnumerable<ITypedItem> fallback = default, bool? required = default);
+    IEnumerable<ITypedItem> Items(string name, NoParamOrder noParamOrder = default, IEnumerable<ITypedItem> fallback = default, bool? required = default);
 
     /// <summary>
     /// Will get the value being a toolbar as specified.
@@ -328,7 +328,7 @@ public interface ITypedModel: IHasKeys
     /// It is automatically `false` if a `fallback` is set / not `null`.
     /// </param>
     /// <returns>typed result if found, `null` if not found</returns>
-    IToolbarBuilder Toolbar(string name, string noParamOrder = Protector, IToolbarBuilder fallback = default, bool? required = default);
+    IToolbarBuilder Toolbar(string name, NoParamOrder noParamOrder = default, IToolbarBuilder fallback = default, bool? required = default);
 
     #endregion
 
@@ -345,7 +345,7 @@ public interface ITypedModel: IHasKeys
     /// It is automatically `false` if a `fallback` is not `null`.
     /// </param>
     /// <returns>typed result if found, `null` if not found</returns>
-    IHtmlTag HtmlTag(string name, string noParamOrder = Protector, IHtmlTag fallback = default,
+    IHtmlTag HtmlTag(string name, NoParamOrder noParamOrder = default, IHtmlTag fallback = default,
         bool? required = default);
 
     /// <summary>
@@ -359,7 +359,7 @@ public interface ITypedModel: IHasKeys
     /// It is automatically `false` if a `fallback` is not `null`.
     /// </param>
     /// <returns>typed result if found, `null` if not found</returns>
-    IEnumerable<IHtmlTag> HtmlTags(string name, string noParamOrder = Protector,
+    IEnumerable<IHtmlTag> HtmlTags(string name, NoParamOrder noParamOrder = default,
         IEnumerable<IHtmlTag> fallback = default, bool? required = default);
 
     #endregion

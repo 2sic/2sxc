@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
 
@@ -64,7 +65,7 @@ public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
     /// Added v15.04
     /// </remarks>
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    TValue Get<TValue>(string name, string noParamOrder = Eav.Parameters.Protector, TValue fallback = default);
+    TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default);
 
     #endregion
 

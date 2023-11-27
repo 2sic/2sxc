@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Data;
-using ToSic.Eav.Run;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code;
 
@@ -107,7 +106,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, ID
     /// <remarks>New in v16.02</remarks>
     ITypedItem AsItem(
         object data,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         bool? propsRequired = default,
         bool? mock = default
     );
@@ -122,7 +121,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, ID
     /// <remarks>New in v16.01</remarks>
     IEnumerable<ITypedItem> AsItems(
         object list,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         bool? propsRequired = default
     );
 
@@ -142,7 +141,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, ID
     /// <returns></returns>
     ITyped AsTyped(
         object data,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         bool? propsRequired = default
     );
 
@@ -155,7 +154,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, ID
     /// <returns></returns>
     IEnumerable<ITyped> AsTypedList(
         object list,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         bool? propsRequired = default
     );
 
@@ -233,7 +232,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, ID
     /// 
     /// In older code there was a similar `CreateInstance` method
     /// </remarks>
-    dynamic GetCode(string path, string noParamOrder = Protector, string className = default);
+    dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default);
 
     #endregion
 

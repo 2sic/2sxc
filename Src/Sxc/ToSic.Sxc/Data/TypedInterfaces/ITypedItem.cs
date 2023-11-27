@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Data;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data;
 
@@ -45,7 +45,7 @@ public partial interface ITypedItem: ITyped, ICanBeEntity, ICanBeItem
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns></returns>
     IField Field(string name,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         bool? required = default);
 
 }

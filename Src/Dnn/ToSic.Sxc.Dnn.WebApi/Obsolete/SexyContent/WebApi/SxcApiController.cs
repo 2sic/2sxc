@@ -6,6 +6,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc;
 using ToSic.Sxc.Blocks;
@@ -182,7 +183,7 @@ public abstract partial class SxcApiController :
     /// <param name="field"></param>
     /// <param name="subFolder"></param>
     /// <returns></returns>
-    public new Sxc.Adam.IFile SaveInAdam(string noParamOrder = Eav.Parameters.Protector,
+    public new Sxc.Adam.IFile SaveInAdam(NoParamOrder noParamOrder = default,
         Stream stream = null,
         string fileName = null,
         string contentType = null,
@@ -198,7 +199,7 @@ public abstract partial class SxcApiController :
     string IGetCodePath.CreateInstancePath { get; set; }
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
-    public dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
+    public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
         => _DynCodeRoot.CreateInstance(virtualPath, noParamOrder, name, ((IGetCodePath)this).CreateInstancePath, throwOnError);
 
     #endregion

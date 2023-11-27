@@ -1,5 +1,5 @@
-﻿using ToSic.Lib.Logging;
-using static ToSic.Eav.Parameters;
+﻿using ToSic.Lib.Coding;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Code.CodeHelpers;
 
@@ -25,25 +25,19 @@ public class CodeHelper: CodeHelperBase
 
     #region CreateInstance
 
-    public object GetCode(string path, string noParamOrder = Protector, string className = default)
-    {
-        Protect(noParamOrder, nameof(className));
-        return CreateInstance(path, name: className);
-    }
+    public object GetCode(string path, NoParamOrder noParamOrder = default, string className = default) 
+        => CreateInstance(path, name: className);
 
     /// <inheritdoc />
-    public object CreateInstance(string virtualPath,
-        string noParamOrder = Protector,
-        string name = null,
-        string relativePath = null,
-        bool throwOnError = true) => Log.Func(() =>
+    public object CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
     {
+        var l = Log.Fn<object>();
         // usually we don't have a relative path, so we use the preset path from when this class was instantiated
         var createPath = (_parent as IGetCodePath)?.CreateInstancePath;
-        relativePath = relativePath ?? createPath;
-        var instance = _DynCodeRoot?.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
-        return instance;
-    });
+        relativePath ??= createPath;
+        object instance = _DynCodeRoot?.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
+        return l.Return(instance);
+    }
 
     #endregion
 

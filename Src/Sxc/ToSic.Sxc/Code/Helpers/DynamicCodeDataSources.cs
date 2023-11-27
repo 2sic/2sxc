@@ -44,7 +44,7 @@ public class DynamicCodeDataSources
         Protect(noParamOrder, $"{nameof(attach)}, {nameof(options)}");
 
         // If no in-source was provided, make sure that we create one from the current app
-        attach = attach ?? DataSources.Value.CreateDefault(new DataSourceOptions(appIdentity: AppIdentity, lookUp: LookUpEngine, immutable: true));
+        attach ??= DataSources.Value.CreateDefault(new DataSourceOptions(appIdentity: AppIdentity, lookUp: LookUpEngine, immutable: true));
         var typedOptions = new DataSourceOptions.Converter().Create(new DataSourceOptions(lookUp: LookUpEngine, immutable: immutable), options);
         return DataSources.Value.Create<T>(attach: attach, options: typedOptions);
     }

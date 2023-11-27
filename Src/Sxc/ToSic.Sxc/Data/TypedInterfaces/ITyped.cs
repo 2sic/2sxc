@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data;
 
@@ -37,7 +37,7 @@ public partial interface ITyped
     /// <param name="fallback">_optional_ fallback if conversion fails</param>
     /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>Value as `bool`</returns>
-    bool Bool(string name, string noParamOrder = Protector, bool fallback = default, bool? required = default);
+    bool Bool(string name, NoParamOrder noParamOrder = default, bool fallback = default, bool? required = default);
 
 
     /// <summary>
@@ -49,7 +49,7 @@ public partial interface ITyped
     /// <param name="fallback">_optional_ fallback if conversion fails</param>
     /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>Value as `DateTime`</returns>
-    DateTime DateTime(string name, string noParamOrder = Protector, DateTime fallback = default, bool? required = default);
+    DateTime DateTime(string name, NoParamOrder noParamOrder = default, DateTime fallback = default, bool? required = default);
 
     /// <summary>
     /// Get a property and return the value as a `string`.
@@ -65,7 +65,7 @@ public partial interface ITyped
     /// This is the same as using `Kit.Scrub.All(...)` or `.Only(...). For more detailed scrubbing, use the `Kit.Scrub`
     /// </param>
     /// <returns>Value as `string`</returns>
-    string String(string name, string noParamOrder = Protector, string fallback = default, bool? required = default, object scrubHtml = default);
+    string String(string name, NoParamOrder noParamOrder = default, string fallback = default, bool? required = default, object scrubHtml = default);
 
     #region Numbers
 
@@ -81,7 +81,7 @@ public partial interface ITyped
     /// <param name="fallback">_optional_ fallback if conversion fails</param>
     /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>Value as `int`</returns>
-    int Int(string name, string noParamOrder = Protector, int fallback = default, bool? required = default);
+    int Int(string name, NoParamOrder noParamOrder = default, int fallback = default, bool? required = default);
 
 
     /// <summary>
@@ -93,7 +93,7 @@ public partial interface ITyped
     /// <param name="fallback">_optional_ fallback if conversion fails</param>
     /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>Value as `long`</returns>
-    long Long(string name, string noParamOrder = Protector, long fallback = default, bool? required = default);
+    long Long(string name, NoParamOrder noParamOrder = default, long fallback = default, bool? required = default);
 
     /// <summary>
     /// Get a property and return the value as a `float`.
@@ -104,7 +104,7 @@ public partial interface ITyped
     /// <param name="fallback">_optional_ fallback if conversion fails</param>
     /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>Value as `float`</returns>
-    float Float(string name, string noParamOrder = Protector, float fallback = default, bool? required = default);
+    float Float(string name, NoParamOrder noParamOrder = default, float fallback = default, bool? required = default);
 
 
     /// <summary>
@@ -116,7 +116,7 @@ public partial interface ITyped
     /// <param name="fallback">_optional_ fallback if conversion fails</param>
     /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>Value as `decimal`</returns>
-    decimal Decimal(string name, string noParamOrder = Protector, decimal fallback = default, bool? required = default);
+    decimal Decimal(string name, NoParamOrder noParamOrder = default, decimal fallback = default, bool? required = default);
 
     /// <summary>
     /// Get a property and return the value as a `double`.
@@ -127,7 +127,7 @@ public partial interface ITyped
     /// <param name="fallback">_optional_ fallback if conversion fails</param>
     /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>Value as `double`</returns>
-    double Double(string name, string noParamOrder = Protector, double fallback = default, bool? required = default);
+    double Double(string name, NoParamOrder noParamOrder = default, double fallback = default, bool? required = default);
 
     #endregion
 
@@ -142,7 +142,7 @@ public partial interface ITyped
     /// <param name="fallback">_optional_ fallback if conversion fails</param>
     /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>A url converted if possible. If the field contains anything else such as `hello` then it will not be modified.</returns>
-    string Url(string name, string noParamOrder = Protector, string fallback = default, bool? required = default);
+    string Url(string name, NoParamOrder noParamOrder = default, string fallback = default, bool? required = default);
 
     #region Debugging
 

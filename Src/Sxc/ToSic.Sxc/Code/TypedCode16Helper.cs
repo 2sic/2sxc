@@ -2,7 +2,6 @@
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code;
 
@@ -27,13 +26,13 @@ public class TypedCode16Helper: CodeHelperXxBase
         //this.LinkLog(codeRoot.Log);
     }
 
-    public ITypedItem MyItem => _myItem.Get(() => CodeRoot.Cdf.AsItem(Data.MyItem, Protector, propsRequired: DefaultStrict));
+    public ITypedItem MyItem => _myItem.Get(() => CodeRoot.Cdf.AsItem(Data.MyItem, default, propsRequired: DefaultStrict));
     private readonly GetOnce<ITypedItem> _myItem = new();
 
-    public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => CodeRoot.Cdf.AsItems(Data.MyItem, Protector, propsRequired: DefaultStrict));
+    public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => CodeRoot.Cdf.AsItems(Data.MyItem, default, propsRequired: DefaultStrict));
     private readonly GetOnce<IEnumerable<ITypedItem>> _myItems = new();
 
-    public ITypedItem MyHeader => _myHeader.Get(() => CodeRoot.Cdf.AsItem(Data.MyHeader, Protector, propsRequired: DefaultStrict));
+    public ITypedItem MyHeader => _myHeader.Get(() => CodeRoot.Cdf.AsItem(Data.MyHeader, default, propsRequired: DefaultStrict));
     private readonly GetOnce<ITypedItem> _myHeader = new();
 
     public ITypedModel MyModel => _myModel.Get(() => new TypedModel(_myModelData, CodeRoot, IsRazor, CodeFileName));

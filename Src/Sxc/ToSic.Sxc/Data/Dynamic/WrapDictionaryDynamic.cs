@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data.Typed;
@@ -65,13 +66,13 @@ public class WrapDictionaryDynamic<TKey, TVal>: DynamicObject, IWrapper<IDiction
     [PrivateApi]
     bool IHasKeys.ContainsKey(string name) => _ignoreCaseLookup.ContainsKey(name);
 
-    public bool IsEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default)
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default)//, bool? blankIs = default)
         => !_ignoreCaseLookup.TryGetValue(name, out var result) || HasKeysHelper.IsEmpty(result, default /*blankIs*/);
 
-    public bool IsNotEmpty(string name, string noParamOrder = Protector)//, bool? blankIs = default)
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default)//, bool? blankIs = default)
         => _ignoreCaseLookup.TryGetValue(name, out var result) && HasKeysHelper.IsNotEmpty(result, default /*blankIs*/);
 
 
-    IEnumerable<string> IHasKeys.Keys(string noParamOrder, IEnumerable<string> only) 
+    IEnumerable<string> IHasKeys.Keys(NoParamOrder noParamOrder, IEnumerable<string> only) 
         => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, _ignoreCaseLookup?.Keys);
 }

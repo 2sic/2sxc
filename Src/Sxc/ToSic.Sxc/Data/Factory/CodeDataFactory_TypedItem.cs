@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Data.Wrapper;
@@ -18,9 +19,8 @@ public partial class CodeDataFactory
     #region AsTyped Implementations
 
 
-    public ITypedItem AsItem(object data, string noParamOrder, bool? required = default, ITypedItem fallback = default, bool? propsRequired = default, bool? mock = default)
+    public ITypedItem AsItem(object data, NoParamOrder noParamOrder, bool? required = default, ITypedItem fallback = default, bool? propsRequired = default, bool? mock = default)
     {
-        Protect(noParamOrder, $"{nameof(fallback)}, {nameof(propsRequired)}, {nameof(mock)}");
         if (mock == true)
             return _codeDataWrapper.Value.TypedItemFromObject(data,
                 WrapperSettings.Typed(true, true, propsRequired ?? true),
@@ -71,11 +71,8 @@ public partial class CodeDataFactory
 
     }
 
-    public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder, bool? required = default, IEnumerable<ITypedItem> fallback = default, bool? propsRequired = default)
-    {
-        Protect(noParamOrder);
-        return AsItemList(list, required ?? true, fallback, MaxRecursions, propsRequired: propsRequired ?? false);
-    }
+    public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder, bool? required = default, IEnumerable<ITypedItem> fallback = default, bool? propsRequired = default) 
+        => AsItemList(list, required ?? true, fallback, MaxRecursions, propsRequired: propsRequired ?? false);
 
     private IEnumerable<ITypedItem> AsItemList(object list, bool required, IEnumerable<ITypedItem> fallback, int recursions, bool propsRequired)
     {

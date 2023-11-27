@@ -63,14 +63,14 @@ public class AppIconHelpers : ServiceBase
 
     public static bool HasAppPathToken(string value)
     {
-        value = value ?? "";
+        value ??= "";
         return value.StartsWith(AppPathPlaceholder, InvariantCultureIgnoreCase)
                || value.StartsWith(AppPathSharedPlaceholder, InvariantCultureIgnoreCase);
     }
 
     public static string AppPathTokenReplace(string value, string appPath, string appPathShared)
     {
-        value = value ?? "";
+        value ??= "";
         if (value.StartsWith(AppPathPlaceholder, InvariantCultureIgnoreCase))
             return appPath + value.After(AppPathPlaceholder);
         if (value.StartsWith(AppPathSharedPlaceholder, InvariantCultureIgnoreCase))

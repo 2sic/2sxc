@@ -7,17 +7,16 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Lib.Coding;
 
 namespace ToSic.Sxc.WebApi;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class CustomApiHelpers
 {
-    public static string FileParamsInitialCheck(string noParamOrder, bool? download, string virtualPath,
+    public static string FileParamsInitialCheck(NoParamOrder noParamOrder, bool? download, string virtualPath,
         string fileDownloadName, object contents)
     {
-        Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(File), nameof(download) + "," + nameof(virtualPath) + "," + nameof(fileDownloadName) + "," + nameof(contents));
-
         // Check initial conflicting values
         CheckInitialConflictingValues(virtualPath, contents);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Dnn;
@@ -29,7 +30,7 @@ partial class SxcApiController
     #endregion
 
     [PrivateApi]
-    public dynamic File(string noParamOrder = Parameters.Protector, bool? download = null,
+    public dynamic File(NoParamOrder noParamOrder = default, bool? download = null,
         string virtualPath = null, string contentType = null, string fileDownloadName = null, object contents = null) =>
         throw new NotSupportedException($"This method is not available in the old {nameof(SxcApiController)}. {ApiController.ErrRecommendedNamespaces}");
 

@@ -4,6 +4,7 @@ using System.Web.WebPages;
 using ToSic.Eav.Code.Help;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
@@ -16,7 +17,6 @@ using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
-using static ToSic.Eav.Parameters;
 using Constants = ToSic.Sxc.Constants;
 using static System.StringComparer;
 
@@ -83,7 +83,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     public override IHtmlHelper Html => SysHlp.Html;
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
-    public dynamic GetCode(string path, string noParamOrder = Protector, string className = default) => SysHlp.GetCode(path, noParamOrder, className);
+    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default) => SysHlp.GetCode(path, noParamOrder, className);
 
     #endregion
 
@@ -150,22 +150,22 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     #region As Conversions
 
     /// <inheritdoc cref="IDynamicCode16.AsItem" />
-    public ITypedItem AsItem(object data, string noParamOrder = Protector, bool? propsRequired = default, bool? mock = default)
+    public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
         => _DynCodeRoot.Cdf.AsItem(data, noParamOrder, propsRequired: propsRequired ?? true, mock: mock);
 
     /// <inheritdoc cref="IDynamicCode16.AsItems" />
-    public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Protector, bool? propsRequired = default) 
+    public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default) 
         => _DynCodeRoot.Cdf.AsItems(list, noParamOrder, propsRequired: propsRequired ?? true);
 
     /// <inheritdoc cref="IDynamicCode16.AsEntity" />
     public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot.Cdf.AsEntity(thing);
 
     /// <inheritdoc cref="IDynamicCode16.AsTyped" />
-    public ITyped AsTyped(object original, string noParamOrder = Protector, bool? propsRequired = default)
+    public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
         => _DynCodeRoot.Cdf.AsTyped(original, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
-    public IEnumerable<ITyped> AsTypedList(object list, string noParamOrder = Protector, bool? propsRequired = default)
+    public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
         => _DynCodeRoot.Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsStack" />

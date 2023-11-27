@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Web.Http.Controllers;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Code;
@@ -66,7 +67,7 @@ public abstract class DynamicApiController : SxcApiControllerBase, IHasDynamicCo
     public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
 
     /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
-    public Sxc.Adam.IFile SaveInAdam(string noParamOrder = Protector, Stream stream = null, string fileName = null, string contentType = null,
+    public Sxc.Adam.IFile SaveInAdam(NoParamOrder noParamOrder = default, Stream stream = null, string fileName = null, string contentType = null,
         Guid? guid = null, string field = null, string subFolder = "")
         => DynHlp.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
 
