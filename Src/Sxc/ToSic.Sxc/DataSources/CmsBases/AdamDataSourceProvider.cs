@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Metadata;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
@@ -49,7 +50,7 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
     }
 
     public AdamDataSourceProvider<TFolderId, TFileId> Configure(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         int appId = default,
         string entityIds = default,
         string entityGuids = default,

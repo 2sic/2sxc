@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Lib.Coding;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
@@ -15,7 +16,7 @@ public partial interface IToolbarBuilder
     /// * Added in v15.07
     /// </remarks>
     IToolbarBuilder Info(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         string link = default,
         Func<ITweakButton, ITweakButton> tweak = default
     );

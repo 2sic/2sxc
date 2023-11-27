@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 
@@ -12,7 +13,7 @@ public interface IRenderingHelper: IHasLog
     IRenderingHelper Init(IBlock block);
 
     string WrapInContext(string content,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         int instanceId = 0,
         int contentBlockId = 0,
         bool editContext = false,

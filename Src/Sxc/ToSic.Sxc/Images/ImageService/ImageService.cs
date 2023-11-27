@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Generics;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Services;
@@ -70,7 +71,7 @@ public partial class ImageService: ServiceForDynamicCode, IImageService
     public IResponsiveImage Img(
         object link = null,
         object settings = null,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object factor = null,
         object width = default,
         string imgAlt = null,
@@ -90,7 +91,7 @@ public partial class ImageService: ServiceForDynamicCode, IImageService
     public IResponsivePicture Picture(
         object link = default,
         object settings = default,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object factor = default,
         object width = default,
         string imgAlt = default,

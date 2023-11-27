@@ -1,11 +1,13 @@
-﻿namespace ToSic.Sxc.Edit.Toolbar;
+﻿using ToSic.Lib.Coding;
+
+namespace ToSic.Sxc.Edit.Toolbar;
 
 internal class ToolbarRuleSettings: ToolbarRule
 {
     private const string CommandName = "settings";
 
     public ToolbarRuleSettings(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         string show = null,
         string hover = null,
         string follow = null,

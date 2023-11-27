@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Data;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
@@ -91,7 +92,7 @@ public interface IEditService: IHasLog, INeedsDynamicCodeRoot
     /// </remarks>
     IRawHtmlString Toolbar(
         object target = null,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         string actions = null,
         string contentType = null,
         object condition = null,
@@ -145,7 +146,7 @@ public interface IEditService: IHasLog, INeedsDynamicCodeRoot
     /// </remarks>
     IRawHtmlString TagToolbar(
         object target = null,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         string actions = null,
         string contentType = null,
         object condition = null,
@@ -176,7 +177,7 @@ public interface IEditService: IHasLog, INeedsDynamicCodeRoot
     /// </remarks>
     IRawHtmlString ContextAttributes(
         ICanBeEntity target, 
-        string noParamOrder = Eav.Parameters.Protector, 
+        NoParamOrder noParamOrder = default, 
         string field = null, 
         string contentType = null,
         Guid? newGuid = null,
@@ -202,7 +203,7 @@ public interface IEditService: IHasLog, INeedsDynamicCodeRoot
     /// </remarks>
     [PrivateApi]
     IRawHtmlString WrapInContext(object content,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         string tag = Constants.DefaultContextTag,
         bool full = false,
         bool? enableEdit = null,
@@ -235,7 +236,7 @@ public interface IEditService: IHasLog, INeedsDynamicCodeRoot
     /// 2. Enhanced with parameter jsApi in 10.20
     /// 3. Being deprecated in 12.02, as you should now use the IPageService instead for most of these features
     /// </remarks>
-    string Enable(string noParamOrder = Eav.Parameters.Protector,
+    string Enable(NoParamOrder noParamOrder = default,
         bool? js = null,
         bool? api = null,
         bool? forms = null,

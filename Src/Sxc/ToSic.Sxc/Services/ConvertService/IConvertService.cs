@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code.Documentation;
 
@@ -70,7 +71,7 @@ public interface IConvertService
     /// <param name="fallback">The value used if conversion fails.</param>
     /// <returns></returns>
     T To<T>(object value,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         T fallback = default);
 
     /// <summary>
@@ -176,7 +177,7 @@ public interface IConvertService
     /// <param name="fallbackOnNull">Determine that nulls should also fallback, default is `true`</param>
     string ToString(object value,
         string fallback = default,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         bool fallbackOnNull = true);
 
     /// <summary>

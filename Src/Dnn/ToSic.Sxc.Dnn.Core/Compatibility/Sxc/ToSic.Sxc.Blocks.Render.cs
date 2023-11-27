@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Code.Infos;
 using ToSic.Eav.Data;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Compatibility;
@@ -36,7 +37,7 @@ public class Render
     /// </remarks>
     public static IRawHtmlString One(
         DynamicEntity parent,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         ICanBeEntity item = null,
         string field = null,
         Guid? newGuid = null)
@@ -57,7 +58,7 @@ public class Render
     /// </remarks>
     public static IRawHtmlString All(
         DynamicEntity parent,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         string field = null,
         string apps = null,
         int max = 100,

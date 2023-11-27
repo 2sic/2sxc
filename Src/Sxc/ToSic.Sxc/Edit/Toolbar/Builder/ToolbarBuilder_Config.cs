@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Edit.Toolbar;
@@ -8,7 +9,7 @@ namespace ToSic.Sxc.Edit.Toolbar;
 public partial class ToolbarBuilder
 {
     private IToolbarBuilder With(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         string mode = default,
         object target = default,
         bool? condition = default, 
@@ -20,7 +21,7 @@ public partial class ToolbarBuilder
         string demoMessage = default
     )
     {
-        Eav.Parameters.Protect(noParamOrder, $"{nameof(mode)}, {nameof(target)}, {nameof(condition)}, {nameof(conditionFunc)}");
+        //Eav.Parameters.Protect(noParamOrder, $"{nameof(mode)}, {nameof(target)}, {nameof(condition)}, {nameof(conditionFunc)}");
         // Create clone before starting to log so it's in there too
         var clone = target == null 
             ? new ToolbarBuilder(this)
@@ -41,11 +42,11 @@ public partial class ToolbarBuilder
     }
 
     public IToolbarBuilder More(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object ui = default
     )
     {
-        Eav.Parameters.Protect(noParamOrder, nameof(ui));
+        //Eav.Parameters.Protect(noParamOrder, nameof(ui));
         return this.AddInternal(new ToolbarRuleCustom("more", ui: PrepareUi(ui)));
     }
 
@@ -53,7 +54,7 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder DetectDemo(
         ICanBeEntity root,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         string message = default)
         => With(root: root, demoMessage: message);
 

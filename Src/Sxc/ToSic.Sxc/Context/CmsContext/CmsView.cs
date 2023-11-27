@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Helpers;
 using ToSic.Eav.Metadata;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
@@ -40,9 +41,8 @@ public class CmsView: CmsContextPartBase<IView>, ICmsView
     private IFolder _folder;
 
     [PrivateApi]
-    IFolder FolderAdvanced(string noParamOrder = Protector, string location = default)
+    IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string location = default)
     {
-        Protect(noParamOrder, nameof(location));
         return new CmsViewFolder(this, _block.App, AppAssetFolderMain.DetermineShared(location) ?? _block.View.IsShared);
     }
 

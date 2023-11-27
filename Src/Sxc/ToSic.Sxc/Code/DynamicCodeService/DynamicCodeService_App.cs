@@ -1,7 +1,7 @@
 ﻿using System;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -15,15 +15,15 @@ public partial class DynamicCodeService
 {
     /// <inheritdoc />
     public IApp App(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         int? zoneId = null,
         int? appId = null,
         ISite site = null,
         bool? withUnpublished = null)
     {
         MakeSureLogIsInHistory();
-        Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(App),
-            $"{nameof(zoneId)}, {nameof(appId)} (required), {nameof(site)}, {nameof(withUnpublished)}");
+        //Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(App),
+        //    $"{nameof(zoneId)}, {nameof(appId)} (required), {nameof(site)}, {nameof(withUnpublished)}");
 
         // Ensure AppId is provided
         var realAppId = appId ?? throw new ArgumentException($"At least the {nameof(appId)} is required and must be a valid AppId", nameof(appId));
@@ -36,7 +36,7 @@ public partial class DynamicCodeService
     public IApp AppOfSite() => AppOfSite(siteId: null);
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public IApp AppOfSite(string noParamOrder = Parameters.Protector, int? siteId = null, ISite site = null, bool? withUnpublished = null)
+    public IApp AppOfSite(NoParamOrder noParamOrder = default, int? siteId = null, ISite site = null, bool? withUnpublished = null)
     {
         var primaryApp = GetPrimaryApp(siteId, site);
         return App(primaryApp, site, withUnpublished);

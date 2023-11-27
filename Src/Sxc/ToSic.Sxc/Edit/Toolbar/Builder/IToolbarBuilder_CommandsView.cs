@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Lib.Coding;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Edit.Toolbar;
@@ -18,7 +19,7 @@ public partial interface IToolbarBuilder
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder Layout(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -38,7 +39,7 @@ public partial interface IToolbarBuilder
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder Code(
         object target,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -58,7 +59,7 @@ public partial interface IToolbarBuilder
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder Fields(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -78,7 +79,7 @@ public partial interface IToolbarBuilder
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder Template(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -98,7 +99,7 @@ public partial interface IToolbarBuilder
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder Query(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -118,7 +119,7 @@ public partial interface IToolbarBuilder
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder View(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,

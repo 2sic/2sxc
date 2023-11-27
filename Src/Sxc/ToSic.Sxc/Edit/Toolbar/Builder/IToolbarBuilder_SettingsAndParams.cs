@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Lib.Coding;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
@@ -11,7 +12,7 @@ public partial interface IToolbarBuilder
     /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder More(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object ui = default
     );
 
@@ -33,7 +34,7 @@ public partial interface IToolbarBuilder
     /// * options `auto` and `never` on autoAddMore added in 14.08
     /// </remarks>
     IToolbarBuilder Settings(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         string show = default,
         string hover = default,
         string follow = default,
@@ -61,7 +62,7 @@ public partial interface IToolbarBuilder
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder Parameters(
         object target = default,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = default,
         object parameters = default,

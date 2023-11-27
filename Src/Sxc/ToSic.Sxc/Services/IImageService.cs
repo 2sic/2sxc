@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Adam;
@@ -63,7 +64,7 @@ public interface IImageService: ICanDebug
     /// </remarks>
     IResizeSettings Settings(
         object settings = default,
-        string noParamOrder = Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object factor = default,
         object width = default,
         object height = default,
@@ -80,7 +81,7 @@ public interface IImageService: ICanDebug
 
     Recipe Recipe(
         Recipe recipe,
-        string noParamOrder = Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         string name = default,
         int width = default,
         string variants = default,
@@ -176,7 +177,7 @@ public interface IImageService: ICanDebug
     IResponsivePicture Picture(
         object link = null,
         object settings = default,
-        string noParamOrder = Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object factor = default,
         object width = default,
         string imgAlt = default,
@@ -238,7 +239,7 @@ public interface IImageService: ICanDebug
     IResponsiveImage Img(
         object link = null,
         object settings = default,
-        string noParamOrder = Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object factor = default,
         object width = default,
         string imgAlt = default,

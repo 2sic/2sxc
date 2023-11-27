@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Eav.Internal.Loaders;
+using ToSic.Lib.Coding;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Images;
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
             string url = null,
             object settings = null,
             object factor = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            NoParamOrder noParamOrder = default,
             object width = null,
             object height = null,
             object quality = null,
@@ -58,7 +59,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
             string url = null,
             object settings = null,
             object factor = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            NoParamOrder noParamOrder = default,
             object width = null,
             object height = null,
             object quality = null,

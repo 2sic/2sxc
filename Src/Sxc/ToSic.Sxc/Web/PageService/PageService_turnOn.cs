@@ -1,13 +1,14 @@
-﻿using ToSic.Lib.Logging;
+﻿using ToSic.Lib.Coding;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Web.PageService;
 
-public partial class PageService
+partial class PageService
 {
     /// <inheritdoc />
     public string TurnOn(object runOrSpecs,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object require = default,
         object data = default,
         bool condition = true,

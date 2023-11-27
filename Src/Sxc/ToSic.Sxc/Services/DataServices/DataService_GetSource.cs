@@ -3,6 +3,7 @@ using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataSource;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
 using static ToSic.Eav.Data.DataConstants;
 using static ToSic.Eav.Parameters;
@@ -14,13 +15,13 @@ internal partial class DataService
 
     // IMPORTANT - this is different! from the _DynCodeRoot - as it should NOT auto attach!
     public T GetSource<T>(
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         IDataSourceLinkable attach = default,
         object parameters = default,
         object options = default) where T : IDataSource
     {
         var l = Log.Fn<T>($"{nameof(attach)}: {attach}, {nameof(options)}: {options}");
-        Protect(noParamOrder, $"{nameof(attach)}, {nameof(parameters)}, {nameof(options)}");
+        //Protect(noParamOrder, $"{nameof(attach)}, {nameof(parameters)}, {nameof(options)}");
 
         // If no in-source was provided, make sure that we create one from the current app
         var fullOptions = OptionsMs.SafeOptions(parameters, options: options);
@@ -30,7 +31,7 @@ internal partial class DataService
     }
 
     public IDataSource GetSource(
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         string name = null,
         IDataSourceLinkable attach = null,
         object parameters = default,
@@ -39,7 +40,7 @@ internal partial class DataService
     )
     {
         var l = Log.Fn<IDataSource>($"{nameof(name)}: {name}, {nameof(attach)}: {attach}, {nameof(options)}: {options}");
-        Protect(noParamOrder, $"{nameof(attach)}, {nameof(parameters)}, {nameof(options)}");
+        //Protect(noParamOrder, $"{nameof(attach)}, {nameof(parameters)}, {nameof(options)}");
 
         // Do this first, to ensure AppIdentity is really known/set
         var safeOptions = OptionsMs.SafeOptions(parameters, options: options);

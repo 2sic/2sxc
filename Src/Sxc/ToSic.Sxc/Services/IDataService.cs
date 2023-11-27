@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using static ToSic.Eav.Parameters;
 
@@ -26,7 +27,7 @@ public interface IDataService
     /// <param name="appId"></param>
     /// <returns></returns>
     [PrivateApi]
-    IDataService New(string noParamOrder = Protector,
+    IDataService New(NoParamOrder noParamOrder = default,
         IAppIdentity appIdentity = default,
         int zoneId = default,
         int appId = default);
@@ -41,7 +42,7 @@ public interface IDataService
     /// <param name="options">Options how to build/construct the DataSource. </param>
     /// <returns></returns>
     [PublicApi]
-    IDataSource GetAppSource(string noParamOrder = Protector, object parameters = default, object options = default);
+    IDataSource GetAppSource(NoParamOrder noParamOrder = default, object parameters = default, object options = default);
 
     /// <summary>
     /// Create a DataSource object using it's type.
@@ -54,7 +55,7 @@ public interface IDataService
     /// <param name="options">Options how to build/construct the DataSource. </param>
     /// <remarks>new v16.00</remarks>
     [PublicApi]
-    T GetSource<T>(string noParamOrder = Protector,
+    T GetSource<T>(NoParamOrder noParamOrder = default,
         IDataSourceLinkable attach = default,
         object parameters = default,
         object options = default
@@ -73,7 +74,7 @@ public interface IDataService
     /// <param name="debug">Determines if exceptions should be shown. Default is only for Developers.</param>
     /// <remarks>new v16.00</remarks>
     [PublicApi]
-    IDataSource GetSource(string noParamOrder = Protector,
+    IDataSource GetSource(NoParamOrder noParamOrder = default,
         string name = default,
         IDataSourceLinkable attach = default,
         object parameters = default,
@@ -93,7 +94,7 @@ public interface IDataService
     [PublicApi]
     IDataSource GetQuery(
         string name = default,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         IDataSourceLinkable attach = default,
         object parameters = default
     );

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -90,7 +91,7 @@ public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolba
     public IToolbarBuilder Toolbar(
         string toolbarTemplate,
         object target = default,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = default,
         object parameters = default,

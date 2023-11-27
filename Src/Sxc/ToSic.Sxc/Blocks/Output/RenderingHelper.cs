@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Web;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Serialization;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
@@ -54,7 +55,7 @@ public class RenderingHelper: ServiceBase, IRenderingHelper
 
 
     public string WrapInContext(string content,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         int instanceId = 0,
         int contentBlockId = 0,
         bool editContext = false,
@@ -64,7 +65,7 @@ public class RenderingHelper: ServiceBase, IRenderingHelper
         List<Exception> exsOrNull = default
     )
     {
-        Eav.Parameters.Protect(noParamOrder, $"{nameof(instanceId)},{nameof(contentBlockId)},{nameof(editContext)},{nameof(tag)},{nameof(addLineBreaks)}");
+        //Eav.Parameters.Protect(noParamOrder, $"{nameof(instanceId)},{nameof(contentBlockId)},{nameof(editContext)},{nameof(tag)},{nameof(addLineBreaks)}");
 
         var contextAttribs = ContextAttributes(instanceId, contentBlockId, editContext, errorCode, exsOrNull);
 

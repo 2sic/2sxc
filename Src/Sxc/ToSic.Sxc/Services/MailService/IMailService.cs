@@ -1,5 +1,6 @@
 ﻿using System.Net.Mail;
 using System.Text;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 
@@ -53,7 +54,7 @@ public interface IMailService: INeedsDynamicCodeRoot
     /// </param>
     /// <returns>The newly created `MailMessage` object</returns>
     MailMessage Create(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object from = null,
         object to = null,
         object cc = null,
@@ -107,7 +108,7 @@ public interface IMailService: INeedsDynamicCodeRoot
     /// </param>
     /// <returns>void</returns>
     void Send(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object from = null,
         object to = null,
         object cc = null,

@@ -2,6 +2,7 @@
 using System;
 using ToSic.Eav.Data;
 using ToSic.Eav.Helpers;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Dnn.Run;
@@ -54,9 +55,9 @@ internal class DnnLinkService : LinkServiceBase
     }
 
 
-    private string Api(string noParamOrder = Eav.Parameters.Protector, string path = null)
+    private string Api(NoParamOrder noParamOrder = default, string path = null)
     {
-        Eav.Parameters.Protect(noParamOrder, $"{nameof(path)}");
+        //Eav.Parameters.Protect(noParamOrder, $"{nameof(path)}");
 
         if (string.IsNullOrEmpty(path)) return string.Empty;
 

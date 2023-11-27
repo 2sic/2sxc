@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code;
 
@@ -23,10 +23,10 @@ internal class DevTools: ServiceBase, IDevTools
         $"Partial Razor '{RazorFileName}' requires {requires} of the following parameters, but {but} were provided: " +
         string.Join(", ", (names ?? Array.Empty<string>()).Select(s => $"'{s}'"));
 
-    public void Debug(object target, string noParamOrder = Protector, bool debug = true)
+    public void Debug(object target, NoParamOrder noParamOrder = default, bool debug = true)
     {
         var l = Log.Fn($"{nameof(target)}: '{target?.GetType()}', {nameof(debug)}: {debug}");
-        Protect(noParamOrder);
+        
         if (!(target is ICanDebug canDebug))
             throw new ArgumentException($"Can't enable debug on {nameof(target)} as it doesn't support {nameof(ICanDebug)}");
         canDebug.Debug = debug;

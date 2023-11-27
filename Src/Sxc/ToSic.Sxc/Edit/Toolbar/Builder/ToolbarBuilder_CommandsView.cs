@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 using ToSic.Sxc.Web.Url;
-using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
@@ -11,7 +11,7 @@ public partial class ToolbarBuilder
 {
     public IToolbarBuilder Layout(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -21,7 +21,7 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder Code(
         object target,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -42,7 +42,7 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder Fields(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -56,7 +56,7 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder Template(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -65,7 +65,7 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder Query(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -74,7 +74,7 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder View(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,

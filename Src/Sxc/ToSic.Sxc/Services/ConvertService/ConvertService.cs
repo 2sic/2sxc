@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
@@ -30,7 +31,7 @@ internal class ConvertService: ServiceBase, IConvertService
 
     public T To<T>(object value) => value.ConvertOrDefault<T>(numeric: OptimizeNumbers, truthy: OptimizeBoolean);
 
-    public T To<T>(object value, string noParamOrder = Eav.Parameters.Protector, T fallback = default) => _cnvSvc.To(value, noParamOrder, fallback);
+    public T To<T>(object value, NoParamOrder noParamOrder = default, T fallback = default) => _cnvSvc.To(value, noParamOrder, fallback);
 
     public int ToInt(object value) => _cnvSvc.To<int>(value);
     public int ToInt(object value, int fallback = 0) => _cnvSvc.To(value, fallback: fallback);
@@ -52,7 +53,7 @@ internal class ConvertService: ServiceBase, IConvertService
         
     public string ToString(object value) => _cnvSvc.To<string>(value);
 
-    public string ToString(object value, string fallback = null, string noParamOrder = Eav.Parameters.Protector, bool fallbackOnNull = true) 
+    public string ToString(object value, string fallback = null, NoParamOrder noParamOrder = default, bool fallbackOnNull = true) 
         => _cnvSvc.ToString(value, noParamOrder, fallback, fallbackOnNull);
 
     public string ForCode(object value) => _code.Value.ForCode(value);

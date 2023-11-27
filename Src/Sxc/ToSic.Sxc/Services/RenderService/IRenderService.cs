@@ -1,10 +1,10 @@
 ﻿using System;
 using ToSic.Eav.Data;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Services;
 
@@ -40,7 +40,7 @@ public interface IRenderService
     /// </remarks>
     IRawHtmlString One(
         ICanBeItem parent,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         ICanBeEntity item = null,
         object data = null,
         string field = null,
@@ -62,7 +62,7 @@ public interface IRenderService
     /// </remarks>
     IRawHtmlString All(
         ICanBeItem parent,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         string field = null,
         string apps = null,
         int max = 100,
@@ -84,7 +84,7 @@ public interface IRenderService
     IRenderResult Module(
         int pageId,
         int moduleId,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         object data = null
     );
 }

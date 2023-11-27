@@ -6,6 +6,7 @@ using Connect.Koi;
 using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Metadata;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -49,7 +50,7 @@ public class ImgResizeLinker : ServiceBase, ICanDebug
         string url = default,
         object settings = default,
         object factor = default,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         IField field = default,  // todo
         object width = default,
         object height = default,

@@ -1,5 +1,5 @@
-﻿using ToSic.Lib.Documentation;
-using static ToSic.Eav.Parameters;
+﻿using ToSic.Lib.Coding;
+using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Code;
 
@@ -19,5 +19,5 @@ public interface IDevTools
     /// <param name="target"></param>
     /// <param name="noParamOrder"></param>
     /// <param name="debug"></param>
-    void Debug(object target, string noParamOrder = Protector, bool debug = true);
+    void Debug(object target, NoParamOrder noParamOrder = default, bool debug = true);
 }

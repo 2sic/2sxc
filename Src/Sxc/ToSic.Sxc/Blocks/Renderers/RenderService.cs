@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Data;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -10,7 +11,6 @@ using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Blocks;
 
@@ -99,13 +99,13 @@ public class RenderService: ServiceForDynamicCode,
     /// <returns></returns>
     public IRawHtmlString One(
         ICanBeItem parent,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         ICanBeEntity item = null,
         object data = null,
         string field = null,
         Guid? newGuid = null)
     {
-        Protect(noParamOrder, $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
+        //Protect(noParamOrder, $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
         item ??= parent.Item;
         MakeSureLogIsInHistory();
         var simpleRenderer = _Deps.SimpleRenderer.New();
@@ -130,13 +130,13 @@ public class RenderService: ServiceForDynamicCode,
     /// </remarks>
     public IRawHtmlString All(
         ICanBeItem parent,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         string field = null,
         string apps = null,
         int max = 100,
         string merge = null)
     {
-        Protect(noParamOrder, $"{nameof(field)},{nameof(merge)}");
+        //Protect(noParamOrder, $"{nameof(field)},{nameof(merge)}");
         if (string.IsNullOrWhiteSpace(field)) throw new ArgumentNullException(nameof(field));
 
         MakeSureLogIsInHistory();
@@ -151,11 +151,11 @@ public class RenderService: ServiceForDynamicCode,
     public virtual IRenderResult Module(
         int pageId,
         int moduleId,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         object data = null)
     {
         var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
-        Protect(noParamOrder, $"{nameof(data)}");
+        //Protect(noParamOrder, $"{nameof(data)}");
         MakeSureLogIsInHistory();
         var block = _Deps.Builder.Value.GetProvider(pageId, moduleId).LoadBlock().BlockBuilder;
         var result = block.Run(true, data);

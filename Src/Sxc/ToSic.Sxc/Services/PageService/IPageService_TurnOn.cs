@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Services;
+﻿using ToSic.Lib.Coding;
+
+namespace ToSic.Sxc.Services;
 
 public partial interface IPageService
 {
@@ -31,7 +33,7 @@ public partial interface IPageService
     /// * `noDuplicates` added in 16.05
     /// </remarks>
     string TurnOn(object runOrSpecs,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object require = default,
         object data = default,
         bool condition = true,

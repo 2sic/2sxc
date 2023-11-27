@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Web;
@@ -135,7 +136,7 @@ public partial interface IPageService
     /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.AddIcon(...)`</returns>
     string AddIcon(
         string path,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         string rel = "",
         int size = 0,
         string type = null);
@@ -151,7 +152,7 @@ public partial interface IPageService
     /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.AddIconSet(...)`</returns>
     string AddIconSet(
         string path,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object favicon = null,
         IEnumerable<string> rels = null,
         IEnumerable<int> sizes = null);

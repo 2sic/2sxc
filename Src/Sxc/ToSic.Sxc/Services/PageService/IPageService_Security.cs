@@ -1,4 +1,5 @@
-﻿using ToSic.Razor.Markup;
+﻿using ToSic.Lib.Coding;
+using ToSic.Razor.Markup;
 
 namespace ToSic.Sxc.Services;
 
@@ -20,7 +21,7 @@ public partial interface IPageService
     /// History: Created in 2sxc 13.10
     /// </remarks>
     IRawHtmlString AssetAttributes(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         bool optimize = true,
         int priority = 0,
         string position = null,

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.DataSources;
@@ -24,7 +25,7 @@ public abstract class PagesDataSourceProvider: ServiceBase
     /// </summary>
     /// <returns></returns>
     public abstract List<PageDataRaw> GetPagesInternal(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         bool includeHidden = default,
         bool includeDeleted = default,
         bool includeAdmin = default,

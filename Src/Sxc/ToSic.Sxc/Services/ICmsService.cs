@@ -1,4 +1,5 @@
-﻿using ToSic.Lib.Documentation;
+﻿using ToSic.Lib.Coding;
+using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Services;
@@ -7,7 +8,7 @@ namespace ToSic.Sxc.Services;
 public interface ICmsService
 {
     IHtmlTag Html(object thing,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object container = default,
         string classes = default,
         bool debug = default,

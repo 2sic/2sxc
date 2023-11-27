@@ -4,10 +4,10 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Catalog;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Services;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code.Helpers;
 
@@ -39,9 +39,9 @@ public class DynamicCodeDataSources
 
     // note: this code is almost identical to the IDataService code, except that `immutable` is a parameter
     // because old code left the DataSources to be mutable
-    public T CreateDataSource<T>(bool immutable, string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource
+    public T CreateDataSource<T>(bool immutable, NoParamOrder noParamOrder = default, IDataSourceLinkable attach = null, object options = default) where T : IDataSource
     {
-        Protect(noParamOrder, $"{nameof(attach)}, {nameof(options)}");
+        //Protect(noParamOrder, $"{nameof(attach)}, {nameof(options)}");
 
         // If no in-source was provided, make sure that we create one from the current app
         attach ??= DataSources.Value.CreateDefault(new DataSourceOptions(appIdentity: AppIdentity, lookUp: LookUpEngine, immutable: true));

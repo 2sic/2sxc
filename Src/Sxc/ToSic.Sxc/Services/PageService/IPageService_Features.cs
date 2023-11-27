@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Services;
+﻿using ToSic.Lib.Coding;
+
+namespace ToSic.Sxc.Services;
 
 public partial interface IPageService
 {
@@ -25,7 +27,7 @@ public partial interface IPageService
     /// * This overload with `condition` added in v15.03
     /// </remarks>
     string Activate(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         bool condition = true,
         params string[] features);
 

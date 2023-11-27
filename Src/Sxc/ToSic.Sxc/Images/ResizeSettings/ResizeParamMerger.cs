@@ -2,6 +2,7 @@
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Data.PropertyLookup;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using static ToSic.Sxc.Images.ImageConstants;
@@ -28,7 +29,7 @@ internal class ResizeParamMerger: HelperBase
 
     internal ResizeSettings BuildResizeSettings(
         object settings = null,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object factor = null,
         object width = null,
         object height = null,
@@ -41,7 +42,7 @@ internal class ResizeParamMerger: HelperBase
         AdvancedSettings advanced = default
     ) => Log.Func(l =>
     {
-        Eav.Parameters.Protect(noParamOrder, $"{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
+        //Eav.Parameters.Protect(noParamOrder, $"{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
 
         // check common mistakes
         if (aspectRatio != null && height != null)

@@ -1,10 +1,10 @@
-﻿using ToSic.Eav;
-using ToSic.Lib.Logging;
+﻿using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Edit.Toolbar;
 using System;
+using ToSic.Lib.Coding;
 
 namespace ToSic.Sxc.Services;
 
@@ -23,7 +23,7 @@ internal class ToolbarService: ServiceForDynamicCode, IToolbarService
     /// <inheritdoc />
     public IToolbarBuilder Default(
         object target = null,
-        string noParamOrder = Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -34,7 +34,7 @@ internal class ToolbarService: ServiceForDynamicCode, IToolbarService
     /// <inheritdoc />
     public IToolbarBuilder Empty(
         object target = null,
-        string noParamOrder = Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -46,7 +46,7 @@ internal class ToolbarService: ServiceForDynamicCode, IToolbarService
     public IToolbarBuilder Metadata(
         object target,
         string contentTypes = null,
-        string noParamOrder = Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -55,7 +55,7 @@ internal class ToolbarService: ServiceForDynamicCode, IToolbarService
     ) => Empty().Metadata(target: target, contentTypes: contentTypes, noParamOrder: noParamOrder, tweak: tweak, ui: ui, parameters: parameters, prefill: prefill, context: context);
 
     private IToolbarBuilder ToolbarBuilder(
-        string noParamOrder,
+        NoParamOrder noParamOrder,
         string toolbarTemplate,
         Func<ITweakButton, ITweakButton> tweak,
         object ui,
@@ -65,7 +65,7 @@ internal class ToolbarService: ServiceForDynamicCode, IToolbarService
         object target)
     {
         var callLog = Log.Fn<IToolbarBuilder>($"{nameof(toolbarTemplate)}:{toolbarTemplate}");
-        Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar", $"{nameof(ui)}");
+        
         // The following lines must be just as this, because it's a functional object, where each call may return a new copy
         var tlb = _toolbarGenerator.New();
         tlb.ConnectToRoot(_DynCodeRoot);

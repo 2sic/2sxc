@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Data;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Markup;
@@ -29,7 +30,7 @@ public partial interface IToolbarBuilder: IRawHtmlString, IHasLog, INeedsDynamic
     IToolbarBuilder Toolbar(
         string toolbarTemplate,
         object target = default,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = default,
         object parameters = default,

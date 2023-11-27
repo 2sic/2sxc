@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using ToSic.Lib.Coding;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
@@ -10,7 +11,7 @@ public partial class ToolbarBuilder
         => Utils.PrepareUi(ui, uiMerge, uiMergePrefix, _configuration?.Group, tweaks: tweaks);
 
     private ITweakButton RunTweaksOrErrorIfCombined(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         ITweakButton initial = default,
         object ui = default,

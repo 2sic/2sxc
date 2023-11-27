@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using ToSic.Lib.Coding;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 
 namespace ToSic.Sxc.Web.PageService;
 
-public partial class PageService
+partial class PageService
 {
     public const string AssetOptimizationsAttributeName = "data-enableoptimizations";
 
@@ -13,7 +14,7 @@ public partial class PageService
         ? Tag.Attr(CspConstants.CspWhitelistAttribute, PageServiceShared.CspEphemeralMarker)
         : null;
 
-    public IRawHtmlString AssetAttributes(string noParamOrder = Eav.Parameters.Protector, bool optimize = true, int priority = 0, string position = null, bool whitelist = true)
+    public IRawHtmlString AssetAttributes(NoParamOrder noParamOrder = default, bool optimize = true, int priority = 0, string position = null, bool whitelist = true)
     {
         var attributes = new List<string>();
         if (optimize)

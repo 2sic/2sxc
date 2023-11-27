@@ -1,4 +1,5 @@
-﻿using ToSic.Lib.Documentation;
+﻿using ToSic.Lib.Coding;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
@@ -13,12 +14,12 @@ public interface ITurnOnService: IHasLog
 {
 
     Attribute Attribute(object runOrSpecs,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object require = null,
         object data = null);
 
     IHtmlTag Run(object runOrSpecs,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object require = null,
         object data = null);
 }

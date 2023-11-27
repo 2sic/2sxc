@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -81,7 +82,7 @@ public interface IDynamicCodeService
     /// <param name="withUnpublished">Determines if the App.Data gives you unpublished data (like in admin-mode) or just published data. If not set, will default to user permissions.</param>
     /// <returns>An initialized App object which you can use to access App.Data</returns>
     IApp App(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         int? zoneId = null,
         int? appId = null,
         ISite site = null,
@@ -105,7 +106,7 @@ public interface IDynamicCodeService
     /// <returns>An initialized App object which you can use to access App.Data</returns>
     IApp AppOfSite(
         // ReSharper disable once MethodOverloadWithOptionalParameter
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         int? siteId = null,
         ISite site = null,
         bool? withUnpublished = null);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using ToSic.Lib.Coding;
 using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
@@ -11,7 +12,7 @@ public partial class ToolbarBuilder
     private IToolbarBuilder AddListAction(
         string commandName,
         object target,
-        string noParamOrder,
+        NoParamOrder noParamOrder,
         string contentType,
         object ui,
         object parameters,
@@ -19,7 +20,7 @@ public partial class ToolbarBuilder
         Func<ITweakButton, ITweakButton> tweak,
         [CallerMemberName] string methodName = default)
     {
-        Protect(noParamOrder, "See docs", methodName);
+        // Protect(noParamOrder, "See docs", methodName);
         TargetCheck(target);
         var pars = PreCleanParams(tweak, defOp: OprAuto, operation: operation, ui: ui, parameters: parameters, methodName: methodName);
         var command = new ToolbarRuleForEntity(commandName, target, 
@@ -34,7 +35,7 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder Add(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         string contentType = null,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
@@ -44,7 +45,7 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder AddExisting(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         string contentType = null,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
@@ -54,7 +55,7 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder List(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -64,7 +65,7 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder MoveDown(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -73,7 +74,7 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder MoveUp(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -82,7 +83,7 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder Remove(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -91,7 +92,7 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder Replace(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,

@@ -1,4 +1,5 @@
-﻿using ToSic.Lib.DI;
+﻿using ToSic.Lib.Coding;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
@@ -26,7 +27,7 @@ internal class TurnOnService: ServiceBase, ITurnOnService
 
     public Attribute Attribute(
         object runOrSpecs,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object require = default,
         object data = default
     )
@@ -39,7 +40,7 @@ internal class TurnOnService: ServiceBase, ITurnOnService
 
     public IHtmlTag Run(
         object runOrSpecs,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object require = default,
         object data = default
     )

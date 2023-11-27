@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Web.PageService;
 
-public partial class PageService
+partial class PageService
 {
     /// <inheritdoc />
     public string SetTitle(string value, string placeholder = null) => PageServiceShared.Queue(PageProperties.Title, value, PageChangeModes.Prepend, placeholder);

@@ -5,12 +5,12 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data.Typed;
-using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Data.Wrapper.JsonProcessingHelpers;
 
 namespace ToSic.Sxc.Data.Wrapper;
@@ -39,15 +39,15 @@ public class CodeJsonWrapper: ServiceBase
     #endregion
 
 
-    internal DynamicJacketBase Json2Jacket(string json, string noParamOrder = Protector, string fallback = default)
+    internal DynamicJacketBase Json2Jacket(string json, NoParamOrder noParamOrder = default, string fallback = default)
     {
-        Protect(noParamOrder, nameof(fallback));
+        //Protect(noParamOrder, nameof(fallback));
         return IfJsonTryConvertToJacket(AsJsonNode(json, fallback)).Final;
     }
 
-    public ITyped JsonToTyped(string json, string noParamOrder = Protector, string fallback = default)
+    public ITyped JsonToTyped(string json, NoParamOrder noParamOrder = default, string fallback = default)
     {
-        Protect(noParamOrder, nameof(fallback));
+        //Protect(noParamOrder, nameof(fallback));
         if (!json.HasValue()) return null;
         ThrowIfNotExpected(json, false);
         var node = AsJsonNode(json, fallback);
@@ -55,9 +55,9 @@ public class CodeJsonWrapper: ServiceBase
         return result.Final;
     }
 
-    public IEnumerable<ITyped> JsonToTypedList(string json, string noParamOrder = Protector, string fallback = default)
+    public IEnumerable<ITyped> JsonToTypedList(string json, NoParamOrder noParamOrder = default, string fallback = default)
     {
-        Protect(noParamOrder, nameof(fallback));
+        //Protect(noParamOrder, nameof(fallback));
         if (!json.HasValue()) return null;
         ThrowIfNotExpected(json, true);
         var node = AsJsonNode(json, fallback);

@@ -6,6 +6,7 @@ using ToSic.Eav.DataSource.Catalog;
 using ToSic.Eav.DataSource.Query;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Services;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -56,7 +57,7 @@ internal partial class DataService: ServiceForDynamicCode, IDataService
     }
     private IAppIdentity _appIdentity;
         
-    public IDataService New(string noParamOrder = Protector, IAppIdentity appIdentity = default, int zoneId = default, int appId = default)
+    public IDataService New(NoParamOrder noParamOrder = default, IAppIdentity appIdentity = default, int zoneId = default, int appId = default)
     {
         // Make sure we have an AppIdentity if possible - or reuse the existing, though it could be null
         if (appIdentity == default)
@@ -88,10 +89,10 @@ internal partial class DataService: ServiceForDynamicCode, IDataService
     private Func<ILookUpEngine> _getLookup;
 
 
-    public IDataSource GetAppSource(string noParamOrder = Protector, object parameters = default, object options = default)
+    public IDataSource GetAppSource(NoParamOrder noParamOrder = default, object parameters = default, object options = default)
     {
         var l = Log.Fn<IDataSource>($"{nameof(options)}: {options}");
-        Protect(noParamOrder, $"{nameof(parameters)}, {nameof(options)}");
+        //Protect(noParamOrder, $"{nameof(parameters)}, {nameof(options)}");
         var fullOptions = OptionsMs.SafeOptions(parameters, options: options, identityRequired: true);
         var appSource = _dataSources.Value.CreateDefault(fullOptions);
         return l.Return(appSource);
@@ -101,7 +102,7 @@ internal partial class DataService: ServiceForDynamicCode, IDataService
     #region GetQuery
 
     public IDataSource GetQuery(string name = default,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         IDataSourceLinkable attach = default,
         object parameters = default)
     {

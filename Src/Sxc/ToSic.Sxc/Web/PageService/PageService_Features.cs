@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
@@ -9,7 +10,7 @@ using static ToSic.Sxc.Web.WebResources.WebResourceConstants;
 
 namespace ToSic.Sxc.Web.PageService;
 
-public partial class PageService
+partial class PageService
 {
     public void TestCdn(string cdnSource)
     {
@@ -42,7 +43,7 @@ public partial class PageService
 
     /// <inheritdoc />
     public string Activate(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         bool condition = true,
         params string[] features)
     {

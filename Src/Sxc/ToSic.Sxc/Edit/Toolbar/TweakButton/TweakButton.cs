@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 using ToSic.Sxc.Web.Url;
-using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleForEntity;
 
 namespace ToSic.Sxc.Edit.Toolbar;
@@ -42,12 +42,12 @@ internal class TweakButton: ITweakButton
 
     public ITweakButton Note(
         string note,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         string type = default,
         string background = default
     )
     {
-        Protect(noParamOrder, $"{nameof(type)}");
+        //Protect(noParamOrder, $"{nameof(type)}");
         var noteProps = new Dictionary<string, object> { [nameof(note)] = note };
         if (type != default) noteProps[nameof(type)] = type;
         if (background != default) noteProps[nameof(background)] = background;
@@ -56,10 +56,10 @@ internal class TweakButton: ITweakButton
         
     public ITweakButton Show(bool show = true) => Ui("show", show.ToString().ToLowerInvariant());
 
-    public ITweakButton Color(string color = default, string noParamOrder = Protector, string background = default,
+    public ITweakButton Color(string color = default, NoParamOrder noParamOrder = default, string background = default,
         string foreground = default)
     {
-        Protect(noParamOrder, $"{nameof(background)}, {nameof(foreground)}");
+        //Protect(noParamOrder, $"{nameof(background)}, {nameof(foreground)}");
         if (color == default)
         {
             color = background;

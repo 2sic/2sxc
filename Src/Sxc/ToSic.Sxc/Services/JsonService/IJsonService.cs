@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
 using static ToSic.Eav.Parameters;
@@ -90,7 +91,7 @@ public interface IJsonService
     /// New in 16.02
     /// </remarks>
     [PublicApi]
-    ITyped ToTyped(string json, string noParamOrder = Protector, string fallback = default, bool? propsRequired = default);
+    ITyped ToTyped(string json, NoParamOrder noParamOrder = default, string fallback = default, bool? propsRequired = default);
 
     /// <summary>
     /// Creates a list of <see cref="ITyped"/> wrappers around an json string containing an array of objects.
@@ -114,6 +115,6 @@ public interface IJsonService
     /// <remarks>
     /// New in 16.04
     /// </remarks>
-    IEnumerable<ITyped> ToTypedList(string json, string noParamOrder = Protector, string fallback = default,
+    IEnumerable<ITyped> ToTypedList(string json, NoParamOrder noParamOrder = default, string fallback = default,
         bool? propsRequired = default);
 }

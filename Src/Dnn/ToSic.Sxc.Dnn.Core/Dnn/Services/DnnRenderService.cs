@@ -1,4 +1,5 @@
 ﻿using System.Web;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
@@ -29,7 +30,7 @@ internal class DnnRenderService : RenderService
     }
 
     public override IRenderResult Module(int pageId, int moduleId,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object data = null)
     {
         var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");

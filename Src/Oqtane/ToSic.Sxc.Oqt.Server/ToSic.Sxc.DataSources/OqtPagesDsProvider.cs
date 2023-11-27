@@ -6,6 +6,7 @@ using Oqtane.Shared;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Helpers;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -46,7 +47,7 @@ namespace ToSic.Sxc.DataSources
         #endregion
 
         public override List<PageDataRaw> GetPagesInternal(
-            string noParamOrder = Eav.Parameters.Protector,
+            NoParamOrder noParamOrder = default,
             bool includeHidden = default,
             bool includeDeleted = default,
             bool includeAdmin = default,

@@ -1,10 +1,10 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Query;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Services.DataServices;
 
@@ -25,13 +25,13 @@ internal class GetQueryMs: ServiceBase
     }
 
     public IDataSource GetQuery(string name = default,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         IDataSourceLinkable attach = default,
         object parameters = default)
     {
         var l = Log.Fn<IDataSource>($"{name}, {nameof(parameters)}: {(parameters == null ? "null" : "not null")}");
 
-        Protect(noParamOrder, $"{nameof(attach)}, {nameof(parameters)}");
+        //Protect(noParamOrder, $"{nameof(attach)}, {nameof(parameters)}");
 
         // If no in-source was provided, make sure that we create one from the current app
         var fullOptions = _optionsMs.SafeOptions(parameters, null, true /*, options: options*/);

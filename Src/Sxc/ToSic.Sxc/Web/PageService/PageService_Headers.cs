@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Web.PageService;
 
-public partial class PageService
+partial class PageService
 {
 
     /// <inheritdoc />

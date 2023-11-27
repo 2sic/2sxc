@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code.Documentation;
 using static ToSic.Eav.Parameters;
@@ -71,7 +72,7 @@ public interface IConvertService16
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The value used if conversion fails.</param>
     /// <returns></returns>
-    T To<T>(object value, string noParamOrder = Protector, T fallback = default);
+    T To<T>(object value, NoParamOrder noParamOrder = default, T fallback = default);
 
     /// <summary>
     /// Convert any object safely to bool.
@@ -90,7 +91,7 @@ public interface IConvertService16
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The value used if conversion fails.</param>
     /// <returns></returns>
-    bool ToBool(object value, string noParamOrder = Protector, bool fallback = default);
+    bool ToBool(object value, NoParamOrder noParamOrder = default, bool fallback = default);
 
     /// <summary>
     /// Convert any object safely to decimal.
@@ -105,7 +106,7 @@ public interface IConvertService16
     /// <param name="value">value to convert</param>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The value used if conversion fails.</param>
-    decimal ToDecimal(object value, string noParamOrder = Protector, decimal fallback = default);
+    decimal ToDecimal(object value, NoParamOrder noParamOrder = default, decimal fallback = default);
 
     /// <summary>
     /// Convert any object safely to double.
@@ -120,7 +121,7 @@ public interface IConvertService16
     /// <param name="value">value to convert</param>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The value used if conversion fails.</param>
-    double ToDouble(object value, string noParamOrder = Protector, double fallback = default);
+    double ToDouble(object value, NoParamOrder noParamOrder = default, double fallback = default);
 
     /// <summary>
     /// Convert any object safely to float.
@@ -139,7 +140,7 @@ public interface IConvertService16
     /// <param name="value">value to convert</param>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The value used if conversion fails.</param>
-    float ToFloat(object value, string noParamOrder = Protector, float fallback = default);
+    float ToFloat(object value, NoParamOrder noParamOrder = default, float fallback = default);
 
     /// <summary>
     /// Convert any object safely to standard int.
@@ -154,7 +155,7 @@ public interface IConvertService16
     /// <param name="value">value to convert</param>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The value used if conversion fails.</param>
-    int ToInt(object value, string noParamOrder = Protector, int fallback = default);
+    int ToInt(object value, NoParamOrder noParamOrder = default, int fallback = default);
 
     /// <summary>
     /// Convert any object safely to a Guid
@@ -169,7 +170,7 @@ public interface IConvertService16
     /// <param name="value">value to convert</param>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The value used if conversion fails.</param>
-    Guid ToGuid(object value, string noParamOrder = Protector, Guid fallback = default);
+    Guid ToGuid(object value, NoParamOrder noParamOrder = default, Guid fallback = default);
 
 
 
@@ -191,7 +192,7 @@ public interface IConvertService16
     /// <param name="fallback">Fallback in case conversion fails or result is null</param>
     /// <param name="fallbackOnNull">Determine that nulls should also fallback, default is `true`</param>
     string ToString(object value,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         string fallback = default,
         bool fallbackOnNull = true);
 
@@ -213,7 +214,7 @@ public interface IConvertService16
     /// <param name="value">value to convert</param>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The value used if conversion fails.</param>
-    string ForCode(object value, string noParamOrder = Protector, string fallback = default);
+    string ForCode(object value, NoParamOrder noParamOrder = default, string fallback = default);
 
     /// <summary>
     /// Sub-Service to convert JSON

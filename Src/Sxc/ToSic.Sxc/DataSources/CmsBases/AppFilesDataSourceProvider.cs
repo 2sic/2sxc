@@ -6,6 +6,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.ImportExport;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
@@ -53,7 +54,7 @@ public class AppFilesDataSourceProvider : ServiceBase<AppFilesDataSourceProvider
     }
 
     public AppFilesDataSourceProvider Configure(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         int zoneId = default,
         int appId = default,
         bool onlyFolders = default,

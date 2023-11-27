@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -32,7 +33,7 @@ public abstract class LinkServiceBase : ServiceForDynamicCode, ILinkService
 
     /// <inheritdoc />
     public string To(
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         int? pageId = null,
         string api = null,
         object parameters = null,
@@ -43,7 +44,7 @@ public abstract class LinkServiceBase : ServiceForDynamicCode, ILinkService
         var l = (Debug ? Log : null).Fn<string>($"pid:{pageId},api:{api},t:{type},l:{language}");
 
         // prevent incorrect use without named parameters
-        Protect(noParamOrder, $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
+        //Protect(noParamOrder, $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
 
         // Check initial conflicting values.
         if (pageId != null && api != null)
@@ -120,7 +121,7 @@ public abstract class LinkServiceBase : ServiceForDynamicCode, ILinkService
         string url = default,
         object settings = default,
         object factor = default,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         IField field = default,
         object width = default,
         object height = default,
@@ -134,8 +135,8 @@ public abstract class LinkServiceBase : ServiceForDynamicCode, ILinkService
     )
     {
         // prevent incorrect use without named parameters
-        Protect(noParamOrder, $"{nameof(width)},{nameof(height)}," +
-                              $"{nameof(quality)},{nameof(resizeMode)},{nameof(scaleMode)},{nameof(format)},{nameof(aspectRatio)},{nameof(type)},{nameof(parameters)}");
+        //Protect(noParamOrder, $"{nameof(width)},{nameof(height)}," +
+        //                      $"{nameof(quality)},{nameof(resizeMode)},{nameof(scaleMode)},{nameof(format)},{nameof(aspectRatio)},{nameof(type)},{nameof(parameters)}");
 
         // If params were given, ensure it can be used as string, as it could also be a params-object
         var strParams = ParametersToString(parameters);

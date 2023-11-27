@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Data;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Edit.Toolbar;
@@ -14,7 +15,7 @@ public partial class EditService
     /// <inheritdoc />
     public IRawHtmlString Toolbar(
         object target = null,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         string actions = null,
         string contentType = null,
         object condition = null,
@@ -26,7 +27,7 @@ public partial class EditService
     /// <inheritdoc/>
     public IRawHtmlString TagToolbar(
         object target = null,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         string actions = null,
         string contentType = null,
         object condition = null,
@@ -38,7 +39,7 @@ public partial class EditService
     private IRawHtmlString ToolbarInternal(
         bool inTag,
         object target,
-        string noParamOrder,
+        NoParamOrder noParamOrder,
         string actions,
         string contentType,
         object condition,
@@ -50,8 +51,8 @@ public partial class EditService
         if (!Enabled) return l.ReturnNull("not enabled");
         if (!IsConditionOk(condition)) return l.ReturnNull("condition false");
 
-        Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar",
-            $"{nameof(actions)},{nameof(contentType)},{nameof(condition)},{nameof(prefill)},{nameof(settings)},{nameof(toolbar)}");
+        //Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar",
+        //    $"{nameof(actions)},{nameof(contentType)},{nameof(condition)},{nameof(prefill)},{nameof(settings)},{nameof(toolbar)}");
 
         // New in v13: The first parameter can also be a ToolbarBuilder, in which case all other params are ignored
         ItemToolbarBase itmToolbar;

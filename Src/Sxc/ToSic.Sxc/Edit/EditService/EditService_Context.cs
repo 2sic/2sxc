@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Text.Json;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Serialization;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
-using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.EditService;
@@ -19,7 +17,7 @@ public partial class EditService
 
     /// <inheritdoc/>
     public IRawHtmlString ContextAttributes(ICanBeEntity target,
-        string noParamOrder = "Params must be named (https://go.2sxc.org/named-params)",
+        NoParamOrder noParamOrder = default,
         string field = null,
         string contentType = null,
         Guid? newGuid = null,
@@ -28,7 +26,7 @@ public partial class EditService
     {
         Log.A("ctx attribs - enabled:{Enabled}");
         if (!Enabled) return null;
-        Parameters.Protect(noParamOrder, $"{nameof(field)},{nameof(contentType)},{nameof(newGuid)}");
+        //Parameters.Protect(noParamOrder, $"{nameof(field)},{nameof(contentType)},{nameof(newGuid)}");
 
         if (field == null) throw new Exception("need parameter 'field'");
 
@@ -49,7 +47,7 @@ public partial class EditService
     /// <inheritdoc/>
     [PrivateApi]
     public IRawHtmlString WrapInContext(object content,
-        string noParamOrder = Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         string tag = Constants.DefaultContextTag,
         bool full = false,
         bool? enableEdit = null,
@@ -57,7 +55,7 @@ public partial class EditService
         int contentBlockId = 0
     )
     {
-        Parameters.Protect(noParamOrder, $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
+        //Parameters.Protect(noParamOrder, $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
 
         var renderingHelper = _renderHelper.Value;
 

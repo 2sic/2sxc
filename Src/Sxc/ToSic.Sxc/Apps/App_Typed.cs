@@ -1,12 +1,12 @@
 ﻿using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Decorators;
 using ToSic.Sxc.Services.DataServices;
-using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Apps.AppAssetFolderMain;
 
 namespace ToSic.Sxc.Apps;
@@ -18,9 +18,9 @@ public partial class App: IAppTyped
     IFolder IAppTyped.Folder => _folder ??= (this as IAppTyped).FolderAdvanced();
     private IFolder _folder;
 
-    IFolder IAppTyped.FolderAdvanced(string noParamOrder, string location)
+    IFolder IAppTyped.FolderAdvanced(NoParamOrder noParamOrder, string location)
     {
-        Protect(noParamOrder, nameof(location));
+        //Protect(noParamOrder, nameof(location));
         return new AppAssetFolderMain(AppPaths, Folder, DetermineShared(location) ?? AppState.IsShared());
     }
 
@@ -31,7 +31,7 @@ public partial class App: IAppTyped
 
     #region GetQuery
 
-    IDataSource IAppTyped.GetQuery(string name, string noParamOrder, IDataSourceLinkable attach, object parameters)
+    IDataSource IAppTyped.GetQuery(string name, NoParamOrder noParamOrder, IDataSourceLinkable attach, object parameters)
     {
         var opts = new DataSourceOptionsMs(this, () => ConfigurationProvider);
         return new GetQueryMs(Services.QueryManager, opts, Log).GetQuery(name, noParamOrder, attach, parameters);

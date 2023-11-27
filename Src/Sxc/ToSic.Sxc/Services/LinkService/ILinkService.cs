@@ -1,4 +1,5 @@
-﻿using ToSic.Lib.Documentation;
+﻿using ToSic.Lib.Coding;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
@@ -63,7 +64,7 @@ public interface ILinkService: INeedsDynamicCodeRoot, ICanDebug
     /// * In v13.02 introduced language with "current"
     /// </remarks>
     string To(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         int? pageId = null,
         string api = null,
         object parameters = null,
@@ -151,7 +152,7 @@ public interface ILinkService: INeedsDynamicCodeRoot, ICanDebug
         string url = default,
         object settings = default,
         object factor = default,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         IField field = default,
         object width = default,
         object height = default,

@@ -1,4 +1,4 @@
-﻿using static ToSic.Eav.Parameters;
+﻿using ToSic.Lib.Coding;
 
 namespace ToSic.Sxc.Data.Docs;
 
@@ -33,7 +33,7 @@ public abstract class DynamicEntityDocs
     /// <returns>a dynamically typed result, can be string, bool, etc.</returns>
     public abstract dynamic Get(string name,
         // ReSharper disable once MethodOverloadWithOptionalParameter
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         string language = null,
         bool convertLinks = true,
         bool? debug = null
@@ -67,7 +67,7 @@ public abstract class DynamicEntityDocs
     /// <remarks>Added in v15</remarks>
     public abstract TValue Get<TValue>(string name,
         // ReSharper disable once MethodOverloadWithOptionalParameter
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         TValue fallback = default);
 
 }

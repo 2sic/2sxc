@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Services;
+﻿using ToSic.Lib.Coding;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Demo;
 
@@ -17,7 +18,7 @@ public static class ToolbarServiceExtensions
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="ui"></param>
     public static void ActivateDemoMode(this IToolbarService toolbarService, 
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         string ui = null
     )
     {

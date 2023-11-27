@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using static ToSic.Eav.Parameters;
 
@@ -37,7 +38,7 @@ public interface ITweakButton
     /// </remarks>
     ITweakButton Note(
         string note = default,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         string type = default,
         string background = default
     );
@@ -60,7 +61,7 @@ public interface ITweakButton
     /// <returns></returns>
     ITweakButton Color(
         string color = default,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         string background = default,
         string foreground = default
     );

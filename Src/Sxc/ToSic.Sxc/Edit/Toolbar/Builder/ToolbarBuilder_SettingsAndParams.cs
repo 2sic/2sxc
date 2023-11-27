@@ -1,13 +1,14 @@
 ﻿using System;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Data;
+using ToSic.Lib.Coding;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
 public partial class ToolbarBuilder
 {
     public IToolbarBuilder Settings(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         string show = default,
         string hover = default,
         string follow = default,
@@ -21,7 +22,7 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder Parameters(
         object target = default,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = default,
         object parameters = default,

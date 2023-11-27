@@ -1,4 +1,5 @@
-﻿using ToSic.Lib.Documentation;
+﻿using ToSic.Lib.Coding;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Services;
@@ -18,12 +19,12 @@ public partial class EditService
     #region Scripts and CSS includes
 
     /// <inheritdoc/>
-    public string Enable(string noParamOrder = Eav.Parameters.Protector, bool? js = null, bool? api = null,
+    public string Enable(NoParamOrder noParamOrder = default, bool? js = null, bool? api = null,
         bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null
     ) => Log.Func<string>(() =>
     {
-        Eav.Parameters.Protect(noParamOrder,
-            $"{nameof(js)},{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
+        //Eav.Parameters.Protect(noParamOrder,
+        //    $"{nameof(js)},{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
 
         var ps = _DynCodeRoot.GetKit<ServiceKit14>()?.Page;
         if (ps == null)

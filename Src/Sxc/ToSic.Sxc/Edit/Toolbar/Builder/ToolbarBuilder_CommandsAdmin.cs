@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
@@ -8,7 +9,7 @@ public partial class ToolbarBuilder
 {
     private IToolbarBuilder AddAdminAction(
         string verb,
-        string noParamOrder,
+        NoParamOrder noParamOrder,
         object ui,
         object parameters,
         string operation,
@@ -17,7 +18,7 @@ public partial class ToolbarBuilder
         [CallerMemberName] string methodName = default
     )
     {
-        Eav.Parameters.Protect(noParamOrder, "See docs", methodName);
+        // Eav.Parameters.Protect(noParamOrder, "See docs", methodName);
         var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, ui: ui, parameters: parameters, methodName: methodName);
         var uiTweaked = PrepareUi(ui, tweaks: tweaks?.UiMerge);
         var paramsTweaked = Utils.PrepareParams(parameters, tweaks);
@@ -33,7 +34,7 @@ public partial class ToolbarBuilder
         
     public IToolbarBuilder App(
         object target = null,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -42,7 +43,7 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder AppImport(
         object target = null,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -51,7 +52,7 @@ public partial class ToolbarBuilder
         
     public IToolbarBuilder AppResources(
         object target = null,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -60,7 +61,7 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder AppSettings(
         object target = null,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -69,7 +70,7 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder Apps(
         object target = null,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -78,7 +79,7 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder System(
         object target = null,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -88,7 +89,7 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder Insights(
         object target = null,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,

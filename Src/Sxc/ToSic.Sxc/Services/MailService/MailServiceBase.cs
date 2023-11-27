@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Context;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -60,7 +61,7 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
 
     /// <inheritdoc />
     public MailMessage Create(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object from = null,
         object to = null,
         object cc = null,
@@ -78,9 +79,9 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
                         $"{nameof(attachments)}: {attachments}");
 
         // prevent incorrect use without named parameters
-        Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Create)}", 
-            $"{nameof(from)}, {nameof(to)}, {nameof(cc)}, {nameof(bcc)}, {nameof(replyTo)}, " +
-            $"{nameof(subject)}, {nameof(body)}, {nameof(isHtml)}, {nameof(encoding)}, {nameof(attachments)}");
+        //Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Create)}", 
+        //    $"{nameof(from)}, {nameof(to)}, {nameof(cc)}, {nameof(bcc)}, {nameof(replyTo)}, " +
+        //    $"{nameof(subject)}, {nameof(body)}, {nameof(isHtml)}, {nameof(encoding)}, {nameof(attachments)}");
 
         var mailMessage = new MailMessage();
             
@@ -109,7 +110,7 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
 
     /// <inheritdoc />
     public void Send(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object from = null,
         object to = null,
         object cc = null,
@@ -123,9 +124,9 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
     {
         // Note: don't log all the parameters here, because we'll do it again on the Create-call
         // prevent incorrect use without named parameters
-        Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Send)}",
-            $"{nameof(from)}, {nameof(to)}, {nameof(cc)}, {nameof(bcc)}, {nameof(replyTo)}, " +
-            $"{nameof(subject)}, {nameof(body)}, {nameof(isHtml)}, {nameof(encoding)}, {nameof(attachments)}");
+        //Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Send)}",
+        //    $"{nameof(from)}, {nameof(to)}, {nameof(cc)}, {nameof(bcc)}, {nameof(replyTo)}, " +
+        //    $"{nameof(subject)}, {nameof(body)}, {nameof(isHtml)}, {nameof(encoding)}, {nameof(attachments)}");
 
         var mailMessage = Create(
             from: from,

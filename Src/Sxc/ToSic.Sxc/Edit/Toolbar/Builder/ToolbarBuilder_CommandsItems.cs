@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
 using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
@@ -22,7 +23,7 @@ public partial class ToolbarBuilder
     private CleanedParams PreCleanParams(
         Func<ITweakButton, ITweakButton> tweak,
         ToolbarRuleOps defOp, 
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         string operation = default, 
         object ui = default, 
         object uiMerge = default, 
@@ -71,13 +72,12 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder Delete(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
         string operation = null)
     {
-        Protect(noParamOrder, "See docs");
         // Set default operation based on what toolbar is used
         var isDefToolbar = FindRule<ToolbarRuleToolbar>()?.IsDefault ?? false;
         var defOp = isDefToolbar ? OprModify : OprAdd;
@@ -90,14 +90,13 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder Edit(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
         object prefill = null,
         string operation = null)
     {
-        Protect(noParamOrder, "See docs");
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
         return EntityRule("edit", target, pars, propsSkip: new[] { KeyEntityGuid, KeyTitle, KeyPublished }).Builder;
     }
@@ -106,14 +105,13 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder New(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
         object prefill = null,
         string operation = null)
     {
-        Protect(noParamOrder, "See docs");
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
 
         return EntityRule("new", target, pars,
@@ -123,13 +121,12 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder Publish(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
         string operation = null)
     {
-        Protect(noParamOrder, "See docs");
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters);
 
         return EntityRule("publish", target, pars,
@@ -141,7 +138,7 @@ public partial class ToolbarBuilder
     public IToolbarBuilder Metadata(
         object target,
         string contentTypes = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -149,7 +146,6 @@ public partial class ToolbarBuilder
         string operation = null,
         string context = null) => Log.Func(() =>
     {
-        Protect(noParamOrder, "See docs");
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
 
         // Note: DO NOT check the target, as here an IAsset is absolutely valid
@@ -174,7 +170,7 @@ public partial class ToolbarBuilder
     /// <inheritdoc />
     public IToolbarBuilder Copy(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         string contentType = null,
         object ui = null,
@@ -183,7 +179,6 @@ public partial class ToolbarBuilder
         string operation = null,
         string context = null)
     {
-        Protect(noParamOrder, "See docs");
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
 
         return EntityRule("copy", target, pars, propsKeep: new[] { KeyEntityId, KeyContentType },
@@ -195,7 +190,7 @@ public partial class ToolbarBuilder
 
     public IToolbarBuilder Data(
         object target = null,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object filter = null,
         object ui = null,
@@ -203,7 +198,6 @@ public partial class ToolbarBuilder
         string operation = null
     )
     {
-        Protect(noParamOrder, "See docs");
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, filter: filter);
 
         return EntityRule("data", target, pars, propsKeep: new[] { KeyContentType }, contentType: target as string)

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav;
+using ToSic.Lib.Coding;
 
 namespace ToSic.Sxc.Images;
 
@@ -8,7 +9,7 @@ public partial class ImageService
     /// <inheritdoc />
     public IResizeSettings Settings(
         object settings = default,
-        string noParamOrder = Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object factor = default,
         object width = default,
         object height = default,
@@ -34,7 +35,7 @@ public partial class ImageService
     /// <inheritdoc />
     public Recipe Recipe(
         Recipe recipe,
-        string noParamOrder = Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         string name = default,
         int width = default,
         string variants = default,

@@ -1,5 +1,6 @@
 ﻿#if NETFRAMEWORK
 using System;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
@@ -45,7 +46,7 @@ namespace ToSic.Sxc.Web
         /// * In v13.02 introduced language with "current"
         /// </remarks>
         string To(
-            string noParamOrder = Eav.Parameters.Protector,
+            NoParamOrder noParamOrder = default,
             int? pageId = null,
             string api = null,
             object parameters = null,
@@ -133,7 +134,7 @@ namespace ToSic.Sxc.Web
             string url = default,
             object settings = default,
             object factor = default,
-            string noParamOrder = Eav.Parameters.Protector,
+            NoParamOrder noParamOrder = default,
             IField field = default,
             object width = default,
             object height = default,

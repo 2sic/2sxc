@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Data;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using static ToSic.Eav.Parameters;
 
@@ -38,7 +39,7 @@ public partial interface IToolbarBuilder
     [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP 16.02")]
     IToolbarBuilder DetectDemo(
         ICanBeEntity root,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         string message = default);
 
     /// <summary>

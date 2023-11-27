@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Data;
+using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -24,7 +25,7 @@ internal class CmsService: ServiceForDynamicCode, ICmsService
 
     public IHtmlTag Html(
         object thing,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         object container = default,
         string classes = default,
         bool debug = default,

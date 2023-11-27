@@ -4,11 +4,11 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Data.Decorators;
 using static System.StringComparer;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data;
 
@@ -51,9 +51,9 @@ internal class GetAndConvertHelper
 
     public dynamic Get(string name) => GetInternal(name, lookupLink: true).Result;
 
-    public object Get(string name, string noParamOrder = Protector, string language = null, bool convertLinks = true, bool? debug = null)
+    public object Get(string name, NoParamOrder noParamOrder = default, string language = null, bool convertLinks = true, bool? debug = null)
     {
-        Protect(noParamOrder, $"{nameof(language)}, {nameof(convertLinks)}");
+        //Protect(noParamOrder, $"{nameof(language)}, {nameof(convertLinks)}");
 
         _debug = debug;
         var result = GetInternal(name, language, convertLinks).Result;
@@ -64,9 +64,9 @@ internal class GetAndConvertHelper
 
     public TValue Get<TValue>(string name) => TryGet(name).Result.ConvertOrDefault<TValue>();
 
-    public TValue Get<TValue>(string name, string noParamOrder = Protector, TValue fallback = default)
+    public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default)
     {
-        Protect(noParamOrder, nameof(fallback));
+        //Protect(noParamOrder, nameof(fallback));
         return TryGet(name).Result.ConvertOrFallback(fallback);
     }
 

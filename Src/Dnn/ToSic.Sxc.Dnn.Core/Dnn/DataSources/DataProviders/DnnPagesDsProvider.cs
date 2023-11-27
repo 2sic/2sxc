@@ -6,6 +6,7 @@ using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Security.Permissions;
 using ToSic.Lib.Documentation;
 using ToSic.Eav.Helpers;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
 
 // ReSharper disable once CheckNamespace
@@ -22,7 +23,7 @@ internal class DnnPagesDsProvider: PagesDataSourceProvider
 
 
     public override List<PageDataRaw> GetPagesInternal(
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         bool includeHidden = default,
         bool includeDeleted = default,
         bool includeAdmin = default,

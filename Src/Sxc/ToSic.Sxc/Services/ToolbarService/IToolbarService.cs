@@ -1,5 +1,5 @@
 ﻿using System;
-using ToSic.Eav.Data;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Edit.Toolbar;
 
@@ -38,7 +38,7 @@ public interface IToolbarService
     /// </remarks>
     IToolbarBuilder Default(
         object target = null,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -65,7 +65,7 @@ public interface IToolbarService
     /// </remarks>
     IToolbarBuilder Empty(
         object target = null,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,
@@ -98,7 +98,7 @@ public interface IToolbarService
     IToolbarBuilder Metadata(
         object target,
         string contentTypes = null,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         Func<ITweakButton, ITweakButton> tweak = default,
         object ui = null,
         object parameters = null,

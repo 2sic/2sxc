@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
@@ -31,7 +32,7 @@ public interface IAppTyped:
     [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP v16.04")]
     IDataSource GetQuery(
         string name = default,
-        string noParamOrder = Protector,
+        NoParamOrder noParamOrder = default,
         IDataSourceLinkable attach = default,
         object parameters = default
     );
@@ -65,7 +66,7 @@ public interface IAppTyped:
     ///   We may add this some day in future.
     /// * Previously the `Folder` property returned containing the name. This is now on `.Folder().Name`.
     /// </remarks>
-    IFolder FolderAdvanced(string noParamOrder = Protector, string location = default);
+    IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string location = default);
 
     IFile Thumbnail { get; }
 

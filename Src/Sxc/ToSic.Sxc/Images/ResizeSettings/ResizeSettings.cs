@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using static ToSic.Sxc.Images.ImageConstants;
 
@@ -47,7 +48,7 @@ internal class ResizeSettings : IResizeSettings
     /// </summary>
     public ResizeSettings(
         IResizeSettings original,
-        string noParamOrder = Eav.Parameters.Protector,
+        NoParamOrder noParamOrder = default,
         int? width = null,
         int? height = null,
         double? aspectRatio = null,
