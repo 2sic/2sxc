@@ -143,6 +143,10 @@
       <!-- Other DLLs -->
       <AssemblyInclude Include="$(OutDir)\CsvHelper.dll" />
 
+      <!-- XML documentation -->
+      <AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.xml" />
+      <AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.Dnn.xml" />
+
     </ItemGroup>
 
     <CreateItem Include="$(DnnManifestFile)">
@@ -167,6 +171,7 @@
 
     <Copy SourceFiles="@(AssemblyInclude)" DestinationFolder="$(TempPackageFolder)\bin" />
     <Copy SourceFiles="@(AssemblyHelper)" DestinationFolder="$(TempPackagePdbFolder)\bin" />
+    <Copy SourceFiles="@(AssemblyDocumentation)" DestinationFolder="$(TempPackagePdbFolder)\bin" />
     <Copy SourceFiles="@(SqlDataProviderFiles)" DestinationFolder="$(TempPackageFolder)\%(RecursiveDir)" />
     <Copy SourceFiles="@(PackageManifestFiles)" DestinationFolder="$(TempPackageFolder)" />
     <Copy SourceFiles="@(PackageModuleIcon)" DestinationFolder="$(TempPackageFolder)" />
