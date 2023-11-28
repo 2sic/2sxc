@@ -4,7 +4,7 @@ using ToSic.Sxc.Oqt.Shared.Interfaces;
 
 namespace ToSic.Sxc.Oqt.Server.Services;
 
-public class OqtDebugStateService : IOqtDebugStateService
+internal class OqtDebugStateService : IOqtDebugStateService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 

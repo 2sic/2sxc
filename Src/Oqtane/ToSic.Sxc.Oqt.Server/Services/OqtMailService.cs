@@ -12,7 +12,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Oqt.Server.Services;
 
-public class OqtMailService : MailServiceBase
+internal class OqtMailService : MailServiceBase
 {
     private readonly LazySvc<ISiteRepository> _siteRepositoryLazy;
     private readonly LazySvc<ISettingRepository> _settingRepositoryLazy;

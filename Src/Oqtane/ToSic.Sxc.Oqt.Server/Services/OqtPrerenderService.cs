@@ -12,7 +12,7 @@ using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Server.Services;
 
-public class OqtPrerenderService : ServiceBase, IOqtPrerenderService
+internal class OqtPrerenderService : ServiceBase, IOqtPrerenderService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IThemeRepository _themes;

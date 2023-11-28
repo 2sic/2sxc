@@ -1,7 +1,6 @@
 ﻿using Custom.Hybrid;
 using Oqtane.Repository;
 using Oqtane.Shared;
-using System;
 using System.Linq;
 using Oqtane.Models;
 using ToSic.Lib.DI;
@@ -19,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.Services;
 /// The Oqtane implementation of the <see cref="ILinkService"/>.
 /// </summary>
 [PrivateApi]
-public class OqtLinkService : LinkServiceBase
+internal class OqtLinkService : LinkServiceBase
 {
     public Razor12 RazorPage { get; set; }
     private readonly IPageRepository _pageRepository;

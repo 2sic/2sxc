@@ -25,10 +25,10 @@ using static ToSic.Sxc.Oqt.Server.WebApi.OqtWebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
 
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class OqtStartup : IServerStartup
 {
-    public IConfigurationRoot Configuration { get; }
-    //public IWebHostEnvironment HostEnvironment { get; set; }
+    internal IConfigurationRoot Configuration { get; }
 
     public OqtStartup()
     {

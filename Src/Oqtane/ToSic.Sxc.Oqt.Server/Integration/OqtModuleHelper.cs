@@ -3,7 +3,8 @@ using Oqtane.Repository;
 
 namespace ToSic.Sxc.Oqt.Server.Integration;
 
-public class OqtModuleHelper
+// TODO: @STV I have a feeling this isn't used any where?
+internal class OqtModuleHelper
 {
     private readonly IModuleRepository _moduleRepository;
     private readonly IModuleDefinitionRepository _moduleDefinitionRepository;
