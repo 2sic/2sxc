@@ -4,7 +4,6 @@ using Oqtane.Shared;
 using System.Reflection;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Apps;
@@ -26,6 +25,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [Authorize(Roles = RoleNames.Admin)]
 
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ApiExplorerController : OqtStatefulControllerBase, IApiExplorerController
 {
     public ApiExplorerController() : base(RealController.LogSuffix) { }

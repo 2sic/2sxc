@@ -18,7 +18,8 @@ using Page = Oqtane.Models.Page;
 namespace ToSic.Sxc.Oqt.Server.Blocks;
 
 [PrivateApi]
-public class OqtSxcViewBuilder : ServiceBase
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
 {
     #region Constructor and DI
 
@@ -119,11 +120,11 @@ public class OqtSxcViewBuilder : ServiceBase
 
     internal Alias Alias;
     internal Site Site;
-    internal Page Page;
+    public Page Page { get; private set; }
     internal Module Module;
     internal bool PreRender;
 
-    internal IBlock Block => _blockGetOnce.Get(() => LogTimer.DoInTimer(() =>
+    private IBlock Block => _blockGetOnce.Get(() => LogTimer.DoInTimer(() =>
     {
         var ctx = _contextOfBlockEmpty.Init(Page.PageId, Module);
         var block = _blockModuleEmpty.Init(ctx);
@@ -136,11 +137,11 @@ public class OqtSxcViewBuilder : ServiceBase
     }));
     private readonly GetOnce<IBlock> _blockGetOnce = new();
 
-    protected ILogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"PreRender:{PreRender}, Page:{Page?.PageId} '{Page?.Name}', Module:{Module?.ModuleId} '{Module?.Title}'"));
+    private ILogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"PreRender:{PreRender}, Page:{Page?.PageId} '{Page?.Name}', Module:{Module?.ModuleId} '{Module?.Title}'"));
     private readonly GetOnce<ILogCall> _logTimer = new();
 
 
-    protected IOutputCache OutputCache => _oc.Get(() => _outputCache.Init(Module.ModuleId, Page?.PageId ?? 0, Block));
+    private IOutputCache OutputCache => _oc.Get(() => _outputCache.Init(Module.ModuleId, Page?.PageId ?? 0, Block));
     private readonly GetOnce<IOutputCache> _oc = new();
 
     #endregion

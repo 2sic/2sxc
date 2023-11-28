@@ -12,7 +12,7 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
-public class OqtEnvironmentPermission : EnvironmentPermission
+internal class OqtEnvironmentPermission : EnvironmentPermission
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly LazySvc<IUserPermissions> _userPermissions;

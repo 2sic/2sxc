@@ -14,7 +14,7 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Context;
 
-public class OqtModule: Module<Module>
+internal class OqtModule: Module<Module>
 {
     private readonly SettingsHelper _settingsHelper;
     private readonly IModuleRepository _moduleRepository;

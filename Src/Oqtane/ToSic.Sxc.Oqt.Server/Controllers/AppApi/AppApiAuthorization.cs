@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
      * For reference, original AuthorizationMiddleware class is commented on the bottom of this file.
      * Our version is made because endpoint metadata is provided from our custom ActionContext.
      */
-public class AppApiAuthorization: IHasLog
+internal class AppApiAuthorization: IHasLog
 {
     public AppApiAuthorization(ILogStore logStore)
     {

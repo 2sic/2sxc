@@ -7,7 +7,7 @@ using ToSic.Sxc.WebApi.ActionFilters;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
 
-internal static partial class OqtRegisterServices
+partial class OqtRegisterServices
 {
     /// <summary>
     /// Things needed by the standard API Controllers to work

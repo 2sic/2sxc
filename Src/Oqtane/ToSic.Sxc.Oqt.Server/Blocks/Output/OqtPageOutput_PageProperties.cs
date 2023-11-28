@@ -7,7 +7,7 @@ using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output;
 
-public partial class OqtPageOutput
+partial class OqtPageOutput
 {
     /// <summary>
     /// 

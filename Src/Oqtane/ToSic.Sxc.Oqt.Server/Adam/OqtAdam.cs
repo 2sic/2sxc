@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Sxc.Adam;
+﻿using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.Oqt.Server.Adam;
 

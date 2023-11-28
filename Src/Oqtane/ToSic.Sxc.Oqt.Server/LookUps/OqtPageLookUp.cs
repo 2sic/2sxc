@@ -5,7 +5,7 @@ using static ToSic.Sxc.LookUp.LookUpConstants;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps;
 
-public class OqtPageLookUp : LookUpBase
+internal class OqtPageLookUp : LookUpBase
 {
     private readonly IContextResolver _ctxResolver;
     protected Oqtane.Models.Page Page { get; set; }

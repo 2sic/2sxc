@@ -7,7 +7,7 @@ using static ToSic.Sxc.LookUp.LookUpConstants;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps;
 
-public class OqtSiteLookUp : LookUpBase
+internal class OqtSiteLookUp : LookUpBase
 {
     public SiteState SiteState { get; }
     protected Oqtane.Models.Site Site { get; set; }

@@ -20,7 +20,7 @@ namespace ToSic.Sxc.DataSources;
 /// Deliver a list of pages from the current platform (Dnn or Oqtane)
 /// </summary>
 [PrivateApi]
-public class OqtPagesDsProvider : PagesDataSourceProvider
+internal class OqtPagesDsProvider : PagesDataSourceProvider
 {
     private const int OqtLevelOffset = 1;
 

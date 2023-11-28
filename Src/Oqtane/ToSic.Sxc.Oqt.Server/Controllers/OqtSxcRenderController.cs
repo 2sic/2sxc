@@ -20,10 +20,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers;
 
 //[Route("{alias:int}/api/[controller]")]
 [Route(ControllerRoutes.ApiRoute)]
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class OqtSxcRenderController : ModuleControllerBase
 {
     public OqtSxcRenderController(IHttpContextAccessor accessor,
-        OqtSxcViewBuilder sxcOqtane,
+        IOqtSxcViewBuilder sxcOqtane,
         IAliasRepository aliases,
         ISiteRepository sites,
         IPageRepository pages,
@@ -47,7 +49,7 @@ public class OqtSxcRenderController : ModuleControllerBase
     }
 
     private readonly IHttpContextAccessor _accessor;
-    private readonly OqtSxcViewBuilder _sxcOqtane;
+    private readonly IOqtSxcViewBuilder _sxcOqtane;
     private readonly IAliasRepository _aliases;
     private readonly ISiteRepository _sites;
     private readonly IPageRepository _pages;

@@ -19,6 +19,7 @@ public class LookUpConstants
     public const string SourceModule = "module";
     public const string SourcePage = "page";
     public const string SourceSite = "site";
+    public const string SourceUser = "user";
 
     public const string KeyId = "id";
     public const string KeyGuid = "guid";

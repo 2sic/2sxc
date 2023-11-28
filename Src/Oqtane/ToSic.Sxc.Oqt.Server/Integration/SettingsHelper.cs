@@ -8,7 +8,7 @@ using ToSic.Sxc.Oqt.Shared.Dev;
 
 namespace ToSic.Sxc.Oqt.Server.Integration;
 
-public class SettingsHelper
+internal class SettingsHelper
 {
     private readonly ISettingRepository _settingRepository;
     public Dictionary<string, string> Settings;

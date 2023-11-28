@@ -14,6 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
 [Route(OqtWebApiConstants.ApiRootPathNdLang + "/" + AreaRoutes.Sys)]
 
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class LicenseController : OqtStatefulControllerBase, ILicenseController
 {
     public LicenseController(): base("License") { }

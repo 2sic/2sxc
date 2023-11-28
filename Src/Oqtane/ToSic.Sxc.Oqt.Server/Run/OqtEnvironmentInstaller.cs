@@ -10,7 +10,7 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
-public class OqtEnvironmentInstaller: ServiceBase, IEnvironmentInstaller, IPlatformAppInstaller
+internal class OqtEnvironmentInstaller: ServiceBase, IEnvironmentInstaller, IPlatformAppInstaller
 {
     private readonly GenWorkPlus<WorkViews> _workViews;
     private readonly RemoteRouterLink _remoteRouterLink;

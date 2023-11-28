@@ -7,7 +7,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Oqt.Server.Services;
 
-public class OqtUsersService : UsersServiceBase
+internal class OqtUsersService : UsersServiceBase
 {
     private readonly LazySvc<IUserRepository> _userRepository;
     private readonly LazySvc<OqtSecurity> _oqtSecurity;

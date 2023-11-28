@@ -11,7 +11,7 @@ using Page = ToSic.Sxc.Context.Page;
 
 namespace ToSic.Sxc.Oqt.Server.Context;
 
-public class OqtPage : Page, IWrapper<Oqtane.Models.Page>
+internal class OqtPage : Page, IWrapper<Oqtane.Models.Page>
 {
     private readonly SiteState _siteState;
     private readonly LazySvc<IAliasRepository> _aliasRepository;

@@ -4,7 +4,6 @@ using System.Text;
 using System.Xml;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ToSic.Eav;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.WebApi;

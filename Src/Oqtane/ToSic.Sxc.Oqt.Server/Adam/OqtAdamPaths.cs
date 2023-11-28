@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam;
 /// <summary>
 /// Basic AdamPaths resolver, assumes that files are in Content/[tenant]/site/[site]/adam for now
 /// </summary>
-public class OqtAdamPaths: AdamPathsBase
+internal class OqtAdamPaths: AdamPathsBase
 {
     private readonly SiteStateInitializer _siteStateInitializer;
 

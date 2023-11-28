@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Oqt.Server.Integration;
 
-public static class OqtFolderHelper
+internal static class OqtFolderHelper
 {
     // ensure backslash on the end of path, but not on the start
     // except for edge case path = string.Empty

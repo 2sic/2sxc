@@ -3,7 +3,7 @@ using ToSic.Sxc.Oqt.Shared.Dev;
 
 namespace ToSic.Sxc.Oqt.Server.Integration;
 
-public class OqtLogging
+internal static class OqtLogging
 {
     /// <summary>
     /// Activate extended logging for a specific duration

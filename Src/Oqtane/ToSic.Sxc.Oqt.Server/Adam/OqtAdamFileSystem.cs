@@ -17,7 +17,7 @@ using File = Oqtane.Models.File;
 
 namespace ToSic.Sxc.Oqt.Server.Adam;
 
-public class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSystem<int, int>
+internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSystem<int, int>
 {
     private readonly IServerPaths _serverPaths;
     public IFileRepository OqtFileRepository { get; }

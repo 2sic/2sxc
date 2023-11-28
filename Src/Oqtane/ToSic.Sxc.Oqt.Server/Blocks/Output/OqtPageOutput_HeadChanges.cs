@@ -5,7 +5,7 @@ using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output;
 
-public partial class OqtPageOutput
+partial class OqtPageOutput
 {
     public IEnumerable<OqtHeadChange> GetHeadChanges()
     {

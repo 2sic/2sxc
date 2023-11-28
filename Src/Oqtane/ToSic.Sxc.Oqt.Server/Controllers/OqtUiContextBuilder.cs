@@ -9,7 +9,7 @@ using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers;
 
-public class OqtUiContextBuilder: UiContextBuilderBase
+internal class OqtUiContextBuilder: UiContextBuilderBase
 {
     public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, RemoteRouterLink remoteRouterLink, MyServices deps) : base(deps)
     {

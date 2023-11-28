@@ -11,7 +11,7 @@ using ToSic.Sxc.Code;
 namespace ToSic.Sxc.Oqt.Server.Code;
 
 [PrivateApi]
-public class CodeCompilerNetCore: CodeCompiler
+internal class CodeCompilerNetCore: CodeCompiler
 {
     private readonly LazySvc<IServerPaths> _serverPaths;
 

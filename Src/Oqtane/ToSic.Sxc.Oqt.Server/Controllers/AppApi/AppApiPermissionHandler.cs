@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 /// if missing from header "moduleId", or query string, or route value.
 /// </summary>
 [PrivateApi]
-public class AppApiPermissionHandler : PermissionHandler
+internal class AppApiPermissionHandler : PermissionHandler
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly RequestHelper _requestHelper;

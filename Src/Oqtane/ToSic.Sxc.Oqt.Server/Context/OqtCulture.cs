@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Oqtane.Controllers;
 using Oqtane.Infrastructure;
 using Oqtane.Repository;
 using ToSic.Eav.Apps.Languages;
@@ -15,7 +13,7 @@ namespace ToSic.Sxc.Oqt.Server.Context;
 /// <summary>
 /// Manage oqtane site culture info
 /// </summary>
-public class OqtCulture: ServiceBase
+internal class OqtCulture: ServiceBase
 {
     public OqtCulture(LazySvc<ILocalizationManager> localizationManager, LazySvc<ILanguageRepository> languageRepository): base($"{OqtConstants.OqtLogPrefix}.Cultur")
     {

@@ -1,16 +1,17 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Eav.LookUp;
+using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Oqt.Server.Context;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps;
 
-public class OqtUserLookUp : LookUpBase
+internal class OqtUserLookUp : LookUpBase
 {
     private readonly OqtUser _oqtUser;
 
     public OqtUserLookUp(IUser oqtUser)
     {
-        Name = "User";
+        Name = LookUpConstants.SourceUser;
 
         _oqtUser = oqtUser as OqtUser;
     }

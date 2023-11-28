@@ -16,10 +16,11 @@ internal static partial class OqtRegisterServices
 
     private static IServiceCollection AddOqtaneLookUpsAndSources(this IServiceCollection services)
     {
-        services.TryAddTransient<OqtSiteLookUp>();
-        services.TryAddTransient<OqtPageLookUp>();
-        services.TryAddTransient<OqtModuleLookUp>();
-        services.TryAddScoped<OqtUserLookUp>();
+        // 2023-11-28 This looks faulty - they are already registered as ILookup elsewhere
+        //services.TryAddTransient<OqtSiteLookUp>();
+        //services.TryAddTransient<OqtPageLookUp>();
+        //services.TryAddTransient<OqtModuleLookUp>();
+        //services.TryAddScoped<OqtUserLookUp>();
 
         // New v15 for better DI/Logging
         services.TryAddTransient<OqtAssetsFileHelper>();

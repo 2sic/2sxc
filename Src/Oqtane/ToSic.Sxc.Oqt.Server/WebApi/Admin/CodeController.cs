@@ -18,6 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [Authorize(Roles = RoleNames.Admin)]
 
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class CodeController : OqtControllerBase
 {
     public CodeController() : base(false, RealController.LogSuffix) { }

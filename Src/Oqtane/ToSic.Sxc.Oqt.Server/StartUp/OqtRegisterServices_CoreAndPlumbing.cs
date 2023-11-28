@@ -16,7 +16,7 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
 
-internal static partial class OqtRegisterServices
+partial class OqtRegisterServices
 {
     /// <summary>
     /// Path resolvers and IPlatform information

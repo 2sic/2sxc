@@ -4,7 +4,7 @@ using static ToSic.Sxc.Oqt.Server.WebApi.OqtWebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
 
-public static class OqtStartupHelper
+internal static class OqtStartupHelper
 {
 
     public static bool IsSxcEndpoint(string path) => SxcEndpointPathRegex.IsMatch(path);

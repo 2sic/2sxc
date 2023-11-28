@@ -11,7 +11,7 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks;
 
-public class OqtModuleAndBlockBuilder : ModuleAndBlockBuilder
+internal class OqtModuleAndBlockBuilder : ModuleAndBlockBuilder
 {
     public OqtModuleAndBlockBuilder(
         Generator<IModule> moduleGenerator,

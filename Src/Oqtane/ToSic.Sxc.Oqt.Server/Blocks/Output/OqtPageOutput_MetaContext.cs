@@ -5,7 +5,7 @@ using ToSic.Sxc.Edit;
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output;
 
 [PrivateApi]
-public partial class OqtPageOutput
+partial class OqtPageOutput
 {
     /// <summary>
     /// Determines if the context header is needed

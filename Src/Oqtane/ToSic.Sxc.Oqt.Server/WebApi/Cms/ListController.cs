@@ -17,6 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [ValidateAntiForgeryToken]
 //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
 [Authorize(Roles = RoleNames.Admin)]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ListController : OqtStatefulControllerBase, IListController
 {
     public ListController(): base(RealController.LogSuffix) { }

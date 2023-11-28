@@ -16,6 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 
 // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [Authorize(Roles = RoleNames.Admin)]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class LogController: OqtStatefulControllerBase, ILogController
 {
     public LogController() : base(RealController.LogSuffix) { }

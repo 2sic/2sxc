@@ -11,6 +11,7 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Adam;
 
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class OqtAssetsFileHelper: ServiceBase
 {
     public const string RouteAdam = "adam";

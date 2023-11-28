@@ -11,7 +11,7 @@ using ToSic.Sxc.Oqt.Server.Run;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources;
 
-public class OqtUsersDsProvider : UsersDataSourceProvider
+internal class OqtUsersDsProvider : UsersDataSourceProvider
 {
     private readonly SiteState _siteState;
     private readonly LazySvc<OqtSecurity> _oqtSecurity;

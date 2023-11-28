@@ -13,7 +13,7 @@ using ToSic.Sxc.Web.PageFeatures;
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output;
 
 [PrivateApi]
-public partial class OqtPageOutput : ServiceBase
+internal partial class OqtPageOutput : ServiceBase
 {
     #region Constructor and DI
 
@@ -30,13 +30,13 @@ public partial class OqtPageOutput : ServiceBase
     private readonly IBlockResourceExtractor _blockResourceExtractor;
     private readonly IJsApiService _jsApiService;
         
-    public void Init(OqtSxcViewBuilder parent, IRenderResult renderResult)
+    public void Init(IOqtSxcViewBuilder parent, IRenderResult renderResult)
     {
         Parent = parent;
         RenderResult = renderResult;
     }
 
-    protected OqtSxcViewBuilder Parent;
+    protected IOqtSxcViewBuilder Parent;
     protected IRenderResult RenderResult;
 
     #endregion

@@ -16,6 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 [Route(OqtWebApiConstants.AppRootPathNdLang)]
 
 [AllowAnonymous] // All functions will check security internally, so assume no requirements
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AppQueryController : OqtStatefulControllerBase, IAppQueryController
 {
     public AppQueryController(): base(RealController.LogSuffix) { }

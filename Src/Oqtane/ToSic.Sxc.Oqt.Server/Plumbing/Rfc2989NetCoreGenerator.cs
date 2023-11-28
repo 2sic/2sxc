@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing;
 /// the .net Standard 2.0 implementation lacks the option to specify the HashAlgorithm
 /// This ensures that we also have this working in Oqtane
 /// </summary>
-public class Rfc2898NetCoreGenerator : Rfc2898Generator
+internal class Rfc2898NetCoreGenerator : Rfc2898Generator
 {
     public override byte[] GetKeyBytes(AesConfiguration config)
     {

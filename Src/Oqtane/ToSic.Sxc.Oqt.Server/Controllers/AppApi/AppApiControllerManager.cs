@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 /// <summary>
 /// Manage app api controller compilation and registration so we can invoke action latter.
 /// </summary>
-public class AppApiControllerManager: IHasLog
+internal class AppApiControllerManager: IHasLog
 {
     public AppApiControllerManager(ApplicationPartManager partManager, AppApiFileSystemWatcher appApiFileSystemWatcher, ILogStore logStore)
     {

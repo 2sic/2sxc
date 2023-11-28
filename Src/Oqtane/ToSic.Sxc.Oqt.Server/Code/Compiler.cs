@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.Code;
 // Code is based on DynamicRun by Laurent Kempé
 // https://github.com/laurentkempe/DynamicRun
 // https://laurentkempe.com/2019/02/18/dynamically-compile-and-run-code-using-dotNET-Core-3.0/
-public class Compiler : ServiceBase
+internal class Compiler : ServiceBase
 {
     private static List<MetadataReference> References => _references ??= GetMetadataReferences();
     private static List<MetadataReference> _references;

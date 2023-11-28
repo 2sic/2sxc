@@ -11,11 +11,9 @@ using ToSic.Sxc.Web.Url;
 using CspOfPage = ToSic.Sxc.Web.ContentSecurityPolicy.CspOfPage;
 using CspParameters = ToSic.Sxc.Web.ContentSecurityPolicy.CspParameters;
 
-//using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
-
 namespace ToSic.Sxc.Oqt.Server.Services;
 
-public class OqtPageChangesOnServerService : ServiceBase, IOqtPageChangesOnServerService
+internal class OqtPageChangesOnServerService : ServiceBase, IOqtPageChangesOnServerService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly LazySvc<IFeaturesService> _featuresService;

@@ -3,7 +3,7 @@ using Connect.Koi.Detectors;
 
 namespace ToSic.Sxc.Oqt.Server.Polymorphism;
 
-public class OqtKoiCssFrameworkDetector : ICssFrameworkDetector
+internal class OqtKoiCssFrameworkDetector : ICssFrameworkDetector
 {
     private string _bootstrapVersion;
 

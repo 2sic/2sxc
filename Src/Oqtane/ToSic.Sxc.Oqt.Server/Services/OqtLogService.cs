@@ -5,7 +5,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Oqt.Server.Services;
 
-public class OqtSystemLogService : ISystemLogService
+internal class OqtSystemLogService : ISystemLogService
 {
     private readonly ILogManager _logManager;
 

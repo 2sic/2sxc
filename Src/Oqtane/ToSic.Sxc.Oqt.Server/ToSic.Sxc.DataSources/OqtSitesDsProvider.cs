@@ -1,5 +1,4 @@
 ﻿using Oqtane.Repository;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Helpers;
@@ -15,7 +14,7 @@ namespace ToSic.Sxc.DataSources;
 /// Deliver a list of sites from the Oqtane
 /// </summary>
 [PrivateApi]
-public class OqtSitesDsProvider : SitesDataSourceProvider
+internal class OqtSitesDsProvider : SitesDataSourceProvider
 {
     private readonly IAliasRepository _aliases;
     private readonly ISiteRepository _sites;

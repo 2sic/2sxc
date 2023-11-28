@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 // This middleware is dynamically registered in oqtane imageflow module
 // to be executed before main imageflow middleware because we need to
 // rewrite query string params for imageflow
-public class ImageflowRewriteMiddleware : IMiddleware
+internal class ImageflowRewriteMiddleware : IMiddleware
 {
     public Task InvokeAsync(HttpContext context, RequestDelegate next)
     {

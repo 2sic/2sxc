@@ -6,7 +6,7 @@ using static ToSic.Sxc.LookUp.LookUpConstants;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps;
 
-public class OqtModuleLookUp : LookUpBase
+internal class OqtModuleLookUp : LookUpBase
 {
     private Module Module { get; set; }
 

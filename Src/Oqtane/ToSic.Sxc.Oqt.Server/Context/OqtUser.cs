@@ -15,7 +15,7 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Context;
 
-public class OqtUser: ServiceBase, IUser<User>
+internal class OqtUser: ServiceBase, IUser<User>
 {
     private readonly LazySvc<IUserRepository> _userRepository;
     private readonly LazySvc<OqtSecurity> _oqtSecurity;
