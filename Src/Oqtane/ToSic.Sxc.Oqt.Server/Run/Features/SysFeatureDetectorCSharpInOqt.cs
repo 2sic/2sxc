@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Internal.Features;
 using static ToSic.Eav.Internal.Features.SysFeatureSuggestions;
 
-namespace ToSic.Sxc.Oqt.Server.Run.Capabilities;
+namespace ToSic.Sxc.Oqt.Server.Run.Features;
 
 public class SysFeatureDetectorCSharp6: SysFeatureDetector
 {
