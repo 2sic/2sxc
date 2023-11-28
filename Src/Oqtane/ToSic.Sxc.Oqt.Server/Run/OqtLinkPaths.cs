@@ -5,10 +5,9 @@ using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Run;
 using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
-
 namespace ToSic.Sxc.Oqt.Server.Run;
 
-public class OqtLinkPaths: ILinkPaths
+internal class OqtLinkPaths: ILinkPaths
 {
     public OqtLinkPaths(IHttpContextAccessor contextAccessor, SiteStateInitializer siteStateInitializer)
     {

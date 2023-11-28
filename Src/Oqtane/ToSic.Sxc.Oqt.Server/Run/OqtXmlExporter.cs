@@ -15,7 +15,7 @@ using IContextResolver = ToSic.Sxc.Context.IContextResolver;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
-public class OqtXmlExporter : XmlExporter
+internal class OqtXmlExporter : XmlExporter
 {
     #region Constructor / DI
 

@@ -6,7 +6,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Oqt.Server.Context;
 
-public class OqtPlatformContext: Platform, IPlatformInfo
+internal class OqtPlatformContext: Platform, IPlatformInfo
 {
     public OqtPlatformContext(LazySvc<IConfigManager> configManager) => _configManager = configManager;
     private readonly LazySvc<IConfigManager> _configManager;

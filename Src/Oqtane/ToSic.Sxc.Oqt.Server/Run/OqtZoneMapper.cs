@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Languages;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
@@ -16,7 +14,7 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
-public class OqtZoneMapper : ZoneMapperBase
+internal class OqtZoneMapper : ZoneMapperBase
 {
     /// <inheritdoc />
     public OqtZoneMapper(ISiteRepository siteRepository, 

@@ -17,7 +17,7 @@ using IO = System.IO;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
-public class OqtImportExportEnvironment : ImportExportEnvironmentBase
+internal class OqtImportExportEnvironment : ImportExportEnvironmentBase
 {
     private readonly IServerPaths _oqtServerPaths;
     private readonly IFileRepository _oqtFileRepository;

@@ -59,7 +59,7 @@ partial class OqtRegisterServices
         services.TryAddTransient<IValueConverter, OqtValueConverter>();
 
         // Views / Templates / Razor: View Builder
-        services.TryAddTransient<OqtSxcViewBuilder>();
+        services.TryAddTransient<IOqtSxcViewBuilder, OqtSxcViewBuilder>();
 
         services.TryAddTransient<DynamicCodeRoot, OqtDynamicCodeRoot>();
         services.TryAddTransient(typeof(DynamicCodeRoot<,>), typeof(OqtDynamicCodeRoot<,>));

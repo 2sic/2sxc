@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.Context;
 /// This is a Mvc implementation of a Tenant-object.
 /// </summary>
 [PrivateApi]
-public sealed class OqtSite: Site<Site>
+internal sealed class OqtSite: Site<Site>
 {
     /// <summary>
     /// Constructor for DI
