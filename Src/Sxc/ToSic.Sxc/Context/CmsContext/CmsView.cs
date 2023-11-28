@@ -7,7 +7,6 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Context;
 

@@ -4,7 +4,6 @@ using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
-using static ToSic.Eav.Parameters;
 
 // ReSharper disable UnusedMemberInSuper.Global
 

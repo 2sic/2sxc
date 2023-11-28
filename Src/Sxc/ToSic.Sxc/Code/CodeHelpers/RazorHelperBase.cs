@@ -6,7 +6,6 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code.CodeHelpers;
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Tests.DataTests.DynConverterTests
 {

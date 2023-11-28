@@ -17,7 +17,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data.Decorators;
 using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Images;
-using static ToSic.Eav.Parameters;
+
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
 using static ToSic.Eav.Data.Shared.WrapperEquality;
 

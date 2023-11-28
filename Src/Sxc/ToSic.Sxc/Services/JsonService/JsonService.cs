@@ -6,7 +6,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Wrapper;
-using static ToSic.Eav.Parameters;
+
 using static ToSic.Eav.Serialization.JsonOptions;
 
 namespace ToSic.Sxc.Services;

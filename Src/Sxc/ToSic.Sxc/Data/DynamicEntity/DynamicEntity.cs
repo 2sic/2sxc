@@ -10,7 +10,7 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Data.Decorators;
 using ToSic.Sxc.Data.Typed;
 using IEntity = ToSic.Eav.Data.IEntity;
-using static ToSic.Eav.Parameters;
+
 using System.Dynamic;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Blocks;

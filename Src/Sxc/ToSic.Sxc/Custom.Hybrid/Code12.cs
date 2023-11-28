@@ -11,7 +11,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using static ToSic.Eav.Parameters;
+
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;

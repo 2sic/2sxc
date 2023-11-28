@@ -7,7 +7,6 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Logging;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.WebApi;
 

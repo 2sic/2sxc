@@ -10,7 +10,6 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code;
 

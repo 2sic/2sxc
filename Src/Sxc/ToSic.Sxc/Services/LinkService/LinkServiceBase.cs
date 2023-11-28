@@ -10,7 +10,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
-using static ToSic.Eav.Parameters;
+
 
 namespace ToSic.Sxc.Services;
 

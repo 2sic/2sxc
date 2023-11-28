@@ -7,7 +7,7 @@ using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Data.Wrapper;
-using static ToSic.Eav.Parameters;
+
 
 namespace ToSic.Sxc.Data;
 

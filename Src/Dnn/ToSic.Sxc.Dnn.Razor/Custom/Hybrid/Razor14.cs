@@ -15,7 +15,6 @@ using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
-using static ToSic.Eav.Parameters;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
