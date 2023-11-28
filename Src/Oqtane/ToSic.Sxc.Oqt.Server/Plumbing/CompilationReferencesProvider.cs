@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 // Based on https://stackoverflow.com/questions/58685966/adding-assemblies-types-to-be-made-available-to-razor-page-at-runtime to work
 namespace ToSic.Sxc.Oqt.Server.Plumbing;
 
-public class CompilationReferencesProvider: AssemblyPart, ICompilationReferencesProvider
+internal class CompilationReferencesProvider: AssemblyPart, ICompilationReferencesProvider
 {
     private readonly Assembly _assembly;
 
@@ -21,12 +21,7 @@ public class CompilationReferencesProvider: AssemblyPart, ICompilationReferences
     public IEnumerable<string> GetReferencePaths()
     {
         // your `LoadPrivateBinAssemblies()` method needs to be called before the next line executes!
-        // So you should load all private bin's before the first RazorPage gets requested.
-
-        // 2022-11-09 2dm - original code, using deprecated CodeBase property
-        //return AssemblyLoadContext.GetLoadContext(_assembly).Assemblies
-        //    .Where(_ => !_.IsDynamic)
-        //    .Select(_ => new Uri(_.CodeBase).LocalPath);
+        // So you should load all private bin's before the first RazorPage gets requested....
 
         // 2022-11-09 2dm new code
         // 1. Ensure we don't run into null problems

@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Oqt.Server.Code;
 
 // Create a collectible AssemblyLoadContext
 // https://docs.microsoft.com/en-us/dotnet/standard/assembly/unloadability#create-a-collectible-assemblyloadcontext
-public class SimpleUnloadableAssemblyLoadContext : AssemblyLoadContext
+internal class SimpleUnloadableAssemblyLoadContext : AssemblyLoadContext
 {
     public SimpleUnloadableAssemblyLoadContext() : base(/* true */)
     {
