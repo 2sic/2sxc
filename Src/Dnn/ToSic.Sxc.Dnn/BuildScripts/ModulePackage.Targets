@@ -104,6 +104,10 @@
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Dnn*.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Dnn*.pdb" />
 
+      <!-- XML documentation -->
+      <AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.xml" />
+      <AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.Dnn.xml" />
+
       <!-- 2sxc 13+ netstandard2.0/framework 4.7.2 assemblies -->
       <AssemblyInclude Include="$(OutDir)\Microsoft.Bcl.AsyncInterfaces.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.Abstractions.dll" />
@@ -142,10 +146,6 @@
 
       <!-- Other DLLs -->
       <AssemblyInclude Include="$(OutDir)\CsvHelper.dll" />
-
-      <!-- XML documentation -->
-      <AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.xml" />
-      <AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.Dnn.xml" />
 
     </ItemGroup>
 
