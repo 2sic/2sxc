@@ -6,9 +6,8 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Core.Tests;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
+using ToSic.Eav.ImportExport;
 using ToSic.Eav.Internal.Loaders;
-using ToSic.Eav.Persistence.File;
-using ToSic.Eav.Run;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -40,7 +39,8 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
         protected override void SetupServices(IServiceCollection services)
         {
             base.SetupServices(services);
-            services.AddTransient<IAppLoader, AppLoader>();
+            services.AddAppLoader();
+            // services.AddTransient<IAppLoader, AppLoader>();
             services.TryAddTransient<IValueConverter, MockValueConverter>();
         }
 
