@@ -34,9 +34,6 @@
     <file src="..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc.Oqtane\**\*.*" exclude="**\*.map;" target="wwwroot\Modules\ToSic.Sxc.Oqtane" />
     <!-- XML documentation -->
     <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net7.0\ToSic.Sxc.xml" target="lib\net7.0" />
-    <!--<file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net7.0\ToSic.Sxc.Oqtane.Client.xml" target="lib\net7.0" />
-    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net7.0\ToSic.Sxc.Oqtane.Server.xml" target="lib\net7.0" />
-    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net7.0\ToSic.Sxc.Oqtane.Shared.xml" target="lib\net7.0" />-->
     <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net7.0\ToSic.Sxc.Oqtane.*.xml" exclude="**\ToSic.Sxc.Oqtane.Package.xml" target="lib\net7.0" />
     <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net7.0\ToSic.Sxc.Razor.xml" target="lib\net7.0" />
     <!-- 3rd party dependencies -->
