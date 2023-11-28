@@ -6,6 +6,7 @@ using static System.StringComparison;
 namespace ToSic.Sxc.Oqt.Server.Polymorphism;
 
 [PolymorphResolver("Permissions")]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class Permissions : IResolver
 {
     private readonly IUser _oqtUser;

@@ -18,7 +18,6 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Custom;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
-using static ToSic.Eav.Parameters;
 using Constants = ToSic.Sxc.Constants;
 
 // ReSharper disable once CheckNamespace

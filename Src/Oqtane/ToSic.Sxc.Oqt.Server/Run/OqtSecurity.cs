@@ -13,6 +13,7 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class OqtSecurity : ServiceBase
 {
     private readonly LazySvc<IUserRoleRepository> _userRoleRepository;

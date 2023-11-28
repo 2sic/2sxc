@@ -12,6 +12,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Oqt.Server.Pages;
 
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class Pages: ServiceBase
 {
     private readonly IPageModuleRepository _pageModuleRepository;
