@@ -13,7 +13,7 @@ using ToSic.Sxc.Web.JsContext;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output;
 
-public class OqtJsApiService : ServiceBase, IJsApiService
+internal class OqtJsApiService : ServiceBase, IJsApiService
 {
     private readonly IAntiforgery _antiForgery;
     private readonly IHttpContextAccessor _http;

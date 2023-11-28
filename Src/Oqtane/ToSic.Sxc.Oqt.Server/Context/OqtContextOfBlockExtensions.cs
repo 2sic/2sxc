@@ -3,7 +3,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Oqt.Server.Context;
 
-public static class OqtContextOfBlockExtensions
+internal static class OqtContextOfBlockExtensions
 {
     public static IContextOfBlock Init(this IContextOfBlock context, int pageId, Module oqtModule)
     {
