@@ -19,7 +19,7 @@ public partial class App: IAppTyped
     private IFolder _folder;
 
     IFolder IAppTyped.FolderAdvanced(NoParamOrder noParamOrder, string location) 
-        => new AppAssetFolderMain(AppPaths, Folder, DetermineShared(location) ?? AppStateWIP.IsShared());
+        => new AppAssetFolderMain(AppPaths, Folder, DetermineShared(location) ?? AppState.IsShared());
 
     IFile IAppTyped.Thumbnail => _thumbnailFile.Get(() => new AppAssetThumbnail(this, AppPaths, _globalPaths));
     private readonly GetOnce<IFile> _thumbnailFile = new();

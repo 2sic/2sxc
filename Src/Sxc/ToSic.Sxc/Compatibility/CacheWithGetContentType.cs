@@ -9,9 +9,9 @@ namespace ToSic.Sxc.Compatibility
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CacheWithGetContentType
     {
-        private readonly AppState _app;
+        private readonly IAppState _app;
 
-        internal CacheWithGetContentType(AppState app)
+        internal CacheWithGetContentType(IAppState app)
         {
             _app = app;
         }

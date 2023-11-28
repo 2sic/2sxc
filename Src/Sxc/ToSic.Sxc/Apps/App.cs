@@ -49,7 +49,7 @@ public partial class App : EavApp, IApp
     private readonly LazySvc<CodeDataFactory> _cdfLazy;
 
 
-    private IAppPaths AppPaths => _appPaths.Get(() => _appPathsLazy.Value.Init(Site, AppStateWIP));
+    private IAppPaths AppPaths => _appPaths.Get(() => _appPathsLazy.Value.Init(Site, AppState));
     private readonly GetOnce<IAppPaths> _appPaths = new();
 
     #endregion

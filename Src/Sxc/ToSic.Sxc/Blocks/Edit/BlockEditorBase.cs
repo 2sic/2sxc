@@ -65,7 +65,7 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.MySe
         if (BlockConfiguration.Exists || forceCreateContentGroup)
         {
             var existedBeforeSettingTemplate = BlockConfiguration.Exists;
-            var contentGroupGuid = Services.WorkBlocksMod.New(Block.Context.AppState).UpdateOrCreateContentGroup(BlockConfiguration, templateId);
+            var contentGroupGuid = Services.WorkBlocksMod.New(Block.Context.AppStateReader).UpdateOrCreateContentGroup(BlockConfiguration, templateId);
 
             if (!existedBeforeSettingTemplate) EnsureLinkToContentGroup(contentGroupGuid);
 

@@ -20,8 +20,9 @@ partial class EditLoadBackend
     /// </summary>
     /// <returns></returns>
     private JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleWithHeader<IEntity> bundle,
-        JsonSerializer jsonSerializer, AppState appState, IAppWorkCtx appSysCtx) => Log.Func(l =>
+        JsonSerializer jsonSerializer, IAppState appState, IAppWorkCtx appSysCtx)
     {
+        var l = Log.Fn<JsonEntity>();
         // attach original metadata assignment when creating a new one
         JsonEntity ent;
         if (bundle.Entity != null)
@@ -55,8 +56,8 @@ partial class EditLoadBackend
         }
         catch { /* ignore experimental */ }
 
-        return (ent);
-    });
+        return l.Return(ent);
+    }
 
     internal List<IContentType> UsedTypes(List<BundleWithHeader<IEntity>> list, IAppWorkCtx appSysCtx)
         => list.Select(i

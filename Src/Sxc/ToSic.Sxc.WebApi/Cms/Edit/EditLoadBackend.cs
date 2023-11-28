@@ -109,7 +109,7 @@ public partial class EditLoadBackend: ServiceBase
         var appWorkCtx = _workCtxSvc.ContextPlus(appId, showDrafts: showDrafts);
         var result = new EditDto();
         var entityApi = _entityApi.Init(appId, showDrafts);
-        var appState = _appStates.Get(appIdentity);
+        var appState = _appStates.GetReaderInternalOrNull(appIdentity);
         var list = entityApi.GetEntitiesForEditing(items);
         var jsonSerializer = _jsonSerializerGenerator.New().SetApp(appState);
         result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
@@ -187,7 +187,7 @@ public partial class EditLoadBackend: ServiceBase
     /// <summary>
     /// new 2020-12-08 - correct entity-id with lookup of existing if marked as singleton
     /// </summary>
-    private bool TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, AppState appState) => Log.Func(l =>
+    private bool TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, IMetadataSource appState) => Log.Func(l =>
     {
         foreach (var header in list
                      .Where(header => header.For?.Singleton == true && !IsNullOrWhiteSpace(header.ContentTypeName)))

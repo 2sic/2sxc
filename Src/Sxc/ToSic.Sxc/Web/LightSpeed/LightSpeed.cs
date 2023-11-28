@@ -73,7 +73,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
         var appState = AppState;
         if (appState?.ZoneId != null)
             l.Do(message: "dependentAppsStates add", timer: true,
-                action: () => dependentAppsStates.Add(AppStates.Get(AppStates.IdentityOfPrimary(appState.ZoneId))));
+                action: () => dependentAppsStates.Add(AppStates.GetPrimaryApp(appState.ZoneId, Log)));
 
         l.A($"Found {data.DependentApps.Count} apps: " + string.Join(",", data.DependentApps.Select(da => da.AppId)));
         Fresh.Data = data;

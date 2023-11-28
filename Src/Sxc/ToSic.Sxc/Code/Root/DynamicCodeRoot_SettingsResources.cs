@@ -18,7 +18,7 @@ public partial class DynamicCodeRoot
     public ITypedStack AllResources => _allRes.Get(() => Cdf.AsTypedStack(RootNameResources, ResSrc));
     private readonly GetOnce<ITypedStack> _allRes= new();
 
-    private AppSettingsStack AppSS => _appSetStack ??= Services.SettingsStack.Init(App.AppStateWIP);
+    private AppSettingsStack AppSS => _appSetStack ??= Services.SettingsStack.Init(App.AppState);
     private AppSettingsStack _appSetStack;
 
     private SettingsSources ResSrc => _resSrc.Get(() => AppSS.GetStack(AppStackConstants.Resources, Block?.View?.Resources));

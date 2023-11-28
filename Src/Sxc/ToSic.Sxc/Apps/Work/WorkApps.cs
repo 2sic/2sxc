@@ -106,7 +106,7 @@ public class WorkApps : ServiceBase
                     .Where(aId =>
                     {
                         if (!appStateWithCacheInfo.IsCached(aId)) return false;
-                        var appState = _appStates.Get(aId);
+                        var appState = _appStates.GetReaderOrNull(aId);
                         return appState != null && appState.IsShared() && !siteApps.Any(sa => sa.Equals(appState.Folder, StringComparison.InvariantCultureIgnoreCase));
                     })
                     .Select(a => _appGenerator.New().PreInit(site).Init(a, buildConfig) as IApp)

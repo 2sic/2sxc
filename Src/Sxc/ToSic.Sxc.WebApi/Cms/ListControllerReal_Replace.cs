@@ -28,7 +28,7 @@ partial class ListControllerReal
             // Make sure we have the correct casing for the field names
             part = entity.Type[part].Name;
 
-            var fList = _workFieldList.New(Context.AppState);
+            var fList = _workFieldList.New(Context.AppStateReader);
 
             var forceDraft = Context.Publishing.ForceDraft;
             if (add)
@@ -62,9 +62,9 @@ partial class ListControllerReal
 
         var ct = Context.AppState.GetContentType(typeName);
 
-        var listTemp = _workEntities.New(Context.AppState).Get(typeName).ToList();
+        var listTemp = _workEntities.New(Context.AppStateReader).Get(typeName).ToList();
 
-        var results = listTemp.Select(Context.AppState.GetDraftOrKeep).ToDictionary(
+        var results = listTemp.Select(Context.AppStateReader.GetDraftOrKeep).ToDictionary(
             p => p.EntityId,
             p => p.GetBestTitle() ?? "");
 

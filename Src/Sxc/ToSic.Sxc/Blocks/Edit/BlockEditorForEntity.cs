@@ -60,7 +60,7 @@ public class BlockEditorForEntity : BlockEditorBase
 
     private void Update(Dictionary<string, object> newValues)
     {
-        var parentAppState = ((BlockBase)Block).Parent.App.AppStateWIP;
+        var parentAppState = ((BlockBase)Block).Parent.App.AppState;
         _entityUpdate.New(parentAppState)
             .UpdateParts(Math.Abs(Block.ContentBlockId), newValues);
     }

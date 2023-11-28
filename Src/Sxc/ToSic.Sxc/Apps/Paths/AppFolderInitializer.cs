@@ -5,7 +5,6 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Run;
 using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Apps.Paths;
@@ -34,7 +33,7 @@ public class AppFolderInitializer : ServiceBase
     /// Creates a directory and copies the needed web.config for razor files
     /// if the directory does not exist.
     /// </summary>
-    public void EnsureTemplateFolderExists(AppState appState, bool isShared) => Log.Do($"{isShared}", () =>
+    public void EnsureTemplateFolderExists(string appStateFolder, bool isShared) => Log.Do($"{isShared}", () =>
     {
         var portalPath = isShared
             ? ServerPaths.FullAppPath(_globalConfiguration.SharedAppsFolder)
@@ -54,10 +53,10 @@ public class AppFolderInitializer : ServiceBase
             File.Copy(webConfigTemplateFilePath, Path.Combine(sxcFolder.FullName, Constants.WebConfigFileName));
 
         // Create a Content folder (or App Folder)
-        if (string.IsNullOrEmpty(appState.Folder))
+        if (string.IsNullOrEmpty(appStateFolder))
             return "Folder name not given, won't create";
 
-        var contentFolder = new DirectoryInfo(Path.Combine(sxcFolder.FullName, appState.Folder));
+        var contentFolder = new DirectoryInfo(Path.Combine(sxcFolder.FullName, appStateFolder));
         contentFolder.Create();
 
         var appDataProtectedFolder =

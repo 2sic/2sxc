@@ -94,21 +94,21 @@ namespace ToSic.Sxc.WebApi.ImportExport
         }
 
 
-        public THttpResponseType Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString,
-            string templateIdsString)
+        public THttpResponseType Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
         {
-            Log.A($"export content z#{zoneId}, a#{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
+            var l = Log.Fn<THttpResponseType>($"export content z#{zoneId}, a#{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
             SecurityHelpers.ThrowIfNotSiteAdmin(_user, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
             var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, _site.ZoneId);
 
             var fileName = $"2sxcContentExport_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}.xml";
-            var fileXml = _xmlExporter.Init(zoneId, appId, currentApp.AppState, false,
+            var fileXml = _xmlExporter.Init(zoneId, appId, currentApp, false,
                 contentTypeIdsString?.Split(';') ?? Array.Empty<string>(),
                 entityIdsString?.Split(';') ?? Array.Empty<string>()
             ).GenerateNiceXml();
 
-            return _responseMaker.File(fileXml, fileName, "text/xml");
+            var result = _responseMaker.File(fileXml, fileName, "text/xml");
+            return l.Return(result);
         }
     }
 }

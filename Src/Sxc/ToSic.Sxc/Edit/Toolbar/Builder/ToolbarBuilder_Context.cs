@@ -61,8 +61,8 @@ public partial class ToolbarBuilder
             if (_currentAppIdentity != null && _currentAppIdentity.AppId == identity.AppId)
             {
                 // ensure we're not in a global context where the current-context is already special
-                var globalId = appStates.GetPrimaryAppOfAppId(appId, Log);
-                if (globalId.AppId != identity.AppId)
+                var globalAppId = appStates.GetPrimaryAppOfAppId(appId, Log);
+                if (globalAppId != identity.AppId)
                     return (null, $"same app and not Global, context not forced: {identity.Show()}");
             }
 

@@ -30,15 +30,15 @@ public class ImpExpHelpers: ServiceBase
     /// <returns></returns>
     internal IAppStateInternal GetAppAndCheckZoneSwitchPermissions(int zoneId, int appId, IUser user, int contextZoneId)
     {
-        var wrapLog = Log.Fn<IAppStateInternal>($"superuser: {user.IsSystemAdmin}");
+        var l = Log.Fn<IAppStateInternal>($"superuser: {user.IsSystemAdmin}");
         if (!user.IsSystemAdmin && zoneId != contextZoneId)
         {
-            wrapLog.ReturnNull("error");
+            l.ReturnNull("error");
             throw Eav.WebApi.Errors.HttpException.PermissionDenied("Tried to access app from another zone. Requires SuperUser permissions.");
         }
 
         var app = _appStates.GetReaderInternalOrNull(new AppIdentity(zoneId, appId));
-        return wrapLog.Return(app);
+        return l.Return(app);
     }
 
 }

@@ -52,7 +52,7 @@ public abstract class ImportExportEnvironmentBase: Eav.Apps.Run.ImportExportEnvi
         => AppPaths(zoneId, appId).PhysicalPathShared;
 
     private IAppPaths AppPaths(int zoneId, int appId) => _appPaths ??= _services.AppPaths.Init(_services.Site,
-        _services.AppStates.Get(new AppIdentity(zoneId, appId)));
+        _services.AppStates.GetReaderOrNull(new AppIdentity(zoneId, appId)));
     private IAppPaths _appPaths;
 
 

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Apps.Paths;
+using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.ImportExport;
 using ToSic.Lib.Coding;
@@ -13,8 +14,6 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using static System.IO.Path;
-using App = ToSic.Sxc.Apps.App;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.DataSources;
 
@@ -28,23 +27,26 @@ public class AppFilesDataSourceProvider : ServiceBase<AppFilesDataSourceProvider
 {
     public class MyServices : MyServicesBase
     {
-        public ZipExport ZipExport { get; }
+        public ISite Site { get; }
+        internal Generator<FileManager> FileManagerGenerator { get; }
+        internal IAppPathsMicroSvc AppPathMicroSvc { get; }
         public IAppStates AppStates { get; }
-        public LazySvc<App> AppLazy { get; }
 
         /// <summary>
         /// Note that we will use Generators for safety, because in rare cases the dependencies could be re-used to create a sub-data-source
         /// </summary>
         public MyServices(
-            LazySvc<App> appLazy,
             IAppStates appStates,
-            ZipExport zipExport
+            IAppPathsMicroSvc appPathMicroSvc,
+            Generator<FileManager> fileManagerGenerator,
+            ISite site
         )
         {
             ConnectServices(
                 AppStates = appStates,
-                AppLazy = appLazy,
-                ZipExport = zipExport
+                AppPathMicroSvc = appPathMicroSvc,
+                FileManagerGenerator = fileManagerGenerator,
+                Site = site
             );
         }
     }
@@ -67,9 +69,11 @@ public class AppFilesDataSourceProvider : ServiceBase<AppFilesDataSourceProvider
         _onlyFiles = onlyFiles;
         _root = root.TrimPrefixSlash().Backslash();
         _filter = filter;
-        _currentApp = GetApp(zoneId, appId);
-        _fileManager = GetZipExport(_currentApp).FileManager;
-        _fileManager.SetFolder(_currentApp.PhysicalPath, _root);
+
+        var appState = Services.AppStates.GetReaderOrNull(new AppIdentity(zoneId, appId));
+        _appPaths = Services.AppPathMicroSvc.Init(Services.Site, appState);
+        
+        _fileManager = Services.FileManagerGenerator.New().SetFolder(_appPaths.PhysicalPath, _root);
         return this;
     });
 
@@ -77,8 +81,8 @@ public class AppFilesDataSourceProvider : ServiceBase<AppFilesDataSourceProvider
     private bool _onlyFiles;
     private string _root;
     private string _filter;
-    private IApp _currentApp;
     private FileManager _fileManager;
+    private IAppPaths _appPaths;
 
     /// <summary>
     /// FYI: The filters are not actually implemented yet.
@@ -96,7 +100,7 @@ public class AppFilesDataSourceProvider : ServiceBase<AppFilesDataSourceProvider
                 .Select(p => new FileInfo(p))
                 .Select(f =>
                 {
-                    var fullName = FullNameWithoutAppFolder(f.FullName, _currentApp, _root);
+                    var fullName = FullNameWithoutAppFolder(f.FullName, _appPaths, _root);
                     return new AppFileDataRaw
                     {
                         Name = $"{GetFileNameWithoutExtension(f.FullName)}{f.Extension}",
@@ -127,7 +131,7 @@ public class AppFilesDataSourceProvider : ServiceBase<AppFilesDataSourceProvider
                 .Select(p => new DirectoryInfo(p))
                 .Select(d =>
                 {
-                    var fullName = FullNameWithoutAppFolder(d.FullName, _currentApp, _root);
+                    var fullName = FullNameWithoutAppFolder(d.FullName, _appPaths, _root);
                     return new AppFolderDataRaw
                     {
                         Name = $"{GetFileNameWithoutExtension(d.FullName)}{d.Extension}",
@@ -165,7 +169,7 @@ public class AppFilesDataSourceProvider : ServiceBase<AppFilesDataSourceProvider
     /// <param name="currentApp"></param>
     /// <param name="root"></param>
     /// <returns></returns>
-    private static string FullNameWithoutAppFolder(string path, IApp currentApp, string root)
+    private static string FullNameWithoutAppFolder(string path, IAppPaths currentApp, string root)
     {
         var name = path?.Replace(Combine(currentApp.PhysicalPath, root), string.Empty);
         //var isFolder = GetAttributes(filePath).HasFlag(FileAttributes.Directory);
@@ -175,13 +179,4 @@ public class AppFilesDataSourceProvider : ServiceBase<AppFilesDataSourceProvider
             name = name.Replace(Combine(currentApp.PhysicalPathShared, root), string.Empty);
         return name.ForwardSlash();
     }
-
-    private ZipExport GetZipExport(IApp app)
-        => Services.ZipExport.Init(app.ZoneId, app.AppId, app.Folder, app.PhysicalPath, app.PhysicalPathShared);
-
-    private IApp GetApp(int zoneId, int appId)
-        => Services.AppLazy.Value.Init(GetAppState(zoneId, appId), null);
-
-    private AppState GetAppState(int zoneId, int appId)
-        => Services.AppStates.Get(new AppIdentity(zoneId, appId));
 }

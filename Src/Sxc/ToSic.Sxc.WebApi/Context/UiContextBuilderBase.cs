@@ -3,6 +3,7 @@ using System.Linq;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Decorators;
+using ToSic.Eav.Apps.Reader;
 using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.WebApi.Cms;
@@ -60,13 +61,13 @@ public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>,
 
     protected int ZoneId => Services.SiteCtx.Site.ZoneId;
     protected Sxc.Apps.IApp App;
-    protected AppState AppState;
+    protected IAppStateInternal AppState;
 
     #endregion
 
     public IUiContextBuilder InitApp(AppState appState)
     {
-        AppState = appState;
+        AppState = appState.ToInterface(Log).Internal();
         App = appState != null ? (Services.AppToLaterInitialize as Apps.App)?.Init(appState, null) : null;
         return this;
     }

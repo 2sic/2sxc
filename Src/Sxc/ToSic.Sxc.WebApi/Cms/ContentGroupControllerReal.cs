@@ -117,10 +117,10 @@ public class ContentGroupControllerReal: ServiceBase, IContentGroupController
     public List<EntityInListDto> ItemList(Guid guid, string part)
     {
         Log.A($"item list for:{guid}");
-        var cg = Context.AppState.GetDraftOrPublished(guid);
+        var cg = Context.AppStateReader.GetDraftOrPublished(guid);
         var itemList = cg.Children(part);
         var list = itemList
-            .Select(Context.AppState.GetDraftOrKeep)
+            .Select(Context.AppStateReader.GetDraftOrKeep)
             .Select((c, index) => new EntityInListDto
             {
                 Index = index,
@@ -146,7 +146,7 @@ public class ContentGroupControllerReal: ServiceBase, IContentGroupController
             var entity = Context.AppState.GetDraftOrPublished(guid);
             var sequence = list.Select(i => i.Index).ToArray();
             var fields = part == ViewParts.ContentLower ? ViewParts.ContentPair : new[] {part};
-            _workFieldList.New(Context.AppState).FieldListReorder(entity, fields, sequence, Context.Publishing.ForceDraft);
+            _workFieldList.New(Context.AppStateReader).FieldListReorder(entity, fields, sequence, Context.Publishing.ForceDraft);
         });
 
         return true;

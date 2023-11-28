@@ -55,7 +55,7 @@ public partial class ListControllerReal: BlockWebApiBackendBase, IHasLog, IListC
     public void Move(Guid? parent, string fields, int index, int toIndex
     ) => Log.Do($"change order sort:{index}, dest:{toIndex}", () =>
     {
-        var fList = _workFieldList.New(Context.AppState);
+        var fList = _workFieldList.New(Context.AppStateReader);
         ModifyList(FindOrThrow(parent), fields,
             (entity, fieldList, versioning) => fList.FieldListMove(entity, fieldList, index, toIndex, versioning));
     });
@@ -63,7 +63,7 @@ public partial class ListControllerReal: BlockWebApiBackendBase, IHasLog, IListC
 
     public void Delete(Guid? parent, string fields, int index) => Log.Do($"remove from index:{index}", () =>
     {
-        var fList = _workFieldList.New(Context.AppState);
+        var fList = _workFieldList.New(Context.AppStateReader);
         ModifyList(FindOrThrow(parent), fields,
             (entity, fieldList, versioning) => fList.FieldListRemove(entity, fieldList, index, versioning));
     });

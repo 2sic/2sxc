@@ -149,7 +149,7 @@ public class AssetEditor : ServiceBase
         if (SanitizeFileNameAndCheckIfAssetAlreadyExists()) return false;
 
         // ensure the web.config exists (usually missing in the global area)
-        _appFolderInitializer.Value.EnsureTemplateFolderExists(_appState, EditInfo.IsShared);
+        _appFolderInitializer.Value.EnsureTemplateFolderExists(_appState.Folder, EditInfo.IsShared);
 
         var absolutePath = InternalPath;
 

@@ -50,7 +50,7 @@ public class AppsBackend: ServiceBase
     private AppDto CreateAppDto(IApp a)
     {
         AppMetadataDto lightspeed = null;
-        var lsEntity = a.AppStateWIP.Metadata.FirstOrDefaultOfType(LightSpeedDecorator.TypeNameId);
+        var lsEntity = a.AppState.Metadata.FirstOrDefaultOfType(LightSpeedDecorator.TypeNameId);
         if (lsEntity != null)
         {
             var lsd = new LightSpeedDecorator(lsEntity);
@@ -70,8 +70,8 @@ public class AppsBackend: ServiceBase
             Items = a.Data.List.Count(),
             Thumbnail = a.Thumbnail,
             Version = a.VersionSafe(),
-            IsGlobal = a.AppStateWIP.IsShared(),
-            IsInherited = a.AppStateWIP.IsInherited(),
+            IsGlobal = a.AppState.IsShared(),
+            IsInherited = a.AppState.IsInherited(),
             Lightspeed = lightspeed,
             HasCodeWarnings = _codeStats.AppHasWarnings(a.AppId),
         };

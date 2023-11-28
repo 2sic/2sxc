@@ -131,7 +131,7 @@ internal partial class DnnPagePublishing : ServiceBase, IPagePublishing
                 l.A(Log.Try(() => $"will publish id⋮{ids.Count} ids:[{ string.Join(",", ids.Select(i => i.ToString()).ToArray()) }]"));
 
                 if (ids.Any())
-                    _entPublish.New(cb.Context.AppState).Publish(ids.ToArray());
+                    _entPublish.New(cb.Context.AppStateReader).Publish(ids.ToArray());
                 else
                     l.A("no ids found, won\'t publish items");
             }

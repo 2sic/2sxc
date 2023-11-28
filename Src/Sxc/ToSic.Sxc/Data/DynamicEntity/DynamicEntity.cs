@@ -179,10 +179,10 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     public bool IsPublished => Entity?.IsPublished ?? true;
 
     /// <inheritdoc />
-    public dynamic GetDraft() => SubDataFactory.SubDynEntityOrNull(Entity == null ? null : Cdf.BlockOrNull?.App.AppStateWIP?.GetDraft(Entity));
+    public dynamic GetDraft() => SubDataFactory.SubDynEntityOrNull(Entity == null ? null : Cdf.BlockOrNull?.App.AppState?.GetDraft(Entity));
 
     /// <inheritdoc />
-    public dynamic GetPublished() => SubDataFactory.SubDynEntityOrNull(Entity == null ? null : Cdf.BlockOrNull?.App.AppStateWIP?.GetPublished(Entity));
+    public dynamic GetPublished() => SubDataFactory.SubDynEntityOrNull(Entity == null ? null : Cdf.BlockOrNull?.App.AppState?.GetPublished(Entity));
 
     #endregion
 
