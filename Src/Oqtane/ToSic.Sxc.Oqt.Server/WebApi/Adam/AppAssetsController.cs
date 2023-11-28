@@ -11,6 +11,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam;
 // Beta routes
 //[Route(WebApiConstants.WebApiStateRoot + "/adam/{appName}")]
 
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AppAssetsController: WebApi.AppAssetsControllerBase
 {
     public AppAssetsController(MyServices services) 

@@ -11,6 +11,7 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi;
 
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public abstract class AppAssetsControllerBase : OqtControllerBase
 {
     private string Route { get; }
@@ -19,7 +20,7 @@ public abstract class AppAssetsControllerBase : OqtControllerBase
 
     public class MyServices : MyServicesBase
     {
-        public LazySvc<OqtAssetsFileHelper> FileHelper { get; }
+        internal LazySvc<OqtAssetsFileHelper> FileHelper { get; }
         public IWebHostEnvironment HostingEnvironment { get; }
         public LazySvc<AppFolder> AppFolder { get; }
         public SiteState SiteState { get; }

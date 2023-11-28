@@ -17,6 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Cms}")]
 
 [ValidateAntiForgeryToken]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class HistoryController : OqtStatefulControllerBase, IHistoryController
 {
     public HistoryController(): base(RealController.LogSuffix) { }

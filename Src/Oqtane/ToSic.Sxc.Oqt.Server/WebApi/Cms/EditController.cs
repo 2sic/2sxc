@@ -25,6 +25,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [ValidateAntiForgeryToken]
 
 [ApiController]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class EditController: OqtStatefulControllerBase, IEditController
 {
     public EditController() : base(RealController.LogSuffix) { }
