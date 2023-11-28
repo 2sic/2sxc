@@ -12,7 +12,7 @@ namespace ToSic.Sxc.DataSources;
 /// <summary>
 /// Deliver a list of roles from the Oqtane
 /// </summary>
-public class OqtRolesDsProvider : RolesDataSourceProvider
+internal class OqtRolesDsProvider : RolesDataSourceProvider
 {
     private readonly IRoleRepository _roles;
     private readonly SiteState _siteState;

@@ -1,5 +1,4 @@
-﻿using System;
-using Oqtane.Infrastructure;
+﻿using Oqtane.Infrastructure;
 using Oqtane.Shared;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Plumbing;
@@ -7,7 +6,7 @@ using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.Oqt.Server.ToSic.Sxc.DataSources;
 
-public class OqtSqlPlatformInfo: SqlPlatformInfo
+internal class OqtSqlPlatformInfo: SqlPlatformInfo
 {
     private readonly LazySvc<IConfigManager> _configManager;
     public override string DefaultConnectionStringName => SettingKeys.ConnectionStringKey;
