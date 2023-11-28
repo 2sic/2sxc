@@ -5,7 +5,7 @@ using ToSic.Sxc.Oqt.Shared.Interfaces;
 
 namespace ToSic.Sxc.Oqt.Client.Services
 {
-  public class OqtDebugStateService : IOqtDebugStateService
+  internal class OqtDebugStateService : IOqtDebugStateService
     {
         public const string DebugKey = "2sxcDebug";
         private readonly IJSRuntime _jsRuntime;

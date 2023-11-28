@@ -6,6 +6,7 @@ using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Client.Services
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class OqtSxcRenderService : ServiceBase
     {
         public OqtSxcRenderService(HttpClient http, SiteState siteState) : base(http, siteState) { }

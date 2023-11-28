@@ -17,6 +17,7 @@ using static System.StringComparison;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.App
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public partial class Index : ModuleProBase
     {
         #region Injected Services

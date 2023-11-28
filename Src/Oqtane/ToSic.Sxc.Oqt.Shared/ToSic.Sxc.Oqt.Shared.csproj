@@ -18,8 +18,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="App\**" />
     <Compile Remove="Run\**" />
+    <EmbeddedResource Remove="App\**" />
     <EmbeddedResource Remove="Run\**" />
+    <None Remove="App\**" />
     <None Remove="Run\**" />
   </ItemGroup>
 
@@ -37,10 +40,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="App\" />
   </ItemGroup>
 
   <ItemGroup>

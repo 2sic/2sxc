@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Oqt.Client.Services.NoOp
     /// This is NoOp implementation, just to not break Sxc.Oqt.Client code, during service injection.
     /// This code is not doing real work, because it is done in Sxc.Oqt.Server
     /// </summary>
-    public class OqtPageChangesOnServerNoOpService : IOqtPageChangesOnServerService
+    internal class OqtPageChangesOnServerNoOpService : IOqtPageChangesOnServerService
     {
         public int ApplyHttpHeaders(OqtViewResultsDto result, IOqtHybridLog page) => 0;
     }

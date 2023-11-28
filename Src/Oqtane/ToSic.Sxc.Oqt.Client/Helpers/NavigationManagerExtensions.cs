@@ -7,8 +7,10 @@ namespace ToSic.Sxc.Oqt.Client
     /// <summary>
     /// https://chrissainty.com/working-with-query-strings-in-blazor/
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static class NavigationManagerExtensions
     {
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public static bool TryGetQueryString<T>(this NavigationManager navManager, string key, out T value)
         {
             var uri = navManager.ToAbsoluteUri(navManager.Uri);
@@ -44,6 +46,7 @@ namespace ToSic.Sxc.Oqt.Client
             return false;
         }
 
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public static bool TryGetValue(NameValueCollection collection, string key, out string value)
         {
             value = collection[key];

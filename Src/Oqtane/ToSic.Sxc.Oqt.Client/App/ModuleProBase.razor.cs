@@ -17,6 +17,7 @@ using ToSic.Sxc.Oqt.Shared.Interfaces;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.App
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ModuleProBase: ModuleBase, IOqtHybridLog
   {
         #region Injected Services
