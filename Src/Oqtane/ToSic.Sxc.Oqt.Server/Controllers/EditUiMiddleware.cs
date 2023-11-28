@@ -17,7 +17,7 @@ using ToSic.Sxc.Web.EditUi;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers;
 
-public class EditUiMiddleware
+internal class EditUiMiddleware
 {
     private static readonly MemoryCache Cache = MemoryCache.Default;
 

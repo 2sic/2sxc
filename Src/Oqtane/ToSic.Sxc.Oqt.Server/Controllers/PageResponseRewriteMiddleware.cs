@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers;
 /// <summary>
 /// WIP: response rewrite for razor pages (CSP, meta, etc...)
 /// </summary>
-public class PageResponseRewriteMiddleware
+internal class PageResponseRewriteMiddleware
 {
     private readonly RequestDelegate _next;
 

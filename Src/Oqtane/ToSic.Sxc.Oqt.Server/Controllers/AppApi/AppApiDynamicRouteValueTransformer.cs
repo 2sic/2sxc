@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 /// <summary>
 /// Enable dynamically manipulating of route value to select a 2sxc app api dynamic code controller action.
 /// </summary>
-public class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer, IHasLog
+internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer, IHasLog
 {
     private readonly ITenantResolver _tenantResolver;
     private readonly IWebHostEnvironment _hostingEnvironment;
