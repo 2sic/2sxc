@@ -99,7 +99,7 @@ public class ViewsBackend: ServiceBase
         // todo: extra security to only allow zone change if host user
         Log.A($"delete a{appId}, t:{id}");
         var app = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
-        _workViewsMod.New(app.AppState).DeleteView(id);
+        _workViewsMod.New(app).DeleteView(id);
         return true;
     }
 }

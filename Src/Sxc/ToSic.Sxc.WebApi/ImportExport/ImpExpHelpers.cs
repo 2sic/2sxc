@@ -1,43 +1,43 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Reader;
 using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.LookUp;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.ImportExport;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ImpExpHelpers: ServiceBase
 {
+
     #region Constructor / DI
 
-    public ImpExpHelpers(Apps.App unInitializedApp, AppConfigDelegate configProvider) : base("Sxc.ImExHl")
+    public ImpExpHelpers(IAppStates appStates) : base("Sxc.ImExHl")
     {
         ConnectServices(
-            _unInitializedApp = unInitializedApp,
-            _configProvider = configProvider
+            _appStates = appStates
         );
     }
-    private readonly Apps.App _unInitializedApp;
-    private readonly AppConfigDelegate _configProvider;
+
+    private readonly IAppStates _appStates;
 
 
     #endregion
+
     /// <summary>
     /// Get an app - but only allow zone change if super-user
     /// </summary>
     /// <returns></returns>
-    internal IApp GetAppAndCheckZoneSwitchPermissions(int zoneId, int appId, IUser user, int contextZoneId)
+    internal IAppStateInternal GetAppAndCheckZoneSwitchPermissions(int zoneId, int appId, IUser user, int contextZoneId)
     {
-        var wrapLog = Log.Fn<IApp>($"superuser: {user.IsSystemAdmin}");
+        var wrapLog = Log.Fn<IAppStateInternal>($"superuser: {user.IsSystemAdmin}");
         if (!user.IsSystemAdmin && zoneId != contextZoneId)
         {
             wrapLog.ReturnNull("error");
             throw Eav.WebApi.Errors.HttpException.PermissionDenied("Tried to access app from another zone. Requires SuperUser permissions.");
         }
 
-        var app = _unInitializedApp.Init(new AppIdentity(zoneId, appId), _configProvider.Build());
+        var app = _appStates.GetReaderInternalOrNull(new AppIdentity(zoneId, appId));
         return wrapLog.Return(app);
     }
 

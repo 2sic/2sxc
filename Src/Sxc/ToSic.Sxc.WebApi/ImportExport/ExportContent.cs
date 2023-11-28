@@ -58,7 +58,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
             var appCtx = _workEntities.CtxSvc.ContextPlus(currentApp);
-            var contentTypes = currentApp.AppState.ContentTypes.OfScope(scope);
+            var contentTypes = currentApp.ContentTypes.OfScope(scope);
             var entities = _workEntities.New(appCtx).All();
             var templates = _workViews.New(appCtx).GetAll();
 

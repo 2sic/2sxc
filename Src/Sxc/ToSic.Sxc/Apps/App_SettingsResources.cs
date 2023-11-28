@@ -10,10 +10,10 @@ public partial class App
 {
     #region Dynamic Properties: Configuration, Settings, Resources
 
-    /// <inheritdoc />
     // Create config object. Note that AppConfiguration could be null, then it would use default values
-    public IAppConfiguration Configuration => _appConfig.Get(() => new AppConfiguration(AppConfiguration, Log));
-    private readonly GetOnce<IAppConfiguration> _appConfig = new();
+    /// <inheritdoc />
+    public IAppConfiguration Configuration => AppStateWIP.Configuration;// _appConfig.Get(() => new AppConfiguration(AppConfiguration, Log));
+    //private readonly GetOnce<IAppConfiguration> _appConfig = new();
 
     private DynamicEntity MakeDynProperty(IEntity contents, bool propsRequired)
     {

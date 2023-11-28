@@ -2,6 +2,7 @@
 using System.IO;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.ImportExport.ImportHelpers;
+using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Internal.Features;
@@ -21,6 +22,7 @@ namespace ToSic.Sxc.WebApi.ImportExport;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ResetApp: ServiceBase
 {
+
     #region Constructor / DI
 
     public ResetApp(
@@ -31,7 +33,8 @@ public class ResetApp: ServiceBase
         IUser user,
         IImportExportEnvironment env,
         ZipImport zipImport,
-        IEavFeaturesService features
+        IEavFeaturesService features,
+        IAppPathsMicroSvc appPathSvc
     ) : base("Bck.Export")
     {
         ConnectServices(
@@ -42,10 +45,12 @@ public class ResetApp: ServiceBase
             _user = user,
             _env = env,
             _zipImport = zipImport,
-            _features = features
+            _features = features,
+            _appPathSvc = appPathSvc
         );
     }
 
+    private readonly IAppPathsMicroSvc _appPathSvc;
     private readonly WorkAppsRemove _workAppsRemove;
 
     private readonly LazySvc<XmlImportWithFiles> _xmlImportWithFilesLazy;
@@ -60,7 +65,7 @@ public class ResetApp: ServiceBase
 
     internal ImportResultDto Reset(int zoneId, int appId, string defaultLanguage, bool withSiteFiles)
     {
-        Log.A($"Reset App {zoneId}/{appId}");
+        var l = Log.Fn<ImportResultDto>($"Reset App {zoneId}/{appId}");
         var result = new ImportResultDto();
 
         SecurityHelpers.ThrowIfNotSiteAdmin(_user, Log);
@@ -69,10 +74,11 @@ public class ResetApp: ServiceBase
         ExportApp.SyncWithSiteFilesVerifyFeaturesOrThrow(_features, withSiteFiles);
 
         var contextZoneId = _site.ZoneId;
-        var currentApp = _impExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
+        var appRead = _impExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
+        var appPaths = _appPathSvc.Init(_site, appRead);
 
         // migrate old .data/app.xml to App_Data
-        ZipImport.MigrateOldAppDataFile(currentApp.PhysicalPath);
+        ZipImport.MigrateOldAppDataFile(appPaths.PhysicalPath);
 
         //// 1. Verify the file exists before we flush
         //var path = Path.Combine(currentApp.PhysicalPath, Eav.Constants.AppDataProtectedFolder);
@@ -83,7 +89,7 @@ public class ResetApp: ServiceBase
         //    return result;
         //}
 
-        var appDataFolder = Path.Combine(currentApp.PhysicalPath, Eav.Constants.AppDataProtectedFolder);
+        var appDataFolder = Path.Combine(appPaths.PhysicalPath, Eav.Constants.AppDataProtectedFolder);
         var filePath = Path.Combine(appDataFolder, Eav.Constants.AppDataFile);
         if (!File.Exists(filePath))
         {
@@ -98,7 +104,7 @@ public class ResetApp: ServiceBase
         // 3. Optional reset SiteFiles
         if (withSiteFiles)
         {
-            var sourcePath = Path.Combine(currentApp.PhysicalPath, Eav.Constants.AppDataProtectedFolder);
+            var sourcePath = Path.Combine(appPaths.PhysicalPath, Eav.Constants.AppDataProtectedFolder);
 
             // Copy app global template files persisted in /App_Data/2sexyGlobal/ back to app [globalTemplatesRoot]
             var globalTemplatesStateFolder = Path.Combine(appDataFolder, Eav.Constants.ZipFolderForGlobalAppStuff);
@@ -119,6 +125,6 @@ public class ResetApp: ServiceBase
         var imp = new ImportXmlReader(filePath, xmlImport, Log);
         result.Success = xmlImport.ImportXml(zoneId, appId, imp.XmlDoc);
         result.Messages.AddRange(xmlImport.Messages);
-        return result;
+        return l.Return(result);
     }
 }

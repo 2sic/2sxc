@@ -1,9 +1,9 @@
 ﻿using System.IO;
+using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Data;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
@@ -28,18 +28,19 @@ public class AppIconHelpers : ServiceBase
     #endregion
 
 
-    public string IconPathOrNull(IApp app, IView view, PathTypes type) => Log.Func(() =>
+    public string IconPathOrNull(IAppPaths appPaths, IView view, PathTypes type)
     {
+        var l = Log.Fn<string>();
         // 1. Check if the file actually exists or is a file:... reference
-        var iconFile = IconPath(app, view, PathTypes.PhysFull);
+        var iconFile = IconPath(appPaths, view, PathTypes.PhysFull);
         var assumeExists = ValueConverterBase.CouldBeReference(iconFile) || File.Exists(iconFile);
 
         // 2. Return as needed
-        var result = assumeExists ? IconPath(app, view, type) : null;
-        return (result, result ?? "not found");
-    });
+        var result = assumeExists ? IconPath(appPaths, view, type) : null;
+        return l.Return(result, result ?? "not found");
+    }
 
-    private string IconPath(IApp app, IView view, PathTypes type)
+    private string IconPath(IAppPaths app, IView view, PathTypes type)
     {
         // See if we have an icon - but only if we need the link
         if (view.Icon.HasValue())

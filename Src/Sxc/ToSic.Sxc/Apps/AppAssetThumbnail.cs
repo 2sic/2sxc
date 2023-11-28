@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Data.PiggyBack;
@@ -28,11 +29,11 @@ internal class AppAssetThumbnail : AppAssetFile
         // Primary app - we only PiggyBack cache the icon in this case
         // Because otherwise the icon could get moved, and people would have a hard time seeing the effect
         if (_app.NameId == Eav.Constants.PrimaryAppGuid)
-            return _app.AppState.GetPiggyBack("app-thumbnail-primary",
+            return _app.AppStateWIP.Internal().GetPiggyBack("app-thumbnail-primary",
                 () => _globalPaths.Value.GlobalPathTo(AppPrimaryIconFile, PathTypes.Link));
 
         // standard app (not global) try to find app-icon in its (portal) app folder
-        if (!_app.AppState.IsShared() && File.Exists($"{AppPaths.PhysicalPath}/{AppIconFile}")) 
+        if (!_app.AppStateWIP.IsShared() && File.Exists($"{AppPaths.PhysicalPath}/{AppIconFile}")) 
             return $"{AppPaths.Path}/{AppIconFile}";
 
         // global app (and standard app without app-icon in its portal folder) looks for app-icon in global shared location 

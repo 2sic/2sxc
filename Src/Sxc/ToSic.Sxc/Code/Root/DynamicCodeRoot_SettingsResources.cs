@@ -18,15 +18,14 @@ public partial class DynamicCodeRoot
     public ITypedStack AllResources => _allRes.Get(() => Cdf.AsTypedStack(RootNameResources, ResSrc));
     private readonly GetOnce<ITypedStack> _allRes= new();
 
-    private SettingsSources ResSrc => _resSrc.Get(() =>
-        Services.SettingsStack.Init(App.AppState)
-            .GetStack(AppStackConstants.Resources, Block?.View?.Resources));
+    private AppSettingsStack AppSS => _appSetStack ??= Services.SettingsStack.Init(App.AppStateWIP);
+    private AppSettingsStack _appSetStack;
+
+    private SettingsSources ResSrc => _resSrc.Get(() => AppSS.GetStack(AppStackConstants.Resources, Block?.View?.Resources));
     private readonly GetOnce<SettingsSources> _resSrc = new();
 
 
-    private SettingsSources SetSrc => _setSrc.Get(() =>
-        Services.SettingsStack.Init(App.AppState)
-            .GetStack(AppStackConstants.Settings, Block?.View?.Settings));
+    private SettingsSources SetSrc => _setSrc.Get(() => AppSS.GetStack(AppStackConstants.Settings, Block?.View?.Settings));
     private readonly GetOnce<SettingsSources> _setSrc = new();
 
     /// <inheritdoc />

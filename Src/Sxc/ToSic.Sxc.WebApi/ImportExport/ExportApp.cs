@@ -2,6 +2,7 @@
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data.Shared;
@@ -42,6 +43,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly IUser _user;
         private readonly IEavFeaturesService _features;
         private readonly Generator<ImpExpHelpers> _impExpHelpers;
+        private readonly IAppPathsMicroSvc _appPathSvc;
 
         public ExportApp(
             IZoneMapper zoneMapper, 
@@ -52,7 +54,8 @@ namespace ToSic.Sxc.WebApi.ImportExport
             ISite site, 
             IUser user, 
             Generator<ImpExpHelpers> impExpHelpers, 
-            IEavFeaturesService features
+            IEavFeaturesService features,
+            IAppPathsMicroSvc appPathSvc
             ) : base("Bck.Export")
         {
             ConnectServices(
@@ -64,7 +67,8 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 _site = site,
                 _user = user,
                 _features = features,
-                _impExpHelpers = impExpHelpers
+                _impExpHelpers = impExpHelpers,
+                _appPathSvc = appPathSvc
             );
         }
 
@@ -74,29 +78,32 @@ namespace ToSic.Sxc.WebApi.ImportExport
         {
             var l = Log.Fn<AppExportInfoDto>($"get app info for app:{appId} and zone:{zoneId}");
             var contextZoneId = _site.ZoneId;
-            var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
+            var appRead = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
+            var appPaths = _appPathSvc.Init(_site, appRead);
 
-            var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared);
+            var zipExport = _zipExport.Init(zoneId, appId, appRead.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
             var cultCount = _zoneMapper.CulturesWithState(_site).Count(c => c.IsEnabled);
 
-            var appCtx = _appWorkCtxSvc.ContextPlus(currentApp);
+            var appCtx = _appWorkCtxSvc.ContextPlus(appRead);
             var appEntities = _workEntities.New(appCtx);
             var appViews = _workViews.New(appCtx);
 
+            var appHasCustomParent = appRead.HasCustomParentApp();
+
             return l.Return(new AppExportInfoDto
             {
-                Name = currentApp.Name,
-                Guid = currentApp.NameId,
-                Version = currentApp.VersionSafe(),
+                Name = appRead.Name,
+                Guid = appRead.NameId,
+                Version = appRead.VersionSafe(),
                 EntitiesCount = appEntities.All().Count(e => !e.HasAncestor()),
                 LanguagesCount = cultCount,
                 TemplatesCount = appViews.GetAll().Count(),
                 HasRazorTemplates = appViews.GetRazor().Any(),
                 HasTokenTemplates = appViews.GetToken().Any(),
                 FilesCount = zipExport.FileManager.AllFiles().Count() // PortalFilesCount
-                    + (currentApp.AppState.HasCustomParentApp() ? 0 : zipExport.FileManagerGlobal.AllFiles().Count()), // GlobalFilesCount
+                    + (appHasCustomParent ? 0 : zipExport.FileManagerGlobal.AllFiles().Count()), // GlobalFilesCount
                 TransferableFilesCount = zipExport.FileManager.GetAllTransferableFiles().Count() // TransferablePortalFilesCount
-                    + (currentApp.AppState.HasCustomParentApp() ? 0 : zipExport.FileManagerGlobal.GetAllTransferableFiles().Count()), // TransferableGlobalFilesCount
+                    + (appHasCustomParent ? 0 : zipExport.FileManagerGlobal.GetAllTransferableFiles().Count()), // TransferableGlobalFilesCount
             });
         }
 
@@ -109,9 +116,10 @@ namespace ToSic.Sxc.WebApi.ImportExport
             SyncWithSiteFilesVerifyFeaturesOrThrow(_features, withSiteFiles);
 
             var contextZoneId = _site.ZoneId;
-            var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
+            var appRead = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
+            var appPaths = _appPathSvc.Init(_site, appRead);
 
-            var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared);
+            var zipExport = _zipExport.Init(zoneId, appId, appRead.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
             zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid, withSiteFiles);
 
             return l.ReturnTrue();
@@ -126,22 +134,25 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
 #if NETFRAMEWORK
         public HttpResponseMessage Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
+        {
+            var l = Log.Fn<HttpResponseMessage>($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
 #else
         public IActionResult Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
+        {
+            var l = Log.Fn<IActionResult>($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
 #endif
 
-        {
-            Log.A($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
             SecurityHelpers.ThrowIfNotSiteAdmin(_user, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
             var contextZoneId = _site.ZoneId;
-            var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
+            var appRead = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
+            var appPaths = _appPathSvc.Init(_site, appRead);
 
-            var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared);
+            var zipExport = _zipExport.Init(zoneId, appId, appRead.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
             var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";
 
             var fileName =
-                $"2sxcApp_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}{addOnWhenContainingContent}.zip";
+                $"2sxcApp_{appRead.NameWithoutSpecialChars()}_{appRead.VersionSafe()}{addOnWhenContainingContent}.zip";
             Log.A($"file name:{fileName}");
 
             using var fileStream = zipExport.ExportApp(includeContentGroups, resetAppGuid);
@@ -149,9 +160,9 @@ namespace ToSic.Sxc.WebApi.ImportExport
             Log.A("will stream so many bytes:" + fileBytes.Length);
             var mimeType = MimeHelper.FallbackType;
 #if NETFRAMEWORK
-            return HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, mimeType, new MemoryStream(fileBytes));
+            return l.Return(HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, mimeType, new MemoryStream(fileBytes)));
 #else
-                return new FileContentResult(fileBytes, mimeType) { FileDownloadName = fileName };
+            return l.Return(new FileContentResult(fileBytes, mimeType) { FileDownloadName = fileName });
 #endif
         }
     }
