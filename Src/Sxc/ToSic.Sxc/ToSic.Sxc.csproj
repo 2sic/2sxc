@@ -17,11 +17,14 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <!-- end: Don't generate... -->
-
-    <!-- Experimental: generate xml docs -->
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <LangVersion>default</LangVersion>
+    <!-- end: Don't generate... -->
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <!-- generate xml docs -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1701;1702;CS1570;CS1572;CS1573;CS1574;CS1587;CS1591;CS1710;CS1711</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
