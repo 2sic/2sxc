@@ -1,11 +1,10 @@
-﻿using System;
-using ToSic.Lib.DI;
+﻿using ToSic.Lib.DI;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Razor
 {
-    public class RazorService : IRazorService
+    internal class RazorService : IRazorService
     {
 
         private readonly LazySvc<IRazorRenderer> _razorRendererLazy;

@@ -8,8 +8,10 @@ using ToSic.Sxc.Web;
 namespace ToSic.Sxc.Razor
 {
     // ReSharper disable once InconsistentNaming
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static class StartupRazor
     {
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public static IServiceCollection AddSxcRazor(this IServiceCollection services)
         {
             // .net Core parts

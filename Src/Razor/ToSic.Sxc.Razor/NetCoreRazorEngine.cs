@@ -19,8 +19,7 @@ namespace ToSic.Sxc.Razor
     /// </summary>
     [PrivateApi("used to be marked as internal, but it doesn't make sense to show in docs")]
     [EngineDefinition(Name = "Razor")]
-
-    public class NetCoreRazorEngine : EngineBase, IRazorEngine
+    internal class NetCoreRazorEngine : EngineBase, IRazorEngine
     {
         private readonly LazySvc<CodeErrorHelpService> _errorHelp;
         private readonly LazySvc<CodeRootFactory> _codeRootFactory;

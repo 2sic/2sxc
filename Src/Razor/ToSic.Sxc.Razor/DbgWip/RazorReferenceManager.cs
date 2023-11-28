@@ -15,7 +15,8 @@ namespace ToSic.Sxc.Razor.Engine.DbgWip
     /// It's not used in runtime, but we need during development to to verify what's happening
     /// when dependencies are missing
     /// </summary>
-    public class RazorReferenceManager
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    internal class RazorReferenceManager
     {
         private readonly ApplicationPartManager _partManager;
         private readonly MvcRazorRuntimeCompilationOptions _options;
@@ -31,17 +32,12 @@ namespace ToSic.Sxc.Razor.Engine.DbgWip
             _options = options.Value;
         }
 
-        public virtual IReadOnlyList<MetadataReference> CompilationReferences
-        {
-            get
-            {
-                return LazyInitializer.EnsureInitialized(
-                    ref _compilationReferences,
-                    ref _compilationReferencesInitialized,
-                    ref _compilationReferencesLock,
-                    GetCompilationReferences);
-            }
-        }
+        public virtual IReadOnlyList<MetadataReference> CompilationReferences =>
+            LazyInitializer.EnsureInitialized(
+                ref _compilationReferences,
+                ref _compilationReferencesInitialized,
+                ref _compilationReferencesLock,
+                GetCompilationReferences);
 
         private IReadOnlyList<MetadataReference> GetCompilationReferences()
         {
@@ -58,7 +54,6 @@ namespace ToSic.Sxc.Razor.Engine.DbgWip
             var referencePaths = new List<string>(_options.AdditionalReferencePaths.Count);
 
             foreach (var part in _partManager.ApplicationParts)
-            {
                 if (part is ICompilationReferencesProvider compilationReferenceProvider)
                 {
                     referencePaths.AddRange(compilationReferenceProvider.GetReferencePaths());
@@ -67,7 +62,6 @@ namespace ToSic.Sxc.Razor.Engine.DbgWip
                 {
                     referencePaths.AddRange(assemblyPart.GetReferencePaths());
                 }
-            }
 
             referencePaths.AddRange(_options.AdditionalReferencePaths);
 
@@ -76,13 +70,11 @@ namespace ToSic.Sxc.Razor.Engine.DbgWip
 
         private static MetadataReference CreateMetadataReference(string path)
         {
-            using (var stream = File.OpenRead(path))
-            {
-                var moduleMetadata = ModuleMetadata.CreateFromStream(stream, PEStreamOptions.PrefetchMetadata);
-                var assemblyMetadata = AssemblyMetadata.Create(moduleMetadata);
+            using var stream = File.OpenRead(path);
+            var moduleMetadata = ModuleMetadata.CreateFromStream(stream, PEStreamOptions.PrefetchMetadata);
+            var assemblyMetadata = AssemblyMetadata.Create(moduleMetadata);
 
-                return assemblyMetadata.GetReference(filePath: path);
-            }
+            return assemblyMetadata.GetReference(filePath: path);
         }
     }
 }

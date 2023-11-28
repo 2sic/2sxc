@@ -14,7 +14,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Razor
 {
-    public class RazorCompiler : ServiceBase, IRazorCompiler
+    internal class RazorCompiler : ServiceBase, IRazorCompiler
     {
         #region Constructor and DI
 

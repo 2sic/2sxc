@@ -10,7 +10,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Razor
 {
-    public class RazorRenderer : ServiceBase, IRazorRenderer
+    internal class RazorRenderer : ServiceBase, IRazorRenderer
     {
         #region Constructor and DI
 
