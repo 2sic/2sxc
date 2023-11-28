@@ -9,7 +9,7 @@ using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 namespace ToSic.Sxc.Oqt.Server.StartUp;
 
 // ReSharper disable once InconsistentNaming
-internal static partial class OqtRegisterServices
+partial class OqtRegisterServices
 {
     public static IServiceCollection AddOqtAppWebApi(this IServiceCollection services)
     {

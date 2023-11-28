@@ -5,7 +5,7 @@ using ToSic.Sxc.Oqt.Server.LookUps;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
 
-internal static partial class OqtRegisterServices
+partial class OqtRegisterServices
 {
     /// <summary>
     /// Mail, Logging and other services.

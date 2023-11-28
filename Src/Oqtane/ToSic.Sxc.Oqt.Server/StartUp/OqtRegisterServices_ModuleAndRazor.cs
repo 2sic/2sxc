@@ -9,7 +9,6 @@ using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Oqt.Server.Blocks;
-using ToSic.Sxc.Oqt.Server.Blocks.Output;
 using ToSic.Sxc.Oqt.Server.Cms;
 using ToSic.Sxc.Oqt.Server.Data;
 using ToSic.Sxc.Oqt.Server.Integration;
@@ -23,7 +22,7 @@ using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
 
-internal static partial class OqtRegisterServices
+partial class OqtRegisterServices
 {
     /// <summary>
     /// Ensure that the module-concept works
@@ -56,7 +55,6 @@ internal static partial class OqtRegisterServices
         services.TryAddTransient<ILinkService, OqtLinkService>();
 
         services.TryAddTransient<OqtPageOutput>();
-        services.TryAddTransient<OqtSxcViewBuilder>();
         services.TryAddTransient<IBlockResourceExtractor, BlockResourceExtractorWithInline>();
         services.TryAddTransient<IValueConverter, OqtValueConverter>();
 
@@ -72,7 +70,7 @@ internal static partial class OqtRegisterServices
 
         // Views / Templates / Razor: Polymorphism Resolvers
         services.TryAddTransient<Sxc.Polymorphism.Koi>();
-        services.TryAddTransient<Polymorphism.Permissions>();
+        services.TryAddTransient<Permissions>();
         services.TryAddTransient<Connect.Koi.Detectors.ICssFrameworkDetector, OqtKoiCssFrameworkDetector>();
 
         return services;

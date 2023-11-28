@@ -7,7 +7,7 @@ using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output;
 
-public partial class OqtPageOutput
+partial class OqtPageOutput
 {
     /// <summary>
     /// The JavaScript and Style assets
