@@ -1,5 +1,4 @@
-﻿#if NETFRAMEWORK
-using System;
+﻿using System;
 using System.Collections.Generic;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
@@ -17,14 +16,16 @@ namespace ToSic.Sxc.Web
     // This is why each method on the underlying interface must be repeated here :(
     //
     // We suggest that we won't do this for new commands, but all commands that were in 12.08 must be repeated here
+    // eg. Blog 06.00.01 which was still around early 2023 uses this, so it could also be used in Oqtane
 
     /// <summary>
     /// Old name for the IPageService, it's in use in some v12 App templates so we must keep it working.
     /// Will continue to work, but shouldn't be used. Please use <see cref="ToSic.Sxc.Services.IPageService"/>  instead
     /// </summary>
+    [PrivateApi]
     [Obsolete("Use ToSic.Sxc.Services.IPageService instead")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public interface IPageService: ToSic.Sxc.Services.IPageService
+    public interface IPageService // : ToSic.Sxc.Services.IPageService
     {
         // This repeats the definition on the IPage Service
         // For reasons we cannot explain, Razor sometimes otherwise complains
@@ -54,4 +55,3 @@ namespace ToSic.Sxc.Web
 
     }
 }
-#endif
