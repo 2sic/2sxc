@@ -6,7 +6,7 @@ using ToSic.Sxc.Oqt.Server.Integration;
 
 namespace ToSic.Sxc.Oqt.Server.Adam;
 
-public class AdamFolderHelper
+internal static class AdamFolderHelper
 {
     public static Folder NewVirtualFolder(int siteId, int? parentId, string path, string folder)
     {

@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 // ImageflowRewriteMiddleware in oqtane imageflow module to be executed in
 // request pipeline exactly before main imageflow middleware because we need to
 // rewrite query string params before imageflow middleware take a care of them.
-public class PreregisterImageFlowMiddleware : IPreregisterImageFlowMiddleware
+internal class PreregisterImageFlowMiddleware : IPreregisterImageFlowMiddleware
 {
     public void Register(IApplicationBuilder app) => app.UseMiddleware<ImageflowRewriteMiddleware>();
 }

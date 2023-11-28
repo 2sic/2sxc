@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Oqt.Server.Tests.Adam.Imageflow
     [TestClass()]
     public class OqtaneBlobServiceTests
     {
-        private static readonly OqtaneBlobService OqtaneBlobService = new OqtaneBlobService(null);
+        private static readonly OqtaneBlobService OqtaneBlobService = new(null);
         private static bool SupportsPath(string virtualPath) => OqtaneBlobService.SupportsPath(virtualPath);  
         private static bool GetAppNameAndFilePath(string virtualPath, out string appName, out string filePath) => OqtaneBlobService.GetAppNameAndFilePath(virtualPath, out appName, out filePath);
         private static bool ContainsSxcPath(string virtualPath) => OqtaneBlobService.ContainsSxcPath(virtualPath);

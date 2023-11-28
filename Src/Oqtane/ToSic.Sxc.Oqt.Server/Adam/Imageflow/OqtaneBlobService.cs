@@ -12,7 +12,7 @@ using ToSic.Sxc.Oqt.Server.Plumbing;
 
 namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 
-public class OqtaneBlobService : IBlobProvider
+internal class OqtaneBlobService : IBlobProvider
 {
     private const string Prefix = "/";
     private const string AdamPath = "/adam/";
