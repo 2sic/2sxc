@@ -1,13 +1,12 @@
-﻿namespace ToSic.Sxc.Oqt.Server.Controllers
+﻿namespace ToSic.Sxc.Oqt.Server.Controllers;
+
+public abstract class OqtStatefulControllerBase : OqtControllerBase
 {
-    public abstract class OqtStatefulControllerBase : OqtControllerBase
+    #region Setup
+
+    protected OqtStatefulControllerBase(string logSuffix) : base(true, logSuffix)
     {
-        #region Setup
-
-        protected OqtStatefulControllerBase(string logSuffix) : base(true, logSuffix)
-        {
-        }
-
-        #endregion
     }
+
+    #endregion
 }

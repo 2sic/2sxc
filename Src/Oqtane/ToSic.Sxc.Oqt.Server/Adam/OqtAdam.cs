@@ -1,25 +1,24 @@
 ﻿using System;
 using ToSic.Sxc.Adam;
 
-namespace ToSic.Sxc.Oqt.Server.Adam
-{
-    /// <summary>
-    /// Casting helpers so DNN code can work with the file / folder in the DNN signature
-    /// </summary>
-    internal static class OqtAdam
-    {
-        internal static File<int, int> AsOqt(this IFile file)
-        {
-            if (file == null) return null;
-            if (file is not File<int, int> recast) throw new("Tried to cast IFile to internal type, failed");
-            return recast;
-        }
+namespace ToSic.Sxc.Oqt.Server.Adam;
 
-        internal static Folder<int, int> AsOqt(this IFolder folder)
-        {
-            if (folder == null) return null;
-            if (folder is not Folder<int, int> recast) throw new("Tried to cast IFolder to internal type, failed");
-            return recast;
-        }
+/// <summary>
+/// Casting helpers so DNN code can work with the file / folder in the DNN signature
+/// </summary>
+internal static class OqtAdam
+{
+    internal static File<int, int> AsOqt(this IFile file)
+    {
+        if (file == null) return null;
+        if (file is not File<int, int> recast) throw new("Tried to cast IFile to internal type, failed");
+        return recast;
+    }
+
+    internal static Folder<int, int> AsOqt(this IFolder folder)
+    {
+        if (folder == null) return null;
+        if (folder is not Folder<int, int> recast) throw new("Tried to cast IFolder to internal type, failed");
+        return recast;
     }
 }

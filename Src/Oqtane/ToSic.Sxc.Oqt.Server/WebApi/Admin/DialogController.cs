@@ -6,32 +6,31 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi.Admin;
 using RealController = ToSic.Sxc.WebApi.Admin.DialogControllerReal;
 
-namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
+namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
+
+/// <summary>
+/// This one supplies portal-wide (or cross-portal) settings / configuration
+/// </summary>
+//[SupportedModules("2sxc,2sxc-app")]
+//[DnnLogExceptions]
+[Authorize(Roles = RoleNames.Admin)]
+[AutoValidateAntiforgeryToken]
+
+// Release routes
+[Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+[Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
+[Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
+
+[ApiController]
+
+public class DialogController : OqtStatefulControllerBase, IDialogController
 {
-    /// <summary>
-    /// This one supplies portal-wide (or cross-portal) settings / configuration
-    /// </summary>
-    //[SupportedModules("2sxc,2sxc-app")]
-    //[DnnLogExceptions]
-    [Authorize(Roles = RoleNames.Admin)]
-    [AutoValidateAntiforgeryToken]
+    public DialogController() : base(RealController.LogSuffix) { }
 
-    // Release routes
-    [Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
-    [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
-    [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
-
-    [ApiController]
-
-    public class DialogController : OqtStatefulControllerBase, IDialogController
-    {
-        public DialogController() : base(RealController.LogSuffix) { }
-
-        private RealController Real => GetService<RealController>();
+    private RealController Real => GetService<RealController>();
 
 
-        [HttpGet]
-        public DialogContextStandaloneDto Settings(int appId) => Real.Settings(appId);
+    [HttpGet]
+    public DialogContextStandaloneDto Settings(int appId) => Real.Settings(appId);
         
-    }
 }

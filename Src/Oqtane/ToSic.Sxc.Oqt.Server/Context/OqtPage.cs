@@ -9,53 +9,52 @@ using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 using Page = ToSic.Sxc.Context.Page;
 
-namespace ToSic.Sxc.Oqt.Server.Context
+namespace ToSic.Sxc.Oqt.Server.Context;
+
+public class OqtPage : Page, IWrapper<Oqtane.Models.Page>
 {
-    public class OqtPage : Page, IWrapper<Oqtane.Models.Page>
+    private readonly SiteState _siteState;
+    private readonly LazySvc<IAliasRepository> _aliasRepository;
+    private readonly LazySvc<IPageRepository> _pages;
+    private readonly LazySvc<ILinkPaths> _linkPathsLazy;
+
+    public Alias Alias { get; set; }
+
+    public OqtPage(LazySvc<IHttp> httpBlazor, SiteState siteState, LazySvc<IAliasRepository> aliasRepository, LazySvc<IPageRepository> pages, LazySvc<ILinkPaths> linkPathsLazy) : base(httpBlazor)
     {
-        private readonly SiteState _siteState;
-        private readonly LazySvc<IAliasRepository> _aliasRepository;
-        private readonly LazySvc<IPageRepository> _pages;
-        private readonly LazySvc<ILinkPaths> _linkPathsLazy;
+        _siteState = siteState;
+        _aliasRepository = aliasRepository;
+        _pages = pages;
+        _linkPathsLazy = linkPathsLazy;
+    }
 
-        public Alias Alias { get; set; }
+    protected Oqtane.Models.Page UnwrappedPage;
+    public Oqtane.Models.Page GetContents() => UnwrappedPage;
+    public new OqtPage Init(int id)
+    {
+        base.Init(id);
 
-        public OqtPage(LazySvc<IHttp> httpBlazor, SiteState siteState, LazySvc<IAliasRepository> aliasRepository, LazySvc<IPageRepository> pages, LazySvc<ILinkPaths> linkPathsLazy) : base(httpBlazor)
-        {
-            _siteState = siteState;
-            _aliasRepository = aliasRepository;
-            _pages = pages;
-            _linkPathsLazy = linkPathsLazy;
-        }
+        UnwrappedPage = _pages.Value.GetPage(id);
 
-        protected Oqtane.Models.Page UnwrappedPage;
-        public Oqtane.Models.Page GetContents() => UnwrappedPage;
-        public new OqtPage Init(int id)
-        {
-            base.Init(id);
+        Url = GetUrl(GetAlias(UnwrappedPage.SiteId));
+        return this;
+    }
 
-            UnwrappedPage = _pages.Value.GetPage(id);
+    private ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
-            Url = GetUrl(GetAlias(UnwrappedPage.SiteId));
-            return this;
-        }
+    public string GetUrl(Alias alias)
+    {
+        // Page url in Oqtane is without protocol, so we need to add it from current request for consistency
+        // also without trailing slash
+        var parts = new UrlParts(LinkPaths.GetCurrentRequestUrl());
+        return $"{parts.Protocol}{alias.Name}/{UnwrappedPage.Path}".TrimLastSlash();
+    }
 
-        private ILinkPaths LinkPaths => _linkPathsLazy.Value;
-
-        public string GetUrl(Alias alias)
-        {
-            // Page url in Oqtane is without protocol, so we need to add it from current request for consistency
-            // also without trailing slash
-            var parts = new UrlParts(LinkPaths.GetCurrentRequestUrl());
-            return $"{parts.Protocol}{alias.Name}/{UnwrappedPage.Path}".TrimLastSlash();
-        }
-
-        private Alias GetAlias(int siteId)
-        {
-            Alias ??= _siteState.Alias;
-            if (Alias != null && Alias.SiteId == siteId) return Alias;
-            Alias = _aliasRepository.Value.GetAliases().OrderBy(a => a.Name).FirstOrDefault(a => a.SiteId == siteId); // best guess
-            return Alias;
-        }
+    private Alias GetAlias(int siteId)
+    {
+        Alias ??= _siteState.Alias;
+        if (Alias != null && Alias.SiteId == siteId) return Alias;
+        Alias = _aliasRepository.Value.GetAliases().OrderBy(a => a.Name).FirstOrDefault(a => a.SiteId == siteId); // best guess
+        return Alias;
     }
 }

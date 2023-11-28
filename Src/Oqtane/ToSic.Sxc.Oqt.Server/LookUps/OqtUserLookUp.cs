@@ -2,42 +2,41 @@
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Oqt.Server.Context;
 
-namespace ToSic.Sxc.Oqt.Server.LookUps
+namespace ToSic.Sxc.Oqt.Server.LookUps;
+
+public class OqtUserLookUp : LookUpBase
 {
-    public class OqtUserLookUp : LookUpBase
+    private readonly OqtUser _oqtUser;
+
+    public OqtUserLookUp(IUser oqtUser)
     {
-        private readonly OqtUser _oqtUser;
+        Name = "User";
 
-        public OqtUserLookUp(IUser oqtUser)
+        _oqtUser = oqtUser as OqtUser;
+    }
+
+    public override string Get(string key, string format)
+    {
+        try
         {
-            Name = "User";
+            return key.ToLowerInvariant() switch
+            {
+                "id" => $"{_oqtUser.Id}",
+                "username" => $"{_oqtUser.GetContents().Username}",
+                "displayname" => $"{_oqtUser.GetContents().DisplayName}",
+                "email" => $"{_oqtUser.GetContents().Email}",
+                "guid" => $"{_oqtUser.Guid}",
 
-            _oqtUser = oqtUser as OqtUser;
+                //"issuperuser" => $"{_oqtUser.IsSuperUser}",
+                //"isadmin" => $"{_oqtUser.IsAdmin}",
+                //"isanonymous" => $"{_oqtUser.IsAnonymous}",
+
+                _ => string.Empty
+            };
         }
-
-        public override string Get(string key, string format)
+        catch
         {
-            try
-            {
-                return key.ToLowerInvariant() switch
-                {
-                    "id" => $"{_oqtUser.Id}",
-                    "username" => $"{_oqtUser.GetContents().Username}",
-                    "displayname" => $"{_oqtUser.GetContents().DisplayName}",
-                    "email" => $"{_oqtUser.GetContents().Email}",
-                    "guid" => $"{_oqtUser.Guid}",
-
-                    //"issuperuser" => $"{_oqtUser.IsSuperUser}",
-                    //"isadmin" => $"{_oqtUser.IsAdmin}",
-                    //"isanonymous" => $"{_oqtUser.IsAnonymous}",
-
-                    _ => string.Empty
-                };
-            }
-            catch
-            {
-                return string.Empty;
-            }
+            return string.Empty;
         }
     }
 }

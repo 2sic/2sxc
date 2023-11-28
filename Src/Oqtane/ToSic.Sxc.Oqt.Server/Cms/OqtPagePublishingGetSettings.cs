@@ -2,19 +2,18 @@
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Oqt.Shared;
 
-namespace ToSic.Sxc.Oqt.Server.Cms
+namespace ToSic.Sxc.Oqt.Server.Cms;
+
+internal class OqtPagePublishingGetGetSettings: PagePublishingGetSettingsBase
 {
-    internal class OqtPagePublishingGetGetSettings: PagePublishingGetSettingsBase
-    {
-        #region Constructor / DI
+    #region Constructor / DI
 
-        public OqtPagePublishingGetGetSettings() : base(OqtConstants.OqtLogPrefix) { }
+    public OqtPagePublishingGetGetSettings() : base(OqtConstants.OqtLogPrefix) { }
         
-        #endregion
+    #endregion
 
 
-        protected override PublishingMode LookupRequirements(int instanceId)
-            => PublishingMode.DraftOptional;
+    protected override PublishingMode LookupRequirements(int instanceId)
+        => PublishingMode.DraftOptional;
 
-    }
 }

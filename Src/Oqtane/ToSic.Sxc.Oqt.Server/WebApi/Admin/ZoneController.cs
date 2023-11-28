@@ -9,36 +9,35 @@ using ToSic.Eav.WebApi.Zone;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Eav.WebApi.Admin.ZoneControllerReal;
 
-namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
+namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
+
+/// <summary>
+/// This one supplies portal-wide (or cross-portal) settings / configuration
+/// </summary>
+[ValidateAntiForgeryToken]
+[Authorize(Roles = RoleNames.Admin)]
+// Release routes
+[Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+[Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
+[Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
+
+public class ZoneController : OqtStatefulControllerBase, IZoneController
 {
-    /// <summary>
-    /// This one supplies portal-wide (or cross-portal) settings / configuration
-    /// </summary>
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = RoleNames.Admin)]
-    // Release routes
-    [Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
-    [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
-    [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
+    public ZoneController(): base(RealController.LogSuffix) { }
 
-    public class ZoneController : OqtStatefulControllerBase, IZoneController
-    {
-        public ZoneController(): base(RealController.LogSuffix) { }
-
-        private RealController Real => GetService<RealController>();
+    private RealController Real => GetService<RealController>();
 
 
-        /// <inheritdoc />
-        [HttpGet]
-        public IList<SiteLanguageDto> GetLanguages() => Real.GetLanguages();
+    /// <inheritdoc />
+    [HttpGet]
+    public IList<SiteLanguageDto> GetLanguages() => Real.GetLanguages();
 
-        /// <inheritdoc />
-        [HttpGet]
-        public void SwitchLanguage(string cultureCode, bool enable) => Real.SwitchLanguage(cultureCode, enable);
+    /// <inheritdoc />
+    [HttpGet]
+    public void SwitchLanguage(string cultureCode, bool enable) => Real.SwitchLanguage(cultureCode, enable);
 
-        /// <inheritdoc />
-        [HttpGet]
-        public SystemInfoSetDto GetSystemInfo() => Real.GetSystemInfo();
+    /// <inheritdoc />
+    [HttpGet]
+    public SystemInfoSetDto GetSystemInfo() => Real.GetSystemInfo();
 
-    }
 }

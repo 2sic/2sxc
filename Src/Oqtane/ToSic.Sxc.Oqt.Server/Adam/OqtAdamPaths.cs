@@ -5,47 +5,46 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
 
-namespace ToSic.Sxc.Oqt.Server.Adam
+namespace ToSic.Sxc.Oqt.Server.Adam;
+
+/// <summary>
+/// Basic AdamPaths resolver, assumes that files are in Content/[tenant]/site/[site]/adam for now
+/// </summary>
+public class OqtAdamPaths: AdamPathsBase
 {
-    /// <summary>
-    /// Basic AdamPaths resolver, assumes that files are in Content/[tenant]/site/[site]/adam for now
-    /// </summary>
-    public class OqtAdamPaths: AdamPathsBase
+    private readonly SiteStateInitializer _siteStateInitializer;
+
+    public OqtAdamPaths(IServerPaths serverPaths, SiteStateInitializer siteStateInitializer) : base(serverPaths, OqtConstants.OqtLogPrefix)
     {
-        private readonly SiteStateInitializer _siteStateInitializer;
+        _siteStateInitializer = siteStateInitializer;
+    }
 
-        public OqtAdamPaths(IServerPaths serverPaths, SiteStateInitializer siteStateInitializer) : base(serverPaths, OqtConstants.OqtLogPrefix)
+    public string Path(string path)
+    {
+        var original = base.Url(path);
+        return original.PrefixSlash();
+    }
+
+    public override string Url(string path)
+    {
+        // Convert path to url.
+        string url = path.ForwardSlash();
+        var parts = url.Split("/").ToList();
+        if (parts[0] == "adam")
         {
-            _siteStateInitializer = siteStateInitializer;
+            // Swap 'adam' and appName.
+            parts[0] = parts[1];
+            parts[1] = "adam";
+
+            // Insert alias path.
+            var alias = _siteStateInitializer.InitializedState.Alias;
+            var aliasPath = alias.Path;
+            parts.Insert(0, $"{aliasPath}/app");
+
+            // Build url string.
+            url = string.Join('/', parts.ToArray());
         }
 
-        public string Path(string path)
-        {
-            var original = base.Url(path);
-            return original.PrefixSlash();
-        }
-
-        public override string Url(string path)
-        {
-            // Convert path to url.
-            string url = path.ForwardSlash();
-            var parts = url.Split("/").ToList();
-            if (parts[0] == "adam")
-            {
-                // Swap 'adam' and appName.
-                parts[0] = parts[1];
-                parts[1] = "adam";
-
-                // Insert alias path.
-                var alias = _siteStateInitializer.InitializedState.Alias;
-                var aliasPath = alias.Path;
-                parts.Insert(0, $"{aliasPath}/app");
-
-                // Build url string.
-                url = string.Join('/', parts.ToArray());
-            }
-
-            return url.PrefixSlash();
-        }
+        return url.PrefixSlash();
     }
 }
