@@ -39,12 +39,12 @@
       <DnnBinInclude Include="bin\ToSic.Sxc.Dnn*.dll" />
       <DnnBinInclude Include="bin\ToSic.Sxc.Dnn*.pdb" />
 
-      <!-- XML documentation -->
-      <DnnBinInclude Include="bin\ToSic.Sxc.xml" />
-      <DnnBinInclude Include="bin\ToSic.Sxc.Dnn.xml" />
-      <!--<DnnBinInclude Include="bin\ToSic.Sxc*.xml" />
-      <DnnBinInclude Include="bin\ToSic.Eav*.xml" />
-      <DnnBinInclude Include="bin\ToSic.Lib*.xml" />-->
+      <!-- XML documentation is generated in Release only -->
+      <DnnBinInclude Include="bin\ToSic.Sxc.xml" Condition="'$(Configuration)' == 'Release'" />
+      <DnnBinInclude Include="bin\ToSic.Sxc.Dnn.xml" Condition="'$(Configuration)' == 'Release'" />
+      <!--<DnnBinInclude Include="bin\ToSic.Sxc*.xml" Condition="'$(Configuration)' == 'Release'" />
+      <DnnBinInclude Include="bin\ToSic.Eav*.xml" Condition="'$(Configuration)' == 'Release'" />
+      <DnnBinInclude Include="bin\ToSic.Lib*.xml" Condition="'$(Configuration)' == 'Release'" />-->
 
       <!-- 2sxc 13+ netstandard2.0/framework 4.7.2 assemblies -->
       <DependeciesInclude Include="bin\Microsoft.Bcl.AsyncInterfaces.dll" />
