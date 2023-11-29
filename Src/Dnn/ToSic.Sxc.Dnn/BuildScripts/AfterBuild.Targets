@@ -24,6 +24,16 @@
     <!-- Echo Statements -->
     <Message Text="BuildTarget='$(BuildTarget)'" Importance="High"/>
 
+    <!-- XML documentation is generated in Release only -->
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+      <!-- itmes included only in Release configuration -->
+      <DnnBinInclude Include="bin\ToSic.Sxc.xml" />
+      <DnnBinInclude Include="bin\ToSic.Sxc.Dnn.xml" />
+      <!--<DnnBinInclude Include="bin\ToSic.Sxc*.xml" />
+      <DnnBinInclude Include="bin\ToSic.Eav*.xml" />
+      <DnnBinInclude Include="bin\ToSic.Lib*.xml" />-->
+    </ItemGroup>
+    
     <ItemGroup>
       <!-- Global / Shared 2sxc and EAV DLLs-->
       <DnnBinInclude Include="bin\ToSic.Sxc.dll" />
@@ -38,13 +48,6 @@
       <!-- DNN specific DLLs -->
       <DnnBinInclude Include="bin\ToSic.Sxc.Dnn*.dll" />
       <DnnBinInclude Include="bin\ToSic.Sxc.Dnn*.pdb" />
-
-      <!-- XML documentation is generated in Release only -->
-      <DnnBinInclude Include="bin\ToSic.Sxc.xml" Condition="'$(Configuration)' == 'Release'" />
-      <DnnBinInclude Include="bin\ToSic.Sxc.Dnn.xml" Condition="'$(Configuration)' == 'Release'" />
-      <!--<DnnBinInclude Include="bin\ToSic.Sxc*.xml" Condition="'$(Configuration)' == 'Release'" />
-      <DnnBinInclude Include="bin\ToSic.Eav*.xml" Condition="'$(Configuration)' == 'Release'" />
-      <DnnBinInclude Include="bin\ToSic.Lib*.xml" Condition="'$(Configuration)' == 'Release'" />-->
 
       <!-- 2sxc 13+ netstandard2.0/framework 4.7.2 assemblies -->
       <DependeciesInclude Include="bin\Microsoft.Bcl.AsyncInterfaces.dll" />
@@ -93,7 +96,7 @@
       <DependeciesInclude Include="$(MSBuildProjectDirectory)\razorblade-old\bin\*.dll" />
 
     </ItemGroup>
-
+    
     <Copy SourceFiles="@(DnnBinInclude)" DestinationFolder="$(CurrentDnnRoot)/bin" />
     <Copy SourceFiles="@(DependeciesInclude)" DestinationFolder="$(CurrentDnnRoot)/bin" />
 
