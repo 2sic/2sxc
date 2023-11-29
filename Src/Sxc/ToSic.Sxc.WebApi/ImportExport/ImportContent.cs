@@ -115,7 +115,7 @@ public class ImportContent: ServiceBase
                 throw new ArgumentException("a file is not json");
 
             // 1. Create content types
-            var serializer = _jsonSerializerGenerator.New().SetApp(_appStates.GetReaderOrNull(new AppIdentity(zoneId, appId)));
+            var serializer = _jsonSerializerGenerator.New().SetApp(_appStates.GetReader(new AppIdentity(zoneId, appId)));
 
             // 1.1 Deserialize json files
             var packages = files.ToDictionary(file => file.Name, file => serializer.UnpackAndTestGenericJsonV1(file.Contents));
@@ -160,7 +160,7 @@ public class ImportContent: ServiceBase
             // 2. Create Entities
 
             // 2.1 Reset serializer to use the new app
-            var appState = _appStates.GetReaderOrNull(new AppIdentity(zoneId, appId));
+            var appState = _appStates.GetReader(new AppIdentity(zoneId, appId));
             serializer = _jsonSerializerGenerator.New().SetApp(appState);
             l.A("Load items");
 

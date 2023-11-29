@@ -23,8 +23,6 @@ public class Polymorphism: ServiceBase
         _serviceProvider = serviceProvider;
     }
 
-    public Polymorphism Init(AppState appState) => Init(appState.List);
-
     public Polymorphism Init(IEnumerable<IEntity> list)
     {
         Entity = list?.FirstOrDefaultOfType(PolymorphismConstants.Name);

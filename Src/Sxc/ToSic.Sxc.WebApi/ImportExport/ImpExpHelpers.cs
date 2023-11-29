@@ -37,7 +37,7 @@ public class ImpExpHelpers: ServiceBase
             throw Eav.WebApi.Errors.HttpException.PermissionDenied("Tried to access app from another zone. Requires SuperUser permissions.");
         }
 
-        var app = _appStates.GetReaderInternalOrNull(new AppIdentity(zoneId, appId));
+        var app = _appStates.GetReader(new AppIdentity(zoneId, appId));
         return l.Return(app);
     }
 

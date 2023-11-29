@@ -67,7 +67,7 @@ namespace ToSic.Sxc.WebApi.Admin
         public IDictionary<string, string> Scopes(int appId)
         {
             var wrapLog = Log.Fn<IDictionary<string, string>>();
-            var results = _appStates.Get(appId).ContentTypes.GetAllScopesWithLabels();
+            var results = _appStates.GetReader(appId).ContentTypes.GetAllScopesWithLabels();
             return wrapLog.Return(results);
         }
 

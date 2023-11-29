@@ -49,7 +49,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
     private int _moduleId;
     private int _pageId;
     private IBlock _block;
-    private IAppStateInternal AppState => _block?.Context?.AppStateReader;
+    private IAppStateInternal AppState => _block?.Context?.AppState;
     private IAppStates AppStates => _appStatesLazy.Value;
 
     public bool Save(IRenderResult data)
@@ -74,7 +74,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
         var appState = AppState;
         if (appState?.ZoneId != null)
             l.Do(message: "dependentAppsStates add", timer: true,
-                action: () => dependentAppsStates.Add(AppStates.GetPrimaryApp(appState.ZoneId, Log)));
+                action: () => dependentAppsStates.Add(AppStates.GetPrimaryReader(appState.ZoneId, Log).StateCache));
 
         l.A($"Found {data.DependentApps.Count} apps: " + string.Join(",", data.DependentApps.Select(da => da.AppId)));
         Fresh.Data = data;
@@ -134,7 +134,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
         var paths = new List<string>();
         foreach (var appState in appStates)
         {
-            var appPaths = _appPathsLazy.Value.Init(app.Site, appState);
+            var appPaths = _appPathsLazy.Value.Init(app.Site, appState.ToInterface(Log));
             if (Directory.Exists(appPaths.PhysicalPath)) paths.Add(appPaths.PhysicalPath);
             if (Directory.Exists(appPaths.PhysicalPathShared)) paths.Add(appPaths.PhysicalPathShared);
         }

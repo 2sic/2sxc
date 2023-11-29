@@ -87,7 +87,7 @@ public class DnnReadyCheckTurbo : ServiceBase
         {
             // configure it
             var tm = _appFolderInitializerLazy.Value;
-            tm.EnsureTemplateFolderExists(block.Context.AppStateReader.Folder, false);
+            tm.EnsureTemplateFolderExists(block.Context.AppState.Folder, false);
         }
 
         return $"Completed init for module {module.ModuleId} showing {block.AppId}";

@@ -42,11 +42,14 @@ public partial class DynamicCodeService
         return App(primaryApp, site, withUnpublished);
     }
 
-    private AppState GetPrimaryApp(int? siteId, ISite site)
+
+    private IAppState GetPrimaryApp(int? siteId, ISite site) => Services.AppStates.Value.GetReader(GetPrimaryAppIdentity(siteId, site));
+
+    private IAppIdentity GetPrimaryAppIdentity(int? siteId, ISite site)
     {
         siteId ??= site?.Id ?? Services.Site.Value.Id;
         var zoneId = Services.ZoneMapper.Value.GetZoneId(siteId.Value);
-        var primaryApp = Services.AppStates.Value.GetPrimaryApp(zoneId, Log);
+        var primaryApp = Services.AppStates.Value.IdentityOfPrimary(zoneId);
         return primaryApp;
     }
 

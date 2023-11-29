@@ -70,7 +70,7 @@ public class AppFilesDataSourceProvider : ServiceBase<AppFilesDataSourceProvider
         _root = root.TrimPrefixSlash().Backslash();
         _filter = filter;
 
-        var appState = Services.AppStates.GetReaderOrNull(new AppIdentity(zoneId, appId));
+        var appState = Services.AppStates.GetReader(new AppIdentity(zoneId, appId));
         _appPaths = Services.AppPathMicroSvc.Init(Services.Site, appState);
         
         _fileManager = Services.FileManagerGenerator.New().SetFolder(_appPaths.PhysicalPath, _root);

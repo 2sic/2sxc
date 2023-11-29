@@ -44,7 +44,7 @@ public class AppStackBackend: ServiceBase
         if (languages == null || !languages.Any())
             languages = _zoneCulture.SafeLanguagePriorityCodes();
         // Get app 
-        var appState = _appStates.Get(appId);
+        var appState = _appStates.GetReader(appId);
         // Ensure we have the correct stack name
         var partName = SystemStackHelpers.GetStackNameOrNull(part);
         if (partName == null)
@@ -66,7 +66,7 @@ public class AppStackBackend: ServiceBase
 
 
 
-    public List<PropertyDumpItem> GetStackDump(AppState appState, string partName, string[] languages, IEntity viewSettingsMixin)
+    public List<PropertyDumpItem> GetStackDump(IAppState appState, string partName, string[] languages, IEntity viewSettingsMixin)
     {
         // Build Sources List
         var settings = _settingsStack.Init(appState).GetStack(partName, viewSettingsMixin);
@@ -77,7 +77,7 @@ public class AppStackBackend: ServiceBase
     }
 
 
-    private IEntity GetViewSettingsForMixin(Guid? viewGuid, string[] languages, AppState appState, string realName)
+    private IEntity GetViewSettingsForMixin(Guid? viewGuid, string[] languages, IAppStateFullList appState, string realName)
     {
         IEntity viewStackPart = null;
         if (viewGuid != null)

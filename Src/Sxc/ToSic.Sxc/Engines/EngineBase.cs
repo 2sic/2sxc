@@ -78,7 +78,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
 
         // Do various pre-checks and path variations
         var view = block.View;
-        var appState = block.Context.AppStateReader;
+        var appState = block.Context.AppState;
         var appPathRootInInstallation = block.App.PathSwitch(view.IsShared, PathTypes.PhysRelative);
         var polymorphPathOrNull = Services.EnginePolymorphism.PolymorphTryToSwitchPath(appPathRootInInstallation, view, appState);
         var templatePath = polymorphPathOrNull ??
@@ -130,7 +130,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
         var l = Log.Fn<RenderEngineResult>();
 
         // Check App Requirements (new 16.08)
-        var appReqProblems = Services.EngineAppRequirements.GetMessageForAppRequirements(Block.Context.AppStateReader);
+        var appReqProblems = Services.EngineAppRequirements.GetMessageForAppRequirements(Block.Context.AppState);
         if (appReqProblems != null) return l.Return(appReqProblems, "error");
 
 

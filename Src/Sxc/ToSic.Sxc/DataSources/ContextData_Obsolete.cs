@@ -24,7 +24,7 @@ namespace ToSic.Sxc.DataSources
                 if (_cache != null) return _cache;
                 // on first access report problem
                 _codeChanges.Value.Warn(CaV8To17("Data.Cache", "https://go.2sxc.org/brc-13-datasource-cache"));
-                return _cache = new Compatibility.CacheWithGetContentType(_appStates.GetReaderOrNull(this));
+                return _cache = new Compatibility.CacheWithGetContentType(_appStates.GetReader(this));
             }
         }
 

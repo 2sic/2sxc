@@ -28,7 +28,7 @@ partial class ListControllerReal
             // Make sure we have the correct casing for the field names
             part = entity.Type[part].Name;
 
-            var fList = _workFieldList.New(Context.AppStateReader);
+            var fList = _workFieldList.New(Context.AppState);
 
             var forceDraft = Context.Publishing.ForceDraft;
             if (add)
@@ -60,11 +60,11 @@ partial class ListControllerReal
         if (string.IsNullOrEmpty(typeName))
             return l.ReturnNull("no type name, so no data");
 
-        var ct = Context.AppStateReader.GetContentType(typeName);
+        var ct = Context.AppState.GetContentType(typeName);
 
-        var listTemp = _workEntities.New(Context.AppStateReader).Get(typeName).ToList();
+        var listTemp = _workEntities.New(Context.AppState).Get(typeName).ToList();
 
-        var results = listTemp.Select(Context.AppStateReader.GetDraftOrKeep).ToDictionary(
+        var results = listTemp.Select(Context.AppState.GetDraftOrKeep).ToDictionary(
             p => p.EntityId,
             p => p.GetBestTitle() ?? "");
 
@@ -81,10 +81,10 @@ partial class ListControllerReal
     private (List<IEntity> items, string typeName) FindItemAndFieldTypeName(Guid guid, string part)
     {
         var l = Log.Fn<(List<IEntity>, string)>($"guid:{guid},part:{part}");
-        var parent = Context.AppStateReader.GetDraftOrPublished(guid);
+        var parent = Context.AppState.GetDraftOrPublished(guid);
         if (parent == null) throw l.Done(new Exception($"No item found for {guid}"));
         if (!parent.Attributes.ContainsKey(part)) throw l.Done(new Exception($"Could not find field {part} in item {guid}"));
-        var itemList = parent.Children(part).Select(Context.AppStateReader.GetDraftOrKeep).ToList();
+        var itemList = parent.Children(part).Select(Context.AppState.GetDraftOrKeep).ToList();
 
         // find attribute-type-name
         var attribute = parent.Type[part];

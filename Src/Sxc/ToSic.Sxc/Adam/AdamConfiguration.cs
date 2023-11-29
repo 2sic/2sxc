@@ -23,7 +23,7 @@ public class AdamConfiguration
         {
             if (_adamAppRootFolder != null) return _adamAppRootFolder;
 
-            var found = _appStates.GetPresetApp().List.FirstOrDefaultOfType(TypeName)?.Value<string>(ConfigFieldRootFolder);
+            var found = _appStates.GetPresetReader().List.FirstOrDefaultOfType(TypeName)?.Value<string>(ConfigFieldRootFolder);
 
             return _adamAppRootFolder = found ?? AdamFolderMask;
         }

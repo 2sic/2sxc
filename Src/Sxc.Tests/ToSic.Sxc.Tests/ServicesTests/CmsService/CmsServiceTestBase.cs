@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
             eavSystemLoader.LoadLicenseAndFeatures();
 
             var appStates = GetService<IAppStates>();
-            var app = appStates.GetPresetOrNull();
+            var app = appStates.GetPresetReaderIfAlreadyLoaded();
             TstDataContentType = app.GetContentType("TstData");
             if (TstDataContentType == null) throw new Exception("TstData content type not found. Probably JSON is missing.");
             Cdf = GetService<CodeDataFactory>();

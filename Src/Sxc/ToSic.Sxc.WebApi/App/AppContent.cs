@@ -68,7 +68,7 @@ public class AppContent : ServiceBase
     }
     protected IContextOfApp Context;
 
-    protected IAppStateInternal AppState => Context?.AppStateReader ??
+    protected IAppStateInternal AppState => Context?.AppState ??
                                    throw new Exception(
                                        "Can't access AppState before Context is ready. Did you forget to call Init(...)?");
 

@@ -41,8 +41,8 @@ public class EntityPickerBackend: ServiceBase
         var context = _ctxResolver.GetBlockOrSetApp(appId);
         // do security check
         var permCheck = string.IsNullOrEmpty(contentTypeName)
-            ? _appPermissions.New().Init(context, context.AppStateReader)
-            : _typePermissions.New().Init(context, context.AppStateReader, contentTypeName);
+            ? _appPermissions.New().Init(context, context.AppState)
+            : _typePermissions.New().Init(context, context.AppState, contentTypeName);
         if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
             throw HttpException.PermissionDenied(error);
 

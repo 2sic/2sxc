@@ -47,7 +47,7 @@ public class CmsContext: ServiceForDynamicCode, ICmsContext
     private readonly IAppStates _appStates;
     private readonly LazySvc<ICmsSite> _cmsSiteLazy;
 
-    private IAppStateInternal SiteAppState => _siteAppState ??= _appStates.GetPrimaryApp(CtxSite.Site.ZoneId, Log).ToInterface(Log).Internal();
+    private IAppStateInternal SiteAppState => _siteAppState ??= _appStates.GetPrimaryReader(CtxSite.Site.ZoneId, Log);
     private IAppStateInternal _siteAppState;
 
 

@@ -53,7 +53,7 @@ public class EditUiResources: ServiceBase
         if (_features.IsEnabled(BuiltInFeatures.CdnSourceEdit.NameId))
         {
             var zoneId = _zoneMapper.GetZoneId(siteId);
-            var appPreset = _appStates.GetPrimaryApp(zoneId, Log);
+            var appPreset = _appStates.GetPrimaryReader(zoneId, Log);
             var stack = _stackHelper.Init(appPreset).GetStack(RootNameSettings);
             var getResult = stack.InternalGetPath($"{WebResourcesNode}.{CdnSourceEditField}");
             cdnRoot = getResult.Result as string;

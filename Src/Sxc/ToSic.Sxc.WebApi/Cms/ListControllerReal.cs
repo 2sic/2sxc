@@ -55,7 +55,7 @@ public partial class ListControllerReal: BlockWebApiBackendBase, IHasLog, IListC
     public void Move(Guid? parent, string fields, int index, int toIndex
     ) => Log.Do($"change order sort:{index}, dest:{toIndex}", () =>
     {
-        var fList = _workFieldList.New(Context.AppStateReader);
+        var fList = _workFieldList.New(Context.AppState);
         ModifyList(FindOrThrow(parent), fields,
             (entity, fieldList, versioning) => fList.FieldListMove(entity, fieldList, index, toIndex, versioning));
     });
@@ -63,7 +63,7 @@ public partial class ListControllerReal: BlockWebApiBackendBase, IHasLog, IListC
 
     public void Delete(Guid? parent, string fields, int index) => Log.Do($"remove from index:{index}", () =>
     {
-        var fList = _workFieldList.New(Context.AppStateReader);
+        var fList = _workFieldList.New(Context.AppState);
         ModifyList(FindOrThrow(parent), fields,
             (entity, fieldList, versioning) => fList.FieldListRemove(entity, fieldList, index, versioning));
     });
@@ -88,8 +88,8 @@ public partial class ListControllerReal: BlockWebApiBackendBase, IHasLog, IListC
 
     private IEntity FindOrThrow(Guid? parent)
     {
-        var target = parent == null ? CtxResolver.BlockRequired().Configuration.Entity : ContextOfBlock.AppStateReader.List.One(parent.Value); 
+        var target = parent == null ? CtxResolver.BlockRequired().Configuration.Entity : ContextOfBlock.AppState.List.One(parent.Value); 
         if (target == null) throw new Exception($"Can't find parent {parent}");
-        return ContextOfBlock.AppStateReader.GetDraftOrKeep(target);
+        return ContextOfBlock.AppState.GetDraftOrKeep(target);
     }
 }

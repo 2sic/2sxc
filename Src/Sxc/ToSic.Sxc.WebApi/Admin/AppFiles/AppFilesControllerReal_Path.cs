@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Apps.Paths;
+﻿using ToSic.Eav.Apps;
+using ToSic.Sxc.Apps.Paths;
 
 namespace ToSic.Sxc.WebApi.Admin.AppFiles;
 
@@ -8,7 +9,7 @@ partial class AppFilesControllerReal
         (
             _appPaths.InitDone
                 ? _appPaths
-                : _appPaths.Init(_site, _appStates.Get(appId))
+                : _appPaths.Init(_site, _appStates.GetReader(appId))
         )
         .PhysicalPathSwitch(global);
 }

@@ -95,7 +95,7 @@ namespace ToSic.Sxc.WebApi.Sys
                 .ToList();
 
             // Get list of allow/forbid rules for the App installer
-            var primaryApp = _appStates.Value.GetPrimaryApp(site.ZoneId, Log);
+            var primaryApp = _appStates.Value.GetPrimaryReader(site.ZoneId, Log);
             var settingsSources = _appSettingsStack.Value.Init(primaryApp).GetStack(AppStackConstants.Settings);
             var stack = new PropertyStack().Init(AppStackConstants.RootNameSettings, settingsSources);
 

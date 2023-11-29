@@ -59,11 +59,11 @@ public abstract class AdamContext: ServiceBase<AdamContext.MyServices>
     /// </summary>
     public virtual AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, CodeDataFactory cdf)
     {
-        var callLog = Log.Fn<AdamContext>($"app: {context.AppStateReader.Show()}, field:{fieldName}, guid:{entityGuid}");
+        var callLog = Log.Fn<AdamContext>($"app: {context.AppState.Show()}, field:{fieldName}, guid:{entityGuid}");
         Context = context;
 
         Permissions = Services.TypesPermissions.New()
-            .Init(context, context.AppStateReader, contentType);
+            .Init(context, context.AppState, contentType);
 
         // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
         UseSiteRoot = usePortalRoot;
@@ -90,7 +90,7 @@ public abstract class AdamContext: ServiceBase<AdamContext.MyServices>
 
         if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(fieldName)) return callLog.Return(this);
 
-        Attribute = AttributeDefinition(context.AppStateReader, contentType, fieldName);
+        Attribute = AttributeDefinition(context.AppState, contentType, fieldName);
         if (!Security.FileTypeIsOkForThisField(out var exp))
             throw exp;
         return callLog.Return(this);

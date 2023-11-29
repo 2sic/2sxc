@@ -82,7 +82,7 @@ namespace ToSic.Sxc.WebApi.Admin
             => _appBuilderLazy.Value.Init(zoneId).Create(name, null, inheritAppId);
 
         public List<SiteLanguageDto> Languages(int appId)
-            => _languagesBackendLazy.Value.GetLanguagesOfApp(_appStatesLazy.Value.GetReaderInternalOrNull(appId), true);
+            => _languagesBackendLazy.Value.GetLanguagesOfApp(_appStatesLazy.Value.GetReader(appId), true);
 
         public AppExportInfoDto Statistics(int zoneId, int appId) => _exportAppLazy.Value.GetAppInfo(zoneId, appId);
 

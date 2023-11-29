@@ -21,6 +21,6 @@ public class CmsModule: CmsContextPartBase<IModule>, ICmsModule
     private readonly IBlock _block;
 
     protected override IMetadataOf GetMetadataOf() 
-        => ExtendWithRecommendations(_block.Context.AppStateReader.GetMetadataOf(TargetTypes.Module, Id, "Module " + Id));
+        => ExtendWithRecommendations(_block.Context.AppState.GetMetadataOf(TargetTypes.Module, Id, "Module " + Id));
 
 }

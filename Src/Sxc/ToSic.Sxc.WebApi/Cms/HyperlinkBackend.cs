@@ -58,7 +58,7 @@ public class HyperlinkBackend<TFolderId, TFileId>: ServiceBase
             {
                 // page link - only resolve if the user has edit-permissions
                 // only people who have some full edit permissions may actually look up pages
-                var permCheckPage = _appPermissions.New().Init(context, context.AppStateReader);
+                var permCheckPage = _appPermissions.New().Init(context, context.AppState);
                 var userMay= permCheckPage.UserMayOnAll(GrantSets.WritePublished);
                 return new LinkInfoDto {Value = userMay ? resolved : hyperlink};
             }

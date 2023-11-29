@@ -58,7 +58,7 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
         var l = Log.Fn<AdamManager>();
         AppContext = ctx;
         Site = AppContext.Site;
-        AppWorkCtx = AppContext.AppStateReader.CreateAppWorkCtx();
+        AppWorkCtx = AppContext.AppState.CreateAppWorkCtx();
         CompatibilityLevel = compatibility;
         _cdf = cdf;
         return l.Return(this, "ready");
@@ -90,7 +90,7 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
     /// <summary>
     /// Path to the app assets
     /// </summary>
-    public string Path => _path ??= Services.AdamConfiguration.PathForApp(AppContext.AppStateReader);
+    public string Path => _path ??= Services.AdamConfiguration.PathForApp(AppContext.AppState);
     private string _path;
 
 
