@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using ToSic.Eav.Api.Api01;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Reader;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
@@ -67,7 +68,7 @@ public class AppContent : ServiceBase
     }
     protected IContextOfApp Context;
 
-    protected AppState AppState => Context?.AppState ??
+    protected IAppStateInternal AppState => Context?.AppStateReader ??
                                    throw new Exception(
                                        "Can't access AppState before Context is ready. Did you forget to call Init(...)?");
 
@@ -293,17 +294,17 @@ public class AppContent : ServiceBase
 
     #region Permission Checks
 
-    protected MultiPermissionsTypes ThrowIfNotAllowedInType(string contentType, List<Grants> requiredGrants, IAppIdentity alternateApp = null)
+    protected MultiPermissionsTypes ThrowIfNotAllowedInType(string contentType, List<Grants> requiredGrants, IAppIdentity appIdentity)
     {
-        var permCheck = _typesPermissions.New().Init(Context, alternateApp ?? AppState, contentType);
+        var permCheck = _typesPermissions.New().Init(Context, appIdentity, contentType);
         if (!permCheck.EnsureAll(requiredGrants, out var error))
             throw HttpException.PermissionDenied(error);
         return permCheck;
     }
 
-    protected MultiPermissionsItems ThrowIfNotAllowedInItem(IEntity itm, List<Grants> requiredGrants, IAppIdentity alternateApp = null)
+    protected MultiPermissionsItems ThrowIfNotAllowedInItem(IEntity itm, List<Grants> requiredGrants, IAppIdentity appIdentity)
     {
-        var permCheck = _itemsPermissions.New().Init(Context, alternateApp ?? AppState, itm);
+        var permCheck = _itemsPermissions.New().Init(Context, appIdentity, itm);
         if (!permCheck.EnsureAll(requiredGrants, out var error))
             throw HttpException.PermissionDenied(error);
         return permCheck;

@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Reader;
 using ToSic.Eav.Context;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.DI;
@@ -16,14 +17,14 @@ public class CmsSite: CmsContextPartBase<ISite>, ICmsSite
     public CmsSite(LazySvc<App> siteAppLazy) => _siteAppLazy = siteAppLazy;
     private readonly LazySvc<App> _siteAppLazy;
 
-    public ICmsSite Init(CmsContext parent, AppState appState)
+    public ICmsSite Init(CmsContext parent, IAppStateInternal appState)
     {
         base.Init(parent, parent.CtxSite.Site);
         _appState = appState;
         return this;
     }
 
-    private AppState _appState;
+    private IAppStateInternal _appState;
 
     public int Id => GetContents()?.Id ?? Eav.Constants.NullId;
     public string Url => GetContents()?.Url ?? string.Empty;

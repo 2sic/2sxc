@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Reader;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
@@ -46,8 +47,8 @@ public class CmsContext: ServiceForDynamicCode, ICmsContext
     private readonly IAppStates _appStates;
     private readonly LazySvc<ICmsSite> _cmsSiteLazy;
 
-    private AppState SiteAppState => _siteAppState.Get(() => _appStates.GetPrimaryApp(CtxSite.Site.ZoneId, Log));
-    private readonly GetOnce<AppState> _siteAppState = new();
+    private IAppStateInternal SiteAppState => _siteAppState ??= _appStates.GetPrimaryApp(CtxSite.Site.ZoneId, Log).ToInterface(Log).Internal();
+    private IAppStateInternal _siteAppState;
 
 
     private IBlock RealBlockOrNull => _realBlock.Get(() => _DynCodeRoot?.Block);

@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Net;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataFormats.EavLight;
+using ToSic.Eav.DataSource.Query;
+using ToSic.Eav.LookUp;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Admin.App;
 using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.LookUp;
 using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.WebApi.App;
@@ -24,8 +25,8 @@ namespace ToSic.Sxc.WebApi.App;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AppQueryControllerReal: ServiceBase , IAppQueryController
 {
-    private readonly Generator<AppConfigDelegate> _appConfigDelegate;
-    private readonly Generator<Apps.App> _app;
+    private readonly LazySvc<ILookUpEngineResolver> _lookupResolver;
+    private readonly LazySvc<QueryManager> _queryManager;
     public const string LogSuffix = "AppQry";
 
     private const string AllStreams = "*";
@@ -35,15 +36,15 @@ public class AppQueryControllerReal: ServiceBase , IAppQueryController
     public AppQueryControllerReal(Sxc.Context.IContextResolver ctxResolver, 
         IConvertToEavLight dataConverter, 
         Generator<AppPermissionCheck> appPermissionCheck,
-        Generator<AppConfigDelegate> appConfigDelegate,
-        Generator<Apps.App> app) : base("Sxc.ApiApQ")
+        LazySvc<QueryManager> queryManager,
+        LazySvc<ILookUpEngineResolver> lookupResolver) : base("Sxc.ApiApQ")
     {
+        _lookupResolver = lookupResolver;
         ConnectServices(
             _ctxResolver = ctxResolver,
             _dataConverter = dataConverter,
             _appPermissionCheck = appPermissionCheck,
-            _appConfigDelegate = appConfigDelegate,
-            _app = app
+            _queryManager = queryManager
         );
     }
         
@@ -59,23 +60,24 @@ public class AppQueryControllerReal: ServiceBase , IAppQueryController
         bool includeGuid = false)
         => QueryPost(name, null, appId, stream, includeGuid);
 
-    public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost(string name, QueryParameters more,
-        int? appId, string stream = null,
-        bool includeGuid = false) => Log.Func($"'{name}', inclGuid: {includeGuid}, stream: {stream}", l =>
+    public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost(string name, QueryParameters more, int? appId, string stream = null, bool includeGuid = false)
     {
+        var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
         var appCtx = appId != null ? _ctxResolver.GetBlockOrSetApp(appId.Value) : _ctxResolver.BlockContextRequired();
 
         // If the appId wasn't specified or == to the Block-AppId, then also include block info to enable more data-sources like CmsBlock
-        var maybeBlock = appId == null || appId == appCtx.AppState.AppId ? _ctxResolver.BlockOrNull() : null;
+        var maybeBlock = appId == null || appId == appCtx.AppStateReader.AppId ? _ctxResolver.BlockOrNull() : null;
 
         // If no app available from context, check if an app-id was supplied in url
         // Note that it may only be an app from the current portal
         // and security checks will run internally
-        var app = _app.New().InitWithOptionalBlock(appCtx.AppState.AppId, maybeBlock);
+        //var app = _app.New().InitWithOptionalBlock(appCtx.AppStateReader.AppId, maybeBlock);
 
-        var result = BuildQueryAndRun(app, name, stream, includeGuid, appCtx, more);
-        return result;
-    });
+        var blockLookupOrNull = maybeBlock?.Data?.Configuration?.LookUpEngine;
+
+        var result = BuildQueryAndRun(appCtx.AppStateReader, name, stream, includeGuid, appCtx, more, blockLookupOrNull);
+        return l.Return(result);
+    }
 
     #endregion
 
@@ -85,36 +87,40 @@ public class AppQueryControllerReal: ServiceBase , IAppQueryController
         => PublicQueryPost(appPath, name, null, stream);
 
 
-    public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(string appPath, string name,
-        QueryParameters more, string stream) => Log.Func($"path:{appPath}, name:{name}, stream: {stream}", l =>
+    public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(string appPath, string name, QueryParameters more, string stream) 
     {
+        var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"path:{appPath}, name:{name}, stream: {stream}");
         if (string.IsNullOrEmpty(name))
-            throw HttpException.MissingParam(nameof(name));
+            throw l.Ex(HttpException.MissingParam(nameof(name)));
 
         var appCtx = _ctxResolver.SetAppOrGetBlock(appPath);
-            
-        var queryApp = _app.New().Init(appCtx.AppState, _appConfigDelegate.New().Build());
+
+        var blockLookupOrNull = _ctxResolver.BlockOrNull()?.Data?.Configuration?.LookUpEngine;
+        //var queryApp = _app.New().Init(appCtx.AppState, _appConfigDelegate.New().Build());
 
         // now just run the default query check and serializer
-        var result = BuildQueryAndRun(queryApp, name, stream, false, appCtx, more);
-        return result;
-    });
+        var result = BuildQueryAndRun(appCtx.AppStateReader, name, stream, false, appCtx, more, blockLookupOrNull);
+        return l.Return(result);
+    }
 
 
     #endregion
 
 
     private IDictionary<string, IEnumerable<EavLightEntity>> BuildQueryAndRun(
-        IApp app,
+        IAppIdentity app,
         string name,
         string stream,
         bool includeGuid,
         IContextOfApp context,
-        //bool userMayEdit,
-        QueryParameters more
-    ) => Log.Func($"name:{name}, stream:{stream}, withModule:{(context as IContextOfBlock)?.Module.Id}", l =>
+        QueryParameters more,
+        ILookUpEngine preparedLookup = null)
     {
-        var query = app.GetQuery(name);
+        var modId = (context as IContextOfBlock)?.Module.Id ?? -1;
+        var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"name:{name}, stream:{stream}, withModule:{(context as IContextOfBlock)?.Module.Id}");
+        var lookups = preparedLookup ?? _lookupResolver.Value.GetLookUpEngine(modId);
+        var query = _queryManager.Value.GetQuery(app, name, lookups, recurseParents: 3);
+        // var query = app.GetQuery(name);
 
         if (query == null)
         {
@@ -140,6 +146,6 @@ public class AppQueryControllerReal: ServiceBase , IAppQueryController
             serializerWithEdit.WithEdit = context.UserMayEdit; // userMayEdit;
         if (stream == AllStreams) stream = null;
         var result = _dataConverter.Convert(query, stream?.Split(','), more?.Guids);
-        return result;
-    });
+        return l.Return(result);
+    }
 }

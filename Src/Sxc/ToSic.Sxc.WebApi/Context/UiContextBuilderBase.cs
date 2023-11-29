@@ -65,9 +65,9 @@ public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>,
 
     #endregion
 
-    public IUiContextBuilder InitApp(AppState appState)
+    public IUiContextBuilder InitApp(IAppState appState)
     {
-        AppState = appState.ToInterface(Log).Internal();
+        AppState = appState.Internal();
         App = appState != null ? (Services.AppToLaterInitialize as Apps.App)?.Init(appState, null) : null;
         return this;
     }

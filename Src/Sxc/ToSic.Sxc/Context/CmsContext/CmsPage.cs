@@ -9,13 +9,13 @@ namespace ToSic.Sxc.Context;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class CmsPage: CmsContextPartBase<IPage>, ICmsPage
 {
-    public CmsPage(CmsContext parent, AppState appState, LazySvc<IPage> fallbackPage)
+    public CmsPage(CmsContext parent, IMetadataOfSource appState, LazySvc<IPage> fallbackPage)
         : base(parent, parent?.CtxBlockOrNull?.Page ?? fallbackPage.Value)
     {
         _appState = appState;
     }
 
-    private readonly AppState _appState;
+    private readonly IMetadataOfSource _appState;
 
     public int Id => GetContents()?.Id ?? 0;
     public IParameters Parameters => GetContents()?.Parameters;

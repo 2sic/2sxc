@@ -27,6 +27,6 @@ public class AppFolder: ServiceBase
     public string GetAppFolder()
     {
         var ctx = _ctxResolver.AppNameRouteBlock("");
-        return ctx.AppState.Folder;
+        return ctx.AppStateReader.Folder;
     }
 }

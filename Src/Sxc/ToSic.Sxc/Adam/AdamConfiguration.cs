@@ -31,7 +31,7 @@ public class AdamConfiguration
 
     private static string _adamAppRootFolder;
 
-    internal string PathForApp(AppState app)
+    internal string PathForApp(IAppState app)
     {
         var valuesDic = new Dictionary<string, string>
         {

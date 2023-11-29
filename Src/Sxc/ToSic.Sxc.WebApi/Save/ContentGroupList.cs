@@ -196,7 +196,7 @@ public class ContentGroupList: ServiceBase
             if (identifier.Parent != null && identifier.Field != null)
             {
                 // look up type
-                var target = AppCtx/* CmsManager.Read*/.AppState.List.One(identifier.Parent.Value);
+                var target = AppCtx.AppState.List.One(identifier.Parent.Value);
                 var field = target.Type[identifier.Field];
                 identifier.ContentTypeName = field.EntityFieldItemTypePrimary();
                 newItems.Add(identifier);

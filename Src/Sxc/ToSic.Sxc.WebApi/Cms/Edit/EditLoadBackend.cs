@@ -97,10 +97,10 @@ public partial class EditLoadBackend: ServiceBase
         items = _contentGroupList.Init(appIdentity)
             .ConvertGroup(items)
             .ConvertListIndexToId(items);
-        TryToAutoFindMetadataSingleton(items, context.AppState);
+        TryToAutoFindMetadataSingleton(items, context.AppStateReader);
 
         // now look up the types, and repeat security check with type-names
-        var permCheck = _typesPermissions.New().Init(context, context.AppState, items);
+        var permCheck = _typesPermissions.New().Init(context, context.AppStateReader, items);
         if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
             throw HttpException.PermissionDenied(error);
 
@@ -161,7 +161,7 @@ public partial class EditLoadBackend: ServiceBase
         result.Features = _uiData.Features(permCheck);
 
         // Attach context, but only the minimum needed for the UI
-        result.Context = _contextBuilder.InitApp(context.AppState)
+        result.Context = _contextBuilder.InitApp(context.AppStateReader)
             .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features, CtxEnable.EditUi);
 
         result.Settings = _loadSettings.GetSettings(context, usedTypes, result.ContentTypes, appWorkCtx);

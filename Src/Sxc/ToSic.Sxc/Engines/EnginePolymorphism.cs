@@ -24,7 +24,7 @@ public class EnginePolymorphism: ServiceBase
         );
     }
 
-    internal string PolymorphTryToSwitchPath(string root, IView view, AppState appState)
+    internal string PolymorphTryToSwitchPath(string root, IView view, IAppState appState)
     {
         var subPath = view.Path;
         var l = Log.Fn<string>($"{root}, {subPath}");

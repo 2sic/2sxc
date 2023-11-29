@@ -24,7 +24,7 @@ public class EngineCheckTemplate: ServiceBase
     /// Template Exceptions like missing configuration or defined type not found
     /// </summary>
     /// <exception cref="RenderingException"></exception>
-    internal void CheckExpectedTemplateErrors(IView view, AppState appState)
+    internal void CheckExpectedTemplateErrors(IView view, IAppContentTypeReader appState)
     {
         if (view == null)
             throw new RenderingException(ErrHelpConfigMissing);
@@ -49,7 +49,7 @@ public class EngineCheckTemplate: ServiceBase
         // do security check IF security exists
         // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
         var templatePermissions = _appPermCheckLazy.Value
-            .ForItem(appContext, appContext.AppState, Template.Entity);
+            .ForItem(appContext, appContext.AppStateReader, Template.Entity);
 
         // Views only use permissions to prevent access, so only check if there are any configured permissions
         if (appContext.User.IsSiteAdmin || !templatePermissions.HasPermissions)

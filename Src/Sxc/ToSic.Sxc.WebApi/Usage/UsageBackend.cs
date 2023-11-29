@@ -44,7 +44,7 @@ public class UsageBackend: ServiceBase
         var context = _ctxResolver.GetBlockOrSetApp(appId);
 
         // extra security to only allow zone change if host user
-        var permCheck = _appPermissions.New().Init(context, context.AppState);
+        var permCheck = _appPermissions.New().Init(context, context.AppStateReader);
         if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
             throw HttpException.PermissionDenied(error);
 

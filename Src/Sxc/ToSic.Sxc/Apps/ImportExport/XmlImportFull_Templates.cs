@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.ImportExport;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
@@ -25,7 +26,7 @@ public partial class XmlImportFull
         // Otherwise it will auto-initialize, which it shouldn't do when importing data
         var appState = _repositoryLoader.AppStateRaw(AppId, new CodeRefTrail());
 
-        var viewsMod = _workViewsMod.New(appState);
+        var viewsMod = _workViewsMod.New(appState.ToInterface(Log));
 
         foreach (var template in templates.Elements(XmlConstants.Template))
         {

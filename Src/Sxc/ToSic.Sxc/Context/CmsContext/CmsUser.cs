@@ -7,12 +7,12 @@ namespace ToSic.Sxc.Context;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class CmsUser: CmsContextPartBase<IUser>, ICmsUser
 {
-    public CmsUser(CmsContext parent, AppState appState) : base(parent, parent.CtxSite.User)
+    public CmsUser(CmsContext parent, IMetadataOfSource appState) : base(parent, parent.CtxSite.User)
     {
         _appState = appState;
     }
 
-    private readonly AppState _appState;
+    private readonly IMetadataOfSource _appState;
 
     public string Email => IsAnonymous ? "" : GetContents().Email;
 

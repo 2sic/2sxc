@@ -92,7 +92,7 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.MySe
         var hasPresentation = presEntity != null;
 
         // make sure we really have the draft item an not the live one
-        var appState = Block.Context.AppState;
+        var appState = Block.Context.AppStateReader;
         var publisher = Services.Publisher.New(appState: appState);
         var contDraft = contEntity.IsPublished ? appState.GetDraft(contEntity) : contEntity;
         publisher.Publish(contDraft.RepositoryId);

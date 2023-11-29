@@ -40,12 +40,12 @@ public class DialogControllerReal: ServiceBase, IDialogController
         // if we have an appid (we don't have it in an install-new-apps-scenario) check permissions
         if (appContext != null)
         {
-            var appAndPerms = _appPermissions.New().Init(appContext, appContext.AppState);
+            var appAndPerms = _appPermissions.New().Init(appContext, appContext.AppStateReader);
             if (!appAndPerms.ZoneIsOfCurrentContextOrUserIsSuper(out var error))
                 throw HttpException.PermissionDenied(error);
         }
 
-        var cb = _uiContextBuilder.InitApp(appContext?.AppState);
+        var cb = _uiContextBuilder.InitApp(appContext?.AppStateReader);
 
         return new DialogContextStandaloneDto
         {

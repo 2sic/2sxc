@@ -1,8 +1,8 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Reader;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Context;
 
@@ -61,7 +61,7 @@ public interface ICmsSite: IHasMetadata
     new IMetadata Metadata { get; }
 
     [PrivateApi]
-    ICmsSite Init(CmsContext parent, AppState appState);
+    ICmsSite Init(CmsContext parent, IAppStateInternal appState);
 
     // 2023-08-24 2dm hide for now, not sure if we want to publish like this, or just provide appIdentity to get it yourself
     //[PrivateApi("WIP v13/14")]

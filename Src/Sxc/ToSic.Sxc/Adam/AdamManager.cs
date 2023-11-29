@@ -58,7 +58,7 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
         var l = Log.Fn<AdamManager>();
         AppContext = ctx;
         Site = AppContext.Site;
-        AppWorkCtx = AppContext.AppState.CreateAppWorkCtx();
+        AppWorkCtx = AppContext.AppStateReader.CreateAppWorkCtx();
         CompatibilityLevel = compatibility;
         _cdf = cdf;
         return l.Return(this, "ready");
@@ -90,7 +90,7 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
     /// <summary>
     /// Path to the app assets
     /// </summary>
-    public string Path => _path ??= Services.AdamConfiguration.PathForApp(AppContext.AppState);
+    public string Path => _path ??= Services.AdamConfiguration.PathForApp(AppContext.AppStateReader);
     private string _path;
 
 
@@ -116,7 +116,7 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
     /// </summary>
     internal IMetadata Create(string key, string title, Action<IMetadataOf> mdInit = null)
     {
-        var mdOf = new MetadataOf<string>((int)TargetTypes.CmsItem, key, title, null, AppWorkCtx.AppState);
+        var mdOf = new MetadataOf<string>((int)TargetTypes.CmsItem, key, title, null, AppWorkCtx.AppState.StateCache);
         mdInit?.Invoke(mdOf);
         return Cdf.Metadata(mdOf);
     }

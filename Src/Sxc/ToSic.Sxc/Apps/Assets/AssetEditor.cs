@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Text.RegularExpressions;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Paths;
+using ToSic.Eav.Apps.Reader;
 using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
@@ -24,7 +24,7 @@ public class AssetEditor : ServiceBase
     private readonly LazySvc<AppFolderInitializer> _appFolderInitializer;
     private readonly ISite _site;
     private readonly IAppPathsMicroSvc _appPaths;
-    private AppState _appState;
+    private IAppStateInternal _appState;
 
     public AssetEditor(GenWorkPlus<WorkViews> workViews, IUser user, LazySvc<AppFolderInitializer> appFolderInitializer, ISite site, IAppPathsMicroSvc appPaths) : base("Sxc.AstEdt")
     {
@@ -39,7 +39,7 @@ public class AssetEditor : ServiceBase
     private AssetEditInfo EditInfo { get; set; }
 
 
-    public AssetEditor Init(AppState appState, string path, bool global, int viewId)
+    public AssetEditor Init(IAppStateInternal appState, string path, bool global, int viewId)
     {
         InitShared(appState);
         EditInfo = new AssetEditInfo(_appState.AppId, _appState.Name, path, global);
@@ -51,7 +51,7 @@ public class AssetEditor : ServiceBase
     }
 
 
-    private void InitShared(AppState app)
+    private void InitShared(IAppStateInternal app)
     {
         _appState = app;
         _appPaths.Init(_site, _appState);

@@ -88,7 +88,7 @@ namespace ToSic.Sxc.WebApi.Views
             var app = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
             var bundle = new BundleEntityWithAssets
             {
-                Entity = app.AppState.List.One(viewId).IfOfType(Eav.ImportExport.Settings.TemplateContentType) // .Data[Eav.ImportExport.Settings.TemplateContentType].One(viewId)
+                Entity = app.StateCache.List.One(viewId).IfOfType(Eav.ImportExport.Settings.TemplateContentType) // .Data[Eav.ImportExport.Settings.TemplateContentType].One(viewId)
             };
 
             var appPaths = _appPathSvc.Init(_site, app);

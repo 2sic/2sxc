@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Paths;
+using ToSic.Eav.Apps.Reader;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Plumbing;
@@ -48,7 +49,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
     private int _moduleId;
     private int _pageId;
     private IBlock _block;
-    private AppState AppState => _block?.Context?.AppState;
+    private IAppStateInternal AppState => _block?.Context?.AppStateReader;
     private IAppStates AppStates => _appStatesLazy.Value;
 
     public bool Save(IRenderResult data)
@@ -226,7 +227,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
     private LightSpeedDecorator AppConfigGenerator()
     {
         var l = Log.Fn<LightSpeedDecorator>();
-        var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(AppState, Log);
+        var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(AppState.StateCache, Log);
         return l.Return(decoFromPiggyBack, $"{decoFromPiggyBack.Entity != null}");
     }
 

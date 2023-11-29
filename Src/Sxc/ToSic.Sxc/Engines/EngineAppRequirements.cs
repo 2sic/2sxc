@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Reader;
 using ToSic.Eav.Code.Help;
 using ToSic.Eav.Internal.Requirements;
 using ToSic.Eav.Plumbing;
@@ -21,7 +22,7 @@ public class EngineAppRequirements: ServiceBase
         ConnectServices(_requirements = requirements);
     }
 
-    internal RenderEngineResult GetMessageForAppRequirements(AppState appState)
+    internal RenderEngineResult GetMessageForAppRequirements(IAppStateInternal appState)
     {
         var l = Log.Fn<RenderEngineResult>();
         // 1. Preflight

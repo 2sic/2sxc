@@ -52,7 +52,7 @@ public class ContentGroupControllerReal: ServiceBase, IContentGroupController
     private IContextOfBlock Context => _context ??= CtxResolver.BlockContextRequired();
     private IContextOfBlock _context;
 
-    private IAppWorkCtxPlus AppCtx => _appCtx.Get(() => _appBlocks.CtxSvc.ContextPlus(Context.AppState));
+    private IAppWorkCtxPlus AppCtx => _appCtx.Get(() => _appBlocks.CtxSvc.ContextPlus(Context.AppStateReader));
     private readonly GetOnce<IAppWorkCtxPlus> _appCtx = new();
     #endregion
 
@@ -143,7 +143,7 @@ public class ContentGroupControllerReal: ServiceBase, IContentGroupController
 
         _publishing.Value.DoInsidePublishing(Context, args =>
         {
-            var entity = Context.AppState.GetDraftOrPublished(guid);
+            var entity = Context.AppStateReader.GetDraftOrPublished(guid);
             var sequence = list.Select(i => i.Index).ToArray();
             var fields = part == ViewParts.ContentLower ? ViewParts.ContentPair : new[] {part};
             _workFieldList.New(Context.AppStateReader).FieldListReorder(entity, fields, sequence, Context.Publishing.ForceDraft);

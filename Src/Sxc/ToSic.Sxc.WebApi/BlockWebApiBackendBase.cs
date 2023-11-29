@@ -41,7 +41,7 @@ public abstract class BlockWebApiBackendBase : ServiceBase
     public IBlock Block => _block ??= CtxResolver.BlockRequired();
     private IBlock _block;
 
-    protected IAppWorkCtx AppWorkCtx => _appWorkCtx ??= AppWorkCtxService.Context(Block.Context.AppState);
+    protected IAppWorkCtx AppWorkCtx => _appWorkCtx ??= AppWorkCtxService.Context(Block.Context.AppStateReader);
     private IAppWorkCtx _appWorkCtx;
     protected IAppWorkCtxPlus AppWorkCtxPlus => _appWorkCtxPlus ??= AppWorkCtxService.ToCtxPlus(AppWorkCtx);
     private IAppWorkCtxPlus _appWorkCtxPlus;
@@ -53,7 +53,7 @@ public abstract class BlockWebApiBackendBase : ServiceBase
 
     protected void ThrowIfNotAllowedInApp(List<Grants> requiredGrants, IAppIdentity alternateApp = null)
     {
-        var permCheck = _multiPermissionsApp.New().Init(ContextOfBlock, alternateApp ?? ContextOfBlock.AppState);
+        var permCheck = _multiPermissionsApp.New().Init(ContextOfBlock, alternateApp ?? ContextOfBlock.AppStateReader);
         if (!permCheck.EnsureAll(requiredGrants, out var error))
             throw HttpException.PermissionDenied(error);
     }

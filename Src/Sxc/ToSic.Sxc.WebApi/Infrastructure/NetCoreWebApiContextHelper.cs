@@ -93,7 +93,7 @@ namespace ToSic.Sxc.WebApi.Infrastructure
                 if (routeAppPathObj == null) return "";
                 var routeAppPath = routeAppPathObj.ToString();
 
-                var appId = CtxResolver.SetAppOrNull(routeAppPath)?.AppState.AppId ?? Eav.Constants.NullId;
+                var appId = CtxResolver.SetAppOrNull(routeAppPath)?.AppStateReader.AppId ?? Eav.Constants.NullId;
 
                 if (appId != Eav.Constants.NullId)
                 {
