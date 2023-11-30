@@ -72,7 +72,9 @@ internal class LightSpeed : ServiceBase, IOutputCache
 
         // respect primary app (of site) as dependent app to ensure cache invalidation when primary app is changed
         var appState = AppState;
-        if (appState?.ZoneId != null)
+        if (appState == null) return l.ReturnFalse("no app");
+
+        if (appState.ZoneId >= 0)
             l.Do(message: "dependentAppsStates add", timer: true,
                 action: () => dependentAppsStates.Add(AppStates.GetPrimaryReader(appState.ZoneId, Log).StateCache));
 
@@ -92,7 +94,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
         string cacheKey = null;
         l.Do(message: "outputCacheManager add", timer: true, action: () =>
             cacheKey = OutCacheMan.Add(CacheKey, Fresh, duration, _features, dependentAppsStates, appPathsToMonitor,
-                (x) => LightSpeedStats.Remove(appState.AppId, data.Size)));
+                _ => LightSpeedStats.Remove(appState.AppId, data.Size)));
 
         l.A($"LightSpeed Cache Key: {cacheKey}");
 
@@ -110,11 +112,8 @@ internal class LightSpeed : ServiceBase, IOutputCache
     {
         var l = Log.Fn<bool>(timer: true);
         foreach (var appState in appStates)
-        {
-            var appConfig = LightSpeedDecorator.GetFromAppStatePiggyBack(appState, Log);
-            if (appConfig.IsEnabled == false)
+            if (GetLightSpeedConfig(appState).IsEnabled == false)
                 return l.ReturnFalse($"Can't cache; caching disabled on dependent app {appState.AppId}");
-        }
         return l.ReturnTrue("ok");
     }
 
@@ -126,13 +125,13 @@ internal class LightSpeed : ServiceBase, IOutputCache
     /// ADAM folders are not monitored
     /// </remarks>
     /// <returns>list of paths to monitor</returns>
-    private IList<string> AppPaths(List<AppState> appStates)
+    private IList<string> AppPaths(List<AppState> dependentApps)
     {
-        if (!((_block as BlockFromModule)?.App is App app)) return null;
-        if (appStates.SafeNone()) return null;
+        if ((_block as BlockFromModule)?.App is not App app) return null;
+        if (dependentApps.SafeNone()) return null;
 
         var paths = new List<string>();
-        foreach (var appState in appStates)
+        foreach (var appState in dependentApps)
         {
             var appPaths = _appPathsLazy.Value.Init(app.Site, appState.ToInterface(Log));
             if (Directory.Exists(appPaths.PhysicalPath)) paths.Add(appPaths.PhysicalPath);
@@ -221,13 +220,13 @@ internal class LightSpeed : ServiceBase, IOutputCache
         return l.Return(ok, $"app config: {ok}");
     }
 
-    internal LightSpeedDecorator AppConfig => _lsd.Get(AppConfigGenerator);
+    internal LightSpeedDecorator AppConfig => _lsd.Get(() => GetLightSpeedConfig(AppState.StateCache));
     private readonly GetOnce<LightSpeedDecorator> _lsd = new();
 
-    private LightSpeedDecorator AppConfigGenerator()
+    private LightSpeedDecorator GetLightSpeedConfig(AppState appState)
     {
         var l = Log.Fn<LightSpeedDecorator>();
-        var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(AppState.StateCache, Log);
+        var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(appState, Log);
         return l.Return(decoFromPiggyBack, $"{decoFromPiggyBack.Entity != null}");
     }
 

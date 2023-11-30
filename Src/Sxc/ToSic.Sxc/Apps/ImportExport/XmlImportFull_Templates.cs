@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
-using ToSic.Eav.Apps;
 using ToSic.Eav.ImportExport;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
@@ -24,9 +23,9 @@ public partial class XmlImportFull
 
         // The state must come from the DB, and not from the cache
         // Otherwise it will auto-initialize, which it shouldn't do when importing data
-        var appState = _repositoryLoader.AppStateRaw(AppId, new CodeRefTrail());
+        var appBuilder = _repositoryLoader.AppStateBuilderRaw(AppId, new CodeRefTrail());
 
-        var viewsMod = _workViewsMod.New(appState.ToInterface(Log));
+        var viewsMod = _workViewsMod.New(appBuilder.Reader);
 
         foreach (var template in templates.Elements(XmlConstants.Template))
         {
@@ -40,7 +39,7 @@ public partial class XmlImportFull
 
                 l.A($"template:{name}, type:{contentTypeStaticName}, path:{path}");
 
-                if (!string.IsNullOrEmpty(contentTypeStaticName) && appState.GetContentType(contentTypeStaticName) == null)
+                if (!string.IsNullOrEmpty(contentTypeStaticName) && appBuilder.Reader.GetContentType(contentTypeStaticName) == null)
                 {
                     Messages.Add(new Message($"Content Type for Template \'{name}\' could not be found. The template has not been imported.",
                         Message.MessageTypes.Warning));
