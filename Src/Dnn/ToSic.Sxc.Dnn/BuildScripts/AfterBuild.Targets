@@ -51,6 +51,7 @@
 
       <!-- 2sxc 13+ netstandard2.0/framework 4.7.2 assemblies -->
       <DependeciesInclude Include="bin\Microsoft.Bcl.AsyncInterfaces.dll" />
+      <DependeciesInclude Include="bin\Microsoft.Bcl.HashCode.dll" />
       <DependeciesInclude Include="bin\Microsoft.EntityFrameworkCore.Abstractions.dll" />
       <DependeciesInclude Include="bin\Microsoft.EntityFrameworkCore.dll" />
       <DependeciesInclude Include="bin\Microsoft.EntityFrameworkCore.Relational.dll" />

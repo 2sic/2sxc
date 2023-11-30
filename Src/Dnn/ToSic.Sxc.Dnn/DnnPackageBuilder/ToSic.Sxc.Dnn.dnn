@@ -223,6 +223,11 @@
               <name>Microsoft.Bcl.AsyncInterfaces.dll</name>
               <version>7.0.0.0</version>
             </assembly>
+            <!-- CsvHelper transitive dependency -->
+            <assembly>
+              <name>Microsoft.Bcl.HashCode.dll</name>
+              <version>1.0.0.0</version>
+            </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
               <name>Microsoft.EntityFrameworkCore.Abstractions.dll</name>

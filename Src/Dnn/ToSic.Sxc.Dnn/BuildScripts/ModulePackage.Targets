@@ -110,6 +110,7 @@
 
       <!-- 2sxc 13+ netstandard2.0/framework 4.7.2 assemblies -->
       <AssemblyInclude Include="$(OutDir)\Microsoft.Bcl.AsyncInterfaces.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Bcl.HashCode.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.Abstractions.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.Relational.dll" />
