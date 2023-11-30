@@ -74,7 +74,7 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
     {
         var l = Log.Fn<List<DataSourceInfo>>($"{nameof(appId)}: {appId}");
         // App state for automatic lookup of configuration content-types
-        var appState = _appStates.Get(appId);
+        var appState = _appStates.GetReader(appId);
         var data = types
             .Select(pair =>
             {

@@ -5,6 +5,7 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Apps.Reader;
+using ToSic.Eav.Apps.State;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Plumbing;
@@ -93,7 +94,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
 
         string cacheKey = null;
         l.Do(message: "outputCacheManager add", timer: true, action: () =>
-            cacheKey = OutCacheMan.Add(CacheKey, Fresh, duration, _features, dependentAppsStates, appPathsToMonitor,
+            cacheKey = OutCacheMan.Add(CacheKey, Fresh, duration, _features, dependentAppsStates.Cast<IAppStateChanges>().ToList(), appPathsToMonitor,
                 _ => LightSpeedStats.Remove(appState.AppId, data.Size)));
 
         l.A($"LightSpeed Cache Key: {cacheKey}");
@@ -111,9 +112,8 @@ internal class LightSpeed : ServiceBase, IOutputCache
     private bool IsEnabledOnDependentApps(List<AppState> appStates)
     {
         var l = Log.Fn<bool>(timer: true);
-        foreach (var appState in appStates)
-            if (GetLightSpeedConfig(appState).IsEnabled == false)
-                return l.ReturnFalse($"Can't cache; caching disabled on dependent app {appState.AppId}");
+        foreach (var appState in appStates.Where(appState => !GetLightSpeedConfig(appState).IsEnabled))
+            return l.ReturnFalse($"Can't cache; caching disabled on dependent app {appState.AppId}");
         return l.ReturnTrue("ok");
     }
 

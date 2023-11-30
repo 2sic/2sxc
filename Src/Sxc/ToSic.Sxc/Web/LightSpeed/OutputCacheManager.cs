@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.State;
 using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Internal.Features;
 using ToSic.Lib.Documentation;
@@ -31,7 +32,7 @@ internal class OutputCacheManager : ServiceBase
     }
 
     public string Add(string cacheKey, OutputCacheItem data, int duration, IEavFeaturesService features,
-        List<AppState> appStates, IList<string> appPaths = null, CacheEntryUpdateCallback updateCallback = null)
+        List<IAppStateChanges> appStates, IList<string> appPaths = null, CacheEntryUpdateCallback updateCallback = null)
     {
         var l = Log.Fn<string>($"key: {cacheKey}", timer: true);
         try
@@ -51,7 +52,7 @@ internal class OutputCacheManager : ServiceBase
                     Log.Do(message: "changeMonitors add AppResetMonitor", timer: true, action: () => 
                         policy.ChangeMonitors.Add(new AppResetMonitor(appState)));
 
-            if (appPaths != null && appPaths.Count > 0)
+            if (appPaths is { Count: > 0 })
                 Log.Do(message: "changeMonitors add FolderChangeMonitor", timer: true, action: () =>
                     policy.ChangeMonitors.Add(new FolderChangeMonitor(appPaths)));
 
