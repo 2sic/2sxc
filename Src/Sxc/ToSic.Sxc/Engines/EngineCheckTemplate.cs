@@ -24,7 +24,7 @@ public class EngineCheckTemplate: ServiceBase
     /// Template Exceptions like missing configuration or defined type not found
     /// </summary>
     /// <exception cref="RenderingException"></exception>
-    internal void CheckExpectedTemplateErrors(IView view, IAppContentTypeReader appState)
+    internal void CheckExpectedTemplateErrors(IView view, IAppState appState)
     {
         if (view == null)
             throw new RenderingException(ErrHelpConfigMissing);

@@ -132,7 +132,7 @@ public abstract class AdamContext: ServiceBase<AdamContext.MyServices>
     /// <summary>
     /// try to find attribute definition - for later extra security checks
     /// </summary>
-    private IContentTypeAttribute AttributeDefinition(IAppContentTypeReader appState, string contentType, string fieldName)
+    private static IContentTypeAttribute AttributeDefinition(IAppState appState, string contentType, string fieldName)
     {
         var type = appState.GetContentType(contentType);
         return type[fieldName];

@@ -22,7 +22,7 @@ public class PolymorphismBackend : ServiceBase
     public PolymorphismDto Polymorphism(int appId)
     {
         var callLog = Log.Fn<PolymorphismDto>($"a#{appId}");
-        var appState = _appStates.Get(appId);
+        var appState = _appStates.GetReader(appId);
         var poly = _polymorphism.Init(appState.List);
         var result = new PolymorphismDto
         {

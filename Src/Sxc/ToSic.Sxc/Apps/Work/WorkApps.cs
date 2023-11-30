@@ -87,7 +87,7 @@ public class WorkApps : ServiceBase
     {
         // Get existing apps, as we should not list inheritable apps which are already inherited
         var siteApps = _appStates.Apps(site.ZoneId)
-            .Select(a => _appStates.Get(a.Key).Folder)
+            .Select(a => _appStates.GetReader(a.Key).Folder)
             .ToList();
 
         var zones = _appStates.Zones;

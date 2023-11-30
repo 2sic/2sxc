@@ -1,6 +1,8 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Reader;
+using ToSic.Eav.Caching;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.PiggyBack;
+using ToSic.Eav.Metadata;
 using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Web.LightSpeed;
@@ -35,7 +37,7 @@ internal class LightSpeedDecorator: EntityBasedType
 
     public string Advanced => GetThis("");
 
-    public static LightSpeedDecorator GetFromAppStatePiggyBack(AppState appState, ILog log)
+    public static LightSpeedDecorator GetFromAppStatePiggyBack(IAppStateCache appState, ILog log)
     {
         var decoFromPiggyBack = appState?.PiggyBack.GetOrGenerate(appState, $"decorator-{TypeNameId}", () =>
         {

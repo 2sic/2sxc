@@ -64,9 +64,9 @@ internal class LightSpeed : ServiceBase, IOutputCache
         if (data.DependentApps.SafeNone()) return l.ReturnFalse("app not initialized");
 
         // get dependent appStates
-        List<AppState> dependentAppsStates = null;
+        List<IAppStateCache> dependentAppsStates = null;
         l.Do(message: "dependentAppsStates", timer: true, 
-            action: () => dependentAppsStates = data.DependentApps.Select(da => AppStates.Get(da.AppId)).ToList());
+            action: () => dependentAppsStates = data.DependentApps.Select(da => AppStates.GetCacheState(da.AppId)).ToList());
 
         // when dependent apps have disabled caching, parent app should not cache also 
         if (!IsEnabledOnDependentApps(dependentAppsStates)) return l.ReturnFalse("disabled in dependent app");
@@ -109,7 +109,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
     /// <summary>
     /// find if caching is enabled on all dependent apps
     /// </summary>
-    private bool IsEnabledOnDependentApps(List<AppState> appStates)
+    private bool IsEnabledOnDependentApps(List<IAppStateCache> appStates)
     {
         var l = Log.Fn<bool>(timer: true);
         foreach (var appState in appStates.Where(appState => !GetLightSpeedConfig(appState).IsEnabled))
@@ -125,7 +125,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
     /// ADAM folders are not monitored
     /// </remarks>
     /// <returns>list of paths to monitor</returns>
-    private IList<string> AppPaths(List<AppState> dependentApps)
+    private IList<string> AppPaths(List<IAppStateCache> dependentApps)
     {
         if ((_block as BlockFromModule)?.App is not App app) return null;
         if (dependentApps.SafeNone()) return null;
@@ -223,11 +223,11 @@ internal class LightSpeed : ServiceBase, IOutputCache
     internal LightSpeedDecorator AppConfig => _lsd.Get(() => GetLightSpeedConfig(AppState.StateCache));
     private readonly GetOnce<LightSpeedDecorator> _lsd = new();
 
-    private LightSpeedDecorator GetLightSpeedConfig(AppState appState)
+    private LightSpeedDecorator GetLightSpeedConfig(IAppStateCache appState)
     {
         var l = Log.Fn<LightSpeedDecorator>();
         var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(appState, Log);
-        return l.Return(decoFromPiggyBack, $"{decoFromPiggyBack.Entity != null}");
+        return l.Return(decoFromPiggyBack, $"has decorator: {decoFromPiggyBack.Entity != null}");
     }
 
 
