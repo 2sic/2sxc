@@ -3,8 +3,10 @@ using System.Linq;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Decorators;
+using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.Context;
+using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Context;
@@ -12,6 +14,7 @@ using ToSic.Eav.WebApi.Languages;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Web.JsContext;
 using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 
@@ -25,8 +28,9 @@ public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>,
 
     public class MyServices: MyServicesBase
     {
+        public LazySvc<GlobalPaths> GlobalPaths { get; }
+        public IAppPathsMicroSvc AppPaths { get; }
         public IContextOfSite SiteCtx { get; }
-        public Apps.IApp AppToLaterInitialize { get; }
         public IAppStates AppStates { get; }
         public LazySvc<LanguagesBackend> LanguagesBackend { get; }
         public LazySvc<IEavFeaturesService> Features { get; }
@@ -34,20 +38,22 @@ public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>,
 
         public MyServices(
             IContextOfSite siteCtx,
-            Apps.App appToLaterInitialize,
             IAppStates appStates,
             LazySvc<IEavFeaturesService> features,
             LazySvc<IUiData> uiDataLazy,
-            LazySvc<LanguagesBackend> languagesBackend
+            LazySvc<LanguagesBackend> languagesBackend,
+            IAppPathsMicroSvc appPaths,
+            LazySvc<GlobalPaths> globalPaths
         )
         {
             ConnectServices(
-                SiteCtx = siteCtx,
-                AppToLaterInitialize = appToLaterInitialize,
-                AppStates = appStates,
+                SiteCtx = siteCtx, AppStates = appStates,
                 Features = features,
                 UiDataLazy = uiDataLazy,
-                LanguagesBackend = languagesBackend);
+                AppPaths = appPaths,
+                LanguagesBackend = languagesBackend,
+                GlobalPaths = globalPaths
+            );
         }
     }
 
@@ -60,15 +66,13 @@ public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>,
     }
 
     protected int ZoneId => Services.SiteCtx.Site.ZoneId;
-    protected Sxc.Apps.IApp App;
-    protected IAppStateInternal AppState;
+    protected IAppStateInternal AppStateOrNull;
 
     #endregion
 
     public IUiContextBuilder InitApp(IAppState appState)
     {
-        AppState = appState.Internal();
-        App = appState != null ? (Services.AppToLaterInitialize as Apps.App)?.Init(appState.PureIdentity(), null) : null;
+        AppStateOrNull = appState?.Internal();
         return this;
     }
 
@@ -97,7 +101,7 @@ public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>,
         if (ZoneId == 0) return null;
         var site = Services.SiteCtx.Site;
 
-        var converted = Services.LanguagesBackend.Value.GetLanguagesOfApp(AppState);
+        var converted = Services.LanguagesBackend.Value.GetLanguagesOfApp(AppStateOrNull);
 
         return new ContextLanguageDto
         {
@@ -146,7 +150,7 @@ public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>,
 
     protected virtual ContextEnableDto GetEnable(CtxEnable ctx)
     {
-        var isRealApp = AppState != null && !AppState.IsContentApp();// App.NameId != Eav.Constants.DefaultAppGuid; // #SiteApp v13 - Site-Apps should also have permissions
+        var isRealApp = AppStateOrNull != null && !AppStateOrNull.IsContentApp();// App.NameId != Eav.Constants.DefaultAppGuid; // #SiteApp v13 - Site-Apps should also have permissions
         var tmp = new JsContextUser(Services.SiteCtx.User);
         var dto = new ContextEnableDto
         {
@@ -155,7 +159,7 @@ public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>,
         };
         if (ctx.HasFlag(CtxEnable.AppPermissions)) dto.AppPermissions = isRealApp;
         if (ctx.HasFlag(CtxEnable.CodeEditor)) dto.CodeEditor = tmp.CanDevelop;
-        if(ctx.HasFlag(CtxEnable.Query)) dto.Query = isRealApp && tmp.CanDevelop;
+        if (ctx.HasFlag(CtxEnable.Query)) dto.Query = isRealApp && tmp.CanDevelop;
         if (ctx.HasFlag(CtxEnable.FormulaSave)) dto.FormulaSave = tmp.CanDevelop;
         if (ctx.HasFlag(CtxEnable.OverrideEditRestrictions)) dto.OverrideEditRestrictions = tmp.CanDevelop;
         return dto;
@@ -165,43 +169,44 @@ public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>,
 
     protected virtual ContextAppDto GetApp(Ctx flags)
     {
-        if (AppState == null || App == null) return null;
+        if (AppStateOrNull == null) return null;
+        var paths = Services.AppPaths.Init(Services.SiteCtx.Site, AppStateOrNull);
         var result = new ContextAppDto
         {
-            Id = AppState.AppId,
-            Name = AppState.Name,
-            Folder = AppState.Folder,
-            Url = App?.Path,
-            SharedUrl = App?.PathShared
+            Id = AppStateOrNull.AppId,
+            Name = AppStateOrNull.Name,
+            Folder = AppStateOrNull.Folder,
+            Url = paths?.Path,
+            SharedUrl = paths?.PathShared
         };
 
         // Stop now if we don't need edit or advanced
         if (!flags.HasFlag(Ctx.AppEdit) && !flags.HasFlag(Ctx.AppAdvanced)) return result;
 
-        result.IsGlobalApp = AppState.IsGlobalSettingsApp();
-        result.IsSiteApp = AppState.IsSiteSettingsApp();
+        result.IsGlobalApp = AppStateOrNull.IsGlobalSettingsApp();
+        result.IsSiteApp = AppStateOrNull.IsSiteSettingsApp();
         // only check content if not global, as that has the same id
-        if (!result.IsGlobalApp) result.IsContentApp = AppState.IsContentApp();
+        if (!result.IsGlobalApp) result.IsContentApp = AppStateOrNull.IsContentApp();
 
         // Stop now if we don't need advanced infos
         if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
 
         result.GettingStartedUrl = GetGettingStartedUrl();
-        result.Identifier = AppState.NameId;
+        result.Identifier = AppStateOrNull.NameId;
             
         // #SiteApp v13
-        result.SettingsScope = AppState.IsGlobalSettingsApp()
+        result.SettingsScope = AppStateOrNull.IsGlobalSettingsApp()
             ? "Global" 
-            : AppState.IsSiteSettingsApp()
+            : AppStateOrNull.IsSiteSettingsApp()
                 ? "Site" 
                 : "App";
 
-        result.Permissions = new HasPermissionsDto { Count = AppState.Metadata.Permissions.Count() };
+        result.Permissions = new HasPermissionsDto { Count = AppStateOrNull.Metadata.Permissions.Count() };
 
-        result.IsShared = AppState.IsShared();
-        result.IsInherited = AppState.IsInherited();
+        result.IsShared = AppStateOrNull.IsShared();
+        result.IsInherited = AppStateOrNull.IsInherited();
 
-        result.Icon = App?.Thumbnail;
+        result.Icon = AppAssetThumbnail.GetUrl(AppStateOrNull, paths, Services.GlobalPaths); // App?.Thumbnail;
         return result;
     }
 
