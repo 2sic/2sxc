@@ -111,7 +111,6 @@ internal class DynamicApiCodeHelpers: CodeHelper
                 var app = services.AppOverrideLazy.Value
                     .PreInit(siteCtx.Site)
                     .Init(appState.PureIdentity(), services.AppConfigDelegateLazy.Value.Build());
-                //_DynCodeRoot.AttachApp(app);
                 return l.Return(app, $"found #{app.AppId}");
             }
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Services;
 using ToSic.Lib.DI;
@@ -41,12 +40,12 @@ public abstract partial class DynamicCodeRoot : ServiceBase<DynamicCodeRoot.MySe
         public LazySvc<IConvertService> ConvertService { get; }
         internal IServiceProvider ServiceProvider { get; }
         public LazySvc<CodeCompiler> CodeCompilerLazy { get; }
-        public AppSettingsStack SettingsStack { get; }
+        public AppDataStackService DataStackService { get; }
 
         public MyServices(
             IServiceProvider serviceProvider,
             LazySvc<CodeCompiler> codeCompilerLazy,
-            AppSettingsStack settingsStack,
+            AppDataStackService dataStackService,
             LazySvc<IConvertService> convertService,
             LazySvc<IDataSourcesService> dataSourceFactory,
             LazySvc<DynamicCodeDataSources> dataSources,
@@ -55,7 +54,7 @@ public abstract partial class DynamicCodeRoot : ServiceBase<DynamicCodeRoot.MySe
             ConnectServices(
                 ServiceProvider = serviceProvider,
                 CodeCompilerLazy = codeCompilerLazy,
-                SettingsStack = settingsStack,
+                DataStackService = dataStackService,
                 ConvertService = convertService,
                 DataSourceFactory = dataSourceFactory,
                 DataSources = dataSources,

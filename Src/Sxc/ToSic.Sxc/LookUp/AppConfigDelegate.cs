@@ -50,12 +50,6 @@ public class AppConfigDelegate : ServiceBase
     });
 
     /// <summary>
-    /// Generate a delegate which will be used to build the configuration based on a new sxc-instance
-    /// </summary>
-    internal Func<App, IAppDataConfiguration> Build(IBlock block) => block.Log.Func<Func<App, IAppDataConfiguration>>(() => _ => 
-        new AppDataConfiguration(block.Data.Configuration.LookUpEngine));
-
-    /// <summary>
     /// Generate a delegate which will be used to build a basic configuration with very little context
     /// </summary>
     internal Func<App, IAppDataConfiguration> Build(bool? showDrafts) => appToUse => 

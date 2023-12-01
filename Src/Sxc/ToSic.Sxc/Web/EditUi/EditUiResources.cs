@@ -18,15 +18,15 @@ public class EditUiResources: ServiceBase
     #region Constructor
 
     private readonly IAppStates _appStates;
-    private readonly AppSettingsStack _stackHelper;
+    private readonly AppDataStackService _stackServiceHelper;
     private readonly IZoneMapper _zoneMapper;
     private readonly IFeaturesService _features;
 
-    public EditUiResources(IAppStates appStates, AppSettingsStack stackHelper, IZoneMapper zoneMapper, IFeaturesService features) : base("Sxc.EUiRes")
+    public EditUiResources(IAppStates appStates, AppDataStackService stackServiceHelper, IZoneMapper zoneMapper, IFeaturesService features) : base("Sxc.EUiRes")
     {
         ConnectServices(
             _appStates = appStates,
-            _stackHelper = stackHelper,
+            _stackServiceHelper = stackServiceHelper,
             _zoneMapper = zoneMapper,
             _features = features
         );
@@ -55,7 +55,7 @@ public class EditUiResources: ServiceBase
         {
             var zoneId = _zoneMapper.GetZoneId(siteId);
             var appPreset = _appStates.GetPrimaryReader(zoneId, Log);
-            var stack = _stackHelper.Init(appPreset).GetStack(RootNameSettings);
+            var stack = _stackServiceHelper.Init(appPreset).GetStack(RootNameSettings);
             var getResult = stack.InternalGetPath($"{WebResourcesNode}.{CdnSourceEditField}");
             cdnRoot = getResult.Result as string;
             useAltCdn = cdnRoot.HasValue() && cdnRoot != CdnDefault;

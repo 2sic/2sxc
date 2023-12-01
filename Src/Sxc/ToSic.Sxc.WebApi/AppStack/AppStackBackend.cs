@@ -22,10 +22,10 @@ public class AppStackBackend: ServiceBase
 
     #region Constructor / DI
 
-    public AppStackBackend(AppSettingsStack settingsStack, IZoneCultureResolver zoneCulture, IAppStates appStates, LazySvc<QueryDefinitionBuilder> qDefBuilder) : base("Sxc.ApiApQ")
+    public AppStackBackend(AppDataStackService dataStackService, IZoneCultureResolver zoneCulture, IAppStates appStates, LazySvc<QueryDefinitionBuilder> qDefBuilder) : base("Sxc.ApiApQ")
     {
         ConnectServices(
-            _settingsStack = settingsStack,
+            _dataStackService = dataStackService,
             _zoneCulture = zoneCulture,
             _appStates = appStates,
             _qDefBuilder = qDefBuilder
@@ -34,7 +34,7 @@ public class AppStackBackend: ServiceBase
 
     private readonly IAppStates _appStates;
     private readonly IZoneCultureResolver _zoneCulture;
-    private readonly AppSettingsStack _settingsStack;
+    private readonly AppDataStackService _dataStackService;
     private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
 
     #endregion
@@ -70,7 +70,7 @@ public class AppStackBackend: ServiceBase
     public List<PropertyDumpItem> GetStackDump(IAppState appState, string partName, string[] languages, IEntity viewSettingsMixin)
     {
         // Build Sources List
-        var settings = _settingsStack.Init(appState).GetStack(partName, viewSettingsMixin);
+        var settings = _dataStackService.Init(appState).GetStack(partName, viewSettingsMixin);
 
         // Dump results
         var results = settings._Dump(new PropReqSpecs(null, languages, Log), null);

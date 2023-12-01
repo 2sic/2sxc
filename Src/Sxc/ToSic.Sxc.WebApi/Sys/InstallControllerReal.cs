@@ -36,7 +36,7 @@ namespace ToSic.Sxc.WebApi.Sys
         private readonly LazySvc<ImportFromRemote> _impFromRemoteLazy;
         private readonly IResponseMaker _responseMaker;
         private readonly LazySvc<IAppStates> _appStates;
-        private readonly LazySvc<AppSettingsStack> _appSettingsStack;
+        private readonly LazySvc<AppDataStackService> _appSettingsStack;
         private readonly LazySvc<AppsBackend> _appsBackendLazy;
 
         public const string LogSuffix = "Install";
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.WebApi.Sys
             LazySvc<IFeaturesService> featureService,
             LazySvc<AppsBackend> appsBackend,
             LazySvc<IAppStates> appStates,
-            LazySvc<AppSettingsStack> appSettingsStack) : base($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl")
+            LazySvc<AppDataStackService> appSettingsStack) : base($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl")
         {
             ConnectServices(
                 _context = context,
