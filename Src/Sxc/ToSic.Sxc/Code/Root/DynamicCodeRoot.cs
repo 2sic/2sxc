@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Services;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
