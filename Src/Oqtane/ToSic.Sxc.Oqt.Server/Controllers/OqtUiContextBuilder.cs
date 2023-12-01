@@ -63,7 +63,7 @@ internal class OqtUiContextBuilder: UiContextBuilderBase
             RemoteDestinations.GettingStarted,
             Services.SiteCtx.Site,
             blockCtx?.Module.Id ?? 0,
-            Services.AppToLaterInitialize,
+            AppState,
             true
         );
         return gsUrl;

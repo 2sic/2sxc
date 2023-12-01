@@ -74,7 +74,7 @@ public class WorkApps : ServiceBase
         return appIds
             .Select(a => _appGenerator.New()
                 .PreInit(site)
-                .Init(new AppIdentity(zId, a.Key), buildConfig) as IApp)
+                .Init(new AppIdentityPure(zId, a.Key), buildConfig) as IApp)
             .OrderBy(a => a.Name)
             .ToList();
     }
@@ -102,12 +102,12 @@ public class WorkApps : ServiceBase
                 var appIds = _appStates.Apps(zId);
 
                 return appIds
-                    .Select(a => new AppIdentity(zId, a.Key))
+                    .Select(a => new AppIdentityPure(zId, a.Key))
                     .Where(aId =>
                     {
                         if (!appStateWithCacheInfo.IsCached(aId)) return false;
                         var appState = _appStates.GetReader(aId);
-                        return appState != null && appState.IsShared() && !siteApps.Any(sa => sa.Equals(appState.Folder, StringComparison.InvariantCultureIgnoreCase));
+                        return appState?.IsShared() == true && !siteApps.Any(sa => sa.Equals(appState.Folder, StringComparison.InvariantCultureIgnoreCase));
                     })
                     .Select(a => _appGenerator.New().PreInit(site).Init(a, buildConfig) as IApp)
                     .OrderBy(a => a.Name)

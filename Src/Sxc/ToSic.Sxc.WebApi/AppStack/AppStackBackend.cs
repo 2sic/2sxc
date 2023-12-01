@@ -78,7 +78,7 @@ public class AppStackBackend: ServiceBase
     }
 
 
-    private IEntity GetViewSettingsForMixin(Guid? viewGuid, string[] languages, IAppState appState, string realName)
+    private IEntity GetViewSettingsForMixin(Guid? viewGuid, string[] languages, IAppEntityService appState, string realName)
     {
         IEntity viewStackPart = null;
         if (viewGuid != null)

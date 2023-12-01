@@ -171,7 +171,7 @@ public static class Factory
         log.A($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
         var app = StaticBuild<App>(log);
         if (site != null) app.PreInit(site);
-        var appStuff = app.Init(new AppIdentity(zoneId, appId), StaticBuild<AppConfigDelegate>(log).Build(showDrafts));
+        var appStuff = app.Init(new AppIdentityPure(zoneId, appId), StaticBuild<AppConfigDelegate>(log).Build(showDrafts));
         return appStuff;
     }
 

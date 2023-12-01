@@ -6,7 +6,6 @@ using ToSic.Eav.Code.InfoSystem;
 using ToSic.Eav.Generics;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.CodeHelpers;
 using ToSic.Sxc.Context;
@@ -14,8 +13,10 @@ using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Apps;
 using ToSic.Lib.Coding;
 using ToSic.Razor.Blade;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi;
 
@@ -74,7 +75,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
         if (codeRoot.App == null)
         {
             Log.A("DynCode.App is null");
-            var app = TryToAttachAppFromUrlParams(services, request);
+            var app = GetAppOrNullFromUrlParams(services, request);
             if (app != null)
                 codeRoot.AttachApp(app);
         }
@@ -97,7 +98,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
     }
 
 
-    private IApp TryToAttachAppFromUrlParams(DynamicApiServices services, HttpRequestMessage request)
+    private IApp GetAppOrNullFromUrlParams(DynamicApiServices services, HttpRequestMessage request)
     {
         var l = Log.Fn<IApp>();
         try
@@ -112,7 +113,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
                 l.A($"AppId: {appState.AppId}");
                 var app = services.AppOverrideLazy.Value
                     .PreInit(siteCtx.Site)
-                    .Init(appState, services.AppConfigDelegateLazy.Value.Build());
+                    .Init(appState.PureIdentity(), services.AppConfigDelegateLazy.Value.Build());
                 //_DynCodeRoot.AttachApp(app);
                 return l.Return(app, $"found #{app.AppId}");
             }

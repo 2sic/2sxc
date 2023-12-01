@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Specs;
 using ToSic.Eav.Data;
 using static ToSic.Eav.Apps.Adam.AdamConstants;
 
@@ -31,7 +32,7 @@ public class AdamConfiguration
 
     private static string _adamAppRootFolder;
 
-    internal string PathForApp(IAppState app)
+    internal string PathForApp(IAppSpecs app)
     {
         var valuesDic = new Dictionary<string, string>
         {

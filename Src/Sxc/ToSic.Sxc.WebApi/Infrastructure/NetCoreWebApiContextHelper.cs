@@ -122,7 +122,7 @@ namespace ToSic.Sxc.WebApi.Infrastructure
         {
             var app = _helper.GetService<Apps.App>();
             app.PreInit(site);
-            return app.Init(new AppIdentity(AppConstants.AutoLookupZone, appId), _helper.GetService<AppConfigDelegate>().Build());
+            return app.Init(new AppIdentityPure(AppConstants.AutoLookupZone, appId), _helper.GetService<AppConfigDelegate>().Build());
         });
 
 

@@ -30,22 +30,16 @@ public partial class DynamicCodeService
 
         // lookup zoneId if not provided
         var realZoneId = zoneId ?? Services.AppStates.Value.IdentityOfApp(realAppId).ZoneId;
-        return App(new AppIdentity(realZoneId, realAppId), site, withUnpublished: withUnpublished);
+        return App(new AppIdentityPure(realZoneId, realAppId), site, withUnpublished: withUnpublished);
     }
 
     public IApp AppOfSite() => AppOfSite(siteId: null);
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
     public IApp AppOfSite(NoParamOrder noParamOrder = default, int? siteId = null, ISite site = null, bool? withUnpublished = null)
-    {
-        var primaryApp = GetPrimaryApp(siteId, site);
-        return App(primaryApp, site, withUnpublished);
-    }
+        => App(GetPrimaryAppIdentity(siteId, site), site, withUnpublished);
 
-
-    private IAppState GetPrimaryApp(int? siteId, ISite site) => Services.AppStates.Value.GetReader(GetPrimaryAppIdentity(siteId, site));
-
-    private IAppIdentity GetPrimaryAppIdentity(int? siteId, ISite site)
+    private IAppIdentityPure GetPrimaryAppIdentity(int? siteId, ISite site)
     {
         siteId ??= site?.Id ?? Services.Site.Value.Id;
         var zoneId = Services.ZoneMapper.Value.GetZoneId(siteId.Value);
@@ -54,7 +48,7 @@ public partial class DynamicCodeService
     }
 
 
-    private IApp App(IAppIdentity appIdentity, ISite site, bool? withUnpublished = null)
+    private IApp App(IAppIdentityPure appIdentity, ISite site, bool? withUnpublished = null)
     {
         var wrapLog = Log.Fn<IApp>($"{appIdentity.Show()}, site:{site != null}, showDrafts: {withUnpublished}");
         var app = _myScopedServices.AppGenerator.New();

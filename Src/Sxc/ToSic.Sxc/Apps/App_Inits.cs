@@ -22,7 +22,7 @@ public partial class App
     /// Main constructor which auto-configures the app-data
     /// </summary>
     [PrivateApi]
-    public new App Init(IAppIdentity appIdentity, Func<EavApp, IAppDataConfiguration> buildConfig)
+    public new App Init(IAppIdentityPure appIdentity, Func<EavApp, IAppDataConfiguration> buildConfig)
     {
         var l = Log.Fn<App>();
         base.Init(appIdentity, buildConfig);

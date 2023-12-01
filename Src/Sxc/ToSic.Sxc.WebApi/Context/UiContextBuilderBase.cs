@@ -3,7 +3,6 @@ using System.Linq;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Decorators;
-using ToSic.Eav.Apps.Reader;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Features;
@@ -69,7 +68,7 @@ public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>,
     public IUiContextBuilder InitApp(IAppState appState)
     {
         AppState = appState.Internal();
-        App = appState != null ? (Services.AppToLaterInitialize as Apps.App)?.Init(appState, null) : null;
+        App = appState != null ? (Services.AppToLaterInitialize as Apps.App)?.Init(appState.PureIdentity(), null) : null;
         return this;
     }
 

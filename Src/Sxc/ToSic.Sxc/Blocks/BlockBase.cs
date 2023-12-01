@@ -94,7 +94,7 @@ public abstract partial class BlockBase : ServiceBase<BlockBase.MyServices>, IBl
         // Get App for this block
         App = Services.AppLazy.Value
             .PreInit(Context.Site)
-            .Init(this, Services.AppConfigDelegateLazy.Value.BuildForNewBlock(Context, this));
+            .Init(this.PureIdentity(), Services.AppConfigDelegateLazy.Value.BuildForNewBlock(Context, this));
         l.A("App created");
 
         // note: requires EditAllowed, which isn't ready till App is created

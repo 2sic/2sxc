@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
+using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
@@ -132,7 +133,7 @@ public abstract class AdamContext: ServiceBase<AdamContext.MyServices>
     /// <summary>
     /// try to find attribute definition - for later extra security checks
     /// </summary>
-    private static IContentTypeAttribute AttributeDefinition(IAppState appState, string contentType, string fieldName)
+    private static IContentTypeAttribute AttributeDefinition(IAppContentTypeService appState, string contentType, string fieldName)
     {
         var type = appState.GetContentType(contentType);
         return type[fieldName];

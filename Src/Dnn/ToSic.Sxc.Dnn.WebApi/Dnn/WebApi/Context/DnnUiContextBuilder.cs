@@ -77,7 +77,7 @@ internal sealed class DnnUiContextBuilder : UiContextBuilderBase
     /// <returns></returns>
     protected override string GetGettingStartedUrl()
     {
-        if (App is not { } app) return "";
+        if (AppState is not { } app) return "";
 
         var gsUrl = _remoteRouterLink.LinkToRemoteRouter(
             RemoteDestinations.GettingStarted,

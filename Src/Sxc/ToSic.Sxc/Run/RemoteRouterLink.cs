@@ -1,9 +1,8 @@
 ﻿using ToSic.Eav;
+using ToSic.Eav.Apps.Specs;
 using ToSic.Eav.Context;
-using ToSic.Eav.Run;
 using ToSic.Eav.Security.Fingerprint;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Run;
 
@@ -22,7 +21,7 @@ public class RemoteRouterLink
     private readonly SystemFingerprint _fingerprint;
     private readonly IPlatformInfo _platformInfo;
 
-    public string LinkToRemoteRouter(RemoteDestinations destination, ISite site, int moduleId, IApp app, bool isContentApp)
+    public string LinkToRemoteRouter(RemoteDestinations destination, ISite site, int moduleId, IAppSpecs app, bool isContentApp)
     {
         var destinationPart = "";
         if (destination == RemoteDestinations.AutoConfigure)
