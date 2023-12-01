@@ -78,8 +78,7 @@ public class BlockControllerReal : ServiceBase, IBlockController
     {
         // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
         var site = _context.Value.Site;
-        return _workApps.Value/* _cmsZones.Value.SetId(site.ZoneId).AppsRt*/.GetSelectableApps(site, apps)
-            .ToList();
+        return _workApps.Value.GetSelectableApps(site, apps).ToList();
     }
 
     #endregion

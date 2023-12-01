@@ -132,7 +132,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
         var paths = new List<string>();
         foreach (var appState in dependentApps)
         {
-            var appPaths = _appPathsLazy.Value.Init(app.Site, appState.ToInterface(Log));
+            var appPaths = _appPathsLazy.Value.Init(app.Site, _appStatesLazy.Value.ToReader(appState, Log));
             if (Directory.Exists(appPaths.PhysicalPath)) paths.Add(appPaths.PhysicalPath);
             if (Directory.Exists(appPaths.PhysicalPathShared)) paths.Add(appPaths.PhysicalPathShared);
         }

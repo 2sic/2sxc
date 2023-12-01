@@ -31,18 +31,17 @@ public class SaveSecurity: SaveHelperBase
     }
 
 
-    public IMultiPermissionCheck DoPreSaveSecurityCheck(int appId, IEnumerable<BundleWithHeader> items) =>
-        Log.Func<IMultiPermissionCheck>(() =>
-        {
-            var app = _appGen.New().InitWithOptionalBlock(appId);
-            var permCheck = _multiPermissionsTypesGen.New()
-                .Init(Context, app, items.Select(i => i.Header).ToList());
-            if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
-                throw HttpException.PermissionDenied(error);
-            if (!permCheck.UserCanWriteAndPublicFormsEnabled(out _, out error))
-                throw HttpException.PermissionDenied(error);
+    public IMultiPermissionCheck DoPreSaveSecurityCheck(IEnumerable<BundleWithHeader> items)
+    {
+        var l = Log.Fn<IMultiPermissionCheck>($"{items.Count()} items");
 
-            Log.A("passed security checks");
-            return permCheck;
-        });
+        var permCheck = _multiPermissionsTypesGen.New()
+            .Init(Context, Context.AppState, items.Select(i => i.Header).ToList());
+        if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
+            throw HttpException.PermissionDenied(error);
+        if (!permCheck.UserCanWriteAndPublicFormsEnabled(out _, out error))
+            throw HttpException.PermissionDenied(error);
+
+        return l.Return(permCheck, "passed security checks");
+    }
 }

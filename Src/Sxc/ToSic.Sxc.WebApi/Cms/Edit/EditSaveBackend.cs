@@ -96,7 +96,7 @@ public class EditSaveBackend : ServiceBase
 
         #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
         // basic permission checks
-        var permCheck = _saveSecurity.Init(_context).DoPreSaveSecurityCheck(_appId, package.Items);
+        var permCheck = _saveSecurity.Init(_context).DoPreSaveSecurityCheck(package.Items);
 
         var foundItems = package.Items.Where(i => i.Entity.Id != 0 || i.Entity.Guid != Guid.Empty)
             .Select(i => i.Entity.Guid != Guid.Empty

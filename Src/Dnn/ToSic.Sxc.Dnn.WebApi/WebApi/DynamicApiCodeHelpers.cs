@@ -59,13 +59,10 @@ internal class DynamicApiCodeHelpers: CodeHelper
         // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
         var block = SysHlp.GetBlockAndContext(request)?.LoadBlock();
         Log.A($"HasBlock: {block != null}");
-        //var compatibilityLevel = (_owner as ICompatibilityLevel)?.CompatibilityLevel ?? Constants.CompatibilityLevel10;
 
         var services = SysHlp.GetService<DynamicApiServices>().ConnectServices(Log);
         var codeRoot = services.CodeRootFactory
             .BuildCodeRoot(_owner, block, Log, compatibilityFallback: Constants.CompatibilityLevel10);
-        //.InitDynCodeRoot(block, Log); //, compatibilityLevel)
-        //.SetCompatibility(compatibilityLevel);
 
         SysHlp.ConnectToRoot(codeRoot);
 
