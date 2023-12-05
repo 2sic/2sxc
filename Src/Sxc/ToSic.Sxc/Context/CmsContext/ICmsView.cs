@@ -86,6 +86,14 @@ public interface ICmsView: IHasMetadata
     /// </remarks>
     IFolder Folder { get; }
 
+    /// <summary>
+    /// Settings of this view.
+    /// This property only works in the new typed code.
+    ///
+    /// Note that many views don't have their own settings, so this would be empty = `null`.
+    /// </summary>
+    ITypedItem Settings { get; }
+
     // 2023-08-23 2dm v16.04 PathShared, PhysicalPath, PhysicalPathShared removed, don't believe anybody was ever using it!
 
     ///// <summary>

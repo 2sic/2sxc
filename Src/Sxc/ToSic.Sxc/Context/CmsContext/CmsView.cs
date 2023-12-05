@@ -7,6 +7,7 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Context;
 
@@ -16,37 +17,48 @@ public class CmsView: CmsContextPartBase<IView>, ICmsView
 {
     public CmsView(CmsContext parent, IBlock block) : base(parent, block.View)
     {
+        _parent = parent;
         _block = block;
+        _view = block.View;
     }
 
     private readonly IBlock _block;
+    private readonly IView _view;
+    private readonly CmsContext _parent;
 
     /// <inheritdoc />
-    public int Id => GetContents()?.Id ?? 0;
+    public int Id => _view?.Id ?? 0;
 
     /// <inheritdoc />
-    public string Name => GetContents()?.Name ?? "";
+    public string Name => _view?.Name ?? "";
 
     /// <inheritdoc />
-    public string Identifier => GetContents()?.Identifier ?? "";
+    public string Identifier => _view?.Identifier ?? "";
 
     /// <inheritdoc />
-    public string Edition => GetContents()?.Edition;
+    public string Edition => _view?.Edition;
 
     protected override IMetadataOf GetMetadataOf()
-        => ExtendWithRecommendations(GetContents()?.Metadata);
+        => ExtendWithRecommendations(_view?.Metadata);
 
     public IFolder Folder => _folder ??= FolderAdvanced();
     private IFolder _folder;
 
     [PrivateApi]
-    IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string location = default)
+    private IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string location = default)
     {
         return new CmsViewFolder(this, _block.App, AppAssetFolderMain.DetermineShared(location) ?? _block.View.IsShared);
     }
 
+    /// <summary>
+    /// Note: this is an explicit implementation, so in Dynamic Razor it won't work.
+    /// </summary>
+    ITypedItem ICmsView.Settings => _settings.Get(() => _parent._DynCodeRoot.Cdf.AsItem(_view.Settings, default));
+    private readonly GetOnce<ITypedItem> _settings = new();
+
 
     /// <inheritdoc />
+    [PrivateApi("Hidden in 16.04, because we want people to use the Folder. Can't remove it though, because there are many apps that already published this.")]
     public string Path => _path.Get(() => FigureOutPath(_block?.App.Path));
     private readonly GetOnce<string> _path = new();
 
@@ -69,7 +81,7 @@ public class CmsView: CmsContextPartBase<IView>, ICmsView
     private string FigureOutPath(string root)
     {
         // Get addition, but must ensure it doesn't have a leading slash (otherwise Path.Combine treats it as a root)
-        var addition = (GetContents().EditionPath ?? "").TrimPrefixSlash();
+        var addition = (_view.EditionPath ?? "").TrimPrefixSlash();
         var pathWithFile = System.IO.Path.Combine(root ?? "", addition).ForwardSlash();
         return pathWithFile.BeforeLast("/");
     }
