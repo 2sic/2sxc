@@ -255,7 +255,7 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
         //Protect(noParamOrder, nameof(field), message:
         //    $" ***IMPORTANT***: The typed '.Parents(...)' method was changed to also make the parameter '{nameof(type)}' required. " +
         //    "So if you had '.Parents(something)' then change it to '.Parents(type: something)'. See https://r.2sxc.org/brc-1603");
-        return Cdf.AsItems(GetHelper.Parents(entity: Entity, type: type, field: field), noParamOrder);
+        return Cdf.AsItems(GetHelper.Parents(entity: Entity, type: type, field: field));
     }
 
     /// <inheritdoc />

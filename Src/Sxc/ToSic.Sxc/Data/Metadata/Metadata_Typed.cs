@@ -158,7 +158,7 @@ internal partial class Metadata: ITypedItem
             .FirstOrDefault(l => l.SafeAny());
         if (parents == null) return new List<ITypedItem>(0);
 
-        var list = Cdf.AsItems(parents, noParamOrder).ToList();
+        var list = Cdf.AsItems(parents).ToList();
         return list.Any() ? list : new List<ITypedItem>(0);
     }
 
@@ -180,7 +180,7 @@ internal partial class Metadata: ITypedItem
             .FirstOrDefault(l => l.SafeAny());
         if (children == null) return new List<ITypedItem>(0);
 
-        var list = Cdf.AsItems(children, noParamOrder).ToList();
+        var list = Cdf.AsItems(children).ToList();
         return list.Any() ? list : new List<ITypedItem>(0);
     }
 

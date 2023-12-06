@@ -41,14 +41,14 @@ internal class TypedConverter
     {
         var (typed, untyped, ok) = EvalInterface(data, fallback);
         // Try to convert, in case it's an IEntity or something; could also result in error
-        return ok ? typed : Cdf.AsItem(untyped, noParamOrder);
+        return ok ? typed : Cdf.AsItem(untyped);
     }
 
     public IEnumerable<ITypedItem> Items(object maybe, NoParamOrder noParamOrder, IEnumerable<ITypedItem> fallback)
     {
         var (typed, untyped, ok) = EvalInterface(maybe, fallback);
         // Try to convert, in case it's an IEntity or something; could also result in error
-        return ok ? typed : Cdf.AsItems(untyped, noParamOrder);
+        return ok ? typed : Cdf.AsItems(untyped);
     }
 
     public IToolbarBuilder Toolbar(object maybe, IToolbarBuilder fallback)
@@ -105,7 +105,7 @@ internal class TypedConverter
     {
         var (typed, untyped, ok) = EvalInterface(maybe, fallback);
         // Try to convert, in case it's an IEntity or something; could also result in error
-        return ok ? typed : Cdf.AsItem(untyped, noParamOrder);
+        return ok ? typed : Cdf.AsItem(untyped);
     }
 
     #region Tags

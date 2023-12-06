@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynConverterTests
         [TestMethod]
         public void ItemFake()
         {
-            var fake = Cdf.AsItem(Cdf.FakeEntity(0), noParamOrder: default, propsRequired: false);
+            var fake = Cdf.AsItem(Cdf.FakeEntity(0), propsRequired: false);
             Assert.IsNotNull(fake);
             Assert.IsNull(fake.String("some-field"));
         }

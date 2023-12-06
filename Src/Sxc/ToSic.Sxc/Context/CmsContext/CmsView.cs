@@ -53,7 +53,7 @@ public class CmsView: CmsContextPartBase<IView>, ICmsView
     /// <summary>
     /// Note: this is an explicit implementation, so in Dynamic Razor it won't work.
     /// </summary>
-    ITypedItem ICmsView.Settings => _settings.Get(() => _parent._DynCodeRoot.Cdf.AsItem(_view.Settings, default));
+    ITypedItem ICmsView.Settings => _settings.Get(() => _parent._DynCodeRoot.Cdf.AsItem(_view.Settings));
     private readonly GetOnce<ITypedItem> _settings = new();
 
 

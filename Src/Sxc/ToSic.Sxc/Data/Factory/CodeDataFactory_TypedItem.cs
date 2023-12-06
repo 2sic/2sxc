@@ -19,7 +19,7 @@ public partial class CodeDataFactory
     #region AsTyped Implementations
 
 
-    public ITypedItem AsItem(object data, NoParamOrder noParamOrder, bool? required = default, ITypedItem fallback = default, bool? propsRequired = default, bool? mock = default)
+    public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? required = default, ITypedItem fallback = default, bool? propsRequired = default, bool? mock = default)
     {
         if (mock == true)
             return _codeDataWrapper.Value.TypedItemFromObject(data,
@@ -71,7 +71,7 @@ public partial class CodeDataFactory
 
     }
 
-    public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder, bool? required = default, IEnumerable<ITypedItem> fallback = default, bool? propsRequired = default) 
+    public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? required = default, IEnumerable<ITypedItem> fallback = default, bool? propsRequired = default) 
         => AsItemList(list, required ?? true, fallback, MaxRecursions, propsRequired: propsRequired ?? false);
 
     private IEnumerable<ITypedItem> AsItemList(object list, bool required, IEnumerable<ITypedItem> fallback, int recursions, bool propsRequired)

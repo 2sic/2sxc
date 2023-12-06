@@ -130,7 +130,7 @@ internal class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPropLookup
         var findResult = _helper.TryGet(name);
         return IsErrStrict(findResult.Found, required, _helper.PropsRequired)
             ? throw ErrStrict(name)
-            : Cdf.AsItem(findResult.Result, noParamOrder);
+            : Cdf.AsItem(findResult.Result);
     }
 
     IEnumerable<ITypedItem> ITypedStack.Children(string field, NoParamOrder noParamOrder, string type, bool? required)
@@ -138,7 +138,7 @@ internal class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPropLookup
         var findResult = _helper.TryGet(field);
         return IsErrStrict(findResult.Found, required, _helper.PropsRequired)
             ? throw ErrStrict(field)
-            : Cdf.AsItems(findResult.Result, noParamOrder)
+            : Cdf.AsItems(findResult.Result)
                 // Apply type filter - even if a bit "late"
                 .Where(i => i.Entity.Type.Is(type))
                 .ToList();
