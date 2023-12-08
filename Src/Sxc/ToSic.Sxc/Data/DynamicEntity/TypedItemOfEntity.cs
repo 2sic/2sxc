@@ -17,7 +17,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data.Decorators;
 using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Images;
-
+using ToSic.Sxc.Services.Tweaks;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
 using static ToSic.Eav.Data.Shared.WrapperEquality;
 
@@ -318,9 +318,10 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
         bool? toolbar,
         object imageSettings,
         bool? required,
-        bool debug
+        bool debug,
+        Func<ITweakInput<string>, ITweakInput<string>> tweak = default
     ) => TypedItemHelpers.Html(Cdf, this, name: name, noParamOrder: noParamOrder, container: container,
-        toolbar: toolbar, imageSettings: imageSettings, required: required, debug: debug);
+        toolbar: toolbar, imageSettings: imageSettings, required: required, debug: debug, tweak: tweak);
 
     /// <inheritdoc/>
     IResponsivePicture ITypedItem.Picture(

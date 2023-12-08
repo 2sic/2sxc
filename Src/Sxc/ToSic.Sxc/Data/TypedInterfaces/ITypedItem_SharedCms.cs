@@ -1,7 +1,9 @@
-﻿using ToSic.Lib.Coding;
+﻿using System;
+using ToSic.Lib.Coding;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Tweaks;
 
 namespace ToSic.Sxc.Data;
 
@@ -34,9 +36,11 @@ public partial interface ITypedItem
     /// <param name="imageSettings">Settings for resizing. Default is `Wysiwyg` but it can also be `Content` or a settings object.</param>
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <param name="debug">Activate debug visualization to better see alignments and such.</param>
+    /// <param name="tweak">tweak behavior - ATM modify the input before it's processed new in v17</param>
     /// <returns></returns>
     /// <remarks>
     /// * Added in 2sxc 16.01
+    /// * Added `tweak` in v17
     /// * Only works on Razor files inheriting from Hybrid14 or newer
     /// </remarks>
     IHtmlTag Html(
@@ -46,7 +50,8 @@ public partial interface ITypedItem
         bool? toolbar = default,
         object imageSettings = default,
         bool? required = default,
-        bool debug = default
+        bool debug = default,
+        Func<ITweakInput<string>, ITweakInput<string>> tweak = default
     );
 
 

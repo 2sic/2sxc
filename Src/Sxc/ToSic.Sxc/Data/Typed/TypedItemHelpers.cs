@@ -4,6 +4,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Services.Tweaks;
 
 namespace ToSic.Sxc.Data.Typed;
 
@@ -19,13 +20,14 @@ internal class TypedItemHelpers
         bool? toolbar,
         object imageSettings,
         bool? required,
-        bool debug
+        bool debug,
+        Func<ITweakInput<string>, ITweakInput<string>> tweak = default
     )
     {
         // Protect(noParamOrder, $"{nameof(container)}, {nameof(imageSettings)}, {nameof(toolbar)}, {nameof(required)}, {nameof(debug)}...");
         var kit = cdf.GetServiceKitOrThrow();
         var field = item.Field(name, required: required);
-        return kit.Cms.Html(field, container: container, classes: null, imageSettings: imageSettings, debug: debug, toolbar: toolbar);
+        return kit.Cms.Html(field, container: container, classes: null, imageSettings: imageSettings, debug: debug, toolbar: toolbar, tweak: tweak);
     }
 
     public static IResponsivePicture Picture(

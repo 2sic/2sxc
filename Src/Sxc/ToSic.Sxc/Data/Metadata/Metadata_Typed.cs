@@ -10,6 +10,7 @@ using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Services.Tweaks;
 using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
@@ -203,9 +204,10 @@ internal partial class Metadata: ITypedItem
         bool? toolbar,
         object imageSettings,
         bool? required,
-        bool debug
+        bool debug,
+        Func<ITweakInput<string>, ITweakInput<string>> tweak = default
     ) => TypedItemHelpers.Html(Cdf, this, name: name, noParamOrder: noParamOrder, container: container,
-        toolbar: toolbar, imageSettings: imageSettings, required: required, debug: debug);
+        toolbar: toolbar, imageSettings: imageSettings, required: required, debug: debug, tweak: tweak);
 
     /// <inheritdoc/>
     IResponsivePicture ITypedItem.Picture(

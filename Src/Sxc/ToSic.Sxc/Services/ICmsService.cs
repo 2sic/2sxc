@@ -6,7 +6,7 @@ using ToSic.Sxc.Services.Tweaks;
 
 namespace ToSic.Sxc.Services;
 
-[PrivateApi("WIP")]
+[PrivateApi("not published, use Item.Html() instead")]
 public interface ICmsService
 {
     IHtmlTag Html(object thing,

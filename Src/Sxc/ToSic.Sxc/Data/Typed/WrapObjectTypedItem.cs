@@ -16,6 +16,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Tweaks;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data.Typed;
@@ -47,9 +48,9 @@ public class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
     bool ITypedItem.IsDemoItem => PreWrap.TryGetTyped(nameof(ITypedItem.IsDemoItem), noParamOrder: default, fallback: false, required: false);
 
     IHtmlTag ITypedItem.Html(string name, NoParamOrder noParamOrder, object container, bool? toolbar,
-        object imageSettings, bool? required, bool debug
+        object imageSettings, bool? required, bool debug, Func<ITweakInput<string>, ITweakInput<string>> tweak = default
     ) => TypedItemHelpers.Html(_cdf.Value, this, name: name, noParamOrder: noParamOrder, container: container,
-        toolbar: toolbar, imageSettings: imageSettings, required: required, debug: debug);
+        toolbar: toolbar, imageSettings: imageSettings, required: required, debug: debug, tweak: tweak);
 
     IResponsivePicture ITypedItem.Picture(string name, NoParamOrder noParamOrder, object settings,
         object factor, object width, string imgAlt, string imgAltFallback,
