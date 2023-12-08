@@ -1,6 +1,8 @@
-﻿using ToSic.Lib.Coding;
+﻿using System;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Cms.Html;
 
 namespace ToSic.Sxc.Services;
 
@@ -13,6 +15,6 @@ public interface ICmsService
         string classes = default,
         bool debug = default,
         object imageSettings = default,
-        bool? toolbar = default
-    );
+        bool? toolbar = default,
+        Func<ITweakHtml, ITweakHtml> tweak = default);
 }

@@ -170,6 +170,8 @@
     <Compile Include="ServicesTests\PageServiceSharedTest.cs" />
     <Compile Include="ServicesTests\SecureData\SecureDataTest.cs" />
     <Compile Include="Images\ImageflowRewriteTests.cs" />
+    <Compile Include="ServiceTweaks\TweakListTests.cs" />
+    <Compile Include="ServiceTweaks\CmsHtmlTweakTests.cs" />
     <Compile Include="TestBaseSxcDb.cs" />
     <Compile Include="TestBaseSxc.cs" />
     <Compile Include="ServicesTests\ConvertService\ConvertServiceTest.cs" />

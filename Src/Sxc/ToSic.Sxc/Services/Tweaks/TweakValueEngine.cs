@@ -11,7 +11,7 @@ public class TweakValueEngine
         if (func == null) return l.Return(value, "no tweak");
         try
         {
-            var result = func(new TweakValue<TValue>("Default", "Default", value));
+            var result = func(new TweakValue<TValue>(value, "Default", "Default", 0));
             if (result == null) return l.Return(value, "no tweak result, keep original");
             var isChanged = value?.Equals(result.Value) ?? (value == null && result.Value == null);
             return l.Return(result.Value, $"tweaked; changed: {isChanged}");

@@ -70,10 +70,11 @@ internal class CmsServiceStringWysiwyg: ServiceForDynamicCode
     /// <summary>
     /// Note: very expressive name for logs
     /// </summary>
-    internal CmsProcessed HtmlForStringAndWysiwyg()
+    /// <param name="value"></param>
+    internal CmsProcessed HtmlForStringAndWysiwyg(string value)
     {
         var l = Log.Fn<CmsProcessed>();
-        var html = Field.Raw as string;
+        var html = value ?? Field.Raw as string;
         if (string.IsNullOrWhiteSpace(html))
             return l.Return(new CmsProcessed(false, null, null), "no html, treat as unknown, return null to let parent do wrapping with original");
 

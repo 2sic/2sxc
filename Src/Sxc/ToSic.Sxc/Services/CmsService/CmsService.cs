@@ -1,9 +1,11 @@
-﻿using ToSic.Eav.Data;
+﻿using System;
+using ToSic.Eav.Data;
 using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Cms.Html;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Services.CmsService;
@@ -30,7 +32,8 @@ internal class CmsService: ServiceForDynamicCode, ICmsService
         string classes = default,
         bool debug = default,
         object imageSettings = default,
-        bool? toolbar = default
+        bool? toolbar = default,
+        Func<ITweakHtml, ITweakHtml> tweak = default
     )
     {
         var field = thing as IField;
@@ -38,13 +41,16 @@ internal class CmsService: ServiceForDynamicCode, ICmsService
         // Initialize the container helper, as we'll use it a few times
         var cntHelper = new CmsServiceContainerHelper(_DynCodeRoot, field, container, classes, toolbar, Log);
 
+        // New v17 - preprocess the tweaks if available
+        var value = field?.Raw?.ToString() ?? thing?.ToString();
+        value = ProcessTweaks(tweak, value, l);
+
         // If it's not a field, we cannot find out more about the object
         // In that case, just wrap the result in the container and return it
         if (field is null)
-            return l.Return(cntHelper.Wrap(thing, defaultToolbar: false), "No field, will just treat as value");
+            return l.Return(cntHelper.Wrap(value ?? thing, defaultToolbar: false), "No field, will just treat as value");
 
         // Get Content type and field information
-        var value = field.Raw;
         var contentType = field.Parent.Entity?.Type; // Entity can be null on mock data
         if (contentType == null)
             return l.Return(cntHelper.Wrap(value, defaultToolbar: false), "can't find content-type, treat as value");
@@ -65,7 +71,7 @@ internal class CmsService: ServiceForDynamicCode, ICmsService
                 var fieldAdam = _DynCodeRoot.AsAdam(field.Parent, field.Name);
                 var htmlResult = _stringWysiwyg.New()
                     .Init(field, contentType, attribute, fieldAdam, debug, imageSettings)
-                    .HtmlForStringAndWysiwyg();
+                    .HtmlForStringAndWysiwyg(value);
                 return htmlResult.IsProcessed
                     ? l.Return(cntHelper.Wrap(htmlResult, defaultToolbar: true), "wysiwyg, default w/toolbar")
                     : l.Return(cntHelper.Wrap(value, defaultToolbar: true), "wysiwyg, not converted, w/toolbar");
@@ -78,5 +84,22 @@ internal class CmsService: ServiceForDynamicCode, ICmsService
         // Fallback...
         return l.Return(cntHelper.Wrap(value, defaultToolbar: false), "nothing else hit, will treat as value");
     }
-        
+
+    private static string ProcessTweaks(Func<ITweakHtml, ITweakHtml> tweak, string value, ILog log)
+    {
+        var l = log.Fn<string>();
+        if (tweak == null) return l.Return(value, "no tweaks");
+
+        try
+        {
+            var tweakHtml = (TweakHtml)tweak(new TweakHtml());
+            var valueTweak = tweakHtml.Preprocess(value);
+            return l.Return(valueTweak.Value, "tweaked");
+        }
+        catch (Exception e)
+        {
+            var ex = new Exception($"Error in processing {nameof(tweak)}", e);
+            throw l.Ex(ex);
+        }
+    }
 }

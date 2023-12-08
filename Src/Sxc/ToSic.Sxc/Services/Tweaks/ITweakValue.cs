@@ -12,4 +12,11 @@ public interface ITweakValue<out TValue>
     /// Current value
     /// </summary>
     TValue Value { get; }
+
+    /// <summary>
+    /// Processing step number, starting with 0.
+    /// This will be larger than 0 if the value has been processed multiple times.
+    /// </summary>
+    public int StepIndex { get; }
+
 }

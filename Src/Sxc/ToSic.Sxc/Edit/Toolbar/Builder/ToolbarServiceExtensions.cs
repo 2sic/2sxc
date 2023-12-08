@@ -23,12 +23,10 @@ internal static class ToolbarBuilderExtensions
         var clone = new ToolbarBuilder(parent: original as ToolbarBuilder);
 
         foreach (var rule in newRules)
-        {
             if (rule is ToolbarRuleBase realRule)
                 clone.Rules.Add(realRule);
             else if (rule is string stringRule)
                 clone.Rules.Add(new ToolbarRuleGeneric(stringRule));
-        }
 
         return l.Return(clone, "clone");
     }

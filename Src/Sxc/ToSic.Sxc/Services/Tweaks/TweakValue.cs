@@ -7,23 +7,26 @@ namespace ToSic.Sxc.Services.Tweaks;
 /// WIP 16.08 Helper to let a tweak operation modify a value
 /// </summary>
 /// <typeparam name="TValue"></typeparam>
-[PrivateApi("WIP 16.08")]
+[PrivateApi("WIP v17")]
 public class TweakValue<TValue>: ITweakValue<TValue>
 {
-    internal TweakValue(string name, string step, TValue initial)
+    internal TweakValue(TValue initial, string name, string step, int stepIndex)
     {
         Name = name;
         Step = step;
         //Initial = initial;
         Value = initial;
+        StepIndex = stepIndex;
     }
 
-    private TweakValue(TweakValue<TValue> original, TValue value)
+    internal TweakValue(ITweakValue<TValue> original, TValue value, int stepIndex)
     {
-        Name = original.Name;
-        Step = original.Step;
+        var otw = original as TweakValue<TValue>;
+        Name = otw?.Name;
+        Step = otw?.Step;
         //Initial = original.Initial;
         Value = value;
+        StepIndex = stepIndex;
     }
 
     /// <summary>
@@ -32,9 +35,11 @@ public class TweakValue<TValue>: ITweakValue<TValue>
     public string Name { get; }
 
     /// <summary>
-    /// Step of the tweak, like a workflow step. eg. `Result`
+    /// Step of the tweak, like a workflow step. eg. `before`
     /// </summary>
     public string Step { get; }
+
+    public int StepIndex { get; }
 
     ///// <summary>
     ///// Initial value before any processing had happened
@@ -44,13 +49,13 @@ public class TweakValue<TValue>: ITweakValue<TValue>
     /// <inheritdoc />
     public TValue Value { get; }
 
-    /// <summary>
-    /// Get a new TweakValue with the value changed.
-    /// This is so that the object is always immutable.
-    /// </summary>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    public TweakValue<TValue> New(NoParamOrder noParamOrder = default, TValue value = default)
-        => new(this, value);
+    ///// <summary>
+    ///// Get a new TweakValue with the value changed.
+    ///// This is so that the object is always immutable.
+    ///// </summary>
+    ///// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    ///// <param name="value"></param>
+    ///// <returns></returns>
+    //public TweakValue<TValue> New(NoParamOrder noParamOrder = default, TValue value = default)
+    //    => new(this, value);
 }
