@@ -13,7 +13,7 @@ using ToSic.Sxc.Edit.Toolbar;
 namespace ToSic.Sxc.Services.CmsService;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class CmsServiceContainerHelper: ServiceBase
+internal class CmsServiceContainerHelper: HelperBase
 {
     private readonly IDynamicCodeRoot _dynCodeRoot;
     private readonly object _container;
@@ -27,9 +27,8 @@ internal class CmsServiceContainerHelper: ServiceBase
         string classes,
         bool? toolbar,
         ILog parentLog
-    ) : base("Cms.SvcCnt")
+    ) : base(parentLog,"Cms.SvcCnt")
     {
-        this.LinkLog(parentLog);
         _dynCodeRoot = dynCodeRoot;
         _field = field;
         _container = container;

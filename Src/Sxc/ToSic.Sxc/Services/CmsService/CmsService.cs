@@ -5,8 +5,8 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Cms.Html;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Services.Tweaks;
 
 namespace ToSic.Sxc.Services.CmsService;
 
@@ -33,7 +33,7 @@ internal class CmsService: ServiceForDynamicCode, ICmsService
         bool debug = default,
         object imageSettings = default,
         bool? toolbar = default,
-        Func<ITweakHtml, ITweakHtml> tweak = default
+        Func<ITweakInput<string>, ITweakInput<string>> tweak = default
     )
     {
         var field = thing as IField;
@@ -85,14 +85,14 @@ internal class CmsService: ServiceForDynamicCode, ICmsService
         return l.Return(cntHelper.Wrap(value, defaultToolbar: false), "nothing else hit, will treat as value");
     }
 
-    private static string ProcessTweaks(Func<ITweakHtml, ITweakHtml> tweak, string value, ILog log)
+    private static string ProcessTweaks(Func<ITweakInput<string>, ITweakInput<string>> tweak, string value, ILog log)
     {
         var l = log.Fn<string>();
         if (tweak == null) return l.Return(value, "no tweaks");
 
         try
         {
-            var tweakHtml = (TweakHtml)tweak(new TweakHtml());
+            var tweakHtml = (TweakInput<string>)tweak(new TweakInput<string>());
             var valueTweak = tweakHtml.Preprocess(value);
             return l.Return(valueTweak.Value, "tweaked");
         }

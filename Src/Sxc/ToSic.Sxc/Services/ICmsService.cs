@@ -2,7 +2,7 @@
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Cms.Html;
+using ToSic.Sxc.Services.Tweaks;
 
 namespace ToSic.Sxc.Services;
 
@@ -16,5 +16,5 @@ public interface ICmsService
         bool debug = default,
         object imageSettings = default,
         bool? toolbar = default,
-        Func<ITweakHtml, ITweakHtml> tweak = default);
+        Func<ITweakInput<string>, ITweakInput<string>> tweak = default);
 }

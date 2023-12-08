@@ -1,15 +1,15 @@
 ﻿using System;
 using ToSic.Lib.Coding;
-using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Tweaks;
+using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Cms.Html
+namespace ToSic.Sxc.Services.Tweaks
 {
     /// <summary>
-    /// Tweak API to reconfigure HTML generation in the <see cref="ICmsService"/> class.
+    /// Tweak API to reconfigure a value pre processing in a service / method call.
     /// </summary>
     /// <remarks>Added in v17</remarks>
-    public interface ITweakHtml
+    [PublicApi]
+    public interface ITweakInput<TInput>
     {
         /// <summary>
         /// Simple value tweak, to inject a different value for use instead of the original.
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Cms.Html
         /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="step">optional step, such as 'before' or 'after' - default is 'before'</param>
         /// <returns></returns>
-        ITweakHtml Value(string replace, NoParamOrder protector = default, string step = default);
+        ITweakInput<TInput> Input(TInput replace, NoParamOrder protector = default); //, string step = default);
 
         /// <summary>
         /// Simple value tweak, to inject a different value for use instead of the original.
@@ -27,15 +27,26 @@ namespace ToSic.Sxc.Cms.Html
         /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="step">optional step, such as 'before' or 'after' - default is 'before'</param>
         /// <returns></returns>
-        ITweakHtml Value(Func<string> func, NoParamOrder protector = default, string step = default);
+        ITweakInput<TInput> Input(Func<TInput> func, NoParamOrder protector = default); //, string step = default);
 
         /// <summary>
         /// Simple value tweak, to inject a different value for use instead of the original.
         /// </summary>
-        /// <param name="func">function to generate a replacement value, receiving the previous value inside a <see cref="ITweakValue{TValue}"/> </param>
+        /// <param name="func">function to generate a replacement value</param>
         /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="step">optional step, such as 'before' or 'after' - default is 'before'</param>
         /// <returns></returns>
-        ITweakHtml Value(Func<ITweakValue<string>, string> func, NoParamOrder protector = default, string step = default);
+        ITweakInput<TInput> Input(Func<TInput, TInput> func, NoParamOrder protector = default); //, string step = default);
+
+        ///// <summary>
+        ///// DO NOT USE YET - BETA
+        ///// Simple value tweak, to inject a different value for use instead of the original.
+        ///// </summary>
+        ///// <param name="func">function to generate a replacement value, receiving the previous value inside a <see cref="ITweakValue{TValue}"/> </param>
+        ///// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        ///// <param name="step">optional step, such as 'before' or 'after' - default is 'before'</param>
+        ///// <returns></returns>
+        //[PrivateApi("not yet final")]
+        //ITweakHtml Process(Func<ITweakValue<string>, string> func, NoParamOrder protector = default);//, string step = default);
     }
 }

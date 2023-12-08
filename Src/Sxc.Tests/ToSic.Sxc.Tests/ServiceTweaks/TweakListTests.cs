@@ -10,8 +10,8 @@ namespace ToSic.Sxc.Tests.ServiceTweaks
         [TestMethod]
         public void CloneIsFunctional()
         {
-            var tw = new TweaksList(null);
-            var tw2 = new TweaksList(tw);
+            var tw = new TweakConfigs(null);
+            var tw2 = new TweakConfigs(tw);
             AreNotSame(tw, tw2);
             AreEqual(tw.List.Count, tw2.List.Count);
             AreNotSame(tw.List, tw2.List);
@@ -20,9 +20,9 @@ namespace ToSic.Sxc.Tests.ServiceTweaks
         [TestMethod]
         public void CloneHasSameTweaks()
         {
-            var tw = new TweaksList(null, new TweakBase("test"));
-            tw = new TweaksList(tw, new TweakBase("test2"));
-            var tw2 = new TweaksList(tw);
+            var tw = new TweakConfigs(null, new TweakConfig("test"));
+            tw = new TweakConfigs(tw, new TweakConfig("test2"));
+            var tw2 = new TweakConfigs(tw);
             AreNotSame(tw, tw2);
             AreEqual(tw.List.Count, tw2.List.Count);
             AreNotSame(tw.List, tw2.List);

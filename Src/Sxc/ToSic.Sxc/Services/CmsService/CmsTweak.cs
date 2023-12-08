@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Services.CmsService
         {
         }
 
-        public CmsTweak ChangeValue(Func<ITweakValue<string>, string> changeFunc)
+        public CmsTweak ChangeValue(Func<ITweakData<string>, string> changeFunc)
         {
             return new CmsTweak();
         }

@@ -8,9 +8,9 @@ namespace ToSic.Sxc.Services.Tweaks;
 /// </summary>
 /// <typeparam name="TValue"></typeparam>
 [PrivateApi("WIP v17")]
-public class TweakValue<TValue>: ITweakValue<TValue>
+public class TweakData<TValue>: ITweakData<TValue>
 {
-    internal TweakValue(TValue initial, string name, string step, int stepIndex)
+    internal TweakData(TValue initial, string name, string step, int stepIndex)
     {
         Name = name;
         Step = step;
@@ -19,9 +19,9 @@ public class TweakValue<TValue>: ITweakValue<TValue>
         StepIndex = stepIndex;
     }
 
-    internal TweakValue(ITweakValue<TValue> original, TValue value, int stepIndex)
+    internal TweakData(ITweakData<TValue> original, TValue value, int stepIndex)
     {
-        var otw = original as TweakValue<TValue>;
+        var otw = original as TweakData<TValue>;
         Name = otw?.Name;
         Step = otw?.Step;
         //Initial = original.Initial;

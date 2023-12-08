@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Cms.Html;
 using ToSic.Sxc.Services.Tweaks;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
@@ -8,10 +7,10 @@ namespace ToSic.Sxc.Tests.ServiceTweaks
     [TestClass]
     public class CmsHtmlTweakTests
     {
-        private (TweakHtml Tw1, TweakHtml Tw2) GetTweakers()
+        private (TweakInput<string> Tw1, TweakInput<string> Tw2) GetTweakers()
         {
-            var tw1 = new TweakHtml();
-            var tw2 = (TweakHtml)tw1.Value(v => v.Value + "-test");
+            var tw1 = new TweakInput<string>();
+            var tw2 = (TweakInput<string>)tw1.Input(v => v + "-test");
             return (tw1, tw2);
         }
 
@@ -27,25 +26,25 @@ namespace ToSic.Sxc.Tests.ServiceTweaks
         public void AddingTweakIsCorrectType()
         {
             var (_, tw2) = GetTweakers();
-            AreEqual(TweakHtml.NameDefault, tw2.Tweaks.List[0].NameId);
-            AreEqual(TweakHtml.StepBefore, tw2.Tweaks.List[0].Step);
+            AreEqual(TweakValue.NameDefault, tw2.Tweaks.List[0].NameId);
+            AreEqual(TweakValue.StepBefore, tw2.Tweaks.List[0].Step);
         }
 
         [TestMethod]
         public void GetPreprocessIsCorrect()
         {
             var (_, tw2) = GetTweakers();
-            var preprocess = tw2.Tweaks.GetTweaksByStep(TweakHtml.StepBefore);
+            var preprocess = tw2.Tweaks.GetTweaksByStep(TweakValue.StepBefore);
             AreEqual(1, preprocess.Count);
-            AreEqual(TweakHtml.NameDefault, preprocess[0].NameId);
-            AreEqual(TweakHtml.StepBefore, tw2.Tweaks.List[0].Step);
+            AreEqual(TweakValue.NameDefault, preprocess[0].NameId);
+            AreEqual(TweakValue.StepBefore, tw2.Tweaks.List[0].Step);
         }
 
         [TestMethod]
         public void GetPostProcessIsCorrect()
         {
             var (_, tw2) = GetTweakers();
-            var preprocess = tw2.Tweaks.GetTweaksByStep(TweakHtml.StepAfter);
+            var preprocess = tw2.Tweaks.GetTweaksByStep(TweakValue.StepAfter);
             AreEqual(0, preprocess.Count);
         }
 
