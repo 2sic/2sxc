@@ -54,6 +54,11 @@ internal class ToolbarService: ServiceForDynamicCode, IToolbarService
         string context = null
     ) => Empty().Metadata(target: target, contentTypes: contentTypes, noParamOrder: noParamOrder, tweak: tweak, ui: ui, parameters: parameters, prefill: prefill, context: context);
 
+    public IToolbarBuilder Edit(object target, NoParamOrder noParamOrder = default, Func<ITweakButton, ITweakButton> tweak = default)
+        => Empty().Edit(target: target, noParamOrder: noParamOrder, tweak: tweak);
+
+
+
     private IToolbarBuilder ToolbarBuilder(
         NoParamOrder noParamOrder,
         string toolbarTemplate,

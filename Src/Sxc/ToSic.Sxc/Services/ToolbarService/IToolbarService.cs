@@ -34,7 +34,6 @@ public interface IToolbarService
     /// History
     /// * Added in 2sxc 13
     /// * target, ui, parameters added in v14.04
-    /// * root added in 16.02
     /// </remarks>
     IToolbarBuilder Default(
         object target = null,
@@ -61,7 +60,6 @@ public interface IToolbarService
     /// History
     /// * Added in 2sxc 13
     /// * target, ui, parameters added in v14.04
-    /// * root added in 16.02
     /// </remarks>
     IToolbarBuilder Empty(
         object target = null,
@@ -75,7 +73,7 @@ public interface IToolbarService
     /// <summary>
     /// Build an **empty** Toolbar with a Metadata button.
     /// 
-    /// This is the same as .Empty().Metadata(target, contentType);
+    /// This is the same as `.Empty().Metadata(...)`
     /// </summary>
     /// <param name="target">The target object which should receive metadata. Must support <see cref="ToSic.Eav.Metadata.IHasMetadata"/> </param>
     /// <param name="contentTypes">Name of one or more content-types for which to generate the button(s). For many, use comma `,` to separate. If not specified, will try to lookup config (v14)</param>
@@ -93,7 +91,6 @@ public interface IToolbarService
     /// * contentTypes can also have `*` or `YourCustomType,*` in v14
     /// * contentTypes can also be optional, in which case it behaves as if it was `*` in v14 - if no config is found, it will not add a metadata-button
     /// * parameter context added in 2sxc 14 - still WIP/experimental
-    /// * root added in 16.02
     /// </remarks>
     IToolbarBuilder Metadata(
         object target,
@@ -104,5 +101,25 @@ public interface IToolbarService
         object parameters = null,
         object prefill = null,
         string context = null
+    );
+
+
+    /// <summary>
+    /// Build an **empty** Toolbar with a Edit button.
+    /// 
+    /// This is the same as `.Empty().Edit(...)`
+    /// </summary>
+    /// <param name="target">The target object which should receive metadata. Must support <see cref="ToSic.Eav.Metadata.IHasMetadata"/> </param>
+    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v16.02)</param>
+    /// <returns>An toolbar builder with empty configuration and just this button on it</returns>
+    /// <remarks>
+    /// History
+    /// * Added in 2sxc 17
+    /// </remarks>
+    IToolbarBuilder Edit(
+        object target,
+        NoParamOrder noParamOrder = default,
+        Func<ITweakButton, ITweakButton> tweak = default
     );
 }
