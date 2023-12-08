@@ -48,9 +48,9 @@ public class EditLoadSettingsHelper: ServiceBase
     /// - later get from settings
     /// </summary>
     /// <returns></returns>
-    public EditSettingsDto GetSettings(IContextOfApp contextOfApp, List<IContentType> contentTypes,
-        List<JsonContentType> jsonTypes, IAppWorkCtxPlus appWorkCtx) => Log.Func(l =>
+    public EditSettingsDto GetSettings(IContextOfApp contextOfApp, List<IContentType> contentTypes, List<JsonContentType> jsonTypes, IAppWorkCtxPlus appWorkCtx)
     {
+        var l = Log.Fn<EditSettingsDto>();
         var allInputTypes = jsonTypes
             .SelectMany(ct => ct.Attributes.Select(at => at.InputType))
             .Distinct()
@@ -87,17 +87,18 @@ public class EditLoadSettingsHelper: ServiceBase
             Values = finalSettings,
             Entities = SettingsEntities(appWorkCtx, allInputTypes),
         };
-        return settings;
-    });
+        return l.Return(settings);
+    }
         
 
-    public List<JsonEntity> SettingsEntities(IAppWorkCtxPlus appWorkCtx, List<string> allInputTypes) => Log.Func(l =>
+    private List<JsonEntity> SettingsEntities(IAppWorkCtxPlus appWorkCtx, List<string> allInputTypes)
     {
+        var l = Log.Fn<List<JsonEntity>>();
         try
         {
             var hasWysiwyg = allInputTypes.Any(it => it.ContainsInsensitive("wysiwyg"));
             if (!hasWysiwyg)
-                return (new List<JsonEntity>(), "no wysiwyg field");
+                return l.Return(new List<JsonEntity>(), "no wysiwyg field");
 
             var entities = _appEntities.New(appWorkCtx)
                 .GetWithParentAppsExperimental("StringWysiwygConfiguration")
@@ -106,13 +107,13 @@ public class EditLoadSettingsHelper: ServiceBase
             var jsonSerializer = _jsonSerializerGenerator.Value.SetApp(appWorkCtx.AppState);
             var result = entities.Select(e => jsonSerializer.ToJson(e)).ToList();
 
-            return (result, $"{result.Count}");
+            return l.Return(result, $"{result.Count}");
         }
         catch (Exception ex)
         {
             l.Ex(ex);
-            return (new List<JsonEntity>(), "error");
+            return l.Return(new List<JsonEntity>(), "error");
         }
-    });
+    }
         
 }

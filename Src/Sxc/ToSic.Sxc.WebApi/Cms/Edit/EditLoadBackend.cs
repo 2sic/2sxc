@@ -85,8 +85,9 @@ public partial class EditLoadBackend: ServiceBase
     #endregion
 
 
-    public EditDto Load(int appId, List<ItemIdentifier> items) => Log.Func($"load many a#{appId}, items⋮{items.Count}", l =>
+    public EditDto Load(int appId, List<ItemIdentifier> items)
     {
+        var l = Log.Fn<EditDto>($"load many a#{appId}, items⋮{items.Count}");
         // Security check
         var context = _ctxResolver.GetBlockOrSetApp(appId);
         //var showDrafts = context.UserMayEdit;
@@ -133,7 +134,7 @@ public partial class EditLoadBackend: ServiceBase
         // important, this code is shared/duplicated in the EntitiesController.GetManyForEditing
         if (list.Any(set => set.Entity != null))
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out error))
-                throw HttpException.PermissionDenied(error);
+                throw l.Ex(HttpException.PermissionDenied(error));
 
         // load content-types
         var serializerForTypes = _jsonSerializerGenerator.New().SetApp(appState);
@@ -177,18 +178,17 @@ public partial class EditLoadBackend: ServiceBase
         }
             
         // done
-        return (result, $"ready, sending items:{result.Items.Count}, " +
-                        $"types:{result.ContentTypes.Count}, " +
-                        $"inputs:{result.InputTypes.Count}, " +
-                        $"feats:{result.Features.Count}");
-    });
+        var finalMsg = $"items:{result.Items.Count}, types:{result.ContentTypes.Count}, inputs:{result.InputTypes.Count}, feats:{result.Features.Count}";
+        return l.Return(result, finalMsg);
+    }
         
 
     /// <summary>
     /// new 2020-12-08 - correct entity-id with lookup of existing if marked as singleton
     /// </summary>
-    private bool TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, IMetadataSource appState) => Log.Func(l =>
+    private bool TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, IMetadataSource appState)
     {
+        var l = Log.Fn<bool>();
         foreach (var header in list
                      .Where(header => header.For?.Singleton == true && !IsNullOrWhiteSpace(header.ContentTypeName)))
         {
@@ -213,6 +213,6 @@ public partial class EditLoadBackend: ServiceBase
             header.EntityId = !mdList.Any() ? 0 : mdList.First().EntityId;
         }
 
-        return true;
-    });
+        return l.ReturnTrue();
+    }
 }

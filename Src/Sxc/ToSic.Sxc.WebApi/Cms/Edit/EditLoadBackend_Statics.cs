@@ -59,14 +59,14 @@ partial class EditLoadBackend
         return l.Return(ent);
     }
 
-    internal List<IContentType> UsedTypes(List<BundleWithHeader<IEntity>> list, IAppWorkCtx appSysCtx)
+    private List<IContentType> UsedTypes(List<BundleWithHeader<IEntity>> list, IAppWorkCtx appSysCtx)
         => list.Select(i
                 // try to get the entity type, but if there is none (new), look it up according to the header
                 => i.Entity?.Type
                    ?? appSysCtx.AppState.GetContentType(i.Header.ContentTypeName))
             .ToList();
 
-    internal List<InputTypeInfo> GetNecessaryInputTypes(List<JsonContentType> contentTypes, IAppWorkCtxPlus appCtx)
+    private List<InputTypeInfo> GetNecessaryInputTypes(List<JsonContentType> contentTypes, IAppWorkCtxPlus appCtx)
     {
         var l = Log.Fn<List<InputTypeInfo>>($"{nameof(contentTypes)}: {contentTypes.Count}");
         var fields = contentTypes
