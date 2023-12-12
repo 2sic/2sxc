@@ -36,18 +36,18 @@ public class AppConfigDelegate : ServiceBase
     /// <summary>
     /// Generate a delegate which will be used to build the configuration based on a new sxc-instance
     /// </summary>
-    internal Func<App, IAppDataConfiguration> BuildForNewBlock(IContextOfBlock context, IBlock block
-    ) => Log.Func<Func<App, IAppDataConfiguration>>($"showDrafts: {context.UserMayEdit}", () =>
+    internal Func<App, IAppDataConfiguration> BuildForNewBlock(IContextOfBlock context, IBlock block)
     {
-        return appToUse =>
+        var l = Log.Fn<Func<App, IAppDataConfiguration>>($"showDrafts: {context.UserMayEdit}");
+        return l.Return(appToUse =>
         {
             // check if we'll use the config already on the sxc-instance, or generate a new one
             var lookUpEngine = GetLookupEngineForContext(context, appToUse as IApp, block);
 
             // return results
             return new AppDataConfiguration(lookUpEngine);
-        };
-    });
+        });
+    }
 
     /// <summary>
     /// Generate a delegate which will be used to build a basic configuration with very little context
@@ -61,9 +61,9 @@ public class AppConfigDelegate : ServiceBase
 
     // note: not sure yet where the best place for this method is, so it's here for now
     // will probably move again some day
-    internal LookUpEngine GetLookupEngineForContext(IContextOfSite context, IApp appForLookup, IBlock blockForLookup
-    ) => Log.Func($"module: {(context as ContextOfBlock)?.Module.Id}, app: {appForLookup?.AppId} ..., ...", l =>
+    internal LookUpEngine GetLookupEngineForContext(IContextOfSite context, IApp appForLookup, IBlock blockForLookup) 
     {
+        var l = Log.Fn<LookUpEngine>($"module: {(context as ContextOfBlock)?.Module.Id}, app: {appForLookup?.AppId} ..., ...");
         var modId = (context as ContextOfBlock)?.Module.Id ?? 0;
 
         // Find the standard DNN property sources if PortalSettings object is available
@@ -132,6 +132,6 @@ public class AppConfigDelegate : ServiceBase
         else
             l.A("Not in App context, will not add stack for settings/resources");
 
-        return (provider, $"{provider.Sources.Count}");
-    });
+        return l.Return(provider, $"{provider.Sources.Count}");
+    }
 }

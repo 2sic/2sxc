@@ -15,12 +15,10 @@ namespace ToSic.Sxc.WebApi.Save;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class SaveSecurity: SaveHelperBase
 {
-    private readonly Generator<Apps.App> _appGen;
     private readonly Generator<MultiPermissionsTypes> _multiPermissionsTypesGen;
 
-    public SaveSecurity(Generator<Apps.App> appGen, Generator<MultiPermissionsTypes> multiPermissionsTypesGen) : base("Api.SavSec") =>
+    public SaveSecurity(Generator<MultiPermissionsTypes> multiPermissionsTypesGen) : base("Api.SavSec") =>
         ConnectServices(
-            _appGen = appGen,
             _multiPermissionsTypesGen = multiPermissionsTypesGen
         );
 

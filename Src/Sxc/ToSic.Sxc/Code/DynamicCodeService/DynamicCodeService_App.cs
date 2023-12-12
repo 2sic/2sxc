@@ -14,12 +14,7 @@ namespace ToSic.Sxc.Code;
 public partial class DynamicCodeService
 {
     /// <inheritdoc />
-    public IApp App(
-        NoParamOrder noParamOrder = default,
-        int? zoneId = null,
-        int? appId = null,
-        ISite site = null,
-        bool? withUnpublished = null)
+    public IApp App(NoParamOrder noParamOrder = default, int? zoneId = null, int? appId = null, ISite site = null, bool? withUnpublished = null)
     {
         MakeSureLogIsInHistory();
         //Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(App),

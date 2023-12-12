@@ -61,8 +61,7 @@ internal class OqtMailService : MailServiceBase
 
     private Dictionary<string, string> GetSettings()
     {
-        var site = _siteRepositoryLazy.Value.GetSite(App.Site.Id);
-        var settings = _settingRepositoryLazy.Value.GetSettings(EntityNames.Site, site.SiteId).ToList();
+        var settings = _settingRepositoryLazy.Value.GetSettings(EntityNames.Site, App.Site.Id).ToList();
         return settings.OrderBy(item => item.SettingName).ToList().ToDictionary(setting => setting.SettingName, setting => setting.SettingValue);
     }
 }
