@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Decorators;
+﻿using System.Collections.Generic;
+using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Coding;
@@ -50,4 +51,7 @@ public partial class App: IAppTyped
         return _cdfLazy.Value.AsItem(wrapped, propsRequired: propsRequired);
     }
 
+    IEnumerable<IContentType> IAppTyped.GetContentTypes() => AppStateInt.ContentTypes;
+
+    IContentType IAppTyped.GetContentType(string name) => AppStateInt.GetContentType(name);
 }
