@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
@@ -13,16 +12,16 @@ public partial class ToolbarBuilder
     public IToolbarBuilder Info(
         NoParamOrder noParamOrder = default,
         string link = default,
+        string target = default,
         Func<ITweakButton, ITweakButton> tweak = default
-    ) => InfoLikeButton(noParamOrder: noParamOrder, verb: "info", paramsMergeInTweak: link != default ? new { link, } : null, tweak: tweak);
+    ) => InfoLikeButton(noParamOrder: noParamOrder, verb: "info", paramsMergeInTweak: link != default ? new { link, target } : null, tweak: tweak);
 
 
     private IToolbarBuilder InfoLikeButton(
         NoParamOrder noParamOrder,
         string verb,
         object paramsMergeInTweak,
-        Func<ITweakButton, ITweakButton> tweak,
-        [CallerMemberName] string methodName = null
+        Func<ITweakButton, ITweakButton> tweak
     )
     {
         //Eav.Parameters.Protect(noParamOrder, "See docs", methodName: methodName);
