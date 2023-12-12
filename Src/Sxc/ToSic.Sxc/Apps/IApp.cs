@@ -8,9 +8,9 @@ using ToSic.Sxc.Data;
 namespace ToSic.Sxc.Apps;
 
 /// <summary>
-/// An app-object as is available in a razor template or WebApi
+/// An app-object as is available in a razor template or WebApi when in classic/dynamic mode.
 /// </summary>
-[PublicApi_Stable_ForUseInYourCode]
+[PublicApi]
 public interface IApp: 
     Eav.Apps.IApp,
     IAppPaths

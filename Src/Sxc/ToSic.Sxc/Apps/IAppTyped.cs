@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Data;
+﻿using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
@@ -12,7 +10,7 @@ using ToSic.Sxc.Data;
 namespace ToSic.Sxc.Apps;
 
 /// <summary>
-/// An app-object as is available in a razor template or WebApi
+/// An app-object as is available in a razor template or WebApi when in **Typed** mode.
 /// </summary>
 [PublicApi]
 public interface IAppTyped: IAppIdentity
@@ -23,7 +21,7 @@ public interface IAppTyped: IAppIdentity
     string Name { get; }
 
     /// <inheritdoc cref="Eav.Apps.IApp.Data"/>
-    IAppData Data { get; }
+    IAppDataTyped Data { get; }
 
     #endregion
 
@@ -77,21 +75,4 @@ public interface IAppTyped: IAppIdentity
 
     #endregion
 
-    #region ContentTypes
-
-    // Note: Implemented as a method, so later we can apply filters etc. as additional parameters
-    /// <summary>
-    /// All content types of the app.
-    /// </summary>
-    /// <remarks>Added v17</remarks>
-    IEnumerable<IContentType> GetContentTypes();
-
-    /// <summary>
-    /// Get a single content type by name (display name or NameId).
-    /// </summary>
-    /// <param name="name">the name, either the normal name or the NameId which looks like a GUID</param>
-    /// <remarks>Added v17</remarks>
-    IContentType GetContentType(string name);
-
-    #endregion
 }

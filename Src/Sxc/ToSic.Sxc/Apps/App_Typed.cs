@@ -1,9 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.DataSources;
 using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Coding;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Decorators;
@@ -20,10 +25,17 @@ public partial class App: IAppTyped
     private IFolder _folder;
 
     IFolder IAppTyped.FolderAdvanced(NoParamOrder noParamOrder, string location) 
-        => new AppAssetFolderMain(AppPaths, Folder, DetermineShared(location) ?? AppState.IsShared());
+        => new AppAssetFolderMain(AppPaths, Folder, DetermineShared(location) ?? AppStateInt.IsShared());
 
-    IFile IAppTyped.Thumbnail => _thumbnailFile.Get(() => new AppAssetThumbnail(AppState, AppPaths, _globalPaths));
+    IFile IAppTyped.Thumbnail => _thumbnailFile.Get(() => new AppAssetThumbnail(AppStateInt, AppPaths, _globalPaths));
     private readonly GetOnce<IFile> _thumbnailFile = new();
+
+    #endregion
+
+    #region Data
+
+    IAppDataTyped IAppTyped.Data => _data ??= BuildData<AppDataTyped, IAppDataTyped>();
+    private IAppDataTyped _data;
 
     #endregion
 
@@ -51,7 +63,5 @@ public partial class App: IAppTyped
         return _cdfLazy.Value.AsItem(wrapped, propsRequired: propsRequired);
     }
 
-    IEnumerable<IContentType> IAppTyped.GetContentTypes() => AppStateInt.ContentTypes;
 
-    IContentType IAppTyped.GetContentType(string name) => AppStateInt.GetContentType(name);
 }
