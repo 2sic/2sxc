@@ -5,6 +5,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Internal.Loaders;
 using ToSic.Lib.DI;
+using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Images.ImageflowRewrite;
 
 namespace ToSic.Sxc.Dnn.StartUp;
@@ -64,6 +65,9 @@ public class StartupDnn : IServiceRouteMapper
 
         // Optional registration of query string rewrite functionality implementation for dnn imageflow module
         Imageflow.Dnn.StartUp.RegisterQueryStringRewrite(ImageflowRewrite.QueryStringRewrite);
+
+        // Clean the App_Data/2sxc.bin folder
+        MyAppCode.CleanTempAssemblyFolder();
 
         _alreadyConfigured = true;
     }

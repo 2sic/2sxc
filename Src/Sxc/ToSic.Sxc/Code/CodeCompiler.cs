@@ -81,7 +81,7 @@ public abstract class CodeCompiler: ServiceBase
         // if no name provided, use the name which is the same as the file name
         className ??= Path.GetFileNameWithoutExtension(relativePath) ?? Eav.Constants.NullNameId;
 
-        var (assembly, errorMessages) = GetAssembly(relativePath, className);
+        var (assembly, errorMessages) = GetAssembly(relativePath, className).ToTuple();
 
         if (errorMessages != null) return l.Return((null, errorMessages), "error messages");
 
@@ -113,7 +113,7 @@ public abstract class CodeCompiler: ServiceBase
         return l.Return((compiledType, errorMessages), errorMessages == null ? "ok" : "errors");
     }
 
-    protected abstract (Assembly Assembly, string ErrorMessages) GetAssembly(string relativePath, string className);
+    protected internal abstract AssemblyResult GetAssembly(string relativePath, string className, int appId = 0);
 
 
     protected abstract (Type Type, string ErrorMessage) GetCsHtmlType(string relativePath);

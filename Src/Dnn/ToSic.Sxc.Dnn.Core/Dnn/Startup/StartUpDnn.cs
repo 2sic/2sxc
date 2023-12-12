@@ -139,6 +139,12 @@ public static class StartUpDnnCore
         // v15 - move ready check turbo into a service
         services.TryAddTransient<DnnReadyCheckTurbo>();
         //services.TryAddScoped<CodeRootFactory, DnnCodeRootFactory>();
+
+        // v17
+        services.TryAddSingleton<IHostingEnvironmentWrapper, HostingEnvironmentWrapper>();
+        services.TryAddSingleton<IReferencedAssembliesProvider, ReferencedAssembliesProvider>();
+        services.TryAddTransient<MyAppCodeCompiler, MyAppCodeCompilerNetFull>();
+
         return services;
     }
 }

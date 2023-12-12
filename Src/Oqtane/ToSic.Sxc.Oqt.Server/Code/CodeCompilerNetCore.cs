@@ -24,17 +24,17 @@ internal class CodeCompilerNetCore: CodeCompiler
 
     protected override (Type Type, string ErrorMessage) GetCsHtmlType(string virtualPath) 
         => throw new("Runtime Compile of .cshtml is Not Implemented in .net standard / core");
-    protected override (Assembly Assembly, string ErrorMessages) GetAssembly(string virtualPath, string className)
+    protected internal override AssemblyResult GetAssembly(string virtualPath, string className, int appId = 0)
     {
-        var l = Log.Fn<(Assembly Assembly, string ErrorMessages)>(
-            $"{nameof(virtualPath)}: '{virtualPath}'; {nameof(className)}: '{className}'");
+        var l = Log.Fn<AssemblyResult>(
+            $"{nameof(virtualPath)}: '{virtualPath}'; {nameof(className)}: '{className}'; {nameof(appId)}: {appId}", timer: true);
         var fullContentPath = _serverPaths.Value.FullContentPath(virtualPath.Backslash());
         var fullPath = NormalizeFullFilePath(fullContentPath);
         l.A($"New paths: '{fullContentPath}', '{fullPath}'");
         try
         {
             var assembly = new Compiler().Compile(fullPath, className);
-            return l.Return((assembly, null), "ok");
+            return l.ReturnAsOk(new AssemblyResult(assembly));
         }
         catch (Exception ex)
         {
@@ -42,15 +42,14 @@ internal class CodeCompilerNetCore: CodeCompiler
             var errorMessage =
                 $"Error: Can't compile '{className}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. " +
                 ex.Message;
-            return l.Return((null, errorMessage), "error");
+            return l.ReturnAsError(new AssemblyResult(errorMessages: errorMessage), "error");
         }
     }
 
-    /**
-         * Normalize full file path, so it is without redirections like "../" in "dir1/dir2/../file.cs"
-         */
-    public static string NormalizeFullFilePath(string fullPath)
-    {
-        return new FileInfo(fullPath).FullName;
-    }
+    /// <summary>
+    /// Normalize full file path, so it is without redirections like "../" in "dir1/dir2/../file.cs"
+    /// </summary>
+    /// <param name="fullPath"></param>
+    /// <returns></returns>
+    private static string NormalizeFullFilePath(string fullPath) => new FileInfo(fullPath).FullName;
 }

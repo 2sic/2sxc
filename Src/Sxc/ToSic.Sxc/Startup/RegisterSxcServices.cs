@@ -181,6 +181,10 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<WrapObjectTyped>();
         services.TryAddTransient<WrapObjectTypedItem>();
 
+        // v17
+        services.TryAddSingleton<AssemblyCacheManager>();
+        services.TryAddSingleton<MyAppCodeLoader>();
+
         // Add possibly missing fallback services
         // This must always be at the end here so it doesn't accidentally replace something we actually need
         services
@@ -226,7 +230,7 @@ public static partial class RegisterSxcServices
         // WebForms implementations
         services.TryAddScoped<IHttp, HttpNetFramework>();
 #else
-            services.TryAddTransient<IHttp, HttpNetCore>();
+        services.TryAddTransient<IHttp, HttpNetCore>();
 #endif
         return services;
     }

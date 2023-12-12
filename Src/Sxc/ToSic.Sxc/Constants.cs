@@ -8,6 +8,8 @@ public class Constants : Eav.Constants // inherit from EAV constants to make cod
 {
     public const string SxcLogName = "Sxc";
 
+    public const string SxcLogAppCodeLoader = "global-app-code-compiler";
+
     /// <summary>
     /// Additional json-node for metadata in serialized entities, if user has edit rights
     /// </summary>
