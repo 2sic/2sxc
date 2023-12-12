@@ -100,10 +100,7 @@ public static class Factory
     {
         DnnStaticDi.CodeInfos.Warn(V13To17($"ToSic.Sxc.Dnn.Factory.{nameof(DynamicCode)}", "https://go.2sxc.org/brc-13-dnn-factory"));
         return StaticBuild<CodeRootFactory>()
-                .BuildCodeRoot(customCodeOrNull: null, blockBuilder.Block, NewLog(), Constants.CompatibilityLevel10)
-            //.InitDynCodeRoot(blockBuilder.Block, NewLog()) //, Constants.CompatibilityLevel10)
-            //.SetCompatibility(Constants.CompatibilityLevel10)
-            as DnnDynamicCodeRoot;
+                .BuildCodeRoot(customCodeOrNull: null, blockBuilder.Block, NewLog(), Constants.CompatibilityLevel10) as DnnDynamicCodeRoot;
     }
 
     /// <summary>
@@ -119,7 +116,7 @@ public static class Factory
     /// <returns>An initialized App object which you can use to access App.Data</returns>
     [Obsolete("This is obsolete in V13 but will continue to work for now, we plan to remove in v15 or 16. Use the IDynamicCodeService or the IRenderService instead.")]
     public static IApp App(int appId, bool unusedButKeepForApiStability = false, bool showDrafts = false, ILog parentLog = null)
-        => App(AppConstants.AutoLookupZone, appId, null, showDrafts, parentLog ?? NewLog());
+        => App(AutoLookupZoneId, appId, null, showDrafts, parentLog ?? NewLog());
 
     /// <summary>
     /// Get a full app-object for accessing data of the app from outside
@@ -155,8 +152,15 @@ public static class Factory
         bool unusedButKeepForApiStability = false,
         bool showDrafts = false,
         ILog parentLog = null)
-        => App(AppConstants.AutoLookupZone, appId,
-            ((DnnSite)StaticBuild<ISite>()).TryInitPortal(ownerPortalSettings, parentLog), showDrafts, parentLog);
+        => App(AutoLookupZoneId, appId, GetSite(ownerPortalSettings, parentLog), showDrafts, parentLog);
+
+    private static ISite GetSite(PortalSettings altPortalSettings = default, ILog log = default)
+    {
+        var portalSettings = altPortalSettings ?? PortalSettings.Current;
+        var l = log.Fn<ISite>($"{nameof(altPortalSettings)}: {altPortalSettings?.PortalId}; {nameof(portalSettings)}: {portalSettings.PortalId}");
+        var site = ((DnnSite)StaticBuild<ISite>()).TryInitPortal(altPortalSettings, log);
+        return l.Return(site);
+    }
 
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
     private static IApp App(
@@ -171,8 +175,11 @@ public static class Factory
         log.A($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
         var app = StaticBuild<App>(log);
         if (site != null) app.PreInit(site);
-        var appStuff = app.Init(new AppIdentityPure(zoneId, appId), StaticBuild<AppConfigDelegate>(log).Build(showDrafts));
+        site ??= GetSite(log: log);
+        var appIdentity = zoneId == AutoLookupZoneId ? new AppIdentityPure(site.ZoneId, appId) : new AppIdentityPure(zoneId, appId);
+        var appStuff = app.Init(appIdentity, StaticBuild<AppConfigDelegate>(log).Build(showDrafts));
         return appStuff;
     }
 
+    private const int AutoLookupZoneId = -999;
 }

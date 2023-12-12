@@ -118,12 +118,13 @@ namespace ToSic.Sxc.WebApi.Infrastructure
         /// <param name="appId"></param>
         /// <param name="site"></param>
         /// <returns></returns>
-        private IApp LoadAppOnly(int appId, ISite site) => base.Log.Func($"{appId}", () =>
+        private IApp LoadAppOnly(int appId, ISite site)
         {
+            var l = Log.Fn<IApp>($"{appId}");
             var app = _helper.GetService<Apps.App>();
             app.PreInit(site);
-            return app.Init(new AppIdentityPure(AppConstants.AutoLookupZone, appId), _helper.GetService<AppConfigDelegate>().Build());
-        });
+            return l.Return(app.Init(new AppIdentityPure(site.ZoneId, appId), _helper.GetService<AppConfigDelegate>().Build()));
+        }
 
 
         #endregion
