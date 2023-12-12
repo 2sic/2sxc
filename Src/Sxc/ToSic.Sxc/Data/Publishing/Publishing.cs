@@ -1,0 +1,61 @@
+﻿using ToSic.Eav.Apps.State;
+using ToSic.Eav.Data;
+using ToSic.Lib.Helpers;
+using ToSic.Lib.Services;
+
+namespace ToSic.Sxc.Data;
+
+internal class Publishing(ITypedItem currentItem, CodeDataFactory cdf) : HelperBase(cdf.Log, "Pub"), IPublishing
+{
+    private readonly IAppStateInternal _appState = cdf._DynCodeRoot.App.AppState.Internal();
+
+    // Always supported on IEntity
+    public bool IsSupported => true;
+
+    // Entity knows if it's published
+    private bool IsPublished => _isPublished ??= currentItem.Entity.IsPublished;
+    private bool? _isPublished;
+
+    // Either current is published, or the draft has a different RepositoryId
+    public bool HasPublished => IsPublished || currentItem.Entity.RepositoryId != currentItem.Entity.EntityId;
+
+    // Either current is not published, or we found a draft
+    public bool HasUnpublished => !IsPublished || UnpublishedEntity != null;
+
+    // Combination of both must be true
+    public bool HasDraft => HasUnpublished && HasPublished;
+
+    // Get published - either current, or from appState
+    public ITypedItem GetPublished() => _published.Get(() =>
+    {
+        if (IsPublished) return currentItem;
+        var pubEntity = _appState.GetPublished(currentItem.Entity);
+        return pubEntity == null ? null : cdf.AsDynamic(pubEntity, true).TypedItem;
+    });
+    private readonly GetOnce<ITypedItem> _published = new();
+
+    // Get draft - either current, or from appState
+    public ITypedItem GetUnpublished() => _draft.Get(() => !IsPublished
+        ? currentItem
+        : UnpublishedEntity == null
+            ? null
+            : cdf.AsDynamic(UnpublishedEntity, true).TypedItem
+    );
+    private readonly GetOnce<ITypedItem> _draft = new();
+
+    /// <summary>
+    /// Get draft entity - either current, or from appState.
+    /// Do this as a separate step, as we sometimes need the info without converting it to a typed item
+    /// </summary>
+    private IEntity UnpublishedEntity => _unPubEntity.Get(() =>
+    {
+        if (!IsPublished) return currentItem.Entity;
+        var draftEntity = _appState.GetDraft(currentItem.Entity);
+        return draftEntity;
+    });
+    private readonly GetOnce<IEntity> _unPubEntity = new();
+
+    // Get opposite - either draft or published
+    public ITypedItem GetOpposite() => _other.Get(() => IsPublished ? GetUnpublished() : GetPublished());
+    private readonly GetOnce<ITypedItem> _other = new();
+}

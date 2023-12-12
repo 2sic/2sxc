@@ -258,6 +258,11 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
         return Cdf.AsItems(GetHelper.Parents(entity: Entity, type: type, field: field));
     }
 
+    bool ITypedItem.IsPublished => Entity.IsPublished;
+
+    IPublishing ITypedItem.Publishing => _publishing.Get(() => new Publishing(this, Cdf));
+    private readonly GetOnce<IPublishing> _publishing = new();
+
     /// <inheritdoc />
     [PrivateApi]
     IEnumerable<ITypedItem> ITypedItem.Children(string field, NoParamOrder noParamOrder, string type, bool? required)

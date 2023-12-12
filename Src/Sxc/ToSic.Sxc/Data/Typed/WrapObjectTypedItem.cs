@@ -122,6 +122,11 @@ public class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
         return items;
     }
 
+    bool ITypedItem.IsPublished => true;
+
+    IPublishing ITypedItem.Publishing => _publishing.Get(() => new PublishingFallback(this));
+    private readonly GetOnce<IPublishing> _publishing = new();
+
     public ITypedItem Presentation => _presentation.Get(() => CreateItemFromProperty(nameof(Presentation)));
     private readonly GetOnce<ITypedItem> _presentation = new();
 

@@ -5,6 +5,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
@@ -162,6 +163,9 @@ internal partial class Metadata: ITypedItem
         var list = Cdf.AsItems(parents).ToList();
         return list.Any() ? list : new List<ITypedItem>(0);
     }
+
+    IPublishing ITypedItem.Publishing => _publishing.Get(() => new Publishing(this, Cdf));
+    private readonly GetOnce<IPublishing> _publishing = new();
 
     /// <inheritdoc />
     [PrivateApi]
