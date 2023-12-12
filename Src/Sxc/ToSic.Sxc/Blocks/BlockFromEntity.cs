@@ -59,14 +59,10 @@ public sealed class BlockFromEntity: BlockBase
     /// Get the content-block definition if we only have the ID
     /// </summary>
     /// <param name="parent"></param>
-    /// <param name="contentBlockId"></param>
+    /// <param name="contentBlockId">The block ID. Can sometimes be negative to mark inner-content-blocks</param>
     /// <returns></returns>
-    private static IEntity GetBlockEntity(IBlock parent, int contentBlockId)
-    {
-        // for various reasons this can be introduced as a negative value, make sure we neutralize that
-        contentBlockId = Math.Abs(contentBlockId); 
-        return parent.App.Data.List.One(contentBlockId);
-    }
+    private static IEntity GetBlockEntity(IBlock parent, int contentBlockId) 
+        => parent.App.Data.List.One(Math.Abs(contentBlockId));
 
     #region ContentBlock Definition Entity
 
