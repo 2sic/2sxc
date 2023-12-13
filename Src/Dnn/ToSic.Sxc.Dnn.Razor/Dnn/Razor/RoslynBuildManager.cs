@@ -140,6 +140,12 @@ namespace ToSic.Sxc.Dnn.Razor
                 // sink
             }
 
+            // deduplicate referencedAssemblies by filename, keep last duplicate
+            referencedAssemblies = referencedAssemblies
+                .GroupBy(Path.GetFileName)
+                .Select(g => g.Last())
+                .ToList();
+
             return referencedAssemblies;
         }
 
