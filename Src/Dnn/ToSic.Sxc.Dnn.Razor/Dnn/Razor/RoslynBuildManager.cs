@@ -80,21 +80,32 @@ namespace ToSic.Sxc.Dnn.Razor
             // If the assembly was not in the cache, we need to compile it
             if (_generatedAssembly == null)
             {
+                l.A($"Template not found in cache. Path: {templateFullPath}");
+
                 // Initialize the list of referenced assemblies with the default ones
                 _referencedAssemblies = [..DefaultReferencedAssemblies.Value];
 
                 // Roslyn compiler need reference to location of dll, when dll is not in bin folder
-                var appCodeAssembly = AssemblyCacheManager.GetMyAppCode(appId)?.Assembly;
-                if (appCodeAssembly != null) _referencedAssemblies.Add(appCodeAssembly.Location);
+                var myAppCodeAssembly = AssemblyCacheManager.GetMyAppCode(appId)?.Assembly;
+                if (myAppCodeAssembly != null)
+                {
+                    _referencedAssemblies.Add(myAppCodeAssembly.Location);
+                    l.A($"Added reference to MyApp.Code assembly: {myAppCodeAssembly.Location}");
+                }
 
                 // Compile the template
                 _className = GetSafeClassName(templateFullPath);
+                l.A($"Compiling template. Class: {_className}");
+
                 var template = File.ReadAllText(templateFullPath);
                 using (var reader = new StringReader(template))
                 {
                     _generatedAssembly = CompileTemplate(reader);
                     if (_generatedAssembly == null)
+                    {
+                        l.E(_errorMessage);
                         throw new Exception(_errorMessage);
+                    }
                 }
 
                 // Add the compiled assembly to the cache
@@ -106,7 +117,7 @@ namespace ToSic.Sxc.Dnn.Razor
             }
 
             // Find the generated type in the assembly and return it
-            return _generatedAssembly.GetTypes().FirstOrDefault(t => t.Name.StartsWith(_className));
+            return l.ReturnAsOk(_generatedAssembly.GetTypes().FirstOrDefault(t => t.Name.StartsWith(_className)));
         }
 
         private static List<string> GetDefaultReferencedAssemblies()
@@ -146,15 +157,19 @@ namespace ToSic.Sxc.Dnn.Razor
         /// <returns>The compiled assembly.</returns>
         private Assembly CompileTemplate(TextReader templateReader)
         {
+            var l = Log.Fn<Assembly>(timer: true);
+
             // Read the template content
             var template = templateReader.ReadToEnd();
             templateReader.Close();
+            l.A($"Template content length: {template.Length}");
 
             //// fix template
             //template = FixTemplate(template);
 
             // Find the base class for the template
             _baseClass = FindTemplateType(template);
+            l.A($"Base class: {_baseClass}");
 
             // Create the Razor template engine host
             var engine = CreateHost();
@@ -176,7 +191,7 @@ namespace ToSic.Sxc.Dnn.Razor
             var compilerResults = codeProvider.CompileAssemblyFromDom(compilerParameters, razorResults.GeneratedCode);
 
             if (compilerResults.Errors.Count <= 0)
-                return compilerResults.CompiledAssembly;
+                return l.ReturnAsOk(compilerResults.CompiledAssembly);
 
             // Handle compilation errors
             var compileErrors = new StringBuilder();
@@ -184,13 +199,15 @@ namespace ToSic.Sxc.Dnn.Razor
                 compileErrors.AppendLine($"Line: {compileError.Line}, Column: {compileError.Column}, Error: {compileError.ErrorText}");
 
             _errorMessage = compileErrors.ToString();
-            return null;
+            return l.ReturnAsError(null, _errorMessage);
         }
 
         private string[] GetAppFolderPaths(int appId)
         {
+            var l = Log.Fn<string[]>($"{nameof(appId)}: {appId}");
             var appPaths = _appPathsLazy.Value.Init(_site, _appStates.GetReader(appId));
-            return new[] { appPaths.PhysicalPath, appPaths.PhysicalPathShared };
+            l.A($"AppPaths: {appPaths.PhysicalPath}, {appPaths.PhysicalPathShared}");
+            return l.ReturnAsOk([appPaths.PhysicalPath, appPaths.PhysicalPathShared]);
         }
 
         /// <summary>
@@ -224,18 +241,6 @@ namespace ToSic.Sxc.Dnn.Razor
                 return "System.Web.WebPages.WebPageBase";
             }
         }
-
-        //private string FixTemplate(string template)
-        //{
-        //    // find all lines that starts with @inherits and remove ; if there is one on the end of the line
-        //    var lines = template.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
-        //    for (var i = 0; i < lines.Length; i++)
-        //    {
-        //        if (!lines[i].Contains("@inherits ")) continue;
-        //        if (lines[i].Trim().EndsWith(";")) lines[i] = lines[i].Substring(0, lines[i].Length - 1);
-        //    }
-        //    return string.Join("\r\n", lines);
-        //}
 
         /// <summary>
         /// Creates a new instance of the RazorTemplateEngine class with the specified configuration.
