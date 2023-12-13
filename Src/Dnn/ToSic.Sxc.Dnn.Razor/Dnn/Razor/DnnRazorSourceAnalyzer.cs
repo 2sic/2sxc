@@ -63,8 +63,8 @@ public class DnnRazorSourceAnalyzer: ServiceBase
         if (ns.IsEmptyOrWs())
             return l.Return(CodeFileInfo.CodeFileUnknown);
 
-        var myAppMatch = Regex.Match(contents, @"@using\s+(?<MyApp>[\w\.]+)", RegexOptions.Multiline);
-        var myApp = myAppMatch.Success && myAppMatch.Groups["MyApp"].Value.EqualsInsensitive("MyApp.Code");
+        var myAppMatch = Regex.Match(contents, @"@using\s+MyApp\.Code", RegexOptions.Multiline);
+        var myApp = myAppMatch.Success;
 
         var findMatch = CodeFileInfo.CodeFileList
             .FirstOrDefault(cf => cf.Inherits.EqualsInsensitive(ns)  && cf.MyApp == myApp);
