@@ -33,7 +33,7 @@ public interface IPublishing
     /// <summary>
     /// True if this item **branches** meaning it has a published version _and_ an unpublished draft version.
     /// </summary>
-    bool HasDraft { get; }
+    bool HasBoth { get; }
 
     /// <summary>
     /// Get the published version of this item.

@@ -23,7 +23,7 @@ internal class Publishing(ITypedItem currentItem, CodeDataFactory cdf) : HelperB
     public bool HasUnpublished => !IsPublished || UnpublishedEntity != null;
 
     // Combination of both must be true
-    public bool HasDraft => HasUnpublished && HasPublished;
+    public bool HasBoth => HasUnpublished && HasPublished;
 
     // Get published - either current, or from appState
     public ITypedItem GetPublished() => _published.Get(() =>
