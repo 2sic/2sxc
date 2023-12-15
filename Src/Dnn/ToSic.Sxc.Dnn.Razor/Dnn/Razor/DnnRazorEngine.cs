@@ -39,16 +39,17 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     private readonly LazySvc<DnnRazorSourceAnalyzer> _sourceAnalyzer;
     private readonly LazySvc<MyAppCodeLoader> _myAppCodeLoader;
     private readonly LazySvc<RoslynBuildManager> _roslynBuildManager;
+    private readonly AssemblyResolver _assemblyResolver;
 
-    public DnnRazorEngine(MyServices helpers, CodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<DnnRazorSourceAnalyzer> sourceAnalyzer, LazySvc<MyAppCodeLoader> myAppCodeLoader, LazySvc<RoslynBuildManager> roslynBuildManager) : base(helpers)
+    public DnnRazorEngine(MyServices helpers, CodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<DnnRazorSourceAnalyzer> sourceAnalyzer, LazySvc<MyAppCodeLoader> myAppCodeLoader, LazySvc<RoslynBuildManager> roslynBuildManager, AssemblyResolver assemblyResolver) : base(helpers)
     {
-        _myAppCodeLoader = myAppCodeLoader;
         ConnectServices(
             _codeRootFactory = codeRootFactory,
             _errorHelp = errorHelp,
             _sourceAnalyzer = sourceAnalyzer,
             _myAppCodeLoader = myAppCodeLoader,
-            _roslynBuildManager = roslynBuildManager
+            _roslynBuildManager = roslynBuildManager,
+            _assemblyResolver = assemblyResolver
         );
     }
 
@@ -106,7 +107,6 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
 
         try
         {
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
             page.ExecutePageHierarchy(new WebPageContext(HttpContextCurrent, page, data), writer, page);
         }
         catch (Exception maybeIEntityCast)
@@ -116,21 +116,12 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
             ExceptionDispatchInfo.Capture(ex).Throw();
             throw; // fake throw, just so the code shows what happens
         }
-        finally
-        {
-            AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
-        }
+
         return l.Return((writer, page.SysHlp.ExceptionsOrNull));
     }
 
     [PrivateApi]
-    Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-    {
-        if (args.Name == _appCodeAssembly?.FullName)
-            return _appCodeAssembly;
-        return null;
-    }
-    private Assembly _appCodeAssembly = null;
+    protected override (string, List<Exception>) RenderImplementation(object data) => RenderImplementation(Webpage, data);
 
     [PrivateApi]
     protected override (string, List<Exception>) RenderImplementation(object data)
@@ -149,7 +140,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
         var razorType = _sourceAnalyzer.Value.TypeOfVirtualPath(TemplatePath);
         try
         {
-            _appCodeAssembly = _myAppCodeLoader.Value.GetAppCodeAssemblyOrNull(App.AppId);
+            _assemblyResolver.AddAssembly(_myAppCodeLoader.Value.GetAppCodeAssemblyOrNull(App.AppId));
             compiledType = razorType.MyApp 
                 ? _roslynBuildManager.Value.GetCompiledType(TemplatePath, App.AppId)
                 : BuildManager.GetCompiledType(TemplatePath);
