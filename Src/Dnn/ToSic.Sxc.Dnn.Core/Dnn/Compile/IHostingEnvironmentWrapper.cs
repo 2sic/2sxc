@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Dnn.Compile
 {
-    [InternalApi_DoNotUse_MayChangeWithoutNotice()]
+    [PrivateApi]
     public interface IHostingEnvironmentWrapper
     {
         string MapPath(string virtualPath);

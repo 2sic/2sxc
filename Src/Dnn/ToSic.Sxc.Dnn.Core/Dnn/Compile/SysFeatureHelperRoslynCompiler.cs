@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Dnn.Compile.AppDomain;
 
 namespace ToSic.Sxc.Dnn.Compile;
 
+[PrivateApi]
 internal class RoslynCompilerCapability
 {
     internal static bool CheckCsharpLangVersion(int version) => CsharpLangVersions.Contains(value: version);

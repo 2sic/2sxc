@@ -5,7 +5,7 @@ using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Dnn.Compile
 {
-    [InternalApi_DoNotUse_MayChangeWithoutNotice()]
+    [PrivateApi]
     public class ReferencedAssembliesProvider : IReferencedAssembliesProvider
     {
         public string[] Locations() => 

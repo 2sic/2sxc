@@ -1,11 +1,13 @@
 ﻿using System.IO;
 using System.Web;
+using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Dnn.Compile
 {
     /// <summary>
     /// DNN on start need to clean the "2sxc.bin", because it is used to temporary save shared temp MyAppCode assemblies.
     /// </summary>
+    [PrivateApi]
     public static class MyAppCode
     {
         private static bool Cleaned { get; set; }

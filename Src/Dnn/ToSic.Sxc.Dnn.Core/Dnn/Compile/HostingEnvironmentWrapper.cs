@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Dnn.Compile
     /// wrapper around HostingEnvironment
     /// </summary>
     /// <remarks>to mock the wrapper in unit tests</remarks>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice()]
+    [PrivateApi]
     public class HostingEnvironmentWrapper : IHostingEnvironmentWrapper
     {
         /// <summary>Maps a virtual path to a physical path on the server.</summary>
