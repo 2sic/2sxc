@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Caching;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Paths;
+using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
@@ -41,10 +43,9 @@ namespace ToSic.Sxc.Code
         {
             var l = callerLog.Fn<AssemblyResult>($"{nameof(appId)}: {appId}");
 
-            // TODO: PROBABLY CHANGE to just use GetAppCode
-            var cacheKey = AssemblyCacheManager.KeyAppCode(appId);
-            return AssemblyCacheManager.Has(cacheKey) 
-                ? l.ReturnAsOk(AssemblyCacheManager.Get(cacheKey)) 
+            var (result, _) = AssemblyCacheManager.TryGetAppCode(appId);
+            return result != null
+                ? l.ReturnAsOk(result)
                 : l.ReturnNull();
         }
 
@@ -73,9 +74,9 @@ namespace ToSic.Sxc.Code
         {
             var l = Log.Fn<AssemblyResult>($"{nameof(appId)}: {appId}");
 
-            var cacheKey = AssemblyCacheManager.KeyAppCode(appId);
-            if (AssemblyCacheManager.Has(cacheKey))
-                return l.ReturnAsOk(AssemblyCacheManager.Get(cacheKey));
+            var (result, cacheKey) = AssemblyCacheManager.TryGetAppCode(appId);
+            if (result != null)
+                return l.ReturnAsOk(result);
 
             // Get paths
             var (physicalPath, relativePath) = GetAppPaths(appId, MyAppCodeFolder);
@@ -89,12 +90,19 @@ namespace ToSic.Sxc.Code
             if (assemblyResult.ErrorMessages.HasValue()) 
                 return l.ReturnAsError(assemblyResult, assemblyResult.ErrorMessages);
 
+            assemblyResult.WatcherFolders = new[] { physicalPath };
+
             var (refsAssemblyPath, _) = GetAppPaths(appId, MyAppBinFolder);
             CopyAssemblyForRefs(assemblyResult.AssemblyLocations[1], Path.Combine(refsAssemblyPath, MyAppCodeDll));
 
-            // ??? what exactly should this do?
-            _assemblyCacheManager.Add(cacheKey, assemblyResult, appPaths: new[] { physicalPath },
-                updateCallback: _ => AssembliesDelete(assemblyResult.AssemblyLocations.Append(refsAssemblyPath)));
+            // Add compiled assembly to cache
+            _assemblyCacheManager.Add(
+                cacheKey,
+                assemblyResult,
+                changeMonitor: new ChangeMonitor[] { new FolderChangeMonitor(assemblyResult.WatcherFolders) },
+                //appPaths: new[] { physicalPath },
+                updateCallback: _ => AssembliesDelete(assemblyResult.AssemblyLocations.Append(refsAssemblyPath))
+            );
 
             return l.ReturnAsOk(assemblyResult);
         }

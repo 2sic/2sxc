@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Caching;
 using System.Text;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Razor;
 using System.Web.Razor.Generator;
 using System.Web.WebPages;
+using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
@@ -21,6 +23,8 @@ namespace ToSic.Sxc.Dnn.Razor
     /// </summary>
     public class RoslynBuildManager : ServiceBase
     {
+        private const string DefaultNamespace = "RazorHost";
+
         // TODO: @STV - probably not needed, see below
         //private readonly ISite _site;
         //private readonly IAppStates _appStates;
@@ -56,17 +60,21 @@ namespace ToSic.Sxc.Dnn.Razor
             var templateFullPath = HostingEnvironment.MapPath(templatePath);
 
             // Check if the template is already in the assembly cache
-            Assembly generatedAssembly = null;
-            string className = null;
-            if (AssemblyCacheManager.HasTemplate(templateFullPath))
+            var (result, cacheKey) = AssemblyCacheManager.TryGetTemplate(templateFullPath);
+            if (result != null) // AssemblyCacheManager.HasTemplate(templateFullPath))
             {
-                var assemblyResult = AssemblyCacheManager.GetTemplate(templateFullPath);
-                generatedAssembly = assemblyResult?.Assembly;
-                className = assemblyResult?.SafeClassName;
-                l.A($"Template found in cache. Assembly: {generatedAssembly?.FullName}, Class: {className}");
+                //var assemblyResult = AssemblyCacheManager.GetTemplate(templateFullPath);
+                var cacheAssembly = /*assemblyResult?*/result.Assembly;
+                var cacheClassName = /*assemblyResult?*/result.SafeClassName;
+                l.A($"Template found in cache. Assembly: {cacheAssembly?.FullName}, Class: {cacheClassName}");
+                if (/*cacheAssembly*/ result.MainType != null)
+                    return l.ReturnAsOk(result.MainType);// cacheAssembly.GetType(cacheClassName));
+                    // before: return l.ReturnAsOk(cacheAssembly.GetTypes().FirstOrDefault(t => t.Name.StartsWith(cacheClassName)));
             }
 
             // If the assembly was not in the cache, we need to compile it
+            Assembly generatedAssembly = null;
+            string className = null;
             if (generatedAssembly == null)
             {
                 l.A($"Template not found in cache. Path: {templateFullPath}");
@@ -75,7 +83,8 @@ namespace ToSic.Sxc.Dnn.Razor
                 List<string> referencedAssemblies = [.. DefaultReferencedAssemblies.Value];
 
                 // Roslyn compiler need reference to location of dll, when dll is not in bin folder
-                var myAppCodeAssembly = AssemblyCacheManager.GetMyAppCode(appId)?.Assembly;
+                var appCode = AssemblyCacheManager.TryGetAppCode(appId);
+                var myAppCodeAssembly = appCode.Result?.Assembly;
                 if (myAppCodeAssembly != null)
                 {
                     referencedAssemblies.Add(myAppCodeAssembly.Location);
@@ -98,12 +107,31 @@ namespace ToSic.Sxc.Dnn.Razor
                 // ...but there is no reason for this, the file can only be in one path and never in two
                 // ...also throws errors when adding to cache, because the global path often doesn't exist
                 //var appPaths = GetAppFolderPaths(appId);
-                var appPaths = new [] { Path.GetDirectoryName(templateFullPath) };
+                //var appPaths = new [] { Path.GetDirectoryName(templateFullPath) };
+
+                // Changed again: better to only monitor the current file
+                // otherwise all caches keep getting flushed when any file changes
+                // TODO: must also watch for global shared code changes
+
+                var fileChangeMon = new HostFileChangeMonitor(new[] { templateFullPath });
+                var sharedFolderChangeMon = appCode.Result == null ? null : new FolderChangeMonitor(appCode.Result.WatcherFolders);
+                var changeMonitors = appCode.Result == null 
+                    ? new ChangeMonitor[] { fileChangeMon } 
+                    : [fileChangeMon, sharedFolderChangeMon];
+
+                // FYI: @STV - added ability to directly attach a type to the cache
+                // TODO: @STV - you used StartsWith, I changed it to use the full namespace. is that ok?
+                var mainType = generatedAssembly.GetType($"{DefaultNamespace}.{className}");
+                l.A($"Main type: {mainType}");
+                //var typeWithSearch = generatedAssembly.GetTypes().FirstOrDefault(t => t.Name.StartsWith(className));
+                //l.A($"Type with search: {typeWithSearch}");
                 _assemblyCacheManager.Add(
-                    cacheKey: AssemblyCacheManager.KeyTemplate(templateFullPath),
-                    data: new AssemblyResult(generatedAssembly, safeClassName: className),
+                    cacheKey: cacheKey,
+                    data: new AssemblyResult(generatedAssembly, safeClassName: className, mainType: mainType),
                     duration: 3600,
-                    appPaths: appPaths);
+                    changeMonitor: changeMonitors,
+                    //appPaths: appPaths,
+                    updateCallback: null);
             }
 
             // Find the generated type in the assembly and return it
@@ -179,20 +207,25 @@ namespace ToSic.Sxc.Dnn.Razor
             // Create the Razor template engine host
             var engine = CreateHost(className, baseClass);
 
+            var lTimer = Log.Fn("Generate Code", timer: true);
             using var reader = new StringReader(template);
             var razorResults = engine.GenerateCode(reader);
+            lTimer.Done();
 
-            var codeProvider = new Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider();
-
+            lTimer = Log.Fn("Compiler Params", timer: true);
             var compilerParameters = new CompilerParameters([.. referencedAssemblies])
             {
                 GenerateInMemory = true,
                 IncludeDebugInformation = true,
                 TreatWarningsAsErrors = false
             };
+            lTimer.Done();
 
             // Compile the template into an assembly
+            lTimer = Log.Fn("Compile", timer: true);
+            var codeProvider = new Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider();
             var compilerResults = codeProvider.CompileAssemblyFromDom(compilerParameters, razorResults.GeneratedCode);
+            lTimer.Done();
             //var compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, template);
 
             //var mappings = razorResults.DesignTimeLineMappings;
@@ -258,18 +291,29 @@ namespace ToSic.Sxc.Dnn.Razor
 
         /// <summary>
         /// Creates a new instance of the RazorTemplateEngine class with the specified configuration.
+        ///
+        /// Basically imitating https://github.com/Antaris/RazorEngine/blob/master/src/source/RazorEngine.Core/Compilation/CompilerServiceBase.cs#L203-L229
         /// </summary>
         /// <returns>The initialized RazorTemplateEngine instance.</returns>
         private RazorTemplateEngine CreateHost(string className, string baseClass)
         {
+            var l = Log.Fn<RazorTemplateEngine>($"{nameof(className)}: '{className}'; {nameof(baseClass)}: '{baseClass}'", timer: true);
+
             var host = new RazorEngineHost(new CSharpRazorCodeLanguage())
             {
                 DefaultBaseClass = baseClass,
                 DefaultClassName = className,
-                DefaultNamespace = "RazorHost"
+                DefaultNamespace = DefaultNamespace
             };
 
-            var context = new GeneratedClassContext("Execute", "Write", "WriteLiteral", "WriteTo", "WriteLiteralTo", typeof(HelperResult).FullName, "DefineSection")
+            var context = new GeneratedClassContext(
+                "Execute",
+                "Write",
+                "WriteLiteral", 
+                "WriteTo",
+                "WriteLiteralTo",
+                typeof(HelperResult).FullName,
+                "DefineSection")
             {
                 ResolveUrlMethodName = "ResolveUrl"
             };
@@ -278,7 +322,8 @@ namespace ToSic.Sxc.Dnn.Razor
 
             //foreach (var ns in ReferencedNamespaces) host.NamespaceImports.Add(ns);
 
-            return new RazorTemplateEngine(host);
+            var engine = new RazorTemplateEngine(host);
+            return l.ReturnAsOk(engine);
         }
     }
 }
