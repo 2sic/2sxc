@@ -40,23 +40,7 @@ namespace ToSic.Sxc.Dnn.Razor
             );
         }
 
-        private string _className;
-        private string _baseClass;
-        //private List<string> _referencedAssemblies;
-        //private string _errorMessage;
-
         private static readonly Lazy<List<string>> DefaultReferencedAssemblies = new(GetDefaultReferencedAssemblies);
-
-        // TODO: @STV THIS LOOKS problematic, make sure we don't add anything which isn't included by default #Compile
-        //private static readonly List<string> ReferencedNamespaces =
-        //[
-        //    "System",
-        //    "System.Text",
-        //    "System.Collections.Generic",
-        //    "System.Linq",
-        //    "System.IO",
-        //    "System.Web.WebPages"
-        //];
 
         /// <summary>
         /// Manage template compilations, cache the assembly and returns the generated type.
@@ -72,12 +56,13 @@ namespace ToSic.Sxc.Dnn.Razor
 
             // Check if the template is already in the assembly cache
             Assembly generatedAssembly = null;
+            string className = null;
             if (AssemblyCacheManager.HasTemplate(templateFullPath))
             {
                 var assemblyResult = AssemblyCacheManager.GetTemplate(templateFullPath);
                 generatedAssembly = assemblyResult?.Assembly;
-                _className = assemblyResult?.SafeClassName;
-                l.A($"Template found in cache. Assembly: {generatedAssembly?.FullName}, Class: {_className}");
+                className = assemblyResult?.SafeClassName;
+                l.A($"Template found in cache. Assembly: {generatedAssembly?.FullName}, Class: {className}");
             }
 
             // If the assembly was not in the cache, we need to compile it
@@ -86,7 +71,7 @@ namespace ToSic.Sxc.Dnn.Razor
                 l.A($"Template not found in cache. Path: {templateFullPath}");
 
                 // Initialize the list of referenced assemblies with the default ones
-                List<string> referencedAssemblies = [..DefaultReferencedAssemblies.Value];
+                List<string> referencedAssemblies = [.. DefaultReferencedAssemblies.Value];
 
                 // Roslyn compiler need reference to location of dll, when dll is not in bin folder
                 var myAppCodeAssembly = AssemblyCacheManager.GetMyAppCode(appId)?.Assembly;
@@ -97,11 +82,11 @@ namespace ToSic.Sxc.Dnn.Razor
                 }
 
                 // Compile the template
-                _className = GetSafeClassName(templateFullPath);
-                l.A($"Compiling template. Class: {_className}");
+                className = GetSafeClassName(templateFullPath);
+                l.A($"Compiling template. Class: {className}");
 
                 var template = File.ReadAllText(templateFullPath);
-                (generatedAssembly, var errors) = CompileTemplate(template, referencedAssemblies);
+                (generatedAssembly, var errors) = CompileTemplate(template, referencedAssemblies, className);
                 if (generatedAssembly == null)
                     throw l.Ex(new Exception(
                         $"Found {errors.Count} errors compiling Razor '{templateFullPath}' (length: {template.Length}, lines: {template.Split('\n').Length}): {ErrorMessagesFromCompileErrors(errors)}"));
@@ -109,13 +94,13 @@ namespace ToSic.Sxc.Dnn.Razor
                 // Add the compiled assembly to the cache
                 _assemblyCacheManager.Add(
                     cacheKey: AssemblyCacheManager.KeyTemplate(templateFullPath),
-                    data: new AssemblyResult(generatedAssembly, safeClassName: _className),
+                    data: new AssemblyResult(generatedAssembly, safeClassName: className),
                     duration: 3600,
                     appPaths: GetAppFolderPaths(appId));
             }
 
             // Find the generated type in the assembly and return it
-            return l.ReturnAsOk(generatedAssembly.GetTypes().FirstOrDefault(t => t.Name.StartsWith(_className)));
+            return l.ReturnAsOk(generatedAssembly.GetTypes().FirstOrDefault(t => t.Name.StartsWith(className)));
         }
 
         private static List<string> GetDefaultReferencedAssemblies()
@@ -149,16 +134,31 @@ namespace ToSic.Sxc.Dnn.Razor
 
         private string GetSafeClassName(string templateFullPath)
         {
-            if (string.IsNullOrWhiteSpace(templateFullPath))
-                return "RazorView" + Guid.NewGuid().ToString().Replace("-", "_");
-            return "RazorView" + Path.GetFileNameWithoutExtension(templateFullPath).Replace("-", "_");
+            if (!string.IsNullOrWhiteSpace(templateFullPath))
+                return "RazorView" + GetSafeString(Path.GetFileNameWithoutExtension(templateFullPath));
+
+            // Fallback class name with a unique identifier
+            return "RazorView" + Guid.NewGuid().ToString("N");
         }
+
+        private static string GetSafeString(string input)
+        {
+            var safeChars = input.Where(c => char.IsLetterOrDigit(c) || c == '_').ToArray();
+            var safeString = new string(safeChars);
+
+            // Ensure the class name starts with a letter or underscore
+            if (!char.IsLetter(safeString.FirstOrDefault()) && safeString.FirstOrDefault() != '_')
+                safeString = "_" + safeString;
+
+            return safeString;
+        }
+
 
         /// <summary>
         /// Compiles the template into an assembly.
         /// </summary>
         /// <returns>The compiled assembly.</returns>
-        private (Assembly Assembly, List<CompilerError> Errors) CompileTemplate(string template, List<string> referencedAssemblies)
+        private (Assembly Assembly, List<CompilerError> Errors) CompileTemplate(string template, List<string> referencedAssemblies, string className)
         {
             var l = Log.Fn<(Assembly, List<CompilerError>)>(timer: true, parameters: $"Template content length: {template.Length}");
 
@@ -166,11 +166,11 @@ namespace ToSic.Sxc.Dnn.Razor
             //template = FixTemplate(template);
 
             // Find the base class for the template
-            _baseClass = FindTemplateType(template);
-            l.A($"Base class: {_baseClass}");
+            var baseClass = FindTemplateType(template);
+            l.A($"Base class: {baseClass}");
 
             // Create the Razor template engine host
-            var engine = CreateHost();
+            var engine = CreateHost(className, baseClass);
 
             using var reader = new StringReader(template);
             var razorResults = engine.GenerateCode(reader);
@@ -252,12 +252,12 @@ namespace ToSic.Sxc.Dnn.Razor
         /// Creates a new instance of the RazorTemplateEngine class with the specified configuration.
         /// </summary>
         /// <returns>The initialized RazorTemplateEngine instance.</returns>
-        private RazorTemplateEngine CreateHost()
+        private RazorTemplateEngine CreateHost(string className, string baseClass)
         {
             var host = new RazorEngineHost(new CSharpRazorCodeLanguage())
             {
-                DefaultBaseClass = _baseClass,
-                DefaultClassName = _className,
+                DefaultBaseClass = baseClass,
+                DefaultClassName = className,
                 DefaultNamespace = "RazorHost"
             };
 
