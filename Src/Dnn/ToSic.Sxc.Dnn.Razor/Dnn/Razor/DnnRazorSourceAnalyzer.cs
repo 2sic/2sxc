@@ -61,8 +61,7 @@ public class DnnRazorSourceAnalyzer() : ServiceBase("Dnn.RzrSrc")
         if (ns.IsEmptyOrWs())
             return l.Return(CodeFileInfo.CodeFileUnknown);
 
-        var myAppMatch = Regex.Match(contents, @"@using\s+MyApp\.Code", RegexOptions.Multiline);
-        var myApp = myAppMatch.Success;
+        var myApp = IsMyAppCodeUsed(contents);
 
         var findMatch = CodeFileInfo.CodeFileList
             .FirstOrDefault(cf => cf.Inherits.EqualsInsensitive(ns)  && cf.MyApp == myApp);
@@ -71,4 +70,23 @@ public class DnnRazorSourceAnalyzer() : ServiceBase("Dnn.RzrSrc")
             ? l.ReturnAndLog(findMatch)
             : l.Return(CodeFileInfo.CodeFileOther, $"namespace '{ns}' can't be found");
     }
-}
+
+    private static bool IsMyAppCodeUsed(string sourceCode)
+    {
+        const string pattern = @"
+        # Ignore leading whitespaces
+        (?<=^\s*)
+
+        # Match the @using statement
+        @using\s+MyApp\.Code
+
+        # Ensure that it's not part of a comment
+        (?<!@(/\*)[\s\S]*?@using\s+MyApp\.Code) # Not in Razor comment
+        ";
+
+        var options = RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace;
+        var myAppMatch = Regex.Match(sourceCode, pattern, options);
+
+        return myAppMatch.Success;
+    }
+ }
