@@ -10,10 +10,6 @@ using System.Web.Hosting;
 using System.Web.Razor;
 using System.Web.Razor.Generator;
 using System.Web.WebPages;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Paths;
-using ToSic.Eav.Context;
-using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
@@ -25,17 +21,22 @@ namespace ToSic.Sxc.Dnn.Razor
     /// </summary>
     public class RoslynBuildManager : ServiceBase
     {
-        private readonly ISite _site;
-        private readonly IAppStates _appStates;
-        private readonly LazySvc<IAppPathsMicroSvc> _appPathsLazy;
+        // TODO: @STV - probably not needed, see below
+        //private readonly ISite _site;
+        //private readonly IAppStates _appStates;
+        //private readonly LazySvc<IAppPathsMicroSvc> _appPathsLazy;
         private readonly AssemblyCacheManager _assemblyCacheManager;
 
-        public RoslynBuildManager(ISite site, IAppStates appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, AssemblyCacheManager assemblyCacheManager) : base("Dnn.RoslynBuildManager")
+        public RoslynBuildManager(
+            // TODO: @STV - probably not needed, see below
+            //ISite site, IAppStates appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, 
+            AssemblyCacheManager assemblyCacheManager) : base("Dnn.RoslynBuildManager")
         {
             ConnectServices(
-                _site = site,
-                _appStates = appStates,
-                _appPathsLazy = appPathsLazy,
+                // TODO: @STV - probably not needed, see below
+                //_site = site,
+                //_appStates = appStates,
+                //_appPathsLazy = appPathsLazy,
                 _assemblyCacheManager = assemblyCacheManager
             );
         }
@@ -92,11 +93,17 @@ namespace ToSic.Sxc.Dnn.Razor
                         $"Found {errors.Count} errors compiling Razor '{templateFullPath}' (length: {template.Length}, lines: {template.Split('\n').Length}): {ErrorMessagesFromCompileErrors(errors)}"));
 
                 // Add the compiled assembly to the cache
+
+                // TODO: @STV - original tried to get both global and shared path
+                // ...but there is no reason for this, the file can only be in one path and never in two
+                // ...also throws errors when adding to cache, because the global path often doesn't exist
+                //var appPaths = GetAppFolderPaths(appId);
+                var appPaths = new [] { Path.GetDirectoryName(templateFullPath) };
                 _assemblyCacheManager.Add(
                     cacheKey: AssemblyCacheManager.KeyTemplate(templateFullPath),
                     data: new AssemblyResult(generatedAssembly, safeClassName: className),
                     duration: 3600,
-                    appPaths: GetAppFolderPaths(appId));
+                    appPaths: appPaths);
             }
 
             // Find the generated type in the assembly and return it
@@ -208,13 +215,14 @@ namespace ToSic.Sxc.Dnn.Razor
             return l.ReturnAsOk(compileErrors.ToString());
         }
 
-        private string[] GetAppFolderPaths(int appId)
-        {
-            var l = Log.Fn<string[]>($"{nameof(appId)}: {appId}");
-            var appPaths = _appPathsLazy.Value.Init(_site, _appStates.GetReader(appId));
-            l.A($"AppPaths: {appPaths.PhysicalPath}, {appPaths.PhysicalPathShared}");
-            return l.ReturnAsOk([appPaths.PhysicalPath, appPaths.PhysicalPathShared]);
-        }
+        // TODO: @STV - probably not needed, see above
+        //private string[] GetAppFolderPaths(int appId)
+        //{
+        //    var l = Log.Fn<string[]>($"{nameof(appId)}: {appId}");
+        //    var appPaths = _appPathsLazy.Value.Init(_site, _appStates.GetReader(appId));
+        //    l.A($"AppPaths: {appPaths.PhysicalPath}, {appPaths.PhysicalPathShared}");
+        //    return l.ReturnAsOk([appPaths.PhysicalPath, appPaths.PhysicalPathShared]);
+        //}
 
         /// <summary>
         /// Finds the type of the template based on the template content.

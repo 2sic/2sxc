@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Caching;
 using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Lib.Documentation;
@@ -35,31 +36,46 @@ namespace ToSic.Sxc.Code
 
         public string Add(string cacheKey, AssemblyResult data, int duration = 3600, IList<string> appPaths = null, CacheEntryUpdateCallback updateCallback = null)
         {
-            var l = Log.Fn<string>($"key: {cacheKey}", timer: true);
+            var l = Log.Fn<string>($"{nameof(cacheKey)}: {cacheKey}; {nameof(duration)}: {duration}", timer: true);
+
+            // Never store 0, that's like never-expire
+            if (duration == 0) duration = 1;
+            var expiration = new TimeSpan(0, 0, duration);
+            var policy = new CacheItemPolicy { SlidingExpiration = expiration };
+
+            // Try set app change folder monitor
+            if (appPaths is { Count: > 0 })
+                try
+                {
+                    l.Do(message: $"Add FolderChangeMonitor for {appPaths.Count} paths; first: '{appPaths[0]}'", timer: true,
+                        action: () => policy.ChangeMonitors.Add(new FolderChangeMonitor(appPaths)));
+                }
+                catch (Exception ex)
+                {
+                    l.E("Error during set app folder ChangeMonitor");
+                    l.Ex(ex);
+                    /* ignore for now */
+                    return l.ReturnAsError("error");
+                }
+
+            // Register Callback - usually to remove something from another cache
+            if (updateCallback != null)
+                policy.UpdateCallback = updateCallback;
+
+            // Try to add to cache
             try
             {
-                // Never store 0, that's like never-expire
-                if (duration == 0) duration = 1;
-                var expiration = new TimeSpan(0, 0, duration);
-                var policy = new CacheItemPolicy { SlidingExpiration = expiration };
-
-                if (appPaths != null && appPaths.Count > 0)
-                    l.Do(message: "changeMonitors add FolderChangeMonitor", timer: true, action: () =>
-                        policy.ChangeMonitors.Add(new FolderChangeMonitor(appPaths)));
-
-                if (updateCallback != null)
-                    policy.UpdateCallback = updateCallback;
-
-                l.Do(message: $"cache set cacheKey:{cacheKey}", timer: true, action: () => 
-                    Cache.Set(new CacheItem(cacheKey, data), policy));
+                l.Do(message: $"cache set cacheKey:{cacheKey}", timer: true, 
+                    action: () => Cache.Set(new CacheItem(cacheKey, data), policy));
 
                 return l.ReturnAsOk(cacheKey);
             }
-            catch
+            catch (Exception ex)
             {
+                l.Ex(ex);
                 /* ignore for now */
+                return l.ReturnAsError("error");
             }
-            return l.ReturnAsError("error");
         }
 
         private static MemoryCache Cache => MemoryCache.Default;

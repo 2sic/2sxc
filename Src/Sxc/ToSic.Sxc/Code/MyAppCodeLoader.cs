@@ -92,8 +92,9 @@ namespace ToSic.Sxc.Code
             var (refsAssemblyPath, _) = GetAppPaths(appId, MyAppBinFolder);
             CopyAssemblyForRefs(assemblyResult.AssemblyLocations[1], Path.Combine(refsAssemblyPath, MyAppCodeDll));
 
-            _assemblyCacheManager.Add(cacheKey, assemblyResult, appPaths: new[] { physicalPath }, 
-                updateCallback: (_)=> AssembliesDelete(assemblyResult.AssemblyLocations.Append(refsAssemblyPath)));
+            // ??? what exactly should this do?
+            _assemblyCacheManager.Add(cacheKey, assemblyResult, appPaths: new[] { physicalPath },
+                updateCallback: _ => AssembliesDelete(assemblyResult.AssemblyLocations.Append(refsAssemblyPath)));
 
             return l.ReturnAsOk(assemblyResult);
         }
