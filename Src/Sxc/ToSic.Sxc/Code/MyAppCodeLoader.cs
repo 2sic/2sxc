@@ -57,17 +57,19 @@ namespace ToSic.Sxc.Code
 
             try
             {
-                var assemblyResults = GetMyAppCodeAssemblyResultsCachedOrCreate(appId);
-                return l.Return(assemblyResults?.Assembly, assemblyResults?.ErrorMessages != null ? "Ok" : "NoK");
+                var assemblyResults = TryLoadAppCodeAssembly(appId);
+                return string.IsNullOrEmpty(assemblyResults?.ErrorMessages)
+                    ? l.ReturnAsOk(assemblyResults?.Assembly)
+                    : l.ReturnAsError(assemblyResults?.Assembly);
             }
             catch (Exception ex)
             {
                 l.Ex(ex);
-                return l.Return(null, "error");
+                return l.ReturnAsError(null);
             }
         }
 
-        private AssemblyResult GetMyAppCodeAssemblyResultsCachedOrCreate(int appId)
+        private AssemblyResult TryLoadAppCodeAssembly(int appId)
         {
             var l = Log.Fn<AssemblyResult>($"{nameof(appId)}: {appId}");
 

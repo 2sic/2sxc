@@ -13,6 +13,9 @@ namespace ToSic.Sxc.Code;
 [PrivateApi]
 internal class MyAppCodeCompilerNetFull : MyAppCodeCompiler
 {
+    public const string CsFiles = ".cs";
+    public const bool UseSubfolders = false;
+
     private readonly IHostingEnvironmentWrapper _hostingEnvironment;
     private readonly IReferencedAssembliesProvider _referencedAssembliesProvider;
 
@@ -24,20 +27,27 @@ internal class MyAppCodeCompilerNetFull : MyAppCodeCompiler
         );
     }
 
-    protected internal override AssemblyResult GetAssembly(string relativePath, string className = null, int appId = 0)
+    protected internal override AssemblyResult GetAssembly(string relativePath, string className, int appId = 0)
     {
-        var l = Log.Fn<AssemblyResult>(
-            $"{nameof(relativePath)}: '{relativePath}'; {nameof(className)}: '{className}'; {nameof(appId)}: {appId}");
+        var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {nameof(className)}: '{className}'; {nameof(appId)}: {appId}");
 
         try
         {
             // Get all C# files in the folder
-            var sourceFiles = Directory.GetFiles(NormalizeFullPath(_hostingEnvironment.MapPath(relativePath)), "*.cs", SearchOption.AllDirectories);
+            var fullPath = NormalizeFullPath(_hostingEnvironment.MapPath(relativePath));
+            var sourceFiles = Directory.GetFiles(fullPath, $"*{CsFiles}", UseSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+
+            // Log all files
+            var wrapFiles = l.Fn($"Source Files in {fullPath}:");
+            foreach (var sourceFile in sourceFiles) l.A(sourceFile);
+            wrapFiles.Done($"{sourceFiles.Length}");
 
             // Validate are there any C# files
+            // TODO: if no files exist, it shouldn't be an error, because it could be that it's just not here yet
             if (sourceFiles.Length == 0)
-                return l.ReturnAsError(new AssemblyResult(errorMessages: $"Error: given path '{relativePath}' doesn't contain any .cs files")
-                    , $"given path '{relativePath}' doesn't contain any .cs files");
+                return l.ReturnAsError(new AssemblyResult(
+                        errorMessages: $"Error: given path '{relativePath}' doesn't contain any {CsFiles} files"),
+                    $"given path '{relativePath}' doesn't contain any {CsFiles} files");
 
             var assemblyLocations = GetAssemblyLocations(appId);
 
@@ -50,17 +60,19 @@ internal class MyAppCodeCompilerNetFull : MyAppCodeCompiler
             // Compile error case
             var errors = "";
             foreach (CompilerError error in results.Errors)
-                errors += $"Error ({error.ErrorNumber}): {error.ErrorText}\n";
+            {
+                var msg = $"Error ({error.ErrorNumber}): {error.ErrorText}";
+                l.E(msg);
+                errors += $"{msg}\n";
+            }
 
             return l.ReturnAsError(new AssemblyResult(errorMessages: errors), errors);
         }
         catch (Exception ex)
         {
             l.Ex(ex);
-            var errorMessage =
-                $"Error: Can't compile '{className}' in {Path.GetFileName(relativePath)}. Details are logged into insights. " +
-                ex.Message;
-            return l.ReturnAsError(new AssemblyResult(errorMessages: errorMessage), "error");
+            var errorMessage = $"Error: Can't compile '{className}' in {Path.GetFileName(relativePath)}. Details are logged into insights. {ex.Message}";
+            return l.ReturnAsError(new AssemblyResult(errorMessages: errorMessage));
         }
     }
 
@@ -94,6 +106,7 @@ internal class MyAppCodeCompilerNetFull : MyAppCodeCompiler
                 GenerateInMemory = false,
                 GenerateExecutable = false,
                 IncludeDebugInformation = true,
+                // TODO: @STV THIS LOOKS BAD - it says that DNN should compile with Oqtane=true and NetCoreApp=true, which is certainly wrong
                 CompilerOptions = "/define:OQTANE;NETCOREAPP;NET5_0 /optimize-",
             };
 
@@ -102,15 +115,16 @@ internal class MyAppCodeCompilerNetFull : MyAppCodeCompiler
 
         var compilerResults = provider.CompileAssemblyFromFile(parameters, sourceFiles);
 
-        return l.Return(compilerResults, compilerResults.Errors.HasErrors ? "Error" : "Ok");
+        return compilerResults.Errors.HasErrors
+            ? l.ReturnAsError(compilerResults)
+            : l.ReturnAsOk(compilerResults);
     }
 
     protected override (Type Type, string ErrorMessage) GetCsHtmlType(string relativePath)
     {
         var l = Log.Fn<(Type Type, string ErrorMessage)>($"{nameof(relativePath)}: '{relativePath}'", timer: true);
         var compiledType = BuildManager.GetCompiledType(relativePath);
-        var errMsg = compiledType == null
-            ? $"Couldn't create instance of {relativePath}. Compiled type == null" : null;
+        var errMsg = compiledType == null ? $"Couldn't create instance of {relativePath}. Compiled type == null" : null;
         return l.Return((compiledType, errMsg), errMsg ?? "Ok");
     }
 
