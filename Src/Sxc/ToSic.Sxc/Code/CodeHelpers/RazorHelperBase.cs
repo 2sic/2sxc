@@ -31,7 +31,7 @@ public abstract class RazorHelperBase: CodeHelperBase
     protected string ResolvePathIfAbsoluteToApp(string path, IDynamicCodeRoot overrideCodeRoot = default)
     {
         var l = Log.Fn<string>(path);
-        if (path == null || (!path.StartsWith("/") && !path.StartsWith("\\")))
+        if (path == null || (!path.StartsWith("/") && !path.StartsWith("\\") && !path.StartsWith("./") && !path.StartsWith(".\\")))
             return l.ReturnNull("not absolute, return null");
 
         l.A("Will try to use absolute path relative to the app.");
@@ -42,7 +42,7 @@ public abstract class RazorHelperBase: CodeHelperBase
                   ?? throw l.Done(new Exception("Absolute paths require an App, which was null"));
         var appFolder = (app as IAppTyped)?.Folder?.Path
                         ?? throw l.Done(new Exception("Absolute paths require the App folder, which was null"));
-        return l.ReturnAndLog(Path.Combine(appFolder, path.TrimPrefixSlash()));
+        return l.ReturnAndLog(Path.Combine(appFolder, path.TrimStart('.').TrimPrefixSlash()));
     }
 
     #region CreateInstance / GetCode
@@ -69,7 +69,7 @@ public abstract class RazorHelperBase: CodeHelperBase
                 ? null as object
                 : throw l.Done(new ArgumentException("path can't be empty"));
 
-        var path = ResolvePathIfAbsoluteToApp(virtualPath)?.PrefixSlash()
+        var path = ResolvePathIfAbsoluteToApp(virtualPath)?.ForwardSlash().PrefixSlash()
                    ?? GetCodeNormalizePath(virtualPath);
 
         if (!File.Exists(GetCodeFullPathForExistsCheck(path)))

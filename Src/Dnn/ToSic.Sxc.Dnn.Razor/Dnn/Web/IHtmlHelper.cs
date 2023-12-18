@@ -25,5 +25,5 @@ public interface IHtmlHelper
     /// <param name="path">path/file of razor, like "../shared/_list-item.cshtml"</param>
     /// <param name="data">TODO new v16.00</param>
     /// <returns></returns>
-    IHtmlString Partial(string path, params object[] data);
+    IHtmlString Partial(string path, object data = default);
 }

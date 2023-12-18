@@ -33,7 +33,7 @@ namespace Custom.Hybrid;
 /// Be aware of this since the APIs are very different.
 /// </remarks>
 [PublicApi]
-public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IHasCodeHelp, IGetCodePath, ISetDynamicModel
+public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IHasCodeHelp, IGetCodePath, ISetDynamicModel, ISupportAppCode
 {
     #region Constructor, Setup, Helpers
 
@@ -189,4 +189,16 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
 
     #endregion
 
+    void ISupportAppCode.AttachRazorEngine(DnnRazorEngine razorEngine)
+    {
+        if (_razorEngine == null) _razorEngine = razorEngine;
+    }
+    private DnnRazorEngine _razorEngine;
+
+    public HelperResult RoslynRenderPage(string virtualPath, object data)
+    {
+        // TODO: switch based on razorType.MyApp
+        //return base.RenderPage(virtualPath, data);
+        return _razorEngine?.RenderPage(this.NormalizePath(virtualPath), data);
+    }
 }

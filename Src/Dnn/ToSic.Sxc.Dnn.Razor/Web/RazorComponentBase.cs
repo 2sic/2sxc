@@ -1,5 +1,5 @@
-﻿using System.Web.WebPages;
-using Custom.Hybrid;
+﻿using Custom.Hybrid;
+using System.Web.WebPages;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Web;
 /// </summary>
 [PrivateApi("internal class only!")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class RazorComponentBase: WebPageBase, IRazor, IHasCodeLog, IHasLog, IDnnRazorCompatibility, ICompatibilityLevel
+public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHasLog, IDnnRazorCompatibility, ICompatibilityLevel
 {
     #region Constructor / Setup
 
@@ -26,9 +26,17 @@ public abstract class RazorComponentBase: WebPageBase, IRazor, IHasCodeLog, IHas
     /// For architecture of Composition over Inheritance.
     /// </summary>
     [PrivateApi]
-    internal DnnRazorHelper SysHlp => _sysHlp ??= new DnnRazorHelper().Init(this, (path, data) => base.RenderPage(path, data));
+    internal DnnRazorHelper SysHlp => _sysHlp ??= new DnnRazorHelper().Init(this, RenderFunction);
     private DnnRazorHelper _sysHlp;
 
+    HelperResult RenderFunction(string path, object data)
+    {
+        if (this is ISupportAppCode supportAppCode)
+            return supportAppCode.RoslynRenderPage(path, data);
+        
+        // handle conversion from 'object' to 'params object[]'
+        return data == null ? base.RenderPage(path) : base.RenderPage(path, data);
+    }
 
     /// <inheritdoc />
     [PrivateApi]
@@ -83,5 +91,4 @@ public abstract class RazorComponentBase: WebPageBase, IRazor, IHasCodeLog, IHas
     public virtual IHtmlHelper Html => SysHlp.Html;
 
     #endregion
-
 }

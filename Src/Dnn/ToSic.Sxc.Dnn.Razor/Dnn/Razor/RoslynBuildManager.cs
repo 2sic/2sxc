@@ -40,7 +40,6 @@ namespace ToSic.Sxc.Dnn.Razor
             );
         }
 
-        private Assembly _generatedAssembly;
         private string _className;
         private string _baseClass;
         private List<string> _referencedAssemblies;
@@ -70,15 +69,16 @@ namespace ToSic.Sxc.Dnn.Razor
             var templateFullPath = HostingEnvironment.MapPath(templatePath);
 
             // Check if the template is already in the assembly cache
+            Assembly generatedAssembly = null;
             if (AssemblyCacheManager.HasTemplate(templateFullPath))
             {
                 var assemblyResult = AssemblyCacheManager.GetTemplate(templateFullPath);
-                _generatedAssembly = assemblyResult?.Assembly;
+                generatedAssembly = assemblyResult?.Assembly;
                 _className = assemblyResult?.SafeClassName;
-                l.A($"Template found in cache. Assembly: {_generatedAssembly?.FullName}, Class: {_className}");
+                l.A($"Template found in cache. Assembly: {generatedAssembly?.FullName}, Class: {_className}");
             }
             // If the assembly was not in the cache, we need to compile it
-            if (_generatedAssembly == null)
+            if (generatedAssembly == null)
             {
                 l.A($"Template not found in cache. Path: {templateFullPath}");
 
@@ -100,8 +100,8 @@ namespace ToSic.Sxc.Dnn.Razor
                 var template = File.ReadAllText(templateFullPath);
                 using (var reader = new StringReader(template))
                 {
-                    _generatedAssembly = CompileTemplate(reader);
-                    if (_generatedAssembly == null)
+                    generatedAssembly = CompileTemplate(reader);
+                    if (generatedAssembly == null)
                     {
                         l.E(_errorMessage);
                         throw new Exception(_errorMessage);
@@ -111,13 +111,13 @@ namespace ToSic.Sxc.Dnn.Razor
                 // Add the compiled assembly to the cache
                 _assemblyCacheManager.Add(
                     cacheKey: AssemblyCacheManager.KeyTemplate(templateFullPath),
-                    data: new AssemblyResult(_generatedAssembly, safeClassName: _className),
+                    data: new AssemblyResult(generatedAssembly, safeClassName: _className),
                     duration: 3600,
                     appPaths: GetAppFolderPaths(appId));
             }
 
             // Find the generated type in the assembly and return it
-            return l.ReturnAsOk(_generatedAssembly.GetTypes().FirstOrDefault(t => t.Name.StartsWith(_className)));
+            return l.ReturnAsOk(generatedAssembly.GetTypes().FirstOrDefault(t => t.Name.StartsWith(_className)));
         }
 
         private static List<string> GetDefaultReferencedAssemblies()

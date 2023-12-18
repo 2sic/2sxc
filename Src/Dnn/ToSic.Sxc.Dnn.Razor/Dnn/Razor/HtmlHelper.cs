@@ -39,7 +39,7 @@ internal class HtmlHelper: ServiceBase, IHtmlHelper
         );
     }
 
-    public HtmlHelper Init(RazorComponentBase page, DnnRazorHelper helper, bool isSystemAdmin, Func<string, object[], HelperResult> renderPage)
+    public HtmlHelper Init(RazorComponentBase page, DnnRazorHelper helper, bool isSystemAdmin, Func<string, object, HelperResult> renderPage)
     {
         _page = page;
         _helper = helper;
@@ -50,7 +50,7 @@ internal class HtmlHelper: ServiceBase, IHtmlHelper
     private RazorComponentBase _page;
     private DnnRazorHelper _helper;
     private bool _isSystemAdmin;
-    private Func<string, object[], HelperResult> _renderPage;
+    private Func<string, object, HelperResult> _renderPage;
 
     /// <inheritdoc/>
     public IHtmlString Raw(object stringHtml)
@@ -69,7 +69,7 @@ internal class HtmlHelper: ServiceBase, IHtmlHelper
     /// <param name="path"></param>
     /// <param name="data"></param>
     /// <returns></returns>
-    public IHtmlString Partial(string path, params object[] data)
+    public IHtmlString Partial(string path, object data = default)
     {
         try
         {

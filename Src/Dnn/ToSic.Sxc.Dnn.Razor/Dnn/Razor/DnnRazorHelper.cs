@@ -22,7 +22,7 @@ internal class DnnRazorHelper: RazorHelperBase
 
     public DnnRazorHelper() : base("Sxc.RzrHlp") { }
 
-    public DnnRazorHelper Init(RazorComponentBase page, Func<string, object[], HelperResult> renderPage)
+    public DnnRazorHelper Init(RazorComponentBase page, Func<string, object, HelperResult> renderPage)
     {
         Page = page;
         _renderPage = renderPage;
@@ -30,7 +30,7 @@ internal class DnnRazorHelper: RazorHelperBase
     }
 
     public RazorComponentBase Page { get; private set; }
-    private Func<string, object[], HelperResult> _renderPage;
+    private Func<string, object, HelperResult> _renderPage;
 
     #endregion
 

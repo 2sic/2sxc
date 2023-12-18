@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Custom.Hybrid;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Web;
@@ -57,7 +57,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
 
 
     [PrivateApi]
-    protected RazorComponentBase Webpage
+    private RazorComponentBase Webpage
     {
         get => Log.Getter(() => _webpage);
         set => Log.Setter(() => _webpage = value);
@@ -72,7 +72,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
         base.Init(block);
         try
         {
-            InitWebpage();
+            Webpage = InitWebpage(TemplatePath);
         }
         // Catch web.config Error on DNNs upgraded to 7
         catch (ConfigurationErrorsException exc)
@@ -91,10 +91,9 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     private readonly GetOnce<HttpContextBase> _httpContext = new();
 
     [PrivateApi]
-    private (TextWriter writer, List<Exception> exception) Render(TextWriter writer, object data)
+    private (TextWriter writer, List<Exception> exception) Render(RazorComponentBase page, TextWriter writer, object data)
     {
         var l = Log.Fn<(TextWriter writer, List<Exception> exception)>(message: "will render into TextWriter");
-        var page = Webpage; // access the property once only
         try
         {
             if (data != null && page is ISetDynamicModel setDyn)
@@ -123,27 +122,26 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     [PrivateApi]
     protected override (string, List<Exception>) RenderImplementation(object data) => RenderImplementation(Webpage, data);
 
-    [PrivateApi]
-    protected override (string, List<Exception>) RenderImplementation(object data)
+    private (string, List<Exception>) RenderImplementation(RazorComponentBase webpage, object data)
     {
         var l = Log.Fn<(string, List<Exception>)>();
         var writer = new StringWriter();
-        var result = Render(writer, data);
+        var result = Render(webpage, writer, data);
         return l.ReturnAsOk((result.writer.ToString(), result.exception));
     }
 
-    private object CreateWebPageInstance()
+    private object CreateWebPageInstance(string templatePath)
     {
         var l = Log.Fn<object>();
         object page = null;
         Type compiledType;
-        var razorType = _sourceAnalyzer.Value.TypeOfVirtualPath(TemplatePath);
+        var razorType = _sourceAnalyzer.Value.TypeOfVirtualPath(templatePath);
         try
         {
             _assemblyResolver.AddAssembly(_myAppCodeLoader.Value.GetAppCodeAssemblyOrNull(App.AppId));
             compiledType = razorType.MyApp 
-                ? _roslynBuildManager.Value.GetCompiledType(TemplatePath, App.AppId)
-                : BuildManager.GetCompiledType(TemplatePath);
+                ? _roslynBuildManager.Value.GetCompiledType(templatePath, App.AppId)
+                : BuildManager.GetCompiledType(templatePath);
         }
         catch (Exception compileEx)
         {
@@ -177,23 +175,22 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
         }
     }
 
-
-    private bool InitWebpage()
+    private RazorComponentBase InitWebpage(string templatePath)
     {
-        var l = Log.Fn<bool>();
-        if (string.IsNullOrEmpty(TemplatePath)) return l.ReturnFalse("null path");
+        var l = Log.Fn<RazorComponentBase>();
+        if (string.IsNullOrEmpty(templatePath)) return l.ReturnNull("null path");
 
-        var objectValue = RuntimeHelpers.GetObjectValue(CreateWebPageInstance());
+        var objectValue = RuntimeHelpers.GetObjectValue(CreateWebPageInstance(templatePath));
         // ReSharper disable once JoinNullCheckWithUsage
         if (objectValue == null)
-            throw new InvalidOperationException($"The webpage found at '{TemplatePath}' was not created.");
+            throw new InvalidOperationException($"The webpage found at '{templatePath}' was not created.");
 
         if (!(objectValue is RazorComponentBase pageToInit))
-            throw new InvalidOperationException($"The webpage at '{TemplatePath}' must derive from RazorComponentBase.");
-        Webpage = pageToInit;
+            throw new InvalidOperationException($"The webpage at '{templatePath}' must derive from RazorComponentBase.");
+        //Webpage = pageToInit;
 
         pageToInit.Context = HttpContextCurrent;
-        pageToInit.VirtualPath = TemplatePath;
+        pageToInit.VirtualPath = templatePath;
         if (pageToInit is RazorComponent rzrPage)
         {
 #pragma warning disable CS0618
@@ -205,8 +202,10 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
         if (pageToInit is SexyContentWebPage oldPage) oldPage.InstancePurpose = (InstancePurposes)Purpose;
 #pragma warning restore 618, CS0612
 
+        if (pageToInit is ISupportAppCode appCodePage) appCodePage.AttachRazorEngine(this);
+
         InitHelpers(pageToInit);
-        return l.ReturnTrue("ok");
+        return l.ReturnAsOk(pageToInit);
     }
 
     private void InitHelpers(RazorComponentBase webPage)
@@ -221,4 +220,12 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     /// Special old mechanism to always request jQuery and Rvt
     /// </summary>
     public bool OldAutoLoadJQueryAndRvt => Webpage._DynCodeRoot.Cdf.CompatibilityLevel <= Constants.MaxLevelForAutoJQuery;
+
+
+    public HelperResult RenderPage(string templatePath, object data)
+    {
+        var page = InitWebpage(templatePath);
+        var (resultString, exceptions) = RenderImplementation(page, data);
+        return new HelperResult(writer => writer.Write(resultString));
+    }
 }
