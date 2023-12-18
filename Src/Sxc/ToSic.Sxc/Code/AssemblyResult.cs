@@ -18,8 +18,16 @@ namespace ToSic.Sxc.Code
         public string[] AssemblyLocations { get; } = assemblyLocations;
         public string SafeClassName { get; } = safeClassName;
 
+        /// <summary>
+        /// The main type of this assembly - typically for Razor files which usually just publish a single type.
+        /// This is to speed up performance, so the user of it doesn't need to find it again. 
+        /// </summary>
         public Type MainType => mainType;
 
+        /// <summary>
+        /// The list of folders which must be watched for changes when using this assembly.
+        /// ATM just used for AppCode assemblies, should maybe be in a inheriting class...
+        /// </summary>
         // WIP - should be more functional, this get/set is still hacky
         public IList<string> WatcherFolders { get; set; }
 
