@@ -10,7 +10,7 @@ public class CodeFileInfo
     {
         Inherits = inherits;
         Type = type;
-        Help = help ?? new List<CodeHelp>();
+        Help = help ?? [];
         MyApp = myApp;
     }
 
@@ -20,8 +20,7 @@ public class CodeFileInfo
     public List<CodeHelp> Help { get; }
     public bool MyApp { get; }
 
-    public static CodeFileInfo CodeFileUnknown =
-        new("unknown", CodeFileTypes.Unknown, CodeHelpDbUnknown.CompileUnknown);
+    public static CodeFileInfo CodeFileUnknown = new("unknown", CodeFileTypes.Unknown, CodeHelpDbUnknown.CompileUnknown);
     public static CodeFileInfo CodeFileOther = new("other", CodeFileTypes.Other, CodeHelpDbUnknown.CompileUnknown);
 
     public static CodeFileInfo CodeFileNotFound = new("", CodeFileTypes.FileNotFound, new List<CodeHelp>());

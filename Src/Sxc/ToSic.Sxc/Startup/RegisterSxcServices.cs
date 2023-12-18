@@ -182,8 +182,8 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<WrapObjectTypedItem>();
 
         // v17
-        services.TryAddSingleton<AssemblyCacheManager>();
-        services.TryAddSingleton<MyAppCodeLoader>();
+        services.TryAddTransient<AssemblyCacheManager>();
+        services.TryAddTransient<MyAppCodeLoader>();
 
         // Add possibly missing fallback services
         // This must always be at the end here so it doesn't accidentally replace something we actually need

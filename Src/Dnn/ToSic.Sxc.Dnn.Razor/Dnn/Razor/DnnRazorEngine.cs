@@ -135,10 +135,17 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
         var l = Log.Fn<object>();
         object page = null;
         Type compiledType;
+        // TODO: SHOULD OPTIMIZE so the file doesn't need to read multiple times
+        // 1. probably change so the CodeFileInfo contains the source code
         var razorType = _sourceAnalyzer.Value.TypeOfVirtualPath(templatePath);
         try
         {
-            _assemblyResolver.AddAssembly(_myAppCodeLoader.Value.GetAppCodeAssemblyOrNull(App.AppId));
+            // get assembly - try to get from cache, otherwise compile
+            var codeAssembly = MyAppCodeLoader.TryGetAssemblyOfCodeFromCache(App.AppId, Log)?.Assembly 
+                               ?? _myAppCodeLoader.Value.GetAppCodeAssemblyOrNull(App.AppId);
+
+            _assemblyResolver.AddAssembly(codeAssembly);
+
             compiledType = razorType.MyApp 
                 ? _roslynBuildManager.Value.GetCompiledType(templatePath, App.AppId)
                 : BuildManager.GetCompiledType(templatePath);

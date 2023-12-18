@@ -10,10 +10,8 @@ using ToSic.Sxc.Code.Help;
 namespace ToSic.Sxc.Dnn.Razor;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class DnnRazorSourceAnalyzer: ServiceBase
+public class DnnRazorSourceAnalyzer() : ServiceBase("Dnn.RzrSrc")
 {
-    public DnnRazorSourceAnalyzer() : base("Dnn.RzrSrc") { }
-
     public CodeFileInfo TypeOfVirtualPath(string virtualPath)
     {
         var l = Log.Fn<CodeFileInfo>($"{nameof(virtualPath)}: '{virtualPath}'");
@@ -45,7 +43,7 @@ public class DnnRazorSourceAnalyzer: ServiceBase
             return l.Return(null, "file not found");
 
         var contents = File.ReadAllText(path);
-        return l.Return(contents, $"found, {contents?.Length} bytes");
+        return l.Return(contents, $"found, {contents.Length} bytes");
     }
 
     public CodeFileInfo AnalyzeContent(string contents)

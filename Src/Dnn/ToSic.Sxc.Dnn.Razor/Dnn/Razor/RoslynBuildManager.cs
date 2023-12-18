@@ -42,19 +42,21 @@ namespace ToSic.Sxc.Dnn.Razor
 
         private string _className;
         private string _baseClass;
-        private List<string> _referencedAssemblies;
-        private string _errorMessage;
+        //private List<string> _referencedAssemblies;
+        //private string _errorMessage;
 
-        private static readonly Lazy<List<string>> DefaultReferencedAssemblies = new Lazy<List<string>>(GetDefaultReferencedAssemblies);
-        private static readonly List<string> ReferencedNamespaces = new List<string>
-        {
-            "System",
-            "System.Text",
-            "System.Collections.Generic",
-            "System.Linq",
-            "System.IO",
-            "System.Web.WebPages"
-        };
+        private static readonly Lazy<List<string>> DefaultReferencedAssemblies = new(GetDefaultReferencedAssemblies);
+
+        // TODO: @STV THIS LOOKS problematic, make sure we don't add anything which isn't included by default #Compile
+        //private static readonly List<string> ReferencedNamespaces =
+        //[
+        //    "System",
+        //    "System.Text",
+        //    "System.Collections.Generic",
+        //    "System.Linq",
+        //    "System.IO",
+        //    "System.Web.WebPages"
+        //];
 
         /// <summary>
         /// Manage template compilations, cache the assembly and returns the generated type.
@@ -77,19 +79,20 @@ namespace ToSic.Sxc.Dnn.Razor
                 _className = assemblyResult?.SafeClassName;
                 l.A($"Template found in cache. Assembly: {generatedAssembly?.FullName}, Class: {_className}");
             }
+
             // If the assembly was not in the cache, we need to compile it
             if (generatedAssembly == null)
             {
                 l.A($"Template not found in cache. Path: {templateFullPath}");
 
                 // Initialize the list of referenced assemblies with the default ones
-                _referencedAssemblies = [..DefaultReferencedAssemblies.Value];
+                List<string> referencedAssemblies = [..DefaultReferencedAssemblies.Value];
 
                 // Roslyn compiler need reference to location of dll, when dll is not in bin folder
                 var myAppCodeAssembly = AssemblyCacheManager.GetMyAppCode(appId)?.Assembly;
                 if (myAppCodeAssembly != null)
                 {
-                    _referencedAssemblies.Add(myAppCodeAssembly.Location);
+                    referencedAssemblies.Add(myAppCodeAssembly.Location);
                     l.A($"Added reference to MyApp.Code assembly: {myAppCodeAssembly.Location}");
                 }
 
@@ -98,15 +101,10 @@ namespace ToSic.Sxc.Dnn.Razor
                 l.A($"Compiling template. Class: {_className}");
 
                 var template = File.ReadAllText(templateFullPath);
-                using (var reader = new StringReader(template))
-                {
-                    generatedAssembly = CompileTemplate(reader);
-                    if (generatedAssembly == null)
-                    {
-                        l.E(_errorMessage);
-                        throw new Exception(_errorMessage);
-                    }
-                }
+                (generatedAssembly, var errors) = CompileTemplate(template, referencedAssemblies);
+                if (generatedAssembly == null)
+                    throw l.Ex(new Exception(
+                        $"Found {errors.Count} errors compiling Razor '{templateFullPath}' (length: {template.Length}, lines: {template.Split('\n').Length}): {ErrorMessagesFromCompileErrors(errors)}"));
 
                 // Add the compiled assembly to the cache
                 _assemblyCacheManager.Add(
@@ -159,16 +157,10 @@ namespace ToSic.Sxc.Dnn.Razor
         /// <summary>
         /// Compiles the template into an assembly.
         /// </summary>
-        /// <param name="templateReader">The TextReader containing the template content.</param>
         /// <returns>The compiled assembly.</returns>
-        private Assembly CompileTemplate(TextReader templateReader)
+        private (Assembly Assembly, List<CompilerError> Errors) CompileTemplate(string template, List<string> referencedAssemblies)
         {
-            var l = Log.Fn<Assembly>(timer: true);
-
-            // Read the template content
-            var template = templateReader.ReadToEnd();
-            templateReader.Close();
-            l.A($"Template content length: {template.Length}");
+            var l = Log.Fn<(Assembly, List<CompilerError>)>(timer: true, parameters: $"Template content length: {template.Length}");
 
             //// fix template
             //template = FixTemplate(template);
@@ -180,13 +172,12 @@ namespace ToSic.Sxc.Dnn.Razor
             // Create the Razor template engine host
             var engine = CreateHost();
 
-            GeneratorResults razorResults;
-            using (var reader = new StringReader(template))
-                razorResults = engine.GenerateCode(reader);
+            using var reader = new StringReader(template);
+            var razorResults = engine.GenerateCode(reader);
 
             var codeProvider = new Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider();
 
-            var compilerParameters = new CompilerParameters(_referencedAssemblies.ToArray())
+            var compilerParameters = new CompilerParameters([.. referencedAssemblies])
             {
                 GenerateInMemory = true,
                 IncludeDebugInformation = true,
@@ -195,17 +186,26 @@ namespace ToSic.Sxc.Dnn.Razor
 
             // Compile the template into an assembly
             var compilerResults = codeProvider.CompileAssemblyFromDom(compilerParameters, razorResults.GeneratedCode);
+            //var compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, template);
+
+            //var mappings = razorResults.DesignTimeLineMappings;
 
             if (compilerResults.Errors.Count <= 0)
-                return l.ReturnAsOk(compilerResults.CompiledAssembly);
+                return l.ReturnAsOk((compilerResults.CompiledAssembly, null));
 
             // Handle compilation errors
-            var compileErrors = new StringBuilder();
-            foreach (CompilerError compileError in compilerResults.Errors)
-                compileErrors.AppendLine($"Line: {compileError.Line}, Column: {compileError.Column}, Error: {compileError.ErrorText}");
+            var errorList = compilerResults.Errors.Cast<CompilerError>().ToList();
 
-            _errorMessage = compileErrors.ToString();
-            return l.ReturnAsError(null, _errorMessage);
+            return l.ReturnAsError((null, errorList), "error");
+        }
+
+        private string ErrorMessagesFromCompileErrors(List<CompilerError> errors)
+        {
+            var l = Log.Fn<string>(timer: true);
+            var compileErrors = new StringBuilder();
+            foreach (var compileError in errors)
+                compileErrors.AppendLine($"Line: {compileError.Line}, Column: {compileError.Column}, Error: {compileError.ErrorText}");
+            return l.ReturnAsOk(compileErrors.ToString());
         }
 
         private string[] GetAppFolderPaths(int appId)

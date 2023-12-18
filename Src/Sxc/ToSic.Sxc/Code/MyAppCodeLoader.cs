@@ -37,6 +37,17 @@ namespace ToSic.Sxc.Code
         private readonly LazySvc<MyAppCodeCompiler> _myAppCodeCompilerLazy;
         private readonly AssemblyCacheManager _assemblyCacheManager;
 
+        public static AssemblyResult TryGetAssemblyOfCodeFromCache(int appId, ILog callerLog)
+        {
+            var l = callerLog.Fn<AssemblyResult>($"{nameof(appId)}: {appId}");
+
+            // TODO: PROBABLY CHANGE to just use GetAppCode
+            var cacheKey = AssemblyCacheManager.KeyAppCode(appId);
+            return AssemblyCacheManager.Has(cacheKey) 
+                ? l.ReturnAsOk(AssemblyCacheManager.Get(cacheKey)) 
+                : l.ReturnNull();
+        }
+
         public Assembly GetAppCodeAssemblyOrNull(int appId)
         {
             _logStore.Add(Constants.SxcLogAppCodeLoader, Log);
