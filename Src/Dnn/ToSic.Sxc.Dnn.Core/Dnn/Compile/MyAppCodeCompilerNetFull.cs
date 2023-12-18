@@ -106,8 +106,7 @@ internal class MyAppCodeCompilerNetFull : MyAppCodeCompiler
                 GenerateInMemory = false,
                 GenerateExecutable = false,
                 IncludeDebugInformation = true,
-                // TODO: @STV THIS LOOKS BAD - it says that DNN should compile with Oqtane=true and NetCoreApp=true, which is certainly wrong
-                CompilerOptions = "/define:OQTANE;NETCOREAPP;NET5_0 /optimize-",
+                CompilerOptions = "/optimize- /warnaserror-",
             };
 
         // Add all referenced assemblies
