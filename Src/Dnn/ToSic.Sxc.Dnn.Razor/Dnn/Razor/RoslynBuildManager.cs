@@ -25,22 +25,11 @@ namespace ToSic.Sxc.Dnn.Razor
     {
         private const string DefaultNamespace = "RazorHost";
 
-        // TODO: @STV - probably not needed, see below
-        //private readonly ISite _site;
-        //private readonly IAppStates _appStates;
-        //private readonly LazySvc<IAppPathsMicroSvc> _appPathsLazy;
         private readonly AssemblyCacheManager _assemblyCacheManager;
 
-        public RoslynBuildManager(
-            // TODO: @STV - probably not needed, see below
-            //ISite site, IAppStates appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, 
-            AssemblyCacheManager assemblyCacheManager) : base("Dnn.RoslynBuildManager")
+        public RoslynBuildManager(AssemblyCacheManager assemblyCacheManager) : base("Dnn.RoslynBuildManager")
         {
             ConnectServices(
-                // TODO: @STV - probably not needed, see below
-                //_site = site,
-                //_appStates = appStates,
-                //_appPathsLazy = appPathsLazy,
                 _assemblyCacheManager = assemblyCacheManager
             );
         }
@@ -61,81 +50,65 @@ namespace ToSic.Sxc.Dnn.Razor
 
             // Check if the template is already in the assembly cache
             var (result, cacheKey) = AssemblyCacheManager.TryGetTemplate(templateFullPath);
-            if (result != null) // AssemblyCacheManager.HasTemplate(templateFullPath))
+            if (result != null)
             {
-                //var assemblyResult = AssemblyCacheManager.GetTemplate(templateFullPath);
-                var cacheAssembly = /*assemblyResult?*/result.Assembly;
-                var cacheClassName = /*assemblyResult?*/result.SafeClassName;
+                var cacheAssembly = result.Assembly;
+                var cacheClassName = result.SafeClassName;
                 l.A($"Template found in cache. Assembly: {cacheAssembly?.FullName}, Class: {cacheClassName}");
-                if (/*cacheAssembly*/ result.MainType != null)
-                    return l.ReturnAsOk(result.MainType);// cacheAssembly.GetType(cacheClassName));
-                    // before: return l.ReturnAsOk(cacheAssembly.GetTypes().FirstOrDefault(t => t.Name.StartsWith(cacheClassName)));
+                if (result.MainType != null)
+                    return l.ReturnAsOk(result.MainType);
             }
 
             // If the assembly was not in the cache, we need to compile it
-            Assembly generatedAssembly = null;
-            string className = null;
-            if (generatedAssembly == null)
+            l.A($"Template not found in cache. Path: {templateFullPath}");
+
+            // Initialize the list of referenced assemblies with the default ones
+            List<string> referencedAssemblies = [.. DefaultReferencedAssemblies.Value];
+
+            // Roslyn compiler need reference to location of dll, when dll is not in bin folder
+            var appCode = AssemblyCacheManager.TryGetAppCode(appId);
+            var myAppCodeAssembly = appCode.Result?.Assembly;
+            if (myAppCodeAssembly != null)
             {
-                l.A($"Template not found in cache. Path: {templateFullPath}");
-
-                // Initialize the list of referenced assemblies with the default ones
-                List<string> referencedAssemblies = [.. DefaultReferencedAssemblies.Value];
-
-                // Roslyn compiler need reference to location of dll, when dll is not in bin folder
-                var appCode = AssemblyCacheManager.TryGetAppCode(appId);
-                var myAppCodeAssembly = appCode.Result?.Assembly;
-                if (myAppCodeAssembly != null)
-                {
-                    referencedAssemblies.Add(myAppCodeAssembly.Location);
-                    l.A($"Added reference to MyApp.Code assembly: {myAppCodeAssembly.Location}");
-                }
-
-                // Compile the template
-                className = GetSafeClassName(templateFullPath);
-                l.A($"Compiling template. Class: {className}");
-
-                var template = File.ReadAllText(templateFullPath);
-                (generatedAssembly, var errors) = CompileTemplate(template, referencedAssemblies, className);
-                if (generatedAssembly == null)
-                    throw l.Ex(new Exception(
-                        $"Found {errors.Count} errors compiling Razor '{templateFullPath}' (length: {template.Length}, lines: {template.Split('\n').Length}): {ErrorMessagesFromCompileErrors(errors)}"));
-
-                // Add the compiled assembly to the cache
-
-                // TODO: @STV - original tried to get both global and shared path
-                // ...but there is no reason for this, the file can only be in one path and never in two
-                // ...also throws errors when adding to cache, because the global path often doesn't exist
-                //var appPaths = GetAppFolderPaths(appId);
-                //var appPaths = new [] { Path.GetDirectoryName(templateFullPath) };
-
-                // Changed again: better to only monitor the current file
-                // otherwise all caches keep getting flushed when any file changes
-                // TODO: must also watch for global shared code changes
-
-                var fileChangeMon = new HostFileChangeMonitor(new[] { templateFullPath });
-                var sharedFolderChangeMon = appCode.Result == null ? null : new FolderChangeMonitor(appCode.Result.WatcherFolders);
-                var changeMonitors = appCode.Result == null 
-                    ? new ChangeMonitor[] { fileChangeMon } 
-                    : [fileChangeMon, sharedFolderChangeMon];
-
-                // FYI: @STV - added ability to directly attach a type to the cache
-                // TODO: @STV - you used StartsWith, I changed it to use the full namespace. is that ok?
-                var mainType = generatedAssembly.GetType($"{DefaultNamespace}.{className}");
-                l.A($"Main type: {mainType}");
-                //var typeWithSearch = generatedAssembly.GetTypes().FirstOrDefault(t => t.Name.StartsWith(className));
-                //l.A($"Type with search: {typeWithSearch}");
-                _assemblyCacheManager.Add(
-                    cacheKey: cacheKey,
-                    data: new AssemblyResult(generatedAssembly, safeClassName: className, mainType: mainType),
-                    duration: 3600,
-                    changeMonitor: changeMonitors,
-                    //appPaths: appPaths,
-                    updateCallback: null);
+                referencedAssemblies.Add(myAppCodeAssembly.Location);
+                l.A($"Added reference to MyApp.Code assembly: {myAppCodeAssembly.Location}");
             }
 
-            // Find the generated type in the assembly and return it
-            return l.ReturnAsOk(generatedAssembly.GetTypes().FirstOrDefault(t => t.Name.StartsWith(className)));
+            // Compile the template
+            var className = GetSafeClassName(templateFullPath);
+            l.A($"Compiling template. Class: {className}");
+
+            var template = File.ReadAllText(templateFullPath);
+            var (generatedAssembly, errors) = CompileTemplate(template, referencedAssemblies, className);
+            if (generatedAssembly == null)
+                throw l.Ex(new Exception(
+                    $"Found {errors.Count} errors compiling Razor '{templateFullPath}' (length: {template.Length}, lines: {template.Split('\n').Length}): {ErrorMessagesFromCompileErrors(errors)}"));
+
+            // Add the compiled assembly to the cache
+
+            // Changed again: better to only monitor the current file
+            // otherwise all caches keep getting flushed when any file changes
+            // TODO: must also watch for global shared code changes
+
+            var fileChangeMon = new HostFileChangeMonitor(new[] { templateFullPath });
+            var sharedFolderChangeMon = appCode.Result == null ? null : new FolderChangeMonitor(appCode.Result.WatcherFolders);
+            var changeMonitors = appCode.Result == null 
+                ? new ChangeMonitor[] { fileChangeMon } 
+                : [fileChangeMon, sharedFolderChangeMon];
+
+            // directly attach a type to the cache
+            var mainType = generatedAssembly.GetType($"{DefaultNamespace}.{className}");
+            l.A($"Main type: {mainType}");
+
+            _assemblyCacheManager.Add(
+                cacheKey: cacheKey,
+                data: new AssemblyResult(generatedAssembly, safeClassName: className, mainType: mainType),
+                duration: 3600,
+                changeMonitor: changeMonitors,
+                //appPaths: appPaths,
+                updateCallback: null);
+
+            return l.ReturnAsOk(mainType);
         }
 
         private static List<string> GetDefaultReferencedAssemblies()
@@ -248,14 +221,6 @@ namespace ToSic.Sxc.Dnn.Razor
             return l.ReturnAsOk(compileErrors.ToString());
         }
 
-        // TODO: @STV - probably not needed, see above
-        //private string[] GetAppFolderPaths(int appId)
-        //{
-        //    var l = Log.Fn<string[]>($"{nameof(appId)}: {appId}");
-        //    var appPaths = _appPathsLazy.Value.Init(_site, _appStates.GetReader(appId));
-        //    l.A($"AppPaths: {appPaths.PhysicalPath}, {appPaths.PhysicalPathShared}");
-        //    return l.ReturnAsOk([appPaths.PhysicalPath, appPaths.PhysicalPathShared]);
-        //}
 
         /// <summary>
         /// Finds the type of the template based on the template content.
