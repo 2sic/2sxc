@@ -12,6 +12,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Code.Helpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Typed;
@@ -184,6 +185,7 @@ public static partial class RegisterSxcServices
         // v17
         services.TryAddTransient<AssemblyCacheManager>();
         services.TryAddTransient<MyAppCodeLoader>();
+        services.TryAddTransient<SourceAnalyzer>();
 
         // Add possibly missing fallback services
         // This must always be at the end here so it doesn't accidentally replace something we actually need

@@ -8,7 +8,6 @@ public static class StartUpDnnRazor
 {
     public static IServiceCollection AddDnnRazor(this IServiceCollection services)
     {
-        services.TryAddTransient<DnnRazorSourceAnalyzer>();
         services.TryAddTransient<HtmlHelper>();
 
         services.TryAddTransient<RoslynBuildManager>();

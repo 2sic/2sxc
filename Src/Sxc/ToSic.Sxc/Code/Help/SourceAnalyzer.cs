@@ -1,17 +1,25 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web.Hosting;
+using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Help;
 
-namespace ToSic.Sxc.Dnn.Razor;
+namespace ToSic.Sxc.Code.Help;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class DnnRazorSourceAnalyzer() : ServiceBase("Dnn.RzrSrc")
+public class SourceAnalyzer : ServiceBase
 {
+    private readonly IServerPaths _serverPaths;
+
+    public SourceAnalyzer(IServerPaths serverPaths) : base("Sxc.RzrSrc")
+    {
+        ConnectServices(
+            _serverPaths = serverPaths
+        );
+    }
+
     public CodeFileInfo TypeOfVirtualPath(string virtualPath)
     {
         var l = Log.Fn<CodeFileInfo>($"{nameof(virtualPath)}: '{virtualPath}'");
@@ -35,7 +43,7 @@ public class DnnRazorSourceAnalyzer() : ServiceBase("Dnn.RzrSrc")
         if (virtualPath.IsEmptyOrWs())
             return l.Return(null, "no path");
 
-        var path = HostingEnvironment.MapPath(virtualPath);
+        var path = _serverPaths.FullContentPath(virtualPath);
         if (path == null || path.IsEmptyOrWs())
             return l.Return(null, "no path");
 
@@ -64,7 +72,7 @@ public class DnnRazorSourceAnalyzer() : ServiceBase("Dnn.RzrSrc")
         var myApp = IsMyAppCodeUsed(contents);
 
         var findMatch = CodeFileInfo.CodeFileList
-            .FirstOrDefault(cf => cf.Inherits.EqualsInsensitive(ns)  && cf.MyApp == myApp);
+            .FirstOrDefault(cf => cf.Inherits.EqualsInsensitive(ns) && cf.MyApp == myApp);
 
         return findMatch != null
             ? l.ReturnAndLog(findMatch)
@@ -89,4 +97,4 @@ public class DnnRazorSourceAnalyzer() : ServiceBase("Dnn.RzrSrc")
 
         return myAppMatch.Success;
     }
- }
+}

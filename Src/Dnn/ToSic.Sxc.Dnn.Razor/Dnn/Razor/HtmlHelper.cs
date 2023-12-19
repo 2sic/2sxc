@@ -23,14 +23,14 @@ namespace ToSic.Sxc.Dnn.Razor;
 [PrivateApi]
 internal class HtmlHelper: ServiceBase, IHtmlHelper
 {
-    private readonly LazySvc<DnnRazorSourceAnalyzer> _codeAnalysis;
+    private readonly LazySvc<SourceAnalyzer> _codeAnalysis;
     private readonly LazySvc<IFeaturesService> _featureSvc;
     private readonly LazySvc<CodeErrorHelpService> _codeErrService;
 
     public HtmlHelper(
         LazySvc<CodeErrorHelpService> codeErrService,
         LazySvc<IFeaturesService> featureSvc,
-        LazySvc<DnnRazorSourceAnalyzer> codeAnalysis) : base("Dnn.HtmHlp")
+        LazySvc<SourceAnalyzer> codeAnalysis) : base("Dnn.HtmHlp")
     {
         ConnectServices(
             _codeErrService = codeErrService,
