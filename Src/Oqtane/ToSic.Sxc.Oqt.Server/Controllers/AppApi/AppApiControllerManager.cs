@@ -73,14 +73,14 @@ internal class AppApiControllerManager: IHasLog
 
         // Build new AppApi Controller
         Log.A($"Compile assembly: {apiFile}, {dllName}");
-        var assembly = new Compiler().Compile(apiFile, dllName);
+        var assemblyResult = new Compiler().Compile(apiFile, dllName);
 
         // Add new key to concurrent dictionary, before registering new AppAPi controller.
         if (!_compiledAppApiControllers.TryAdd(apiFile, false))
             throw new IOException($"Error, can't register updated controller {Path.GetFileName(apiFile)} because older controller is already registered. Please try again in few moments.");
 
         // Register new AppApi Controller.
-        AddController(dllName, assembly);
+        AddController(dllName, assemblyResult.Assembly);
 
         return wrapLog.ReturnTrue($"ok, Controller is compiled and added to ApplicationParts: {apiFile}.");
     }

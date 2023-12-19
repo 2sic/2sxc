@@ -60,6 +60,6 @@ public class ApiExplorerController : OqtStatefulControllerBase, IApiExplorerCont
         var controllerFolder = pathFromRoot.Substring(0, pathFromRoot.LastIndexOf(@"\"));
         var dllName = AppApiDynamicRouteValueTransformer.GetDllName(controllerFolder, apiFile);
 
-        return new Compiler().Compile(apiFile, dllName);
+        return new Compiler().Compile(apiFile, dllName).Assembly;
     }
 }

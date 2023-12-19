@@ -15,6 +15,7 @@ partial class OqtRegisterServices
     {
         // App WebApi: .net specific code compiler
         services.TryAddTransient<CodeCompiler, CodeCompilerNetCore>();
+        services.TryAddTransient<MyAppCodeCompiler, MyAppCodeCompilerNetCore>();
 
         services.AddSingleton<IActionDescriptorChangeProvider>(AppApiActionDescriptorChangeProvider.Instance);
         services.AddSingleton(AppApiActionDescriptorChangeProvider.Instance);

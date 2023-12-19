@@ -7,6 +7,8 @@ using System.IO;
 using System.Threading.Tasks;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code.Help;
 
 namespace ToSic.Sxc.Razor
 {
@@ -16,25 +18,31 @@ namespace ToSic.Sxc.Razor
 
         private readonly ITempDataProvider _tempDataProvider;
         private readonly IRazorCompiler _razorCompiler;
+        private readonly IMyAppCodeRazorCompiler _myAppCodeRazorCompiler;
+        private readonly SourceAnalyzer _sourceAnalyzer;
 
-        public RazorRenderer(ITempDataProvider tempDataProvider, IRazorCompiler razorCompiler) : base($"{Constants.SxcLogName}.RzrRdr")
+        public RazorRenderer(ITempDataProvider tempDataProvider, IRazorCompiler razorCompiler, IMyAppCodeRazorCompiler myAppCodeRazorCompiler, SourceAnalyzer sourceAnalyzer) : base($"{Constants.SxcLogName}.RzrRdr")
         {
             ConnectServices(
                 _tempDataProvider = tempDataProvider,
-                _razorCompiler = razorCompiler
+                _razorCompiler = razorCompiler,
+                _myAppCodeRazorCompiler = myAppCodeRazorCompiler,
+                _sourceAnalyzer = sourceAnalyzer
             );
         }
         #endregion
 
-        public async Task<string> RenderToStringAsync<TModel>(string partialName, TModel model, Action<RazorView> configure = null)
+        public async Task<string> RenderToStringAsync<TModel>(string templatePath, TModel model, Action<RazorView> configure, IApp app)
         {
-            var l = Log.Fn<string>($"partialName:{partialName}");
-            //var actionContext = _actionContextAccessor.ActionContext;
-            //var partial = FindView(actionContext, partialName);
-            //// do callback to configure the object we received
-            //if (partial is RazorView rzv) configure?.Invoke(rzv);
+            var l = Log.Fn<string>($"partialName:{templatePath},appId:{app.PhysicalPath}");
 
-            var (view, actionContext) = _razorCompiler.CompileView(partialName, configure);
+            // TODO: SHOULD OPTIMIZE so the file doesn't need to read multiple times
+            // 1. probably change so the CodeFileInfo contains the source code
+            var razorType = _sourceAnalyzer.TypeOfVirtualPath(templatePath);
+
+            var (view, actionContext) = razorType.MyApp 
+                ? await _myAppCodeRazorCompiler.CompileView(templatePath, configure, app)
+                : await _razorCompiler.CompileView(templatePath, configure, null);
 
             // Prepare to render
             await using var output = new StringWriter();

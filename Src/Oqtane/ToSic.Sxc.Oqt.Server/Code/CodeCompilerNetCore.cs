@@ -1,11 +1,10 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Internal.Environment;
-using ToSic.Lib.Logging;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Oqt.Server.Code;
@@ -33,8 +32,8 @@ internal class CodeCompilerNetCore: CodeCompiler
         l.A($"New paths: '{fullContentPath}', '{fullPath}'");
         try
         {
-            var assembly = new Compiler().Compile(fullPath, className);
-            return l.ReturnAsOk(new AssemblyResult(assembly));
+            var assemblyResult = new Compiler().Compile(fullPath, className);
+            return l.ReturnAsOk(assemblyResult);
         }
         catch (Exception ex)
         {
