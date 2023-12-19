@@ -17,9 +17,9 @@ namespace ToSic.Sxc.Code
 {
     public class MyAppCodeLoader : ServiceBase
     {
-        private const string MyAppCodeFolder = "AppCode";
-        private const string MyAppBinFolder = "bin";
-        private const string MyAppCodeDll = "MyApp.Code.dll";
+        public const string MyAppCodeFolder = "AppCode";
+        public const string MyAppBinFolder = "bin";
+        public const string MyAppCodeDll = "MyApp.Code.dll";
 
         public MyAppCodeLoader(ILogStore logStore, ISite site, IAppStates appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, LazySvc<MyAppCodeCompiler> myAppCodeCompilerLazy, AssemblyCacheManager assemblyCacheManager) : base("Sys.AppCodeLoad")
         {
