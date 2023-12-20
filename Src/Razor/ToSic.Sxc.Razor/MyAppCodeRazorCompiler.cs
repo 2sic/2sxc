@@ -42,6 +42,7 @@ namespace ToSic.Sxc.Razor
         private readonly IRazorPageActivator _pageActivator;
         private readonly LazySvc<MyAppCodeLoader> _myAppCodeLoader;
         private readonly LazySvc<IServerPaths> _serverPaths;
+        private readonly AssemblyResolver _assemblyResolver;
 
         public MyAppCodeRazorCompiler(
             ApplicationPartManager applicationPartManager,
@@ -51,8 +52,10 @@ namespace ToSic.Sxc.Razor
             IActionContextAccessor actionContextAccessor,
             IRazorPageActivator pageActivator,
             LazySvc<MyAppCodeLoader> myAppCodeLoader,
-            LazySvc<IServerPaths> serverPaths) : base($"{Constants.SxcLogName}.RzrCmp")
+            LazySvc<IServerPaths> serverPaths,
+            AssemblyResolver assemblyResolver) : base($"{Constants.SxcLogName}.RzrCmp")
         {
+
             ConnectServices(
                 _applicationPartManager = applicationPartManager,
                 _viewEngine = viewEngine,
@@ -61,7 +64,8 @@ namespace ToSic.Sxc.Razor
                 _actionContextAccessor = actionContextAccessor,
                 _pageActivator = pageActivator,
                 _myAppCodeLoader = myAppCodeLoader,
-                _serverPaths = serverPaths
+                _serverPaths = serverPaths,
+                _assemblyResolver = assemblyResolver
             );
         }
         #endregion
@@ -157,6 +161,8 @@ namespace ToSic.Sxc.Razor
             // get assembly - try to get from cache, otherwise compile
             var codeAssembly = MyAppCodeLoader.TryGetAssemblyOfCodeFromCache(app.AppId, Log)?.Assembly
                                ?? _myAppCodeLoader.Value.GetAppCodeAssemblyOrNull(app.AppId);
+
+            _assemblyResolver.AddAssembly(codeAssembly);
 
             _assemblyLoadContext = new AssemblyLoadContext("UnLoadableAssemblyLoadContext", isCollectible: true);
 

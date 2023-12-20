@@ -186,6 +186,7 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<AssemblyCacheManager>();
         services.TryAddTransient<MyAppCodeLoader>();
         services.TryAddTransient<SourceAnalyzer>();
+        services.TryAddSingleton<AssemblyResolver>();
 
         // Add possibly missing fallback services
         // This must always be at the end here so it doesn't accidentally replace something we actually need

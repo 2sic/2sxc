@@ -11,7 +11,6 @@ public static class StartUpDnnRazor
         services.TryAddTransient<HtmlHelper>();
 
         services.TryAddTransient<RoslynBuildManager>();
-        services.TryAddSingleton<AssemblyResolver>();
 
         return services;
     }

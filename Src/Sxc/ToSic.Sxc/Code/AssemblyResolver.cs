@@ -2,11 +2,11 @@
 using System.Collections.Concurrent;
 using System.Reflection;
 
-namespace ToSic.Sxc.Dnn.Razor
+namespace ToSic.Sxc.Code
 {
     public class AssemblyResolver
     {
-        
+
         private static bool _isHandlerRegistered = false;
         private readonly ConcurrentDictionary<string, Assembly> _assemblyCache = new();
 
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.Razor
             }
         }
 
-        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args) 
+        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
             => _assemblyCache.TryGetValue(args.Name, out var assembly) ? assembly : null;
 
         public void AddAssembly(Assembly assembly)

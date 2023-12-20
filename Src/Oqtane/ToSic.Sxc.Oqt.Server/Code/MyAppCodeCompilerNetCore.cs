@@ -49,8 +49,8 @@ internal class MyAppCodeCompilerNetCore: MyAppCodeCompiler
                     $"given path '{virtualPath}' doesn't contain any {CsFiles} files");
 
             var assemblyLocations = GetAssemblyLocations(appId);
-
-            var assemblyResult = new Compiler().GetCompiledAssemblyFromFolder(sourceFiles, assemblyLocations[1], assemblyLocations[0], MyAppCodeLoader.MyAppCodeDll);
+            var dllName = Path.GetFileName(assemblyLocations[1]);
+            var assemblyResult = new Compiler().GetCompiledAssemblyFromFolder(sourceFiles, assemblyLocations[1], assemblyLocations[0], dllName);
 
             // Compile ok
             if (assemblyResult.ErrorMessages.IsEmpty())
