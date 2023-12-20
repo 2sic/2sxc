@@ -84,6 +84,7 @@
     <PackageReference Include="DotNetNuke.Web.Client" Version="9.6.1">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" Version="3.6.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
