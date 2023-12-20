@@ -15,15 +15,16 @@ internal class RoslynCompilerCapability
     {
         get
         {
-            if (_csharpLangVersions == null)
-                lock (LangVersionLock)
-                    if (_csharpLangVersions == null)
-                        _csharpLangVersions = GetCsharpLangVersions();
+            if (_csharpLangVersions != null) return _csharpLangVersions;
+
+            lock (LangVersionLock)
+                if (_csharpLangVersions == null)
+                    _csharpLangVersions = GetCsharpLangVersions();
             return _csharpLangVersions;
         }
     }
     // Volatile keyword ensures that the most up-to-date value is always read from memory, which is crucial for the correct functioning of the double-check locking pattern.
-    private static volatile int[] _csharpLangVersions = null;
+    private static volatile int[] _csharpLangVersions;
     private static readonly object LangVersionLock = new();
 
     // DETECT based on installed stuff (DLLs, available APIs?)
