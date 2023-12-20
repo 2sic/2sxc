@@ -9,6 +9,7 @@ namespace ToSic.Sxc.Code
 
         private static bool _isHandlerRegistered = false;
         private readonly ConcurrentDictionary<string, Assembly> _assemblyCache = new();
+        private readonly ConcurrentDictionary<string, string> _assemblyPathPerApp = new(StringComparer.InvariantCultureIgnoreCase);
 
         public AssemblyResolver()
         {
@@ -24,10 +25,15 @@ namespace ToSic.Sxc.Code
         private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
             => _assemblyCache.TryGetValue(args.Name, out var assembly) ? assembly : null;
 
-        public void AddAssembly(Assembly assembly)
+        public void AddAssembly(Assembly assembly, string appRelativePath = null)
         {
             if (assembly == null) return;
             _assemblyCache.TryAdd(assembly.GetName().FullName, assembly);
+            
+            if (appRelativePath != null) _assemblyPathPerApp.TryAdd(appRelativePath, assembly.Location);
         }
+
+        public string GetAssemblyLocation(string appRelativePath)
+            => _assemblyPathPerApp.TryGetValue(appRelativePath, out var location) ? location : null;
     }
 }

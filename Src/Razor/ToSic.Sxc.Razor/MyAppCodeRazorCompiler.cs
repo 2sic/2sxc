@@ -160,7 +160,7 @@ namespace ToSic.Sxc.Razor
             var codeAssembly = MyAppCodeLoader.TryGetAssemblyOfCodeFromCache(app.AppId, Log)?.Assembly
                                ?? _myAppCodeLoader.Value.GetAppCodeAssemblyOrNull(app.AppId);
 
-            _assemblyResolver.AddAssembly(codeAssembly);
+            _assemblyResolver.AddAssembly(codeAssembly, app.RelativePath);
 
             var assemblyLoadContext = new AssemblyLoadContext("UnLoadableAssemblyLoadContext", isCollectible: true);
 
