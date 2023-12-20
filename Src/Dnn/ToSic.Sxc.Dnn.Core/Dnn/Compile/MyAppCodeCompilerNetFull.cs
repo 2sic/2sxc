@@ -1,4 +1,4 @@
-﻿using Microsoft.CSharp;
+﻿using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using System;
 using System.CodeDom.Compiler;
 using System.IO;
@@ -99,20 +99,20 @@ internal class MyAppCodeCompilerNetFull : MyAppCodeCompiler
     {
         var l = Log.Fn<CompilerResults>($"{nameof(sourceFiles)}: {sourceFiles.Length}; {nameof(assemblyFilePath)}: '{assemblyFilePath}'", timer: true);
 
-        var provider = new CSharpCodeProvider();
         // need to save dll so latter can be loaded by roslyn compiler
         var parameters = new CompilerParameters(null, assemblyFilePath)
             {
                 GenerateInMemory = false,
                 GenerateExecutable = false,
                 IncludeDebugInformation = true,
-                CompilerOptions = "/optimize- /warnaserror-",
+                CompilerOptions = $"/optimize- /warnaserror- {DnnRoslynConstants.CompilerOptionLanguageVersion} {DnnRoslynConstants.DefaultDisableWarnings}",
             };
 
         // Add all referenced assemblies
         parameters.ReferencedAssemblies.AddRange(_referencedAssembliesProvider.Locations());
 
-        var compilerResults = provider.CompileAssemblyFromFile(parameters, sourceFiles);
+        var codeProvider = new CSharpCodeProvider();
+        var compilerResults = codeProvider.CompileAssemblyFromFile(parameters, sourceFiles);
 
         return compilerResults.Errors.HasErrors
             ? l.ReturnAsError(compilerResults)

@@ -19,6 +19,7 @@ using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Dnn.Compile;
 
 namespace ToSic.Sxc.Dnn.Razor
 {
@@ -28,6 +29,10 @@ namespace ToSic.Sxc.Dnn.Razor
     public class RoslynBuildManager : ServiceBase
     {
         private const string DefaultNamespace = "RazorHost";
+
+        // TODO: THIS IS PROBABLY Wrong, but not important for now
+        // It's wrong, because the web.config gives the default to be a very old 2sxc base class
+        private const string FallbackBaseClass = "System.Web.WebPages.WebPageBase";
 
         private readonly AssemblyCacheManager _assemblyCacheManager;
 
@@ -117,6 +122,8 @@ namespace ToSic.Sxc.Dnn.Razor
 
         private static List<string> GetDefaultReferencedAssemblies()
         {
+            // TODO: @STV - this is different here and in the AppCode
+            // it's unclear why, so either make it the same, or document why it's different
             var referencedAssemblies = new List<string>
             {
                 "System.dll",
@@ -178,7 +185,7 @@ namespace ToSic.Sxc.Dnn.Razor
             //template = FixTemplate(template);
 
             // Find the base class for the template
-            var baseClass = FindTemplateType(template);
+            var baseClass = FindBaseClass(template);
             l.A($"Base class: {baseClass}");
 
             // Create the Razor template engine host
@@ -194,13 +201,16 @@ namespace ToSic.Sxc.Dnn.Razor
             {
                 GenerateInMemory = true,
                 IncludeDebugInformation = true,
-                TreatWarningsAsErrors = false
+                TreatWarningsAsErrors = false,
+
+                CompilerOptions = $"{DnnRoslynConstants.CompilerOptionLanguageVersion} {DnnRoslynConstants.DefaultDisableWarnings}",
             };
             lTimer.Done();
 
             // Compile the template into an assembly
             lTimer = Log.Fn("Compile", timer: true);
             var codeProvider = new Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider();
+            
             var compilerResults = codeProvider.CompileAssemblyFromDom(compilerParameters, razorResults.GeneratedCode);
             lTimer.Done();
             //var compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, template);
@@ -285,11 +295,11 @@ namespace ToSic.Sxc.Dnn.Razor
         /// </summary>
         /// <param name="template">The template content.</param>
         /// <returns>The type of the template.</returns>
-        private static string FindTemplateType(string template)
+        private static string FindBaseClass(string template)
         {
             try
             {
-                if (!template.Contains("@inherits ")) return "System.Web.WebPages.WebPageBase";
+                if (!template.Contains("@inherits ")) return FallbackBaseClass;
 
                 // extract the type name from the template
                 var at = template.IndexOf("@inherits ", StringComparison.Ordinal);
@@ -307,8 +317,7 @@ namespace ToSic.Sxc.Dnn.Razor
             }
             catch (Exception)
             {
-                // fallback;
-                return "System.Web.WebPages.WebPageBase";
+                return FallbackBaseClass;
             }
         }
 
