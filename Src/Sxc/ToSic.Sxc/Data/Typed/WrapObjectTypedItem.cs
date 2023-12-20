@@ -48,7 +48,7 @@ public class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
     bool ITypedItem.IsDemoItem => PreWrap.TryGetTyped(nameof(ITypedItem.IsDemoItem), noParamOrder: default, fallback: false, required: false);
 
     IHtmlTag ITypedItem.Html(string name, NoParamOrder noParamOrder, object container, bool? toolbar,
-        object imageSettings, bool? required, bool debug, Func<ITweakInput<string>, ITweakInput<string>> tweak = default
+        object imageSettings, bool? required, bool debug, Func<ITweakInput<string>, ITweakInput<string>> tweak
     ) => TypedItemHelpers.Html(_cdf.Value, this, name: name, noParamOrder: noParamOrder, container: container,
         toolbar: toolbar, imageSettings: imageSettings, required: required, debug: debug, tweak: tweak);
 

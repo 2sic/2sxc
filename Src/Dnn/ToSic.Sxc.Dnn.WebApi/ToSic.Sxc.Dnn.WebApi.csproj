@@ -25,6 +25,10 @@
     <!-- generate xml docs -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>1701;1702;CS1570;CS1572;CS1573;CS1574;CS1587;CS1591;CS1710;CS1711</NoWarn>
+    <!-- ignore warning that Dnn was loaded 2x - ATM necessary for MS build? @STV -->
+    <NoWarn>MSB4011</NoWarn>
+    <!-- ignore warning that it's using a dangerous version of Dnn (v9.6.1) @2dm -->
+    <NoWarn>NU1902</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

@@ -209,7 +209,7 @@ internal partial class Metadata: ITypedItem
         object imageSettings,
         bool? required,
         bool debug,
-        Func<ITweakInput<string>, ITweakInput<string>> tweak = default
+        Func<ITweakInput<string>, ITweakInput<string>> tweak
     ) => TypedItemHelpers.Html(Cdf, this, name: name, noParamOrder: noParamOrder, container: container,
         toolbar: toolbar, imageSettings: imageSettings, required: required, debug: debug, tweak: tweak);
 

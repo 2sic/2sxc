@@ -11,6 +11,7 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Search;
+#pragma warning disable CS0618 // Type or member is obsolete
 
 namespace ToSic.Sxc.Dnn.Razor;
 
