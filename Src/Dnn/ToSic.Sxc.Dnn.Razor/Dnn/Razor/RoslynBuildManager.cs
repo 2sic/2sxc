@@ -1,4 +1,8 @@
-﻿using System;
+﻿//using Microsoft.CodeAnalysis;
+//using Microsoft.CodeAnalysis.CSharp;
+//using Microsoft.CodeAnalysis.Emit;
+//using Microsoft.CodeAnalysis.Text;
+using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
@@ -211,6 +215,60 @@ namespace ToSic.Sxc.Dnn.Razor
 
             return l.ReturnAsError((null, errorList), "error");
         }
+
+        // TODO: use roslyn compiler directly (need nuget packages)
+        //private (Assembly Assembly, List<string> Errors) RoslynCompileTemplate(string template, List<string> referencedAssemblies, string className)
+        //{
+        //    var l = Log.Fn<(Assembly, List<string>)>(timer: true, parameters: $"Template content length: {template.Length}");
+
+        //    // Find the base class for the template
+        //    var baseClass = FindTemplateType(template);
+        //    l.A($"Base class: {baseClass}");
+
+        //    // Create the Razor template engine host
+        //    var engine = CreateHost(className, baseClass);
+
+        //    var lTimer = Log.Fn("Generate Code", timer: true);
+        //    using var reader = new StringReader(template);
+        //    var razorResults = engine.GenerateCode(reader);
+        //    var syntaxTree = CSharpSyntaxTree.ParseText(SourceText.From(template));
+        //    lTimer.Done();
+
+        //    lTimer = Log.Fn("Compiler Params", timer: true);
+        //    var references = referencedAssemblies.Select(r => MetadataReference.CreateFromFile(r)).ToList();
+        //    lTimer.Done();
+
+        //    // Compile the template into an assembly
+        //    lTimer = Log.Fn("Compile", timer: true);
+        //    var compilation = CSharpCompilation.Create(
+        //        "CompiledTemplateAssembly",
+        //        new[] { syntaxTree },
+        //        references,
+        //        new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+        //            .WithOptimizationLevel(OptimizationLevel.Debug)
+        //            .WithWarningLevel(4)
+        //            .WithLanguageVersion(LanguageVersion.CSharp8)
+        //    );
+        //    using var ms = new MemoryStream();
+        //    EmitResult result = compilation.Emit(ms);
+        //    lTimer.Done();
+
+        //    if (!result.Success)
+        //    {
+        //        // Handle compilation errors
+        //        var errorList = result.Diagnostics
+        //            .Where(diagnostic => diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error)
+        //            .Select(diagnostic => diagnostic.ToString())
+        //            .ToList();
+
+        //        return l.ReturnAsError((null, errorList), "Compilation error");
+        //    }
+
+        //    ms.Seek(0, SeekOrigin.Begin);
+        //    var compiledAssembly = Assembly.Load(ms.ToArray());
+
+        //    return l.ReturnAsOk((compiledAssembly, null));
+        //}
 
         private string ErrorMessagesFromCompileErrors(List<CompilerError> errors)
         {
