@@ -154,8 +154,6 @@ namespace ToSic.Sxc.Razor
             throw new InvalidOperationException(errorMessage);
         }
 
-        private AssemblyLoadContext _assemblyLoadContext;
-
         private async Task<ViewEngineResult> GetViewWithAppCodeAsync(string templatePath, IApp app)
         {
             // get assembly - try to get from cache, otherwise compile
@@ -164,7 +162,7 @@ namespace ToSic.Sxc.Razor
 
             _assemblyResolver.AddAssembly(codeAssembly);
 
-            _assemblyLoadContext = new AssemblyLoadContext("UnLoadableAssemblyLoadContext", isCollectible: true);
+            var assemblyLoadContext = new AssemblyLoadContext("UnLoadableAssemblyLoadContext", isCollectible: true);
 
             var refs = GetMetadataReferences(codeAssembly.Location);
             var fileSystem = RazorProjectFileSystem.Create(app.PhysicalPath);
@@ -230,12 +228,13 @@ namespace ToSic.Sxc.Razor
             peStream.Seek(0, SeekOrigin.Begin);
 
             // 3. Loading and Execution
-            var assembly = _assemblyLoadContext.LoadFromStream(peStream);
+            var assembly = assemblyLoadContext.LoadFromStream(peStream);
 
             var viewType = assembly.GetType("Razor.Template");
 
             var instance = Activator.CreateInstance(viewType);
-            _assemblyLoadContext.Unload();
+
+            assemblyLoadContext.Unload();
 
             if (instance is not IRazorPage page)
                 return ViewEngineResult.NotFound(templatePath, new string[] { "View not found" });
@@ -264,7 +263,7 @@ namespace ToSic.Sxc.Razor
             };
 
             if (File.Exists(appCodeFullPath))
-                references.Add(MetadataReference.CreateFromFile(_assemblyLoadContext.LoadFromAssemblyPath(appCodeFullPath).Location));
+                references.Add(MetadataReference.CreateFromFile(appCodeFullPath));
 
             RazorReferencedAssemblies().ToList().ForEach(a => references.Add(MetadataReference.CreateFromFile(Assembly.Load(a).Location)));
 
