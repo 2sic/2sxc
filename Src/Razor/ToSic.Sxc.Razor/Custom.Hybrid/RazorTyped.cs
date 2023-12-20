@@ -1,4 +1,9 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Razor.Internal;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToSic.Eav.Code.Help;
 using ToSic.Eav.Data;
 using ToSic.Lib.Coding;
@@ -131,6 +136,32 @@ namespace Custom.Hybrid
         [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => CodeHelpDbV16.Compile16;
 
         #endregion
+
+
+        /// <summary>
+        /// This is a tmp workaround to enable injecting the following properties in cshtml compiled with roslyn in Oqtane
+        /// </summary>
+
+        [RazorInject]
+        public IModelExpressionProvider ModelExpressionProvider { get; set; } = (IModelExpressionProvider)null;
+
+        [RazorInject]
+        public IUrlHelper Url { get; set; } = (IUrlHelper)null;
+
+        [RazorInject]
+        public IViewComponentHelper Component { get; set; } = (IViewComponentHelper)null;
+
+        [RazorInject]
+        public IJsonHelper Json { get; set; } = (IJsonHelper)null;
+
+        [RazorInject]
+        public IHtmlHelper<dynamic> Html { get; set; } = (IHtmlHelper<dynamic>)null;
+
+        //public ViewDataDictionary<dynamic> ViewData => (ViewDataDictionary<dynamic>)PageContext?.ViewData;
+
+        //public dynamic Model => ViewData.Model;
+
+        public PageContext PageContext { get; set; } = default!;
 
     }
 }
