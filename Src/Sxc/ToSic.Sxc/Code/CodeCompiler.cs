@@ -154,7 +154,7 @@ public abstract class CodeCompiler: ServiceBase
 
     private void AttachRelativePath(string virtualPath, object instance)
     {
-        var l = Log.Fn();
+        var l = Log.Fn($"{nameof(virtualPath)}: {virtualPath}");
 
         if (!(instance is IGetCodePath codeForwarding))
         {
