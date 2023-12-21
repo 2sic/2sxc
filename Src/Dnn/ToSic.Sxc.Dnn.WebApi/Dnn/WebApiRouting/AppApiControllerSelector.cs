@@ -12,13 +12,15 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 using System.Web.Http.Routing;
 using ToSic.Eav.Context;
-using ToSic.Lib.DI;
 using ToSic.Eav.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Routing;
+using ToSic.Lib.DI;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Help;
+using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Context;
+using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 
 namespace ToSic.Sxc.Dnn.WebApiRouting;
@@ -38,8 +40,6 @@ internal class AppApiControllerSelector : IHttpControllerSelector
     {
         _config = configuration;
     }
-
-
 
     public IDictionary<string, HttpControllerDescriptor> GetControllerMapping() => PreviousSelector.GetControllerMapping();
 
@@ -103,11 +103,11 @@ internal class AppApiControllerSelector : IHttpControllerSelector
             var site = sp.Build<ISite>(log);
 
             // First check local app (in this site), then global
-            var descriptor = DescriptorIfExists(log, request, site, appFolder, edition, controllerTypeName, false);
+            var descriptor = DescriptorIfExists(log, request, site, appFolder, edition, controllerTypeName, false, sp);
             if (descriptor != null) return l.ReturnAsOk(descriptor);
 
             l.A("path not found, will check on shared location");
-            descriptor = DescriptorIfExists(log, request, site, appFolder, edition, controllerTypeName, true);
+            descriptor = DescriptorIfExists(log, request, site, appFolder, edition, controllerTypeName, true, sp);
             if (descriptor != null) return l.ReturnAsOk(descriptor);
         }
         catch (Exception e)
@@ -123,7 +123,7 @@ internal class AppApiControllerSelector : IHttpControllerSelector
 
     }
 
-    private HttpControllerDescriptor DescriptorIfExists(ILog log, HttpRequestMessage request, ISite site, string appFolder, string edition, string controllerTypeName, bool shared)
+    private HttpControllerDescriptor DescriptorIfExists(ILog log, HttpRequestMessage request, ISite site, string appFolder, string edition, string controllerTypeName, bool shared, IServiceProvider sp)
     {
         var l = log.Fn<HttpControllerDescriptor>();
         var controllerFolder = Path
@@ -135,7 +135,7 @@ internal class AppApiControllerSelector : IHttpControllerSelector
         // note: this may look like something you could optimize/cache the result, but that's a bad idea
         // because when the file changes, the type-object will be different, so please don't optimize :)
         var exists = File.Exists(HostingEnvironment.MapPath(controllerPath));
-        var descriptor = exists ? BuildDescriptor(request, controllerFolder, controllerPath, controllerTypeName) : null;
+        var descriptor = exists ? BuildDescriptor(request, controllerFolder, controllerPath, controllerTypeName, sp) : null;
         return l.Return(descriptor, $"{nameof(exists)}: {exists}");
     }
 
@@ -149,10 +149,18 @@ internal class AppApiControllerSelector : IHttpControllerSelector
         return edition;
     }
 
-    private HttpControllerDescriptor BuildDescriptor(HttpRequestMessage request, string folder, string fullPath, string typeName)
+    private HttpControllerDescriptor BuildDescriptor(HttpRequestMessage request, string folder, string fullPath, string typeName, IServiceProvider sp)
     {
-        var assembly = BuildManager.GetCompiledAssembly(fullPath)
-                       ?? throw new Exception("Assembly not found or compiled to null (error).");
+        var hasMyApp = sp.Build<SourceAnalyzer>().TypeOfVirtualPath(fullPath).MyApp;
+        var appId = sp.Build<DnnGetBlock>().GetCmsBlock(request).LoadBlock().AppId;
+        var roslynBuildManager = sp.Build<LazySvc<IRoslynBuildManager>>();
+
+        var assembly = hasMyApp
+            ? roslynBuildManager.Value.GetCompiledAssembly(fullPath, typeName, appId)?.Assembly
+            : BuildManager.GetCompiledAssembly(fullPath);
+
+        if (assembly == null) throw new Exception("Assembly not found or compiled to null (error).");
+
         var type = assembly.GetType(typeName, true, true)
                    ?? throw new Exception($"Type '{typeName}' not found in assembly. Could be a compile error or name mismatch.");
 

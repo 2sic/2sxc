@@ -12,12 +12,10 @@ namespace ToSic.Sxc.Razor
     {
 
         private readonly LazySvc<IRazorRenderer> _razorRendererLazy;
-        private readonly LazySvc<MyAppCodeLoader> _myAppCodeLoader;
 
-        public RazorService(LazySvc<IRazorRenderer> razorRendererLazy, LazySvc<MyAppCodeLoader> myAppCodeLoader)
+        public RazorService(LazySvc<IRazorRenderer> razorRendererLazy)
         {
             _razorRendererLazy = razorRendererLazy;
-            _myAppCodeLoader = myAppCodeLoader;
         }
 
         /// <summary>

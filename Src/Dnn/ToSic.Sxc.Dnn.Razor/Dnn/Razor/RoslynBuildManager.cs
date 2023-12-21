@@ -17,6 +17,7 @@ using System.Web.Razor.Generator;
 using System.Web.WebPages;
 using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Helpers;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
@@ -36,11 +37,16 @@ namespace ToSic.Sxc.Dnn.Razor
         private const string FallbackBaseClass = "System.Web.WebPages.WebPageBase";
 
         private readonly AssemblyCacheManager _assemblyCacheManager;
+        private readonly LazySvc<MyAppCodeLoader> _myAppCodeLoader;
+        private readonly AssemblyResolver _assemblyResolver;
 
-        public RoslynBuildManager(AssemblyCacheManager assemblyCacheManager) : base("Dnn.RoslynBuildManager")
+        public RoslynBuildManager(AssemblyCacheManager assemblyCacheManager, LazySvc<MyAppCodeLoader> myAppCodeLoader, AssemblyResolver assemblyResolver) : base("Dnn.RoslynBuildManager")
         {
+            ;
             ConnectServices(
-                _assemblyCacheManager = assemblyCacheManager
+                _assemblyCacheManager = assemblyCacheManager,
+                _myAppCodeLoader = myAppCodeLoader,
+                _assemblyResolver = assemblyResolver
             );
         }
 
@@ -82,6 +88,12 @@ namespace ToSic.Sxc.Dnn.Razor
             List<string> referencedAssemblies = [.. DefaultReferencedAssemblies.Value];
 
             // Roslyn compiler need reference to location of dll, when dll is not in bin folder
+            // get assembly - try to get from cache, otherwise compile
+            var codeAssembly = MyAppCodeLoader.TryGetAssemblyOfCodeFromCache(appId, Log)?.Assembly
+                               ?? _myAppCodeLoader.Value.GetAppCodeAssemblyOrNull(appId);
+
+            _assemblyResolver.AddAssembly(codeAssembly);
+
             var appCode = AssemblyCacheManager.TryGetAppCode(appId);
             var myAppCodeAssembly = appCode.Result?.Assembly;
             if (myAppCodeAssembly != null)
