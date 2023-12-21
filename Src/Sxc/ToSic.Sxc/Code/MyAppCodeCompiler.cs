@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Code
             string randomNameWithoutExtension;
             do
             {
-                randomNameWithoutExtension = $"App-{appId:0000}-{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}";
+                randomNameWithoutExtension = $"App-{appId:00000}-{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}";
             }
             while (File.Exists(Path.Combine(folderPath, $"{randomNameWithoutExtension}.dll")));
             return l.ReturnAsOk(randomNameWithoutExtension);

@@ -5,7 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Code;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using File = System.IO.File;
@@ -18,15 +21,19 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 /// </summary>
 internal class AppApiControllerManager: IHasLog
 {
-    public AppApiControllerManager(ApplicationPartManager partManager, AppApiFileSystemWatcher appApiFileSystemWatcher, ILogStore logStore)
+    public AppApiControllerManager(ApplicationPartManager partManager, AppApiFileSystemWatcher appApiFileSystemWatcher, ILogStore logStore, LazySvc<MyAppCodeLoader> myAppCodeLoader, IContextResolver ctxResolver)
     {
         _partManager = partManager;
+        _myAppCodeLoader = myAppCodeLoader;
+        _ctxResolver = ctxResolver;
         _compiledAppApiControllers = appApiFileSystemWatcher.CompiledAppApiControllers;
         Log = new Log(HistoryLogName, null, "AppApiControllerManager");
         logStore.Add(HistoryLogGroup, Log);
     }
     private readonly ConcurrentDictionary<string, bool> _compiledAppApiControllers;
     private readonly ApplicationPartManager _partManager;
+    private readonly LazySvc<MyAppCodeLoader> _myAppCodeLoader;
+    private readonly IContextResolver _ctxResolver;
 
     public ILog Log { get; }
 
@@ -71,9 +78,10 @@ internal class AppApiControllerManager: IHasLog
         if (string.IsNullOrWhiteSpace(apiCode))
             throw new IOException($"Error, missing AppApi code in file {Path.GetFileName(apiFile)}.");
 
+        var appId = _ctxResolver.SetAppOrGetBlock("")?.AppState?.AppId ?? Eav.Constants.AppIdEmpty;
         // Build new AppApi Controller
         Log.A($"Compile assembly: {apiFile}, {dllName}");
-        var assemblyResult = new Compiler().Compile(apiFile, dllName);
+        var assemblyResult = new Compiler(_myAppCodeLoader).Compile(apiFile, dllName, appId);
 
         // Add new key to concurrent dictionary, before registering new AppAPi controller.
         if (!_compiledAppApiControllers.TryAdd(apiFile, false))

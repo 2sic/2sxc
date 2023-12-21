@@ -13,14 +13,16 @@ namespace ToSic.Sxc.Oqt.Server.Code;
 [PrivateApi]
 internal class MyAppCodeCompilerNetCore: MyAppCodeCompiler
 {
-    public MyAppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths)
+    public MyAppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, LazySvc<MyAppCodeLoader> myAppCodeLoader)
     {
         ConnectServices(
-            _serverPaths = serverPaths
+            _serverPaths = serverPaths,
+            _myAppCodeLoader = myAppCodeLoader
         );
     }
 
     private readonly LazySvc<IServerPaths> _serverPaths;
+    private readonly LazySvc<MyAppCodeLoader> _myAppCodeLoader;
 
     protected internal override AssemblyResult GetAppCode(string virtualPath, int appId = 0)
     {
@@ -35,7 +37,7 @@ internal class MyAppCodeCompilerNetCore: MyAppCodeCompiler
 
             var assemblyLocations = GetAssemblyLocations(appId);
             var dllName = Path.GetFileName(assemblyLocations[1]);
-            var assemblyResult = new Compiler().GetCompiledAssemblyFromFolder(sourceFiles, assemblyLocations[1], assemblyLocations[0], dllName);
+            var assemblyResult = new Compiler(_myAppCodeLoader).GetCompiledAssemblyFromFolder(sourceFiles, assemblyLocations[1], assemblyLocations[0], dllName);
 
             // Compile ok
             if (assemblyResult.ErrorMessages.IsEmpty())
@@ -77,5 +79,15 @@ internal class MyAppCodeCompilerNetCore: MyAppCodeCompiler
     /// Generates a random name for a dll file and ensures it does not already exist in the "2sxc.bin" folder.
     /// </summary>
     /// <returns>The generated random name.</returns>
-    protected override string GetAppCodeDllName(string folderPath, int appId) => Log.Fn<string>().Return($"App-{appId:0000}");
+    private string GetAppCodeDllName(string folderPath, int appId)
+    {
+        var l = Log.Fn<string>($"{nameof(folderPath)}: '{folderPath}'; {nameof(appId)}: {appId}", timer: true);
+        string randomNameWithoutExtension;
+        do
+        {
+            randomNameWithoutExtension = $"App-{appId:00000}-{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}";
+        }
+        while (File.Exists(Path.Combine(folderPath, $"{randomNameWithoutExtension}.dll")));
+        return l.ReturnAsOk(randomNameWithoutExtension);
+    }
 }

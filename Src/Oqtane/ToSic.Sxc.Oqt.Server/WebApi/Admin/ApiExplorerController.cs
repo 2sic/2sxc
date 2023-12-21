@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Reflection;
 using ToSic.Eav.Internal.Environment;
-using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Routing;
+using ToSic.Lib.DI;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Oqt.Server.Code;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
@@ -45,8 +47,10 @@ public class ApiExplorerController : OqtStatefulControllerBase, IApiExplorerCont
         // get path from root
         var siteStateInitializer = GetService<SiteStateInitializer>();
         var siteId = siteStateInitializer.InitializedState.Alias.SiteId;
+        var appId = CtxHlp.BlockOptional?.AppId ?? Eav.Constants.AppIdEmpty;
         var appFolder = GetService<AppFolder>().GetAppFolder();
         var pathFromRoot = OqtServerPaths.GetAppApiPath(siteId, appFolder, path);
+        var myAppCodeLoader = GetService<LazySvc<MyAppCodeLoader>>();
         Log.A($"Controller path from root: {pathFromRoot}");
 
         // get full path
@@ -60,6 +64,6 @@ public class ApiExplorerController : OqtStatefulControllerBase, IApiExplorerCont
         var controllerFolder = pathFromRoot.Substring(0, pathFromRoot.LastIndexOf(@"\"));
         var dllName = AppApiDynamicRouteValueTransformer.GetDllName(controllerFolder, apiFile);
 
-        return new Compiler().Compile(apiFile, dllName).Assembly;
+        return new Compiler(myAppCodeLoader).Compile(apiFile, dllName, appId).Assembly;
     }
 }

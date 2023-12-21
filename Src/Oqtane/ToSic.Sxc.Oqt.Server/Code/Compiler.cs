@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
@@ -21,18 +22,25 @@ namespace ToSic.Sxc.Oqt.Server.Code
     // https://laurentkempe.com/2019/02/18/dynamically-compile-and-run-code-using-dotNET-Core-3.0/
     public class Compiler : ServiceBase
     {
+        private readonly LazySvc<MyAppCodeLoader> _myAppCodeLoader;
+
+        public Compiler(LazySvc<MyAppCodeLoader> myAppCodeLoader) : base("Sys.CodCpl")
+        {
+            _myAppCodeLoader = myAppCodeLoader;
+        }
+
         private static List<MetadataReference> References => _references ??= GetMetadataReferences();
         private static List<MetadataReference> _references;
-
-        public Compiler() : base("Sys.CodCpl")
-        { }
 
         // Ensure that can't be kept alive by stack slot references (real- or JIT-introduced locals).
         // That could keep the SimpleUnloadableAssemblyLoadContext alive and prevent the unload.
         [MethodImpl(MethodImplOptions.NoInlining)]
-        internal AssemblyResult Compile(string sourceFile, string dllName)
+        internal AssemblyResult Compile(string sourceFile, string dllName, int appId)
         {
             var l = Log.Fn<AssemblyResult>($"Starting compilation of: '{sourceFile}', {nameof(dllName)}: {dllName}.");
+
+            var codeAssembly = MyAppCodeLoader.TryGetAssemblyOfCodeFromCache(appId, Log)?.Assembly
+                               ?? _myAppCodeLoader.Value.GetAppCodeAssemblyOrNull(appId);
 
             var encoding = Encoding.UTF8;
 
@@ -52,7 +60,7 @@ namespace ToSic.Sxc.Oqt.Server.Code
             var compilation = CSharpCompilation.Create(
                 $"{assemblyName}.dll",
                 syntaxTrees,
-                references: References,
+                references: GetMetadataReferences(codeAssembly?.Location),
                 options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
                     optimizationLevel: OptimizationLevel.Debug,
                     assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default));
@@ -185,7 +193,13 @@ namespace ToSic.Sxc.Oqt.Server.Code
                 references.Add(MetadataReference.CreateFromFile(dllFile));
             foreach (string dllFile in Directory.GetFiles(Path.Combine(dllPath, "refs"), "*.dll"))
                 references.Add(MetadataReference.CreateFromFile(dllFile));
+
             return references;
         }
+
+        private static List<MetadataReference> GetMetadataReferences(string appCodeFullPath) =>
+            !string.IsNullOrEmpty(appCodeFullPath) && File.Exists(appCodeFullPath)
+                ? References.Union(new List<MetadataReference>() { MetadataReference.CreateFromFile(appCodeFullPath) }).ToList()
+                : References;
     }
 }

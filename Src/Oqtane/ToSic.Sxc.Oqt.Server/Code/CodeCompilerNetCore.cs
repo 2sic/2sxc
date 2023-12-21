@@ -10,19 +10,22 @@ using ToSic.Sxc.Code;
 namespace ToSic.Sxc.Oqt.Server.Code;
 
 [PrivateApi]
-internal class CodeCompilerNetCore: CodeCompiler
+internal class CodeCompilerNetCore : CodeCompiler
 {
     private readonly LazySvc<IServerPaths> _serverPaths;
+    private readonly LazySvc<MyAppCodeLoader> _myAppCodeLoader;
 
-    public CodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, IServiceProvider serviceProvider) : base(serviceProvider)
+    public CodeCompilerNetCore(IServiceProvider serviceProvider, LazySvc<IServerPaths> serverPaths, LazySvc<MyAppCodeLoader> myAppCodeLoader) : base(serviceProvider)
     {
         ConnectServices(
-            _serverPaths = serverPaths
+            _serverPaths = serverPaths,
+            _myAppCodeLoader = myAppCodeLoader
         );
     }
 
-    protected override (Type Type, string ErrorMessage) GetCsHtmlType(string virtualPath) 
+    protected override (Type Type, string ErrorMessage) GetCsHtmlType(string virtualPath)
         => throw new("Runtime Compile of .cshtml is Not Implemented in .net standard / core");
+
     protected internal override AssemblyResult GetAssembly(string virtualPath, string className, int appId = 0)
     {
         var l = Log.Fn<AssemblyResult>(
@@ -32,8 +35,7 @@ internal class CodeCompilerNetCore: CodeCompiler
         l.A($"New paths: '{fullContentPath}', '{fullPath}'");
         try
         {
-            var assemblyResult = new Compiler().Compile(fullPath, className);
-            return l.ReturnAsOk(assemblyResult);
+            return l.ReturnAsOk(new Compiler(_myAppCodeLoader).Compile(fullPath, className, appId));
         }
         catch (Exception ex)
         {

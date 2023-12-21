@@ -160,11 +160,11 @@ namespace ToSic.Sxc.Razor
             var codeAssembly = MyAppCodeLoader.TryGetAssemblyOfCodeFromCache(app.AppId, Log)?.Assembly
                                ?? _myAppCodeLoader.Value.GetAppCodeAssemblyOrNull(app.AppId);
 
-            _assemblyResolver.AddAssembly(codeAssembly, app.RelativePath);
+            if (codeAssembly != null) _assemblyResolver.AddAssembly(codeAssembly, app.RelativePath);
 
             var assemblyLoadContext = new AssemblyLoadContext("UnLoadableAssemblyLoadContext", isCollectible: true);
 
-            var refs = GetMetadataReferences(codeAssembly.Location);
+            var refs = GetMetadataReferences(codeAssembly?.Location);
             var fileSystem = RazorProjectFileSystem.Create(app.PhysicalPath);
             var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, fileSystem, (RazorProjectEngineBuilder builder) =>
             {
@@ -262,7 +262,7 @@ namespace ToSic.Sxc.Razor
                 MetadataReference.CreateFromFile(Assembly.LoadFile(typeof(Microsoft.AspNetCore.Mvc.Razor.RazorPage).Assembly.Location).Location),
             };
 
-            if (File.Exists(appCodeFullPath))
+            if (!string.IsNullOrEmpty(appCodeFullPath) && File.Exists(appCodeFullPath))
                 references.Add(MetadataReference.CreateFromFile(appCodeFullPath));
 
             RazorReferencedAssemblies().ToList().ForEach(a => references.Add(MetadataReference.CreateFromFile(Assembly.Load(a).Location)));
