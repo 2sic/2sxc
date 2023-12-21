@@ -1,12 +1,13 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Code
 {
-    public abstract class MyAppCodeCompiler(/*IServiceProvider serviceProvider*/) : ServiceBase("Sxc.MyApCd") // CodeCompiler(serviceProvider)
+    public abstract class MyAppCodeCompiler() : ServiceBase("Sxc.MyApCd")
     {
         public const string CsFiles = ".cs";
         public const bool UseSubfolders = false;
@@ -55,14 +56,16 @@ namespace ToSic.Sxc.Code
         protected static string NormalizeFullPath(string fullPath) => new FileInfo(fullPath).FullName;
 
 
-        protected bool LogAllTypes(Assembly assembly)
+        protected void LogAllTypes(Assembly assembly)
         {
             var l = Log.Fn<bool>(assembly?.FullName);
-            if (assembly == null) return l.ReturnFalse("no assembly");
 
-            foreach (var type in assembly.GetTypes()) l.A(type.FullName);
+            var list = AssemblyAnalyzer.TypeInformation(assembly);
+            foreach (var item in list) l.A(item);
 
-            return l.ReturnTrue();
+            l.Done();
         }
+
+
     }
 }
