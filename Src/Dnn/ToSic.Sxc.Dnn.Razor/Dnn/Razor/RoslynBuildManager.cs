@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Caching;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Web;
 using System.Web.Hosting;
@@ -146,6 +147,8 @@ namespace ToSic.Sxc.Dnn.Razor
             return l.ReturnAsOk(assemblyResult);
         }
 
+
+
         /// <summary>
         /// extract appRelativePath from relativePath
         /// </summary>
@@ -186,7 +189,7 @@ namespace ToSic.Sxc.Dnn.Razor
             try
             {
                 foreach (var dll in Directory.GetFiles(HttpRuntime.BinDirectory, "*.dll"))
-                    referencedAssemblies.Add(dll);
+                    if (IsValidAssembly(dll)) referencedAssemblies.Add(dll);
             }
             catch
             {
@@ -195,11 +198,30 @@ namespace ToSic.Sxc.Dnn.Razor
 
             // deduplicate referencedAssemblies by filename, keep last duplicate
             referencedAssemblies = referencedAssemblies
+                //.Where(IsValidAssembly)
                 .GroupBy(Path.GetFileName)
                 .Select(g => g.Last())
                 .ToList();
 
             return referencedAssemblies;
+        }
+
+        /// <summary>
+        /// We need to skip invalid assemblies to not break compile process
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        private static bool IsValidAssembly(string filePath)
+        {
+            try
+            {
+                Assembly.ReflectionOnlyLoadFrom(filePath);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private string GetSafeClassName(string templateFullPath)

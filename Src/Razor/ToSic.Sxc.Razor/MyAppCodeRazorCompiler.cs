@@ -253,30 +253,43 @@ namespace ToSic.Sxc.Razor
             return l.ReturnAsOk(new ActionContext(httpContext, new RouteData(), new ActionDescriptor()));
         }
 
-        private List<MetadataReference> GetMetadataReferences(string appCodeFullPath)
+        #region References
+        private static List<MetadataReference> GetMetadataReferences(string appCodeFullPath)
         {
-            var references = new List<MetadataReference>
+            try
             {
-                // MetadataReference.CreateFromFile(typeof(object).Assembly.Location), // Commented because it solves error when "refs" are referenced.
-                MetadataReference.CreateFromFile(Assembly.Load("netstandard, Version=2.0.0.0").Location),
-                MetadataReference.CreateFromFile(Assembly.LoadFile(typeof(Microsoft.AspNetCore.Mvc.Razor.RazorPage).Assembly.Location).Location),
+                if (!string.IsNullOrEmpty(appCodeFullPath) && File.Exists(appCodeFullPath))
+                    return References.Union(new List<MetadataReference>()
+                            { MetadataReference.CreateFromFile(appCodeFullPath) })
+                        .ToList();
+            }
+            catch
+            {
+                // sink
             };
 
-            if (!string.IsNullOrEmpty(appCodeFullPath) && File.Exists(appCodeFullPath))
-                references.Add(MetadataReference.CreateFromFile(appCodeFullPath));
+            return References;
+        }
 
-            RazorReferencedAssemblies().ToList().ForEach(a => references.Add(MetadataReference.CreateFromFile(Assembly.Load(a).Location)));
+        private static List<MetadataReference> References => _references ??= GetMetadataReferences();
+        private static List<MetadataReference> _references;
 
+        private static List<MetadataReference> GetMetadataReferences()
+        {
+            var references = new List<MetadataReference>();
+            //AddMetadataReferenceFromAssembly(references, typeof(object).Assembly.Location); // Commented because it solves error when "refs" are referenced.
+            AddMetadataReferenceFromAssemblyName(references, "netstandard, Version=2.0.0.0");
+            AddMetadataReferenceFromFile(references, typeof(Microsoft.AspNetCore.Mvc.Razor.RazorPage).Assembly.Location);
+            RazorReferencedAssemblies().ToList()
+                .ForEach(assemblyName => AddMetadataReferenceFromAssemblyName(references, assemblyName));
             Assembly.GetEntryAssembly()?.GetReferencedAssemblies().ToList()
-                .ForEach(a => references.Add(MetadataReference.CreateFromFile(Assembly.Load(a).Location)));
+                .ForEach(assemblyName => AddMetadataReferenceFromAssemblyName(references, assemblyName));
 
             // Add references to all dll's in bin folder.
             var dllLocation = AppContext.BaseDirectory;
             var dllPath = Path.GetDirectoryName(dllLocation);
-            foreach (string dllFile in Directory.GetFiles(dllPath, "*.dll"))
-                references.Add(MetadataReference.CreateFromFile(Assembly.LoadFile(dllFile).Location));
-            foreach (string dllFile in Directory.GetFiles(Path.Combine(dllPath, "refs"), "*.dll"))
-                references.Add(MetadataReference.CreateFromFile(/*Assembly.Load(Path.GetFileNameWithoutExtension(dllFile)).Location*/dllFile));
+            foreach (string dllFile in Directory.GetFiles(dllPath, "*.dll")) AddMetadataReferenceFromFile(references, dllFile);
+            foreach (string dllFile in Directory.GetFiles(Path.Combine(dllPath, "refs"), "*.dll")) AddMetadataReferenceFromFile(references, dllFile);
 
             return references;
         }
@@ -284,33 +297,70 @@ namespace ToSic.Sxc.Razor
         private static string[] RazorReferencedAssemblies()
         {
             return new string[] {
-              "Microsoft.AspNetCore",
-              "Microsoft.AspNetCore.Authorization.Policy",
-              "Microsoft.AspNetCore.Diagnostics",
-              "Microsoft.AspNetCore.Hosting.Abstractions",
-              "Microsoft.AspNetCore.Html.Abstractions",
-              "Microsoft.AspNetCore.Http.Abstractions",
-              "Microsoft.AspNetCore.HttpsPolicy",
-              "Microsoft.AspNetCore.Mvc",
-              "Microsoft.AspNetCore.Mvc.Abstractions",
-              "Microsoft.AspNetCore.Mvc.Core",
-              "Microsoft.AspNetCore.Mvc.Razor",
-              "Microsoft.AspNetCore.Mvc.RazorPages",
-              "Microsoft.AspNetCore.Mvc.TagHelpers",
-              "Microsoft.AspNetCore.Mvc.ViewFeatures",
-              "Microsoft.AspNetCore.Razor",
-              "Microsoft.AspNetCore.Razor.Runtime",
-              "Microsoft.AspNetCore.Routing",
-              "Microsoft.AspNetCore.StaticFiles",
-              "Microsoft.Extensions.DependencyInjection.Abstractions",
-              "Microsoft.Extensions.Hosting.Abstractions",
-              "Microsoft.Extensions.Logging.Abstractions",
-              "System.Diagnostics.DiagnosticSource",
-              "System.Linq.Expressions",
-              "System.Runtime",
-              "System.Runtime.Loader",
-              "System.Text.Encodings.Web",
+                "Microsoft.AspNetCore",
+                "Microsoft.AspNetCore.Authorization.Policy",
+                "Microsoft.AspNetCore.Diagnostics",
+                "Microsoft.AspNetCore.Hosting.Abstractions",
+                "Microsoft.AspNetCore.Html.Abstractions",
+                "Microsoft.AspNetCore.Http.Abstractions",
+                "Microsoft.AspNetCore.HttpsPolicy",
+                "Microsoft.AspNetCore.Mvc",
+                "Microsoft.AspNetCore.Mvc.Abstractions",
+                "Microsoft.AspNetCore.Mvc.Core",
+                "Microsoft.AspNetCore.Mvc.Razor",
+                "Microsoft.AspNetCore.Mvc.RazorPages",
+                "Microsoft.AspNetCore.Mvc.TagHelpers",
+                "Microsoft.AspNetCore.Mvc.ViewFeatures",
+                "Microsoft.AspNetCore.Razor",
+                "Microsoft.AspNetCore.Razor.Runtime",
+                "Microsoft.AspNetCore.Routing",
+                "Microsoft.AspNetCore.StaticFiles",
+                "Microsoft.Extensions.DependencyInjection.Abstractions",
+                "Microsoft.Extensions.Hosting.Abstractions",
+                "Microsoft.Extensions.Logging.Abstractions",
+                "System.Diagnostics.DiagnosticSource",
+                "System.Linq.Expressions",
+                "System.Runtime",
+                "System.Runtime.Loader",
+                "System.Text.Encodings.Web",
             };
         }
+
+        private static void AddMetadataReferenceFromAssemblyName(List<MetadataReference> references, string assemblyName)
+        {
+            try
+            {
+                references.Add(MetadataReference.CreateFromFile(Assembly.Load(assemblyName).Location));
+            }
+            catch
+            {
+                // sink
+            }
+        }
+
+        private static void AddMetadataReferenceFromAssemblyName(List<MetadataReference> references, AssemblyName assemblyName)
+        {
+            try
+            {
+                references.Add(MetadataReference.CreateFromFile(Assembly.Load(assemblyName).Location));
+            }
+            catch
+            {
+                // sink
+            }
+        }
+
+        private static void AddMetadataReferenceFromFile(List<MetadataReference> references, string dllFile)
+        {
+            try
+            {
+                references.Add(MetadataReference.CreateFromFile(dllFile));
+            }
+            catch
+            {
+                // sink
+            }
+        } 
+        #endregion
     }
 }

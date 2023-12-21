@@ -29,9 +29,6 @@ namespace ToSic.Sxc.Oqt.Server.Code
             _myAppCodeLoader = myAppCodeLoader;
         }
 
-        private static List<MetadataReference> References => _references ??= GetMetadataReferences();
-        private static List<MetadataReference> _references;
-
         // Ensure that can't be kept alive by stack slot references (real- or JIT-introduced locals).
         // That could keep the SimpleUnloadableAssemblyLoadContext alive and prevent the unload.
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -175,31 +172,79 @@ namespace ToSic.Sxc.Oqt.Server.Code
             return l.ReturnAsOk(new AssemblyResult(assembly, /*assemblyBytes,*/ null));
         }
 
-        private static List<MetadataReference> GetMetadataReferences()
+        #region References
+        private static List<MetadataReference> GetMetadataReferences(string appCodeFullPath)
         {
-            var references = new List<MetadataReference>
+            try
             {
-                //MetadataReference.CreateFromFile(typeof(object).Assembly.Location), // Commented because it solves error when "refs" are referenced.
-                MetadataReference.CreateFromFile(Assembly.Load("netstandard, Version=2.0.0.0").Location)
+                if (!string.IsNullOrEmpty(appCodeFullPath) && File.Exists(appCodeFullPath))
+                    return References.Union(new List<MetadataReference>()
+                            { MetadataReference.CreateFromFile(appCodeFullPath) })
+                        .ToList();
+            }
+            catch
+            {
+                // sink
             };
 
+            return References;
+        }
+
+        private static List<MetadataReference> References => _references ??= GetMetadataReferences();
+        private static List<MetadataReference> _references;
+
+        private static List<MetadataReference> GetMetadataReferences()
+        {
+            var references = new List<MetadataReference>();
+            //AddMetadataReferenceFromFile(references, typeof(object).Assembly.Location); // Commented because it solves error when "refs" are referenced.
+            AddMetadataReferenceFromAssemblyName(references, "netstandard, Version=2.0.0.0");
             Assembly.GetEntryAssembly()?.GetReferencedAssemblies().ToList()
-                .ForEach(a => references.Add(MetadataReference.CreateFromFile(Assembly.Load(a).Location)));
+                .ForEach(assemblyName => AddMetadataReferenceFromAssemblyName(references, assemblyName));
 
             // Add references to all dll's in bin folder.
             var dllLocation = AppContext.BaseDirectory;
             var dllPath = Path.GetDirectoryName(dllLocation);
-            foreach (string dllFile in Directory.GetFiles(dllPath, "*.dll"))
-                references.Add(MetadataReference.CreateFromFile(dllFile));
-            foreach (string dllFile in Directory.GetFiles(Path.Combine(dllPath, "refs"), "*.dll"))
-                references.Add(MetadataReference.CreateFromFile(dllFile));
+            foreach (string dllFile in Directory.GetFiles(dllPath, "*.dll")) AddMetadataReferenceFromFile(references, dllFile);
+            foreach (string dllFile in Directory.GetFiles(Path.Combine(dllPath, "refs"), "*.dll")) AddMetadataReferenceFromFile(references, dllFile);
 
             return references;
         }
 
-        private static List<MetadataReference> GetMetadataReferences(string appCodeFullPath) =>
-            !string.IsNullOrEmpty(appCodeFullPath) && File.Exists(appCodeFullPath)
-                ? References.Union(new List<MetadataReference>() { MetadataReference.CreateFromFile(appCodeFullPath) }).ToList()
-                : References;
+        private static void AddMetadataReferenceFromAssemblyName(List<MetadataReference> references, string assemblyName)
+        {
+            try
+            {
+                references.Add(MetadataReference.CreateFromFile(Assembly.Load(assemblyName).Location));
+            }
+            catch
+            {
+                // sink
+            }
+        }
+
+        private static void AddMetadataReferenceFromAssemblyName(List<MetadataReference> references, AssemblyName assemblyName)
+        {
+            try
+            {
+                references.Add(MetadataReference.CreateFromFile(Assembly.Load(assemblyName).Location));
+            }
+            catch
+            {
+                // sink
+            }
+        }
+
+        private static void AddMetadataReferenceFromFile(List<MetadataReference> references, string dllFile)
+        {
+            try
+            {
+                references.Add(MetadataReference.CreateFromFile(dllFile));
+            }
+            catch
+            {
+                // sink
+            }
+        } 
+        #endregion
     }
 }
