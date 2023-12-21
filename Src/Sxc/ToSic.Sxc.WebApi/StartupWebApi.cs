@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Apps.Insights;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.ImportExport;
@@ -26,6 +27,7 @@ using ToSic.Sxc.WebApi.Infrastructure;
 using ToSic.Sxc.WebApi.InPage;
 using ToSic.Sxc.WebApi.Save;
 using ToSic.Sxc.WebApi.Sys;
+using ToSic.Sxc.WebApi.Sys.Insights;
 using ToSic.Sxc.WebApi.Usage;
 using ToSic.Sxc.WebApi.Views;
 
@@ -114,6 +116,8 @@ public static class StartupWebApi
 
         services.AddLoadSettingsProviders();
 
+        services.AddSxcInsights();
+
         services.AddFallbacks();
 
         return services;
@@ -151,6 +155,12 @@ public static class StartupWebApi
         // Typed Adam
         services.TryAddTransient<IAdamTransGetItems, AdamTransGetItems<TFolder, TFile>>();
 
+        return services;
+    }
+
+    public static IServiceCollection AddSxcInsights(this IServiceCollection services)
+    {
+        services.TryAddTransient<IInsightsProvider, InsightsAppCodeOverview>();
         return services;
     }
 
