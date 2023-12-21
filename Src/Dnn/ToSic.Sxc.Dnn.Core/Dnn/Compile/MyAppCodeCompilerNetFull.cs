@@ -16,7 +16,7 @@ internal class MyAppCodeCompilerNetFull : MyAppCodeCompiler
     private readonly IHostingEnvironmentWrapper _hostingEnvironment;
     private readonly IReferencedAssembliesProvider _referencedAssembliesProvider;
 
-    public MyAppCodeCompilerNetFull(/*IServiceProvider serviceProvider,*/ IHostingEnvironmentWrapper hostingEnvironment, IReferencedAssembliesProvider referencedAssembliesProvider) //: base(serviceProvider)
+    public MyAppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironment, IReferencedAssembliesProvider referencedAssembliesProvider)
     {
         ConnectServices(
             _hostingEnvironment = hostingEnvironment,
@@ -35,24 +35,6 @@ internal class MyAppCodeCompilerNetFull : MyAppCodeCompiler
             var (sourceFiles, errorResult) = GetSourceFilesOrError(NormalizeFullPath(_hostingEnvironment.MapPath(relativePath)));
             if (errorResult != null)
                 return l.ReturnAsError(errorResult, errorResult.ErrorMessages);
-
-            //var initialPath = _hostingEnvironment.MapPath(relativePath);
-            //var fullPath = NormalizeFullPath(initialPath);
-            //var sourceFiles = Directory.GetFiles(fullPath, $"*{CsFiles}", UseSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
-
-            // Log all files
-            //var wrapFiles = l.Fn($"Source Files in {fullPath}:");
-            //foreach (var sourceFile in sourceFiles) l.A(sourceFile);
-            //wrapFiles.Done($"{sourceFiles.Length}");
-
-            //// Validate are there any C# files
-            //// TODO: if no files exist, it shouldn't be an error, because it could be that it's just not here yet
-            //if (sourceFiles.Length == 0)
-            //    return l.ReturnAsError(new AssemblyResult(
-            //            errorMessages: $"Error: given path '{relativePath}' doesn't contain any {CsFiles} files"),
-            //        $"given path '{relativePath}' doesn't contain any {CsFiles} files");
-
-
 
             var assemblyLocations = GetAssemblyLocations(appId);
 
@@ -126,14 +108,5 @@ internal class MyAppCodeCompilerNetFull : MyAppCodeCompiler
             ? l.ReturnAsError(compilerResults)
             : l.ReturnAsOk(compilerResults);
     }
-
-    //protected override (Type Type, string ErrorMessage) GetCsHtmlType(string relativePath)
-    //{
-    //    var l = Log.Fn<(Type Type, string ErrorMessage)>($"{nameof(relativePath)}: '{relativePath}'", timer: true);
-    //    var compiledType = BuildManager.GetCompiledType(relativePath);
-    //    var errMsg = compiledType == null ? $"Couldn't create instance of {relativePath}. Compiled type == null" : null;
-    //    return l.Return((compiledType, errMsg), errMsg ?? "Ok");
-    //}
-
 
 }

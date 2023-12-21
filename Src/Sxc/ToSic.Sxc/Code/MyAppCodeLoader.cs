@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Code
             if (!Directory.Exists(physicalPath))
                 return l.ReturnAsError(null, $"no folder {physicalPath}");
 
-            var assemblyResult = _myAppCodeCompilerLazy.Value.GetAssembly(relativePath, appId);
+            var assemblyResult = _myAppCodeCompilerLazy.Value.GetAppCode(relativePath, appId);
 
             if (assemblyResult.ErrorMessages.HasValue()) 
                 return l.ReturnAsError(assemblyResult, assemblyResult.ErrorMessages);
