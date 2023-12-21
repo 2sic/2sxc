@@ -131,7 +131,7 @@ namespace ToSic.Sxc.Dnn.Razor
                 : [fileChangeMon, sharedFolderChangeMon];
 
             // directly attach a type to the cache
-            var mainType = generatedAssembly.GetType($"{DefaultNamespace}.{className}");
+            var mainType = generatedAssembly.GetType(isCshtml ? $"{DefaultNamespace}.{className}" : className, false, true);
             l.A($"Main type: {mainType}");
 
             var assemblyResult = new AssemblyResult(generatedAssembly, safeClassName: className, mainType: mainType);

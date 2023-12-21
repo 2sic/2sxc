@@ -2,6 +2,7 @@
 using System.IO;
 using System.Web.Compilation;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Help;
 
@@ -10,25 +11,26 @@ namespace ToSic.Sxc.Dnn.Compile;
 [PrivateApi]
 internal class CodeCompilerNetFull(IServiceProvider serviceProvider, IRoslynBuildManager roslynBuildManager, Lazy<SourceAnalyzer> sourceAnalyzer) : CodeCompiler(serviceProvider)
 {
-
-
     protected internal override AssemblyResult GetAssembly(string relativePath, string className, int appId = 0)
     {
+        var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}:{relativePath}, {nameof(className)}:{className}, {nameof(appId)}:{appId}", timer: true);
         try
         {
             // TODO: SHOULD OPTIMIZE so the file doesn't need to read multiple times
             // 1. probably change so the CodeFileInfo contains the source code
-            var razorType = sourceAnalyzer.Value.TypeOfVirtualPath(relativePath);
+            var code = sourceAnalyzer.Value.TypeOfVirtualPath(relativePath);
 
-            if (razorType.MyApp) return roslynBuildManager.GetCompiledAssembly(relativePath, className, appId);
-            return new AssemblyResult(BuildManager.GetCompiledAssembly(relativePath));
+            if (code.MyApp)
+                return l.Return(roslynBuildManager.GetCompiledAssembly(relativePath, className, appId), "Ok, RoslynBuildManager");
+
+            return l.Return(new AssemblyResult(BuildManager.GetCompiledAssembly(relativePath)),"Ok, BuildManager");
         }
         catch (Exception ex)
         {
             var errorMessage =
-                $"Error: Can't compile '{className}' in {Path.GetFileName(relativePath)}. Details are logged into insights. " +
+                $"Can't compile '{className}' in {Path.GetFileName(relativePath)}. Details are logged into insights. " +
                 ex.Message;
-            return new AssemblyResult(errorMessages: errorMessage);
+            return l.ReturnAsError(new AssemblyResult(errorMessages: errorMessage), "errorMessage");
         }
     }
 
