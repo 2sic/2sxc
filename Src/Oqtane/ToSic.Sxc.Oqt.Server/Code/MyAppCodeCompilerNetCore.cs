@@ -13,11 +13,7 @@ namespace ToSic.Sxc.Oqt.Server.Code;
 [PrivateApi]
 internal class MyAppCodeCompilerNetCore: MyAppCodeCompiler
 {
-
-    public const string CsFiles = ".cs";
-    public const bool UseSubfolders = false;
-
-    public MyAppCodeCompilerNetCore(IServiceProvider serviceProvider, LazySvc<IServerPaths> serverPaths) : base(serviceProvider)
+    public MyAppCodeCompilerNetCore(/*IServiceProvider serviceProvider,*/ LazySvc<IServerPaths> serverPaths) //: base(serviceProvider)
     {
         ConnectServices(
             _serverPaths = serverPaths
@@ -26,27 +22,34 @@ internal class MyAppCodeCompilerNetCore: MyAppCodeCompiler
 
     private readonly LazySvc<IServerPaths> _serverPaths;
 
-    protected internal override AssemblyResult GetAssembly(string virtualPath, string className, int appId = 0)
+    protected internal override AssemblyResult GetAppCode(string virtualPath, int appId = 0)
     {
-        var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {nameof(className)}: '{className}'; {nameof(appId)}: {appId}", timer: true);
+        var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {nameof(appId)}: {appId}", timer: true);
 
         try
         {
-            // Get all C# files in the folder
-            var fullPath = NormalizeFullPath(_serverPaths.Value.FullContentPath(virtualPath.Backslash()));
-            var sourceFiles = Directory.GetFiles(fullPath, $"*{CsFiles}", UseSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+            var (sourceFiles, errResult) = GetSourceFilesOrError(NormalizeFullPath(_serverPaths.Value.FullContentPath(virtualPath.Backslash())));
 
-            // Log all files
-            var wrapFiles = l.Fn($"Source Files in {fullPath}:");
-            foreach (var sourceFile in sourceFiles) l.A(sourceFile);
-            wrapFiles.Done($"{sourceFiles.Length}");
+            if (errResult != null)
+                return l.ReturnAsError(errResult, errResult.ErrorMessages);
 
-            // Validate are there any C# files
-            // TODO: if no files exist, it shouldn't be an error, because it could be that it's just not here yet
-            if (sourceFiles.Length == 0)
-                return l.ReturnAsError(new AssemblyResult(
-                        errorMessages: $"Error: given path '{virtualPath}' doesn't contain any {CsFiles} files"),
-                    $"given path '{virtualPath}' doesn't contain any {CsFiles} files");
+
+            //var initialPath = _serverPaths.Value.FullContentPath(virtualPath.Backslash());
+            //// Get all C# files in the folder
+            //var fullPath = NormalizeFullPath(initialPath);
+            //var sourceFiles = Directory.GetFiles(fullPath, $"*{CsFiles}", UseSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+
+            //// Log all files
+            //var wrapFiles = Log.Fn($"Source Files in {fullPath}:");
+            //foreach (var sourceFile in sourceFiles) l.A(sourceFile);
+            //wrapFiles.Done($"{sourceFiles.Length}");
+
+            //// Validate are there any C# files
+            //// TODO: if no files exist, it shouldn't be an error, because it could be that it's just not here yet
+            //if (sourceFiles.Length == 0)
+            //    return l.ReturnAsError(new AssemblyResult(
+            //            errorMessages: $"Error: given path '{virtualPath}' doesn't contain any {CsFiles} files"),
+            //        $"given path '{virtualPath}' doesn't contain any {CsFiles} files");
 
             var assemblyLocations = GetAssemblyLocations(appId);
             var dllName = Path.GetFileName(assemblyLocations[1]);
@@ -54,14 +57,17 @@ internal class MyAppCodeCompilerNetCore: MyAppCodeCompiler
 
             // Compile ok
             if (assemblyResult.ErrorMessages.IsEmpty())
+            {
+                LogAllTypes(assemblyResult.Assembly);
                 return l.ReturnAsOk(new AssemblyResult(assembly: assemblyResult.Assembly, assemblyLocations: assemblyLocations));
+            }
 
             return l.ReturnAsError(new AssemblyResult(errorMessages: assemblyResult.ErrorMessages), assemblyResult.ErrorMessages);
         }
         catch (Exception ex)
         {
             l.Ex(ex);
-            var errorMessage = $"Error: Can't compile '{className}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. {ex.Message}";
+            var errorMessage = $"Error: Can't compile '{MyAppCodeDll}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. {ex.Message}";
             return l.ReturnAsError(new AssemblyResult(errorMessages: errorMessage), "error");
         }
     }
@@ -75,7 +81,7 @@ internal class MyAppCodeCompilerNetCore: MyAppCodeCompiler
         Directory.CreateDirectory(tempAssemblyFolderPath);
 
         // need name 
-        var assemblyName = GetName(tempAssemblyFolderPath, appId);
+        var assemblyName = GetAppCodeDllName(tempAssemblyFolderPath, appId);
         l.A($"AssemblyName: '{assemblyName}'");
         var assemblyFilePath = Path.Combine(tempAssemblyFolderPath, $"{assemblyName}.dll");
         l.A($"AssemblyFilePath: '{assemblyFilePath}'");
@@ -85,16 +91,16 @@ internal class MyAppCodeCompilerNetCore: MyAppCodeCompiler
         return l.ReturnAsOk(assemblyLocations);
     }
 
-    protected override (Type Type, string ErrorMessage) GetCsHtmlType(string virtualPath)
-        => throw new("Runtime Compile of .cshtml is Not Implemented in .net standard / core");
+    //protected override (Type Type, string ErrorMessage) GetCsHtmlType(string virtualPath)
+    //    => throw new("Runtime Compile of .cshtml is Not Implemented in .net standard / core");
 
     /// <summary>
     /// Generates a random name for a dll file and ensures it does not already exist in the "2sxc.bin" folder.
     /// </summary>
     /// <returns>The generated random name.</returns>
-    private string GetName(string folderPath, int appId)
+    protected override string GetAppCodeDllName(string folderPath, int appId)
     {
-        return $"App-{appId:0000}";
+        return Log.Fn<string>().Return($"App-{appId:0000}");
         //var l = Log.Fn<string>($"{nameof(folderPath)}: '{folderPath}'; {nameof(appId)}: {appId}", timer: true);
         //string randomNameWithoutExtension;
         //do
@@ -105,10 +111,10 @@ internal class MyAppCodeCompilerNetCore: MyAppCodeCompiler
         //return l.ReturnAsOk(randomNameWithoutExtension);
     }
 
-    /// <summary>
-    /// Normalize full file path, so it is without redirections like "../" in "dir1/dir2/../file.cs"
-    /// </summary>
-    /// <param name="fullPath"></param>
-    /// <returns></returns>
-    private static string NormalizeFullPath(string fullPath) => new FileInfo(fullPath).FullName;
+    ///// <summary>
+    ///// Normalize full file path, so it is without redirections like "../" in "dir1/dir2/../file.cs"
+    ///// </summary>
+    ///// <param name="fullPath"></param>
+    ///// <returns></returns>
+    //private static string NormalizeFullPath(string fullPath) => new FileInfo(fullPath).FullName;
 }

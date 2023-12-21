@@ -19,7 +19,6 @@ namespace ToSic.Sxc.Code
     {
         public const string MyAppCodeFolder = "AppCode";
         public const string MyAppBinFolder = "bin";
-        public const string MyAppCodeDll = "MyApp.Code.dll";
 
         public MyAppCodeLoader(ILogStore logStore, ISite site, IAppStates appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, LazySvc<MyAppCodeCompiler> myAppCodeCompilerLazy, AssemblyCacheManager assemblyCacheManager) : base("Sys.AppCodeLoad")
         {
@@ -85,7 +84,7 @@ namespace ToSic.Sxc.Code
             if (!Directory.Exists(physicalPath))
                 return l.ReturnAsError(null, $"no folder {physicalPath}");
 
-            var assemblyResult = _myAppCodeCompilerLazy.Value.GetAssembly(relativePath, MyAppCodeDll, appId);
+            var assemblyResult = _myAppCodeCompilerLazy.Value.GetAssembly(relativePath, appId);
 
             if (assemblyResult.ErrorMessages.HasValue()) 
                 return l.ReturnAsError(assemblyResult, assemblyResult.ErrorMessages);
@@ -93,7 +92,7 @@ namespace ToSic.Sxc.Code
             assemblyResult.WatcherFolders = new[] { physicalPath };
 
             var (refsAssemblyPath, _) = GetAppPaths(appId, MyAppBinFolder);
-            CopyAssemblyForRefs(assemblyResult.AssemblyLocations[1], Path.Combine(refsAssemblyPath, MyAppCodeDll));
+            CopyAssemblyForRefs(assemblyResult.AssemblyLocations[1], Path.Combine(refsAssemblyPath, MyAppCodeCompiler.MyAppCodeDll));
 
             // Add compiled assembly to cache
             _assemblyCacheManager.Add(
