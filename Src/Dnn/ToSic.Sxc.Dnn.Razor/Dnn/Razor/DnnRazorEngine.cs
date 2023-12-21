@@ -146,7 +146,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
 
             _assemblyResolver.AddAssembly(codeAssembly);
 
-            compiledType = razorType.MyApp 
+            compiledType = razorType.MyAppRequirements() 
                 ? _roslynBuildManager.Value.GetCompiledType(templatePath, App.AppId)
                 : BuildManager.GetCompiledType(templatePath);
         }

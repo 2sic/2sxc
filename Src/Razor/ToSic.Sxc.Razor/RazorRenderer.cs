@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Razor
             // 1. probably change so the CodeFileInfo contains the source code
             var razorType = _sourceAnalyzer.TypeOfVirtualPath(templatePath);
 
-            var (view, actionContext) = razorType.MyApp 
+            var (view, actionContext) = razorType.MyAppRequirements()
                 ? await _myAppCodeRazorCompiler.CompileView(templatePath, configure, app)
                 : await _razorCompiler.CompileView(templatePath, configure, null);
 
