@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Razor;
 
 namespace ToSic.Sxc;
@@ -10,7 +11,7 @@ public static class StartUpDnnRazor
     {
         services.TryAddTransient<HtmlHelper>();
 
-        services.TryAddTransient<RoslynBuildManager>();
+        services.TryAddTransient<IRoslynBuildManager, RoslynBuildManager>();
 
         return services;
     }

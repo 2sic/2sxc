@@ -16,6 +16,7 @@ using System.Web.Razor;
 using System.Web.Razor.Generator;
 using System.Web.WebPages;
 using ToSic.Eav.Caching.CachingMonitors;
+using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.Dnn.Razor
     /// <summary>
     /// This class is responsible for managing the compilation of Razor templates using Roslyn.
     /// </summary>
-    public class RoslynBuildManager : ServiceBase
+    public class RoslynBuildManager : ServiceBase, IRoslynBuildManager
     {
         private const string DefaultNamespace = "RazorHost";
 
@@ -45,31 +46,37 @@ namespace ToSic.Sxc.Dnn.Razor
 
         private static readonly Lazy<List<string>> DefaultReferencedAssemblies = new(GetDefaultReferencedAssemblies);
 
+        public AssemblyResult GetCompiledAssembly(string relativePath, string className, int appId) 
+            => GetAssemblyResult(relativePath, className, appId);
+
         /// <summary>
         /// Manage template compilations, cache the assembly and returns the generated type.
         /// </summary>
         /// <param name="templatePath">Relative path to template file.</param>
         /// <param name="appId">The ID of the application.</param>
         /// <returns>The generated type for razor cshtml.</returns>
-        public Type GetCompiledType(string templatePath, int appId)
-        {
-            var l = Log.Fn<Type>($"{nameof(templatePath)}: '{templatePath}'; {nameof(appId)}: {appId}", timer: true);
+        public Type GetCompiledType(string templatePath, int appId) 
+            => GetAssemblyResult(templatePath, null, appId).MainType;
 
-            var templateFullPath = HostingEnvironment.MapPath(templatePath);
+        private AssemblyResult GetAssemblyResult(string virtualPath, string className, int appId)
+        {
+            var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {nameof(appId)}: {appId}", timer: true);
+
+            var fileFullPath = HostingEnvironment.MapPath(virtualPath);
 
             // Check if the template is already in the assembly cache
-            var (result, cacheKey) = AssemblyCacheManager.TryGetTemplate(templateFullPath);
+            var (result, cacheKey) = AssemblyCacheManager.TryGetTemplate(fileFullPath);
             if (result != null)
             {
                 var cacheAssembly = result.Assembly;
                 var cacheClassName = result.SafeClassName;
                 l.A($"Template found in cache. Assembly: {cacheAssembly?.FullName}, Class: {cacheClassName}");
                 if (result.MainType != null)
-                    return l.ReturnAsOk(result.MainType);
+                    return l.ReturnAsOk(result);
             }
 
             // If the assembly was not in the cache, we need to compile it
-            l.A($"Template not found in cache. Path: {templateFullPath}");
+            l.A($"Template not found in cache. Path: {fileFullPath}");
 
             // Initialize the list of referenced assemblies with the default ones
             List<string> referencedAssemblies = [.. DefaultReferencedAssemblies.Value];
@@ -79,19 +86,24 @@ namespace ToSic.Sxc.Dnn.Razor
             var myAppCodeAssembly = appCode.Result?.Assembly;
             if (myAppCodeAssembly != null)
             {
-                referencedAssemblies.Add(myAppCodeAssembly.Location);
-                l.A($"Added reference to MyApp.Code assembly: {myAppCodeAssembly.Location}");
+                var assemblyLocation = myAppCodeAssembly.Location;
+                referencedAssemblies.Add(assemblyLocation);
+                l.A($"Added reference to MyApp.Code assembly: {assemblyLocation}");
             }
 
             // Compile the template
-            var className = GetSafeClassName(templateFullPath);
+            var pathLowerCase = virtualPath.ToLowerInvariant();
+            var isCshtml = pathLowerCase.EndsWith(ToSic.Sxc.Code.CodeCompiler.CsHtmlFileExtension);
+            if (isCshtml) className = GetSafeClassName(fileFullPath);
             l.A($"Compiling template. Class: {className}");
 
-            var template = File.ReadAllText(templateFullPath);
-            var (generatedAssembly, errors) = CompileTemplate(template, referencedAssemblies, className);
+            var template = File.ReadAllText(fileFullPath);
+            var (generatedAssembly, errors) = isCshtml 
+                ? CompileTemplate(template, referencedAssemblies, className, DefaultNamespace)
+                : CompileCSharpCode(template, referencedAssemblies);
             if (generatedAssembly == null)
                 throw l.Ex(new Exception(
-                    $"Found {errors.Count} errors compiling Razor '{templateFullPath}' (length: {template.Length}, lines: {template.Split('\n').Length}): {ErrorMessagesFromCompileErrors(errors)}"));
+                    $"Found {errors.Count} errors compiling Razor '{fileFullPath}' (length: {template.Length}, lines: {template.Split('\n').Length}): {ErrorMessagesFromCompileErrors(errors)}"));
 
             // Add the compiled assembly to the cache
 
@@ -99,25 +111,52 @@ namespace ToSic.Sxc.Dnn.Razor
             // otherwise all caches keep getting flushed when any file changes
             // TODO: must also watch for global shared code changes
 
-            var fileChangeMon = new HostFileChangeMonitor(new[] { templateFullPath });
+            var fileChangeMon = new HostFileChangeMonitor(new[] { fileFullPath });
             var sharedFolderChangeMon = appCode.Result == null ? null : new FolderChangeMonitor(appCode.Result.WatcherFolders);
-            var changeMonitors = appCode.Result == null 
-                ? new ChangeMonitor[] { fileChangeMon } 
+            var changeMonitors = appCode.Result == null
+                ? new ChangeMonitor[] { fileChangeMon }
                 : [fileChangeMon, sharedFolderChangeMon];
 
             // directly attach a type to the cache
             var mainType = generatedAssembly.GetType($"{DefaultNamespace}.{className}");
             l.A($"Main type: {mainType}");
 
+            var assemblyResult = new AssemblyResult(generatedAssembly, safeClassName: className, mainType: mainType);
+
             _assemblyCacheManager.Add(
                 cacheKey: cacheKey,
-                data: new AssemblyResult(generatedAssembly, safeClassName: className, mainType: mainType),
+                data: assemblyResult,
                 duration: 3600,
                 changeMonitor: changeMonitors,
                 //appPaths: appPaths,
                 updateCallback: null);
 
-            return l.ReturnAsOk(mainType);
+            return l.ReturnAsOk(assemblyResult);
+        }
+
+        /// <summary>
+        /// extract appRelativePath from relativePath
+        /// </summary>
+        /// <param name="relativePath">string "/Portals/site-id-or-name/2sxc/app-folder-name/etc..."</param>
+        /// <returns>string "\\Portals\\site-id-or-name\\2sxc\\app-folder-name" or null</returns>
+        private static string GetAppRelativePath(string relativePath)
+        {
+            // TODO: stv, this has to more generic because it is very 2sxc on DNN specific, only for default case of templates under /Portals/xxxx/ folder
+
+            // validations
+            var message = $"relativePath:'{relativePath}' is not in format '/Portals/site-id-or-name/2sxc/app-folder-name/etc...'";
+            if (string.IsNullOrEmpty(relativePath) || !relativePath.StartsWith("/Portals/"))
+                throw new Exception(message);
+
+            var startPos = relativePath.IndexOf("/2sxc/", 10); // start from 10 to skip '/' before 'site-id-or-name'
+            if (startPos < 0) throw new Exception(message);
+
+            // find position of 5th slash in relativePath 
+            var pos = startPos + 6; // skipping first 4 slashes
+            pos = relativePath.IndexOf('/', pos + 1);
+            if (pos < 0) throw new Exception(message);
+
+            return relativePath.Substring(0, pos).Backslash();
         }
 
         private static List<string> GetDefaultReferencedAssemblies()
@@ -177,7 +216,7 @@ namespace ToSic.Sxc.Dnn.Razor
         /// Compiles the template into an assembly.
         /// </summary>
         /// <returns>The compiled assembly.</returns>
-        private (Assembly Assembly, List<CompilerError> Errors) CompileTemplate(string template, List<string> referencedAssemblies, string className)
+        private (Assembly Assembly, List<CompilerError> Errors) CompileTemplate(string template, List<string> referencedAssemblies, string className, string defaultNamespace)
         {
             var l = Log.Fn<(Assembly, List<CompilerError>)>(timer: true, parameters: $"Template content length: {template.Length}");
 
@@ -189,7 +228,7 @@ namespace ToSic.Sxc.Dnn.Razor
             l.A($"Base class: {baseClass}");
 
             // Create the Razor template engine host
-            var engine = CreateHost(className, baseClass);
+            var engine = CreateHost(className, baseClass, defaultNamespace);
 
             var lTimer = Log.Fn("Generate Code", timer: true);
             using var reader = new StringReader(template);
@@ -210,7 +249,7 @@ namespace ToSic.Sxc.Dnn.Razor
             // Compile the template into an assembly
             lTimer = Log.Fn("Compile", timer: true);
             var codeProvider = new Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider();
-            
+
             var compilerResults = codeProvider.CompileAssemblyFromDom(compilerParameters, razorResults.GeneratedCode);
             lTimer.Done();
             //var compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, template);
@@ -280,6 +319,41 @@ namespace ToSic.Sxc.Dnn.Razor
         //    return l.ReturnAsOk((compiledAssembly, null));
         //}
 
+        /// <summary>
+        /// Compiles the C# code into an assembly.
+        /// </summary>
+        /// <returns>The compiled assembly.</returns>
+        private (Assembly Assembly, List<CompilerError> Errors) CompileCSharpCode(string csharpCode, List<string> referencedAssemblies)
+        {
+            var l = Log.Fn<(Assembly, List<CompilerError>)>(timer: true, parameters: $"C# code content length: {csharpCode.Length}");
+
+            var lTimer = Log.Fn("Compiler Params", timer: true);
+            var compilerParameters = new CompilerParameters(referencedAssemblies.ToArray())
+            {
+                GenerateInMemory = true,
+                IncludeDebugInformation = true,
+                TreatWarningsAsErrors = false,
+                CompilerOptions = $"{DnnRoslynConstants.CompilerOptionLanguageVersion} {DnnRoslynConstants.DefaultDisableWarnings}",
+            };
+            lTimer.Done();
+
+            // Compile the C# code into an assembly
+            lTimer = Log.Fn("Compile", timer: true);
+            var codeProvider = new Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider();
+
+            var compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, csharpCode);
+            lTimer.Done();
+
+            if (compilerResults.Errors.Count <= 0)
+                return l.ReturnAsOk((compilerResults.CompiledAssembly, null));
+
+            // Handle compilation errors
+            var errorList = compilerResults.Errors.Cast<CompilerError>().ToList();
+
+            return l.ReturnAsError((null, errorList), "error");
+        }
+
+
         private string ErrorMessagesFromCompileErrors(List<CompilerError> errors)
         {
             var l = Log.Fn<string>(timer: true);
@@ -299,6 +373,8 @@ namespace ToSic.Sxc.Dnn.Razor
         {
             try
             {
+                // TODO: stv, use existing 2sxc regex for extraction (from CodeType)
+
                 if (!template.Contains("@inherits ")) return FallbackBaseClass;
 
                 // extract the type name from the template
@@ -327,7 +403,7 @@ namespace ToSic.Sxc.Dnn.Razor
         /// Basically imitating https://github.com/Antaris/RazorEngine/blob/master/src/source/RazorEngine.Core/Compilation/CompilerServiceBase.cs#L203-L229
         /// </summary>
         /// <returns>The initialized RazorTemplateEngine instance.</returns>
-        private RazorTemplateEngine CreateHost(string className, string baseClass)
+        private RazorTemplateEngine CreateHost(string className, string baseClass, string defaultNamespace)
         {
             var l = Log.Fn<RazorTemplateEngine>($"{nameof(className)}: '{className}'; {nameof(baseClass)}: '{baseClass}'", timer: true);
 
@@ -335,13 +411,13 @@ namespace ToSic.Sxc.Dnn.Razor
             {
                 DefaultBaseClass = baseClass,
                 DefaultClassName = className,
-                DefaultNamespace = DefaultNamespace
+                DefaultNamespace = defaultNamespace
             };
 
             var context = new GeneratedClassContext(
                 "Execute",
                 "Write",
-                "WriteLiteral", 
+                "WriteLiteral",
                 "WriteTo",
                 "WriteLiteralTo",
                 typeof(HelperResult).FullName,

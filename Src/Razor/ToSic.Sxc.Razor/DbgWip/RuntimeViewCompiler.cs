@@ -382,6 +382,7 @@ namespace ToSic.Sxc.Razor.DbgWip
         /// <returns>string "2sxc\\n\\aaa-folder-name" or null</returns>
         private static string GetAppRelativePath(string relativePath)
         {
+            // TODO: stv, this has to more generic because it is very 2sxc on Oqtane specific
             // validations
             if ((string.IsNullOrEmpty(relativePath))
                     || (relativePath.Length < 8)

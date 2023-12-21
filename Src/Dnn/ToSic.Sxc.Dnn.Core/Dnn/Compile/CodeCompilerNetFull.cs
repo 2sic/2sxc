@@ -3,18 +3,25 @@ using System.IO;
 using System.Web.Compilation;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Help;
 
 namespace ToSic.Sxc.Dnn.Compile;
 
 [PrivateApi]
-internal class CodeCompilerNetFull(IServiceProvider serviceProvider) : CodeCompiler(serviceProvider)
+internal class CodeCompilerNetFull(IServiceProvider serviceProvider, IRoslynBuildManager roslynBuildManager, Lazy<SourceAnalyzer> sourceAnalyzer) : CodeCompiler(serviceProvider)
 {
+
+
     protected internal override AssemblyResult GetAssembly(string relativePath, string className, int appId = 0)
     {
         try
         {
-            var assembly = BuildManager.GetCompiledAssembly(relativePath);
-            return new AssemblyResult(assembly);
+            // TODO: SHOULD OPTIMIZE so the file doesn't need to read multiple times
+            // 1. probably change so the CodeFileInfo contains the source code
+            var razorType = sourceAnalyzer.Value.TypeOfVirtualPath(relativePath);
+
+            if (razorType.MyApp) return roslynBuildManager.GetCompiledAssembly(relativePath, className, appId);
+            return new AssemblyResult(BuildManager.GetCompiledAssembly(relativePath));
         }
         catch (Exception ex)
         {

@@ -17,6 +17,7 @@ using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Help;
+using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web;
@@ -38,10 +39,10 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     private readonly CodeRootFactory _codeRootFactory;
     private readonly LazySvc<SourceAnalyzer> _sourceAnalyzer;
     private readonly LazySvc<MyAppCodeLoader> _myAppCodeLoader;
-    private readonly LazySvc<RoslynBuildManager> _roslynBuildManager;
+    private readonly LazySvc<IRoslynBuildManager> _roslynBuildManager;
     private readonly AssemblyResolver _assemblyResolver;
 
-    public DnnRazorEngine(MyServices helpers, CodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<SourceAnalyzer> sourceAnalyzer, LazySvc<MyAppCodeLoader> myAppCodeLoader, LazySvc<RoslynBuildManager> roslynBuildManager, AssemblyResolver assemblyResolver) : base(helpers)
+    public DnnRazorEngine(MyServices helpers, CodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<SourceAnalyzer> sourceAnalyzer, LazySvc<MyAppCodeLoader> myAppCodeLoader, LazySvc<IRoslynBuildManager> roslynBuildManager, AssemblyResolver assemblyResolver) : base(helpers)
     {
         ConnectServices(
             _codeRootFactory = codeRootFactory,
@@ -144,7 +145,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
             var codeAssembly = MyAppCodeLoader.TryGetAssemblyOfCodeFromCache(App.AppId, Log)?.Assembly 
                                ?? _myAppCodeLoader.Value.GetAppCodeAssemblyOrNull(App.AppId);
 
-            _assemblyResolver.AddAssembly(codeAssembly);
+            _assemblyResolver.AddAssembly(codeAssembly, App.RelativePath);
 
             compiledType = razorType.MyAppRequirements() 
                 ? _roslynBuildManager.Value.GetCompiledType(templatePath, App.AppId)

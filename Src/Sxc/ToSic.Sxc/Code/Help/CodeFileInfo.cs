@@ -21,6 +21,7 @@ public class CodeFileInfo
     public bool MyApp { get; }
 
     public static CodeFileInfo CodeFileUnknown = new("unknown", CodeFileTypes.Unknown, CodeHelpDbUnknown.CompileUnknown);
+    public static CodeFileInfo CodeFileUnknownWithMyAppCode = new("unknown", CodeFileTypes.Unknown, CodeHelpDbUnknown.CompileUnknown, true);
     public static CodeFileInfo CodeFileOther = new("other", CodeFileTypes.Other, CodeHelpDbUnknown.CompileUnknown);
 
     public static CodeFileInfo CodeFileNotFound = new("", CodeFileTypes.FileNotFound, new List<CodeHelp>());

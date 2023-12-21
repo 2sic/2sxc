@@ -156,7 +156,8 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
                     var (type, errorMessages) = compiler.GetTypeOrErrorMessages(
                         relativePath: Path.Combine(relativePath, Path.GetFileName(dataSourceFile)),
                         className: className,
-                        throwOnError: false);
+                        throwOnError: false, 
+                        appId: appId);
 
                     if (!errorMessages.HasValue())
                         return new TempDsInfo { ClassName = className, Type = type };

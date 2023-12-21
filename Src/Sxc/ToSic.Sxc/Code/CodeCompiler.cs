@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
@@ -32,7 +31,7 @@ public abstract class CodeCompiler: ServiceBase
     public const string SharedCodeRootPathKeyInCache = "SharedCodeRootPath";
     public const string SharedCodeRootFullPathKeyInCache = "SharedCodeRootFullPath";
 
-    internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true)
+    internal object InstantiateClass(string virtualPath, int appId, string className = null, string relativePath = null, bool throwOnError = true)
     {
         var l = Log.Fn<object>($"{virtualPath}, {nameof(className)}:{className}, {nameof(relativePath)}:{relativePath}, {throwOnError}");
 
@@ -56,7 +55,7 @@ public abstract class CodeCompiler: ServiceBase
             (compiledType, errorMessages) = GetCsHtmlType(virtualPath);
         // compile .cs files
         else if (isCs || isCshtml)
-            (compiledType, errorMessages) = GetTypeOrErrorMessages(virtualPath, className, throwOnError);
+            (compiledType, errorMessages) = GetTypeOrErrorMessages(virtualPath, className, throwOnError, appId);
         else
             errorMessages = $"Error: given path '{Path.GetFileName(virtualPath)}' doesn't point to a .cs or .cshtml";
 
@@ -74,14 +73,14 @@ public abstract class CodeCompiler: ServiceBase
         return l.Return(instance, $"found: {instance != null}");
     }
 
-    public (Type Type, string ErrorMessages) GetTypeOrErrorMessages(string relativePath, string className, bool throwOnError)
+    public (Type Type, string ErrorMessages) GetTypeOrErrorMessages(string relativePath, string className, bool throwOnError, int appId)
     {
         var l = Log.Fn<(Type Type, string ErrorMessages)>($"'{relativePath}', '{className}', throw: {throwOnError}");
 
         // if no name provided, use the name which is the same as the file name
         className ??= Path.GetFileNameWithoutExtension(relativePath) ?? Eav.Constants.NullNameId;
 
-        var (assembly, errorMessages) = GetAssembly(relativePath, className).ToTuple();
+        var (assembly, errorMessages) = GetAssembly(relativePath, className, appId).ToTuple();
 
         if (errorMessages != null) return l.Return((null, errorMessages), "error messages");
 
