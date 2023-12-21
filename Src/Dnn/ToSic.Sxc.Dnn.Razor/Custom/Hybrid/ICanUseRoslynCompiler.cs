@@ -4,7 +4,7 @@ using ToSic.Sxc.Dnn.Razor;
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
 
-internal interface ISupportAppCode
+internal interface ICanUseRoslynCompiler
 {
     void AttachRazorEngine(DnnRazorEngine razorEngine);
 

@@ -31,7 +31,7 @@ public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHa
 
     HelperResult RenderFunction(string path, object data)
     {
-        if (this is ISupportAppCode supportAppCode)
+        if (this is ICanUseRoslynCompiler supportAppCode)
             return supportAppCode.RoslynRenderPage(path, data);
         
         // handle conversion from 'object' to 'params object[]'

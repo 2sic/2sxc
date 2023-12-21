@@ -209,7 +209,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
         if (pageToInit is SexyContentWebPage oldPage) oldPage.InstancePurpose = (InstancePurposes)Purpose;
 #pragma warning restore 618, CS0612
 
-        if (pageToInit is ISupportAppCode appCodePage) appCodePage.AttachRazorEngine(this);
+        if (pageToInit is ICanUseRoslynCompiler appCodePage) appCodePage.AttachRazorEngine(this);
 
         InitHelpers(pageToInit);
         return l.ReturnAsOk(pageToInit);

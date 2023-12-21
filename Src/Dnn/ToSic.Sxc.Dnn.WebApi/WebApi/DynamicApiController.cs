@@ -20,7 +20,9 @@ namespace ToSic.Sxc.WebApi;
 // Note: 2022-02 2dm I'm not sure if this was ever published as the official api controller, but it may have been?
 [DnnLogExceptions]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class DynamicApiController : SxcApiControllerBase, IHasDynamicCodeRoot
+[method: PrivateApi]
+public abstract class DynamicApiController(string logSuffix, string insightsGroup = default)
+    : SxcApiControllerBase(logSuffix, insightsGroup), IHasDynamicCodeRoot
 {
     #region Constructor & DI / Setup
 
@@ -29,9 +31,6 @@ public abstract class DynamicApiController : SxcApiControllerBase, IHasDynamicCo
     /// </summary>
     [PrivateApi]
     protected DynamicApiController() : this("DynApi") { }
-
-    [PrivateApi]
-    protected DynamicApiController(string logSuffix, string insightsGroup = default) : base(logSuffix, insightsGroup) { }
 
     [PrivateApi]
     protected override void Initialize(HttpControllerContext controllerContext)

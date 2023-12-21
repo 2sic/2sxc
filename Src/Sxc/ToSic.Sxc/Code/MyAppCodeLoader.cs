@@ -100,7 +100,6 @@ namespace ToSic.Sxc.Code
                 cacheKey,
                 assemblyResult,
                 changeMonitor: new ChangeMonitor[] { new FolderChangeMonitor(assemblyResult.WatcherFolders) },
-                //appPaths: new[] { physicalPath },
                 updateCallback: _ => AssembliesDelete(assemblyResult.AssemblyLocations.Append(refsAssemblyPath))
             );
 
