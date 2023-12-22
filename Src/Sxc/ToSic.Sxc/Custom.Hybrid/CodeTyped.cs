@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using ToSic.Eav;
 using ToSic.Eav.Code.Help;
 using ToSic.Eav.Data;
@@ -29,13 +30,13 @@ public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
     /// Main constructor.
     /// Doesn't have parameters so it can easily be inherited.
     /// </summary>
-    protected CodeTyped() : base("Sxc.CodeTy") { }
+    protected CodeTyped() : base("Cst.CodeTy") { }
 
     /// <summary>
     /// Special constructor for code files in the `ThisCode` which need the context - such as the Kit.
     /// </summary>
     /// <param name="parent"></param>
-    protected CodeTyped(IDynamicCode16 parent) : base("Cst.CodeTy")
+    protected CodeTyped(IHasCodeContext parent) : base("Cst.CodeTy")
     {
         if (parent is not IHasDynamicCodeRoot dynCodeParent)
             return;
@@ -47,10 +48,10 @@ public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
     public new ICodeLog Log => SysHlp.CodeLog;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
-    public TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
+    public TService GetService<TService>() where TService : class => CodeRootOrError().GetService<TService>();
 
     private TypedCode16Helper CodeHelper 
-        => _codeHelper ??= new TypedCode16Helper(_DynCodeRoot, MyData, null, false, "c# code file");
+        => _codeHelper ??= new TypedCode16Helper(CodeRootOrError(), MyData, null, false, "c# code file");
     private TypedCode16Helper _codeHelper;
 
     [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel16;
@@ -58,17 +59,21 @@ public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
     #endregion
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
-    public ServiceKit16 Kit => _kit.Get(() =>
-    {
-        if (_DynCodeRoot != null) return _DynCodeRoot.GetKit<ServiceKit16>();
+    public ServiceKit16 Kit => _kit.Get(() => CodeRootOrError().GetKit<ServiceKit16>());
+    private readonly GetOnce<ServiceKit16> _kit = new();
 
-        var message = "Can't access the Kit property, because the CodeRoot which provides this is not known. " +
+    private IDynamicCodeRoot CodeRootOrError([CallerMemberName] string propName = default)
+    {
+        if (_DynCodeRoot != null) return _DynCodeRoot;
+
+        var message = $"Can't access properties such as {propName}, because the Code-Context is not known. " +
                       $"This is typical in code which is in the **ThisCode** folder. " +
                       $"Make sure the caller of the code uses 'this' in the constructor - " +
-                      $"eg. 'new {GetType().Name}(this)' and that the class {GetType().Name} has a constructor which passes it to the base class. ";
-        throw new ExceptionWithHelp(new CodeHelp("get-kit-without-code-root", "todo", uiMessage: message), new ArgumentNullException(nameof(Kit)));
-    });
-    private readonly GetOnce<ServiceKit16> _kit = new();
+                      $"eg. 'new {GetType().Name}(this)' and that the class {GetType().Name} has a constructor which passes it to the base class " +
+                      $"like public {GetType().Name}({nameof(IHasCodeContext)} parent) : base(parent) {{ }} ";
+        throw new ExceptionWithHelp(new CodeHelp("get-kit-without-code-root", "todo", uiMessage: message),
+            new ArgumentNullException(nameof(Kit)));
+    }
 
     #region Stuff added by Code12
 
@@ -80,7 +85,7 @@ public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
 
     #region Link and Edit
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => _DynCodeRoot?.Link;
+    public ILinkService Link => CodeRootOrError()?.Link;
 
     #endregion
 
@@ -102,7 +107,7 @@ public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
     #region New App, Settings, Resources
 
     /// <inheritdoc />
-    public IAppTyped App => (IAppTyped)_DynCodeRoot?.App;
+    public IAppTyped App => (IAppTyped)CodeRootOrError()?.App;
 
     /// <inheritdoc cref="IDynamicCode16.AllResources" />
     public ITypedStack AllResources => CodeHelper.AllResources;
@@ -111,7 +116,7 @@ public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
     public ITypedStack AllSettings => CodeHelper.AllSettings;
 
 
-    public IContextData MyData => _DynCodeRoot.Data;
+    public IContextData MyData => CodeRootOrError().Data;
 
     #endregion
 
@@ -130,25 +135,25 @@ public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
 
     /// <inheritdoc cref="IDynamicCode16.AsItem" />
     public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
-        => _DynCodeRoot.Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
+        => CodeRootOrError().Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
 
     /// <inheritdoc cref="IDynamicCode16.AsItems" />
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _DynCodeRoot.Cdf.AsItems(list, propsRequired: propsRequired ?? true);
+        => CodeRootOrError().Cdf.AsItems(list, propsRequired: propsRequired ?? true);
 
     /// <inheritdoc cref="IDynamicCode16.AsEntity" />
-    public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot.Cdf.AsEntity(thing);
+    public IEntity AsEntity(ICanBeEntity thing) => CodeRootOrError().Cdf.AsEntity(thing);
 
     /// <inheritdoc cref="IDynamicCode16.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _DynCodeRoot.Cdf.AsTyped(original, propsRequired: propsRequired);
+        => CodeRootOrError().Cdf.AsTyped(original, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _DynCodeRoot.Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
+        => CodeRootOrError().Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsStack" />
-    public ITypedStack AsStack(params object[] items) => _DynCodeRoot.Cdf.AsStack(items);
+    public ITypedStack AsStack(params object[] items) => CodeRootOrError().Cdf.AsStack(items);
 
     #endregion
 
@@ -157,16 +162,16 @@ public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
     #region MyContext & UniqueKey
 
     /// <inheritdoc cref="IDynamicCode16.MyContext" />
-    public ICmsContext MyContext => _DynCodeRoot.CmsContext;
+    public ICmsContext MyContext => CodeRootOrError().CmsContext;
 
     /// <inheritdoc cref="IDynamicCode16.MyPage" />
-    public ICmsPage MyPage => _DynCodeRoot.CmsContext.Page;
+    public ICmsPage MyPage => CodeRootOrError().CmsContext.Page;
 
     /// <inheritdoc cref="IDynamicCode16.MyUser" />
-    public ICmsUser MyUser => _DynCodeRoot.CmsContext.User;
+    public ICmsUser MyUser => CodeRootOrError().CmsContext.User;
 
     /// <inheritdoc cref="IDynamicCode16.MyView" />
-    public ICmsView MyView => _DynCodeRoot.CmsContext.View;
+    public ICmsView MyView => CodeRootOrError().CmsContext.View;
 
     /// <inheritdoc cref="IDynamicCode16.UniqueKey" />
     public string UniqueKey => Kit.Key.UniqueKey;

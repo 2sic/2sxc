@@ -46,6 +46,7 @@ public abstract class ServiceForDynamicCode: ServiceBase, INeedsDynamicCodeRoot,
     private bool _alreadyConnected;
 
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public virtual IDynamicCodeRoot _DynCodeRoot { get; private set; }
 
     [PrivateApi]
