@@ -29,7 +29,7 @@ public class SourceAnalyzer : ServiceBase
             var contents = GetFileContentsOfVirtualPath(virtualPath);
             return contents == null
                 ? l.ReturnAndLog(CodeFileInfo.CodeFileNotFound)
-                : l.ReturnAndLog(AnalyzeContent(contents));
+                : l.ReturnAndLog(AnalyzeContent(virtualPath, contents));
         }
         catch
         {
@@ -55,7 +55,7 @@ public class SourceAnalyzer : ServiceBase
         return l.Return(contents, $"found, {contents.Length} bytes");
     }
 
-    public CodeFileInfo AnalyzeContent(string contents)
+    public CodeFileInfo AnalyzeContent(string path, string contents)
     {
         var l = Log.Fn<CodeFileInfo>();
         if (contents.Length < 10)
