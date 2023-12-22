@@ -96,6 +96,7 @@
     <Compile Include="CodeTests\LoggingTests\LogFnOldTests.cs" />
     <Compile Include="CodeTests\LoggingTests\LogFnTests.cs" />
     <Compile Include="CodeTests\LoggingTests\LogTestBase.cs" />
+    <Compile Include="Code\Help\SourceAnalyzerTests.cs" />
     <Compile Include="ConfigurationTests\VerifyPatronsPerfectionistPackage.cs" />
     <Compile Include="ContentSecurityPolicyTests\CspParametersTests.cs" />
     <Compile Include="ContentSecurityPolicyTests\CspParameterFinalizerTests.cs" />

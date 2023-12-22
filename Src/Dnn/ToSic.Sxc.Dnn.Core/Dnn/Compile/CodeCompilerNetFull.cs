@@ -43,7 +43,7 @@ internal class CodeCompilerNetFull : CodeCompiler
 
             try
             {
-                if (code.ThisApp)
+                if (code.ThisAppRequirements())
                     return l.Return(_roslynBuildManager.GetCompiledAssembly(relativePath, className, appId),
                         "Ok, RoslynBuildManager");
             }

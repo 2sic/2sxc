@@ -8,7 +8,6 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Code.Help;
 
-// TODO: stv, analyzer works with razor files, and need enhancement for CS... 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class SourceAnalyzer : ServiceBase
 {
@@ -67,8 +66,23 @@ public class SourceAnalyzer : ServiceBase
         if (isCs)
         {
             var csHasThisAppCode = IsThisAppCodeUsedInCs(contents);
-            l.A($"thisApp: {csHasThisAppCode}");
-            return l.Return(csHasThisAppCode ? CodeFileInfo.CodeFileUnknownWithThisAppCode : CodeFileInfo.CodeFileUnknown, "Ok, cs file");
+            l.A($"cs, thisApp: {csHasThisAppCode}");
+
+            var className = Path.GetFileNameWithoutExtension(path);
+            l.A($"cs, className: {className}");
+
+            var baseClass = ExtractBaseClass(contents, className);
+            l.A($"cs, baseClass: {baseClass}");
+
+            if (baseClass.IsEmptyOrWs())
+                return l.Return(csHasThisAppCode ? CodeFileInfo.CodeFileUnknownWithThisAppCode : CodeFileInfo.CodeFileUnknown, "Ok, cs file without base class");
+
+            var csBaseClassMatch = CodeFileInfo.CodeFileList
+                .FirstOrDefault(cf => cf.Inherits.EqualsInsensitive(baseClass) && cf.ThisApp == csHasThisAppCode);
+
+            return csBaseClassMatch != null
+                ? l.ReturnAndLog(csBaseClassMatch)
+                : l.Return(csHasThisAppCode ? CodeFileInfo.CodeFileOtherWithThisAppCode : CodeFileInfo.CodeFileOther, "Ok, cs file with other base class");
         }
 
         // Cshtml part
@@ -139,4 +153,29 @@ public class SourceAnalyzer : ServiceBase
         return thisAppMatch.Success;
     }
 
+
+    /// <summary>
+    /// Extract 'className' base class from source code
+    /// </summary>
+    /// <param name="sourceCode"></param>
+    /// <param name="className"></param>
+    /// <returns></returns>
+    /// <remarks>
+    /// Code Complexity: This regex won't work well if the class declaration spans multiple lines or if there are comments between the class name and its base class.
+    /// Generic Classes: If the base class uses generics, the regex needs to be adjusted to handle such cases.
+    /// Multiple Inheritance: C# doesn't support multiple inheritance for classes. However, if interfaces are involved, this regex will only capture the first inherited type (which is usually the base class).
+    /// Formatting: The regex assumes standard formatting.If there are unusual spacings or line breaks, it might not work correctly.
+    /// Nested Classes: If the class is nested within another class, the regex will not match it.
+    /// Comments and Strings: If the class declaration is commented out or appears within a string, the regex will still match it, which might not be desired.
+    /// More robust solution can be done with Roslyn source pars, but additional packages can be needed.
+    /// </remarks>
+    public static string ExtractBaseClass(string sourceCode, string className)
+    {
+        if (sourceCode.IsEmptyOrWs() || className.IsEmptyOrWs()) return null;
+        var pattern = $@"class\s+{className}\s*:\s*([^\s{{,]+)";
+        var match = Regex.Match(sourceCode, pattern, RegexOptions.IgnoreCase);
+        return match.Success && match.Groups.Count > 1 
+            ? match.Groups[1].Value 
+            : null;
+    }
 }
