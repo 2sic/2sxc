@@ -476,10 +476,22 @@ namespace ToSic.Sxc.Dnn.Razor
 
             host.GeneratedClassContext = context;
 
-            //foreach (var ns in ReferencedNamespaces) host.NamespaceImports.Add(ns);
+            // temp 2dm
+            foreach (var ns in ReferencedNamespaces) host.NamespaceImports.Add(ns);
 
             var engine = new RazorTemplateEngine(host);
             return l.ReturnAsOk(engine);
         }
+
+        // temp 2dm
+        private static readonly List<string> ReferencedNamespaces =
+        [
+            "System",
+            "System.Text",
+            "System.Collections.Generic",
+            "System.Linq",
+            "System.IO",
+            "System.Web.WebPages"
+        ];
     }
 }
