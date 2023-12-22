@@ -3,13 +3,13 @@
     public static class CodeFileInfoExtensions
     {
         /// <summary>
-        /// MyAppCode is supported in RazorTyped and newer, and
-        /// enabled when "using MyApp.Code" is used
+        /// ThisAppCode is supported in RazorTyped and newer, and
+        /// enabled when "using ThisApp.Code" is used
         /// </summary>
         /// <param name="razorType"></param>
         /// <returns></returns>
-        public static bool MyAppRequirements(this CodeFileInfo razorType)
-            => razorType.MyApp
+        public static bool ThisAppRequirements(this CodeFileInfo razorType)
+            => razorType.ThisApp
             && razorType.Type == CodeFileTypes.V16;
     }
 }

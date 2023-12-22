@@ -38,17 +38,17 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     private readonly LazySvc<CodeErrorHelpService> _errorHelp;
     private readonly CodeRootFactory _codeRootFactory;
     private readonly LazySvc<SourceAnalyzer> _sourceAnalyzer;
-    private readonly LazySvc<MyAppCodeLoader> _myAppCodeLoader;
+    private readonly LazySvc<ThisAppCodeLoader> _thisAppCodeLoader;
     private readonly LazySvc<IRoslynBuildManager> _roslynBuildManager;
     private readonly AssemblyResolver _assemblyResolver;
 
-    public DnnRazorEngine(MyServices helpers, CodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<SourceAnalyzer> sourceAnalyzer, LazySvc<MyAppCodeLoader> myAppCodeLoader, LazySvc<IRoslynBuildManager> roslynBuildManager, AssemblyResolver assemblyResolver) : base(helpers)
+    public DnnRazorEngine(MyServices helpers, CodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<SourceAnalyzer> sourceAnalyzer, LazySvc<ThisAppCodeLoader> thisAppCodeLoader, LazySvc<IRoslynBuildManager> roslynBuildManager, AssemblyResolver assemblyResolver) : base(helpers)
     {
         ConnectServices(
             _codeRootFactory = codeRootFactory,
             _errorHelp = errorHelp,
             _sourceAnalyzer = sourceAnalyzer,
-            _myAppCodeLoader = myAppCodeLoader,
+            _thisAppCodeLoader = thisAppCodeLoader,
             _roslynBuildManager = roslynBuildManager,
             _assemblyResolver = assemblyResolver
         );
@@ -142,12 +142,12 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
         try
         {
             // get assembly - try to get from cache, otherwise compile
-            var codeAssembly = MyAppCodeLoader.TryGetAssemblyOfCodeFromCache(App.AppId, Log)?.Assembly 
-                               ?? _myAppCodeLoader.Value.GetAppCodeAssemblyOrNull(App.AppId);
+            var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(App.AppId, Log)?.Assembly 
+                               ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrNull(App.AppId);
 
             _assemblyResolver.AddAssembly(codeAssembly, App.RelativePath);
 
-            compiledType = razorType.MyAppRequirements() 
+            compiledType = razorType.ThisAppRequirements() 
                 ? _roslynBuildManager.Value.GetCompiledType(templatePath, App.AppId)
                 : BuildManager.GetCompiledType(templatePath);
         }

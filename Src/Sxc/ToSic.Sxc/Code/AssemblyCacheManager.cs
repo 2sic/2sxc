@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Code
 
         #region Static Calls for AppCode - to use before requiring DI
 
-        public static (AssemblyResult Result, string cacheKey) TryGetAppCode(int appId)
+        public static (AssemblyResult Result, string cacheKey) TryGetThisAppCode(int appId)
         {
             var cacheKey = KeyAppCode(appId);
             return (Get(cacheKey), cacheKey);

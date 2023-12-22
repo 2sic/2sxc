@@ -67,7 +67,7 @@ public class StartupDnn : IServiceRouteMapper
         Imageflow.Dnn.StartUp.RegisterQueryStringRewrite(ImageflowRewrite.QueryStringRewrite);
 
         // Clean the App_Data/2sxc.bin folder
-        MyAppCode.CleanTempAssemblyFolder();
+        ThisAppCode.CleanTempAssemblyFolder();
 
         _alreadyConfigured = true;
     }

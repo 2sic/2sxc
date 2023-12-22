@@ -197,7 +197,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
 
     public HelperResult RoslynRenderPage(string virtualPath, object data)
     {
-        // TODO: switch based on razorType.MyApp
+        // TODO: switch based on razorType.ThisApp
         //return base.RenderPage(virtualPath, data);
         return _razorEngine?.RenderPage(this.NormalizePath(virtualPath), data);
     }

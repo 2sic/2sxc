@@ -1,17 +1,15 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Reflection;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Code
 {
-    public abstract class MyAppCodeCompiler() : ServiceBase("Sxc.MyApCd")
+    public abstract class ThisAppCodeCompiler() : ServiceBase("Sxc.MyApCd")
     {
         public const string CsFiles = ".cs";
         public const bool UseSubfolders = false;
-        public const string MyAppCodeDll = "MyApp.Code.dll";
+        public const string ThisAppCodeDll = "ThisApp.Code.dll";
 
         protected internal abstract AssemblyResult GetAppCode(string relativePath, int appId = 0);
 
@@ -41,7 +39,7 @@ namespace ToSic.Sxc.Code
             string randomNameWithoutExtension;
             do
             {
-                randomNameWithoutExtension = $"App-{appId:00000}-{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}";
+                randomNameWithoutExtension = $"ThisApp.Code-{appId:00000}-{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}";
             }
             while (File.Exists(Path.Combine(folderPath, $"{randomNameWithoutExtension}.dll")));
             return l.ReturnAsOk(randomNameWithoutExtension);

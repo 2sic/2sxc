@@ -6,22 +6,22 @@ namespace ToSic.Sxc.Code.Help;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class CodeFileInfo
 {
-    private CodeFileInfo(string inherits, CodeFileTypes type, List<CodeHelp> help, bool myApp = false)
+    private CodeFileInfo(string inherits, CodeFileTypes type, List<CodeHelp> help, bool thisApp = false)
     {
         Inherits = inherits;
         Type = type;
         Help = help ?? [];
-        MyApp = myApp;
+        ThisApp = thisApp;
     }
 
     public string Inherits { get; }
 
     public CodeFileTypes Type { get; }
     public List<CodeHelp> Help { get; }
-    public bool MyApp { get; }
+    public bool ThisApp { get; }
 
     public static CodeFileInfo CodeFileUnknown = new("unknown", CodeFileTypes.Unknown, CodeHelpDbUnknown.CompileUnknown);
-    public static CodeFileInfo CodeFileUnknownWithMyAppCode = new("unknown", CodeFileTypes.Unknown, CodeHelpDbUnknown.CompileUnknown, true);
+    public static CodeFileInfo CodeFileUnknownWithThisAppCode = new("unknown", CodeFileTypes.Unknown, CodeHelpDbUnknown.CompileUnknown, true);
     public static CodeFileInfo CodeFileOther = new("other", CodeFileTypes.Other, CodeHelpDbUnknown.CompileUnknown);
 
     public static CodeFileInfo CodeFileNotFound = new("", CodeFileTypes.FileNotFound, new List<CodeHelp>());

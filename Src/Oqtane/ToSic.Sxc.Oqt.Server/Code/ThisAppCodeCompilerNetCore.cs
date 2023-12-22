@@ -11,18 +11,18 @@ using ToSic.Sxc.Code;
 namespace ToSic.Sxc.Oqt.Server.Code;
 
 [PrivateApi]
-internal class MyAppCodeCompilerNetCore: MyAppCodeCompiler
+internal class ThisAppCodeCompilerNetCore: ThisAppCodeCompiler
 {
-    public MyAppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, LazySvc<MyAppCodeLoader> myAppCodeLoader)
+    public ThisAppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, LazySvc<ThisAppCodeLoader> thisAppCodeLoader)
     {
         ConnectServices(
             _serverPaths = serverPaths,
-            _myAppCodeLoader = myAppCodeLoader
+            _thisAppCodeLoader = thisAppCodeLoader
         );
     }
 
     private readonly LazySvc<IServerPaths> _serverPaths;
-    private readonly LazySvc<MyAppCodeLoader> _myAppCodeLoader;
+    private readonly LazySvc<ThisAppCodeLoader> _thisAppCodeLoader;
 
     protected internal override AssemblyResult GetAppCode(string virtualPath, int appId = 0)
     {
@@ -37,7 +37,7 @@ internal class MyAppCodeCompilerNetCore: MyAppCodeCompiler
 
             var assemblyLocations = GetAssemblyLocations(appId);
             var dllName = Path.GetFileName(assemblyLocations[1]);
-            var assemblyResult = new Compiler(_myAppCodeLoader).GetCompiledAssemblyFromFolder(sourceFiles, assemblyLocations[1], assemblyLocations[0], dllName);
+            var assemblyResult = new Compiler(_thisAppCodeLoader).GetCompiledAssemblyFromFolder(sourceFiles, assemblyLocations[1], assemblyLocations[0], dllName);
 
             // Compile ok
             if (assemblyResult.ErrorMessages.IsEmpty())
@@ -51,7 +51,7 @@ internal class MyAppCodeCompilerNetCore: MyAppCodeCompiler
         catch (Exception ex)
         {
             l.Ex(ex);
-            var errorMessage = $"Error: Can't compile '{MyAppCodeDll}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. {ex.Message}";
+            var errorMessage = $"Error: Can't compile '{ThisAppCodeDll}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. {ex.Message}";
             return l.ReturnAsError(new AssemblyResult(errorMessages: errorMessage), "error");
         }
     }

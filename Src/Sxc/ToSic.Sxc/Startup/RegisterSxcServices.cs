@@ -184,7 +184,7 @@ public static partial class RegisterSxcServices
 
         // v17
         services.TryAddTransient<AssemblyCacheManager>();
-        services.TryAddTransient<MyAppCodeLoader>();
+        services.TryAddTransient<ThisAppCodeLoader>();
         services.TryAddTransient<SourceAnalyzer>();
         services.TryAddSingleton<AssemblyResolver>();
 

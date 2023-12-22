@@ -151,16 +151,17 @@ internal class AppApiControllerSelector : IHttpControllerSelector
 
     private HttpControllerDescriptor BuildDescriptor(HttpRequestMessage request, string folder, string fullPath, string typeName, IServiceProvider sp)
     {
-        var hasMyApp = sp.Build<SourceAnalyzer>().TypeOfVirtualPath(fullPath).MyApp;
+        var hasThisApp = sp.Build<SourceAnalyzer>().TypeOfVirtualPath(fullPath).ThisApp;
         var appId = sp.Build<DnnGetBlock>().GetCmsBlock(request).LoadBlock().AppId;
         var roslynBuildManager = sp.Build<LazySvc<IRoslynBuildManager>>();
 
-        var assembly = hasMyApp
+        var assembly = hasThisApp
             ? roslynBuildManager.Value.GetCompiledAssembly(fullPath, typeName, appId)?.Assembly
             : BuildManager.GetCompiledAssembly(fullPath);
 
         if (assembly == null) throw new Exception("Assembly not found or compiled to null (error).");
 
+        // TODO: stv, implement more robust FindMainType
         var type = assembly.GetType(typeName, true, true)
                    ?? throw new Exception($"Type '{typeName}' not found in assembly. Could be a compile error or name mismatch.");
 
