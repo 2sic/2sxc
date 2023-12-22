@@ -50,7 +50,7 @@ public class ApiExplorerController : OqtStatefulControllerBase, IApiExplorerCont
         var appId = CtxHlp.BlockOptional?.AppId ?? Eav.Constants.AppIdEmpty;
         var appFolder = GetService<AppFolder>().GetAppFolder();
         var pathFromRoot = OqtServerPaths.GetAppApiPath(siteId, appFolder, path);
-        var myAppCodeLoader = GetService<LazySvc<MyAppCodeLoader>>();
+        var thisAppCodeLoader = GetService<LazySvc<ThisAppCodeLoader>>();
         Log.A($"Controller path from root: {pathFromRoot}");
 
         // get full path
@@ -64,6 +64,6 @@ public class ApiExplorerController : OqtStatefulControllerBase, IApiExplorerCont
         var controllerFolder = pathFromRoot.Substring(0, pathFromRoot.LastIndexOf(@"\"));
         var dllName = AppApiDynamicRouteValueTransformer.GetDllName(controllerFolder, apiFile);
 
-        return new Compiler(myAppCodeLoader).Compile(apiFile, dllName, appId).Assembly;
+        return new Compiler(thisAppCodeLoader).Compile(apiFile, dllName, appId).Assembly;
     }
 }

@@ -21,10 +21,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 /// </summary>
 internal class AppApiControllerManager: IHasLog
 {
-    public AppApiControllerManager(ApplicationPartManager partManager, AppApiFileSystemWatcher appApiFileSystemWatcher, ILogStore logStore, LazySvc<MyAppCodeLoader> myAppCodeLoader, IContextResolver ctxResolver)
+    public AppApiControllerManager(ApplicationPartManager partManager, AppApiFileSystemWatcher appApiFileSystemWatcher, ILogStore logStore, LazySvc<ThisAppCodeLoader> thisAppCodeLoader, IContextResolver ctxResolver)
     {
         _partManager = partManager;
-        _myAppCodeLoader = myAppCodeLoader;
+        _thisAppCodeLoader = thisAppCodeLoader;
         _ctxResolver = ctxResolver;
         _compiledAppApiControllers = appApiFileSystemWatcher.CompiledAppApiControllers;
         Log = new Log(HistoryLogName, null, "AppApiControllerManager");
@@ -32,7 +32,7 @@ internal class AppApiControllerManager: IHasLog
     }
     private readonly ConcurrentDictionary<string, bool> _compiledAppApiControllers;
     private readonly ApplicationPartManager _partManager;
-    private readonly LazySvc<MyAppCodeLoader> _myAppCodeLoader;
+    private readonly LazySvc<ThisAppCodeLoader> _thisAppCodeLoader;
     private readonly IContextResolver _ctxResolver;
 
     public ILog Log { get; }
@@ -81,7 +81,7 @@ internal class AppApiControllerManager: IHasLog
         var appId = _ctxResolver.SetAppOrGetBlock("")?.AppState?.AppId ?? Eav.Constants.AppIdEmpty;
         // Build new AppApi Controller
         Log.A($"Compile assembly: {apiFile}, {dllName}");
-        var assemblyResult = new Compiler(_myAppCodeLoader).Compile(apiFile, dllName, appId);
+        var assemblyResult = new Compiler(_thisAppCodeLoader).Compile(apiFile, dllName, appId);
 
         // Add new key to concurrent dictionary, before registering new AppAPi controller.
         if (!_compiledAppApiControllers.TryAdd(apiFile, false))

@@ -28,7 +28,7 @@ using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Razor
 {
-    internal class MyAppCodeRazorCompiler : ServiceBase, IMyAppCodeRazorCompiler
+    internal class ThisAppCodeRazorCompiler : ServiceBase, IThisAppCodeRazorCompiler
     {
         // TODO: Copy of code from RazorCompiler.cs - should be refactored to use the same code
 
@@ -40,18 +40,18 @@ namespace ToSic.Sxc.Razor
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IRazorPageActivator _pageActivator;
-        private readonly LazySvc<MyAppCodeLoader> _myAppCodeLoader;
+        private readonly LazySvc<ThisAppCodeLoader> _thisAppCodeLoader;
         private readonly LazySvc<IServerPaths> _serverPaths;
         private readonly AssemblyResolver _assemblyResolver;
 
-        public MyAppCodeRazorCompiler(
+        public ThisAppCodeRazorCompiler(
             ApplicationPartManager applicationPartManager,
             IRazorViewEngine viewEngine,
             IServiceProvider serviceProvider,
             IHttpContextAccessor httpContextAccessor,
             IActionContextAccessor actionContextAccessor,
             IRazorPageActivator pageActivator,
-            LazySvc<MyAppCodeLoader> myAppCodeLoader,
+            LazySvc<ThisAppCodeLoader> thisAppCodeLoader,
             LazySvc<IServerPaths> serverPaths,
             AssemblyResolver assemblyResolver) : base($"{Constants.SxcLogName}.RzrCmp")
         {
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Razor
                 _httpContextAccessor = httpContextAccessor,
                 _actionContextAccessor = actionContextAccessor,
                 _pageActivator = pageActivator,
-                _myAppCodeLoader = myAppCodeLoader,
+                _thisAppCodeLoader = thisAppCodeLoader,
                 _serverPaths = serverPaths,
                 _assemblyResolver = assemblyResolver
             );
@@ -157,8 +157,8 @@ namespace ToSic.Sxc.Razor
         private async Task<ViewEngineResult> GetViewWithAppCodeAsync(string templatePath, IApp app)
         {
             // get assembly - try to get from cache, otherwise compile
-            var codeAssembly = MyAppCodeLoader.TryGetAssemblyOfCodeFromCache(app.AppId, Log)?.Assembly
-                               ?? _myAppCodeLoader.Value.GetAppCodeAssemblyOrNull(app.AppId);
+            var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(app.AppId, Log)?.Assembly
+                               ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrNull(app.AppId);
 
             if (codeAssembly != null) _assemblyResolver.AddAssembly(codeAssembly, app.RelativePath);
 

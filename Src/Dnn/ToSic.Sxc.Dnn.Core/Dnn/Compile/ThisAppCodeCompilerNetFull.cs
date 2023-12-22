@@ -10,13 +10,13 @@ using ToSic.Sxc.Dnn.Compile;
 namespace ToSic.Sxc.Code;
 
 [PrivateApi]
-internal class MyAppCodeCompilerNetFull : MyAppCodeCompiler
+internal class ThisAppCodeCompilerNetFull : ThisAppCodeCompiler
 {
 
     private readonly IHostingEnvironmentWrapper _hostingEnvironment;
     private readonly IReferencedAssembliesProvider _referencedAssembliesProvider;
 
-    public MyAppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironment, IReferencedAssembliesProvider referencedAssembliesProvider)
+    public ThisAppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironment, IReferencedAssembliesProvider referencedAssembliesProvider)
     {
         ConnectServices(
             _hostingEnvironment = hostingEnvironment,
@@ -61,7 +61,7 @@ internal class MyAppCodeCompilerNetFull : MyAppCodeCompiler
         catch (Exception ex)
         {
             l.Ex(ex);
-            var errorMessage = $"Error: Can't compile '{MyAppCodeDll}' in {Path.GetFileName(relativePath)}. Details are logged into insights. {ex.Message}";
+            var errorMessage = $"Error: Can't compile '{ThisAppCodeDll}' in {Path.GetFileName(relativePath)}. Details are logged into insights. {ex.Message}";
             return l.ReturnAsError(new AssemblyResult(errorMessages: errorMessage));
         }
     }

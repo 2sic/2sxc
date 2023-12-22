@@ -66,9 +66,9 @@ public class SourceAnalyzer : ServiceBase
 
         if (isCs)
         {
-            var myAppInCs = IsMyAppCodeUsedInCs(contents);
-            l.A($"myApp: {myAppInCs}");
-            return l.Return(myAppInCs ? CodeFileInfo.CodeFileUnknownWithMyAppCode : CodeFileInfo.CodeFileUnknown, "Ok, cs file");
+            var csHasThisAppCode = IsThisAppCodeUsedInCs(contents);
+            l.A($"thisApp: {csHasThisAppCode}");
+            return l.Return(csHasThisAppCode ? CodeFileInfo.CodeFileUnknownWithThisAppCode : CodeFileInfo.CodeFileUnknown, "Ok, cs file");
         }
 
         // Cshtml part
@@ -81,19 +81,19 @@ public class SourceAnalyzer : ServiceBase
         if (ns.IsEmptyOrWs())
             return l.Return(CodeFileInfo.CodeFileUnknown);
 
-        var myApp = IsMyAppCodeUsedInCshtml(contents);
+        var cshtmlHasThisAppCode = IsThisAppCodeUsedInCshtml(contents);
 
         var findMatch = CodeFileInfo.CodeFileList
-            .FirstOrDefault(cf => cf.Inherits.EqualsInsensitive(ns) && cf.MyApp == myApp);
+            .FirstOrDefault(cf => cf.Inherits.EqualsInsensitive(ns) && cf.ThisApp == cshtmlHasThisAppCode);
 
         return findMatch != null
             ? l.ReturnAndLog(findMatch)
             : l.Return(CodeFileInfo.CodeFileOther, $"namespace '{ns}' can't be found");
     }
 
-    private static bool IsMyAppCodeUsedInCshtml(string sourceCode)
+    private static bool IsThisAppCodeUsedInCshtml(string sourceCode)
     {
-        // Pattern to match '@using MyApp.Code' not commented out
+        // Pattern to match '@using ThisApp.Code' not commented out
 
         // TODO: stv, update code because this code is not robust enough
         // it does not handle all edge cases, event it does not work correctly in some cases
@@ -103,20 +103,20 @@ public class SourceAnalyzer : ServiceBase
             (?<=^\s*)
 
             # Match the @using statement
-            @using\s+MyApp\.Code
+            @using\s+ThisApp\.Code
 
             # Ensure that it's not part of a comment
-            (?<!@(/\*)[\s\S]*?@using\s+MyApp\.Code) # Not in Razor comment";
+            (?<!@(/\*)[\s\S]*?@using\s+ThisApp\.Code) # Not in Razor comment";
 
         var options = RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace;
-        var myAppMatch = Regex.Match(sourceCode, pattern, options);
+        var thisAppMatch = Regex.Match(sourceCode, pattern, options);
 
-        return myAppMatch.Success;
+        return thisAppMatch.Success;
     }
 
-    private static bool IsMyAppCodeUsedInCs(string sourceCode)
+    private static bool IsThisAppCodeUsedInCs(string sourceCode)
     {
-        // Pattern to match 'using MyApp.Code;' not in single-line or multi-line comments
+        // Pattern to match 'using ThisApp.Code;' not in single-line or multi-line comments
 
         // TODO: stv, update code because this code is not robust enough
         // it does not handle all edge cases, event it does not work correctly in some cases
@@ -124,19 +124,19 @@ public class SourceAnalyzer : ServiceBase
             # Ignore leading whitespaces
             (?<=^\s*)
 
-            # Match the 'using MyApp.Code;' statement
-            using\s+MyApp\.Code\s*;
+            # Match the 'using ThisApp.Code;' statement
+            using\s+ThisApp\.Code\s*;
 
             # Ensure that it's not part of a single-line comment
-            (?<!//.*using\s+MyApp\.Code\s*;)
+            (?<!//.*using\s+ThisApp\.Code\s*;)
 
             # Ensure that it's not part of a multi-line comment
-            (?<!/\*[\s\S]*?using\s+MyApp\.Code\s*;)";
+            (?<!/\*[\s\S]*?using\s+ThisApp\.Code\s*;)";
 
         var options = RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace;
-        var myAppMatch = Regex.Match(sourceCode, pattern, options);
+        var thisAppMatch = Regex.Match(sourceCode, pattern, options);
 
-        return myAppMatch.Success;
+        return thisAppMatch.Success;
     }
 
 }

@@ -15,19 +15,19 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Code
 {
-    public class MyAppCodeLoader : ServiceBase
+    public class ThisAppCodeLoader : ServiceBase
     {
-        public const string MyAppCodeFolder = "AppCode";
-        public const string MyAppBinFolder = "bin";
+        public const string ThisAppCodeFolder = "ThisApp\\Code";
+        public const string ThisAppBinFolder = "bin";
 
-        public MyAppCodeLoader(ILogStore logStore, ISite site, IAppStates appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, LazySvc<MyAppCodeCompiler> myAppCodeCompilerLazy, AssemblyCacheManager assemblyCacheManager) : base("Sys.AppCodeLoad")
+        public ThisAppCodeLoader(ILogStore logStore, ISite site, IAppStates appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, LazySvc<ThisAppCodeCompiler> thisAppCodeCompilerLazy, AssemblyCacheManager assemblyCacheManager) : base("Sys.AppCodeLoad")
         {
             ConnectServices(
                 _logStore = logStore,
                 _site = site,
                 _appStates = appStates,
                 _appPathsLazy = appPathsLazy,
-                _myAppCodeCompilerLazy = myAppCodeCompilerLazy,
+                _thisAppCodeCompilerLazy = thisAppCodeCompilerLazy,
                 _assemblyCacheManager = assemblyCacheManager
             );
         }
@@ -35,14 +35,14 @@ namespace ToSic.Sxc.Code
         private readonly ISite _site;
         private readonly IAppStates _appStates;
         private readonly LazySvc<IAppPathsMicroSvc> _appPathsLazy;
-        private readonly LazySvc<MyAppCodeCompiler> _myAppCodeCompilerLazy;
+        private readonly LazySvc<ThisAppCodeCompiler> _thisAppCodeCompilerLazy;
         private readonly AssemblyCacheManager _assemblyCacheManager;
 
         public static AssemblyResult TryGetAssemblyOfCodeFromCache(int appId, ILog callerLog)
         {
             var l = callerLog.Fn<AssemblyResult>($"{nameof(appId)}: {appId}");
 
-            var (result, _) = AssemblyCacheManager.TryGetAppCode(appId);
+            var (result, _) = AssemblyCacheManager.TryGetThisAppCode(appId);
             return result != null
                 ? l.ReturnAsOk(result)
                 : l.ReturnNull();
@@ -73,26 +73,26 @@ namespace ToSic.Sxc.Code
         {
             var l = Log.Fn<AssemblyResult>($"{nameof(appId)}: {appId}");
 
-            var (result, cacheKey) = AssemblyCacheManager.TryGetAppCode(appId);
+            var (result, cacheKey) = AssemblyCacheManager.TryGetThisAppCode(appId);
             if (result != null)
                 return l.ReturnAsOk(result);
 
             // Get paths
-            var (physicalPath, relativePath) = GetAppPaths(appId, MyAppCodeFolder);
+            var (physicalPath, relativePath) = GetAppPaths(appId, ThisAppCodeFolder);
             l.A($"{nameof(physicalPath)}: '{physicalPath}'; {nameof(relativePath)}: '{relativePath}'");
 
             if (!Directory.Exists(physicalPath))
                 return l.ReturnAsError(null, $"no folder {physicalPath}");
 
-            var assemblyResult = _myAppCodeCompilerLazy.Value.GetAppCode(relativePath, appId);
+            var assemblyResult = _thisAppCodeCompilerLazy.Value.GetAppCode(relativePath, appId);
 
             if (assemblyResult.ErrorMessages.HasValue()) 
                 return l.ReturnAsError(assemblyResult, assemblyResult.ErrorMessages);
 
             assemblyResult.WatcherFolders = new[] { physicalPath };
 
-            var (refsAssemblyPath, _) = GetAppPaths(appId, MyAppBinFolder);
-            CopyAssemblyForRefs(assemblyResult.AssemblyLocations[1], Path.Combine(refsAssemblyPath, MyAppCodeCompiler.MyAppCodeDll));
+            var (refsAssemblyPath, _) = GetAppPaths(appId, ThisAppBinFolder);
+            CopyAssemblyForRefs(assemblyResult.AssemblyLocations[1], Path.Combine(refsAssemblyPath, ThisAppCodeCompiler.ThisAppCodeDll));
 
             // Add compiled assembly to cache
             _assemblyCacheManager.Add(

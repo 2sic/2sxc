@@ -18,15 +18,15 @@ namespace ToSic.Sxc.Razor
 
         private readonly ITempDataProvider _tempDataProvider;
         private readonly IRazorCompiler _razorCompiler;
-        private readonly IMyAppCodeRazorCompiler _myAppCodeRazorCompiler;
+        private readonly IThisAppCodeRazorCompiler _thisAppCodeRazorCompiler;
         private readonly SourceAnalyzer _sourceAnalyzer;
 
-        public RazorRenderer(ITempDataProvider tempDataProvider, IRazorCompiler razorCompiler, IMyAppCodeRazorCompiler myAppCodeRazorCompiler, SourceAnalyzer sourceAnalyzer) : base($"{Constants.SxcLogName}.RzrRdr")
+        public RazorRenderer(ITempDataProvider tempDataProvider, IRazorCompiler razorCompiler, IThisAppCodeRazorCompiler thisAppCodeRazorCompiler, SourceAnalyzer sourceAnalyzer) : base($"{Constants.SxcLogName}.RzrRdr")
         {
             ConnectServices(
                 _tempDataProvider = tempDataProvider,
                 _razorCompiler = razorCompiler,
-                _myAppCodeRazorCompiler = myAppCodeRazorCompiler,
+                _thisAppCodeRazorCompiler = thisAppCodeRazorCompiler,
                 _sourceAnalyzer = sourceAnalyzer
             );
         }
@@ -40,8 +40,8 @@ namespace ToSic.Sxc.Razor
             // 1. probably change so the CodeFileInfo contains the source code
             var razorType = _sourceAnalyzer.TypeOfVirtualPath(templatePath);
 
-            var (view, actionContext) = razorType.MyAppRequirements()
-                ? await _myAppCodeRazorCompiler.CompileView(templatePath, configure, app)
+            var (view, actionContext) = razorType.ThisAppRequirements()
+                ? await _thisAppCodeRazorCompiler.CompileView(templatePath, configure, app)
                 : await _razorCompiler.CompileView(templatePath, configure, null);
 
             // Prepare to render
