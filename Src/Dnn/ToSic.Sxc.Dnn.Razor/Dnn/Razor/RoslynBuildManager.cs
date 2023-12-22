@@ -128,7 +128,7 @@ namespace ToSic.Sxc.Dnn.Razor
                 : [fileChangeMon, sharedFolderChangeMon];
 
             // directly attach a type to the cache
-            var mainType = generatedAssembly.GetType(isCshtml ? $"{DefaultNamespace}.{className}" : className, false, true);
+            var mainType = FindMainType(generatedAssembly, className, isCshtml);
             l.A($"Main type: {mainType}");
 
             var assemblyResult = new AssemblyResult(generatedAssembly, safeClassName: className, mainType: mainType);
@@ -144,6 +144,23 @@ namespace ToSic.Sxc.Dnn.Razor
             return l.ReturnAsOk(assemblyResult);
         }
 
+        private Type FindMainType(Assembly generatedAssembly, string className, bool isCshtml)
+        {
+            var l = Log.Fn<Type>($"{nameof(className)}: '{className}'; {nameof(isCshtml)}: {isCshtml}", timer: true);
+            if (generatedAssembly == null) return l.ReturnAsError(null, "generatedAssembly is null, so type is null");
+
+            var mainType = generatedAssembly.GetType(isCshtml ? $"{DefaultNamespace}.{className}" : className, false, true);
+            if (mainType != null) return l.ReturnAsOk(mainType);
+
+            l.A("can't find MainType in standard way, fallback #1 - search by classname, ignoring namespace");
+            foreach (var mainTypeFallback1 in generatedAssembly.GetTypes())
+                if (mainTypeFallback1.Name.Equals(className, StringComparison.OrdinalIgnoreCase))
+                    return l.ReturnAsOk(mainTypeFallback1);
+
+            l.A("can't find mainTypeFallback1, fallback #2 - just return first type (in most cases we have one only)");
+            var mainTypeFallback2 = generatedAssembly.GetTypes().FirstOrDefault();
+            return l.ReturnAsOk(mainTypeFallback2);
+        }
 
 
         /// <summary>
