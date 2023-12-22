@@ -121,11 +121,13 @@ public class ServiceKit16: ServiceKit
 
     /// <inheritdoc cref="ServiceKit14.User"/>
     [PrivateApi("Experimental in v15.03")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public IUserService User => _users.Get(GetService<IUserService>);
     private readonly GetOnce<IUserService> _users = new();
 
     // v16 new Keys
     [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP v16.04")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public IKeyService Key => _keys ??= new KeyService();
     private IKeyService _keys;
 }
