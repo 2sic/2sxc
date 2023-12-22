@@ -53,9 +53,6 @@ namespace ToSic.Sxc.Dnn.Razor
 
         private static readonly Lazy<List<string>> DefaultReferencedAssemblies = new(GetDefaultReferencedAssemblies);
 
-        public AssemblyResult GetCompiledAssembly(string relativePath, string className, int appId) 
-            => GetAssemblyResult(relativePath, className, appId);
-
         /// <summary>
         /// Manage template compilations, cache the assembly and returns the generated type.
         /// </summary>
@@ -63,9 +60,9 @@ namespace ToSic.Sxc.Dnn.Razor
         /// <param name="appId">The ID of the application.</param>
         /// <returns>The generated type for razor cshtml.</returns>
         public Type GetCompiledType(string templatePath, int appId) 
-            => GetAssemblyResult(templatePath, null, appId).MainType;
+            => GetCompiledAssembly(templatePath, null, appId).MainType;
 
-        private AssemblyResult GetAssemblyResult(string virtualPath, string className, int appId)
+        public AssemblyResult GetCompiledAssembly(string virtualPath, string className, int appId) 
         {
             var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {nameof(appId)}: {appId}", timer: true);
 
