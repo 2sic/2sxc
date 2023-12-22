@@ -57,22 +57,31 @@ public class SourceAnalyzer : ServiceBase
 
     public CodeFileInfo AnalyzeContent(string path, string contents)
     {
-        var l = Log.Fn<CodeFileInfo>();
+        var l = Log.Fn<CodeFileInfo>($"{nameof(path)}:{path}");
         if (contents.Length < 10)
             return l.Return(CodeFileInfo.CodeFileUnknown, "file too short");
 
-        var myApp = IsMyAppCodeUsedInCs(contents);
+        var isCs = path.ToLowerInvariant().EndsWith(ToSic.Sxc.Code.CodeCompiler.CsFileExtension);
+        l.A($"isCs: {isCs}");
 
+        if (isCs)
+        {
+            var myAppInCs = IsMyAppCodeUsedInCs(contents);
+            l.A($"myApp: {myAppInCs}");
+            return l.Return(myAppInCs ? CodeFileInfo.CodeFileUnknownWithMyAppCode : CodeFileInfo.CodeFileUnknown, "Ok, cs file");
+        }
+
+        // Cshtml part
         var inheritsMatch = Regex.Match(contents, @"@inherits\s+(?<BaseName>[\w\.]+)", RegexOptions.Multiline);
 
         if (!inheritsMatch.Success)
-            return l.Return(myApp ? CodeFileInfo.CodeFileUnknownWithMyAppCode : CodeFileInfo.CodeFileUnknown, "no inherits found");
+            return l.Return(CodeFileInfo.CodeFileUnknown, "no inherits found");
 
         var ns = inheritsMatch.Groups["BaseName"].Value;
         if (ns.IsEmptyOrWs())
             return l.Return(CodeFileInfo.CodeFileUnknown);
 
-        myApp = myApp || IsMyAppCodeUsedInCshtml(contents);
+        var myApp = IsMyAppCodeUsedInCshtml(contents);
 
         var findMatch = CodeFileInfo.CodeFileList
             .FirstOrDefault(cf => cf.Inherits.EqualsInsensitive(ns) && cf.MyApp == myApp);
@@ -90,15 +99,14 @@ public class SourceAnalyzer : ServiceBase
         // it does not handle all edge cases, event it does not work correctly in some cases
 
         const string pattern = @"
-        # Ignore leading whitespaces
-        (?<=^\s*)
+            # Ignore leading whitespaces
+            (?<=^\s*)
 
-        # Match the @using statement
-        @using\s+MyApp\.Code
+            # Match the @using statement
+            @using\s+MyApp\.Code
 
-        # Ensure that it's not part of a comment
-        (?<!@(/\*)[\s\S]*?@using\s+MyApp\.Code) # Not in Razor comment
-        ";
+            # Ensure that it's not part of a comment
+            (?<!@(/\*)[\s\S]*?@using\s+MyApp\.Code) # Not in Razor comment";
 
         var options = RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace;
         var myAppMatch = Regex.Match(sourceCode, pattern, options);
