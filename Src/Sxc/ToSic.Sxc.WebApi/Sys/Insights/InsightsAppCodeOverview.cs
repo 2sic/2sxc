@@ -6,8 +6,10 @@ using ToSic.Eav.WebApi.Sys.Insights;
 
 namespace ToSic.Sxc.WebApi.Sys.Insights;
 
-internal class InsightsAppCodeOverview(IAppStates appStates) : InsightsProvider("AppCodeOverview", category: "ThisApp.Code")
+internal class InsightsAppCodeOverview(IAppStates appStates) : InsightsProvider(Link, helpCategory: "ThisApp.Code")
 {
+    public static string Link => "AppCodeOverview";
+
     public override string HtmlBody()
     {
         var msg = "";
@@ -49,7 +51,7 @@ internal class InsightsAppCodeOverview(IAppStates appStates) : InsightsProvider(
                        app.InCache ? "yes" : "no",
                        AppStateExtensions.AppGuidIsAPreset(app.Guid)
                            ? ""
-                           : Linker.LinkTo(view: "AppCodeBuild", label: "Build",
+                           : Linker.LinkTo(view: InsightsAppCodeBuild.Link, label: "Build",
                                appId: app.Id))
             );
         }
@@ -57,8 +59,5 @@ internal class InsightsAppCodeOverview(IAppStates appStates) : InsightsProvider(
                + "</table>"
                + InsightsHtmlParts.JsTableSort();
         return msg;
-
-        return "AppCodeOverview";
-
     }
 }

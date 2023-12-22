@@ -160,7 +160,8 @@ public static class StartupWebApi
 
     public static IServiceCollection AddSxcInsights(this IServiceCollection services)
     {
-        services.TryAddTransient<IInsightsProvider, InsightsAppCodeOverview>();
+        services.AddTransient<IInsightsProvider, InsightsAppCodeOverview>();
+        services.AddTransient<IInsightsProvider, InsightsAppCodeBuild>();
         return services;
     }
 
