@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Data;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName,
-    IWrapper<IEntity>, IHasMetadata
+    IWrapper<IEntity>, IHasMetadata, IEquatable<ITypedItem>
 {
     #region Setup
 
@@ -95,8 +95,10 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
         if (b is null) return false;
         if (ReferenceEquals(this, b)) return true;
         if (b.GetType() != GetType()) return false;
-        return EqualsWrapper(this, (TypedItemOfEntity)b);
+        return EqualsWrapper(this, (IWrapper<IEntity>)b);
     }
+
+    bool IEquatable<ITypedItem>.Equals(ITypedItem other) => Equals(other);
 
     #endregion
 

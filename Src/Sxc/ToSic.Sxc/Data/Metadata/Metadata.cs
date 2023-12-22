@@ -41,4 +41,23 @@ internal partial class Metadata: DynamicEntity, IMetadata, IHasPropLookup
     public new ITypedItem Presentation => throw new NotSupportedException();
 
     #endregion
+
+    #region Equals
+
+    public override bool Equals(object b)
+    {
+        if (b is null) return false;
+        if (ReferenceEquals(this, b)) return true;
+        if (b.GetType() != GetType()) return false;
+
+        // TODO: ATM not clear how to best do this
+        // probably need to check what's inside the PreWrap...
+        //return EqualsWrapper(this, (IWrapper<IEntity>)b);
+        return false;
+    }
+
+    bool IEquatable<ITypedItem>.Equals(ITypedItem other) => Equals(other);
+
+    #endregion
+
 }

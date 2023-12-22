@@ -1,4 +1,7 @@
 {
+  "_": {
+    "V": 1
+  },
   "Bundles": [
     {
       "Name": "default",
@@ -8,7 +11,53 @@
             "Id": "813a3cb7-1a89-4477-bdfe-8863ab3ae59a",
             "Name": "SettingsSystem",
             "Scope": "System.Configuration",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 130614,
+                "Version": 7,
+                "Guid": "c0313d2f-899f-4d31-b863-6c10ff6f8383",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "Description": {
+                      "*": ""
+                    },
+                    "DynamicChildrenField": {
+                      "*": ""
+                    },
+                    "EditInstructions": {
+                      "*": "<p>Here you can configure System Settings. If you're new to this please <a href=\"https://r.2sxc.org/settings\" target=\"_blank\" rel=\"noopener\">read the docs</a>.&nbsp;</p>\n<p>Remember that you can always create <em>custom settings</em> for anything you want. These will not be stored here, but in a new ContentType called <em>Settings</em> which you would create on your own.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "*": "System Settings"
+                    },
+                    "ListInstructions": {
+                      "*": "<p>These settings override defaults provided at the global level. Make sure you understand Settings before doing much here. <a href=\"https://r.2sxc.org/settings\" target=\"_blank\" rel=\"noopener\">Read the docs please</a>.&nbsp;</p>\n<p>Note: you should usually only have exactly 1 item in this list. The only exception is on the main <strong>Content</strong> app where you have two items (one affecting only the current App, one affecting the entire Site).&nbsp;</p>"
+                    },
+                    "Notes": {
+                      "*": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "*": ""
+                    },
+                    "Link": {
+                      "*": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "813a3cb7-1a89-4477-bdfe-8863ab3ae59a"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "Title",
@@ -21,8 +70,8 @@
                     "Version": 4,
                     "Guid": "2cb4d735-f4dc-44c5-8890-36e7b8f50201",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -81,8 +130,8 @@
                     "Version": 3,
                     "Guid": "050a85b3-1508-4200-852a-93d04889492f",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -101,8 +150,8 @@
                     "Version": 3,
                     "Guid": "81c65f11-5b9c-4994-9dd8-ab4c33259d4c",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -126,8 +175,8 @@
                     "Version": 7,
                     "Guid": "198ac2ed-06af-4cf0-9ae4-94a665fba259",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -186,8 +235,8 @@
                     "Version": 6,
                     "Guid": "6bf1cfc3-8a1e-4f48-a7c9-9f86ea03894a",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -206,8 +255,8 @@
                     "Version": 6,
                     "Guid": "d8b1df1c-1a22-4a5d-9e72-69da716c7126",
                     "Type": {
-                      "Name": "@string-dropdown",
-                      "Id": "@string-dropdown"
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
                     },
                     "Attributes": {
                       "String": {
@@ -239,8 +288,8 @@
                     "Version": 4,
                     "Guid": "1a824775-95df-4d4b-9ea8-687a25404772",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -309,8 +358,8 @@
                     "Version": 11,
                     "Guid": "623eb94e-c2ea-4436-b32c-61311ea3d714",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -379,8 +428,8 @@
                     "Version": 4,
                     "Guid": "1df44260-b2ee-4452-8cbd-8e43a4ae1fec",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -449,8 +498,8 @@
                     "Version": 4,
                     "Guid": "33d8eef3-9a7f-4756-8c82-11f6e8b79c69",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -511,8 +560,8 @@
                     "Version": 3,
                     "Guid": "a54af856-06e3-4915-ba80-5ea3900871c3",
                     "Type": {
-                      "Name": "@empty-default",
-                      "Id": "@empty-default"
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
                     },
                     "Attributes": {
                       "Boolean": {
@@ -536,8 +585,8 @@
                     "Version": 5,
                     "Guid": "1b86a72c-9ea8-4927-8ed7-b03111c6f087",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -596,8 +645,8 @@
                     "Version": 4,
                     "Guid": "c8a913ba-d892-4f70-9d37-199f610f9cc3",
                     "Type": {
-                      "Name": "@Entity",
-                      "Id": "@Entity"
+                      "Id": "@Entity",
+                      "Name": "@Entity"
                     },
                     "Attributes": {
                       "String": {
@@ -644,8 +693,8 @@
                     "Version": 3,
                     "Guid": "ffbc2df0-83a1-4883-b7bc-68fbffc1b0a5",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -715,8 +764,8 @@
                     "Version": 2,
                     "Guid": "6bc5d0cb-be03-4138-8d46-3bb960a63d42",
                     "Type": {
-                      "Name": "@Entity",
-                      "Id": "@Entity"
+                      "Id": "@Entity",
+                      "Name": "@Entity"
                     },
                     "Attributes": {
                       "String": {
@@ -769,8 +818,8 @@
                     "Version": 3,
                     "Guid": "86c1cd5d-3b16-4071-b048-2942fc03f253",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -831,8 +880,8 @@
                     "Version": 2,
                     "Guid": "d4765e91-ccc9-4204-8d40-3a0be958a94b",
                     "Type": {
-                      "Name": "@empty-default",
-                      "Id": "@empty-default"
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
                     },
                     "Attributes": {
                       "Boolean": {
@@ -856,8 +905,8 @@
                     "Version": 4,
                     "Guid": "cf06e71c-f14e-4f0a-a0a0-455b6628cd9c",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -927,8 +976,8 @@
                     "Version": 3,
                     "Guid": "66f7c299-a872-4313-a3c6-ccc14e4262e2",
                     "Type": {
-                      "Name": "@Entity",
-                      "Id": "@Entity"
+                      "Id": "@Entity",
+                      "Name": "@Entity"
                     },
                     "Attributes": {
                       "String": {
@@ -981,8 +1030,8 @@
                     "Version": 3,
                     "Guid": "5b9ddffb-03e2-45a2-a109-cff38919e4f0",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1041,8 +1090,8 @@
                     "Version": 2,
                     "Guid": "51fc1f39-6e7a-4bed-a26b-12254214526f",
                     "Type": {
-                      "Name": "@Entity",
-                      "Id": "@Entity"
+                      "Id": "@Entity",
+                      "Name": "@Entity"
                     },
                     "Attributes": {
                       "String": {
@@ -1089,8 +1138,8 @@
                     "Version": 2,
                     "Guid": "91efd773-b042-481e-82bc-fb3bb9d065cd",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1149,8 +1198,8 @@
                     "Version": 1,
                     "Guid": "b8424c6f-66bf-49ce-856d-b17f0d63b366",
                     "Type": {
-                      "Name": "@Entity",
-                      "Id": "@Entity"
+                      "Id": "@Entity",
+                      "Name": "@Entity"
                     },
                     "Attributes": {
                       "String": {
@@ -1197,8 +1246,8 @@
                     "Version": 2,
                     "Guid": "41d29954-c106-4742-b59f-91d18d74beee",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1259,8 +1308,8 @@
                     "Version": 1,
                     "Guid": "f9a34b2b-fc02-4e3f-9cf9-e1b9263bd6ca",
                     "Type": {
-                      "Name": "@empty-default",
-                      "Id": "@empty-default"
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
                     },
                     "Attributes": {
                       "Boolean": {
@@ -1284,8 +1333,8 @@
                     "Version": 3,
                     "Guid": "c4f29d42-b61a-4a08-8ee6-b1113e4b9f92",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1344,8 +1393,8 @@
                     "Version": 2,
                     "Guid": "1df20cb6-629e-4550-ba4f-22ddae96d050",
                     "Type": {
-                      "Name": "@Entity",
-                      "Id": "@Entity"
+                      "Id": "@Entity",
+                      "Name": "@Entity"
                     },
                     "Attributes": {
                       "String": {
@@ -1392,8 +1441,8 @@
                     "Version": 5,
                     "Guid": "cb63ebab-2640-4261-86ca-735f1290b7c6",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1452,8 +1501,8 @@
                     "Version": 4,
                     "Guid": "75539fd7-1e8e-4cd7-887d-5a228632f0b6",
                     "Type": {
-                      "Name": "@empty-default",
-                      "Id": "@empty-default"
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
                     },
                     "Attributes": {
                       "Boolean": {
@@ -1477,8 +1526,8 @@
                     "Version": 3,
                     "Guid": "ef86dbc2-faf5-4078-a934-2f191fb50d99",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1537,8 +1586,8 @@
                     "Version": 2,
                     "Guid": "665b299b-40b5-404e-9cbc-7b45e3828ae0",
                     "Type": {
-                      "Name": "@Entity",
-                      "Id": "@Entity"
+                      "Id": "@Entity",
+                      "Name": "@Entity"
                     },
                     "Attributes": {
                       "String": {
@@ -1585,8 +1634,8 @@
                     "Version": 4,
                     "Guid": "78b2fc6b-6ca9-4c07-86a8-ae9206f9a3b9",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1645,8 +1694,8 @@
                     "Version": 3,
                     "Guid": "5b7d19d2-4ea2-4487-b6d6-1f006015576e",
                     "Type": {
-                      "Name": "@empty-default",
-                      "Id": "@empty-default"
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
                     },
                     "Attributes": {
                       "Boolean": {
@@ -1670,8 +1719,8 @@
                     "Version": 4,
                     "Guid": "c0fead0b-da4c-4ee6-b770-5960a157edfb",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1732,8 +1781,8 @@
                     "Version": 2,
                     "Guid": "b1eae523-a9b9-417f-aaee-102807385525",
                     "Type": {
-                      "Name": "@Entity",
-                      "Id": "@Entity"
+                      "Id": "@Entity",
+                      "Name": "@Entity"
                     },
                     "Attributes": {
                       "String": {
@@ -1780,8 +1829,8 @@
                     "Version": 4,
                     "Guid": "2c04ce26-d2bd-4696-acab-36d5265481a3",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1840,8 +1889,8 @@
                     "Version": 3,
                     "Guid": "1851dc87-f322-4346-acd3-38b778fbd2d9",
                     "Type": {
-                      "Name": "@empty-default",
-                      "Id": "@empty-default"
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
                     },
                     "Attributes": {
                       "Boolean": {
@@ -1865,8 +1914,8 @@
                     "Version": 5,
                     "Guid": "92c49d95-789d-49b7-a98d-a9a9d05e8035",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1925,8 +1974,8 @@
                     "Version": 4,
                     "Guid": "f3872579-aec0-45c2-80a7-7e86d2fe35e5",
                     "Type": {
-                      "Name": "@Entity",
-                      "Id": "@Entity"
+                      "Id": "@Entity",
+                      "Name": "@Entity"
                     },
                     "Attributes": {
                       "String": {
@@ -1962,53 +2011,6 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 130614,
-                "Version": 7,
-                "Guid": "c0313d2f-899f-4d31-b863-6c10ff6f8383",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "Description": {
-                      "*": ""
-                    },
-                    "DynamicChildrenField": {
-                      "*": ""
-                    },
-                    "EditInstructions": {
-                      "*": "<p>Here you can configure System Settings. If you're new to this please <a href=\"https://r.2sxc.org/settings\" target=\"_blank\" rel=\"noopener\">read the docs</a>.&nbsp;</p>\n<p>Remember that you can always create <em>custom settings</em> for anything you want. These will not be stored here, but in a new ContentType called <em>Settings</em> which you would create on your own.&nbsp;</p>"
-                    },
-                    "Label": {
-                      "*": "System Settings"
-                    },
-                    "ListInstructions": {
-                      "*": "<p>These settings override defaults provided at the global level. Make sure you understand Settings before doing much here. <a href=\"https://r.2sxc.org/settings\" target=\"_blank\" rel=\"noopener\">Read the docs please</a>.&nbsp;</p>\n<p>Note: you should usually only have exactly 1 item in this list. The only exception is on the main <strong>Content</strong> app where you have two items (one affecting only the current App, one affecting the entire Site).&nbsp;</p>"
-                    },
-                    "Notes": {
-                      "*": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "*": ""
-                    },
-                    "Link": {
-                      "*": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "813a3cb7-1a89-4477-bdfe-8863ab3ae59a"
-                }
-              }
             ]
           },
           "Entities": [
@@ -2017,8 +2019,8 @@
               "Version": 2,
               "Guid": "015cd69e-c652-4cce-ad01-e4a644cbd318",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -2048,8 +2050,8 @@
               "Version": 1,
               "Guid": "19bb9348-59b3-4c23-b769-a950de118cf2",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -2079,8 +2081,8 @@
               "Version": 1,
               "Guid": "e78504d3-1016-43e2-9a42-692554ea9145",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -2107,8 +2109,8 @@
               "Version": 1,
               "Guid": "8ada531e-f7ea-4c14-b843-91b9d86cbea7",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -2135,8 +2137,8 @@
               "Version": 1,
               "Guid": "414f8b4d-6b9c-4acf-a0b0-53a1ffa2a5b5",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -2163,8 +2165,8 @@
               "Version": 1,
               "Guid": "3984debd-09ca-4e42-93b6-4284af3dcffe",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -2191,8 +2193,8 @@
               "Version": 2,
               "Guid": "f526066d-7f78-4177-a81a-1a1248018a54",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -2224,7 +2226,53 @@
             "Id": "d7f2e4fa-5306-41bb-a3cd-d9529c838879",
             "Name": "\uD83E\uDDD1‍\uD83D\uDCBBSystemExportConfiguration",
             "Scope": "System.Configuration",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 165960,
+                "Version": 4,
+                "Guid": "36e39115-81bd-458b-92d6-52338e48a24b",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "Description": {
+                      "en-us": "Configuration for a specific export"
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p>Define export packages for quick re-export of certain parts of the App.</p>"
+                    },
+                    "Label": {
+                      "en-us": "\uD83E\uDDD1‍\uD83D\uDCBBExport Configuration"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "d7f2e4fa-5306-41bb-a3cd-d9529c838879"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "Name",
@@ -2237,8 +2285,8 @@
                     "Version": 1,
                     "Guid": "84a30b63-d348-4b0d-909c-03ce0c2df7de",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -2281,8 +2329,8 @@
                     "Version": 3,
                     "Guid": "141c8eca-c247-45d6-8e99-2fe8ae43d1b6",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -2351,8 +2399,8 @@
                     "Version": 2,
                     "Guid": "9796b144-1972-4e25-9e01-a8f1f1cad9bd",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -2411,8 +2459,8 @@
                     "Version": 1,
                     "Guid": "89d6b2bc-d793-430c-89ac-9010e05731d6",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -2431,8 +2479,8 @@
                     "Version": 1,
                     "Guid": "b74b6a5a-3084-406e-a1e7-21b6a533fbcc",
                     "Type": {
-                      "Name": "@string-dropdown",
-                      "Id": "@string-dropdown"
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
                     },
                     "Attributes": {
                       "String": {
@@ -2464,8 +2512,8 @@
                     "Version": 2,
                     "Guid": "98d81fa6-33c9-458f-8c86-2cd655ea1eac",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -2524,8 +2572,8 @@
                     "Version": 1,
                     "Guid": "ef6354de-6e3f-4116-8978-36b68aa79fc3",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -2544,8 +2592,8 @@
                     "Version": 1,
                     "Guid": "523a4d76-62ac-4f6b-b41f-36a3815f9052",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -2574,8 +2622,8 @@
                     "Version": 3,
                     "Guid": "7103b508-ce9c-4e33-bb40-1d0176f3cbaa",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -2634,8 +2682,8 @@
                     "Version": 2,
                     "Guid": "2cc0e49d-91fa-4d76-9d5a-4482789fc659",
                     "Type": {
-                      "Name": "@Boolean",
-                      "Id": "@Boolean"
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
                     },
                     "Attributes": {
                       "String": {
@@ -2670,8 +2718,8 @@
                     "Version": 5,
                     "Guid": "5dad1f37-2379-4ff3-bbb0-49ca6f86a162",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -2730,8 +2778,8 @@
                     "Version": 3,
                     "Guid": "ebd7978c-dca3-4301-bee9-4e2268640b33",
                     "Type": {
-                      "Name": "@Boolean",
-                      "Id": "@Boolean"
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
                     },
                     "Attributes": {
                       "String": {
@@ -2750,53 +2798,6 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 165960,
-                "Version": 4,
-                "Guid": "36e39115-81bd-458b-92d6-52338e48a24b",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "Description": {
-                      "en-us": "Configuration for a specific export"
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": "<p>Define export packages for quick re-export of certain parts of the App.</p>"
-                    },
-                    "Label": {
-                      "en-us": "\uD83E\uDDD1‍\uD83D\uDCBBExport Configuration"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "d7f2e4fa-5306-41bb-a3cd-d9529c838879"
-                }
-              }
             ]
           },
           "Entities": [
@@ -2805,8 +2806,8 @@
               "Version": 1,
               "Guid": "9cc5420b-097f-4af8-a8f3-a8b27cccf9a7",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -2835,7 +2836,53 @@
             "Id": "5f431769-ff03-472e-aab5-33891af10acc",
             "Name": "⚙️ContentSecurityPolicies",
             "Scope": "System.Configuration",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 144468,
+                "Version": 4,
+                "Guid": "d4b784fd-ab13-41c8-a92b-8f3e3c00eb68",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": "Items"
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p><img src=\"/Portals/system-types/adam/System-Types/_YS31BOryEGpK48-PADraA/EditInstructions/blobid3.svg\" alt=\"\" width=\"100%\" /></p>\n<p>Content Security Policies are security configurations for CSP.&nbsp;&nbsp;</p>"
+                    },
+                    "Label": {
+                      "en-us": "⚙️Content Security Policies"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "5f431769-ff03-472e-aab5-33891af10acc"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "SettingsIdentifier",
@@ -2848,8 +2895,8 @@
                     "Version": 3,
                     "Guid": "240ee6bc-874a-46af-b9e3-5c3c954b4438",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -2908,8 +2955,8 @@
                     "Version": 2,
                     "Guid": "aed104fd-4c0c-4519-8f1f-5855e67af962",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -2928,8 +2975,8 @@
                     "Version": 2,
                     "Guid": "ee7a6890-723a-48b5-8caf-5c8a60dde864",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -2953,8 +3000,8 @@
                     "Version": 4,
                     "Guid": "ae1d4551-1470-4dc2-982b-3fe7e2d30ce4",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -3023,8 +3070,8 @@
                     "Version": 3,
                     "Guid": "8b004990-fba8-4baa-9717-4f9dc42ea422",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -3083,8 +3130,8 @@
                     "Version": 2,
                     "Guid": "864fe97a-82c6-4f91-a1af-6f7de0ca6f9c",
                     "Type": {
-                      "Name": "@Entity",
-                      "Id": "@Entity"
+                      "Id": "@Entity",
+                      "Name": "@Entity"
                     },
                     "Attributes": {
                       "String": {
@@ -3120,53 +3167,6 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 144468,
-                "Version": 4,
-                "Guid": "d4b784fd-ab13-41c8-a92b-8f3e3c00eb68",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "Description": {
-                      "en-us": ""
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": "Items"
-                    },
-                    "EditInstructions": {
-                      "en-us": "<p><img src=\"/Portals/system-types/adam/System-Types/_YS31BOryEGpK48-PADraA/EditInstructions/blobid3.svg\" alt=\"\" width=\"100%\" /></p>\n<p>Content Security Policies are security configurations for CSP.&nbsp;&nbsp;</p>"
-                    },
-                    "Label": {
-                      "en-us": "⚙️Content Security Policies"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "5f431769-ff03-472e-aab5-33891af10acc"
-                }
-              }
             ]
           },
           "Entities": [
@@ -3175,8 +3175,8 @@
               "Version": 1,
               "Guid": "420612fc-6056-49a9-baa5-8267c72e86bc",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -3205,7 +3205,53 @@
             "Id": "92f2eb3c-c3b7-4378-82df-b2393da6687e",
             "Name": "⚙️ContentSecurityPolicy",
             "Scope": "System.Configuration",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 144478,
+                "Version": 2,
+                "Guid": "938a4147-c2ef-4ae1-9849-46dc9cef4b5a",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p><img srcset=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyNi4zLjEsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iRWJlbmVfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCAxOTY4LjkgMjUwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAxOTY4LjkgMjUwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojMDAwMDNFO30NCgkuc3Qxe2ZpbGw6I0ZGRkZGRjt9DQo8L3N0eWxlPg0KPHBhdGggY2xhc3M9InN0MCIgZD0iTTE2NC40LDI1MEgwVjg1LjZDMCwzOC40LDM4LjQsMCw4NS42LDBIMjUwdjE2NC40QzI1MCwyMTEuNiwyMTEuNiwyNTAsMTY0LjQsMjUweiIvPg0KPGc+DQoJPHBhdGggY2xhc3M9InN0MSIgZD0iTTE4Mi4yLDk2LjVjMCw1MS45LTMxLjksODAuOC01MS45LDg5LjFjLTIuOCwxLjEtNS45LDEuMS04LjYsMEM5Ni42LDE3NS4yLDY5LjcsMTQzLDY5LjcsOTYuNQ0KCQljMC00LjUsMi43LTguNiw2LjktMTAuNGw0NS0xOC44YzEuMS0wLjUsMy4xLTAuOSw0LjMtMC45YzEuMiwwLDMuMiwwLjQsNC4zLDAuOWw0NSwxOC44QzE3OS41LDg3LjgsMTgyLjIsOTEuOSwxODIuMiw5Ni41eg0KCQkgTTE3MSw5Ni41bC00NS0xOC44TDgxLDk2LjVjMCwzOS43LDIyLjIsNjkuMiw0NSw3OC44QzE0Ny45LDE2Ni4xLDE3MSwxMzcuMiwxNzEsOTYuNXogTTExOC4yLDEzNC42bDMzLjEtMzIuOQ0KCQljMS4xLTEuMSwyLjktMS4xLDQsMGw1LjMsNS4zYzEuMSwxLjEsMS4xLDIuOSwwLDRsLTQwLjUsNDAuMWMtMS4xLDEuMS0yLjksMS4xLTQsMGwtMjEuMy0yMS40Yy0xLjEtMS4xLTEuMS0yLjksMC00bDUuMy01LjMNCgkJYzEuMS0xLjEsMi45LTEuMSw0LDBMMTE4LjIsMTM0LjZ6Ii8+DQo8L2c+DQo8Zz4NCgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMzkyLDE3MGMtMjYuOC0yLTQ3LjctMjQuMy00Ny43LTUxLjRjMC0yNy40LDIxLjMtNDkuNiw0Ny43LTUxLjV2MTUuMWMtMTgsMi4zLTMwLjQsMTguNi0zMC40LDM2LjUNCgkJYzAsMTcuNSwxMi40LDM0LjUsMzAuNCwzNi40VjE3MHogTTM5OS4zLDY3LjFjMTIuNSwxLjQsMjQuNyw2LjEsMzMuMiwxNC42YzEuNiwxLjYsMS4zLDIuNi0wLjMsNC4zbC02LjUsNy4xDQoJCWMtMS42LDEuNy0yLjYsMi00LjMsMC4zYy02LTYuNC0xMy4yLTkuOS0yMi4yLTExLjFWNjcuMXogTTM5OS4zLDE1NWM4LjktMS4xLDE2LTQuNywyMi4zLTExLjJjMS43LTEuNywyLjctMS4zLDQuMywwLjNsNi41LDcuMQ0KCQljMS42LDEuOCwxLjgsMi43LDAuMSw0LjRjLTguNyw4LjUtMjEuMiwxMy41LTMzLjIsMTQuNVYxNTV6Ii8+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTQ3OC45LDE2OS43Yy0xOC43LTEuOC0zMy45LTE3LjgtMzMuOS0zNy41YzAtMTkuOSwxNS4zLTM1LjksMzMuOS0zNy42djE0LjhjLTEwLjIsMS44LTE3LjksMTEuMS0xNy45LDIyLjkNCgkJYzAsMTIuMiw4LjEsMjEuMywxNy45LDIzVjE2OS43eiBNNDg2LDE1NS4zYzEwLjItMS43LDE4LTExLjEsMTgtMjNzLTgtMjEuMy0xOC0yMi45Vjk0LjZjMTkuMiwyLDM0LjEsMTgsMzQuMSwzNy42DQoJCWMwLDE5LjUtMTQuOCwzNS42LTM0LjEsMzcuNVYxNTUuM3oiLz4NCgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNTU0LjcsMTY1LjNjMCwyLjMtMC43LDMtMywzaC0xMC4yYy0yLjMsMC0zLTAuNy0zLTNWOTljMC0yLjMsMC43LTMsMy0zaDUuMWMyLjcsMCw0LjQsMC40LDUuNSwxLjdsMi42LDQNCgkJVjE2NS4zeiBNNTYxLjgsOTguM2MzLjQtMi42LDcuNy0zLjgsMTIuOS0zLjhjMTUuNiwwLDI3LjUsOC40LDI3LjUsMzIuOHYzOC4xYzAsMi4zLTAuNywzLTMsM2gtMTAuMmMtMi4zLDAtMy0wLjctMy0zdi0zNC41DQoJCWMwLTE1LjEtNS41LTIxLjktMTUuNS0yMS45Yy00LjEsMC02LjcsMS40LTguOCwzLjNWOTguM3oiLz4NCgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNjIwLjgsMTA5Yy0yLjMsMC0zLTAuNy0zLTN2LTdjMC0yLjMsMC43LTMsMy0zaDUuM1Y4Mi4xYzAtMi4zLDAuNi0zLDMtM2gxMC4xYzIuMywwLDMsMC43LDMsM1Y5NmgyMS45DQoJCWMyLjMsMCwzLDAuNywzLDMuMXY2LjhjMCwyLjMtMC43LDMtMywzSDYyMC44eiBNNjQyLjEsMTE2LjJ2MjEuM2MwLDEyLjgsNC40LDE3LjksMTMuMSwxNy45YzMuMSwwLDUuNS0wLjMsOC41LTEuNw0KCQljMi43LTEuNCwzLjMtMS4zLDMuOCwxLjdsMS4zLDcuMWMwLjQsMi4xLDAuMywyLjgtMS42LDMuOGMtNS43LDMuNS0xMS45LDMuNS0xMy44LDMuNWMtMTguNywwLTI3LjQtMTEuOC0yNy40LTMxLjR2LTIyLjNINjQyLjF6Ig0KCQkvPg0KCTxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik02OTcuMywxMzIuOGMwLDEzLjIsOS40LDIzLjEsMjEuOSwyMy4xYzUsMCwxMi4xLTEuMSwxOS41LTUuNGMyLjEtMSwyLjgtMS42LDQuMywwLjNsNC4xLDUuMQ0KCQljMS40LDEuNywxLjcsMi42LDAuNCw0Yy02LjUsNi40LTE4LjMsOS45LTI4LjcsOS45Yy0yMS40LDAtMzguMi0xNi45LTM4LjItMzcuNmMwLTE5LjUsMTQuNi0zNS41LDMzLjQtMzcuNXYxMy4zDQoJCWMtMTAuMiwyLjEtMTYuNiwxMS4yLTE2LjYsMjMuN1YxMzIuOHogTTcwNC43LDEyNi45aDMyLjFjLTEtOC40LTYtMTYuOS0xNS44LTE4LjlWOTQuNmMyMS4yLDEuNywzMi4yLDE5LjIsMzIuMiwzOS44DQoJCWMwLDIuMy0wLjQsMy4xLTIuOCwzLjFoLTQ1LjdDNzAzLjgsMTM0LjIsNzAzLjgsMTMwLjEsNzA0LjcsMTI2Ljl6Ii8+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTc4Ny4xLDE2NS4zYzAsMi4zLTAuNywzLTMsM2gtMTAuMmMtMi4zLDAtMy0wLjctMy0zVjk5YzAtMi4zLDAuNy0zLDMtM2g1LjFjMi43LDAsNC40LDAuNCw1LjUsMS43bDIuNiw0DQoJCVYxNjUuM3ogTTc5NC4yLDk4LjNjMy40LTIuNiw3LjctMy44LDEyLjktMy44YzE1LjYsMCwyNy41LDguNCwyNy41LDMyLjh2MzguMWMwLDIuMy0wLjcsMy0zLDNoLTEwLjJjLTIuMywwLTMtMC43LTMtM3YtMzQuNQ0KCQljMC0xNS4xLTUuNS0yMS45LTE1LjUtMjEuOWMtNC4xLDAtNi43LDEuNC04LjgsMy4zVjk4LjN6Ii8+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTg1My4xLDEwOWMtMi4zLDAtMy0wLjctMy0zdi03YzAtMi4zLDAuNy0zLDMtM2g1LjNWODIuMWMwLTIuMywwLjYtMywzLTNoMTAuMWMyLjMsMCwzLDAuNywzLDNWOTZoMjEuOQ0KCQljMi4zLDAsMywwLjcsMywzLjF2Ni44YzAsMi4zLTAuNywzLTMsM0g4NTMuMXogTTg3NC40LDExNi4ydjIxLjNjMCwxMi44LDQuNCwxNy45LDEzLjEsMTcuOWMzLjEsMCw1LjUtMC4zLDguNS0xLjcNCgkJYzIuNy0xLjQsMy4zLTEuMywzLjgsMS43bDEuMyw3LjFjMC40LDIuMSwwLjMsMi44LTEuNiwzLjhjLTUuNywzLjUtMTEuOSwzLjUtMTMuOCwzLjVjLTE4LjcsMC0yNy40LTExLjgtMjcuNC0zMS40di0yMi4zSDg3NC40eiINCgkJLz4NCgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNOTgzLjIsMTY5LjZjLTEyLjgtMS0yMi4zLTQtMzItMTAuNWMtMi4xLTEuMy0xLjgtMi4zLTAuOS00LjNsNC40LTcuMWMxLjEtMiwyLTIuNyw0LjEtMS4zDQoJCWM4LjUsNS40LDE2LjIsNy40LDI0LjMsOC4yVjE2OS42eiBNOTg0LjksODIuNmMtMTMuNSwxLjMtMTYuOSw4LjctMTYuOSwxNS4zYzAsOS41LDEwLjEsMTEuNiwyNC42LDEzLjUNCgkJYzE3LjMsMi4xLDMzLjksNy41LDMzLjksMjguNWMwLDE1LjMtMTIuMiwyOS44LTM2LjEsMzB2LTE1LjFjMTEuNS0wLjQsMTkuNS00LjQsMTkuNS0xNC4yYzAtMTAuMi05LjUtMTIuOS0yNS40LTE1LjENCgkJYy0xNS41LTItMzMuMS03LjQtMzMuMS0yNy4xYzAtMTIuNCw4LjktMjkuOCwzMy41LTMxLjFWODIuNnogTTk5Miw2Ny40YzExLjgsMC45LDIwLjksNC41LDMxLDEwLjhjMiwxLjEsMS43LDIuMywwLjcsNC4zbC00LjMsNw0KCQljLTEuMSwyLTIuMSwyLjgtNC4xLDEuNGMtOC43LTUuNy0xNS41LTgtMjMuMy04LjRWNjcuNHoiLz4NCgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTA1NS45LDEzMi44YzAsMTMuMiw5LjQsMjMuMSwyMS45LDIzLjFjNSwwLDEyLjEtMS4xLDE5LjUtNS40YzIuMS0xLDIuOC0xLjYsNC4zLDAuM2w0LjEsNS4xDQoJCWMxLjQsMS43LDEuNywyLjYsMC40LDRjLTYuNSw2LjQtMTguMyw5LjktMjguNyw5LjljLTIxLjQsMC0zOC4yLTE2LjktMzguMi0zNy42YzAtMTkuNSwxNC42LTM1LjUsMzMuNC0zNy41djEzLjMNCgkJYy0xMC4yLDIuMS0xNi42LDExLjItMTYuNiwyMy43VjEzMi44eiBNMTA2My4yLDEyNi45aDMyLjFjLTEtOC40LTYtMTYuOS0xNS44LTE4LjlWOTQuNmMyMS4yLDEuNywzMi4yLDE5LjIsMzIuMiwzOS44DQoJCWMwLDIuMy0wLjQsMy4xLTIuOCwzLjFoLTQ1LjdDMTA2Mi40LDEzNC4yLDEwNjIuNCwxMzAuMSwxMDYzLjIsMTI2Ljl6Ii8+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTExNTcuMiwxMDkuM2MtOS44LDEuNy0xOCwxMC42LTE4LDIzYzAsMTIuMSw3LjgsMjEuMiwxOCwyMi45djE0LjZjLTE5LjctMS44LTM0LjEtMTguNS0zNC4xLTM3LjUNCgkJYzAtMTkuMiwxNC4zLTM1LjgsMzQuMS0zNy42VjEwOS4zeiBNMTE2NC4yLDk0LjZjOC40LDAuOSwxNiw0LDIyLjcsMTAuNWMxLjMsMS4zLDEsMi0wLjQsMy43bC01LjMsNS43Yy0xLjYsMS43LTIuNiwyLjEtNC4zLDAuNg0KCQljLTQuMy00LTguNy01LjMtMTIuOC02Vjk0LjZ6IE0xMTY0LjIsMTU1LjNjNS4xLTAuOSw4LjgtMi40LDEyLjgtNmMxLjgtMS42LDIuNy0xLjEsNC4zLDAuNmw1LjMsNS43YzEuNCwxLjcsMS43LDIuNCwwLjQsMy43DQoJCWMtNi44LDYuNS0xMy45LDkuNS0yMi43LDEwLjVWMTU1LjN6Ii8+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTEyNDIuNiwxNjYuMWMtMy40LDIuNi03LjcsMy44LTEyLjksMy44Yy0xNS42LDAtMjcuNS04LjQtMjcuNS0zMi44Vjk5YzAtMi4zLDAuNy0zLDMtM2gxMC4yYzIuMywwLDMsMC43LDMsMw0KCQl2MzQuNmMwLDE0LjksNS41LDIxLjcsMTUuNSwyMS43YzQuMSwwLDYuNy0xLjQsOC44LTMuM1YxNjYuMXogTTEyNDkuNyw5OWMwLTIuMywwLjctMywzLTNoMTAuMmMyLjMsMCwzLDAuNywzLDN2NjYuMw0KCQljMCwyLjMtMC43LDMtMywzaC01LjFjLTIuNywwLTQuNC0wLjQtNS41LTEuN2wtMi42LTRWOTl6Ii8+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTEzMDYuOCwxNjUuM2MtMC4xLDIuMy0wLjcsMy0zLDNoLTEwLjJjLTIuMywwLTMtMC43LTMtM1Y5OWMwLTIuMywwLjctMywzLTNoNS4xYzQuNCwwLDUsMC45LDguMSw0LjRWMTY1LjN6DQoJCSBNMTMxMy45LDk5LjZjMy44LTIuNyw4LjktNS4xLDE4LjYtNS4xYzIuOCwwLDMuMSwwLjksMi44LDIuOGwtMS42LDEwLjRjLTAuNCwyLjMtMS4xLDIuOC0zLjQsMi44Yy03LDAtMTIuMSwxLjgtMTYuNSw1LjVWOTkuNnoiDQoJCS8+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTEzNjAuMyw2My40YzUuNCwwLDkuOSw0LjUsOS45LDEwLjFjMCw1LjUtNC41LDkuOC05LjksOS44Yy01LjUsMC05LjktNC4zLTkuOS05LjgNCgkJQzEzNTAuNCw2Ny45LDEzNTQuOCw2My40LDEzNjAuMyw2My40eiBNMTM1Mi4zLDk5YzAtMi4zLDAuNy0zLDMtM2gxMC4yYzIuMywwLDMsMC43LDMsM3Y2Ni4zYzAsMi4zLTAuNywzLTMsM2gtMTAuMg0KCQljLTIuMywwLTMtMC43LTMtM1Y5OXoiLz4NCgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTM5MiwxMDljLTIuMywwLTMtMC43LTMtM3YtN2MwLTIuMywwLjctMywzLTNoNS4zVjgyLjFjMC0yLjMsMC42LTMsMy0zaDEwLjFjMi4zLDAsMywwLjcsMywzVjk2aDIxLjkNCgkJYzIuMywwLDMsMC43LDMsMy4xdjYuOGMwLDIuMy0wLjcsMy0zLDNIMTM5MnogTTE0MTMuMywxMTYuMnYyMS4zYzAsMTIuOCw0LjQsMTcuOSwxMy4xLDE3LjljMy4xLDAsNS41LTAuMyw4LjUtMS43DQoJCWMyLjctMS40LDMuMy0xLjMsMy44LDEuN2wxLjMsNy4xYzAuNCwyLjEsMC4zLDIuOC0xLjYsMy44Yy01LjcsMy41LTExLjksMy41LTEzLjgsMy41Yy0xOC43LDAtMjcuNC0xMS44LTI3LjQtMzEuNHYtMjIuM0gxNDEzLjN6Ig0KCQkvPg0KCTxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xNDc2LjcsMTk0LjNjLTEuMSwyLjQtMiwzLTMuOCwzaC0xMS42Yy0yLjEsMC0yLjctMC43LTEuNi0zbDE0LjYtMzIuNUwxNDQ1LjksOTljLTEtMi4zLTAuNi0zLDEuNi0zaDExLjYNCgkJYzIsMCwyLjcsMC43LDQsM2wyOC4zLDYyLjlMMTQ3Ni43LDE5NC4zeiBNMTQ4Ny4xLDEzNC43bDE1LjUtMzUuNmMxLjMtMi4zLDItMyw0LTNoMTEuNmMyLjEsMCwyLjYsMC43LDEuNiwzbC0yNC40LDU0LjENCgkJTDE0ODcuMSwxMzQuN3oiLz4NCgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTU4Ni4yLDE2NS4zYy0wLjEsMi4zLTAuNywzLTMsM0gxNTcyYy0yLjQsMC0zLTAuNy0zLTNWNzEuOWMwLTIuNCwwLjctMywzLTNoMTQuMlYxNjUuM3ogTTE1OTMuNSwxMTQuNmgxMi40DQoJCWMxNC44LDAsMTkuNi03LDE5LjYtMTUuOWMwLTguNy00LjgtMTUuNS0xOS42LTE1LjVoLTEyLjRWNjguOWgxMy4xYzE2LjYsMCwzNS41LDYuOCwzNS41LDI5LjhzLTE4LjksMzAuMi0zNS41LDMwLjJoLTEzLjFWMTE0LjZ6Ig0KCQkvPg0KCTxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xNjgzLjUsMTY5LjdjLTE4LjctMS44LTMzLjktMTcuOC0zMy45LTM3LjVjMC0xOS45LDE1LjMtMzUuOSwzMy45LTM3LjZ2MTQuOGMtMTAuMiwxLjgtMTcuOSwxMS4xLTE3LjksMjIuOQ0KCQljMCwxMi4yLDguMSwyMS4zLDE3LjksMjNWMTY5Ljd6IE0xNjkwLjYsMTU1LjNjMTAuMi0xLjcsMTgtMTEuMSwxOC0yM3MtOC0yMS4zLTE4LTIyLjlWOTQuNmMxOS4yLDIsMzQuMSwxOCwzNC4xLDM3LjYNCgkJYzAsMTkuNS0xNC44LDM1LjYtMzQuMSwzNy41VjE1NS4zeiIvPg0KCTxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xNzQzLjQsNjYuNWMwLTIuMywwLjctMywzLTNoMTAuMmMyLjQsMCwzLDAuNywzLDN2OTguOGMwLDIuMy0wLjcsMy0zLDNoLTEwLjJjLTIuMywwLTMtMC43LTMtM1Y2Ni41eiIvPg0KCTxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xNzk0LjgsNjMuNGM1LjQsMCw5LjksNC41LDkuOSwxMC4xYzAsNS41LTQuNSw5LjgtOS45LDkuOGMtNS41LDAtOS45LTQuMy05LjktOS44DQoJCUMxNzg0LjksNjcuOSwxNzg5LjMsNjMuNCwxNzk0LjgsNjMuNHogTTE3ODYuOSw5OWMwLTIuMywwLjctMywzLTNoMTAuMmMyLjMsMCwzLDAuNywzLDN2NjYuM2MwLDIuMy0wLjcsMy0zLDNoLTEwLjINCgkJYy0yLjMsMC0zLTAuNy0zLTNWOTl6Ii8+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTE4NTcuNiwxMDkuM2MtOS44LDEuNy0xOCwxMC42LTE4LDIzYzAsMTIuMSw3LjgsMjEuMiwxOCwyMi45djE0LjZjLTE5LjctMS44LTM0LjEtMTguNS0zNC4xLTM3LjUNCgkJYzAtMTkuMiwxNC4zLTM1LjgsMzQuMS0zNy42VjEwOS4zeiBNMTg2NC41LDk0LjZjOC40LDAuOSwxNiw0LDIyLjcsMTAuNWMxLjMsMS4zLDEsMi0wLjQsMy43bC01LjMsNS43Yy0xLjYsMS43LTIuNiwyLjEtNC4zLDAuNg0KCQljLTQuMy00LTguNy01LjMtMTIuOC02Vjk0LjZ6IE0xODY0LjUsMTU1LjNjNS4xLTAuOSw4LjgtMi40LDEyLjgtNmMxLjgtMS42LDIuNy0xLjEsNC4zLDAuNmw1LjMsNS43YzEuNCwxLjcsMS43LDIuNCwwLjQsMy43DQoJCWMtNi44LDYuNS0xMy45LDkuNS0yMi43LDEwLjVWMTU1LjN6Ii8+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTE5MjQuOSwxOTQuM2MtMS4xLDIuNC0yLDMtMy44LDNoLTExLjZjLTIuMSwwLTIuNy0wLjctMS42LTNsMTQuNi0zMi41TDE4OTQuMSw5OWMtMS0yLjMtMC42LTMsMS42LTNoMTEuNg0KCQljMiwwLDIuNywwLjcsNCwzbDI4LjMsNjIuOUwxOTI0LjksMTk0LjN6IE0xOTM1LjIsMTM0LjdsMTUuNS0zNS42YzEuMy0yLjMsMi0zLDQtM2gxMS42YzIuMSwwLDIuNiwwLjcsMS42LDNsLTI0LjQsNTQuMQ0KCQlMMTkzNS4yLDEzNC43eiIvPg0KPC9nPg0KPC9zdmc+DQo=\" alt=\"\" width=\"100%\" /></p>"
+                    },
+                    "Label": {
+                      "en-us": "⚙️Content Security Policy"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "92f2eb3c-c3b7-4378-82df-b2393da6687e"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "SettingsIdentifier",
@@ -3218,8 +3264,8 @@
                     "Version": 4,
                     "Guid": "da88eb53-6ec2-4c2c-9646-e1f79e7cad32",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -3280,8 +3326,8 @@
                     "Version": 3,
                     "Guid": "64e3ee53-d510-4435-b70f-a7323d83b47e",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -3300,8 +3346,8 @@
                     "Version": 3,
                     "Guid": "d6d9a4be-3f44-4b44-848e-22b1cb9cc5dd",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -3325,8 +3371,8 @@
                     "Version": 3,
                     "Guid": "071f96c4-edea-479b-9989-fdbd9eb224f8",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -3395,8 +3441,8 @@
                     "Version": 9,
                     "Guid": "bb50c3ed-1ac8-4fb1-ae9f-f5ef16f9eada",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -3455,8 +3501,8 @@
                     "Version": 8,
                     "Guid": "a7b5e5d4-83bd-4a83-83a1-1a77f58d9cec",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -3475,8 +3521,8 @@
                     "Version": 8,
                     "Guid": "1b1bd0fc-723f-4e56-982d-0d5c7dc8fb7f",
                     "Type": {
-                      "Name": "@string-dropdown",
-                      "Id": "@string-dropdown"
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
                     },
                     "Attributes": {
                       "String": {
@@ -3508,8 +3554,8 @@
                     "Version": 3,
                     "Guid": "9fd9ff5c-f99c-49a9-9639-e6aefbe86f19",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -3578,8 +3624,8 @@
                     "Version": 9,
                     "Guid": "2cf8b990-787d-4fb3-a981-b0a6f6e406f5",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -3641,8 +3687,8 @@
                     "Version": 6,
                     "Guid": "1c7d7e47-89ab-4be3-abcb-0284a8edcfe6",
                     "Type": {
-                      "Name": "@Boolean",
-                      "Id": "@Boolean"
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
                     },
                     "Attributes": {
                       "String": {
@@ -3672,8 +3718,8 @@
                     "Version": 8,
                     "Guid": "88ba9f39-f176-4b3d-b76c-060daf023c6e",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -3734,8 +3780,8 @@
                     "Version": 5,
                     "Guid": "59e23162-3843-42c0-89a1-2415136ad604",
                     "Type": {
-                      "Name": "@Boolean",
-                      "Id": "@Boolean"
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
                     },
                     "Attributes": {
                       "String": {
@@ -3765,8 +3811,8 @@
                     "Version": 5,
                     "Guid": "773d4d5e-dfff-4936-b9e5-615355cb8015",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -3835,8 +3881,8 @@
                     "Version": 5,
                     "Guid": "e963ca63-2738-4fff-93f7-e3b2636157f5",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -3905,8 +3951,8 @@
                     "Version": 7,
                     "Guid": "835b01e9-ab75-453a-9892-fddc389bfd6e",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -3967,8 +4013,8 @@
                     "Version": 4,
                     "Guid": "36d35e0b-ae2d-449d-b4d7-bd89b4e630ae",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -3987,8 +4033,8 @@
                     "Version": 4,
                     "Guid": "a5a8028e-e44d-4749-8c8d-d30292fed19a",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -4006,53 +4052,6 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 144478,
-                "Version": 2,
-                "Guid": "938a4147-c2ef-4ae1-9849-46dc9cef4b5a",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "Description": {
-                      "en-us": ""
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": "<p><img srcset=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyNi4zLjEsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iRWJlbmVfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCAxOTY4LjkgMjUwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAxOTY4LjkgMjUwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojMDAwMDNFO30NCgkuc3Qxe2ZpbGw6I0ZGRkZGRjt9DQo8L3N0eWxlPg0KPHBhdGggY2xhc3M9InN0MCIgZD0iTTE2NC40LDI1MEgwVjg1LjZDMCwzOC40LDM4LjQsMCw4NS42LDBIMjUwdjE2NC40QzI1MCwyMTEuNiwyMTEuNiwyNTAsMTY0LjQsMjUweiIvPg0KPGc+DQoJPHBhdGggY2xhc3M9InN0MSIgZD0iTTE4Mi4yLDk2LjVjMCw1MS45LTMxLjksODAuOC01MS45LDg5LjFjLTIuOCwxLjEtNS45LDEuMS04LjYsMEM5Ni42LDE3NS4yLDY5LjcsMTQzLDY5LjcsOTYuNQ0KCQljMC00LjUsMi43LTguNiw2LjktMTAuNGw0NS0xOC44YzEuMS0wLjUsMy4xLTAuOSw0LjMtMC45YzEuMiwwLDMuMiwwLjQsNC4zLDAuOWw0NSwxOC44QzE3OS41LDg3LjgsMTgyLjIsOTEuOSwxODIuMiw5Ni41eg0KCQkgTTE3MSw5Ni41bC00NS0xOC44TDgxLDk2LjVjMCwzOS43LDIyLjIsNjkuMiw0NSw3OC44QzE0Ny45LDE2Ni4xLDE3MSwxMzcuMiwxNzEsOTYuNXogTTExOC4yLDEzNC42bDMzLjEtMzIuOQ0KCQljMS4xLTEuMSwyLjktMS4xLDQsMGw1LjMsNS4zYzEuMSwxLjEsMS4xLDIuOSwwLDRsLTQwLjUsNDAuMWMtMS4xLDEuMS0yLjksMS4xLTQsMGwtMjEuMy0yMS40Yy0xLjEtMS4xLTEuMS0yLjksMC00bDUuMy01LjMNCgkJYzEuMS0xLjEsMi45LTEuMSw0LDBMMTE4LjIsMTM0LjZ6Ii8+DQo8L2c+DQo8Zz4NCgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMzkyLDE3MGMtMjYuOC0yLTQ3LjctMjQuMy00Ny43LTUxLjRjMC0yNy40LDIxLjMtNDkuNiw0Ny43LTUxLjV2MTUuMWMtMTgsMi4zLTMwLjQsMTguNi0zMC40LDM2LjUNCgkJYzAsMTcuNSwxMi40LDM0LjUsMzAuNCwzNi40VjE3MHogTTM5OS4zLDY3LjFjMTIuNSwxLjQsMjQuNyw2LjEsMzMuMiwxNC42YzEuNiwxLjYsMS4zLDIuNi0wLjMsNC4zbC02LjUsNy4xDQoJCWMtMS42LDEuNy0yLjYsMi00LjMsMC4zYy02LTYuNC0xMy4yLTkuOS0yMi4yLTExLjFWNjcuMXogTTM5OS4zLDE1NWM4LjktMS4xLDE2LTQuNywyMi4zLTExLjJjMS43LTEuNywyLjctMS4zLDQuMywwLjNsNi41LDcuMQ0KCQljMS42LDEuOCwxLjgsMi43LDAuMSw0LjRjLTguNyw4LjUtMjEuMiwxMy41LTMzLjIsMTQuNVYxNTV6Ii8+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTQ3OC45LDE2OS43Yy0xOC43LTEuOC0zMy45LTE3LjgtMzMuOS0zNy41YzAtMTkuOSwxNS4zLTM1LjksMzMuOS0zNy42djE0LjhjLTEwLjIsMS44LTE3LjksMTEuMS0xNy45LDIyLjkNCgkJYzAsMTIuMiw4LjEsMjEuMywxNy45LDIzVjE2OS43eiBNNDg2LDE1NS4zYzEwLjItMS43LDE4LTExLjEsMTgtMjNzLTgtMjEuMy0xOC0yMi45Vjk0LjZjMTkuMiwyLDM0LjEsMTgsMzQuMSwzNy42DQoJCWMwLDE5LjUtMTQuOCwzNS42LTM0LjEsMzcuNVYxNTUuM3oiLz4NCgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNTU0LjcsMTY1LjNjMCwyLjMtMC43LDMtMywzaC0xMC4yYy0yLjMsMC0zLTAuNy0zLTNWOTljMC0yLjMsMC43LTMsMy0zaDUuMWMyLjcsMCw0LjQsMC40LDUuNSwxLjdsMi42LDQNCgkJVjE2NS4zeiBNNTYxLjgsOTguM2MzLjQtMi42LDcuNy0zLjgsMTIuOS0zLjhjMTUuNiwwLDI3LjUsOC40LDI3LjUsMzIuOHYzOC4xYzAsMi4zLTAuNywzLTMsM2gtMTAuMmMtMi4zLDAtMy0wLjctMy0zdi0zNC41DQoJCWMwLTE1LjEtNS41LTIxLjktMTUuNS0yMS45Yy00LjEsMC02LjcsMS40LTguOCwzLjNWOTguM3oiLz4NCgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNjIwLjgsMTA5Yy0yLjMsMC0zLTAuNy0zLTN2LTdjMC0yLjMsMC43LTMsMy0zaDUuM1Y4Mi4xYzAtMi4zLDAuNi0zLDMtM2gxMC4xYzIuMywwLDMsMC43LDMsM1Y5NmgyMS45DQoJCWMyLjMsMCwzLDAuNywzLDMuMXY2LjhjMCwyLjMtMC43LDMtMywzSDYyMC44eiBNNjQyLjEsMTE2LjJ2MjEuM2MwLDEyLjgsNC40LDE3LjksMTMuMSwxNy45YzMuMSwwLDUuNS0wLjMsOC41LTEuNw0KCQljMi43LTEuNCwzLjMtMS4zLDMuOCwxLjdsMS4zLDcuMWMwLjQsMi4xLDAuMywyLjgtMS42LDMuOGMtNS43LDMuNS0xMS45LDMuNS0xMy44LDMuNWMtMTguNywwLTI3LjQtMTEuOC0yNy40LTMxLjR2LTIyLjNINjQyLjF6Ig0KCQkvPg0KCTxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik02OTcuMywxMzIuOGMwLDEzLjIsOS40LDIzLjEsMjEuOSwyMy4xYzUsMCwxMi4xLTEuMSwxOS41LTUuNGMyLjEtMSwyLjgtMS42LDQuMywwLjNsNC4xLDUuMQ0KCQljMS40LDEuNywxLjcsMi42LDAuNCw0Yy02LjUsNi40LTE4LjMsOS45LTI4LjcsOS45Yy0yMS40LDAtMzguMi0xNi45LTM4LjItMzcuNmMwLTE5LjUsMTQuNi0zNS41LDMzLjQtMzcuNXYxMy4zDQoJCWMtMTAuMiwyLjEtMTYuNiwxMS4yLTE2LjYsMjMuN1YxMzIuOHogTTcwNC43LDEyNi45aDMyLjFjLTEtOC40LTYtMTYuOS0xNS44LTE4LjlWOTQuNmMyMS4yLDEuNywzMi4yLDE5LjIsMzIuMiwzOS44DQoJCWMwLDIuMy0wLjQsMy4xLTIuOCwzLjFoLTQ1LjdDNzAzLjgsMTM0LjIsNzAzLjgsMTMwLjEsNzA0LjcsMTI2Ljl6Ii8+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTc4Ny4xLDE2NS4zYzAsMi4zLTAuNywzLTMsM2gtMTAuMmMtMi4zLDAtMy0wLjctMy0zVjk5YzAtMi4zLDAuNy0zLDMtM2g1LjFjMi43LDAsNC40LDAuNCw1LjUsMS43bDIuNiw0DQoJCVYxNjUuM3ogTTc5NC4yLDk4LjNjMy40LTIuNiw3LjctMy44LDEyLjktMy44YzE1LjYsMCwyNy41LDguNCwyNy41LDMyLjh2MzguMWMwLDIuMy0wLjcsMy0zLDNoLTEwLjJjLTIuMywwLTMtMC43LTMtM3YtMzQuNQ0KCQljMC0xNS4xLTUuNS0yMS45LTE1LjUtMjEuOWMtNC4xLDAtNi43LDEuNC04LjgsMy4zVjk4LjN6Ii8+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTg1My4xLDEwOWMtMi4zLDAtMy0wLjctMy0zdi03YzAtMi4zLDAuNy0zLDMtM2g1LjNWODIuMWMwLTIuMywwLjYtMywzLTNoMTAuMWMyLjMsMCwzLDAuNywzLDNWOTZoMjEuOQ0KCQljMi4zLDAsMywwLjcsMywzLjF2Ni44YzAsMi4zLTAuNywzLTMsM0g4NTMuMXogTTg3NC40LDExNi4ydjIxLjNjMCwxMi44LDQuNCwxNy45LDEzLjEsMTcuOWMzLjEsMCw1LjUtMC4zLDguNS0xLjcNCgkJYzIuNy0xLjQsMy4zLTEuMywzLjgsMS43bDEuMyw3LjFjMC40LDIuMSwwLjMsMi44LTEuNiwzLjhjLTUuNywzLjUtMTEuOSwzLjUtMTMuOCwzLjVjLTE4LjcsMC0yNy40LTExLjgtMjcuNC0zMS40di0yMi4zSDg3NC40eiINCgkJLz4NCgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNOTgzLjIsMTY5LjZjLTEyLjgtMS0yMi4zLTQtMzItMTAuNWMtMi4xLTEuMy0xLjgtMi4zLTAuOS00LjNsNC40LTcuMWMxLjEtMiwyLTIuNyw0LjEtMS4zDQoJCWM4LjUsNS40LDE2LjIsNy40LDI0LjMsOC4yVjE2OS42eiBNOTg0LjksODIuNmMtMTMuNSwxLjMtMTYuOSw4LjctMTYuOSwxNS4zYzAsOS41LDEwLjEsMTEuNiwyNC42LDEzLjUNCgkJYzE3LjMsMi4xLDMzLjksNy41LDMzLjksMjguNWMwLDE1LjMtMTIuMiwyOS44LTM2LjEsMzB2LTE1LjFjMTEuNS0wLjQsMTkuNS00LjQsMTkuNS0xNC4yYzAtMTAuMi05LjUtMTIuOS0yNS40LTE1LjENCgkJYy0xNS41LTItMzMuMS03LjQtMzMuMS0yNy4xYzAtMTIuNCw4LjktMjkuOCwzMy41LTMxLjFWODIuNnogTTk5Miw2Ny40YzExLjgsMC45LDIwLjksNC41LDMxLDEwLjhjMiwxLjEsMS43LDIuMywwLjcsNC4zbC00LjMsNw0KCQljLTEuMSwyLTIuMSwyLjgtNC4xLDEuNGMtOC43LTUuNy0xNS41LTgtMjMuMy04LjRWNjcuNHoiLz4NCgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTA1NS45LDEzMi44YzAsMTMuMiw5LjQsMjMuMSwyMS45LDIzLjFjNSwwLDEyLjEtMS4xLDE5LjUtNS40YzIuMS0xLDIuOC0xLjYsNC4zLDAuM2w0LjEsNS4xDQoJCWMxLjQsMS43LDEuNywyLjYsMC40LDRjLTYuNSw2LjQtMTguMyw5LjktMjguNyw5LjljLTIxLjQsMC0zOC4yLTE2LjktMzguMi0zNy42YzAtMTkuNSwxNC42LTM1LjUsMzMuNC0zNy41djEzLjMNCgkJYy0xMC4yLDIuMS0xNi42LDExLjItMTYuNiwyMy43VjEzMi44eiBNMTA2My4yLDEyNi45aDMyLjFjLTEtOC40LTYtMTYuOS0xNS44LTE4LjlWOTQuNmMyMS4yLDEuNywzMi4yLDE5LjIsMzIuMiwzOS44DQoJCWMwLDIuMy0wLjQsMy4xLTIuOCwzLjFoLTQ1LjdDMTA2Mi40LDEzNC4yLDEwNjIuNCwxMzAuMSwxMDYzLjIsMTI2Ljl6Ii8+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTExNTcuMiwxMDkuM2MtOS44LDEuNy0xOCwxMC42LTE4LDIzYzAsMTIuMSw3LjgsMjEuMiwxOCwyMi45djE0LjZjLTE5LjctMS44LTM0LjEtMTguNS0zNC4xLTM3LjUNCgkJYzAtMTkuMiwxNC4zLTM1LjgsMzQuMS0zNy42VjEwOS4zeiBNMTE2NC4yLDk0LjZjOC40LDAuOSwxNiw0LDIyLjcsMTAuNWMxLjMsMS4zLDEsMi0wLjQsMy43bC01LjMsNS43Yy0xLjYsMS43LTIuNiwyLjEtNC4zLDAuNg0KCQljLTQuMy00LTguNy01LjMtMTIuOC02Vjk0LjZ6IE0xMTY0LjIsMTU1LjNjNS4xLTAuOSw4LjgtMi40LDEyLjgtNmMxLjgtMS42LDIuNy0xLjEsNC4zLDAuNmw1LjMsNS43YzEuNCwxLjcsMS43LDIuNCwwLjQsMy43DQoJCWMtNi44LDYuNS0xMy45LDkuNS0yMi43LDEwLjVWMTU1LjN6Ii8+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTEyNDIuNiwxNjYuMWMtMy40LDIuNi03LjcsMy44LTEyLjksMy44Yy0xNS42LDAtMjcuNS04LjQtMjcuNS0zMi44Vjk5YzAtMi4zLDAuNy0zLDMtM2gxMC4yYzIuMywwLDMsMC43LDMsMw0KCQl2MzQuNmMwLDE0LjksNS41LDIxLjcsMTUuNSwyMS43YzQuMSwwLDYuNy0xLjQsOC44LTMuM1YxNjYuMXogTTEyNDkuNyw5OWMwLTIuMywwLjctMywzLTNoMTAuMmMyLjMsMCwzLDAuNywzLDN2NjYuMw0KCQljMCwyLjMtMC43LDMtMywzaC01LjFjLTIuNywwLTQuNC0wLjQtNS41LTEuN2wtMi42LTRWOTl6Ii8+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTEzMDYuOCwxNjUuM2MtMC4xLDIuMy0wLjcsMy0zLDNoLTEwLjJjLTIuMywwLTMtMC43LTMtM1Y5OWMwLTIuMywwLjctMywzLTNoNS4xYzQuNCwwLDUsMC45LDguMSw0LjRWMTY1LjN6DQoJCSBNMTMxMy45LDk5LjZjMy44LTIuNyw4LjktNS4xLDE4LjYtNS4xYzIuOCwwLDMuMSwwLjksMi44LDIuOGwtMS42LDEwLjRjLTAuNCwyLjMtMS4xLDIuOC0zLjQsMi44Yy03LDAtMTIuMSwxLjgtMTYuNSw1LjVWOTkuNnoiDQoJCS8+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTEzNjAuMyw2My40YzUuNCwwLDkuOSw0LjUsOS45LDEwLjFjMCw1LjUtNC41LDkuOC05LjksOS44Yy01LjUsMC05LjktNC4zLTkuOS05LjgNCgkJQzEzNTAuNCw2Ny45LDEzNTQuOCw2My40LDEzNjAuMyw2My40eiBNMTM1Mi4zLDk5YzAtMi4zLDAuNy0zLDMtM2gxMC4yYzIuMywwLDMsMC43LDMsM3Y2Ni4zYzAsMi4zLTAuNywzLTMsM2gtMTAuMg0KCQljLTIuMywwLTMtMC43LTMtM1Y5OXoiLz4NCgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTM5MiwxMDljLTIuMywwLTMtMC43LTMtM3YtN2MwLTIuMywwLjctMywzLTNoNS4zVjgyLjFjMC0yLjMsMC42LTMsMy0zaDEwLjFjMi4zLDAsMywwLjcsMywzVjk2aDIxLjkNCgkJYzIuMywwLDMsMC43LDMsMy4xdjYuOGMwLDIuMy0wLjcsMy0zLDNIMTM5MnogTTE0MTMuMywxMTYuMnYyMS4zYzAsMTIuOCw0LjQsMTcuOSwxMy4xLDE3LjljMy4xLDAsNS41LTAuMyw4LjUtMS43DQoJCWMyLjctMS40LDMuMy0xLjMsMy44LDEuN2wxLjMsNy4xYzAuNCwyLjEsMC4zLDIuOC0xLjYsMy44Yy01LjcsMy41LTExLjksMy41LTEzLjgsMy41Yy0xOC43LDAtMjcuNC0xMS44LTI3LjQtMzEuNHYtMjIuM0gxNDEzLjN6Ig0KCQkvPg0KCTxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xNDc2LjcsMTk0LjNjLTEuMSwyLjQtMiwzLTMuOCwzaC0xMS42Yy0yLjEsMC0yLjctMC43LTEuNi0zbDE0LjYtMzIuNUwxNDQ1LjksOTljLTEtMi4zLTAuNi0zLDEuNi0zaDExLjYNCgkJYzIsMCwyLjcsMC43LDQsM2wyOC4zLDYyLjlMMTQ3Ni43LDE5NC4zeiBNMTQ4Ny4xLDEzNC43bDE1LjUtMzUuNmMxLjMtMi4zLDItMyw0LTNoMTEuNmMyLjEsMCwyLjYsMC43LDEuNiwzbC0yNC40LDU0LjENCgkJTDE0ODcuMSwxMzQuN3oiLz4NCgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTU4Ni4yLDE2NS4zYy0wLjEsMi4zLTAuNywzLTMsM0gxNTcyYy0yLjQsMC0zLTAuNy0zLTNWNzEuOWMwLTIuNCwwLjctMywzLTNoMTQuMlYxNjUuM3ogTTE1OTMuNSwxMTQuNmgxMi40DQoJCWMxNC44LDAsMTkuNi03LDE5LjYtMTUuOWMwLTguNy00LjgtMTUuNS0xOS42LTE1LjVoLTEyLjRWNjguOWgxMy4xYzE2LjYsMCwzNS41LDYuOCwzNS41LDI5LjhzLTE4LjksMzAuMi0zNS41LDMwLjJoLTEzLjFWMTE0LjZ6Ig0KCQkvPg0KCTxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xNjgzLjUsMTY5LjdjLTE4LjctMS44LTMzLjktMTcuOC0zMy45LTM3LjVjMC0xOS45LDE1LjMtMzUuOSwzMy45LTM3LjZ2MTQuOGMtMTAuMiwxLjgtMTcuOSwxMS4xLTE3LjksMjIuOQ0KCQljMCwxMi4yLDguMSwyMS4zLDE3LjksMjNWMTY5Ljd6IE0xNjkwLjYsMTU1LjNjMTAuMi0xLjcsMTgtMTEuMSwxOC0yM3MtOC0yMS4zLTE4LTIyLjlWOTQuNmMxOS4yLDIsMzQuMSwxOCwzNC4xLDM3LjYNCgkJYzAsMTkuNS0xNC44LDM1LjYtMzQuMSwzNy41VjE1NS4zeiIvPg0KCTxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xNzQzLjQsNjYuNWMwLTIuMywwLjctMywzLTNoMTAuMmMyLjQsMCwzLDAuNywzLDN2OTguOGMwLDIuMy0wLjcsMy0zLDNoLTEwLjJjLTIuMywwLTMtMC43LTMtM1Y2Ni41eiIvPg0KCTxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xNzk0LjgsNjMuNGM1LjQsMCw5LjksNC41LDkuOSwxMC4xYzAsNS41LTQuNSw5LjgtOS45LDkuOGMtNS41LDAtOS45LTQuMy05LjktOS44DQoJCUMxNzg0LjksNjcuOSwxNzg5LjMsNjMuNCwxNzk0LjgsNjMuNHogTTE3ODYuOSw5OWMwLTIuMywwLjctMywzLTNoMTAuMmMyLjMsMCwzLDAuNywzLDN2NjYuM2MwLDIuMy0wLjcsMy0zLDNoLTEwLjINCgkJYy0yLjMsMC0zLTAuNy0zLTNWOTl6Ii8+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTE4NTcuNiwxMDkuM2MtOS44LDEuNy0xOCwxMC42LTE4LDIzYzAsMTIuMSw3LjgsMjEuMiwxOCwyMi45djE0LjZjLTE5LjctMS44LTM0LjEtMTguNS0zNC4xLTM3LjUNCgkJYzAtMTkuMiwxNC4zLTM1LjgsMzQuMS0zNy42VjEwOS4zeiBNMTg2NC41LDk0LjZjOC40LDAuOSwxNiw0LDIyLjcsMTAuNWMxLjMsMS4zLDEsMi0wLjQsMy43bC01LjMsNS43Yy0xLjYsMS43LTIuNiwyLjEtNC4zLDAuNg0KCQljLTQuMy00LTguNy01LjMtMTIuOC02Vjk0LjZ6IE0xODY0LjUsMTU1LjNjNS4xLTAuOSw4LjgtMi40LDEyLjgtNmMxLjgtMS42LDIuNy0xLjEsNC4zLDAuNmw1LjMsNS43YzEuNCwxLjcsMS43LDIuNCwwLjQsMy43DQoJCWMtNi44LDYuNS0xMy45LDkuNS0yMi43LDEwLjVWMTU1LjN6Ii8+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTE5MjQuOSwxOTQuM2MtMS4xLDIuNC0yLDMtMy44LDNoLTExLjZjLTIuMSwwLTIuNy0wLjctMS42LTNsMTQuNi0zMi41TDE4OTQuMSw5OWMtMS0yLjMtMC42LTMsMS42LTNoMTEuNg0KCQljMiwwLDIuNywwLjcsNCwzbDI4LjMsNjIuOUwxOTI0LjksMTk0LjN6IE0xOTM1LjIsMTM0LjdsMTUuNS0zNS42YzEuMy0yLjMsMi0zLDQtM2gxMS42YzIuMSwwLDIuNiwwLjcsMS42LDNsLTI0LjQsNTQuMQ0KCQlMMTkzNS4yLDEzNC43eiIvPg0KPC9nPg0KPC9zdmc+DQo=\" alt=\"\" width=\"100%\" /></p>"
-                    },
-                    "Label": {
-                      "en-us": "⚙️Content Security Policy"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "92f2eb3c-c3b7-4378-82df-b2393da6687e"
-                }
-              }
             ]
           },
           "Entities": [
@@ -4061,8 +4060,8 @@
               "Version": 1,
               "Guid": "6294cc9e-3793-4506-a777-a8aada403bb1",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -4089,8 +4088,8 @@
               "Version": 3,
               "Guid": "d15730b0-3402-4cf6-a63a-ea3f792e4917",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -4120,8 +4119,8 @@
               "Version": 1,
               "Guid": "f6be3e78-a86c-44da-97d7-f283481b5f8e",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -4148,8 +4147,8 @@
               "Version": 2,
               "Guid": "1571d7da-298c-476e-a25c-d2fe79c1052b",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -4176,8 +4175,8 @@
               "Version": 1,
               "Guid": "67897d2b-1039-4008-9e8c-13af71fc34dc",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -4204,8 +4203,8 @@
               "Version": 1,
               "Guid": "49c22fa1-4e1f-4585-92e7-10d18a6da0fe",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -4232,8 +4231,8 @@
               "Version": 1,
               "Guid": "728d2627-698b-4bc6-b34e-3bee512ab93f",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -4263,8 +4262,8 @@
               "Version": 1,
               "Guid": "cd800dca-99fc-4970-bbc8-1aa215436c0e",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -4291,8 +4290,8 @@
               "Version": 2,
               "Guid": "c6170f01-7fd3-49eb-8203-cdea80148094",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -4321,7 +4320,53 @@
             "Id": "f5764f60-2621-4a5d-9391-100fbe664640",
             "Name": "⚙️GoogleMaps",
             "Scope": "System.Configuration",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 166452,
+                "Version": 2,
+                "Guid": "8286402e-d593-4615-a0e0-b3f9dd5e166a",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": ""
+                    },
+                    "Label": {
+                      "en-us": "⚙️Google Maps"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "f5764f60-2621-4a5d-9391-100fbe664640"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "SettingsIdentifier",
@@ -4334,8 +4379,8 @@
                     "Version": 3,
                     "Guid": "f1d1ccd8-f9f1-41e9-80b5-c8eb8d3e0a3e",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -4394,8 +4439,8 @@
                     "Version": 2,
                     "Guid": "2eb275b8-b5c2-4afa-b494-10c6c727ae5d",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -4414,8 +4459,8 @@
                     "Version": 2,
                     "Guid": "b3d0af8c-a179-4002-9dfe-ebbecd799019",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -4439,8 +4484,8 @@
                     "Version": 3,
                     "Guid": "b3518e15-5f91-4f35-b391-73751ef4af02",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -4499,8 +4544,8 @@
                     "Version": 2,
                     "Guid": "9f90f92f-7b74-4bcb-b230-334ba27c91a8",
                     "Type": {
-                      "Name": "@Number",
-                      "Id": "@Number"
+                      "Id": "@Number",
+                      "Name": "@Number"
                     },
                     "Attributes": {
                       "Number": {
@@ -4516,8 +4561,8 @@
                     "Version": 2,
                     "Guid": "302e69b8-5422-408d-a326-6c0d2d79566d",
                     "Type": {
-                      "Name": "@number-dropdown",
-                      "Id": "@number-dropdown"
+                      "Id": "@number-dropdown",
+                      "Name": "@number-dropdown"
                     },
                     "Attributes": {
                       "String": {
@@ -4549,8 +4594,8 @@
                     "Version": 3,
                     "Guid": "3a024141-f6ac-44fd-9786-ead31b01dcc2",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -4609,8 +4654,8 @@
                     "Version": 2,
                     "Guid": "17d48b76-3efa-4eee-82a6-08587661451a",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -4629,8 +4674,8 @@
                     "Version": 2,
                     "Guid": "aad0d742-e928-4d6c-923f-8fb69830cbba",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -4659,8 +4704,8 @@
                     "Version": 2,
                     "Guid": "fa2d78fc-dbb2-4e34-93fe-78bb116b3769",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -4719,8 +4764,8 @@
                     "Version": 1,
                     "Guid": "6b052128-2aad-4154-a89c-ee1e6679f287",
                     "Type": {
-                      "Name": "@Hyperlink",
-                      "Id": "@Hyperlink"
+                      "Id": "@Hyperlink",
+                      "Name": "@Hyperlink"
                     },
                     "Attributes": {
                       "String": {
@@ -4770,8 +4815,8 @@
                     "Version": 3,
                     "Guid": "1126f85e-2ac6-48e2-8542-e62a411adaa5",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -4835,8 +4880,8 @@
                     "Version": 1,
                     "Guid": "aa41513e-05f2-499b-a437-3af8b8526fdb",
                     "Type": {
-                      "Name": "@custom-gps",
-                      "Id": "@custom-gps"
+                      "Id": "@custom-gps",
+                      "Name": "@custom-gps"
                     },
                     "Attributes": {
                       "String": {
@@ -4858,53 +4903,6 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 166452,
-                "Version": 2,
-                "Guid": "8286402e-d593-4615-a0e0-b3f9dd5e166a",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "Description": {
-                      "en-us": ""
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": ""
-                    },
-                    "Label": {
-                      "en-us": "⚙️Google Maps"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "f5764f60-2621-4a5d-9391-100fbe664640"
-                }
-              }
             ]
           },
           "Entities": [
@@ -4913,8 +4911,8 @@
               "Version": 1,
               "Guid": "200d66a2-823b-415c-9a41-19ec5eb6e520",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -4943,7 +4941,50 @@
             "Id": "838b51db-b06c-449b-adcc-cb508ca4b488",
             "Name": "⚙️GoogleRecaptcha",
             "Scope": "System.Configuration",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 130620,
+                "Version": 2,
+                "Guid": "796f4a72-8c10-4456-8902-feb0060b7499",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "Description": {
+                      "*": ""
+                    },
+                    "EditInstructions": {
+                      "*": "<p>Configure how Google Recaptcha should work.</p>"
+                    },
+                    "Label": {
+                      "*": "⚙️GoogleRecaptcha"
+                    },
+                    "ListInstructions": {
+                      "*": ""
+                    },
+                    "Notes": {
+                      "*": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "*": ""
+                    },
+                    "Link": {
+                      "*": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "838b51db-b06c-449b-adcc-cb508ca4b488"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "SettingsIdentifier",
@@ -4956,8 +4997,8 @@
                     "Version": 3,
                     "Guid": "270801b1-91cf-4e45-8f16-0145c1b3f6f4",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -5024,8 +5065,8 @@
                     "Version": 3,
                     "Guid": "750733fa-9d17-4a45-9342-6bfb9eec7a29",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -5084,8 +5125,8 @@
                     "Version": 2,
                     "Guid": "be1df46d-c5f8-4cd5-ba4c-11bf11b8ab83",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -5104,8 +5145,8 @@
                     "Version": 2,
                     "Guid": "b7c1fa53-f558-4f6a-929d-47c01d9c7387",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -5134,8 +5175,8 @@
                     "Version": 3,
                     "Guid": "57f20cc1-6d1b-4ebe-8516-fa2fa76a5a4a",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -5194,8 +5235,8 @@
                     "Version": 2,
                     "Guid": "f773bbd5-d87d-4a4e-af9a-c1969c719a7d",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -5214,8 +5255,8 @@
                     "Version": 2,
                     "Guid": "5aff68f9-26ad-43e2-8e12-26f9dbd19e06",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -5233,50 +5274,6 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 130620,
-                "Version": 2,
-                "Guid": "796f4a72-8c10-4456-8902-feb0060b7499",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "Description": {
-                      "*": ""
-                    },
-                    "EditInstructions": {
-                      "*": "<p>Configure how Google Recaptcha should work.</p>"
-                    },
-                    "Label": {
-                      "*": "⚙️GoogleRecaptcha"
-                    },
-                    "ListInstructions": {
-                      "*": ""
-                    },
-                    "Notes": {
-                      "*": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "*": ""
-                    },
-                    "Link": {
-                      "*": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "838b51db-b06c-449b-adcc-cb508ca4b488"
-                }
-              }
             ]
           },
           "Entities": []
@@ -5286,7 +5283,53 @@
             "Id": "6a7b65c2-b07b-4ce0-8d5a-15572431698e",
             "Name": "⚙️GoogleTranslate",
             "Scope": "System.Configuration",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 166455,
+                "Version": 1,
+                "Guid": "641dbbc5-e12a-4a67-ae86-243ffa048f6b",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": ""
+                    },
+                    "Label": {
+                      "en-us": "⚙️Google Translate"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "6a7b65c2-b07b-4ce0-8d5a-15572431698e"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "SettingsIdentifier",
@@ -5299,8 +5342,8 @@
                     "Version": 2,
                     "Guid": "7ba81bf5-e339-4d56-a0f4-8d0935926505",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -5359,8 +5402,8 @@
                     "Version": 1,
                     "Guid": "d1d16821-8119-468a-903e-e88262662b4a",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -5379,8 +5422,8 @@
                     "Version": 1,
                     "Guid": "801d857c-6d53-49f4-b4e6-5fc4d36ff648",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -5404,8 +5447,8 @@
                     "Version": 4,
                     "Guid": "ee1352b6-f68f-4606-856a-3f847bca7530",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -5464,8 +5507,8 @@
                     "Version": 3,
                     "Guid": "810150dc-8330-4928-9e77-4b8a0196783c",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -5484,8 +5527,8 @@
                     "Version": 3,
                     "Guid": "1725b76d-8275-4da1-9668-e6bf17916a28",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -5503,15 +5546,23 @@
                   }
                 ]
               }
-            ],
+            ]
+          },
+          "Entities": []
+        },
+        {
+          "ContentType": {
+            "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f",
+            "Name": "⚙️Image",
+            "Scope": "System.Configuration",
             "Metadata": [
               {
-                "Id": 166455,
+                "Id": 166457,
                 "Version": 1,
-                "Guid": "641dbbc5-e12a-4a67-ae86-243ffa048f6b",
+                "Guid": "d7c5a829-129d-4ac5-a3db-34d003586424",
                 "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
+                  "Id": "ContentType",
+                  "Name": "ContentType"
                 },
                 "Attributes": {
                   "String": {
@@ -5525,7 +5576,7 @@
                       "en-us": ""
                     },
                     "Label": {
-                      "en-us": "⚙️Google Translate"
+                      "en-us": "⚙️Image"
                     },
                     "ListInstructions": {
                       "en-us": ""
@@ -5547,19 +5598,10 @@
                 "For": {
                   "Target": "ContentType",
                   "TargetType": 5,
-                  "String": "6a7b65c2-b07b-4ce0-8d5a-15572431698e"
+                  "String": "1a86b080-9e0d-4207-97d2-04edf80b4f2f"
                 }
               }
-            ]
-          },
-          "Entities": []
-        },
-        {
-          "ContentType": {
-            "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f",
-            "Name": "⚙️Image",
-            "Scope": "System.Configuration",
-            "Description": null,
+            ],
             "Attributes": [
               {
                 "Name": "SettingsIdentifier",
@@ -5572,8 +5614,8 @@
                     "Version": 4,
                     "Guid": "7253aa04-09c6-4308-81b9-3937b36e6c61",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -5634,8 +5676,8 @@
                     "Version": 3,
                     "Guid": "17ba7686-01c7-4d01-82f4-8fd87d3d2dfd",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -5654,8 +5696,8 @@
                     "Version": 3,
                     "Guid": "2a9cadb4-11a9-4252-8278-fad10c5c89f0",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -5679,8 +5721,8 @@
                     "Version": 6,
                     "Guid": "f0df036b-1ce2-4c6c-8e25-08f85608e42e",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -5750,8 +5792,8 @@
                     "Version": 5,
                     "Guid": "9db820ca-4625-4e8a-968a-38792a4cdfdf",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -5770,8 +5812,8 @@
                     "Version": 5,
                     "Guid": "9629a7be-9978-49ab-bbea-5318c9414d30",
                     "Type": {
-                      "Name": "@string-dropdown",
-                      "Id": "@string-dropdown"
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
                     },
                     "Attributes": {
                       "String": {
@@ -5809,8 +5851,8 @@
                     "Version": 1,
                     "Guid": "b5be42ed-e558-46a3-95c3-2ead0f1e31f7",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -5853,8 +5895,8 @@
                     "Version": 7,
                     "Guid": "0615d0c7-797e-41fb-9759-4313d20e970a",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -5913,8 +5955,8 @@
                     "Version": 5,
                     "Guid": "78c21972-4122-4a04-bb13-a87932e2c90a",
                     "Type": {
-                      "Name": "@Number",
-                      "Id": "@Number"
+                      "Id": "@Number",
+                      "Name": "@Number"
                     },
                     "Attributes": {
                       "Number": {
@@ -5930,8 +5972,8 @@
                     "Version": 3,
                     "Guid": "5f494775-cb1a-47cf-836c-d7e45d3c0234",
                     "Type": {
-                      "Name": "@number-dropdown",
-                      "Id": "@number-dropdown"
+                      "Id": "@number-dropdown",
+                      "Name": "@number-dropdown"
                     },
                     "Attributes": {
                       "String": {
@@ -5963,8 +6005,8 @@
                     "Version": 2,
                     "Guid": "e1e8149a-73fb-4a30-87ef-c365d82a91c0",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -6009,8 +6051,8 @@
                     "Version": 1,
                     "Guid": "cb7c6873-6bbb-4ace-8e0a-8ef46c8511b3",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -6053,8 +6095,8 @@
                     "Version": 5,
                     "Guid": "d11bd984-630f-40a2-9b31-f948f394ebcc",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -6113,8 +6155,8 @@
                     "Version": 4,
                     "Guid": "3b9de40d-8e26-4508-845b-c54668208a0b",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -6133,8 +6175,8 @@
                     "Version": 4,
                     "Guid": "e365f343-3f5c-43b1-99c6-1d03864bded3",
                     "Type": {
-                      "Name": "@string-dropdown",
-                      "Id": "@string-dropdown"
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
                     },
                     "Attributes": {
                       "String": {
@@ -6166,8 +6208,8 @@
                     "Version": 8,
                     "Guid": "c62e2399-bf83-4ce2-8e65-96167db2ca75",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -6226,8 +6268,8 @@
                     "Version": 7,
                     "Guid": "18edb3cf-c813-422f-b020-d647893f7bd5",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -6246,8 +6288,8 @@
                     "Version": 7,
                     "Guid": "0b1f2d83-73f3-40ef-96bf-9984a568604c",
                     "Type": {
-                      "Name": "@string-dropdown",
-                      "Id": "@string-dropdown"
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
                     },
                     "Attributes": {
                       "String": {
@@ -6279,8 +6321,8 @@
                     "Version": 3,
                     "Guid": "c5195e5c-59c3-4104-82e8-bea6a93ed60c",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -6339,8 +6381,8 @@
                     "Version": 2,
                     "Guid": "015de30f-8bac-49cb-b562-88ab9f5e8188",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -6359,8 +6401,8 @@
                     "Version": 2,
                     "Guid": "946ddba3-c530-438c-86f8-662bb580b1e2",
                     "Type": {
-                      "Name": "@string-dropdown",
-                      "Id": "@string-dropdown"
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
                     },
                     "Attributes": {
                       "String": {
@@ -6392,8 +6434,8 @@
                     "Version": 11,
                     "Guid": "31cd4bb6-3a64-434e-babc-c97f836fce83",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -6454,8 +6496,8 @@
                     "Version": 9,
                     "Guid": "f2e77914-359c-481c-9379-d887a7b2edad",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -6474,8 +6516,8 @@
                     "Version": 9,
                     "Guid": "a1eb3b7a-377c-4fbf-a21f-a0fa93d6a412",
                     "Type": {
-                      "Name": "@string-json",
-                      "Id": "@string-json"
+                      "Id": "@string-json",
+                      "Name": "@string-json"
                     },
                     "Attributes": {
                       "String": {
@@ -6512,53 +6554,6 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 166457,
-                "Version": 1,
-                "Guid": "d7c5a829-129d-4ac5-a3db-34d003586424",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "Description": {
-                      "en-us": ""
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": ""
-                    },
-                    "Label": {
-                      "en-us": "⚙️Image"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "1a86b080-9e0d-4207-97d2-04edf80b4f2f"
-                }
-              }
             ]
           },
           "Entities": [
@@ -6567,8 +6562,8 @@
               "Version": 2,
               "Guid": "e9fa2064-ad18-475a-b549-cfa1434d4e15",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -6598,8 +6593,8 @@
               "Version": 1,
               "Guid": "ad90da09-ab14-4b6a-b762-6b60613cf63c",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -6626,8 +6621,8 @@
               "Version": 1,
               "Guid": "00eed300-a780-4959-8c6e-b5b2a1ff8af5",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -6656,7 +6651,53 @@
             "Id": "7edd0b8d-1405-44ed-ac33-d0d63a274bd6",
             "Name": "⚙️Images",
             "Scope": "System.Configuration",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 130661,
+                "Version": 4,
+                "Guid": "17eab878-42c2-45c5-a766-c66a33ef1db6",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "Description": {
+                      "*": ""
+                    },
+                    "DynamicChildrenField": {
+                      "*": "Items"
+                    },
+                    "EditInstructions": {
+                      "*": "<p>This contains global image settings. Modern Apps will follow the settings here, but some apps may still have their custom behavior.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "*": "⚙️Images"
+                    },
+                    "ListInstructions": {
+                      "*": ""
+                    },
+                    "Notes": {
+                      "*": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "*": ""
+                    },
+                    "Link": {
+                      "*": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "7edd0b8d-1405-44ed-ac33-d0d63a274bd6"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "SettingsIdentifier",
@@ -6669,8 +6710,8 @@
                     "Version": 2,
                     "Guid": "a141688b-027d-4a2d-a31f-6e75819d237f",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -6729,8 +6770,8 @@
                     "Version": 1,
                     "Guid": "28179b36-a916-4d74-aa66-d136b118c08b",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -6749,8 +6790,8 @@
                     "Version": 1,
                     "Guid": "f067e605-67de-4e8c-a135-4213a533ad26",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -6774,8 +6815,8 @@
                     "Version": 8,
                     "Guid": "4f194dec-92a3-4459-92bb-9b1cf671758a",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -6834,8 +6875,8 @@
                     "Version": 7,
                     "Guid": "05c1f082-c301-4da9-a6d9-2b5f8beab350",
                     "Type": {
-                      "Name": "@Entity",
-                      "Id": "@Entity"
+                      "Id": "@Entity",
+                      "Name": "@Entity"
                     },
                     "Attributes": {
                       "String": {
@@ -6871,53 +6912,6 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 130661,
-                "Version": 4,
-                "Guid": "17eab878-42c2-45c5-a766-c66a33ef1db6",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "Description": {
-                      "*": ""
-                    },
-                    "DynamicChildrenField": {
-                      "*": "Items"
-                    },
-                    "EditInstructions": {
-                      "*": "<p>This contains global image settings. Modern Apps will follow the settings here, but some apps may still have their custom behavior.&nbsp;</p>"
-                    },
-                    "Label": {
-                      "*": "⚙️Images"
-                    },
-                    "ListInstructions": {
-                      "*": ""
-                    },
-                    "Notes": {
-                      "*": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "*": ""
-                    },
-                    "Link": {
-                      "*": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "7edd0b8d-1405-44ed-ac33-d0d63a274bd6"
-                }
-              }
             ]
           },
           "Entities": []
@@ -6927,7 +6921,53 @@
             "Id": "57248ccb-24f1-44c6-9c6c-085e44ebb0cb",
             "Name": "⚙️License",
             "Scope": "System.Configuration",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 165978,
+                "Version": 3,
+                "Guid": "ccee5764-f2ff-469d-b610-72e372089a4d",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p>Special license ID for this system. Normally you would:</p>\n<ol>\n<li>Create such an item</li>\n<li>Export it as json</li>\n<li>Place it in the <code>App_Data/system-custom/entities/</code> folder</li>\n</ol>\n<p>This itself only provides an additional fingerprint for activating certain features. It does not enable the license. For this you must also have the matching license file, which you would get from 2sxc.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "en-us": "⚙️License"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "57248ccb-24f1-44c6-9c6c-085e44ebb0cb"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "Title",
@@ -6940,8 +6980,8 @@
                     "Version": 1,
                     "Guid": "48bd0a6a-bd62-4cbc-829a-9b130177a1f0",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -6984,8 +7024,8 @@
                     "Version": 1,
                     "Guid": "9ff395ea-6916-4bf7-9f00-bdf64ba77af1",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -7017,53 +7057,6 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 165978,
-                "Version": 3,
-                "Guid": "ccee5764-f2ff-469d-b610-72e372089a4d",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "Description": {
-                      "en-us": ""
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": "<p>Special license ID for this system. Normally you would:</p>\n<ol>\n<li>Create such an item</li>\n<li>Export it as json</li>\n<li>Place it in the <code>App_Data/system-custom/entities/</code> folder</li>\n</ol>\n<p>This itself only provides an additional fingerprint for activating certain features. It does not enable the license. For this you must also have the matching license file, which you would get from 2sxc.&nbsp;</p>"
-                    },
-                    "Label": {
-                      "en-us": "⚙️License"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "57248ccb-24f1-44c6-9c6c-085e44ebb0cb"
-                }
-              }
             ]
           },
           "Entities": []
@@ -7073,7 +7066,53 @@
             "Id": "5ad95efe-1dc9-4681-adb8-42d9e7f0183b",
             "Name": "⚙️QuickEdit",
             "Scope": "System.Configuration",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 130619,
+                "Version": 3,
+                "Guid": "c83fbbf0-ef8c-43c7-8c70-42814991b30a",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "Description": {
+                      "*": ""
+                    },
+                    "DynamicChildrenField": {
+                      "*": "Items"
+                    },
+                    "EditInstructions": {
+                      "*": "<p>Important: This data is still experimental and more Proof-Of-Concept. It doesn't have an affect yet, so we recommend you don't add your own settings.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "*": "⚙️QuickEdit"
+                    },
+                    "ListInstructions": {
+                      "*": ""
+                    },
+                    "Notes": {
+                      "*": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "*": ""
+                    },
+                    "Link": {
+                      "*": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "5ad95efe-1dc9-4681-adb8-42d9e7f0183b"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "SettingsIdentifier",
@@ -7086,8 +7125,8 @@
                     "Version": 3,
                     "Guid": "4f243a10-1795-4b51-afc9-118bab0cdd11",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -7146,8 +7185,8 @@
                     "Version": 2,
                     "Guid": "1bebc016-265b-488d-8b15-b9429930cf0c",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -7166,8 +7205,8 @@
                     "Version": 2,
                     "Guid": "99f85172-ad98-4edc-a6fa-8ce4682bf3d5",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -7191,8 +7230,8 @@
                     "Version": 3,
                     "Guid": "8f910efd-f176-43e3-b642-08d62f4b1486",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -7251,8 +7290,8 @@
                     "Version": 2,
                     "Guid": "666bd355-4a79-4b88-bf6f-0e39d25e6860",
                     "Type": {
-                      "Name": "@Entity",
-                      "Id": "@Entity"
+                      "Id": "@Entity",
+                      "Name": "@Entity"
                     },
                     "Attributes": {
                       "String": {
@@ -7288,53 +7327,6 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 130619,
-                "Version": 3,
-                "Guid": "c83fbbf0-ef8c-43c7-8c70-42814991b30a",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "Description": {
-                      "*": ""
-                    },
-                    "DynamicChildrenField": {
-                      "*": "Items"
-                    },
-                    "EditInstructions": {
-                      "*": "<p>Important: This data is still experimental and more Proof-Of-Concept. It doesn't have an affect yet, so we recommend you don't add your own settings.&nbsp;</p>"
-                    },
-                    "Label": {
-                      "*": "⚙️QuickEdit"
-                    },
-                    "ListInstructions": {
-                      "*": ""
-                    },
-                    "Notes": {
-                      "*": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "*": ""
-                    },
-                    "Link": {
-                      "*": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "5ad95efe-1dc9-4681-adb8-42d9e7f0183b"
-                }
-              }
             ]
           },
           "Entities": []
@@ -7344,7 +7336,53 @@
             "Id": "46cd1afc-c840-4473-8586-6bb1f35656a8",
             "Name": "⚙️QuickEditPart",
             "Scope": "System.Configuration",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 166462,
+                "Version": 1,
+                "Guid": "9b5b4edc-32dd-470d-ad2b-96d1ed1b30e2",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": ""
+                    },
+                    "Label": {
+                      "en-us": "⚙️QuickEdit Part"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "46cd1afc-c840-4473-8586-6bb1f35656a8"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "SettingsIdentifier",
@@ -7357,8 +7395,8 @@
                     "Version": 4,
                     "Guid": "847bf7af-2f9e-43bd-9477-389c101b025f",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -7419,8 +7457,8 @@
                     "Version": 3,
                     "Guid": "9ee0bf8d-7dde-426b-afd5-2eee0f1701ca",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -7439,8 +7477,8 @@
                     "Version": 3,
                     "Guid": "d850de1d-1ae4-4623-b110-1c9a947ec669",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -7464,8 +7502,8 @@
                     "Version": 2,
                     "Guid": "4544b653-e57c-42d8-92e6-291b4d5de48e",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -7524,8 +7562,8 @@
                     "Version": 1,
                     "Guid": "d7a1450e-417a-44f1-8560-c0c125d03528",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -7544,8 +7582,8 @@
                     "Version": 1,
                     "Guid": "fafd16ef-fcc9-42db-89ba-c6c2da5b6290",
                     "Type": {
-                      "Name": "@string-dropdown",
-                      "Id": "@string-dropdown"
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
                     },
                     "Attributes": {
                       "String": {
@@ -7574,8 +7612,8 @@
                     "Version": 1,
                     "Guid": "e7c1f9da-a305-4845-a837-a5dbc0247bd3",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -7618,8 +7656,8 @@
                     "Version": 1,
                     "Guid": "02856302-f4da-41ef-8f1b-f50ab0614e6a",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -7662,8 +7700,8 @@
                     "Version": 1,
                     "Guid": "fd280ad2-9dcf-48f2-86fe-bda9b927cda1",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -7706,8 +7744,8 @@
                     "Version": 1,
                     "Guid": "cd637330-f49f-46a0-b61c-3cba6620a870",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -7750,8 +7788,8 @@
                     "Version": 1,
                     "Guid": "cae6aa41-bfec-4bd9-999c-fc83fd1beff4",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -7794,8 +7832,8 @@
                     "Version": 3,
                     "Guid": "30e2e6d1-edb8-491c-9d7f-73ee742777f0",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -7854,8 +7892,8 @@
                     "Version": 2,
                     "Guid": "2cc1ecbb-7853-4013-b064-bd34d45e39f0",
                     "Type": {
-                      "Name": "@Boolean",
-                      "Id": "@Boolean"
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
                     },
                     "Attributes": {
                       "String": {
@@ -7874,53 +7912,6 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 166462,
-                "Version": 1,
-                "Guid": "9b5b4edc-32dd-470d-ad2b-96d1ed1b30e2",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "Description": {
-                      "en-us": ""
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": ""
-                    },
-                    "Label": {
-                      "en-us": "⚙️QuickEdit Part"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "46cd1afc-c840-4473-8586-6bb1f35656a8"
-                }
-              }
             ]
           },
           "Entities": [
@@ -7929,8 +7920,8 @@
               "Version": 4,
               "Guid": "bf0b980d-1e5c-487c-8732-ae780b7e84e0",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -7962,7 +7953,53 @@
             "Id": "0948fd10-7ce2-4495-bc6e-7ccb8265857e",
             "Name": "⚙️SiteSetup",
             "Scope": "System.Configuration",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 166061,
+                "Version": 1,
+                "Guid": "6e5e7f67-6ad6-4fd5-8531-c0a57f116bc0",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p>Here you can configure aspects of how new sites are setup.</p>\n<p>As of v15, you can what apps should be available in the Auto-Installer. If this feature is popular, we'll consider enhancing it to also support custom apps and more.</p>"
+                    },
+                    "Label": {
+                      "en-us": "⚙️SiteSetup"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "0948fd10-7ce2-4495-bc6e-7ccb8265857e"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "SettingsIdentifier",
@@ -7975,8 +8012,8 @@
                     "Version": 2,
                     "Guid": "af9f284a-c6c6-4f77-886f-d05457556ec8",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -8035,8 +8072,8 @@
                     "Version": 1,
                     "Guid": "1338a5e0-8661-40e6-93d6-ce202058b0c6",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -8055,8 +8092,8 @@
                     "Version": 1,
                     "Guid": "0ec37593-6f43-44e7-b5f0-6c35fb6f8980",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -8080,8 +8117,8 @@
                     "Version": 3,
                     "Guid": "28b4578d-8771-4acc-9306-c89f7a06b8bf",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -8150,8 +8187,8 @@
                     "Version": 4,
                     "Guid": "a4a9c154-90ea-4e8c-8895-2b8d5b0f2ee7",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -8210,8 +8247,8 @@
                     "Version": 3,
                     "Guid": "f479f640-e7a6-487b-b6d4-f4815662a580",
                     "Type": {
-                      "Name": "@Entity",
-                      "Id": "@Entity"
+                      "Id": "@Entity",
+                      "Name": "@Entity"
                     },
                     "Attributes": {
                       "String": {
@@ -8247,53 +8284,6 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 166061,
-                "Version": 1,
-                "Guid": "6e5e7f67-6ad6-4fd5-8531-c0a57f116bc0",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "Description": {
-                      "en-us": ""
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": "<p>Here you can configure aspects of how new sites are setup.</p>\n<p>As of v15, you can what apps should be available in the Auto-Installer. If this feature is popular, we'll consider enhancing it to also support custom apps and more.</p>"
-                    },
-                    "Label": {
-                      "en-us": "⚙️SiteSetup"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "0948fd10-7ce2-4495-bc6e-7ccb8265857e"
-                }
-              }
             ]
           },
           "Entities": [
@@ -8302,8 +8292,8 @@
               "Version": 1,
               "Guid": "ad2e2046-6eef-4cb1-98dd-0ae513af9e50",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -8332,7 +8322,53 @@
             "Id": "833baa25-899b-4242-ade7-323a319bcf71",
             "Name": "⚙️SiteSetupAutoInstallApps",
             "Scope": "System.Configuration",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 166465,
+                "Version": 1,
+                "Guid": "2ab9428b-d082-4837-9839-54c66560eb6e",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": ""
+                    },
+                    "Label": {
+                      "en-us": "⚙️SiteSetup Auto Install Apps"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "833baa25-899b-4242-ade7-323a319bcf71"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "Name",
@@ -8345,8 +8381,8 @@
                     "Version": 3,
                     "Guid": "795e2d26-301a-4155-bffe-154edf2359de",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -8405,8 +8441,8 @@
                     "Version": 2,
                     "Guid": "c785c222-025f-4fd5-a397-aad907a884ad",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -8425,8 +8461,8 @@
                     "Version": 2,
                     "Guid": "9ae91ccd-1abf-4fab-8353-876045c69aa6",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -8450,8 +8486,8 @@
                     "Version": 3,
                     "Guid": "1acd3e13-346e-4bc5-9304-1576761346d6",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -8510,8 +8546,8 @@
                     "Version": 2,
                     "Guid": "7a842c84-7d21-4b89-94bf-b44da6bcdfeb",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -8530,8 +8566,8 @@
                     "Version": 2,
                     "Guid": "637bd140-abba-4e0a-ae2e-0771151321c7",
                     "Type": {
-                      "Name": "@string-dropdown",
-                      "Id": "@string-dropdown"
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
                     },
                     "Attributes": {
                       "String": {
@@ -8563,8 +8599,8 @@
                     "Version": 6,
                     "Guid": "335fcc90-f084-40c9-985c-54ade83297a8",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -8625,8 +8661,8 @@
                     "Version": 4,
                     "Guid": "8a543fa0-390c-4407-a61a-685afdd90248",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -8645,8 +8681,8 @@
                     "Version": 4,
                     "Guid": "0a9e4842-d548-4997-ad82-280eb0a31bf4",
                     "Type": {
-                      "Name": "@string-dropdown",
-                      "Id": "@string-dropdown"
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
                     },
                     "Attributes": {
                       "String": {
@@ -8678,8 +8714,8 @@
                     "Version": 4,
                     "Guid": "4790b967-fa82-4cdd-bf99-70369c4b1d9b",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -8740,8 +8776,8 @@
                     "Version": 2,
                     "Guid": "15a2b72e-8664-4df4-869a-b90dbb1977e7",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -8760,8 +8796,8 @@
                     "Version": 2,
                     "Guid": "eecaa63b-f51e-476f-8680-e073c131a5b0",
                     "Type": {
-                      "Name": "@string-url-path",
-                      "Id": "@string-url-path"
+                      "Id": "@string-url-path",
+                      "Name": "@string-url-path"
                     },
                     "Attributes": {
                       "String": {
@@ -8790,8 +8826,8 @@
                     "Version": 3,
                     "Guid": "4ffbfe66-dbf0-4ce4-95aa-8c571d9a1dc6",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -8852,8 +8888,8 @@
                     "Version": 1,
                     "Guid": "93c49ac7-fbe8-448f-b956-357a782112e8",
                     "Type": {
-                      "Name": "@Hyperlink",
-                      "Id": "@Hyperlink"
+                      "Id": "@Hyperlink",
+                      "Name": "@Hyperlink"
                     },
                     "Attributes": {
                       "String": {
@@ -8892,53 +8928,6 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 166465,
-                "Version": 1,
-                "Guid": "2ab9428b-d082-4837-9839-54c66560eb6e",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "Description": {
-                      "en-us": ""
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": ""
-                    },
-                    "Label": {
-                      "en-us": "⚙️SiteSetup Auto Install Apps"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "833baa25-899b-4242-ade7-323a319bcf71"
-                }
-              }
             ]
           },
           "Entities": [
@@ -8947,8 +8936,8 @@
               "Version": 2,
               "Guid": "c4b84ce2-edd3-4ab5-a87c-d0534251947c",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -8975,8 +8964,8 @@
               "Version": 2,
               "Guid": "4bbd4c45-a56a-4aed-ab73-4fb6bffad6a1",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -9003,8 +8992,8 @@
               "Version": 1,
               "Guid": "8431ad5d-a030-4646-b524-5acf4ca502ee",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -9033,7 +9022,56 @@
             "Id": "aed871cf-220b-4330-b368-f1259981c9c8",
             "Name": "⚙️CopyrightSettings",
             "Scope": "System.Configuration",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 182640,
+                "Version": 2,
+                "Guid": "08208884-69bd-4448-8fd9-4f0f7cef5f50",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": ""
+                    },
+                    "Label": {
+                      "en-us": "⚙️Copyright Settings"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "aed871cf-220b-4330-b368-f1259981c9c8"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "SettingsIdentifier",
@@ -9046,8 +9084,8 @@
                     "Version": 6,
                     "Guid": "61220dc2-2824-4ef1-adad-a28373be49bc",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -9117,8 +9155,8 @@
                     "Version": 5,
                     "Guid": "680db639-cb65-4e13-9b6f-5024bd8d40a0",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -9137,8 +9175,8 @@
                     "Version": 5,
                     "Guid": "3e4678e5-0250-457f-adef-289e0b5a885a",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -9162,8 +9200,8 @@
                     "Version": 5,
                     "Guid": "514cbecb-0063-43c1-a8a6-4f0703d746fb",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -9233,8 +9271,8 @@
                     "Version": 4,
                     "Guid": "750733f6-9673-4df9-8b0f-b2a558eac401",
                     "Type": {
-                      "Name": "@Boolean",
-                      "Id": "@Boolean"
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
                     },
                     "Attributes": {
                       "String": {
@@ -9252,56 +9290,180 @@
                     "Owner": "dnn:userid=41"
                   }
                 ]
-              }
-            ],
-            "Metadata": [
+              },
               {
-                "Id": 182640,
-                "Version": 2,
-                "Guid": "08208884-69bd-4448-8fd9-4f0f7cef5f50",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "AdditionalSettings": {
-                      "en-us": ""
+                "Name": "DisplayPrefix",
+                "Type": "String",
+                "InputType": "string-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 182646,
+                    "Version": 1,
+                    "Guid": "78e0ae31-81fd-44b1-b702-763cc04f0d8f",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
                     },
-                    "Description": {
-                      "en-us": ""
+                    "Attributes": {
+                      "String": {
+                        "InputType": {
+                          "*": "string-default"
+                        },
+                        "Name": {
+                          "*": "DisplayPrefix"
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "VisibleInEditUI": {
+                          "*": true
+                        }
+                      }
                     },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": ""
-                    },
-                    "Label": {
-                      "en-us": "⚙️Copyright Settings"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
-                    }
+                    "Owner": "dnn:userid=41"
                   }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "aed871cf-220b-4330-b368-f1259981c9c8"
-                }
+                ]
+              },
+              {
+                "Name": "DisplayFormat",
+                "Type": "String",
+                "InputType": "string-dropdown",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 182647,
+                    "Version": 2,
+                    "Guid": "bbed63a0-301d-4c36-969e-46fd281181c0",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-dropdown"
+                        },
+                        "Name": {
+                          "en-us": "DisplayFormat"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 182648,
+                    "Version": 1,
+                    "Guid": "adf0a5fe-ef0c-46b7-b951-08df15c3020f",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 182649,
+                    "Version": 1,
+                    "Guid": "318364e3-5aa1-487f-b27d-5e42e3a2cb15",
+                    "Type": {
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ":Default - [prefix] [owner] [year] [type] [message]"
+                        },
+                        "DropdownValuesFormat": {
+                          "en-us": "value-label"
+                        },
+                        "Separator": {
+                          "en-us": ","
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
               }
             ]
           },
@@ -9314,8 +9476,8 @@
           "Version": 17,
           "Guid": "8c87f24f-959c-4ff1-b537-077556e8d439",
           "Type": {
-            "Name": "SettingsSystem",
-            "Id": "813a3cb7-1a89-4477-bdfe-8863ab3ae59a"
+            "Id": "813a3cb7-1a89-4477-bdfe-8863ab3ae59a",
+            "Name": "SettingsSystem"
           },
           "Attributes": {
             "String": {
@@ -9381,8 +9543,8 @@
               "Version": 1,
               "Guid": "c8c3fac2-0aa3-407a-8463-a5e724f54623",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -9407,8 +9569,8 @@
           "Version": 3,
           "Guid": "285c4a83-7fa2-4732-b1a2-da945b94c3dd",
           "Type": {
-            "Name": "⚙️ContentSecurityPolicies",
-            "Id": "5f431769-ff03-472e-aab5-33891af10acc"
+            "Id": "5f431769-ff03-472e-aab5-33891af10acc",
+            "Name": "⚙️ContentSecurityPolicies"
           },
           "Attributes": {
             "String": {
@@ -9432,8 +9594,8 @@
               "Version": 1,
               "Guid": "fcc413ba-ca41-40d1-bf92-89ecdeed8e11",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -9458,8 +9620,8 @@
           "Version": 13,
           "Guid": "429b41cd-c626-48f2-919e-63d7a4cdd226",
           "Type": {
-            "Name": "⚙️ContentSecurityPolicy",
-            "Id": "92f2eb3c-c3b7-4378-82df-b2393da6687e"
+            "Id": "92f2eb3c-c3b7-4378-82df-b2393da6687e",
+            "Name": "⚙️ContentSecurityPolicy"
           },
           "Attributes": {
             "String": {
@@ -9489,8 +9651,8 @@
               "Version": 1,
               "Guid": "b9cdb5ac-5c94-4d9d-8c5b-88e0365011dc",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -9515,8 +9677,8 @@
           "Version": 1,
           "Guid": "2ab98dd8-9937-4a5c-8f9f-651222c2bad9",
           "Type": {
-            "Name": "⚙️ContentSecurityPolicy",
-            "Id": "92f2eb3c-c3b7-4378-82df-b2393da6687e"
+            "Id": "92f2eb3c-c3b7-4378-82df-b2393da6687e",
+            "Name": "⚙️ContentSecurityPolicy"
           },
           "Attributes": {
             "String": {
@@ -9546,8 +9708,8 @@
               "Version": 1,
               "Guid": "13dd5bb1-7d3f-44f9-93c2-649d65814f50",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -9572,8 +9734,8 @@
           "Version": 13,
           "Guid": "c459f03d-bb65-4813-ac8a-0a780f72eab7",
           "Type": {
-            "Name": "⚙️GoogleMaps",
-            "Id": "f5764f60-2621-4a5d-9391-100fbe664640"
+            "Id": "f5764f60-2621-4a5d-9391-100fbe664640",
+            "Name": "⚙️GoogleMaps"
           },
           "Attributes": {
             "String": {
@@ -9607,8 +9769,8 @@
               "Version": 1,
               "Guid": "f0753bdc-e7a1-4b61-b721-4b4e21b34f7c",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -9633,8 +9795,8 @@
           "Version": 3,
           "Guid": "eb39ffc9-f7fa-4599-8ea4-549a8fd9d69a",
           "Type": {
-            "Name": "⚙️GoogleTranslate",
-            "Id": "6a7b65c2-b07b-4ce0-8d5a-15572431698e"
+            "Id": "6a7b65c2-b07b-4ce0-8d5a-15572431698e",
+            "Name": "⚙️GoogleTranslate"
           },
           "Attributes": {
             "String": {
@@ -9653,8 +9815,8 @@
               "Version": 1,
               "Guid": "a58efde7-756d-4f34-a0dc-be478b2c183b",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -9679,8 +9841,8 @@
           "Version": 2,
           "Guid": "7d929ae6-ffe2-4686-b3dc-cf0937abea00",
           "Type": {
-            "Name": "⚙️GoogleRecaptcha",
-            "Id": "838b51db-b06c-449b-adcc-cb508ca4b488"
+            "Id": "838b51db-b06c-449b-adcc-cb508ca4b488",
+            "Name": "⚙️GoogleRecaptcha"
           },
           "Attributes": {
             "String": {
@@ -9702,8 +9864,8 @@
               "Version": 1,
               "Guid": "5f53e47b-d9c4-4a21-9b6d-b873c4c61185",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -9728,8 +9890,8 @@
           "Version": 25,
           "Guid": "358ce0df-52bf-4877-bf32-19c3fb723c73",
           "Type": {
-            "Name": "⚙️Image",
-            "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f"
+            "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f",
+            "Name": "⚙️Image"
           },
           "Attributes": {
             "String": {
@@ -9774,8 +9936,8 @@
               "Version": 1,
               "Guid": "0dc356a3-acff-4bcf-b276-a13e46fc3a9d",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -9800,8 +9962,8 @@
           "Version": 14,
           "Guid": "35d4e680-2f92-455a-90b7-4a5a936c287f",
           "Type": {
-            "Name": "⚙️Image",
-            "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f"
+            "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f",
+            "Name": "⚙️Image"
           },
           "Attributes": {
             "String": {
@@ -9846,8 +10008,8 @@
               "Version": 1,
               "Guid": "e5fefea9-ae40-4151-afcb-619aa88ee09b",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -9872,8 +10034,8 @@
           "Version": 15,
           "Guid": "bdbff289-219d-46d6-b697-5d17050eebe9",
           "Type": {
-            "Name": "⚙️Image",
-            "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f"
+            "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f",
+            "Name": "⚙️Image"
           },
           "Attributes": {
             "String": {
@@ -9918,8 +10080,8 @@
               "Version": 1,
               "Guid": "6993d8e1-158d-4ca2-baa0-b3b846d49773",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -9944,8 +10106,8 @@
           "Version": 18,
           "Guid": "8affa267-ec04-408f-af93-48c0ae693e5c",
           "Type": {
-            "Name": "⚙️Image",
-            "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f"
+            "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f",
+            "Name": "⚙️Image"
           },
           "Attributes": {
             "String": {
@@ -9990,8 +10152,8 @@
               "Version": 1,
               "Guid": "c7a4b6b0-f3e8-45af-aff9-dd498be1f318",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -10016,8 +10178,8 @@
           "Version": 4,
           "Guid": "89184eb0-1d4d-4429-8c38-c453f8aa149d",
           "Type": {
-            "Name": "⚙️Images",
-            "Id": "7edd0b8d-1405-44ed-ac33-d0d63a274bd6"
+            "Id": "7edd0b8d-1405-44ed-ac33-d0d63a274bd6",
+            "Name": "⚙️Images"
           },
           "Attributes": {
             "String": {
@@ -10045,8 +10207,8 @@
               "Version": 1,
               "Guid": "2ec32b16-b553-49d8-9495-2fd9b7d8a8c2",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -10071,8 +10233,8 @@
           "Version": 2,
           "Guid": "a88c329c-cc6e-4744-b3ec-88c186502d9d",
           "Type": {
-            "Name": "⚙️QuickEdit",
-            "Id": "5ad95efe-1dc9-4681-adb8-42d9e7f0183b"
+            "Id": "5ad95efe-1dc9-4681-adb8-42d9e7f0183b",
+            "Name": "⚙️QuickEdit"
           },
           "Attributes": {
             "String": {
@@ -10098,8 +10260,8 @@
               "Version": 1,
               "Guid": "43f8d589-2948-4a26-8a2f-ff58176ca847",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -10124,8 +10286,8 @@
           "Version": 3,
           "Guid": "c8e3769a-96e9-4312-8cb4-da24f90b9fdd",
           "Type": {
-            "Name": "⚙️QuickEditPart",
-            "Id": "46cd1afc-c840-4473-8586-6bb1f35656a8"
+            "Id": "46cd1afc-c840-4473-8586-6bb1f35656a8",
+            "Name": "⚙️QuickEditPart"
           },
           "Attributes": {
             "String": {
@@ -10164,8 +10326,8 @@
               "Version": 1,
               "Guid": "f7e455a4-51de-4fc5-a97a-d3fb968ccc1b",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -10190,8 +10352,8 @@
           "Version": 3,
           "Guid": "02667ae8-dbb6-4431-81ae-125a22f9e5ac",
           "Type": {
-            "Name": "⚙️QuickEditPart",
-            "Id": "46cd1afc-c840-4473-8586-6bb1f35656a8"
+            "Id": "46cd1afc-c840-4473-8586-6bb1f35656a8",
+            "Name": "⚙️QuickEditPart"
           },
           "Attributes": {
             "String": {
@@ -10230,8 +10392,8 @@
               "Version": 1,
               "Guid": "77dcf7a8-40f8-4c81-85e3-d2c4b1c64a76",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -10256,8 +10418,8 @@
           "Version": 3,
           "Guid": "89c89890-ab00-42f7-9ee1-c81d79855533",
           "Type": {
-            "Name": "⚙️QuickEditPart",
-            "Id": "46cd1afc-c840-4473-8586-6bb1f35656a8"
+            "Id": "46cd1afc-c840-4473-8586-6bb1f35656a8",
+            "Name": "⚙️QuickEditPart"
           },
           "Attributes": {
             "String": {
@@ -10296,8 +10458,8 @@
               "Version": 1,
               "Guid": "4b931acc-7554-4a5a-8961-643a196e7297",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -10322,8 +10484,8 @@
           "Version": 3,
           "Guid": "7cb78140-86e6-401b-bca5-a46ee525b925",
           "Type": {
-            "Name": "⚙️QuickEditPart",
-            "Id": "46cd1afc-c840-4473-8586-6bb1f35656a8"
+            "Id": "46cd1afc-c840-4473-8586-6bb1f35656a8",
+            "Name": "⚙️QuickEditPart"
           },
           "Attributes": {
             "String": {
@@ -10362,8 +10524,8 @@
               "Version": 1,
               "Guid": "825217f1-d5b9-44d9-a311-3ec53c241b5c",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -10388,8 +10550,8 @@
           "Version": 1,
           "Guid": "052a5e27-40f8-40bf-bd97-35a6641e9df0",
           "Type": {
-            "Name": "⚙️SiteSetup",
-            "Id": "0948fd10-7ce2-4495-bc6e-7ccb8265857e"
+            "Id": "0948fd10-7ce2-4495-bc6e-7ccb8265857e",
+            "Name": "⚙️SiteSetup"
           },
           "Attributes": {
             "String": {
@@ -10410,8 +10572,8 @@
               "Version": 1,
               "Guid": "4ff9ceef-85f8-4f79-96dc-42c6a25c97db",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -10436,8 +10598,8 @@
           "Version": 1,
           "Guid": "8c454005-9a76-48b2-a63d-7e92a731bb80",
           "Type": {
-            "Name": "⚙️Image",
-            "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f"
+            "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f",
+            "Name": "⚙️Image"
           },
           "Attributes": {
             "String": {
@@ -10479,8 +10641,8 @@
               "Version": 1,
               "Guid": "2987dbad-0186-4bc0-9684-685ddf64a1e2",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -10505,8 +10667,8 @@
           "Version": 1,
           "Guid": "6c155e30-43a4-4564-bf3f-0d80c925c4d7",
           "Type": {
-            "Name": "⚙️Image",
-            "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f"
+            "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f",
+            "Name": "⚙️Image"
           },
           "Attributes": {
             "String": {
@@ -10551,8 +10713,8 @@
               "Version": 1,
               "Guid": "7d64cbc8-6c71-433f-b691-bb5e0dcab9fa",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -10577,8 +10739,8 @@
           "Version": 2,
           "Guid": "7116c320-769d-4d7c-94ef-76c176a17ba2",
           "Type": {
-            "Name": "⚙️CopyrightSettings",
-            "Id": "aed871cf-220b-4330-b368-f1259981c9c8"
+            "Id": "aed871cf-220b-4330-b368-f1259981c9c8",
+            "Name": "⚙️CopyrightSettings"
           },
           "Attributes": {
             "String": {
@@ -10594,8 +10756,8 @@
               "Version": 1,
               "Guid": "e6913d5f-d209-4dce-af00-a8dd39140f1b",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -10617,8 +10779,5 @@
         }
       ]
     }
-  ],
-  "_": {
-    "V": 1
-  }
+  ]
 }

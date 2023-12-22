@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Data;
+﻿using System;
+using ToSic.Eav.Data;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Data;
 /// Introduced in 2sxc 16.01
 /// </remarks>
 [PublicApi]
-public partial interface ITypedItem: ITyped, ICanBeEntity, ICanBeItem
+public partial interface ITypedItem: ITyped, ICanBeEntity, ICanBeItem, IEquatable<ITypedItem>
 {
     /// <summary>
     /// A dynamic accessor for properties, to quickly get values when you don't care about type safety.

@@ -7,6 +7,7 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
+using ToSic.Lib.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -18,6 +19,7 @@ using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Tweaks;
 using static ToSic.Sxc.Data.Typed.TypedHelpers;
+using static ToSic.Eav.Data.Shared.WrapperEquality;
 
 namespace ToSic.Sxc.Data.Typed;
 
@@ -225,4 +227,32 @@ public class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
     public IBlock TryGetBlockContext() => _cdf?.Value.BlockOrNull;
 
     public ITypedItem Item => this;
+
+    #region Equals
+
+    /// <summary>
+    /// This is used by various equality comparison. 
+    /// Since we define two object to be equal when they host the same contents, this determines the hash based on the contents
+    /// </summary>
+    [PrivateApi]
+    // ReSharper disable once NonReadonlyMemberInGetHashCode
+    public override int GetHashCode() => GetWrappedHashCode(this.PreWrap);
+
+
+    public override bool Equals(object b)
+    {
+        if (b is null) return false;
+        if (ReferenceEquals(this, b)) return true;
+        if (b.GetType() != GetType()) return false;
+        if (b is not WrapObjectTypedItem bTyped) return false;
+        if (bTyped.PreWrap.GetType() != PreWrap.GetType()) return false;
+
+        // TODO: ATM not clear how to best do this
+        // probably need to check what's inside the PreWrap...
+        return EqualsWrapper(this.PreWrap, bTyped.PreWrap);
+    }
+
+    bool IEquatable<ITypedItem>.Equals(ITypedItem other) => Equals(other);
+
+    #endregion
 }

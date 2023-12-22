@@ -1,4 +1,7 @@
 {
+  "_": {
+    "V": 1
+  },
   "Bundles": [
     {
       "Name": "default",
@@ -8,7 +11,77 @@
             "Id": "DataPipeline",
             "Name": "DataPipeline",
             "Scope": "System.DataSources",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 45145,
+                "Version": 2,
+                "Guid": "b48d7594-b48d-4412-8450-0080a1f3327b",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "Description": {
+                      "*": "Describes a set of data sources and how they are interconnected."
+                    },
+                    "EditInstructions": {
+                      "*": "<p>A Query (DataPipeline) is the definition type of a Visual-Query, containing title, description and hidden information like wiring between the parts.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "*": "Query"
+                    },
+                    "ListInstructions": {
+                      "*": ""
+                    },
+                    "Notes": {
+                      "*": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "*": ""
+                    },
+                    "Link": {
+                      "*": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=1",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "DataPipeline"
+                }
+              },
+              {
+                "Id": 137453,
+                "Version": 1,
+                "Guid": "01a3080f-1409-4760-84ee-632fe76142f7",
+                "Type": {
+                  "Id": "e2f569c9-d1dd-4458-a54e-4aaf53e9ae3c",
+                  "Name": "LanguagesDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "Title": {
+                      "en-us": "Disable Translation"
+                    }
+                  },
+                  "Boolean": {
+                    "Enabled": {
+                      "en-us": false
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "DataPipeline"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "Name",
@@ -21,8 +94,8 @@
                     "Version": 4,
                     "Guid": "8d83d13c-916f-4594-9ae9-aa1f5c0fe24f",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -81,8 +154,8 @@
                     "Version": 3,
                     "Guid": "f6dabb9c-1f12-4443-9783-70f691d6e7b2",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -101,8 +174,8 @@
                     "Version": 2,
                     "Guid": "f23e2e7e-aa81-405f-b129-22e2816240df",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -131,8 +204,8 @@
                     "Version": 2,
                     "Guid": "41533565-885e-4c33-9bfb-8e208ed8d8ee",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -173,8 +246,8 @@
                     "Version": 3,
                     "Guid": "009d0843-b009-41ae-9237-e22b465316e8",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {},
                     "Owner": "dnn:userid=1"
@@ -184,8 +257,8 @@
                     "Version": 2,
                     "Guid": "a2cb52c2-3c1b-4486-8222-4aadcf9840f0",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "Number": {
@@ -209,8 +282,8 @@
                     "Version": 3,
                     "Guid": "ea3d9f87-c42b-46c9-8ddd-9c073f09c0fe",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -280,8 +353,8 @@
                     "Version": 1,
                     "Guid": "b8ac5fc0-85c5-4146-ba33-e897e932c857",
                     "Type": {
-                      "Name": "@Boolean",
-                      "Id": "@Boolean"
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
                     },
                     "Attributes": {
                       "String": {
@@ -311,8 +384,8 @@
                     "Version": 3,
                     "Guid": "d94606d0-72d5-4f65-a1aa-ecea3fa4f049",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -382,8 +455,8 @@
                     "Version": 2,
                     "Guid": "297811b1-d326-4600-8700-d789e366c3fc",
                     "Type": {
-                      "Name": "@Boolean",
-                      "Id": "@Boolean"
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
                     },
                     "Attributes": {
                       "String": {
@@ -418,8 +491,8 @@
                     "Version": 3,
                     "Guid": "fdcb6b4a-f22d-45ca-817e-c14b68a03828",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -472,8 +545,8 @@
                     "Version": 2,
                     "Guid": "5d34f96d-02db-4858-959e-80870dda0708",
                     "Type": {
-                      "Name": "@empty-default",
-                      "Id": "@empty-default"
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
                     },
                     "Attributes": {
                       "Boolean": {
@@ -497,8 +570,8 @@
                     "Version": 9,
                     "Guid": "a67f614b-d57a-48f7-bfd8-05604fa88725",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -557,8 +630,8 @@
                     "Version": 8,
                     "Guid": "86929de5-86c8-4a85-8854-7cedaaa3693a",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -577,8 +650,8 @@
                     "Version": 8,
                     "Guid": "81f36eff-3f91-4a23-9b90-13a3137e08c1",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -607,8 +680,8 @@
                     "Version": 3,
                     "Guid": "56ada5ea-e4ff-4bba-80bd-5dfb27d044e5",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -667,8 +740,8 @@
                     "Version": 2,
                     "Guid": "c3bc760d-e33f-45b4-987c-cb8854192aa3",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -687,8 +760,8 @@
                     "Version": 2,
                     "Guid": "b003c249-537f-4ab3-a0a3-09b12336e01a",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -717,8 +790,8 @@
                     "Version": 5,
                     "Guid": "c7be53d6-3fe2-43c4-8a3c-fd94bf4c4bd8",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -779,8 +852,8 @@
                     "Version": 4,
                     "Guid": "18f8c776-392d-43e8-afb1-e4ec659907cb",
                     "Type": {
-                      "Name": "@empty-default",
-                      "Id": "@empty-default"
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
                     },
                     "Attributes": {
                       "Boolean": {
@@ -804,8 +877,8 @@
                     "Version": 4,
                     "Guid": "e65cbf0e-8415-444b-8c76-c018a056119e",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -864,8 +937,8 @@
                     "Version": 3,
                     "Guid": "fbda1223-55eb-405f-99a3-4dff47cc79ea",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -884,8 +957,8 @@
                     "Version": 2,
                     "Guid": "b8e18079-d7ae-47cb-af24-174b5b167746",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -914,8 +987,8 @@
                     "Version": 4,
                     "Guid": "8597cd16-2cb5-4bd5-94af-a3b9ef656602",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -974,8 +1047,8 @@
                     "Version": 3,
                     "Guid": "7719f9a1-905a-4501-8e91-8e692f8397ce",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -994,8 +1067,8 @@
                     "Version": 2,
                     "Guid": "3fa3e6d8-9242-42e1-8d13-dc4184203fe1",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -1024,8 +1097,8 @@
                     "Version": 7,
                     "Guid": "f09ddc98-2037-4b63-aa22-d1267b324b29",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1084,8 +1157,8 @@
                     "Version": 5,
                     "Guid": "0c21341b-6c33-4792-88fe-bf73b2a17875",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -1104,8 +1177,8 @@
                     "Version": 1,
                     "Guid": "7d6b9263-1351-4208-85b2-c4b035c8d298",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -1121,8 +1194,8 @@
                     "Version": 4,
                     "Guid": "f655ac6f-db30-4964-92c0-ee0ff460bcfe",
                     "Type": {
-                      "Name": "@string-json",
-                      "Id": "@string-json"
+                      "Id": "@string-json",
+                      "Name": "@string-json"
                     },
                     "Attributes": {
                       "String": {
@@ -1154,77 +1227,6 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 45145,
-                "Version": 2,
-                "Guid": "b48d7594-b48d-4412-8450-0080a1f3327b",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "Description": {
-                      "*": "Describes a set of data sources and how they are interconnected."
-                    },
-                    "EditInstructions": {
-                      "*": "<p>A Query (DataPipeline) is the definition type of a Visual-Query, containing title, description and hidden information like wiring between the parts.&nbsp;</p>"
-                    },
-                    "Label": {
-                      "*": "Query"
-                    },
-                    "ListInstructions": {
-                      "*": ""
-                    },
-                    "Notes": {
-                      "*": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "*": ""
-                    },
-                    "Link": {
-                      "*": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=1",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "DataPipeline"
-                }
-              },
-              {
-                "Id": 137453,
-                "Version": 1,
-                "Guid": "01a3080f-1409-4760-84ee-632fe76142f7",
-                "Type": {
-                  "Name": "LanguagesDecorator",
-                  "Id": "e2f569c9-d1dd-4458-a54e-4aaf53e9ae3c"
-                },
-                "Attributes": {
-                  "String": {
-                    "Title": {
-                      "en-us": "Disable Translation"
-                    }
-                  },
-                  "Boolean": {
-                    "Enabled": {
-                      "en-us": false
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "DataPipeline"
-                }
-              }
             ]
           },
           "Entities": [
@@ -1233,8 +1235,8 @@
               "Version": 2,
               "Guid": "f4e52fd1-4a37-406f-82cf-e51cb977dde4",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -1266,7 +1268,77 @@
             "Id": "DataPipelinePart",
             "Name": "DataPipelinePart",
             "Scope": "System.DataSources",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 45146,
+                "Version": 2,
+                "Guid": "ce3bc4fa-1f60-46b6-b6a8-9f26e981b55d",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "Description": {
+                      "*": "A part in the data pipeline, usually a data source/target element."
+                    },
+                    "EditInstructions": {
+                      "*": "<p>This is an internal data-type, usually invisible to the user. It contains the specs for a DataSource part inside a VisualQuery (DataPipeline). You should usually not edit this yourself, as you'll probably break something.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "*": "Query Part"
+                    },
+                    "ListInstructions": {
+                      "*": ""
+                    },
+                    "Notes": {
+                      "*": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "*": ""
+                    },
+                    "Link": {
+                      "*": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=1",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "DataPipelinePart"
+                }
+              },
+              {
+                "Id": 137454,
+                "Version": 1,
+                "Guid": "5ceca9a8-eda2-46d5-a47b-84b7a6c686d9",
+                "Type": {
+                  "Id": "e2f569c9-d1dd-4458-a54e-4aaf53e9ae3c",
+                  "Name": "LanguagesDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "Title": {
+                      "en-us": "Disable Translation"
+                    }
+                  },
+                  "Boolean": {
+                    "Enabled": {
+                      "en-us": false
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "DataPipelinePart"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "Name",
@@ -1279,8 +1351,8 @@
                     "Version": 3,
                     "Guid": "848cf93b-b0fb-405a-9abf-f4dbbd15333c",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1321,8 +1393,8 @@
                     "Version": 3,
                     "Guid": "536504b2-8914-41ee-a17d-65cded02d08e",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {},
                     "Owner": "dnn:userid=1"
@@ -1332,8 +1404,8 @@
                     "Version": 1,
                     "Guid": "a1bef096-4ab2-4fbf-8429-48e7f3c1a0f5",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "Number": {
@@ -1357,8 +1429,8 @@
                     "Version": 3,
                     "Guid": "0bb6d7dc-4918-4f05-9ce3-4eaaf105cd18",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1399,8 +1471,8 @@
                     "Version": 3,
                     "Guid": "3221122f-0fe5-4714-8088-f6e83df36d79",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {},
                     "Owner": "dnn:userid=1"
@@ -1410,8 +1482,8 @@
                     "Version": 1,
                     "Guid": "b6d59b24-e328-4b7f-8f9d-fc3e6f7f54a7",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "Number": {
@@ -1435,8 +1507,8 @@
                     "Version": 6,
                     "Guid": "a44a5c63-b20e-4096-92ba-32bdb8f2923b",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1495,8 +1567,8 @@
                     "Version": 5,
                     "Guid": "ced8f8a3-4f49-44d3-a573-386d9aa526c5",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -1515,8 +1587,8 @@
                     "Version": 3,
                     "Guid": "eca41956-0eb4-4a43-bd0f-7c4ca0ed5d76",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -1545,8 +1617,8 @@
                     "Version": 6,
                     "Guid": "1a3c49c4-471a-4338-b862-1e20bf4720c5",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1605,8 +1677,8 @@
                     "Version": 4,
                     "Guid": "ef734c14-4efa-4288-9764-ee2d2eb7aa53",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -1625,8 +1697,8 @@
                     "Version": 1,
                     "Guid": "3f98bef5-f95d-4c1d-ae8c-0eec97198603",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "Number": {
@@ -1642,8 +1714,8 @@
                     "Version": 1,
                     "Guid": "ca02b45f-d534-4b6a-911d-1bc51550c44c",
                     "Type": {
-                      "Name": "@string-json",
-                      "Id": "@string-json"
+                      "Id": "@string-json",
+                      "Name": "@string-json"
                     },
                     "Attributes": {
                       "String": {
@@ -1675,85 +1747,11 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 45146,
-                "Version": 2,
-                "Guid": "ce3bc4fa-1f60-46b6-b6a8-9f26e981b55d",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "Description": {
-                      "*": "A part in the data pipeline, usually a data source/target element."
-                    },
-                    "EditInstructions": {
-                      "*": "<p>This is an internal data-type, usually invisible to the user. It contains the specs for a DataSource part inside a VisualQuery (DataPipeline). You should usually not edit this yourself, as you'll probably break something.&nbsp;</p>"
-                    },
-                    "Label": {
-                      "*": "Query Part"
-                    },
-                    "ListInstructions": {
-                      "*": ""
-                    },
-                    "Notes": {
-                      "*": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "*": ""
-                    },
-                    "Link": {
-                      "*": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=1",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "DataPipelinePart"
-                }
-              },
-              {
-                "Id": 137454,
-                "Version": 1,
-                "Guid": "5ceca9a8-eda2-46d5-a47b-84b7a6c686d9",
-                "Type": {
-                  "Name": "LanguagesDecorator",
-                  "Id": "e2f569c9-d1dd-4458-a54e-4aaf53e9ae3c"
-                },
-                "Attributes": {
-                  "String": {
-                    "Title": {
-                      "en-us": "Disable Translation"
-                    }
-                  },
-                  "Boolean": {
-                    "Enabled": {
-                      "en-us": false
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "DataPipelinePart"
-                }
-              }
             ]
           },
           "Entities": []
         }
       ]
     }
-  ],
-  "_": {
-    "V": 1
-  }
+  ]
 }
