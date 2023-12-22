@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Code
 
         private const BindingFlags OwnPropsOnly = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public;
 
-        private static readonly string[] SkipTypeRoots = ["Microsoft", "System"];
+        private static readonly string[] SkipTypeRoots = []; // ["Microsoft", "System"];
         private static readonly string[] SkipMethods = ["get_", "set_"];
     }
 }

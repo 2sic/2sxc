@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using ToSic.Eav;
+using ToSic.Eav.Code.Help;
 using ToSic.Eav.Data;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
@@ -26,7 +29,19 @@ public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
     /// Main constructor.
     /// Doesn't have parameters so it can easily be inherited.
     /// </summary>
-    protected CodeTyped() : base("Sxc.Code16") { }
+    protected CodeTyped() : base("Sxc.CodeTy") { }
+
+    /// <summary>
+    /// Special constructor for code files in the `ThisCode` which need the context - such as the Kit.
+    /// </summary>
+    /// <param name="parent"></param>
+    protected CodeTyped(IDynamicCode16 parent) : base("Cst.CodeTy")
+    {
+        if (parent is not IHasDynamicCodeRoot dynCodeParent)
+            return;
+
+        base.ConnectToRoot(dynCodeParent._DynCodeRoot);
+    }
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => SysHlp.CodeLog;
@@ -43,7 +58,16 @@ public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
     #endregion
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
-    public ServiceKit16 Kit => _kit.Get(() => _DynCodeRoot.GetKit<ServiceKit16>());
+    public ServiceKit16 Kit => _kit.Get(() =>
+    {
+        if (_DynCodeRoot != null) return _DynCodeRoot.GetKit<ServiceKit16>();
+
+        var message = "Can't access the Kit property, because the CodeRoot which provides this is not known. " +
+                      $"This is typical in code which is in the **ThisCode** folder. " +
+                      $"Make sure the caller of the code uses 'this' in the constructor - " +
+                      $"eg. 'new {GetType().Name}(this)' and that the class {GetType().Name} has a constructor which passes it to the base class. ";
+        throw new ExceptionWithHelp(new CodeHelp("get-kit-without-code-root", "todo", uiMessage: message), new ArgumentNullException(nameof(Kit)));
+    });
     private readonly GetOnce<ServiceKit16> _kit = new();
 
     #region Stuff added by Code12

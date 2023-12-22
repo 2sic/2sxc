@@ -20,10 +20,21 @@ public partial class DynamicCodeRoot
         var compiler = Services.CodeCompilerLazy.Value;
         var instance = compiler.InstantiateClass(virtualPath, App.AppId, className: name, relativePath: relativePath, throwOnError: throwOnError);
 
-        // if it supports all our known context properties, attach them
-        if (instance is INeedsDynamicCodeRoot needsRoot) needsRoot.ConnectToRoot(this);
+        if (instance == null)
+            return l.ReturnNull("null / not found / error");
 
-        return l.Return(instance, (instance != null).ToString());
+        var typeName = instance.GetType().FullName;
+
+        // if it supports all our known context properties, attach them
+        if (instance is INeedsDynamicCodeRoot needsRoot)
+        {
+            l.A($"will attach root / Kit to {typeName}");
+            needsRoot.ConnectToRoot(this);
+        }
+        else
+            l.A($"no root / Kit for {typeName}");
+
+        return l.Return(instance, instance.ToString());
     }
 
     /// <inheritdoc />
