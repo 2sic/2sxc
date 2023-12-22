@@ -1,10 +1,10 @@
 ﻿using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Data
+namespace ToSic.Sxc.Data;
+
+[PrivateApi]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public interface IHasJsonSource
 {
-    [PrivateApi]
-    public interface IHasJsonSource
-    {
-        object JsonSource { get; }
-    }
+    object JsonSource { get; }
 }

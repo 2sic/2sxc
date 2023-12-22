@@ -1,4 +1,5 @@
 ﻿#if NETFRAMEWORK
+using ToSic.Eav.Apps;
 using ToSic.Eav.Code.InfoSystem;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.DataSources
     {
         private readonly LazySvc<CodeInfoService> _codeChanges;
 
-        private readonly ToSic.Eav.Apps.IAppStates _appStates;
+        private readonly IAppStates _appStates;
 
 #pragma warning disable 618
         [System.Obsolete("Old property on this data source, should really not be used at all. Must add warning in v13, and remove ca. v15")]
@@ -23,7 +24,7 @@ namespace ToSic.Sxc.DataSources
                 if (_cache != null) return _cache;
                 // on first access report problem
                 _codeChanges.Value.Warn(CaV8To17("Data.Cache", "https://go.2sxc.org/brc-13-datasource-cache"));
-                return _cache = new Compatibility.CacheWithGetContentType(_appStates.Get(this));
+                return _cache = new Compatibility.CacheWithGetContentType(_appStates.GetReader(this));
             }
         }
 
@@ -32,7 +33,7 @@ namespace ToSic.Sxc.DataSources
 #pragma warning restore 618
 
         [PrivateApi("older use case, probably don't publish")]
-        public DataPublishing Publish { get; } = new DataPublishing();
+        public DataPublishing Publish { get; } = new();
 
 
         #region Prepared code if we need to reactivate some old APIs #DataInAddWontWork

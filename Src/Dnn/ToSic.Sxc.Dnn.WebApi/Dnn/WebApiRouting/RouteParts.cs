@@ -1,56 +1,54 @@
 ﻿using System.Linq;
 using ToSic.Eav.WebApi.Routing;
 
-namespace ToSic.Sxc.Dnn.WebApiRouting
+namespace ToSic.Sxc.Dnn.WebApiRouting;
+
+internal class Roots
 {
-    public class Roots
+    public static RootId[] QueryRoots =
     {
-        public static RootId[] QueryRoots =
-        {
-            new RootId("qry-auto", AppRoots.AppAuto + "/" + AppParts.Query), 
-            new RootId("qry-name", AppRoots.AppNamed + "/" + AppParts.Query)
-        };
-        public static RootId[] AppAutoAndNamed =
-        {
-            new RootId("app-auto", AppRoots.AppAuto), 
-            new RootId("app-name",  AppRoots.AppNamed)
-        };
-        public static RootId[] Content =
-        {
-            new RootId("cont-auto", AppRoots.AppAutoContent), 
-            new RootId("cont-name", AppRoots.AppNamedContent),
-            new RootId("data-auto", AppRoots.AppAutoData), // new, v13
-            new RootId("data-name", AppRoots.AppNamedData) // new, v13
-        };
-
-        public static RootId[] AppAutoNamedInclEditions = AppAutoAndNamed
-            .Concat(AppAutoAndNamed.Select(rid => new RootId(rid.Name + "-edition", rid.Path + "/" + ValueTokens.Edition)))
-            .ToArray();
-    }
-
-    public struct RootId
+        new("qry-auto", AppRoots.AppAuto + "/" + AppParts.Query), 
+        new("qry-name", AppRoots.AppNamed + "/" + AppParts.Query)
+    };
+    public static RootId[] AppAutoAndNamed =
     {
-        public string Name;
-        public string Path;
-
-        public RootId(string name, string path)
-        {
-            Name = name;
-            Path = path;
-        }
-    }
-
-
-    internal class RouteParts
+        new("app-auto", AppRoots.AppAuto), 
+        new("app-name",  AppRoots.AppNamed)
+    };
+    public static RootId[] Content =
     {
-        public const string RouteApiControllerAction = "api/" + ValueTokens.SetControllerAction;
-    }
+        new("cont-auto", AppRoots.AppAutoContent), 
+        new("cont-name", AppRoots.AppNamedContent),
+        new("data-auto", AppRoots.AppAutoData), // new, v13
+        new("data-name", AppRoots.AppNamedData) // new, v13
+    };
 
-    public class ControllerNames
+    public static RootId[] AppAutoNamedInclEditions = AppAutoAndNamed
+        .Concat(AppAutoAndNamed.Select(rid => new RootId(rid.Name + "-edition", rid.Path + "/" + ValueTokens.Edition)))
+        .ToArray();
+}
+
+internal struct RootId
+{
+    public string Name;
+    public string Path;
+
+    public RootId(string name, string path)
     {
-        public const string Adam = "Adam";
-        public const string AppContent = "AppData";
-        public const string AppQuery = "AppQuery";
+        Name = name;
+        Path = path;
     }
 }
 
+
+internal class RouteParts
+{
+    public const string RouteApiControllerAction = "api/" + ValueTokens.SetControllerAction;
+}
+
+public class ControllerNames
+{
+    public const string Adam = "Adam";
+    public const string AppContent = "AppData";
+    public const string AppQuery = "AppQuery";
+}

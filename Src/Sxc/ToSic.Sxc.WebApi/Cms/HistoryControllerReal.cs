@@ -1,36 +1,35 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Formats;
-using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.WebApi.Cms
+namespace ToSic.Sxc.WebApi.Cms;
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class HistoryControllerReal : ServiceBase, IHistoryController
 {
-    public class HistoryControllerReal : ServiceBase, IHistoryController
+    public const string LogSuffix = "Hist";
+
+    // #UnusedFeatureHistoryOfGroup 2022-07-05 2dm removed - probably clean up ca. Q4 2022
+    public HistoryControllerReal(GenWorkDb<WorkEntityVersioning> versioner) : base("Api.CmsHistoryRl")
     {
-        public const string LogSuffix = "Hist";
+        ConnectServices(
+            _versioner = versioner
+        );
+    }
 
-        // #UnusedFeatureHistoryOfGroup 2022-07-05 2dm removed - probably clean up ca. Q4 2022
-        public HistoryControllerReal(LazySvc<AppManager> appManagerLazy) : base("Api.CmsHistoryRl")
-        {
-            ConnectServices(
-                _appManagerLazy = appManagerLazy
-            );
-        }
-
-        private readonly LazySvc<AppManager> _appManagerLazy;
+    private readonly GenWorkDb<WorkEntityVersioning> _versioner;
 
 
-        public List<ItemHistory> Get(int appId, ItemIdentifier item)
-            => _appManagerLazy.Value.Init(appId).Entities.VersionHistory(item.EntityId);
+    public List<ItemHistory> Get(int appId, ItemIdentifier item)
+        => _versioner.New(appId: appId).VersionHistory(item.EntityId);
 
 
-        public bool Restore(int appId, int changeId, ItemIdentifier item)
-        {
-            _appManagerLazy.Value.Init(appId).Entities.VersionRestore(item.EntityId, changeId);
-            return true;
-        }
+    public bool Restore(int appId, int changeId, ItemIdentifier item)
+    {
+        _versioner.New(appId: appId).VersionRestore(item.EntityId, changeId);
+        return true;
     }
 }

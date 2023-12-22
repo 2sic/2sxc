@@ -1,5 +1,6 @@
 ﻿#if NETFRAMEWORK
 using System;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
@@ -11,6 +12,7 @@ namespace ToSic.Sxc.Web
     /// </summary>
     [PrivateApi("Hide from 2022-03-29 v13.05 as it shouldn't be used any more. Keep for a while for compatibility, but we don't believe anybody is using this interface directly.")]
     [Obsolete("This shouldn't be used any more and will be removed ca. v14. Use the ILinkService instead.")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface ILinkHelper: INeedsDynamicCodeRoot
     {
         /// <summary>
@@ -44,7 +46,7 @@ namespace ToSic.Sxc.Web
         /// * In v13.02 introduced language with "current"
         /// </remarks>
         string To(
-            string noParamOrder = Eav.Parameters.Protector,
+            NoParamOrder noParamOrder = default,
             int? pageId = null,
             string api = null,
             object parameters = null,
@@ -132,7 +134,7 @@ namespace ToSic.Sxc.Web
             string url = default,
             object settings = default,
             object factor = default,
-            string noParamOrder = Eav.Parameters.Protector,
+            NoParamOrder noParamOrder = default,
             IField field = default,
             object width = default,
             object height = default,

@@ -4,7 +4,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages
 {
     public class UrlPartsTestBase
     {
-        protected UrlParts UrlParts(string url) => new UrlParts(url);
+        protected UrlParts UrlParts(string url) => new(url);
 
     }
 }

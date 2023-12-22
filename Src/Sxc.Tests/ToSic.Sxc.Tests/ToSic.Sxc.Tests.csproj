@@ -37,6 +37,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -45,6 +46,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugOqtane|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -52,7 +54,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>default</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugDnn|AnyCPU'">
@@ -61,7 +63,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>default</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
@@ -87,12 +89,14 @@
     <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs">
       <Link>Properties\AssemblyInfoInherited.cs</Link>
     </Compile>
+    <Compile Include="Adam\AdamPathsBaseTests.cs" />
     <Compile Include="Adam\AdamSecurity.cs" />
     <Compile Include="Blocks\Output\BlockResourceExtractorGetHtmlAttributesTests.cs" />
     <Compile Include="CodeTests\LoggingTests\LogAdapterTests.cs" />
     <Compile Include="CodeTests\LoggingTests\LogFnOldTests.cs" />
     <Compile Include="CodeTests\LoggingTests\LogFnTests.cs" />
     <Compile Include="CodeTests\LoggingTests\LogTestBase.cs" />
+    <Compile Include="Code\Help\SourceAnalyzerTests.cs" />
     <Compile Include="ConfigurationTests\VerifyPatronsPerfectionistPackage.cs" />
     <Compile Include="ContentSecurityPolicyTests\CspParametersTests.cs" />
     <Compile Include="ContentSecurityPolicyTests\CspParameterFinalizerTests.cs" />
@@ -167,6 +171,8 @@
     <Compile Include="ServicesTests\PageServiceSharedTest.cs" />
     <Compile Include="ServicesTests\SecureData\SecureDataTest.cs" />
     <Compile Include="Images\ImageflowRewriteTests.cs" />
+    <Compile Include="ServiceTweaks\TweakListTests.cs" />
+    <Compile Include="ServiceTweaks\CmsHtmlTweakTests.cs" />
     <Compile Include="TestBaseSxcDb.cs" />
     <Compile Include="TestBaseSxc.cs" />
     <Compile Include="ServicesTests\ConvertService\ConvertServiceTest.cs" />

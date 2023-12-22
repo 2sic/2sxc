@@ -1,15 +1,15 @@
 ﻿using System;
 using ToSic.Eav.Identity;
 
-namespace ToSic.Sxc.Adam
+namespace ToSic.Sxc.Adam;
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class Security
 {
-    public class Security
+    internal static bool PathIsInItemAdam(Guid guid, string field, string path)
     {
-        internal static bool PathIsInItemAdam(Guid guid, string field, string path)
-        {
-            var shortGuid = Mapper.GuidCompress(guid);
-            // will do check, case-sensitive because the compressed guid is case-sensitive
-            return path.Replace('\\', '/').Contains(shortGuid + "/" + field);
-        }
+        var shortGuid = Mapper.GuidCompress(guid);
+        // will do check, case-sensitive because the compressed guid is case-sensitive
+        return path.Replace('\\', '/').Contains(shortGuid + "/" + field);
     }
 }

@@ -1,11 +1,14 @@
-﻿using System;
+﻿using System.IO;
+using ToSic.Eav.Helpers;
+using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;
+using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Razor
 {
-    public class RazorService : IRazorService
+    internal class RazorService : IRazorService
     {
 
         private readonly LazySvc<IRazorRenderer> _razorRendererLazy;
@@ -26,16 +29,15 @@ namespace ToSic.Sxc.Razor
             var razorPageVirtualPath = GetVirtualPath(partialName);
             var razorPageModel = model ?? new {};
 
-            var task = _razorRendererLazy.Value.RenderToStringAsync(razorPageVirtualPath, razorPageModel, null);
+            var task = _razorRendererLazy.Value.RenderToStringAsync(razorPageVirtualPath, razorPageModel, null, null);
             task.Wait();
             return task.Result;
         }
 
         private string GetVirtualPath(string partialName)
         {
-            // TODO: STV find if there is better way to provide virtual path to razorPage (cshtml).
-            // This is Oqtane specific.
-            return $"~/2sxc/{CodeRoot.App.Site.Id}/{CodeRoot.App.Folder}/{partialName}";
+           //return $"~/2sxc/{CodeRoot.App.Site.Id}/{CodeRoot.App.Folder}/{partialName}";
+            return Path.Combine(CodeRoot.App.PathSwitch(false, PathTypes.PhysRelative), partialName).ForwardSlash();
         }
 
         #region Connect to DynamicCodeRoot

@@ -1,15 +1,15 @@
 ﻿using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Data
-{
-    /// <summary>
-    /// Special helper object pass around a url when it started as a string
-    /// </summary>
-    [PrivateApi]
-    public class HasLink: IHasLink
-    {
-        internal HasLink(string url) => Url = url;
+namespace ToSic.Sxc.Data;
 
-        public string Url { get; }
-    }
+/// <summary>
+/// Special helper object pass around a url when it started as a string
+/// </summary>
+[PrivateApi]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class HasLink: IHasLink
+{
+    internal HasLink(string url) => Url = url;
+
+    public string Url { get; }
 }

@@ -7,27 +7,26 @@ using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Eav.WebApi.Admin.AppInternalsControllerReal;
 
-namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
+namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
+
+/// <summary>
+/// Proxy Class to the AppInternalsController (Web API Controller)
+/// </summary>
+[Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+[Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
+[Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class AppInternalsController : OqtStatefulControllerBase, IAppInternalsController
 {
-    /// <summary>
-    /// Proxy Class to the AppInternalsController (Web API Controller)
-    /// </summary>
+    public AppInternalsController() : base(RealController.LogSuffix) { }
 
-    [Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
-    [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
-    [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
-    public class AppInternalsController : OqtStatefulControllerBase, IAppInternalsController
-    {
-        public AppInternalsController() : base(RealController.LogSuffix) { }
+    private RealController Real => GetService<RealController>();
 
-        private RealController Real => GetService<RealController>();
-
-        /// <inheritdoc/>
-        [HttpGet]
-        [ValidateAntiForgeryToken]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [Authorize(Roles = RoleNames.Admin)]
-        public AppInternalsDto Get(int appId, int targetType, string keyType, string key)
-            => Real.Get(appId, targetType, keyType, key);
-    }
+    /// <inheritdoc/>
+    [HttpGet]
+    [ValidateAntiForgeryToken]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    [Authorize(Roles = RoleNames.Admin)]
+    public AppInternalsDto Get(int appId, int targetType, string keyType, string key)
+        => Real.Get(appId, targetType, keyType, key);
 }

@@ -1,18 +1,18 @@
 ﻿using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.Web.LightSpeed
+namespace ToSic.Sxc.Web.LightSpeed;
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public interface IOutputCache: IHasLog
 {
-    public interface IOutputCache: IHasLog
-    {
-        bool IsEnabled { get; }
+    bool IsEnabled { get; }
 
-        IOutputCache Init(int moduleId, int pageId, IBlock block);
+    IOutputCache Init(int moduleId, int pageId, IBlock block);
 
-        OutputCacheItem Existing { get; }
+    OutputCacheItem Existing { get; }
 
-        OutputCacheItem Fresh { get; }
+    OutputCacheItem Fresh { get; }
 
-        bool Save(IRenderResult data);
-    }
+    bool Save(IRenderResult data);
 }

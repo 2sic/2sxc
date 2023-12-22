@@ -1,18 +1,20 @@
-﻿using ToSic.Lib.Documentation;
+﻿using System;
+using ToSic.Lib.Coding;
+using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Services.Tweaks;
 
-namespace ToSic.Sxc.Services
+namespace ToSic.Sxc.Services;
+
+[PrivateApi("not published, use Item.Html() instead")]
+public interface ICmsService
 {
-    [PrivateApi("WIP")]
-    public interface ICmsService
-    {
-        IHtmlTag Html(object thing,
-            string noParamOrder = Eav.Parameters.Protector,
-            object container = default,
-            string classes = default,
-            bool debug = default,
-            object imageSettings = default,
-            bool? toolbar = default
-        );
-    }
+    IHtmlTag Html(object thing,
+        NoParamOrder noParamOrder = default,
+        object container = default,
+        string classes = default,
+        bool debug = default,
+        object imageSettings = default,
+        bool? toolbar = default,
+        Func<ITweakInput<string>, ITweakInput<string>> tweak = default);
 }

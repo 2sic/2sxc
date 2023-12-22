@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace ToSic.Sxc.Web.PageFeatures
+namespace ToSic.Sxc.Web.PageFeatures;
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public interface IPageFeaturesManager
 {
-    public interface IPageFeaturesManager
-    {
-        IReadOnlyDictionary<string, IPageFeature> Features { get; }
+    IReadOnlyDictionary<string, IPageFeature> Features { get; }
         
-        List<IPageFeature> GetWithDependents(List<string> keys);
-    }
+    List<IPageFeature> GetWithDependents(List<string> keys);
 }

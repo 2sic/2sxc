@@ -1,10 +1,9 @@
 ﻿using ToSic.Lib.Documentation;
 
 // ReSharper disable once CheckNamespace
-namespace Custom.Oqtane
+namespace Custom.Oqtane;
+
+[PublicApi]
+public abstract class Code12: ToSic.Sxc.Code.DynamicCode12
 {
-    [PublicApi]
-    public abstract class Code12: ToSic.Sxc.Code.DynamicCode12
-    {
-    }
 }

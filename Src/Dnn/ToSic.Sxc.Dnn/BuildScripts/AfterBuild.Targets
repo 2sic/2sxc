@@ -24,6 +24,16 @@
     <!-- Echo Statements -->
     <Message Text="BuildTarget='$(BuildTarget)'" Importance="High"/>
 
+    <!-- XML documentation is generated in Release only -->
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+      <!-- itmes included only in Release configuration -->
+      <DnnBinInclude Include="bin\ToSic.Sxc.xml" />
+      <DnnBinInclude Include="bin\ToSic.Sxc.Dnn.xml" />
+      <!--<DnnBinInclude Include="bin\ToSic.Sxc*.xml" />
+      <DnnBinInclude Include="bin\ToSic.Eav*.xml" />
+      <DnnBinInclude Include="bin\ToSic.Lib*.xml" />-->
+    </ItemGroup>
+    
     <ItemGroup>
       <!-- Global / Shared 2sxc and EAV DLLs-->
       <DnnBinInclude Include="bin\ToSic.Sxc.dll" />
@@ -41,6 +51,7 @@
 
       <!-- 2sxc 13+ netstandard2.0/framework 4.7.2 assemblies -->
       <DependeciesInclude Include="bin\Microsoft.Bcl.AsyncInterfaces.dll" />
+      <DependeciesInclude Include="bin\Microsoft.Bcl.HashCode.dll" />
       <DependeciesInclude Include="bin\Microsoft.EntityFrameworkCore.Abstractions.dll" />
       <DependeciesInclude Include="bin\Microsoft.EntityFrameworkCore.dll" />
       <DependeciesInclude Include="bin\Microsoft.EntityFrameworkCore.Relational.dll" />
@@ -86,15 +97,20 @@
       <DependeciesInclude Include="$(MSBuildProjectDirectory)\razorblade-old\bin\*.dll" />
 
     </ItemGroup>
-
+    
     <Copy SourceFiles="@(DnnBinInclude)" DestinationFolder="$(CurrentDnnRoot)/bin" />
     <Copy SourceFiles="@(DependeciesInclude)" DestinationFolder="$(CurrentDnnRoot)/bin" />
 
     <!-- Copy Imageflow and dependecies -->
+    <!--<Exec Command="robocopy /S &quot;$(ProjectDir)Extensions/Imageflow/bin/&quot; &quot;$(CurrentDnnRoot)bin/&quot; /XF *.dll.pending" IgnoreExitCode="true"/>-->
     <Exec Command="robocopy /S &quot;$(ProjectDir)Extensions/Imageflow/bin/&quot; &quot;$(CurrentDnnRoot)bin/&quot;" IgnoreExitCode="true"/>
+    
     <!-- Imageflow.dll Handling -->
-    <Exec Command="if exist &quot;$(TargetDir)runtimes/win-x64/native/imageflow.dll&quot; ( del &quot;$(TargetDir)runtimes/win-x64/native/imageflow.dll&quot; &amp; rename &quot;$(TargetDir)runtimes/win-x64/native/imageflow.dll.pending&quot; imageflow.dll )" />
-    <Exec Command="if exist &quot;$(TargetDir)runtimes/win-x86/native/imageflow.dll&quot; ( del &quot;$(TargetDir)runtimes/win-x86/native/imageflow.dll&quot; &amp; rename &quot;$(TargetDir)runtimes/win-x86/native/imageflow.dll.pending&quot; imageflow.dll )" />
+    <!-- this is optimization for development, to prevent second DNN restart that happens by 'imageflow' module when file 'imageflow.dll.pending' exists in 'bin/runtimes/win-???/native/' -->
+    <!-- when exists 'imageflow.dll.pending' it will rename it to 'imageflow.dll' ( but first need to remove old 'imageflow.dll' if one exists ) -->
+    <!-- note: DEL and RENAME cmds should have consistend backslash based path, we should not mix \ / becuase that is not working as expected -->
+    <Exec Command="if exist &quot;$(CurrentDnnRoot)bin/runtimes/win-x64/native/imageflow.dll.pending&quot; ( ( if exist &quot;$(CurrentDnnRoot)bin/runtimes/win-x64/native/imageflow.dll&quot; del &quot;$(CurrentDnnRoot)bin\runtimes\win-x64\native\imageflow.dll&quot; ) &amp; rename &quot;$(CurrentDnnRoot)bin\runtimes\win-x64\native\imageflow.dll.pending&quot; imageflow.dll )" IgnoreExitCode="true"/>
+    <Exec Command="if exist &quot;$(CurrentDnnRoot)bin/runtimes/win-x86/native/imageflow.dll.pending&quot; ( ( if exist &quot;$(CurrentDnnRoot)bin/runtimes/win-x86/native/imageflow.dll&quot; del &quot;$(CurrentDnnRoot)bin\runtimes\win-x86\native\imageflow.dll&quot; ) &amp; rename &quot;$(CurrentDnnRoot)bin\runtimes\win-x86\native\imageflow.dll.pending&quot; imageflow.dll )" IgnoreExitCode="true"/>
 
     <!--Copy the data folders-->
     <Exec Command="robocopy /MIR &quot;$(ProjectDir)../../Data/App_Data/&quot; &quot;$(BuildTarget)/App_Data/&quot; /XO /XF &quot;$(BuildTarget)/App_Data/system-custom/configurations/features.json&quot; /XF &quot;$(BuildTarget)/App_Data/system-custom/configurations/default.license.json&quot;" IgnoreExitCode="true"/>

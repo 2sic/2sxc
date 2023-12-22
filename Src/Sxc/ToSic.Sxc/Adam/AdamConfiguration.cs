@@ -2,49 +2,50 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Specs;
 using ToSic.Eav.Data;
 using static ToSic.Eav.Apps.Adam.AdamConstants;
 
-namespace ToSic.Sxc.Adam
+namespace ToSic.Sxc.Adam;
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class AdamConfiguration
 {
-    public class AdamConfiguration
+    public AdamConfiguration(IAppStates appStates)
     {
-        public AdamConfiguration(IAppStates appStates)
-        {
-            _appStates = appStates;
-        }
-        private readonly IAppStates _appStates;
+        _appStates = appStates;
+    }
+    private readonly IAppStates _appStates;
         
 
-        public string AdamAppRootFolder
+    public string AdamAppRootFolder
+    {
+        get
         {
-            get
-            {
-                if (_adamAppRootFolder != null) return _adamAppRootFolder;
+            if (_adamAppRootFolder != null) return _adamAppRootFolder;
 
-                var found = _appStates.GetPresetApp().List.FirstOrDefaultOfType(TypeName)?.Value<string>(ConfigFieldRootFolder);
+            var found = _appStates.GetPresetReader().List.FirstOrDefaultOfType(TypeName)?.Value<string>(ConfigFieldRootFolder);
 
-                return _adamAppRootFolder = found ?? AdamFolderMask;
-            }
+            return _adamAppRootFolder = found ?? AdamFolderMask;
         }
-
-        private static string _adamAppRootFolder;
-
-        internal string PathForApp(AppState app)
-        {
-            var valuesDic = new Dictionary<string, string>
-            {
-                { AppConstants.AppFolderPlaceholder, app.Folder },
-                { "[ZoneId]", app.ZoneId.ToString() },
-                { "[AppId]", app.AppId.ToString() },
-                { "[AppGuid]", app.NameId }
-            };
-            var finalPath = FillMask(valuesDic, AdamAppRootFolder);
-            return finalPath;
-        }
-
-        private static string FillMask(Dictionary<string, string> valuesDictionary, string mask)
-            => valuesDictionary.Aggregate(mask, (current, dicItem)
-                => Regex.Replace(current, Regex.Escape(dicItem.Key), dicItem.Value, RegexOptions.CultureInvariant));
     }
+
+    private static string _adamAppRootFolder;
+
+    internal string PathForApp(IAppSpecs app)
+    {
+        var valuesDic = new Dictionary<string, string>
+        {
+            { AppConstants.AppFolderPlaceholder, app.Folder },
+            { "[ZoneId]", app.ZoneId.ToString() },
+            { "[AppId]", app.AppId.ToString() },
+            { "[AppGuid]", app.NameId }
+        };
+        var finalPath = FillMask(valuesDic, AdamAppRootFolder);
+        return finalPath;
+    }
+
+    private static string FillMask(Dictionary<string, string> valuesDictionary, string mask)
+        => valuesDictionary.Aggregate(mask, (current, dicItem)
+            => Regex.Replace(current, Regex.Escape(dicItem.Key), dicItem.Value, RegexOptions.CultureInvariant));
 }

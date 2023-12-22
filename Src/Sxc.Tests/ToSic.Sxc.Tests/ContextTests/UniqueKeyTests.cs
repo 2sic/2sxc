@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Tests.ContextTests
     [TestClass]
     public class UniqueKeyTests
     {
-        private UniqueKeysServices GetNew() => new UniqueKeysServices();
+        private UniqueKeysServices GetNew() => new();
 
         [TestMethod]
         public void UniqueKeyLength() => AreEqual(UniqueKeysServices.UniqueKeyLength, GetNew().UniqueKey.Length);

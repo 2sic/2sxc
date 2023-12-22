@@ -1,38 +1,37 @@
-﻿using ToSic.Eav.Configuration;
+﻿using ToSic.Eav.Internal.Catalogs;
 using ToSic.Lib.Logging;
 using static ToSic.Sxc.Web.PageFeatures.BuiltInFeatures;
 
-namespace ToSic.Sxc.Web.PageFeatures
+namespace ToSic.Sxc.Web.PageFeatures;
+
+/// <summary>
+/// Important: This is a singleton!
+/// </summary>
+public class PageFeaturesCatalog: GlobalCatalogBase<IPageFeature>
 {
     /// <summary>
-    /// Important: This is a singleton!
+    /// Constructor - ATM we'll just add our known services here.
+    ///
     /// </summary>
-    public class PageFeaturesCatalog: GlobalCatalogBase<IPageFeature>
+    /// <remarks>
+    /// Important: if you want to add more services in a DI Startup, it must happen at Configure.
+    /// If you do it earlier, the singleton retrieved then will not be the one at runtime.
+    /// </remarks>
+    public PageFeaturesCatalog(ILogStore logStore): base(logStore, Constants.SxcLogName + ".PftCat", new CodeRef())
     {
-        /// <summary>
-        /// Constructor - ATM we'll just add our known services here.
-        ///
-        /// </summary>
-        /// <remarks>
-        /// Important: if you want to add more services in a DI Startup, it must happen at Configure.
-        /// If you do it earlier, the singleton retrieved then will not be the one at runtime.
-        /// </remarks>
-        public PageFeaturesCatalog(ILogStore logStore): base(logStore, Constants.SxcLogName + ".PftCat", new CodeRef())
-        {
-            Register(
-                JQuery,
-                ContextPage,
-                ContextModule,
-                JsCore,
-                JsCms,
-                JsCmsInternal,
-                Toolbars,
-                ToolbarsInternal,
-                ToolbarsAuto,
-                ToolbarsAutoInternal,
-                TurnOn,
-                CmsWysiwyg
-            );
-        }
+        Register(
+            JQuery,
+            ContextPage,
+            ContextModule,
+            JsCore,
+            JsCms,
+            JsCmsInternal,
+            Toolbars,
+            ToolbarsInternal,
+            ToolbarsAuto,
+            ToolbarsAutoInternal,
+            TurnOn,
+            CmsWysiwyg
+        );
     }
 }

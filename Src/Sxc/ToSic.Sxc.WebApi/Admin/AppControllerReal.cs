@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
-using ToSic.Eav.Configuration;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.DataSources.Sys;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
@@ -10,7 +9,7 @@ using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Eav.WebApi.Languages;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.AppStack;
 using ToSic.Sxc.WebApi.ImportExport;
@@ -27,18 +26,19 @@ namespace ToSic.Sxc.WebApi.Admin
     /// Experimental new class
     /// Goal is to reduce code in the Dnn and Oqtane controllers, which basically does the same thing, mostly DI work
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AppControllerReal : ServiceBase
     {
         public const string LogSuffix = "AppCon";
 
         public AppControllerReal(
             LazySvc<AppsBackend> appsBackendLazy,
-            LazySvc<CmsZones> cmsZonesLazy,
+            LazySvc<WorkAppsRemove> workAppsRemove,
             LazySvc<ExportApp> exportAppLazy,
             LazySvc<ImportApp> importAppLazy,
             LazySvc<AppCreator> appBuilderLazy,
             LazySvc<ResetApp> resetAppLazy,
-            LazySvc<SystemManager> systemManagerLazy,
+            LazySvc<AppCachePurger> systemManagerLazy,
             LazySvc<LanguagesBackend> languagesBackendLazy,
             LazySvc<IAppStates> appStatesLazy,
             LazySvc<AppStackBackend> appStackBackendLazy
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.WebApi.Admin
         {
             ConnectServices(
                 _appsBackendLazy = appsBackendLazy,
-                _cmsZonesLazy = cmsZonesLazy,
+                _workAppsRemove = workAppsRemove,
                 _exportAppLazy = exportAppLazy,
                 _importAppLazy = importAppLazy,
                 _appBuilderLazy = appBuilderLazy,
@@ -58,13 +58,14 @@ namespace ToSic.Sxc.WebApi.Admin
             );
         }
 
+        private readonly LazySvc<WorkAppsRemove> _workAppsRemove;
+
         private readonly LazySvc<AppsBackend> _appsBackendLazy;
-        private readonly LazySvc<CmsZones> _cmsZonesLazy;
         private readonly LazySvc<ExportApp> _exportAppLazy;
         private readonly LazySvc<ImportApp> _importAppLazy;
         private readonly LazySvc<AppCreator> _appBuilderLazy;
         private readonly LazySvc<ResetApp> _resetAppLazy;
-        private readonly LazySvc<SystemManager> _systemManagerLazy;
+        private readonly LazySvc<AppCachePurger> _systemManagerLazy;
         private readonly LazySvc<LanguagesBackend> _languagesBackendLazy;
         private readonly LazySvc<IAppStates> _appStatesLazy;
         private readonly LazySvc<AppStackBackend> _appStackBackendLazy;
@@ -75,13 +76,13 @@ namespace ToSic.Sxc.WebApi.Admin
         public List<AppDto> InheritableApps() => _appsBackendLazy.Value.GetInheritableApps();
 
         public void App(int zoneId, int appId, bool fullDelete = true)
-            => _cmsZonesLazy.Value.SetId(zoneId).AppsMan.RemoveAppInSiteAndEav(appId, fullDelete);
+            => _workAppsRemove.Value /*_cmsZonesLazy.Value.SetId(zoneId).AppsMan*/.RemoveAppInSiteAndEav(zoneId, appId, fullDelete);
 
         public void App(int zoneId, string name, int? inheritAppId = null)
             => _appBuilderLazy.Value.Init(zoneId).Create(name, null, inheritAppId);
 
         public List<SiteLanguageDto> Languages(int appId)
-            => _languagesBackendLazy.Value.GetLanguagesOfApp(_appStatesLazy.Value.Get(appId), true);
+            => _languagesBackendLazy.Value.GetLanguagesOfApp(_appStatesLazy.Value.GetReader(appId), true);
 
         public AppExportInfoDto Statistics(int zoneId, int appId) => _exportAppLazy.Value.GetAppInfo(zoneId, appId);
 
@@ -99,7 +100,7 @@ namespace ToSic.Sxc.WebApi.Admin
             => _exportAppLazy.Value.SaveDataForVersionControl(zoneId, appId, includeContentGroups, resetAppGuid, withPortalFiles);
 
         public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
-            => _appStackBackendLazy.Value.GetAll(appId, part ?? ConfigurationConstants.RootNameSettings, key, view, null);
+            => _appStackBackendLazy.Value.GetAll(appId, part ?? AppStackConstants.RootNameSettings, key, view, null);
 
         public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage, bool withPortalFiles) 
             => _resetAppLazy.Value.Reset(zoneId, appId, defaultLanguage, withPortalFiles);

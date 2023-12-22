@@ -19,6 +19,7 @@ namespace ToSic.Sxc.DataSources
     /// It's based on the <see cref="PassThrough"/> data source, because it's just a coordination-wrapper.
     /// </summary>
     [PrivateApi("used to be Internal... till 16.01, then changed to private to hide implementation")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal partial class ContextData : PassThrough, IContextData
     {
         #region Constructor and Init
@@ -46,10 +47,10 @@ namespace ToSic.Sxc.DataSources
         #region New v16
 
         internal IEnumerable<IEntity> MyItem => _myContent.Get(() => _blockSource.GetStream(emptyIfNotFound: true).List);
-        private readonly GetOnce<IEnumerable<IEntity>> _myContent = new GetOnce<IEnumerable<IEntity>>();
+        private readonly GetOnce<IEnumerable<IEntity>> _myContent = new();
 
         internal IEnumerable<IEntity> MyHeader => _header.Get(() => _blockSource.GetStream(ViewParts.StreamHeader, emptyIfNotFound: true).List);
-        private readonly GetOnce<IEnumerable<IEntity>> _header = new GetOnce<IEnumerable<IEntity>>();
+        private readonly GetOnce<IEnumerable<IEntity>> _header = new();
         
         #endregion
 

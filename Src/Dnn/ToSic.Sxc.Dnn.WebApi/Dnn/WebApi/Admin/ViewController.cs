@@ -18,69 +18,69 @@ using ToSic.Sxc.WebApi.Admin;
 using ToSic.Sxc.WebApi.Views;
 using RealController = ToSic.Sxc.WebApi.Admin.ViewControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Admin
+namespace ToSic.Sxc.Dnn.WebApi.Admin;
+
+[DnnLogExceptions]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class ViewController : SxcApiControllerBase, IViewController
 {
-    [DnnLogExceptions]
-    public class ViewController : SxcApiControllerBase, IViewController
+    public ViewController() : base(RealController.LogSuffix) { }
+
+    private RealController Real => SysHlp.GetService<RealController>();
+
+    /// <inheritdoc />
+    [HttpGet]
+    [SupportedModules(DnnSupportedModuleNames)]
+    [ValidateAntiForgeryToken]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    public IEnumerable<ViewDetailsDto> All(int appId) => Real.All(appId);
+
+    /// <inheritdoc />
+    [HttpGet]
+    [SupportedModules(DnnSupportedModuleNames)]
+    [ValidateAntiForgeryToken]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    public PolymorphismDto Polymorphism(int appId) => Real.Polymorphism(appId);
+
+    /// <inheritdoc />
+    [HttpGet, HttpDelete]
+    [SupportedModules(DnnSupportedModuleNames)]
+    [ValidateAntiForgeryToken]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    public bool Delete(int appId, int id) => Real.Delete(appId, id);
+
+    /// <inheritdoc />
+    [HttpGet]
+    [AllowAnonymous] // will do security check internally
+    public HttpResponseMessage Json(int appId, int viewId)
     {
-        public ViewController() : base(RealController.LogSuffix) { }
+        // Make sure the Scoped ResponseMaker has this controller context
+        SysHlp.SetupResponseMaker(this);
 
-        private RealController Real => SysHlp.GetService<RealController>();
-
-        /// <inheritdoc />
-        [HttpGet]
-        [SupportedModules(DnnSupportedModuleNames)]
-        [ValidateAntiForgeryToken]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public IEnumerable<ViewDetailsDto> All(int appId) => Real.All(appId);
-
-        /// <inheritdoc />
-        [HttpGet]
-        [SupportedModules(DnnSupportedModuleNames)]
-        [ValidateAntiForgeryToken]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public PolymorphismDto Polymorphism(int appId) => Real.Polymorphism(appId);
-
-        /// <inheritdoc />
-        [HttpGet, HttpDelete]
-        [SupportedModules(DnnSupportedModuleNames)]
-        [ValidateAntiForgeryToken]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public bool Delete(int appId, int id) => Real.Delete(appId, id);
-
-        /// <inheritdoc />
-        [HttpGet]
-        [AllowAnonymous] // will do security check internally
-        public HttpResponseMessage Json(int appId, int viewId)
-        {
-            // Make sure the Scoped ResponseMaker has this controller context
-            SysHlp.SetupResponseMaker(this);
-
-            return Real.Json(appId, viewId);
-        }
-
-        /// <inheritdoc />
-        [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        [ValidateAntiForgeryToken]
-        public ImportResultDto Import(int zoneId, int appId)
-        {
-            SysHlp.PreventServerTimeout300();
-            return Real.Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId, appId);
-        }
-
-        /// <inheritdoc />
-        [HttpGet]
-        [SupportedModules(DnnSupportedModuleNames)]
-        [ValidateAntiForgeryToken]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public IEnumerable<ViewDto> Usage(int appId, Guid guid) => Real.UsagePreparations((views, blocks) =>
-        {
-            // create array with all 2sxc modules in this portal
-            var allMods = new DnnPages(Log).AllModulesWithContent(PortalSettings.PortalId);
-            Log.A($"Found {allMods.Count} modules");
-
-            return views.Select(vwb => new ViewDto().Init(vwb, blocks, allMods));
-        }).Usage(appId, guid);
+        return Real.Json(appId, viewId);
     }
+
+    /// <inheritdoc />
+    [HttpPost]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [ValidateAntiForgeryToken]
+    public ImportResultDto Import(int zoneId, int appId)
+    {
+        SysHlp.PreventServerTimeout300();
+        return Real.Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId, appId);
+    }
+
+    /// <inheritdoc />
+    [HttpGet]
+    [SupportedModules(DnnSupportedModuleNames)]
+    [ValidateAntiForgeryToken]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    public IEnumerable<ViewDto> Usage(int appId, Guid guid) => Real.UsagePreparations((views, blocks) =>
+    {
+        // create array with all 2sxc modules in this portal
+        var allMods = new DnnPages(Log).AllModulesWithContent(PortalSettings.PortalId);
+        Log.A($"Found {allMods.Count} modules");
+
+        return views.Select(vwb => new ViewDto().Init(vwb, blocks, allMods));
+    }).Usage(appId, guid);
 }

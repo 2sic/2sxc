@@ -1,15 +1,15 @@
 ﻿using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.Polymorphism
+namespace ToSic.Sxc.Polymorphism;
+
+/// <summary>
+/// A polymorphism resolver - which can determine alternate editions for a view / template
+/// </summary>
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public interface IResolver
 {
-    /// <summary>
-    /// A polymorphism resolver - which can determine alternate editions for a view / template
-    /// </summary>
-    public interface IResolver
-    {
-        string Name { get; }
+    string Name { get; }
 
 
-        string Edition(string parameters, ILog log);
-    }
+    string Edition(string parameters, ILog log);
 }

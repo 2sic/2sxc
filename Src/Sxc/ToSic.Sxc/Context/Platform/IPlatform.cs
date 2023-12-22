@@ -1,9 +1,9 @@
 ﻿using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Context
+namespace ToSic.Sxc.Context;
+
+[PrivateApi]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public interface IPlatform: ICmsPlatform
 {
-    [PrivateApi]
-    public interface IPlatform: ICmsPlatform
-    {
-    }
 }

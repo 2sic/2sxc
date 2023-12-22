@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
 
         private class TestData
         {
-            public TestPerson Author { get; } = new TestPerson
+            public TestPerson Author { get; } = new()
             {
                 Id = 101,
                 Title = "some author",
@@ -20,22 +20,22 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             };
 
             public TestPerson[] Readers { get; } = {
-                new TestPerson
+                new()
                 {
                     Id = 201
                 },
-                new TestPerson
+                new()
                 {
                     Id = 202
                 },
-                new TestPerson
+                new()
                 {
                     Id = 301,
                     Type = "Company"
                 },
             };
         }
-        private static readonly TestData Data = new TestData();
+        private static readonly TestData Data = new();
         private ITypedItem Item => Obj2Item(Data);
         private ITypedItem Author() => Item.Child("author");
         private ITypedItem Reader() => Item.Child("readers");

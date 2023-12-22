@@ -1,23 +1,17 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Run.Unknown;
+using ToSic.Eav.Internal.Unknown;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.DataSources
-{
-    public class PagesDataSourceProviderUnknown: PagesDataSourceProvider
-    {
-        public PagesDataSourceProviderUnknown(WarnUseOfUnknown<PagesDataSourceProviderUnknown> _): base($"{Constants.SxcLogName}.{LogConstants.NameUnknown}")
-        { }
+namespace ToSic.Sxc.DataSources;
 
-        public override List<PageDataRaw> GetPagesInternal(
-            string noParamOrder = Eav.Parameters.Protector,
-            bool includeHidden = default,
-            bool includeDeleted = default,
-            bool includeAdmin = default,
-            bool includeSystem = default,
-            bool includeLinks = default,
-            bool requireViewPermissions = true,
-            bool requireEditPermissions = true
-        ) => new List<PageDataRaw>();
-    }
+internal class PagesDataSourceProviderUnknown: PagesDataSourceProvider
+{
+    public PagesDataSourceProviderUnknown(WarnUseOfUnknown<PagesDataSourceProviderUnknown> _): base($"{Constants.SxcLogName}.{LogConstants.NameUnknown}")
+    { }
+
+    public override List<PageDataRaw> GetPagesInternal(NoParamOrder noParamOrder = default,
+        bool includeHidden = default, bool includeDeleted = default, bool includeAdmin = default,
+        bool includeSystem = default, bool includeLinks = default, bool requireViewPermissions = true,
+        bool requireEditPermissions = true) => new();
 }

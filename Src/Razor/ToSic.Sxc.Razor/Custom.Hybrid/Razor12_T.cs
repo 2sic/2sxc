@@ -4,11 +4,11 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using static ToSic.Eav.Parameters;
 using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.Coding;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Engines;
@@ -48,7 +48,7 @@ namespace Custom.Hybrid
         private string _createInstancePath;
 
         /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
-        public dynamic CreateInstance(string virtualPath, string noParamOrder = Protector, string name = null, string relativePath = null, bool throwOnError = true)
+        public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
             => SysHlp.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
 
         #endregion

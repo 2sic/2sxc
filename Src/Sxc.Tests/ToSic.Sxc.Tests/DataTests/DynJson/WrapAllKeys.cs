@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
         /// <summary>
         /// Description of various properties and what they represent (or even if they don't exist)
         /// </summary>
-        public static List<PropInfo> BoolKeys = new List<PropInfo>
+        public static List<PropInfo> BoolKeys = new()
         {
             new PropInfo("TrueBoolType", true, true, true),
             new PropInfo("TrueBoolTYPE", true, true, true),
@@ -49,9 +49,9 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
 
         public static IEnumerable<object[]> BoolKeysInfo => BoolKeys.ToTestEnum();
 
-        private ITyped BoolTestDataStrict => _boolTestDataStrict ?? (_boolTestDataStrict = Obj2Json2TypedStrict(BoolDataAnon));
+        private ITyped BoolTestDataStrict => _boolTestDataStrict ??= Obj2Json2TypedStrict(BoolDataAnon);
         private static ITyped _boolTestDataStrict;
-        private ITyped BoolTestDataLoose => _boolTestDataLoose ?? (_boolTestDataLoose = Obj2Json2TypedLoose(BoolDataAnon));
+        private ITyped BoolTestDataLoose => _boolTestDataLoose ??= Obj2Json2TypedLoose(BoolDataAnon);
         private static ITyped _boolTestDataLoose;
 
         
@@ -124,7 +124,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
         /// <summary>
         /// Description of various properties and what they represent (or even if they don't exist)
         /// </summary>
-        public static List<PropInfo> KeysDataDeepProps = new List<PropInfo>
+        public static List<PropInfo> KeysDataDeepProps = new()
         {
             new PropInfo("Key1", true, true, "hello"),
             new PropInfo("Key2", true, true, "goodbye"),
@@ -139,10 +139,10 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
             new PropInfo("SubEmpty", true, hasData: true),
         };
         
-        private ITyped KeysDataObjJsonTyped => _keysDataObjJsonTyped ?? (_keysDataObjJsonTyped = Obj2Json2TypedStrict(KeysDataDeepAnon));
+        private ITyped KeysDataObjJsonTyped => _keysDataObjJsonTyped ??= Obj2Json2TypedStrict(KeysDataDeepAnon);
         private static ITyped _keysDataObjJsonTyped;
 
-        private ITyped KeysDataObjTyped => _keysDataObjTyped ?? (_keysDataObjTyped = Obj2Typed(KeysDataDeepAnon));
+        private ITyped KeysDataObjTyped => _keysDataObjTyped ??= Obj2Typed(KeysDataDeepAnon);
         private static ITyped _keysDataObjTyped;
 
         #endregion

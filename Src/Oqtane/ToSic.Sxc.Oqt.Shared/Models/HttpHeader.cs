@@ -1,8 +1,6 @@
-﻿using Microsoft.VisualBasic;
-using System;
+﻿namespace ToSic.Sxc.Oqt.Shared.Models;
 
-namespace ToSic.Sxc.Oqt.Shared.Models;
-
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class HttpHeader
 {
     public HttpHeader(string name, string value)

@@ -1,57 +1,56 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using ToSic.Eav.Helpers;
-using ToSic.Lib.Logging;
-using ToSic.Eav.Run;
+using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 
-namespace ToSic.Sxc.Oqt.Server.Code
+namespace ToSic.Sxc.Oqt.Server.Code;
+
+[PrivateApi]
+internal class CodeCompilerNetCore : CodeCompiler
 {
-    [PrivateApi]
-    public class CodeCompilerNetCore: CodeCompiler
+    private readonly LazySvc<IServerPaths> _serverPaths;
+    private readonly LazySvc<ThisAppCodeLoader> _thisAppCodeLoader;
+
+    public CodeCompilerNetCore(IServiceProvider serviceProvider, LazySvc<IServerPaths> serverPaths, LazySvc<ThisAppCodeLoader> thisAppCodeLoader) : base(serviceProvider)
     {
-        private readonly LazySvc<IServerPaths> _serverPaths;
+        ConnectServices(
+            _serverPaths = serverPaths,
+            _thisAppCodeLoader = thisAppCodeLoader
+        );
+    }
 
-        public CodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, IServiceProvider serviceProvider) : base(serviceProvider)
+    protected override (Type Type, string ErrorMessage) GetCsHtmlType(string virtualPath)
+        => throw new("Runtime Compile of .cshtml is Not Implemented in .net standard / core");
+
+    protected internal override AssemblyResult GetAssembly(string virtualPath, string className, int appId = 0)
+    {
+        var l = Log.Fn<AssemblyResult>(
+            $"{nameof(virtualPath)}: '{virtualPath}'; {nameof(className)}: '{className}'; {nameof(appId)}: {appId}", timer: true);
+        var fullContentPath = _serverPaths.Value.FullContentPath(virtualPath.Backslash());
+        var fullPath = NormalizeFullFilePath(fullContentPath);
+        l.A($"New paths: '{fullContentPath}', '{fullPath}'");
+        try
         {
-            ConnectServices(
-                _serverPaths = serverPaths
-            );
+            return l.ReturnAsOk(new Compiler(_thisAppCodeLoader).Compile(fullPath, className, appId));
         }
-
-        protected override (Type Type, string ErrorMessage) GetCsHtmlType(string virtualPath) 
-            => throw new("Runtime Compile of .cshtml is Not Implemented in .net standard / core");
-        protected override (Assembly Assembly, string ErrorMessages) GetAssembly(string virtualPath, string className)
+        catch (Exception ex)
         {
-            var l = Log.Fn<(Assembly Assembly, string ErrorMessages)>(
-                $"{nameof(virtualPath)}: '{virtualPath}'; {nameof(className)}: '{className}'");
-            var fullContentPath = _serverPaths.Value.FullContentPath(virtualPath.Backslash());
-            var fullPath = NormalizeFullFilePath(fullContentPath);
-            l.A($"New paths: '{fullContentPath}', '{fullPath}'");
-            try
-            {
-                var assembly = new Compiler().Compile(fullPath, className);
-                return l.Return((assembly, null), "ok");
-            }
-            catch (Exception ex)
-            {
-                l.Ex(ex);
-                var errorMessage =
-                    $"Error: Can't compile '{className}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. " +
-                    ex.Message;
-                return l.Return((null, errorMessage), "error");
-            }
-        }
-
-        /**
-         * Normalize full file path, so it is without redirections like "../" in "dir1/dir2/../file.cs"
-         */
-        public static string NormalizeFullFilePath(string fullPath)
-        {
-            return new FileInfo(fullPath).FullName;
+            l.Ex(ex);
+            var errorMessage =
+                $"Error: Can't compile '{className}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. " +
+                ex.Message;
+            return l.ReturnAsError(new AssemblyResult(errorMessages: errorMessage), "error");
         }
     }
+
+    /// <summary>
+    /// Normalize full file path, so it is without redirections like "../" in "dir1/dir2/../file.cs"
+    /// </summary>
+    /// <param name="fullPath"></param>
+    /// <returns></returns>
+    private static string NormalizeFullFilePath(string fullPath) => new FileInfo(fullPath).FullName;
 }

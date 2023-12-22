@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
@@ -12,103 +12,103 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.SaveHelpers;
-using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Save;
 
-namespace ToSic.Sxc.WebApi.Cms
+namespace ToSic.Sxc.WebApi.Cms;
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class EditSaveBackend : ServiceBase
 {
-    public class EditSaveBackend : ServiceBase
+    private readonly GenWorkPlus<WorkEntities> _workEntities;
+    private readonly DataBuilder _dataBuilder;
+    private readonly SaveEntities _saveBackendHelper;
+    private readonly SaveSecurity _saveSecurity;
+    private readonly JsonSerializer _jsonSerializer;
+
+    #region DI Constructor and Init
+
+    public EditSaveBackend(
+        SxcPagePublishing pagePublishing,
+        GenWorkPlus<WorkEntities> workEntities,
+        Sxc.Context.IContextResolver ctxResolver,
+        JsonSerializer jsonSerializer,
+        SaveSecurity saveSecurity,
+        SaveEntities saveBackendHelper,
+        DataBuilder dataBuilder
+    ) : base("Cms.SaveBk")
     {
-        private readonly DataBuilder _dataBuilder;
-        private readonly SaveEntities _saveBackendHelper;
-        private readonly SaveSecurity _saveSecurity;
-        private readonly JsonSerializer _jsonSerializer;
+        ConnectServices(
+            _pagePublishing = pagePublishing,
+            _workEntities = workEntities,
+            _ctxResolver = ctxResolver,
+            _jsonSerializer = jsonSerializer,
+            _saveSecurity = saveSecurity,
+            _saveBackendHelper = saveBackendHelper,
+            _dataBuilder = dataBuilder
+        );
+    }
+    private readonly SxcPagePublishing _pagePublishing;
+    private readonly Sxc.Context.IContextResolver _ctxResolver;
 
-        #region DI Constructor and Init
+    public EditSaveBackend Init(int appId)
+    {
+        _appId = appId;
+        // The context should be from the block if there is one, because it affects saving/publishing
+        // Basically it can result in things being saved draft or titles being updated
+        _context = _ctxResolver.GetBlockOrSetApp(appId);
+        _pagePublishing.Init(_context);
+        return this;
+    }
 
-        public EditSaveBackend(
-            SxcPagePublishing pagePublishing, 
-            LazySvc<AppManager> appManagerLazy,
-            Sxc.Context.IContextResolver ctxResolver,
-            JsonSerializer jsonSerializer,
-            SaveSecurity saveSecurity,
-            SaveEntities saveBackendHelper,
-            DataBuilder dataBuilder
-            ) : base("Cms.SaveBk")
-        {
-            ConnectServices(
-                _pagePublishing = pagePublishing,
-                _appManagerLazy = appManagerLazy,
-                _ctxResolver = ctxResolver,
-                _jsonSerializer = jsonSerializer,
-                _saveSecurity = saveSecurity,
-                _saveBackendHelper = saveBackendHelper,
-                _dataBuilder = dataBuilder
+    private IContextOfApp _context;
+    private int _appId;
+    #endregion
+
+    public Dictionary<Guid, int> Save(EditDto package, bool partOfPage)
+    {
+        Log.A($"save started with a#{_appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
+
+        var validator = new SaveDataValidator(package, Log);
+        // perform some basic validation checks
+        var containsOnlyExpectedNodesException = validator.ContainsOnlyExpectedNodes();
+        if (containsOnlyExpectedNodesException != null)
+            throw containsOnlyExpectedNodesException;
+
+        // todo: unsure about this - thought I should check contentblockappid in group-header, because this is where it should be saved!
+        //var contextAppId = appId;
+        //var targetAppId = package.Items.First().Header.Group.ContentBlockAppId;
+        //if (targetAppId != 0)
+        //{
+        //    Log.A($"detected content-block app to use: {targetAppId}; in context of app {contextAppId}");
+        //    appId = targetAppId;
+        //}
+
+        // new API WIP
+        var appEntities = _workEntities.New(_appId);
+        var appCtx = appEntities.AppWorkCtx;
+
+        var ser = _jsonSerializer.SetApp(appCtx.AppState);
+        // Since we're importing directly into this app, we would prefer local content-types
+        ser.PreferLocalAppTypes = true;
+        validator.PrepareForEntityChecks(appEntities);
+
+        #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
+        // basic permission checks
+        var permCheck = _saveSecurity.Init(_context).DoPreSaveSecurityCheck(package.Items);
+
+        var foundItems = package.Items.Where(i => i.Entity.Id != 0 || i.Entity.Guid != Guid.Empty)
+            .Select(i => i.Entity.Guid != Guid.Empty
+                    ? appEntities.Get(i.Entity.Guid) // prefer guid access if available
+                    : appEntities.Get(i.Entity.Id) // otherwise id
             );
-        }
-        private readonly SxcPagePublishing _pagePublishing;
-        private readonly LazySvc<AppManager> _appManagerLazy;
-        private readonly Sxc.Context.IContextResolver _ctxResolver;
-
-        public EditSaveBackend Init(int appId)
-        {
-            _appId = appId;
-            // The context should be from the block if there is one, because it affects saving/publishing
-            // Basically it can result in things being saved draft or titles being updated
-            _context = _ctxResolver.GetBlockOrSetApp(appId);
-            _pagePublishing.Init(_context);
-            return this;
-        }
-
-        private IContextOfApp _context;
-        private int _appId;
+        if (foundItems.Any(i => i != null) && !permCheck.EnsureAll(GrantSets.UpdateSomething, out var error))
+            throw HttpException.PermissionDenied(error);
         #endregion
 
-        public Dictionary<Guid, int> Save(EditDto package, bool partOfPage)
-        {
-            Log.A($"save started with a#{_appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
 
-            var validator = new SaveDataValidator(package, Log);
-            // perform some basic validation checks
-            var containsOnlyExpectedNodesException = validator.ContainsOnlyExpectedNodes();
-            if (containsOnlyExpectedNodesException != null)
-                throw containsOnlyExpectedNodesException;
-
-            // todo: unsure about this - thought I should check contentblockappid in group-header, because this is where it should be saved!
-            //var contextAppId = appId;
-            //var targetAppId = package.Items.First().Header.Group.ContentBlockAppId;
-            //if (targetAppId != 0)
-            //{
-            //    Log.A($"detected content-block app to use: {targetAppId}; in context of app {contextAppId}");
-            //    appId = targetAppId;
-            //}
-
-            var appMan = _appManagerLazy.Value.Init(_appId);
-            var appRead = appMan.Read;
-            var ser = _jsonSerializer.SetApp(appRead.AppState);
-            // Since we're importing directly into this app, we would prefer local content-types
-            ser.PreferLocalAppTypes = true;
-            validator.PrepareForEntityChecks(appRead);
-
-            #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
-            // basic permission checks
-            var permCheck = _saveSecurity.Init(_context)
-                .DoPreSaveSecurityCheck(_appId, package.Items);
-
-            var foundItems = package.Items.Where(i => i.Entity.Id != 0 || i.Entity.Guid != Guid.Empty)
-                .Select(i => i.Entity.Guid != Guid.Empty
-                        ? appRead.Entities.Get(i.Entity.Guid) // prefer guid access if available
-                        : appRead.Entities.Get(i.Entity.Id)  // otherwise id
-                );
-            if (foundItems.Any(i => i != null) && !permCheck.EnsureAll(GrantSets.UpdateSomething, out var error))
-                throw HttpException.PermissionDenied(error);
-            #endregion
-
-
-            var items = package.Items.Where(i => !i.Header.IsEmpty).Select(i =>
+        var items = package.Items.Where(i => !i.Header.IsEmpty).Select(i =>
             {
                 var ent = ser.Deserialize(i.Entity, false, false);
 
@@ -148,27 +148,24 @@ namespace ToSic.Sxc.WebApi.Cms
             })
             .ToList();
 
-            Log.A("items to save generated, all data tests passed");
+        Log.A("items to save generated, all data tests passed");
 
-            return _pagePublishing.SaveInPagePublishing(_ctxResolver.BlockOrNull(), _appId, items, partOfPage,
-                    forceSaveAsDraft => DoSave(appMan, items, forceSaveAsDraft),
-                    permCheck);
-        }
+        return _pagePublishing.SaveInPagePublishing(_ctxResolver.BlockOrNull(), _appId, items, partOfPage,
+            forceSaveAsDraft => DoSave(appEntities, items, forceSaveAsDraft),
+            permCheck);
+    }
 
 
-        private Dictionary<Guid, int> DoSave(AppManager appMan, List<BundleWithHeader<IEntity>> items, bool forceSaveAsDraft)
-        {
-            // only save entities that are
-            // a) not in a group
-            // b) in a group where the slot isn't marked as empty
-            var entitiesToSave = items
-                .Where(e => !e.Header.IsContentBlockMode || !e.Header.IsEmpty)
-                .ToList();
+    private Dictionary<Guid, int> DoSave(WorkEntities workEntities, List<BundleWithHeader<IEntity>> items, bool forceSaveAsDraft)
+    {
+        // only save entities that are
+        // a) not in a group
+        // b) in a group where the slot isn't marked as empty
+        var entitiesToSave = items
+            .Where(e => !e.Header.IsContentBlockMode || !e.Header.IsEmpty)
+            .ToList();
 
-            var save = _saveBackendHelper;// new Eav.WebApi.SaveHelpers.SaveEntities(Log);
-            save.UpdateGuidAndPublishedAndSaveMany(appMan, entitiesToSave, forceSaveAsDraft);
-            var appState = appMan.Read.AppState;
-            return save.GenerateIdList(appMan.Read.Entities, items, appState);
-        }
+        _saveBackendHelper.UpdateGuidAndPublishedAndSaveMany(workEntities.AppWorkCtx, entitiesToSave, forceSaveAsDraft);
+        return _saveBackendHelper.GenerateIdList(workEntities, items);
     }
 }

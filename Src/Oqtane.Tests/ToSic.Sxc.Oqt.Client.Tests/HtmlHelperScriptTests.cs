@@ -58,11 +58,15 @@ namespace ToSic.Sxc.Oqt.Client.Tests
         {
             // Arrange
             var html = "<!-- just a comment -->";
-            string src = null;
             var alias = new Alias { BaseUrl = "https://example.com/" };
 
             // Act
+#pragma warning disable CS8600
+            string src = null;
+#pragma warning disable CS8604
             var result = AddScript(html, src, alias);
+#pragma warning restore CS8604
+#pragma warning restore CS8600
 
             // Assert
             Assert.AreEqual(html, result);

@@ -1,34 +1,39 @@
-﻿using ToSic.Eav.Configuration;
+﻿using ToSic.Eav.Internal.Features;
+using ToSic.Razor.Internals.Documentation;
 
-namespace ToSic.Sxc.Configuration.Features
+namespace ToSic.Sxc.Configuration.Features;
+
+/// <summary>
+/// Internal - built-in features.
+/// </summary>
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[PrivateApi]
+public partial class BuiltInFeatures
 {
-    public partial class BuiltInFeatures
-    {
-        public static void Register(FeaturesCatalog cat) =>
-            cat.Register(
-                RazorThrowPartial,
-                RenderThrowPartialSystemAdmin,
-                ContentSecurityPolicy,
-                ContentSecurityPolicyTestUrl,
-                ContentSecurityPolicyEnforceTemp,
+    public static void Register(FeaturesCatalog cat) =>
+        cat.Register(
+            RazorThrowPartial,
+            RenderThrowPartialSystemAdmin,
+            ContentSecurityPolicy,
+            ContentSecurityPolicyTestUrl,
+            ContentSecurityPolicyEnforceTemp,
 
-                // New 15.04
-                CdnSourcePublic,
-                CdnSourceEdit,
-                // Not yet available
-                //CdnSourceAdmin,
-                //CdnSourceDev,
+            // New 15.04
+            CdnSourcePublic,
+            CdnSourceEdit,
+            // Not yet available
+            //CdnSourceAdmin,
+            //CdnSourceDev,
 
-                // Patrons Perfectionist
-                ImageServiceMultiFormat, // v13
-                ImageServiceMultipleSizes,
-                ImageServiceSetSizes,
-                ImageServiceUseFactors,
+            // Patrons Perfectionist
+            ImageServiceMultiFormat, // v13
+            ImageServiceMultipleSizes,
+            ImageServiceSetSizes,
+            ImageServiceUseFactors,
 
-                LightSpeedOutputCache,
-                LightSpeedOutputCacheAppFileChanges
-            );
+            LightSpeedOutputCache,
+            LightSpeedOutputCacheAppFileChanges
+        );
 
 
-    }
 }

@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynWrappers
             public string File => "file:72";
 
         }
-        private static readonly TestData Data = new TestData();
+        private static readonly TestData Data = new();
 
         private ITypedItem Item => Obj2Item(Data);
         private IField Field => Item.Field("ForField");

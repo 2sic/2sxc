@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Run.Unknown;
+using ToSic.Eav.Internal.Unknown;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context.Raw;
 
-namespace ToSic.Sxc.DataSources
+namespace ToSic.Sxc.DataSources;
+
+internal class UsersDataSourceProviderUnknown : UsersDataSourceProvider
 {
-    public class UsersDataSourceProviderUnknown : UsersDataSourceProvider
+    public UsersDataSourceProviderUnknown(WarnUseOfUnknown<UsersDataSourceProviderUnknown> _): base($"{Constants.SxcLogName}.{LogConstants.NameUnknown}")
     {
-        public UsersDataSourceProviderUnknown(WarnUseOfUnknown<UsersDataSourceProviderUnknown> _): base($"{Constants.SxcLogName}.{LogConstants.NameUnknown}")
-        {
-        }
-        
-        public override IEnumerable<CmsUserRaw> GetUsersInternal() => new List<CmsUserRaw>();
     }
+        
+    public override IEnumerable<CmsUserRaw> GetUsersInternal() => new List<CmsUserRaw>();
 }

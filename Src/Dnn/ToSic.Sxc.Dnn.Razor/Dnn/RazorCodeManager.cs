@@ -1,100 +1,102 @@
 ﻿using System;
 using System.IO;
 using System.Web;
+using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Web;
+#pragma warning disable CS0618
 
-namespace ToSic.Sxc.Dnn
+namespace ToSic.Sxc.Dnn;
+
+internal class RazorCodeManager: HelperBase
 {
-    public class RazorCodeManager: HelperBase
+    public RazorComponentBase Parent;
+    public RazorCodeManager(RazorComponentBase parent, ILog parentLog): base(parentLog, "Rzr.Code")
     {
-        public RazorComponentBase Parent;
-        public RazorCodeManager(RazorComponentBase parent, ILog parentLog): base(parentLog, "Rzr.Code")
+        Parent = parent;
+    }
+
+    /// <summary>
+    /// The compiled code - or null
+    /// </summary>
+    private object _code;
+
+    /// <summary>
+    /// Determines if code has been compiled (or at least attempted)
+    /// </summary>
+    protected bool BuildComplete;
+
+    /// <summary>
+    /// Copy of any exception thrown when compiling the code
+    /// </summary>
+    protected Exception BuildException;
+
+    /// <summary>
+    ///  This tries to get the code and will show an exception if not ready. 
+    /// </summary>
+    public dynamic CodeOrException
+    {
+        get
         {
-            Parent = parent;
+            TryToBuildCode();
+            if (BuildException == null) return _code;
+            throw ImproveExceptionMessage(BuildException);
+        }
+    }
+
+    /// <summary>
+    /// Internal accessor for the code, which does not throw exceptions but returns a null if not available
+    /// </summary>
+    internal dynamic CodeOrNull
+    {
+        get
+        {
+            TryToBuildCode();
+            return _code;
+        }
+    }
+
+    /// <summary>
+    /// Try to build the code. If something fails, remember the exception in case we need it later.
+    /// </summary>
+    private void TryToBuildCode() => Log.Do(() =>
+    {
+        if (BuildComplete) return;
+        var codeFile = Parent.VirtualPath.Replace(".cshtml", ".code.cshtml").Backslash().AfterLast("\\");
+        Log.A($"Will try to load code from '{codeFile}");
+        try
+        {
+            var compiled = Parent.SysHlp.CreateInstance(codeFile);
+            if (compiled != null && !(compiled is RazorComponentCode))
+            {
+                throw new Exception(
+                    $"Tried to compile the .Code file, but the type is '{compiled.GetType().Name}'. " +
+                    $"Expected that it inherits from '{nameof(RazorComponentCode)}'. " +
+                    "Please add '@inherits ToSic.Sxc.Dnn.RazorComponentCode' to the beginning of the 'xxx.code.cshtml' file. ");
+            }
+
+            _code = compiled;
+        }
+        catch (Exception e)
+        {
+            BuildException = e;
         }
 
-        /// <summary>
-        /// The compiled code - or null
-        /// </summary>
-        private object _code;
+        BuildComplete = true;
+    });
 
-        /// <summary>
-        /// Determines if code has been compiled (or at least attempted)
-        /// </summary>
-        protected bool BuildComplete;
-
-        /// <summary>
-        /// Copy of any exception thrown when compiling the code
-        /// </summary>
-        protected Exception BuildException;
-
-        /// <summary>
-        ///  This tries to get the code and will show an exception if not ready. 
-        /// </summary>
-        public dynamic CodeOrException
+    private static Exception ImproveExceptionMessage(Exception innerException)
+    {
+        switch (innerException)
         {
-            get
-            {
-                TryToBuildCode();
-                if (BuildException == null) return _code;
-                throw ImproveExceptionMessage(BuildException);
-            }
-        }
-
-        /// <summary>
-        /// Internal accessor for the code, which does not throw exceptions but returns a null if not available
-        /// </summary>
-        internal dynamic CodeOrNull
-        {
-            get
-            {
-                TryToBuildCode();
-                return _code;
-            }
-        }
-
-        /// <summary>
-        /// Try to build the code. If something fails, remember the exception in case we need it later.
-        /// </summary>
-        private void TryToBuildCode() => Log.Do(() =>
-        {
-            if (BuildComplete) return;
-            var codeFile = Parent.VirtualPath.Replace(".cshtml", ".code.cshtml");
-            Log.A($"Will try to load code from '{codeFile}");
-            try
-            {
-                var compiled = Parent.SysHlp.CreateInstance(codeFile);
-                if (compiled != null && !(compiled is RazorComponentCode))
-                {
-                    throw new Exception(
-                        $"Tried to compile the .Code file, but the type is '{compiled.GetType().Name}'. " +
-                        $"Expected that it inherits from '{nameof(RazorComponentCode)}'. " +
-                        "Please add '@inherits ToSic.Sxc.Dnn.RazorComponentCode' to the beginning of the 'xxx.code.cshtml' file. ");
-                }
-
-                _code = compiled;
-            }
-            catch (Exception e)
-            {
-                BuildException = e;
-            }
-
-            BuildComplete = true;
-        });
-
-        private static Exception ImproveExceptionMessage(Exception innerException)
-        {
-            switch (innerException)
-            {
-                case FileNotFoundException _:
-                    return new Exception("Tried to compile matching .Code file - but couldn't find it. \n", innerException);
-                case HttpCompileException _:
-                    return new Exception("Error compiling .Code file. \n", innerException);
-                default:
-                    return innerException;
-            }
+            case FileNotFoundException _:
+                return new Exception("Tried to compile matching .Code file - but couldn't find it. \n", innerException);
+            case HttpCompileException _:
+                return new Exception("Error compiling .Code file. \n", innerException);
+            default:
+                return innerException;
         }
     }
 }

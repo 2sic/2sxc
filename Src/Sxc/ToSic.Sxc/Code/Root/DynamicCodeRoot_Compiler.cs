@@ -1,34 +1,44 @@
-﻿using ToSic.Lib.Logging;
+﻿using ToSic.Lib.Coding;
+using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.Code
+namespace ToSic.Sxc.Code;
+
+public partial class DynamicCodeRoot
 {
-    public partial class DynamicCodeRoot
+    #region SharedCode Compiler
+
+    /// <inheritdoc />
+    public dynamic CreateInstance(string virtualPath,
+        NoParamOrder noParamOrder = default,
+        string name = null,
+        string relativePath = null,
+        bool throwOnError = true)
     {
-        #region SharedCode Compiler
+        var l = Log.Fn<object>($"{virtualPath}, {name}, {relativePath}, {throwOnError}");
 
-        /// <inheritdoc />
-        public dynamic CreateInstance(string virtualPath,
-            string noParamOrder = Eav.Parameters.Protector,
-            string name = null,
-            string relativePath = null,
-            bool throwOnError = true)
+        // Compile
+        var compiler = Services.CodeCompilerLazy.Value;
+        var instance = compiler.InstantiateClass(virtualPath, App.AppId, className: name, relativePath: relativePath, throwOnError: throwOnError);
+
+        if (instance == null)
+            return l.ReturnNull("null / not found / error");
+
+        var typeName = instance.GetType().FullName;
+
+        // if it supports all our known context properties, attach them
+        if (instance is INeedsDynamicCodeRoot needsRoot)
         {
-            var wrap = Log.Fn<object>($"{virtualPath}, {name}, {relativePath}, {throwOnError}");
-            Eav.Parameters.Protect(noParamOrder, $"{nameof(name)},{nameof(throwOnError)}");
-
-            // Compile
-            var compiler = Services.CodeCompilerLazy.Value;
-            var instance = compiler.InstantiateClass(virtualPath, name, relativePath, throwOnError);
-
-            // if it supports all our known context properties, attach them
-            if (instance is INeedsDynamicCodeRoot needsRoot) needsRoot.ConnectToRoot(this);
-
-            return wrap.Return(instance, (instance != null).ToString());
+            l.A($"will attach root / Kit to {typeName}");
+            needsRoot.ConnectToRoot(this);
         }
+        else
+            l.A($"no root / Kit for {typeName}");
 
-        /// <inheritdoc />
-        public string CreateInstancePath { get; set; }
-
-        #endregion
+        return l.Return(instance, instance.ToString());
     }
+
+    /// <inheritdoc />
+    public string CreateInstancePath { get; set; }
+
+    #endregion
 }

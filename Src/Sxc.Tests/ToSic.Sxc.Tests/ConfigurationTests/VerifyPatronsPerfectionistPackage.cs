@@ -1,7 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Configuration;
-using ToSic.Eav.Configuration.Licenses;
+using ToSic.Eav.Context;
+using ToSic.Eav.Internal.Features;
+using ToSic.Eav.Internal.Licenses;
 using ToSic.Eav.Run;
 using ToSic.Testing.Shared.Platforms;
 
@@ -41,7 +42,7 @@ namespace ToSic.Sxc.Tests.ConfigurationTests
         [TestMethod]
         public void VerifyImageFormats()
         {
-            var features = GetService<IFeaturesInternal>();
+            var features = GetService<IEavFeaturesService>();
             var result = features.IsEnabled(Configuration.Features.BuiltInFeatures.ImageServiceMultiFormat);
 
             // Our current test enables 6 packages, so the service should report so many active licenses

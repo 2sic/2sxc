@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynStack
                 Sub1 = "hello deep1.sub",
             }
         };
-        public static List<PropInfo> Anon1PropInfo => new List<PropInfo>
+        public static List<PropInfo> Anon1PropInfo => new()
         {
             new PropInfo("Key1", true, true, "hello"),
             new PropInfo("Key2", true, true, "goodbye"),
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynStack
         public static string ValueNotTestable = "value-not-testable";
 
 
-        public static List<PropInfo> StackOrder12PropInfo => new List<PropInfo>
+        public static List<PropInfo> StackOrder12PropInfo => new()
         {
             new PropInfo("Key1", true, true, "hello"),
             new PropInfo("dummy", false),

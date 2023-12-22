@@ -5,50 +5,56 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Security;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Lib.Services;
+using ToSic.Eav.Apps.Work;
 
-namespace ToSic.Sxc.WebApi
+namespace ToSic.Sxc.WebApi;
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public abstract class BlockWebApiBackendBase : ServiceBase
 {
-    public abstract class BlockWebApiBackendBase : ServiceBase
+    protected BlockWebApiBackendBase(
+        Generator<MultiPermissionsApp> multiPermissionsApp,
+        AppWorkContextService appWorkCtxService,
+        Sxc.Context.IContextResolver ctxResolver,
+        string logName
+    ) : base(logName)
     {
-        private readonly Generator<MultiPermissionsApp> _multiPermissionsApp;
-        public Sxc.Context.IContextResolver CtxResolver { get; }
-        protected readonly LazySvc<CmsManager> CmsManagerLazy;
-
-        protected IContextOfApp ContextOfBlock =>
-            _contextOfAppOrBlock ?? (_contextOfAppOrBlock = CtxResolver.BlockContextRequired());
-        private IContextOfApp _contextOfAppOrBlock;
-        #region Block-Context Requiring properties
-
-        public IBlock Block => _block ?? (_block = CtxResolver.BlockRequired());
-        private IBlock _block;
-
-        protected CmsManager CmsManagerOfBlock => _cmsManager ?? (_cmsManager = CmsManagerLazy.Value.Init(Block.Context));
-        private CmsManager _cmsManager;
-
-        #endregion
+        ConnectServices(
+            _multiPermissionsApp = multiPermissionsApp,
+            CtxResolver = ctxResolver,
+            AppWorkCtxService = appWorkCtxService
+        );
+    }
 
 
-        protected BlockWebApiBackendBase(
-            Generator<MultiPermissionsApp> multiPermissionsApp,
-            LazySvc<CmsManager> cmsManagerLazy,
-            Sxc.Context.IContextResolver ctxResolver, string logName
-            ) : base(logName)
-        {
-            ConnectServices(
-                _multiPermissionsApp = multiPermissionsApp,
-                CtxResolver = ctxResolver,
-                CmsManagerLazy = cmsManagerLazy
-            );
-        }
+    public AppWorkContextService AppWorkCtxService { get; }
+    private readonly Generator<MultiPermissionsApp> _multiPermissionsApp;
+    public Sxc.Context.IContextResolver CtxResolver { get; }
 
-        protected void ThrowIfNotAllowedInApp(List<Grants> requiredGrants, IAppIdentity alternateApp = null)
-        {
-            var permCheck = _multiPermissionsApp.New().Init(ContextOfBlock, alternateApp ?? ContextOfBlock.AppState);
-            if (!permCheck.EnsureAll(requiredGrants, out var error))
-                throw HttpException.PermissionDenied(error);
-        }
+    protected IContextOfApp ContextOfBlock =>
+        _contextOfAppOrBlock ??= CtxResolver.BlockContextRequired();
+    private IContextOfApp _contextOfAppOrBlock;
+    #region Block-Context Requiring properties
+
+    public IBlock Block => _block ??= CtxResolver.BlockRequired();
+    private IBlock _block;
+
+    protected IAppWorkCtx AppWorkCtx => _appWorkCtx ??= AppWorkCtxService.Context(Block.Context.AppState);
+    private IAppWorkCtx _appWorkCtx;
+    protected IAppWorkCtxPlus AppWorkCtxPlus => _appWorkCtxPlus ??= AppWorkCtxService.ToCtxPlus(AppWorkCtx);
+    private IAppWorkCtxPlus _appWorkCtxPlus;
+    protected IAppWorkCtxWithDb AppWorkCtxDb => _appWorkCtxDb ??= AppWorkCtxService.CtxWithDb(AppWorkCtx.AppState);
+    private IAppWorkCtxWithDb _appWorkCtxDb;
+
+    #endregion
+
+
+    protected void ThrowIfNotAllowedInApp(List<Grants> requiredGrants, IAppIdentity alternateApp = null)
+    {
+        var permCheck = _multiPermissionsApp.New().Init(ContextOfBlock, alternateApp ?? ContextOfBlock.AppState);
+        if (!permCheck.EnsureAll(requiredGrants, out var error))
+            throw HttpException.PermissionDenied(error);
     }
 }

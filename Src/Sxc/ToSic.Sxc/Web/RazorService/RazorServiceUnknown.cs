@@ -1,14 +1,14 @@
-﻿using ToSic.Eav.Run.Unknown;
+﻿using ToSic.Eav.Internal.Unknown;
 using ToSic.Sxc.Code;
 
-namespace ToSic.Sxc.Web
+namespace ToSic.Sxc.Web;
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class RazorServiceUnknown : IRazorService
 {
-    public class RazorServiceUnknown : IRazorService
-    {
-        public RazorServiceUnknown(WarnUseOfUnknown<RazorServiceUnknown> _) { }
+    public RazorServiceUnknown(WarnUseOfUnknown<RazorServiceUnknown> _) { }
 
-        public string Render(string partialName, object model) => "";
+    public string Render(string partialName, object model) => "";
 
-        public void ConnectToRoot(IDynamicCodeRoot codeRoot) { /* Do nothing */ }
-    }
+    public void ConnectToRoot(IDynamicCodeRoot codeRoot) { /* Do nothing */ }
 }

@@ -24,8 +24,8 @@ namespace ToSic.Sxc.Tests.LinksAndImages
         public const string fragWithQuestion = "#some=how-are-you?";
 
         private const NameValueCollection addOnNull = null;
-        private static NameValueCollection addOnEmpty = new NameValueCollection();
-        private static NameValueCollection addOnOne = new NameValueCollection
+        private static NameValueCollection addOnEmpty = new();
+        private static NameValueCollection addOnOne = new()
         {
             {"added", "worked"}
         };

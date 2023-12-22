@@ -1,6 +1,12 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Razor.Internal;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToSic.Eav.Code.Help;
 using ToSic.Eav.Data;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
@@ -10,7 +16,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Services;
-using static ToSic.Eav.Parameters;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -33,7 +38,7 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="IDynamicCode16.Kit"/>
         public ServiceKit16 Kit => _kit.Get(() => _DynCodeRoot.GetKit<ServiceKit16>());
-        private readonly GetOnce<ServiceKit16> _kit = new GetOnce<ServiceKit16>();
+        private readonly GetOnce<ServiceKit16> _kit = new();
 
         #endregion
 
@@ -77,22 +82,22 @@ namespace Custom.Hybrid
         #region As Conversions
 
         /// <inheritdoc cref="IDynamicCode16.AsItem" />
-        public ITypedItem AsItem(object data, string noParamOrder = Protector, bool? propsRequired = default, bool? mock = default)
-            => _DynCodeRoot.Cdf.AsItem(data, noParamOrder, propsRequired: propsRequired ?? true, mock: mock);
+        public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
+            => _DynCodeRoot.Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
 
         /// <inheritdoc cref="IDynamicCode16.AsItems" />
-        public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Protector, bool? propsRequired = default)
-            => _DynCodeRoot.Cdf.AsItems(list, noParamOrder, propsRequired: propsRequired ?? true);
+        public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
+            => _DynCodeRoot.Cdf.AsItems(list, propsRequired: propsRequired ?? true);
 
         /// <inheritdoc cref="IDynamicCode16.AsEntity" />
         public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot.Cdf.AsEntity(thing);
 
         /// <inheritdoc cref="IDynamicCode16.AsTyped" />
-        public ITyped AsTyped(object original, string noParamOrder = Protector, bool? propsRequired = default)
+        public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
             => _DynCodeRoot.Cdf.AsTyped(original, propsRequired: propsRequired);
 
         /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
-        public IEnumerable<ITyped> AsTypedList(object list, string noParamOrder = Protector, bool? propsRequired = default)
+        public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
             => _DynCodeRoot.Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
 
         /// <inheritdoc cref="IDynamicCode16.AsStack" />
@@ -102,7 +107,7 @@ namespace Custom.Hybrid
 
 
         /// <inheritdoc cref="IDynamicCode16.GetCode"/>
-        public dynamic GetCode(string path, string noParamOrder = Protector, string className = default) => SysHlp.GetCode(path, noParamOrder, className);
+        public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default) => SysHlp.GetCode(path, noParamOrder, className);
 
         #region MyContext & UniqueKey
 
@@ -131,6 +136,32 @@ namespace Custom.Hybrid
         [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => CodeHelpDbV16.Compile16;
 
         #endregion
+
+
+        /// <summary>
+        /// This is a tmp workaround to enable injecting the following properties in cshtml compiled with roslyn in Oqtane
+        /// </summary>
+
+        [RazorInject]
+        public IModelExpressionProvider ModelExpressionProvider { get; set; } = (IModelExpressionProvider)null;
+
+        [RazorInject]
+        public IUrlHelper Url { get; set; } = (IUrlHelper)null;
+
+        [RazorInject]
+        public IViewComponentHelper Component { get; set; } = (IViewComponentHelper)null;
+
+        [RazorInject]
+        public IJsonHelper Json { get; set; } = (IJsonHelper)null;
+
+        [RazorInject]
+        public IHtmlHelper<dynamic> Html { get; set; } = (IHtmlHelper<dynamic>)null;
+
+        //public ViewDataDictionary<dynamic> ViewData => (ViewDataDictionary<dynamic>)PageContext?.ViewData;
+
+        //public dynamic Model => ViewData.Model;
+
+        public PageContext PageContext { get; set; } = default!;
 
     }
 }

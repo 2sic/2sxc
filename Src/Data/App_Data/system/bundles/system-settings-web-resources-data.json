@@ -1,4 +1,7 @@
 {
+  "_": {
+    "V": 1
+  },
   "Bundles": [
     {
       "Name": "default",
@@ -8,7 +11,53 @@
             "Id": "66f19c62-371e-4ad1-a98b-de0745507be4",
             "Name": "⚙️WebResource",
             "Scope": "System.Configuration",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 166467,
+                "Version": 1,
+                "Guid": "cad9fa69-b654-414a-9de2-cc59be5664be",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": ""
+                    },
+                    "Label": {
+                      "en-us": "⚙️Web Resource"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "66f19c62-371e-4ad1-a98b-de0745507be4"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "SettingsIdentifier",
@@ -21,8 +70,8 @@
                     "Version": 4,
                     "Guid": "b460d734-3b44-4f2e-9006-affa1d3a842a",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -83,8 +132,8 @@
                     "Version": 3,
                     "Guid": "c4fe15aa-1c62-4ba3-918f-14e043cea781",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -103,8 +152,8 @@
                     "Version": 3,
                     "Guid": "c7e54e84-093c-4c7c-9f90-719c536534be",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -128,8 +177,8 @@
                     "Version": 8,
                     "Guid": "885919d3-9278-4278-89c0-b83e5ceaa0bd",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -188,8 +237,8 @@
                     "Version": 6,
                     "Guid": "78c62298-7189-45eb-a2cb-de21d26d9ac3",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -208,8 +257,8 @@
                     "Version": 6,
                     "Guid": "7fc87496-192e-4d70-8884-74392a3fcee0",
                     "Type": {
-                      "Name": "@string-dropdown",
-                      "Id": "@string-dropdown"
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
                     },
                     "Attributes": {
                       "String": {
@@ -241,8 +290,8 @@
                     "Version": 7,
                     "Guid": "7f966c33-b4d7-41c8-90a8-ad28395b8d51",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -301,8 +350,8 @@
                     "Version": 6,
                     "Guid": "fc93ad3a-a947-452c-9893-47c5d1c2ed9f",
                     "Type": {
-                      "Name": "@Boolean",
-                      "Id": "@Boolean"
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
                     },
                     "Attributes": {
                       "String": {
@@ -332,8 +381,8 @@
                     "Version": 5,
                     "Guid": "62a70977-5a94-4c11-ae2d-51b233e4b4f4",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -392,8 +441,8 @@
                     "Version": 4,
                     "Guid": "70304913-6bde-4f25-bddb-9310f8a677ee",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -412,8 +461,8 @@
                     "Version": 4,
                     "Guid": "e45576ab-6895-4e56-9594-de392ca1e1bf",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -442,8 +491,8 @@
                     "Version": 2,
                     "Guid": "770341e9-6a2a-4349-a2e4-c5f0387b50da",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -513,8 +562,8 @@
                     "Version": 1,
                     "Guid": "f964befb-f612-4a82-b83a-bc75da716427",
                     "Type": {
-                      "Name": "@empty-default",
-                      "Id": "@empty-default"
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
                     },
                     "Attributes": {
                       "Boolean": {
@@ -538,8 +587,8 @@
                     "Version": 2,
                     "Guid": "6caf29fa-4e9a-45bf-bd8d-5a48006be1ee",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -609,8 +658,8 @@
                     "Version": 1,
                     "Guid": "6d4cbce9-da2c-4ee8-bcab-f9c5dcb814e6",
                     "Type": {
-                      "Name": "@Boolean",
-                      "Id": "@Boolean"
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
                     },
                     "Attributes": {
                       "String": {
@@ -629,53 +678,6 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 166467,
-                "Version": 1,
-                "Guid": "cad9fa69-b654-414a-9de2-cc59be5664be",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "Description": {
-                      "en-us": ""
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": ""
-                    },
-                    "Label": {
-                      "en-us": "⚙️Web Resource"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "66f19c62-371e-4ad1-a98b-de0745507be4"
-                }
-              }
             ]
           },
           "Entities": [
@@ -684,8 +686,8 @@
               "Version": 2,
               "Guid": "915a2d6e-7092-4552-a367-a68e753777e3",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -717,7 +719,53 @@
             "Id": "9ff20ccf-3ff7-4a76-b749-dd22771df730",
             "Name": "⚙️WebResources",
             "Scope": "System.Configuration",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 130636,
+                "Version": 4,
+                "Guid": "d7779b22-0193-43f4-b8fe-50132c133d34",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "Description": {
+                      "*": ""
+                    },
+                    "DynamicChildrenField": {
+                      "*": "Items"
+                    },
+                    "EditInstructions": {
+                      "*": "<p>Web Resources are additional script etc. which are often loaded from a CDN.&nbsp;</p>\n<p>The default configuration will continue to point to the latest CDN versions you need - but you can always override this in your System/Site/App as needed.</p>\n<p>Only Apps which explicitly want to load these resources from the Settings will actually obey this - older and custom apps may have their own list of things they load.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "*": "⚙️WebResources"
+                    },
+                    "ListInstructions": {
+                      "*": ""
+                    },
+                    "Notes": {
+                      "*": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "*": ""
+                    },
+                    "Link": {
+                      "*": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "9ff20ccf-3ff7-4a76-b749-dd22771df730"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "SettingsIdentifier",
@@ -730,8 +778,8 @@
                     "Version": 2,
                     "Guid": "04c3974c-a33b-425e-bdc6-5670403471b3",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -790,8 +838,8 @@
                     "Version": 1,
                     "Guid": "70449387-aef3-4fa2-b6b9-fff1da999497",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -810,8 +858,8 @@
                     "Version": 1,
                     "Guid": "8313a56b-a109-4016-a955-8d455cb9e876",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -835,8 +883,8 @@
                     "Version": 4,
                     "Guid": "3a897222-1950-4d38-a0b1-fe5af3f98888",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -916,8 +964,8 @@
                     "Version": 9,
                     "Guid": "c26bb49e-8607-47bd-add3-12962104a963",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -987,8 +1035,8 @@
                     "Version": 8,
                     "Guid": "4d053dd3-3456-41d9-a797-90b9ab0849d7",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -1007,8 +1055,8 @@
                     "Version": 8,
                     "Guid": "880a956f-d542-4608-8e6a-055858a1e589",
                     "Type": {
-                      "Name": "@string-dropdown",
-                      "Id": "@string-dropdown"
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
                     },
                     "Attributes": {
                       "String": {
@@ -1046,8 +1094,8 @@
                     "Version": 6,
                     "Guid": "7d01e570-7af5-4ed2-bfe1-0ba58a956a1d",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1117,8 +1165,8 @@
                     "Version": 5,
                     "Guid": "0e2a664d-e946-4585-a1e3-6a2a810d00bd",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -1137,8 +1185,8 @@
                     "Version": 5,
                     "Guid": "4eac359d-372e-42d1-94c5-3628c9a79fab",
                     "Type": {
-                      "Name": "@string-dropdown",
-                      "Id": "@string-dropdown"
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
                     },
                     "Attributes": {
                       "String": {
@@ -1176,8 +1224,8 @@
                     "Version": 9,
                     "Guid": "c3fa7759-f4fb-4266-ac54-89857e301ccb",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1236,8 +1284,8 @@
                     "Version": 8,
                     "Guid": "19b7bfe7-2bb6-4022-a851-a481c81cd492",
                     "Type": {
-                      "Name": "@Entity",
-                      "Id": "@Entity"
+                      "Id": "@Entity",
+                      "Name": "@Entity"
                     },
                     "Attributes": {
                       "String": {
@@ -1273,53 +1321,6 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 130636,
-                "Version": 4,
-                "Guid": "d7779b22-0193-43f4-b8fe-50132c133d34",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "Description": {
-                      "*": ""
-                    },
-                    "DynamicChildrenField": {
-                      "*": "Items"
-                    },
-                    "EditInstructions": {
-                      "*": "<p>Web Resources are additional script etc. which are often loaded from a CDN.&nbsp;</p>\n<p>The default configuration will continue to point to the latest CDN versions you need - but you can always override this in your System/Site/App as needed.</p>\n<p>Only Apps which explicitly want to load these resources from the Settings will actually obey this - older and custom apps may have their own list of things they load.&nbsp;</p>"
-                    },
-                    "Label": {
-                      "*": "⚙️WebResources"
-                    },
-                    "ListInstructions": {
-                      "*": ""
-                    },
-                    "Notes": {
-                      "*": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "*": ""
-                    },
-                    "Link": {
-                      "*": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "9ff20ccf-3ff7-4a76-b749-dd22771df730"
-                }
-              }
             ]
           },
           "Entities": [
@@ -1328,8 +1329,8 @@
               "Version": 2,
               "Guid": "69741b0b-6734-49b8-a8b5-46b42908e302",
               "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
               },
               "Attributes": {
                 "String": {
@@ -1360,8 +1361,8 @@
           "Version": 12,
           "Guid": "06f4fa58-2e91-4896-a16e-3bbaf9a5f491",
           "Type": {
-            "Name": "⚙️WebResources",
-            "Id": "9ff20ccf-3ff7-4a76-b749-dd22771df730"
+            "Id": "9ff20ccf-3ff7-4a76-b749-dd22771df730",
+            "Name": "⚙️WebResources"
           },
           "Attributes": {
             "String": {
@@ -1395,8 +1396,8 @@
               "Version": 1,
               "Guid": "3c2edf90-4fe7-42dc-9031-af52dcecc36d",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -1421,8 +1422,8 @@
           "Version": 6,
           "Guid": "e6d3d600-ea17-4957-9c56-9bae78329c67",
           "Type": {
-            "Name": "⚙️WebResource",
-            "Id": "66f19c62-371e-4ad1-a98b-de0745507be4"
+            "Id": "66f19c62-371e-4ad1-a98b-de0745507be4",
+            "Name": "⚙️WebResource"
           },
           "Attributes": {
             "String": {
@@ -1452,8 +1453,8 @@
               "Version": 1,
               "Guid": "136bb934-15a8-418f-9b74-2a76abdd8022",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -1478,8 +1479,8 @@
           "Version": 9,
           "Guid": "38e0226d-4c31-4d2e-ab97-8e16483ddf94",
           "Type": {
-            "Name": "⚙️WebResource",
-            "Id": "66f19c62-371e-4ad1-a98b-de0745507be4"
+            "Id": "66f19c62-371e-4ad1-a98b-de0745507be4",
+            "Name": "⚙️WebResource"
           },
           "Attributes": {
             "String": {
@@ -1509,8 +1510,8 @@
               "Version": 1,
               "Guid": "049f481e-a3aa-4a85-afe7-8c88ccafd38d",
               "Type": {
-                "Name": "NoteDecorator",
-                "Id": "5e958dc6-2922-4d68-835c-7b9711538b12"
+                "Id": "5e958dc6-2922-4d68-835c-7b9711538b12",
+                "Name": "NoteDecorator"
               },
               "Attributes": {
                 "String": {
@@ -1537,8 +1538,8 @@
               "Version": 1,
               "Guid": "b757c81f-6b2a-46a6-be76-30a907586813",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -1563,8 +1564,8 @@
           "Version": 5,
           "Guid": "4b9ef331-480a-4a38-86f1-a580f8345677",
           "Type": {
-            "Name": "⚙️WebResource",
-            "Id": "66f19c62-371e-4ad1-a98b-de0745507be4"
+            "Id": "66f19c62-371e-4ad1-a98b-de0745507be4",
+            "Name": "⚙️WebResource"
           },
           "Attributes": {
             "String": {
@@ -1594,8 +1595,8 @@
               "Version": 1,
               "Guid": "7db3406c-be34-4953-aa9e-7170ba075e5b",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -1620,8 +1621,8 @@
           "Version": 7,
           "Guid": "72286f65-e38b-42ee-a0da-0c73e55f7ba4",
           "Type": {
-            "Name": "⚙️WebResource",
-            "Id": "66f19c62-371e-4ad1-a98b-de0745507be4"
+            "Id": "66f19c62-371e-4ad1-a98b-de0745507be4",
+            "Name": "⚙️WebResource"
           },
           "Attributes": {
             "String": {
@@ -1651,8 +1652,8 @@
               "Version": 1,
               "Guid": "c0c72782-77a4-4419-be31-7c5ac4f7bca0",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -1677,8 +1678,8 @@
           "Version": 11,
           "Guid": "3356ad17-91ce-4814-83c1-9f527697391a",
           "Type": {
-            "Name": "⚙️WebResource",
-            "Id": "66f19c62-371e-4ad1-a98b-de0745507be4"
+            "Id": "66f19c62-371e-4ad1-a98b-de0745507be4",
+            "Name": "⚙️WebResource"
           },
           "Attributes": {
             "String": {
@@ -1708,8 +1709,8 @@
               "Version": 1,
               "Guid": "04c9dd2c-f931-48b0-a1ad-7473e2526f00",
               "Type": {
-                "Name": "NoteDecorator",
-                "Id": "5e958dc6-2922-4d68-835c-7b9711538b12"
+                "Id": "5e958dc6-2922-4d68-835c-7b9711538b12",
+                "Name": "NoteDecorator"
               },
               "Attributes": {
                 "String": {
@@ -1736,8 +1737,8 @@
               "Version": 1,
               "Guid": "b5aca58e-d6af-4489-9853-dcaaab66b3cb",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -1762,8 +1763,8 @@
           "Version": 5,
           "Guid": "3e6811a8-87ab-4954-8402-6e2b3d80c6e2",
           "Type": {
-            "Name": "⚙️WebResource",
-            "Id": "66f19c62-371e-4ad1-a98b-de0745507be4"
+            "Id": "66f19c62-371e-4ad1-a98b-de0745507be4",
+            "Name": "⚙️WebResource"
           },
           "Attributes": {
             "String": {
@@ -1793,8 +1794,8 @@
               "Version": 1,
               "Guid": "be43a43e-56c9-4660-97a4-a3aadafa370e",
               "Type": {
-                "Name": "NoteDecorator",
-                "Id": "5e958dc6-2922-4d68-835c-7b9711538b12"
+                "Id": "5e958dc6-2922-4d68-835c-7b9711538b12",
+                "Name": "NoteDecorator"
               },
               "Attributes": {
                 "String": {
@@ -1821,8 +1822,8 @@
               "Version": 1,
               "Guid": "ecf47466-931f-4e69-9c56-d8e3a0853d38",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -1844,8 +1845,5 @@
         }
       ]
     }
-  ],
-  "_": {
-    "V": 1
-  }
+  ]
 }

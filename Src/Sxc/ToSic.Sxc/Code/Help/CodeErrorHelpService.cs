@@ -17,6 +17,7 @@ using HttpCompileException = System.Exception;
 
 namespace ToSic.Sxc.Code.Help
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class CodeErrorHelpService: ServiceBase
     {
         public CodeErrorHelpService() : base("Sxc.CErrHS")

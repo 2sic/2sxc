@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav;
+using ToSic.Lib.Coding;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Tests.ServicesTests.ImageService
 
         public static IResizeSettings SettingsTA(this TestBaseSxc parent,
             object settings = default,
-            string noParamOrder = Parameters.Protector,
+            NoParamOrder noParamOrder = default,
             object factor = default,
             object width = default,
             object height = default,

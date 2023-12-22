@@ -1,14 +1,13 @@
 ﻿using ToSic.Lib.Documentation;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Dnn.Code
+namespace ToSic.Sxc.Dnn.Code;
+
+/// <summary>
+/// The basic DnnDynamicCode without explicitly typed model / kit
+/// </summary>
+[PrivateApi]
+internal class DnnDynamicCodeRoot : DnnDynamicCodeRoot<object, ServiceKit>
 {
-    /// <summary>
-    /// The basic DnnDynamicCode without explicitly typed model / kit
-    /// </summary>
-    [PrivateApi]
-    public class DnnDynamicCodeRoot : DnnDynamicCodeRoot<object, ServiceKit>
-    {
-        public DnnDynamicCodeRoot(MyServices services): base(services) { }
-    }
+    public DnnDynamicCodeRoot(MyServices services): base(services) { }
 }

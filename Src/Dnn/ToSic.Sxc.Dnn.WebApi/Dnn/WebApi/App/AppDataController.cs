@@ -4,70 +4,70 @@ using ToSic.Eav.WebApi.App;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.WebApi.App.AppDataControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.App
+namespace ToSic.Sxc.Dnn.WebApi.App;
+
+/// <inheritdoc />
+[AllowAnonymous]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class AppDataController : SxcApiControllerBase, IAppDataController
 {
+    public AppDataController(): base(RealController.LogSuffix) { }
+
+    private RealController Real => SysHlp.GetService<RealController>();
+
+    #region Get List / all of a certain content-type
+
     /// <inheritdoc />
-    [AllowAnonymous]
-    public class AppDataController : SxcApiControllerBase, IAppDataController
-    {
-        public AppDataController(): base(RealController.LogSuffix) { }
+    [HttpGet]
+    [AllowAnonymous]   // will check security internally, so assume no requirements
+    public IEnumerable<IDictionary<string, object>> GetEntities(string contentType, string appPath = null) 
+        => Real.GetEntities(contentType, appPath);
 
-        private RealController Real => SysHlp.GetService<RealController>();
+    #endregion
 
-        #region Get List / all of a certain content-type
-
-        /// <inheritdoc />
-        [HttpGet]
-        [AllowAnonymous]   // will check security internally, so assume no requirements
-        public IEnumerable<IDictionary<string, object>> GetEntities(string contentType, string appPath = null) 
-            => Real.GetEntities(contentType, appPath);
-
-        #endregion
-
-        #region GetOne by ID / GUID
+    #region GetOne by ID / GUID
         
-        /// <inheritdoc />
-        [HttpGet]
-	    [AllowAnonymous] // will check security internally, so assume no requirements
-	    public IDictionary<string, object> GetOne(string contentType, string guid, string appPath = null) // this will handle Guid
-            => Real.GetOne(contentType, guid, appPath);
+    /// <inheritdoc />
+    [HttpGet]
+    [AllowAnonymous] // will check security internally, so assume no requirements
+    public IDictionary<string, object> GetOne(string contentType, string guid, string appPath = null) // this will handle Guid
+        => Real.GetOne(contentType, guid, appPath);
 
-        [HttpGet]
-        [AllowAnonymous] // will check security internally, so assume no requirements
-        public IDictionary<string, object> GetOne(string contentType, int id, string appPath = null) // this will handle int id
-            => Real.GetOne(contentType, id.ToString(), appPath);
+    [HttpGet]
+    [AllowAnonymous] // will check security internally, so assume no requirements
+    public IDictionary<string, object> GetOne(string contentType, int id, string appPath = null) // this will handle int id
+        => Real.GetOne(contentType, id.ToString(), appPath);
 
-        #endregion
+    #endregion
 
-        #region Create
+    #region Create
 
-        /// <inheritdoc />
-        [HttpPost]
-        [AllowAnonymous] // will check security internally, so assume no requirements
-        public IDictionary<string, object> CreateOrUpdate(
-            [FromUri] string contentType,
-            [FromBody] Dictionary<string, object> newContentItem, 
-            [FromUri] int? id = null,
-            [FromUri] string appPath = null)
-            => Real.CreateOrUpdate(contentType, newContentItem, id, appPath);
+    /// <inheritdoc />
+    [HttpPost]
+    [AllowAnonymous] // will check security internally, so assume no requirements
+    public IDictionary<string, object> CreateOrUpdate(
+        [FromUri] string contentType,
+        [FromBody] Dictionary<string, object> newContentItem, 
+        [FromUri] int? id = null,
+        [FromUri] string appPath = null)
+        => Real.CreateOrUpdate(contentType, newContentItem, id, appPath);
 
-        #endregion
+    #endregion
 
-        #region Delete
+    #region Delete
 
-        /// <inheritdoc />
-        [HttpDelete]
-        [AllowAnonymous]   // will check security internally, so assume no requirements
-        public void Delete(string contentType, string guid, [FromUri] string appPath = null) // this will handle Guid
-            => Real.Delete(contentType, guid, appPath);
+    /// <inheritdoc />
+    [HttpDelete]
+    [AllowAnonymous]   // will check security internally, so assume no requirements
+    public void Delete(string contentType, string guid, [FromUri] string appPath = null) // this will handle Guid
+        => Real.Delete(contentType, guid, appPath);
 
  
-        [HttpDelete]
-        [AllowAnonymous]   // will check security internally, so assume no requirements
-        public void Delete(string contentType, int id, [FromUri] string appPath = null) // this will handle int id
-            => Real.Delete(contentType, id.ToString(), appPath);
+    [HttpDelete]
+    [AllowAnonymous]   // will check security internally, so assume no requirements
+    public void Delete(string contentType, int id, [FromUri] string appPath = null) // this will handle int id
+        => Real.Delete(contentType, id.ToString(), appPath);
 
-        #endregion
+    #endregion
 
-    }
 }

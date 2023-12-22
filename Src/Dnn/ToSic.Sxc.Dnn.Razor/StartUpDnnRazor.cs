@@ -1,20 +1,19 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.Engines;
-using ToSic.Sxc.Engines.Razor;
+using ToSic.Sxc.Dnn.Compile;
+using ToSic.Sxc.Dnn.Razor;
 
-namespace ToSic.Sxc
+namespace ToSic.Sxc;
+
+public static class StartUpDnnRazor
 {
-    public static class StartUpDnnRazor
+    public static IServiceCollection AddDnnRazor(this IServiceCollection services)
     {
-        public static IServiceCollection AddDnnRazor(this IServiceCollection services)
-        {
-            // Settings / WebApi stuff
-            services.TryAddTransient<DnnRazorSourceAnalyzer>();
-            services.TryAddTransient<HtmlHelper>();
+        services.TryAddTransient<HtmlHelper>();
 
-            return services;
-        }
+        services.TryAddTransient<IRoslynBuildManager, RoslynBuildManager>();
 
+        return services;
     }
+
 }

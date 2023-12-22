@@ -140,8 +140,8 @@ namespace ToSic.Sxc.Tests.ContextTests
 
         #region Add Dates
 
-        private static readonly DateTime TestDate = new DateTime(2042, 4, 2);
-        private static readonly DateTime TestDateTime = new DateTime(2042, 4, 2, 3, 4, 56);
+        private static readonly DateTime TestDate = new(2042, 4, 2);
+        private static readonly DateTime TestDateTime = new(2042, 4, 2, 3, 4, 56);
 
         [TestMethod]
         public void AddNewDate()
@@ -203,10 +203,10 @@ namespace ToSic.Sxc.Tests.ContextTests
 
         private static IEnumerable<object[]> CountTests => new List<ParameterCountTest>
         {
-            new ParameterCountTest { Count = 2 },
-            new ParameterCountTest { Count = 2, Prepare = p => p.TestSet("id") },
-            new ParameterCountTest { Count = 3, Prepare = p => p.TestSet("new") },
-            new ParameterCountTest { Count = 1, Prepare = p => p.TestRemove("id") },
+            new() { Count = 2 },
+            new() { Count = 2, Prepare = p => p.TestSet("id") },
+            new() { Count = 3, Prepare = p => p.TestSet("new") },
+            new() { Count = 1, Prepare = p => p.TestRemove("id") },
         }.ToTestEnum();
 
         [TestMethod]

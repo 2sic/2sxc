@@ -10,10 +10,10 @@ namespace ToSic.Sxc.Tests.ServicesTests
             var i = 1;
             return new List<TestParamSet>
             {
-                new TestParamSet($"Test #{i++} {name}-both", true, true, true, variants),
-                new TestParamSet($"Test #{i++} {name}-both", true, true, false, variants),
-                new TestParamSet($"Test #{i++} {name}-on set", true, false, true, variants),
-                new TestParamSet($"Test #{i++} {name}-on set", true, false, false, variants),
+                new($"Test #{i++} {name}-both", true, true, true, variants),
+                new($"Test #{i++} {name}-both", true, true, false, variants),
+                new($"Test #{i++} {name}-on set", true, false, true, variants),
+                new($"Test #{i++} {name}-on set", true, false, false, variants),
                 // The On-Pic variations don't exist, as the pic doesn't have params for width/height
                 //new TestParamSet($"{i++}{name}-on pic", false, true, true, srcset),
                 //new TestParamSet($"{i++}{name}-on pic", false, true, false, srcset),

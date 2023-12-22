@@ -1,0 +1,15 @@
+﻿using ToSic.Lib.Documentation;
+
+namespace ToSic.Sxc.Code;
+
+/// <summary>
+/// Special interface to mark all objects which have the current code context.
+/// These objects know about the current App, are able to provide ServiceKits and more.
+///
+/// The interface is used to allow for code in the `ThisApp/Code` folder to pass the context to the base class.
+/// Thereby enabling things such as the `Kit` or `App` object to magically work.
+/// </summary>
+[PublicApi]
+public interface IHasCodeContext
+{
+}

@@ -33,7 +33,9 @@
         [TestMethod]
         public void Test_NullHeadContent_ReturnsOriginal()
         {
+#pragma warning disable CS8625
             var result = AddOrUpdateMetaTagContent(null, "keywords", "orange, grape, strawberry");
+#pragma warning restore CS8625
             Assert.IsNull(result);
         }
 
@@ -41,7 +43,9 @@
         public void Test_NullMetaTagName_ReturnsOriginal()
         {
             var headContent = @"<meta name=""keywords"" content=""apple, banana, cherry"">";
+#pragma warning disable CS8625
             var result = AddOrUpdateMetaTagContent(headContent, null, "orange, grape, strawberry");
+#pragma warning restore CS8625
             Assert.AreEqual(headContent, result);
         }
 
@@ -57,7 +61,9 @@
         public void Test_NullContentValue_UpdatesToEmpty()
         {
             var headContent = @"<meta name=""keywords"" content=""apple, banana, cherry"">";
+#pragma warning disable CS8625
             var result = AddOrUpdateMetaTagContent(headContent, "keywords", null);
+#pragma warning restore CS8625
             Assert.IsTrue(result.Contains(@"<meta name=""keywords"" content="""">"));
         }
 

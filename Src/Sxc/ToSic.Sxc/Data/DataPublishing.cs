@@ -8,6 +8,7 @@ namespace ToSic.Sxc.Data
     /// This was a system we used before queries.
     /// </summary>
     [PrivateApi("older use case, probably obsolete some day")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class DataPublishing
     {
         public bool Enabled { get; set; }

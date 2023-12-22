@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav.Apps.ImportExport;
-using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Security;
@@ -10,8 +10,9 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.WebApi.App;
+
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;
 #else
@@ -20,25 +21,30 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ExportContent : ServiceBase
     {
+        private readonly GenWorkPlus<WorkEntities> _workEntities;
+
         #region Constructor / DI
 
-        public ExportContent(XmlExporter xmlExporter, LazySvc<CmsRuntime> cmsRuntime, ISite site, IUser user, Generator<ImpExpHelpers> impExpHelpers, IResponseMaker responseMaker)
-            : base("Bck.Export") =>
+        public ExportContent(XmlExporter xmlExporter, GenWorkPlus<WorkViews> workViews, GenWorkPlus<WorkEntities> workEntities, ISite site, IUser user, Generator<ImpExpHelpers> impExpHelpers, IResponseMaker responseMaker)
+            : base("Bck.Export")
+        {
             ConnectServices(
                 _xmlExporter = xmlExporter,
-                _cmsRuntime = cmsRuntime,
+                _workViews = workViews,
+                _workEntities = workEntities,
                 _site = site,
                 _user = user,
                 _impExpHelpers = impExpHelpers,
                 _responseMaker = responseMaker
             );
+        }
 
+        private readonly GenWorkPlus<WorkViews> _workViews;
         private readonly XmlExporter _xmlExporter;
-        private readonly LazySvc<CmsRuntime> _cmsRuntime;
         private readonly ISite _site;
-        private CmsRuntime CmsRuntime => _cmsRuntime.Value;
         private readonly IUser _user;
         private readonly Generator<ImpExpHelpers> _impExpHelpers;
         private readonly IResponseMaker _responseMaker;
@@ -51,10 +57,10 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
-            var cms = CmsRuntime.InitQ(currentApp);
-            var contentTypes = cms.ContentTypes.All.OfScope(scope);
-            var entities = cms.Entities.All;
-            var templates = cms.Views.GetAll();
+            var appCtx = _workEntities.CtxSvc.ContextPlus(currentApp);
+            var contentTypes = currentApp.ContentTypes.OfScope(scope);
+            var entities = _workEntities.New(appCtx).All();
+            var templates = _workViews.New(appCtx).GetAll();
 
             return new ExportPartsOverviewDto
             {
@@ -88,23 +94,21 @@ namespace ToSic.Sxc.WebApi.ImportExport
         }
 
 
-        public THttpResponseType Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString,
-            string templateIdsString)
+        public THttpResponseType Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
         {
-            Log.A($"export content z#{zoneId}, a#{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
+            var l = Log.Fn<THttpResponseType>($"export content z#{zoneId}, a#{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
             SecurityHelpers.ThrowIfNotSiteAdmin(_user, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
-            var contextZoneId = _site.ZoneId;
-            var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
-            var appRuntime = CmsRuntime.InitQ(currentApp);
+            var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, _site.ZoneId);
 
             var fileName = $"2sxcContentExport_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}.xml";
-            var fileXml = _xmlExporter.Init(zoneId, appId, appRuntime, false,
+            var fileXml = _xmlExporter.Init(zoneId, appId, currentApp, false,
                 contentTypeIdsString?.Split(';') ?? Array.Empty<string>(),
                 entityIdsString?.Split(';') ?? Array.Empty<string>()
             ).GenerateNiceXml();
 
-            return _responseMaker.File(fileXml, fileName, "text/xml");
+            var result = _responseMaker.File(fileXml, fileName, "text/xml");
+            return l.Return(result);
         }
     }
 }

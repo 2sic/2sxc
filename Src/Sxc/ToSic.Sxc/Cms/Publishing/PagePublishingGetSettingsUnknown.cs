@@ -1,15 +1,14 @@
-﻿using ToSic.Eav;
-using ToSic.Eav.Apps.Enums;
-using ToSic.Eav.Run.Unknown;
+﻿using ToSic.Eav.Apps.Enums;
+using ToSic.Eav.Internal.Unknown;
 using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.Cms.Publishing
-{
-    public class PagePublishingGetSettingsUnknown : PagePublishingGetSettingsBase
-    {
-        public PagePublishingGetSettingsUnknown(WarnUseOfUnknown<PagePublishingGetSettingsUnknown> _) : base(LogScopes.NotImplemented) { }
+namespace ToSic.Sxc.Cms.Publishing;
 
-        protected override PublishingMode LookupRequirements(int moduleId) 
-            => PublishingMode.DraftOptional;
-    }
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class PagePublishingGetSettingsUnknown : PagePublishingGetSettingsBase
+{
+    public PagePublishingGetSettingsUnknown(WarnUseOfUnknown<PagePublishingGetSettingsUnknown> _) : base(LogScopes.NotImplemented) { }
+
+    protected override PublishingMode LookupRequirements(int moduleId) 
+        => PublishingMode.DraftOptional;
 }

@@ -130,7 +130,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages
         }
 
         private static RecipeVariant BuildExpected(float size, char sizeType, int? width, int height) =>
-            new RecipeVariant
+            new()
             {
                 Size = size,
                 SizeType = sizeType,

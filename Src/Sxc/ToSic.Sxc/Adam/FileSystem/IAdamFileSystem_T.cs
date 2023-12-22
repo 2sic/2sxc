@@ -2,58 +2,55 @@
 using System.IO;
 using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.Adam
+namespace ToSic.Sxc.Adam;
+
+public interface IAdamFileSystem<TFolderId, TFileId>: IHasLog
 {
-    public interface IAdamFileSystem<TFolderId, TFileId>: IHasLog
-    {
-        void Init(AdamManager<TFolderId, TFileId> adamManager);
+    void Init(AdamManager<TFolderId, TFileId> adamManager);
 
-        #region FileSystem Settings
+    #region FileSystem Settings
 
-        int MaxUploadKb();
+    int MaxUploadKb();
 
-        #endregion
+    #endregion
 
-        #region Files
+    #region Files
 
-        File<TFolderId, TFileId> GetFile(TFileId fileId);
+    File<TFolderId, TFileId> GetFile(TFileId fileId);
 
-        List<File<TFolderId, TFileId>> GetFiles(IFolder folder);
+    List<File<TFolderId, TFileId>> GetFiles(IFolder folder);
 
-        void Rename(IFile file, string newName);
+    void Rename(IFile file, string newName);
 
-        void Delete(IFile file);
+    void Delete(IFile file);
 
-        File<TFolderId, TFileId> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName);
+    File<TFolderId, TFileId> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName);
 
-        ///// <summary>
-        ///// When uploading a new file, we must verify that the name isn't used. 
-        ///// If it is used, walk through numbers to make a new name which isn't used. 
-        ///// </summary>
-        ///// <param name="parentFolder"></param>
-        ///// <param name="fileName"></param>
-        ///// <returns></returns>
-        //string FindUniqueFileName(IFolder parentFolder, string fileName);
+    ///// <summary>
+    ///// When uploading a new file, we must verify that the name isn't used. 
+    ///// If it is used, walk through numbers to make a new name which isn't used. 
+    ///// </summary>
+    ///// <param name="parentFolder"></param>
+    ///// <param name="fileName"></param>
+    ///// <returns></returns>
+    //string FindUniqueFileName(IFolder parentFolder, string fileName);
 
-        #endregion
+    #endregion
 
-        #region Folders
+    #region Folders
 
-        void AddFolder(string path);
-        bool FolderExists(string path);
+    void AddFolder(string path);
+    bool FolderExists(string path);
 
-        Folder<TFolderId, TFileId> GetFolder(TFolderId folderId);
+    Folder<TFolderId, TFileId> GetFolder(TFolderId folderId);
 
-        List<Folder<TFolderId, TFileId>> GetFolders(IFolder folder);
+    List<Folder<TFolderId, TFileId>> GetFolders(IFolder folder);
 
-        void Rename(IFolder folder, string newName);
+    void Rename(IFolder folder, string newName);
 
-        void Delete(IFolder folder);
+    void Delete(IFolder folder);
 
-        #endregion
+    #endregion
 
-        Folder<TFolderId, TFileId> Get(string path);
-
-        //string GetUrl(string folderPath);
-    }
+    Folder<TFolderId, TFileId> Get(string path);
 }

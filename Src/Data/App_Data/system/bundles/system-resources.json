@@ -1,4 +1,7 @@
 {
+  "_": {
+    "V": 1
+  },
   "Bundles": [
     {
       "Name": "default",
@@ -8,7 +11,53 @@
             "Id": "8cfea27d-ab69-42e7-bfcb-0aa054eacbfb",
             "Name": "ResourcesSystem",
             "Scope": "System.Configuration",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 132213,
+                "Version": 1,
+                "Guid": "4fc531f6-9548-4298-832e-5d98cd8ffb56",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "Description": {
+                      "*": ""
+                    },
+                    "DynamicChildrenField": {
+                      "*": ""
+                    },
+                    "EditInstructions": {
+                      "*": "<p>Here you can configure System Resources. If you're new to this please <a href=\"https://r.2sxc.org/settings\" target=\"_blank\" rel=\"noopener\">read the docs</a>.&nbsp;</p>\n<p>As of now, there are not many pre-defined <em>SystemResources</em> - so if this form looks pretty empty that's expected \uD83D\uDE09.</p>\n<p>Remember that you can always create <em>custom resources </em>for anything you want. These will not be stored here, but in a new ContentType called&nbsp;<em>Resources</em> which you would create on your own.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "*": "System Resources"
+                    },
+                    "ListInstructions": {
+                      "*": "<p>These settings override defaults provided at the global level. Make sure you understand Settings before doing much here. <a href=\"https://r.2sxc.org/settings\" target=\"_blank\" rel=\"noopener\">Read the docs please</a>.&nbsp;</p>\n<p>Note: you should usually only have exactly 1 item in this list. The only exception is on the main <strong>Content</strong> app where you have two items (one affecting only the current App, one affecting the entire Site).&nbsp;</p>"
+                    },
+                    "Notes": {
+                      "*": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "*": ""
+                    },
+                    "Link": {
+                      "*": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "8cfea27d-ab69-42e7-bfcb-0aa054eacbfb"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "Title",
@@ -21,8 +70,8 @@
                     "Version": 2,
                     "Guid": "9d4b1723-383d-4f16-8589-6eae07b2511d",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -81,8 +130,8 @@
                     "Version": 1,
                     "Guid": "30490916-f80d-4bf2-b74c-09c8b83851cb",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -101,8 +150,8 @@
                     "Version": 1,
                     "Guid": "80ae7716-eb37-4e87-b932-7f16de538796",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -126,8 +175,8 @@
                     "Version": 2,
                     "Guid": "c4d6ec9f-fca2-4413-be77-fa671d2ca9dd",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -186,8 +235,8 @@
                     "Version": 1,
                     "Guid": "27eb0826-5452-4de3-806b-e285956bf6a3",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -206,8 +255,8 @@
                     "Version": 1,
                     "Guid": "a5bee366-0780-4ed1-9280-172d5662f490",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -236,8 +285,8 @@
                     "Version": 5,
                     "Guid": "a7e23a29-1b9a-4022-8632-7277ff6845c3",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -296,8 +345,8 @@
                     "Version": 3,
                     "Guid": "8d864fdc-d11c-479a-89fe-6206023288a6",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -316,8 +365,8 @@
                     "Version": 3,
                     "Guid": "046451e4-3860-47e5-82e5-e4dc78ec5a3c",
                     "Type": {
-                      "Name": "@string-dropdown",
-                      "Id": "@string-dropdown"
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
                     },
                     "Attributes": {
                       "String": {
@@ -349,8 +398,8 @@
                     "Version": 4,
                     "Guid": "26de0eb1-19b2-488d-a58e-cf78d08f576d",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -417,8 +466,8 @@
                     "Version": 3,
                     "Guid": "ca2459d8-4a7b-435c-b768-5aa40222f014",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -477,8 +526,8 @@
                     "Version": 2,
                     "Guid": "25232847-80da-48d6-a0e4-b07f58d3ad5b",
                     "Type": {
-                      "Name": "@Entity",
-                      "Id": "@Entity"
+                      "Id": "@Entity",
+                      "Name": "@Entity"
                     },
                     "Attributes": {
                       "String": {
@@ -525,8 +574,8 @@
                     "Version": 5,
                     "Guid": "f66487be-7c17-42fa-9fd4-2d53fc8c4c15",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -585,8 +634,8 @@
                     "Version": 4,
                     "Guid": "357c276d-06b0-440e-9a2e-b690645edd46",
                     "Type": {
-                      "Name": "@Entity",
-                      "Id": "@Entity"
+                      "Id": "@Entity",
+                      "Name": "@Entity"
                     },
                     "Attributes": {
                       "String": {
@@ -622,53 +671,6 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 132213,
-                "Version": 1,
-                "Guid": "4fc531f6-9548-4298-832e-5d98cd8ffb56",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "Description": {
-                      "*": ""
-                    },
-                    "DynamicChildrenField": {
-                      "*": ""
-                    },
-                    "EditInstructions": {
-                      "*": "<p>Here you can configure System Resources. If you're new to this please <a href=\"https://r.2sxc.org/settings\" target=\"_blank\" rel=\"noopener\">read the docs</a>.&nbsp;</p>\n<p>As of now, there are not many pre-defined <em>SystemResources</em> - so if this form looks pretty empty that's expected \uD83D\uDE09.</p>\n<p>Remember that you can always create <em>custom resources </em>for anything you want. These will not be stored here, but in a new ContentType called&nbsp;<em>Resources</em> which you would create on your own.&nbsp;</p>"
-                    },
-                    "Label": {
-                      "*": "System Resources"
-                    },
-                    "ListInstructions": {
-                      "*": "<p>These settings override defaults provided at the global level. Make sure you understand Settings before doing much here. <a href=\"https://r.2sxc.org/settings\" target=\"_blank\" rel=\"noopener\">Read the docs please</a>.&nbsp;</p>\n<p>Note: you should usually only have exactly 1 item in this list. The only exception is on the main <strong>Content</strong> app where you have two items (one affecting only the current App, one affecting the entire Site).&nbsp;</p>"
-                    },
-                    "Notes": {
-                      "*": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "*": ""
-                    },
-                    "Link": {
-                      "*": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "8cfea27d-ab69-42e7-bfcb-0aa054eacbfb"
-                }
-              }
             ]
           },
           "Entities": []
@@ -678,7 +680,53 @@
             "Id": "40e561d2-096f-4ff7-a388-55f61a19490c",
             "Name": "\uD83C\uDF10GoogleMaps",
             "Scope": "System.Configuration",
-            "Description": null,
+            "Metadata": [
+              {
+                "Id": 132238,
+                "Version": 1,
+                "Guid": "886e8b4c-6a04-44d5-b641-d632f54cfaf7",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p>These resources are to be used with Google Maps implementations.</p>"
+                    },
+                    "Label": {
+                      "en-us": "\uD83C\uDF10GoogleMaps"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "40e561d2-096f-4ff7-a388-55f61a19490c"
+                }
+              }
+            ],
             "Attributes": [
               {
                 "Name": "Identifier",
@@ -691,8 +739,8 @@
                     "Version": 7,
                     "Guid": "cd5948e1-94b2-4742-88da-7986a568e1d8",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -751,8 +799,8 @@
                     "Version": 6,
                     "Guid": "58f12a41-b38a-4acb-afa2-5519d3fa3bca",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -771,8 +819,8 @@
                     "Version": 6,
                     "Guid": "33501e3a-af78-4fed-8861-fca4988b92aa",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -796,8 +844,8 @@
                     "Version": 2,
                     "Guid": "7877762a-e261-4d59-a01d-a30b1f214c17",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -857,8 +905,8 @@
                     "Version": 1,
                     "Guid": "758f3da9-c075-4ff7-814f-5472cb03eac0",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -877,8 +925,8 @@
                     "Version": 1,
                     "Guid": "1f99b176-a683-4196-b927-b62869a27140",
                     "Type": {
-                      "Name": "@string-wysiwyg",
-                      "Id": "@string-wysiwyg"
+                      "Id": "@string-wysiwyg",
+                      "Name": "@string-wysiwyg"
                     },
                     "Attributes": {
                       "String": {
@@ -902,53 +950,6 @@
                   }
                 ]
               }
-            ],
-            "Metadata": [
-              {
-                "Id": 132238,
-                "Version": 1,
-                "Guid": "886e8b4c-6a04-44d5-b641-d632f54cfaf7",
-                "Type": {
-                  "Name": "ContentType",
-                  "Id": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "Description": {
-                      "en-us": ""
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": "<p>These resources are to be used with Google Maps implementations.</p>"
-                    },
-                    "Label": {
-                      "en-us": "\uD83C\uDF10GoogleMaps"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "40e561d2-096f-4ff7-a388-55f61a19490c"
-                }
-              }
             ]
           },
           "Entities": []
@@ -958,7 +959,7 @@
             "Id": "29be4120-d21f-473a-a5c9-9ce10f0248c7",
             "Name": "\uD83C\uDF10Toolbar",
             "Scope": "System.Configuration",
-            "Description": null,
+            "Metadata": [],
             "Attributes": [
               {
                 "Name": "Identifier",
@@ -971,8 +972,8 @@
                     "Version": 2,
                     "Guid": "58b2014a-bbb8-46e3-8fb6-7b706045954e",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1031,8 +1032,8 @@
                     "Version": 1,
                     "Guid": "2a7ae2dd-754c-4c6a-8d2e-57dd8f01c0bf",
                     "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
+                      "Id": "@String",
+                      "Name": "@String"
                     },
                     "Attributes": {
                       "String": {
@@ -1051,8 +1052,8 @@
                     "Version": 1,
                     "Guid": "7e786097-950e-48af-af62-e776874bd4fa",
                     "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
+                      "Id": "@string-default",
+                      "Name": "@string-default"
                     },
                     "Attributes": {
                       "String": {
@@ -1076,8 +1077,8 @@
                     "Version": 1,
                     "Guid": "4254c9a4-c6ae-4528-94fc-8975e93b911a",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1120,8 +1121,8 @@
                     "Version": 1,
                     "Guid": "26f32cb0-f31f-41cf-b480-b740f204aa7a",
                     "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
@@ -1153,8 +1154,7 @@
                   }
                 ]
               }
-            ],
-            "Metadata": []
+            ]
           },
           "Entities": []
         }
@@ -1165,8 +1165,8 @@
           "Version": 5,
           "Guid": "a0bedfbb-57eb-44b6-a4ce-738b199fdbc2",
           "Type": {
-            "Name": "ResourcesSystem",
-            "Id": "8cfea27d-ab69-42e7-bfcb-0aa054eacbfb"
+            "Id": "8cfea27d-ab69-42e7-bfcb-0aa054eacbfb",
+            "Name": "ResourcesSystem"
           },
           "Attributes": {
             "String": {
@@ -1201,8 +1201,8 @@
               "Version": 1,
               "Guid": "af6d1d4c-57de-48a5-b001-3f0b33a5349e",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -1227,8 +1227,8 @@
           "Version": 8,
           "Guid": "d3af78fc-8d7a-44f4-9712-ec8554714158",
           "Type": {
-            "Name": "\uD83C\uDF10GoogleMaps",
-            "Id": "40e561d2-096f-4ff7-a388-55f61a19490c"
+            "Id": "40e561d2-096f-4ff7-a388-55f61a19490c",
+            "Name": "\uD83C\uDF10GoogleMaps"
           },
           "Attributes": {
             "String": {
@@ -1248,8 +1248,8 @@
               "Version": 1,
               "Guid": "53673bf0-1986-411d-906c-933db7bce302",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -1274,8 +1274,8 @@
           "Version": 1,
           "Guid": "1d9dc186-d707-467b-ba49-c2e58d2869a0",
           "Type": {
-            "Name": "\uD83C\uDF10Toolbar",
-            "Id": "29be4120-d21f-473a-a5c9-9ce10f0248c7"
+            "Id": "29be4120-d21f-473a-a5c9-9ce10f0248c7",
+            "Name": "\uD83C\uDF10Toolbar"
           },
           "Attributes": {
             "String": {
@@ -1299,8 +1299,8 @@
               "Version": 1,
               "Guid": "65141641-8f57-474b-b0bc-8f153e2eb748",
               "Type": {
-                "Name": "SystemExportDecorator",
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
               },
               "Attributes": {
                 "Entity": {
@@ -1322,8 +1322,5 @@
         }
       ]
     }
-  ],
-  "_": {
-    "V": 1
-  }
+  ]
 }

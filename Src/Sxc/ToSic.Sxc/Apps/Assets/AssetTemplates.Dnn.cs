@@ -1,30 +1,30 @@
 ﻿using ToSic.Sxc.Context;
 
-namespace ToSic.Sxc.Apps.Assets
-{
-    public partial class AssetTemplates
-    {
-        public const string CsCodeTemplateName = "PleaseRenameClass";
+namespace ToSic.Sxc.Apps.Assets;
 
-        public static readonly TemplateInfo RazorDnn = new TemplateInfo("cshtml-dnn", "Razor Dnn", ".cshtml", "DetailsTemplate", ForTemplate, TypeRazor)
-        {
-            Body = @"@inherits Custom.Dnn.Razor12
+public partial class AssetTemplates
+{
+    public const string CsCodeTemplateName = "PleaseRenameClass";
+
+    public static readonly TemplateInfo RazorDnn = new("cshtml-dnn", "Razor Dnn", ".cshtml", "DetailsTemplate", ForTemplate, TypeRazor)
+    {
+        Body = @"@inherits Custom.Dnn.Razor12
 @* This inherits statement gets you features like App, CmsContext, Data etc. - you can delete this comment *@
 @using ToSic.Sxc.Services; @* Make it easier to use https://go.2sxc.org/services *@
 
 <div @Edit.TagToolbar(Content)>
     Put your content here
 </div>",
-            Description = "razor page dnn template",
-        };
+        Description = "razor page dnn template",
+    };
 
-        /// <summary>
-        /// This only works for Dnn, Hybrid doesn't have this concept as we can't access functions from outside
-        /// </summary>
-        public static readonly TemplateInfo DnnCsCode =
-            new TemplateInfo("cshtml-code-hybrid", "Razor Code (Dnn only)", ".code.cshtml", "DetailsTemplate", ForTemplate, TypeRazor)
-            {
-                Body = @"@inherits Custom.Dnn.Razor12
+    /// <summary>
+    /// This only works for Dnn, Hybrid doesn't have this concept as we can't access functions from outside
+    /// </summary>
+    public static readonly TemplateInfo DnnCsCode =
+        new("cshtml-code-hybrid", "Razor Code (Dnn only)", ".code.cshtml", "DetailsTemplate", ForTemplate, TypeRazor)
+        {
+            Body = @"@inherits Custom.Dnn.Razor12
 @* This inherits statement gets you features like App, CmsContext, Data as well as Dnn etc. - you can delete this comment *@
 @using ToSic.Razor.Blade;
 @using ToSic.Sxc.Services; @* Make it easier to use https://go.2sxc.org/services *@
@@ -39,17 +39,17 @@ namespace ToSic.Sxc.Apps.Assets
   }
 }
 ",
-                Description = "razor page c# code hybrid template",
-                PlatformTypes = PlatformType.Dnn,
-            };
+            Description = "razor page c# code hybrid template",
+            PlatformTypes = PlatformType.Dnn,
+        };
 
 
 
 
-        public static readonly TemplateInfo DnnSearch =
-            new TemplateInfo("cs-code-custom-search-dnn", "Dnn Search Integration (c#)", ".cs", "DnnSearch", ForSearch, TypeNone)
-            {
-                Body = @"using System;
+    public static readonly TemplateInfo DnnSearch =
+        new("cs-code-custom-search-dnn", "Dnn Search Integration (c#)", ".cs", "DnnSearch", ForSearch, TypeNone)
+        {
+            Body = @"using System;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Sxc.Context;
@@ -98,11 +98,10 @@ public class " + CsCodeTemplateName + @" : Custom.Hybrid.Code12, ICustomizeSearc
     }
 }
 ",
-                Description =
-                    "custom search c# code to customize how dnn search treats data of view, see https://go.2sxc.org/customize-search",
-                PlatformTypes = PlatformType.Dnn,
-            };
+            Description =
+                "custom search c# code to customize how dnn search treats data of view, see https://go.2sxc.org/customize-search",
+            PlatformTypes = PlatformType.Dnn,
+        };
 
         
-    }
 }

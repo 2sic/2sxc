@@ -1,7 +1,7 @@
-﻿namespace ToSic.Sxc.Engines
+﻿namespace ToSic.Sxc.Engines;
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public interface ISetDynamicModel
 {
-    public interface ISetDynamicModel
-    {
-        void SetDynamicModel(object data);
-    }
+    void SetDynamicModel(object data);
 }

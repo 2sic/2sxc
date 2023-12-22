@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Core.Tests;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
-using ToSic.Eav.Persistence.File;
-using ToSic.Eav.Run;
+using ToSic.Eav.ImportExport;
+using ToSic.Eav.Internal.Loaders;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -29,7 +28,7 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
             eavSystemLoader.LoadLicenseAndFeatures();
 
             var appStates = GetService<IAppStates>();
-            var app = appStates.GetPresetOrNull();
+            var app = appStates.GetPresetReader();
             TstDataContentType = app.GetContentType("TstData");
             if (TstDataContentType == null) throw new Exception("TstData content type not found. Probably JSON is missing.");
             Cdf = GetService<CodeDataFactory>();
@@ -40,7 +39,8 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
         protected override void SetupServices(IServiceCollection services)
         {
             base.SetupServices(services);
-            services.AddTransient<IRuntime, Runtime>();
+            services.AddAppLoader();
+            // services.AddTransient<IAppLoader, AppLoader>();
             services.TryAddTransient<IValueConverter, MockValueConverter>();
         }
 

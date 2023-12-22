@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Tests.DataTests.DynConverterTests
 {
@@ -10,7 +9,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynConverterTests
         [TestMethod]
         public void AsItemWithFakeOk()
         {
-            var item = Cdf.AsItem(Cdf.FakeEntity(0), noParamOrder: Protector, propsRequired: true);
+            var item = Cdf.AsItem(Cdf.FakeEntity(0), propsRequired: true);
             Assert.IsNotNull(item);
         }
 
@@ -24,7 +23,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynConverterTests
                 Birthday = new DateTime(2012, 02, 07)
             };
 
-            var item = Cdf.AsItem(data, noParamOrder: Protector, propsRequired: true);
+            var item = Cdf.AsItem(data, propsRequired: true);
         }
     }
 }

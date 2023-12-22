@@ -1,17 +1,18 @@
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Emit;
+using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Caching;
 using System.Runtime.CompilerServices;
 using System.Text;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Emit;
-using Microsoft.CodeAnalysis.Text;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Oqt.Server.Code
 {
@@ -21,57 +22,56 @@ namespace ToSic.Sxc.Oqt.Server.Code
     // https://laurentkempe.com/2019/02/18/dynamically-compile-and-run-code-using-dotNET-Core-3.0/
     public class Compiler : ServiceBase
     {
-        private static List<MetadataReference> References => _references ??= GetMetadataReferences();
-        private static List<MetadataReference> _references;
+        private readonly LazySvc<ThisAppCodeLoader> _thisAppCodeLoader;
 
-        public Compiler() : base("Sys.CodCpl")
+        public Compiler(LazySvc<ThisAppCodeLoader> thisAppCodeLoader) : base("Sys.CodCpl")
         {
-
-        }
-
-        public Assembly Compile(string filePath, string dllName)
-        {
-            Log.A($"Starting compilation of: '{filePath}'");
-
-            var sourceCode = File.ReadAllText(filePath);
-
-            var cache = MemoryCache.Default;
-            var assembly = cache[filePath.ToLowerInvariant()] as Assembly;
-            if (assembly != null) return assembly;
-            assembly = CompileSourceCode(filePath, sourceCode, dllName);
-            if (assembly != null)
-                cache.Set(filePath.ToLowerInvariant(), assembly, GetCacheItemPolicy(filePath));
-            return assembly;
+            _thisAppCodeLoader = thisAppCodeLoader;
         }
 
         // Ensure that can't be kept alive by stack slot references (real- or JIT-introduced locals).
         // That could keep the SimpleUnloadableAssemblyLoadContext alive and prevent the unload.
         [MethodImpl(MethodImplOptions.NoInlining)]
-
-        private Assembly CompileSourceCode(string path, string sourceCode, string dllName)
+        internal AssemblyResult Compile(string sourceFile, string dllName, int appId)
         {
-            var l = Log.Fn<Assembly>($"{nameof(dllName)}: {dllName}.");
+            var l = Log.Fn<AssemblyResult>($"Starting compilation of: '{sourceFile}', {nameof(dllName)}: {dllName}.");
+
+            var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(appId, Log)?.Assembly
+                               ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrNull(appId);
+
             var encoding = Encoding.UTF8;
-            var pdbName = $"{dllName}.pdb";
+
+            var options = CSharpParseOptions.Default
+                .WithLanguageVersion(LanguageVersion.CSharp11)
+                .WithPreprocessorSymbols("OQTANE", "NETCOREAPP", "NET5_0");
+
+            var syntaxTrees = new List<SyntaxTree>();
+            var embeddedTexts = new List<EmbeddedText>();
+
+            var sourceCode = File.ReadAllText(sourceFile);
+            syntaxTrees.Add(SyntaxFactory.ParseSyntaxTree(sourceCode, options));
+            embeddedTexts.Add(EmbeddedText.FromSource(sourceFile, SourceText.From(sourceCode, encoding)));
+
+            var assemblyName = dllName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) ? dllName.Substring(0, dllName.Length - 4) : dllName;
+
+            var compilation = CSharpCompilation.Create(
+                $"{assemblyName}.dll",
+                syntaxTrees,
+                references: GetMetadataReferences(codeAssembly?.Location),
+                options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
+                    optimizationLevel: OptimizationLevel.Debug,
+                    assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default));
+
+            var assemblyLoadContext = new SimpleUnloadableAssemblyLoadContext();
+
+            // Compile to in-memory streams
             using (var peStream = new MemoryStream())
             using (var pdbStream = new MemoryStream())
             {
-                var options = new EmitOptions(
-                    debugInformationFormat: DebugInformationFormat.PortablePdb,
-                    pdbFilePath: pdbName);
-
-                var buffer = encoding.GetBytes(sourceCode);
-                var sourceText = SourceText.From(buffer, buffer.Length, encoding, canBeEmbedded: true);
-
-                var embeddedTexts = new List<EmbeddedText>
-                {
-                    EmbeddedText.FromSource(path, sourceText),
-                };
-
-                var result = GenerateCode(path, sourceText, dllName).Emit(peStream,
-                    pdbStream,
-                    embeddedTexts: embeddedTexts,
-                    options: options);
+                var result = compilation.Emit(peStream, pdbStream, embeddedTexts: embeddedTexts,
+                    options: new EmitOptions(
+                        debugInformationFormat: DebugInformationFormat.PortablePdb,
+                        pdbFilePath: $"{assemblyName}.pdb"));
 
                 if (!result.Success)
                 {
@@ -88,70 +88,163 @@ namespace ToSic.Sxc.Oqt.Server.Code
                         errors.Add($"{diagnostic.Id}: {diagnostic.GetMessage()}");
                     }
 
-                    throw l.Done(new IOException(string.Join("\n", errors)));
+                    //throw l.Done(new InvalidOperationException(string.Join("\n", errors)));
+                    return l.ReturnAsError(new AssemblyResult(errorMessages: string.Join("\n", errors)));
                 }
 
                 peStream.Seek(0, SeekOrigin.Begin);
                 pdbStream?.Seek(0, SeekOrigin.Begin);
 
-                var assemblyLoadContext = new SimpleUnloadableAssemblyLoadContext();
                 var assembly = assemblyLoadContext.LoadFromStream(peStream, pdbStream);
 
-                return l.Return(assembly, "Compilation done without any error.");
+                return l.ReturnAsOk(new AssemblyResult(assembly));
             }
         }
 
-        private static CSharpCompilation GenerateCode(string path, SourceText sourceCode, string dllName)
+        // Ensure that can't be kept alive by stack slot references (real- or JIT-introduced locals).
+        // That could keep the SimpleUnloadableAssemblyLoadContext alive and prevent the unload.
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        internal AssemblyResult GetCompiledAssemblyFromFolder(string[] sourceFiles, string assemblyFilePath, string pdbFilePath, string dllName)
         {
+            var l = Log.Fn<AssemblyResult>($"{nameof(sourceFiles)}: {sourceFiles.Length}; {nameof(assemblyFilePath)}: '{assemblyFilePath}'", timer: true);
+
+            var encoding = Encoding.UTF8;
+
             var options = CSharpParseOptions.Default
-                .WithLanguageVersion(LanguageVersion.CSharp9)
+                .WithLanguageVersion(LanguageVersion.Latest)
                 .WithPreprocessorSymbols("OQTANE", "NETCOREAPP", "NET5_0");
 
-            var parsedSyntaxTree = SyntaxFactory.ParseSyntaxTree(sourceCode, options, path);
-            var peName = $"{dllName}.dll";
+            var syntaxTrees = new List<SyntaxTree>();
+            var embeddedTexts = new List<EmbeddedText>();
 
-            return CSharpCompilation.Create(peName,
-                new[] { parsedSyntaxTree },
+            foreach (var sourceFile in sourceFiles)
+            {
+                var sourceCode = File.ReadAllText(sourceFile);
+                syntaxTrees.Add(SyntaxFactory.ParseSyntaxTree(sourceCode, options));
+                embeddedTexts.Add(EmbeddedText.FromSource(sourceFile, SourceText.From(sourceCode, encoding)));
+            }
+
+            var compilation = CSharpCompilation.Create(
+                dllName,
+                syntaxTrees,
                 references: References,
-                options: new(OutputKind.DynamicallyLinkedLibrary,
+                options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
                     optimizationLevel: OptimizationLevel.Debug,
                     assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default));
+
+            var assemblyLoadContext = new SimpleUnloadableAssemblyLoadContext();
+
+            // Create file streams to save the compiled assembly and PDB to disk
+            using (var peFileStream = new FileStream(assemblyFilePath, FileMode.Create, FileAccess.Write))
+            using (var pdbFileStream = new FileStream(pdbFilePath, FileMode.Create, FileAccess.Write))
+            {
+                var result = compilation.Emit(peFileStream, pdbFileStream, embeddedTexts: embeddedTexts,
+                    options: new EmitOptions(
+                        debugInformationFormat: DebugInformationFormat.PortablePdb,
+                        pdbFilePath: pdbFilePath));
+
+                if (!result.Success)
+                {
+                    l.E("Compilation done with error.");
+
+                    var errors = new List<string>();
+
+                    var failures = result.Diagnostics.Where(diagnostic =>
+                        diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error);
+
+                    foreach (var diagnostic in failures)
+                    {
+                        l.A("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
+                        errors.Add($"{diagnostic.Id}: {diagnostic.GetMessage()}");
+                    }
+
+                    //throw l.Done(new IOException(string.Join("\n", errors)));
+                    return l.ReturnAsError(new AssemblyResult(errorMessages: string.Join("\n", errors)));
+                }
+
+                peFileStream.Flush();
+                pdbFileStream.Flush();
+            }
+
+            var assembly = assemblyLoadContext.LoadFromAssemblyPath(assemblyFilePath);
+            //var assemblyBytes = File.ReadAllBytes(assemblyFilePath);
+
+            return l.ReturnAsOk(new AssemblyResult(assembly, /*assemblyBytes,*/ null));
         }
+
+        #region References
+        private static List<MetadataReference> GetMetadataReferences(string appCodeFullPath)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(appCodeFullPath) && File.Exists(appCodeFullPath))
+                    return References.Union(new List<MetadataReference>()
+                            { MetadataReference.CreateFromFile(appCodeFullPath) })
+                        .ToList();
+            }
+            catch
+            {
+                // sink
+            };
+
+            return References;
+        }
+
+        private static List<MetadataReference> References => _references ??= GetMetadataReferences();
+        private static List<MetadataReference> _references;
 
         private static List<MetadataReference> GetMetadataReferences()
         {
-            var references = new List<MetadataReference>
-            {
-                //MetadataReference.CreateFromFile(typeof(object).Assembly.Location), // Commented because it solves error when "refs" are referenced.
-                MetadataReference.CreateFromFile(Assembly.Load("netstandard, Version=2.0.0.0").Location)
-            };
-
+            var references = new List<MetadataReference>();
+            //AddMetadataReferenceFromFile(references, typeof(object).Assembly.Location); // Commented because it solves error when "refs" are referenced.
+            AddMetadataReferenceFromAssemblyName(references, "netstandard, Version=2.0.0.0");
             Assembly.GetEntryAssembly()?.GetReferencedAssemblies().ToList()
-                .ForEach(a => references.Add(MetadataReference.CreateFromFile(Assembly.Load(a).Location)));
+                .ForEach(assemblyName => AddMetadataReferenceFromAssemblyName(references, assemblyName));
 
             // Add references to all dll's in bin folder.
             var dllLocation = AppContext.BaseDirectory;
             var dllPath = Path.GetDirectoryName(dllLocation);
-            foreach (string dllFile in Directory.GetFiles(dllPath, "*.dll"))
-                references.Add(MetadataReference.CreateFromFile(dllFile));
-            foreach (string dllFile in Directory.GetFiles(Path.Combine(dllPath, "refs"), "*.dll"))
-                references.Add(MetadataReference.CreateFromFile(dllFile));
+            foreach (string dllFile in Directory.GetFiles(dllPath, "*.dll")) AddMetadataReferenceFromFile(references, dllFile);
+            foreach (string dllFile in Directory.GetFiles(Path.Combine(dllPath, "refs"), "*.dll")) AddMetadataReferenceFromFile(references, dllFile);
+
             return references;
         }
 
-        private CacheItemPolicy GetCacheItemPolicy(string filePath)
+        private static void AddMetadataReferenceFromAssemblyName(List<MetadataReference> references, string assemblyName)
         {
-            var filePaths = new List<string> { filePath };
-
-            // expire cache item if not used in 30 min
-            var cacheItemPolicy = new CacheItemPolicy
+            try
             {
-                SlidingExpiration = TimeSpan.FromMinutes(30)
-            };
-            // expire cache item on CS file change
-            cacheItemPolicy.ChangeMonitors.Add(new
-                HostFileChangeMonitor(filePaths));
-            return cacheItemPolicy;
+                references.Add(MetadataReference.CreateFromFile(Assembly.Load(assemblyName).Location));
+            }
+            catch
+            {
+                // sink
+            }
         }
+
+        private static void AddMetadataReferenceFromAssemblyName(List<MetadataReference> references, AssemblyName assemblyName)
+        {
+            try
+            {
+                references.Add(MetadataReference.CreateFromFile(Assembly.Load(assemblyName).Location));
+            }
+            catch
+            {
+                // sink
+            }
+        }
+
+        private static void AddMetadataReferenceFromFile(List<MetadataReference> references, string dllFile)
+        {
+            try
+            {
+                references.Add(MetadataReference.CreateFromFile(dllFile));
+            }
+            catch
+            {
+                // sink
+            }
+        } 
+        #endregion
     }
 }

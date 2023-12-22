@@ -19,8 +19,7 @@ namespace ToSic.Sxc.Razor
     /// </summary>
     [PrivateApi("used to be marked as internal, but it doesn't make sense to show in docs")]
     [EngineDefinition(Name = "Razor")]
-
-    public class NetCoreRazorEngine : EngineBase, IRazorEngine
+    internal class NetCoreRazorEngine : EngineBase, IRazorEngine
     {
         private readonly LazySvc<CodeErrorHelpService> _errorHelp;
         private readonly LazySvc<CodeRootFactory> _codeRootFactory;
@@ -38,11 +37,11 @@ namespace ToSic.Sxc.Razor
                 _renderingHelper = renderingHelper
             );
         }
-        
+
         #endregion
 
         /// <inheritdoc/>
-        protected override (string, List<Exception>) RenderTemplate(object data)
+        protected override (string, List<Exception>) RenderImplementation(object data)
         {
             var l = Log.Fn<(string, List<Exception>)>();
             var task = RenderTask();
@@ -83,7 +82,7 @@ namespace ToSic.Sxc.Razor
 
                         asSxc.ConnectToRoot(dynCode);
                         // Note: Don't set the purpose here any more, it's a deprecated feature in 12+
-                    });
+                    }, App);
                 var writer = new StringWriter();
                 await writer.WriteAsync(result);
                 return (writer, null);

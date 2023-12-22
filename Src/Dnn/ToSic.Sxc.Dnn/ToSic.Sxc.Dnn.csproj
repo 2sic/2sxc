@@ -39,6 +39,12 @@
     <!-- end: Don't generate... -->
     <OutputPath>bin\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <!-- generate xml docs -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>bin\ToSic.Sxc.Dnn.xml</DocumentationFile>
+    <NoWarn>1701;1702;CS1570;CS1572;CS1573;CS1574;CS1587;CS1591;CS1710;CS1711</NoWarn>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -74,12 +80,18 @@
     <NoWarn>1591</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup>
-    <NoWarn>$(NoWarn);MSB3277</NoWarn>
+    <NoWarn>$(NoWarn);MSB3277;</NoWarn>
+    <!-- ignore warning that Dnn was loaded 2x - ATM necessary for MS build? @STV -->
+    <NoWarn>MSB4011</NoWarn>
+    <!-- ignore warning that it's using a dangerous version of Dnn (v9.6.1) @2dm -->
+    <NoWarn>NU1902</NoWarn>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="DnnPackageBuilder\SqlDataProvider\16.07.01.SqlDataProvider" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetNuke.Core" Version="9.6.1">
       <ExcludeAssets>runtime</ExcludeAssets>
@@ -105,15 +117,11 @@
     <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.2.3">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.1">
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
     <PackageReference Include="MSBuildTasks">
       <Version>1.5.0.235</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="System.Text.Json" Version="7.0.2" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Connect.Dnn.Koi, Version=2.0.0.27364, Culture=neutral, processorArchitecture=MSIL">
@@ -156,10 +164,6 @@
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj">
       <Project>{82f94588-269b-4cdd-98d1-d5cb14c39090}</Project>
       <Name>ToSic.Eav.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj">
-      <Project>{5a75cd35-99f4-4cf0-944a-dc0f5d68b430}</Project>
-      <Name>ToSic.Eav.ImportExport</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj">
       <Project>{f93f5fb1-95a6-4c4b-bdcf-b001e82f766f}</Project>
@@ -206,6 +210,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="ClientScripts\readme.md" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\16.07.01.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\ToSic.Sxc.Dnn.dnn">
       <SubType>Designer</SubType>
     </Content>
@@ -242,6 +247,7 @@
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets')" />
   <!--<Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />-->
@@ -294,16 +300,16 @@
 
   <Target Name="BuildConfigTarget2" AfterTargets="Build" DependsOnTargets="BuildConfigTarget">
 
-    <Message Text="------------------------------------------------------------------------------" Importance="high"/>
-    <Message Text="$(BuildConfigPath)" Importance="high"/>
-    <Message Text="------------------------------------------------------------------------------" Importance="high"/>
-    <Message Text="DnnTargets:" Importance="high"/>
-    <Message Text="$(DnnTargets)" Importance="high"/>
-    <Message Text="Source:" Importance="high"/>
-    <Message Text="$(Source)" Importance="high"/>
-    <Message Text="DnnInstallPackage:" Importance="high"/>
-    <Message Text="$(DnnInstallPackage)" Importance="high"/>
-    <Message Text="------------------------------------------------------------------------------" Importance="high"/>
+    <Message Text="------------------------------------------------------------------------------" Importance="high" />
+    <Message Text="$(BuildConfigPath)" Importance="high" />
+    <Message Text="------------------------------------------------------------------------------" Importance="high" />
+    <Message Text="DnnTargets:" Importance="high" />
+    <Message Text="$(DnnTargets)" Importance="high" />
+    <Message Text="Source:" Importance="high" />
+    <Message Text="$(Source)" Importance="high" />
+    <Message Text="DnnInstallPackage:" Importance="high" />
+    <Message Text="$(DnnInstallPackage)" Importance="high" />
+    <Message Text="------------------------------------------------------------------------------" Importance="high" />
 
   </Target>
 </Project>

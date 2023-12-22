@@ -1,10 +1,10 @@
-﻿namespace ToSic.Sxc.Data.Wrapper
+﻿namespace ToSic.Sxc.Data.Wrapper;
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class WrapperConstants
 {
-    public class WrapperConstants
-    {
-        public const string EmptyJson = "{}";
-        public const char JObjStart = '{';
-        public const char JArrayStart = '[';
-        public const string JsonErrorCode = "error";
-    }
+    public const string EmptyJson = "{}";
+    public const char JObjStart = '{';
+    public const char JArrayStart = '[';
+    public const string JsonErrorCode = "error";
 }

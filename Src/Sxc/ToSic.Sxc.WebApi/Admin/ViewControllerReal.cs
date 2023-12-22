@@ -21,6 +21,7 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class ViewControllerReal : ServiceBase, IViewController
     {
         public const string LogSuffix = "View";

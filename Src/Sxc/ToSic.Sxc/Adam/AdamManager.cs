@@ -1,113 +1,125 @@
 ﻿using System;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.Metadata;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.Apps.Work;
+using ToSic.Sxc.Code;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
+namespace ToSic.Sxc.Adam;
 
-namespace ToSic.Sxc.Adam
+/// <summary>
+/// The Manager of ADAM
+/// In charge of managing assets inside this app - finding them, creating them etc.
+/// </summary>
+/// <remarks>
+/// It's abstract, because there will be a typed implementation inheriting this
+/// </remarks>
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompatibilityLevel
 {
-    /// <summary>
-    /// The Manager of ADAM
-    /// In charge of managing assets inside this app - finding them, creating them etc.
-    /// </summary>
-    /// <remarks>
-    /// It's abstract, because there will be a typed implementation inheriting this
-    /// </remarks>
-    public abstract class AdamManager: ServiceBase, ICompatibilityLevel
+    #region MyServices
+
+    public class MyServices: MyServicesBase
     {
-        private readonly LazySvc<CodeDataFactory> _cdf;
+        public LazySvc<CodeDataFactory> Cdf { get; }
+        public AdamConfiguration AdamConfiguration { get; }
 
-        #region Constructor for inheritance
-
-        protected AdamManager(
-            LazySvc<AppRuntime> appRuntimeLazy,
-            LazySvc<AdamMetadataMaker> metadataMakerLazy,
-            LazySvc<CodeDataFactory> cdf,
-            AdamConfiguration adamConfiguration,
-            string logName) : base(logName ?? "Adm.Managr")
+        public MyServices(LazySvc<CodeDataFactory> cdf, AdamConfiguration adamConfiguration)
         {
             ConnectServices(
-                _appRuntimeLazy = appRuntimeLazy,
-                _metadataMakerLazy = metadataMakerLazy,
-                _adamConfiguration = adamConfiguration,
-                _cdf = cdf.SetInit(asc => asc.SetFallbacks(AppContext?.Site, CompatibilityLevel, this))
+                Cdf = cdf,
+                AdamConfiguration = adamConfiguration
             );
         }
-        
-        public AdamMetadataMaker MetadataMaker => _adamMetadataMaker ?? (_adamMetadataMaker = _metadataMakerLazy.Value);
-        private AdamMetadataMaker _adamMetadataMaker;
-        private readonly LazySvc<AdamMetadataMaker> _metadataMakerLazy;
-
-        private readonly AdamConfiguration _adamConfiguration;
-
-        public AppRuntime AppRuntime => _appRuntimeLazy.Value;
-        private readonly LazySvc<AppRuntime> _appRuntimeLazy;
-
-        #endregion
-
-        #region Init
-
-        public virtual AdamManager Init(IContextOfApp ctx, CodeDataFactory cdf, int compatibility)
-        {
-            AppContext = ctx;
-
-            var callLog = Log.Fn<AdamManager>();
-            Site = AppContext.Site;
-            AppRuntime.InitQ(AppContext.AppState);
-            CompatibilityLevel = compatibility;
-            _asc = cdf;
-            return callLog.Return(this, "ready");
-        }
-        
-        public IContextOfApp AppContext { get; private set; }
-
-        public ISite Site { get; private set; }
-
-        internal CodeDataFactory Cdf => _asc ?? (_asc = _cdf.Value);
-        private CodeDataFactory _asc;
-        #endregion
-
-        #region Static Helpers
-
-        public static int? CheckIdStringForId(string id)
-        {
-            if (!id.HasValue()) return null;
-            var linkParts = new LinkParts(id);
-            if (!linkParts.IsMatch || linkParts.Id == 0) return null;
-            return linkParts.Id;
-        }
-
-
-        #endregion
-
-        /// <summary>
-        /// Path to the app assets
-        /// </summary>
-        public string Path => _path ?? (_path = _adamConfiguration.PathForApp(AppContext.AppState));
-        private string _path;
-
-
-        [PrivateApi]
-        public int CompatibilityLevel { get; set; }
-
-
-        #region Properties the base class already provides, but must be implemented at inheritance
-
-        public abstract IFolder Folder(Guid entityGuid, string fieldName, IField field = default);
-
-
-        public abstract IFile File(int id);
-
-        public abstract IFolder Folder(int id);
-        #endregion
     }
+
+    #endregion
+
+    #region Constructor for inheritance
+
+    protected AdamManager(MyServices services, string logName) : base(services, logName ?? "Adm.Managr")
+    {
+        // Note: Services are already connected in base class
+        Services.Cdf.SetInit(asc => asc.SetFallbacks(AppContext?.Site, CompatibilityLevel, this));
+    }
+
+    #endregion
+
+    #region Init
+
+    public virtual AdamManager Init(IContextOfApp ctx, CodeDataFactory cdf, int compatibility)
+    {
+        var l = Log.Fn<AdamManager>();
+        AppContext = ctx;
+        Site = AppContext.Site;
+        AppWorkCtx = AppContext.AppState.CreateAppWorkCtx();
+        CompatibilityLevel = compatibility;
+        _cdf = cdf;
+        return l.Return(this, "ready");
+    }
+        
+    public IAppWorkCtx AppWorkCtx { get; private set; }
+
+    public IContextOfApp AppContext { get; private set; }
+
+    public ISite Site { get; private set; }
+
+    internal CodeDataFactory Cdf => _cdf ??= Services.Cdf.Value;
+    private CodeDataFactory _cdf;
+    #endregion
+
+    #region Static Helpers
+
+    public static int? CheckIdStringForId(string id)
+    {
+        if (!id.HasValue()) return null;
+        var linkParts = new LinkParts(id);
+        if (!linkParts.IsMatch || linkParts.Id == 0) return null;
+        return linkParts.Id;
+    }
+
+
+    #endregion
+
+    /// <summary>
+    /// Path to the app assets
+    /// </summary>
+    public string Path => _path ??= Services.AdamConfiguration.PathForApp(AppContext.AppState);
+    private string _path;
+
+
+    [PrivateApi]
+    public int CompatibilityLevel { get; set; }
+
+
+    #region Properties the base class already provides, but must be implemented at inheritance
+
+    public abstract IFolder Folder(Guid entityGuid, string fieldName, IField field = default);
+
+
+    public abstract IFile File(int id);
+
+    public abstract IFolder Folder(int id);
+
+    #endregion
+
+    #region Metadata Maker
+
+    /// <summary>
+    /// Get the first metadata entity of an item - or return a fake one instead
+    /// </summary>
+    internal IMetadata Create(string key, string title, Action<IMetadataOf> mdInit = null)
+    {
+        var mdOf = new MetadataOf<string>((int)TargetTypes.CmsItem, key, title, null, AppWorkCtx.AppState.StateCache);
+        mdInit?.Invoke(mdOf);
+        return Cdf.Metadata(mdOf);
+    }
+
+    #endregion
 }

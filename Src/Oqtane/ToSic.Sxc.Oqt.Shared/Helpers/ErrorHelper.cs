@@ -1,24 +1,24 @@
 ﻿using System;
 
-namespace ToSic.Sxc.Oqt.Shared.Helpers
+namespace ToSic.Sxc.Oqt.Shared.Helpers;
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class ErrorHelper
 {
-    public class ErrorHelper
+    public static string ErrorMessage(Exception ex, bool isSupreUser = false)
     {
-        public static string ErrorMessage(Exception ex, bool isSupreUser = false)
+        string errorMessage = ex.Message;
+
+        if (isSupreUser)
         {
-            string errorMessage = ex.Message;
-
-            if (isSupreUser)
+            errorMessage += " - " + ex.StackTrace;
+            if (ex.InnerException != null)
             {
-                errorMessage += " - " + ex.StackTrace;
-                if (ex.InnerException != null)
-                {
-                    errorMessage += " - " + ex.InnerException.Message;
-                    errorMessage += " - " + ex.InnerException.StackTrace;
-                }
+                errorMessage += " - " + ex.InnerException.Message;
+                errorMessage += " - " + ex.InnerException.StackTrace;
             }
-
-            return errorMessage;
         }
+
+        return errorMessage;
     }
 }

@@ -13,82 +13,81 @@ using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Startup
+namespace ToSic.Sxc.Startup;
+
+public static partial class RegisterSxcServices
 {
-    public static partial class RegisterSxcServices
+
+    /// <summary>
+    /// This will add Do-Nothing services which will take over if they are not provided by the main system
+    /// In general this will result in some features missing, which many platforms don't need or care about
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    /// <remarks>
+    /// All calls in here MUST use TryAddTransient, and never without the Try
+    /// </remarks>
+    public static IServiceCollection AddSxcCoreFallbackServices(this IServiceCollection services)
     {
+        // basic environment, pages, modules etc.
+        services.TryAddTransient<IEnvironmentInstaller, BasicEnvironmentInstaller>();
+        services.TryAddTransient<IPlatformAppInstaller, BasicEnvironmentInstaller>();
+        services.TryAddTransient<IPlatformModuleUpdater, BasicModuleUpdater>();
+        //services.TryAddTransient<IPagePublishingResolver, BasicPagePublishingResolver>();
+        services.TryAddTransient<IPagePublishing, BasicPagePublishing>();
 
-        /// <summary>
-        /// This will add Do-Nothing services which will take over if they are not provided by the main system
-        /// In general this will result in some features missing, which many platforms don't need or care about
-        /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        /// <remarks>
-        /// All calls in here MUST use TryAddTransient, and never without the Try
-        /// </remarks>
-        public static IServiceCollection AddSxcCoreFallbackServices(this IServiceCollection services)
-        {
-            // basic environment, pages, modules etc.
-            services.TryAddTransient<IEnvironmentInstaller, BasicEnvironmentInstaller>();
-            services.TryAddTransient<IPlatformAppInstaller, BasicEnvironmentInstaller>();
-            services.TryAddTransient<IPlatformModuleUpdater, BasicModuleUpdater>();
-            //services.TryAddTransient<IPagePublishingResolver, BasicPagePublishingResolver>();
-            services.TryAddTransient<IPagePublishing, BasicPagePublishing>();
+        // This must never have a TRY! but only an AddTransient, as many can be registered by this type
+        services.AddTransient<IPagePublishingGetSettings, PagePublishingGetSettingsOptional>(); // new v13 BETA #SwitchServicePagePublishingResolver
+        services.AddTransient<IPagePublishingGetSettings, PagePublishingGetSettingsForbidden>();
 
-            // This must never have a TRY! but only an AddTransient, as many can be registered by this type
-            services.AddTransient<IPagePublishingGetSettings, PagePublishingGetSettingsOptional>(); // new v13 BETA #SwitchServicePagePublishingResolver
-            services.AddTransient<IPagePublishingGetSettings, PagePublishingGetSettingsForbidden>();
-
-            // Code / Dynamic Code
-            services.TryAddTransient<CodeRootFactory>();
-            services.TryAddTransient<DynamicCodeRoot, DynamicCodeRootUnknown>();
-            services.TryAddTransient(typeof(DynamicCodeRoot<,>), typeof(DynamicCodeRootUnknown<,>));
-            services.TryAddTransient<IModule, ModuleUnknown>();
+        // Code / Dynamic Code
+        services.TryAddTransient<CodeRootFactory>();
+        services.TryAddTransient<DynamicCodeRoot, DynamicCodeRootUnknown>();
+        services.TryAddTransient(typeof(DynamicCodeRoot<,>), typeof(DynamicCodeRootUnknown<,>));
+        services.TryAddTransient<IModule, ModuleUnknown>();
             
-            // 11.08 - fallback in case not added
-            services.TryAddSingleton<IPlatform, PlatformUnknown>();
+        // 11.08 - fallback in case not added
+        services.TryAddSingleton<IPlatform, PlatformUnknown>();
 
-            // ADAM basics
-            // TODO: this doesn't warn yet, there should be an AdamFileSystemUnknown(WarnUseOfUnknown<AdamFileSystemUnknown> warn)
-            services.TryAddTransient<IAdamFileSystem<string, string>, AdamFileSystemBasic>();
+        // ADAM basics
+        // TODO: this doesn't warn yet, there should be an AdamFileSystemUnknown(WarnUseOfUnknown<AdamFileSystemUnknown> warn)
+        services.TryAddTransient<IAdamFileSystem<string, string>, AdamFileSystemBasic>();
 
-            // v12.05 - linkhelperunknown - for testing etc.
-            services.TryAddTransient<ILinkService, LinkServiceUnknown>();
+        // v12.05 - linkhelperunknown - for testing etc.
+        services.TryAddTransient<ILinkService, LinkServiceUnknown>();
 
-            // v12.05
-            services.TryAddTransient<IRazorService, RazorServiceUnknown>();
+        // v12.05
+        services.TryAddTransient<IRazorService, RazorServiceUnknown>();
 
-            // v12.05
-            services.TryAddTransient<ISystemLogService, SystemLogServiceUnknown>();
+        // v12.05
+        services.TryAddTransient<ISystemLogService, SystemLogServiceUnknown>();
 
-            // v12.05
-            services.TryAddTransient<IMailService, MailServiceUnknown>();
+        // v12.05
+        services.TryAddTransient<IMailService, MailServiceUnknown>();
 
-            // v13.02
-            services.TryAddTransient<IDynamicCodeService, DynamicCodeServiceUnknown>();
+        // v13.02
+        services.TryAddTransient<IDynamicCodeService, DynamicCodeServiceUnknown>();
 
-            // v13.02
-            services.TryAddTransient<ILinkPaths, LinkPathsUnknown>();
-            services.TryAddTransient<IModuleAndBlockBuilder, ModuleAndBlockBuilderUnknown>();
+        // v13.02
+        services.TryAddTransient<ILinkPaths, LinkPathsUnknown>();
+        services.TryAddTransient<IModuleAndBlockBuilder, ModuleAndBlockBuilderUnknown>();
 
-            // v13.04
-            services.TryAddTransient<IUserService, UsersServiceUnknown>();
+        // v13.04
+        services.TryAddTransient<IUserService, UsersServiceUnknown>();
 
-            // Koi, mainly so tests don't fail
-            services.TryAddTransient<ICssFrameworkDetector, CssFrameworkDetectorUnknown>();
+        // Koi, mainly so tests don't fail
+        services.TryAddTransient<ICssFrameworkDetector, CssFrameworkDetectorUnknown>();
 
-            // v15 DataSource
-            services.TryAddTransient<PagesDataSourceProvider, PagesDataSourceProviderUnknown>();
-            services.TryAddTransient<UsersDataSourceProvider, UsersDataSourceProviderUnknown>();
-            services.TryAddTransient<RolesDataSourceProvider, RolesDataSourceProviderUnknown>();
-            services.TryAddTransient<SitesDataSourceProvider, SitesDataSourceProviderUnknown>();
+        // v15 DataSource
+        services.TryAddTransient<PagesDataSourceProvider, PagesDataSourceProviderUnknown>();
+        services.TryAddTransient<UsersDataSourceProvider, UsersDataSourceProviderUnknown>();
+        services.TryAddTransient<RolesDataSourceProvider, RolesDataSourceProviderUnknown>();
+        services.TryAddTransient<SitesDataSourceProvider, SitesDataSourceProviderUnknown>();
 
-            // v16
-            services.TryAddScoped<IJsApiService, JsApiServiceUnknown>();
-            services.TryAddTransient<CodeErrorHelpService>();
+        // v16
+        services.TryAddScoped<IJsApiService, JsApiServiceUnknown>();
+        services.TryAddTransient<CodeErrorHelpService>();
 
-            return services;
-        }
+        return services;
     }
 }

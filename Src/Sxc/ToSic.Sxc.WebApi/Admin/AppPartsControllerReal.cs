@@ -15,6 +15,7 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class AppPartsControllerReal : ServiceBase, IAppPartsController
     {
         public const string LogSuffix = "AParts";

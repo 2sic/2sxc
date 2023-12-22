@@ -29,6 +29,13 @@
     <!--<PreserveCompilationReferences>true</PreserveCompilationReferences>
     <PreserveCompilationContext>true</PreserveCompilationContext>-->
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <!-- generate xml docs -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1701;1702;CS1570;CS1572;CS1573;CS1574;CS1587;CS1591;CS1710;CS1711</NoWarn>
+  </PropertyGroup>
+  
   <ItemGroup>
     <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs" Link="Properties\AssemblyInfoInherited.cs" />
     <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
@@ -86,6 +93,7 @@
     <EmbeddedResource Include="Scripts\ToSic.Sxc.13.00.00.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.13.01.00.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.15.00.00.sql" />
+    <EmbeddedResource Include="Scripts\ToSic.Sxc.16.07.01.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.Uninstall.sql" />
   </ItemGroup>
 

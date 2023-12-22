@@ -1,10 +1,10 @@
 ﻿using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Code
+namespace ToSic.Sxc.Code;
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public interface IDynamicCodeRoot<out TModel, out TServiceKit>: IDynamicCodeRoot, IDynamicCodeKit<TServiceKit>
+    where TModel : class
+    where TServiceKit : ServiceKit
 {
-    public interface IDynamicCodeRoot<out TModel, out TServiceKit>: IDynamicCodeRoot, /*IDynamicCode<TModel, TServiceKit>,*/ IDynamicCodeKit<TServiceKit>
-        where TModel : class
-        where TServiceKit : ServiceKit
-    {
-    }
 }

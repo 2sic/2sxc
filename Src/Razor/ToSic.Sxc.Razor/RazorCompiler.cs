@@ -9,12 +9,14 @@ using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Razor
 {
-    public class RazorCompiler : ServiceBase, IRazorCompiler
+    internal class RazorCompiler : ServiceBase, IRazorCompiler
     {
         #region Constructor and DI
 
@@ -41,7 +43,11 @@ namespace ToSic.Sxc.Razor
         }
         #endregion
 
-        public (IView view, ActionContext context) CompileView(string partialName, Action<RazorView> configure = null)
+
+        public Task<(IView view, ActionContext context)> CompileView(string templatePath, Action<RazorView> configure = null, IApp app = null)
+            => Task.FromResult(CompileView(templatePath, configure));
+
+        private (IView view, ActionContext context) CompileView(string partialName, Action<RazorView> configure = null)
         {
             var l = Log.Fn<(IView view, ActionContext context)>($"partialName:{partialName}");
             var actionContext = _actionContextAccessor.ActionContext ?? NewActionContext();

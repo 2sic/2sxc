@@ -11,95 +11,139 @@ using ToSic.Sxc.Web.Url;
 using CspOfPage = ToSic.Sxc.Web.ContentSecurityPolicy.CspOfPage;
 using CspParameters = ToSic.Sxc.Web.ContentSecurityPolicy.CspParameters;
 
-//using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
+namespace ToSic.Sxc.Oqt.Server.Services;
 
-namespace ToSic.Sxc.Oqt.Server.Services
+internal class OqtPageChangesOnServerService : ServiceBase, IOqtPageChangesOnServerService
 {
-    public class OqtPageChangesOnServerService : ServiceBase, IOqtPageChangesOnServerService
-    {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly LazySvc<IFeaturesService> _featuresService;
-        private readonly Generator<CspOfPage> _cspOfPage;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly LazySvc<IFeaturesService> _featuresService;
+    private readonly Generator<CspOfPage> _cspOfPage;
 
-        public OqtPageChangesOnServerService(IHttpContextAccessor httpContextAccessor, LazySvc<IFeaturesService> featuresService, Generator<CspOfPage> cspOfPage) : base($"{Constants.SxcLogName}.OqtPgChService")
+    public OqtPageChangesOnServerService(IHttpContextAccessor httpContextAccessor, LazySvc<IFeaturesService> featuresService, Generator<CspOfPage> cspOfPage) : base($"{Constants.SxcLogName}.OqtPgChService")
+    {
+        ConnectServices(
+            _httpContextAccessor = httpContextAccessor,
+            _featuresService = featuresService,
+            _cspOfPage = cspOfPage
+        );
+    }
+
+    public int ApplyHttpHeaders(OqtViewResultsDto result, IOqtHybridLog page)
+    {
+        var logPrefix = $"{nameof(ApplyHttpHeaders)}(...) - ";
+
+        #region initial request and parameters validation
+        page?.Log($"{logPrefix}validate parameters");
+
+        if (_httpContextAccessor?.HttpContext == null)
         {
-            ConnectServices(
-                _httpContextAccessor = httpContextAccessor,
-                _featuresService = featuresService,
-                _cspOfPage = cspOfPage
-                );
+            page?.Log($"{logPrefix}missing http context");
+            return -1;
         }
 
-        public int ApplyHttpHeaders(OqtViewResultsDto result, IOqtHybridLog page)
+        if (_httpContextAccessor.HttpContext.Request?.Path.HasValue != true)
         {
-            var logPrefix = $"{nameof(ApplyHttpHeaders)}(...) - ";
+            page?.Log($"{logPrefix}not a page because no path, so no headers");
+            return -1;
+        }
 
-            #region initial request and parameters validation
-            page?.Log($"{logPrefix}validate parameters");
+        if (_httpContextAccessor.HttpContext.Request.Path.Value!.Contains("/_blazor"))
+        {
+            page?.Log($"{logPrefix}no headers for blazor");
+            return -1;
+        }
 
-            if (_httpContextAccessor?.HttpContext == null)
+        if (!(result?.CspParameters?.Any() ?? false))
+        {
+            page?.Log($"{logPrefix}no headers if there are no CSP parameters");
+            return -1;
+        }
+        #endregion
+
+        // Register CSP changes for applying once all modules have been prepared
+        // Note that in cached scenarios, CspEnabled is true, but it may have been turned off since
+        if (result!.CspEnabled && _featuresService.Value.IsEnabled("ContentSecurityPolicy" /*BuiltInFeatures.ContentSecurityPolicy.NameId*/))
+        {
+            page?.Log($"{logPrefix}Register CSP changes");
+            PageCsp(result.CspEnforced, page).Add(result.CspParameters.Select(p => new CspParameters(UrlHelpers.ParseQueryString(p))).ToList());
+        }
+
+        #region response and headers validation
+        if (_httpContextAccessor.HttpContext.Response.HasStarted)
+        {
+            page?.Log($"{logPrefix}error, to late for adding http headers");
+            return 0;
+        }
+
+        var httpHeaders = result.HttpHeaders;
+        if (httpHeaders?.Any() == true)
+        {
+            page?.Log($"{logPrefix}ok, no headers to add");
+            return 0;
+        } 
+        #endregion
+
+        // Register event to attach headers
+        _httpContextAccessor.HttpContext.Response.OnStarting(() =>
+        {
+            try
             {
-                page?.Log($"{logPrefix}missing http context");
-                return -1;
+                foreach (var httpHeader in httpHeaders!)
+                {
+                    if (string.IsNullOrWhiteSpace(httpHeader.Name)) continue;
+
+                    // TODO: The CSP header can only exist once
+                    // So to do this well, we'll need to merge them in future, 
+                    // Ideally combining the existing one with any additional ones added here
+                    _httpContextAccessor.HttpContext.Response.Headers[httpHeader.Name] = httpHeader.Value;
+                    page?.Log($"{logPrefix}{httpHeader.Name}={httpHeader.Value}");
+                }
+            }
+            catch (Exception e)
+            {
+                page?.Log($"{logPrefix}Exception: {e.Message}");
             }
 
-            if (_httpContextAccessor.HttpContext.Request?.Path.HasValue != true)
-            {
-                page?.Log($"{logPrefix}not a page because no path, so no headers");
-                return -1;
-            }
+            return Task.CompletedTask;
+        });
 
-            if (_httpContextAccessor.HttpContext.Request.Path.Value!.Contains("/_blazor"))
-            {
-                page?.Log($"{logPrefix}no headers for blazor");
-                return -1;
-            }
+        page?.Log($"{logPrefix}httpHeaders.Count: {httpHeaders!.Count}");
+        return httpHeaders!.Count;
+    }
 
-            if (!(result?.CspParameters?.Any() ?? false))
-            {
-                page?.Log($"{logPrefix}no headers if there are no CSP parameters");
-                return -1;
-            }
-            #endregion
+    private CspOfPage PageCsp(bool enforced, IOqtHybridLog page)
+    {
+        var logPrefix = $"{nameof(PageCsp)}(enforced:{enforced}) - ";
 
-            // Register CSP changes for applying once all modules have been prepared
-            // Note that in cached scenarios, CspEnabled is true, but it may have been turned off since
-            if (result!.CspEnabled && _featuresService.Value.IsEnabled("ContentSecurityPolicy" /*BuiltInFeatures.ContentSecurityPolicy.NameId*/))
-            {
-                page?.Log($"{logPrefix}Register CSP changes");
-                PageCsp(result.CspEnforced, page).Add(result.CspParameters.Select(p => new CspParameters(UrlHelpers.ParseQueryString(p))).ToList());
-            }
+        var key = "2sxcPageLevelCsp";
 
-            #region response and headers validation
-            if (_httpContextAccessor.HttpContext.Response.HasStarted)
-            {
-                page?.Log($"{logPrefix}error, to late for adding http headers");
-                return 0;
-            }
+        // If it's already registered, then the add-on-sending has already been added too
+        // So we shouldn't repeat it, just return the cache which will be used later
+        if (_httpContextAccessor.HttpContext!.Items.ContainsKey(key))
+        {
+            var result = (CspOfPage)_httpContextAccessor.HttpContext.Items[key];
+            page?.Log($"already registered {logPrefix}{key}={result}");
+            return result;
+        }
 
-            var httpHeaders = result.HttpHeaders;
-            if (httpHeaders?.Any() == true)
-            {
-                page?.Log($"{logPrefix}ok, no headers to add");
-                return 0;
-            } 
-            #endregion
+        // Not yet registered. Create, and register for on-end of request
+        var pageLevelCsp = _cspOfPage.New();
+        _httpContextAccessor.HttpContext.Items[key] = pageLevelCsp;
 
-            // Register event to attach headers
+        // Register event to attach headers once the request is done and all Apps have registered their Csp
+        if (!_httpContextAccessor.HttpContext.Response.HasStarted)
             _httpContextAccessor.HttpContext.Response.OnStarting(() =>
             {
                 try
                 {
-                    foreach (var httpHeader in httpHeaders!)
+                    var headers = pageLevelCsp.CspHttpHeader();
+                    if (headers != null)
                     {
-                        if (string.IsNullOrWhiteSpace(httpHeader.Name)) continue;
-
-                        // TODO: The CSP header can only exist once
-                        // So to do this well, we'll need to merge them in future, 
-                        // Ideally combining the existing one with any additional ones added here
-                        _httpContextAccessor.HttpContext.Response.Headers[httpHeader.Name] = httpHeader.Value;
-                        page?.Log($"{logPrefix}{httpHeader.Name}={httpHeader.Value}");
+                        var key = pageLevelCsp.HeaderName(enforced);
+                        _httpContextAccessor.HttpContext.Response.Headers[key] = headers;
+                        page?.Log($"{logPrefix}have headers {key}={headers}");
                     }
+
                 }
                 catch (Exception e)
                 {
@@ -108,54 +152,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
 
                 return Task.CompletedTask;
             });
-
-            page?.Log($"{logPrefix}httpHeaders.Count: {httpHeaders!.Count}");
-            return httpHeaders!.Count;
-        }
-
-        private CspOfPage PageCsp(bool enforced, IOqtHybridLog page)
-        {
-            var logPrefix = $"{nameof(PageCsp)}(enforced:{enforced}) - ";
-
-            var key = "2sxcPageLevelCsp";
-
-            // If it's already registered, then the add-on-sending has already been added too
-            // So we shouldn't repeat it, just return the cache which will be used later
-            if (_httpContextAccessor.HttpContext!.Items.ContainsKey(key))
-            {
-                var result = (CspOfPage)_httpContextAccessor.HttpContext.Items[key];
-                page?.Log($"already registered {logPrefix}{key}={result}");
-                return result;
-            }
-
-            // Not yet registered. Create, and register for on-end of request
-            var pageLevelCsp = _cspOfPage.New();
-            _httpContextAccessor.HttpContext.Items[key] = pageLevelCsp;
-
-            // Register event to attach headers once the request is done and all Apps have registered their Csp
-            if (!_httpContextAccessor.HttpContext.Response.HasStarted)
-                _httpContextAccessor.HttpContext.Response.OnStarting(() =>
-                {
-                    try
-                    {
-                        var headers = pageLevelCsp.CspHttpHeader();
-                        if (headers != null)
-                        {
-                            var key = pageLevelCsp.HeaderName(enforced);
-                            _httpContextAccessor.HttpContext.Response.Headers[key] = headers;
-                            page?.Log($"{logPrefix}have headers {key}={headers}");
-                        }
-
-                    }
-                    catch (Exception e)
-                    {
-                        page?.Log($"{logPrefix}Exception: {e.Message}");
-                    }
-
-                    return Task.CompletedTask;
-                });
-            page?.Log($"not yet registered {logPrefix}{key}={pageLevelCsp}");
-            return pageLevelCsp;
-        }
+        page?.Log($"not yet registered {logPrefix}{key}={pageLevelCsp}");
+        return pageLevelCsp;
     }
 }

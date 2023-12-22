@@ -8,8 +8,8 @@ namespace ToSic.Sxc.Tests.WebUrlTests
     [TestClass]
     public class UrlValueFilterTests
     {
-        private UrlValueFilterNames TestFilter(bool defaultSerialize, IEnumerable<string> opposite)
-            => new UrlValueFilterNames(defaultSerialize, opposite);
+        private UrlValueFilterNames TestFilter(bool defaultSerialize, IEnumerable<string> opposite) =>
+            new(defaultSerialize, opposite);
 
         [TestMethod]
         public void NoFilterKeepAll()

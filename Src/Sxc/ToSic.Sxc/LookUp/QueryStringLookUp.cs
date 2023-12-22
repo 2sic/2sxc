@@ -4,47 +4,47 @@ using ToSic.Lib.DI;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Parameters;
 
-namespace ToSic.Sxc.LookUp
+namespace ToSic.Sxc.LookUp;
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class QueryStringLookUp : LookUpBase
 {
-    public class QueryStringLookUp : LookUpBase
+    /// <summary>
+    /// Constructor for DI
+    /// </summary>
+
+    public QueryStringLookUp(LazySvc<IHttp> httpLazy)
     {
-        /// <summary>
-        /// Constructor for DI
-        /// </summary>
+        Name = "QueryString";
+        _httpLazy = httpLazy;
+    }
+    private readonly LazySvc<IHttp> _httpLazy;
+    private NameValueCollection _source;
+    private NameValueCollection _originalParams;
 
-        public QueryStringLookUp(LazySvc<IHttp> httpLazy)
+
+    public override string Get(string key, string format)
+    {
+        if (_source == null)
+            _source = _httpLazy.Value?.QueryStringParams ?? new NameValueCollection();
+
+        // Special handling when having original parameters in query string.
+        var originalParametersQueryStringValue = _source[OriginalParameters.NameInUrlForOriginalParameters];
+        var overrideParam = GetOverrideParam(key, originalParametersQueryStringValue);
+
+        return !string.IsNullOrEmpty(overrideParam) ? overrideParam : _source[key];
+    }
+
+    private string GetOverrideParam(string key, string originalParametersQueryStringValue)
+    {
+        if (string.IsNullOrEmpty(originalParametersQueryStringValue)) return string.Empty;
+
+        if (_originalParams == null)
         {
-            Name = "QueryString";
-            _httpLazy = httpLazy;
-        }
-        private readonly LazySvc<IHttp> _httpLazy;
-        private NameValueCollection _source;
-        private NameValueCollection _originalParams;
-
-
-        public override string Get(string key, string format)
-        {
-            if (_source == null)
-                _source = _httpLazy.Value?.QueryStringParams ?? new NameValueCollection();
-
-            // Special handling when having original parameters in query string.
-            var originalParametersQueryStringValue = _source[OriginalParameters.NameInUrlForOriginalParameters];
-            var overrideParam = GetOverrideParam(key, originalParametersQueryStringValue);
-
-            return !string.IsNullOrEmpty(overrideParam) ? overrideParam : _source[key];
+            var originalParams = new NameValueCollection { { OriginalParameters.NameInUrlForOriginalParameters, originalParametersQueryStringValue } };
+            _originalParams = OriginalParameters.GetOverrideParams(originalParams);
         }
 
-        private string GetOverrideParam(string key, string originalParametersQueryStringValue)
-        {
-            if (string.IsNullOrEmpty(originalParametersQueryStringValue)) return string.Empty;
-
-            if (_originalParams == null)
-            {
-                var originalParams = new NameValueCollection { { OriginalParameters.NameInUrlForOriginalParameters, originalParametersQueryStringValue } };
-                _originalParams = OriginalParameters.GetOverrideParams(originalParams);
-            }
-
-            return _originalParams[key];
-        }
+        return _originalParams[key];
     }
 }

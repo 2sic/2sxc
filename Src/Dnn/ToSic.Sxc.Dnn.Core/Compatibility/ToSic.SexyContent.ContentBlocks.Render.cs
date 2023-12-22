@@ -1,6 +1,7 @@
 ﻿#if NETFRAMEWORK
 using System;
 using ToSic.Eav.Data;
+using ToSic.Lib.Coding;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Data;
 
@@ -12,7 +13,7 @@ namespace ToSic.SexyContent.ContentBlocks
     {
         [Obsolete]
         public static IRawHtmlString One(DynamicEntity context,
-            string noParamOrder = Eav.Parameters.Protector,
+            NoParamOrder noParamOrder = default,
             ICanBeEntity item = null,
             string field = null,
             Guid? newGuid = null)
@@ -20,7 +21,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
         [Obsolete]
         public static IRawHtmlString All(DynamicEntity context,
-            string noParamOrder = Eav.Parameters.Protector,
+            NoParamOrder noParamOrder = default,
             string field = null,
             string merge = null)
             => Sxc.Blocks.Render.All(context, noParamOrder, field: field, merge: merge);

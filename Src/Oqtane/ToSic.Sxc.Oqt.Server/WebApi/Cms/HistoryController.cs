@@ -9,33 +9,33 @@ using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.WebApi.Cms.HistoryControllerReal;
 
-namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
+namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
+
+// Release routes
+[Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Cms}")]
+[Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Cms}")]
+[Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Cms}")]
+
+[ValidateAntiForgeryToken]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class HistoryController : OqtStatefulControllerBase, IHistoryController
 {
-    // Release routes
-    [Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Cms}")]
-    [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Cms}")]
-    [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Cms}")]
+    public HistoryController(): base(RealController.LogSuffix) { }
 
-    [ValidateAntiForgeryToken]
-    public class HistoryController : OqtStatefulControllerBase, IHistoryController
-    {
-        public HistoryController(): base(RealController.LogSuffix) { }
-
-        private RealController Real => GetService<RealController>();
+    private RealController Real => GetService<RealController>();
 
 
-        /// <inheritdoc />
-        [HttpPost]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [Authorize(Roles = RoleNames.Admin)]
-        public List<ItemHistory> Get(int appId, [FromBody] ItemIdentifier item)
-            => Real.Get(appId, item);
+    /// <inheritdoc />
+    [HttpPost]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    [Authorize(Roles = RoleNames.Admin)]
+    public List<ItemHistory> Get(int appId, [FromBody] ItemIdentifier item)
+        => Real.Get(appId, item);
 
-        /// <inheritdoc />
-        [HttpPost]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [Authorize(Roles = RoleNames.Admin)]
-        public bool Restore(int appId, int changeId, [FromBody] ItemIdentifier item) 
-            => Real.Restore(appId, changeId, item);
-    }
+    /// <inheritdoc />
+    [HttpPost]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    [Authorize(Roles = RoleNames.Admin)]
+    public bool Restore(int appId, int changeId, [FromBody] ItemIdentifier item) 
+        => Real.Restore(appId, changeId, item);
 }

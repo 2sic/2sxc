@@ -4,18 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Catalog;
-using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Decorators;
 
 namespace ToSic.Sxc.Code
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class DynamicCodeObsolete
     {
         private readonly IDynamicCodeRoot _root;
@@ -40,7 +38,7 @@ namespace ToSic.Sxc.Code
                 // try to find with assembly name, or otherwise with GlobalName / previous names
                 //var catalog = _root.GetService<DataSourceCatalog>();
                 var type = dataSources.Catalog.Value.FindDataSourceInfo(typeName, _root.App.AppId)?.Type;
-                configuration = configuration ?? dataSources.LookUpEngine; // _root.ConfigurationProvider;
+                configuration ??= dataSources.LookUpEngine; // _root.ConfigurationProvider;
                 var cnf2Wip = new DataSourceOptions(lookUp: configuration);
                 if (links != null)
                     return dataSources.DataSources.Value/*_root.DataSourceFactory*/.Create(type: type, attach: links, options: cnf2Wip);

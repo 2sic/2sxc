@@ -3,130 +3,129 @@ using Custom.Hybrid;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using static ToSic.Eav.Parameters;
 
-namespace ToSic.Sxc.Code
+namespace ToSic.Sxc.Code;
+
+/// <summary>
+/// This is a base class for dynamic code which is compiled at runtime.
+///
+/// > [!TIP]
+/// > This is an old base class and works, but you should use a newer one such as <see cref="CodeTyped"/>
+/// </summary>
+[PublicApi]
+public abstract class DynamicCode : DynamicCodeBase, IHasCodeLog, IDynamicCode
 {
+    #region Constructor / Setup
+
     /// <summary>
-    /// This is a base class for dynamic code which is compiled at runtime.
-    ///
-    /// > [!TIP]
-    /// > This is an old base class and works, but you should use a newer one such as <see cref="CodeTyped"/>
+    /// Main constructor, to enable easy inheriting in custom code.
     /// </summary>
-    [PublicApi]
-    public abstract class DynamicCode : DynamicCodeBase, IHasCodeLog, IDynamicCode
-    {
-        #region Constructor / Setup
+    protected DynamicCode() : base("Sxc.DynCod") { }
 
-        /// <summary>
-        /// Main constructor, to enable easy inheriting in custom code.
-        /// </summary>
-        protected DynamicCode() : base("Sxc.DynCod") { }
+    /// <inheritdoc cref="IHasCodeLog.Log" />
+    public new ICodeLog Log => SysHlp.CodeLog;
 
-        /// <inheritdoc cref="IHasCodeLog.Log" />
-        public new ICodeLog Log => SysHlp.CodeLog;
+    /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+    public TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
 
-        /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
-        public TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
+    [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel10;
 
-        [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel10;
+    #endregion
 
-        #endregion
+    #region App / Data / Content / Header
 
-        #region App / Data / Content / Header
+    /// <inheritdoc cref="IDynamicCode.App" />
+    public IApp App => _DynCodeRoot?.App;
 
-        /// <inheritdoc cref="IDynamicCode.App" />
-        public IApp App => _DynCodeRoot?.App;
+    /// <inheritdoc cref="IDynamicCode.Data" />
+    public IContextData Data => _DynCodeRoot?.Data;
 
-        /// <inheritdoc cref="IDynamicCode.Data" />
-        public IContextData Data => _DynCodeRoot?.Data;
+    /// <inheritdoc cref="IDynamicCode.Content" />
+    public dynamic Content => _DynCodeRoot?.Content;
+    /// <inheritdoc cref="IDynamicCode.Header" />
+    public dynamic Header => _DynCodeRoot?.Header;
 
-        /// <inheritdoc cref="IDynamicCode.Content" />
-        public dynamic Content => _DynCodeRoot?.Content;
-        /// <inheritdoc cref="IDynamicCode.Header" />
-        public dynamic Header => _DynCodeRoot?.Header;
-
-        #endregion
+    #endregion
 
 
-        #region Link and Edit
+    #region Link and Edit
 
-        /// <inheritdoc cref="IDynamicCode.Link" />
-        public ILinkService Link => _DynCodeRoot?.Link;
-        /// <inheritdoc cref="IDynamicCode.Edit" />
-        public IEditService Edit => _DynCodeRoot?.Edit;
+    /// <inheritdoc cref="IDynamicCode.Link" />
+    public ILinkService Link => _DynCodeRoot?.Link;
+    /// <inheritdoc cref="IDynamicCode.Edit" />
+    public IEditService Edit => _DynCodeRoot?.Edit;
 
-        #endregion
+    #endregion
 
-        #region SharedCode - must also map previous path to use here
+    #region SharedCode - must also map previous path to use here
 
-        /// <inheritdoc />
-        [PrivateApi]
-        string IGetCodePath.CreateInstancePath { get; set; }
+    /// <inheritdoc />
+    [PrivateApi]
+    string IGetCodePath.CreateInstancePath { get; set; }
 
-        /// <inheritdoc />
-        public dynamic CreateInstance(string virtualPath, string noParamOrder = Protector, string name = null, string relativePath = null, bool throwOnError = true) =>
-            SysHlp.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
+    /// <inheritdoc />
+    public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true) =>
+        SysHlp.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
 
-        #endregion
+    #endregion
 
-        #region Context, Settings, Resources
+    #region Context, Settings, Resources
 
-        /// <inheritdoc cref="IDynamicCode.CmsContext" />
-        public ICmsContext CmsContext => _DynCodeRoot?.CmsContext;
+    /// <inheritdoc cref="IDynamicCode.CmsContext" />
+    public ICmsContext CmsContext => _DynCodeRoot?.CmsContext;
 
-        #endregion CmsContext
+    #endregion CmsContext
 
-        #region AsDynamic and AsEntity
+    #region AsDynamic and AsEntity
 
-        /// <inheritdoc />
-        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot?.Cdf.Json2Jacket(json, fallback);
+    /// <inheritdoc />
+    public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot?.Cdf.Json2Jacket(json, fallback);
 
-        /// <inheritdoc />
-        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot?.Cdf.CodeAsDyn(entity);
+    /// <inheritdoc />
+    public dynamic AsDynamic(IEntity entity) => _DynCodeRoot?.Cdf.CodeAsDyn(entity);
 
-        /// <inheritdoc />
-        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot?.Cdf.AsDynamicFromObject(dynamicEntity);
+    /// <inheritdoc />
+    public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot?.Cdf.AsDynamicFromObject(dynamicEntity);
 
-        /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
-        public dynamic AsDynamic(params object[] entities) => _DynCodeRoot?.Cdf.MergeDynamic(entities);
+    /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
+    public dynamic AsDynamic(params object[] entities) => _DynCodeRoot?.Cdf.MergeDynamic(entities);
 
-        /// <inheritdoc />
-        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot?.Cdf.AsEntity(dynamicEntity);
+    /// <inheritdoc />
+    public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot?.Cdf.AsEntity(dynamicEntity);
 
-        #endregion
+    #endregion
 
-        #region AsList
+    #region AsList
 
-        /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.Cdf.CodeAsDynList(list);
+    /// <inheritdoc />
+    public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.Cdf.CodeAsDynList(list);
 
-        #endregion
+    #endregion
 
-        #region CreateSource
+    #region CreateSource
 
-        /// <inheritdoc />
-        public T CreateSource<T>(IDataStream source) where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(source);
+    /// <inheritdoc />
+    public T CreateSource<T>(IDataStream source) where T : IDataSource
+        => _DynCodeRoot.CreateSource<T>(source);
 
-        /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
+    /// <inheritdoc />
+    public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
+        => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
 
-        #endregion
+    #endregion
 
-        #region AsAdam
+    #region AsAdam
 
-        /// <inheritdoc />
-        public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot?.AsAdam(item, fieldName);
+    /// <inheritdoc />
+    public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot?.AsAdam(item, fieldName);
 
-        #endregion
-    }
+    #endregion
 }

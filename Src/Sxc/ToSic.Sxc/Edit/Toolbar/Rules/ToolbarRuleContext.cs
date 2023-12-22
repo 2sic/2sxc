@@ -1,15 +1,15 @@
-﻿namespace ToSic.Sxc.Edit.Toolbar
-{
-    public class ToolbarRuleContext: ToolbarRuleTargeted
-    {
-        internal const string CommandName = "context";
+﻿namespace ToSic.Sxc.Edit.Toolbar;
 
-        public ToolbarRuleContext(
-            object target,
-            ToolbarContext context = null,
-            ToolbarButtonDecoratorHelper decoHelper = null
-        ) : base(target, CommandName, null, null, null, context, decoHelper)
-        {
-        }
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+internal class ToolbarRuleContext: ToolbarRuleTargeted
+{
+    internal const string CommandName = "context";
+
+    public ToolbarRuleContext(
+        object target,
+        ToolbarContext context = null,
+        ToolbarButtonDecoratorHelper decoHelper = null
+    ) : base(target, CommandName, null, null, null, context, decoHelper)
+    {
     }
 }

@@ -1,26 +1,25 @@
-﻿namespace ToSic.Sxc.Web.PageService
+﻿namespace ToSic.Sxc.Web.PageService;
+
+partial class PageService
 {
-    public partial class PageService
+    /// <inheritdoc />
+    public string SetTitle(string value, string placeholder = null) => PageServiceShared.Queue(PageProperties.Title, value, PageChangeModes.Prepend, placeholder);
+
+    /// <inheritdoc />
+    public string SetDescription(string value, string placeholder = null) => PageServiceShared.Queue(PageProperties.Description, value, PageChangeModes.Prepend, placeholder);
+
+    /// <inheritdoc />
+    public string SetKeywords(string value, string placeholder = null) => PageServiceShared.Queue(PageProperties.Keywords, value, PageChangeModes.Prepend, placeholder);
+
+    /// <inheritdoc />
+    public string SetHttpStatus(int statusCode, string message = null)
     {
-        /// <inheritdoc />
-        public string SetTitle(string value, string placeholder = null) => PageServiceShared.Queue(PageProperties.Title, value, PageChangeModes.Prepend, placeholder);
-
-        /// <inheritdoc />
-        public string SetDescription(string value, string placeholder = null) => PageServiceShared.Queue(PageProperties.Description, value, PageChangeModes.Prepend, placeholder);
-
-        /// <inheritdoc />
-        public string SetKeywords(string value, string placeholder = null) => PageServiceShared.Queue(PageProperties.Keywords, value, PageChangeModes.Prepend, placeholder);
-
-        /// <inheritdoc />
-        public string SetHttpStatus(int statusCode, string message = null)
-        {
-            PageServiceShared.HttpStatusCode = statusCode;
-            PageServiceShared.HttpStatusMessage = message;
-            return "";
-        }
-
-        /// <inheritdoc />
-        public string SetBase(string url) => PageServiceShared.Queue(PageProperties.Base, url, PageChangeModes.Replace, null);
-
+        PageServiceShared.HttpStatusCode = statusCode;
+        PageServiceShared.HttpStatusMessage = message;
+        return "";
     }
+
+    /// <inheritdoc />
+    public string SetBase(string url) => PageServiceShared.Queue(PageProperties.Base, url, PageChangeModes.Replace, null);
+
 }

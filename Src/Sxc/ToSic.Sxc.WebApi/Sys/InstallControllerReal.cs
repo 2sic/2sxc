@@ -2,10 +2,11 @@
 using System.Linq;
 using System.Text;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Configuration;
+using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
+using ToSic.Eav.Internal.Features;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
@@ -25,6 +26,7 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 
 namespace ToSic.Sxc.WebApi.Sys
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public class InstallControllerReal : ServiceBase
     {
         private readonly LazySvc<IPlatformAppInstaller> _platformAppInstaller;
@@ -34,7 +36,7 @@ namespace ToSic.Sxc.WebApi.Sys
         private readonly LazySvc<ImportFromRemote> _impFromRemoteLazy;
         private readonly IResponseMaker _responseMaker;
         private readonly LazySvc<IAppStates> _appStates;
-        private readonly LazySvc<AppSettingsStack> _appSettingsStack;
+        private readonly LazySvc<AppDataStackService> _appSettingsStack;
         private readonly LazySvc<AppsBackend> _appsBackendLazy;
 
         public const string LogSuffix = "Install";
@@ -50,7 +52,7 @@ namespace ToSic.Sxc.WebApi.Sys
             LazySvc<IFeaturesService> featureService,
             LazySvc<AppsBackend> appsBackend,
             LazySvc<IAppStates> appStates,
-            LazySvc<AppSettingsStack> appSettingsStack) : base($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl")
+            LazySvc<AppDataStackService> appSettingsStack) : base($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl")
         {
             ConnectServices(
                 _context = context,
@@ -94,9 +96,9 @@ namespace ToSic.Sxc.WebApi.Sys
                 .ToList();
 
             // Get list of allow/forbid rules for the App installer
-            var primaryApp = _appStates.Value.GetPrimaryApp(site.ZoneId, Log);
-            var settingsSources = _appSettingsStack.Value.Init(primaryApp).GetStack(ConfigurationConstants.Settings);
-            var stack = new PropertyStack().Init(ConfigurationConstants.RootNameSettings, settingsSources);
+            var primaryApp = _appStates.Value.GetPrimaryReader(site.ZoneId, Log);
+            var settingsSources = _appSettingsStack.Value.Init(primaryApp).GetStack(AppStackConstants.Settings);
+            var stack = new PropertyStack().Init(AppStackConstants.RootNameSettings, settingsSources);
 
             var rules = stack.InternalGetPath(new PropReqSpecs("SiteSetup.AutoInstallApps", null, Log), null);
             var ruleEntities = rules.Result as IEnumerable<IEntity>;    // note: Result is null if nothing found...
