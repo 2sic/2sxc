@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Services;
 /// - Created ca. v2 as `ToSic.Sxc.Web.ILinkHelper`
 /// - Moved to this new `Services.ILinkService` in v13.05. The previous name will continue to work, but newer features will be missing on that interface. 
 /// </remarks>
-[PublicApi_Stable_ForUseInYourCode]
+[PublicApi]
 public interface ILinkService: INeedsDynamicCodeRoot, ICanDebug
 #if NETFRAMEWORK
 #pragma warning disable CS0618

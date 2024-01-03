@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Blocks;
 /// <summary>
 /// Defines a view configuration which is loaded from an <see cref="EntityBasedType"/>.
 /// </summary>
-[PublicApi_Stable_ForUseInYourCode]
+[PublicApi]
 public interface IView: IEntityBasedType
 {
     /// <summary>

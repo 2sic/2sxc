@@ -12,7 +12,7 @@ namespace ToSic.Sxc.WebApi;
 /// This interface extends WebAPIs with File-Save helpers.
 /// It's important, because if 2sxc also runs on other CMS platforms, then the Dnn Context won't be available, so it's in a separate interface.
 /// </summary>
-[PublicApi_Stable_ForUseInYourCode]
+[PublicApi]
 public interface IDynamicWebApi
 {
     /// <summary>

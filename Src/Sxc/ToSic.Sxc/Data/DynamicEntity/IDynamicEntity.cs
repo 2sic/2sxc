@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Data
     /// Please check @HowTo.DynamicCode.DynamicEntity
     /// </blockquote>
     /// </summary>
-    [PublicApi_Stable_ForUseInYourCode]
+    [PublicApi]
     public partial interface IDynamicEntity:
 #if NETFRAMEWORK
         SexyContent.Interfaces.IDynamicEntity,

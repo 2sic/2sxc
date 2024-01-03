@@ -21,7 +21,7 @@ namespace ToSic.Sxc.DataSources;
 /// It could also find that the template specifies a query, in which case it would retrieve that. <br/>
 /// <em>Was previously called ModuleDataSource</em>
 /// </summary>
-[PublicApi_Stable_ForUseInYourCode]
+[PublicApi]
 [VisualQuery(
     NiceName = "CMS Block",
     UiHint = "Data for this CMS Block (instance/module)",

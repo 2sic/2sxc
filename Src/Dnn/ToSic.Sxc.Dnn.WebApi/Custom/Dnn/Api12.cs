@@ -12,7 +12,7 @@ namespace Custom.Dnn;
 /// This is the base class for all custom API Controllers. <br/>
 /// With this, your code receives the full context  incl. the current App, DNN, Data, etc.
 /// </summary>
-[PublicApi_Stable_ForUseInYourCode("This is the official base class for v12+")]
+[PublicApi("This is the official base class for v12+")]
 [DnnLogExceptions]
 [DefaultToNewtonsoftForHttpJson]
 public abstract class Api12 : Hybrid.Api12, IDnnDynamicWebApi, IHasDnn

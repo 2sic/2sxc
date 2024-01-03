@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Dnn.DataSources;
 /// <summary>
 /// Get DNN user profiles as <see cref="IEntity"/> objects of one or many users.
 /// </summary>
-[PublicApi_Stable_ForUseInYourCode]
+[PublicApi]
 [VisualQuery(
     NiceName = "Dnn User Profiles",
     UiHint = "Users profiles of specified users in Dnn",

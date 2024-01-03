@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Services;
 /// - First version created ca. v2 - originally as `ToSic.Sxc.Web.IInPageEditEditingHelper`
 /// - Moved to `ToSic.Sxc.Services.IEditService` in v13.05
 /// </remarks>
-[PublicApi_Stable_ForUseInYourCode]
+[PublicApi]
 public interface IEditService: IHasLog, INeedsDynamicCodeRoot
 #if NETFRAMEWORK
 #pragma warning disable CS0618

@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Services;
 /// * Introduced in v12.05 but on another namespace which still works for compatibility
 /// * Moved to ToSic.Sxc.Services in v13
 /// </remarks>
-[PublicApi_Stable_ForUseInYourCode]
+[PublicApi]
 public interface IRenderService
 {
     /// <summary>

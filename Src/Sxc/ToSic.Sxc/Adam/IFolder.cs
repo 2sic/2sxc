@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Adam;
 /// An ADAM (Automatic Digital Asset Management) folder.
 /// This simple interface assumes that it uses int-IDs.
 /// </summary>
-[PublicApi_Stable_ForUseInYourCode]
+[PublicApi]
 public interface IFolder: Eav.Apps.Assets.IFolder, IAsset
 {
     /// <summary>
