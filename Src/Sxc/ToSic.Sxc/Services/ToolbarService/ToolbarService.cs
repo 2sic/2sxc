@@ -5,6 +5,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Sxc.Edit.Toolbar;
 using System;
 using ToSic.Lib.Coding;
+using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Services;
 

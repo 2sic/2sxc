@@ -12,6 +12,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Services.Internal;
 using MailMessage = System.Net.Mail.MailMessage;
 
 // ReSharper disable once CheckNamespace

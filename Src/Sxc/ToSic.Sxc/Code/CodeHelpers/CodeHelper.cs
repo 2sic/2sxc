@@ -1,5 +1,6 @@
 ﻿using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Code.Internal;
 
 namespace ToSic.Sxc.Code.CodeHelpers;
 
@@ -13,13 +14,13 @@ public class CodeHelper: CodeHelperBase
 
     }
 
-    public CodeHelper Init(DynamicCodeBase parent)
+    public CodeHelper Init(CustomCodeBase parent)
     {
         _parent = parent;
         return this;
     }
 
-    private DynamicCodeBase _parent;
+    private CustomCodeBase _parent;
 
     #endregion
 

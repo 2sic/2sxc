@@ -2,6 +2,7 @@
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 
 namespace ToSic.Sxc.Web.PageService;

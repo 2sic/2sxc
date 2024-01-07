@@ -8,6 +8,7 @@ using ToSic.Sxc;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -24,7 +25,7 @@ namespace Custom.Hybrid;
 /// > This is an old base class and works, but you should use a newer one such as <see cref="CodeTyped"/>
 /// </summary>
 [PublicApi]
-public abstract class Code12 : DynamicCodeBase, IHasCodeLog, IDynamicCode, IDynamicCode12
+public abstract class Code12 : CustomCodeBase, IHasCodeLog, IDynamicCode, IDynamicCode12
 {
     #region Constructor / Setup
 

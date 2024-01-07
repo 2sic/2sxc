@@ -5,6 +5,7 @@ using ToSic.Sxc.Code;
 namespace Custom.Hybrid;
 
 [PrivateApi("not sure where/if it goes anywhere")]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface IRazor: IHasDynamicCodeRoot, INeedsDynamicCodeRoot
 {
     /// <summary>

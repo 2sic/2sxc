@@ -9,6 +9,7 @@ using ToSic.Sxc;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -27,7 +28,7 @@ namespace Custom.Hybrid;
 /// Important: The property `Convert` which exited on Razor12 was removed. use `Kit.Convert` instead.
 /// </remarks>
 [PublicApi]
-public abstract class Code14 : DynamicCodeBase, IHasCodeLog, IDynamicCode, IDynamicCode14<object, ServiceKit14>
+public abstract class Code14 : CustomCodeBase, IHasCodeLog, IDynamicCode, IDynamicCode14<object, ServiceKit14>
 {
 
     #region Constructor / Setup

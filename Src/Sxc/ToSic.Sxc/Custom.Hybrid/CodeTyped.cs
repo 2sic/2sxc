@@ -9,6 +9,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -21,7 +22,7 @@ namespace Custom.Hybrid;
 /// Base class for v16 Pro Dynamic Code files.
 /// </summary>
 [PublicApi]
-public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
+public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
 {
 
     #region Constructor / Setup
@@ -54,7 +55,9 @@ public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
         => _codeHelper ??= new TypedCode16Helper(CodeRootOrError(), MyData, null, false, "c# code file");
     private TypedCode16Helper _codeHelper;
 
-    [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel16;
+    [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public override int CompatibilityLevel => Constants.CompatibilityLevel16;
 
     #endregion
 
@@ -78,6 +81,7 @@ public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
     #region Stuff added by Code12
 
     [PrivateApi("Not yet ready")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public IDevTools DevTools => CodeHelper.DevTools;
 
     #endregion

@@ -7,6 +7,7 @@ using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Code;
 /// > This is an old base class and works, but you should use a newer one such as <see cref="CodeTyped"/>
 /// </summary>
 [PublicApi]
-public class DynamicCode12: DynamicCodeBase, IHasCodeLog, IDynamicCode, IDynamicCode12
+public class DynamicCode12: CustomCodeBase, IHasCodeLog, IDynamicCode, IDynamicCode12
 {
     #region Constructor / Setup
 

@@ -6,6 +6,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.WebApi.Adam;

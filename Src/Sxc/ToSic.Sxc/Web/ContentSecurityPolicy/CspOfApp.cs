@@ -5,6 +5,7 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy;
 

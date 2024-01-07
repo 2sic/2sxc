@@ -7,6 +7,7 @@ using ToSic.Lib.Coding;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.Images;

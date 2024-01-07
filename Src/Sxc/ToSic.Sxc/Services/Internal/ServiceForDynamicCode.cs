@@ -3,25 +3,24 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
 
-namespace ToSic.Sxc.Services;
+namespace ToSic.Sxc.Services.Internal;
 
 /// <summary>
 /// Internal special base class for services which link to the dynamic code root
 /// </summary>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class ServiceForDynamicCode: ServiceBase, INeedsDynamicCodeRoot, IHasDynamicCodeRoot, ICanDebug
+// #NoEditorBrowsableBecauseOfInheritance
+//[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[method: PrivateApi]
+public abstract class ServiceForDynamicCode(string logName)
+    : ServiceBase(logName), INeedsDynamicCodeRoot, IHasDynamicCodeRoot, ICanDebug
 {
-    [PrivateApi]
-    protected ServiceForDynamicCode(string logName) : base(logName)
-    {
-    }
-
     /// <summary>
     /// Connect to CodeRoot and it's log
     /// </summary>
     /// <param name="codeRoot"></param>
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot) => ConnectToRoot(codeRoot, null);
 
     /// <summary>
@@ -30,6 +29,7 @@ public abstract class ServiceForDynamicCode: ServiceBase, INeedsDynamicCodeRoot,
     /// <param name="codeRoot"></param>
     /// <param name="parentLog"></param>
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public void ConnectToRoot(IDynamicCodeRoot codeRoot, ILog parentLog)
     {
         // Avoid unnecessary reconnects
@@ -50,5 +50,6 @@ public abstract class ServiceForDynamicCode: ServiceBase, INeedsDynamicCodeRoot,
     public virtual IDynamicCodeRoot _DynCodeRoot { get; private set; }
 
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public virtual bool Debug { get; set; }
 }

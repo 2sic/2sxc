@@ -4,6 +4,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.EditService;

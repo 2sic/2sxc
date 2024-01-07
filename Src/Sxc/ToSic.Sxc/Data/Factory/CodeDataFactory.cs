@@ -8,6 +8,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Data;
 

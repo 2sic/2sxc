@@ -11,6 +11,7 @@ using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Blocks;
 
