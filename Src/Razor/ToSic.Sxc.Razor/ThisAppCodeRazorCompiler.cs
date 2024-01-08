@@ -170,15 +170,30 @@ namespace ToSic.Sxc.Razor
             {
                 builder.AddDefaultImports(new[]
                 {
+                    // based on 'obj/Debug/net8.0/*.GlobalUsings.g.cs'
+                    "@using global::System;",
+                    "@using global::System.Collections.Generic;",
+                    "@using global::System.IO;",
+                    "@using global::System.Linq;",
+                    "@using global::System.Net.Http;",
+                    "@using global::System.Net.Http.Json;",
+                    "@using global::System.Threading;",
+                    "@using global::System.Threading.Tasks;",
+                    "@using global::Microsoft.AspNetCore.Builder;",
+                    "@using global::Microsoft.AspNetCore.Hosting;",
+                    "@using global::Microsoft.AspNetCore.Http;",
+                    "@using global::Microsoft.AspNetCore.Routing;",
+                    "@using global::Microsoft.Extensions.Configuration;",
+                    "@using global::Microsoft.Extensions.DependencyInjection;",
+                    "@using global::Microsoft.Extensions.Hosting;",
+                    "@using global::Microsoft.Extensions.Logging;",
+
+                    // based on cshtml decompile POC
                     "@using Microsoft.AspNetCore.Mvc;",
                     "@using Microsoft.AspNetCore.Mvc.Razor.Internal;",
                     "@using Microsoft.AspNetCore.Mvc.Rendering;",
                     "@using Microsoft.AspNetCore.Mvc.ViewFeatures;",
-                    "@using Microsoft.AspNetCore.Razor.Hosting;",
-                    "@using System.Runtime.CompilerServices;",
-                    "@using System.Threading.Tasks;",
-                    //
-                    "@using System.Linq;",
+                    "@using System.Runtime.CompilerServices;"
                 });
             });
             var projectItem = fileSystem.GetItem(_serverPaths.Value.FullContentPath(templatePath));

@@ -476,22 +476,33 @@ namespace ToSic.Sxc.Dnn.Razor
 
             host.GeneratedClassContext = context;
 
-            // temp 2dm
+            // add implicit usings
             foreach (var ns in ReferencedNamespaces) host.NamespaceImports.Add(ns);
 
             var engine = new RazorTemplateEngine(host);
             return l.ReturnAsOk(engine);
         }
 
-        // temp 2dm
+        // adjusted based on 'obj/*.GlobalUsings.g.cs'
         private static readonly List<string> ReferencedNamespaces =
         [
             "System",
-            "System.Text",
             "System.Collections.Generic",
-            "System.Linq",
             "System.IO",
-            "System.Web.WebPages"
+            "System.Linq",
+            "System.Net.Http",
+            //"System.Net.Http.Json",
+            //"System.Text",
+            "System.Threading",
+            "System.Threading.Tasks",
+            "System.Web",
+            //"System.Web.UI",
+            //"System.Web.UI.WebControls",
+            "System.Web.WebPages",
+            "Microsoft.Extensions.Configuration",
+            "Microsoft.Extensions.DependencyInjection",
+            //"Microsoft.Extensions.Hosting",
+            "Microsoft.Extensions.Logging"
         ];
     }
 }
