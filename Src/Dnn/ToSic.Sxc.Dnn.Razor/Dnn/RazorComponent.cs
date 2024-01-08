@@ -19,6 +19,7 @@ using ToSic.Sxc.Search;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Dnn;
 
@@ -105,7 +106,7 @@ public abstract partial class RazorComponent : RazorComponentBase,
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
 
-    [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel10;
+    [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel10;
 
     /// <inheritdoc />
     public new IApp App => _DynCodeRoot.App;

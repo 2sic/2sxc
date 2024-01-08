@@ -5,6 +5,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Sxc.Edit.Toolbar;
 using System;
 using ToSic.Lib.Coding;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Services;
@@ -15,7 +16,7 @@ internal class ToolbarService: ServiceForDynamicCode, IToolbarService
 {
     #region Constructor & Init
 
-    public ToolbarService(Generator<IToolbarBuilder> toolbarGenerator) : base($"{Constants.SxcLogName}.TlbSvc")
+    public ToolbarService(Generator<IToolbarBuilder> toolbarGenerator) : base($"{SxcLogging.SxcLogName}.TlbSvc")
         => ConnectServices(_toolbarGenerator = toolbarGenerator);
     private readonly Generator<IToolbarBuilder> _toolbarGenerator;
 

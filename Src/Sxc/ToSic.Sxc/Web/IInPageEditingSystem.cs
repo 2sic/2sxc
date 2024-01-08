@@ -6,6 +6,7 @@ using ToSic.Lib.Logging;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Internal;
 
 // ReSharper disable UnusedMember.Global
 namespace ToSic.Sxc.Web;
@@ -187,7 +188,7 @@ public interface IInPageEditingSystem: IHasLog, INeedsDynamicCodeRoot
     [PrivateApi]
     IRawHtmlString WrapInContext(object content,
         NoParamOrder noParamOrder = default,
-        string tag = Constants.DefaultContextTag,
+        string tag = SxcUiConstants.DefaultContextTag,
         bool full = false,
         bool? enableEdit = null,
         int instanceId = 0,

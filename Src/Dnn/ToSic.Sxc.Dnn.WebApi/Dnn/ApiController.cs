@@ -14,6 +14,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
 
@@ -45,7 +46,7 @@ public abstract class ApiController : DynamicApiController,
     /// </remarks>
     [PrivateApi] public IBlock Block => SysHlp.GetBlockAndContext(Request).LoadBlock();
 
-    [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel9Old;
+    [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel9Old;
 
     /// <inheritdoc cref="IDynamicCode.App" />
     public IApp App => _DynCodeRoot.App;

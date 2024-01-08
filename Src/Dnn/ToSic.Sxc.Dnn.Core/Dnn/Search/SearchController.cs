@@ -25,6 +25,7 @@ using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Search;
 using static System.StringComparer;
 
@@ -348,9 +349,7 @@ internal class SearchController : ServiceBase
         {
             l.A($"attach DynamicCode context to class instance");
             var parentDynamicCodeRoot = _codeRootFactory.New()
-                .BuildCodeRoot(null, block, Log, Constants.CompatibilityLevel10);
-            //.InitDynCodeRoot(block, Log) //, Constants.CompatibilityLevel10)
-            //.SetCompatibility(Constants.CompatibilityLevel10);
+                .BuildCodeRoot(null, block, Log, CompatibilityLevels.CompatibilityLevel10);
             instanceWithContext.ConnectToRoot(parentDynamicCodeRoot);
         }
 

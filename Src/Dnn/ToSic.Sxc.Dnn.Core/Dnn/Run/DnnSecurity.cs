@@ -9,6 +9,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Context.Raw;
+using ToSic.Sxc.Internal;
 using static ToSic.Sxc.Dnn.DnnSxcSettings;
 
 namespace ToSic.Sxc.Dnn.Run;
@@ -90,7 +91,7 @@ public class DnnSecurity : ServiceBase
 
     internal Guid UserGuid(UserInfo user) => Membership.GetUser(user.Username)?.ProviderUserKey as Guid? ?? Guid.Empty;
 
-    internal string UserIdentityToken(UserInfo user) => IsAnonymous(user) ? Constants.Anonymous : DnnConstants.UserTokenPrefix + user.UserID;
+    internal string UserIdentityToken(UserInfo user) => IsAnonymous(user) ? SxcUserConstants.Anonymous : DnnConstants.UserTokenPrefix + user.UserID;
 
     internal CmsUserRaw CmsUserBuilder(UserInfo user, int siteId)
     {

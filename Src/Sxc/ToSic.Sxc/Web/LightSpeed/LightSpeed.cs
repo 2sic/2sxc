@@ -14,6 +14,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Internal;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Web.LightSpeed;
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.Web.LightSpeed;
 internal class LightSpeed : ServiceBase, IOutputCache
 {
 
-    public LightSpeed(IEavFeaturesService features, LazySvc<IAppStates> appStatesLazy, LazySvc<IAppPathsMicroSvc> appPathsLazy, LightSpeedStats lightSpeedStats, LazySvc<ICmsContext> cmsContext) : base(Constants.SxcLogName + ".Lights")
+    public LightSpeed(IEavFeaturesService features, LazySvc<IAppStates> appStatesLazy, LazySvc<IAppPathsMicroSvc> appPathsLazy, LightSpeedStats lightSpeedStats, LazySvc<ICmsContext> cmsContext) : base(SxcLogging.SxcLogName + ".Lights")
     {
         ConnectServices(
             LightSpeedStats = lightSpeedStats,

@@ -10,6 +10,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
@@ -66,7 +67,7 @@ public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolba
         Rules.AddRange(replaceRules ?? parent.Rules);
     }
 
-    public ILog Log { get; } = new Log(Constants.SxcLogName + ".TlbBld");
+    public ILog Log { get; } = new Log(SxcLogging.SxcLogName + ".TlbBld");
 
     private IAppIdentity _currentAppIdentity;
 

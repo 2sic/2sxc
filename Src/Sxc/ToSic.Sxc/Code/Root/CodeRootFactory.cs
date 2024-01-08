@@ -5,6 +5,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code;
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Code;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class CodeRootFactory: ServiceBase
 {
-    public CodeRootFactory(IServiceProvider serviceProvider): base($"{Constants.SxcLogName}.CDRFac")
+    public CodeRootFactory(IServiceProvider serviceProvider): base($"{SxcLogging.SxcLogName}.CDRFac")
     {
         _serviceProvider = serviceProvider;
     }

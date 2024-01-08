@@ -5,6 +5,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 
@@ -29,7 +30,7 @@ public class CmsContext: ServiceForDynamicCode, ICmsContext
         LazySvc<IPage> pageLazy,
         IAppStates appStates,
         LazySvc<ICmsSite> cmsSiteLazy
-    ) : base(Constants.SxcLogName + ".CmsCtx")
+    ) : base(SxcLogging.SxcLogName + ".CmsCtx")
     {
         ConnectServices(
             _initialContext = initialContext,

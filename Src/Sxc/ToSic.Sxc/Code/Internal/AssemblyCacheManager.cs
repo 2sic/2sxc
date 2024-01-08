@@ -5,11 +5,12 @@ using System.Runtime.Caching;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Code.Internal
 {
     [PrivateApi]
-    public class AssemblyCacheManager() : ServiceBase(Constants.SxcLogName + ".AssemblyCacheManager")
+    public class AssemblyCacheManager() : ServiceBase(SxcLogging.SxcLogName + ".AssemblyCacheManager")
     {
         private const string GlobalCacheRoot = "2sxc.AssemblyCache.Module.";
 

@@ -5,6 +5,7 @@ using ToSic.Eav.Internal.Features;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services.GoogleMaps;
 using static System.StringComparer;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
@@ -17,7 +18,7 @@ internal class LoadSettingsForGpsDefaults: ServiceBase, ILoadSettingsProvider
     private readonly LazySvc<IFeaturesService> _features;
 
     public LoadSettingsForGpsDefaults(GoogleMapsSettings googleMapsSettings,
-        LazySvc<IFeaturesService> features) : base($"{Constants.SxcLogName}.LdGpsD")
+        LazySvc<IFeaturesService> features) : base($"{SxcLogging.SxcLogName}.LdGpsD")
     {
         ConnectServices(
             _googleMapsSettings = googleMapsSettings,

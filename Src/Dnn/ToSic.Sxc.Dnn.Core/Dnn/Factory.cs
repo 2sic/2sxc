@@ -10,6 +10,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Context;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.LookUp;
 using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 using App = ToSic.Sxc.Apps.App;
@@ -100,7 +101,7 @@ public static class Factory
     {
         DnnStaticDi.CodeInfos.Warn(V13To17($"ToSic.Sxc.Dnn.Factory.{nameof(DynamicCode)}", "https://go.2sxc.org/brc-13-dnn-factory"));
         return StaticBuild<CodeRootFactory>()
-                .BuildCodeRoot(customCodeOrNull: null, blockBuilder.Block, NewLog(), Constants.CompatibilityLevel10) as DnnDynamicCodeRoot;
+                .BuildCodeRoot(customCodeOrNull: null, blockBuilder.Block, NewLog(), CompatibilityLevels.CompatibilityLevel10) as DnnDynamicCodeRoot;
     }
 
     /// <summary>

@@ -5,6 +5,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.ImportExport.Environment;
 using ToSic.Eav.Persistence.Xml;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Internal;
 using IContextResolver = ToSic.Sxc.Context.IContextResolver;
 
 namespace ToSic.Sxc.Dnn.ImportExport;
@@ -28,7 +29,7 @@ internal class DnnXmlExporter: XmlExporter
 
     protected override void PostContextInit(IContextOfApp appContext)
     {
-        AdamManager.Init(ctx: appContext, compatibility: Constants.CompatibilityLevel10, cdf: null);
+        AdamManager.Init(ctx: appContext, compatibility: CompatibilityLevels.CompatibilityLevel10, cdf: null);
     }
 
     #endregion

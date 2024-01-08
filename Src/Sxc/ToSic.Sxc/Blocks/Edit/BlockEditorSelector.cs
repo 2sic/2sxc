@@ -2,6 +2,7 @@
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Blocks.Edit;
 
@@ -14,7 +15,7 @@ public class BlockEditorSelector: ServiceBase
     public BlockEditorSelector(
         LazySvc<BlockEditorForModule> blkEdtForMod,
         LazySvc<BlockEditorForEntity> blkEdtForEnt
-    ) : base($"{Constants.SxcLogName}.BlEdSl")
+    ) : base($"{SxcLogging.SxcLogName}.BlEdSl")
     {
         ConnectServices(
             _blkEdtForMod = blkEdtForMod,

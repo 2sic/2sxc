@@ -13,6 +13,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Internal;
 using static System.IO.Path;
 
 namespace ToSic.Sxc.DataSources;
@@ -51,7 +52,7 @@ public class AppFilesDataSourceProvider : ServiceBase<AppFilesDataSourceProvider
         }
     }
 
-    public AppFilesDataSourceProvider(MyServices services) : base(services, $"{Constants.SxcLogName}.AppFls")
+    public AppFilesDataSourceProvider(MyServices services) : base(services, $"{SxcLogging.SxcLogName}.AppFls")
     {
     }
 

@@ -12,6 +12,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Shared;
 using IContextResolver = ToSic.Sxc.Context.IContextResolver;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
@@ -51,7 +52,7 @@ internal class OqtXmlExporter : XmlExporter
 
     protected override void PostContextInit(IContextOfApp appContext)
     {
-        AdamManager.Init(appContext, cdf: null, Constants.CompatibilityLevel10);
+        AdamManager.Init(appContext, cdf: null, CompatibilityLevels.CompatibilityLevel10);
     }
 
 

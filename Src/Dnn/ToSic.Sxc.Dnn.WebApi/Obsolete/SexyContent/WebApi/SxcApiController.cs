@@ -24,6 +24,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
+using ToSic.Sxc.Internal;
 
 // ReSharper disable InheritdocInvalidUsage
 
@@ -71,7 +72,7 @@ public abstract partial class SxcApiController :
     /// </summary>
     [PrivateApi] public IBlock Block => SysHlp.GetBlockAndContext(Request).LoadBlock();
 
-    [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel9Old;
+    [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel9Old;
 
     /// <inheritdoc cref="IDynamicCode.App" />
     public IApp App => _DynCodeRoot.App;

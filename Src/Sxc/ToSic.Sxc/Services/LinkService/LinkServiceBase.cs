@@ -8,6 +8,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web;
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Services;
 public abstract class LinkServiceBase : ServiceForDynamicCode, ILinkService
 {
     protected LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy) : base(
-        $"{Constants.SxcLogName}.LnkHlp")
+        $"{SxcLogging.SxcLogName}.LnkHlp")
         => ConnectServices(
             _linkPathsLazy = linkPathsLazy,
             ImgLinker = imgLinker

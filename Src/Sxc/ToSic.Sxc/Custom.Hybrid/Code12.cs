@@ -11,6 +11,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 
 
@@ -42,7 +43,7 @@ public abstract class Code12 : CustomCodeBase, IHasCodeLog, IDynamicCode, IDynam
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
 
-    [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel12;
+    [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
     #endregion
 

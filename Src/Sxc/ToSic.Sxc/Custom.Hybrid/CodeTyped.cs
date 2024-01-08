@@ -12,8 +12,8 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
-using Constants = ToSic.Sxc.Constants;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
@@ -57,7 +57,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
 
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public override int CompatibilityLevel => Constants.CompatibilityLevel16;
+    public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
 
     #endregion
 

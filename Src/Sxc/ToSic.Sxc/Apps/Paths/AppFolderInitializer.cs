@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using System.Linq;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Apps.Paths;
 
@@ -48,9 +48,9 @@ public class AppFolderInitializer : ServiceBase
         // Note that DNN needs it because many razor file don't use @inherits and the web.config contains the default class
         // but in Oqtane we'll require that to work
         var webConfigTemplateFilePath =
-            Path.Combine(_globalConfiguration.GlobalFolder, Constants.WebConfigTemplateFile);
-        if (File.Exists(webConfigTemplateFilePath) && !sxcFolder.GetFiles(Constants.WebConfigFileName).Any())
-            File.Copy(webConfigTemplateFilePath, Path.Combine(sxcFolder.FullName, Constants.WebConfigFileName));
+            Path.Combine(_globalConfiguration.GlobalFolder, SpecialFiles.WebConfigTemplateFile);
+        if (File.Exists(webConfigTemplateFilePath) && !sxcFolder.GetFiles(SpecialFiles.WebConfigFileName).Any())
+            File.Copy(webConfigTemplateFilePath, Path.Combine(sxcFolder.FullName, SpecialFiles.WebConfigFileName));
 
         // Create a Content folder (or App Folder)
         if (string.IsNullOrEmpty(appStateFolder))

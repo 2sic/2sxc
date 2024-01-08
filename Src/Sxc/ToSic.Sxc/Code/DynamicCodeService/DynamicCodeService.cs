@@ -7,6 +7,7 @@ using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Services;
 using App = ToSic.Sxc.Apps.App;
@@ -71,7 +72,7 @@ public partial class DynamicCodeService: ServiceBase<DynamicCodeService.MyServic
         }
     }
 
-    public DynamicCodeService(MyServices services): this(services, $"{Constants.SxcLogName}.DCS") { }
+    public DynamicCodeService(MyServices services): this(services, $"{SxcLogging.SxcLogName}.DCS") { }
     protected DynamicCodeService(MyServices services, string logName): base(services, logName)
     {
         ScopedServiceProvider = services.ServiceProvider.CreateScope().ServiceProvider;

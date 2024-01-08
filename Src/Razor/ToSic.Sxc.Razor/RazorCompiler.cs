@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Razor
 {
@@ -31,7 +32,7 @@ namespace ToSic.Sxc.Razor
             IRazorViewEngine viewEngine,
             IServiceProvider serviceProvider,
             IHttpContextAccessor httpContextAccessor,
-            IActionContextAccessor actionContextAccessor) : base($"{Constants.SxcLogName}.RzrCmp")
+            IActionContextAccessor actionContextAccessor) : base($"{SxcLogging.SxcLogName}.RzrCmp")
         {
             ConnectServices(
                 _applicationPartManager = applicationPartManager,

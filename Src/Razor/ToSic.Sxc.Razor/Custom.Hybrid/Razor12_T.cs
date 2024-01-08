@@ -12,6 +12,7 @@ using ToSic.Lib.Coding;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Razor.Internal;
 
 // ReSharper disable once CheckNamespace
@@ -26,7 +27,7 @@ namespace Custom.Hybrid
         /// Constructor - only available for inheritance
         /// </summary>
         [PrivateApi]
-        protected Razor12(): base(Constants.CompatibilityLevel12, "Oqt.Rzr12") { }
+        protected Razor12(): base(CompatibilityLevels.CompatibilityLevel12, "Oqt.Rzr12") { }
 
         #endregion
 

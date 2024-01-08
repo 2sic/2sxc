@@ -15,6 +15,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
 
@@ -39,7 +40,7 @@ public abstract partial class Api12: DynamicApiController, IDynamicCode12, IDyna
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => SysHlp.CodeLog;
 
-    [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel12;
+    [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();

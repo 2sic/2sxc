@@ -14,6 +14,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.CodeHelpers;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.WebApi.Adam;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -63,7 +64,7 @@ namespace ToSic.Sxc.WebApi.Infrastructure
             // Note that BlockOptional was already retrieved in the base class
             var codeRoot = context.HttpContext.RequestServices
                 .Build<CodeRootFactory>()
-                .BuildCodeRoot(_owner, BlockOptional, Log, compatibilityFallback: Constants.CompatibilityLevel12);
+                .BuildCodeRoot(_owner, BlockOptional, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel12);
             ConnectToRoot(codeRoot);
 
             AdamCode = codeRoot.GetService<AdamCode>();

@@ -7,6 +7,7 @@ using ToSic.Eav.Serialization;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Markup;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.EditService;
@@ -48,7 +49,7 @@ public partial class EditService
     [PrivateApi]
     public IRawHtmlString WrapInContext(object content,
         NoParamOrder noParamOrder = default,
-        string tag = Constants.DefaultContextTag,
+        string tag = SxcUiConstants.DefaultContextTag,
         bool full = false,
         bool? enableEdit = null,
         int instanceId = 0,

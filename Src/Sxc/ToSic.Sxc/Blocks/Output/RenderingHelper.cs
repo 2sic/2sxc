@@ -9,6 +9,7 @@ using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.JsContext;
@@ -59,7 +60,7 @@ public class RenderingHelper: ServiceBase, IRenderingHelper
         int instanceId = 0,
         int contentBlockId = 0,
         bool editContext = false,
-        string tag = Constants.DefaultContextTag,
+        string tag = SxcUiConstants.DefaultContextTag,
         bool addLineBreaks = true,
         string errorCode = default,
         List<Exception> exsOrNull = default
@@ -71,7 +72,7 @@ public class RenderingHelper: ServiceBase, IRenderingHelper
 
         var lineBreaks = addLineBreaks ? "\n" : "";
 
-        return $"<{tag} class='{Constants.ClassToMarkContentBlock}' {contextAttribs}>{lineBreaks}" +
+        return $"<{tag} class='{SxcUiConstants.ClassToMarkContentBlock}' {contextAttribs}>{lineBreaks}" +
                $"{content}" +
                $"{lineBreaks}</{tag}>";
     }

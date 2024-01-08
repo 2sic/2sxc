@@ -12,6 +12,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.WebApi.Cms;
@@ -30,7 +31,7 @@ public class EditLoadSettingsHelper: ServiceBase
         LazySvc<JsonSerializer> jsonSerializerGenerator,
         IEnumerable<ILoadSettingsProvider> loadSettingsProviders,
         GenWorkPlus<WorkEntities> appEntities
-    ) : base(Constants.SxcLogName + ".LodSet")
+    ) : base(SxcLogging.SxcLogName + ".LodSet")
     {
         ConnectServices(
             _jsonSerializerGenerator = jsonSerializerGenerator,

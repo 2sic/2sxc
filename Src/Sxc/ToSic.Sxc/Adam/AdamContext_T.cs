@@ -4,6 +4,7 @@ using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Adam;
 
@@ -36,7 +37,7 @@ public class AdamContext<TFolderId, TFileId>: AdamContext
         bool usePortalRoot, CodeDataFactory cdf)
     {
         var logCall = Log.Fn<AdamContext>($"..., usePortalRoot: {usePortalRoot}");
-        AdamManager.Init(context, cdf, Constants.CompatibilityLevel10);
+        AdamManager.Init(context, cdf, CompatibilityLevels.CompatibilityLevel10);
         AdamRoot = usePortalRoot
             ? _siteStoreGenerator.New() as AdamStorage<TFolderId, TFileId>
             : _fieldStoreGenerator.New().InitItemAndField(entityGuid, fieldName);

@@ -13,6 +13,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 using static ToSic.Sxc.Images.ImageConstants;
@@ -26,7 +27,7 @@ public class ImgResizeLinker : ServiceBase, ICanDebug
 {
 
     public ImgResizeLinker(LazySvc<IEavFeaturesService> features, LazySvc<ICss> koi, LazySvc<ISite> siteLazy)
-        : base($"{Constants.SxcLogName}.ImgRes")
+        : base($"{SxcLogging.SxcLogName}.ImgRes")
     {
         ConnectServices(
             _features = features,

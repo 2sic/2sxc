@@ -2,6 +2,7 @@
 using System.Linq;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
@@ -9,7 +10,7 @@ namespace ToSic.Sxc.Edit.Toolbar;
 public class ToolbarButtonDecoratorHelper: ServiceBase
 {
 
-    public ToolbarButtonDecoratorHelper(IAppStates appStates): base($"{Constants.SxcLogName}.TbdHlp")
+    public ToolbarButtonDecoratorHelper(IAppStates appStates): base($"{SxcLogging.SxcLogName}.TbdHlp")
     {
         _appStates = appStates;
     }

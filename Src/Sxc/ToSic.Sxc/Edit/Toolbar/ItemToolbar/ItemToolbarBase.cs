@@ -1,4 +1,5 @@
 ﻿using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
@@ -21,7 +22,7 @@ internal abstract class ItemToolbarBase: ServiceBase
     /// <returns></returns>
     public abstract string ToolbarAsAttributes();
 
-    protected ItemToolbarBase(string logName) : base($"{Constants.SxcLogName}.{logName}")
+    protected ItemToolbarBase(string logName) : base($"{SxcLogging.SxcLogName}.{logName}")
     {
     }
 }

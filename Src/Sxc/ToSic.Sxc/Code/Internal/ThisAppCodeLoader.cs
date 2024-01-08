@@ -12,6 +12,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Code.Internal
 {
@@ -50,7 +51,7 @@ namespace ToSic.Sxc.Code.Internal
 
         public Assembly GetAppCodeAssemblyOrNull(int appId)
         {
-            _logStore.Add(Constants.SxcLogAppCodeLoader, Log);
+            _logStore.Add(SxcLogging.SxcLogAppCodeLoader, Log);
 
             // Initial message for insights-overview
             var l = Log.Fn<Assembly>($"{nameof(appId)}: {appId}", timer: true);

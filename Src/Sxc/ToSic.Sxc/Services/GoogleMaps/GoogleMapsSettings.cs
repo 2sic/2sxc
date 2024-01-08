@@ -3,6 +3,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Services.GoogleMaps;
 
@@ -12,7 +13,7 @@ public class GoogleMapsSettings: EntityBasedService<GoogleMapsSettings>
 {
     public static string TypeIdentifier = "f5764f60-2621-4a5d-9391-100fbe664640";
 
-    public GoogleMapsSettings(IJsonService jsonService) : base($"{Constants.SxcLogName}.GMapSt")
+    public GoogleMapsSettings(IJsonService jsonService) : base($"{SxcLogging.SxcLogName}.GMapSt")
     {
         _jsonService = jsonService;
     }

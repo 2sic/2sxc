@@ -1,6 +1,7 @@
 ﻿using System.Collections.Specialized;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Plumbing.ParseObject;
@@ -12,7 +13,7 @@ namespace ToSic.Sxc.Images;
 /// </summary>
 internal class ResizeParams: HelperBase
 {
-    public ResizeParams(ILog parentLog) : base(parentLog, $"{Constants.SxcLogName}.ResPar") { }
+    public ResizeParams(ILog parentLog) : base(parentLog, $"{SxcLogging.SxcLogName}.ResPar") { }
 
     public double? AspectRatioOrNull(object aspectRatio) 
         => DoubleOrNullWithCalculation(aspectRatio);

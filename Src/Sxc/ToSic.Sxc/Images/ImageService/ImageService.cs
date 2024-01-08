@@ -6,6 +6,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 using static System.StringComparer;
@@ -17,7 +18,7 @@ public partial class ImageService: ServiceForDynamicCode, IImageService
 {
     #region Constructor and Inits
 
-    public ImageService(ImgResizeLinker imgLinker, IFeaturesService features) : base(Constants.SxcLogName + ".ImgSvc")
+    public ImageService(ImgResizeLinker imgLinker, IFeaturesService features) : base(SxcLogging.SxcLogName + ".ImgSvc")
     {
         ConnectServices(
             Features = features,

@@ -7,6 +7,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Dnn.Install;
 
@@ -82,7 +83,7 @@ public class DnnReadyCheckTurbo : ServiceBase
     {
         var sxcFolder = new DirectoryInfo(block.Context.Site.AppsRootPhysicalFull);
         var contentFolder = new DirectoryInfo(Path.Combine(sxcFolder.FullName, Eav.Constants.ContentAppFolder));
-        var webConfigTemplate = new FileInfo(Path.Combine(sxcFolder.FullName, Constants.WebConfigFileName));
+        var webConfigTemplate = new FileInfo(Path.Combine(sxcFolder.FullName, SpecialFiles.WebConfigFileName));
         if (!(sxcFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
         {
             // configure it

@@ -2,6 +2,7 @@
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Code;
 
@@ -16,7 +17,7 @@ public class TypedCode16Helper: CodeHelperXxBase
     //protected readonly string CodeFileName;
     internal ContextData Data { get; }
     public TypedCode16Helper(IDynamicCodeRoot codeRoot, IContextData data, IDictionary<string, object> myModelData, bool isRazor, string codeFileName)
-        : base(codeRoot, isRazor, codeFileName, Constants.SxcLogName + ".TCd16H")
+        : base(codeRoot, isRazor, codeFileName, SxcLogging.SxcLogName + ".TCd16H")
     {
         //CodeRoot = codeRoot;
         _myModelData = myModelData;

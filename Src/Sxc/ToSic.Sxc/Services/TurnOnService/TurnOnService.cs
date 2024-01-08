@@ -3,6 +3,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Internal;
 using Attribute = ToSic.Razor.Markup.Attribute;
 
 namespace ToSic.Sxc.Services;
@@ -13,7 +14,7 @@ internal class TurnOnService: ServiceBase, ITurnOnService
     private const string TagName = "turnOn";
     private const string AttributeName = "turn-on";
 
-    public TurnOnService(LazySvc<IHtmlTagsService> htmlTagsService) : base(Constants.SxcLogName + ".TrnOnS")
+    public TurnOnService(LazySvc<IHtmlTagsService> htmlTagsService) : base(SxcLogging.SxcLogName + ".TrnOnS")
     {
         ConnectServices(
             _htmlTagsService = htmlTagsService

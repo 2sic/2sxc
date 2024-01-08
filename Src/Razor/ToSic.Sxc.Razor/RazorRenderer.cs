@@ -9,6 +9,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Help;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Razor
 {
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Razor
         private readonly IThisAppCodeRazorCompiler _thisAppCodeRazorCompiler;
         private readonly SourceAnalyzer _sourceAnalyzer;
 
-        public RazorRenderer(ITempDataProvider tempDataProvider, IRazorCompiler razorCompiler, IThisAppCodeRazorCompiler thisAppCodeRazorCompiler, SourceAnalyzer sourceAnalyzer) : base($"{Constants.SxcLogName}.RzrRdr")
+        public RazorRenderer(ITempDataProvider tempDataProvider, IRazorCompiler razorCompiler, IThisAppCodeRazorCompiler thisAppCodeRazorCompiler, SourceAnalyzer sourceAnalyzer) : base($"{SxcLogging.SxcLogName}.RzrRdr")
         {
             ConnectServices(
                 _tempDataProvider = tempDataProvider,

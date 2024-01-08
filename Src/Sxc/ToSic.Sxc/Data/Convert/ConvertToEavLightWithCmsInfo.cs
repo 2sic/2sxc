@@ -4,6 +4,7 @@ using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Data;
 
@@ -67,7 +68,7 @@ public class ConvertToEavLightWithCmsInfo : ConvertToEavLight
 
         var editDecorator = entity.GetDecorator<EntityInBlockDecorator>();
 
-        dictionary.Add(Constants.JsonEntityEditNodeName, editDecorator != null // entity is IHasEditingData entWithEditing
+        dictionary.Add(SxcUiConstants.JsonEntityEditNodeName, editDecorator != null // entity is IHasEditingData entWithEditing
             ? (object) new {
                 sortOrder = editDecorator.SortOrder,
                 isPublished = entity.IsPublished,

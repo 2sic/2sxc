@@ -3,6 +3,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context.Raw;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services.Internal;
 using static System.StringComparison;
 
@@ -12,7 +13,7 @@ namespace ToSic.Sxc.Services;
 public abstract class UsersServiceBase : ServiceForDynamicCode, IUserService
 {
 
-    protected UsersServiceBase(LazySvc<IContextOfSite> context) : base($"{Constants.SxcLogName}.UsrInfoSrv")
+    protected UsersServiceBase(LazySvc<IContextOfSite> context) : base($"{SxcLogging.SxcLogName}.UsrInfoSrv")
     {
         ConnectServices(
             _context = context
@@ -58,7 +59,7 @@ public abstract class UsersServiceBase : ServiceForDynamicCode, IUserService
         if (string.IsNullOrWhiteSpace(identityToken))
             return (CmsUserRaw.UnknownUser.Id, "empty identity token");
 
-        if (identityToken.EqualsInsensitive(Constants.Anonymous))
+        if (identityToken.EqualsInsensitive(SxcUserConstants.Anonymous))
             return (CmsUserRaw.AnonymousUser.Id, "ok (anonymous)");
 
         var prefix = PlatformIdentityTokenPrefix;

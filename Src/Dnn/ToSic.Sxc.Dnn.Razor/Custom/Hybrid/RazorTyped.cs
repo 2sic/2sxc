@@ -15,10 +15,10 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Razor.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
-using Constants = ToSic.Sxc.Constants;
 using static System.StringComparer;
 
 // ReSharper disable once CheckNamespace
@@ -44,7 +44,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
         => SysHlp.RenderPageNotSupported();
 
 
-    [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel16;
+    [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();

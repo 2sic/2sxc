@@ -10,6 +10,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.LookUp;
 
 // ReSharper disable once CheckNamespace
@@ -99,7 +100,7 @@ public class TokenEngine : EngineBase
     }
 
     private void InitDataHelper() => _data = _codeRootFactory.Value
-        .BuildCodeRoot(null, Block, Log, Constants.CompatibilityLevel9Old);
+        .BuildCodeRoot(null, Block, Log, CompatibilityLevels.CompatibilityLevel9Old);
 
     private void InitTokenReplace()
     {

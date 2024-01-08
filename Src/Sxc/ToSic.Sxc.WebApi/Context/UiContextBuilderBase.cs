@@ -15,6 +15,7 @@ using ToSic.Eav.WebApi.Security;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Web.JsContext;
 using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 
@@ -61,7 +62,7 @@ public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>,
 
     #region Constructor / DI
 
-    protected UiContextBuilderBase(MyServices services): base(services, Constants.SxcLogName + ".UiCtx")
+    protected UiContextBuilderBase(MyServices services): base(services, SxcLogging.SxcLogName + ".UiCtx")
     {
     }
 

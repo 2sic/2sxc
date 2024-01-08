@@ -9,6 +9,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Internal;
 using static ToSic.Sxc.Dnn.Run.DnnSecurity;
 
 namespace ToSic.Sxc.Dnn.Context;
@@ -27,7 +28,7 @@ internal class DnnUser: ServiceBase, IUser<UserInfo>
     private string GetUserIdentityToken ()
     {
         var userId = Id;
-        var token = userId == -1 ? Constants.Anonymous : $"{DnnConstants.UserTokenPrefix}{userId}";
+        var token = userId == -1 ? SxcUserConstants.Anonymous : $"{DnnConstants.UserTokenPrefix}{userId}";
         return token;
     }
 

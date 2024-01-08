@@ -3,6 +3,7 @@ using System.Linq;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.LookUp;
 
@@ -14,7 +15,7 @@ public class LookUpEngineResolverGeneric : ServiceBase, ILookUpEngineResolver
 {
     #region Constructor and DI
 
-    public LookUpEngineResolverGeneric(LazySvc<IEnumerable<ILookUp>> lookUps) : base($"{Constants.SxcLogName}.LookUp")
+    public LookUpEngineResolverGeneric(LazySvc<IEnumerable<ILookUp>> lookUps) : base($"{SxcLogging.SxcLogName}.LookUp")
     {
         _lookUps = lookUps;
     }

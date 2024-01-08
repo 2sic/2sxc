@@ -12,6 +12,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services.Internal;
 using MailMessage = System.Net.Mail.MailMessage;
 
@@ -27,7 +28,7 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
 
     private readonly LazySvc<IUser> _userLazy;
 
-    protected MailServiceBase(LazySvc<IUser> userLazy) : base($"{Constants.SxcLogName}.MailSrv")
+    protected MailServiceBase(LazySvc<IUser> userLazy) : base($"{SxcLogging.SxcLogName}.MailSrv")
     {
         ConnectServices(
             _userLazy = userLazy

@@ -9,6 +9,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Web;
 // ReSharper disable RedundantExtendsListEntry
 #pragma warning disable CS0108, CS0114
@@ -204,7 +205,7 @@ public interface IEditService: IHasLog, INeedsDynamicCodeRoot
     [PrivateApi]
     IRawHtmlString WrapInContext(object content,
         NoParamOrder noParamOrder = default,
-        string tag = Constants.DefaultContextTag,
+        string tag = SxcUiConstants.DefaultContextTag,
         bool full = false,
         bool? enableEdit = null,
         int instanceId = 0,

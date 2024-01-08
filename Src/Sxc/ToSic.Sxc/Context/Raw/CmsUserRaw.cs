@@ -6,6 +6,7 @@ using ToSic.Eav.Data.Raw;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Context.Raw;
 
@@ -38,7 +39,7 @@ public class CmsUserRaw: RawEntityBase, IUser, IRawEntity, IHasIdentityNameId
 
     #region Constant user objects for Unknown/Anonymous
 
-    public static readonly CmsUserRaw AnonymousUser = new() { Id = -1, Name = Constants.Anonymous };
+    public static readonly CmsUserRaw AnonymousUser = new() { Id = -1, Name = SxcUserConstants.Anonymous };
 
     public static readonly CmsUserRaw UnknownUser = new() { Id = -2, Name = Eav.Constants.NullNameId };
 

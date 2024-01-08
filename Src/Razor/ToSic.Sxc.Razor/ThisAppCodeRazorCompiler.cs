@@ -25,6 +25,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Razor
 {
@@ -53,7 +54,7 @@ namespace ToSic.Sxc.Razor
             IRazorPageActivator pageActivator,
             LazySvc<ThisAppCodeLoader> thisAppCodeLoader,
             LazySvc<IServerPaths> serverPaths,
-            AssemblyResolver assemblyResolver) : base($"{Constants.SxcLogName}.RzrCmp")
+            AssemblyResolver assemblyResolver) : base($"{SxcLogging.SxcLogName}.RzrCmp")
         {
 
             ConnectServices(

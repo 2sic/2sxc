@@ -11,6 +11,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data.Typed;
+using ToSic.Sxc.Internal;
 using static ToSic.Sxc.Data.Wrapper.JsonProcessingHelpers;
 
 namespace ToSic.Sxc.Data.Wrapper;
@@ -23,7 +24,7 @@ public class CodeJsonWrapper: ServiceBase
     private readonly Generator<WrapObjectTyped> _wrapTypeGenerator;
     public WrapperSettings Settings { get; private set; }
 
-    public CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator) : base($"{Constants.SxcLogName}.CdJsWr")
+    public CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator) : base($"{SxcLogging.SxcLogName}.CdJsWr")
     {
         ConnectServices(
             _wrapTypeGenerator = wrapTypeGenerator

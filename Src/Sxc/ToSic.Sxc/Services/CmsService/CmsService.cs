@@ -6,6 +6,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Services.Tweaks;
 
@@ -19,7 +20,7 @@ internal class CmsService: ServiceForDynamicCode, ICmsService
 
     public CmsService(
         Generator<CmsServiceStringWysiwyg> stringWysiwyg
-    ) : base(Constants.SxcLogName + ".CmsSrv")
+    ) : base(SxcLogging.SxcLogName + ".CmsSrv")
     {
         ConnectServices(
             _stringWysiwyg = stringWysiwyg.SetInit(s => s.ConnectToRoot(_DynCodeRoot))

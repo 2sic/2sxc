@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Code;
 
@@ -26,7 +27,7 @@ public partial class DynamicCodeService
         ActivateEditUi();
         var cmsBlock = _myScopedServices.ModAndBlockBuilder.Value.GetProvider(pageId, moduleId).LoadBlock();
         var codeRoot = _myScopedServices.CodeRootGenerator.New()
-            .BuildCodeRoot(customCodeOrNull: null, cmsBlock, Log, Constants.CompatibilityLevel12);
+            .BuildCodeRoot(customCodeOrNull: null, cmsBlock, Log, CompatibilityLevels.CompatibilityLevel12);
 
         return wrapLog.ReturnAsOk(codeRoot);
     }
@@ -43,7 +44,7 @@ public partial class DynamicCodeService
         MakeSureLogIsInHistory();
         ActivateEditUi();
         var codeRoot = _myScopedServices.CodeRootGenerator.New()
-            .BuildCodeRoot(customCodeOrNull: null, null, Log, Constants.CompatibilityLevel12);
+            .BuildCodeRoot(customCodeOrNull: null, null, Log, CompatibilityLevels.CompatibilityLevel12);
         var app = App(zoneId: zoneId, appId: appId);
         codeRoot.AttachApp(app);
         return wrapLog.ReturnAsOk(codeRoot);

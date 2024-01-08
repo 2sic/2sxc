@@ -9,7 +9,6 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using Constants = ToSic.Sxc.Constants;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.Oqt.Server.Custom;
@@ -18,6 +17,7 @@ using System.IO;
 using ToSic.Sxc.Adam;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Lib.Coding;
+using ToSic.Sxc.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
@@ -48,7 +48,7 @@ public abstract class ApiTyped : OqtStatefulControllerBase, IDynamicWebApi, IHas
         CtxHlp.OnActionExecutingEnd(context);
     }
 
-    [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel16;
+    [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
 
     #endregion
 

@@ -3,6 +3,7 @@ using System.Linq;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.WebApi.Cms;
@@ -11,7 +12,7 @@ internal class LoadSettingsApiKeys: LoadSettingsProviderBase, ILoadSettingsProvi
 {
     private readonly LazySvc<ISecureDataService> _secureDataService;
 
-    public LoadSettingsApiKeys(LazySvc<ISecureDataService> secureDataService) : base($"{Constants.SxcLogName}.StApiK")
+    public LoadSettingsApiKeys(LazySvc<ISecureDataService> secureDataService) : base($"{SxcLogging.SxcLogName}.StApiK")
     {
         _secureDataService = secureDataService;
     }

@@ -2,13 +2,14 @@
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Internal;
 using static System.String;
 
 namespace ToSic.Sxc.WebApi.Cms;
 
 internal class LoadSettingsForContentType: LoadSettingsProviderBase, ILoadSettingsProvider
 {
-    public LoadSettingsForContentType() : base($"{Constants.SxcLogName}.LdStCT")
+    public LoadSettingsForContentType() : base($"{SxcLogging.SxcLogName}.LdStCT")
     {
     }
 

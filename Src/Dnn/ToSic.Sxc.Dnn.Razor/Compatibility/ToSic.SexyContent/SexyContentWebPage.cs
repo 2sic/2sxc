@@ -26,6 +26,7 @@ using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
@@ -92,7 +93,7 @@ public abstract class SexyContentWebPage :
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
 
-    [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel9Old;
+    [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel9Old;
 
     /// <inheritdoc />
     public new IApp App => _DynCodeRoot.App;

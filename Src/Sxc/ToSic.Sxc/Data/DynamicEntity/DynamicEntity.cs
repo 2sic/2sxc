@@ -14,6 +14,7 @@ using IEntity = ToSic.Eav.Data.IEntity;
 using System.Dynamic;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Data;
 
@@ -122,7 +123,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
         bool? toolbar = default,
         object imageSettings = default,
         bool debug = default
-    ) => Cdf.CompatibilityLevel < Constants.CompatibilityLevel12
+    ) => Cdf.CompatibilityLevel < CompatibilityLevels.CompatibilityLevel12
         // Only do compatibility check if used on DynamicEntity
         ? throw new NotSupportedException($"{nameof(Html)}(...) not supported in older Razor templates. Use Razor14, RazorTyped or newer.")
         : TypedItemHelpers.Html(Cdf, this.TypedItem, name: name, noParamOrder: noParamOrder, container: container,

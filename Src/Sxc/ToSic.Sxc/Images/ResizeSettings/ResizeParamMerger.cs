@@ -5,6 +5,7 @@ using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Plumbing.ParseObject;
 
@@ -23,7 +24,7 @@ internal class ResizeParamMerger: HelperBase
     private const string AspectRatioField = "AspectRatio";
     private const string AdvancedField = "Advanced";
 
-    public ResizeParamMerger(ILog parentLog) : base(parentLog, $"{Constants.SxcLogName}.ImgRPM") { }
+    public ResizeParamMerger(ILog parentLog) : base(parentLog, $"{SxcLogging.SxcLogName}.ImgRPM") { }
 
     public bool Debug = false;
 

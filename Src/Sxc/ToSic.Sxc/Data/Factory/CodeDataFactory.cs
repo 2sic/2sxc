@@ -7,6 +7,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 
@@ -58,7 +59,7 @@ public partial class CodeDataFactory: ServiceForDynamicCode
     private ISite _siteOrNull;
     public int CompatibilityLevel => _priorityCompatibilityLevel ?? _compatibilityLevel;
     private int? _priorityCompatibilityLevel;
-    private int _compatibilityLevel = Constants.CompatibilityLevel10;
+    private int _compatibilityLevel = CompatibilityLevels.CompatibilityLevel10;
 
 
     #region CodeDataServices

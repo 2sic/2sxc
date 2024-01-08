@@ -21,6 +21,7 @@ using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.Razor;
@@ -220,7 +221,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     private void InitHelpers(RazorComponentBase webPage)
     {
         var l = Log.Fn();
-        var dynCode = _codeRootFactory.BuildCodeRoot(webPage, Block, Log, compatibilityFallback: Constants.CompatibilityLevel9Old);
+        var dynCode = _codeRootFactory.BuildCodeRoot(webPage, Block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel9Old);
         webPage.ConnectToRoot(dynCode);
         l.Done();
     }
@@ -228,7 +229,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     /// <summary>
     /// Special old mechanism to always request jQuery and Rvt
     /// </summary>
-    public bool OldAutoLoadJQueryAndRvt => Webpage._DynCodeRoot.Cdf.CompatibilityLevel <= Constants.MaxLevelForAutoJQuery;
+    public bool OldAutoLoadJQueryAndRvt => Webpage._DynCodeRoot.Cdf.CompatibilityLevel <= CompatibilityLevels.MaxLevelForAutoJQuery;
 
 
     public HelperResult RenderPage(string templatePath, object data)

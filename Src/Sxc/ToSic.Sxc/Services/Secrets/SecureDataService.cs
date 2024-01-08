@@ -4,6 +4,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Internal;
 using static System.StringComparison;
 
 namespace ToSic.Sxc.Services;
@@ -22,7 +23,7 @@ internal class SecureDataService: ServiceBase, ISecureDataService
 {
     public readonly AesCryptographyService Aes;
 
-    public SecureDataService(AesCryptographyService aes) : base($"{Constants.SxcLogName}.SecDtS")
+    public SecureDataService(AesCryptographyService aes) : base($"{SxcLogging.SxcLogName}.SecDtS")
     {
         Aes = aes;
     }

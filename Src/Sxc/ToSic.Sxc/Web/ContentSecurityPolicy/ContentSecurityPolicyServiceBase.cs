@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy;
@@ -12,7 +13,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ContentSecurityPolicyServiceBase : ServiceBase, IContentSecurityPolicyService
 {
-    public ContentSecurityPolicyServiceBase(): base($"{Constants.SxcLogName}.CspSvc") { }
+    public ContentSecurityPolicyServiceBase(): base($"{SxcLogging.SxcLogName}.CspSvc") { }
 
     public CspParameters Policy = new();
 

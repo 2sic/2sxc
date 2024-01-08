@@ -10,6 +10,7 @@ using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Razor.Internal;
 
 namespace ToSic.Sxc.Razor
@@ -78,7 +79,7 @@ namespace ToSic.Sxc.Razor
                         if (rzv.RazorPage is not IRazor asSxc) return;
 
                         var dynCode = _codeRootFactory.Value
-                            .BuildCodeRoot(asSxc, Block, Log, compatibilityFallback: Constants.CompatibilityLevel12);
+                            .BuildCodeRoot(asSxc, Block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel12);
 
                         asSxc.ConnectToRoot(dynCode);
                         // Note: Don't set the purpose here any more, it's a deprecated feature in 12+

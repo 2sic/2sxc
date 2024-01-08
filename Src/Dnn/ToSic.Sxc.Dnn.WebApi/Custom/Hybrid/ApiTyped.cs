@@ -16,6 +16,7 @@ using System.Net.Http;
 using System.Web.Http.Results;
 using ToSic.Eav.WebApi;
 using ToSic.Lib.Coding;
+using ToSic.Sxc.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
@@ -56,7 +57,7 @@ public abstract class ApiTyped: DynamicApiController, IHasCodeLog, IDynamicWebAp
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => SysHlp.CodeLog;
 
-    [PrivateApi] public int CompatibilityLevel => ToSic.Sxc.Constants.CompatibilityLevel16;
+    [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
 
     #endregion
 

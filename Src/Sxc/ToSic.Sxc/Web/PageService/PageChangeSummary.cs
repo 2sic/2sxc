@@ -6,6 +6,7 @@ using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Web.ClientAssets;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageFeatures;
@@ -26,7 +27,7 @@ public class PageChangeSummary: ServiceBase
     public PageChangeSummary(
         LazySvc<IBlockResourceExtractor> resourceExtractor,
         LazySvc<RequirementsService> requirements
-    ) : base(Constants.SxcLogName + "PgChSm")
+    ) : base(SxcLogging.SxcLogName + "PgChSm")
     {
         ConnectServices(
             _requirements = requirements,

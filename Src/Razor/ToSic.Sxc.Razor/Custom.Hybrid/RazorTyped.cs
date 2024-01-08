@@ -15,6 +15,7 @@ using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Razor.Internal;
 using ToSic.Sxc.Services;
 
@@ -31,7 +32,7 @@ namespace Custom.Hybrid
         /// Constructor - only available for inheritance
         /// </summary>
         [PrivateApi]
-        protected RazorTyped() : base(ToSic.Sxc.Constants.CompatibilityLevel16, "Oqt.Rzr16") { }
+        protected RazorTyped() : base(CompatibilityLevels.CompatibilityLevel16, "Oqt.Rzr16") { }
 
         #endregion
 

@@ -14,11 +14,11 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Custom;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
-using Constants = ToSic.Sxc.Constants;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
@@ -36,7 +36,7 @@ public abstract class Api12 : OqtStatefulControllerBase, IDynamicWebApi, IDynami
 
     protected Api12(string logSuffix) : base(logSuffix) { }
 
-    [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel12;
+    [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
     /// <summary>
     /// Our custom dynamic 2sxc app api controllers, depends on event OnActionExecuting to provide dependencies (without DI in constructor).

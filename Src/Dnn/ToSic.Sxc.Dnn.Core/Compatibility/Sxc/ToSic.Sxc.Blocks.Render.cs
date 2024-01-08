@@ -7,6 +7,7 @@ using ToSic.Razor.Markup;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Internal;
 using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 
 // ReSharper disable once CheckNamespace
@@ -69,7 +70,7 @@ public class Render
     {
         var cdf = parent.Cdf;
         // First do version checks -should not be allowed if compatibility is too low
-        if (cdf.CompatibilityLevel > Constants.MaxLevelForStaticRender)
+        if (cdf.CompatibilityLevel > CompatibilityLevels.MaxLevelForStaticRender)
             throw new Exception(
                 "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. " +
                 "For v14+ use the Kit.Render (IRenderService) or for v12+ use the GetService<ToSic.Sxc.Services.IRenderService>().");

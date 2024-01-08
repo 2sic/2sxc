@@ -2,6 +2,7 @@
 using ToSic.Eav.Run;
 using ToSic.Eav.StartUp;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Startup;
 
@@ -10,7 +11,7 @@ public class SxcStartUpRegistrations: ServiceBase, IStartUpRegistrations
 {
     public string NameId => Log.NameId;
 
-    public SxcStartUpRegistrations(FeaturesCatalog featuresCatalog): base($"{Constants.SxcLogName}.SUpReg")
+    public SxcStartUpRegistrations(FeaturesCatalog featuresCatalog): base($"{SxcLogging.SxcLogName}.SUpReg")
     {
         _featuresCatalog = featuresCatalog;
     }
