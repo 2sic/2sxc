@@ -5,6 +5,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Razor.Internal;
 using IHasLog = ToSic.Lib.Logging.IHasLog;
 using ILog = ToSic.Lib.Logging.ILog;
 

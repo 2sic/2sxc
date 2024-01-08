@@ -6,6 +6,7 @@ namespace Custom.Hybrid;
 
 partial class Razor12: ISetDynamicModel
 {
+    [PublicApi]
     /// <inheritdoc cref="IRazor14{TModel,TServiceKit}.DynamicModel"/>
     public dynamic DynamicModel => SysHlp.DynamicModel;
 

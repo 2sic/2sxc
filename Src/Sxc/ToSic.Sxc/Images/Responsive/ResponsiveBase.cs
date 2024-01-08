@@ -60,7 +60,7 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     /// <inheritdoc />
     public virtual Img Img => _imgTag.GetL(Log, l =>
     {
-        var imgTag = Razor.Blade.Tag.Img().Src(Src);
+        var imgTag = ToSic.Razor.Blade.Tag.Img().Src(Src);
 
         // Add all kind of attributes if specified
         imgTag = AddAttributes(imgTag, Params.ImgAttributes);

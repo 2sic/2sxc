@@ -19,7 +19,7 @@ public class ResponsivePicture: ResponsiveBase, IResponsivePicture
 
     public Picture Picture => _picTag.Get(() =>
     {
-        var pic = Razor.Blade.Tag.Picture(Sources, Img);
+        var pic = ToSic.Razor.Blade.Tag.Picture(Sources, Img);
         pic = AddAttributes(pic, Params.PictureAttributes);
         if (Params.PictureClass.HasValue()) pic = pic.Class(Params.PictureClass);
         if (TryGetAttribute(Params.PictureAttributes, Recipe.SpecialPropertyStyle, out var style))
@@ -39,7 +39,7 @@ public class ResponsivePicture: ResponsiveBase, IResponsivePicture
         var wrapLog = logOrNull.Fn<TagList>();
         // Check formats
         var defFormat = ImgService.GetFormat(url);
-        if (defFormat == null) return wrapLog.Return(Razor.Blade.Tag.TagList(), "no format");
+        if (defFormat == null) return wrapLog.Return(ToSic.Razor.Blade.Tag.TagList(), "no format");
 
         // Determine if we have many formats, otherwise just use the current one
         var formats = defFormat.ResizeFormats.Any()
@@ -59,11 +59,11 @@ public class ResponsivePicture: ResponsiveBase, IResponsivePicture
                 var srcSet = useMultiSrcSet
                     ? ImgLinker.SrcSet(url, formatSettings, SrcSetType.Source, Params.HasMetadataOrNull)
                     : ImgLinker.ImageOnly(url, formatSettings, Params.HasMetadataOrNull).Url;
-                var source = Razor.Blade.Tag.Source().Type(resizeFormat.MimeType).Srcset(srcSet);
+                var source = ToSic.Razor.Blade.Tag.Source().Type(resizeFormat.MimeType).Srcset(srcSet);
                 if (!string.IsNullOrEmpty(Sizes)) source.Sizes(Sizes);
                 return source;
             });
-        var result = Razor.Blade.Tag.TagList(sources);
+        var result = ToSic.Razor.Blade.Tag.TagList(sources);
         return wrapLog.Return(result, $"{result.Count()}");
     }
 

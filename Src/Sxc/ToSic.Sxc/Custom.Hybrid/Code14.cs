@@ -28,6 +28,7 @@ namespace Custom.Hybrid;
 /// Important: The property `Convert` which exited on Razor12 was removed. use `Kit.Convert` instead.
 /// </remarks>
 [PublicApi]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]   // #DocsButNotForIntellisense
 public abstract class Code14 : CustomCodeBase, IHasCodeLog, IDynamicCode, IDynamicCode14<object, ServiceKit14>
 {
 

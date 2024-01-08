@@ -1,8 +1,7 @@
 ﻿using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 
-// ReSharper disable once CheckNamespace
-namespace Custom.Hybrid;
+namespace ToSic.Sxc.Razor.Internal;
 
 [PrivateApi("not sure where/if it goes anywhere")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
