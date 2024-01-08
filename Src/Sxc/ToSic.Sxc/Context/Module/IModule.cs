@@ -59,6 +59,7 @@ namespace ToSic.Eav.Run
     /// but just defined by a razor page.
     /// </summary>
     [Obsolete("this was replaced by IModule")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IContainer
     {
     }
