@@ -13,6 +13,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Dnn.Cms;
@@ -55,11 +56,11 @@ internal class DnnModuleUpdater : ServiceBase, IPlatformModuleUpdater
         var zoneId = _site.ZoneId;
 
         if (appId == Eav.Constants.AppIdEmpty || !appId.HasValue)
-            UpdateInstanceSettingForAllLanguages(instance.Id, Settings.ModuleSettingApp, null, Log);
+            UpdateInstanceSettingForAllLanguages(instance.Id, ModuleSettingNames.AppName, null, Log);
         else
         {
             var appName = _appStates.AppIdentifier(zoneId, appId.Value);
-            UpdateInstanceSettingForAllLanguages(instance.Id, Settings.ModuleSettingApp, appName, Log);
+            UpdateInstanceSettingForAllLanguages(instance.Id, ModuleSettingNames.AppName, appName, Log);
         }
 
         // Change to 1. available preferable default template if app has been set
@@ -79,7 +80,7 @@ internal class DnnModuleUpdater : ServiceBase, IPlatformModuleUpdater
     protected void ClearPreview(int instanceId)
     {
         Log.A($"ClearPreviewTemplate(iid: {instanceId})");
-        UpdateInstanceSettingForAllLanguages(instanceId, Settings.ModuleSettingsPreview, null, Log);
+        UpdateInstanceSettingForAllLanguages(instanceId, ModuleSettingNames.PreviewView, null, Log);
     }
 
     public void SetContentGroup(int instanceId, bool blockExists, Guid guid)
@@ -89,7 +90,7 @@ internal class DnnModuleUpdater : ServiceBase, IPlatformModuleUpdater
         ClearPreview(instanceId);
         // Update blockConfiguration Guid for this module
         if (blockExists)
-            UpdateInstanceSettingForAllLanguages(instanceId, Settings.ModuleSettingContentGroup,
+            UpdateInstanceSettingForAllLanguages(instanceId, ModuleSettingNames.ContentGroup,
                 guid.ToString(), Log);
     }
 
@@ -103,10 +104,10 @@ internal class DnnModuleUpdater : ServiceBase, IPlatformModuleUpdater
         var settings = moduleController.GetModule(instanceId).ModuleSettings;
 
         // Do not allow saving the temporary template id if a ContentGroup exists for this module
-        if (settings[Settings.ModuleSettingContentGroup] != null)
+        if (settings[ModuleSettingNames.ContentGroup] != null)
             throw new Exception("Preview template id cannot be set for a module that already has content.");
 
-        UpdateInstanceSettingForAllLanguages(instanceId, Settings.ModuleSettingsPreview, previewView.ToString(), Log);
+        UpdateInstanceSettingForAllLanguages(instanceId, ModuleSettingNames.PreviewView, previewView.ToString(), Log);
     }
 
     public void UpdateTitle(IBlock block, IEntity titleItem)

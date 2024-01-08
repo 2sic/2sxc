@@ -12,6 +12,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Work;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
@@ -56,11 +57,11 @@ internal class OqtModuleUpdater: ServiceBase, IPlatformModuleUpdater
         // ToDo: Should throw exception if a real BlockConfiguration exists
 
         if (appId == Eav.Constants.AppIdEmpty || !appId.HasValue)
-            UpdateInstanceSetting(instance.Id, Settings.ModuleSettingApp, null, Log);
+            UpdateInstanceSetting(instance.Id, ModuleSettingNames.AppName, null, Log);
         else
         {
             var appName = _appStates.Value.AppIdentifier(_site.ZoneId, appId.Value);
-            UpdateInstanceSetting(instance.Id, Settings.ModuleSettingApp, appName, Log);
+            UpdateInstanceSetting(instance.Id, ModuleSettingNames.AppName, appName, Log);
         }
 
         // Change to 1. available template if app has been set
@@ -77,7 +78,7 @@ internal class OqtModuleUpdater: ServiceBase, IPlatformModuleUpdater
     protected void ClearPreview(int instanceId)
     {
         Log.A($"ClearPreviewTemplate(iid: {instanceId})");
-        UpdateInstanceSetting(instanceId, Settings.ModuleSettingsPreview, null, Log);
+        UpdateInstanceSetting(instanceId, ModuleSettingNames.PreviewView, null, Log);
     }
 
     /// <summary>
@@ -102,10 +103,10 @@ internal class OqtModuleUpdater: ServiceBase, IPlatformModuleUpdater
         var settings = _settingsHelper.Init(EntityNames.Module, instanceId).Settings;
 
         // Do not allow saving the temporary template id if a ContentGroup exists for this module
-        if (settings.TryGetValue(Settings.ModuleSettingContentGroup, out var value) && !string.IsNullOrEmpty(value))
+        if (settings.TryGetValue(ModuleSettingNames.ContentGroup, out var value) && !string.IsNullOrEmpty(value))
             throw new("Preview template id cannot be set for a module that already has content.");
 
-        UpdateInstanceSetting(instanceId, Settings.ModuleSettingsPreview, previewTemplateGuid.ToString(), Log);
+        UpdateInstanceSetting(instanceId, ModuleSettingNames.PreviewView, previewTemplateGuid.ToString(), Log);
     }
     public void SetContentGroup(int instanceId, bool wasCreated, Guid guid)
     {
@@ -114,7 +115,7 @@ internal class OqtModuleUpdater: ServiceBase, IPlatformModuleUpdater
         ClearPreview(instanceId);
         // Update blockConfiguration Guid for this module
         if (wasCreated)
-            UpdateInstanceSetting(instanceId, Settings.ModuleSettingContentGroup, guid.ToString(), Log);
+            UpdateInstanceSetting(instanceId, ModuleSettingNames.ContentGroup, guid.ToString(), Log);
     }
 
     public void UpdateTitle(IBlock block, IEntity titleItem)

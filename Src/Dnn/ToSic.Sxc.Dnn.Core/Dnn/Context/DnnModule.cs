@@ -7,6 +7,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Internal;
 using ISite = ToSic.Eav.Context.ISite;
 
 namespace ToSic.Sxc.Dnn.Context;
@@ -82,10 +83,10 @@ public class DnnModule: Module<ModuleInfo>
             var settings = UnwrappedModule.ModuleSettings;
 
             // find block identifier
-            Guid.TryParse(settings[Settings.ModuleSettingContentGroup]?.ToString(), out var blockGuid);
+            Guid.TryParse(settings[ModuleSettingNames.ContentGroup]?.ToString(), out var blockGuid);
 
             // Check if we have preview-view identifier - for blocks which don't exist yet
-            var previewTemplateString = settings[Settings.ModuleSettingsPreview]?.ToString();
+            var previewTemplateString = settings[ModuleSettingNames.PreviewView]?.ToString();
             var overrideView = !string.IsNullOrEmpty(previewTemplateString)
                 ? Guid.Parse(previewTemplateString)
                 : new Guid();
@@ -107,9 +108,9 @@ public class DnnModule: Module<ModuleInfo>
             return l.Return((appId, "Content"), $"{msg} - use Default app: {appId}");
         }
 
-        if (module.ModuleSettings.ContainsKey(Settings.ModuleSettingApp))
+        if (module.ModuleSettings.ContainsKey(ModuleSettingNames.AppName))
         {
-            var guid = module.ModuleSettings[Settings.ModuleSettingApp].ToString();
+            var guid = module.ModuleSettings[ModuleSettingNames.AppName].ToString();
             var appId = _appFinderLazy.Value.FindAppId(zoneId, guid);
             return l.Return((appId, guid), $"{msg} AppG:{guid} = app:{appId}");
         }

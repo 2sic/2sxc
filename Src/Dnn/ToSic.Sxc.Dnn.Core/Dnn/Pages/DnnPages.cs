@@ -5,6 +5,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Dnn.Pages;
 
@@ -41,13 +42,13 @@ public class DnnPages: HelperBase
         // filter the results
         var allMods = all
             .Where(m => m.DefaultLanguageModule == null)
-            .Where(m => m.ModuleSettings.ContainsKey(Settings.ModuleSettingContentGroup))
+            .Where(m => m.ModuleSettings.ContainsKey(ModuleSettingNames.ContentGroup))
             .ToList();
 
         var result = allMods.Select(m => new ModuleWithContent
             {
                 Module = m,
-                ContentGroup = Guid.TryParse(m.ModuleSettings[Settings.ModuleSettingContentGroup].ToString(),
+                ContentGroup = Guid.TryParse(m.ModuleSettings[ModuleSettingNames.ContentGroup].ToString(),
                     out var g)
                     ? g
                     : Guid.Empty,

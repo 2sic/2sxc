@@ -9,6 +9,7 @@ using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared;
 
@@ -85,12 +86,12 @@ internal class OqtModule: Module<Module>
             var zoneId = _site.ZoneId; // ZoneMapper.GetZoneId(UnwrappedContents.SiteId);
             var (appId, appNameId) = GetInstanceAppId(zoneId); //appId ?? TestIds.Blog.App;
             var block = Guid.Empty;
-            if (_settings.ContainsKey(Settings.ModuleSettingContentGroup))
-                Guid.TryParse(_settings[Settings.ModuleSettingContentGroup], out block);
+            if (_settings.ContainsKey(ModuleSettingNames.ContentGroup))
+                Guid.TryParse(_settings[ModuleSettingNames.ContentGroup], out block);
 
             // Check if we have preview-view identifier - for blocks which don't exist yet
             var overrideView = new Guid();
-            if (_settings.TryGetValue(Settings.ModuleSettingsPreview, out var previewId) && !string.IsNullOrEmpty(previewId))
+            if (_settings.TryGetValue(ModuleSettingNames.PreviewView, out var previewId) && !string.IsNullOrEmpty(previewId))
                 Guid.TryParse(previewId, out overrideView);
 
             _blockIdentifier = new BlockIdentifier(zoneId, appId, appNameId, block, overrideView);
@@ -109,10 +110,10 @@ internal class OqtModule: Module<Module>
         if (IsContent) 
             return wrapLog.Return((_appStates.DefaultAppId(zoneId), "Content"), "Content");
 
-        if (!_settings.ContainsKey(Settings.ModuleSettingApp)) 
+        if (!_settings.ContainsKey(ModuleSettingNames.AppName)) 
             return wrapLog.Return((Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty), Eav.Constants.AppNameIdEmpty);
 
-        var guid = _settings[Settings.ModuleSettingApp] ?? "";
+        var guid = _settings[ModuleSettingNames.AppName] ?? "";
         var appId = _appFinderLazy.Value.FindAppId(zoneId, guid);
         return wrapLog.ReturnAsOk((appId, guid));
 
