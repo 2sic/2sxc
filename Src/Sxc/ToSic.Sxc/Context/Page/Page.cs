@@ -1,5 +1,4 @@
 ﻿using ToSic.Lib.DI;
-using ToSic.Sxc.Context.Query;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Parameters;
 
@@ -27,7 +26,7 @@ public class Page: IPage
     public int Id { get; private set; } = Eav.Constants.NullId;
 
 
-    public IParameters Parameters => _parameters ??= new Parameters(OriginalParameters.GetOverrideParams(_httpLazy.Value?.QueryStringParams));
+    public IParameters Parameters => _parameters ??= new Parameters.Parameters(OriginalParameters.GetOverrideParams(_httpLazy.Value?.QueryStringParams));
     private IParameters _parameters;
 
 

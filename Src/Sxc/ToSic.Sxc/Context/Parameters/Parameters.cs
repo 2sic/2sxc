@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
@@ -9,14 +10,14 @@ using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.Url;
 
-namespace ToSic.Sxc.Context.Query;
+namespace ToSic.Sxc.Context.Parameters;
 
 /// <summary>
 /// This should provide cross-platform, neutral way to have page parameters in the Razor
 /// </summary>
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public partial class Parameters : IParameters
+internal partial class Parameters : IParameters
 {
     #region Constructor
 
@@ -103,6 +104,52 @@ public partial class Parameters : IParameters
 
     public override string ToString() => Nvc.NvcToString();
 
+    #region Toggle and Filter
+
+    private IParameters Toggle(string name, string value)
+    {
+        var oldValue = Get(name);
+        return oldValue.EqualsInsensitive(value)
+            ? Remove(name)
+            : Set(name, value);
+
+        // Maybe: implement detailed replace if multiple values exist?
+        // most of this kind of already works, but we don't have all edge cases covered
+        // since it's not sure if we ever need this, it's not implemented yet
+        //var values = Nvc.GetValues(key);
+
+        //if (value == default)
+        //{
+        //    return Set(key);
+        //}
+
+        //if (values == null || values.Length == 0)
+        //    return Set(key, value);
+
+        //if (values.Any(v => v.EqualsInsensitive(value)))
+        //    return Remove(key);
+
+        //return Set(key, value);
+    }
+
+    public IParameters Toggle(string name, object value) => Toggle(name, ValueToUrlValue(value));
+
+    public IParameters Filter(string names)
+    {
+        if (names == null || names.IsEmptyOrWs()) return this;
+        var keysToKeep = names.Split(',')
+            .Select(k => k.Trim())
+            .ToList();
+
+        var oldKeys = Nvc.AllKeys;
+        var removeKeys = oldKeys.Where(k => !keysToKeep.Contains(k, StringComparer.InvariantCultureIgnoreCase)).ToList();
+        var copy = new NameValueCollection(Nvc);
+        foreach (var k in removeKeys) copy.Remove(k);
+        return new Parameters(copy);
+    }
+
+    #endregion
+
     #region Basic Add/Set/Remove with key only or string-value
 
     public IParameters Add(string key)
@@ -129,10 +176,25 @@ public partial class Parameters : IParameters
     public IParameters Remove(string name)
     {
         var copy = new NameValueCollection(Nvc);
-        if (copy[name] != null)
-            copy.Remove(name);
+        if (copy[name] != null) copy.Remove(name);
         return new Parameters(copy);
     }
+
+    private IParameters Remove(string name, string value)
+    {
+        var values = Nvc.GetValues(name);
+        if (values == null || values.Length == 0) return this;
+
+        var copy = new NameValueCollection(Nvc);
+        copy.Remove(name);
+        var rest = values.Where(v => !v.EqualsInsensitive(value)).ToList();
+        if (rest.Count == 0) return new Parameters(copy);
+
+        foreach (var r in rest) copy.Add(name, r);
+        return new Parameters(copy);
+    }
+
+    public IParameters Remove(string name, object value) => Remove(name, ValueToUrlValue(value));
 
     #endregion
 
@@ -146,11 +208,12 @@ public partial class Parameters : IParameters
     private string ValueToUrlValue(object value)
     {
         if (value is null) return null;
+        if (value is string sVal) return sVal;
         if (value is bool bVal) return bVal.ToString().ToLower();
         if (value.IsNumeric()) return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
         if (value is DateTime dtmVal)
         {
-            var result = System.DateTime.SpecifyKind(dtmVal, DateTimeKind.Utc).ToString("s", System.Globalization.CultureInfo.InvariantCulture);
+            var result = DateTime.SpecifyKind(dtmVal, DateTimeKind.Utc).ToString("s", System.Globalization.CultureInfo.InvariantCulture);
             // if the time is zero, trim that
             if (result.EndsWith("T00:00:00")) return result.Substring(0, result.IndexOf('T'));
             return result;

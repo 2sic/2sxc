@@ -39,7 +39,7 @@ public static class UrlHelpers
 
     /// <summary>
     /// Converts a NameValueCollection to string.
-    /// Used in link generations and especially also the <see cref="Context.Query.Parameters"/>
+    /// Used in link generations and especially also the <see cref="Parameters"/>
     /// so be very careful if you change anything!
     /// </summary>
     /// <param name="nvc"></param>

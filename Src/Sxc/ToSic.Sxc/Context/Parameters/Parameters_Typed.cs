@@ -8,9 +8,9 @@ using ToSic.Razor.Markup;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Typed;
 
-namespace ToSic.Sxc.Context.Query;
+namespace ToSic.Sxc.Context.Parameters;
 
-public partial class Parameters: ITyped
+internal partial class Parameters: ITyped
 {
     [PrivateApi]
     bool ITyped.ContainsKey(string name)
