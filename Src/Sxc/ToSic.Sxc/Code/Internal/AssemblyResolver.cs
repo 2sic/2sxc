@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Reflection;
 
-namespace ToSic.Sxc.Code
+namespace ToSic.Sxc.Code.Internal
 {
     public class AssemblyResolver
     {
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Code
         {
             if (assembly == null) return;
             _assemblyCache.TryAdd(assembly.GetName().FullName, assembly);
-            
+
             if (appRelativePath != null) _assemblyPathPerApp.TryAdd(appRelativePath, assembly.Location);
         }
 

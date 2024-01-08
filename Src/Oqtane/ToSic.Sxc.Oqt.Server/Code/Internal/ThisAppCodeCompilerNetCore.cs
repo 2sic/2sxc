@@ -6,12 +6,12 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 
-namespace ToSic.Sxc.Oqt.Server.Code;
+namespace ToSic.Sxc.Oqt.Server.Code.Internal;
 
 [PrivateApi]
-internal class ThisAppCodeCompilerNetCore: ThisAppCodeCompiler
+internal class ThisAppCodeCompilerNetCore : ThisAppCodeCompiler
 {
     public ThisAppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, LazySvc<ThisAppCodeLoader> thisAppCodeLoader)
     {

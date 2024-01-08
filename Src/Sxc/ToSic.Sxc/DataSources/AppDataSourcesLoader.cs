@@ -15,7 +15,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 
 namespace ToSic.Sxc.DataSources;
 

@@ -21,10 +21,10 @@ using ToSic.Eav.Helpers;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Dnn.Compile;
 
-namespace ToSic.Sxc.Dnn.Razor
+namespace ToSic.Sxc.Dnn.Razor.Internal
 {
     /// <summary>
     /// This class is responsible for managing the compilation of Razor templates using Roslyn.
@@ -59,10 +59,10 @@ namespace ToSic.Sxc.Dnn.Razor
         /// <param name="templatePath">Relative path to template file.</param>
         /// <param name="appId">The ID of the application.</param>
         /// <returns>The generated type for razor cshtml.</returns>
-        public Type GetCompiledType(string templatePath, int appId) 
+        public Type GetCompiledType(string templatePath, int appId)
             => GetCompiledAssembly(templatePath, null, appId).MainType;
 
-        public AssemblyResult GetCompiledAssembly(string virtualPath, string className, int appId) 
+        public AssemblyResult GetCompiledAssembly(string virtualPath, string className, int appId)
         {
             var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {nameof(appId)}: {appId}", timer: true);
 
@@ -103,12 +103,12 @@ namespace ToSic.Sxc.Dnn.Razor
 
             // Compile the template
             var pathLowerCase = virtualPath.ToLowerInvariant();
-            var isCshtml = pathLowerCase.EndsWith(ToSic.Sxc.Code.CodeCompiler.CsHtmlFileExtension);
+            var isCshtml = pathLowerCase.EndsWith(Sxc.Code.Internal.CodeCompiler.CsHtmlFileExtension);
             if (isCshtml) className = GetSafeClassName(fileFullPath);
             l.A($"Compiling template. Class: {className}");
 
             var template = File.ReadAllText(fileFullPath);
-            var (generatedAssembly, errors) = isCshtml 
+            var (generatedAssembly, errors) = isCshtml
                 ? CompileTemplate(template, referencedAssemblies, className, DefaultNamespace)
                 : CompileCSharpCode(template, referencedAssemblies);
             if (generatedAssembly == null)

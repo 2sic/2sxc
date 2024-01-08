@@ -23,7 +23,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using ToSic.Eav.Helpers;
-using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 
 namespace ToSic.Sxc.Razor.DbgWip
 {

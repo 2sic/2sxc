@@ -1,5 +1,5 @@
 ﻿using System;
-using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 
 namespace ToSic.Sxc.Dnn.Compile;
 

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.Extensions.Logging;
-using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 
 namespace ToSic.Sxc.Razor.DbgWip
 {

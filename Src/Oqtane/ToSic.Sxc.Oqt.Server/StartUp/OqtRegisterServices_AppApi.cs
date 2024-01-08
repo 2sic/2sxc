@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Oqt.Server.Code;
+using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Oqt.Server.Code.Internal;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;

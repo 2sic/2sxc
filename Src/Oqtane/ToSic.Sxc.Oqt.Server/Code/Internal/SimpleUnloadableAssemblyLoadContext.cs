@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.Loader;
 
-namespace ToSic.Sxc.Oqt.Server.Code
+namespace ToSic.Sxc.Oqt.Server.Code.Internal
 {
 
     // Create a collectible AssemblyLoadContext

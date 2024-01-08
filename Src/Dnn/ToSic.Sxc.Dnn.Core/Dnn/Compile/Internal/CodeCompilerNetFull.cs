@@ -4,10 +4,10 @@ using System.Web.Compilation;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Help;
+using ToSic.Sxc.Code.Internal;
 
-namespace ToSic.Sxc.Dnn.Compile;
+namespace ToSic.Sxc.Dnn.Compile.Internal;
 
 [PrivateApi]
 internal class CodeCompilerNetFull : CodeCompiler

@@ -13,7 +13,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Code
+namespace ToSic.Sxc.Code.Internal
 {
     public class ThisAppCodeLoader : ServiceBase
     {
@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Code
 
             var assemblyResult = _thisAppCodeCompilerLazy.Value.GetAppCode(relativePath, appId);
 
-            if (assemblyResult.ErrorMessages.HasValue()) 
+            if (assemblyResult.ErrorMessages.HasValue())
                 return l.ReturnAsError(assemblyResult, assemblyResult.ErrorMessages);
 
             assemblyResult.WatcherFolders = new[] { physicalPath };
@@ -138,7 +138,7 @@ namespace ToSic.Sxc.Code
 
             var destinationFolder = Path.GetDirectoryName(destination);
             if (destinationFolder != null) Directory.CreateDirectory(destinationFolder);
- 
+
             File.Copy(source, destination, true);
         }
     }

@@ -6,7 +6,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Code
+namespace ToSic.Sxc.Code.Internal
 {
     [PrivateApi]
     public class AssemblyCacheManager() : ServiceBase(Constants.SxcLogName + ".AssemblyCacheManager")
@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Code
             var cacheKey = KeyAppCode(appId);
             return (Get(cacheKey), cacheKey);
         }
-        
+
         private static string KeyAppCode(int appId) => $"{GlobalCacheRoot}a:{appId}.App.Code";
 
         #endregion
@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Code
             // Try to add to cache
             try
             {
-                l.Do(message: $"cache set cacheKey:{cacheKey}", timer: true, 
+                l.Do(message: $"cache set cacheKey:{cacheKey}", timer: true,
                     action: () => Cache.Set(new CacheItem(cacheKey, data), policy));
 
                 return l.ReturnAsOk(cacheKey);

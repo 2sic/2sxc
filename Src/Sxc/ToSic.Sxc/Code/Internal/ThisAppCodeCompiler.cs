@@ -3,7 +3,7 @@ using System.Reflection;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Code
+namespace ToSic.Sxc.Code.Internal
 {
     public abstract class ThisAppCodeCompiler() : ServiceBase("Sxc.MyApCd")
     {
@@ -24,8 +24,8 @@ namespace ToSic.Sxc.Code
 
             // Validate are there any C# files
             // TODO: if no files exist, it shouldn't be an error, because it could be that it's just not here yet
-            return sourceFiles.Length == 0 
-                ? l.ReturnAsError((sourceFiles, new AssemblyResult(errorMessages: $"Error: given path '{fullPath}' doesn't contain any {CsFiles} files"))) : 
+            return sourceFiles.Length == 0
+                ? l.ReturnAsError((sourceFiles, new AssemblyResult(errorMessages: $"Error: given path '{fullPath}' doesn't contain any {CsFiles} files"))) :
                 l.ReturnAsOk((sourceFiles, null));
         }
 

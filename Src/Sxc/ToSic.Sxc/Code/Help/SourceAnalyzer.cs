@@ -60,7 +60,7 @@ public class SourceAnalyzer : ServiceBase
         if (contents.Length < 10)
             return l.Return(CodeFileInfo.CodeFileUnknown, "file too short");
 
-        var isCs = path.ToLowerInvariant().EndsWith(ToSic.Sxc.Code.CodeCompiler.CsFileExtension);
+        var isCs = path.ToLowerInvariant().EndsWith(Internal.CodeCompiler.CsFileExtension);
         l.A($"isCs: {isCs}");
 
         if (isCs)

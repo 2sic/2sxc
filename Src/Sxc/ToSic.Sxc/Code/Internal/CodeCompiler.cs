@@ -9,11 +9,11 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using static System.StringComparison;
 
-namespace ToSic.Sxc.Code;
+namespace ToSic.Sxc.Code.Internal;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class CodeCompiler: ServiceBase
+public abstract class CodeCompiler : ServiceBase
 {
     private readonly IServiceProvider _serviceProvider;
 
@@ -69,7 +69,7 @@ public abstract class CodeCompiler: ServiceBase
 
         var instance = _serviceProvider.Build<object>(compiledType, Log);
         AttachRelativePath(virtualPath, instance);
-            
+
         return l.Return(instance, $"found: {instance != null}");
     }
 

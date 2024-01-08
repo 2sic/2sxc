@@ -4,6 +4,7 @@ using System.CodeDom.Compiler;
 using System.IO;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Dnn.Compile;
 
 // ReSharper disable once CheckNamespace

@@ -5,9 +5,9 @@ using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 
-namespace ToSic.Sxc.Oqt.Server.Code;
+namespace ToSic.Sxc.Oqt.Server.Code.Internal;
 
 [PrivateApi]
 internal class CodeCompilerNetCore : CodeCompiler

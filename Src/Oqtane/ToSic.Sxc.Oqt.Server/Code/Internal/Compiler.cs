@@ -12,9 +12,9 @@ using System.Text;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 
-namespace ToSic.Sxc.Oqt.Server.Code
+namespace ToSic.Sxc.Oqt.Server.Code.Internal
 {
 
     // Code is based on DynamicRun by Laurent Kempé
@@ -244,7 +244,7 @@ namespace ToSic.Sxc.Oqt.Server.Code
             {
                 // sink
             }
-        } 
+        }
         #endregion
     }
 }

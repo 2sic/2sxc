@@ -17,6 +17,7 @@ using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Help;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines;

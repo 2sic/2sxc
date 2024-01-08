@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace ToSic.Sxc.Code
+namespace ToSic.Sxc.Code.Internal
 {
     public class AssemblyResult(
         Assembly assembly = null,
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Code
         //public static AssemblyResult ToAssemblyResult(this (Assembly Assembly, string ErrorMessages) tuple)
         //    => new(tuple);
 
-        public static (Assembly Assembly, string ErrorMessages) ToTuple(this AssemblyResult assemblyResult) 
+        public static (Assembly Assembly, string ErrorMessages) ToTuple(this AssemblyResult assemblyResult)
             => (assemblyResult.Assembly, assemblyResult.ErrorMessages);
     }
 
