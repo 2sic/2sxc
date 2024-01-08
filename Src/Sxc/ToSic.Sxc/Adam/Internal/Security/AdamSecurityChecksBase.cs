@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Files;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Adam;
+namespace ToSic.Sxc.Adam.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class AdamSecurityChecksBase: ServiceBase<AdamSecurityChecksBase.MyServices>
+public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices services, string logPrefix)
+    : ServiceBase<AdamSecurityChecksBase.MyServices>(services, $"{logPrefix}.TnScCk")
 {
 
     #region DI / Constructor
@@ -29,10 +30,6 @@ public abstract class AdamSecurityChecksBase: ServiceBase<AdamSecurityChecksBase
                 AppPermissionChecks = appPermissionChecks
             );
         }
-    }
-
-    protected AdamSecurityChecksBase(MyServices services, string logPrefix) : base(services, $"{logPrefix}.TnScCk")
-    {
     }
 
     internal AdamSecurityChecksBase Init(AdamContext adamContext, bool usePortalRoot)
@@ -161,7 +158,7 @@ public abstract class AdamSecurityChecksBase: ServiceBase<AdamSecurityChecksBase
 
     private static bool DestinationIsInItem(Guid guid, string field, string path, out HttpExceptionAbstraction preparedException)
     {
-        var inAdam = Sxc.Adam.Security.PathIsInItemAdam(guid, field, path);
+        var inAdam = Security.PathIsInItemAdam(guid, field, path);
         preparedException = inAdam
             ? null
             : HttpException.PermissionDenied("Can't access a resource which is not part of this item.");

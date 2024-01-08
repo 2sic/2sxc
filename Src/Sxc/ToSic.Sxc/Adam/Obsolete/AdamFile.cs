@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NETFRAMEWORK
+using System;
 using ToSic.Sxc.Adam;
 
 // Obsolete class / namespace
@@ -23,3 +24,4 @@ public interface AdamFile: IFile
     int FileId { get; }
 
 }
+#endif

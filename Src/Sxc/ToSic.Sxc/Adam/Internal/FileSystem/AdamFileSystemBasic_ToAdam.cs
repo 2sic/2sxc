@@ -2,7 +2,7 @@
 using System.IO;
 using ToSic.Eav.Helpers;
 
-namespace ToSic.Sxc.Adam;
+namespace ToSic.Sxc.Adam.Internal;
 
 public partial class AdamFileSystemBasic
 {

@@ -5,6 +5,7 @@ using ToSic.Eav.DataSource.Catalog;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.StartUp;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Apps.Work;

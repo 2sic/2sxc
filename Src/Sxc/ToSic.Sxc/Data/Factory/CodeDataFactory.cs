@@ -4,6 +4,7 @@ using ToSic.Eav.Data.Build;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Wrapper;

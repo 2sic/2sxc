@@ -8,6 +8,7 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Adam;

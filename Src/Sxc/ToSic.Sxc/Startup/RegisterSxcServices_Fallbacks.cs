@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;

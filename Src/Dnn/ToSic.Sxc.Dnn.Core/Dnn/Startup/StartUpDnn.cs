@@ -12,6 +12,7 @@ using ToSic.Eav.Run;
 using ToSic.Eav.Security;
 using ToSic.Eav.StartUp;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Cms.Publishing;

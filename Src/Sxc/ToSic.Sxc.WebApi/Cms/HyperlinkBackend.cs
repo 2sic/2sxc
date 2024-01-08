@@ -6,6 +6,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Adam;
 
@@ -67,7 +68,7 @@ public class HyperlinkBackend<TFolderId, TFileId>: ServiceBase
             if (guid == default || string.IsNullOrEmpty(field) || string.IsNullOrEmpty(contentType))
                 return new LinkInfoDto { Value = hyperlink };
 
-            var isOutsideOfAdam = !Sxc.Adam.Security.PathIsInItemAdam(guid, field, resolved);
+            var isOutsideOfAdam = !Security.PathIsInItemAdam(guid, field, resolved);
 
             // file-check, more abilities to allow
             // this will already do a ensure-or-throw inside it if outside of adam

@@ -1,26 +1,20 @@
 ﻿using System.Collections.Generic;
 
-namespace ToSic.Sxc.Adam;
+namespace ToSic.Sxc.Adam.Internal;
 
 /// <summary>
 /// Export helper
 /// provides a list of all files / folders in ADAM for export
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class Export<TFolderId, TFileId>
+public class Export<TFolderId, TFileId>(AdamManager<TFolderId, TFileId> adm)
 {
-    private readonly Folder<TFolderId, TFileId> _root;
+    private readonly Folder<TFolderId, TFileId> _root = adm.RootFolder;
     // todo #adamid - should use TFile/TFolder
     private readonly List<TFileId> _fileIds = new();
     private readonly List<TFolderId> _folderIds = new();
 
-    private readonly IAdamFileSystem<TFolderId, TFileId> _envFs;
-
-    public Export(AdamManager<TFolderId, TFileId> adm)
-    {
-        _root = adm.RootFolder;
-        _envFs = adm.AdamFs;
-    }
+    private readonly IAdamFileSystem<TFolderId, TFileId> _envFs = adm.AdamFs;
 
     public List<TFileId> AppFiles
     {

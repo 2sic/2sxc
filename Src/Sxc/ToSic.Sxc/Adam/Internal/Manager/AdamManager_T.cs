@@ -5,7 +5,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Data;
 
-namespace ToSic.Sxc.Adam;
+namespace ToSic.Sxc.Adam.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AdamManager<TFolderId, TFileId>: AdamManager

@@ -1,13 +1,13 @@
 ﻿using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.Adam;
+namespace ToSic.Sxc.Adam.Internal;
 
 /// <summary>
 /// Basic AdamPaths resolver, assumes that files are in wwwroot/adam for now.
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AdamPathsWwwroot: AdamPathsBase
+public class AdamPathsWwwroot : AdamPathsBase
 {
     public AdamPathsWwwroot(IServerPaths serverPaths) : base(serverPaths, LogScopes.Base)
     {

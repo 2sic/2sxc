@@ -4,7 +4,7 @@ using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Context;
 using ToSic.Eav.ImportExport.Environment;
 using ToSic.Eav.Persistence.Xml;
-using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Internal;
 using IContextResolver = ToSic.Sxc.Context.IContextResolver;
 

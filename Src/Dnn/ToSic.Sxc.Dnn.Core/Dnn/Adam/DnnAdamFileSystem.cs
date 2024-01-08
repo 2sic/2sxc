@@ -10,14 +10,13 @@ using ToSic.Eav.Apps.Adam;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Internal;
 
 namespace ToSic.Sxc.Dnn.Adam;
 
-internal class DnnAdamFileSystem : ServiceBase, IAdamFileSystem<int, int>
+internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem<int, int>
 {
     #region Constructor / DI / Init
-
-    public DnnAdamFileSystem(): base("Dnn.FilSys") { }
 
     public void Init(AdamManager<int, int> adamManager)
     {

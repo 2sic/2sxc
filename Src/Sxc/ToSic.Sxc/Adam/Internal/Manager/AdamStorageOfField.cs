@@ -3,7 +3,7 @@ using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Identity;
 using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.Adam;
+namespace ToSic.Sxc.Adam.Internal;
 
 /// <summary>
 /// Container of the assets of a field

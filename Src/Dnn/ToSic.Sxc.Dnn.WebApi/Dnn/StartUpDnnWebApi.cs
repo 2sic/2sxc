@@ -6,6 +6,7 @@ using System.Web.Http;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Admin;
 using ToSic.Sxc.Dnn.WebApi.Context;

@@ -162,7 +162,7 @@ internal class OqtValueConverter : ValueConverterBase
             if (!_featuresLazy.Value.IsEnabled(AdamRestrictLookupToEntity.Guid)) return result;
 
             // check if it's in this item. We won't check the field, just the item, so the field is ""
-            return !Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", pathInAdam)
+            return !Sxc.Adam.Internal.Security.PathIsInItemAdam(itemGuid, "", pathInAdam)
                 ? null
                 : result;
         }

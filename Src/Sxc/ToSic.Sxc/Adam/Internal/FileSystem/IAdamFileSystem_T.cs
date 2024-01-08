@@ -2,8 +2,9 @@
 using System.IO;
 using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.Adam;
+namespace ToSic.Sxc.Adam.Internal;
 
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface IAdamFileSystem<TFolderId, TFileId>: IHasLog
 {
     void Init(AdamManager<TFolderId, TFileId> adamManager);

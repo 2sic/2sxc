@@ -6,7 +6,7 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Internal;
 
-namespace ToSic.Sxc.Adam;
+namespace ToSic.Sxc.Adam.Internal;
 
 /// <inheritdoc />
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

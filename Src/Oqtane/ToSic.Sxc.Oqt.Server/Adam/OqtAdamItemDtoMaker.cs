@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.WebApi.Dto;
+using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Adam;
 
@@ -15,7 +16,7 @@ internal class OqtAdamItemDtoMaker<TFolderId, TFileId> : AdamItemDtoMaker<TFolde
 
     #endregion
 
-    public override AdamItemDto Create(Sxc.Adam.File<TFolderId, TFileId> original)
+    public override AdamItemDto Create(File<TFolderId, TFileId> original)
     {
         var item = base.Create(original);
         if(item is AdamItemDto<TFolderId, TFolderId> typed)
@@ -25,7 +26,7 @@ internal class OqtAdamItemDtoMaker<TFolderId, TFileId> : AdamItemDtoMaker<TFolde
     }
 
 
-    public override AdamItemDto Create(Sxc.Adam.Folder<TFolderId, TFileId> folder)
+    public override AdamItemDto Create(Folder<TFolderId, TFileId> folder)
     {
         var item = base.Create(folder);
         if (item is AdamItemDto<TFolderId, TFolderId> typed)

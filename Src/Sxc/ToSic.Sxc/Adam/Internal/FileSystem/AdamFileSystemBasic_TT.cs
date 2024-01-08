@@ -5,7 +5,7 @@ using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Adam;
+namespace ToSic.Sxc.Adam.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public abstract class AdamFileSystemBasic<TFolder, TFile>: ServiceBase, IAdamFileSystem<TFolder, TFile>

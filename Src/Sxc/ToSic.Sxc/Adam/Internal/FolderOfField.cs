@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Adam;
+﻿namespace ToSic.Sxc.Adam.Internal;
 
 /// <summary>
 /// The ADAM Navigator creates a folder object for an entity/field combination

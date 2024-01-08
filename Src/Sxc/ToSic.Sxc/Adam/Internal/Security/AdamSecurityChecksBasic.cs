@@ -1,16 +1,15 @@
 ﻿using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.Adam;
+namespace ToSic.Sxc.Adam.Internal;
 
 /// <summary>
 /// This is a simple AdamSecurityChecks which doesn't know much about the environment but works to get started.
 /// 
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AdamSecurityChecksBasic: AdamSecurityChecksBase
+internal class AdamSecurityChecksBasic(AdamSecurityChecksBase.MyServices services)
+    : AdamSecurityChecksBase(services, LogScopes.Base)
 {
-    public AdamSecurityChecksBasic(MyServices services) : base(services, LogScopes.Base) { }
-
     /// <summary>
     /// Our version here just gives an ok - so that the site doesn't block this extension.
     /// Note that internally we'll still check against dangerous extensions, so this would just be an extra layer of protection,

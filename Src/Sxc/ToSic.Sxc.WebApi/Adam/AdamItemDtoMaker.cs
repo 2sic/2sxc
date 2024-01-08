@@ -6,6 +6,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Dto.Metadata;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.WebApi.Adam;

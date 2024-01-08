@@ -6,25 +6,18 @@ using ToSic.Eav.Apps.Specs;
 using ToSic.Eav.Data;
 using static ToSic.Eav.Apps.Adam.AdamConstants;
 
-namespace ToSic.Sxc.Adam;
+namespace ToSic.Sxc.Adam.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AdamConfiguration
+public class AdamConfiguration(IAppStates appStates)
 {
-    public AdamConfiguration(IAppStates appStates)
-    {
-        _appStates = appStates;
-    }
-    private readonly IAppStates _appStates;
-        
-
     public string AdamAppRootFolder
     {
         get
         {
             if (_adamAppRootFolder != null) return _adamAppRootFolder;
 
-            var found = _appStates.GetPresetReader().List.FirstOrDefaultOfType(TypeName)?.Value<string>(ConfigFieldRootFolder);
+            var found = appStates.GetPresetReader().List.FirstOrDefaultOfType(TypeName)?.Value<string>(ConfigFieldRootFolder);
 
             return _adamAppRootFolder = found ?? AdamFolderMask;
         }

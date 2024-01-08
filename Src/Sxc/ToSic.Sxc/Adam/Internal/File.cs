@@ -6,18 +6,19 @@ using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
 
-namespace ToSic.Sxc.Adam;
+namespace ToSic.Sxc.Adam.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class File<TFolderId, TFileId> : Eav.Apps.Assets.File<TFolderId, TFileId>,
+public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets.File<TFolderId, TFileId>,
+#if NETFRAMEWORK
 #pragma warning disable 618
-    ToSic.SexyContent.Adam.AdamFile, 
+    ToSic.SexyContent.Adam.AdamFile,
 #pragma warning restore 618
+#endif
     IFile,
     IHasLink
 {
-    public File(AdamManager adamManager) => AdamManager = adamManager;
-    private AdamManager AdamManager { get; }
+    private AdamManager AdamManager { get; } = adamManager;
 
     #region Metadata
 

@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.Adam;
+namespace ToSic.Sxc.Adam.Internal;
 
 public partial class AdamFileSystemBasic
 {

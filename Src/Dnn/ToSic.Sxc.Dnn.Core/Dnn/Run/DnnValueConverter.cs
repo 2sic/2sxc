@@ -12,6 +12,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Internal.Features;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Plumbing;
 
 namespace ToSic.Sxc.Dnn.Run;
@@ -107,7 +108,7 @@ internal class DnnValueConverter : ValueConverterBase
             if (!_featuresLazy.Value.IsEnabled(BuiltInFeatures.AdamRestrictLookupToEntity.Guid)) return result;
 
             // check if it's in this item. We won't check the field, just the item, so the field is ""
-            return !Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", filePath)
+            return !Security.PathIsInItemAdam(itemGuid, "", filePath)
                 ? null
                 : result;
         }

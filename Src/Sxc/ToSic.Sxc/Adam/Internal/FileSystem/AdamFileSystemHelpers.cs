@@ -5,23 +5,16 @@ using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Adam;
+namespace ToSic.Sxc.Adam.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AdamFileSystemHelpers: ServiceBase
+public class AdamFileSystemHelpers(IAdamPaths adamPaths) : ServiceBase("Sxc.AdmFil")
 {
-    private readonly IAdamPaths _adamPaths;
-
-    public AdamFileSystemHelpers(IAdamPaths adamPaths) : base("Sxc.AdmFil")
-    {
-        _adamPaths = adamPaths;
-    }
-
     public string EnsurePhysicalPath(string path)
     {
         path = path.Backslash();
         return path.StartsWith("adam", StringComparison.CurrentCultureIgnoreCase)
-            ? _adamPaths.PhysicalPath(path)
+            ? adamPaths.PhysicalPath(path)
             : path;
     }
 

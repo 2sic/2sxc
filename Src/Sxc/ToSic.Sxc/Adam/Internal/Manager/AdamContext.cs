@@ -2,18 +2,18 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Apps.Services;
+using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Lib.Logging;
+using ToSic.Eav.Internal.Features;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
 using static ToSic.Eav.Internal.Features.BuiltInFeatures;
-using ToSic.Eav.Apps.Work;
-using ToSic.Eav.Internal.Features;
 
-namespace ToSic.Sxc.Adam;
+namespace ToSic.Sxc.Adam.Internal;
 
 /// <summary>
 /// The context of ADAM operations - containing site, app, field, entity-guid etc.

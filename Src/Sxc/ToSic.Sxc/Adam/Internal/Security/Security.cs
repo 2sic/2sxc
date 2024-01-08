@@ -1,10 +1,10 @@
 ﻿using System;
 using ToSic.Eav.Identity;
 
-namespace ToSic.Sxc.Adam;
+namespace ToSic.Sxc.Adam.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class Security
+internal class Security
 {
     internal static bool PathIsInItemAdam(Guid guid, string field, string path)
     {

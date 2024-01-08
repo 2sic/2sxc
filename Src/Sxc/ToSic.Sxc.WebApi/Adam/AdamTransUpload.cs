@@ -5,6 +5,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Internal;
 
 namespace ToSic.Sxc.WebApi.Adam;
 

@@ -13,6 +13,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Images;

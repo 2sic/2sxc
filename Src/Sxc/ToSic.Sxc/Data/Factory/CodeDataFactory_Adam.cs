@@ -3,6 +3,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Internal;
 
 namespace ToSic.Sxc.Data;
 

@@ -1,14 +1,10 @@
 ﻿using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Adam;
+namespace ToSic.Sxc.Adam.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class AdamStorage: ServiceBase
+public abstract class AdamStorage(string logName) : ServiceBase(logName)
 {
-    protected AdamStorage(string logName) : base(logName)
-    {
-    }
-
     /// <summary>
     /// Root of this container
     /// </summary>
