@@ -1,8 +1,9 @@
-﻿namespace ToSic.Sxc;
+﻿namespace ToSic.Sxc.Internal;
 
 /// <summary>
 /// Contains information for all assemblies to use
 /// </summary>
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public static class SharedAssemblyInfo
 {
     public const string AssemblyVersion = ToSic.Eav.SharedAssemblyInfo.AssemblyVersion;

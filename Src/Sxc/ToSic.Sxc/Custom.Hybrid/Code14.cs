@@ -67,6 +67,7 @@ public abstract class Code14 : CustomCodeBase, IHasCodeLog, IDynamicCode, IDynam
     public dynamic Settings => _DynCodeRoot?.Settings;
 
     [PrivateApi("Not yet ready")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public IDevTools DevTools => CodeHelper.DevTools;
 
     #endregion
@@ -115,6 +116,7 @@ public abstract class Code14 : CustomCodeBase, IHasCodeLog, IDynamicCode, IDynam
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
     [PrivateApi("added in 16.05, but not sure if it should be public")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default) => SysHlp.GetCode(path, noParamOrder, className);
 
     #endregion

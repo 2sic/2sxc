@@ -88,6 +88,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Beta\" />
+    <Folder Include="Data\Internal\Typed\" />
+    <Folder Include="Internal\" />
   </ItemGroup>
 
 </Project>
