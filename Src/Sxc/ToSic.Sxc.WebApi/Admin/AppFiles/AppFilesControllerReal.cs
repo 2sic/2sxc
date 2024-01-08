@@ -7,7 +7,7 @@ using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.Assets;
+using ToSic.Sxc.Apps.Internal.Assets;
 using static System.StringComparison;
 
 namespace ToSic.Sxc.WebApi.Admin.AppFiles;

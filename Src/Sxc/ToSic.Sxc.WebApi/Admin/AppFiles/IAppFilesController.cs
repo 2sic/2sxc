@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.WebApi.Assets;
-using ToSic.Sxc.Apps.Assets;
+using ToSic.Sxc.Apps.Internal.Assets;
 
 namespace ToSic.Sxc.WebApi.Admin.AppFiles;
 

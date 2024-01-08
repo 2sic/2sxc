@@ -10,7 +10,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.Work;
+using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.WebApi.App;
 
 #if NETFRAMEWORK

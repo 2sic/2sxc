@@ -4,7 +4,7 @@ using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.Apps.Paths;
+namespace ToSic.Sxc.Apps.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public static class AppPathExtensions

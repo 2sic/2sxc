@@ -8,7 +8,7 @@ using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Apps.Work;
+using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Blocks.Output;

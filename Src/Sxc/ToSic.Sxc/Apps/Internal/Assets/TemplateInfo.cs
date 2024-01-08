@@ -3,33 +3,28 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using ToSic.Sxc.Context;
 
-namespace ToSic.Sxc.Apps.Assets;
+namespace ToSic.Sxc.Apps.Internal.Assets;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class TemplateInfo
+public class TemplateInfo(
+    string key,
+    string name,
+    string extension,
+    string suggestedFileName,
+    string purpose,
+    string type)
 {
-    public TemplateInfo(string key, string name, string extension, string suggestedFileName, string purpose, string type)
-    {
-        Key = key;
-        Name = name;
-        Extension = extension;
-        Purpose = purpose;
-        Type = type;
-        SuggestedFileName = suggestedFileName;
-    }
+    public string Key { get; } = key;
 
+    public string Name { get; } = name;
 
-    public string Key { get; }
+    public string SuggestedFileName { get; } = suggestedFileName;
 
-    public string Name { get; }
+    public string Extension { get; set; } = extension;
 
-    public string SuggestedFileName { get; }
+    public string Purpose { get; set; } = purpose;
 
-    public string Extension { get; set; }
-
-    public string Purpose { get; set; }
-
-    public string Type { get; set; }
+    public string Type { get; set; } = type;
 
     public string Folder { get; set; } = string.Empty;
 

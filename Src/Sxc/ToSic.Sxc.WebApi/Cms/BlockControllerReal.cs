@@ -5,7 +5,7 @@ using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Apps.Work;
+using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.WebApi.ContentBlocks;
 using ToSic.Sxc.WebApi.InPage;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;

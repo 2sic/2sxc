@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using JetBrains.Annotations;
-using ToSic.Sxc.Apps.Assets;
+using ToSic.Sxc.Apps.Internal.Assets;
 
 namespace ToSic.Sxc.WebApi.Admin.AppFiles;
 

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace ToSic.Sxc.Apps.Assets;
+namespace ToSic.Sxc.Apps.Internal.Assets;
 
 /// <summary>
 /// Information class needed by the edit-ui, to provide optimal syntax helpers etc.

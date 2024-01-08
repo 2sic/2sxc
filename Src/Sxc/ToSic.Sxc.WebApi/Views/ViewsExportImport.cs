@@ -20,7 +20,6 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Validation;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi.ImportExport;
 using ToSic.Eav.Helpers;
@@ -28,6 +27,7 @@ using ToSic.Eav.Security;
 using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Internal.Environment;
+using ToSic.Sxc.Apps.Internal;
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;
 #else
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.WebApi.Views
         private readonly IServerPaths _serverPaths;
         private readonly IEnvironmentLogger _envLogger;
         private readonly LazySvc<JsonSerializer> _jsonSerializerLazy;
-        private readonly IAppStates _appStates;
+        //private readonly IAppStates _appStates;
         private readonly AppIconHelpers _appIconHelpers;
         private readonly Generator<ImpExpHelpers> _impExpHelpers;
         private readonly IResponseMaker _responseMaker;
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.WebApi.Views
             IEnvironmentLogger envLogger,
             LazySvc<JsonSerializer> jsonSerializerLazy, 
             IContextOfSite context,
-            IAppStates appStates,
+            //IAppStates appStates,
             AppIconHelpers appIconHelpers,
             Generator<ImpExpHelpers> impExpHelpers,
             IResponseMaker responseMaker,
@@ -70,7 +70,7 @@ namespace ToSic.Sxc.WebApi.Views
                 _serverPaths = serverPaths,
                 _envLogger = envLogger,
                 _jsonSerializerLazy = jsonSerializerLazy,
-                _appStates = appStates,
+                //_appStates = appStates,
                 _appIconHelpers = appIconHelpers,
                 _impExpHelpers = impExpHelpers,
                 _responseMaker = responseMaker,

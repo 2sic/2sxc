@@ -3,7 +3,7 @@ using ToSic.Eav.Apps.Work;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.Apps.Work;
+namespace ToSic.Sxc.Apps.Internal.Work;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class WorkViewsMod : WorkUnitBase<IAppWorkCtx>

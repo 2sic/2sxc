@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Apps.Assets;
+﻿namespace ToSic.Sxc.Apps.Internal.Assets;
 
 public partial class AssetTemplates
 {

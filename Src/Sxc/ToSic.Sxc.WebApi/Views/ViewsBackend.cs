@@ -11,7 +11,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.WebApi.ImportExport;
 using ToSic.Eav.Apps.Work;
-using ToSic.Sxc.Apps.Work;
+using ToSic.Sxc.Apps.Internal.Work;
 
 namespace ToSic.Sxc.WebApi.Views;
 

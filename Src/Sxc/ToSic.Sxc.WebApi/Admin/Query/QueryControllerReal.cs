@@ -6,7 +6,7 @@ using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Apps.Work;
+using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.LookUp;
 

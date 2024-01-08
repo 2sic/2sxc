@@ -6,7 +6,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Apps.Assets;
+using ToSic.Sxc.Apps.Internal.Assets;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Blocks;

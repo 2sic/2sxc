@@ -4,11 +4,11 @@ using System.Xml.Linq;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Work;
 using ToSic.Eav.ImportExport;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Repositories;
-using ToSic.Sxc.Apps.Work;
+using ToSic.Lib.Logging;
+using ToSic.Sxc.Apps.Internal.Work;
 
-namespace ToSic.Sxc.Apps.ImportExport;
+namespace ToSic.Sxc.Apps.Internal.ImportExport;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public partial class XmlImportFull: XmlImportWithFiles

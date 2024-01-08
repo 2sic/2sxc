@@ -9,10 +9,9 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSource.Query;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.Apps.Work;
+namespace ToSic.Sxc.Apps.Internal.Work;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class WorkBlocks: WorkUnitBase<IAppWorkCtxPlus>

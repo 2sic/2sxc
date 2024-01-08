@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.Routing;
-using ToSic.Sxc.Apps.Assets;
+using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi.Admin.AppFiles;
 using RealController = ToSic.Sxc.WebApi.Admin.AppFiles.AppFilesControllerReal;

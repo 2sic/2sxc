@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps.Paths;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Data;
 
 // ReSharper disable UnusedMemberInSuper.Global

@@ -7,7 +7,7 @@ using Oqtane.Shared;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Internal;
 

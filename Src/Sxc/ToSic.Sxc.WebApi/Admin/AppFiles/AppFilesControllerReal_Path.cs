@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Sxc.Apps.Paths;
+using ToSic.Sxc.Apps.Internal;
 
 namespace ToSic.Sxc.WebApi.Admin.AppFiles;
 

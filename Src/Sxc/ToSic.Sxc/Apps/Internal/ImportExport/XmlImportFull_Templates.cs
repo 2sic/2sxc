@@ -2,15 +2,15 @@
 using System.Linq;
 using System.Xml.Linq;
 using ToSic.Eav.ImportExport;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 
 // 2dm: must disable NullRef warnings, because there a lot of warnings when processing XML, 
 // ...and these are real errors which should blow
 // ReSharper disable PossibleNullReferenceException
 
-namespace ToSic.Sxc.Apps.ImportExport;
+namespace ToSic.Sxc.Apps.Internal.ImportExport;
 
 public partial class XmlImportFull
 {

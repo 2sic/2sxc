@@ -7,7 +7,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Internal;
 
-namespace ToSic.Sxc.Apps.Paths;
+namespace ToSic.Sxc.Apps.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AppFolderInitializer : ServiceBase

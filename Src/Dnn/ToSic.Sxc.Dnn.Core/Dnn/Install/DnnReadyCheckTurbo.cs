@@ -5,7 +5,7 @@ using System.IO;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.Paths;
+using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Internal;
 

@@ -6,7 +6,7 @@ using ToSic.Eav.Apps.Work;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Apps.Work;
+using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Context;
 

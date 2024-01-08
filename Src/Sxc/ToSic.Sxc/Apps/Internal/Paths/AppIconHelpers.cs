@@ -2,15 +2,15 @@
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Data;
 using ToSic.Eav.Internal.Environment;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using static System.StringComparison;
 using static ToSic.Eav.Apps.AppConstants;
 
-namespace ToSic.Sxc.Apps.Paths;
+namespace ToSic.Sxc.Apps.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AppIconHelpers : ServiceBase

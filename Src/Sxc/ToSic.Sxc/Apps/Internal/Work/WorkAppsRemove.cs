@@ -7,7 +7,7 @@ using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Apps.Work;
+namespace ToSic.Sxc.Apps.Internal.Work;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class WorkAppsRemove: ServiceBase 

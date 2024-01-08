@@ -9,7 +9,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.Apps.Blocks;
+namespace ToSic.Sxc.Apps.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class BlockConfiguration: EntityBasedWithLog, IAppIdentity

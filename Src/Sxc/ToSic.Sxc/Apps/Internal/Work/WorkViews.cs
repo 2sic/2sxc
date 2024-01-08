@@ -10,15 +10,12 @@ using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource.Query;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Metadata;
-using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Apps.Blocks;
-using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 
 // note: not sure if the final namespace should be Sxc.Apps or Sxc.Views
-namespace ToSic.Sxc.Apps.Work;
+namespace ToSic.Sxc.Apps.Internal.Work;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class WorkViews: WorkUnitBase<IAppWorkCtxPlus>

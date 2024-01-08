@@ -3,7 +3,7 @@ using DotNetNuke.Web.Api;
 using System.Collections.Generic;
 using System.Web.Http;
 using ToSic.Eav.WebApi.Assets;
-using ToSic.Sxc.Apps.Assets;
+using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Admin.AppFiles;

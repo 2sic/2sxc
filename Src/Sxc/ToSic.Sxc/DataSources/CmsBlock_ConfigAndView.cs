@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.DataSources;

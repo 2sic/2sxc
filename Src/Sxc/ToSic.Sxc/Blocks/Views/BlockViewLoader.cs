@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.Work;
+using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Blocks;

@@ -4,8 +4,7 @@ using System.Linq;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 
-
-namespace ToSic.Sxc.Apps.Assets;
+namespace ToSic.Sxc.Apps.Internal.Assets;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class Purpose

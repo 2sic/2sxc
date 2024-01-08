@@ -7,11 +7,10 @@ using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.Paths;
-using ToSic.Sxc.Apps.Work;
+using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.Apps.Assets;
+namespace ToSic.Sxc.Apps.Internal.Assets;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AssetEditor : ServiceBase
