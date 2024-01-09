@@ -18,7 +18,7 @@ using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Web.Internal;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.PageFeatures;
-using ToSic.Sxc.Web.Url;
+using ToSic.Sxc.Web.Internal.Url;
 using ToSic.Sxc.WebApi.InPage;
 
 namespace ToSic.Sxc.WebApi.ContentBlocks;

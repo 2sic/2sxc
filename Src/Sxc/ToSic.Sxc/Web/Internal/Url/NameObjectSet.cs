@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Web.Url;
+﻿namespace ToSic.Sxc.Web.Internal.Url;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class NameObjectSet

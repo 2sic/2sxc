@@ -1,6 +1,6 @@
 ﻿using System.Collections.Specialized;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Web.Url;
+using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests
 {

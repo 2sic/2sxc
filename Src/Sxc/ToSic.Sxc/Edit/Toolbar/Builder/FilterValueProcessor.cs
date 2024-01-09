@@ -2,7 +2,7 @@
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Web.Url;
+using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 

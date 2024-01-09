@@ -1,8 +1,8 @@
-﻿using ToSic.Eav.Plumbing;
+﻿using System.Linq;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Serialization;
-using System.Linq;
 
-namespace ToSic.Sxc.Web.Url;
+namespace ToSic.Sxc.Web.Internal.Url;
 
 /// <summary>
 /// Base class for processing URL Values before keeping / converting to a string-url

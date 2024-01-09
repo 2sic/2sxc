@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Plumbing;
 
-namespace ToSic.Sxc.Web.Url;
+namespace ToSic.Sxc.Web.Internal.Url;
 
 /// <summary>
 /// Helper to process url values - and keep or skip certain properties.

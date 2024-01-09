@@ -14,7 +14,7 @@ using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Internal;
-using ToSic.Sxc.Web.Url;
+using ToSic.Sxc.Web.Internal.Url;
 using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Images.ImageDecorator;

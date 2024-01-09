@@ -4,7 +4,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Serialization;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Web.Url;
+using ToSic.Sxc.Web.Internal.Url;
 using static System.String;
 using Build = ToSic.Sxc.Web.Build;
 

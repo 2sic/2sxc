@@ -8,7 +8,7 @@ using ToSic.Sxc.Internal;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web.Url;
+using ToSic.Sxc.Web.Internal.Url;
 using CspOfPage = ToSic.Sxc.Web.Internal.ContentSecurityPolicy.CspOfPage;
 using CspParameters = ToSic.Sxc.Web.Internal.ContentSecurityPolicy.CspParameters;
 
