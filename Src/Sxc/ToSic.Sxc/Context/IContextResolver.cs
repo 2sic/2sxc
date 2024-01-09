@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Context;
 

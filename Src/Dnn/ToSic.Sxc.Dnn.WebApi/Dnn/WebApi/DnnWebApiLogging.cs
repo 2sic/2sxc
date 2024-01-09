@@ -5,6 +5,7 @@ using ToSic.Eav.WebApi;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Dnn.WebApi;
 

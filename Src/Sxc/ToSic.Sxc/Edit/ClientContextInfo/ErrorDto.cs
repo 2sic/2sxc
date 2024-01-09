@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Code.InfoSystem;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Blocks.Problems;
+using ToSic.Sxc.Blocks.Internal;
 using static System.Text.Json.Serialization.JsonIgnoreCondition;
-using static ToSic.Sxc.Blocks.Problems.ProblemReport;
+using static ToSic.Sxc.Blocks.Internal.ProblemReport;
 
 namespace ToSic.Sxc.Edit.ClientContextInfo;
 

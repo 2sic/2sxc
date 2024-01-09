@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web.UI;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Output;
 
 namespace ToSic.Sxc.Dnn;

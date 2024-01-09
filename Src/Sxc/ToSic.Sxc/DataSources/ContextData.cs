@@ -6,6 +6,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data;
 #if NETFRAMEWORK
 using ToSic.Lib.DI;

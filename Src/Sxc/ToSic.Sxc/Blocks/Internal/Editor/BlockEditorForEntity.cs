@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Data;
 using ToSic.Eav.Apps.Work;
+using ToSic.Eav.Data;
 
-namespace ToSic.Sxc.Blocks.Edit;
+namespace ToSic.Sxc.Blocks.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class BlockEditorForEntity : BlockEditorBase

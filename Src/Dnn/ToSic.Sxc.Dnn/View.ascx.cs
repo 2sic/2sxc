@@ -6,6 +6,8 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;

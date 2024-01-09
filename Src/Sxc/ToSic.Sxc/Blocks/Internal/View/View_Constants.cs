@@ -1,6 +1,6 @@
-﻿namespace ToSic.Sxc.Blocks;
+﻿namespace ToSic.Sxc.Blocks.Internal;
 
-public partial class View 
+internal class ViewConstants
 {
     internal const string FieldContentType = "ContentTypeStaticName";
     internal const string FieldContentDemo = "ContentDemoEntity";

@@ -7,13 +7,12 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 
-namespace ToSic.Sxc.Blocks;
+namespace ToSic.Sxc.Blocks.Internal.Render;
 
 /// <summary>
 /// Block-Rendering system. It's responsible for taking a Block and delivering HTML for the output. <br/>

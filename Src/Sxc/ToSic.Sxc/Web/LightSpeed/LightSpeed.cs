@@ -13,6 +13,8 @@ using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Internal;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;

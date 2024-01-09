@@ -4,6 +4,7 @@ using ToSic.Eav;
 using ToSic.Eav.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.WebApi.InPage;

@@ -5,7 +5,7 @@ using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
 
-namespace ToSic.Sxc.Blocks;
+namespace ToSic.Sxc.Blocks.Internal.Render;
 
 /// <summary>
 /// Contains everything which results from a render of a Block
@@ -94,9 +94,4 @@ public interface IRenderResult
     /// Errors such as not-activated features
     /// </summary>
     List<string> Errors { get; set; }
-}
-
-public interface IDependentApp
-{
-    int AppId { get; }
 }

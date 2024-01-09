@@ -6,6 +6,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Installation;
@@ -33,7 +34,6 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         IOutputCache outputCache
     ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
     {
-
         ConnectServices(
             _contextOfBlockEmpty = contextOfBlockEmpty,
             _blockModuleEmpty = blockModuleEmpty,

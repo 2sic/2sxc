@@ -2,14 +2,14 @@
 using System.Text;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.Lib.Logging;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Blocks.Renderers;
+namespace ToSic.Sxc.Blocks.Internal.Render;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

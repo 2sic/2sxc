@@ -3,6 +3,7 @@ using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Web;
 using Page = System.Web.UI.Page;

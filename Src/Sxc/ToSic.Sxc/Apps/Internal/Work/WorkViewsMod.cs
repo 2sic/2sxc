@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps.Work;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Apps.Internal.Work;
 
@@ -42,22 +43,22 @@ public class WorkViewsMod : WorkUnitBase<IAppWorkCtx>
         {
             {nameof(IView.Name) /*View.FieldName*/, name },
             {nameof(IView.Path) /*View.FieldPath*/, path },
-            {View.FieldContentType, contentTypeStaticName },
-            {View.FieldContentDemo, contentDemoEntity.HasValue ? new List<int> { contentDemoEntity.Value } : new List<int>() },
-            {View.FieldPresentationType, presentationTypeStaticName },
-            {View.FieldPresentationItem, presentationDemoEntity.HasValue ? new List<int> { presentationDemoEntity.Value } : new List<int>() },
-            {View.FieldHeaderType, listContentTypeStaticName },
-            {View.FieldHeaderItem, listContentDemoEntity.HasValue ? new List<int> { listContentDemoEntity.Value } : new List<int>() },
-            {View.FieldHeaderPresentationType, listPresentationTypeStaticName },
-            {View.FieldHeaderPresentationItem, listPresentationDemoEntity.HasValue ? new List<int> { listPresentationDemoEntity.Value } : new List<int>() },
+            {ViewConstants.FieldContentType, contentTypeStaticName },
+            {ViewConstants.FieldContentDemo, contentDemoEntity.HasValue ? [contentDemoEntity.Value] : new List<int>() },
+            {ViewConstants.FieldPresentationType, presentationTypeStaticName },
+            {ViewConstants.FieldPresentationItem, presentationDemoEntity.HasValue ? [presentationDemoEntity.Value] : new List<int>() },
+            {ViewConstants.FieldHeaderType, listContentTypeStaticName },
+            {ViewConstants.FieldHeaderItem, listContentDemoEntity.HasValue ? [listContentDemoEntity.Value] : new List<int>() },
+            {ViewConstants.FieldHeaderPresentationType, listPresentationTypeStaticName },
+            {ViewConstants.FieldHeaderPresentationItem, listPresentationDemoEntity.HasValue ? [listPresentationDemoEntity.Value] : new List<int>() },
             {nameof(IView.Type) /*View.FieldType*/, templateType },
             {nameof(IView.IsHidden) /*View.FieldIsHidden*/, isHidden },
-            {View.FieldLocation, location },
-            {View.FieldUseList, useForList },
-            {View.FieldPublishEnable, publishData },
-            {View.FieldPublishStreams, streamsToPublish },
-            {View.FieldPipeline, queryEntity.HasValue ? new List<int> { queryEntity.Value } : new List<int>() },
-            {View.FieldNameInUrl, viewNameInUrl }
+            {ViewConstants.FieldLocation, location },
+            {ViewConstants.FieldUseList, useForList },
+            {ViewConstants.FieldPublishEnable, publishData },
+            {ViewConstants.FieldPublishStreams, streamsToPublish },
+            {ViewConstants.FieldPipeline, queryEntity.HasValue ? [queryEntity.Value] : new List<int>() },
+            {ViewConstants.FieldNameInUrl, viewNameInUrl }
         };
 
 

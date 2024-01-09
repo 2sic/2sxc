@@ -7,7 +7,7 @@ using ToSic.Lib.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.Blocks.Edit;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.InPage;

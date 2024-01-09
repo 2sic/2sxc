@@ -2,7 +2,7 @@
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Context;
 
-namespace ToSic.Sxc.Blocks;
+namespace ToSic.Sxc.Blocks.Internal;
 
 /// <summary>
 /// This is an important helper.

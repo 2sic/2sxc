@@ -2,7 +2,7 @@
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
 
-namespace ToSic.Sxc.Blocks;
+namespace ToSic.Sxc.Blocks.Internal;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

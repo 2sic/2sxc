@@ -28,6 +28,7 @@ using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Sxc.Apps.Internal;
+using ToSic.Sxc.Blocks.Internal;
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;
 #else

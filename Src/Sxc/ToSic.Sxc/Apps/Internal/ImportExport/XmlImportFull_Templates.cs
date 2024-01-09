@@ -5,6 +5,7 @@ using ToSic.Eav.ImportExport;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 
 // 2dm: must disable NullRef warnings, because there a lot of warnings when processing XML, 
 // ...and these are real errors which should blow
@@ -61,17 +62,17 @@ public partial class XmlImportFull
 
                 var type = template.Attribute(XmlConstants.EntityTypeAttribute).Value;
                 var isHidden = bool.Parse(template.Attribute(nameof(IView.IsHidden)).Value);
-                var location = template.Attribute(View.FieldLocation).Value;
+                var location = template.Attribute(ViewConstants.FieldLocation).Value;
                 var publishData =
-                    bool.Parse(template.Attribute(View.FieldPublishEnable) == null
+                    bool.Parse(template.Attribute(ViewConstants.FieldPublishEnable) == null
                         ? "False"
-                        : template.Attribute(View.FieldPublishEnable).Value);
-                var streamsToPublish = template.Attribute(View.FieldPublishStreams) == null
+                        : template.Attribute(ViewConstants.FieldPublishEnable).Value);
+                var streamsToPublish = template.Attribute(ViewConstants.FieldPublishStreams) == null
                     ? ""
-                    : template.Attribute(View.FieldPublishStreams).Value;
-                var viewNameInUrl = template.Attribute(View.FieldNameInUrl) == null
+                    : template.Attribute(ViewConstants.FieldPublishStreams).Value;
+                var viewNameInUrl = template.Attribute(ViewConstants.FieldNameInUrl) == null
                     ? null
-                    : template.Attribute(View.FieldNameInUrl).Value;
+                    : template.Attribute(ViewConstants.FieldNameInUrl).Value;
 
                 var queryEntityGuid = template.Attribute(XmlConstants.TemplateQueryGuidField);
                 var queryEntityId = new int?();
@@ -86,8 +87,8 @@ public partial class XmlImportFull
                 }
 
                 var useForList = false;
-                if (template.Attribute(View.FieldUseList) != null)
-                    useForList = bool.Parse(template.Attribute(View.FieldUseList).Value);
+                if (template.Attribute(ViewConstants.FieldUseList) != null)
+                    useForList = bool.Parse(template.Attribute(ViewConstants.FieldUseList).Value);
 
                 var lstTemplateDefaults = template.Elements(XmlConstants.Entity).Select(e =>
                 {

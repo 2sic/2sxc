@@ -9,7 +9,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Utils;
 using ToSic.Sxc.Web.PageFeatures;
-using static ToSic.Sxc.Blocks.RenderService;
+using static ToSic.Sxc.Blocks.Internal.Render.RenderService;
 
 namespace ToSic.Sxc.Services.CmsService;
 

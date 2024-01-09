@@ -14,6 +14,7 @@ using ToSic.Razor.Blade;
 using ToSic.Razor.Dnn;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.ContentSecurityPolicy;

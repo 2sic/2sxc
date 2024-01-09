@@ -7,7 +7,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Internal.Work;
 
-namespace ToSic.Sxc.Blocks.Edit;
+namespace ToSic.Sxc.Blocks.Internal;
 
 // todo: create interface
 // todo: move some parts out into a BlockManagement

@@ -7,18 +7,15 @@ using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
 
-namespace ToSic.Sxc.Blocks;
+namespace ToSic.Sxc.Blocks.Internal.Render;
 
 /// <inheritdoc />
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class RenderResult : TagText, IRenderResult
+public class RenderResult(string html) : TagText(null), IRenderResult
 {
-    public RenderResult(string html) : base(null)
-        => Html = html;
-
     /// <inheritdoc />
-    public string Html { get; set; }
+    public string Html { get; set; } = html;
 
     public int Size => _size.Get(() => Html?.Length ?? 0);
     private readonly GetOnce<int> _size = new();
@@ -65,9 +62,4 @@ public class RenderResult : TagText, IRenderResult
     public IList<CspParameters> CspParameters { get; set; }
 
     public List<string> Errors { get; set; }
-}
-
-public class DependentApp : IDependentApp
-{
-    public int AppId { get; set; }
 }

@@ -8,7 +8,7 @@ using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.ClientAssets;
 using static ToSic.Sxc.Web.ClientAssetConstants;
 
-namespace ToSic.Sxc.Blocks.Output;
+namespace ToSic.Sxc.Blocks.Internal;
 
 public abstract partial class BlockResourceExtractor
 {
@@ -47,7 +47,7 @@ public abstract partial class BlockResourceExtractor
 
             // get all Attributes
             var (attributes, cspCode) = GetHtmlAttributes(match.Value);
-            var forCsp = cspCode == _pageServiceShared.CspEphemeralMarker;
+            var forCsp = cspCode == pageServiceShared.CspEphemeralMarker;
             if (jsSettings.AutoDefer && !attributes.ContainsKey(AttributeDefer)) attributes[AttributeDefer] = null;
             if (jsSettings.AutoAsync && !attributes.ContainsKey(AttributeAsync)) attributes[AttributeAsync] = null;
 

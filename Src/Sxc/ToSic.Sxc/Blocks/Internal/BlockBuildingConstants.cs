@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Blocks;
+﻿namespace ToSic.Sxc.Blocks.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class BlockBuildingConstants

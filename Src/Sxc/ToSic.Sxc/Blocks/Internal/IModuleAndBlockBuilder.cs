@@ -1,7 +1,7 @@
 ﻿using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.Blocks;
+namespace ToSic.Sxc.Blocks.Internal;
 
 [PrivateApi("internal use only")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using static System.Text.Json.Serialization.JsonIgnoreCondition;
 
-namespace ToSic.Sxc.Blocks.Problems;
+namespace ToSic.Sxc.Blocks.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ProblemReport

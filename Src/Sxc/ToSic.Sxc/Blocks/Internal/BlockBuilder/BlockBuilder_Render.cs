@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web.PageFeatures;
-using static ToSic.Sxc.Blocks.BlockBuildingConstants;
+using static ToSic.Sxc.Blocks.Internal.BlockBuildingConstants;
 
-namespace ToSic.Sxc.Blocks;
+namespace ToSic.Sxc.Blocks.Internal;
 
 public partial class BlockBuilder
 {

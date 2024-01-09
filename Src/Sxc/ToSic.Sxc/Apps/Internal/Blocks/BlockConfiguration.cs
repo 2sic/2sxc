@@ -8,6 +8,7 @@ using ToSic.Eav.DataSource.Query;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Apps.Internal;
 

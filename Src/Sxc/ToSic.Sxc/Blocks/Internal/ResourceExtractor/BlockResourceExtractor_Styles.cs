@@ -5,7 +5,7 @@ using ToSic.Sxc.Utils;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.ClientAssets;
 
-namespace ToSic.Sxc.Blocks.Output;
+namespace ToSic.Sxc.Blocks.Internal;
 
 public abstract partial class BlockResourceExtractor
 {
@@ -41,7 +41,7 @@ public abstract partial class BlockResourceExtractor
 
             // get all Attributes
             var (_, cspCode) = GetHtmlAttributes(match.Value);
-            var forCsp = cspCode == _pageServiceShared.CspEphemeralMarker;
+            var forCsp = cspCode == pageServiceShared.CspEphemeralMarker;
 
             // Register, then remember to remove later on
             var url = FixUrlWithSpaces(match.Groups["Src"].Value);

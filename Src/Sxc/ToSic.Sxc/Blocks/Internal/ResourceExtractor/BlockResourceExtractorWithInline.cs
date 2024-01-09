@@ -2,7 +2,7 @@
 using ToSic.Sxc.Web.ClientAssets;
 using ToSic.Sxc.Web.PageService;
 
-namespace ToSic.Sxc.Blocks.Output;
+namespace ToSic.Sxc.Blocks.Internal;
 
 /// <summary>
 /// ATM only used in Oqtane, where external and internal scripts must be extracted

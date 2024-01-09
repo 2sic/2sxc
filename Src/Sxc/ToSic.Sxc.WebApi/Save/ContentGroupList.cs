@@ -9,11 +9,11 @@ using ToSic.Eav.WebApi.Formats;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Blocks.Edit;
 using static System.StringComparison;
 using ToSic.Eav.Apps.Work;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Internal.Work;
+using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.WebApi.Save;
 

@@ -11,6 +11,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
 using ToSic.Eav.Apps.Work;
+using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.WebApi.Cms;
 

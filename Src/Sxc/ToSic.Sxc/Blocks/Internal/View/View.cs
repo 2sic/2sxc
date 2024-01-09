@@ -7,25 +7,20 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps.Internal.Assets;
+using static ToSic.Sxc.Blocks.Internal.ViewConstants;
 using IEntity = ToSic.Eav.Data.IEntity;
 
-namespace ToSic.Sxc.Blocks;
+namespace ToSic.Sxc.Blocks.Internal;
 
 [PrivateApi("Internal implementation - don't publish")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public partial class View: EntityBasedWithLog, IView
+public partial class View(
+    IEntity templateEntity,
+    string[] languageCodes,
+    ILog parentLog,
+    LazySvc<QueryDefinitionBuilder> qDefBuilder)
+    : EntityBasedWithLog(templateEntity, languageCodes, parentLog, "Sxc.View"), IView
 {
-
-    #region Constructors
-
-    public View(IEntity templateEntity, string[] languageCodes, ILog parentLog, LazySvc<QueryDefinitionBuilder> qDefBuilder) : base(templateEntity, languageCodes, parentLog, "Sxc.View")
-    {
-        _qDefBuilder = qDefBuilder;
-    }
-    private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
-
-    #endregion
-
     private IEntity GetBestRelationship(string key) => Entity.Children(key).FirstOrDefault();
 
 
@@ -85,7 +80,7 @@ public partial class View: EntityBasedWithLog, IView
     {
         var queryRaw = GetBestRelationship(FieldPipeline);
         var query = queryRaw != null
-            ? _qDefBuilder.Value.Create(queryRaw, Entity.AppId)
+            ? qDefBuilder.Value.Create(queryRaw, Entity.AppId)
             : null;
         return (queryRaw, query);
     });

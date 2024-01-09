@@ -13,18 +13,12 @@ using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageService;
 using static System.StringComparer;
 
-namespace ToSic.Sxc.Blocks.Output;
+namespace ToSic.Sxc.Blocks.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract partial class BlockResourceExtractor: ServiceBase, IBlockResourceExtractor
+public abstract partial class BlockResourceExtractor(PageServiceShared pageServiceShared)
+    : ServiceBase("Sxc.AstOpt"), IBlockResourceExtractor
 {
-    #region Construction / DI
-
-    protected BlockResourceExtractor(PageServiceShared pageServiceShared) : base("Sxc.AstOpt") 
-        => _pageServiceShared = pageServiceShared;
-    private readonly PageServiceShared _pageServiceShared;
-
-    #endregion
 
     #region Settings
 

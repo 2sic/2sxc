@@ -9,6 +9,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context;
 using IEntity = ToSic.Eav.Data.IEntity;
 

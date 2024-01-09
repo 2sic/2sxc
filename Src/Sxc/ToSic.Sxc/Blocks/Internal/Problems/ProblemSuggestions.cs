@@ -8,7 +8,7 @@ using ToSic.Sxc.Apps;
 
 // ReSharper disable ConvertTypeCheckPatternToNullCheck
 
-namespace ToSic.Sxc.Blocks.Problems;
+namespace ToSic.Sxc.Blocks.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class ProblemSuggestions

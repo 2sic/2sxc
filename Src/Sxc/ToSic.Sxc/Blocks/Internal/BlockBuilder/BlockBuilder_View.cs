@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using ToSic.Sxc.Apps;
-
-namespace ToSic.Sxc.Blocks;
+﻿namespace ToSic.Sxc.Blocks.Internal;
 
 public partial class BlockBuilder
 {

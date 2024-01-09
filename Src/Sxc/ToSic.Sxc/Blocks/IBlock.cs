@@ -3,7 +3,7 @@ using ToSic.Eav.Apps;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps.Internal;
-using ToSic.Sxc.Blocks.Problems;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;

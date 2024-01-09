@@ -6,6 +6,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.CodeHelpers;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.WebApi;

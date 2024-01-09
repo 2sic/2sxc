@@ -12,9 +12,10 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Internal;
-using static ToSic.Sxc.Blocks.BlockBuildingConstants;
+using static ToSic.Sxc.Blocks.Internal.BlockBuildingConstants;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IDataSource = ToSic.Eav.DataSource.IDataSource;
 

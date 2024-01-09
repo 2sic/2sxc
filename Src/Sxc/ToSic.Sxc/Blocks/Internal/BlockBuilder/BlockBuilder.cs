@@ -10,7 +10,7 @@ using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.PageService;
 
-namespace ToSic.Sxc.Blocks;
+namespace ToSic.Sxc.Blocks.Internal;
 
 /// <summary>
 /// This is an instance-context of a Content-Module. It basically encapsulates the instance-state, incl.

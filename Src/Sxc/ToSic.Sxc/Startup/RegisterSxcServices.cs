@@ -9,7 +9,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Blocks.Edit;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Help;

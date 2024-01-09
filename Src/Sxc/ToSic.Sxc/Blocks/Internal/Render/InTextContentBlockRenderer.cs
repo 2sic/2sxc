@@ -8,7 +8,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Blocks.Renderers;
+namespace ToSic.Sxc.Blocks.Internal.Render;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class InTextContentBlockRenderer: ServiceBase
