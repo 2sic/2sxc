@@ -13,7 +13,7 @@ using ToSic.Sxc.Data.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Web;
 using static System.StringComparer;
-using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
+using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 using static ToSic.Sxc.Images.ImageDecorator;
 
 namespace ToSic.Sxc.Images;

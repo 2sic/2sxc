@@ -15,13 +15,13 @@ using ToSic.Razor.Dnn;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
 using static ToSic.Sxc.Web.ClientAssetConstants;
-using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Dnn.Services;
 
@@ -123,7 +123,7 @@ public class DnnPageChanges : ServiceBase
 
         // Register CSP changes for applying once all modules have been prepared
         // Note that in cached scenarios, CspEnabled is true, but it may have been turned off since
-        if (result.CspEnabled && _featuresService.Value.IsEnabled(BuiltInFeatures.ContentSecurityPolicy.NameId))
+        if (result.CspEnabled && _featuresService.Value.IsEnabled(SxcFeatures.ContentSecurityPolicy.NameId))
             PageCsp(result.CspEnforced).Add(result.CspParameters);
 
         if (page?.Response == null) return l.Return(0, "error, HttpResponse is null");

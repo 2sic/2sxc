@@ -2,9 +2,9 @@
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.SysData;
 
-namespace ToSic.Sxc.Configuration.Features;
+namespace ToSic.Sxc.Configuration.Internal;
 
-public partial class BuiltInFeatures
+public partial class SxcFeatures
 {
     public static readonly Feature ContentSecurityPolicy = new(
         "ContentSecurityPolicy",

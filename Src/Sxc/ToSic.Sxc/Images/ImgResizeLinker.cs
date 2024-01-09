@@ -15,7 +15,7 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Web.Url;
-using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
+using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Images.ImageDecorator;
 using static ToSic.Sxc.Images.RecipeVariant;

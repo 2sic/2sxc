@@ -12,7 +12,7 @@ using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Web;
 using static System.StringComparer;
-using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
+using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Dnn.Razor;

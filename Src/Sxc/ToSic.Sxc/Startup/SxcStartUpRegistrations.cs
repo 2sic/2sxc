@@ -2,6 +2,7 @@
 using ToSic.Eav.Run;
 using ToSic.Eav.StartUp;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Startup;
@@ -20,6 +21,6 @@ public class SxcStartUpRegistrations: ServiceBase, IStartUpRegistrations
     /// <summary>
     /// Register Dnn features before loading
     /// </summary>
-    public void Register() => Configuration.Features.BuiltInFeatures.Register(_featuresCatalog);
+    public void Register() => SxcFeatures.Register(_featuresCatalog);
 
 }

@@ -1,14 +1,14 @@
 ﻿using ToSic.Eav.Internal.Features;
 using ToSic.Razor.Internals.Documentation;
 
-namespace ToSic.Sxc.Configuration.Features;
+namespace ToSic.Sxc.Configuration.Internal;
 
 /// <summary>
 /// Internal - built-in features.
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 [PrivateApi]
-public partial class BuiltInFeatures
+public partial class SxcFeatures
 {
     public static void Register(FeaturesCatalog cat) =>
         cat.Register(

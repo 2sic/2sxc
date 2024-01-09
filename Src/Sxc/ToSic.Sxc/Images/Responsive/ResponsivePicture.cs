@@ -6,7 +6,7 @@ using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
-using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
+using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 
 namespace ToSic.Sxc.Images;
 

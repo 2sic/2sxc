@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
+using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 
 namespace ToSic.Sxc.Images;
 

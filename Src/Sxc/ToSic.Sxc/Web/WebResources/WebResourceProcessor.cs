@@ -3,11 +3,11 @@ using System.Text.RegularExpressions;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Utils;
 using ToSic.Sxc.Web.PageFeatures;
-using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Web.WebResources;
 
@@ -66,7 +66,7 @@ internal class WebResourceProcessor: HelperBase
             return l.Return(new PageFeatureFromSettings(key, html: html, autoOptimize: autoOptimize), "ok, using built-in cdn-path");
 
         // check if feature is enabled
-        if (!_features.IsEnabled(BuiltInFeatures.CdnSourcePublic.NameId))
+        if (!_features.IsEnabled(SxcFeatures.CdnSourcePublic.NameId))
             return l.Return(new PageFeatureFromSettings(key, html: html, autoOptimize: autoOptimize), "ok, cdn-swap feature not enabled");
 
         // Set new root based on CdnSource settings

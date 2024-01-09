@@ -5,10 +5,10 @@ using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
+using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
-using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy;
@@ -85,7 +85,7 @@ public class CspOfModule: ServiceForDynamicCode
 
     private string CspUrlParam => _cspUrlParam.Get(Log, () =>
     {
-        if (!_featuresService.IsEnabled(BuiltInFeatures.ContentSecurityPolicyTestUrl.NameId))
+        if (!_featuresService.IsEnabled(SxcFeatures.ContentSecurityPolicyTestUrl.NameId))
             return null;
         var pageParameters = _DynCodeRoot?.CmsContext?.Page?.Parameters;
         if (pageParameters == null) return null;
@@ -125,9 +125,9 @@ public class CspOfModule: ServiceForDynamicCode
     internal bool IsEnabled => _enabled.Get(Log, () =>
     {
         // Check features
-        if (!_featuresService.IsEnabled(BuiltInFeatures.ContentSecurityPolicy.NameId))
+        if (!_featuresService.IsEnabled(SxcFeatures.ContentSecurityPolicy.NameId))
             return false;
-        if(_featuresService.IsEnabled(BuiltInFeatures.ContentSecurityPolicyEnforceTemp.NameId))
+        if(_featuresService.IsEnabled(SxcFeatures.ContentSecurityPolicyEnforceTemp.NameId))
             return true;
 
         // Try settings

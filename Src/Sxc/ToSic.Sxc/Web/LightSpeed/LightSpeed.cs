@@ -17,7 +17,7 @@ using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Internal;
-using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
+using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 
 namespace ToSic.Sxc.Web.LightSpeed;
 

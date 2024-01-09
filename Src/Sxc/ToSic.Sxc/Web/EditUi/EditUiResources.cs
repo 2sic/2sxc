@@ -3,7 +3,7 @@ using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Configuration.Features;
+using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Services;
 using static ToSic.Eav.Apps.AppStackConstants;
 using static ToSic.Sxc.Web.WebResources.WebResourceConstants;
@@ -51,7 +51,7 @@ public class EditUiResources: ServiceBase
         var useAltCdn = false;
         var html = "";
 
-        if (_features.IsEnabled(BuiltInFeatures.CdnSourceEdit.NameId))
+        if (_features.IsEnabled(SxcFeatures.CdnSourceEdit.NameId))
         {
             var zoneId = _zoneMapper.GetZoneId(siteId);
             var appPreset = _appStates.GetPrimaryReader(zoneId, Log);
