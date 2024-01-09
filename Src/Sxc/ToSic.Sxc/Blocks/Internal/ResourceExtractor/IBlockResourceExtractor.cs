@@ -1,6 +1,7 @@
 ﻿using ToSic.Lib.Logging;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Web.ClientAssets;
+using ToSic.Sxc.Web.Internal;
+using ToSic.Sxc.Web.Internal.ClientAssets;
 
 namespace ToSic.Sxc.Blocks.Internal;
 

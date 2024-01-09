@@ -69,7 +69,7 @@ partial class OqtRegisterServices
         services.TryAddTransient<IModuleAndBlockBuilder, OqtModuleAndBlockBuilder>();
 
         // Views / Templates / Razor: Polymorphism Resolvers
-        services.TryAddTransient<Sxc.Polymorphism.Koi>();
+        services.TryAddTransient<Sxc.Polymorphism.Internal.Koi>();
         services.TryAddTransient<Permissions>();
         services.TryAddTransient<Connect.Koi.Detectors.ICssFrameworkDetector, OqtKoiCssFrameworkDetector>();
 

@@ -5,8 +5,9 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Utils;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.Web.ClientAssets;
-using static ToSic.Sxc.Web.ClientAssetConstants;
+using ToSic.Sxc.Web.Internal;
+using ToSic.Sxc.Web.Internal.ClientAssets;
+using static ToSic.Sxc.Web.Internal.ClientAssets.ClientAssetConstants;
 
 namespace ToSic.Sxc.Blocks.Internal;
 

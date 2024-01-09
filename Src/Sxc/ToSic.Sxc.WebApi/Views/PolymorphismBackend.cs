@@ -2,13 +2,14 @@
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Polymorphism;
+using ToSic.Sxc.Polymorphism.Internal;
 
 namespace ToSic.Sxc.WebApi.Views;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class PolymorphismBackend : ServiceBase
 {
-    public PolymorphismBackend(Polymorphism.Polymorphism polymorphism, IAppStates appStates) : base("Bck.Views")
+    public PolymorphismBackend(Polymorphism.Internal.PolymorphConfigReader polymorphism, IAppStates appStates) : base("Bck.Views")
     {
         ConnectServices(
             _polymorphism = polymorphism,
@@ -16,7 +17,7 @@ public class PolymorphismBackend : ServiceBase
         );
     }
 
-    private readonly Polymorphism.Polymorphism _polymorphism;
+    private readonly Polymorphism.Internal.PolymorphConfigReader _polymorphism;
     private readonly IAppStates _appStates;
 
     public PolymorphismDto Polymorphism(int appId)

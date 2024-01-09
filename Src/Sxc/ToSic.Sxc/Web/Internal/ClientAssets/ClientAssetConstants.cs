@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using ToSic.Sxc.Web.ContentSecurityPolicy;
+using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
-namespace ToSic.Sxc.Web;
+namespace ToSic.Sxc.Web.Internal.ClientAssets;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ClientAssetConstants
+internal class ClientAssetConstants
 {
     #region Constants for placement in resulting HTML
 
@@ -25,6 +25,12 @@ public class ClientAssetConstants
     /// that we need to skip from adding in general HtmlAttributes dictionary
     /// because this special attributes are handled in custom way.
     /// </summary>
-    internal static readonly List<string> SpecialHtmlAttributes = new() { "src", "id", PageService.PageService.AssetOptimizationsAttributeName, CspConstants.CspWhitelistAttribute };
+    internal static readonly List<string> SpecialHtmlAttributes =
+    [
+        "src",
+        "id",
+        PageService.PageService.AssetOptimizationsAttributeName,
+        CspConstants.CspWhitelistAttribute
+    ];
 
 }

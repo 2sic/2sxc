@@ -13,7 +13,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web.ContentSecurityPolicy;
+using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 using IApp = ToSic.Sxc.Apps.IApp;
 // ReSharper disable InheritdocInvalidUsage

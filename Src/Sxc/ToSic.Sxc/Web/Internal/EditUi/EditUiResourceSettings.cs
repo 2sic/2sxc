@@ -1,5 +1,8 @@
-﻿namespace ToSic.Sxc.Web.EditUi;
+﻿namespace ToSic.Sxc.Web.Internal.EditUi;
 
+/// <summary>
+/// Configuration which icons/fonts are needed by the various edit-UIs
+/// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public struct EditUiResourceSettings
 {
@@ -13,7 +16,7 @@ public struct EditUiResourceSettings
         FontRoboto = true,
     };
 
-    public static EditUiResourceSettings QuickDialog = new()
+    public static EditUiResourceSettings QuickDialog => new()
     {
         IconsMaterial = true,
         FontRoboto = true,

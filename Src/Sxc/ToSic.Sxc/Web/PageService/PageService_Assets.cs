@@ -2,7 +2,7 @@
 using ToSic.Lib.Coding;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Web.ContentSecurityPolicy;
+using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
 namespace ToSic.Sxc.Web.PageService;
 

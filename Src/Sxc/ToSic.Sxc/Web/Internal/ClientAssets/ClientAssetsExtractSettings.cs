@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Web.ClientAssets;
+﻿namespace ToSic.Sxc.Web.Internal.ClientAssets;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ClientAssetsExtractSettings
@@ -24,37 +24,4 @@ public class ClientAssetsExtractSettings
     public ClientAssetExtractSettings Css { get; }
 
     public ClientAssetExtractSettings Js { get; }
-}
-
-public class ClientAssetExtractSettings
-{
-    public ClientAssetExtractSettings(bool extractAll, string location, int priority, bool autoDefer, bool autoAsync)
-    {
-        ExtractAll = extractAll;
-        Location = location;
-        Priority = priority;
-        AutoDefer = autoDefer;
-        AutoAsync = autoAsync;
-    }
-    /// <summary>
-    /// Extract all assets, even if they don't have an auto-optimize attribute.
-    /// </summary>
-    public bool ExtractAll { get; }
-    public string Location { get; }
-
-    /// <summary>
-    /// Default Priority - will be used for sorting when added to page
-    /// </summary>
-    public int Priority { get; }
-
-    /// <summary>
-    /// Automatically add a `defer` attribute to scripts
-    /// </summary>
-    public bool AutoDefer { get; }
-
-
-    /// <summary>
-    /// Automatically add as `async` attribute to scripts
-    /// </summary>
-    public bool AutoAsync { get; }
 }

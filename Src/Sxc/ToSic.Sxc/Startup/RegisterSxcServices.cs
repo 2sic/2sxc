@@ -29,9 +29,9 @@ using ToSic.Sxc.Plumbing;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services.GoogleMaps;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.Web.ContentSecurityPolicy;
-using ToSic.Sxc.Web.EditUi;
+using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.DotNet;
+using ToSic.Sxc.Web.Internal.EditUi;
 using ToSic.Sxc.Web.Internal.JsContext;
 using ToSic.Sxc.Web.LightSpeed;
 using ToSic.Sxc.Web.PageFeatures;
@@ -113,7 +113,7 @@ public static partial class RegisterSxcServices
         services.AddNetVariations();
 
         // Polymorphism
-        services.TryAddTransient<Polymorphism.Polymorphism>();
+        services.TryAddTransient<Polymorphism.Internal.PolymorphConfigReader>();
 
 
         // 2022-02-07 2dm experimental

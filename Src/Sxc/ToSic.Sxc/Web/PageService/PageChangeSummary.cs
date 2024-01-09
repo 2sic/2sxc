@@ -8,10 +8,11 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Internal;
-using ToSic.Sxc.Web.ClientAssets;
-using ToSic.Sxc.Web.ContentSecurityPolicy;
+using ToSic.Sxc.Web.Internal;
+using ToSic.Sxc.Web.Internal.ClientAssets;
+using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageFeatures;
-using static ToSic.Sxc.Web.ClientAssetConstants;
+using static ToSic.Sxc.Web.Internal.ClientAssets.ClientAssetConstants;
 using BuiltInFeatures = ToSic.Sxc.Web.PageFeatures.BuiltInFeatures;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 

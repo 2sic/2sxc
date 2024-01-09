@@ -1,12 +1,10 @@
 ﻿using Connect.Koi.Detectors;
 using ToSic.Eav.Internal.Unknown;
 
-namespace ToSic.Sxc.Polymorphism;
+namespace ToSic.Sxc.Polymorphism.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CssFrameworkDetectorUnknown: ICssFrameworkDetector
+internal class CssFrameworkDetectorUnknown(WarnUseOfUnknown<CssFrameworkDetectorUnknown> _) : ICssFrameworkDetector
 {
-    public CssFrameworkDetectorUnknown(WarnUseOfUnknown<CssFrameworkDetectorUnknown> _) { }
-
     public string AutoDetect() => Connect.Koi.CssFrameworks.Unknown;
 }

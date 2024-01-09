@@ -18,10 +18,12 @@ using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.Web.ContentSecurityPolicy;
+using ToSic.Sxc.Web.Internal;
+using ToSic.Sxc.Web.Internal.ClientAssets;
+using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
-using static ToSic.Sxc.Web.ClientAssetConstants;
+using static ToSic.Sxc.Web.Internal.ClientAssets.ClientAssetConstants;
 
 namespace ToSic.Sxc.Dnn.Services;
 

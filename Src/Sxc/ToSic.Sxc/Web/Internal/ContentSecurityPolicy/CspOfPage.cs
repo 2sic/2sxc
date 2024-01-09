@@ -5,7 +5,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Web.ContentSecurityPolicy;
+namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class CspOfPage: ServiceBase

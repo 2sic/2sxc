@@ -1,7 +1,7 @@
 ﻿using System.Collections.Specialized;
 using ToSic.Sxc.Web.Url;
 
-namespace ToSic.Sxc.Web.ContentSecurityPolicy;
+namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class CspParameters: NameValueCollection

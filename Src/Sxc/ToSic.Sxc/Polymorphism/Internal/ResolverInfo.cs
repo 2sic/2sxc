@@ -1,14 +1,9 @@
 ﻿using System;
 using ToSic.Eav.Plumbing;
 
-namespace ToSic.Sxc.Polymorphism;
+namespace ToSic.Sxc.Polymorphism.Internal;
 
-internal class ResolverInfo: TypeWithMetadataBase<PolymorphResolverAttribute>
+internal class ResolverInfo(Type dsType) : TypeWithMetadataBase<PolymorphResolverAttribute>(dsType)
 {
-    public ResolverInfo(Type dsType): base (dsType)
-    {
-
-    }
-
     public override string Name => TypeMetadata?.Name;
 }

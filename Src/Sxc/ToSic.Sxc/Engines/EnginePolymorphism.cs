@@ -12,10 +12,10 @@ namespace ToSic.Sxc.Engines;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class EnginePolymorphism: ServiceBase
 {
-    private readonly Polymorphism.Polymorphism _polymorphism;
+    private readonly Polymorphism.Internal.PolymorphConfigReader _polymorphism;
     private readonly IServerPaths _serverPaths;
 
-    public EnginePolymorphism(Polymorphism.Polymorphism polymorphism, IServerPaths serverPaths) : base("Sxc.EngPly")
+    public EnginePolymorphism(Polymorphism.Internal.PolymorphConfigReader polymorphism, IServerPaths serverPaths) : base("Sxc.EngPly")
     {
         ConnectServices(
             _polymorphism = polymorphism,

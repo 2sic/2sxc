@@ -1,29 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Polymorphism;
+namespace ToSic.Sxc.Polymorphism.Internal;
 
+/// <summary>
+/// Mini service to read the polymorph config of the app
+/// and then resolve the edition based on an <see cref="IResolver"/>
+/// </summary>
+/// <param name="serviceProvider"></param>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class Polymorphism: ServiceBase
+public class PolymorphConfigReader(IServiceProvider serviceProvider) : ServiceBase("Plm.Managr")
 {
-    private readonly IServiceProvider _serviceProvider;
     public string Resolver;
     public string Parameters;
     public string Rule;
     public IEntity Entity;
-       
-    public Polymorphism(IServiceProvider serviceProvider) : base("Plm.Managr")
-    {
-        _serviceProvider = serviceProvider;
-    }
 
-    public Polymorphism Init(IEnumerable<IEntity> list)
+    public PolymorphConfigReader Init(IEnumerable<IEntity> list)
     {
         Entity = list?.FirstOrDefaultOfType(PolymorphismConstants.Name);
         if (Entity == null) return this;
@@ -53,12 +51,11 @@ public class Polymorphism: ServiceBase
         {
             if (string.IsNullOrEmpty(Resolver)) return (null, "no resolver");
 
-            var rInfo = Cache.FirstOrDefault(r =>
-                r.Name.Equals(Resolver, StringComparison.InvariantCultureIgnoreCase));
+            var rInfo = ResolversCache.FirstOrDefault(r => r.Name.EqualsInsensitive(Resolver));
             if (rInfo == null)
                 return (null, "resolver not found");
             Log.A($"resolver for {Resolver} found");
-            var editionResolver = (IResolver)_serviceProvider.GetService(rInfo.Type);
+            var editionResolver = (IResolver)serviceProvider.GetService(rInfo.Type);
             var result = editionResolver.Edition(Parameters, Log);
 
             return (result, "ok");
@@ -70,7 +67,7 @@ public class Polymorphism: ServiceBase
         }
     });
 
-    private static List<ResolverInfo> Cache { get; } = AssemblyHandling
+    private static List<ResolverInfo> ResolversCache { get; } = AssemblyHandling
         .FindInherited(typeof(IResolver))
         .Select(t => new ResolverInfo(t))
         .ToList();

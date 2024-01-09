@@ -2,16 +2,15 @@
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
-namespace ToSic.Sxc.Web.ContentSecurityPolicy;
+namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class CspOfModule: ServiceForDynamicCode

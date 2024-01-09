@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
-using ToSic.Sxc.Web.ContentSecurityPolicy;
+using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
 namespace ToSic.Sxc.Tests.ContentSecurityPolicyTests
 {

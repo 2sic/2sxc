@@ -17,7 +17,7 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.Web.EditUi;
+using ToSic.Sxc.Web.Internal.EditUi;
 
 namespace ToSic.Sxc.Dnn.dist;
 

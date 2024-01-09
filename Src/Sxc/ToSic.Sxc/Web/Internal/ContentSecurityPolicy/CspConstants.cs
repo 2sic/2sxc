@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Web.ContentSecurityPolicy;
+﻿namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
 internal class CspConstants
 {

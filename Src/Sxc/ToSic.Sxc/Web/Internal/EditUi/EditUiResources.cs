@@ -9,8 +9,11 @@ using static ToSic.Eav.Apps.AppStackConstants;
 using static ToSic.Sxc.Web.WebResources.WebResourceConstants;
 using static ToSic.Sxc.Web.WebResources.WebResourceProcessor;
 
-namespace ToSic.Sxc.Web.EditUi;
+namespace ToSic.Sxc.Web.Internal.EditUi;
 
+/// <summary>
+/// Provide all resources (fonts, icons, etc.) needed for the edit-ui
+/// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class EditUiResources: ServiceBase
 {

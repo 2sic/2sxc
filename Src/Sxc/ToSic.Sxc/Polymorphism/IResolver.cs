@@ -10,6 +10,5 @@ public interface IResolver
 {
     string Name { get; }
 
-
     string Edition(string parameters, ILog log);
 }

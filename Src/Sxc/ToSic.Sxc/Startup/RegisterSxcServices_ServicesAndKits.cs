@@ -12,7 +12,7 @@ using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.CmsService;
 using ToSic.Sxc.Services.DataServices;
-using ToSic.Sxc.Web.ContentSecurityPolicy;
+using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageService;
 using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 

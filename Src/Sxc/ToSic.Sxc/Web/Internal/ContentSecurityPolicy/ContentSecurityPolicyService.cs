@@ -2,7 +2,7 @@
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.PageService;
 
-namespace ToSic.Sxc.Web.ContentSecurityPolicy;
+namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
 /// <summary>
 /// Very experimental, do not use

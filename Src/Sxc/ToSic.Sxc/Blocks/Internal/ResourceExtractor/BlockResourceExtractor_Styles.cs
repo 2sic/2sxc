@@ -3,7 +3,8 @@ using System.Text.RegularExpressions;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Utils;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.Web.ClientAssets;
+using ToSic.Sxc.Web.Internal;
+using ToSic.Sxc.Web.Internal.ClientAssets;
 
 namespace ToSic.Sxc.Blocks.Internal;
 

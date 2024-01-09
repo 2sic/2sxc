@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Web.EditUi;
+using ToSic.Sxc.Web.Internal.EditUi;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi;
 
@@ -81,9 +81,12 @@ internal static class OqtWebApiConstants
     //};
 
     // Dialogs for 2sxc UI
-    public static readonly List<(string url, string page, EditUiResourceSettings setting)> SxcDialogs = new(capacity: 2)
-    {
-        ($"/Modules/{OqtConstants.PackageName}/dist/quick-dialog/", $@"Modules\{OqtConstants.PackageName}\dist\quick-dialog\index-raw.html", EditUiResourceSettings.QuickDialog),
-        ($"/Modules/{OqtConstants.PackageName}/dist/ng-edit/", $@"Modules\{OqtConstants.PackageName}\dist\ng-edit\index-raw.html", EditUiResourceSettings.EditUi)
-    };
+    public static readonly List<(string url, string page, EditUiResourceSettings setting)> SxcDialogs =
+    [
+        ($"/Modules/{OqtConstants.PackageName}/dist/quick-dialog/",
+            $@"Modules\{OqtConstants.PackageName}\dist\quick-dialog\index-raw.html",
+            EditUiResourceSettings.QuickDialog),
+        ($"/Modules/{OqtConstants.PackageName}/dist/ng-edit/",
+            $@"Modules\{OqtConstants.PackageName}\dist\ng-edit\index-raw.html", EditUiResourceSettings.EditUi)
+    ];
 }
