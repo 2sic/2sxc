@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Blocks;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ViewParts
+internal class ViewParts
 {
     public const string ViewFieldInContentBlock = "Template";
     public const string TemplateContentType = "Template";
