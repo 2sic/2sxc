@@ -20,6 +20,7 @@ using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.DataSources.Internal.Compatibility;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Dnn;
@@ -121,7 +122,7 @@ public abstract partial class RazorComponent : RazorComponentBase,
 
     // This is explicitly implemented so the interfaces don't complain
     // but actually we're not showing this - in reality we're showing the Old (see above)
-    IBlockData IDynamicCode.Data => _DynCodeRoot.Data;
+    IBlockRun IDynamicCode.Data => _DynCodeRoot.Data;
 
     #endregion
 

@@ -17,7 +17,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal;
 
-namespace ToSic.Sxc.DataSources;
+namespace ToSic.Sxc.DataSources.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader

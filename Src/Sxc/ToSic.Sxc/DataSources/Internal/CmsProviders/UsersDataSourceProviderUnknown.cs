@@ -4,7 +4,7 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Context.Internal.Raw;
 using ToSic.Sxc.Internal;
 
-namespace ToSic.Sxc.DataSources;
+namespace ToSic.Sxc.DataSources.Internal;
 
 internal class UsersDataSourceProviderUnknown : UsersDataSourceProvider
 {

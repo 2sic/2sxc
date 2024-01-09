@@ -5,7 +5,7 @@ using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.DataSources;
+namespace ToSic.Sxc.DataSources.Internal;
 
 /// <summary>
 /// Base class to provide data to the Sites DataSource.

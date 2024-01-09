@@ -53,7 +53,7 @@ public abstract class ApiController : DynamicApiController,
     public IApp App => _DynCodeRoot.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IBlockData Data => _DynCodeRoot.Data;
+    public IBlockRun Data => _DynCodeRoot.Data;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();

@@ -60,7 +60,7 @@ public abstract partial class Api12: DynamicApiController, IDynamicCode12, IDyna
     public IApp App => _DynCodeRoot.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IBlockData Data => _DynCodeRoot.Data;
+    public IBlockRun Data => _DynCodeRoot.Data;
 
     #endregion
 

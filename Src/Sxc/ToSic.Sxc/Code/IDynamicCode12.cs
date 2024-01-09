@@ -49,7 +49,7 @@ public interface IDynamicCode12 : IDynamicCode //, ICompatibleToCode12
     IApp App { get; }
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    IBlockData Data { get; }
+    IBlockRun Data { get; }
 
     #region Content and Header
 

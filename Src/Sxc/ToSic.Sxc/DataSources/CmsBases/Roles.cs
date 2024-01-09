@@ -9,6 +9,7 @@ using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.DataSources.Internal;
 using static ToSic.Eav.DataSource.DataSourceConstants;
 
 // Important Info to people working with this

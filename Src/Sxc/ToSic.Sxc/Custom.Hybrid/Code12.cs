@@ -73,7 +73,7 @@ public abstract class Code12 : CustomCodeBase, IHasCodeLog, IDynamicCode, IDynam
     public IApp App => _DynCodeRoot?.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IBlockData Data => _DynCodeRoot?.Data;
+    public IBlockRun Data => _DynCodeRoot?.Data;
 
     /// <inheritdoc cref="IDynamicCode.Content" />
     public dynamic Content => _DynCodeRoot?.Content;

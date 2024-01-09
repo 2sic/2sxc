@@ -117,7 +117,7 @@ public abstract partial class DynamicCodeRoot : ServiceBase<DynamicCodeRoot.MySe
     public IApp App { get; private set; }
 
     /// <inheritdoc />
-    public IBlockData Data { get; private set; }
+    public IBlockRun Data { get; private set; }
 
     /// <inheritdoc cref="IDynamicCode.Link" />
     // Note that ILinkHelper uses INeedsCodeRoot, so if initialized in GetService this will be auto-provided

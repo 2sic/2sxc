@@ -1,7 +1,7 @@
 ﻿#if NETFRAMEWORK
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.DataSources.Old;
+namespace ToSic.Sxc.DataSources.Internal.Compatibility;
 
 /// <summary>
 /// This is for data sources to determine that they can be published as JSON stream from the module.

@@ -206,7 +206,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, ID
     /// 1. If the view expects no data, it will just contain a `Default` stream containing no items
     /// 1. If the view has a Query behind it, then MyData will have all the streams provided by the Query
     /// </summary>
-    IBlockData MyData { get; }
+    IBlockRun MyData { get; }
 
     #endregion
 

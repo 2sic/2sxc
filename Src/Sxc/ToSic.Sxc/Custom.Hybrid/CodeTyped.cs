@@ -121,7 +121,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     public ITypedStack AllSettings => CodeHelper.AllSettings;
 
 
-    public IBlockData MyData => CodeRootOrError().Data;
+    public IBlockRun MyData => CodeRootOrError().Data;
 
     #endregion
 

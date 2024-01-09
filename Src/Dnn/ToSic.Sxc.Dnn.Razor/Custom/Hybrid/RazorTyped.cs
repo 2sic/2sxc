@@ -122,7 +122,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     public ITypedItem MyHeader => CodeHelper.MyHeader;
 
     /// <inheritdoc />
-    public IBlockData MyData => _DynCodeRoot.Data;
+    public IBlockRun MyData => _DynCodeRoot.Data;
 
     /// <inheritdoc />
     public ITypedModel MyModel => CodeHelper.MyModel;

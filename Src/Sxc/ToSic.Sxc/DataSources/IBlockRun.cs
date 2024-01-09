@@ -17,7 +17,7 @@ namespace ToSic.Sxc.DataSources;
 /// </remarks>
 [PrivateApi("Was public from 16.01 till 17.00, but no real reason for it, so not any more")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public interface IBlockData: IDataSource
+public interface IBlockRun: IDataSource
 {
     [PrivateApi("maybe just add for docs")]
     new IReadOnlyDictionary<string, IDataStream> Out { get; }

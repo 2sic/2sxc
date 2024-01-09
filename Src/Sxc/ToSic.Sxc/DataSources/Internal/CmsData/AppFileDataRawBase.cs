@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav.Data.Raw;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.DataSources;
+namespace ToSic.Sxc.DataSources.Internal;
 
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

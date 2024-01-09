@@ -176,7 +176,7 @@ public abstract class ApiTyped: DynamicApiController, IHasCodeLog, IDynamicWebAp
 
     public ITypedItem MyHeader => CodeHelper.MyHeader;
 
-    public IBlockData MyData => _DynCodeRoot.Data;
+    public IBlockRun MyData => _DynCodeRoot.Data;
 
     #endregion
 

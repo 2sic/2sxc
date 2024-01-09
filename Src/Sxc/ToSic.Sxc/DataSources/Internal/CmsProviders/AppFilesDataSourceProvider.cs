@@ -16,7 +16,7 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Internal;
 using static System.IO.Path;
 
-namespace ToSic.Sxc.DataSources;
+namespace ToSic.Sxc.DataSources.Internal;
 
 /// <summary>
 /// Base class to provide data to the AppFiles DataSource.

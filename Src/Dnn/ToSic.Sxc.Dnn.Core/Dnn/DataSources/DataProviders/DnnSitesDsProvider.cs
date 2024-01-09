@@ -5,6 +5,7 @@ using System.Linq;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.DataSources.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources;

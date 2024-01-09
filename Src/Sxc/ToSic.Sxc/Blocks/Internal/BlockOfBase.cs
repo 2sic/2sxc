@@ -12,6 +12,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.LookUp;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -164,13 +165,13 @@ public abstract partial class BlockBase : ServiceBase<BlockBase.MyServices>, IBl
 
 
 
-    public IBlockData Data => _data.GetL(Log, l =>
+    public IBlockRun Data => _data.GetL(Log, l =>
     {
         l.A($"About to load data source with possible app configuration provider. App is probably null: {App}");
         var dataSource = Services.BdsFactoryLazy.Value.GetContextDataSource(this, App?.ConfigurationProvider);
         return dataSource;
     });
-    private readonly GetOnce<IBlockData> _data = new();
+    private readonly GetOnce<IBlockRun> _data = new();
 
     public BlockConfiguration Configuration { get; protected set; }
         

@@ -1,9 +1,8 @@
 ﻿#if NETFRAMEWORK
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.DataSources.Old;
 
-namespace ToSic.Sxc.DataSources.Internal;
+namespace ToSic.Sxc.DataSources.Internal.Compatibility;
 
 /// <summary>
 /// This marks data sources which are meant for Blocks (Modules, Content-Block Instances). <br/>

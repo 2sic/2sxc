@@ -8,6 +8,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.DataSources.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources;

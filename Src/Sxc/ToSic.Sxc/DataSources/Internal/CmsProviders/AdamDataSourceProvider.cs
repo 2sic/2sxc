@@ -13,7 +13,7 @@ using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Internal;
 
-namespace ToSic.Sxc.DataSources;
+namespace ToSic.Sxc.DataSources.Internal;
 
 /// <summary>
 /// Base class to provide data to the Adam DataSource.

@@ -2,7 +2,7 @@
 using ToSic.Lib.Coding;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.DataSources;
+namespace ToSic.Sxc.DataSources.Internal;
 
 /// <summary>
 /// Base class to provide data to the Pages DataSource.

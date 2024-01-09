@@ -1,14 +1,14 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Query;
-using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Services;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
-namespace ToSic.Sxc.DataSources;
+namespace ToSic.Sxc.DataSources.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class BlockDataSourceFactory: ServiceBase
@@ -29,9 +29,9 @@ public class BlockDataSourceFactory: ServiceBase
 
 
     [PrivateApi]
-    internal IBlockData GetContextDataSource(IBlock block, ILookUpEngine configLookUp)
+    internal IBlockRun GetContextDataSource(IBlock block, ILookUpEngine configLookUp)
     {
-        var wrapLog = Log.Fn<IBlockData>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.UserMayEdit}, view:{block.View?.Name}");
+        var wrapLog = Log.Fn<IBlockRun>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.UserMayEdit}, view:{block.View?.Name}");
         var view = block.View;
 
         // Get ModuleDataSource
@@ -57,10 +57,12 @@ public class BlockDataSourceFactory: ServiceBase
             // Note: Deprecated feature in v13, remove ca. 14 - should warn
             // TODO: #WarnDeprecated
 #if NETFRAMEWORK
-            if (contextDataSource is ToSic.Sxc.DataSources.Internal.IBlockDataSource old)
+            if (contextDataSource is Internal.Compatibility.IBlockDataSource old)
             {
+#pragma warning disable CS0618 // Type or member is obsolete
                 old.Publish.Enabled = view.PublishData;
                 old.Publish.Streams = view.StreamsToPublish;
+#pragma warning restore CS0618 // Type or member is obsolete
             }
 #endif
             Log.A($"use template, & query#{view.Query?.Id}");
