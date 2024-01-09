@@ -5,12 +5,13 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.DataSources.Internal;
-using static ToSic.Eav.DataSource.DataSourceConstants;
+using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.DataSources;
 [PublicApi]
 [VisualQuery(
     NiceName = "Roles (User Roles)",
-    Icon = Icons.UserCircled,
+    Icon = DataSourceIcons.UserCircled,
     UiHint = "Roles in this site",
     HelpLink = "https://go.2sxc.org/ds-roles",
     NameId = "eee54266-d7ad-4f5e-9422-2d00c8f93b45",

@@ -2,8 +2,8 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Catalog;
-using ToSic.Eav.DataSource.Query;
+using ToSic.Eav.DataSource.Internal.Catalog;
+using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Services;
 using ToSic.Lib.Coding;

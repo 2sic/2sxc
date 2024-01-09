@@ -3,12 +3,13 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.DataSources.Internal;
-using static ToSic.Eav.DataSource.DataSourceConstants;
+using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 
 // Important Info to people working with this
 // It depends on abstract provder, that must be overriden in each platform
@@ -30,7 +31,7 @@ namespace ToSic.Sxc.DataSources;
     UiHint = "Files and folders in the Adam",
     NameId = "ee1d0cb6-5086-4d59-b16a-d0dc7b594bf2",
     HelpLink = "https://go.2sxc.org/ds-adam",
-    Icon = Icons.Tree,
+    Icon = DataSourceIcons.Tree,
     Type = DataSourceType.Lookup,
     Audience = Audience.Advanced,
     In = new[] { InStreamDefaultRequired },

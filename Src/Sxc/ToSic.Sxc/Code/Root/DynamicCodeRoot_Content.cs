@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
-using static ToSic.Eav.DataSource.DataSourceConstants;
+using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 using static ToSic.Sxc.Blocks.Internal.ViewParts;
 
 namespace ToSic.Sxc.Code;

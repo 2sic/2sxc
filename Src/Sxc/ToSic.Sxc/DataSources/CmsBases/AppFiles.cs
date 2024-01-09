@@ -4,13 +4,14 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.DataSources.Internal;
 using static System.StringComparer;
-using static ToSic.Eav.DataSource.DataSourceConstants;
+using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -31,7 +32,7 @@ namespace ToSic.Sxc.DataSources;
     ConfigurationType = "", // TODO:
     NameId = "3fe6c215-4c37-45c1-8883-b4b2a47162a7",
     HelpLink = "https://go.2sxc.org/ds-appfiles",
-    Icon = Icons.Tree,
+    Icon = DataSourceIcons.Tree,
     NiceName = "AppFiles",
     Type = DataSourceType.Source,
     Audience = Audience.Advanced,

@@ -8,13 +8,14 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Data.Source;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Services;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context.Internal.Raw;
 using ToSic.Sxc.DataSources.Internal;
-using static ToSic.Eav.DataSource.DataSourceConstants;
+using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -30,7 +31,7 @@ namespace ToSic.Sxc.DataSources;
 [PublicApi]
 [VisualQuery(
     NiceName = "Users",
-    Icon = Icons.UserCircled,
+    Icon = DataSourceIcons.UserCircled,
     UiHint = "Users in this site",
     HelpLink = "https://go.2sxc.org/ds-users",
     NameId = "93ac53c6-adc6-4218-b979-48d1071a5765", // random & unique Guid

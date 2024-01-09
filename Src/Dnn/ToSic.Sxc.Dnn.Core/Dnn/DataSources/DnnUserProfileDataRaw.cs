@@ -9,6 +9,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
@@ -27,7 +28,7 @@ namespace ToSic.Sxc.Dnn.DataSources;
 [VisualQuery(
     NiceName = "Dnn User Profiles",
     UiHint = "Users profiles of specified users in Dnn",
-    Icon = Icons.Face,
+    Icon = DataSourceIcons.Face,
     Type = DataSourceType.Source, 
     NameId = "ToSic.Sxc.Dnn.DataSources.DnnUserProfile, ToSic.Sxc.Dnn",
     ConfigurationType = "|Config ToSic.SexyContent.DataSources.DnnUserProfileDataSource",

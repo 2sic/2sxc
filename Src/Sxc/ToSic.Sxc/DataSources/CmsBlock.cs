@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using ToSic.Eav.Apps.Work;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Services;
 using ToSic.Lib.DI;
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.DataSources;
 [VisualQuery(
     NiceName = "CMS Block",
     UiHint = "Data for this CMS Block (instance/module)",
-    Icon = Icons.RecentActor,
+    Icon = DataSourceIcons.RecentActor,
     Type = DataSourceType.Source, 
     NameId = "ToSic.Sxc.DataSources.CmsBlock, ToSic.Sxc",
     ConfigurationType = "7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02",

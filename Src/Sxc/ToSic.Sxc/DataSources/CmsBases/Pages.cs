@@ -4,12 +4,13 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.DataSources.Internal;
-using static ToSic.Eav.DataSource.DataSourceConstants;
+using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -28,7 +29,7 @@ namespace ToSic.Sxc.DataSources;
     ConfigurationType = "3d970d2b-32cb-4ecb-aeaf-c49fbcc678a5",
     NameId = "e35031b2-3e99-41fe-a5ac-b79f447d5800",
     HelpLink = "https://go.2sxc.org/ds-pages",
-    Icon = Icons.PageFind,
+    Icon = DataSourceIcons.PageFind,
     NiceName = "Pages",
     Type = DataSourceType.Source,
     UiHint = "Pages in this site")]

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Api.Api01;
 using ToSic.Eav.Data;
-using ToSic.Eav.DataSource.Caching;
+using ToSic.Eav.DataSource.Internal.Caching;
 using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.Apps
