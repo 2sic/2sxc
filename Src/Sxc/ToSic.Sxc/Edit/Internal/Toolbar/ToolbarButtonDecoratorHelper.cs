@@ -7,7 +7,7 @@ using ToSic.Sxc.Internal;
 namespace ToSic.Sxc.Edit.Internal.Toolbar;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ToolbarButtonDecoratorHelper(IAppStates appStates) : ServiceBase($"{SxcLogging.SxcLogName}.TbdHlp")
+internal class ToolbarButtonDecoratorHelper(IAppStates appStates) : ServiceBase($"{SxcLogging.SxcLogName}.TbdHlp")
 {
     public IAppIdentity MainAppIdentity { get; set; }
 

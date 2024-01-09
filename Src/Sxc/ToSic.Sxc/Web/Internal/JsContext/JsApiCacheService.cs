@@ -3,16 +3,16 @@ using System.Collections.Concurrent;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Web.Internal.DotNet;
 
-namespace ToSic.Sxc.Web.JsContext;
+namespace ToSic.Sxc.Web.Internal.JsContext;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class JsApiCache : ServiceBase
+public class JsApiCacheService : ServiceBase
 {
     private const string JsApiKey = "JsApi";
     private readonly IHttp _http;
     private ConcurrentDictionary<int, JsApi> _cache;
 
-    public JsApiCache(IHttp http) : base("JsApi")
+    public JsApiCacheService(IHttp http) : base("JsApi")
     {
         ConnectServices(_http = http);
     }

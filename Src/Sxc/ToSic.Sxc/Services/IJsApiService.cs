@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Web.JsContext;
+﻿using ToSic.Sxc.Web.Internal.JsContext;
 
 namespace ToSic.Sxc.Services;
 

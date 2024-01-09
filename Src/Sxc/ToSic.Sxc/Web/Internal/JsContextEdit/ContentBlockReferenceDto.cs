@@ -6,7 +6,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
 
-namespace ToSic.Sxc.Edit.ClientContextInfo;
+namespace ToSic.Sxc.Web.Internal.JsContextEdit;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ContentBlockReferenceDto

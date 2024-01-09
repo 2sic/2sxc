@@ -8,7 +8,7 @@ using ToSic.Sxc.Blocks.Internal;
 using static System.Text.Json.Serialization.JsonIgnoreCondition;
 using static ToSic.Sxc.Blocks.Internal.ProblemReport;
 
-namespace ToSic.Sxc.Edit.ClientContextInfo;
+namespace ToSic.Sxc.Web.Internal.JsContextEdit;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ErrorDto

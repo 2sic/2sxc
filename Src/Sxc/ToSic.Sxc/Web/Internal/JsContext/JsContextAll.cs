@@ -7,11 +7,11 @@ using ToSic.Eav.Data.Shared;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Edit.ClientContextInfo;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Web.Internal.JsContextEdit;
 using ToSic.Sxc.Web.PageFeatures;
 
-namespace ToSic.Sxc.Web.JsContext;
+namespace ToSic.Sxc.Web.Internal.JsContext;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class JsContextAll : ServiceBase
@@ -49,7 +49,7 @@ public class JsContextAll : ServiceBase
         var ctx = block.Context;
 
         Environment = new JsContextEnvironment(systemRootUrl, ctx);
-        Language = _jsLangCtx.Init(ctx.Site, block.ZoneId);
+        Language = _jsLangCtx.Init(ctx.Site);
 
         // New in v13 - if the view is from remote, don't allow design
         var blockCanDesign = block.View?.Entity.HasAncestor() ?? false ? (bool?)false : null;

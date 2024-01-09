@@ -3,7 +3,7 @@ using ToSic.Eav.Run;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.Web.JsContext;
+using ToSic.Sxc.Web.Internal.JsContext;
 
 namespace ToSic.Sxc.Services;
 

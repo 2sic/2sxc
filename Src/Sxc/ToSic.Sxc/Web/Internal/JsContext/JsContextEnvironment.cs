@@ -1,41 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Web.Parameters;
 
-
-namespace ToSic.Sxc.Web.JsContext;
+namespace ToSic.Sxc.Web.Internal.JsContext;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class JsContextEnvironment
+public class JsContextEnvironment(string systemRootUrl, IContextOfBlock ctx)
 {
-    public int WebsiteId { get; }       // aka PortalId
-    public string WebsiteUrl { get; }
-    public int PageId { get; }          // aka TabId
-    public string PageUrl { get; }
+    public int WebsiteId { get; } = ctx.Site.Id;
+    public string WebsiteUrl { get; } = "//" + ctx.Site.UrlRoot + "/";
+    public int PageId { get; } = ctx.Page.Id;
+    public string PageUrl { get; } = ctx.Page.Url;
+
     // ReSharper disable once InconsistentNaming
-    public IEnumerable<KeyValuePair<string, string>> parameters { get; }
+#pragma warning disable IDE1006
+    public IEnumerable<KeyValuePair<string, string>> parameters { get; } = ctx.Page.Parameters?.Where(p => p.Key != OriginalParameters.NameInUrlForOriginalParameters);
+#pragma warning restore IDE1006
 
-    public int InstanceId { get; }      // aka ModuleId
+    public int InstanceId { get; } = ctx.Module.Id;
 
-    public string SxcVersion { get; }
+    public string SxcVersion { get; } = EavSystemInfo.VersionWithStartUpBuild;
 
-    public string SxcRootUrl { get; }
+    public string SxcRootUrl { get; } = systemRootUrl;
 
-    public bool IsEditable { get; }
-
-    public JsContextEnvironment(string systemRootUrl, IContextOfBlock ctx)
-    {
-        WebsiteId = ctx.Site.Id;
-        WebsiteUrl = "//" + ctx.Site.UrlRoot + "/";
-        PageId = ctx.Page.Id;
-        PageUrl = ctx.Page.Url;
-        InstanceId = ctx.Module.Id;
-        SxcVersion = EavSystemInfo.VersionWithStartUpBuild;
-        SxcRootUrl = systemRootUrl;
-        IsEditable = ctx.UserMayEdit;
-        parameters = ctx.Page.Parameters?.Where(p => p.Key != OriginalParameters.NameInUrlForOriginalParameters);
-    }
+    public bool IsEditable { get; } = ctx.UserMayEdit;
 }

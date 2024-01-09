@@ -1,17 +1,13 @@
 ﻿using System.Text.Json.Serialization;
+// ReSharper disable UnusedMember.Global
 
-namespace ToSic.Sxc.Edit.ClientContextInfo;
+namespace ToSic.Sxc.Web.Internal.JsContextEdit;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class UiDto
+public class UiDto(bool autoToolbar)
 {
-    public bool AutoToolbar { get; }
+    public bool AutoToolbar { get; } = autoToolbar;
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string Edition { get; }
-
-    public UiDto(bool autoToolbar)
-    {
-        AutoToolbar = autoToolbar;
-    }
 }

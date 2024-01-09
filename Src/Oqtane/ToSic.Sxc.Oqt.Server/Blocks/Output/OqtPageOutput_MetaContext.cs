@@ -1,6 +1,6 @@
 ﻿using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Edit;
+using ToSic.Sxc.Web.Internal.JsContext;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output;
 
@@ -36,5 +36,5 @@ partial class OqtPageOutput
     /// </remarks>
     private string AntiForgeryToken() => "";
 
-    public string ContextMetaName => InpageCms.MetaName;
+    public string ContextMetaName => JsApi.MetaName;
 }

@@ -32,7 +32,7 @@ using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.EditUi;
 using ToSic.Sxc.Web.Internal.DotNet;
-using ToSic.Sxc.Web.JsContext;
+using ToSic.Sxc.Web.Internal.JsContext;
 using ToSic.Sxc.Web.LightSpeed;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
@@ -100,7 +100,7 @@ public static partial class RegisterSxcServices
         // JS UI Context
         services.TryAddTransient<JsContextAll>();
         services.TryAddTransient<JsContextLanguage>();
-        services.TryAddScoped<JsApiCache>(); // v16.01
+        services.TryAddScoped<JsApiCacheService>(); // v16.01
 
         // Adam stuff
         services.TryAddTransient<AdamSecurityChecksBase, AdamSecurityChecksBasic>();

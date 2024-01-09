@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 using ToSic.Eav.Helpers;
 using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.Edit.ClientContextInfo;
+namespace ToSic.Sxc.Web.Internal.JsContextEdit;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ContentBlockDto : EntityDto

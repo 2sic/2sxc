@@ -13,7 +13,7 @@ using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.Web.JsContext;
+using ToSic.Sxc.Web.Internal.JsContext;
 using static ToSic.Sxc.Blocks.Internal.BlockBuildingConstants;
 
 namespace ToSic.Sxc.Blocks.Internal.Render;

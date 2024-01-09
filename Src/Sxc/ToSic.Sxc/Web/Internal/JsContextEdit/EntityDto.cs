@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ToSic.Sxc.Edit.ClientContextInfo;
+namespace ToSic.Sxc.Web.Internal.JsContextEdit;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public abstract class EntityDto
