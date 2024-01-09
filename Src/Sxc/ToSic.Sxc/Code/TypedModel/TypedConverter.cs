@@ -16,14 +16,9 @@ namespace ToSic.Sxc.Code;
 /// Helper to convert some unknown object into the possible result.
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class TypedConverter
+internal class TypedConverter(CodeDataFactory cdf)
 {
-    public CodeDataFactory Cdf { get; }
-
-    public TypedConverter(CodeDataFactory cdf)
-    {
-        Cdf = cdf;
-    }
+    public CodeDataFactory Cdf { get; } = cdf;
 
     public (T typed, object untyped, bool ok) EvalInterface<T>(object maybe, T fallback = default) where T: class 
     {

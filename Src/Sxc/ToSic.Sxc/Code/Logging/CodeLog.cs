@@ -9,11 +9,8 @@ namespace ToSic.Sxc.Code;
 
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeLog : Wrapper<ILog>, ICodeLog
+internal class CodeLog(ILog log) : Wrapper<ILog>(log ?? new Log(LogConstants.NameUnknown)), ICodeLog
 {
-    public CodeLog(ILog log) : base(log ?? new Log(LogConstants.NameUnknown))
-    { }
-
     /// <inheritdoc />
     public string Add(string message, [CallerFilePath] string cPath = null, [CallerMemberName] string cName = null, [CallerLineNumber] int cLine = 0)
     {

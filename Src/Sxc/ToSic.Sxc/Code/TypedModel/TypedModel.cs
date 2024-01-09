@@ -15,20 +15,16 @@ namespace ToSic.Sxc.Code;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class TypedModel : ITypedModel
+internal class TypedModel(
+    IDictionary<string, object> paramsDictionary,
+    IDynamicCodeRoot codeRoot,
+    bool isRazor,
+    string razorFileName)
+    : ITypedModel
 {
-    private readonly bool _isRazor;
-    private readonly string _razorFileName;
-    private readonly IDictionary<string, object> _paramsDictionary;
-    private readonly TypedConverter _converter;
-
-    internal TypedModel(IDictionary<string, object> paramsDictionary, IDynamicCodeRoot codeRoot, bool isRazor, string razorFileName)
-    {
-        _isRazor = isRazor;
-        _razorFileName = razorFileName;
-        _paramsDictionary = paramsDictionary?.ToInvariant() ?? new Dictionary<string, object>();
-        _converter = new TypedConverter(codeRoot.Cdf);
-    }
+    private readonly bool _isRazor = isRazor;
+    private readonly IDictionary<string, object> _paramsDictionary = paramsDictionary?.ToInvariant() ?? new Dictionary<string, object>();
+    private readonly TypedConverter _converter = new(codeRoot.Cdf);
 
     #region Check if parameters were supplied
 
@@ -92,7 +88,7 @@ public class TypedModel : ITypedModel
         var call = $"{nameof(TypedModel)}.{method}(\"{name}\")";
         var callReqFalse = call.Replace(")", ", required: false)");
         throw new ArgumentException($@"Tried to get parameter with {call} but parameter '{name}' not provided. 
-Either change the calling Html.Partial(""{_razorFileName}"", {{ {name} = ... }} ) or use {callReqFalse} to make it optional.", nameof(name));
+Either change the calling Html.Partial(""{razorFileName}"", {{ {name} = ... }} ) or use {callReqFalse} to make it optional.", nameof(name));
     }
 
     #endregion
