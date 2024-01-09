@@ -8,7 +8,7 @@ using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Edit.EditService;
 
-public partial class EditService
+partial class EditService
 {
     private readonly string innerContentAttribute = "data-list-context";
 

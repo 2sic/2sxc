@@ -1,14 +1,13 @@
 ﻿using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Services;
 using BuiltInFeatures = ToSic.Sxc.Web.PageFeatures.BuiltInFeatures;
 
 namespace ToSic.Sxc.Edit.EditService;
 
-public partial class EditService
+partial class EditService
 {
     /// <inheritdoc />
     public bool Enabled { 

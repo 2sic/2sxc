@@ -12,7 +12,7 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.EditService;
 
-public partial class EditService
+partial class EditService
 {
     #region Context Attributes
 

@@ -25,15 +25,13 @@ internal abstract class ToolbarRuleTargeted: ToolbarRule
 
         var operationCode = target as string;
         // Special case, if target is "-" or "remove" etc.
-        if (operationCode.HasValue())
-        {
-            var targetCouldBeOperation = ToolbarRuleOperation.Pick(operationCode, OprUnknown);
-            if (targetCouldBeOperation != (char)OprUnknown)
-            {
-                Target = null;
-                Operation = targetCouldBeOperation;
-            }
-        }
+        if (!operationCode.HasValue()) return;
+
+        var targetCouldBeOperation = ToolbarRuleOperation.Pick(operationCode, OprUnknown);
+        if (targetCouldBeOperation == (char)OprUnknown) return;
+
+        Target = null;
+        Operation = targetCouldBeOperation;
     }
 
     internal object Target { get; set; }

@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Edit.Toolbar;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ToolbarRuleBase: RawHtmlString
+internal class ToolbarRuleBase: RawHtmlString
 {
 
     protected ToolbarRuleBase(): base(string.Empty) {}

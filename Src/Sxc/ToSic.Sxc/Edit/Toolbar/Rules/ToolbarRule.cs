@@ -7,7 +7,7 @@ using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 namespace ToSic.Sxc.Edit.Toolbar;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class ToolbarRule: ToolbarRuleBase
+internal abstract class ToolbarRule: ToolbarRuleBase
 {
     /// <summary>
     /// 

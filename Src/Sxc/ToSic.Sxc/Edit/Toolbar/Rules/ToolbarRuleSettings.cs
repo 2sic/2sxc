@@ -2,30 +2,25 @@
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-internal class ToolbarRuleSettings: ToolbarRule
+internal class ToolbarRuleSettings(
+    NoParamOrder noParamOrder = default,
+    string show = null,
+    string hover = null,
+    string follow = null,
+    string classes = null,
+    string autoAddMore = null,
+    string ui = "",
+    string parameters = "") : ToolbarRule(CommandName, ui: ui, parameters: parameters)
 {
     private const string CommandName = "settings";
-
-    public ToolbarRuleSettings(
-        NoParamOrder noParamOrder = default,
-        string show = null,
-        string hover = null,
-        string follow = null,
-        string classes = null,
-        string autoAddMore = null,
-        string ui = "",
-        string parameters = "")
-        : base(CommandName, ui: ui, parameters: parameters)
-        => _uiParams = new[]
-        {
+    private readonly (string, string)[] _uiParams =
+        [
             ("show", show),
             ("hover", hover),
             ("follow", follow),
             ("autoAddMore", autoAddMore),
             ("classes", classes),
-        };
-
-    private readonly (string, string)[] _uiParams;
+        ];
 
     public override string GeneratedUiParams() => BuildValidParameterList(_uiParams);
 }
