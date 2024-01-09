@@ -14,8 +14,7 @@ namespace ToSic.Sxc.Data;
 
 [PrivateApi("Keep implementation hidden, only publish interface")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class DynamicStack: DynamicObject,
-    /*IDynamicEntityBase,*/
+internal class DynamicStack: DynamicObject,
     IWrapper<IPropertyStack>,
     IDynamicStack,
     IHasPropLookup,

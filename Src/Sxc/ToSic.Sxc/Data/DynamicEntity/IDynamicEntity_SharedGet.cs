@@ -1,5 +1,5 @@
 ﻿using ToSic.Lib.Coding;
-using ToSic.Sxc.Data.Docs;
+using ToSic.Sxc.Data.Internal.Docs;
 
 namespace ToSic.Sxc.Data;
 

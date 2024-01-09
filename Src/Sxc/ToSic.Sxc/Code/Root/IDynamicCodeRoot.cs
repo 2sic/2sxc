@@ -21,8 +21,8 @@ public interface IDynamicCodeRoot : IDynamicCode12
     [PrivateApi] void AttachApp(IApp app);
 
 
-    new DynamicStack Resources { get; }
-    new DynamicStack Settings { get; }
+    new IDynamicStack Resources { get; }
+    new IDynamicStack Settings { get; }
 
     #region AsConverter (internal)
 

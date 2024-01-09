@@ -4,7 +4,7 @@ using ToSic.Eav.Data;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Data.Docs;
+using ToSic.Sxc.Data.Internal.Docs;
 
 namespace ToSic.Sxc.Data;
 

@@ -67,7 +67,7 @@ partial class CodeDataFactory
                 ? hasPl.PropertyLookup
                 : null;
 
-    public DynamicStack AsDynStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources) =>
+    internal DynamicStack AsDynStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources) =>
         new(name, this, sources);
 
     public ITypedStack AsTypedStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources)

@@ -4,6 +4,7 @@ using ToSic.Lib.Documentation;
 namespace ToSic.Sxc.Data;
 
 [Flags]
+[PrivateApi]
 [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
 public enum SecretAuthorities
 {

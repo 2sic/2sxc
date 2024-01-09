@@ -12,7 +12,7 @@ public partial class DynamicCodeRoot
 {
     /// <inheritdoc />
     [PublicApi]
-    public DynamicStack Resources => _resources.Get(() => Cdf.AsDynStack(RootNameResources, ResSrc));
+    public IDynamicStack Resources => _resources.Get(() => Cdf.AsDynStack(RootNameResources, ResSrc));
     private readonly GetOnce<DynamicStack> _resources = new();
 
     [PrivateApi]
@@ -31,7 +31,7 @@ public partial class DynamicCodeRoot
 
     /// <inheritdoc />
     [PublicApi]
-    public DynamicStack Settings => _settings.Get(() => Cdf.AsDynStack(RootNameSettings, SetSrc));
+    public IDynamicStack Settings => _settings.Get(() => Cdf.AsDynStack(RootNameSettings, SetSrc));
     private readonly GetOnce<DynamicStack> _settings = new();
 
     public ITypedStack AllSettings => _allSettings.Get(() => Cdf.AsTypedStack(RootNameSettings, SetSrc));
