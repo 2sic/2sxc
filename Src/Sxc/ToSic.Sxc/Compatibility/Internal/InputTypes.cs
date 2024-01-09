@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Compatibility;
 
-public class InputTypes
+internal class InputTypes
 {
     public static string InputTypeWysiwyg = "string-wysiwyg";
 
@@ -28,7 +28,7 @@ public class InputTypes
         { "string-wysiwyg-adv", InputTypeWysiwyg },
     };
 
-    public static string MapInputTypeV10(string original) =>
+    internal static string MapInputTypeV10(string original) =>
         _inputTypeMap.TryGetValue(original, out var result)
             ? result
             : original;
