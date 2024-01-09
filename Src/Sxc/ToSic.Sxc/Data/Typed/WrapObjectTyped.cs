@@ -18,18 +18,10 @@ namespace ToSic.Sxc.Data.Typed;
 [PrivateApi]
 [JsonConverter(typeof(DynamicJsonConverter))]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class WrapObjectTyped: IWrapper<IPreWrap>, ITyped, IHasPropLookup, IHasJsonSource
+public class WrapObjectTyped(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeService> forCodeConverter)
+    : IWrapper<IPreWrap>, ITyped, IHasPropLookup, IHasJsonSource
 {
-
-    private readonly LazySvc<IScrub> _scrubSvc;
-    private readonly LazySvc<ConvertForCodeService> _forCodeConverter;
     internal IPreWrap PreWrap { get; private set; }
-
-    public WrapObjectTyped(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeService> forCodeConverter)
-    {
-        _scrubSvc = scrubSvc;
-        _forCodeConverter = forCodeConverter;
-    }
 
     internal WrapObjectTyped Setup(IPreWrap preWrap)
     {
@@ -96,7 +88,7 @@ public class WrapObjectTyped: IWrapper<IPreWrap>, ITyped, IHasPropLookup, IHasJs
     string ITyped.String(string name, NoParamOrder noParamOrder, string fallback, bool? required, object scrubHtml)
     {
         var value = PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
-        return TypedItemHelpers.MaybeScrub(value, scrubHtml, () => _scrubSvc.Value);
+        return TypedItemHelpers.MaybeScrub(value, scrubHtml, () => scrubSvc.Value);
     }
 
     int ITyped.Int(string name, NoParamOrder noParamOrder, int fallback, bool? required)
@@ -128,7 +120,7 @@ public class WrapObjectTyped: IWrapper<IPreWrap>, ITyped, IHasPropLookup, IHasJs
     {
         //Protect(noParamOrder, nameof(fallback));
         var value = PreWrap.TryGetWrap(name, false).Result;
-        var strValue = _forCodeConverter.Value.ForCode(value, fallback: fallback);
+        var strValue = forCodeConverter.Value.ForCode(value, fallback: fallback);
         return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
     }
 

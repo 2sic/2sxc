@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Data.Docs;
 /// This is minor cross-concerns aspect of Dynamic-Entity-like objects
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class DynamicEntityDocs
+internal abstract class DynamicEntityDocs
 {
     /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */
     /// <summary>

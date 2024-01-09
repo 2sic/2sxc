@@ -4,22 +4,13 @@ namespace ToSic.Sxc.Data;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class TryGetResult
+internal class TryGetResult(bool found, object raw, object result = default)
 {
-    public TryGetResult(bool found, object result)
+    public TryGetResult(bool found, object result): this(found, result, result)
     {
-        Found = found;
-        Raw = result;
-        Result = result;
     }
 
-    public TryGetResult(bool found, object raw, object result = default)
-    {
-        Found = found;
-        Raw = raw;
-        Result = result;
-    }
-    public bool Found;
-    public object Raw;
-    public object Result;
+    public bool Found = found;
+    public object Raw = raw;
+    public object Result = result;
 }

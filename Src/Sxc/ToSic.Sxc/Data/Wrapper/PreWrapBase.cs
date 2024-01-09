@@ -12,17 +12,11 @@ using static ToSic.Sxc.Data.Typed.TypedHelpers;
 namespace ToSic.Sxc.Data.Wrapper;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class PreWrapBase: IWrapper<object>
+internal abstract class PreWrapBase(object data) : IWrapper<object>
 {
-    protected PreWrapBase(object data)
-    {
-        _data = data;
-    }
-    private readonly object _data;
-
     #region IWrapper
 
-    object IWrapper<object>.GetContents() => _data;
+    object IWrapper<object>.GetContents() => data;
 
     #endregion
 

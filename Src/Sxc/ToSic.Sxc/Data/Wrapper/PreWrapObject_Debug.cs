@@ -7,7 +7,7 @@ using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data.Wrapper;
 
-public partial class PreWrapObject
+partial class PreWrapObject
 {
     public const string DumpSourceName = "DynamicRead";
 

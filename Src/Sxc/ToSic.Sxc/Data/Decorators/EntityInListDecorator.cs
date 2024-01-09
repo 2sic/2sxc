@@ -11,16 +11,9 @@ namespace ToSic.Sxc.Data.Decorators;
 /// </summary>
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class EntityInListDecorator : IDecorator<IEntity>
+internal abstract class EntityInListDecorator(string field, int index = 0, IEntity parent = default)
+    : IDecorator<IEntity>
 {
-    protected EntityInListDecorator(string field, int index = 0, IEntity parent = default)
-    {
-        Parent = parent;
-        ParentGuid = parent?.EntityGuid; // parentGuid;
-        Field = field;
-        SortOrder = index;
-    }
-
     protected const int DefIndex = 0;
 
     /// <summary>
@@ -29,7 +22,7 @@ public abstract class EntityInListDecorator : IDecorator<IEntity>
     /// <remarks>
     /// This has been in use since ca. 2sxc 2.0
     /// </remarks>
-    public int SortOrder { get; }
+    public int SortOrder { get; } = index;
 
     /// <summary>
     /// The field which has the list containing this item.
@@ -37,7 +30,7 @@ public abstract class EntityInListDecorator : IDecorator<IEntity>
     /// <remarks>
     /// Added in 2sxc 11.01
     /// </remarks>
-    public string Field { get; }
+    public string Field { get; } = field;
 
     /// <summary>
     /// The parent item which has the list containing this item.
@@ -48,7 +41,7 @@ public abstract class EntityInListDecorator : IDecorator<IEntity>
     ///
     /// Added in 2sxc 11.01
     /// </remarks>
-    public Guid? ParentGuid { get; private set; }
+    public Guid? ParentGuid { get; private set; } = parent?.EntityGuid; // parentGuid;
 
-    public IEntity Parent { get; private set; }
+    public IEntity Parent { get; private set; } = parent;
 }

@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Data.Decorators;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public static class IEntityExtensions
+internal static class IEntityExtensions
 {
     public static bool IsDemoItemSafe(this IEntity entity) => entity?.GetDecorator<EntityInBlockDecorator>()?.IsDemoItem ?? false;
 

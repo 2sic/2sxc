@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Data.Wrapper;
 /// </remarks>
 [JsonConverter(typeof(DynamicJsonConverter))]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public partial class PreWrapObject: PreWrapBase, /*IWrapper<object>,*/ IPropertyLookup, IHasJsonSource, IPreWrap
+internal partial class PreWrapObject: PreWrapBase, /*IWrapper<object>,*/ IPropertyLookup, IHasJsonSource, IPreWrap
 {
     #region Constructor / Setup
 

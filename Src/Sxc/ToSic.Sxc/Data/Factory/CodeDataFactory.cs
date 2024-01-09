@@ -1,15 +1,15 @@
-﻿using ToSic.Eav.Code.InfoSystem;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
+using ToSic.Eav.Code.InfoSystem;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data.Build;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.Internal;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Data;

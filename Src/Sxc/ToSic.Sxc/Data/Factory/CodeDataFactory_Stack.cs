@@ -9,7 +9,7 @@ using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Data;
 
-public partial class CodeDataFactory
+partial class CodeDataFactory
 {
     [PrivateApi]
     public ITypedStack AsStack(object[] parts) => AsStack(null, parts, strictTypes: true, AsTypedStack);

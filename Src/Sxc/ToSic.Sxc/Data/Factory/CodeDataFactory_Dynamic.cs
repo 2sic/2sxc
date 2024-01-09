@@ -8,7 +8,7 @@ using ToSic.Sxc.Data.Wrapper;
 
 namespace ToSic.Sxc.Data;
 
-public partial class CodeDataFactory
+partial class CodeDataFactory
 {
 
     #region Dynamic

@@ -4,7 +4,7 @@ using ToSic.Sxc.Data.Decorators;
 
 namespace ToSic.Sxc.Data;
 
-public partial class CodeDataFactory
+partial class CodeDataFactory
 {
     public IEntity AsEntity(object thingToConvert) =>
         thingToConvert == null

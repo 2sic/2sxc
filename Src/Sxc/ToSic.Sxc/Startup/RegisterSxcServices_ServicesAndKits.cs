@@ -77,7 +77,7 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<DataSource16.MyServices>();
 
         // v16 AsConverter
-        services.TryAddTransient<CodeDataFactory>();
+        services.TryAddTransient<CodeDataFactory>(sp => ActivatorUtilities.CreateInstance<CodeDataFactory>(sp));
         services.TryAddTransient<CodeDataServices>();
 
         // Kits v14+

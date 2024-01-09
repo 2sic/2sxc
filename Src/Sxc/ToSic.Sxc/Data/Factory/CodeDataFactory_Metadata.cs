@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Data;
 
-public partial class CodeDataFactory
+partial class CodeDataFactory
 {
     public IMetadata Metadata(IMetadataOf mdOf) => new Metadata(mdOf, this);
 }

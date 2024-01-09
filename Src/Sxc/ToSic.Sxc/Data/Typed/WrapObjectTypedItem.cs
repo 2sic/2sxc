@@ -7,7 +7,6 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
-using ToSic.Lib.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -25,22 +24,18 @@ using static ToSic.Eav.Data.Shared.WrapperEquality;
 namespace ToSic.Sxc.Data.Typed;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
+public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeService> forCodeConverter)
+    : WrapObjectTyped(scrubSvc, forCodeConverter), ITypedItem
 {
-    private ILazyLike<CodeDataFactory> _cdf { get; set; }
-
-    public WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeService> forCodeConverter) : base(scrubSvc, forCodeConverter)
-    {
-    }
-
-    public WrapObjectTypedItem Setup(ILazyLike<CodeDataFactory> cdf, CodeDataWrapper wrapper, PreWrapObject preWrap)
+    internal WrapObjectTypedItem Setup(ILazyLike<CodeDataFactory> cdf, CodeDataWrapper wrapper, PreWrapObject preWrap)
     {
         Setup(preWrap);
         Wrapper = wrapper;
-        _cdf = cdf;
+        Cdf = cdf;
         return this;
     }
 
+    private ILazyLike<CodeDataFactory> Cdf { get; set; }
     private CodeDataWrapper Wrapper { get; set; }
 
 
@@ -52,14 +47,14 @@ public class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
 
     IHtmlTag ITypedItem.Html(string name, NoParamOrder noParamOrder, object container, bool? toolbar,
         object imageSettings, bool? required, bool debug, Func<ITweakInput<string>, ITweakInput<string>> tweak
-    ) => TypedItemHelpers.Html(_cdf.Value, this, name: name, noParamOrder: noParamOrder, container: container,
+    ) => TypedItemHelpers.Html(Cdf.Value, this, name: name, noParamOrder: noParamOrder, container: container,
         toolbar: toolbar, imageSettings: imageSettings, required: required, debug: debug, tweak: tweak);
 
     IResponsivePicture ITypedItem.Picture(string name, NoParamOrder noParamOrder, object settings,
         object factor, object width, string imgAlt, string imgAltFallback,
         string imgClass, object imgAttributes, string pictureClass,
         object pictureAttributes, object toolbar, object recipe
-    ) => TypedItemHelpers.Picture(cdf: _cdf.Value, item: this, name: name, noParamOrder: noParamOrder,
+    ) => TypedItemHelpers.Picture(cdf: Cdf.Value, item: this, name: name, noParamOrder: noParamOrder,
         settings: settings, factor: factor, width: width, imgAlt: imgAlt,
         imgAltFallback: imgAltFallback, imgClass: imgClass, imgAttributes: imgAttributes, pictureClass: pictureClass, pictureAttributes: pictureAttributes, toolbar: toolbar, recipe: recipe);
 
@@ -152,7 +147,7 @@ public class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
         //Protect(noParamOrder, nameof(required));
         return IsErrStrict(this, name, required, PreWrap.Settings.PropsRequired)
             ? throw ErrStrictForTyped(this, name)
-            : _cdf.Value.AdamManager.Folder(Guid, name, Field(name: name, noParamOrder: default, required: required));
+            : Cdf.Value.AdamManager.Folder(Guid, name, Field(name: name, noParamOrder: default, required: required));
     }
 
     public IFile File(string name, NoParamOrder noParamOrder, bool? required)
@@ -167,7 +162,7 @@ public class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
         // TODO: SEE if we can also provide optional metadata
 
         var fileId = AdamManager.CheckIdStringForId(idString);
-        return fileId == null ? null : _cdf.Value.AdamManager.File(fileId.Value);
+        return fileId == null ? null : Cdf.Value.AdamManager.File(fileId.Value);
     }
 
     #endregion
@@ -185,8 +180,8 @@ public class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
                 : new List<object> { raw }
             : new List<object>();
 
-        var df = _cdf.Value.Services.DataFactory.New(
-            options: new DataFactoryOptions(appId: _cdf.Value.BlockOrNull?.AppId, autoId: false));
+        var df = Cdf.Value.Services.DataFactory.New(
+            options: new DataFactoryOptions(appId: Cdf.Value.BlockOrNull?.AppId, autoId: false));
         var mdEntities = objList
             .Where(o => o != null)
             .Select(o =>
@@ -201,13 +196,13 @@ public class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
 
         var mdOf = new MetadataOf<int>(0, 0, "virtual", mdEntities);
         // TODO: @2dm - this probably won't work yet, without an entity (null) #todoTyped
-        var metadata = _cdf.Value.Metadata(mdOf);
+        var metadata = Cdf.Value.Metadata(mdOf);
         return metadata;
     }
 
 
     public IField Field(string name, NoParamOrder noParamOrder, bool? required) 
-        => new Field(this, name, _cdf.Value);
+        => new Field(this, name, Cdf.Value);
 
     /// <summary>
     /// Override the URL, to also support checks for "file:72"
@@ -219,13 +214,13 @@ public class WrapObjectTypedItem: WrapObjectTyped, ITypedItem
 
         // ReSharper disable once ConvertTypeCheckPatternToNullCheck
         if (ValueConverterBase.CouldBeReference(url))
-            url = _cdf.Value.Services.ValueConverterOrNull?.ToValue(url, Guid.Empty) ?? url;
+            url = Cdf.Value.Services.ValueConverterOrNull?.ToValue(url, Guid.Empty) ?? url;
 
         return Tags.SafeUrl(url).ToString();
     }
     #endregion
 
-    public IBlock TryGetBlockContext() => _cdf?.Value.BlockOrNull;
+    public IBlock TryGetBlockContext() => Cdf?.Value.BlockOrNull;
 
     public ITypedItem Item => this;
 

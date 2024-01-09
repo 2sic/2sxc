@@ -4,12 +4,7 @@ using ToSic.Eav.Data;
 namespace ToSic.Sxc.Data;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ListTypedItems: List<ITypedItem>, ICanBeEntity
+internal class ListTypedItems(IList<ITypedItem> original, IEntity fieldInfo) : List<ITypedItem>(original), ICanBeEntity
 {
-    public ListTypedItems(IList<ITypedItem> original, IEntity fieldInfo) : base(original)
-    {
-        Entity = fieldInfo;
-    }
-
-    public IEntity Entity { get; }
+    public IEntity Entity { get; } = fieldInfo;
 }

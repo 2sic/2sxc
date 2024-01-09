@@ -10,7 +10,7 @@ using ToSic.Sxc.Data.Wrapper;
 
 namespace ToSic.Sxc.Data;
 
-public partial class CodeDataFactory
+partial class CodeDataFactory
 {
     private const string NameOfAsTyped = nameof(IDynamicCode16.AsTyped) + "(...)";
 

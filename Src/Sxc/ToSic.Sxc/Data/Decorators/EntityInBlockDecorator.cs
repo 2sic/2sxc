@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Data.Decorators;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class EntityInBlockDecorator: EntityInListDecorator
+internal class EntityInBlockDecorator: EntityInListDecorator
 {
     private EntityInBlockDecorator(string field, 
         int index = DefIndex,

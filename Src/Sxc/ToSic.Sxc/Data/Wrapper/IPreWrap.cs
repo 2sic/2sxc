@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Data.Wrapper;
 [PrivateApi]
 [JsonConverter(typeof(DynamicJsonConverter))]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public interface IPreWrap : IHasJsonSource, IPropertyLookup, IWrapper<object>
+internal interface IPreWrap : IHasJsonSource, IPropertyLookup, IWrapper<object>
 {
     TryGetResult TryGetWrap(string name, bool wrapDefault = true);
 

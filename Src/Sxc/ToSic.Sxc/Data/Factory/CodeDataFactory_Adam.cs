@@ -7,7 +7,7 @@ using ToSic.Sxc.Adam.Internal;
 
 namespace ToSic.Sxc.Data;
 
-public partial class CodeDataFactory
+partial class CodeDataFactory
 {
     public AdamManager AdamManager => _adamManager.Get(GetAdamManager);
     private readonly GetOnce<AdamManager> _adamManager = new();

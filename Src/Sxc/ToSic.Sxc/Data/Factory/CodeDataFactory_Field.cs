@@ -6,7 +6,7 @@ using static ToSic.Sxc.Data.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data;
 
-public partial class CodeDataFactory
+partial class CodeDataFactory
 {
     public IField Field(ITypedItem parent, string name, bool propsRequired, NoParamOrder noParamOrder = default, bool? required = default)
     {
