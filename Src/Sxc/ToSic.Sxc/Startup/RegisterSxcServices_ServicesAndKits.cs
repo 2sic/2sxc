@@ -1,7 +1,6 @@
 ﻿using Custom.DataSource;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
@@ -31,10 +30,11 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<RenderService.MyServices>();
         services.TryAddTransient<SimpleRenderer>();
         services.TryAddTransient<InTextContentBlockRenderer>();
+#if NETFRAMEWORK
 #pragma warning disable CS0618
         services.TryAddTransient<Blocks.IRenderService, RenderService>();  // Obsolete, but keep for the few apps we already released in v12
 #pragma warning restore CS0618
-
+#endif
 
         // WIP 12.05 - json converter
         services.TryAddTransient<IJsonService, JsonService>();

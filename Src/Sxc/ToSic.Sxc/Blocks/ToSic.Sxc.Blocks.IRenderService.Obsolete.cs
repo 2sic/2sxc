@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NETFRAMEWORK
+using System;
 using ToSic.Eav.Data;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
@@ -21,6 +22,7 @@ namespace ToSic.Sxc.Blocks;
 /// Will continue to work, but shouldn't be used. Please use <see cref="ToSic.Sxc.Services.IRenderService"/>  instead
 /// </summary>
 [Obsolete("Old name, used in 2-3 v12 apps released. Pls use ToSic.Sxc.Services.IRenderService instead.")]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface IRenderService: ToSic.Sxc.Services.IRenderService
 {
     [PrivateApi]
@@ -32,3 +34,4 @@ public interface IRenderService: ToSic.Sxc.Services.IRenderService
         string field = null, string apps = null, int max = 100, string merge = null);
 //#pragma warning restore CS0108, CS0114
 }
+#endif

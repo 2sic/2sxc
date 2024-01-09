@@ -13,18 +13,9 @@ namespace ToSic.Sxc.Context;
 
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CmsView: CmsContextPartBase<IView>, ICmsView
+public class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IView>(parent, block.View), ICmsView
 {
-    public CmsView(CmsContext parent, IBlock block) : base(parent, block.View)
-    {
-        _parent = parent;
-        _block = block;
-        _view = block.View;
-    }
-
-    private readonly IBlock _block;
-    private readonly IView _view;
-    private readonly CmsContext _parent;
+    private readonly IView _view = block.View;
 
     /// <inheritdoc />
     public int Id => _view?.Id ?? 0;
@@ -47,19 +38,19 @@ public class CmsView: CmsContextPartBase<IView>, ICmsView
     [PrivateApi]
     private IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string location = default)
     {
-        return new CmsViewFolder(this, _block.App, AppAssetFolderMain.DetermineShared(location) ?? _block.View.IsShared);
+        return new CmsViewFolder(this, block.App, AppAssetFolderMain.DetermineShared(location) ?? block.View.IsShared);
     }
 
     /// <summary>
     /// Note: this is an explicit implementation, so in Dynamic Razor it won't work.
     /// </summary>
-    ITypedItem ICmsView.Settings => _settings.Get(() => _parent._DynCodeRoot.Cdf.AsItem(_view.Settings));
+    ITypedItem ICmsView.Settings => _settings.Get(() => parent._DynCodeRoot.Cdf.AsItem(_view.Settings));
     private readonly GetOnce<ITypedItem> _settings = new();
 
 
     /// <inheritdoc />
     [PrivateApi("Hidden in 16.04, because we want people to use the Folder. Can't remove it though, because there are many apps that already published this.")]
-    public string Path => _path.Get(() => FigureOutPath(_block?.App.Path));
+    public string Path => _path.Get(() => FigureOutPath(block?.App.Path));
     private readonly GetOnce<string> _path = new();
 
     ///// <inheritdoc />

@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Web.UI;
 using DotNetNuke.Services.Exceptions;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Blocks.Output;
+using ToSic.Sxc.Blocks.Internal.Render;
 
 namespace ToSic.Sxc.Dnn;
 
@@ -34,7 +33,7 @@ partial class View
 
                 // first get a rendering helper - but since BlockBuilder may be null, create a new one
                 var renderingHelper = GetService<IRenderingHelper>().Init(Block);
-                var msg = renderingHelper.DesignErrorMessage(new List<Exception> { ex }, true,
+                var msg = renderingHelper.DesignErrorMessage([ex], true,
                     additionalInfo: $" - ℹ️ CONTEXT: Page: {TabId}; Module: {ModuleId}");
 
                 try

@@ -9,7 +9,7 @@ using ToSic.Sxc.Search;
 namespace ToSic.Sxc.Dnn.Web;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public interface IEngineDnnOldCompatibility
+internal interface IEngineDnnOldCompatibility
 {
     bool OldAutoLoadJQueryAndRvt { get; }
 

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Blocks.Output;
+using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Engines;

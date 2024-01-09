@@ -22,10 +22,12 @@ namespace ToSic.Sxc.Blocks.Internal.Render;
 [PrivateApi("Hide Implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class RenderService: ServiceForDynamicCode,
-    ToSic.Sxc.Services.IRenderService,
+    ToSic.Sxc.Services.IRenderService
+#if NETFRAMEWORK
 #pragma warning disable CS0618
-    ToSic.Sxc.Blocks.IRenderService
+   , ToSic.Sxc.Blocks.IRenderService
 #pragma warning restore CS0618
+#endif
 {
     internal const string InputTypeForContentBlocksField = "entity-content-blocks";
 

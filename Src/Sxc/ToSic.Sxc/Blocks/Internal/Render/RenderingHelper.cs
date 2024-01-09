@@ -15,10 +15,10 @@ using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.JsContext;
 using static ToSic.Sxc.Blocks.Internal.BlockBuildingConstants;
 
-namespace ToSic.Sxc.Blocks.Output;
+namespace ToSic.Sxc.Blocks.Internal.Render;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class RenderingHelper: ServiceBase, IRenderingHelper
+internal class RenderingHelper: ServiceBase, IRenderingHelper
 {
     #region Constructors and DI
 

@@ -1,7 +1,7 @@
 ﻿using ToSic.Lib.DI;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Blocks.Output;
+using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
