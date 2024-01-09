@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Plumbing;
+﻿namespace ToSic.Sxc.Internal.Plumbing;
 
 internal static partial class ParseObject
 {

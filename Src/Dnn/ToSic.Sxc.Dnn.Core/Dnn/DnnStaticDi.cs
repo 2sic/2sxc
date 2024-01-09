@@ -6,7 +6,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Plumbing;
+using ToSic.Sxc.Internal.Plumbing;
 
 namespace ToSic.Sxc.Dnn;
 

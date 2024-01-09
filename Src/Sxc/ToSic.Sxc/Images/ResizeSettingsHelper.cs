@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using ToSic.Eav.Plumbing;
-using static ToSic.Sxc.Plumbing.ParseObject;
+using static ToSic.Sxc.Internal.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images;
 

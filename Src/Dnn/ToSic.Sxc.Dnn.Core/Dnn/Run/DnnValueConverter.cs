@@ -13,7 +13,7 @@ using ToSic.Eav.Internal.Features;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Plumbing;
+using ToSic.Sxc.Internal.Plumbing;
 
 namespace ToSic.Sxc.Dnn.Run;
 

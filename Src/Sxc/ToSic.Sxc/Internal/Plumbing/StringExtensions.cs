@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace ToSic.Sxc.Plumbing;
+namespace ToSic.Sxc.Internal.Plumbing;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public static class StringExtensions
+internal static class StringExtensions
 {
     /// <summary>
     /// Returns a new string in which all occurrences of a specified string in the current instance are replaced with another specified string.

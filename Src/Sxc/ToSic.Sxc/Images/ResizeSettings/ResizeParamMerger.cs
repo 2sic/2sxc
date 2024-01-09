@@ -7,7 +7,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Internal;
 using static ToSic.Sxc.Images.ImageConstants;
-using static ToSic.Sxc.Plumbing.ParseObject;
+using static ToSic.Sxc.Internal.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images;
 

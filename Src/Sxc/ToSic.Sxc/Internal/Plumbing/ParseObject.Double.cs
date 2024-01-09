@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace ToSic.Sxc.Plumbing;
+namespace ToSic.Sxc.Internal.Plumbing;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal static partial class ParseObject

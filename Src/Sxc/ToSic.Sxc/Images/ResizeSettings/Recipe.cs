@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Plumbing;
+using ToSic.Sxc.Internal.Plumbing;
 
 
 namespace ToSic.Sxc.Images;

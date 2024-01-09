@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Images;
-using ToSic.Sxc.Plumbing;
+using ToSic.Sxc.Internal.Plumbing;
 
 namespace ToSic.Sxc.Tests.LinksAndImages
 {
