@@ -9,16 +9,12 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Run;
 
+/// <summary>
+/// Empty constructor for DI
+/// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class BasicModuleUpdater: ServiceBase, IPlatformModuleUpdater
+internal class BasicModuleUpdater(WarnUseOfUnknown<BasicModuleUpdater> _) : ServiceBase($"{LogScopes.NotImplemented}.MapA2I"), IPlatformModuleUpdater
 {
-    /// <summary>
-    /// Empty constructor for DI
-    /// </summary>
-    // ReSharper disable once UnusedMember.Global
-    public BasicModuleUpdater(WarnUseOfUnknown<BasicModuleUpdater> _) : base($"{LogScopes.NotImplemented}.MapA2I") { }
-
-
     public void SetAppId(IModule instance, int? appId)
     {
         // do nothing

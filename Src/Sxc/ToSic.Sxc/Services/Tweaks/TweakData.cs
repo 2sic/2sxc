@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Services.Tweaks;
 /// </summary>
 /// <typeparam name="TValue"></typeparam>
 [PrivateApi("WIP v17")]
-public class TweakData<TValue>: ITweakData<TValue>
+internal class TweakData<TValue>: ITweakData<TValue>
 {
     internal TweakData(TValue initial, string name, string step, int stepIndex)
     {

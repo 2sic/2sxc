@@ -6,7 +6,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Utils;
+using ToSic.Sxc.Web.Internal.HtmlParsing;
 
 namespace ToSic.Sxc.Services.CmsService;
 

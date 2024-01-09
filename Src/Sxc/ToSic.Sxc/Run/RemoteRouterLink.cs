@@ -11,16 +11,8 @@ namespace ToSic.Sxc.Run;
 /// </summary>
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class RemoteRouterLink
+public class RemoteRouterLink(SystemFingerprint fingerprint, IPlatformInfo platformInfo)
 {
-    public RemoteRouterLink(SystemFingerprint fingerprint, IPlatformInfo platformInfo)
-    {
-        _fingerprint = fingerprint;
-        _platformInfo = platformInfo;
-    }
-    private readonly SystemFingerprint _fingerprint;
-    private readonly IPlatformInfo _platformInfo;
-
     public string LinkToRemoteRouter(RemoteDestinations destination, ISite site, int moduleId, IAppSpecs app, bool isContentApp)
     {
         var destinationPart = "";
@@ -31,9 +23,9 @@ public class RemoteRouterLink
             destinationPart = "&destination=features";
 
         var link = "//gettingstarted.2sxc.org/router.aspx?"
-                   + $"Platform={_platformInfo.Name}"
+                   + $"Platform={platformInfo.Name}"
                    // note: Version ToString max 3, as Oqtane only has 3 version numbers, otherwise error
-                   + $"&SysVersion={_platformInfo.Version.ToString(3)}"
+                   + $"&SysVersion={platformInfo.Version.ToString(3)}"
                    + $"&SxcVersion={EavSystemInfo.VersionString}"
                    + destinationPart
                    + "&ModuleId=" + moduleId
@@ -41,7 +33,7 @@ public class RemoteRouterLink
                    + "&ZoneID=" + site?.ZoneId
                    + "&DefaultLanguage=" + site?.DefaultCultureCode
                    + "&CurrentLanguage=" + site?.SafeCurrentCultureCode()
-                   + "&SysGuid=" + _platformInfo.Identity
+                   + "&SysGuid=" + platformInfo.Identity
             ;
 
         link += "&AppId=" + (isContentApp ? "Default" : app?.NameId ?? "");
@@ -51,12 +43,13 @@ public class RemoteRouterLink
             link += $"&AppVersion={app.Configuration.Version}"
                     + $"&AppOriginalId={app.Configuration.OriginalId}";
 
-        link += "&fp=" + System.Net.WebUtility.UrlEncode(_fingerprint.GetFingerprint())?.ToLowerInvariant();
+        link += "&fp=" + System.Net.WebUtility.UrlEncode(fingerprint.GetFingerprint())?.ToLowerInvariant();
         return link;
     }
 
 }
 
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public enum RemoteDestinations
 {
     AutoConfigure,

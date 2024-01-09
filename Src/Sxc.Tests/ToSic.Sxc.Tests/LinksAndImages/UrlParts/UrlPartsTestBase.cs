@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Web;
+﻿using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Tests.LinksAndImages
 {

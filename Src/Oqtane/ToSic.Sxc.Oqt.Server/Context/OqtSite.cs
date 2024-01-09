@@ -12,7 +12,7 @@ using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
 using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
-using UrlParts = ToSic.Sxc.Web.UrlParts;
+using UrlParts = ToSic.Sxc.Web.Internal.Url.UrlParts;
 
 namespace ToSic.Sxc.Oqt.Server.Context;
 

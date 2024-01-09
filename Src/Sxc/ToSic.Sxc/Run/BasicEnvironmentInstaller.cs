@@ -1,35 +1,19 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Unknown;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Run;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
-
 
 namespace ToSic.Sxc.Run;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class BasicEnvironmentInstaller: ServiceBase, IEnvironmentInstaller, IIsUnknown, IPlatformAppInstaller
+internal class BasicEnvironmentInstaller(WarnUseOfUnknown<BasicEnvironmentInstaller> _) : ServiceBase($"{LogScopes.NotImplemented}.Instll"), IEnvironmentInstaller, IIsUnknown, IPlatformAppInstaller
 {
-    public BasicEnvironmentInstaller(WarnUseOfUnknown<BasicEnvironmentInstaller> _) : base($"{LogScopes.NotImplemented}.Instll")
-    {
-    }
+    // for now, always assume installation worked
+    public string UpgradeMessages() => null;
 
-    public string UpgradeMessages()
-    {
-        // for now, always assume installation worked
-        return null;
-    }
+    // don't do anything for now
+    public bool ResumeAbortedUpgrade() => true;
 
-    public bool ResumeAbortedUpgrade()
-    {
-        // don't do anything for now
-        return true;
-    }
-
-    public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp)
-    {
-        return "mvc not implemented #todo #mvc";
-    }
-
+    public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp) => "mvc not implemented #todo #mvc";
 }

@@ -26,16 +26,18 @@ public class LinkPaths: ILinkPaths
 #endif
     }
 
+    public string GetCurrentRequestUrl()
 #if NETFRAMEWORK
-    public string GetCurrentRequestUrl() => HttpContext.Current?.Request?.Url?.AbsoluteUri ?? string.Empty;
+        => HttpContext.Current?.Request?.Url?.AbsoluteUri ?? string.Empty;
 #else
-        public string GetCurrentRequestUrl() => _urlHelper.ActionContext.HttpContext.Request.GetEncodedUrl();
+        => _urlHelper.ActionContext.HttpContext.Request.GetEncodedUrl();
 #endif
 
+    public string GetCurrentLinkRoot()
 #if NETFRAMEWORK
-    public string GetCurrentLinkRoot() => HttpContext.Current?.Request?.Url?.GetLeftPart(UriPartial.Authority) ?? string.Empty;
+        => HttpContext.Current?.Request?.Url?.GetLeftPart(UriPartial.Authority) ?? string.Empty;
 #else
-        public string GetCurrentLinkRoot() => new Uri(_urlHelper.ActionContext.HttpContext.Request.GetEncodedUrl()).GetLeftPart(UriPartial.Authority);
+        => new Uri(_urlHelper.ActionContext.HttpContext.Request.GetEncodedUrl()).GetLeftPart(UriPartial.Authority);
 #endif
 
 }

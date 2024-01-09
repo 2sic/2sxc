@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Web;
+namespace ToSic.Sxc.Web.Internal.Url;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

@@ -12,15 +12,10 @@ internal class TweakValue
     public const string StepAfter = "after";
 }
 
-internal class TweakInput<TInput>: ITweakInput<TInput>
+internal class TweakInput<TInput>(TweakInput<TInput> original = default, TweakConfig additional = default)
+    : ITweakInput<TInput>
 {
-
-    public TweakInput(TweakInput<TInput> original = default, TweakConfig additional = default)
-    {
-        Tweaks = new TweakConfigs(original?.Tweaks, additional);
-    }
-
-    public TweakConfigs Tweaks { get; }
+    public TweakConfigs Tweaks { get; } = new(original?.Tweaks, additional);
 
     [PublicApi]
     public ITweakInput<TInput> Input(TInput replace, NoParamOrder protector = default)//, string step = default)

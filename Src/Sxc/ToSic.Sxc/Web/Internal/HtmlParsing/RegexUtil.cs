@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Web.Internal.PageService;
-using ToSic.Sxc.Web.PageService;
 
-namespace ToSic.Sxc.Utils;
+namespace ToSic.Sxc.Web.Internal.HtmlParsing;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class RegexUtil
+internal class RegexUtil
 {
     /// <summary>
     /// Used in ScriptSrc and StyleSrc Formulas
@@ -35,7 +33,7 @@ public class RegexUtil
     private const string IdFormula = "('|\"|\\s)id=('|\")(?<Id>.*?)('|\")";
     // language=regex
     private const string ClientDependencyRegex =
-        "\\s" + PageService.AssetOptimizationsAttributeName + "=('|\")(?<Priority>true|[0-9]+)?(?::)?(?<Position>bottom|head|body)?('|\")(>|\\s)";
+        "\\s" + PageService.PageService.AssetOptimizationsAttributeName + "=('|\")(?<Priority>true|[0-9]+)?(?::)?(?<Position>bottom|head|body)?('|\")(>|\\s)";
 
     public const string PriorityKey = "Priority";
     public const string PositionKey = "Position";

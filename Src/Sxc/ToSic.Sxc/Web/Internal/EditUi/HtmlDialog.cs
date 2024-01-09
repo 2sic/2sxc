@@ -2,7 +2,7 @@
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Web;
+namespace ToSic.Sxc.Web.Internal.EditUi;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
