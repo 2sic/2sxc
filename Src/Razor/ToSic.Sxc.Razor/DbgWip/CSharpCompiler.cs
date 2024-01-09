@@ -14,6 +14,7 @@ using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Hosting;
+using ToSic.Sxc.Code.Internal.HotBuild;
 //using ToSic.Sxc.Razor.Engine.DbgWip;
 using DependencyContextCompilationOptions = Microsoft.Extensions.DependencyModel.CompilationOptions;
 
@@ -164,7 +165,7 @@ namespace ToSic.Sxc.Razor.DbgWip
             IWebHostEnvironment hostingEnvironment,
             DependencyContextCompilationOptions dependencyContextOptions)
         {
-            var csharpCompilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, usings: ImplicitUsings);
+            var csharpCompilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, usings: ImplicitUsings.ForRazor);
 
             // Disable 1702 until roslyn turns this off by default
             csharpCompilationOptions = csharpCompilationOptions.WithSpecificDiagnosticOptions(
@@ -206,26 +207,6 @@ namespace ToSic.Sxc.Razor.DbgWip
 
             return csharpCompilationOptions;
         }
-
-        // based on 'obj/Debug/net8.0/*.GlobalUsings.g.cs'
-        private static readonly IEnumerable<string> ImplicitUsings = new List<string> {
-            "System",
-            "System.Collections.Generic",
-            "System.IO",
-            "System.Linq",
-            "System.Net.Http",
-            "System.Net.Http.Json",
-            "System.Threading",
-            "System.Threading.Tasks",
-            "Microsoft.AspNetCore.Builder",
-            "Microsoft.AspNetCore.Hosting",
-            "Microsoft.AspNetCore.Http",
-            "Microsoft.AspNetCore.Routing",
-            "Microsoft.Extensions.Configuration",
-            "Microsoft.Extensions.DependencyInjection",
-            "Microsoft.Extensions.Hosting",
-            "Microsoft.Extensions.Logging"
-        };
 
         private static CSharpParseOptions GetParseOptions(
             IWebHostEnvironment hostingEnvironment,

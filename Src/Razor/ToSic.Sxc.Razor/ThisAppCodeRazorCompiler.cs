@@ -21,6 +21,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
@@ -170,33 +171,7 @@ namespace ToSic.Sxc.Razor
             var fileSystem = RazorProjectFileSystem.Create(app.PhysicalPath);
             var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, fileSystem, (RazorProjectEngineBuilder builder) =>
             {
-                builder.AddDefaultImports(new[]
-                {
-                    // based on 'obj/Debug/net8.0/*.GlobalUsings.g.cs'
-                    "@using global::System;",
-                    "@using global::System.Collections.Generic;",
-                    "@using global::System.IO;",
-                    "@using global::System.Linq;",
-                    "@using global::System.Net.Http;",
-                    "@using global::System.Net.Http.Json;",
-                    "@using global::System.Threading;",
-                    "@using global::System.Threading.Tasks;",
-                    "@using global::Microsoft.AspNetCore.Builder;",
-                    "@using global::Microsoft.AspNetCore.Hosting;",
-                    "@using global::Microsoft.AspNetCore.Http;",
-                    "@using global::Microsoft.AspNetCore.Routing;",
-                    "@using global::Microsoft.Extensions.Configuration;",
-                    "@using global::Microsoft.Extensions.DependencyInjection;",
-                    "@using global::Microsoft.Extensions.Hosting;",
-                    "@using global::Microsoft.Extensions.Logging;",
-
-                    // based on cshtml decompile POC
-                    "@using Microsoft.AspNetCore.Mvc;",
-                    "@using Microsoft.AspNetCore.Mvc.Razor.Internal;",
-                    "@using Microsoft.AspNetCore.Mvc.Rendering;",
-                    "@using Microsoft.AspNetCore.Mvc.ViewFeatures;",
-                    "@using System.Runtime.CompilerServices;"
-                });
+                builder.AddDefaultImports(DefaultImports);
             });
             var projectItem = fileSystem.GetItem(_serverPaths.Value.FullContentPath(templatePath));
             var codeDocument = projectEngine.Process(projectItem);
@@ -261,6 +236,20 @@ namespace ToSic.Sxc.Razor
             // Create an IView instance from the compiled assembly
             var viewInstance = new RazorView(_viewEngine, _pageActivator, Array.Empty<IRazorPage>(), page, HtmlEncoder.Default, new DiagnosticListener(templatePath));
             return ViewEngineResult.Found(templatePath, viewInstance);
+        }
+
+        private string[] DefaultImports => _defaultImports.Get(GetDefaultImports);
+        private readonly GetOnce<string[]> _defaultImports = new();
+        private static string[] GetDefaultImports()
+        {
+            var implicitUsings = new List<string>(ImplicitUsings.ForRazor) {
+
+                // based on cshtml decompile POC
+                "Microsoft.AspNetCore.Mvc.Rendering" // 'IHtmlHelper<>' is required for '@Html.Partial(...)'
+
+            };
+
+            return implicitUsings.Select(u => $"@using global::{u};").ToArray();
         }
 
         private ActionContext NewActionContext()
@@ -377,7 +366,7 @@ namespace ToSic.Sxc.Razor
             {
                 // sink
             }
-        } 
+        }
         #endregion
     }
 }
