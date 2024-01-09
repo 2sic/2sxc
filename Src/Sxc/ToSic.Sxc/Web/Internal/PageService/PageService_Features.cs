@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Lib.Coding;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Helpers;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.WebResources;
 using static ToSic.Sxc.Web.WebResources.WebResourceConstants;
 
-namespace ToSic.Sxc.Web.PageService;
+namespace ToSic.Sxc.Web.Internal.PageService;
 
 partial class PageService
 {

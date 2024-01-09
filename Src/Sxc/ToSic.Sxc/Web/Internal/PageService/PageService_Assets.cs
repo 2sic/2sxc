@@ -4,7 +4,7 @@ using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
-namespace ToSic.Sxc.Web.PageService;
+namespace ToSic.Sxc.Web.Internal.PageService;
 
 partial class PageService
 {

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Web.PageService;
+namespace ToSic.Sxc.Web.Internal.PageService;
 
-public partial class PageServiceShared
+partial class PageServiceShared
 {
     public int? HttpStatusCode { get; set; } = null;
 

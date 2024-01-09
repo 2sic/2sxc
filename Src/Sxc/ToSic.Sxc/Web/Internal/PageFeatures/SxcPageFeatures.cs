@@ -2,10 +2,10 @@
 using ToSic.Eav.SysData;
 using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 
-namespace ToSic.Sxc.Web.PageFeatures;
+namespace ToSic.Sxc.Web.Internal.PageFeatures;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class BuiltInFeatures
+public class SxcPageFeatures
 {
     /// <summary>
     /// JQuery feature
@@ -67,11 +67,11 @@ public class BuiltInFeatures
     /// </remarks>
     public static PageFeature ToolbarsInternal = new("Internal.Toolbars",
         "2sxc InPage editing UIs / Toolbar",
-        needs: new[]
-        {
+        needs:
+        [
             JsCmsInternal.NameId,
             ContextPage.NameId,
-        }, urlWip: "dist/inpage/inpage.min.css");
+        ], urlWip: "dist/inpage/inpage.min.css");
 
     /// <summary>
     /// The 2sxc JS libraries for cms / edit actions
@@ -81,7 +81,7 @@ public class BuiltInFeatures
     /// </remarks>
     public static PageFeature Toolbars = new("2sxc.Toolbars",
         "2sxc InPage editing UIs / Toolbar",
-        needs: new[] { ToolbarsInternal.NameId },
+        needs: [ToolbarsInternal.NameId],
         requirements: RequiresPublicEditForm);
 
     /// <summary>
@@ -99,7 +99,7 @@ public class BuiltInFeatures
     /// </summary>
     public static PageFeature ToolbarsAuto = new("2sxc.ToolbarsAuto",
         "Ensure that the toolbars automatically appear",
-        needs: new[] { ToolbarsAutoInternal.NameId },
+        needs: [ToolbarsAutoInternal.NameId],
         requirements: RequiresPublicEditForm);
 
     /// <summary>

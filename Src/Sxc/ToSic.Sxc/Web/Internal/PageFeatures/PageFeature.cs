@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav.SysData;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Web.PageFeatures;
+namespace ToSic.Sxc.Web.Internal.PageFeatures;
 
 /// <summary>
 /// A feature describes something that can be enabled on a page. It can be a script, some css, an inline JS or combinations thereof.
@@ -11,65 +11,50 @@ namespace ToSic.Sxc.Web.PageFeatures;
 /// </summary>
 [PrivateApi("Internal / not final - neither name, namespace or anything")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class PageFeature : IPageFeature
+public class PageFeature(
+    string key,
+    string name,
+    string description = default,
+    string[] needs = default,
+    string html = default,
+    List<Requirement> requirements = default,
+    string urlWip = default)
+    : IPageFeature
 {
     public const string ConditionIsPageFeature = "pagefeature";
-
-    #region Constructor
-
-    public PageFeature(
-        string key, 
-        string name, 
-        string description = default,
-        string[] needs = default,
-        string html = default,
-        List<Requirement> requirements = default,
-        string urlWip = default)
-    {
-        NameId = key ?? throw new Exception("key is required");
-        Name = name ?? throw new Exception("name is required");
-        Html = html;
-        Description = description ?? "";
-        Needs = needs ?? Array.Empty<string>();
-        Requirement = new Requirement(ConditionIsPageFeature, key);
-        Requirements = requirements ?? new List<Requirement>();
-        UrlWip = urlWip;
-    }
-
-    #endregion
         
     /// <summary>
     /// Primary identifier to activate the feature
     /// </summary>
-    public string NameId { get; }
-        
+    public string NameId { get; } = key ?? throw new Exception("key is required");
+
     /// <summary>
     /// Name of this feature. 
     /// </summary>
-    public string Name { get; }
+    public string Name { get; } = name ?? throw new Exception("name is required");
 
-    public string Html { get; set; }
+    public string Html { get; set; } = html;
 
     /// <summary>
     /// Nice description of the feature.
     /// </summary>
-    public string Description { get; }
+    public string Description { get; } = description ?? "";
 
     /// <summary>
     /// List of other features required to run this feature.
     /// </summary>
-    public IEnumerable<string> Needs { get; }
+    public IEnumerable<string> Needs { get; } = needs ?? Array.Empty<string>();
 
-    public Requirement Requirement { get; }
+    public Requirement Requirement { get; } = new(ConditionIsPageFeature, key);
 
-    public List<Requirement> Requirements { get; }
+    public List<Requirement> Requirements { get; } = requirements ?? new List<Requirement>();
 
     /// <summary>
     /// Temporary URL for internal features which need to store the URL someplace
     /// This is not a final solution, in future it should probably
     /// be more sophisticated, like contain a list of configuration objects to construct the url.
     /// </summary>
-    public string UrlWip { get; }
+    public string UrlWip { get; } = urlWip;
 
     /// <summary>
     /// ToString for easier debugging

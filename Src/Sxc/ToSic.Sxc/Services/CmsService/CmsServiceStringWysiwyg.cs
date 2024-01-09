@@ -9,7 +9,7 @@ using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Utils;
-using ToSic.Sxc.Web.PageFeatures;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 using static ToSic.Sxc.Blocks.Internal.Render.RenderService;
 
 namespace ToSic.Sxc.Services.CmsService;
@@ -81,7 +81,7 @@ internal class CmsServiceStringWysiwyg: ServiceForDynamicCode
             return l.Return(new CmsProcessed(false, null, null), "no html, treat as unknown, return null to let parent do wrapping with original");
 
         // 1. We got HTML, so first we must ensure the feature is activated
-        ServiceKit.Page.Activate(BuiltInFeatures.CmsWysiwyg.NameId);
+        ServiceKit.Page.Activate(SxcPageFeatures.CmsWysiwyg.NameId);
 
         // 2. Check Inner Content
         html = ProcessInnerContent(html);

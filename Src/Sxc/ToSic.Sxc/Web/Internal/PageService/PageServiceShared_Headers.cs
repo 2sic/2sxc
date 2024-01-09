@@ -3,9 +3,9 @@ using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
 
-namespace ToSic.Sxc.Web.PageService;
+namespace ToSic.Sxc.Web.Internal.PageService;
 
-public partial class PageServiceShared
+partial class PageServiceShared
 {
     public IList<HeadChange> Headers { get; } = new List<HeadChange>();
     public IList<HeadChange> GetHeadChangesAndFlush(ILog log)

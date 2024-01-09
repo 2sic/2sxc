@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Web.PageFeatures;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.Tests.PageFeatures
 {

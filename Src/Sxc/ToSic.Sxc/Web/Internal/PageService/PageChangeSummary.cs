@@ -1,22 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Internal.Requirements;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Internal;
-using ToSic.Sxc.Web.Internal;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
-using ToSic.Sxc.Web.PageFeatures;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 using static ToSic.Sxc.Web.Internal.ClientAssets.ClientAssetConstants;
-using BuiltInFeatures = ToSic.Sxc.Web.PageFeatures.BuiltInFeatures;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
-namespace ToSic.Sxc.Web.PageService;
+namespace ToSic.Sxc.Web.Internal.PageService;
 
 /// <summary>
 /// This should bundle all the page changes once a module is done.
@@ -44,8 +41,8 @@ public class PageChangeSummary: ServiceBase
     {
         if (enableEdit)
         {
-            pss.Activate(BuiltInFeatures.ToolbarsInternal.NameId);
-            pss.Activate(BuiltInFeatures.ToolbarsAutoInternal.NameId);
+            pss.Activate(SxcPageFeatures.ToolbarsInternal.NameId);
+            pss.Activate(SxcPageFeatures.ToolbarsAutoInternal.NameId);
         }
 
         var assets = pss.Assets;

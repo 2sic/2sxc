@@ -14,6 +14,7 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Polymorphism.Internal;
+using ToSic.Sxc.Razor.Internal;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
@@ -62,6 +63,7 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<ILinkService, LinkServiceUnknown>();
 
         // v12.05
+        // 2024-01-09 2dm seems unused
         services.TryAddTransient<IRazorService, RazorServiceUnknown>();
 
         // v12.05

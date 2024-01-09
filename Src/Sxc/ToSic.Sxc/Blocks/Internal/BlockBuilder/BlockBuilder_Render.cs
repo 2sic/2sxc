@@ -8,7 +8,7 @@ using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Web.PageFeatures;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 using static ToSic.Sxc.Blocks.Internal.BlockBuildingConstants;
 
 namespace ToSic.Sxc.Blocks.Internal;
@@ -144,7 +144,7 @@ public partial class BlockBuilder
                         if (renderEngineResult.ActivateJsApi)
                         {
                             l.A("template referenced 2sxc.api JS in script-tag: will enable");
-                            Block.Context.PageServiceShared.PageFeatures.Activate(BuiltInFeatures.JsCore.NameId);
+                            Block.Context.PageServiceShared.PageFeatures.Activate(SxcPageFeatures.JsCore.NameId);
                         }
 
                         // Put all assets into the global page service for final processing later on
@@ -174,7 +174,7 @@ public partial class BlockBuilder
             if (!addEditCtx && Block.BlockFeatureKeys.Any())
             {
                 var features = Block.Context.PageServiceShared.PageFeatures.GetWithDependents(Block.BlockFeatureKeys, Log);
-                addEditCtx = features.Contains(BuiltInFeatures.ContextModule);
+                addEditCtx = features.Contains(SxcPageFeatures.ContextModule);
             }
 
             #region Add Custom Tags to the end if provided by the ModuleService - like TurnOn - not ideal yet

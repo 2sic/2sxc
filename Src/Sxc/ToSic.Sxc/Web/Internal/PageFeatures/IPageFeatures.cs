@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Web.PageFeatures;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Web;

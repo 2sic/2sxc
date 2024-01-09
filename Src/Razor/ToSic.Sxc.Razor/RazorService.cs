@@ -4,7 +4,7 @@ using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Razor.Internal;
 
 namespace ToSic.Sxc.Razor
 {

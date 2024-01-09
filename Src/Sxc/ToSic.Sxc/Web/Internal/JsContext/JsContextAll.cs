@@ -9,7 +9,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal.JsContextEdit;
-using ToSic.Sxc.Web.PageFeatures;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.Web.Internal.JsContext;
 
@@ -64,7 +64,7 @@ public class JsContextAll : ServiceBase
         var autoToolbar = ctx.UserMayEdit || (
             block.BlockFeatureKeys.Any() && block.Context.PageServiceShared.PageFeatures
                 .GetWithDependents(block.BlockFeatureKeys, Log)
-                .Contains(BuiltInFeatures.ToolbarsAutoInternal)
+                .Contains(SxcPageFeatures.ToolbarsAutoInternal)
         );
 
         l.A($"{nameof(autoToolbar)}: {autoToolbar}");

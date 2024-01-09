@@ -3,7 +3,7 @@ using ToSic.Lib.Coding;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Internals.Page;
 
-namespace ToSic.Sxc.Web.PageService;
+namespace ToSic.Sxc.Web.Internal.PageService;
 
 partial class PageService
 {

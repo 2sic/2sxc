@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Internal.Features;
@@ -11,7 +10,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Internal;
 
-namespace ToSic.Sxc.Web.LightSpeed;
+namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

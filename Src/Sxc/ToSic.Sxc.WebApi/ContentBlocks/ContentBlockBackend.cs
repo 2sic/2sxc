@@ -17,7 +17,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Web.Internal;
 using ToSic.Sxc.Web.Internal.ClientAssets;
-using ToSic.Sxc.Web.PageFeatures;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sxc.Web.Url;
 using ToSic.Sxc.WebApi.InPage;
 
@@ -100,9 +100,9 @@ public class ContentBlockBackend : BlockWebApiBackendBase
         l.A("2.1. Build Resources");
         var resources = new List<AjaxResourceDtoWIP>();
         var ver = EavSystemInfo.VersionWithStartUpBuild;
-        if (result.Features.Contains(BuiltInFeatures.TurnOn))
+        if (result.Features.Contains(SxcPageFeatures.TurnOn))
             resources.Add(new AjaxResourceDtoWIP
-                { Url = UrlHelpers.QuickAddUrlParameter(root.SuffixSlash() + BuiltInFeatures.TurnOn.UrlWip, "v", ver) });
+                { Url = UrlHelpers.QuickAddUrlParameter(root.SuffixSlash() + SxcPageFeatures.TurnOn.UrlWip, "v", ver) });
 
         l.A("2.2. Add JS & CSS which were stripped before");
         resources.AddRange(result.Assets.Select(asset => new AjaxResourceDtoWIP

@@ -3,7 +3,7 @@ using ToSic.Eav.SysData;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Web.PageFeatures;
+namespace ToSic.Sxc.Web.Internal.PageFeatures;
 
 [PrivateApi("Internal / not final - neither name, namespace or anything")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

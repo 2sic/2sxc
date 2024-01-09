@@ -1,8 +1,8 @@
 ﻿using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Web.PageFeatures;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 
-namespace ToSic.Sxc.Web.PageService;
+namespace ToSic.Sxc.Web.Internal.PageService;
 
 partial class PageService
 {
@@ -21,7 +21,7 @@ partial class PageService
             return l.ReturnNull("condition false");
 
         // first activate the page feature
-        Activate(BuiltInFeatures.TurnOn.NameId);
+        Activate(SxcPageFeatures.TurnOn.NameId);
 
         // then generate the turn-on and add to module state
         var tag = _turnOn.Value.Run(runOrSpecs, require: require, data: data);

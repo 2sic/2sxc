@@ -5,9 +5,10 @@ using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
-namespace ToSic.Sxc.Web.PageService;
+namespace ToSic.Sxc.Web.Internal.PageService;
 
 [PrivateApi]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public partial class PageService: ServiceForDynamicCode, ToSic.Sxc.Services.IPageService // Important: Write with namespace, because it's easy to confuse with IPageService it supports
 {
 

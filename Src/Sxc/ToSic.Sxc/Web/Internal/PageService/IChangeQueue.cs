@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.Web.PageService;
+namespace ToSic.Sxc.Web.Internal.PageService;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface IChangeQueue

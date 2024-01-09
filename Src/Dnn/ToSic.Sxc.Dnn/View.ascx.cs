@@ -11,7 +11,7 @@ using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Web.LightSpeed;
+using ToSic.Sxc.Web.Internal.LightSpeed;
 
 namespace ToSic.Sxc.Dnn;
 

@@ -1,6 +1,6 @@
 ﻿using ToSic.Razor.Blade;
 
-namespace ToSic.Sxc.Web.PageService;
+namespace ToSic.Sxc.Web.Internal.PageService;
 
 partial class PageService
 {

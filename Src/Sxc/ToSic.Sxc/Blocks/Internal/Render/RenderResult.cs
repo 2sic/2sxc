@@ -6,7 +6,8 @@ using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
-using ToSic.Sxc.Web.PageFeatures;
+using ToSic.Sxc.Web.Internal.PageFeatures;
+using ToSic.Sxc.Web.Internal.PageService;
 using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Blocks.Internal.Render;

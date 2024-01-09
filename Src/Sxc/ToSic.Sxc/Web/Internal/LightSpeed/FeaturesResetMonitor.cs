@@ -2,7 +2,7 @@
 using System.Runtime.Caching;
 using ToSic.Eav.Internal.Features;
 
-namespace ToSic.Sxc.Web.LightSpeed;
+namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
 /// <summary>
 /// Signal that some items in an app cache should be flushed

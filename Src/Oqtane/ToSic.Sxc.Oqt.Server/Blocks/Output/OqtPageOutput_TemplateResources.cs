@@ -5,7 +5,7 @@ using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal;
 using ToSic.Sxc.Web.Internal.ClientAssets;
-using ToSic.Sxc.Web.PageFeatures;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output;
 

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace ToSic.Sxc.Web.PageService;
+namespace ToSic.Sxc.Web.Internal.PageService;
 
-public partial class PageServiceShared
+partial class PageServiceShared
 {
     public IEnumerable<string> Activate(params string[] keys) => PageFeatures.Activate(keys);
 

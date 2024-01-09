@@ -13,7 +13,7 @@ using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
-using ToSic.Sxc.Web.LightSpeed;
+using ToSic.Sxc.Web.Internal.LightSpeed;
 using ToSic.Sxc.Web.Url;
 using Page = Oqtane.Models.Page;
 
@@ -116,7 +116,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     }
 
     // convert System.Collections.Generic.IList<ToSic.Sxc.Web.PageService.HttpHeader> to System.Collections.Generic.IList<ToSic.Sxc.Oqt.Shared.HttpHeader>
-    private static IList<HttpHeader> ConvertHttpHeaders(IList<Web.PageService.HttpHeader> httpHeaders) 
+    private static IList<HttpHeader> ConvertHttpHeaders(IList<Web.Internal.PageService.HttpHeader> httpHeaders) 
         => httpHeaders.Select(httpHeader => new HttpHeader(httpHeader.Name, httpHeader.Value)).ToList();
 
     internal Alias Alias;

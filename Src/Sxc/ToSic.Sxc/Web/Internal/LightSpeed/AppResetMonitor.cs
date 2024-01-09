@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Runtime.Caching;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.State;
 
-namespace ToSic.Sxc.Web.LightSpeed;
+namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
 /// <summary>
 /// Experimental way to signal that all the items in an app cache should be flushed

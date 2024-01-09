@@ -3,15 +3,12 @@ using System.Linq;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.Web.PageFeatures;
+namespace ToSic.Sxc.Web.Internal.PageFeatures;
 
 [PrivateApi("Internal stuff, hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class PageFeatures: IPageFeatures
+internal class PageFeatures(IPageFeaturesManager pfm) : IPageFeatures
 {
-    public PageFeatures(IPageFeaturesManager pfm) => _pfm = pfm;
-    private readonly IPageFeaturesManager _pfm;
-
     /// <inheritdoc />
     public IEnumerable<string> Activate(params string[] keys)
     {
@@ -57,7 +54,7 @@ internal class PageFeatures: IPageFeatures
     /// <inheritdoc />
     public List<IPageFeature> GetWithDependents(List<string> features, ILog log) => log.Func($"Got {features.Count} items", () =>
     {
-        var unfolded = _pfm.GetWithDependents(features);
+        var unfolded = pfm.GetWithDependents(features);
         return (unfolded, $"Got unfolded features {unfolded.Count}");
     });
 

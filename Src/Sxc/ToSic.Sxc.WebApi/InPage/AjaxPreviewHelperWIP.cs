@@ -5,7 +5,7 @@ using ToSic.Eav.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal.Render;
-using ToSic.Sxc.Web.PageFeatures;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.WebApi.InPage;
 
@@ -27,8 +27,8 @@ public class AjaxPreviewHelperWIP
         var addOn = "";
 
         // 1. Check if the features includes turnOn
-        if (renderResult.Features.Contains(BuiltInFeatures.TurnOn)) 
-            addOn += Js(ver, root + BuiltInFeatures.TurnOn.UrlWip);
+        if (renderResult.Features.Contains(SxcPageFeatures.TurnOn)) 
+            addOn += Js(ver, root + SxcPageFeatures.TurnOn.UrlWip);
 
         // 2. Add JS & CSS which was stripped before
         renderResult.Assets.ToList().ForEach(a => addOn += "\n" + (a.IsJs ? Js(ver, a.Url) : Css(a.Url)));

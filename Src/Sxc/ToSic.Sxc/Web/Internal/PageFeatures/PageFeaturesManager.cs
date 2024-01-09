@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ToSic.Sxc.Web.PageFeatures;
+namespace ToSic.Sxc.Web.Internal.PageFeatures;
 
 internal class PageFeaturesManager: IPageFeaturesManager
 {

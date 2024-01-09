@@ -1,13 +1,12 @@
-﻿using ToSic.Eav.Internal.Unknown;
+﻿
+using ToSic.Eav.Internal.Unknown;
 using ToSic.Sxc.Code;
 
-namespace ToSic.Sxc.Web;
+namespace ToSic.Sxc.Razor.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class RazorServiceUnknown : IRazorService
+// 2024-01-09 2dm seems unused
+internal class RazorServiceUnknown(WarnUseOfUnknown<RazorServiceUnknown> _) : IRazorService
 {
-    public RazorServiceUnknown(WarnUseOfUnknown<RazorServiceUnknown> _) { }
-
     public string Render(string partialName, object model) => "";
 
     public void ConnectToRoot(IDynamicCodeRoot codeRoot) { /* Do nothing */ }

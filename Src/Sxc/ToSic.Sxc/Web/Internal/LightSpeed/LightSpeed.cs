@@ -19,7 +19,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Internal;
 using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 
-namespace ToSic.Sxc.Web.LightSpeed;
+namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class LightSpeed : ServiceBase, IOutputCache

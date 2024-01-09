@@ -1,13 +1,14 @@
 ﻿using ToSic.Eav.Internal.Catalogs;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Internal;
-using static ToSic.Sxc.Web.PageFeatures.BuiltInFeatures;
+using static ToSic.Sxc.Web.Internal.PageFeatures.SxcPageFeatures;
 
-namespace ToSic.Sxc.Web.PageFeatures;
+namespace ToSic.Sxc.Web.Internal.PageFeatures;
 
 /// <summary>
 /// Important: This is a singleton!
 /// </summary>
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class PageFeaturesCatalog: GlobalCatalogBase<IPageFeature>
 {
     /// <summary>

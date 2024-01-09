@@ -11,7 +11,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.Web.LightSpeed;
+using ToSic.Sxc.Web.Internal.LightSpeed;
 
 namespace ToSic.Sxc.WebApi.App;
 

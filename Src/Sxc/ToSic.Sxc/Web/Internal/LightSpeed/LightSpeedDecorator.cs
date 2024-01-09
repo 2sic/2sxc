@@ -1,12 +1,8 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.State;
-using ToSic.Eav.Caching;
+﻿using ToSic.Eav.Apps.State;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.PiggyBack;
-using ToSic.Eav.Metadata;
 using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.Web.LightSpeed;
+namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class LightSpeedDecorator: EntityBasedType

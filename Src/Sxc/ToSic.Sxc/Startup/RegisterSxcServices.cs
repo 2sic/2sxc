@@ -33,8 +33,9 @@ using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.DotNet;
 using ToSic.Sxc.Web.Internal.EditUi;
 using ToSic.Sxc.Web.Internal.JsContext;
-using ToSic.Sxc.Web.LightSpeed;
-using ToSic.Sxc.Web.PageFeatures;
+using ToSic.Sxc.Web.Internal.LightSpeed;
+using ToSic.Sxc.Web.Internal.PageFeatures;
+using ToSic.Sxc.Web.Internal.PageService;
 using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Startup;

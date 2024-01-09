@@ -2,9 +2,9 @@
 using System.Linq;
 using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.Web.PageService;
+namespace ToSic.Sxc.Web.Internal.PageService;
 
-public partial class PageServiceShared
+partial class PageServiceShared
 {
     internal IList<PagePropertyChange> PropertyChanges { get; } = new List<PagePropertyChange>();
 

@@ -3,7 +3,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Services;
-using BuiltInFeatures = ToSic.Sxc.Web.PageFeatures.BuiltInFeatures;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.Edit.EditService;
 
@@ -30,17 +30,17 @@ partial class EditService
         if (ps == null)
             return (null, "page service not found");
 
-        if (js == true || api == true || forms == true) ps.Activate(BuiltInFeatures.JsCore.NameId);
+        if (js == true || api == true || forms == true) ps.Activate(SxcPageFeatures.JsCore.NameId);
 
         // only update the values if true, otherwise leave untouched
         // Must activate the "public" one JsCms, not internal, so feature-tests will run
-        if (api == true || forms == true) ps.Activate(BuiltInFeatures.JsCms.NameId);
+        if (api == true || forms == true) ps.Activate(SxcPageFeatures.JsCms.NameId);
 
-        if (styles == true) ps.Activate(BuiltInFeatures.Toolbars.NameId);
+        if (styles == true) ps.Activate(SxcPageFeatures.Toolbars.NameId);
 
-        if (context == true) ps.Activate(BuiltInFeatures.ContextModule.NameId);
+        if (context == true) ps.Activate(SxcPageFeatures.ContextModule.NameId);
 
-        if (autoToolbar == true) ps.Activate(BuiltInFeatures.ToolbarsAuto.NameId);
+        if (autoToolbar == true) ps.Activate(SxcPageFeatures.ToolbarsAuto.NameId);
 
         return (null, "ok");
     });

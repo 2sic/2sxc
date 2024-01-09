@@ -1,7 +1,6 @@
-﻿using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Blocks.Internal.Render;
+﻿using ToSic.Sxc.Blocks.Internal.Render;
 
-namespace ToSic.Sxc.Web.LightSpeed;
+namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class OutputCacheItem

@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Web.PageService;
+﻿namespace ToSic.Sxc.Web.Internal.PageService;
 
 internal enum PageProperties
 {

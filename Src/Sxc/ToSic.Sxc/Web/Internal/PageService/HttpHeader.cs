@@ -1,15 +1,10 @@
-﻿namespace ToSic.Sxc.Web.PageService;
+﻿namespace ToSic.Sxc.Web.Internal.PageService;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class HttpHeader
+public class HttpHeader(string name, string value)
 {
-    public HttpHeader(string name, string value)
-    {
-        Name = name;
-        Value = value;
-    }
-    public string Name { get; set; }
-    public string Value { get; set; }
+    public string Name { get; set; } = name;
+    public string Value { get; set; } = value;
 
     /// <summary>
     /// If set, would flush existing headers

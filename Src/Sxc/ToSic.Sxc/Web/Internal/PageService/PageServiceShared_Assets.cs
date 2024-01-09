@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Web.Internal;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 
-namespace ToSic.Sxc.Web.PageService;
+namespace ToSic.Sxc.Web.Internal.PageService;
 
-public partial class PageServiceShared
+partial class PageServiceShared
 {
     /// <summary>
     /// Assets consolidated from all render-results 
