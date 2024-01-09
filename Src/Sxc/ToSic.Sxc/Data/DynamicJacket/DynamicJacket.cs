@@ -16,10 +16,10 @@ namespace ToSic.Sxc.Data;
 /// JS/C# code style differences. <br/>
 /// You will usually do things like `AsDynamic(jsonString).FirstName` etc.
 /// </summary>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic(...), don't use this directly")]
+[PrivateApi("was Internal-API till v17 - just use the objects from AsDynamic(...), don't use this directly")]
 [JsonConverter(typeof(DynamicJsonConverter))]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class DynamicJacket: DynamicJacketBase<JsonObject>
+internal class DynamicJacket: DynamicJacketBase<JsonObject>
 {
     /// <inheritdoc />
     [PrivateApi]

@@ -13,14 +13,10 @@ using ToSic.Sxc.Data.Internal.Wrapper;
 namespace ToSic.Sxc.Data;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class PreWrapJsonArray: PreWrapJsonBase, IWrapper<JsonArray>
+internal class PreWrapJsonArray(CodeJsonWrapper wrapper, JsonArray jsonArray)
+    : PreWrapJsonBase(wrapper, jsonArray), IWrapper<JsonArray>
 {
-    public PreWrapJsonArray(CodeJsonWrapper wrapper, JsonArray jsonArray): base(wrapper, jsonArray)
-    {
-        UnwrappedContents = jsonArray;
-    }
-
-    protected readonly JsonArray UnwrappedContents;
+    protected readonly JsonArray UnwrappedContents = jsonArray;
 
     public JsonArray GetContents() => UnwrappedContents;
 

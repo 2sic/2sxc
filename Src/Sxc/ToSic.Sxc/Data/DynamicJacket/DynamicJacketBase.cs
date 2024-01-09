@@ -13,11 +13,10 @@ namespace ToSic.Sxc.Data;
 /// Base class for DynamicJackets. You won't use this, just included in the docs. <br/>
 /// To check if something is an array or an object, use "IsArray"
 /// </summary>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
+[PrivateApi("was Internal-API till v17 - just use the objects from AsDynamic, don't use this directly")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class DynamicJacketBase: DynamicObject, IReadOnlyList<object>, ISxcDynamicObject, ICanGetByName, IHasPropLookup, IHasJsonSource
+internal abstract class DynamicJacketBase: DynamicObject, IReadOnlyList<object>, ISxcDynamicObject, ICanGetByName, IHasPropLookup, IHasJsonSource
 {
-
     #region Constructor / Setup
 
     internal DynamicJacketBase(CodeJsonWrapper wrapper)

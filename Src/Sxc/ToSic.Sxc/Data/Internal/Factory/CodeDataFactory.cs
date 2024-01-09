@@ -75,7 +75,7 @@ public partial class CodeDataFactory: ServiceForDynamicCode
 
     #endregion
 
-    public DynamicJacketBase Json2Jacket(string json, string fallback = default)
+    public object Json2Jacket(string json, string fallback = default)
         => _wrapJsonGenerator.New().Setup(WrapperSettings.Dyn(true, true))
             .Json2Jacket(json, fallback: fallback);
 

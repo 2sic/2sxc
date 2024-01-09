@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Tests.DataTests
 
         #endregion
 
-        public DynamicJacketBase Json2Jacket(string jsonString) => Factory.Json2Jacket(jsonString);
+        public object Json2Jacket(string jsonString) => Factory.Json2Jacket(jsonString);
 
         public dynamic Json2Dyn(string jsonString) => Json2Jacket(jsonString);
 

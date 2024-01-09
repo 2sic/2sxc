@@ -12,9 +12,9 @@ namespace ToSic.Sxc.Data;
 /// To check if something is an array or an object, use "IsArray"
 /// </summary>
 /// <typeparam name="T">The underlying type, either a JObject or a JToken</typeparam>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
+[PrivateApi("was Internal-API till v17 - just use the objects from AsDynamic, don't use this directly")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class DynamicJacketBase<T>: DynamicJacketBase, IReadOnlyList<object>, IWrapper<T>, ISxcDynamicObject, ICanGetByName
+internal abstract class DynamicJacketBase<T>: DynamicJacketBase, IReadOnlyList<object>, IWrapper<T>, ISxcDynamicObject, ICanGetByName
 {
     [PrivateApi]
     protected T UnwrappedContents;
