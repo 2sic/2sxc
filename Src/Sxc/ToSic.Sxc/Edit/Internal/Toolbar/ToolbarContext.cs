@@ -3,7 +3,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Edit.Toolbar;
+namespace ToSic.Sxc.Edit.Internal.Toolbar;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ToolbarContext: IAppIdentity
@@ -23,14 +23,18 @@ public class ToolbarContext: IAppIdentity
     public ToolbarContext(string custom) => Custom = custom;
 
 
-    [JsonPropertyName("zoneId")] public int ZoneId { get; } = NotInitialized;
-    [JsonPropertyName("appId")] public int AppId { get; } = NotInitialized;
+    [JsonPropertyName("zoneId")]
+    public int ZoneId { get; } = NotInitialized;
 
-    [JsonPropertyName("custom")][JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public string Custom { get; } = null;
+    [JsonPropertyName("appId")]
+    public int AppId { get; } = NotInitialized;
+
+    [JsonPropertyName("custom")][JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string Custom { get; } = null;
 }
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public static class ToolbarContextExtensions
+internal static class ToolbarContextExtensions
 {
     public static string ToRuleString(this ToolbarContext tlbCtx) => tlbCtx == null 
         ? null 

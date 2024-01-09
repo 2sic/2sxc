@@ -1,4 +1,5 @@
 ﻿using ToSic.Razor.Markup;
+using ToSic.Sxc.Edit.Internal.Toolbar;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 

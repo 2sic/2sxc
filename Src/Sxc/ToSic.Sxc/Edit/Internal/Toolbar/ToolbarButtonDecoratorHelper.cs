@@ -1,31 +1,24 @@
-﻿using ToSic.Eav.Apps;
-using System.Linq;
+﻿using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Internal;
 
-namespace ToSic.Sxc.Edit.Toolbar;
+namespace ToSic.Sxc.Edit.Internal.Toolbar;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ToolbarButtonDecoratorHelper: ServiceBase
+public class ToolbarButtonDecoratorHelper(IAppStates appStates) : ServiceBase($"{SxcLogging.SxcLogName}.TbdHlp")
 {
-
-    public ToolbarButtonDecoratorHelper(IAppStates appStates): base($"{SxcLogging.SxcLogName}.TbdHlp")
-    {
-        _appStates = appStates;
-    }
-    private readonly IAppStates _appStates;
-
     public IAppIdentity MainAppIdentity { get; set; }
 
-    public ToolbarButtonDecorator GetDecorator(IAppIdentity appIdentity, string typeName, string command)
+    internal ToolbarButtonDecorator GetDecorator(IAppIdentity appIdentity, string typeName, string command)
     {
         // If no special context was given, use the main one from the current context
         appIdentity ??= MainAppIdentity;
 
         if (appIdentity == null || !typeName.HasValue() || !command.HasValue()) return null;
 
-        var appState = _appStates.GetReader(appIdentity);
+        var appState = appStates.GetReader(appIdentity);
 
         var type = appState?.GetContentType(typeName);
         if (type == null) return null;

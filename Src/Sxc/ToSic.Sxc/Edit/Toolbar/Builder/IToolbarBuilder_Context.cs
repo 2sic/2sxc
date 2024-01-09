@@ -2,6 +2,7 @@
 using ToSic.Eav.Data;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Edit.Internal.Toolbar;
 
 
 namespace ToSic.Sxc.Edit.Toolbar;

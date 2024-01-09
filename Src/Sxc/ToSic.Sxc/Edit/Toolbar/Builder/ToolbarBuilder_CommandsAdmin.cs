@@ -5,7 +5,7 @@ using ToSic.Lib.Coding;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-public partial class ToolbarBuilder
+partial class ToolbarBuilder
 {
     private IToolbarBuilder AddAdminAction(
         string verb,

@@ -6,7 +6,7 @@ using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-public partial class ToolbarBuilder
+partial class ToolbarBuilder
 {
     private List<string> GetMetadataTypeNames(object target, string contentTypes)
     {

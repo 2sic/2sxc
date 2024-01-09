@@ -2,7 +2,7 @@
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Serialization;
 using ToSic.Sxc.Web.Url;
-using static ToSic.Sxc.Edit.Toolbar.ToolbarButtonDecorator;
+using static ToSic.Sxc.Edit.Internal.Toolbar.ToolbarButtonDecorator;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 

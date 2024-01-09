@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Data;
+using ToSic.Sxc.Edit.Toolbar;
 
-namespace ToSic.Sxc.Edit.Toolbar;
+namespace ToSic.Sxc.Edit.Internal.Toolbar;
 
 /// <summary>
 /// This is a decorator for Content-Types, which allows special configuration of buttons etc. on that type
@@ -9,7 +10,7 @@ namespace ToSic.Sxc.Edit.Toolbar;
 /// WIP new in v14; as of now only used on NoteDecorator, should have more soon
 /// </remarks>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ToolbarButtonDecorator : EntityBasedType
+internal class ToolbarButtonDecorator(IEntity entity) : EntityBasedType(entity)
 {
     public static string TypeName = "ToolbarButtonDecorator";
     public static string TypeNameId = "acc185a7-f300-4468-bce8-d6a64038989d";
@@ -19,10 +20,6 @@ public class ToolbarButtonDecorator : EntityBasedType
     public static string KeyData = "data";
     public static string KeyNote = "note";
     //public static string KeyIconSvgPrefix = "svg:";
-
-    public ToolbarButtonDecorator(IEntity entity) : base(entity)
-    {
-    }
 
     public string Command => GetThis("");
 

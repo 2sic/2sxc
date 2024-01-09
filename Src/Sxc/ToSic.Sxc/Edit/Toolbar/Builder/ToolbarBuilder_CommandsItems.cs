@@ -11,7 +11,7 @@ using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-public partial class ToolbarBuilder
+partial class ToolbarBuilder
 {
     private class CleanedParams
     {

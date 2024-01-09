@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Edit.Toolbar;
+﻿using ToSic.Sxc.Edit.Internal.Toolbar;
+
+namespace ToSic.Sxc.Edit.Toolbar;
 
 internal class ToolbarRuleCustom(
     string command,
