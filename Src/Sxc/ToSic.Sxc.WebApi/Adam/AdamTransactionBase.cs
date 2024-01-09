@@ -10,6 +10,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Context.Internal;
 
 namespace ToSic.Sxc.WebApi.Adam;
 

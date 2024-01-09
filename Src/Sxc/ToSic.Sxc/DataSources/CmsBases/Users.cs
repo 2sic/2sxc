@@ -12,7 +12,7 @@ using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Services;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Context.Raw;
+using ToSic.Sxc.Context.Internal.Raw;
 using static ToSic.Eav.DataSource.DataSourceConstants;
 
 // Important Info to people working with this

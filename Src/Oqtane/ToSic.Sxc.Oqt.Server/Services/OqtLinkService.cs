@@ -6,6 +6,7 @@ using Oqtane.Models;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
@@ -24,7 +25,7 @@ internal class OqtLinkService : LinkServiceBase
     private readonly IPageRepository _pageRepository;
     private readonly SiteStateInitializer _siteStateInitializer;
     private readonly LazySvc<IAliasRepository> _aliasRepositoryLazy;
-    private Sxc.Context.IContextOfBlock _context;
+    private IContextOfBlock _context;
 
     public OqtLinkService(
         IPageRepository pageRepository,
@@ -34,9 +35,11 @@ internal class OqtLinkService : LinkServiceBase
         LazySvc<IAliasRepository> aliasRepositoryLazy
     ) : base(imgLinker, linkPathsLazy)
     {
-        _pageRepository = pageRepository;
-        _siteStateInitializer = siteStateInitializer;
-        _aliasRepositoryLazy = aliasRepositoryLazy;
+        ConnectServices(
+            _pageRepository = pageRepository,
+            _siteStateInitializer = siteStateInitializer,
+            _aliasRepositoryLazy = aliasRepositoryLazy
+        );
     }
 
     private new OqtLinkPaths LinkPaths => (OqtLinkPaths) base.LinkPaths;

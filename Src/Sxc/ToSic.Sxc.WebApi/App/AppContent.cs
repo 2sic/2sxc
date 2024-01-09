@@ -23,6 +23,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
 using static ToSic.Eav.Apps.Api.Api01.SaveApiAttributes;
 using ToSic.Eav.Apps.Work;
+using IContextResolver = ToSic.Sxc.Context.Internal.IContextResolver;
 
 namespace ToSic.Sxc.WebApi.App;
 
@@ -38,7 +39,7 @@ public class AppContent : ServiceBase
     public AppContent(
         EntityApi entityApi,
         LazySvc<IConvertToEavLight> entToDicLazy,
-        Sxc.Context.IContextResolver ctxResolver,
+        IContextResolver ctxResolver,
         Generator<MultiPermissionsTypes> typesPermissions,
         Generator<MultiPermissionsItems> itemsPermissions,
         GenWorkDb<WorkFieldList> workFieldList,
@@ -57,7 +58,7 @@ public class AppContent : ServiceBase
 
     private readonly EntityApi _entityApi;
     private readonly LazySvc<IConvertToEavLight> _entToDicLazy;
-    private readonly Sxc.Context.IContextResolver _ctxResolver;
+    private readonly IContextResolver _ctxResolver;
     private readonly LazySvc<SimpleDataController> _dataControllerLazy;
 
     public AppContent Init(string appName)

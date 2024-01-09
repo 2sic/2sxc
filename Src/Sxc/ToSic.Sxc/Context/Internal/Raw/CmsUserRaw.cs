@@ -8,7 +8,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Internal;
 
-namespace ToSic.Sxc.Context.Raw;
+namespace ToSic.Sxc.Context.Internal.Raw;
 
 /// <summary>
 /// Internal class to hold all the information about the user,

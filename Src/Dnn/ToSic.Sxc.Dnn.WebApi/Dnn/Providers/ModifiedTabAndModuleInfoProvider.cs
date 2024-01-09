@@ -11,6 +11,7 @@ using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Web.Api;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Context.Internal;
 
 namespace ToSic.Sxc.Dnn.Providers;
 

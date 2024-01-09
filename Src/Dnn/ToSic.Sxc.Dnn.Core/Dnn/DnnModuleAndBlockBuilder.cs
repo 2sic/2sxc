@@ -7,6 +7,7 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Dnn.Context;
 
 namespace ToSic.Sxc.Dnn;

@@ -16,6 +16,7 @@ using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Code.Helpers;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data.Typed;
 using ToSic.Sxc.Data.Wrapper;
 using ToSic.Sxc.DataSources;
@@ -33,6 +34,8 @@ using ToSic.Sxc.Web.JsContext;
 using ToSic.Sxc.Web.LightSpeed;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
+using ContextResolver = ToSic.Sxc.Context.Internal.ContextResolver;
+using IContextResolver = ToSic.Sxc.Context.Internal.IContextResolver;
 
 namespace ToSic.Sxc.Startup;
 
@@ -87,10 +90,10 @@ public static partial class RegisterSxcServices
 
 
         // Context stuff, which is explicitly scoped
-        services.TryAddScoped<Context.IContextResolver, Context.ContextResolver>();
+        services.TryAddScoped<IContextResolver, ContextResolver>();
         // New v15.04 WIP
-        services.TryAddScoped<Eav.Context.IContextResolver>(x => x.GetRequiredService<Context.IContextResolver>());
-        services.TryAddScoped<IContextResolverUserPermissions>(x => x.GetRequiredService<Context.IContextResolver>());
+        services.TryAddScoped<Eav.Context.IContextResolver>(x => x.GetRequiredService<IContextResolver>());
+        services.TryAddScoped<IContextResolverUserPermissions>(x => x.GetRequiredService<IContextResolver>());
         services.TryAddScoped<AppIdResolver>();
 
 

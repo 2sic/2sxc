@@ -2,7 +2,7 @@
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 
-namespace ToSic.Sxc.Context;
+namespace ToSic.Sxc.Context.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal partial class ContextResolver: Eav.Context.ContextResolver, IContextResolver

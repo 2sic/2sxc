@@ -2,7 +2,7 @@
 using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Web.PageService;
 
-namespace ToSic.Sxc.Context;
+namespace ToSic.Sxc.Context.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface IContextOfBlock: IContextOfApp

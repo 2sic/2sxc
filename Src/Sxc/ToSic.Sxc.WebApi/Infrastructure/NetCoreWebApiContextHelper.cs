@@ -18,7 +18,7 @@ using ToSic.Sxc.Internal;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.WebApi.Adam;
 using IApp = ToSic.Sxc.Apps.IApp;
-using IContextResolver = ToSic.Sxc.Context.IContextResolver;
+using IContextResolver = ToSic.Sxc.Context.Internal.IContextResolver;
 
 namespace ToSic.Sxc.WebApi.Infrastructure
 {

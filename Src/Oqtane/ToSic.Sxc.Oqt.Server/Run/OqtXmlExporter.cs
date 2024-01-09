@@ -8,11 +8,10 @@ using ToSic.Lib.DI;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.ImportExport.Environment;
 using ToSic.Eav.Persistence.Xml;
-using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Shared;
-using IContextResolver = ToSic.Sxc.Context.IContextResolver;
+using IContextResolver = ToSic.Sxc.Context.Internal.IContextResolver;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Oqt.Server.Run;

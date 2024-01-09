@@ -15,6 +15,7 @@ using ToSic.Eav.WebApi.SaveHelpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.WebApi.Save;
+using IContextResolver = ToSic.Sxc.Context.Internal.IContextResolver;
 
 namespace ToSic.Sxc.WebApi.Cms;
 
@@ -32,7 +33,7 @@ public class EditSaveBackend : ServiceBase
     public EditSaveBackend(
         SxcPagePublishing pagePublishing,
         GenWorkPlus<WorkEntities> workEntities,
-        Sxc.Context.IContextResolver ctxResolver,
+        IContextResolver ctxResolver,
         JsonSerializer jsonSerializer,
         SaveSecurity saveSecurity,
         SaveEntities saveBackendHelper,
@@ -50,7 +51,7 @@ public class EditSaveBackend : ServiceBase
         );
     }
     private readonly SxcPagePublishing _pagePublishing;
-    private readonly Sxc.Context.IContextResolver _ctxResolver;
+    private readonly IContextResolver _ctxResolver;
 
     public EditSaveBackend Init(int appId)
     {

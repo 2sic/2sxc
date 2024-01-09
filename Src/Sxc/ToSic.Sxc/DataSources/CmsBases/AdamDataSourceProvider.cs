@@ -11,6 +11,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Internal;
+using IContextResolver = ToSic.Sxc.Context.Internal.IContextResolver;
 
 namespace ToSic.Sxc.DataSources;
 
@@ -28,14 +29,14 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
     public class MyServices : MyServicesBase
     {
         public LazySvc<AdamContext<TFolderId, TFileId>> AdamContext { get; }
-        public Sxc.Context.IContextResolver CtxResolver { get; }
+        public IContextResolver CtxResolver { get; }
 
         /// <summary>
         /// Note that we will use Generators for safety, because in rare cases the dependencies could be re-used to create a sub-data-source
         /// </summary>
         public MyServices(
             LazySvc<AdamContext<TFolderId, TFileId>> adamContext,
-            Sxc.Context.IContextResolver ctxResolver
+            IContextResolver ctxResolver
         )
         {
             ConnectServices(

@@ -8,6 +8,7 @@ using ToSic.Lib.DI;
 using ToSic.Sxc.Blocks;
 using ToSic.Lib.Services;
 using ToSic.Eav.Apps.Work;
+using IContextResolver = ToSic.Sxc.Context.Internal.IContextResolver;
 
 namespace ToSic.Sxc.WebApi;
 
@@ -17,7 +18,7 @@ public abstract class BlockWebApiBackendBase : ServiceBase
     protected BlockWebApiBackendBase(
         Generator<MultiPermissionsApp> multiPermissionsApp,
         AppWorkContextService appWorkCtxService,
-        Sxc.Context.IContextResolver ctxResolver,
+        IContextResolver ctxResolver,
         string logName
     ) : base(logName)
     {
@@ -31,7 +32,7 @@ public abstract class BlockWebApiBackendBase : ServiceBase
 
     public AppWorkContextService AppWorkCtxService { get; }
     private readonly Generator<MultiPermissionsApp> _multiPermissionsApp;
-    public Sxc.Context.IContextResolver CtxResolver { get; }
+    public IContextResolver CtxResolver { get; }
 
     protected IContextOfApp ContextOfBlock =>
         _contextOfAppOrBlock ??= CtxResolver.BlockContextRequired();

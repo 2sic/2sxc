@@ -2,7 +2,7 @@
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 
-namespace ToSic.Sxc.Context;
+namespace ToSic.Sxc.Context.Internal;
 
 /// <summary>
 /// This provides other systems with a context

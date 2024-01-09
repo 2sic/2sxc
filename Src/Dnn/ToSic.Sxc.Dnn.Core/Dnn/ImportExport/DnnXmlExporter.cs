@@ -6,7 +6,7 @@ using ToSic.Eav.ImportExport.Environment;
 using ToSic.Eav.Persistence.Xml;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Internal;
-using IContextResolver = ToSic.Sxc.Context.IContextResolver;
+using IContextResolver = ToSic.Sxc.Context.Internal.IContextResolver;
 
 namespace ToSic.Sxc.Dnn.ImportExport;
 

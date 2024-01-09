@@ -6,7 +6,7 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Web.PageService;
 
-namespace ToSic.Sxc.Context;
+namespace ToSic.Sxc.Context.Internal;
 
 [PrivateApi("Internal stuff, not for public use")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
