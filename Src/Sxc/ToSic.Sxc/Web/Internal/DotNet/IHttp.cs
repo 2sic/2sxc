@@ -1,15 +1,13 @@
-﻿
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using ToSic.Lib.Documentation;
-#if NETFRAMEWORK
+﻿#if NETFRAMEWORK
 using System.Web;
 #else
 using Microsoft.AspNetCore.Http;
 #endif
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Web
+namespace ToSic.Sxc.Web.Internal.DotNet
 {
     /// <summary>
     /// Goal is that anything on this will be able to provide HttpContext operations as needed

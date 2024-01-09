@@ -34,6 +34,7 @@ using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.Internal.DotNet;
 
 namespace ToSic.Sxc.Dnn.Startup;
 

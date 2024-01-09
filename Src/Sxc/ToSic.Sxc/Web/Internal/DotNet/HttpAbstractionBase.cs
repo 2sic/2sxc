@@ -9,7 +9,7 @@ using System.Collections.Specialized;
 using System.Linq;
 
 
-namespace ToSic.Sxc.Web;
+namespace ToSic.Sxc.Web.Internal.DotNet;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public abstract class HttpAbstractionBase: IHttp

@@ -88,7 +88,7 @@ public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolba
     private ToolbarBuilderUtilities Utils => _utils ??= new ToolbarBuilderUtilities();
     private ToolbarBuilderUtilities _utils;
 
-    public List<ToolbarRuleBase> Rules { get; } = new();
+    internal List<ToolbarRuleBase> Rules { get; } = new();
 
     public IToolbarBuilder Toolbar(
         string toolbarTemplate,

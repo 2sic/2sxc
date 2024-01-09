@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.DotNet;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Razor.DbgWip;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.Internal.DotNet;
 
 namespace ToSic.Sxc.Razor
 {
