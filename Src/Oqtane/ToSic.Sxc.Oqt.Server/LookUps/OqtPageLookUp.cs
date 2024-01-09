@@ -1,27 +1,19 @@
 ﻿using ToSic.Eav.LookUp;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Oqt.Server.Context;
 using static ToSic.Sxc.LookUp.LookUpConstants;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps;
 
-internal class OqtPageLookUp : LookUpBase
+internal class OqtPageLookUp(ISxcContextResolver ctxResolver) : LookUpBase(SourcePage)
 {
-    private readonly ISxcContextResolver _ctxResolver;
     protected Oqtane.Models.Page Page { get; set; }
-
-    public OqtPageLookUp(ISxcContextResolver ctxResolver)
-    {
-        Name = SourcePage;
-        _ctxResolver = ctxResolver;
-    }
 
     public Oqtane.Models.Page GetSource()
     {
         if (_alreadyTried) return null;
         _alreadyTried = true;
-        var ctx = _ctxResolver.BlockContextOrNull();
+        var ctx = ctxResolver.BlockContextOrNull();
         return ((OqtPage)ctx?.Page)?.GetContents();
     }
     private bool _alreadyTried;

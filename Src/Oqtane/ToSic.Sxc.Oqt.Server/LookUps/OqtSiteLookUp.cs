@@ -7,25 +7,15 @@ using static ToSic.Sxc.LookUp.LookUpConstants;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps;
 
-internal class OqtSiteLookUp : LookUpBase
+internal class OqtSiteLookUp(LazySvc<SiteStateInitializer> siteStateInitializer, SiteState siteState, LazySvc<SiteRepository> siteRepository) : LookUpBase(SourceSite)
 {
-    public SiteState SiteState { get; }
+    public SiteState SiteState { get; } = siteState;
     protected Oqtane.Models.Site Site { get; set; }
-    private readonly LazySvc<SiteStateInitializer> _siteStateInitializer;
-    private readonly LazySvc<SiteRepository> _siteRepository;
-
-    public OqtSiteLookUp(LazySvc<SiteStateInitializer> siteStateInitializer, SiteState siteState, LazySvc<SiteRepository> siteRepository)
-    {
-        Name = SourceSite;
-        SiteState = siteState;
-        _siteStateInitializer = siteStateInitializer;
-        _siteRepository = siteRepository;
-    }
 
     public Oqtane.Models.Site GetSource()
     {
-        if (!_siteStateInitializer.Value.InitIfEmpty()) return null;
-        var site = _siteRepository.Value.GetSite(SiteState.Alias.SiteId);
+        if (!siteStateInitializer.Value.InitIfEmpty()) return null;
+        var site = siteRepository.Value.GetSite(SiteState.Alias.SiteId);
         return site;
     }
 

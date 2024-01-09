@@ -10,18 +10,16 @@ namespace ToSic.Sxc.LookUp;
 /// </summary>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class LookUpInAppProperty : LookUpBase
+internal class LookUpInAppProperty(string name, IApp app) : LookUpBase(name)
 {
-    private readonly IApp _app;
-
     #region Internal stuff to be able to supply sub-properties
 
     private ILookUp Settings
     {
         get
         {
-            if (_settings != null || _app.Settings == null) return _settings;
-            var dynEnt = _app.Settings as IDynamicEntity;
+            if (_settings != null || app.Settings == null) return _settings;
+            var dynEnt = app.Settings as IDynamicEntity;
             return _settings = new LookUpInEntity("appsettings", dynEnt?.Entity, dynEnt?.Cdf.Dimensions);
         }
     }
@@ -31,8 +29,8 @@ internal class LookUpInAppProperty : LookUpBase
     {
         get
         {
-            if (_resources != null || _app.Resources == null) return _resources;
-            var dynEnt = _app.Resources as IDynamicEntity;
+            if (_resources != null || app.Resources == null) return _resources;
+            var dynEnt = app.Resources as IDynamicEntity;
             return _resources = new LookUpInEntity("appresources", dynEnt?.Entity, dynEnt?.Cdf.Dimensions);
         }
     }
@@ -41,23 +39,14 @@ internal class LookUpInAppProperty : LookUpBase
 
     #endregion
 
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    public LookUpInAppProperty(string name, IApp app)
-    {
-        Name = name; 
-        _app = app;
-    }
-
     /// <inheritdoc/>
     public override string Get(string key, string strFormat)
     {
         key = key.ToLowerInvariant();
         if (key == "path")
-            return _app.Path;
+            return app.Path;
         if (key == "physicalpath")
-            return _app.PhysicalPath;
+            return app.PhysicalPath;
 
         var subToken = CheckAndGetSubToken(key);
 

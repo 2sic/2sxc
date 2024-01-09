@@ -5,16 +5,9 @@ using ToSic.Sxc.Oqt.Server.Context;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps;
 
-internal class OqtUserLookUp : LookUpBase
+internal class OqtUserLookUp(IUser oqtUser) : LookUpBase(LookUpConstants.SourceUser)
 {
-    private readonly OqtUser _oqtUser;
-
-    public OqtUserLookUp(IUser oqtUser)
-    {
-        Name = LookUpConstants.SourceUser;
-
-        _oqtUser = oqtUser as OqtUser;
-    }
+    private readonly OqtUser _oqtUser = oqtUser as OqtUser;
 
     public override string Get(string key, string format)
     {
