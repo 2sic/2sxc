@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Edit.Toolbar;
 /// So for now :( it must remain public.
 /// </remarks>
 [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsDynamicCodeRoot
+internal partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsDynamicCodeRoot
 {
 
     #region Constructors and Init
