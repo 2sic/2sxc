@@ -25,7 +25,6 @@ namespace ToSic.Sxc.DataSources;
 ///
 /// To figure out the properties returned and what they match up to, see <see cref="AdamItemDataRaw"/> TODO
 /// </summary>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("still wip / finishing specs etc.")]
 [VisualQuery(
     NiceName = "Adam",
     UiHint = "Files and folders in the Adam",
@@ -38,6 +37,7 @@ namespace ToSic.Sxc.DataSources;
     DynamicOut = false,
     ConfigurationType = "" // TODO: ...
 )]
+[InternalApi_DoNotUse_MayChangeWithoutNotice("still wip / finishing specs etc.")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AdamFiles : DataSourceBase
 {
@@ -82,20 +82,19 @@ public class AdamFiles : DataSourceBase
             _dataFactory = dataDataFactory
         );
 
-        ProvideOut(GetDefault);
+        ProvideOut(GetInternal);
         ProvideOut(GetFolders, "Folders");
         ProvideOut(GetFiles, "Files");
     }
     #endregion
 
-    [PrivateApi]
-    public IImmutableList<IEntity> GetDefault() => GetInternal();
+    private IImmutableList<IEntity> GetFolders() => GetInternal()
+        .Where(e => e.GetBestValue<bool>("IsFolder", null))
+        .ToImmutableList();
 
-    [PrivateApi]
-    public IImmutableList<IEntity> GetFolders() => GetInternal().Where(e => e.GetBestValue<bool>("IsFolder", null)).ToImmutableList();
-
-    [PrivateApi]
-    public IImmutableList<IEntity> GetFiles() => GetInternal().Where(e => !e.GetBestValue<bool>("IsFolder", null)).ToImmutableList();
+    private IImmutableList<IEntity> GetFiles() => GetInternal()
+        .Where(e => !e.GetBestValue<bool>("IsFolder", null))
+        .ToImmutableList();
 
     private IImmutableList<IEntity> GetInternal() => _getInternal.Get(() => Log.Func(l =>
     {

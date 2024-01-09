@@ -33,7 +33,6 @@ namespace ToSic.Sxc.DataSources;
     Type = DataSourceType.Source,
     ConfigurationType = "1b9fd9d1-dde0-40ad-bb66-5cd7f30de18d"
 )]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class Roles : CustomDataSourceAdvanced
 {
     private readonly IDataFactory _rolesFactory;
@@ -89,8 +88,7 @@ public class Roles : CustomDataSourceAdvanced
 
     #endregion
 
-    [PrivateApi]
-    public IImmutableList<IEntity> GetList() => Log.Func(l =>
+    private IImmutableList<IEntity> GetList() => Log.Func(l =>
     {
         var roles = _provider.GetRolesInternal()?.ToList();
         l.A($"found {roles?.Count} roles");

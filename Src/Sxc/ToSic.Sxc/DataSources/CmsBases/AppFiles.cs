@@ -27,7 +27,6 @@ namespace ToSic.Sxc.DataSources;
 ///
 /// To figure out the properties returned and what they match up to, see <see cref="PageDataRaw"/> TODO
 /// </summary>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("still wip / finishing specs etc.")]
 [VisualQuery(
     ConfigurationType = "", // TODO:
     NameId = "3fe6c215-4c37-45c1-8883-b4b2a47162a7",
@@ -37,6 +36,7 @@ namespace ToSic.Sxc.DataSources;
     Type = DataSourceType.Source,
     Audience = Audience.Advanced,
     UiHint = "Files and folders in the App folder")]
+[InternalApi_DoNotUse_MayChangeWithoutNotice("still wip / finishing specs etc.")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AppFiles: CustomDataSourceAdvanced
 {

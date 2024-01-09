@@ -6,7 +6,6 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Internal;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -34,7 +33,6 @@ namespace ToSic.Sxc.DataSources;
     NiceName = "Pages",
     Type = DataSourceType.Source,
     UiHint = "Pages in this site")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class Pages: CustomDataSourceAdvanced
 {
     private readonly ITreeMapper _treeMapper;
@@ -136,8 +134,7 @@ public class Pages: CustomDataSourceAdvanced
     }
     #endregion
 
-    [PrivateApi]
-    public IImmutableList<IEntity> GetPages() => Log.Func(l =>
+    private IImmutableList<IEntity> GetPages() => Log.Func(l =>
     {
         Configuration.Parse();
 

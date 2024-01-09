@@ -27,7 +27,6 @@ namespace ToSic.Sxc.DataSources;
     NiceName = "Sites",
     Type = DataSourceType.Source,
     UiHint = "Sites in this CMS")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class Sites: CustomDataSource
 {
     [PrivateApi]

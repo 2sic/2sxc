@@ -38,7 +38,6 @@ namespace ToSic.Sxc.DataSources;
     Type = DataSourceType.Source,
     ConfigurationType = "ac11fae7-1916-4d2d-8583-09872e1e6966"
 )]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public partial class Users : CustomDataSourceAdvanced
 {
     private readonly IDataSourceGenerator<Roles> _rolesGenerator;

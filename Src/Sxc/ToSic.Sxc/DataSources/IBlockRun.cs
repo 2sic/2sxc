@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.DataSource;
+﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
@@ -19,6 +18,6 @@ namespace ToSic.Sxc.DataSources;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface IBlockRun: IDataSource
 {
-    [PrivateApi("maybe just add for docs")]
-    new IReadOnlyDictionary<string, IDataStream> Out { get; }
+    //[PrivateApi("maybe just add for docs")]
+    //new IReadOnlyDictionary<string, IDataStream> Out { get; }
 }
