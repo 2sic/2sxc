@@ -8,7 +8,6 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
 using IEntity = ToSic.Eav.Data.IEntity;
-
 using System.Dynamic;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Blocks;
@@ -34,13 +33,13 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     /// Constructor with EntityModel and DimensionIds
     /// </summary>
     [PrivateApi]
-    public DynamicEntity(IEntity entity, Internal.CodeDataFactory cdf, bool propsRequired)
+    public DynamicEntity(IEntity entity, CodeDataFactory cdf, bool propsRequired)
         : this(cdf, propsRequired, entity)
     {
         ListHelper = new DynamicEntityListHelper(this, () => Debug, propsRequired: propsRequired, cdf);
     }
 
-    internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, bool propsRequired, Internal.CodeDataFactory cdf)
+    internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, bool propsRequired, CodeDataFactory cdf)
         : this(cdf, propsRequired,
             // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
             list.FirstOrDefault() ?? cdf.PlaceHolderInBlock(appIdOrNull, parent, field))
@@ -53,7 +52,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     [PrivateApi]
     internal readonly DynamicEntityListHelper ListHelper;
 
-    private DynamicEntity(Internal.CodeDataFactory cdf, bool propsRequired, IEntity entity)
+    private DynamicEntity(CodeDataFactory cdf, bool propsRequired, IEntity entity)
     {
         Cdf = cdf;
         _propsRequired = propsRequired;
@@ -65,7 +64,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
 
 
     // ReSharper disable once InconsistentNaming
-    [PrivateApi] public Internal.CodeDataFactory Cdf { get; }
+    [PrivateApi] public CodeDataFactory Cdf { get; }
     [PrivateApi] public IEntity Entity { get; }
     private readonly bool _propsRequired;
 
@@ -128,7 +127,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     ) => Cdf.CompatibilityLevel < CompatibilityLevels.CompatibilityLevel12
         // Only do compatibility check if used on DynamicEntity
         ? throw new NotSupportedException($"{nameof(Html)}(...) not supported in older Razor templates. Use Razor14, RazorTyped or newer.")
-        : TypedItemHelpers.Html(Cdf, this.TypedItem, name: name, noParamOrder: noParamOrder, container: container,
+        : TypedItemHelpers.Html(Cdf, TypedItem, name: name, noParamOrder: noParamOrder, container: container,
             toolbar: toolbar, imageSettings: imageSettings, required: false, debug: debug);
 
     #endregion
@@ -209,14 +208,8 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
 
     #region Any*** properties just for documentation
 
-    public bool AnyBooleanProperty => true;
-    public DateTime AnyDateTimeProperty => DateTime.Now;
-    public IEnumerable<IDynamicEntity> AnyChildrenProperty => null;
-    public string AnyJsonProperty => null;
-    public string AnyLinkOrFileProperty => null;
-    public decimal AnyNumberProperty => 0;
-    public string AnyStringProperty => null;
-    //public IEnumerable<DynamicEntity> AnyTitleOfAnEntityInTheList => null;
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public dynamic AnyProperty => null;
 
     #endregion
 

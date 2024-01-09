@@ -148,6 +148,7 @@ public partial interface ITyped
     #region Debugging
 
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     string ToString();
 
     #endregion

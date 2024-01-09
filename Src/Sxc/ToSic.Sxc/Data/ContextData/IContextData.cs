@@ -14,7 +14,8 @@ namespace ToSic.Sxc.Data;
 /// <remarks>
 /// Introduced in v16.01 to simplify the API when using <see cref="ITypedItem"/>s.
 /// </remarks>
-[PublicApi]
+[PrivateApi("Was public from 16.01 till 17.00, but no real reason for it, so not any more")]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface IContextData: IDataSource // IBlockDataSource
 {
     [PrivateApi("maybe just add for docs")]

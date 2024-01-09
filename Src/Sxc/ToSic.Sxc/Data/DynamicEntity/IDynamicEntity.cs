@@ -2,6 +2,7 @@
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Data.Internal.Docs;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 #if !NETFRAMEWORK
@@ -133,8 +134,15 @@ namespace ToSic.Sxc.Data
         dynamic Presentation { get; }
 
         [PrivateApi]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         // ReSharper disable once InconsistentNaming
         Internal.CodeDataFactory Cdf {get; }
+
+
+        /* IMPORTANT: These are just fake properties for documentation - Keep in Sync between IDynamicEntity and IDynamicStack */
+
+        /// <inheritdoc cref="IDynamicAnythingDocs.AnyProperty"/>
+        public dynamic AnyProperty { get; }
 
     }
 }

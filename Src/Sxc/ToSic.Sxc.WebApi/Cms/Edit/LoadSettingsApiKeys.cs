@@ -41,7 +41,7 @@ internal class LoadSettingsApiKeys: LoadSettingsProviderBase, ILoadSettingsProvi
                     {
                         NameId = key,
                         ApiKey = decrypted.Value,
-                        IsDemo = decrypted.IsSecure
+                        IsDemo = decrypted.IsSecured
                     }
                 };
             })

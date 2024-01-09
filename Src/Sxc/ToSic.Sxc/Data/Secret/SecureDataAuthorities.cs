@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Data;
 [Flags]
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-public enum SecretAuthorities
+public enum SecureDataAuthorities
 {
     /// <summary>
     /// No authority / not a secret or wasn't able to decipher

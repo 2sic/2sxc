@@ -41,5 +41,6 @@ public interface IMetadata: /*IDynamicEntity,*/ IHasMetadata, ITypedItem, ICanDe
     /// It was necessary to re-instate this because it's used in old Apps such as BlueImp Gallery.
     /// </summary>
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     int EntityId { get; }
 }

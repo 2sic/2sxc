@@ -5,6 +5,7 @@ using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal;
 
 namespace ToSic.Sxc.Blocks;
 // Important: There is a critical bug in Razor that methods which an interface inherits

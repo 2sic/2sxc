@@ -9,14 +9,14 @@ internal class SecureData<T>(T result, bool isSecure) : ISecureData<T>
 {
     public T Value { get; internal set; } = result;
 
-    public bool IsEncrypted { get; internal set; } = false;
-    public bool IsSigned { get; internal set; } = false;
-    public SecretAuthorities Authority { get; internal set; } = SecretAuthorities.None;
-    public bool IsSecure { get; internal set; } = isSecure;
+    //public bool IsEncrypted { get; internal set; } = false;
+    //public bool IsSigned { get; internal set; } = false;
+    //public SecureDataAuthorities Authority { get; internal set; } = SecureDataAuthorities.None;
+    public bool IsSecured { get; internal set; } = isSecure;
 
 
     public bool IsSecuredBy(string authorityName) 
-        => IsSecure && "preset".EqualsInsensitive(authorityName);
+        => IsSecured && "preset".EqualsInsensitive(authorityName);
 
     public override string ToString() => Value.ToString();
 }

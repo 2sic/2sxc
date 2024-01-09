@@ -3,7 +3,7 @@ using System.Linq;
 using ToSic.Lib.Coding;
 using ToSic.Razor.Blade;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal.Typed;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class HasKeysHelper

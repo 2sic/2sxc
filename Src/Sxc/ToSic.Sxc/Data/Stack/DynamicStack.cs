@@ -131,17 +131,10 @@ internal class DynamicStack: DynamicObject,
 
     #endregion
 
-
     #region Any*** properties just for documentation
 
-    public bool AnyBooleanProperty => true;
-    public DateTime AnyDateTimeProperty => DateTime.Now;
-    public IEnumerable<IDynamicEntity> AnyChildrenProperty => null;
-    public string AnyJsonProperty => null;
-    public string AnyLinkOrFileProperty => null;
-    public decimal AnyNumberProperty => 0;
-    public string AnyStringProperty => null;
-    //public IEnumerable<DynamicEntity> AnyTitleOfAnEntityInTheList => null;
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public dynamic AnyProperty => null;
 
     #endregion
 

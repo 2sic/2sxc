@@ -2,7 +2,7 @@
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal;
 
 /// <summary>
 /// Interface for things that can check keys and/or existence of values.
@@ -14,7 +14,7 @@ public interface IHasKeys
 {
     /// <summary>
     /// Check if this typed object has a property of this specified name.
-    /// It's case insensitive.
+    /// It's case-insensitive.
     /// </summary>
     /// <param name="name">the name like `Image`; some objects also support path to sub-property like `Author.Name`</param>
     /// <returns></returns>

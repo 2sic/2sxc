@@ -7,7 +7,7 @@ using ToSic.Sxc.Services.Tweaks;
 
 namespace ToSic.Sxc.Data;
 
-public partial interface ITypedItem
+partial interface ITypedItem
 {
     /// <summary>
     /// Many templates show demo data.

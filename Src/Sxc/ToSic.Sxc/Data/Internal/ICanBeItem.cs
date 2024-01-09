@@ -2,7 +2,7 @@
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal;
 
 /// <summary>
 /// This is just a helper interface.
@@ -13,13 +13,15 @@ namespace ToSic.Sxc.Data;
 ///
 /// To make sure that APIs which use this have a consistent structure, these objects all implement this interface.
 /// </summary>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("Just FYI")]
+[PrivateApi("Was InternalApi till v17, but Just FYI")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface ICanBeItem: ICanBeEntity
 {
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     IBlock TryGetBlockContext();
 
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     ITypedItem Item { get; }
 }

@@ -2,11 +2,11 @@
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal.Docs;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public interface ITypedRelationships
+public interface ITypedRelationshipsDocs
 {
     /// <summary>
     /// A single item from a field.
