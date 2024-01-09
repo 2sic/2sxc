@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Context.Internal;
 /// It does not perform security checks ATM and maybe never will
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppIdResolver: ServiceBase
+internal class AppIdResolver: ServiceBase
 {
     #region Constructor & DI
 

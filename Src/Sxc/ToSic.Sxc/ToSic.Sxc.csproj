@@ -88,7 +88,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Beta\" />
-    <Folder Include="Context\CmsContext\Internal\" />
     <Folder Include="Data\Internal\Typed\" />
   </ItemGroup>
 
