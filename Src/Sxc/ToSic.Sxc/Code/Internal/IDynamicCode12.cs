@@ -14,7 +14,7 @@ using IFolder = ToSic.Sxc.Adam.IFolder;
 // Because we need them here as additional definition because of Razor problems with inherited interfaces
 #pragma warning disable CS0108, CS0114
 
-namespace ToSic.Sxc.Code;
+namespace ToSic.Sxc.Code.Internal;
 
 /// <summary>
 /// Interface for Dynamic Code with enhancements after v12. It extends <see cref="IDynamicCode"/>
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Code;
 /// Also provides many Conversions between <see cref="IEntity"/> and <see cref="IDynamicEntity"/>.
 /// Important for dynamic code files like Razor or WebApi. Note that there are many overloads to ensure that AsDynamic and AsEntity "just work" even if you give them the original data.
 /// </summary>
-[PublicApi]
+[PrivateApi("Was public an on ToSic.Sxc.Code before, but now all docs should be on the object so it doesn't need to have the interface in the docs")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface IDynamicCode12 : IDynamicCode //, ICompatibleToCode12
 {

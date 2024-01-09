@@ -15,7 +15,7 @@ using IFolder = ToSic.Sxc.Adam.IFolder;
 // Because we need them here as additional definition because of Razor problems with inherited interfaces
 #pragma warning disable CS0108, CS0114
 
-namespace ToSic.Sxc.Code;
+namespace ToSic.Sxc.Code.Internal;
 
 /// <summary>
 /// Interface for Dynamic Code with enhancements after v12. It extends <see cref="IDynamicCode"/>

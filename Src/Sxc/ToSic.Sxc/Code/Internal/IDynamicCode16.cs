@@ -4,13 +4,12 @@ using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Code;
+namespace ToSic.Sxc.Code.Internal;
 
 /// <summary>
 /// Standard interface for all TypedCode such as RazorPro or WebApiPro.
