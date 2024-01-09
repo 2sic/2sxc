@@ -19,6 +19,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Decorators;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 
@@ -152,7 +153,7 @@ internal partial class DnnPagePublishing : ServiceBase, IPagePublishing
 
     }
 
-    private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, IContextData data, string key)
+    private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, IBlockData data, string key)
     {
         var cont = data.GetStream(key, nullIfNotFound: true)?.List.ToImmutableList(); //  data.Out.ContainsKey(key) ? data[key]?.List?.ToImmutableList() : null;
         Log.A($"TryToAddStream(..., ..., key:{key}), found:{cont != null} add⋮{cont?.Count ?? 0}" );

@@ -14,6 +14,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Razor.Internal;
@@ -77,7 +78,7 @@ namespace Custom.Hybrid
 
         public ITypedItem MyHeader => CodeHelper.MyHeader;
 
-        public IContextData MyData => _DynCodeRoot.Data;
+        public IBlockData MyData => _DynCodeRoot.Data;
 
         #endregion
 

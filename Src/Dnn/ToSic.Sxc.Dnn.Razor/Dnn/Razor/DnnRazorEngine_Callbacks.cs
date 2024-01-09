@@ -8,6 +8,7 @@ using ToSic.SexyContent.Search;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Search;

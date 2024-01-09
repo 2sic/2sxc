@@ -13,6 +13,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Internal;
@@ -59,7 +60,7 @@ public abstract partial class Api12: DynamicApiController, IDynamicCode12, IDyna
     public IApp App => _DynCodeRoot.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IContextData Data => _DynCodeRoot.Data;
+    public IBlockData Data => _DynCodeRoot.Data;
 
     #endregion
 

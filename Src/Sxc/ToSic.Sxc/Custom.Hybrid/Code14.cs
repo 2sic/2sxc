@@ -12,6 +12,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 
@@ -84,7 +85,7 @@ public abstract class Code14 : CustomCodeBase, IHasCodeLog, IDynamicCode, IDynam
     public IApp App => _DynCodeRoot?.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IContextData Data => _DynCodeRoot?.Data;
+    public IBlockData Data => _DynCodeRoot?.Data;
 
     /// <inheritdoc cref="IDynamicCode.Content" />
     public dynamic Content => _DynCodeRoot?.Content;

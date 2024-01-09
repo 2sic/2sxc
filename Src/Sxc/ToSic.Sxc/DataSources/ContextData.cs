@@ -6,7 +6,6 @@ using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Data;
 #if NETFRAMEWORK
 using ToSic.Lib.DI;
 using CodeInfoService = ToSic.Eav.Code.InfoSystem.CodeInfoService;
@@ -22,7 +21,7 @@ namespace ToSic.Sxc.DataSources;
 /// </remarks>
 [PrivateApi("used to be Internal... till 16.01, then changed to private to hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal partial class ContextData : PassThrough, IContextData
+internal partial class ContextData : PassThrough, IBlockData
 {
     #region Constructor and Init
 

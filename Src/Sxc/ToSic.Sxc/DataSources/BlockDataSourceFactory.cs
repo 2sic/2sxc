@@ -6,7 +6,6 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.Services;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Data;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.DataSources;
@@ -30,9 +29,9 @@ public class BlockDataSourceFactory: ServiceBase
 
 
     [PrivateApi]
-    internal IContextData GetContextDataSource(IBlock block, ILookUpEngine configLookUp)
+    internal IBlockData GetContextDataSource(IBlock block, ILookUpEngine configLookUp)
     {
-        var wrapLog = Log.Fn<IContextData>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.UserMayEdit}, view:{block.View?.Name}");
+        var wrapLog = Log.Fn<IBlockData>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.UserMayEdit}, view:{block.View?.Name}");
         var view = block.View;
 
         // Get ModuleDataSource
@@ -58,7 +57,7 @@ public class BlockDataSourceFactory: ServiceBase
             // Note: Deprecated feature in v13, remove ca. 14 - should warn
             // TODO: #WarnDeprecated
 #if NETFRAMEWORK
-            if (contextDataSource is IBlockDataSource old)
+            if (contextDataSource is ToSic.Sxc.DataSources.Internal.IBlockDataSource old)
             {
                 old.Publish.Enabled = view.PublishData;
                 old.Publish.Streams = view.StreamsToPublish;

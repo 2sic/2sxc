@@ -16,6 +16,7 @@ using System.Net.Http;
 using System.Web.Http.Results;
 using ToSic.Eav.WebApi;
 using ToSic.Lib.Coding;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Internal;
 
 // ReSharper disable once CheckNamespace
@@ -175,7 +176,7 @@ public abstract class ApiTyped: DynamicApiController, IHasCodeLog, IDynamicWebAp
 
     public ITypedItem MyHeader => CodeHelper.MyHeader;
 
-    public IContextData MyData => _DynCodeRoot.Data;
+    public IBlockData MyData => _DynCodeRoot.Data;
 
     #endregion
 

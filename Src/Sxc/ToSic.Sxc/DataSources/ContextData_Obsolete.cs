@@ -4,7 +4,7 @@ using ToSic.Eav.Code.InfoSystem;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Compatibility.Internal;
-using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.DataSources.Old;
 using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 

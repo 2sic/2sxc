@@ -7,6 +7,7 @@ using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Engines;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -55,9 +56,9 @@ public interface IBlock: IAppIdentity, IHasLog
     IApp App { get; }
 
     /// <summary>
-    /// The <see cref="IContextData"/> which delivers data for this block (will be used by the <see cref="IEngine"/> together with the View)
+    /// The <see cref="IBlockData"/> which delivers data for this block (will be used by the <see cref="IEngine"/> together with the View)
     /// </summary>
-    IContextData Data { get; }
+    IBlockData Data { get; }
 
     [PrivateApi("might rename this some time")]
     bool IsContentApp { get; }

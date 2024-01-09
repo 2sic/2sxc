@@ -7,6 +7,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
@@ -51,7 +52,7 @@ public interface IDynamicCode14<out TModel, out TServiceKit> : /*ICompatibleToCo
     IApp App { get; }
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    IContextData Data { get; }
+    IBlockData Data { get; }
 
     #region Content and Header
 

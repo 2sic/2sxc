@@ -1,11 +1,9 @@
 ﻿#if NETFRAMEWORK
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Compatibility.Internal;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources.Old;
 
-namespace ToSic.Sxc.DataSources;
+namespace ToSic.Sxc.DataSources.Internal;
 
 /// <summary>
 /// This marks data sources which are meant for Blocks (Modules, Content-Block Instances). <br/>
@@ -16,10 +14,11 @@ namespace ToSic.Sxc.DataSources;
 public interface IBlockDataSource: IDataSource
 {
     [PrivateApi("older use case, will probably become obsolete some day")]
+    [System.Obsolete("Must be removed soon, but it's part of older Mobius so we must add warnings there")]
     DataPublishing Publish { get; }
 
-    [System.Obsolete("Must be removed soon, but it's part of older Mobius so we must add warnings there")]
     [PrivateApi]
+    [System.Obsolete("Must be removed soon, but it's part of older Mobius so we must add warnings there")]
     CacheWithGetContentType Cache { get; }
 }
 

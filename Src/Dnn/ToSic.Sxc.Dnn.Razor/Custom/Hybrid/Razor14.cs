@@ -11,6 +11,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Internal;
@@ -88,7 +89,7 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
     public dynamic Header => _DynCodeRoot.Header;
 
     /// <inheritdoc />
-    public IContextData Data => _DynCodeRoot.Data;
+    public IBlockData Data => _DynCodeRoot.Data;
 
     #endregion
 

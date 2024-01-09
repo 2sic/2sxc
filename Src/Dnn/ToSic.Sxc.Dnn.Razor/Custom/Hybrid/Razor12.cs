@@ -12,6 +12,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Internal;
@@ -65,7 +66,7 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
     public new IApp App => _DynCodeRoot.App;
 
     /// <inheritdoc />
-    public IContextData Data => _DynCodeRoot.Data;
+    public IBlockData Data => _DynCodeRoot.Data;
 
     #endregion
 

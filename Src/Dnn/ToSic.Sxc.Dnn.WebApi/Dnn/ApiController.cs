@@ -11,6 +11,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
@@ -52,7 +53,7 @@ public abstract class ApiController : DynamicApiController,
     public IApp App => _DynCodeRoot.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IContextData Data => _DynCodeRoot.Data;
+    public IBlockData Data => _DynCodeRoot.Data;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();

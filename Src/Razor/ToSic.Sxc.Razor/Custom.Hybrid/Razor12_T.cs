@@ -11,6 +11,7 @@ using ToSic.Eav.LookUp;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Razor.Internal;
@@ -78,7 +79,7 @@ namespace Custom.Hybrid
         public IApp App => _DynCodeRoot.App;
 
         /// <inheritdoc cref="IDynamicCode.Data" />
-        public IContextData Data => _DynCodeRoot.Data;
+        public IBlockData Data => _DynCodeRoot.Data;
 
         #endregion
 

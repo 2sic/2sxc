@@ -14,6 +14,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Custom;
@@ -73,7 +74,7 @@ public abstract class Api12 : OqtStatefulControllerBase, IDynamicWebApi, IDynami
     public IApp App => _DynCodeRoot?.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IContextData Data => _DynCodeRoot?.Data;
+    public IBlockData Data => _DynCodeRoot?.Data;
 
     /// <inheritdoc cref="IDynamicCode12.Resources" />
     public dynamic Resources => _DynCodeRoot.Resources;

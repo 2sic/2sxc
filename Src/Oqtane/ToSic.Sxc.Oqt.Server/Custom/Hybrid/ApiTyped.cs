@@ -17,6 +17,7 @@ using System.IO;
 using ToSic.Sxc.Adam;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Lib.Coding;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Internal;
 
 // ReSharper disable once CheckNamespace
@@ -122,7 +123,7 @@ public abstract class ApiTyped : OqtStatefulControllerBase, IDynamicWebApi, IHas
 
     public ITypedItem MyHeader => CodeHelper.MyHeader;
 
-    public IContextData MyData => _DynCodeRoot.Data;
+    public IBlockData MyData => _DynCodeRoot.Data;
 
     #endregion
 

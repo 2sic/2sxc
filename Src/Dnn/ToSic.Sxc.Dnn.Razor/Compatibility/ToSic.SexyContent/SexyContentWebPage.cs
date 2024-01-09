@@ -23,6 +23,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
@@ -106,12 +107,12 @@ public abstract class SexyContentWebPage :
 
     // This is explicitly implemented so the interfaces don't complain
     // but actually we're not showing this - in reality we're showing the Old (see above)
-    IContextData IAppAndDataHelpers.Data => _DynCodeRoot.Data;
+    IBlockData IAppAndDataHelpers.Data => _DynCodeRoot.Data;
         
     #endregion
 
     /// <inheritdoc />
-    IContextData IDynamicCode.Data => _DynCodeRoot.Data;
+    IBlockData IDynamicCode.Data => _DynCodeRoot.Data;
 
     public RazorPermissions Permissions => new(_DynCodeRoot.Block?.Context.UserMayEdit ?? false);
 

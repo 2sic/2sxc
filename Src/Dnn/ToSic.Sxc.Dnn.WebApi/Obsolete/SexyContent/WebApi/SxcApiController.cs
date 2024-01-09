@@ -16,6 +16,7 @@ using ToSic.Sxc.Compatibility.Internal;
 using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
@@ -79,7 +80,7 @@ public abstract partial class SxcApiController :
     public IApp App => _DynCodeRoot.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IContextData Data => _DynCodeRoot.Data;
+    public IBlockData Data => _DynCodeRoot.Data;
 
 
     #region AsDynamic implementations

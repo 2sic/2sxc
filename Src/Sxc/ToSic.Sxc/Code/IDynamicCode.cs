@@ -8,6 +8,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
@@ -36,8 +37,8 @@ public interface IDynamicCode: ICreateInstance, ICompatibilityLevel, IHasLog // 
     /// The data prepared for the current Code. Usually user data which was manually added to the instance, but can also be a query.
     /// </summary>
     /// <returns>
-    /// An <see cref="IContextData"/> which is as <see cref="IDataSource"/>.</returns>
-    IContextData Data { get; }
+    /// An <see cref="IBlockData"/> which is as <see cref="IDataSource"/>.</returns>
+    IBlockData Data { get; }
 
     #region Content and Header
     /// <summary>

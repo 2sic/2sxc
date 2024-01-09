@@ -12,6 +12,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 
@@ -120,7 +121,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     public ITypedStack AllSettings => CodeHelper.AllSettings;
 
 
-    public IContextData MyData => CodeRootOrError().Data;
+    public IBlockData MyData => CodeRootOrError().Data;
 
     #endregion
 

@@ -12,6 +12,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines;
@@ -121,7 +122,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     public ITypedItem MyHeader => CodeHelper.MyHeader;
 
     /// <inheritdoc />
-    public IContextData MyData => _DynCodeRoot.Data;
+    public IBlockData MyData => _DynCodeRoot.Data;
 
     /// <inheritdoc />
     public ITypedModel MyModel => CodeHelper.MyModel;

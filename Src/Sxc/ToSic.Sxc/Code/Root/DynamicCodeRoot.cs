@@ -10,6 +10,7 @@ using ToSic.Sxc.Code.Helpers;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
@@ -116,7 +117,7 @@ public abstract partial class DynamicCodeRoot : ServiceBase<DynamicCodeRoot.MySe
     public IApp App { get; private set; }
 
     /// <inheritdoc />
-    public IContextData Data { get; private set; }
+    public IBlockData Data { get; private set; }
 
     /// <inheritdoc cref="IDynamicCode.Link" />
     // Note that ILinkHelper uses INeedsCodeRoot, so if initialized in GetService this will be auto-provided
