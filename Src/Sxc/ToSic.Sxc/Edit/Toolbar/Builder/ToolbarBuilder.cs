@@ -10,6 +10,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Edit.Toolbar;

@@ -44,9 +44,10 @@ internal class CodeLog(ILog log) : Wrapper<ILog>(log ?? new Log(LogConstants.Nam
         return (data, finalMsg) => call.Return(data, finalMsg);
     }
 
+    /// <inheritdoc />
     public bool Preserve
     {
         get => (GetContents() as Log)?.Preserve ?? false; // default to false if there is no log
-        set { if (GetContents() is Log log) log.Preserve = value; }
+        set { if (GetContents() is Log log1) log1.Preserve = value; }
     }
 }

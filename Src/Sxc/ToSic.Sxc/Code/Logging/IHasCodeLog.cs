@@ -12,5 +12,6 @@ public interface IHasCodeLog
     /// <summary>
     /// The logger for the current Razor / WebApi which allows you to add logs to Insights.
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     ICodeLog Log { get; }
 }

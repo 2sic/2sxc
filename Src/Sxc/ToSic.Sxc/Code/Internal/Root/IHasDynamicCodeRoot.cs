@@ -1,6 +1,6 @@
 ﻿using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Code;
+namespace ToSic.Sxc.Code.Internal;
 
 /// <summary>
 /// Marks objects which have DynCodeRoot which is passed around to sub-objects as needed

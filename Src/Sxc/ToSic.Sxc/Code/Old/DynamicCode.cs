@@ -18,22 +18,21 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Code;
 
 /// <summary>
-/// Base class for v12 Dynamic Code
-/// Adds new properties and methods, and doesn't keep old / legacy APIs
+/// This is a base class for dynamic code which is compiled at runtime.
 ///
 /// > [!TIP]
 /// > This is an old base class and works, but you should use a newer one such as <see cref="CodeTyped"/>
 /// </summary>
-[PublicApi]
-public class DynamicCode12: CustomCodeBase, IHasCodeLog, IDynamicCode, IDynamicCode12
+[PrivateApi("Was public till v17")]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public abstract class DynamicCode : CustomCodeBase, IHasCodeLog, IDynamicCode
 {
     #region Constructor / Setup
 
     /// <summary>
-    /// Main constructor. May never have parameters, otherwise inheriting code will run into problems. 
+    /// Main constructor, to enable easy inheriting in custom code.
     /// </summary>
-    [PrivateApi]
-    protected DynamicCode12() : base("Sxc.DynCod") { }
+    protected DynamicCode() : base("Sxc.DynCod") { }
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => SysHlp.CodeLog;
@@ -41,27 +40,9 @@ public class DynamicCode12: CustomCodeBase, IHasCodeLog, IDynamicCode, IDynamicC
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
 
-    [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
+    [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel10;
 
     #endregion
-
-    #region Stuff added by Code12
-
-    /// <inheritdoc cref="IDynamicCode12.Convert" />
-    public IConvertService Convert => _DynCodeRoot.Convert;
-
-    /// <inheritdoc cref="IDynamicCode12.Resources" />
-    public dynamic Resources => _DynCodeRoot?.Resources;
-
-    /// <inheritdoc cref="IDynamicCode12.Settings" />
-    public dynamic Settings => _DynCodeRoot?.Settings;
-
-    [PrivateApi("Not yet ready")]
-    public IDevTools DevTools => _DynCodeRoot.DevTools;
-
-    #endregion
-
-    // Stuff "inherited" from DynamicCode (old base class)
 
     #region App / Data / Content / Header
 
@@ -79,8 +60,8 @@ public class DynamicCode12: CustomCodeBase, IHasCodeLog, IDynamicCode, IDynamicC
     #endregion
 
 
-
     #region Link and Edit
+
     /// <inheritdoc cref="IDynamicCode.Link" />
     public ILinkService Link => _DynCodeRoot?.Link;
     /// <inheritdoc cref="IDynamicCode.Edit" />
@@ -94,7 +75,7 @@ public class DynamicCode12: CustomCodeBase, IHasCodeLog, IDynamicCode, IDynamicC
     [PrivateApi]
     string IGetCodePath.CreateInstancePath { get; set; }
 
-    /// <inheritdoc cref="IDynamicCode.CreateInstance(string, NoParamOrder, string, string, bool)" />
+    /// <inheritdoc />
     public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true) =>
         SysHlp.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
 
@@ -109,37 +90,37 @@ public class DynamicCode12: CustomCodeBase, IHasCodeLog, IDynamicCode, IDynamicC
 
     #region AsDynamic and AsEntity
 
-    /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
+    /// <inheritdoc />
     public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot?.Cdf.Json2Jacket(json, fallback);
 
-    /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
+    /// <inheritdoc />
     public dynamic AsDynamic(IEntity entity) => _DynCodeRoot?.Cdf.CodeAsDyn(entity);
 
-    /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
+    /// <inheritdoc />
     public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot?.Cdf.AsDynamicFromObject(dynamicEntity);
 
     /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
     public dynamic AsDynamic(params object[] entities) => _DynCodeRoot?.Cdf.MergeDynamic(entities);
 
-    /// <inheritdoc cref="IDynamicCode.AsEntity" />
+    /// <inheritdoc />
     public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot?.Cdf.AsEntity(dynamicEntity);
 
     #endregion
 
     #region AsList
 
-    /// <inheritdoc cref="IDynamicCode.AsList" />
+    /// <inheritdoc />
     public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.Cdf.CodeAsDynList(list);
 
     #endregion
 
     #region CreateSource
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
+    /// <inheritdoc />
     public T CreateSource<T>(IDataStream source) where T : IDataSource
         => _DynCodeRoot.CreateSource<T>(source);
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
+    /// <inheritdoc />
     public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
         => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
@@ -148,9 +129,8 @@ public class DynamicCode12: CustomCodeBase, IHasCodeLog, IDynamicCode, IDynamicC
 
     #region AsAdam
 
-    /// <inheritdoc cref="IDynamicCode.AsAdam" />
+    /// <inheritdoc />
     public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot?.AsAdam(item, fieldName);
 
     #endregion
-
 }

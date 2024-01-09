@@ -106,7 +106,6 @@ public interface ICodeLog: IWrapper<ILog>
     /// In scenarios like search-indexing it will default to false.
     /// You can then do `Log.Preserve = true;` to temporarily activate it while debugging.
     /// </summary>
-    [PrivateApi]
     bool Preserve { get; set; }
 
 }

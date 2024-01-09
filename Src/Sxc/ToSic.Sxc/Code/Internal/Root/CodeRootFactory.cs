@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Linq;
-using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Code;
+namespace ToSic.Sxc.Code.Internal;
 
 /// <summary>
 /// Special helper which will create the code-root based on the parent class requesting it.

@@ -3,6 +3,7 @@ using System.Text;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Services;

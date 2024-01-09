@@ -4,25 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Eav.LookUp;
 using ToSic.SexyContent;
 using ToSic.Sxc.Data.Internal.Decorators;
 
-namespace ToSic.Sxc.Code
+namespace ToSic.Sxc.Code.Internal
 {
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public class DynamicCodeObsolete
+    public class DynamicCodeObsolete(IDynamicCodeRoot dynCode)
     {
-        private readonly IDynamicCodeRoot _root;
-        public DynamicCodeObsolete(IDynamicCodeRoot dynCode)
-        {
-            _root = dynCode;
-        }
-
-
         [PrivateApi("obsolete")]
         [Obsolete("you should use the CreateSource<T> instead. Deprecated ca. v4 (but not sure), changed to error in v15.")]
         public IDataSource CreateSource(string typeName = "", IDataSource links = null, ILookUpEngine configuration = null)
@@ -31,20 +24,20 @@ namespace ToSic.Sxc.Code
             // Completely rewrote this, because I got rid of some old APIs in v15 on the DataFactory
             // This has never been tested but probably works, but we won't invest time to be certain.
 
-            var dataSources = ((DynamicCodeRoot)_root).DataSources;
+            var dataSources = ((DynamicCodeRoot)dynCode).DataSources;
 
             try
             {
                 // try to find with assembly name, or otherwise with GlobalName / previous names
                 //var catalog = _root.GetService<DataSourceCatalog>();
-                var type = dataSources.Catalog.Value.FindDataSourceInfo(typeName, _root.App.AppId)?.Type;
+                var type = dataSources.Catalog.Value.FindDataSourceInfo(typeName, dynCode.App.AppId)?.Type;
                 configuration ??= dataSources.LookUpEngine; // _root.ConfigurationProvider;
                 var cnf2Wip = new DataSourceOptions(lookUp: configuration);
                 if (links != null)
                     return dataSources.DataSources.Value/*_root.DataSourceFactory*/.Create(type: type, attach: links, options: cnf2Wip);
 
                 var initialSource = dataSources.DataSources.Value/* _root.DataSourceFactory*/
-                    .CreateDefault(new DataSourceOptions(appIdentity: _root.App, lookUp: dataSources.LookUpEngine/*_root.ConfigurationProvider*/));
+                    .CreateDefault(new DataSourceOptions(appIdentity: dynCode.App, lookUp: dataSources.LookUpEngine/*_root.ConfigurationProvider*/));
                 return typeName != ""
                     ? dataSources.DataSources.Value/*_root.DataSourceFactory*/.Create(type: type, attach: initialSource, options: cnf2Wip)
                     : initialSource;
@@ -81,13 +74,13 @@ namespace ToSic.Sxc.Code
         /// </remarks>
         private void TryToBuildElementList()
         {
-            _root.Log.A("try to build old List");
+            dynCode.Log.A("try to build old List");
             _list = new List<Element>();
 
-            if (_root.Data == null || _root.Block.View == null) return;
-            if (!_root.Data.Out.ContainsKey(DataSourceConstants.StreamDefaultName)) return;
+            if (dynCode.Data == null || dynCode.Block.View == null) return;
+            if (!dynCode.Data.Out.ContainsKey(DataSourceConstants.StreamDefaultName)) return;
 
-            var entities = _root.Data.List.ToList();
+            var entities = dynCode.Data.List.ToList();
 
             _list = entities.Select(GetElementFromEntity).ToList();
 
@@ -96,14 +89,14 @@ namespace ToSic.Sxc.Code
                 var el = new Element
                 {
                     EntityId = e.EntityId,
-                    Content = _root.Cdf.CodeAsDyn(e)
+                    Content = dynCode.Cdf.CodeAsDyn(e)
                 };
 
                 var editDecorator = e.GetDecorator<EntityInBlockDecorator>();
 
                 if (editDecorator != null)
                 {
-                    el.Presentation = editDecorator.Presentation == null ? null : _root.Cdf.CodeAsDyn(editDecorator.Presentation);
+                    el.Presentation = editDecorator.Presentation == null ? null : dynCode.Cdf.CodeAsDyn(editDecorator.Presentation);
                     el.SortOrder = editDecorator.SortOrder;
                 }
 

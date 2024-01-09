@@ -2,7 +2,7 @@
 using System;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Web
