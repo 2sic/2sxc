@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.DataSources;
+using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Oqt.Server.ToSic.Sxc.DataSources;
 
 // ReSharper disable once CheckNamespace
