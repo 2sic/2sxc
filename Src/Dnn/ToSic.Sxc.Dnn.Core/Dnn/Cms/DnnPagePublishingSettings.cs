@@ -4,7 +4,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.Apps.Enums;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Dnn.Features;
 using ToSic.Sxc.Services;
 

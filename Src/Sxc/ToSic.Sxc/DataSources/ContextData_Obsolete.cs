@@ -3,6 +3,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Code.InfoSystem;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Compatibility.Internal;
 using ToSic.Sxc.Data;
 using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 
@@ -17,19 +18,19 @@ namespace ToSic.Sxc.DataSources
 #pragma warning disable 618
         [System.Obsolete("Old property on this data source, should really not be used at all. Must add warning in v13, and remove ca. v15")]
         [PrivateApi]
-        public Compatibility.CacheWithGetContentType Cache
+        public CacheWithGetContentType Cache
         {
             get
             {
                 if (_cache != null) return _cache;
                 // on first access report problem
                 _codeChanges.Value.Warn(CaV8To17("Data.Cache", "https://go.2sxc.org/brc-13-datasource-cache"));
-                return _cache = new Compatibility.CacheWithGetContentType(_appStates.GetReader(this));
+                return _cache = new CacheWithGetContentType(_appStates.GetReader(this));
             }
         }
 
         [System.Obsolete]
-        private Compatibility.CacheWithGetContentType _cache;
+        private CacheWithGetContentType _cache;
 #pragma warning restore 618
 
         [PrivateApi("older use case, probably don't publish")]

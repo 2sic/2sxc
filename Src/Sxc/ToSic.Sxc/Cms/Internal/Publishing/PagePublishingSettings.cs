@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps.Enums;
 
-namespace ToSic.Sxc.Cms.Publishing;
+namespace ToSic.Sxc.Cms.Internal.Publishing;
 
 /// <summary>
 /// Tell the save operations if saving should trigger change-detection at page level to start work flows

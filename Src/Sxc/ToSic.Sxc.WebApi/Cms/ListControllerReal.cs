@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Linq;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
 using ToSic.Eav.Apps.Work;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Cms.Internal.Publishing;
 
 namespace ToSic.Sxc.WebApi.Cms;
 
@@ -26,17 +24,15 @@ public partial class ListControllerReal: BlockWebApiBackendBase, IHasLog, IListC
         Generator<MultiPermissionsApp> multiPermissionsApp,
         GenWorkPlus<WorkEntities> workEntities,
         GenWorkDb<WorkFieldList> workFieldList,
-        IPagePublishing publishing,
         IContextResolver ctxResolver,
         AppWorkContextService appWorkCtxService,
-        Generator<IPagePublishing> versioning
+        Generator<IPagePublishing> publishing
     ) : base(multiPermissionsApp, appWorkCtxService, ctxResolver, "Api.LstRl")
     {
         ConnectServices(
             _workFieldList = workFieldList,
             _workEntities = workEntities,
-            _publishing = publishing,
-            _versioning = versioning
+            _publishing = publishing
         );
     }
 
@@ -44,8 +40,7 @@ public partial class ListControllerReal: BlockWebApiBackendBase, IHasLog, IListC
 
     private readonly GenWorkDb<WorkFieldList> _workFieldList;
     private readonly GenWorkPlus<WorkEntities> _workEntities;
-    private readonly Generator<IPagePublishing> _versioning;
-    private readonly IPagePublishing _publishing;
+    private readonly Generator<IPagePublishing> _publishing;
 
     private IContextOfBlock Context => _context ??= CtxResolver.BlockContextRequired();
     private IContextOfBlock _context;
@@ -76,7 +71,7 @@ public partial class ListControllerReal: BlockWebApiBackendBase, IHasLog, IListC
     private void ModifyList(IEntity target, string fields, Action<IEntity, string[], bool> action)
     {
         // use dnn versioning - items here are always part of list
-        _publishing.DoInsidePublishing(ContextOfBlock, args =>
+        _publishing.New().DoInsidePublishing(ContextOfBlock, args =>
         {
             // determine versioning
             var forceDraft = (ContextOfBlock as IContextOfBlock)?.Publishing.ForceDraft ?? false;

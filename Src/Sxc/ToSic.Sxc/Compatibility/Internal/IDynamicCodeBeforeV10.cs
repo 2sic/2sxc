@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
-using ToSic.Lib.Documentation;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Compatibility
+namespace ToSic.Sxc.Compatibility.Internal
 {
 	/// <summary>
     /// Old interface for the SexyContent Web Page

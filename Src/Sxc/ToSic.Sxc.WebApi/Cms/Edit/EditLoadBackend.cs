@@ -24,6 +24,7 @@ using JsonSerializer = ToSic.Eav.ImportExport.Json.JsonSerializer;
 using ToSic.Lib.Services;
 using static System.String;
 using ToSic.Eav.Apps.Work;
+using ToSic.Sxc.Compatibility.Internal;
 
 namespace ToSic.Sxc.WebApi.Cms;
 
@@ -153,7 +154,7 @@ public partial class EditLoadBackend: ServiceBase
         // Fix not-supported input-type names; map to correct name
         result.ContentTypes
             .ForEach(jt => jt.Attributes
-                .ForEach(at => at.InputType = Compatibility.InputTypes.MapInputTypeV10(at.InputType)));
+                .ForEach(at => at.InputType = InputTypes.MapInputTypeV10(at.InputType)));
 
         // load input-field configurations
         result.InputTypes = GetNecessaryInputTypes(result.ContentTypes, appWorkCtx);

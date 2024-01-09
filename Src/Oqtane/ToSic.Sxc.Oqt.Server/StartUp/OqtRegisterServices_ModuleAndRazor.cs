@@ -6,7 +6,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Oqt.Server.Blocks;
 using ToSic.Sxc.Oqt.Server.Cms;

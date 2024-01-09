@@ -1,6 +1,7 @@
 ﻿#if NETFRAMEWORK
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Compatibility.Internal;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.DataSources
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.DataSources
 
         [System.Obsolete("Must be removed soon, but it's part of older Mobius so we must add warnings there")]
         [PrivateApi]
-        Compatibility.CacheWithGetContentType Cache { get; }
+        CacheWithGetContentType Cache { get; }
 
     }
 }

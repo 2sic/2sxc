@@ -12,7 +12,7 @@ using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
-using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Web.ClientAssets;
 using ToSic.Sxc.Web.PageFeatures;

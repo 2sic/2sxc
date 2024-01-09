@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Cms.Publishing;
+﻿namespace ToSic.Sxc.Cms.Internal.Publishing;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public enum PagePublishingPriorities

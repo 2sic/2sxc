@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ToSic.Sxc.Compatibility;
+namespace ToSic.Sxc.Compatibility.Internal;
 
 internal class InputTypes
 {

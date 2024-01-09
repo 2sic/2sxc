@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps.Enums;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Cms.Publishing;
+namespace ToSic.Sxc.Cms.Internal.Publishing;
 
 /// <summary>
 /// This is the fallback page publishing strategy, which basically says that page publishing isn't enabled

@@ -5,8 +5,7 @@ using ToSic.Eav.Internal.Unknown;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
-
-namespace ToSic.Sxc.Cms.Publishing;
+namespace ToSic.Sxc.Cms.Internal.Publishing;
 
 internal class BasicPagePublishing : ServiceBase, IPagePublishing
 {

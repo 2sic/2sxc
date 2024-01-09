@@ -8,7 +8,7 @@ using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Cms.Internal.Publishing;
 
 namespace ToSic.Sxc.WebApi.Save;
 

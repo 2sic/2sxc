@@ -3,7 +3,7 @@ using System;
 using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Data;
 
-namespace ToSic.Sxc.Compatibility
+namespace ToSic.Sxc.Compatibility.Internal
 {
     [Obsolete("this is just a workaround so that old code still works - especially Mobius forms which used this in V3")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

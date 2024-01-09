@@ -4,8 +4,7 @@ using ToSic.Eav.Context;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 
-
-namespace ToSic.Sxc.Cms.Publishing;
+namespace ToSic.Sxc.Cms.Internal.Publishing;
 
 // Note: maybe some day this should go into a .Cms namespace
 [PrivateApi]

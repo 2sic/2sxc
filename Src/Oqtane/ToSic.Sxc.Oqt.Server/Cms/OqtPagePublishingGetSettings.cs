@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Apps.Enums;
-using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Cms;

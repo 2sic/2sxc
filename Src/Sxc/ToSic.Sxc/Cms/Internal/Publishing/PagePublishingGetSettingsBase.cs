@@ -3,7 +3,7 @@ using ToSic.Eav.Apps.Enums;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Cms.Publishing;
+namespace ToSic.Sxc.Cms.Internal.Publishing;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public abstract class PagePublishingGetSettingsBase: ServiceBase, IPagePublishingGetSettings
