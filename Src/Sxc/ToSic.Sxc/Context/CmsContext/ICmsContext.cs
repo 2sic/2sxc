@@ -52,6 +52,12 @@ public interface ICmsContext
     ICmsView View { get; }
 
 
+    /// <summary>
+    /// Information about the current block
+    ///
+    /// Not published yet, as it's not clear if it will be the correct block on inner-content?
+    /// </summary>
     [PrivateApi("WIP v13")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     ICmsBlock Block { get; }
 }

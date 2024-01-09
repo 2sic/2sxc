@@ -58,6 +58,7 @@ namespace ToSic.Eav.Run
     /// The only use case is in an overridable CustomizeSearch, so it is never really called,
     /// but just defined by a razor page.
     /// </summary>
+    [PrivateApi("Obsolete")]
     [Obsolete("this was replaced by IModule")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IContainer

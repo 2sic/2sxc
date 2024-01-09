@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Metadata;
+﻿using System;
+using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
@@ -70,7 +71,9 @@ public interface ICmsView: IHasMetadata
     /// <remarks>
     /// Added in v15.04
     /// </remarks>
+    [Obsolete("Obsolete in v16, pls use Folder.Url instead")]
     [PrivateApi("Hidden in 16.04, because we want people to use the Folder. Can't remove it though, because there are many apps that already published this.")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     string Path { get; }
 
     /// <summary>
