@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Context;
 
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IView>(parent, block.View), ICmsView
+internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IView>(parent, block.View), ICmsView
 {
     private readonly IView _view = block.View;
 

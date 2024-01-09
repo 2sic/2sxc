@@ -13,11 +13,11 @@ namespace ToSic.Sxc.Context;
 
 /// <summary>
 /// Runtime context information, used in dynamic code. Help the code to detect what environment it's in, what page etc.
-/// This lets the code be platform agnostic, so that it works across implementations (Dnn, Oqtane, NopCommerce)
+/// This lets the code be platform-agnostic, so that it works across implementations (Dnn, Oqtane, NopCommerce)
 /// </summary>
 [PrivateApi("we only show the interface in the docs")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CmsContext: ServiceForDynamicCode, ICmsContext
+internal class CmsContext: ServiceForDynamicCode, ICmsContext
 {
     #region Constructor
 
@@ -63,7 +63,7 @@ public class CmsContext: ServiceForDynamicCode, ICmsContext
 
     public ICmsPlatform Platform { get; }
 
-    public ICmsSite Site => _site.Get(() => _cmsSiteLazy.Value.Init(this, SiteAppState));
+    public ICmsSite Site => _site.Get(() => ((CmsSite)_cmsSiteLazy.Value).Init(this, SiteAppState));
     private readonly GetOnce<ICmsSite> _site = new();
 
     public ICmsPage Page => _page ??= new CmsPage(this, SiteAppState, _pageLazy);

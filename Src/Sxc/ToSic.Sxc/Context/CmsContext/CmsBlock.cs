@@ -7,10 +7,8 @@ namespace ToSic.Sxc.Context;
 
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class CmsBlock: Wrapper<IBlock>, ICmsBlock
+internal class CmsBlock(IBlock block) : Wrapper<IBlock>(block), ICmsBlock
 {
-    public CmsBlock(IBlock block): base(block) { }
-
     /// <inheritdoc />
     public int Id => GetContents()?.Configuration.Id ?? 0;
 

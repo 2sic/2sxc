@@ -5,10 +5,8 @@ namespace ToSic.Sxc.Context;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class PageUnknown: IPage, IIsUnknown
+internal class PageUnknown(WarnUseOfUnknown<PageUnknown> _) : IPage, IIsUnknown
 {
-    public PageUnknown(WarnUseOfUnknown<PageUnknown> _) { }
-
     public IPage Init(int id)
     {
         Id = id;

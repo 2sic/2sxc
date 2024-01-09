@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Context;
 /// </remarks>
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class Platform: IPlatform
+internal abstract class Platform: IPlatform
 {
 
     /// <summary>

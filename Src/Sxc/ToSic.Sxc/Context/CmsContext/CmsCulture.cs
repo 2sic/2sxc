@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Context;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CmsCulture: ICmsCulture
+internal class CmsCulture: ICmsCulture
 {
     private readonly CmsContext _parent;
 

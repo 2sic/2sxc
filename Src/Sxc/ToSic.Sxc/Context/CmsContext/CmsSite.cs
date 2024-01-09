@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Context;
 
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CmsSite: CmsContextPartBase<ISite>, ICmsSite
+internal class CmsSite: CmsContextPartBase<ISite>, ICmsSite
 {
     public ICmsSite Init(CmsContext parent, IAppStateInternal appState)
     {

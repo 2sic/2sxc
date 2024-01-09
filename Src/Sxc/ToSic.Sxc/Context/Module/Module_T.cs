@@ -11,14 +11,13 @@ namespace ToSic.Sxc.Context;
 /// <typeparam name="T"></typeparam>
 [PrivateApi("this is just fyi")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class Module<T>: ServiceBase, IModule, IWrapper<T> where T: class
+public abstract class Module<T>(string logName) : ServiceBase(logName), IModule, IWrapper<T>
+    where T : class
 {
     #region Constructors and DI
 
     public T GetContents() => UnwrappedModule;
     [PrivateApi] protected T UnwrappedModule;
-
-    protected Module(string logName) : base(logName) { }
 
     public IModule Init(T item)
     {
