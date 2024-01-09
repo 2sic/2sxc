@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Net;
 using System.Web.Http;
 using ToSic.Lib.Exceptions;
-using ToSic.Sxc.Code.Help;
+using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
 namespace ToSic.Sxc.Dnn;
 

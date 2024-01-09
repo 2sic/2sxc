@@ -7,7 +7,6 @@ using ToSic.Eav.Generics;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.CodeHelpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.Dnn;
@@ -18,6 +17,8 @@ using ToSic.Lib.Coding;
 using ToSic.Razor.Blade;
 using IApp = ToSic.Sxc.Apps.IApp;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.CodeRunHelpers;
+using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Internal;
 

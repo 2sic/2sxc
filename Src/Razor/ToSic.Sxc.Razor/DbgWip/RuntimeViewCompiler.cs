@@ -24,6 +24,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using ToSic.Eav.Helpers;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Razor.DbgWip
 {
@@ -47,35 +48,15 @@ namespace ToSic.Sxc.Razor.DbgWip
             ILogger logger,
             AssemblyResolver assemblyResolver)
         {
-            if (fileProvider == null)
-            {
-                throw new ArgumentNullException(nameof(fileProvider));
-            }
-
-            if (projectEngine == null)
-            {
-                throw new ArgumentNullException(nameof(projectEngine));
-            }
-
-            if (csharpCompiler == null)
-            {
-                throw new ArgumentNullException(nameof(csharpCompiler));
-            }
-
             if (precompiledViews == null)
             {
                 throw new ArgumentNullException(nameof(precompiledViews));
             }
 
-            if (logger == null)
-            {
-                throw new ArgumentNullException(nameof(logger));
-            }
-
-            _fileProvider = fileProvider;
-            _projectEngine = projectEngine;
-            _csharpCompiler = csharpCompiler;
-            _logger = logger;
+            _fileProvider = fileProvider ?? throw new ArgumentNullException(nameof(fileProvider));
+            _projectEngine = projectEngine ?? throw new ArgumentNullException(nameof(projectEngine));
+            _csharpCompiler = csharpCompiler ?? throw new ArgumentNullException(nameof(csharpCompiler));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _assemblyResolver = assemblyResolver;
 
 

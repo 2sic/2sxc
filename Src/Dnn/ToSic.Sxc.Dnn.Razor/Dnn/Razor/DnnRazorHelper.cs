@@ -6,7 +6,7 @@ using ToSic.Eav.Code.Help;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code.CodeHelpers;
+using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Web;

@@ -22,7 +22,9 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Dnn.Compile;
+using CodeCompiler = ToSic.Sxc.Code.Internal.HotBuild.CodeCompiler;
 
 namespace ToSic.Sxc.Dnn.Razor.Internal
 {
@@ -103,7 +105,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
             // Compile the template
             var pathLowerCase = virtualPath.ToLowerInvariant();
-            var isCshtml = pathLowerCase.EndsWith(Sxc.Code.Internal.CodeCompiler.CsHtmlFileExtension);
+            var isCshtml = pathLowerCase.EndsWith(CodeCompiler.CsHtmlFileExtension);
             if (isCshtml) className = GetSafeClassName(fileFullPath);
             l.A($"Compiling template. Class: {className}");
 

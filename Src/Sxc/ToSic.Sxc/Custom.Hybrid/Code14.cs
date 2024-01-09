@@ -10,6 +10,8 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.CodeRunHelpers;
+using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;

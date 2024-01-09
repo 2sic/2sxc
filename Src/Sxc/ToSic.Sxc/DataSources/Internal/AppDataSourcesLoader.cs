@@ -16,6 +16,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.DataSources.Internal;
 

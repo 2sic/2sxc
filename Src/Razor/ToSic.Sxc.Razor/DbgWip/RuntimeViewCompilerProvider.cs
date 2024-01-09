@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.Extensions.Logging;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Razor.DbgWip
 {

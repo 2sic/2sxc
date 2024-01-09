@@ -18,6 +18,7 @@ using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Adam;
 using ToSic.Sxc.Dnn.Cms;

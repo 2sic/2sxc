@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Dnn.Compile;
 

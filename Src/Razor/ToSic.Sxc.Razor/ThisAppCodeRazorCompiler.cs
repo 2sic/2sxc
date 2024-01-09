@@ -25,6 +25,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Razor

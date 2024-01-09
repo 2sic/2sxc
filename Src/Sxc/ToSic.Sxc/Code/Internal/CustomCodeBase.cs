@@ -1,6 +1,6 @@
 ﻿using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code.CodeHelpers;
+using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Code.Internal;

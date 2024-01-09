@@ -1,6 +1,6 @@
 ﻿using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code.Documentation;
+using ToSic.Sxc.Code.Internal.Documentation;
 
 // Important
 // This is just the public API for this

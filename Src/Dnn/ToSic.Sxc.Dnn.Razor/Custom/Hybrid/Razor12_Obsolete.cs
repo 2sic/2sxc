@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Documentation;
- using static ToSic.Sxc.Code.Help.CodeHelpDbV12;
+ using static ToSic.Sxc.Code.Internal.CodeErrorHelp.CodeHelpDbV12;
 
  // ReSharper disable once CheckNamespace
  namespace Custom.Hybrid; 

@@ -4,7 +4,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Code.Help;
+using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;

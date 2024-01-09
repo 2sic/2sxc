@@ -6,8 +6,9 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code.Helpers;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.CodeRunHelpers;
+using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -38,7 +39,7 @@ public abstract partial class DynamicCodeRoot : ServiceBase<DynamicCodeRoot.MySe
     {
         public CodeDataFactory Cdf => _cdf.Value;
         private readonly LazySvc<CodeDataFactory> _cdf;
-        public LazySvc<DynamicCodeDataSources> DataSources { get; }
+        public LazySvc<CodeCreateDataSourceSvc> DataSources { get; }
         public LazySvc<IDataSourcesService> DataSourceFactory { get; }
         public LazySvc<IConvertService> ConvertService { get; }
         internal IServiceProvider ServiceProvider { get; }
@@ -51,7 +52,7 @@ public abstract partial class DynamicCodeRoot : ServiceBase<DynamicCodeRoot.MySe
             AppDataStackService dataStackService,
             LazySvc<IConvertService> convertService,
             LazySvc<IDataSourcesService> dataSourceFactory,
-            LazySvc<DynamicCodeDataSources> dataSources,
+            LazySvc<CodeCreateDataSourceSvc> dataSources,
             LazySvc<CodeDataFactory> cdf)
         {
             ConnectServices(

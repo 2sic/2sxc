@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Code.Help;
+using ToSic.Sxc.Code.Internal.CodeErrorHelp;
+using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Razor
@@ -41,7 +42,7 @@ namespace ToSic.Sxc.Razor
             // 1. probably change so the CodeFileInfo contains the source code
             var razorType = _sourceAnalyzer.TypeOfVirtualPath(templatePath);
 
-            var (view, actionContext) = razorType.ThisAppRequirements()
+            var (view, actionContext) = razorType.IsHotBuildSupported()
                 ? await _thisAppCodeRazorCompiler.CompileView(templatePath, configure, app)
                 : await _razorCompiler.CompileView(templatePath, configure, null);
 

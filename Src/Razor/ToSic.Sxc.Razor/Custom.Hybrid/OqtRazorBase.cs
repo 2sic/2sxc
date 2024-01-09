@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Razor;
 using IHasLog = ToSic.Lib.Logging.IHasLog;
 using ILog = ToSic.Lib.Logging.ILog;

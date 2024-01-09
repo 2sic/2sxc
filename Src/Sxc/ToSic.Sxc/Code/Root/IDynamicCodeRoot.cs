@@ -1,7 +1,6 @@
 ﻿using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code.Helpers;
 using ToSic.Sxc.Data;
 using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
@@ -16,8 +15,6 @@ namespace ToSic.Sxc.Code;
 public interface IDynamicCodeRoot : IDynamicCode12
 {
     [PrivateApi("WIP")] IBlock Block { get; }
-
-    [PrivateApi] DynamicCodeDataSources DataSources { get; }
 
     [PrivateApi] void AttachApp(IApp app);
 

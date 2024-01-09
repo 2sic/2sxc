@@ -4,8 +4,10 @@ using System.Web.Compilation;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.CodeErrorHelp;
+using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Internal.SourceCode;
 
 namespace ToSic.Sxc.Dnn.Compile.Internal;
 
@@ -43,7 +45,7 @@ internal class CodeCompilerNetFull : CodeCompiler
 
             try
             {
-                if (code.ThisAppRequirements())
+                if (code.IsHotBuildSupported())
                     return l.Return(_roslynBuildManager.GetCompiledAssembly(relativePath, className, appId),
                         "Ok, RoslynBuildManager");
             }

@@ -2,6 +2,7 @@
 using System.Web.WebPages;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Web;

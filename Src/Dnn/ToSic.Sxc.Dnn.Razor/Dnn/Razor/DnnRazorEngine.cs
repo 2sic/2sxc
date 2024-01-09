@@ -16,8 +16,10 @@ using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.CodeErrorHelp;
+using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines;
@@ -149,7 +151,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
 
             _assemblyResolver.AddAssembly(codeAssembly, App.RelativePath);
 
-            compiledType = razorType.ThisAppRequirements() 
+            compiledType = razorType.IsHotBuildSupported() 
                 ? _roslynBuildManager.Value.GetCompiledType(templatePath, App.AppId)
                 : BuildManager.GetCompiledType(templatePath);
         }

@@ -5,7 +5,7 @@ using System.Reflection;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Documentation;
+using ToSic.Sxc.Code.Internal.Documentation;
 
 namespace ToSic.Sxc.WebApi.Admin;
 

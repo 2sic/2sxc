@@ -16,6 +16,8 @@ using System.Net.Http;
 using System.Web.Http.Results;
 using ToSic.Eav.WebApi;
 using ToSic.Lib.Coding;
+using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Internal;
 

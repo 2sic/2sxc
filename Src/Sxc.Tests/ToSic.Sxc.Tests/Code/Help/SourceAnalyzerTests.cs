@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Code.Help;
+using ToSic.Sxc.Code.Internal.SourceCode;
 
 namespace ToSic.Sxc.Tests.Code.Help
 {

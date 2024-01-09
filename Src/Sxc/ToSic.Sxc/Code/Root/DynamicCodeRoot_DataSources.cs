@@ -3,7 +3,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Code.Helpers;
+using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
 namespace ToSic.Sxc.Code;
 
@@ -23,8 +23,8 @@ public partial class DynamicCodeRoot
     private readonly GetOnce<ILookUpEngine> _lookupEngine = new();
 
     [PrivateApi]
-    public DynamicCodeDataSources DataSources => _dataSources.Get(() => Services.DataSources.Value.Setup(App, () => LookUpForDataSources));
-    private readonly GetOnce<DynamicCodeDataSources> _dataSources = new();
+    public CodeCreateDataSourceSvc DataSources => _dataSources.Get(() => Services.DataSources.Value.Setup(App, () => LookUpForDataSources));
+    private readonly GetOnce<CodeCreateDataSourceSvc> _dataSources = new();
 
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />

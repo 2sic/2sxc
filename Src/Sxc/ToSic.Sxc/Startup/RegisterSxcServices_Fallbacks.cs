@@ -7,7 +7,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Help;
+using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DataSources.Internal;

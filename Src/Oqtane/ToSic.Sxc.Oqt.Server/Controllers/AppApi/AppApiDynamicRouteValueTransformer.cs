@@ -19,7 +19,7 @@ using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Infrastructure;
 using Log = ToSic.Lib.Logging.Log;
-using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 

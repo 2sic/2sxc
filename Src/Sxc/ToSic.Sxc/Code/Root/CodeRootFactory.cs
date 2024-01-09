@@ -5,6 +5,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 

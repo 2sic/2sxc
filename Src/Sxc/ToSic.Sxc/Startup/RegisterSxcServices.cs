@@ -12,9 +12,10 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Help;
-using ToSic.Sxc.Code.Helpers;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.CodeRunHelpers;
+using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data.Internal.Typed;
@@ -177,7 +178,7 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<EditUiResources>();
 
         // v15
-        services.TryAddTransient<DynamicCodeDataSources>();
+        services.TryAddTransient<CodeCreateDataSourceSvc>();
 
         // v16 DynamicJacket and DynamicRead factories
         services.TryAddTransient<CodeDataWrapper>();
