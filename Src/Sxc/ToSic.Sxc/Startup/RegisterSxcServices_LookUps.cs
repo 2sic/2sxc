@@ -5,13 +5,14 @@ using ToSic.Sxc.LookUp;
 
 namespace ToSic.Sxc.Startup;
 
-public static partial class RegisterSxcServices
+static partial class RegisterSxcServices
 {
 
     /// <summary>
     /// This will add LookUps for DI
     /// All must use AddTransient, not TryAdd
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static IServiceCollection AddSxcCoreLookUps(this IServiceCollection services)
     {
 #if NETCOREAPP

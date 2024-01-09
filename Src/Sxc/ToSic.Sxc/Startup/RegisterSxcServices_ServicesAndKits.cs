@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Edit.EditService;
 using ToSic.Sxc.Edit.Internal.Toolbar;
@@ -14,13 +13,13 @@ using ToSic.Sxc.Services.CmsService;
 using ToSic.Sxc.Services.DataServices;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageService;
-using ToSic.Sxc.Web.PageService;
 using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
 namespace ToSic.Sxc.Startup;
 
-public static partial class RegisterSxcServices
+static partial class RegisterSxcServices
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static IServiceCollection AddServicesAndKits(this IServiceCollection services)
     {
         services.TryAddTransient<IContentSecurityPolicyService, ContentSecurityPolicyService>();

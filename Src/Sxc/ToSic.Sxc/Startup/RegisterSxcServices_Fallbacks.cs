@@ -1,27 +1,22 @@
 ﻿using Connect.Koi.Detectors;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DataSources.Internal;
-using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sxc.Razor.Internal;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Startup;
 
-public static partial class RegisterSxcServices
+static partial class RegisterSxcServices
 {
 
     /// <summary>
@@ -33,6 +28,7 @@ public static partial class RegisterSxcServices
     /// <remarks>
     /// All calls in here MUST use TryAddTransient, and never without the Try
     /// </remarks>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static IServiceCollection AddSxcCoreFallbackServices(this IServiceCollection services)
     {
         // basic environment, pages, modules etc.

@@ -8,11 +8,9 @@ using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
@@ -20,7 +18,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Data.Internal.Wrapper;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Images;
@@ -36,13 +33,13 @@ using ToSic.Sxc.Web.Internal.JsContext;
 using ToSic.Sxc.Web.Internal.LightSpeed;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sxc.Web.Internal.PageService;
-using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Startup;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public static partial class RegisterSxcServices
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static IServiceCollection AddSxcCore(this IServiceCollection services)
     {
         // Runtimes - new: better architecture v16.07+
@@ -206,6 +203,7 @@ public static partial class RegisterSxcServices
         return services;
     }
 
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static IServiceCollection AddCmsContext(this IServiceCollection services)
     {
         services.TryAddTransient<ICmsContext, CmsContext>();
@@ -216,6 +214,7 @@ public static partial class RegisterSxcServices
         return services;
     }
 
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static IServiceCollection ExternalConfig(this IServiceCollection services)
     {
         // new v15
@@ -223,6 +222,7 @@ public static partial class RegisterSxcServices
         return services;
     }
 
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static IServiceCollection AddKoi(this IServiceCollection services)
     {
         services.TryAddTransient<Connect.Koi.KoiCss.Dependencies>();
@@ -231,7 +231,8 @@ public static partial class RegisterSxcServices
         return services;
     }
 
-        
+
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static IServiceCollection AddNetVariations(this IServiceCollection services)
     {
 #if NETFRAMEWORK

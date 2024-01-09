@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Internal.Features;
-using ToSic.Eav.Run;
 using ToSic.Eav.StartUp;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Configuration.Internal;
@@ -8,19 +7,14 @@ using ToSic.Sxc.Internal;
 namespace ToSic.Sxc.Startup;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class SxcStartUpRegistrations: ServiceBase, IStartUpRegistrations
+public class SxcStartUpRegistrations(FeaturesCatalog featuresCatalog)
+    : ServiceBase($"{SxcLogging.SxcLogName}.SUpReg"), IStartUpRegistrations
 {
     public string NameId => Log.NameId;
-
-    public SxcStartUpRegistrations(FeaturesCatalog featuresCatalog): base($"{SxcLogging.SxcLogName}.SUpReg")
-    {
-        _featuresCatalog = featuresCatalog;
-    }
-    private readonly FeaturesCatalog _featuresCatalog;
 
     /// <summary>
     /// Register Dnn features before loading
     /// </summary>
-    public void Register() => SxcFeatures.Register(_featuresCatalog);
+    public void Register() => SxcFeatures.Register(featuresCatalog);
 
 }
