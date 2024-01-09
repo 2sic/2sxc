@@ -2,7 +2,8 @@
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Data.Internal.Decorators;
+using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
 namespace ToSic.Sxc.Apps;
 

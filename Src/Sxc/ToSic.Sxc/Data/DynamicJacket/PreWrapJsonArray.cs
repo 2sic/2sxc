@@ -6,8 +6,8 @@ using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Data;
-using ToSic.Sxc.Data.Typed;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Typed;
+using ToSic.Sxc.Data.Internal.Wrapper;
 
 
 namespace ToSic.Sxc.Data;

@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Metadata;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal;
 
 partial class CodeDataFactory
 {

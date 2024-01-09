@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Eav.Data;
 using ToSic.Lib.Data;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Testing.Shared;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using static ToSic.Sxc.Tests.DataTests.DynStack.TypedStackTestData;

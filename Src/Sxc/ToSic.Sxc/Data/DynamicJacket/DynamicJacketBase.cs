@@ -4,7 +4,8 @@ using System.Dynamic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Convert;
+using ToSic.Sxc.Data.Internal.Wrapper;
 
 namespace ToSic.Sxc.Data;
 

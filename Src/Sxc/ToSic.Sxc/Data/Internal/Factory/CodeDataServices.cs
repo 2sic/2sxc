@@ -6,7 +6,7 @@ using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

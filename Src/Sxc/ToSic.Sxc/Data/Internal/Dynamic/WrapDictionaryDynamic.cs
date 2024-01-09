@@ -5,11 +5,10 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Data.Typed;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Typed;
+using ToSic.Sxc.Data.Internal.Wrapper;
 
-
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal.Dynamic;
 
 // WIP
 // Inspired by https://stackoverflow.com/questions/46948289/how-do-you-convert-any-c-sharp-object-to-an-expandoobject

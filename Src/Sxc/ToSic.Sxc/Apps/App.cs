@@ -6,6 +6,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.LookUp;
+using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 using CodeInfoService = ToSic.Eav.Code.InfoSystem.CodeInfoService;
 using EavApp = ToSic.Eav.Apps.App;
 

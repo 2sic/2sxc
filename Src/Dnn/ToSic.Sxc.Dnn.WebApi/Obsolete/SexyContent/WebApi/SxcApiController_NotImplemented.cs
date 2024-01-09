@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Dnn;
 
 // ReSharper disable once CheckNamespace

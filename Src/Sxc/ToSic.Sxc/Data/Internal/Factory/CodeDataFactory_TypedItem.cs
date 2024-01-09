@@ -7,10 +7,9 @@ using ToSic.Eav.DataSource;
 using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Wrapper;
 
-
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal;
 
 partial class CodeDataFactory
 {
@@ -24,7 +23,7 @@ partial class CodeDataFactory
         if (mock == true)
             return _codeDataWrapper.Value.TypedItemFromObject(data,
                 WrapperSettings.Typed(true, true, propsRequired ?? true),
-                new LazyLike<CodeDataFactory>(this));
+                new LazyLike<Internal.CodeDataFactory>(this));
 
         return AsItemInternal(data, MaxRecursions, propsRequired: propsRequired ?? false) ?? fallback;
     }

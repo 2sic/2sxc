@@ -11,7 +11,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Services.DataServices;
 using static ToSic.Sxc.Apps.AppAssetFolderMain;
 

@@ -9,7 +9,7 @@ using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Web;
 using static System.StringComparer;

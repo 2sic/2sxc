@@ -8,7 +8,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent;
-using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Data.Internal.Decorators;
 
 namespace ToSic.Sxc.Code
 {

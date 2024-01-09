@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Edit.EditService;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Images;
@@ -12,6 +13,7 @@ using ToSic.Sxc.Services.CmsService;
 using ToSic.Sxc.Services.DataServices;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageService;
+using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
 namespace ToSic.Sxc.Startup;
 

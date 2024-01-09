@@ -3,8 +3,10 @@ using ToSic.Eav.Serialization;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Dynamic;
+using ToSic.Sxc.Data.Internal.Wrapper;
 using static System.Text.Json.JsonSerializer;
+using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
 namespace ToSic.Sxc.Tests.DataTests
 {

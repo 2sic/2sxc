@@ -6,7 +6,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Typed;
+using ToSic.Sxc.Data.Internal.Typed;
 
 namespace ToSic.Sxc.Context.Parameters;
 

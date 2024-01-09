@@ -1,8 +1,8 @@
 ﻿using System;
 using ToSic.Eav.Data;
-using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Data.Internal.Decorators;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal;
 
 partial class CodeDataFactory
 {

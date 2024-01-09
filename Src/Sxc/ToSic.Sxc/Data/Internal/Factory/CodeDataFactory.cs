@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Code.InfoSystem;
+﻿using ToSic.Eav.Code.InfoSystem;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data.Build;
 using ToSic.Lib.DI;
@@ -8,11 +6,11 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services.Internal;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal;
 
 // todo: make internal once we have an interface
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

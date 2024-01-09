@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Data;
 
-namespace ToSic.Sxc.Data.Decorators;
+namespace ToSic.Sxc.Data.Internal.Decorators;
 
 internal class CmsEditDecorator : IDecorator<IEntity>
 {

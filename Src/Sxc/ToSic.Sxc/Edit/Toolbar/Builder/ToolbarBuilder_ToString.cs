@@ -5,7 +5,7 @@ using System.Text.Json;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Serialization;
-using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Services;
 using static ToSic.Sxc.Edit.Toolbar.ItemToolbarBase;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleToolbar;

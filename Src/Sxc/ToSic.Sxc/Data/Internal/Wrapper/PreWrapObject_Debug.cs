@@ -5,7 +5,7 @@ using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Data.Wrapper;
+namespace ToSic.Sxc.Data.Internal.Wrapper;
 
 partial class PreWrapObject
 {

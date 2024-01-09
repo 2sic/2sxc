@@ -4,9 +4,9 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Wrapper;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal;
 
 partial class CodeDataFactory
 {

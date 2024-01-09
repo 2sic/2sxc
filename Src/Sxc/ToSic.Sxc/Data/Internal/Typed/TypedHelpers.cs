@@ -8,7 +8,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
 
-namespace ToSic.Sxc.Data.Typed;
+namespace ToSic.Sxc.Data.Internal.Typed;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal static class TypedHelpers

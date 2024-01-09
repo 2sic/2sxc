@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Data;

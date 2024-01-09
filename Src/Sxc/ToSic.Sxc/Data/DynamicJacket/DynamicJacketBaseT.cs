@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Wrapper;
 
 namespace ToSic.Sxc.Data;
 

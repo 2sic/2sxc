@@ -5,7 +5,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal;
 
 partial class CodeDataFactory
 {
@@ -25,7 +25,7 @@ partial class CodeDataFactory
 
         // If we don't even have a _DynCodeRoot (eg. when exporting from a neutral WebAPI)
         if (_DynCodeRoot is null)
-            throw new Exception($"Can't create App Context for {nameof(AdamManager)} in {nameof(CodeDataFactory)} - no block, no App");
+            throw new Exception($"Can't create App Context for {nameof(AdamManager)} in {nameof(Internal.CodeDataFactory)} - no block, no App");
 
         IContextOfApp contextOfApp = _DynCodeRoot.Block?.Context;
         // TODO: @2dm - find out / document why this could even be null

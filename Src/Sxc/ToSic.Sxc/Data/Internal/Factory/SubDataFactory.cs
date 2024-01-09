@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal;
 
 /// <summary>
 /// This helps create sub-items for a specific context, obeying the rules of the context
@@ -10,10 +10,10 @@ namespace ToSic.Sxc.Data;
 internal class SubDataFactory
 {
     private readonly ICanDebug _canDebug;
-    public CodeDataFactory Cdf { get; }
+    public Internal.CodeDataFactory Cdf { get; }
     public bool PropsRequired { get; }
 
-    public SubDataFactory(CodeDataFactory cdf, bool propsRequired, ICanDebug canDebug)
+    public SubDataFactory(Internal.CodeDataFactory cdf, bool propsRequired, ICanDebug canDebug)
     {
         _canDebug = canDebug;
         Cdf = cdf;
@@ -28,7 +28,7 @@ internal class SubDataFactory
     /// <returns></returns>
     public IDynamicEntity SubDynEntityOrNull(IEntity contents) => SubDynEntityOrNull(contents, Cdf, _canDebug.Debug, propsRequired: PropsRequired);
 
-    internal static DynamicEntity SubDynEntityOrNull(IEntity contents, CodeDataFactory cdf, bool? debug, bool propsRequired)
+    internal static DynamicEntity SubDynEntityOrNull(IEntity contents, Internal.CodeDataFactory cdf, bool? debug, bool propsRequired)
     {
         if (contents == null) return null;
         var result = cdf.AsDynamic(contents, propsRequired);

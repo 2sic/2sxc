@@ -3,7 +3,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Images;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

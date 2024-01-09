@@ -4,6 +4,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
+using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 

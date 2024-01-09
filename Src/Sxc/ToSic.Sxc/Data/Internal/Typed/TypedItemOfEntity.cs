@@ -14,14 +14,14 @@ using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Data.Decorators;
-using ToSic.Sxc.Data.Typed;
+using ToSic.Sxc.Data.Internal.Decorators;
+using ToSic.Sxc.Data.Internal.Dynamic;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
-using static ToSic.Sxc.Data.Typed.TypedHelpers;
+using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 using static ToSic.Eav.Data.Shared.WrapperEquality;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal.Typed;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName,

@@ -4,13 +4,14 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Data.Internal.Dynamic;
 
 namespace ToSic.Sxc.Data;
 
 [PrivateApi("Hide implementation")]
 internal partial class Metadata: DynamicEntity, IMetadata, IHasPropLookup
 {
-    internal Metadata(IMetadataOf metadata, CodeDataFactory cdf)
+    internal Metadata(IMetadataOf metadata, Internal.CodeDataFactory cdf)
         : base(metadata, null, "Metadata(virtual-field)", Eav.Constants.TransientAppId, propsRequired: false, cdf)
     {
         _metadata = metadata;

@@ -3,7 +3,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Wrapper;
 
 namespace ToSic.Sxc.Data;
 

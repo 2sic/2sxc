@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Data.Wrapper;
+﻿namespace ToSic.Sxc.Data.Internal.Wrapper;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public readonly struct WrapperSettings

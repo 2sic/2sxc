@@ -4,7 +4,7 @@ using ToSic.Eav.Apps.Enums;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Data.Internal.Decorators;
 
 namespace ToSic.Sxc.Edit.ClientContextInfo;
 

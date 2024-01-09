@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal;
 
 namespace ToSic.Sxc.Adam;
 

@@ -2,12 +2,11 @@
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Internal;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal.Convert;
 
 /// <summary>
 /// Convert various types of entities (standalone, dynamic, in streams, etc.) to Dictionaries <br/>

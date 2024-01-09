@@ -5,8 +5,10 @@ using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Data.Internal.Convert;
+using ToSic.Sxc.Data.Internal.Typed;
 
-namespace ToSic.Sxc.Data.Wrapper;
+namespace ToSic.Sxc.Data.Internal.Wrapper;
 
 [PrivateApi]
 [JsonConverter(typeof(DynamicJsonConverter))]

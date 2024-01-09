@@ -9,11 +9,12 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Convert;
+using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Services;
 using static ToSic.Eav.Data.Shared.WrapperEquality;
 
-namespace ToSic.Sxc.Data.Typed;
+namespace ToSic.Sxc.Data.Internal.Typed;
 
 [PrivateApi]
 [JsonConverter(typeof(DynamicJsonConverter))]

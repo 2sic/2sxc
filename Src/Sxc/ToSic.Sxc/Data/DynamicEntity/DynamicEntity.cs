@@ -7,13 +7,15 @@ using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Data.Decorators;
-using ToSic.Sxc.Data.Typed;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 using System.Dynamic;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Data.Internal.Decorators;
+using ToSic.Sxc.Data.Internal.Dynamic;
+using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Data;
@@ -32,13 +34,13 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     /// Constructor with EntityModel and DimensionIds
     /// </summary>
     [PrivateApi]
-    public DynamicEntity(IEntity entity, CodeDataFactory cdf, bool propsRequired)
+    public DynamicEntity(IEntity entity, Internal.CodeDataFactory cdf, bool propsRequired)
         : this(cdf, propsRequired, entity)
     {
         ListHelper = new DynamicEntityListHelper(this, () => Debug, propsRequired: propsRequired, cdf);
     }
 
-    internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, bool propsRequired, CodeDataFactory cdf)
+    internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, bool propsRequired, Internal.CodeDataFactory cdf)
         : this(cdf, propsRequired,
             // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
             list.FirstOrDefault() ?? cdf.PlaceHolderInBlock(appIdOrNull, parent, field))
@@ -51,7 +53,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     [PrivateApi]
     internal readonly DynamicEntityListHelper ListHelper;
 
-    private DynamicEntity(CodeDataFactory cdf, bool propsRequired, IEntity entity)
+    private DynamicEntity(Internal.CodeDataFactory cdf, bool propsRequired, IEntity entity)
     {
         Cdf = cdf;
         _propsRequired = propsRequired;
@@ -63,7 +65,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
 
 
     // ReSharper disable once InconsistentNaming
-    [PrivateApi] public CodeDataFactory Cdf { get; }
+    [PrivateApi] public Internal.CodeDataFactory Cdf { get; }
     [PrivateApi] public IEntity Entity { get; }
     private readonly bool _propsRequired;
 

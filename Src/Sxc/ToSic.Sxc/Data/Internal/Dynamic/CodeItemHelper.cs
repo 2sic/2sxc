@@ -4,22 +4,16 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Data.Typed;
-using static ToSic.Sxc.Data.Typed.TypedHelpers;
+using ToSic.Sxc.Data.Internal.Typed;
+using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal.Dynamic;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class CodeItemHelper
+internal class CodeItemHelper(GetAndConvertHelper helper, ITyped data)
 {
-    public ITyped Data { get; }
-    public readonly GetAndConvertHelper Helper;
-
-    public CodeItemHelper(GetAndConvertHelper helper, ITyped data)
-    {
-        Data = data;
-        Helper = helper;
-    }
+    public ITyped Data { get; } = data;
+    public readonly GetAndConvertHelper Helper = helper;
 
     #region Keys
     public bool IsEmpty(string name, NoParamOrder noParamOrder, bool? isBlank)

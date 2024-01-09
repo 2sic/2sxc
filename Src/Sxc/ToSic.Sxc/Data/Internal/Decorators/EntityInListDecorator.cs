@@ -2,7 +2,7 @@
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Data.Decorators;
+namespace ToSic.Sxc.Data.Internal.Decorators;
 
 /// <summary>
 /// Important: for now it should be abstract, because we're not sure in which cases

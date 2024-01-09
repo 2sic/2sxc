@@ -8,7 +8,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Typed;
+using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Edit.Toolbar;
 
 namespace ToSic.Sxc.Code;

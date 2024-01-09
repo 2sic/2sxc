@@ -7,9 +7,10 @@ using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Convert;
+using ToSic.Sxc.Data.Internal.Wrapper;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal.Dynamic;
 
 // WIP
 // Inspired by https://stackoverflow.com/questions/46948289/how-do-you-convert-any-c-sharp-object-to-an-expandoobject
@@ -28,10 +29,10 @@ public class WrapObjectDynamic: DynamicObject, IWrapper<object>, IPropertyLookup
     public object GetContents() => ((IWrapper<object>)PreWrap).GetContents();
 
     [PrivateApi]
-    internal readonly Wrapper.PreWrapObject PreWrap;
+    internal readonly PreWrapObject PreWrap;
 
     [PrivateApi]
-    internal WrapObjectDynamic(Wrapper.PreWrapObject preWrap, CodeDataWrapper wrapper)
+    internal WrapObjectDynamic(PreWrapObject preWrap, CodeDataWrapper wrapper)
     {
         Wrapper = wrapper;
         PreWrap = preWrap;

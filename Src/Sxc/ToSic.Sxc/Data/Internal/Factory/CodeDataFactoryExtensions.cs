@@ -1,9 +1,9 @@
-﻿using System.Runtime.CompilerServices;
-using System;
-using ToSic.Sxc.Services;
+﻿using System;
+using System.Runtime.CompilerServices;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal static class CodeDataFactoryExtensions
@@ -12,7 +12,7 @@ internal static class CodeDataFactoryExtensions
     /// Will check if the CodeDataFactory exists and try to get the ServiceKit - or throw an error. 
     /// </summary>
     /// <exception cref="NotSupportedException"></exception>
-    internal static ServiceKit16 GetServiceKitOrThrow(this CodeDataFactory cdf, [CallerMemberName] string cName = default)
+    internal static ServiceKit16 GetServiceKitOrThrow(this Internal.CodeDataFactory cdf, [CallerMemberName] string cName = default)
     {
         if (cdf == null)
             throw new NotSupportedException(

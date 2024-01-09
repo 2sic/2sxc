@@ -21,7 +21,7 @@ using ToSic.Sxc.Compatibility.RazorPermissions;
 using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;

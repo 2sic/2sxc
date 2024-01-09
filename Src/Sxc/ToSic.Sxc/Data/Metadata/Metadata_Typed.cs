@@ -9,11 +9,11 @@ using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Data.Typed;
+using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
 using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
-using static ToSic.Sxc.Data.Typed.TypedHelpers;
+using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data;
 

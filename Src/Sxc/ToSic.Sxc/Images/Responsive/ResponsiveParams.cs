@@ -3,6 +3,7 @@ using ToSic.Eav.Metadata;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal;
 
 namespace ToSic.Sxc.Images;
 

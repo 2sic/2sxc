@@ -1,12 +1,12 @@
-﻿using System.Linq;
-using System;
+﻿using System;
+using System.Linq;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
 
-namespace ToSic.Sxc.Data.Typed;
+namespace ToSic.Sxc.Data.Internal.Typed;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class TypedItemHelpers

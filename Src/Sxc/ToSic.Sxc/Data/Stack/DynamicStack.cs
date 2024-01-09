@@ -9,6 +9,8 @@ using ToSic.Lib.Coding;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Data.Internal.Dynamic;
 
 namespace ToSic.Sxc.Data;
 
@@ -24,7 +26,7 @@ internal class DynamicStack: DynamicObject,
 {
     #region Constructor and Helpers (Composition)
 
-    public DynamicStack(string name, CodeDataFactory cdf, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources)
+    public DynamicStack(string name, Internal.CodeDataFactory cdf, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources)
     {
         Cdf = cdf;
         var stack = new PropertyStack().Init(name, sources);
@@ -32,7 +34,7 @@ internal class DynamicStack: DynamicObject,
         PropertyLookup = new PropLookupStack(stack, () => Debug);
     }
     // ReSharper disable once InconsistentNaming
-    [PrivateApi] public CodeDataFactory Cdf { get; }
+    [PrivateApi] public Internal.CodeDataFactory Cdf { get; }
     private readonly IPropertyStack _stack;
     private const bool Strict = false;
 

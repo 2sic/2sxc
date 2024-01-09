@@ -1,10 +1,10 @@
 ﻿using System.Dynamic;
 using ToSic.Eav.Data;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Data.Decorators;
-using ToSic.Sxc.Data.Typed;
+using ToSic.Sxc.Data.Internal.Decorators;
+using ToSic.Sxc.Data.Internal.Typed;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal.Dynamic;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class CodeDynHelper

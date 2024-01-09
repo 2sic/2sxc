@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Data.Internal.Decorators;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal.Dynamic;
 
 /// <summary>
 /// This is a helper in charge of the list-behavior of a DynamicEntity
@@ -17,17 +17,17 @@ internal class DynamicEntityListHelper
     protected bool PropsRequired { get; }
     public readonly IEntity ParentOrNull;
     public readonly string FieldOrNull;
-    private readonly CodeDataFactory _cdf;
+    private readonly Internal.CodeDataFactory _cdf;
 
     private readonly Func<bool?> _getDebug;
 
-    public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, bool propsRequired, CodeDataFactory cdf)
+    public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, bool propsRequired, Internal.CodeDataFactory cdf)
         : this(cdf, propsRequired, getDebug)
     {
         _list = new List<IDynamicEntity> { singleItem ?? throw new ArgumentException(nameof(singleItem)) };
     }
         
-    public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug, bool propsRequired, CodeDataFactory cdf)
+    public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug, bool propsRequired, Internal.CodeDataFactory cdf)
         : this(cdf, propsRequired, getDebug)
     {
         ParentOrNull = parentOrNull;
@@ -35,7 +35,7 @@ internal class DynamicEntityListHelper
         _entities = entities?.ToArray() ?? throw new ArgumentNullException(nameof(entities));
     }
 
-    private DynamicEntityListHelper(CodeDataFactory cdf, bool propsRequired, Func<bool?> getDebug)
+    private DynamicEntityListHelper(Internal.CodeDataFactory cdf, bool propsRequired, Func<bool?> getDebug)
     {
         _cdf = cdf ?? throw new ArgumentNullException(nameof(cdf));
         PropsRequired = propsRequired;

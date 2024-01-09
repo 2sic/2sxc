@@ -7,7 +7,7 @@ using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
 
 namespace ToSic.Sxc.Services.CmsService;

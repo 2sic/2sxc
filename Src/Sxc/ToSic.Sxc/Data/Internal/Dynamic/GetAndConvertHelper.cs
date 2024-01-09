@@ -7,10 +7,11 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Data.Internal.Decorators;
+using ToSic.Sxc.Data.Internal.Typed;
 using static System.StringComparer;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal.Dynamic;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class GetAndConvertHelper
@@ -18,11 +19,11 @@ internal class GetAndConvertHelper
     #region Setup and Log
 
 
-    public CodeDataFactory Cdf { get; }
+    public Internal.CodeDataFactory Cdf { get; }
 
     public bool PropsRequired { get; }
 
-    public GetAndConvertHelper(IHasPropLookup parent, CodeDataFactory cdf, bool propsRequired, bool childrenShouldBeDynamic, ICanDebug canDebug)
+    public GetAndConvertHelper(IHasPropLookup parent, Internal.CodeDataFactory cdf, bool propsRequired, bool childrenShouldBeDynamic, ICanDebug canDebug)
     {
         _childrenShouldBeDynamic = childrenShouldBeDynamic;
         _canDebug = canDebug;

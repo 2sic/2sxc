@@ -10,6 +10,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
+using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
 namespace ToSic.Sxc.Adam.Internal;
 

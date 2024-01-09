@@ -14,14 +14,14 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Tweaks;
-using static ToSic.Sxc.Data.Typed.TypedHelpers;
+using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 using static ToSic.Eav.Data.Shared.WrapperEquality;
 
-namespace ToSic.Sxc.Data.Typed;
+namespace ToSic.Sxc.Data.Internal.Typed;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeService> forCodeConverter)

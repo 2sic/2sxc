@@ -7,7 +7,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code.CodeHelpers;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Razor.Internal;

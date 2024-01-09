@@ -6,9 +6,10 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Data.Typed;
+using ToSic.Sxc.Data.Internal.Dynamic;
+using ToSic.Sxc.Data.Internal.Typed;
 
-namespace ToSic.Sxc.Data.Wrapper;
+namespace ToSic.Sxc.Data.Internal.Wrapper;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

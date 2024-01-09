@@ -2,9 +2,9 @@
 using ToSic.Eav.Data;
 using ToSic.Lib.Coding;
 using ToSic.Razor.Blade;
-using static ToSic.Sxc.Data.Typed.TypedHelpers;
+using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal;
 
 partial class CodeDataFactory
 {

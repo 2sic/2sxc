@@ -18,7 +18,7 @@ using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 

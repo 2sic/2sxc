@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Data.Internal.Convert;
 using ToSic.Sxc.Dnn;
 using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Conversion;
 /// </summary>
 [PrivateApi("Hide implementation")]
 [Obsolete("Please use the new ToSic.Eav.DataFormats.EavLight.IConvertToEavLight service")]
-public class DataToDictionary: Data.ConvertToEavLightWithCmsInfo
+public class DataToDictionary: ConvertToEavLightWithCmsInfo
 {
 
     /// <summary>

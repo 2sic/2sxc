@@ -7,9 +7,11 @@ using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
-using static ToSic.Sxc.Data.Typed.TypedHelpers;
+using ToSic.Sxc.Data.Internal.Convert;
+using ToSic.Sxc.Data.Internal.Typed;
+using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 
-namespace ToSic.Sxc.Data.Wrapper;
+namespace ToSic.Sxc.Data.Internal.Wrapper;
 
 // WIP
 // Inspired by https://stackoverflow.com/questions/46948289/how-do-you-convert-any-c-sharp-object-to-an-expandoobject

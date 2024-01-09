@@ -5,26 +5,18 @@ using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class PropLookupWithPathEntity:
-    ICanBeEntity,       // This is important, to ensure that when used in a stack it can be converted to something else again
+internal class PropLookupWithPathEntity(IEntity entity, ICanDebug canDebug) :
+    ICanBeEntity, // This is important, to ensure that when used in a stack it can be converted to something else again
     IPropertyLookup
 {
-    private readonly ICanDebug _canDebug;
-
-    public IEntity Entity { get; }
-
-    public PropLookupWithPathEntity(IEntity entity, ICanDebug canDebug)
-    {
-        _canDebug = canDebug;
-        Entity = entity;
-    }
+    public IEntity Entity { get; } = entity;
 
     public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
     {
-        specs = specs.SubLog("Sxc.DynEnt", _canDebug.Debug);
+        specs = specs.SubLog("Sxc.DynEnt", canDebug.Debug);
         var l = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), "DynEntity");
         // check Entity is null (in cases where null-objects are asked for properties)
         if (Entity == null) return l.ReturnNull("no entity");

@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Wrapper;
 
 namespace ToSic.Sxc.Data;
 

@@ -6,7 +6,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Data.Internal.Decorators;
 using static ToSic.Eav.DataSource.DataSourceConstants;
 
 namespace ToSic.Sxc.DataSources;

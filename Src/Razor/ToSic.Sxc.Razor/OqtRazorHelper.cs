@@ -7,7 +7,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.CodeHelpers;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Engines;
 
 namespace ToSic.Sxc.Razor

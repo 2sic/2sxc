@@ -8,7 +8,8 @@ using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Markup;
-using static ToSic.Sxc.Data.Typed.TypedHelpers;
+using ToSic.Sxc.Data.Internal.Dynamic;
+using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data;
 
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Data;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPropLookup, ICanDebug, ICanGetByName
 {
-    public TypedStack(string name, CodeDataFactory cdf, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources)
+    public TypedStack(string name, Internal.CodeDataFactory cdf, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources)
     {
         _stack = new PropertyStack().Init(name, sources);
         Cdf = cdf;
@@ -33,7 +34,7 @@ internal class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPropLookup
 
     public IPropertyStack GetContents() => _stack;
 
-    public CodeDataFactory Cdf { get; }
+    public Internal.CodeDataFactory Cdf { get; }
 
     public bool Debug { get; set; }
 
