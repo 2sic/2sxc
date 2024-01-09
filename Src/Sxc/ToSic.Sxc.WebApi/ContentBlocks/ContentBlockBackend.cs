@@ -37,7 +37,7 @@ public class ContentBlockBackend : BlockWebApiBackendBase
         Generator<MultiPermissionsApp> multiPermissionsApp, 
         IPagePublishing publishing, 
         GenWorkDb<WorkBlocksMod> workBlocksMod,
-        IContextResolver ctxResolver, 
+        ISxcContextResolver ctxResolver, 
         LazySvc<IBlockResourceExtractor> optimizerLazy,
         LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
         AppWorkContextService appWorkCtxService,

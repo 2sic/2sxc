@@ -17,7 +17,7 @@ public class DialogControllerReal: ServiceBase, IDialogController
     public const string LogSuffix = "Dialog";
 
     public DialogControllerReal(
-        IContextResolver ctxResolver,
+        ISxcContextResolver ctxResolver,
         IUiContextBuilder uiContextBuilder,
         Generator<MultiPermissionsApp> appPermissions) : base($"{EavLogs.WebApi}.{LogSuffix}Rl")
     {
@@ -27,7 +27,7 @@ public class DialogControllerReal: ServiceBase, IDialogController
             _appPermissions = appPermissions
         );
     }
-    private readonly IContextResolver _ctxResolver;
+    private readonly ISxcContextResolver _ctxResolver;
     private readonly IUiContextBuilder _uiContextBuilder;
 
     ///<inheritdoc />

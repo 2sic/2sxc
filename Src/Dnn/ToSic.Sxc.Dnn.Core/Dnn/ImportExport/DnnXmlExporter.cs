@@ -5,8 +5,8 @@ using ToSic.Eav.Context;
 using ToSic.Eav.ImportExport.Environment;
 using ToSic.Eav.Persistence.Xml;
 using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Internal;
-using IContextResolver = ToSic.Sxc.Context.Internal.IContextResolver;
 
 namespace ToSic.Sxc.Dnn.ImportExport;
 
@@ -14,7 +14,7 @@ internal class DnnXmlExporter: XmlExporter
 {
     #region Constructor / DI
 
-    public DnnXmlExporter(AdamManager<int, int> adamManager, IContextResolver ctxResolver, XmlSerializer xmlSerializer, IAppStates appStates)
+    public DnnXmlExporter(AdamManager<int, int> adamManager, ISxcContextResolver ctxResolver, XmlSerializer xmlSerializer, IAppStates appStates)
         : base(xmlSerializer, appStates, ctxResolver, DnnConstants.LogName)
     {
         ConnectServices(

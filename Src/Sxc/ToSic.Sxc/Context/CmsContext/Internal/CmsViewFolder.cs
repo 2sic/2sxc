@@ -4,7 +4,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps;
 
-namespace ToSic.Sxc.Context;
+namespace ToSic.Sxc.Context.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class CmsViewFolder(CmsView cmsView, IApp app, bool shared) : AppAssetFolder

@@ -24,13 +24,13 @@ public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>
     public class MyServices : MyServicesBase
     {
         public LazySvc<AdamContext<TFolderId, TFileId>> AdamState { get; }
-        public IContextResolver CtxResolver { get; }
+        public ISxcContextResolver CtxResolver { get; }
         public Generator<AdamItemDtoMaker<TFolderId, TFileId>> AdamDtoMaker { get; }
 
         public MyServices(
             Generator<AdamItemDtoMaker<TFolderId, TFileId>> adamDtoMaker,
             LazySvc<AdamContext<TFolderId, TFileId>> adamState,
-            IContextResolver ctxResolver)
+            ISxcContextResolver ctxResolver)
         {
             ConnectServices(
                 AdamDtoMaker = adamDtoMaker,

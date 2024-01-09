@@ -2,7 +2,7 @@
 using ToSic.Eav.Context;
 using ToSic.Eav.Metadata;
 
-namespace ToSic.Sxc.Context;
+namespace ToSic.Sxc.Context.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class CmsUser(CmsContext parent, IMetadataOfSource appState)

@@ -3,7 +3,7 @@ using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.Context;
+namespace ToSic.Sxc.Context.Internal;
 
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Context;
+namespace ToSic.Sxc.Context.Internal;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

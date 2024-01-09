@@ -9,7 +9,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 
-namespace ToSic.Sxc.Context;
+namespace ToSic.Sxc.Context.Internal;
 
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

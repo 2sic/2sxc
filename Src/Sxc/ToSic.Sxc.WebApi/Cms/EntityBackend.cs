@@ -14,9 +14,9 @@ namespace ToSic.Sxc.WebApi.Cms;
 public class EntityBackend: ServiceBase
 {
     private readonly Generator<MultiPermissionsApp> _appPermissions;
-    private readonly IContextResolver _ctxResolver;
+    private readonly ISxcContextResolver _ctxResolver;
 
-    public EntityBackend(IContextResolver ctxResolver,
+    public EntityBackend(ISxcContextResolver ctxResolver,
         Generator<MultiPermissionsApp> appPermissions) : base("Bck.Entity")
         => ConnectServices(
             _ctxResolver = ctxResolver,

@@ -29,7 +29,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         Output.OqtPageOutput pageOutput,
         IContextOfBlock contextOfBlockEmpty,
         BlockFromModule blockModuleEmpty,
-        IContextResolver contextResolverForLookUps,
+        ISxcContextResolver contextResolverForLookUps,
         ILogStore logStore,
         GlobalTypesCheck globalTypesCheck,
         IOutputCache outputCache
@@ -49,7 +49,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     public Output.OqtPageOutput PageOutput { get; }
     private readonly IContextOfBlock _contextOfBlockEmpty;
     private readonly BlockFromModule _blockModuleEmpty;
-    private readonly IContextResolver _contextResolverForLookUps;
+    private readonly ISxcContextResolver _contextResolverForLookUps;
     private readonly GlobalTypesCheck _globalTypesCheck;
     private readonly IOutputCache _outputCache;
 

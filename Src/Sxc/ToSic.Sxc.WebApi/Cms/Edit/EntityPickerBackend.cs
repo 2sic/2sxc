@@ -18,7 +18,7 @@ public class EntityPickerBackend: ServiceBase
     #region DI Constructor
 
     public EntityPickerBackend(EntityPickerApi entityPickerApi,
-        IContextResolver ctxResolver,
+        ISxcContextResolver ctxResolver,
         Generator<MultiPermissionsApp> appPermissions,
         Generator<MultiPermissionsTypes> typePermissions) : base("BE.EntPck")
     {
@@ -30,7 +30,7 @@ public class EntityPickerBackend: ServiceBase
         );
     }
     private readonly EntityPickerApi _entityPickerApi;
-    private readonly IContextResolver _ctxResolver;
+    private readonly ISxcContextResolver _ctxResolver;
     private readonly Generator<MultiPermissionsApp> _appPermissions;
     private readonly Generator<MultiPermissionsTypes> _typePermissions;
 

@@ -25,7 +25,7 @@ public partial class ListControllerReal: BlockWebApiBackendBase, IHasLog, IListC
         Generator<MultiPermissionsApp> multiPermissionsApp,
         GenWorkPlus<WorkEntities> workEntities,
         GenWorkDb<WorkFieldList> workFieldList,
-        IContextResolver ctxResolver,
+        ISxcContextResolver ctxResolver,
         AppWorkContextService appWorkCtxService,
         Generator<IPagePublishing> publishing
     ) : base(multiPermissionsApp, appWorkCtxService, ctxResolver, "Api.LstRl")

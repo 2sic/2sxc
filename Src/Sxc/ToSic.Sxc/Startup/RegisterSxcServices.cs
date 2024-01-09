@@ -34,8 +34,6 @@ using ToSic.Sxc.Web.JsContext;
 using ToSic.Sxc.Web.LightSpeed;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
-using ContextResolver = ToSic.Sxc.Context.Internal.ContextResolver;
-using IContextResolver = ToSic.Sxc.Context.Internal.IContextResolver;
 
 namespace ToSic.Sxc.Startup;
 
@@ -90,10 +88,10 @@ public static partial class RegisterSxcServices
 
 
         // Context stuff, which is explicitly scoped
-        services.TryAddScoped<IContextResolver, ContextResolver>();
+        services.TryAddScoped<ISxcContextResolver, SxcContextResolver>();
         // New v15.04 WIP
-        services.TryAddScoped<Eav.Context.IContextResolver>(x => x.GetRequiredService<IContextResolver>());
-        services.TryAddScoped<IContextResolverUserPermissions>(x => x.GetRequiredService<IContextResolver>());
+        services.TryAddScoped<IContextResolver>(x => x.GetRequiredService<ISxcContextResolver>());
+        services.TryAddScoped<IContextResolverUserPermissions>(x => x.GetRequiredService<ISxcContextResolver>());
         services.TryAddScoped<AppIdResolver>();
 
 

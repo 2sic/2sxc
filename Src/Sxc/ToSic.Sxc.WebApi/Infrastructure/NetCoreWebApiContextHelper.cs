@@ -14,11 +14,11 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.CodeHelpers;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.WebApi.Adam;
 using IApp = ToSic.Sxc.Apps.IApp;
-using IContextResolver = ToSic.Sxc.Context.Internal.IContextResolver;
 
 namespace ToSic.Sxc.WebApi.Infrastructure
 {
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.WebApi.Infrastructure
 
         private bool _blockContextInitialized;
 
-        private IContextResolver CtxResolver { get; set; }
+        private ISxcContextResolver CtxResolver { get; set; }
         internal IBlock BlockOptional { get; private set; }
 
         public void OnActionExecutingEnd(ActionExecutingContext context)

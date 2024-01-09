@@ -47,7 +47,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
     {
         if (_blockContextInitialized) return;
         _blockContextInitialized = true;
-        SharedContextResolver = SysHlp.GetService<IContextResolver>();
+        SharedContextResolver = SysHlp.GetService<ISxcContextResolver>();
         SharedContextResolver.AttachBlock(SysHlp.GetBlockAndContext(request));
     }
 
@@ -128,7 +128,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
 
     #endregion
 
-    public IContextResolver SharedContextResolver;
+    public ISxcContextResolver SharedContextResolver;
 
     #region Adam
 

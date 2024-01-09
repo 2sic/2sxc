@@ -18,7 +18,7 @@ internal class OqtGetBlock: ServiceBase, IWebApiContextBuilder
     public OqtGetBlock(
         LazySvc<IModuleRepository> modRepoLazy,
         RequestHelper requestHelper,
-        IContextResolver contextResolverToInit,
+        ISxcContextResolver contextResolverToInit,
         Generator<IContextOfBlock> cntOfBlkGen,
         Generator<BlockFromModule> blkFromModGen,
         Generator<BlockFromEntity> blkFromEntGen
@@ -36,12 +36,12 @@ internal class OqtGetBlock: ServiceBase, IWebApiContextBuilder
 
     private readonly LazySvc<IModuleRepository> _modRepoLazy;
     private readonly RequestHelper _requestHelper;
-    private readonly IContextResolver _contextResolverToInit;
+    private readonly ISxcContextResolver _contextResolverToInit;
     private readonly Generator<IContextOfBlock> _cntOfBlkGen;
     private readonly Generator<BlockFromModule> _blkFromModGen;
     private readonly Generator<BlockFromEntity> _blkFromEntGen;
 
-    public IContextResolver PrepareContextResolverForApiRequest()
+    public ISxcContextResolver PrepareContextResolverForApiRequest()
     {
         if (_alreadyTriedToLoad) return _contextResolverToInit;
         _alreadyTriedToLoad = true;

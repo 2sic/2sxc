@@ -18,7 +18,7 @@ public class AppViewPickerBackend: BlockWebApiBackendBase
 {
     public AppViewPickerBackend(
         Generator<MultiPermissionsApp> multiPermissionsApp,
-        IContextResolver ctxResolver,
+        ISxcContextResolver ctxResolver,
         LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
         GenWorkPlus<WorkViews> workViews,
         AppWorkContextService appWorkCtxService,

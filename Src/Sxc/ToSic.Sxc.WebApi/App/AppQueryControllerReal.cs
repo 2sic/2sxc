@@ -16,7 +16,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Context.Internal;
-using IContextResolver = ToSic.Sxc.Context.Internal.IContextResolver;
 
 namespace ToSic.Sxc.WebApi.App;
 
@@ -35,7 +34,7 @@ public class AppQueryControllerReal: ServiceBase , IAppQueryController
 
     #region Constructor / DI
 
-    public AppQueryControllerReal(IContextResolver ctxResolver, 
+    public AppQueryControllerReal(ISxcContextResolver ctxResolver, 
         IConvertToEavLight dataConverter, 
         Generator<AppPermissionCheck> appPermissionCheck,
         LazySvc<QueryManager> queryManager,
@@ -50,7 +49,7 @@ public class AppQueryControllerReal: ServiceBase , IAppQueryController
         );
     }
         
-    private readonly IContextResolver _ctxResolver;
+    private readonly ISxcContextResolver _ctxResolver;
     private readonly IConvertToEavLight _dataConverter;
     private readonly Generator<AppPermissionCheck> _appPermissionCheck;
 

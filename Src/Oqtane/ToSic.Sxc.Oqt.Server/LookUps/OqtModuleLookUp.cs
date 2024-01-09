@@ -11,13 +11,13 @@ internal class OqtModuleLookUp : LookUpBase
 {
     private Module Module { get; set; }
 
-    public OqtModuleLookUp(IContextResolver ctxResolver)
+    public OqtModuleLookUp(ISxcContextResolver ctxResolver)
     {
         Name = SourceModule;
         _ctxResolver = ctxResolver;
     }
 
-    private readonly IContextResolver _ctxResolver;
+    private readonly ISxcContextResolver _ctxResolver;
 
     public Module GetSource()
     {

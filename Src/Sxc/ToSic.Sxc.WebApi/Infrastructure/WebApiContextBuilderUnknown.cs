@@ -9,7 +9,7 @@ internal class WebApiContextBuilderUnknown: IWebApiContextBuilder
 {
     public WebApiContextBuilderUnknown(WarnUseOfUnknown<WebApiContextBuilderUnknown> _) { }
 
-    public IContextResolver PrepareContextResolverForApiRequest()
+    public ISxcContextResolver PrepareContextResolverForApiRequest()
     {
         throw new NotImplementedException();
     }

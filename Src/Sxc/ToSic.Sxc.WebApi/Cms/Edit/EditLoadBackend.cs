@@ -39,7 +39,7 @@ public partial class EditLoadBackend: ServiceBase
     private readonly ContentGroupList _contentGroupList;
     private readonly EntityBuilder _entityBuilder;
     private readonly IUiContextBuilder _contextBuilder;
-    private readonly IContextResolver _ctxResolver;
+    private readonly ISxcContextResolver _ctxResolver;
     private readonly ITargetTypes _mdTargetTypes;
     private readonly IAppStates _appStates;
     private readonly IUiData _uiData;
@@ -55,7 +55,7 @@ public partial class EditLoadBackend: ServiceBase
         ContentGroupList contentGroupList,
         EntityBuilder entityBuilder,
         IUiContextBuilder contextBuilder,
-        IContextResolver ctxResolver,
+        ISxcContextResolver ctxResolver,
         ITargetTypes mdTargetTypes,
         IAppStates appStates,
         IUiData uiData,

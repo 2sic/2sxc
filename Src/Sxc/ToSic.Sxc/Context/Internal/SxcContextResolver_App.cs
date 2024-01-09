@@ -3,7 +3,7 @@ using ToSic.Eav.Context;
 
 namespace ToSic.Sxc.Context.Internal;
 
-partial class ContextResolver
+partial class SxcContextResolver
 {
     public IContextOfApp SetAppOrNull(string nameOrPath)
     {

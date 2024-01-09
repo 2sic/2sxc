@@ -3,7 +3,7 @@ using ToSic.Lib.Data;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
 
-namespace ToSic.Sxc.Context;
+namespace ToSic.Sxc.Context.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal abstract class CmsContextPartBase<T> : Wrapper<T>, IHasMetadata where T : class

@@ -31,7 +31,7 @@ public class ContentGroupControllerReal: ServiceBase, IContentGroupController
         GenWorkDb<WorkFieldList> workFieldList,
         GenWorkPlus<WorkBlocks> appBlocks,
         LazySvc<IPagePublishing> publishing, 
-        IContextResolver ctxResolver,
+        ISxcContextResolver ctxResolver,
         LazySvc<ListControllerReal> listController) : base("Api.CntGrpRl")
     {
         ConnectServices(
@@ -44,7 +44,7 @@ public class ContentGroupControllerReal: ServiceBase, IContentGroupController
     }
 
 
-    public IContextResolver CtxResolver { get; }
+    public ISxcContextResolver CtxResolver { get; }
 
     private readonly GenWorkDb<WorkFieldList> _workFieldList;
     private readonly GenWorkPlus<WorkBlocks> _appBlocks;

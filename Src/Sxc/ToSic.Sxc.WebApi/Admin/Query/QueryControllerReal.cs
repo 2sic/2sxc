@@ -20,13 +20,13 @@ public class QueryControllerReal: QueryControllerBase<QueryControllerReal>
     public const string LogSuffix = "Query";
     public const string LogGroup = EavWebApiConstants.HistoryNameWebApi + "-query";
 
-    private readonly IContextResolver _contextResolver;
+    private readonly ISxcContextResolver _contextResolver;
     private readonly AppConfigDelegate _appConfigMaker;
 
     public QueryControllerReal(
         MyServices services,
         GenWorkPlus<WorkViews> workViews,
-        IContextResolver contextResolver,
+        ISxcContextResolver contextResolver,
         AppConfigDelegate appConfigMaker
     ) : base(services, "Api." + LogSuffix)
     {

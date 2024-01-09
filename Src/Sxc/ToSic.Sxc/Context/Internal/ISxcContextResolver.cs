@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Context.Internal;
 /// Note that it's important to always make this **Scoped**, not transient, as there is some re-use after initialization
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public interface IContextResolver: Eav.Context.IContextResolver
+public interface ISxcContextResolver: IContextResolver
 {
     /// <summary>
     /// Return the block or throw an error

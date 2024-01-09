@@ -10,5 +10,5 @@ namespace ToSic.Sxc.WebApi.Infrastructure;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface IWebApiContextBuilder
 {
-    IContextResolver PrepareContextResolverForApiRequest();
+    ISxcContextResolver PrepareContextResolverForApiRequest();
 }

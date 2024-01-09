@@ -9,9 +9,9 @@ using ToSic.Eav.Helpers;
 using ToSic.Eav.ImportExport.Environment;
 using ToSic.Eav.Persistence.Xml;
 using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Shared;
-using IContextResolver = ToSic.Sxc.Context.Internal.IContextResolver;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
@@ -28,7 +28,7 @@ internal class OqtXmlExporter : XmlExporter
 
     public OqtXmlExporter(
         AdamManager<int, int> adamManager,
-        IContextResolver ctxResolver,
+        ISxcContextResolver ctxResolver,
         XmlSerializer xmlSerializer,
         IWebHostEnvironment hostingEnvironment,
         LazySvc<IFileRepository> fileRepositoryLazy,

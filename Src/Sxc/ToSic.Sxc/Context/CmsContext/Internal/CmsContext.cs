@@ -5,12 +5,10 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Internal;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 
-namespace ToSic.Sxc.Context;
+namespace ToSic.Sxc.Context.Internal;
 
 /// <summary>
 /// Runtime context information, used in dynamic code. Help the code to detect what environment it's in, what page etc.

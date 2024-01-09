@@ -20,12 +20,12 @@ public class HyperlinkBackend<TFolderId, TFileId>: ServiceBase
     private readonly IValueConverter _valueConverter;
     private readonly Generator<MultiPermissionsApp> _appPermissions;
     private readonly LazySvc<AdamContext<TFolderId, TFileId>> _adamState;
-    private readonly IContextResolver _ctxResolver;
+    private readonly ISxcContextResolver _ctxResolver;
     private AdamContext<TFolderId, TFileId> AdamContext => _adamState.Value;
 
     public HyperlinkBackend(
         LazySvc<AdamContext<TFolderId, TFileId>> adamState,
-        IContextResolver ctxResolver,
+        ISxcContextResolver ctxResolver,
         Generator<MultiPermissionsApp> appPermissions,
         Generator<AdamItemDtoMaker<TFolderId, TFileId>> adamDtoMaker,
         IValueConverter valueConverter) : base("Bck.HypLnk")

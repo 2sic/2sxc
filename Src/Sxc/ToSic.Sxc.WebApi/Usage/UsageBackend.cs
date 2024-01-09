@@ -22,13 +22,13 @@ public class UsageBackend: ServiceBase
     private readonly GenWorkPlus<WorkViews> _workViews;
     private readonly GenWorkPlus<WorkBlocks> _appBlocks;
     private readonly Generator<MultiPermissionsApp> _appPermissions;
-    private readonly IContextResolver _ctxResolver;
+    private readonly ISxcContextResolver _ctxResolver;
 
     public UsageBackend(
         GenWorkPlus<WorkBlocks> appBlocks,
         GenWorkPlus<WorkViews> workViews,
         Generator<MultiPermissionsApp> appPermissions,
-        IContextResolver ctxResolver
+        ISxcContextResolver ctxResolver
     ) : base("Bck.Usage")
     {
         ConnectServices(

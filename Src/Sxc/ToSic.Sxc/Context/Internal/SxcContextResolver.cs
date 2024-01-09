@@ -5,13 +5,13 @@ using ToSic.Lib.Helpers;
 namespace ToSic.Sxc.Context.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal partial class ContextResolver: Eav.Context.ContextResolver, IContextResolver
+internal partial class SxcContextResolver: ContextResolver, ISxcContextResolver
 {
     #region Constructor / DI
         
     protected readonly LazySvc<AppIdResolver> AppIdResolver;
 
-    public ContextResolver(
+    public SxcContextResolver(
         LazySvc<AppIdResolver> appIdResolverLazy,
         Generator<IContextOfSite> contextOfSite,
         Generator<IContextOfApp> contextOfApp) : base(contextOfSite, contextOfApp, "Sxc.CtxRes")

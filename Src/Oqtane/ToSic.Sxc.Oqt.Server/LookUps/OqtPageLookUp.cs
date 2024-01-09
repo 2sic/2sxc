@@ -8,10 +8,10 @@ namespace ToSic.Sxc.Oqt.Server.LookUps;
 
 internal class OqtPageLookUp : LookUpBase
 {
-    private readonly IContextResolver _ctxResolver;
+    private readonly ISxcContextResolver _ctxResolver;
     protected Oqtane.Models.Page Page { get; set; }
 
-    public OqtPageLookUp(IContextResolver ctxResolver)
+    public OqtPageLookUp(ISxcContextResolver ctxResolver)
     {
         Name = SourcePage;
         _ctxResolver = ctxResolver;

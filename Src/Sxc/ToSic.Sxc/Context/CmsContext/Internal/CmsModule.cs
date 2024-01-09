@@ -2,8 +2,7 @@
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
 
-
-namespace ToSic.Sxc.Context;
+namespace ToSic.Sxc.Context.Internal;
 
 [PrivateApi("WIP / hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

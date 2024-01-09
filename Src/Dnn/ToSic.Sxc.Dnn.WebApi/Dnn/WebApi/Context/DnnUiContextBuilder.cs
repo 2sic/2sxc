@@ -16,13 +16,13 @@ internal sealed class DnnUiContextBuilder : UiContextBuilderBase
 {
     #region Constructor / DI
 
-    private readonly IContextResolver _ctxResolver;
+    private readonly ISxcContextResolver _ctxResolver;
     private readonly RemoteRouterLink _remoteRouterLink;
     private readonly PortalSettings _portal = PortalSettings.Current;
 
     private ModuleInfo Module => (_ctxResolver.BlockContextOrNull()?.Module as IWrapper<ModuleInfo>)?.GetContents();
 
-    public DnnUiContextBuilder(IContextResolver ctxResolver, RemoteRouterLink remoteRouterLink, MyServices deps) : base(deps)
+    public DnnUiContextBuilder(ISxcContextResolver ctxResolver, RemoteRouterLink remoteRouterLink, MyServices deps) : base(deps)
     {
         _ctxResolver = ctxResolver;
         _remoteRouterLink = remoteRouterLink;
