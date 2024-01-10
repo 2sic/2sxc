@@ -1,18 +1,14 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Images;
+namespace ToSic.Sxc.Images.Internal;
 
 // TODO: LOCATION / NAMESPACE not final
 [PrivateApi("WIP v16.08")]
-public class Copyright: EntityBasedType
+public class Copyright(IEntity entity) : EntityBasedType(entity)
 {
     public static string TypeNameId = "ac3df5f0-c637-45e7-a52b-b323d50e52ac";
     public static string NiceTypeName = "🖺Copyright";
-
-    public Copyright(IEntity entity) : base(entity)
-    {
-    }
 
     public string CopyrightType => GetThis(null as string);
 

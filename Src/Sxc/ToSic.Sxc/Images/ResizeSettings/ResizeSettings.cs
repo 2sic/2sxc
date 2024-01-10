@@ -2,7 +2,7 @@
 using System.Collections.Specialized;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
-using static ToSic.Sxc.Images.ImageConstants;
+using static ToSic.Sxc.Images.Internal.ImageConstants;
 
 namespace ToSic.Sxc.Images;
 
@@ -71,8 +71,14 @@ internal class ResizeSettings : IResizeSettings, IResizeSettingsInternal
         Factor = factor ?? original.Factor;
         Parameters = parameters ?? original.Parameters;
         AspectRatio = aspectRatio ?? original.AspectRatio;
-        UseAspectRatio = original.UseAspectRatio;
-        UseFactorMap = original.UseFactorMap;
+
+        // workaround, as it's not part of the interface ATM
+        if (original is ResizeSettings typed)
+        {
+            UseAspectRatio = typed.UseAspectRatio;
+            UseFactorMap = typed.UseFactorMap;
+        }
+
         Advanced = advanced ?? (original as IResizeSettingsInternal)?.Advanced;
     }
 

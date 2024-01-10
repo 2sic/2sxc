@@ -47,7 +47,7 @@ internal class AdvancedSettings : IHasPiggyBack
 
         // Parse any single rule It's just one rule which should be used
         if (value is Recipe mrrValue)
-            return new AdvancedSettings(mrrValue);
+            return new(mrrValue);
 
         return null;
     }
@@ -68,7 +68,7 @@ internal class AdvancedSettings : IHasPiggyBack
             l.Ex(ex);
         }
 
-        return (new AdvancedSettings(), "new");
+        return (new(), "new");
     });
 
     [PrivateApi]
@@ -95,6 +95,6 @@ internal class AdvancedSettings : IHasPiggyBack
     /// </summary>
     [PrivateApi("internal use only")]
     [JsonIgnore]
-    public PiggyBack PiggyBack => _piggyBack ??= new PiggyBack();
+    public PiggyBack PiggyBack => _piggyBack ??= new();
     private PiggyBack _piggyBack;
 }

@@ -2,6 +2,7 @@
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Images.Internal;
 
 namespace ToSic.Sxc.Data;
 

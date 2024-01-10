@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Images;
+namespace ToSic.Sxc.Images.Internal;
 
 [PrivateApi("Can and will change any time, don't use outside of 2sxc")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

@@ -4,7 +4,7 @@ using ToSic.Lib.Coding;
 
 namespace ToSic.Sxc.Images;
 
-public partial class ImageService
+partial class ImageService
 {
     /// <inheritdoc />
     public IResizeSettings Settings(

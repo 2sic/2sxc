@@ -3,7 +3,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Web.Internal.Url;
-using static ToSic.Sxc.Images.ImageConstants;
+using static ToSic.Sxc.Images.Internal.ImageConstants;
 using static ToSic.Sxc.Internal.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images;

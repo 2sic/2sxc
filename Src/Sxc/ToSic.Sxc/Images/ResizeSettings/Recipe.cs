@@ -18,17 +18,17 @@ namespace ToSic.Sxc.Images;
 /// <remarks>
 /// History: Released 2sxc 13.10
 /// </remarks>
-[PublicApi("Still Beta / WIP")]
+[InternalApi_DoNotUse_MayChangeWithoutNotice("Still Beta / WIP")]   // note: was marked as PublicApi(Beta/WIP) till v17
 public class Recipe: ICanDump
 {
-    [PrivateApi] public const string RuleForDefault = "default";
+    internal const string RuleForDefault = "default";
 
     // Special properties which are only added to the tag if activated in settings
-    [PrivateApi] public const string SpecialPropertySizes = "sizes";
-    [PrivateApi] public const string SpecialPropertyMedia = "media";
-    [PrivateApi] public const string SpecialPropertyClass = "class";
-    [PrivateApi] public const string SpecialPropertyStyle = "style";
-    [PrivateApi] public static string[] SpecialProperties = { SpecialPropertySizes, SpecialPropertyMedia, SpecialPropertyClass, SpecialPropertyStyle };
+    internal const string SpecialPropertySizes = "sizes";
+    internal const string SpecialPropertyMedia = "media";
+    internal const string SpecialPropertyClass = "class";
+    internal const string SpecialPropertyStyle = "style";
+    internal static string[] SpecialProperties = [SpecialPropertySizes, SpecialPropertyMedia, SpecialPropertyClass, SpecialPropertyStyle];
 
 
     /// <summary>
@@ -136,6 +136,7 @@ public class Recipe: ICanDump
     /// Used in cases where there are many such rules and the one will be picked that matches this factor.
     /// </summary>
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public double FactorParsed { get; private set; }
 
     /// <summary>
@@ -168,6 +169,7 @@ public class Recipe: ICanDump
     public string Variants { get; private set; }
 
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public string Sizes => Attributes?.TryGetValue(SpecialPropertySizes, out var strSizes) == true ? strSizes.ToString() : null;
 
 

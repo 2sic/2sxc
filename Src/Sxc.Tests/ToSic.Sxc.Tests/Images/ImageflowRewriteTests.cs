@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
 using System.Linq;
-using ToSic.Sxc.Images.ImageflowRewrite;
+using ToSic.Sxc.Images.Internal;
 
 namespace ToSic.Sxc.Tests.Images
 {

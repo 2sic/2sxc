@@ -1,9 +1,10 @@
 ﻿using System.IO;
+using ToSic.Sxc.Images.Internal;
 using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 
 namespace ToSic.Sxc.Images;
 
-public partial class ImageService
+partial class ImageService
 {
     /// <inheritdoc />
     public IImageFormat GetFormat(string path)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Images.Internal;
 using static ToSic.Sxc.Tests.DataForImageTests.ResizeRecipesData;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests

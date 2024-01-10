@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ImageService

@@ -21,6 +21,7 @@ using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Internal.Plumbing;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Run;

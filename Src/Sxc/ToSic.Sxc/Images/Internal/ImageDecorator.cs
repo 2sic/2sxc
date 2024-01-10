@@ -7,10 +7,10 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
-namespace ToSic.Sxc.Images;
+namespace ToSic.Sxc.Images.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ImageDecorator: EntityBasedType
+public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBasedType(entity, languageCodes)
 {
     // Marks Requirements Metadata 13.04
     public static string TypeNameId = "cb27a0f2-f921-48d0-a3bc-37c0e77b1d0c";
@@ -31,8 +31,6 @@ public class ImageDecorator: EntityBasedType
         var decItem = source?.Metadata?.FirstOrDefaultOfType(TypeNameId);
         return decItem != null ? new ImageDecorator(decItem, dimensions) : null;
     }
-
-    public ImageDecorator(IEntity entity, string[] languageCodes) : base(entity, languageCodes) { }
 
     public string CropBehavior => GetThis("");
 

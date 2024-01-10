@@ -6,6 +6,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
@@ -14,7 +15,7 @@ using static System.StringComparer;
 namespace ToSic.Sxc.Images;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public partial class ImageService: ServiceForDynamicCode, IImageService
+internal partial class ImageService: ServiceForDynamicCode, IImageService
 {
     #region Constructor and Inits
 

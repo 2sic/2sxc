@@ -2,7 +2,7 @@
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Internal.Plumbing;
-using static ToSic.Sxc.Images.ImageConstants;
+using static ToSic.Sxc.Images.Internal.ImageConstants;
 using static ToSic.Sxc.Images.RecipeVariant;
 using static ToSic.Sxc.Internal.Plumbing.ParseObject;
 
@@ -53,7 +53,7 @@ internal class ResizeDimensionGenerator() : ServiceBase("Img.ResDim")
 
         dim = KeepInRangeProportional(dim);
 
-        return new OneResize
+        return new()
         {
             Width = dim.Width,
             Height = dim.Height

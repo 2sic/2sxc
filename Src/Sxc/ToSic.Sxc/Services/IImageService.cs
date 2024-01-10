@@ -6,6 +6,7 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Images.Internal;
 
 namespace ToSic.Sxc.Services;
 

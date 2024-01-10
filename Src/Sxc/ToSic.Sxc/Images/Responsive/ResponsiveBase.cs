@@ -11,10 +11,11 @@ using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Web;
 using static System.StringComparer;
 using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
-using static ToSic.Sxc.Images.ImageDecorator;
+using static ToSic.Sxc.Images.Internal.ImageDecorator;
 
 namespace ToSic.Sxc.Images;
 

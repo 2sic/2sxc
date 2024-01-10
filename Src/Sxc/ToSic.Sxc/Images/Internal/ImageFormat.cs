@@ -2,7 +2,7 @@
 using System.Linq;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Images;
+namespace ToSic.Sxc.Images.Internal;
 
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -26,7 +26,7 @@ public class ImageFormat : IImageFormat
         CanResize = canResize;
         ResizeFormats = canResize
             ? better?.Union(new []{this}).ToList() ?? new List<IImageFormat> { this }
-            : new List<IImageFormat>();
+            : new();
     }
 
     public ImageFormat(IImageFormat original, bool preserveSizes)

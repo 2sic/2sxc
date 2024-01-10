@@ -2,7 +2,7 @@
 using ToSic.Eav.Plumbing;
 using static ToSic.Sxc.Internal.Plumbing.ParseObject;
 
-namespace ToSic.Sxc.Images;
+namespace ToSic.Sxc.Images.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal static class ResizeSettingsExtensions

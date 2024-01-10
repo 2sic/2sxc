@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Images;
+namespace ToSic.Sxc.Images.Internal;
 
 /// <summary>
 /// Describes everything to be known about an image format for resizing or generating source-tags.

@@ -6,7 +6,7 @@ using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Internal;
-using static ToSic.Sxc.Images.ImageConstants;
+using static ToSic.Sxc.Images.Internal.ImageConstants;
 using static ToSic.Sxc.Internal.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images;
@@ -55,7 +55,7 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
         var resP = new ResizeParams(Log);
 
         if (settings is IResizeSettings typeSettings)
-            return (new ResizeSettings(
+            return (new(
                 typeSettings,
                 format: resP.FormatOrNull(format),
                 width: resP.WidthOrNull(width),

@@ -7,7 +7,7 @@ using ToSic.Eav.Internal.Loaders;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Integration;
-using ToSic.Sxc.Images.ImageflowRewrite;
+using ToSic.Sxc.Images.Internal;
 
 namespace ToSic.Sxc.Dnn.StartUp;
 

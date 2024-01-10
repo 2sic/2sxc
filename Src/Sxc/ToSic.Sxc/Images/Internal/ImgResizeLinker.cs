@@ -16,13 +16,14 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Web.Internal.Url;
 using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
-using static ToSic.Sxc.Images.ImageConstants;
-using static ToSic.Sxc.Images.ImageDecorator;
+using static ToSic.Sxc.Images.Internal.ImageConstants;
+using static ToSic.Sxc.Images.Internal.ImageDecorator;
 using static ToSic.Sxc.Images.RecipeVariant;
 
-namespace ToSic.Sxc.Images;
+namespace ToSic.Sxc.Images.Internal;
 
 [PrivateApi("Internal stuff")]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ImgResizeLinker : ServiceBase, ICanDebug
 {
 
@@ -32,7 +33,7 @@ public class ImgResizeLinker : ServiceBase, ICanDebug
         ConnectServices(
             _features = features,
             _koi = koi,
-            DimGen = new ResizeDimensionGenerator()
+            DimGen = new()
         );
         _siteLazy = siteLazy;
     }
@@ -184,7 +185,7 @@ public class ImgResizeLinker : ServiceBase, ICanDebug
         get
         {
             if (_resizeParamMerger != null) return _resizeParamMerger;
-            _resizeParamMerger = new ResizeParamMerger(Log);
+            _resizeParamMerger = new(Log);
             if (Debug) _resizeParamMerger.Debug = true;
             return _resizeParamMerger;
         }

@@ -67,11 +67,11 @@ public interface IResizeSettings
     /// </summary>
     NameValueCollection Parameters { get; }
 
-    [PrivateApi("WIP")] 
-    bool UseFactorMap { get; }
+    //[PrivateApi("WIP")] 
+    //bool UseFactorMap { get; }
 
-    [PrivateApi]
-    bool UseAspectRatio { get; }
+    //[PrivateApi("WIP")]
+    //bool UseAspectRatio { get; }
 
     ///// <summary>
     ///// Settings which are used when img/picture tags are generated with multiple resizes

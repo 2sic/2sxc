@@ -8,6 +8,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web.Internal.Url;
