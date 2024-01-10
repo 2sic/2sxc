@@ -6,7 +6,7 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.WebApi.Cms;
+namespace ToSic.Sxc.Backend.Cms;
 
 internal class LoadSettingsApiKeys: LoadSettingsProviderBase, ILoadSettingsProvider
 {

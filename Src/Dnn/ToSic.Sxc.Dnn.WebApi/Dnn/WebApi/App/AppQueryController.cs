@@ -4,7 +4,7 @@ using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.WebApi.Admin.App;
 using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Sxc.WebApi;
-using RealController = ToSic.Sxc.WebApi.App.AppQueryControllerReal;
+using RealController = ToSic.Sxc.Backend.App.AppQueryControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.App;
 

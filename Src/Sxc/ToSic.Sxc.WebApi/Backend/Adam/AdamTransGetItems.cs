@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.WebApi.Adam;
-
-namespace ToSic.Sxc.WebApi.Adam;
+﻿namespace ToSic.Sxc.Backend.Adam;
 
 /// <summary>
 /// Backend for the API

@@ -5,7 +5,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.Helpers;
 
-namespace ToSic.Sxc.WebApi.Cms;
+namespace ToSic.Sxc.Backend.Cms;
 
 partial class EditLoadPrefetchHelper
 {

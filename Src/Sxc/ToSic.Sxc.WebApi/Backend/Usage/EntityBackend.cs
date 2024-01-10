@@ -5,10 +5,9 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 
-namespace ToSic.Sxc.WebApi.Cms;
+namespace ToSic.Sxc.Backend.Usage;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class EntityBackend: ServiceBase

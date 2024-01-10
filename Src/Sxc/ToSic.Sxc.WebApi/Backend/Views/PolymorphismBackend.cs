@@ -1,10 +1,9 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Polymorphism.Internal;
 
-namespace ToSic.Sxc.WebApi.Views;
+namespace ToSic.Sxc.Backend.Views;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class PolymorphismBackend : ServiceBase

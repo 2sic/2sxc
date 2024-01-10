@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal.Documentation;
 
-namespace ToSic.Sxc.WebApi.Admin;
+namespace ToSic.Sxc.Backend.Admin;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class CodeControllerReal : ServiceBase

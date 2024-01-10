@@ -13,7 +13,7 @@ using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using JsonOptions = ToSic.Eav.Serialization.JsonOptions;
-using RealController = ToSic.Sxc.WebApi.Cms.EditControllerReal;
+using RealController = ToSic.Sxc.Backend.Cms.EditControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 
@@ -26,10 +26,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 
 [ApiController]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class EditController: OqtStatefulControllerBase, IEditController
+public class EditController() : OqtStatefulControllerBase(RealController.LogSuffix), IEditController
 {
-    public EditController() : base(RealController.LogSuffix) { }
-
     private RealController Real => GetService<RealController>();
 
 

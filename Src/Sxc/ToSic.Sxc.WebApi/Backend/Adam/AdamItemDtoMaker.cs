@@ -9,10 +9,10 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Data;
 
-namespace ToSic.Sxc.WebApi.Adam;
+namespace ToSic.Sxc.Backend.Adam;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AdamItemDtoMaker<TFolderId, TFileId>
+public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TFileId>.MyServices services)
 {
     #region Constructor / DI
 
@@ -25,18 +25,13 @@ public class AdamItemDtoMaker<TFolderId, TFileId>
         }
     }
 
-    public AdamItemDtoMaker(MyServices services)
-    {
-        _security = services.Security;
-    }
-
     public AdamItemDtoMaker<TFolderId, TFileId> Init(AdamContext adamContext)
     {
         AdamContext = adamContext;
         return this;
     }
 
-    private readonly AdamSecurityChecksBase _security;
+    private readonly AdamSecurityChecksBase _security = services.Security;
     public AdamContext AdamContext;
 
     #endregion

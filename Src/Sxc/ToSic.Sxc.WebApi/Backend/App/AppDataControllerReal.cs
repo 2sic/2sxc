@@ -5,7 +5,7 @@ using ToSic.Eav.WebApi.App;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.WebApi.App;
+namespace ToSic.Sxc.Backend.App;
 
 /// <inheritdoc />
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

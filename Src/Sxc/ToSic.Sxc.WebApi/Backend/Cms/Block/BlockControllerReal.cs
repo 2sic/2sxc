@@ -6,11 +6,11 @@ using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.WebApi.ContentBlocks;
-using ToSic.Sxc.WebApi.InPage;
+using ToSic.Sxc.Backend.ContentBlocks;
+using ToSic.Sxc.Backend.InPage;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
-namespace ToSic.Sxc.WebApi.Cms;
+namespace ToSic.Sxc.Backend.Cms;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class BlockControllerReal : ServiceBase, IBlockController

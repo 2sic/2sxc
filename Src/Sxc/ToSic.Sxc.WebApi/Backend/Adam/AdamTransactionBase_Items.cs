@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Sxc.Adam;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Adam.Internal;
 
-namespace ToSic.Sxc.WebApi.Adam;
+namespace ToSic.Sxc.Backend.Adam;
 
 partial class AdamTransactionBase<T, TFolderId, TFileId>
 {

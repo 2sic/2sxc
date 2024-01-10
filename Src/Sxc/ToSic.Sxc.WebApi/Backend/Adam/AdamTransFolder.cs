@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.WebApi.Adam;
+namespace ToSic.Sxc.Backend.Adam;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AdamTransFolder<TFolderId, TFileId> : AdamTransactionBase<AdamTransFolder<TFolderId, TFileId>, TFolderId, TFileId>

@@ -2,7 +2,7 @@
 using ToSic.Eav.Apps.Insights;
 using ToSic.Razor.Blade;
 
-namespace ToSic.Sxc.WebApi.Sys.Insights;
+namespace ToSic.Sxc.Backend.Sys;
 
 internal class InsightsAppCodeBuild(IAppStates appStates) : InsightsProvider(Link)
 {

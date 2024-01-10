@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.WebApi.Routing;
+using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.WebApi.Admin;
-using RealController = ToSic.Sxc.WebApi.Admin.DialogControllerReal;
+using RealController = ToSic.Sxc.Backend.Admin.DialogControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 

@@ -5,7 +5,7 @@ using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.WebApi.Cms;
+namespace ToSic.Sxc.Backend.Cms;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class HistoryControllerReal : ServiceBase, IHistoryController

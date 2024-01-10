@@ -1,7 +1,7 @@
-﻿using ToSic.Lib.Logging;
-using ToSic.Eav.Security.Permissions;
+﻿using ToSic.Eav.Security.Permissions;
+using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.WebApi.Adam;
+namespace ToSic.Sxc.Backend.Adam;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AdamTransDelete<TFolderId, TFileId> : AdamTransactionBase<AdamTransDelete<TFolderId, TFileId>, TFolderId, TFileId>

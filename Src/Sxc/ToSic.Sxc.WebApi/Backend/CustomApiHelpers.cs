@@ -9,7 +9,7 @@ using System.Xml.Schema;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.Coding;
 
-namespace ToSic.Sxc.WebApi;
+namespace ToSic.Sxc.Backend;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class CustomApiHelpers

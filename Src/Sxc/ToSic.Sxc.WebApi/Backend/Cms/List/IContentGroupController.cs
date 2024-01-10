@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Sxc.WebApi.ItemLists;
 
-namespace ToSic.Sxc.WebApi.Cms;
+namespace ToSic.Sxc.Backend.Cms;
 
 public interface IContentGroupController
 {

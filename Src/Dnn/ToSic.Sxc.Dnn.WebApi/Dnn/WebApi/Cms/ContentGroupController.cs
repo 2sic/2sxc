@@ -3,10 +3,9 @@ using DotNetNuke.Web.Api;
 using System;
 using System.Collections.Generic;
 using System.Web.Http;
+using ToSic.Sxc.Backend.Cms;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Cms;
-using ToSic.Sxc.WebApi.ItemLists;
-using RealController = ToSic.Sxc.WebApi.Cms.ContentGroupControllerReal;
+using RealController = ToSic.Sxc.Backend.Cms.ContentGroupControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms;
 

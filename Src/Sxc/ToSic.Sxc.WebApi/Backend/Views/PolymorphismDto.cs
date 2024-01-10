@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.WebApi.Views;
+﻿namespace ToSic.Sxc.Backend.Views;
 
 public class PolymorphismDto
 {

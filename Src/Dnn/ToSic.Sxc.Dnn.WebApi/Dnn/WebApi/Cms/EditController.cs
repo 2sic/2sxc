@@ -8,7 +8,7 @@ using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.WebApi;
-using RealController = ToSic.Sxc.WebApi.Cms.EditControllerReal;
+using RealController = ToSic.Sxc.Backend.Cms.EditControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms;
 

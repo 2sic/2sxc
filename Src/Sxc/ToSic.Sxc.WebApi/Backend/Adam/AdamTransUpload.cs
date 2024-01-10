@@ -1,13 +1,12 @@
 ﻿using System;
 using System.IO;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
-using ToSic.Sxc.Adam;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Adam.Internal;
 
-namespace ToSic.Sxc.WebApi.Adam;
+namespace ToSic.Sxc.Backend.Adam;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public partial class AdamTransUpload<TFolderId, TFileId>: AdamTransactionBase<AdamTransUpload<TFolderId, TFileId>, TFolderId, TFileId>

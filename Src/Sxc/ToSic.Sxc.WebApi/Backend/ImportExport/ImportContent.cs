@@ -23,7 +23,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.WebApi.ImportExport;
+namespace ToSic.Sxc.Backend.ImportExport;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ImportContent: ServiceBase

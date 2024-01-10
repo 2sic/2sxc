@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Assets;
-using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 
-namespace ToSic.Sxc.WebApi.Adam;
+namespace ToSic.Sxc.Backend.Adam;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>

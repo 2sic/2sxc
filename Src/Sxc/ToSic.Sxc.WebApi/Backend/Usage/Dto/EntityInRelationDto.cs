@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Data;
 
-namespace ToSic.Sxc.WebApi.Usage.Dto;
+namespace ToSic.Sxc.Backend.Usage.Dto;
 
 class EntityInRelationDto: EntityDto
 {

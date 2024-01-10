@@ -1,10 +1,10 @@
 ﻿using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Admin;
-using RealController = ToSic.Sxc.WebApi.Admin.DialogControllerReal;
+using RealController = ToSic.Sxc.Backend.Admin.DialogControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin;
 

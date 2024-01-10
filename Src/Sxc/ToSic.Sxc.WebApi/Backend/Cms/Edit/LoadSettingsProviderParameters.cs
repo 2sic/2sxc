@@ -2,7 +2,7 @@
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 
-namespace ToSic.Sxc.WebApi.Cms;
+namespace ToSic.Sxc.Backend.Cms;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class LoadSettingsProviderParameters

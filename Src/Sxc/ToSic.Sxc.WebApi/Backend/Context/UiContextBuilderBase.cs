@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Apps.Paths;
@@ -10,6 +9,7 @@ using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Context;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Languages;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Lib.DI;
@@ -19,7 +19,7 @@ using ToSic.Sxc.Internal;
 using ToSic.Sxc.Web.Internal.JsContext;
 using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 
-namespace ToSic.Sxc.WebApi.Context;
+namespace ToSic.Sxc.Backend.Context;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>, IUiContextBuilder

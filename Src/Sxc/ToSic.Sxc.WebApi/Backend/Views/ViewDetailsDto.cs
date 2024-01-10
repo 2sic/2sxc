@@ -4,7 +4,7 @@ using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Security;
 
-namespace ToSic.Sxc.WebApi.Views;
+namespace ToSic.Sxc.Backend.Views;
 
 public class ViewDetailsDto
 {

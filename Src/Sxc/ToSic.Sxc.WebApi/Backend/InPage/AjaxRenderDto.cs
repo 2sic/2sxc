@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ToSic.Sxc.WebApi.InPage;
+namespace ToSic.Sxc.Backend.InPage;
 
 public class AjaxRenderDto
 {

@@ -10,13 +10,13 @@ using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Sxc.Backend.Admin;
+using ToSic.Sxc.Backend.Views;
 using ToSic.Sxc.Dnn.Pages;
 using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Admin;
-using ToSic.Sxc.WebApi.Views;
-using RealController = ToSic.Sxc.WebApi.Admin.ViewControllerReal;
+using RealController = ToSic.Sxc.Backend.Admin.ViewControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin;
 

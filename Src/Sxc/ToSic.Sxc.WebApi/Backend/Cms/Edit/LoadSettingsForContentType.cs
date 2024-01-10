@@ -5,7 +5,7 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Internal;
 using static System.String;
 
-namespace ToSic.Sxc.WebApi.Cms;
+namespace ToSic.Sxc.Backend.Cms;
 
 internal class LoadSettingsForContentType: LoadSettingsProviderBase, ILoadSettingsProvider
 {

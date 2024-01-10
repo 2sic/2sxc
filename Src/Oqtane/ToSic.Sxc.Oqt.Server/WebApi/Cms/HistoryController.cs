@@ -7,7 +7,7 @@ using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using RealController = ToSic.Sxc.WebApi.Cms.HistoryControllerReal;
+using RealController = ToSic.Sxc.Backend.Cms.HistoryControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 
@@ -18,10 +18,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class HistoryController : OqtStatefulControllerBase, IHistoryController
+public class HistoryController() : OqtStatefulControllerBase(RealController.LogSuffix), IHistoryController
 {
-    public HistoryController(): base(RealController.LogSuffix) { }
-
     private RealController Real => GetService<RealController>();
 
 

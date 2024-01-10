@@ -7,10 +7,9 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 
-namespace ToSic.Sxc.WebApi.Cms;
+namespace ToSic.Sxc.Backend.Cms;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class EntityPickerBackend: ServiceBase

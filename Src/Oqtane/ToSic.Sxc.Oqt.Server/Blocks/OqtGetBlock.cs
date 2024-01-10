@@ -3,10 +3,10 @@ using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Oqt.Server.Context;
-using ToSic.Sxc.WebApi.Infrastructure;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks;
 
@@ -71,7 +71,7 @@ internal class OqtGetBlock: ServiceBase, IWebApiContextBuilder
         var block = _blkFromModGen.New().Init(ctx);
 
         // only if it's negative, do we load the inner block
-        var contentBlockId = _requestHelper.GetTypedHeader(Sxc.WebApi.SxcWebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
+        var contentBlockId = _requestHelper.GetTypedHeader(Sxc.Backend.SxcWebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
         if (contentBlockId >= 0)
             return wrapLog.Return(new(ctx, () => block), "found block");
 

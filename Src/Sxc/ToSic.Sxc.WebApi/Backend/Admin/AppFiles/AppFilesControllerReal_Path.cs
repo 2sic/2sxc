@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Sxc.Apps.Internal;
 
-namespace ToSic.Sxc.WebApi.Admin.AppFiles;
+namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
 partial class AppFilesControllerReal
 {

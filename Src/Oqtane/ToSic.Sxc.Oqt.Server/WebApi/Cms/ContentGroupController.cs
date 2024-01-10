@@ -4,10 +4,9 @@ using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
 using ToSic.Eav.WebApi.Routing;
+using ToSic.Sxc.Backend.Cms;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.WebApi.Cms;
-using ToSic.Sxc.WebApi.ItemLists;
-using RealController = ToSic.Sxc.WebApi.Cms.ContentGroupControllerReal;
+using RealController = ToSic.Sxc.Backend.Cms.ContentGroupControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 
@@ -20,10 +19,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [ApiController]
 // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ContentGroupController : OqtStatefulControllerBase, IContentGroupController
+public class ContentGroupController() : OqtStatefulControllerBase(RealController.LogSuffix), IContentGroupController
 {
-    public ContentGroupController(): base(RealController.LogSuffix) { }
-
     private RealController Real => GetService<RealController>();
 
 

@@ -1,8 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Specs;
-using IApp = ToSic.Sxc.Apps.IApp;
 
-namespace ToSic.Sxc.WebApi.App;
+namespace ToSic.Sxc.Backend.App;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public static class ExtensionsForIApp

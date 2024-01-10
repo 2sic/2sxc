@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using System;
+﻿using System;
+using System.Linq;
 using ToSic.Eav.Apps.Work;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.WebApi;
@@ -7,11 +7,10 @@ using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.LookUp;
 
-namespace ToSic.Sxc.WebApi.Admin.Query;
+namespace ToSic.Sxc.Backend.Admin.Query;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class QueryControllerReal: QueryControllerBase<QueryControllerReal>

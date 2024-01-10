@@ -5,13 +5,11 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Context;
+using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.WebApi.Adam;
 
-namespace ToSic.Sxc.WebApi.Cms;
+namespace ToSic.Sxc.Backend.Cms;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class HyperlinkBackend<TFolderId, TFileId>: ServiceBase

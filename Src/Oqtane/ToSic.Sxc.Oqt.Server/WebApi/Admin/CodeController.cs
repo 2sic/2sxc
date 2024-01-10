@@ -4,8 +4,7 @@ using Oqtane.Shared;
 using System.Collections.Generic;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.WebApi.Admin;
-using RealController = ToSic.Sxc.WebApi.Admin.CodeControllerReal;
+using RealController = ToSic.Sxc.Backend.Admin.CodeControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 
@@ -27,5 +26,5 @@ public class CodeController : OqtControllerBase
 
 
     [HttpGet]
-    public IEnumerable<CodeControllerReal.HelpItem> InlineHelp(string language) => Real.InlineHelp(language);
+    public IEnumerable<RealController.HelpItem> InlineHelp(string language) => Real.InlineHelp(language);
 }

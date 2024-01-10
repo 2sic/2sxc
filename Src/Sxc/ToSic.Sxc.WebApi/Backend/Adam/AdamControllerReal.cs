@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.WebApi.Adam;
+namespace ToSic.Sxc.Backend.Adam;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AdamControllerReal<TIdentifier>: ServiceBase

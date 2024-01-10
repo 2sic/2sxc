@@ -4,7 +4,7 @@ using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.WebApi.Cms;
+namespace ToSic.Sxc.Backend.Cms;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public abstract class LoadSettingsProviderBase: ServiceBase

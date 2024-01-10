@@ -3,7 +3,7 @@ using System.Linq;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.WebApi.Cms;
+namespace ToSic.Sxc.Backend.Cms;
 
 partial class EditLoadPrefetchHelper
 {

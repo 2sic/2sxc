@@ -3,7 +3,7 @@ using System.IO;
 using JetBrains.Annotations;
 using ToSic.Sxc.Apps.Internal.Assets;
 
-namespace ToSic.Sxc.WebApi.Admin.AppFiles;
+namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
 partial class AppFilesControllerReal
 {

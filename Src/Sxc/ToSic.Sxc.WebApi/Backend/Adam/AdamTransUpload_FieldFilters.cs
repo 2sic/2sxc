@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using ToSic.Lib.Logging;
 
-namespace ToSic.Sxc.WebApi.Adam;
+namespace ToSic.Sxc.Backend.Adam;
 
 partial class AdamTransUpload<TFolderId, TFileId>
 {

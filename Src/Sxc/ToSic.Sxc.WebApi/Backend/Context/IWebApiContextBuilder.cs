@@ -1,7 +1,6 @@
-﻿using ToSic.Sxc.Context;
-using ToSic.Sxc.Context.Internal;
+﻿using ToSic.Sxc.Context.Internal;
 
-namespace ToSic.Sxc.WebApi.Infrastructure;
+namespace ToSic.Sxc.Backend.Context;
 
 /// <summary>
 /// Helper object which will determine the current context based on headers, url-parameters etc.

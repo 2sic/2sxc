@@ -1,9 +1,9 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.WebApi.Sys;
 
-namespace ToSic.Sxc.WebApi.Sys;
+namespace ToSic.Sxc.Backend.Sys;
 
-internal class SiteSetupAutoInstallAppsRule: EntityBasedType
+internal class SiteSetupAutoInstallAppsRule(IEntity entity) : EntityBasedType(entity)
 {
     public const string TargetGuid = "guid";
     public const string TargetAll = "all";
@@ -12,10 +12,6 @@ internal class SiteSetupAutoInstallAppsRule: EntityBasedType
     public const string ModeAllow = "a";
     public const string ModeOptional = "o";
     public const string ModeRequired = "r";
-
-    public SiteSetupAutoInstallAppsRule(IEntity entity) : base(entity)
-    {
-    }
 
     public string Target => GetThis(TargetGuid);
 

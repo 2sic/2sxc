@@ -6,7 +6,7 @@ using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.WebApi;
-using RealController = ToSic.Sxc.WebApi.Cms.HistoryControllerReal;
+using RealController = ToSic.Sxc.Backend.Cms.HistoryControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms;
 

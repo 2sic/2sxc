@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Lib.DI;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.WebApi.InPage;
+using ToSic.Sxc.Backend.InPage;
 
-namespace ToSic.Sxc.WebApi.Cms;
+namespace ToSic.Sxc.Backend.Cms;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class EditControllerReal: ServiceBase, IEditController

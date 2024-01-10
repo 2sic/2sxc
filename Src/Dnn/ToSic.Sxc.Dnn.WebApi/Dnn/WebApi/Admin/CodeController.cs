@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
 using ToSic.Sxc.WebApi;
-using RealController = ToSic.Sxc.WebApi.Admin.CodeControllerReal;
+using RealController = ToSic.Sxc.Backend.Admin.CodeControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin;
 

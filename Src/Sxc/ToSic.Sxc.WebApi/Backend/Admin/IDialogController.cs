@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.WebApi.Admin;
+﻿namespace ToSic.Sxc.Backend.Admin;
 
 public interface IDialogController
 {

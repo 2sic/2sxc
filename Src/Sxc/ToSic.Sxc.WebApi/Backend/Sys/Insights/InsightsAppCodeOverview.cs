@@ -4,7 +4,7 @@ using ToSic.Eav.Apps.Insights;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.WebApi.Sys.Insights;
 
-namespace ToSic.Sxc.WebApi.Sys.Insights;
+namespace ToSic.Sxc.Backend.Sys;
 
 internal class InsightsAppCodeOverview(IAppStates appStates) : InsightsProvider(Link, helpCategory: "ThisApp.Code")
 {

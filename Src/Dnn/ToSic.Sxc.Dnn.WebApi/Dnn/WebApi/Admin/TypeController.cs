@@ -10,7 +10,7 @@ using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
-using RealController = ToSic.Sxc.WebApi.Admin.TypeControllerReal;
+using RealController = ToSic.Sxc.Backend.Admin.TypeControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin;
 

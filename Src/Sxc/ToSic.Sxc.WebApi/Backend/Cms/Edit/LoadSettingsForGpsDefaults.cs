@@ -10,7 +10,7 @@ using ToSic.Sxc.Services.Internal;
 using static System.StringComparer;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
-namespace ToSic.Sxc.WebApi.Cms;
+namespace ToSic.Sxc.Backend.Cms;
 
 internal class LoadSettingsForGpsDefaults: ServiceBase, ILoadSettingsProvider
 {

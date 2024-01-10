@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace ToSic.Sxc.WebApi.Admin.AppFiles;
+namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
 partial class AppFilesControllerReal
 {

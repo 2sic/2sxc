@@ -5,7 +5,7 @@ using ToSic.Eav.WebApi.Routing;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
-using RealController = ToSic.Sxc.WebApi.Sys.InstallControllerReal;
+using RealController = ToSic.Sxc.Backend.Sys.InstallControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 
@@ -15,11 +15,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 [Route(OqtWebApiConstants.ApiRootPathNdLang + "/" + AreaRoutes.Sys)]
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class InstallController: OqtStatefulControllerBase, IInstallController<IActionResult>
+public class InstallController()
+    : OqtStatefulControllerBase(RealController.LogSuffix), IInstallController<IActionResult>
 {
-
-    public InstallController(): base(RealController.LogSuffix) { }
-
     private RealController Real => GetService<RealController>();
 
 

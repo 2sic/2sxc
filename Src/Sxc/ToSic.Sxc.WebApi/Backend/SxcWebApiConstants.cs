@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.WebApi;
+﻿namespace ToSic.Sxc.Backend;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class SxcWebApiConstants

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.Apps.Work;
 using ToSic.Eav.ImportExport.Json.V1;
@@ -10,15 +9,12 @@ using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Cms.Internal.Publishing;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.WebApi.ItemLists;
 using static System.StringComparison;
 
-namespace ToSic.Sxc.WebApi.Cms;
+namespace ToSic.Sxc.Backend.Cms;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ContentGroupControllerReal: ServiceBase, IContentGroupController

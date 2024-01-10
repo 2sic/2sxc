@@ -7,7 +7,7 @@ using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using RealController = ToSic.Sxc.WebApi.Admin.TypeControllerReal;
+using RealController = ToSic.Sxc.Backend.Admin.TypeControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 

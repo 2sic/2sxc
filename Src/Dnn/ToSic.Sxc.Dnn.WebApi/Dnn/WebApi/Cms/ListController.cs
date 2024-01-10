@@ -4,7 +4,7 @@ using System;
 using System.Web.Http;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Sxc.WebApi;
-using RealController = ToSic.Sxc.WebApi.Cms.ListControllerReal;
+using RealController = ToSic.Sxc.Backend.Cms.ListControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms;
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Eav.ImportExport.Json.V1;
 
-namespace ToSic.Sxc.WebApi.ItemLists;
+namespace ToSic.Sxc.Backend.Cms;
 
 public class EntityInListDto
 {

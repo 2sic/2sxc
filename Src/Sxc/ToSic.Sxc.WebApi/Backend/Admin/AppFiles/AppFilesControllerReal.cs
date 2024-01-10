@@ -3,14 +3,14 @@ using System.IO;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
-using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Lib.DI;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal.Assets;
 using static System.StringComparison;
 
-namespace ToSic.Sxc.WebApi.Admin.AppFiles;
+namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public partial class AppFilesControllerReal: ServiceBase, IAppFilesController

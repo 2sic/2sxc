@@ -13,7 +13,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Web.Internal.LightSpeed;
 
-namespace ToSic.Sxc.WebApi.App;
+namespace ToSic.Sxc.Backend.App;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AppsBackend: ServiceBase

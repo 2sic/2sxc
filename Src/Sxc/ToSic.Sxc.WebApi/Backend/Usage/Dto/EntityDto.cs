@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.WebApi.Dto;
 
-namespace ToSic.Sxc.WebApi.Usage.Dto;
+namespace ToSic.Sxc.Backend.Usage.Dto;
 
 public class EntityDto: IdentifierDto
 {

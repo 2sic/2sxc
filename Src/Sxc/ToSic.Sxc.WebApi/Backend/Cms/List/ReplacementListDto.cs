@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ToSic.Sxc.WebApi.ItemLists;
+namespace ToSic.Sxc.Backend.Cms;
 
 public class ReplacementListDto
 {

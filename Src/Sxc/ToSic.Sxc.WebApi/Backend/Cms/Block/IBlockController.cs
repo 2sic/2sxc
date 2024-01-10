@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Apps.Ui;
-using ToSic.Sxc.WebApi.InPage;
+using ToSic.Sxc.Backend.InPage;
 
-namespace ToSic.Sxc.WebApi.Cms;
+namespace ToSic.Sxc.Backend.Cms;
 
 public interface IBlockController
 {

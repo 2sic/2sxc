@@ -3,11 +3,10 @@ using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Helpers;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 
-namespace ToSic.Sxc.WebApi.InPage;
+namespace ToSic.Sxc.Backend.InPage;
 
 /// <summary>
 /// This helps the ajax preview to ensure js/css are also loaded in the preview.

@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Web.Http;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Sxc.Apps.Internal.Assets;
+using ToSic.Sxc.Backend.Admin.AppFiles;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Admin.AppFiles;
-using RealController = ToSic.Sxc.WebApi.Admin.AppFiles.AppFilesControllerReal;
+using RealController = ToSic.Sxc.Backend.Admin.AppFiles.AppFilesControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin;
 
@@ -19,10 +19,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin;
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppFilesController : SxcApiControllerBase, IAppFilesController
+public class AppFilesController() : SxcApiControllerBase(RealController.LogSuffix), IAppFilesController
 {
-    public AppFilesController() : base(RealController.LogSuffix) { }
-
     private RealController Real => SysHlp.GetService<RealController>();
 
     [HttpGet]

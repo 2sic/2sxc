@@ -4,20 +4,18 @@ using System;
 using System.Collections.Generic;
 using System.Web.Http;
 using ToSic.Eav.Apps.Ui;
+using ToSic.Sxc.Backend.Cms;
+using ToSic.Sxc.Backend.InPage;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Cms;
-using ToSic.Sxc.WebApi.InPage;
-using RealController = ToSic.Sxc.WebApi.Cms.BlockControllerReal;
+using RealController = ToSic.Sxc.Backend.Cms.BlockControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms;
 
 [ValidateAntiForgeryToken]
 // cannot use this, as most requests now come from a lone page [SupportedModules(DnnSupportedModuleNames)]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class BlockController : SxcApiControllerBase, IBlockController
+public class BlockController() : SxcApiControllerBase(RealController.LogSuffix), IBlockController
 {
-    public BlockController() : base(RealController.LogSuffix) { }
-
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <inheritdoc />

@@ -10,7 +10,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
-using RealController = ToSic.Sxc.WebApi.Admin.Query.QueryControllerReal;
+using RealController = ToSic.Sxc.Backend.Admin.Query.QueryControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin;
 
