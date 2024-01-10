@@ -3,7 +3,7 @@ using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-internal abstract class ItemToolbarBase: ServiceBase
+internal abstract class ItemToolbarBase(string logName) : ServiceBase($"{SxcLogging.SxcLogName}.{logName}")
 {
     public const string ToolbarAttributeName = "sxc-toolbar";
     public const string JsonToolbarNodeName = "toolbar";
@@ -21,8 +21,4 @@ internal abstract class ItemToolbarBase: ServiceBase
     /// </summary>
     /// <returns></returns>
     public abstract string ToolbarAsAttributes();
-
-    protected ItemToolbarBase(string logName) : base($"{SxcLogging.SxcLogName}.{logName}")
-    {
-    }
 }

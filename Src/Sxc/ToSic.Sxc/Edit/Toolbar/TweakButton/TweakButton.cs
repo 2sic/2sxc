@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Edit.Toolbar;
 /// Remove this comment 2024 end of Q1 if all works, otherwise re-document why it must be public
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class TweakButton: ITweakButton
+internal class TweakButton: ITweakButton, ITweakButtonInternal
 {
     public IImmutableList<object> UiMerge { get; }
     public IImmutableList<object> ParamsMerge { get; }
@@ -27,8 +27,8 @@ internal class TweakButton: ITweakButton
 
     private TweakButton(ITweakButton original, IImmutableList<object> uiMerge = default, IImmutableList<object> paramsMerge = default)
     {
-        UiMerge = uiMerge ?? original.UiMerge;
-        ParamsMerge = paramsMerge ?? original.ParamsMerge;
+        UiMerge = uiMerge ?? (original as ITweakButtonInternal)?.UiMerge ?? ImmutableList.Create<object>();
+        ParamsMerge = paramsMerge ?? (original as ITweakButtonInternal)?.ParamsMerge ?? ImmutableList.Create<object>();
     }
 
     /// <summary>
@@ -82,7 +82,7 @@ internal class TweakButton: ITweakButton
 
     public ITweakButton Position(int value) => Ui("pos", value);
 
-    public ITweakButton Ui(object value) => value == null ? this : new TweakButton(this, UiMerge.Add(value));
+    public ITweakButton Ui(object value) => value == null ? this : new(this, UiMerge.Add(value));
 
     public ITweakButton Ui(string name, object value) => (value ?? name) == null ? this : Ui($"{name}={value}");
 
@@ -94,7 +94,7 @@ internal class TweakButton: ITweakButton
 
     public ITweakButton FormParameters(string name, object value) => (value ?? name) == null ? this : FormParameters($"{name}={value}");
 
-    public ITweakButton Parameters(object value) => value == null ? this : new TweakButton(this, paramsMerge: ParamsMerge.Add(value));
+    public ITweakButton Parameters(object value) => value == null ? this : new(this, paramsMerge: ParamsMerge.Add(value));
     public ITweakButton Parameters(string name, object value) => (value ?? name) == null ? this : Parameters($"{name}={value}");
 
     public ITweakButton Prefill(object value) => value == null ? this : Parameters(new ObjectToUrl().SerializeChild(value, PrefixPrefill));

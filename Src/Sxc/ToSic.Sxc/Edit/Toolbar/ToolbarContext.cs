@@ -1,19 +1,18 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal.Url;
 
-namespace ToSic.Sxc.Edit.Internal.Toolbar;
+namespace ToSic.Sxc.Edit.Toolbar;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ToolbarContext: IAppIdentity
+internal class ToolbarContext: IAppIdentity
 {
     internal const string CtxZone = "context:zoneId";
     internal const string CtxApp = "context:appId";
     internal const int NotInitialized = -7007;
 
-    public ToolbarContext(IAppIdentity parent): this(parent.ZoneId, parent.AppId) { }
+    internal ToolbarContext(IAppIdentity parent): this(parent.ZoneId, parent.AppId) { }
 
     public ToolbarContext(int zoneId, int appId)
     {
@@ -21,7 +20,7 @@ public class ToolbarContext: IAppIdentity
         AppId = appId;
     }
 
-    public ToolbarContext(string custom) => Custom = custom;
+    internal ToolbarContext(string custom) => Custom = custom;
 
 
     [JsonPropertyName("zoneId")]

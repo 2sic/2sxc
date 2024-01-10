@@ -5,11 +5,10 @@ using ToSic.Lib.Logging;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Edit.Internal.Toolbar;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-partial class ToolbarBuilder
+partial class ToolbarBuilder: IToolbarBuilderInternal
 {
     private const int NoAppId = -1;
 

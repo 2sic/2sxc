@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Data;
-using ToSic.Sxc.Edit.Toolbar;
 
-namespace ToSic.Sxc.Edit.Internal.Toolbar;
+namespace ToSic.Sxc.Edit.Toolbar;
 
 /// <summary>
 /// This is a decorator for Content-Types, which allows special configuration of buttons etc. on that type

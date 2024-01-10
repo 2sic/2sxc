@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Edit.Internal.Toolbar;
-
-namespace ToSic.Sxc.Edit.Toolbar;
+﻿namespace ToSic.Sxc.Edit.Toolbar;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class ToolbarRuleContext(

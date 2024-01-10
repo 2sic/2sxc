@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Edit.Internal.Toolbar;
-
-namespace ToSic.Sxc.Edit.Toolbar;
+﻿namespace ToSic.Sxc.Edit.Toolbar;
 
 internal class ToolbarRuleForParams(
     object target,

@@ -2,14 +2,12 @@
 using ToSic.Eav.Data;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Edit.Internal.Toolbar;
 
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-public partial interface IToolbarBuilder
+internal interface IToolbarBuilderInternal
 {
-
     [PrivateApi("WIP / Debugging")]
     [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     ToolbarContext GetContext();
@@ -19,8 +17,10 @@ public partial interface IToolbarBuilder
     IToolbarBuilder Context(
         object target
     );
+}
 
-
+public partial interface IToolbarBuilder
+{
     /// <summary>
     /// Set the main target of this toolbar.
     /// </summary>

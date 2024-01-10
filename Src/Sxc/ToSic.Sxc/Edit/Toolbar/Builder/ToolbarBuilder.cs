@@ -11,7 +11,6 @@ using ToSic.Lib.Services;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Edit.Internal.Toolbar;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Edit.Toolbar;

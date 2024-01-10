@@ -4,7 +4,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Internal;
 
-namespace ToSic.Sxc.Edit.Internal.Toolbar;
+namespace ToSic.Sxc.Edit.Toolbar;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class ToolbarButtonDecoratorHelper(IAppStates appStates) : ServiceBase($"{SxcLogging.SxcLogName}.TbdHlp")

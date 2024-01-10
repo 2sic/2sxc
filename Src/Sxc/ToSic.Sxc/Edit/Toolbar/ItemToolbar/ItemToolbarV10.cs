@@ -10,18 +10,18 @@ using Build = ToSic.Sxc.Web.Build;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-internal class ItemToolbarV10: ItemToolbarBase
+internal class ItemToolbarV10(
+    IEntity entity,
+    string newType = null,
+    string prefill = null,
+    string settings = null,
+    object toolbar = null,
+    string logName = null)
+    : ItemToolbarBase(logName ?? "TlbV10")
 {
-    public ItemToolbarV10(IEntity entity, string newType = null, string prefill = null, string settings = null, object toolbar = null, string logName = null) : base( logName ?? "TlbV10")
-    {
-        Settings = settings;
-        Rules = ItemToolbarPicker.ToolbarV10OrNull(toolbar) ?? new List<string>();
-        TargetAction = new EntityEditInfo(entity) { contentType = newType, prefill = prefill };
-    }
-
-    protected readonly string Settings;
-    protected readonly List<string> Rules;
-    protected readonly EntityEditInfo TargetAction;
+    protected readonly string Settings = settings;
+    protected readonly List<string> Rules = ItemToolbarPicker.ToolbarV10OrNull(toolbar) ?? new List<string>();
+    protected readonly EntityEditInfo TargetAction = new(entity) { contentType = newType, prefill = prefill };
 
     public override string ToolbarAsTag 
         => ToolbarTagTemplate.Replace(ToolbarTagPlaceholder, ToolbarAttributes(JsonToolbarNodeName));

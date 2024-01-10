@@ -45,7 +45,7 @@ partial class ToolbarBuilder
         return new()
         {
             Operation = ToolbarRuleOperation.Pick(operation, defOp),
-            Ui = PrepareUi(ui, uiMerge, uiMergePrefix, tweaks: tweaks?.UiMerge),
+            Ui = PrepareUi(ui, uiMerge, uiMergePrefix, tweaks: (tweaks as ITweakButtonInternal)?.UiMerge),
             Parameters = Utils.Filter2Url.SerializeWithChild(parsWithPrefill, filter, PrefixFilters)
         };
 

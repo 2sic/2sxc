@@ -20,7 +20,7 @@ partial class ToolbarBuilder
     {
         // Eav.Parameters.Protect(noParamOrder, "See docs", methodName);
         var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, ui: ui, parameters: parameters, methodName: methodName);
-        var uiTweaked = PrepareUi(ui, tweaks: tweaks?.UiMerge);
+        var uiTweaked = PrepareUi(ui, tweaks: (tweaks as ITweakButtonInternal)?.UiMerge);
         var paramsTweaked = Utils.PrepareParams(parameters, tweaks);
         TargetCheck(target);
         return this.AddInternal(new ToolbarRuleCustom(
