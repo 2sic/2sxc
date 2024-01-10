@@ -12,12 +12,12 @@ namespace ToSic.Sxc.WebApi;
 /// This interface extends WebAPIs with File-Save helpers.
 /// It's important, because if 2sxc also runs on other CMS platforms, then the Dnn Context won't be available, so it's in a separate interface.
 /// </summary>
-[PublicApi]
+[PrivateApi("Was public till v17, but now the docs are all objects directly")]
 public interface IDynamicWebApi
 {
     /// <summary>
     /// Save a file from a stream (usually an upload from the browser) into an adam-field of an item.
-    /// Read more about this in the the [WebAPI docs for SaveInAdam](xref:NetCode.WebApi.DotNet.SaveInAdam)
+    /// Read more about this in the [WebAPI docs for SaveInAdam](xref:NetCode.WebApi.DotNet.SaveInAdam)
     /// </summary>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="stream">the stream</param>
