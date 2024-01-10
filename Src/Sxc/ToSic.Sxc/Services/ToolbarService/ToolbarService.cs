@@ -77,7 +77,7 @@ internal class ToolbarService: ServiceForDynamicCode, IToolbarService
         var tlb = _toolbarGenerator.New();
         tlb.ConnectToRoot(_DynCodeRoot);
 
-        tlb = tlb.Toolbar(toolbarTemplate: toolbarTemplate, target: target, tweak: tweak, ui: ui, parameters: parameters, prefill: prefill);
+        tlb = ((ToolbarBuilder)tlb).Toolbar(toolbarTemplate: toolbarTemplate, target: target, tweak: tweak, ui: ui, parameters: parameters, prefill: prefill);
 
         if (_defaultUi.HasValue())
             tlb = tlb.Settings(ui: _defaultUi);

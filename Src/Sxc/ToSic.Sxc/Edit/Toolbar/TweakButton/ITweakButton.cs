@@ -20,8 +20,13 @@ public interface ITweakButton
     /// <summary>
     /// List of changes to apply to the UI parameter
     /// </summary>
-    [PrivateApi] IImmutableList<object> UiMerge { get; }
-    [PrivateApi] IImmutableList<object> ParamsMerge { get; }
+    [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)] 
+    IImmutableList<object> UiMerge { get; }
+
+    [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    IImmutableList<object> ParamsMerge { get; }
 
     #region UI
 

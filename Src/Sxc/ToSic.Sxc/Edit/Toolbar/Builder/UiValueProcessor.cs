@@ -14,7 +14,7 @@ internal class UiValueProcessor: UrlValueProcess
         // Colors - remove any # like #CCDDFF
         if (set.Name == KeyColor)
             return set.Value is string color && color.HasValue() && color.Contains("#")
-                ? new NameObjectSet(set, value: color.Replace("#", ""))
+                ? new(set, value: color.Replace("#", ""))
                 : set;
 
         // Data: must always be object and base64
@@ -23,7 +23,7 @@ internal class UiValueProcessor: UrlValueProcess
         {
             if (set.Value == null) return set;
             var json = JsonSerializer.Serialize(set.Value, JsonOptions.SafeJsonForHtmlAttributes);
-            return new NameObjectSet(set, value: $"{Json64Prefix}{Base64.Encode(json)}");
+            return new(set, value: $"{Json64Prefix}{Base64.Encode(json)}");
         }
 
         // All others such as icons - make safe

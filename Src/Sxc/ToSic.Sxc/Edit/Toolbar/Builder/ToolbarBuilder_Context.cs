@@ -36,7 +36,7 @@ partial class ToolbarBuilder
     private ToolbarContext GenerateContext(object target, string context) => Log.Func($"{nameof(context)}:{context}", () =>
     {
         // Check if context had already been prepared
-        if (context.ContainsInsensitive("context:")) return (new ToolbarContext(context), "contains context:");
+        if (context.ContainsInsensitive("context:")) return (new(context), "contains context:");
 
         if (target == null) return (null, "no target");
         if (context.EqualsInsensitive(false.ToString())) return (null, "context=false");

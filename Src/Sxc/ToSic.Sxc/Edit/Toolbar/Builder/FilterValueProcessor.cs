@@ -17,7 +17,7 @@ internal class FilterValueProcessor : UrlValueProcess
 
         // If the value is an entity / dynamic-entity, return it as an id
         if (set.Value is ICanBeEntity entity)
-            return new NameObjectSet(set, value: entity.Entity.EntityId);
+            return new(set, value: entity.Entity.EntityId);
 
         // Check array / list of items to filter for
         // Make sure that if they have IDs or Entity-like objects they will be reduced to their ID
@@ -32,7 +32,7 @@ internal class FilterValueProcessor : UrlValueProcess
                 })
                 .Where(v => v != null)
                 .ToArray();
-            return new NameObjectSet(set, value: ids);
+            return new(set, value: ids);
         }
 
         // Fallback

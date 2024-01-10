@@ -27,15 +27,15 @@ namespace ToSic.Sxc.Edit.Toolbar;
 [PublicApi]
 public partial interface IToolbarBuilder: IRawHtmlString, IHasLog, INeedsDynamicCodeRoot
 {
-    [PrivateApi("internal use only")]
-    IToolbarBuilder Toolbar(
-        string toolbarTemplate,
-        object target = default,
-        NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = default,
-        object parameters = default,
-        object prefill = default
-    );
+    //[PrivateApi("internal use only")]
+    //IToolbarBuilder Toolbar(
+    //    string toolbarTemplate,
+    //    object target = default,
+    //    NoParamOrder noParamOrder = default,
+    //    Func<ITweakButton, ITweakButton> tweak = default,
+    //    object ui = default,
+    //    object parameters = default,
+    //    object prefill = default
+    //);
 
 }

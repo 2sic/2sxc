@@ -65,7 +65,7 @@ partial class ToolbarBuilder
             return true;
         }
 
-        if (!AddRuleIfFound<ToolbarRuleToolbar>(t => new ToolbarRuleToolbar(Empty, t.Ui)))
+        if (!AddRuleIfFound<ToolbarRuleToolbar>(t => new(Empty, t.Ui)))
             rules.Add(new ToolbarRuleToolbar(Empty));
         AddRuleIfFound<ToolbarRuleForParams>();
         AddRuleIfFound<ToolbarRuleSettings>();

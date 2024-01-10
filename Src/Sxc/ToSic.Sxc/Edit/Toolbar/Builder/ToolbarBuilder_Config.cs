@@ -24,10 +24,10 @@ partial class ToolbarBuilder
         //Eav.Parameters.Protect(noParamOrder, $"{nameof(mode)}, {nameof(target)}, {nameof(condition)}, {nameof(conditionFunc)}");
         // Create clone before starting to log so it's in there too
         var clone = target == null 
-            ? new ToolbarBuilder(this)
+            ? new(this)
             : (ToolbarBuilder)Parameters(target);   // Params will already copy/clone it
 
-        var p = clone._configuration = new ToolbarBuilderConfiguration(
+        var p = clone._configuration = new(
             _configuration,
             mode: mode, 
             condition: condition, 

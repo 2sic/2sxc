@@ -42,7 +42,7 @@ partial class ToolbarBuilder
         var parsWithPrefill = Utils.Prefill2Url.SerializeWithChild(paramsString, prefill, PrefixPrefill);
         if (fields != default)
             parsWithPrefill = Utils.Filter2Url.SerializeWithChild(parsWithPrefill, new { fields });
-        return new CleanedParams
+        return new()
         {
             Operation = ToolbarRuleOperation.Pick(operation, defOp),
             Ui = PrepareUi(ui, uiMerge, uiMergePrefix, tweaks: tweaks?.UiMerge),

@@ -10,10 +10,12 @@ namespace ToSic.Sxc.Edit.Toolbar;
 public partial interface IToolbarBuilder
 {
 
-    [PrivateApi]
+    [PrivateApi("WIP / Debugging")]
+    [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     ToolbarContext GetContext();
 
     [PrivateApi("WIP 14.07.04")]
+    [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     IToolbarBuilder Context(
         object target
     );
