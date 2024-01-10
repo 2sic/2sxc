@@ -6,6 +6,7 @@ using ToSic.Razor.StartUp;
 using ToSic.Sxc.Backend;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Startup;
 using ToSic.Sxc.Engines;

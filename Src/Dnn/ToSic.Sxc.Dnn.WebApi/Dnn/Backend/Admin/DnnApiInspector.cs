@@ -7,15 +7,10 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Dnn.WebApi.Admin;
+namespace ToSic.Sxc.Dnn.Backend.Admin;
 
-internal class DnnApiInspector: ServiceBase, IApiInspector
+internal class DnnApiInspector() : ServiceBase(DnnConstants.LogName), IApiInspector
 {
-    public DnnApiInspector(): base(DnnConstants.LogName)
-    {
-
-    }
-        
     public bool IsBody(ParameterInfo paramInfo)
     {
         return paramInfo.CustomAttributes.Any(ca => ca.AttributeType == typeof(FromBodyAttribute));

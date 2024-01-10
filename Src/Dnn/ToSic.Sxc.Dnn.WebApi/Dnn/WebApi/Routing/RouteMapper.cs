@@ -3,14 +3,15 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Routing;
+using ToSic.Sxc.Dnn.Backend;
+using ToSic.Sxc.Dnn.Backend.Admin;
+using ToSic.Sxc.Dnn.Backend.App;
+using ToSic.Sxc.Dnn.Backend.Cms;
+using ToSic.Sxc.Dnn.Backend.Module;
+using ToSic.Sxc.Dnn.Backend.Sys;
 using ToSic.Sxc.Dnn.Providers;
-using ToSic.Sxc.Dnn.WebApi;
-using ToSic.Sxc.Dnn.WebApi.Admin;
-using ToSic.Sxc.Dnn.WebApi.App;
-using ToSic.Sxc.Dnn.WebApi.Cms;
-using ToSic.Sxc.Dnn.WebApi.Sys;
 
-namespace ToSic.Sxc.Dnn.WebApiRouting;
+namespace ToSic.Sxc.Dnn.WebApi;
 
 // ReSharper disable once UnusedMember.Global
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -28,10 +29,10 @@ public class RouteMapper : IServiceRouteMapper
     // app-query    will try to request a query
     // app-api      will call custom c# web-apis of a specific app
 
-    static readonly string[] StdNsWebApi = {typeof(AppDataController).Namespace /* "ToSic.Sxc.WebApi.App" */};
-    static readonly string[] AdamNamespace = {typeof(AdamController).Namespace};
+    private static readonly string[] StdNsWebApi = [typeof(AppDataController).Namespace];
+    private static readonly string[] AdamNamespace = [typeof(AdamController).Namespace];
     private IMapRoute _mapRouteManager;
-    private static readonly object appContentDefs = new {controller = ControllerNames.AppContent, id = RouteParameter.Optional };
+    private static readonly object AppContentDefs = new {controller = ControllerNames.AppContent, id = RouteParameter.Optional };
 
 
     public void RegisterRoutes(IMapRoute mapRouteManager)
@@ -54,7 +55,7 @@ public class RouteMapper : IServiceRouteMapper
         // 2. Type and guid-id
         foreach (var part in Roots.Content)
         {
-            AddWC("2sxc-" + part.Name,      $"{part.Path}/{ValueTokens.SetTypeAndId}", appContentDefs, idNullOrNumber, StdNsWebApi);
+            AddWC("2sxc-" + part.Name,      $"{part.Path}/{ValueTokens.SetTypeAndId}", AppContentDefs, idNullOrNumber, StdNsWebApi);
             AddWD("2sxc-guid-" + part.Name, $"{part.Path}/{ValueTokens.SetTypeAndGuid}",  ControllerNames.AppContent, StdNsWebApi);
         }
 
@@ -79,7 +80,7 @@ public class RouteMapper : IServiceRouteMapper
         // /Sys/ Part 1: Special update v13 - all the insights-commands go through "Details?view=xyz
         // It's important that this comes first, otherwise the second /sys/ will capture this as well
         _mapRouteManager.MapHttpRoute(Mod2Sxc, "2sxc-sys-new", $"{Areas.Sys}/Insights/{{View}}",
-            new { controller = "Insights", action = nameof(InsightsController.Details) }, new[] { typeof(InsightsController).Namespace });
+            new { controller = "Insights", action = nameof(InsightsController.Details) }, [typeof(InsightsController).Namespace]);
 
         // /Sys/ Part 2: All others
         AddTy("2sxc-sys",     Areas.Sys + "/" + ValueTokens.SetControllerAction,           typeof(InstallController));
@@ -115,7 +116,7 @@ public class RouteMapper : IServiceRouteMapper
         // 1. Type and null or int-id
         // 2. Type and guid-id
         var idNullOrNumber = new {id = @"^\d*$"}; // Only matches if "id" is null, or built only with digits.
-        AddWC("app-content", $"{oldContentRoot}/{ValueTokens.SetTypeAndId}", appContentDefs, idNullOrNumber, StdNsWebApi);
+        AddWC("app-content", $"{oldContentRoot}/{ValueTokens.SetTypeAndId}", AppContentDefs, idNullOrNumber, StdNsWebApi);
         AddWD("app-content-guid", $"{oldContentRoot}/{ValueTokens.SetTypeAndGuid}", ControllerNames.AppContent, StdNsWebApi);
 
         // App-API routes - for the custom code API calls of an app
@@ -168,7 +169,7 @@ public class RouteMapper : IServiceRouteMapper
     /// Add with type
     /// </summary>
     void AddTy(string name, string url, Type nsType)
-        => AddNs(name, url, new[] { nsType.Namespace });
+        => AddNs(name, url, [nsType.Namespace]);
 
 
     #endregion

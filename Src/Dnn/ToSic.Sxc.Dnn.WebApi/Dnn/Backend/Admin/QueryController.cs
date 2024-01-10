@@ -12,7 +12,7 @@ using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Admin.Query.QueryControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Admin;
+namespace ToSic.Sxc.Dnn.Backend.Admin;
 
 /// <summary>
 /// Proxy Class to the EAV PipelineDesignerController (Web API Controller)
@@ -22,11 +22,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin;
 [DnnLogExceptions]
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class QueryController : SxcApiControllerBase, IQueryController
+public class QueryController() : SxcApiControllerBase(RealController.LogSuffix, RealController.LogGroup,
+    firstMessage: $"Query: {HttpContext.Current?.Request.Url.AbsoluteUri.After("/query/")}"), IQueryController
 {
-    public QueryController() : base(RealController.LogSuffix, RealController.LogGroup,
-        firstMessage: $"Query: {HttpContext.Current?.Request.Url.AbsoluteUri.After("/query/")}") { }
-
     private RealController Real => SysHlp.GetService<RealController>();
 
     [HttpGet] public QueryDefinitionDto Get(int appId, int? id = null) => Real.Get(appId, id);

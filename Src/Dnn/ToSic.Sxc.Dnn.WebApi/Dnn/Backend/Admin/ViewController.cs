@@ -1,31 +1,29 @@
-﻿using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
-using ToSic.Lib.Logging;
+using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.Views;
+using ToSic.Sxc.Dnn.Backend.Context;
 using ToSic.Sxc.Dnn.Pages;
-using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Admin.ViewControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Admin;
+namespace ToSic.Sxc.Dnn.Backend.Admin;
 
 [DnnLogExceptions]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ViewController : SxcApiControllerBase, IViewController
+public class ViewController() : SxcApiControllerBase(RealController.LogSuffix), IViewController
 {
-    public ViewController() : base(RealController.LogSuffix) { }
-
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <inheritdoc />

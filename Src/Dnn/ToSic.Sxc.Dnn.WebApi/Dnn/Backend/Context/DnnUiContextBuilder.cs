@@ -5,28 +5,23 @@ using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.Data;
 using ToSic.Sxc.Backend.Context;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Dnn.WebApi.Context;
 
-internal sealed class DnnUiContextBuilder : UiContextBuilderBase
+internal sealed class DnnUiContextBuilder(
+    ISxcContextResolver ctxResolver,
+    RemoteRouterLink remoteRouterLink,
+    UiContextBuilderBase.MyServices deps)
+    : UiContextBuilderBase(deps)
 {
     #region Constructor / DI
 
-    private readonly ISxcContextResolver _ctxResolver;
-    private readonly RemoteRouterLink _remoteRouterLink;
     private readonly PortalSettings _portal = PortalSettings.Current;
 
-    private ModuleInfo Module => (_ctxResolver.BlockContextOrNull()?.Module as IWrapper<ModuleInfo>)?.GetContents();
-
-    public DnnUiContextBuilder(ISxcContextResolver ctxResolver, RemoteRouterLink remoteRouterLink, MyServices deps) : base(deps)
-    {
-        _ctxResolver = ctxResolver;
-        _remoteRouterLink = remoteRouterLink;
-    }
+    private ModuleInfo Module => (ctxResolver.BlockContextOrNull()?.Module as IWrapper<ModuleInfo>)?.GetContents();
 
     #endregion
 
@@ -80,7 +75,7 @@ internal sealed class DnnUiContextBuilder : UiContextBuilderBase
     {
         if (AppStateOrNull is not { } app) return "";
 
-        var gsUrl = _remoteRouterLink.LinkToRemoteRouter(
+        var gsUrl = remoteRouterLink.LinkToRemoteRouter(
             RemoteDestinations.GettingStarted,
             Services.SiteCtx.Site,
             Module.ModuleID,

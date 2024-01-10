@@ -1,7 +1,7 @@
-﻿using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.Http;
+using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Backend.Admin.AppFiles;
@@ -9,7 +9,7 @@ using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Admin.AppFiles.AppFilesControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Admin;
+namespace ToSic.Sxc.Dnn.Backend.Admin;
 
 /// <summary>
 /// This one supplies portal-wide (or cross-portal) settings / configuration

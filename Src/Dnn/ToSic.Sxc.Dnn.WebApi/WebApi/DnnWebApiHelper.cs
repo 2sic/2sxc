@@ -8,6 +8,7 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Dnn.WebApi;
 
 namespace ToSic.Sxc.WebApi;

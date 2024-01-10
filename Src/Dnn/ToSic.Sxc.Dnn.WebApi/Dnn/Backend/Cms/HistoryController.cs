@@ -1,22 +1,20 @@
-﻿using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.Http;
+using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
 using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Cms.HistoryControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Cms;
+namespace ToSic.Sxc.Dnn.Backend.Cms;
 
 [SupportedModules(DnnSupportedModuleNames)]
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class HistoryController : SxcApiControllerBase, IHistoryController
+public class HistoryController() : SxcApiControllerBase(RealController.LogSuffix), IHistoryController
 {
-    public HistoryController() : base(RealController.LogSuffix) { }
-
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <inheritdoc />

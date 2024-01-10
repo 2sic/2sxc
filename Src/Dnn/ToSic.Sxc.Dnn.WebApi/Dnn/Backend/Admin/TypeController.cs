@@ -1,10 +1,10 @@
 ﻿using System;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
@@ -12,7 +12,7 @@ using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Admin.TypeControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Admin;
+namespace ToSic.Sxc.Dnn.Backend.Admin;
 
 /// <summary>
 /// Web API Controller for Content-Type structures, fields etc.
@@ -28,10 +28,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin;
 /// </remarks>
 [DnnLogExceptions]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class TypeController : SxcApiControllerBase, ITypeController
+public class TypeController() : SxcApiControllerBase(RealController.LogSuffix), ITypeController
 {
-    public TypeController() : base(RealController.LogSuffix) { }
-
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <summary>

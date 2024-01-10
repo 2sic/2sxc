@@ -1,15 +1,15 @@
-﻿using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
+using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Sxc.Backend.Cms;
 using ToSic.Sxc.Backend.InPage;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Cms.BlockControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Cms;
+namespace ToSic.Sxc.Dnn.Backend.Cms;
 
 [ValidateAntiForgeryToken]
 // cannot use this, as most requests now come from a lone page [SupportedModules(DnnSupportedModuleNames)]

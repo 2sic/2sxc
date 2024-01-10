@@ -41,16 +41,19 @@ public abstract class ApiController : DynamicApiController,
     IHasDynamicCodeRoot,
     IHasCodeLog
 {
-    [PrivateApi]
-    public const string ErrRecommendedNamespaces = "To use it, use the new base class from Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.";
+    internal const string ErrRecommendedNamespaces = "To use it, use the new base class from Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.";
 
     /// <remarks>
     /// Probably obsolete, but a bit risky to just remove
     /// We will only add it to ApiController but not to Api12, because no new code should ever use that.
     /// </remarks>
-    [PrivateApi] public IBlock Block => SysHlp.GetBlockAndContext(Request).LoadBlock();
+    [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)] 
+    public IBlock Block => SysHlp.GetBlockAndContext(Request).LoadBlock();
 
-    [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel9Old;
+    [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel9Old;
 
     /// <inheritdoc cref="IDynamicCode.App" />
     public IApp App => _DynCodeRoot.App;

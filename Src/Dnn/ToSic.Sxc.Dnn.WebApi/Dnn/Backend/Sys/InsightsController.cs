@@ -1,15 +1,14 @@
 ﻿using System.Web.Http;
+using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using RealController = ToSic.Eav.WebApi.Sys.Insights.InsightsControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Sys;
+namespace ToSic.Sxc.Dnn.Backend.Sys;
 
 [DnnLogExceptions]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class InsightsController : DnnApiControllerWithFixes
+public class InsightsController() : DnnApiControllerWithFixes(RealController.LogSuffix)
 {
-    public InsightsController() : base(RealController.LogSuffix) { }
-
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <summary>

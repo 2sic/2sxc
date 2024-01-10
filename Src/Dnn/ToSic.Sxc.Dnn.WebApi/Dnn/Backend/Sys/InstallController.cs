@@ -1,19 +1,19 @@
-﻿using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Web.Http;
+using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
+using ToSic.Sxc.Dnn.WebApi;
 using RealController = ToSic.Sxc.Backend.Sys.InstallControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Sys;
+namespace ToSic.Sxc.Dnn.Backend.Sys;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class InstallController : DnnApiControllerWithFixes, IInstallController<HttpResponseMessage>
+public class InstallController()
+    : DnnApiControllerWithFixes(RealController.LogSuffix), IInstallController<HttpResponseMessage>
 {
-    public InstallController() : base(RealController.LogSuffix) { }
-
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <summary>

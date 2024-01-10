@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using ToSic.Eav.WebApi.Routing;
 
-namespace ToSic.Sxc.Dnn.WebApiRouting;
+namespace ToSic.Sxc.Dnn.WebApi;
 
 internal class Roots
 {
@@ -28,16 +28,10 @@ internal class Roots
         .ToArray();
 }
 
-internal struct RootId
+internal struct RootId(string name, string path)
 {
-    public string Name;
-    public string Path;
-
-    public RootId(string name, string path)
-    {
-        Name = name;
-        Path = path;
-    }
+    public string Name = name;
+    public string Path = path;
 }
 
 
@@ -46,7 +40,7 @@ internal class RouteParts
     public const string RouteApiControllerAction = "api/" + ValueTokens.SetControllerAction;
 }
 
-public class ControllerNames
+internal class ControllerNames
 {
     public const string Adam = "Adam";
     public const string AppContent = "AppData";

@@ -4,15 +4,13 @@ using ToSic.Eav.WebApi.App;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.App.AppDataControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.App;
+namespace ToSic.Sxc.Dnn.Backend.App;
 
 /// <inheritdoc />
 [AllowAnonymous]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppDataController : SxcApiControllerBase, IAppDataController
+public class AppDataController() : SxcApiControllerBase(RealController.LogSuffix), IAppDataController
 {
-    public AppDataController(): base(RealController.LogSuffix) { }
-
     private RealController Real => SysHlp.GetService<RealController>();
 
     #region Get List / all of a certain content-type

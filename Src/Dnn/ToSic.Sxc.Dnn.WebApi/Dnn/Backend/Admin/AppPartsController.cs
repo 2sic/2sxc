@@ -1,21 +1,21 @@
-﻿using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Sxc.Dnn.WebApi;
 using RealController = ToSic.Sxc.Backend.Admin.AppPartsControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Admin;
+namespace ToSic.Sxc.Dnn.Backend.Admin;
 // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)] can't be used, because it forces the security
 // token, which fails in the cases where the url is called using get, which should result in a download
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppPartsController : DnnApiControllerWithFixes, IAppPartsController
+public class AppPartsController() : DnnApiControllerWithFixes(RealController.LogSuffix), IAppPartsController
 {
-    public AppPartsController() : base(RealController.LogSuffix) { }
     private RealController Real => SysHlp.GetService<RealController>();
     #region Parts Export/Import
 

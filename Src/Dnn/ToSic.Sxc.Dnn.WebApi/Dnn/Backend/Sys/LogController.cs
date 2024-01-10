@@ -1,12 +1,13 @@
-﻿using DotNetNuke.Security;
+﻿using System.Web.Http;
+using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using System.Web.Http;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using RealController = ToSic.Eav.WebApi.Sys.LogControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Sys;
+namespace ToSic.Sxc.Dnn.Backend.Sys;
 
 /// <summary>
 /// This one supplies portal-wide (or cross-portal) settings / configuration
@@ -16,10 +17,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys;
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class LogController : DnnApiControllerWithFixes, ILogController
+public class LogController() : DnnApiControllerWithFixes(RealController.LogSuffix), ILogController
 {
-    public LogController() : base(RealController.LogSuffix) { }
-
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <inheritdoc />

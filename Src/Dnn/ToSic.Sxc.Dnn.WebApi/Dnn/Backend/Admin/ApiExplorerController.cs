@@ -1,26 +1,26 @@
-﻿using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using System;
+﻿using System;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http;
+using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
 using ToSic.Eav.Context;
-using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.ApiExplorer;
+using ToSic.Lib.Logging;
+using ToSic.Sxc.Dnn.Integration;
+using ToSic.Sxc.Dnn.WebApi;
 using RealController = ToSic.Eav.WebApi.ApiExplorer.ApiExplorerControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Admin;
+namespace ToSic.Sxc.Dnn.Backend.Admin;
 
 [ValidateAntiForgeryToken]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ApiExplorerController : DnnApiControllerWithFixes, IApiExplorerController
+public class ApiExplorerController() : DnnApiControllerWithFixes(RealController.LogSuffix), IApiExplorerController
 {
-    public ApiExplorerController() : base(RealController.LogSuffix) { }
-
     private RealController Real => SysHlp.GetService<RealController>();
 
     [HttpGet]

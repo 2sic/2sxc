@@ -9,7 +9,7 @@ using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Adam.AdamControllerReal<int>;
 
-namespace ToSic.Sxc.Dnn.WebApi;
+namespace ToSic.Sxc.Dnn.Backend;
 
 /// <summary>
 /// Direct access to app-content items, simple manipulations etc.

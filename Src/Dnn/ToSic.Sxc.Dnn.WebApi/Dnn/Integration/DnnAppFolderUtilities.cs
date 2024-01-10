@@ -3,16 +3,15 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using ToSic.Eav.Context;
-using ToSic.Lib.DI;
 using ToSic.Eav.Helpers;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Dnn.WebApi;
-using ToSic.Sxc.Dnn.WebApiRouting;
 
-namespace ToSic.Sxc.Dnn;
+namespace ToSic.Sxc.Dnn.Integration;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class DnnAppFolderUtilities: ServiceBase

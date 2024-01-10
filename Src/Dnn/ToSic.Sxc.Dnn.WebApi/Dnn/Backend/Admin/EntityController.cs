@@ -1,8 +1,8 @@
-﻿using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Web.Http;
+using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
 using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
@@ -11,7 +11,7 @@ using ToSic.Sxc.WebApi;
 using Guid = System.Guid;
 using RealController = ToSic.Eav.WebApi.Admin.EntityControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Admin;
+namespace ToSic.Sxc.Dnn.Backend.Admin;
 
 /// <summary>
 /// Proxy Class to the EAV EntitiesController (Web API Controller)
@@ -27,10 +27,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin;
 /// </remarks>
 [DnnLogExceptions]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class EntityController : SxcApiControllerBase, IEntityController
+public class EntityController() : SxcApiControllerBase(RealController.LogSuffix), IEntityController
 {
-    public EntityController(): base(RealController.LogSuffix) { }
-
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <inheritdoc/>

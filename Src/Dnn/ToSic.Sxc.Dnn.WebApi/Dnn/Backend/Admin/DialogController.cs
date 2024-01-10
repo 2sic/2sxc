@@ -6,7 +6,7 @@ using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Admin.DialogControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Admin;
+namespace ToSic.Sxc.Dnn.Backend.Admin;
 
 /// <summary>
 /// This one supplies portal-wide (or cross-portal) settings / configuration
@@ -16,12 +16,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin;
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class DialogController : SxcApiControllerBase, IDialogController
+public class DialogController() : SxcApiControllerBase(RealController.LogSuffix), IDialogController
 {
-
-
-    public DialogController(): base(RealController.LogSuffix) { }
-
     private RealController Real => SysHlp.GetService<RealController>();
 
     [HttpGet]

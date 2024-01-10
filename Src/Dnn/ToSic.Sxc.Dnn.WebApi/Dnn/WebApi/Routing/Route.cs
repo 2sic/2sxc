@@ -1,7 +1,7 @@
 ﻿using System.Web.Http.Routing;
 using ToSic.Eav.WebApi.Routing;
 
-namespace ToSic.Sxc.Dnn.WebApiRouting;
+namespace ToSic.Sxc.Dnn.WebApi;
 
 internal class Route
 {

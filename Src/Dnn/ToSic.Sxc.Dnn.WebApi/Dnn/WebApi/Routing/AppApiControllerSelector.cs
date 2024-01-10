@@ -16,16 +16,15 @@ using ToSic.Eav.Helpers;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
+using ToSic.Sxc.Dnn.Backend.Sys;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Context;
-using ToSic.Sxc.Dnn.WebApi;
-using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.Integration;
 
-namespace ToSic.Sxc.Dnn.WebApiRouting;
+namespace ToSic.Sxc.Dnn.WebApi;
 
 /// <inheritdoc />
 /// <summary>
@@ -33,19 +32,13 @@ namespace ToSic.Sxc.Dnn.WebApiRouting;
 /// ...and if yes, compile / run the app-specific api controllers
 /// ...otherwise hand processing back to next api controller up-stream
 /// </summary>
-internal class AppApiControllerSelector : IHttpControllerSelector
+internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttpControllerSelector
 {
-    private readonly HttpConfiguration _config;
     public IHttpControllerSelector PreviousSelector { get; set; }
-
-    public AppApiControllerSelector(HttpConfiguration configuration)
-    {
-        _config = configuration;
-    }
 
     public IDictionary<string, HttpControllerDescriptor> GetControllerMapping() => PreviousSelector.GetControllerMapping();
 
-    private static readonly string[] AllowedRoutes = {"desktopmodules/2sxc/api/app-api/", "api/2sxc/app-api/"}; // old routes, dnn 7/8 & dnn 9
+    private static readonly string[] AllowedRoutes = ["desktopmodules/2sxc/api/app-api/", "api/2sxc/app-api/"]; // old routes, dnn 7/8 & dnn 9
 
 
     // new in 2sxc 9.34 #1651 - added "([^/]+\/)?" to allow an optional edition parameter
@@ -171,7 +164,7 @@ internal class AppApiControllerSelector : IHttpControllerSelector
         request?.Properties.Add(CodeCompiler.SharedCodeRootPathKeyInCache, folder);
         request?.Properties.Add(CodeCompiler.SharedCodeRootFullPathKeyInCache, fullPath);
 
-        return new HttpControllerDescriptor(_config, type.Name, type);
+        return new HttpControllerDescriptor(configuration, type.Name, type);
     }
 
     private static void AddToInsightsHistory(IServiceProvider sp, string url, ILog log)

@@ -3,6 +3,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.LookUp;
 
 namespace ToSic.Sxc.WebApi;

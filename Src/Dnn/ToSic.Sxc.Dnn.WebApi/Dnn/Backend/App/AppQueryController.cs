@@ -6,14 +6,12 @@ using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.App.AppQueryControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.App;
+namespace ToSic.Sxc.Dnn.Backend.App;
 
 [AllowAnonymous] // All functions will check security internally, so assume no requirements
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppQueryController : SxcApiControllerBase, IAppQueryController
+public class AppQueryController() : SxcApiControllerBase(RealController.LogSuffix), IAppQueryController
 {
-    public AppQueryController() : base(RealController.LogSuffix) { }
-
     private RealController Real => SysHlp.GetService<RealController>();
 
     // GET is separated from POST to solve HttpResponseException that happens when

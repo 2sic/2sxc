@@ -1,8 +1,8 @@
 ﻿using System;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
 using System.Collections.Generic;
 using System.Web.Http;
+using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Data;
 using ToSic.Eav.WebApi.Admin;
@@ -10,7 +10,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Eav.WebApi.Admin.FieldControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Admin;
+namespace ToSic.Sxc.Dnn.Backend.Admin;
 
 /// <summary>
 /// Web API Controller for Content-Type structures, fields etc.
@@ -19,10 +19,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin;
 [ValidateAntiForgeryToken]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class FieldController : SxcApiControllerBase, IFieldController
+public class FieldController() : SxcApiControllerBase(RealController.LogSuffix), IFieldController
 {
-    public FieldController() : base(RealController.LogSuffix) { }
-
     private RealController Real => SysHlp.GetService<RealController>();
 
     #region Fields - Get, Reorder, Data-Types (for dropdown), etc.

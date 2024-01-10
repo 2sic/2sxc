@@ -7,25 +7,19 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 
-namespace ToSic.Sxc.Dnn.WebApi;
+namespace ToSic.Sxc.Dnn.Integration;
 
 /// <summary>
 /// Helper class for work on the WebAPIs which may be used by multiple base classes.
 /// This is to ensure the code is not in the class, and is reusable. 
 /// </summary>
-internal class DnnWebApiLogging
+internal class DnnWebApiLogging(ILog log, ILogStore logStore, string logGroup, string firstMessage = default)
 {
-    public DnnWebApiLogging(ILog log, ILogStore logStore, string logGroup, string firstMessage = default)
-    {
-        // Add the first message with the current path
-        _timerWrapLog = log.Fn(message: firstMessage ?? $"Path: {HttpContext.Current?.Request.Url.AbsoluteUri}", timer: true);
+    // Add the first message with the current path
+    private readonly ILogCall _timerWrapLog = log.Fn(message: firstMessage ?? $"Path: {HttpContext.Current?.Request.Url.AbsoluteUri}", timer: true);
 
         // Add it to the log store
-        LogStoreEntry = logStore.Add(logGroup ?? EavWebApiConstants.HistoryNameWebApi, log);
-    }
-
-    private readonly ILogCall _timerWrapLog;
-    public LogStoreEntry LogStoreEntry;
+    public LogStoreEntry LogStoreEntry = logStore.Add(logGroup ?? EavWebApiConstants.HistoryNameWebApi, log);
 
     public void OnInitialize(HttpControllerContext controllerContext)
     {

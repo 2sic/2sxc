@@ -1,23 +1,21 @@
-﻿using DotNetNuke.Security;
+﻿using System.Web.Http;
+using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using System.Web.Http;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Eav.WebApi.Admin.AppInternalsControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Admin;
+namespace ToSic.Sxc.Dnn.Backend.Admin;
 
 /// <summary>
 /// Proxy Class to the AppInternalsController (Web API Controller)
 /// </summary>
 [DnnLogExceptions]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppInternalsController : SxcApiControllerBase, IAppInternalsController
+public class AppInternalsController() : SxcApiControllerBase(RealController.LogSuffix), IAppInternalsController
 {
-    public AppInternalsController(): base(RealController.LogSuffix) { }
-
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <inheritdoc/>

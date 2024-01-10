@@ -1,11 +1,10 @@
-﻿using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
-using ToSic.Eav.DataSources.Sys;
+using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
 using ToSic.Eav.DataSources.Sys.Internal;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
@@ -15,7 +14,7 @@ using ToSic.Sxc.WebApi;
 using AppDto = ToSic.Eav.WebApi.Dto.AppDto;
 using RealController = ToSic.Sxc.Backend.Admin.AppControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Admin;
+namespace ToSic.Sxc.Dnn.Backend.Admin;
 
 // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)] can't be used, because it forces the security
 // token, which fails in the cases where the url is called using get, which should result in a download
@@ -23,10 +22,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin;
 // we can't set this globally (only needed for imports)
 [DnnLogExceptions]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppController : SxcApiControllerBase, IAppController<HttpResponseMessage>
+public class AppController() : SxcApiControllerBase(RealController.LogSuffix), IAppController<HttpResponseMessage>
 {
-    public AppController() : base(RealController.LogSuffix) { }
-
     private RealController Real => SysHlp.GetService<RealController>();
 
     /// <inheritdoc />

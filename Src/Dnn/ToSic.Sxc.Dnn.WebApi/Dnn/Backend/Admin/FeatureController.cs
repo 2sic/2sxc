@@ -5,9 +5,10 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.SysData;
 using ToSic.Eav.WebApi.Admin.Features;
+using ToSic.Sxc.Dnn.WebApi;
 using RealController = ToSic.Eav.WebApi.Admin.Features.FeatureControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Admin;
+namespace ToSic.Sxc.Dnn.Backend.Admin;
 
 /// <summary>
 /// Provide information about activated features which will be managed externally. 
@@ -18,10 +19,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin;
 [SupportedModules(DnnSupportedModuleNames)]
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class FeatureController : DnnApiControllerWithFixes, IFeatureController
+public class FeatureController() : DnnApiControllerWithFixes(RealController.LogSuffix), IFeatureController
 {
-    public FeatureController(): base(RealController.LogSuffix) { }
-
     private RealController Real => SysHlp.GetService<RealController>();
 
     [HttpGet]

@@ -1,27 +1,23 @@
-﻿using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
-using ToSic.Lib.Logging;
+using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Cms.EditControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Cms;
+namespace ToSic.Sxc.Dnn.Backend.Cms;
 
 //[SupportedModules(DnnSupportedModuleNames)]
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class EditController : SxcApiControllerBase, IEditController
+public class EditController() : SxcApiControllerBase(RealController.LogSuffix), IEditController
 {
     #region Setup / Infrastructure
-
-
-
-    public EditController() : base(RealController.LogSuffix) { }
 
     private RealController Real => SysHlp.GetService<RealController>();
 

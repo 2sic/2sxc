@@ -3,12 +3,11 @@ using System.Web.Http;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Admin.CodeControllerReal;
 
-namespace ToSic.Sxc.Dnn.WebApi.Admin;
+namespace ToSic.Sxc.Dnn.Backend.Admin;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeController : SxcApiControllerBase
+public class CodeController() : SxcApiControllerBase(RealController.LogSuffix)
 {
-    public CodeController() : base(RealController.LogSuffix) { }
     private RealController Real => SysHlp.GetService<RealController>();
 
     [HttpGet]

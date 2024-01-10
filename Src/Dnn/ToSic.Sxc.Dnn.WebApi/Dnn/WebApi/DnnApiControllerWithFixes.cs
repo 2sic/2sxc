@@ -21,7 +21,7 @@ public abstract class DnnApiControllerWithFixes : DnnApiController, IHasLog
     {
         Log = new Log("Api." + logSuffix);
         // ReSharper disable once VirtualMemberCallInConstructor
-        SysHlp = new DnnWebApiHelper(this, insightsGroup ?? HistoryLogGroup, firstMessage);
+        SysHlp = new(this, insightsGroup ?? HistoryLogGroup, firstMessage);
     }
 
     /// <summary>

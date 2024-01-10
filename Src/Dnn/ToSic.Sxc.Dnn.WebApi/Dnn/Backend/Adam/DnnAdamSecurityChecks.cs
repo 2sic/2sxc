@@ -3,18 +3,16 @@ using System.IO;
 using DotNetNuke.Entities.Host;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
-using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using IAsset = ToSic.Eav.Apps.Assets.IAsset;
 using IFile = ToSic.Eav.Apps.Assets.IFile;
 using IFolder = ToSic.Eav.Apps.Assets.IFolder;
 
-namespace ToSic.Sxc.Dnn.WebApi;
+namespace ToSic.Sxc.Dnn.Backend;
 
-internal class DnnAdamSecurityChecks: AdamSecurityChecksBase
+internal class DnnAdamSecurityChecks(AdamSecurityChecksBase.MyServices services)
+    : AdamSecurityChecksBase(services, DnnConstants.LogName)
 {
-    public DnnAdamSecurityChecks(MyServices services) : base(services, DnnConstants.LogName) { }
-
     /// <summary>
     /// Helper to check extension based on DNN settings
     /// </summary>

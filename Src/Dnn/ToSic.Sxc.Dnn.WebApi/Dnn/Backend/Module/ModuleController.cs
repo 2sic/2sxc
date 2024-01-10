@@ -2,18 +2,17 @@
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Dnn.WebApi;
 
-namespace ToSic.Sxc.Dnn.WebApi;
+namespace ToSic.Sxc.Dnn.Backend.Module;
 
 // support all modules now... 
 [SupportedModules(DnnSupportedModuleNames)]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ModuleController: DnnApiControllerWithFixes
+public class ModuleController() : DnnApiControllerWithFixes("Mod")
 {
-    public ModuleController() : base("Mod") { }
-
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public bool Delete(int tabId, int modId)
