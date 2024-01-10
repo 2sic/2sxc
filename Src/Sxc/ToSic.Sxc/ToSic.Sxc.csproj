@@ -89,6 +89,7 @@
   <ItemGroup>
     <Folder Include="Beta\" />
     <Folder Include="Images\ResizeSettings\Internal\" />
+    <Folder Include="Run\" />
   </ItemGroup>
 
 </Project>

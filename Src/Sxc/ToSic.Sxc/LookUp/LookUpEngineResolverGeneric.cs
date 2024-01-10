@@ -11,23 +11,17 @@ namespace ToSic.Sxc.LookUp;
 /// Generic Lookup Resolver - will provide all lookups which are registered in DI
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class LookUpEngineResolverGeneric : ServiceBase, ILookUpEngineResolver
+public class LookUpEngineResolverGeneric(LazySvc<IEnumerable<ILookUp>> lookUps)
+    : ServiceBase($"{SxcLogging.SxcLogName}.LookUp"), ILookUpEngineResolver
 {
     #region Constructor and DI
-
-    public LookUpEngineResolverGeneric(LazySvc<IEnumerable<ILookUp>> lookUps) : base($"{SxcLogging.SxcLogName}.LookUp")
-    {
-        _lookUps = lookUps;
-    }
-
-    private readonly LazySvc<IEnumerable<ILookUp>> _lookUps;
 
     #endregion
 
     public ILookUpEngine GetLookUpEngine(int instanceId)
     {
         var luEngine = new LookUpEngine(Log);
-        luEngine.Add(_lookUps.Value.ToList());
+        luEngine.Add(lookUps.Value.ToList());
         return luEngine;
     }
 }

@@ -23,23 +23,15 @@ namespace ToSic.Sxc.LookUp;
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public partial class LookUpForTokenTemplate : ILookUp
+[method: PrivateApi]
+public partial class LookUpForTokenTemplate(
+    string name,
+    IDynamicEntity entity,
+    int repeaterIndex = -1,
+    int repeaterTotal = -1)
+    : ILookUp
 {
-
-    private readonly IDynamicEntity _entity;
-    public string Name { get; }
-
-    private readonly int _repeaterIndex;
-    private readonly int _repeaterTotal;
-        
-    [PrivateApi]
-    public LookUpForTokenTemplate(string name, IDynamicEntity entity, int repeaterIndex = -1, int repeaterTotal = -1)
-    {
-        Name = name;
-        _entity = entity;
-        _repeaterIndex = repeaterIndex;
-        _repeaterTotal = repeaterTotal;
-    }
+    public string Name { get; } = name;
 
     /// <summary>
     /// Get Property out of NameValueCollection
@@ -50,7 +42,7 @@ public partial class LookUpForTokenTemplate : ILookUp
     private string GetProperty(string strPropertyName, string strFormat)
     {
         // Return empty string if Entity is null
-        if (_entity == null)
+        if (entity == null)
             return string.Empty;
 
         var outputFormat = strFormat == string.Empty ? "g" : strFormat;
@@ -58,7 +50,7 @@ public partial class LookUpForTokenTemplate : ILookUp
         // If it's a repeater token for list index or something, get that first (or null)
         // Otherwise just get the normal value
         var valueObject = ResolveRepeaterTokens(strPropertyName) 
-                          ?? _entity.Get(strPropertyName);
+                          ?? entity.Get(strPropertyName);
 
         if (valueObject != null)
         {
@@ -94,16 +86,16 @@ public partial class LookUpForTokenTemplate : ILookUp
         var propertyMatch = Regex.Match(strPropertyName, "([a-z]+):([a-z]+)", RegexOptions.IgnoreCase);
         if (!propertyMatch.Success) return string.Empty;
 
-        valueObject = _entity.Get(propertyMatch.Groups[1].Value);
+        valueObject = entity.Get(propertyMatch.Groups[1].Value);
         if (valueObject == null) return string.Empty;
 
         #region Handle Entity-Field (List of DynamicEntity)
         var list = valueObject as List<IDynamicEntity>;
 
-        var entity = list?.FirstOrDefault() ?? valueObject as IDynamicEntity;
+        var entity1 = list?.FirstOrDefault() ?? valueObject as IDynamicEntity;
 
-        if (entity != null)
-            return new LookUpForTokenTemplate(null, entity).GetProperty(propertyMatch.Groups[2].Value, string.Empty);
+        if (entity1 != null)
+            return new LookUpForTokenTemplate(null, entity1).GetProperty(propertyMatch.Groups[2].Value, string.Empty);
 
         #endregion
 
@@ -113,9 +105,10 @@ public partial class LookUpForTokenTemplate : ILookUp
     }
 
 
-    private CultureInfo GetCultureInfo() => IZoneCultureResolverExtensions.SafeCultureInfo(_entity?.Cdf.Dimensions);
+    private CultureInfo GetCultureInfo() => IZoneCultureResolverExtensions.SafeCultureInfo(entity?.Cdf.Dimensions);
 
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public string Get(string key, string strFormat) => GetProperty(key, strFormat);
 
     /// <inheritdoc/>
