@@ -28,6 +28,7 @@ using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Internal;
+using ToSic.Sxc.Dnn.Code;
 
 // ReSharper disable InheritdocInvalidUsage
 
@@ -46,23 +47,22 @@ namespace ToSic.SexyContent.WebApi;
 [PrivateApi("This was the official base class a long time ago, Name & APIs must remain stable")]
 [DefaultToNewtonsoftForHttpJson]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract partial class SxcApiController : 
-    DynamicApiController, 
+public abstract partial class SxcApiController() :
+    DynamicApiController("OldApi"),
     IDnnDynamicWebApi,
     ICreateInstance,
-    IDynamicWebApi, 
+    IDynamicWebApi,
     IDynamicCodeBeforeV10,
 #pragma warning disable 618
     IAppAndDataHelpers,
 #pragma warning restore 618
     IHasCodeLog
 {
-    protected SxcApiController() : base("OldApi") { }
-
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
 
-    public new IDnnContext Dnn => base.Dnn;
+    /// <inheritdoc cref="IHasDnn.Dnn"/>
+    public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
 
     [Obsolete]
     [PrivateApi]

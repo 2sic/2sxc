@@ -13,6 +13,8 @@ using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Dnn.Code;
+using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
@@ -59,6 +61,8 @@ public abstract class ApiController : DynamicApiController,
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
 
+    /// <inheritdoc cref="IHasDnn.Dnn"/>
+    public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
 
     #region AsDynamic implementations
     /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />

@@ -60,7 +60,9 @@ public abstract class ApiTyped: DynamicApiController, IHasCodeLog, IDynamicWebAp
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => SysHlp.CodeLog;
 
-    [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
+    [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
 
     #endregion
 
@@ -73,6 +75,7 @@ public abstract class ApiTyped: DynamicApiController, IHasCodeLog, IDynamicWebAp
     public ILinkService Link => _DynCodeRoot?.Link;
 
     [PrivateApi("Not yet ready")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public IDevTools DevTools => CodeHelper.DevTools;
 
     #endregion

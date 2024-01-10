@@ -15,11 +15,10 @@ namespace Custom.Dnn;
 [PublicApi("This is the official base class for v12+")]
 [DnnLogExceptions]
 [DefaultToNewtonsoftForHttpJson]
-public abstract class Api12 : Hybrid.Api12, IDnnDynamicWebApi, IHasDnn
+public abstract class Api12(string logSuffix) : Hybrid.Api12(logSuffix), IDnnDynamicWebApi, IHasDnn
 {
-    protected Api12() : base("Dnn12") { }
-    protected Api12(string logSuffix) : base(logSuffix) { }
+    protected Api12() : this("Dnn12") { }
 
-    /// <inheritdoc />
-    public new IDnnContext Dnn => base.Dnn;
+    /// <inheritdoc cref="IHasDnn.Dnn"/>
+    public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
 }

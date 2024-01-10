@@ -12,7 +12,8 @@ namespace ToSic.Sxc.WebApi;
 /// </summary>
 [DnnLogExceptions]
 [PrivateApi("This was only ever used as an internal base class, so it can be modified as needed - just make sure the derived types don't break")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+// Can't hide in Intellisense, because that would hide it for all derived classes too
+// [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public abstract class SxcApiControllerBase(string logSuffix, string insightsGroup = default, string firstMessage = default)
     : DnnApiControllerWithFixes(logSuffix, insightsGroup, firstMessage)
 {
@@ -22,7 +23,6 @@ public abstract class SxcApiControllerBase(string logSuffix, string insightsGrou
         DynHlp.InitializeBlockContext(controllerContext.Request);
     }
 
-    [PrivateApi]
     internal DynamicApiCodeHelpers DynHlp => _dynHlp ??= new DynamicApiCodeHelpers(this, SysHlp);
     private DynamicApiCodeHelpers _dynHlp;
         

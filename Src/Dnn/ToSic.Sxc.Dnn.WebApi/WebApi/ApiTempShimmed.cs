@@ -10,7 +10,7 @@ namespace ToSic.Sxc.WebApi;
 /// </summary>
 [DnnLogExceptions]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class ApiTempShimmed : DynamicApiController, IDynamicWebApi, IHasDynamicCodeRoot, INetCoreCompatibility
+internal abstract class ApiTempShimmed : DynamicApiController, IDynamicWebApi, IHasDynamicCodeRoot, INetCoreCompatibility
 {
 
     #region Net Core Compatibility Shims - Copy this entire section to WebApi Files

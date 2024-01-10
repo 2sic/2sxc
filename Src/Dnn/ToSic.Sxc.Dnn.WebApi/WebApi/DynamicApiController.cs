@@ -20,7 +20,8 @@ namespace ToSic.Sxc.WebApi;
 [PrivateApi("This is an internal base class used for the App ApiControllers. Make sure the implementations don't break")]
 // Note: 2022-02 2dm I'm not sure if this was ever published as the official api controller, but it may have been?
 [DnnLogExceptions]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+// Can't hide in Intellisense, because that would hide it for all derived classes too
+// [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 [method: PrivateApi]
 public abstract class DynamicApiController(string logSuffix, string insightsGroup = default)
     : SxcApiControllerBase(logSuffix, insightsGroup), IHasDynamicCodeRoot
@@ -48,6 +49,7 @@ public abstract class DynamicApiController(string logSuffix, string insightsGrou
     #region Internal / Plumbing / Obsolete
 
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public IDynamicCodeRoot _DynCodeRoot { get; private set; }
 
     /// <summary>
@@ -56,14 +58,13 @@ public abstract class DynamicApiController(string logSuffix, string insightsGrou
     /// </summary>
     [Obsolete("Deprecated in v13.03 - doesn't serve a purpose any more. Will just remain to avoid breaking public uses of this property.")]
     // ReSharper disable once UnassignedGetOnlyAutoProperty
-    [PrivateApi] protected virtual string HistoryLogName { get; }
+    [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    protected virtual string HistoryLogName { get; }
 
     #endregion
 
     #region Services / Properties to share
-
-    /// <inheritdoc cref="IHasDnn.Dnn"/>
-    public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
 
     /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
     public Sxc.Adam.IFile SaveInAdam(NoParamOrder noParamOrder = default, Stream stream = null, string fileName = null, string contentType = null,
