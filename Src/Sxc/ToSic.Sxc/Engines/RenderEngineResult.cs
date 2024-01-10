@@ -28,7 +28,7 @@ public class RenderEngineResult
     {
         Html = html;
         ActivateJsApi = activateJsApi;
-        Assets = assets ?? new List<IClientAsset>();
+        Assets = assets ?? [];
         ErrorCode = errorCode;
         ExceptionsOrNull = exsOrNull;
     }

@@ -6,16 +6,17 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Polymorphism.Internal;
 
 namespace ToSic.Sxc.Engines;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class EnginePolymorphism: ServiceBase
 {
-    private readonly Polymorphism.Internal.PolymorphConfigReader _polymorphism;
+    private readonly PolymorphConfigReader _polymorphism;
     private readonly IServerPaths _serverPaths;
 
-    public EnginePolymorphism(Polymorphism.Internal.PolymorphConfigReader polymorphism, IServerPaths serverPaths) : base("Sxc.EngPly")
+    public EnginePolymorphism(PolymorphConfigReader polymorphism, IServerPaths serverPaths) : base("Sxc.EngPly")
     {
         ConnectServices(
             _polymorphism = polymorphism,

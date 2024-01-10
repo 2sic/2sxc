@@ -72,7 +72,7 @@ public class EngineAppRequirements: ServiceBase
                 "</p>",
                 EngineMessages.Warning);
 
-            var result = new RenderEngineResult(html, false, new List<IClientAsset>(), null, exList2);
+            var result = new RenderEngineResult(html, false, [], null, exList2);
             return l.Return(result, "error");
         }
 

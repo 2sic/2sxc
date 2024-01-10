@@ -20,6 +20,6 @@ public class EngineFactory: ServiceBase
     private readonly Generator<TokenEngine> _tokenEngineGen;
 
     public IEngine CreateEngine(IView view) => view.IsRazor
-        ? (IEngine)_razorEngineGen.New()
+        ? _razorEngineGen.New()
         : _tokenEngineGen.New();
 }
