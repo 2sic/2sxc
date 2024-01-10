@@ -150,14 +150,10 @@ public abstract partial class Api14: DynamicApiController, IDynamicCode14<object
     public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot.AsAdam(item, fieldName);
 
     /// <inheritdoc cref="IDynamicWebApi.SaveInAdam" />
-    public new ToSic.Sxc.Adam.IFile SaveInAdam(NoParamOrder noParamOrder = default,
-        Stream stream = null,
-        string fileName = null,
-        string contentType = null,
-        Guid? guid = null,
-        string field = null,
-        string subFolder = "")
-        => base.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
+    /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
+    public IFile SaveInAdam(NoParamOrder noParamOrder = default, Stream stream = null, string fileName = null, string contentType = null,
+        Guid? guid = null, string field = null, string subFolder = "")
+        => DynHlp.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
 
     #endregion
 

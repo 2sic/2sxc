@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
@@ -121,6 +122,11 @@ public abstract class ApiController : DynamicApiController,
     public dynamic File(NoParamOrder noParamOrder = default, bool? download = null, string virtualPath = null,
         string contentType = null, string fileDownloadName = null, object contents = null) =>
         throw new NotSupportedException("Not implemented. " + ErrRecommendedNamespaces);
+
+    /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
+    public IFile SaveInAdam(NoParamOrder noParamOrder = default, Stream stream = null, string fileName = null, string contentType = null,
+        Guid? guid = null, string field = null, string subFolder = "")
+        => DynHlp.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
 
     #endregion
 

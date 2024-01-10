@@ -9,6 +9,7 @@ using ToSic.Eav.LookUp;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
@@ -176,25 +177,10 @@ public abstract partial class SxcApiController() :
     /// <inheritdoc cref="IDynamicCode.AsAdam" />
     public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot.AsAdam(item, fieldName);
 
-    /// <summary>
-    /// Save a file from a stream (usually an upload from the browser) into an adam-field
-    /// </summary>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    /// <param name="stream">the stream</param>
-    /// <param name="fileName">file name to save to</param>
-    /// <param name="contentType">content-type of the target item (important for security checks)</param>
-    /// <param name="guid"></param>
-    /// <param name="field"></param>
-    /// <param name="subFolder"></param>
-    /// <returns></returns>
-    public new Sxc.Adam.IFile SaveInAdam(NoParamOrder noParamOrder = default,
-        Stream stream = null,
-        string fileName = null,
-        string contentType = null,
-        Guid? guid = null,
-        string field = null,
-        string subFolder = "")
-        => base.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
+    /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
+    public IFile SaveInAdam(NoParamOrder noParamOrder = default, Stream stream = null, string fileName = null, string contentType = null,
+        Guid? guid = null, string field = null, string subFolder = "")
+        => DynHlp.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
 
     #endregion
 

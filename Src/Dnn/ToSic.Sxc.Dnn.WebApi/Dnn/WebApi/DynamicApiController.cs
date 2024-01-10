@@ -1,12 +1,8 @@
 ﻿using System;
-using System.IO;
 using System.Web.Http.Controllers;
-using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Dnn.Code;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 
 namespace ToSic.Sxc.WebApi;
@@ -66,10 +62,11 @@ public abstract class DynamicApiController(string logSuffix, string insightsGrou
 
     #region Services / Properties to share
 
-    /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
-    public Sxc.Adam.IFile SaveInAdam(NoParamOrder noParamOrder = default, Stream stream = null, string fileName = null, string contentType = null,
-        Guid? guid = null, string field = null, string subFolder = "")
-        => DynHlp.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
+    // 2024-01-10 moved to the own classes away from base class
+    ///// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
+    //public Sxc.Adam.IFile SaveInAdam(NoParamOrder noParamOrder = default, Stream stream = null, string fileName = null, string contentType = null,
+    //    Guid? guid = null, string field = null, string subFolder = "")
+    //    => DynHlp.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
 
     #endregion
 }
