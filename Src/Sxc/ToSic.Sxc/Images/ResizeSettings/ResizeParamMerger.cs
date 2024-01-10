@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Images;
 /// <summary>
 /// This merges predefined settings with custom specified parameters to create a stable resize-Parameters object for further use
 /// </summary>
-internal class ResizeParamMerger: HelperBase
+internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcLogging.SxcLogName}.ImgRPM")
 {
     private const string ResizeModeField = "ResizeMode";
     private const string ScaleModeField = "ScaleMode";
@@ -23,8 +23,6 @@ internal class ResizeParamMerger: HelperBase
     private const string HeightField = "Height";
     private const string AspectRatioField = "AspectRatio";
     private const string AdvancedField = "Advanced";
-
-    public ResizeParamMerger(ILog parentLog) : base(parentLog, $"{SxcLogging.SxcLogName}.ImgRPM") { }
 
     public bool Debug = false;
 

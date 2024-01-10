@@ -8,10 +8,8 @@ using static ToSic.Sxc.Internal.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images;
 
-internal class ResizeDimensionGenerator: ServiceBase
+internal class ResizeDimensionGenerator() : ServiceBase("Img.ResDim")
 {
-    public ResizeDimensionGenerator(): base("Img.ResDim") { }
-
     public bool Debug = false;
         
 

@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Images;
 
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class ResizeSettings : IResizeSettings
+internal class ResizeSettings : IResizeSettings, IResizeSettingsInternal
 {
     public int Width { get; } = IntIgnore;
     public int Height { get; } = IntIgnore;
@@ -73,7 +73,7 @@ internal class ResizeSettings : IResizeSettings
         AspectRatio = aspectRatio ?? original.AspectRatio;
         UseAspectRatio = original.UseAspectRatio;
         UseFactorMap = original.UseFactorMap;
-        Advanced = advanced ?? original.Advanced;
+        Advanced = advanced ?? (original as IResizeSettingsInternal)?.Advanced;
     }
 
 }

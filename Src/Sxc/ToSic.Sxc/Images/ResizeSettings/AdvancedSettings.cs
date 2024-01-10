@@ -12,7 +12,7 @@ using ToSic.Eav.Plumbing;
 namespace ToSic.Sxc.Images;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AdvancedSettings : IHasPiggyBack
+internal class AdvancedSettings : IHasPiggyBack
 {
     [JsonConstructor]
     public AdvancedSettings(Recipe recipe = default)

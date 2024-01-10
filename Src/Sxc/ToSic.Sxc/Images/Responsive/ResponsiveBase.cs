@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Images;
 /// Note: this could also affect .Picture and .Image base classes
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
+internal abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
 {
 
     internal ResponsiveBase(ImageService imgService, ResponsiveParams callParams, ILog parentLog, string logName)
@@ -41,7 +41,7 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     protected readonly ImgResizeLinker ImgLinker;
     protected readonly ImageService ImgService;
 
-    protected OneResize ThisResize => _thisResize.Get(() => { 
+    private OneResize ThisResize => _thisResize.Get(() => { 
         var t = ImgLinker.ImageOnly(Params.Link.Url, Settings as ResizeSettings, Params.HasMetadataOrNull);
         Log.A(ImgService.Debug, $"{nameof(ThisResize)}: " + t?.Dump());
         return t;

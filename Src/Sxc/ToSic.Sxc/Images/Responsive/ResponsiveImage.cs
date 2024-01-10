@@ -6,7 +6,7 @@ using ToSic.Razor.Html5;
 namespace ToSic.Sxc.Images;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ResponsiveImage: ResponsiveBase
+internal class ResponsiveImage: ResponsiveBase
 {
     [PrivateApi("don't show")]
     internal ResponsiveImage(ImageService imgService, ResponsiveParams callParams, ILog parentLog) : base(imgService, callParams, parentLog, "Img")

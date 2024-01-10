@@ -190,7 +190,7 @@ public class Recipe: ICanDump
 
 
     [PrivateApi("Important for using these settings, but not relevant outside of this")]
-    public RecipeVariant[] VariantsParsed { get; private set; }
+    internal RecipeVariant[] VariantsParsed { get; private set; }
 
     [PrivateApi]
     internal Recipe InitAfterLoad()

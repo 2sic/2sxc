@@ -9,18 +9,11 @@ namespace ToSic.Sxc.Images;
 /// </summary>
 [PublicApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class RecipeQuality
+internal class RecipeQuality(RecipeQuality original, int forWidth, string forFormat, int quality)
 {
-    public RecipeQuality(RecipeQuality original, int forWidth, string forFormat, int quality)
-    {
-        ForFormat = forFormat ?? original.ForFormat;
-        Quality = quality;
-        ForWidth = forWidth;
-    }
+    public int ForWidth { get; } = forWidth;
 
-    public int ForWidth { get; }
+    public string ForFormat { get; } = forFormat ?? original.ForFormat;
 
-    public string ForFormat { get; }
-
-    public int Quality { get; }
+    public int Quality { get; } = quality;
 }

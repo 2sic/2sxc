@@ -5,13 +5,13 @@ namespace ToSic.Sxc.Images;
 
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class RecipeVariant
+internal class RecipeVariant
 {
     public const char SizeDefault = 'd';
     public const char SizeWidth = 'w';
     public const char SizePixelDensity = 'x';
     public const char SizeFactorOf = '*';
-    public static readonly char[] SizeTypes = { SizeWidth, SizePixelDensity, SizeDefault, SizeFactorOf };
+    public static readonly char[] SizeTypes = [SizeWidth, SizePixelDensity, SizeDefault, SizeFactorOf];
 
     /// <summary>
     /// The size - usually 1000 or something in case of 'w', and 1.5 or something in case of 'x'

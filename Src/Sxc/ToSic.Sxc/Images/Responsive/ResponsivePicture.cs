@@ -10,7 +10,7 @@ using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 
 namespace ToSic.Sxc.Images;
 
-public class ResponsivePicture: ResponsiveBase, IResponsivePicture
+internal class ResponsivePicture: ResponsiveBase, IResponsivePicture
 {
     internal ResponsivePicture(ImageService imgService, ResponsiveParams callParams, ILog parentLog) : base(imgService, callParams, parentLog, "Picture")
     {

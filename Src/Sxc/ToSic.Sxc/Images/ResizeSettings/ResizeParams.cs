@@ -11,10 +11,8 @@ namespace ToSic.Sxc.Images;
 /// <summary>
 /// Helper to process optional parameters and figure out if they should be used or not
 /// </summary>
-internal class ResizeParams: HelperBase
+internal class ResizeParams(ILog parentLog) : HelperBase(parentLog, $"{SxcLogging.SxcLogName}.ResPar")
 {
-    public ResizeParams(ILog parentLog) : base(parentLog, $"{SxcLogging.SxcLogName}.ResPar") { }
-
     public double? AspectRatioOrNull(object aspectRatio) 
         => DoubleOrNullWithCalculation(aspectRatio);
 
