@@ -24,7 +24,7 @@ using ToSic.Sxc.Images;
 using ToSic.Sxc.Internal.Plumbing;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.Services.GoogleMaps;
+using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.DotNet;

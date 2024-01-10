@@ -5,7 +5,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Internal;
 
-namespace ToSic.Sxc.Services.GoogleMaps;
+namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

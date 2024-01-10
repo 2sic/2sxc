@@ -20,20 +20,11 @@ namespace ToSic.Sxc.Services;
 /// <remarks>
 /// * History: Added v15.06 - still WIP
 /// </remarks>
-[PrivateApi]
-public class ServiceKitLight16 : ServiceBase
+[PublicApi]
+public class ServiceKitLight16(IServiceProvider serviceProvider) : ServiceBase("Sxc.Kit15")
 {
+    private TService GetService<TService>() => serviceProvider.Build<TService>(Log);
 
-    [PrivateApi("Public constructor for DI")]
-    public ServiceKitLight16(IServiceProvider serviceProvider) : base("Sxc.Kit15")
-    {
-        _serviceProvider = serviceProvider;
-    }
-    private readonly IServiceProvider _serviceProvider;
-    [PrivateApi]
-    private TService GetService<TService>() => _serviceProvider.Build<TService>(Log);
-
-    [PrivateApi]
     internal ServiceKitLight16 Setup(IAppIdentity appIdentity, Func<ILookUpEngine> getLookup)
     {
         _appIdentity = appIdentity;
@@ -50,30 +41,11 @@ public class ServiceKitLight16 : ServiceBase
     //public IAdamService Adam => _adam.Get(GetService<IAdamService>);
     //private readonly GetOnce<IAdamService> _adam = new GetOnce<IAdamService>();
 
-    ///// <summary>
-    ///// The CMS Service - WIP
-    ///// </summary>
-    //[PrivateApi("Still WIP v15")]
-    //public ICmsService Cms => _cms.Get(GetService<ICmsService>);
-    //private readonly GetOnce<ICmsService> _cms = new GetOnce<ICmsService>();
-
-    /// <summary>
-    /// The Convert Service, used to convert any kind of data type to another data type
-    /// </summary>
+    /// <inheritdoc cref="ServiceKit14.Convert"/>
     public IConvertService Convert => _convert.Get(GetService<IConvertService>);
     private readonly GetOnce<IConvertService> _convert = new();
 
-    ///// <summary>
-    ///// The Koi CSS Service, used to detect the current CSS framework and other features.
-    ///// See [ICss](xref:Connect.Koi.ICss)
-    ///// </summary>
-    //public ICss Css => _css.Get(GetService<ICss>);
-    //private readonly GetOnce<ICss> _css = new GetOnce<ICss>();
-
-
-    /// <summary>
-    /// The Edit service, same as the main Edit service
-    /// </summary>
+    /// <inheritdoc cref="ServiceKit14.Data"/>
     public IDataService Data => _data.Get(() =>
     {
         var dss = GetService<IDataService>();
@@ -82,101 +54,31 @@ public class ServiceKitLight16 : ServiceBase
     });
     private readonly GetOnce<IDataService> _data = new();
 
-    ///// <summary>
-    ///// The Edit service, same as the main Edit service
-    ///// </summary>
-    //public IEditService Edit => _edit.Get(GetService<IEditService>);
-    //private readonly GetOnce<IEditService> _edit = new GetOnce<IEditService>();
 
-
-    /// <summary>
-    /// The Features services, used to check if features are enabled
-    /// </summary>
+    /// <inheritdoc cref="ServiceKit14.Feature"/>
     public IFeaturesService Feature => _features.Get(GetService<IFeaturesService>);
     private readonly GetOnce<IFeaturesService> _features = new();
 
-    /// <summary>
-    /// The Razor Blade 4 HtmlTags service, to fluidly create Tags.
-    /// See [](xref:ToSic.Razor.Blade.IHtmlTagsService).
-    ///
-    /// > [!IMPORTANT]
-    /// > This is _similar but different_ to the [Razor.Blade.Tag](https://razor-blade.net/api/ToSic.Razor.Blade.Tag.html).
-    /// > The [](xref:ToSic.Razor.Blade.IHtmlTag) objects returned here are _immutable_.
-    /// > This means that chained commands like `...HtmlTags.Div().Id(...).Class(...)`
-    /// > all return new objects and don't modify the previous one.
-    /// >
-    /// > The older `Tag` helper created mutable objects where chaining always modified the original and returned it again.
-    /// </summary>
-    /// <remarks>Added in v15</remarks>
+    /// <inheritdoc cref="ServiceKit14.HtmlTags"/>
     public IHtmlTagsService HtmlTags => _ht.Get(GetService<IHtmlTagsService>);
     private readonly GetOnce<IHtmlTagsService> _ht = new();
 
-    ///// <summary>
-    ///// The Images service, used to create `img` and `picture` tags
-    ///// </summary>
-    //public IImageService Image => _image.Get(GetService<IImageService>);
-    //private readonly GetOnce<IImageService> _image = new GetOnce<IImageService>();
-
-
-    /// <summary>
-    /// The JSON service, used to convert data to-and-from JSON
-    /// </summary>
+    /// <inheritdoc cref="ServiceKit14.Json"/>
     public IJsonService Json => _json.Get(GetService<IJsonService>);
     private readonly GetOnce<IJsonService> _json = new();
 
-
-    ///// <summary>
-    ///// The JSON service, used to convert data to-and-from JSON
-    ///// </summary>
-    //public ILinkService Link => _link.Get(GetService<ILinkService>);
-    //private readonly GetOnce<ILinkService> _link = new GetOnce<ILinkService>();
-
-    /// <summary>
-    /// The System Log service, used to add log messages to the system (Dnn/Oqtane)
-    /// </summary>
+    /// <inheritdoc cref="ServiceKit14.SystemLog"/>
     public ISystemLogService SystemLog => _sysLog.Get(GetService<ISystemLogService>);
     private readonly GetOnce<ISystemLogService> _sysLog = new();
 
-
-    ///// <summary>
-    ///// The Mail service, used to send mails
-    ///// </summary>
-    //public IMailService Mail => _mail.Get(GetService<IMailService>);
-    //private readonly GetOnce<IMailService> _mail = new GetOnce<IMailService>();
-
-
-    ///// <summary>
-    ///// The Page service, used to set headers, activate features etc.
-    ///// </summary>
-    //public IPageService Page => _page.Get(GetService<IPageService>);
-    //private readonly GetOnce<IPageService> _page = new GetOnce<IPageService>();
-
-
-    ///// <summary>
-    ///// The Render service, used to render one or more dynamic content within other content
-    ///// </summary>
-    //public IRenderService Render => _render.Get(GetService<IRenderService>);
-    //private readonly GetOnce<IRenderService> _render = new GetOnce<IRenderService>();
-
-    /// <summary>
-    /// The Secure Data service - mainly for reading / decrypting secrets. 
-    /// </summary>
+    /// <inheritdoc cref="ServiceKit14.SecureData"/>
     public ISecureDataService SecureData => _secureData.Get(GetService<ISecureDataService>);
     private readonly GetOnce<ISecureDataService> _secureData = new();
 
-    /// <summary>
-    /// The Razor-Blade Scrub service, used to clean up HTML.
-    /// See [](xref:ToSic.Razor.Blade.IScrub)
-    /// </summary>
+    /// <inheritdoc cref="ServiceKit14.Scrub"/>
     public IScrub Scrub => _scrub.Get(GetService<IScrub>);
     private readonly GetOnce<IScrub> _scrub = new();
 
-
-    ///// <summary>
-    ///// The toolbar service, used to generate advanced toolbars
-    ///// </summary>
-    //public IToolbarService Toolbar => _toolbar.Get(GetService<IToolbarService>);
-    //private readonly GetOnce<IToolbarService> _toolbar = new GetOnce<IToolbarService>();
 
     //[PrivateApi("Experimental in v15.03")]
     //public IUsersService Users => _users.Get(GetService<IUsersService>);

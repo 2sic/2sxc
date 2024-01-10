@@ -14,13 +14,9 @@ namespace ToSic.Sxc.Services;
 /// * History: Added v14.04
 /// </remarks>
 [PublicApi]
-public class ServiceKit16: ServiceKit
+[method: PrivateApi("Public constructor for DI")]
+public class ServiceKit16() : ServiceKit("Sxc.Kit16")
 {
-    [PrivateApi("Public constructor for DI")]
-    public ServiceKit16() : base("Sxc.Kit16")
-    {
-    }
-
     /// <inheritdoc cref="ServiceKit14.Adam"/>
     public IAdamService Adam => _adam.Get(GetService<IAdamService>);
     private readonly GetOnce<IAdamService> _adam = new();
@@ -32,9 +28,7 @@ public class ServiceKit16: ServiceKit
     internal ICmsService Cms => _cms.Get(GetService<ICmsService>);
     private readonly GetOnce<ICmsService> _cms = new();
 
-    /// <summary>
-    /// The Convert Service, used to convert any kind of data type to another data type
-    /// </summary>
+    /// <inheritdoc cref="ServiceKit14.Convert"/>
     public IConvertService16 Convert => _convert.Get(GetService<IConvertService16>);
     private readonly GetOnce<IConvertService16> _convert = new();
 
@@ -43,13 +37,7 @@ public class ServiceKit16: ServiceKit
     private readonly GetOnce<ICss> _css = new();
 
 
-    /// <summary>
-    /// The Data service to get DataSources and similar.
-    /// </summary>
-    /// <remarks>
-    /// * added in v15.06
-    /// </remarks>
-    [PrivateApi("WIP not yet public for v15 - added v15.06")]
+    /// <inheritdoc cref="ServiceKit14.Data"/>
     public IDataService Data => _data.Get(GetService<IDataService>);
     private readonly GetOnce<IDataService> _data = new();
 
@@ -126,9 +114,14 @@ public class ServiceKit16: ServiceKit
     public IUserService User => _users.Get(GetService<IUserService>);
     private readonly GetOnce<IUserService> _users = new();
 
-    // v16 new Keys
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP v16.04")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    /// <summary>
+    /// Keys service.
+    /// Rarely used, as the RazorTyped has a UniqueKey property which comes from this service.
+    /// You only need this service, if you need to create combined keys (eg with an entity)
+    /// </summary>
+    /// <remarks>
+    /// * New in v16.04
+    /// </remarks>
     public IKeyService Key => _keys ??= new KeyService();
     private IKeyService _keys;
 }

@@ -26,7 +26,7 @@ public interface IKeyService
     /// </summary>
     /// <remarks>
     /// If you get a fresh <see cref="IKeyService"/> it will also create a new UniqueKey.
-    /// So your code should usually use the built in property `UniqueKey` which comes from teh shared ServiceKit <see cref="ServiceKit16.Key"/>.
+    /// So your code should usually use the built-in property `UniqueKey` which comes from the shared ServiceKit <see cref="ServiceKit16.Key"/>.
     /// </remarks>
     string UniqueKey { get; }
 

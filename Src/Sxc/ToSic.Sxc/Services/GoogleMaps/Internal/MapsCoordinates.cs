@@ -1,6 +1,6 @@
 ﻿using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Services.GoogleMaps;
+namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

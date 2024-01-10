@@ -6,7 +6,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Internal;
-using ToSic.Sxc.Services.GoogleMaps;
+using ToSic.Sxc.Services.Internal;
 using static System.StringComparer;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
