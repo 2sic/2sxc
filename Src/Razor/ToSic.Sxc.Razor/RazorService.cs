@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Razor
             var razorPageVirtualPath = GetVirtualPath(partialName);
             var razorPageModel = model ?? new {};
 
-            var task = _razorRendererLazy.Value.RenderToStringAsync(razorPageVirtualPath, razorPageModel, null, null);
+            var task = _razorRendererLazy.Value.RenderToStringAsync(razorPageVirtualPath, razorPageModel, null);
             task.Wait();
             return task.Result;
         }

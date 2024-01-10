@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
@@ -12,7 +13,7 @@ public abstract class ThisAppCodeCompiler() : ServiceBase("Sxc.MyApCd")
     public const bool UseSubfolders = false;
     public const string ThisAppCodeDll = "ThisApp.Code.dll";
 
-    protected internal abstract AssemblyResult GetAppCode(string relativePath, int appId = 0);
+    protected internal abstract AssemblyResult GetAppCode(string relativePath, HotBuildSpec spec);
 
     protected (string[] SourceFiles, AssemblyResult ErrorResult) GetSourceFilesOrError(string fullPath)
     {
@@ -34,13 +35,14 @@ public abstract class ThisAppCodeCompiler() : ServiceBase("Sxc.MyApCd")
     /// Generates a random name for a dll file and ensures it does not already exist in the "2sxc.bin" folder.
     /// </summary>
     /// <returns>The generated random name.</returns>
-    protected virtual string GetAppCodeDllName(string folderPath, int appId)
+    protected virtual string GetAppCodeDllName(string folderPath, HotBuildSpec spec)
     {
-        var l = Log.Fn<string>($"{nameof(folderPath)}: '{folderPath}'; {nameof(appId)}: {appId}", timer: true);
+        var l = Log.Fn<string>($"{nameof(folderPath)}: '{folderPath}'; {nameof(spec.AppId)}: {spec.AppId}; ; {nameof(spec.Edition)}: '{spec.Edition}'", timer: true);
         string randomNameWithoutExtension;
         do
         {
-            randomNameWithoutExtension = $"ThisApp.Code-{appId:00000}-{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}";
+            var appIdWithEdition = spec.Edition.HasValue() ? $"{spec.AppId:00000}-{spec.Edition}" : $"{spec.AppId:00000}";
+            randomNameWithoutExtension = $"ThisApp.Code-{appIdWithEdition}-{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}";
         }
         while (File.Exists(Path.Combine(folderPath, $"{randomNameWithoutExtension}.dll")));
         return l.ReturnAsOk(randomNameWithoutExtension);
@@ -64,6 +66,4 @@ public abstract class ThisAppCodeCompiler() : ServiceBase("Sxc.MyApCd")
 
         l.Done();
     }
-
-
 }

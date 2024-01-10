@@ -25,7 +25,6 @@ using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Internal;
 
@@ -73,18 +72,18 @@ namespace ToSic.Sxc.Razor
         }
         #endregion
 
-        public async Task<(IView view, ActionContext context)> CompileView(string templatePath, Action<RazorView> configure = null, IApp app = null)
+        public async Task<(IView view, ActionContext context)> CompileView(string templatePath, Action<RazorView> configure = null, IApp app = null, HotBuildSpec spec = default)
         {
             var l = Log.Fn<(IView view, ActionContext context)>($"partialName:{templatePath},appCodePath:{app}");
             var actionContext = _actionContextAccessor.ActionContext ?? NewActionContext();
-            var partial = await FindViewAsync(actionContext, templatePath, app);
+            var partial = await FindViewAsync(actionContext, templatePath, app, spec);
             // do callback to configure the object we received
             if (partial is RazorView rzv) configure?.Invoke(rzv);
             return l.ReturnAsOk((partial, actionContext));
         }
 
         private static bool _executedAlready = false;
-        private async Task<IView> FindViewAsync(ActionContext actionContext, string templatePath, IApp app)
+        private async Task<IView> FindViewAsync(ActionContext actionContext, string templatePath, IApp app, HotBuildSpec spec)
         {
             var l = Log.Fn<IView>($"partialName:{templatePath}");
             var searchedLocations = new List<string>();
@@ -108,7 +107,7 @@ namespace ToSic.Sxc.Razor
                     _executedAlready = true;
                 }
 
-                var firstAttempt = await GetViewWithAppCodeAsync(templatePath, app);
+                var firstAttempt = await GetViewWithAppCodeAsync(templatePath, app, spec);
                 l.A($"firstAttempt: {firstAttempt}");
 
                 if (removeThis != null)
@@ -157,11 +156,11 @@ namespace ToSic.Sxc.Razor
             throw new InvalidOperationException(errorMessage);
         }
 
-        private async Task<ViewEngineResult> GetViewWithAppCodeAsync(string templatePath, IApp app)
+        private async Task<ViewEngineResult> GetViewWithAppCodeAsync(string templatePath, IApp app, HotBuildSpec spec)
         {
             // get assembly - try to get from cache, otherwise compile
-            var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(app.AppId, Log)?.Assembly
-                               ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrNull(app.AppId);
+            var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(spec, Log)?.Assembly
+                               ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrNull(spec);
 
             if (codeAssembly != null) _assemblyResolver.AddAssembly(codeAssembly, app.RelativePath);
 

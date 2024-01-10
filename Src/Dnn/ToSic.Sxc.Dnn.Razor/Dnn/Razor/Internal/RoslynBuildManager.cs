@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Caching;
-using System.Runtime.Versioning;
 using System.Text;
 using System.Web;
 using System.Web.Hosting;
@@ -21,7 +20,6 @@ using ToSic.Eav.Helpers;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Dnn.Compile;
 using CodeCompiler = ToSic.Sxc.Code.Internal.HotBuild.CodeCompiler;
@@ -59,14 +57,14 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         /// Manage template compilations, cache the assembly and returns the generated type.
         /// </summary>
         /// <param name="templatePath">Relative path to template file.</param>
-        /// <param name="appId">The ID of the application.</param>
+        /// <param name="spec"></param>
         /// <returns>The generated type for razor cshtml.</returns>
-        public Type GetCompiledType(string templatePath, int appId)
-            => GetCompiledAssembly(templatePath, null, appId).MainType;
+        public Type GetCompiledType(string templatePath, HotBuildSpec spec)
+            => GetCompiledAssembly(templatePath, null, spec).MainType;
 
-        public AssemblyResult GetCompiledAssembly(string virtualPath, string className, int appId)
+        public AssemblyResult GetCompiledAssembly(string virtualPath, string className, HotBuildSpec spec)
         {
-            var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {nameof(appId)}: {appId}", timer: true);
+            var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'", timer: true);
 
             var fileFullPath = HostingEnvironment.MapPath(virtualPath);
 
@@ -89,12 +87,12 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
             // Roslyn compiler need reference to location of dll, when dll is not in bin folder
             // get assembly - try to get from cache, otherwise compile
-            var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(appId, Log)?.Assembly
-                               ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrNull(appId);
+            var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(spec, Log)?.Assembly
+                               ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrNull(spec);
 
             _assemblyResolver.AddAssembly(codeAssembly);
 
-            var thisAppCode = AssemblyCacheManager.TryGetThisAppCode(appId);
+            var thisAppCode = AssemblyCacheManager.TryGetThisAppCode(spec);
             var thisAppCodeAssembly = thisAppCode.Result?.Assembly;
             if (thisAppCodeAssembly != null)
             {
@@ -389,7 +387,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
             // Compile the C# code into an assembly
             lTimer = Log.Fn("Compile", timer: true);
-            var codeProvider = new Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider();
+            var codeProvider = new Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider(); // TODO: @stvtest with latest nuget package for @inherits ; issue
 
             var compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, csharpCode);
             lTimer.Done();
@@ -459,7 +457,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
             var host = new RazorEngineHost(new CSharpRazorCodeLanguage())
             {
-                DefaultBaseClass = baseClass,
+                DefaultBaseClass = baseClass, // TODO: @stv - do not provide our from cshtml
                 DefaultClassName = className,
                 DefaultNamespace = defaultNamespace
             };

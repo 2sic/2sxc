@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Web.Compilation;
 using System.Web.Hosting;
@@ -13,6 +14,7 @@ using System.Web.Http.Dispatcher;
 using System.Web.Http.Routing;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
@@ -146,13 +148,25 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
 
     private HttpControllerDescriptor BuildDescriptor(HttpRequestMessage request, string folder, string fullPath, string typeName, IServiceProvider sp)
     {
+        Assembly assembly;
         var hasThisApp = sp.Build<SourceAnalyzer>().TypeOfVirtualPath(fullPath).ThisApp;
-        var appId = sp.Build<DnnGetBlock>().GetCmsBlock(request).LoadBlock().AppId;
-        var roslynBuildManager = sp.Build<LazySvc<IRoslynBuildManager>>();
-
-        var assembly = hasThisApp
-            ? roslynBuildManager.Value.GetCompiledAssembly(fullPath, typeName, appId)?.Assembly
-            : BuildManager.GetCompiledAssembly(fullPath);
+        if (hasThisApp)
+        {
+            // Figure edition
+            var spec = new HotBuildSpec();
+            var block = sp.Build<DnnGetBlock>().GetCmsBlock(request).LoadBlock();
+            if (block != null)
+            {
+                spec.AppId = block.AppId;
+                var polymorph = sp.Build<Polymorphism.Internal.PolymorphConfigReader>().Init(block.App.AppState.List);
+                spec.Edition = block.View.Edition.NullIfNoValue() ?? polymorph.Edition();
+            }
+            assembly = sp.Build<IRoslynBuildManager>().GetCompiledAssembly(fullPath, typeName, spec)?.Assembly;
+        }
+        else
+        {
+            assembly = BuildManager.GetCompiledAssembly(fullPath);
+        }
 
         if (assembly == null) throw new Exception("Assembly not found or compiled to null (error).");
 

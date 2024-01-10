@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Razor
@@ -45,7 +46,7 @@ namespace ToSic.Sxc.Razor
         #endregion
 
 
-        public Task<(IView view, ActionContext context)> CompileView(string templatePath, Action<RazorView> configure = null, IApp app = null)
+        public Task<(IView view, ActionContext context)> CompileView(string templatePath, Action<RazorView> configure = null, IApp app = null, HotBuildSpec spec = default)
             => Task.FromResult(CompileView(templatePath, configure));
 
         private (IView view, ActionContext context) CompileView(string partialName, Action<RazorView> configure = null)

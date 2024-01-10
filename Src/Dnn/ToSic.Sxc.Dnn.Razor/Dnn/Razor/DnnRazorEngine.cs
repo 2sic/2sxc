@@ -15,7 +15,6 @@ using ToSic.Lib.Logging;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.HotBuild;
@@ -145,14 +144,16 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
         var razorType = _sourceAnalyzer.Value.TypeOfVirtualPath(templatePath);
         try
         {
+            var spec = new HotBuildSpec { AppId = App.AppId, Edition = Edition };
+            
             // get assembly - try to get from cache, otherwise compile
-            var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(App.AppId, Log)?.Assembly 
-                               ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrNull(App.AppId);
+            var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(spec, Log)?.Assembly 
+                               ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrNull(spec);
 
             _assemblyResolver.AddAssembly(codeAssembly, App.RelativePath);
 
             compiledType = razorType.IsHotBuildSupported() 
-                ? _roslynBuildManager.Value.GetCompiledType(templatePath, App.AppId)
+                ? _roslynBuildManager.Value.GetCompiledType(templatePath, spec)
                 : BuildManager.GetCompiledType(templatePath);
         }
         catch (Exception compileEx)

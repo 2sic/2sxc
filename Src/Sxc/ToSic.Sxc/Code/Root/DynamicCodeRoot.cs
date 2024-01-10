@@ -10,7 +10,6 @@ using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
@@ -45,6 +44,7 @@ public abstract partial class DynamicCodeRoot : ServiceBase<DynamicCodeRoot.MySe
         internal IServiceProvider ServiceProvider { get; }
         public LazySvc<CodeCompiler> CodeCompilerLazy { get; }
         public AppDataStackService DataStackService { get; }
+        public Polymorphism.Internal.PolymorphConfigReader Polymorphism { get; }
 
         public MyServices(
             IServiceProvider serviceProvider,
@@ -53,7 +53,8 @@ public abstract partial class DynamicCodeRoot : ServiceBase<DynamicCodeRoot.MySe
             LazySvc<IConvertService> convertService,
             LazySvc<IDataSourcesService> dataSourceFactory,
             LazySvc<CodeCreateDataSourceSvc> dataSources,
-            LazySvc<CodeDataFactory> cdf)
+            LazySvc<CodeDataFactory> cdf,
+            Polymorphism.Internal.PolymorphConfigReader polymorphism)
         {
             ConnectServices(
                 ServiceProvider = serviceProvider,
@@ -62,7 +63,8 @@ public abstract partial class DynamicCodeRoot : ServiceBase<DynamicCodeRoot.MySe
                 ConvertService = convertService,
                 DataSourceFactory = dataSourceFactory,
                 DataSources = dataSources,
-                _cdf = cdf
+                _cdf = cdf,
+                Polymorphism = polymorphism
             );
         }
 

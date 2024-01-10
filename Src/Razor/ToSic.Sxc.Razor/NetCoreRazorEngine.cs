@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Razor;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Razor;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks.Internal.Render;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
+using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Razor.Internal;
@@ -84,7 +84,9 @@ namespace ToSic.Sxc.Razor
 
                         asSxc.ConnectToRoot(dynCode);
                         // Note: Don't set the purpose here any more, it's a deprecated feature in 12+
-                    }, App);
+                    }, 
+                    App, 
+                    new HotBuildSpec { AppId = App.AppId, Edition = Edition });
                 var writer = new StringWriter();
                 await writer.WriteAsync(result);
                 return (writer, null);

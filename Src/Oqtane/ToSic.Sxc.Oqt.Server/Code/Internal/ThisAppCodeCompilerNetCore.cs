@@ -6,7 +6,6 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Oqt.Server.Code.Internal;
@@ -25,9 +24,9 @@ internal class ThisAppCodeCompilerNetCore : ThisAppCodeCompiler
     private readonly LazySvc<IServerPaths> _serverPaths;
     private readonly LazySvc<ThisAppCodeLoader> _thisAppCodeLoader;
 
-    protected internal override AssemblyResult GetAppCode(string virtualPath, int appId = 0)
+    protected internal override AssemblyResult GetAppCode(string virtualPath, HotBuildSpec spec)
     {
-        var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {nameof(appId)}: {appId}", timer: true);
+        var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'", timer: true);
 
         try
         {
@@ -36,7 +35,7 @@ internal class ThisAppCodeCompilerNetCore : ThisAppCodeCompiler
             if (errResult != null)
                 return l.ReturnAsError(errResult, errResult.ErrorMessages);
 
-            var assemblyLocations = GetAssemblyLocations(appId);
+            var assemblyLocations = GetAssemblyLocations(spec);
             var dllName = Path.GetFileName(assemblyLocations[1]);
             var assemblyResult = new Compiler(_thisAppCodeLoader).GetCompiledAssemblyFromFolder(sourceFiles, assemblyLocations[1], assemblyLocations[0], dllName);
 
@@ -57,16 +56,16 @@ internal class ThisAppCodeCompilerNetCore : ThisAppCodeCompiler
         }
     }
 
-    private string[] GetAssemblyLocations(int appId)
+    private string[] GetAssemblyLocations(HotBuildSpec spec)
     {
-        var l = Log.Fn<string[]>($"{nameof(appId)}: {appId}");
+        var l = Log.Fn<string[]>($"{nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'");
         var tempAssemblyFolderPath = _serverPaths.Value.FullContentPath(@"App_Data\2sxc.bin");
         l.A($"TempAssemblyFolderPath: '{tempAssemblyFolderPath}'");
         // Ensure "2sxc.bin" folder exists to preserve dlls
         Directory.CreateDirectory(tempAssemblyFolderPath);
 
         // need name 
-        var assemblyName = GetAppCodeDllName(tempAssemblyFolderPath, appId);
+        var assemblyName = GetAppCodeDllName(tempAssemblyFolderPath, spec);
         l.A($"AssemblyName: '{assemblyName}'");
         var assemblyFilePath = Path.Combine(tempAssemblyFolderPath, $"{assemblyName}.dll");
         l.A($"AssemblyFilePath: '{assemblyFilePath}'");
@@ -74,21 +73,5 @@ internal class ThisAppCodeCompilerNetCore : ThisAppCodeCompiler
         l.A($"SymbolsFilePath: '{symbolsFilePath}'");
         var assemblyLocations = new[] { symbolsFilePath, assemblyFilePath };
         return l.ReturnAsOk(assemblyLocations);
-    }
-
-    /// <summary>
-    /// Generates a random name for a dll file and ensures it does not already exist in the "2sxc.bin" folder.
-    /// </summary>
-    /// <returns>The generated random name.</returns>
-    private string GetAppCodeDllName(string folderPath, int appId)
-    {
-        var l = Log.Fn<string>($"{nameof(folderPath)}: '{folderPath}'; {nameof(appId)}: {appId}", timer: true);
-        string randomNameWithoutExtension;
-        do
-        {
-            randomNameWithoutExtension = $"App-{appId:00000}-{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}";
-        }
-        while (File.Exists(Path.Combine(folderPath, $"{randomNameWithoutExtension}.dll")));
-        return l.ReturnAsOk(randomNameWithoutExtension);
     }
 }

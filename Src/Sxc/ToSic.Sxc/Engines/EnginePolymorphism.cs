@@ -23,10 +23,10 @@ public class EnginePolymorphism: ServiceBase
         );
     }
 
-    internal string PolymorphTryToSwitchPath(string root, IView view, IAppEntityService appState)
+    internal (string, string) PolymorphTryToSwitchPath(string root, IView view, IAppEntityService appState)
     {
         var subPath = view.Path;
-        var l = Log.Fn<string>($"{root}, {subPath}");
+        var l = Log.Fn<(string, string)>($"{root}, {subPath}");
         // Get initial path - here the file is already reliably stored
         view.EditionPath = subPath.ToAbsolutePathForwardSlash();
         subPath = view.EditionPath.TrimPrefixSlash();
@@ -43,7 +43,7 @@ public class EnginePolymorphism: ServiceBase
         // eg. subPath = "View.cshtml" and there is a "bs5/View.cshtml"
         var newPath = PolymorphTestPathAndSetIfFound(view, root, edition, subPath);
         if (newPath != null)
-            return l.Return(newPath, $"found edition {edition}");
+            return l.Return((newPath, edition), $"found edition {edition}");
 
         // Case #2 where edition _replaces_ an edition in the current path
         // eg. subPath ="bs5/View.cshtml" and there is a "bs4/View.cshtml"
@@ -53,7 +53,7 @@ public class EnginePolymorphism: ServiceBase
             return l.ReturnNull("view is not in subfolder, so no edition to replace, stopping now");
         newPath = PolymorphTestPathAndSetIfFound(view, root, edition, pathWithoutFirstFolder);
         if (newPath != null)
-            return l.Return(newPath, $"edition {edition} up one path");
+            return l.Return((newPath, edition), $"edition {edition} up one path");
 
         return l.ReturnNull($"edition {edition} not found");
     }

@@ -31,7 +31,7 @@ public abstract class CodeCompiler : ServiceBase
     public const string SharedCodeRootPathKeyInCache = "SharedCodeRootPath";
     public const string SharedCodeRootFullPathKeyInCache = "SharedCodeRootFullPath";
 
-    internal object InstantiateClass(string virtualPath, int appId, string className = null, string relativePath = null, bool throwOnError = true)
+    internal object InstantiateClass(string virtualPath, HotBuildSpec spec, string className = null, string relativePath = null, bool throwOnError = true)
     {
         var l = Log.Fn<object>($"{virtualPath}, {nameof(className)}:{className}, {nameof(relativePath)}:{relativePath}, {throwOnError}");
 
@@ -55,7 +55,7 @@ public abstract class CodeCompiler : ServiceBase
             (compiledType, errorMessages) = GetCsHtmlType(virtualPath);
         // compile .cs files
         else if (isCs || isCshtml)
-            (compiledType, errorMessages) = GetTypeOrErrorMessages(virtualPath, className, throwOnError, appId);
+            (compiledType, errorMessages) = GetTypeOrErrorMessages(virtualPath, className, throwOnError, spec);
         else
             errorMessages = $"Error: given path '{Path.GetFileName(virtualPath)}' doesn't point to a .cs or .cshtml";
 
@@ -73,14 +73,14 @@ public abstract class CodeCompiler : ServiceBase
         return l.Return(instance, $"found: {instance != null}");
     }
 
-    public (Type Type, string ErrorMessages) GetTypeOrErrorMessages(string relativePath, string className, bool throwOnError, int appId)
+    public (Type Type, string ErrorMessages) GetTypeOrErrorMessages(string relativePath, string className, bool throwOnError, HotBuildSpec spec)
     {
-        var l = Log.Fn<(Type Type, string ErrorMessages)>($"'{relativePath}', '{className}', throw: {throwOnError}");
+        var l = Log.Fn<(Type Type, string ErrorMessages)>($"{nameof(relativePath)}: '{relativePath}'; {nameof(className)} '{className}'; {nameof(throwOnError)}: {throwOnError}; {nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'");
 
         // if no name provided, use the name which is the same as the file name
         className ??= Path.GetFileNameWithoutExtension(relativePath) ?? Eav.Constants.NullNameId;
 
-        var assResult = GetAssembly(relativePath, className, appId);
+        var assResult = GetAssembly(relativePath, className, spec);
         var assembly = assResult.Assembly;
         var errorMessages = assResult.ErrorMessages;
 
@@ -114,7 +114,7 @@ public abstract class CodeCompiler : ServiceBase
         return l.Return((compiledType, errorMessages), errorMessages == null ? "ok" : "errors");
     }
 
-    protected internal abstract AssemblyResult GetAssembly(string relativePath, string className, int appId = 0);
+    protected internal abstract AssemblyResult GetAssembly(string relativePath, string className, HotBuildSpec spec);
 
 
     protected abstract (Type Type, string ErrorMessage) GetCsHtmlType(string relativePath);
