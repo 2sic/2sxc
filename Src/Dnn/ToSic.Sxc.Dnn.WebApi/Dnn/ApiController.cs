@@ -17,8 +17,8 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
-using ToSic.Sxc.Dnn.WebApi.HttpJson;
-using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.Dnn.WebApi.Internal;
+using ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Dnn;
 [Obsolete("This will continue to work, but you should use the Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.")]
 [DefaultToNewtonsoftForHttpJson]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class ApiController : DynamicApiController, 
+public abstract class ApiController : DnnSxcCustomControllerBase, 
     IDnnDynamicWebApi,
     ICreateInstance,
     IDynamicCode, 

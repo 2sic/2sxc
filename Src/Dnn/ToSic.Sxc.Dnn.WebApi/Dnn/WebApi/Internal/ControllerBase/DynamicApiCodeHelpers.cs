@@ -1,28 +1,25 @@
-﻿using System.IO;
-using System;
+﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Web.Http.Controllers;
-using ToSic.Eav.Code.InfoSystem;
-using ToSic.Eav.Generics;
-using ToSic.Lib.Logging;
-using ToSic.Lib.Services;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Context;
-using ToSic.Sxc.Dnn;
-using ToSic.Sxc.Dnn.Code;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Code.InfoSystem;
+using ToSic.Eav.Generics;
 using ToSic.Lib.Coding;
+using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Backend.Adam;
-using IApp = ToSic.Sxc.Apps.IApp;
-using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Internal;
+using IApp = ToSic.Sxc.Apps.IApp;
 
-namespace ToSic.Sxc.WebApi;
+namespace ToSic.Sxc.Dnn.WebApi.Internal;
 
 internal class DynamicApiCodeHelpers: CodeHelper
 {
@@ -64,7 +61,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
         var block = SysHlp.GetBlockAndContext(request)?.LoadBlock();
         Log.A($"HasBlock: {block != null}");
 
-        var services = SysHlp.GetService<DynamicApiServices>().ConnectServices(Log);
+        var services = SysHlp.GetService<ApiControllerMyServices>().ConnectServices(Log);
         var codeRoot = services.CodeRootFactory
             .BuildCodeRoot(_owner, block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel10);
 
@@ -99,7 +96,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
     }
 
 
-    private IApp GetAppOrNullFromUrlParams(DynamicApiServices services, HttpRequestMessage request)
+    private IApp GetAppOrNullFromUrlParams(ApiControllerMyServices services, HttpRequestMessage request)
     {
         var l = Log.Fn<IApp>();
         try

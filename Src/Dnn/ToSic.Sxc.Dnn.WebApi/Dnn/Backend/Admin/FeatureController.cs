@@ -6,6 +6,7 @@ using ToSic.Eav.Internal.Features;
 using ToSic.Eav.SysData;
 using ToSic.Eav.WebApi.Admin.Features;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using RealController = ToSic.Eav.WebApi.Admin.Features.FeatureControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 [SupportedModules(DnnSupportedModuleNames)]
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class FeatureController() : DnnApiControllerWithFixes(RealController.LogSuffix), IFeatureController
+public class FeatureController() : DnnSxcControllerRoot(RealController.LogSuffix), IFeatureController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

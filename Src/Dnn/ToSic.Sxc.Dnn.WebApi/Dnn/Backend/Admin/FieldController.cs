@@ -7,6 +7,7 @@ using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Data;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Eav.WebApi.Admin.FieldControllerReal;
 
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 [ValidateAntiForgeryToken]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class FieldController() : SxcApiControllerBase(RealController.LogSuffix), IFieldController
+public class FieldController() : DnnSxcControllerBase(RealController.LogSuffix), IFieldController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

@@ -8,7 +8,7 @@ using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
-using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Admin.Query.QueryControllerReal;
 
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 [DnnLogExceptions]
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class QueryController() : SxcApiControllerBase(RealController.LogSuffix, RealController.LogGroup,
+public class QueryController() : DnnSxcControllerBase(RealController.LogSuffix, RealController.LogGroup,
     firstMessage: $"Query: {HttpContext.Current?.Request.Url.AbsoluteUri.After("/query/")}"), IQueryController
 {
     private RealController Real => SysHlp.GetService<RealController>();

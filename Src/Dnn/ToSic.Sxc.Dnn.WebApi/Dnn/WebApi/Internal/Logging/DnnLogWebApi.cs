@@ -3,7 +3,7 @@ using ToSic.Eav.Generics;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Dnn.Run;
 
-namespace ToSic.Sxc.Dnn.WebApi.Logging;
+namespace ToSic.Sxc.Dnn.WebApi.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class DnnLogWebApi : ActionFilterAttribute

@@ -4,7 +4,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
-using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using RealController = ToSic.Eav.WebApi.Sys.LogControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Sys;
@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Dnn.Backend.Sys;
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class LogController() : DnnApiControllerWithFixes(RealController.LogSuffix), ILogController
+public class LogController() : DnnSxcControllerRoot(RealController.LogSuffix), ILogController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

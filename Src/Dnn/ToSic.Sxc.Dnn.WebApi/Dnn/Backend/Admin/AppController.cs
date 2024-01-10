@@ -9,7 +9,7 @@ using ToSic.Eav.DataSources.Sys.Internal;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using ToSic.Sxc.WebApi;
 using AppDto = ToSic.Eav.WebApi.Dto.AppDto;
 using RealController = ToSic.Sxc.Backend.Admin.AppControllerReal;
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 // we can't set this globally (only needed for imports)
 [DnnLogExceptions]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppController() : SxcApiControllerBase(RealController.LogSuffix), IAppController<HttpResponseMessage>
+public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), IAppController<HttpResponseMessage>
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

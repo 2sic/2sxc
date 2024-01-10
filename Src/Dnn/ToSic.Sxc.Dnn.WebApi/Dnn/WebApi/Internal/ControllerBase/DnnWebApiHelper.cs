@@ -7,11 +7,9 @@ using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Integration;
-using ToSic.Sxc.Dnn.WebApi;
 
-namespace ToSic.Sxc.WebApi;
+namespace ToSic.Sxc.Dnn.WebApi.Internal;
 
 internal class DnnWebApiHelper : CodeHelperBase
 {

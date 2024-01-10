@@ -2,6 +2,7 @@
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Admin.Metadata;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Eav.WebApi.Admin.Metadata.MetadataControllerReal;
 
@@ -12,7 +13,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class MetadataController() : SxcApiControllerBase(RealController.LogSuffix), IMetadataController
+public class MetadataController() : DnnSxcControllerBase(RealController.LogSuffix), IMetadataController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

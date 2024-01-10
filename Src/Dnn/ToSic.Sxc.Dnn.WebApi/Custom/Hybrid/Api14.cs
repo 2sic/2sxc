@@ -16,8 +16,9 @@ using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Dnn.WebApi.HttpJson;
-using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.Dnn.WebApi.Internal;
+using ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
+using ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
@@ -36,7 +37,7 @@ namespace Custom.Hybrid;
 [PublicApi]
 [DnnLogExceptions]
 [DefaultToNewtonsoftForHttpJson]
-public abstract partial class Api14: DynamicApiController, IDynamicCode14<object, ServiceKit14>, IHasCodeLog, IDynamicWebApi, IDynamicCode12, ICreateInstance
+public abstract partial class Api14: DnnSxcCustomControllerBase, IDynamicCode14<object, ServiceKit14>, IHasCodeLog, IDynamicWebApi, IDynamicCode12, ICreateInstance
 {
     #region Setup
 

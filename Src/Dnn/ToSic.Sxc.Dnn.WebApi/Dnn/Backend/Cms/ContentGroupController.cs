@@ -4,13 +4,14 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Sxc.Backend.Cms;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Cms.ContentGroupControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Cms;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ContentGroupController() : SxcApiControllerBase(RealController.LogSuffix), IContentGroupController
+public class ContentGroupController() : DnnSxcControllerBase(RealController.LogSuffix), IContentGroupController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

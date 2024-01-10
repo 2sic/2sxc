@@ -6,6 +6,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Adam.AdamControllerReal<int>;
 
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Dnn.Backend;
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]    // use view, all methods must re-check permissions
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AdamController() : SxcApiControllerBase("Adam"), IAdamController<int>
+public class AdamController() : DnnSxcControllerBase("Adam"), IAdamController<int>
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

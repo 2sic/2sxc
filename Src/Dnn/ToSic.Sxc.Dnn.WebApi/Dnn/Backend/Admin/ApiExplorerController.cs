@@ -12,6 +12,7 @@ using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using RealController = ToSic.Eav.WebApi.ApiExplorer.ApiExplorerControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 [ValidateAntiForgeryToken]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ApiExplorerController() : DnnApiControllerWithFixes(RealController.LogSuffix), IApiExplorerController
+public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSuffix), IApiExplorerController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

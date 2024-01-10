@@ -2,6 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // https://github.com/aspnet/AspLabs/blob/main/src/AspNetCoreWebAPI/src/System.Text.Json.Formatter/SystemTextJsonMediaTypeFormatter.cs
 
+// 2024-01-10 2dm NOTES
+// It seems to be identical with the code from the source, so I assume that it patches capabilities
+// which were added by a newer .net but missing in Dnn
+// Also not sure when we can remove this
+
 using System.IO;
 using System.Net.Http.Headers;
 using System.Text;
@@ -9,6 +14,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
+// ReSharper disable once CheckNamespace
 namespace System.Net.Http.Formatting;
 
 /// <summary>

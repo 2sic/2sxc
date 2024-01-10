@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Dnn.Razor;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn.StartUp;
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.Dnn.StartUp;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class CompilerDependencies
 {
-    private string ToSicSexyContentWebApi => nameof(DynamicApiController);
+    private string ToSicSexyContentWebApi => nameof(DnnSxcCustomControllerBase);
 
     private string ToSicSexyContentRazor => nameof(DnnRazorEngine);
 }

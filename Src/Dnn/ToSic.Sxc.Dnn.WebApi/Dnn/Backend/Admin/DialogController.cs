@@ -2,7 +2,7 @@
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Sxc.Backend.Admin;
-using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Admin.DialogControllerReal;
 
@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class DialogController() : SxcApiControllerBase(RealController.LogSuffix), IDialogController
+public class DialogController() : DnnSxcControllerBase(RealController.LogSuffix), IDialogController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

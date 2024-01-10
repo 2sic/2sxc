@@ -8,7 +8,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Backend;
 
-namespace ToSic.Sxc.WebApi;
+namespace ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
 
 partial class WebApiCoreShim
 {

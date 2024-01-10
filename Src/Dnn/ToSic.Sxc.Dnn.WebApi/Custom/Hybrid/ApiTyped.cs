@@ -6,7 +6,6 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
 using System.Web.Http;
@@ -20,6 +19,8 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Dnn.WebApi.Internal;
+using ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
 using ToSic.Sxc.Internal;
 
 // ReSharper disable once CheckNamespace
@@ -37,7 +38,7 @@ namespace Custom.Hybrid;
 [DnnLogExceptions]
 //[DefaultToNewtonsoftForHttpJson] - // !!! v16 should now default to normal
 [JsonFormatter]
-public abstract class ApiTyped: DynamicApiController, IHasCodeLog, IDynamicWebApi, IHasDynamicCodeRoot, IDynamicCode16, IGetCodePath
+public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynamicWebApi, IHasDynamicCodeRoot, IDynamicCode16, IGetCodePath
 {
     #region Setup
 

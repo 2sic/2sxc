@@ -6,7 +6,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using ToSic.Sxc.WebApi;
 using Guid = System.Guid;
 using RealController = ToSic.Eav.WebApi.Admin.EntityControllerReal;
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 /// </remarks>
 [DnnLogExceptions]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class EntityController() : SxcApiControllerBase(RealController.LogSuffix), IEntityController
+public class EntityController() : DnnSxcControllerBase(RealController.LogSuffix), IEntityController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

@@ -7,6 +7,7 @@ using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using RealController = ToSic.Sxc.Backend.Admin.AppPartsControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 // token, which fails in the cases where the url is called using get, which should result in a download
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppPartsController() : DnnApiControllerWithFixes(RealController.LogSuffix), IAppPartsController
+public class AppPartsController() : DnnSxcControllerRoot(RealController.LogSuffix), IAppPartsController
 {
     private RealController Real => SysHlp.GetService<RealController>();
     #region Parts Export/Import

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
 using ToSic.Eav.WebApi.App;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.App.AppDataControllerReal;
 
@@ -9,7 +10,7 @@ namespace ToSic.Sxc.Dnn.Backend.App;
 /// <inheritdoc />
 [AllowAnonymous]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppDataController() : SxcApiControllerBase(RealController.LogSuffix), IAppDataController
+public class AppDataController() : DnnSxcControllerBase(RealController.LogSuffix), IAppDataController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

@@ -5,7 +5,7 @@ using System.Web.Http;
 
 // The commands here should help Dnn WebAPIs 
 
-namespace ToSic.Sxc.WebApi;
+namespace ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
 
 partial class WebApiCoreShim
 {

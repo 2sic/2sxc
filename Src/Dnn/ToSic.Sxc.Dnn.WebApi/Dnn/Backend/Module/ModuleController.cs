@@ -3,6 +3,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 
 namespace ToSic.Sxc.Dnn.Backend.Module;
 
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Dnn.Backend.Module;
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ModuleController() : DnnApiControllerWithFixes("Mod")
+public class ModuleController() : DnnSxcControllerRoot("Mod")
 {
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]

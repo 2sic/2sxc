@@ -5,7 +5,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Backend.Admin.AppFiles;
-using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Admin.AppFiles.AppFilesControllerReal;
 
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppFilesController() : SxcApiControllerBase(RealController.LogSuffix), IAppFilesController
+public class AppFilesController() : DnnSxcControllerBase(RealController.LogSuffix), IAppFilesController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

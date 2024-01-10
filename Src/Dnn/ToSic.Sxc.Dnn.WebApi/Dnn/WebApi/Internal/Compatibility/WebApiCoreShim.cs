@@ -1,9 +1,8 @@
 ﻿using System.Net.Http;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Dnn.WebApi.Logging;
 
-namespace ToSic.Sxc.WebApi;
+namespace ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
 
 /// <summary>
 /// This is the helper class to compose other WebApi-classes of modern custom API Controllers. <br/>

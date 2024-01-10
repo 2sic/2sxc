@@ -21,22 +21,22 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
-using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
-using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Dnn.Code;
+using ToSic.Sxc.Dnn.WebApi.Internal;
+using ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
 
 // ReSharper disable InheritdocInvalidUsage
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.WebApi;
 
-/// <inheritdoc cref="DynamicApiController" />
+/// <inheritdoc cref="DnnSxcCustomControllerBase" />
 /// <summary>
 /// This is the base class for API Controllers which need the full context
 /// incl. the current App, DNN, Data, etc.
@@ -49,7 +49,7 @@ namespace ToSic.SexyContent.WebApi;
 [DefaultToNewtonsoftForHttpJson]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public abstract partial class SxcApiController() :
-    DynamicApiController("OldApi"),
+    DnnSxcCustomControllerBase("OldApi"),
     IDnnDynamicWebApi,
     ICreateInstance,
     IDynamicWebApi,

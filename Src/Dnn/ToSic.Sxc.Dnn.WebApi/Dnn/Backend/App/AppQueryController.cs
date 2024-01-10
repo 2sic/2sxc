@@ -3,6 +3,7 @@ using System.Web.Http;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.WebApi.Admin.App;
 using ToSic.Eav.WebApi.Admin.Query;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.App.AppQueryControllerReal;
 
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.Dnn.Backend.App;
 
 [AllowAnonymous] // All functions will check security internally, so assume no requirements
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppQueryController() : SxcApiControllerBase(RealController.LogSuffix), IAppQueryController
+public class AppQueryController() : DnnSxcControllerBase(RealController.LogSuffix), IAppQueryController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

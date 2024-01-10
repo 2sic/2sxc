@@ -1,12 +1,12 @@
-﻿using ToSic.Eav.Serialization;
+﻿using System.Net.Http.Formatting;
+using ToSic.Eav.Serialization;
 
-// ReSharper disable once CheckNamespace
-namespace System.Net.Http.Formatting;
+namespace ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
 
 internal class JsonFormatters
 {
     public static SystemTextJsonMediaTypeFormatter SystemTextJsonMediaTypeFormatter =>
-        _systemTextJsonMediaTypeFormatter ??= new SystemTextJsonMediaTypeFormatter
+        _systemTextJsonMediaTypeFormatter ??= new()
         {
             JsonSerializerOptions = JsonOptions.UnsafeJsonWithoutEncodingHtml
         };

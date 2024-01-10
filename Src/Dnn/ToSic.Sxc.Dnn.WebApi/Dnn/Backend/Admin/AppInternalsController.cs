@@ -3,7 +3,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Eav.WebApi.Admin.AppInternalsControllerReal;
 
@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 /// </summary>
 [DnnLogExceptions]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppInternalsController() : SxcApiControllerBase(RealController.LogSuffix), IAppInternalsController
+public class AppInternalsController() : DnnSxcControllerBase(RealController.LogSuffix), IAppInternalsController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

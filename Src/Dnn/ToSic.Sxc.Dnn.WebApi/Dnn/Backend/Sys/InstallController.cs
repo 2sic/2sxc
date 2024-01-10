@@ -6,13 +6,14 @@ using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using RealController = ToSic.Sxc.Backend.Sys.InstallControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Sys;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class InstallController()
-    : DnnApiControllerWithFixes(RealController.LogSuffix), IInstallController<HttpResponseMessage>
+    : DnnSxcControllerRoot(RealController.LogSuffix), IInstallController<HttpResponseMessage>
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

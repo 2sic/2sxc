@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.WebApi;
+﻿namespace ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface INetCoreCompatibility

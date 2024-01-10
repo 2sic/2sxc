@@ -35,6 +35,7 @@ public class RouteMapper : IServiceRouteMapper
     private static readonly object AppContentDefs = new {controller = ControllerNames.AppContent, id = RouteParameter.Optional };
 
 
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public void RegisterRoutes(IMapRoute mapRouteManager)
     {
         _mapRouteManager = mapRouteManager;

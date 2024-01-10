@@ -1,23 +1,21 @@
 ﻿using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
-using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Dnn.WebApi.HttpJson;
-using ToSic.Sxc.Dnn.WebApi.Logging;
-using ToSic.Sxc.WebApi;
+using ToSic.Lib.Logging;
+using ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
 
-namespace ToSic.Sxc.Dnn.WebApi;
+namespace ToSic.Sxc.Dnn.WebApi.Internal;
 
 [DnnLogWebApi, JsonOnlyResponse]
 [PrivateApi("This controller is never used publicly, you can rename any time you want")]
 // Can't hide in Intellisense, because that would hide it for all derived classes too
 // [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class DnnApiControllerWithFixes : DnnApiController, IHasLog
+public abstract class DnnSxcControllerRoot : DnnApiController, IHasLog
 {
     internal const string DnnSupportedModuleNames = "2sxc,2sxc-app";
 
-    protected DnnApiControllerWithFixes(string logSuffix, string insightsGroup = default, string firstMessage = default)
+    protected DnnSxcControllerRoot(string logSuffix, string insightsGroup = default, string firstMessage = default)
     {
         Log = new Log("Api." + logSuffix);
         // ReSharper disable once VirtualMemberCallInConstructor

@@ -8,7 +8,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Admin.TypeControllerReal;
 
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 /// </remarks>
 [DnnLogExceptions]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class TypeController() : SxcApiControllerBase(RealController.LogSuffix), ITypeController
+public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), ITypeController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

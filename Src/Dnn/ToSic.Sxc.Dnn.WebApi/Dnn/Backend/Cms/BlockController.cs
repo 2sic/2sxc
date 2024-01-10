@@ -6,6 +6,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Sxc.Backend.Cms;
 using ToSic.Sxc.Backend.InPage;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Cms.BlockControllerReal;
 
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.Dnn.Backend.Cms;
 [ValidateAntiForgeryToken]
 // cannot use this, as most requests now come from a lone page [SupportedModules(DnnSupportedModuleNames)]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class BlockController() : SxcApiControllerBase(RealController.LogSuffix), IBlockController
+public class BlockController() : DnnSxcControllerBase(RealController.LogSuffix), IBlockController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

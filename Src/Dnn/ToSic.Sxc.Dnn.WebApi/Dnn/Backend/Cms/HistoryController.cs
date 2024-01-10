@@ -5,6 +5,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Cms.HistoryControllerReal;
 
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Dnn.Backend.Cms;
 [SupportedModules(DnnSupportedModuleNames)]
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class HistoryController() : SxcApiControllerBase(RealController.LogSuffix), IHistoryController
+public class HistoryController() : DnnSxcControllerBase(RealController.LogSuffix), IHistoryController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

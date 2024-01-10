@@ -1,19 +1,27 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.IO;
+using System.Web.Http;
 using ToSic.Lib.Coding;
-using ToSic.Sxc.Code;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.WebApi;
 
-namespace ToSic.Sxc.WebApi;
+namespace ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
 
 /// <summary>
 /// </summary>
 [DnnLogExceptions]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal abstract class ApiTempShimmed : DynamicApiController, IDynamicWebApi, IHasDynamicCodeRoot, INetCoreCompatibility
+internal abstract class ApiTempShimmed : DnnSxcCustomControllerBase, IDynamicWebApi, IHasDynamicCodeRoot, INetCoreCompatibility
 {
 
     #region Net Core Compatibility Shims - Copy this entire section to WebApi Files
+
+    public IFile SaveInAdam(NoParamOrder noParamOrder = default, Stream stream = null, string fileName = null,
+        string contentType = null, Guid? guid = null, string field = null, string subFolder = "")
+    {
+        throw new NotImplementedException();
+    }
 
     /// <inheritdoc cref="IDynamicWebApi.File"/>
     public dynamic File(NoParamOrder noParamOrder = default,

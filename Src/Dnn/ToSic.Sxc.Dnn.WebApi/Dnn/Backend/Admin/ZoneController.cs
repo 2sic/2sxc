@@ -5,7 +5,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Zone;
-using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.Dnn.WebApi.Internal;
 using ToSic.Sxc.WebApi;
 using RealController = ToSic.Eav.WebApi.Admin.ZoneControllerReal;
 
@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ZoneController() : SxcApiControllerBase(RealController.LogSuffix), IZoneController
+public class ZoneController() : DnnSxcControllerBase(RealController.LogSuffix), IZoneController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 

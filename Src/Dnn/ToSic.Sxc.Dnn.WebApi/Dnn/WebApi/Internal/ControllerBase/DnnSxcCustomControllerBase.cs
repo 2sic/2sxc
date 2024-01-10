@@ -3,9 +3,8 @@ using System.Web.Http.Controllers;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Dnn.WebApi.Logging;
 
-namespace ToSic.Sxc.WebApi;
+namespace ToSic.Sxc.Dnn.WebApi.Internal;
 
 /// <summary>
 /// This is the foundation for both the old SxcApiController and the new Dnn.ApiController.
@@ -19,8 +18,8 @@ namespace ToSic.Sxc.WebApi;
 // Can't hide in Intellisense, because that would hide it for all derived classes too
 // [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 [method: PrivateApi]
-public abstract class DynamicApiController(string logSuffix, string insightsGroup = default)
-    : SxcApiControllerBase(logSuffix, insightsGroup), IHasDynamicCodeRoot
+public abstract class DnnSxcCustomControllerBase(string logSuffix, string insightsGroup = default)
+    : DnnSxcControllerBase(logSuffix, insightsGroup), IHasDynamicCodeRoot
 {
     #region Constructor & DI / Setup
 
@@ -28,7 +27,7 @@ public abstract class DynamicApiController(string logSuffix, string insightsGrou
     /// Empty constructor is important for inheriting classes
     /// </summary>
     [PrivateApi]
-    protected DynamicApiController() : this("DynApi") { }
+    protected DnnSxcCustomControllerBase() : this("DynApi") { }
 
     [PrivateApi]
     protected override void Initialize(HttpControllerContext controllerContext)
