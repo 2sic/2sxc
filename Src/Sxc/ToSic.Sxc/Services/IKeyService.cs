@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Services;
 /// <summary>
 /// WIP 16.04
 /// </summary>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("Still WIP in v16.04")]
+[PublicApi]
 public interface IKeyService
 {
     /// <summary>
@@ -31,6 +31,7 @@ public interface IKeyService
     string UniqueKey { get; }
 
     [PrivateApi("not yet sure if we should publish this")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     string UniqueKeyOf(object data);
 
     /// <summary>

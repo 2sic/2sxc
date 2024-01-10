@@ -4,14 +4,12 @@ using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Internal;
 
-namespace ToSic.Sxc.Services;
+namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class ModuleService: ServiceBase, IModuleService
+internal class ModuleService() : ServiceBase(SxcLogging.SxcLogName + ".ModSvc"), IModuleService
 {
-    public ModuleService() : base(SxcLogging.SxcLogName + ".ModSvc") { }
-
     public void AddToMore(IHtmlTag tag, string nameId = null, bool noDuplicates = false)
     {
         if (tag is null) return;

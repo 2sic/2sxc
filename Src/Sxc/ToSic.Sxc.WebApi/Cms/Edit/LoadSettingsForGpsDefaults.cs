@@ -41,8 +41,7 @@ internal class LoadSettingsForGpsDefaults: ServiceBase, ILoadSettingsProvider
         var result = new Dictionary<string, object>(InvariantCultureIgnoreCase)
         {
             {
-                _googleMapsSettings.SettingsIdentifier + "." + nameof(_googleMapsSettings.DefaultCoordinates),
-                coordinates
+                $"{_googleMapsSettings.SettingsIdentifier}.{nameof(GoogleMapsSettings.DefaultCoordinates)}", coordinates
             }
         };
         return (result, $"{result.Count}");

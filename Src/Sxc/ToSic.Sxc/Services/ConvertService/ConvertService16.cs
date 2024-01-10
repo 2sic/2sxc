@@ -4,6 +4,7 @@ using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Services.Internal;
 
 
 // ReSharper disable MethodOverloadWithOptionalParameter

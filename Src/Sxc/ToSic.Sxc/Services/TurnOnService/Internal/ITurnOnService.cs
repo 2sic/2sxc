@@ -4,12 +4,13 @@ using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 
-namespace ToSic.Sxc.Services;
+namespace ToSic.Sxc.Services.Internal;
 
 /// <summary>
 /// turnOn Service helps initialize / boot JavaScripts when all requirements (usually dependencies) are ready.
 /// </summary>
 [PrivateApi("Don't publish yet - the functionality is surfaced on the PageService!")]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface ITurnOnService: IHasLog
 {
 

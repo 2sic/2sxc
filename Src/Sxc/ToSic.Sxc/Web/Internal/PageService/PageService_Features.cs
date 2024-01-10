@@ -12,6 +12,10 @@ namespace ToSic.Sxc.Web.Internal.PageService;
 
 partial class PageService
 {
+    /// <summary>
+    /// Test code to modify the CDN source, not for public use
+    /// </summary>
+    /// <param name="cdnSource"></param>
     public void TestCdn(string cdnSource)
     {
         _overrideCdnSource = cdnSource;

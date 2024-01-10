@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Web.Internal.JsContext;
-
-namespace ToSic.Sxc.Services;
+﻿namespace ToSic.Sxc.Web.Internal.JsContext;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface IJsApiService

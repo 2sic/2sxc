@@ -13,11 +13,9 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Internal;
-using ToSic.Sxc.Services.Internal;
 using MailMessage = System.Net.Mail.MailMessage;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Services;
+namespace ToSic.Sxc.Services.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
@@ -143,7 +141,9 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
         Send(mailMessage);
     });
 
-    public MailAddress MailAddress(string addressType, object mailAddress)
+    // 2024-01-10 2dm internalized - doesn't seem in use, and also not clear why we would have this
+    // was probably an experiment from STV during dev, but we shouldn't keep it in the interface
+    internal MailAddress MailAddress(string addressType, object mailAddress)
     {
         switch (mailAddress)
         {
@@ -156,7 +156,9 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
         }
     }
 
-    public bool AddMailAddresses(string addressType, MailAddressCollection targetMails, object mailAddresses)
+    // 2024-01-10 2dm internalized - doesn't seem in use, and also not clear why we would have this
+    // was probably an experiment from STV during dev, but we shouldn't keep it in the interface
+    internal bool AddMailAddresses(string addressType, MailAddressCollection targetMails, object mailAddresses)
     {
         var wrapLog = Log.Fn<bool>(); // return a bool just to make return-statements easier later on
 

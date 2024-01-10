@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static ToSic.Sxc.Services.LinkServiceUnknown;
+using static ToSic.Sxc.Services.Internal.LinkServiceUnknown;
 using static ToSic.Sxc.Tests.LinksAndImages.ParametersTestExtensions;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests

@@ -10,12 +10,9 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.Services.Internal;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal.Url;
 
-
-namespace ToSic.Sxc.Services;
+namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

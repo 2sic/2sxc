@@ -10,6 +10,7 @@ using ToSic.Razor.Markup;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Edit.EditService;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 
@@ -177,6 +178,6 @@ public class RenderService: ServiceForDynamicCode,
         // Otherwise create a new one - even though it's not clear if this would have any real effect
         var newEdit = _Deps.EditGenerator.New();
         newEdit.ConnectToRoot(_DynCodeRoot);
-        return newEdit.SetBlock(_DynCodeRoot, blockOrNull);
+        return ((EditService)newEdit).SetBlock(_DynCodeRoot, blockOrNull);
     }
 }

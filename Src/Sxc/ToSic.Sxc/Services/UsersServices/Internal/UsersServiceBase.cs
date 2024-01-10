@@ -4,10 +4,9 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context.Internal.Raw;
 using ToSic.Sxc.Internal;
-using ToSic.Sxc.Services.Internal;
 using static System.StringComparison;
 
-namespace ToSic.Sxc.Services;
+namespace ToSic.Sxc.Services.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public abstract class UsersServiceBase : ServiceForDynamicCode, IUserService

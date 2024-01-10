@@ -3,8 +3,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Unknown;
 using ToSic.Lib.DI;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Services;
+namespace ToSic.Sxc.Services.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class MailServiceUnknown : MailServiceBase

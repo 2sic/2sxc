@@ -10,6 +10,7 @@ using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Dnn.Services;
 

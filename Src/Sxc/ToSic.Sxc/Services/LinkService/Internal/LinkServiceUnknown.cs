@@ -1,17 +1,14 @@
-﻿using System;
-using ToSic.Eav.Internal.Unknown;
-using ToSic.Eav.Run;
+﻿using ToSic.Eav.Internal.Unknown;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Services;
+namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi("for testing / un-implemented use")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class LinkServiceUnknown: LinkServiceBase, IIsUnknown
+internal class LinkServiceUnknown: LinkServiceBase, IIsUnknown
 {
     public const string DefDomain = "unknown.2sxc.org";
     public const string DefProtocol = "https";

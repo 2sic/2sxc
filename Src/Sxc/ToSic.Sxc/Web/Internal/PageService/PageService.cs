@@ -36,11 +36,11 @@ public partial class PageService: ServiceForDynamicCode, ToSic.Sxc.Services.IPag
     private readonly LazySvc<IFeaturesService> _features;
     public PageServiceShared PageServiceShared { get; }
 
-    /// <summary>
-    /// How the changes given to this object should be processed.
-    /// </summary>
-    [PrivateApi("not final yet, will probably change")]
-    public PageChangeModes ChangeMode { get; set; } = PageChangeModes.Auto;
+    ///// <summary>
+    ///// How the changes given to this object should be processed.
+    ///// </summary>
+    //[PrivateApi("not final yet, will probably change")]
+    //public PageChangeModes ChangeMode { get; set; } = PageChangeModes.Auto;
 
 
     public bool CspIsEnabled => _cspServiceLazy.Value.IsEnabled;

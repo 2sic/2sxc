@@ -2,7 +2,7 @@
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Dnn.Services;
 

@@ -9,15 +9,10 @@ namespace ToSic.Sxc.Services.GoogleMaps;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class GoogleMapsSettings: EntityBasedService<GoogleMapsSettings>
+public class GoogleMapsSettings(IJsonService jsonService)
+    : EntityBasedService<GoogleMapsSettings>($"{SxcLogging.SxcLogName}.GMapSt")
 {
     public static string TypeIdentifier = "f5764f60-2621-4a5d-9391-100fbe664640";
-
-    public GoogleMapsSettings(IJsonService jsonService) : base($"{SxcLogging.SxcLogName}.GMapSt")
-    {
-        _jsonService = jsonService;
-    }
-    private readonly IJsonService _jsonService;
 
     public string SettingsIdentifier => "Settings.GoogleMaps";
 
@@ -28,6 +23,7 @@ public class GoogleMapsSettings: EntityBasedService<GoogleMapsSettings>
     public string Icon => GetThis("");
 
     public MapsCoordinates DefaultCoordinates => _defCoords.Get(GetMapsCoordinates);
+    private readonly GetOnce<MapsCoordinates> _defCoords = new();
 
     private MapsCoordinates GetMapsCoordinates() => Log.Func(() =>
     {
@@ -35,7 +31,7 @@ public class GoogleMapsSettings: EntityBasedService<GoogleMapsSettings>
         if (!json.HasValue()) return (MapsCoordinates.Defaults, "no json");
         try
         {
-            return (_jsonService.To<MapsCoordinates>(json), "from json");
+            return (jsonService.To<MapsCoordinates>(json), "from json");
         }
         catch
         {
@@ -43,5 +39,4 @@ public class GoogleMapsSettings: EntityBasedService<GoogleMapsSettings>
         }
     });
 
-    private readonly GetOnce<MapsCoordinates> _defCoords = new();
 }

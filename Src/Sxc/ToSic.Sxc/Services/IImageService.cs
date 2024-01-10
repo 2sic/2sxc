@@ -26,6 +26,7 @@ public interface IImageService: ICanDebug
     /// <returns></returns>
     /// <remarks>Only works for the basic, known image types</remarks>
     [PrivateApi("Not sure if this is needed outside...")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     IImageFormat GetFormat(string path);
 
 

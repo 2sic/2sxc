@@ -3,16 +3,12 @@ using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Services;
+namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ConvertValueService: ServiceBase
+public class ConvertValueService() : ServiceBase("Sxc.CnvSrv")
 {
-    public ConvertValueService(): base("Sxc.CnvSrv")
-    {
-    }
-
     public bool OptimizeNumbers => true;
 
     public bool OptimizeBoolean => true;

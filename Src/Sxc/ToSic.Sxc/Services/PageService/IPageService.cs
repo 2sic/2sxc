@@ -21,12 +21,12 @@ namespace ToSic.Sxc.Services;
 [PublicApi]
 public partial interface IPageService
 {
-    /// <summary>
-    /// How changes should be applied to the page.
-    /// Default is <see cref="T:ChangeMode.Auto"/>
-    /// </summary>
-    [PrivateApi("not final yet")]
-    PageChangeModes ChangeMode { get; set; }
+    ///// <summary>
+    ///// How changes should be applied to the page.
+    ///// Default is <see cref="T:ChangeMode.Auto"/>
+    ///// </summary>
+    //[PrivateApi("not final yet")]
+    //PageChangeModes ChangeMode { get; set; }
 
     /// <summary>
     /// Add a standard base header tag or replace it if one is already provided.
@@ -159,13 +159,4 @@ public partial interface IPageService
 
     #endregion
 
-    #region Testing Commands
-
-    /// <summary>
-    /// This is for testing only, and not a real API. Should not be used outside of testing.
-    /// </summary>
-    [PrivateApi]
-    void TestCdn(string cdnSource);
-
-    #endregion
 }

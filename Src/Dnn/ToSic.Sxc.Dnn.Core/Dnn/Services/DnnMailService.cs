@@ -6,14 +6,12 @@ using DotNetNuke.Entities.Host;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Dnn.Services;
 
-internal class DnnMailService : MailServiceBase
+internal class DnnMailService(LazySvc<IUser> userLazy) : MailServiceBase(userLazy)
 {
-    public DnnMailService(LazySvc<IUser> userLazy) : base(userLazy)
-    { }
-        
     protected override SmtpClient SmtpClient()
     {
         var smtpServer = Host.SMTPServer;

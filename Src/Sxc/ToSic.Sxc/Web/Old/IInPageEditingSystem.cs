@@ -169,32 +169,33 @@ public interface IInPageEditingSystem: IHasLog, INeedsDynamicCodeRoot
         string apps = null,
         int max = 100);
 
-    /// <summary>
-    /// Wrap something in a context wrapper-tag
-    /// This is mainly meant for internal use
-    /// </summary>
-    /// <param name="content">the string / tags to wrap</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    /// <param name="tag">optional tag to use for the wrapper, default is div</param>
-    /// <param name="full">include full context (default is partial context only)</param>
-    /// <param name="enableEdit">include information needed for editing</param>
-    /// <param name="instanceId">id to include in context - important for API calls</param>
-    /// <param name="contentBlockId">content block this is for - important for API calls</param>
-    /// <returns></returns>
-    /// <remarks>
-    /// **History** <br/>
-    /// 1. Introduced in 2sxc 8.4
-    /// 1. Enhanced to return `IRawHtmlString` instead of `IHybridHtmlString` in 16.02
-    /// </remarks>
-    [PrivateApi]
-    IRawHtmlString WrapInContext(object content,
-        NoParamOrder noParamOrder = default,
-        string tag = SxcUiConstants.DefaultContextTag,
-        bool full = false,
-        bool? enableEdit = null,
-        int instanceId = 0,
-        int contentBlockId = 0
-    );
+    // 2024-01-10 2dm disabled #WrapInContext - was for internal only, seems not to be used? Was created 2018? https://github.com/2sic/2sxc/issues/1479
+    ///// <summary>
+    ///// Wrap something in a context wrapper-tag
+    ///// This is mainly meant for internal use
+    ///// </summary>
+    ///// <param name="content">the string / tags to wrap</param>
+    ///// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    ///// <param name="tag">optional tag to use for the wrapper, default is div</param>
+    ///// <param name="full">include full context (default is partial context only)</param>
+    ///// <param name="enableEdit">include information needed for editing</param>
+    ///// <param name="instanceId">id to include in context - important for API calls</param>
+    ///// <param name="contentBlockId">content block this is for - important for API calls</param>
+    ///// <returns></returns>
+    ///// <remarks>
+    ///// **History** <br/>
+    ///// 1. Introduced in 2sxc 8.4
+    ///// 1. Enhanced to return `IRawHtmlString` instead of `IHybridHtmlString` in 16.02
+    ///// </remarks>
+    //[PrivateApi]
+    //IRawHtmlString WrapInContext(object content,
+    //    NoParamOrder noParamOrder = default,
+    //    string tag = SxcUiConstants.DefaultContextTag,
+    //    bool full = false,
+    //    bool? enableEdit = null,
+    //    int instanceId = 0,
+    //    int contentBlockId = 0
+    //);
 
     /// <summary>
     /// Ensure that the UI will load the correct assets to enable editing. See [](xref:NetCode.Razor.Edit.Enable)

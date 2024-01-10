@@ -99,7 +99,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public void TestRoundTrip(string testName, string value)
         {
             var secDataService = GetSecureDataService();
-            var encrypted = secDataService.Create(value);
+            var encrypted = ((SecureDataService)secDataService).Create(value);
             Trace.WriteLine("Encrypted: " + encrypted);
 
             var decrypted = secDataService.Parse(encrypted);

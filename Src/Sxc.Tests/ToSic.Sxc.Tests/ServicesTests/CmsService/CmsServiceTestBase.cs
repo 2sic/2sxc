@@ -10,7 +10,7 @@ using ToSic.Eav.ImportExport;
 using ToSic.Eav.Internal.Loaders;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 using ToSic.Testing.Shared.Mocks;
 using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 

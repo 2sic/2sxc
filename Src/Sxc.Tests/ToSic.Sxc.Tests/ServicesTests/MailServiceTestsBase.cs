@@ -1,5 +1,6 @@
 ﻿using System.Net.Mail;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.ServicesTests
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         {
             // Actually tests System.Net.Mail.MailAddress
             // that is responsible for parsing input to email Address and display name
-            var actual = MailService().MailAddress("test", input);
+            var actual = ((MailServiceBase)MailService()).MailAddress("test", input);
             AreEqual(expectedAddress, actual.Address);
             AreEqual(expectedDisplayName, actual.DisplayName);
         }
@@ -33,7 +34,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             // that is responsible for parsing string input to list of MailAddresses
             var actual = new MailAddressCollection();
 
-            MailService().AddMailAddresses("test", actual, input);
+            ((MailServiceBase)MailService()).AddMailAddresses("test", actual, input);
             AreEqual(expected1Address, actual[0].Address);
             AreEqual(expected1DisplayName, actual[0].DisplayName);
             AreEqual(expected2Address, actual[1].Address);

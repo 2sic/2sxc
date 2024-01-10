@@ -2,7 +2,6 @@
 using System.Text;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 
 // ReSharper disable once CheckNamespace
@@ -122,7 +121,11 @@ public interface IMailService: INeedsDynamicCodeRoot
         object attachments = null
     );
 
-    [PrivateApi] MailAddress MailAddress(string addressType, object mailAddress);
+    // 2024-01-10 2dm internalized - doesn't seem in use, and also not clear why we would have this
+    // was probably an experiment from STV during dev, but we shouldn't keep it in the interface
+    //[PrivateApi] MailAddress MailAddress(string addressType, object mailAddress);
 
-    [PrivateApi] bool AddMailAddresses(string addressType, MailAddressCollection targetMails, object mailAddresses);
+    // 2024-01-10 2dm internalized - doesn't seem in use, and also not clear why we would have this
+    // was probably an experiment from STV during dev, but we shouldn't keep it in the interface
+    //[PrivateApi] bool AddMailAddresses(string addressType, MailAddressCollection targetMails, object mailAddresses);
 }

@@ -3,6 +3,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 

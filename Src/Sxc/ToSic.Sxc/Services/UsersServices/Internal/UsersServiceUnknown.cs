@@ -1,10 +1,9 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Unknown;
 using ToSic.Lib.DI;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Context.Internal.Raw;
 
-namespace ToSic.Sxc.Services;
+namespace ToSic.Sxc.Services.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class UsersServiceUnknown : UsersServiceBase, IIsUnknown

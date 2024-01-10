@@ -1,9 +1,9 @@
 ﻿using ToSic.Eav.Internal.Unknown;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Web.Internal.JsContext;
+using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Services;
+namespace ToSic.Sxc.Web.Internal.JsContext;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class JsApiServiceUnknown(WarnUseOfUnknown<JsApiServiceUnknown> _) : ServiceBase($"{LogScopes.NotImplemented}.JsApi"), IJsApiService, IIsUnknown

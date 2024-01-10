@@ -5,6 +5,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Data.Internal;
 
