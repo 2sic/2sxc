@@ -4,8 +4,6 @@ using System.Web.Compilation;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
 
@@ -25,9 +23,9 @@ internal class CodeCompilerNetFull : CodeCompiler
         );
     }
 
-    protected internal override AssemblyResult GetAssembly(string relativePath, string className, int appId = 0)
+    protected internal override AssemblyResult GetAssembly(string relativePath, string className, HotBuildSpec spec)
     {
-        var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}:{relativePath}, {nameof(className)}:{className}, {nameof(appId)}:{appId}", timer: true);
+        var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {nameof(className)}: '{className}'; {nameof(spec.AppId)}:{spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'", timer: true);
 
         AssemblyResult ReportError(Exception ex, string additionalInfo)
         {
@@ -46,7 +44,7 @@ internal class CodeCompilerNetFull : CodeCompiler
             try
             {
                 if (code.IsHotBuildSupported())
-                    return l.Return(_roslynBuildManager.GetCompiledAssembly(relativePath, className, appId),
+                    return l.Return(_roslynBuildManager.GetCompiledAssembly(relativePath, className, spec),
                         "Ok, RoslynBuildManager");
             }
             catch (Exception ex)

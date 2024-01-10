@@ -17,7 +17,6 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.DataSources.Internal;
@@ -138,8 +137,7 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
         return (physicalPath, relativePath);
     }
 
-    private IEnumerable<TempDsInfo> LoadAppDataSources(int appId, string physicalPath, string relativePath
-    )
+    private IEnumerable<TempDsInfo> LoadAppDataSources(int appId, string physicalPath, string relativePath)
     {
         var l = Log.Fn<IEnumerable<TempDsInfo>>(
             $"{nameof(appId)}: {appId}; {nameof(physicalPath)}: '{physicalPath}'; {nameof(relativePath)}: '{relativePath}'");
@@ -156,11 +154,14 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
                 var className = Path.GetFileNameWithoutExtension(dataSourceFile);
                 try
                 {
+                    // TODO: AppDataSource do not support Edition
+                    var spec = new HotBuildSpec { AppId = appId, Edition = default };
+
                     var (type, errorMessages) = compiler.GetTypeOrErrorMessages(
                         relativePath: Path.Combine(relativePath, Path.GetFileName(dataSourceFile)),
                         className: className,
                         throwOnError: false, 
-                        appId: appId);
+                        spec: spec);
 
                     if (!errorMessages.HasValue())
                         return new TempDsInfo { ClassName = className, Type = type };

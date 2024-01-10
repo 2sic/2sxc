@@ -62,6 +62,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
 
     [PrivateApi] protected IView Template;
     [PrivateApi] protected string TemplatePath;
+    [PrivateApi] protected string Edition;
     [PrivateApi] protected IApp App;
     [PrivateApi] protected IDataSource DataSource;
     [PrivateApi] protected IBlock Block;
@@ -81,7 +82,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
         var view = block.View;
         var appState = block.Context.AppState;
         var appPathRootInInstallation = block.App.PathSwitch(view.IsShared, PathTypes.PhysRelative);
-        var polymorphPathOrNull = Services.EnginePolymorphism.PolymorphTryToSwitchPath(appPathRootInInstallation, view, appState);
+        var (polymorphPathOrNull, edition) = Services.EnginePolymorphism.PolymorphTryToSwitchPath(appPathRootInInstallation, view, appState);
         var templatePath = polymorphPathOrNull ??
                            Path.Combine(appPathRootInInstallation, view.Path).ToAbsolutePathForwardSlash();
 
@@ -99,6 +100,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
         // All ok, set properties
         Block = block;
         Template = view;
+        Edition = edition;
         TemplatePath = templatePath;
         App = Block.App;
         DataSource = Block.Data;

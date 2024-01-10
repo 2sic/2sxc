@@ -1,12 +1,12 @@
-﻿using System;
+﻿using DotNetNuke.Entities.Modules;
+using DotNetNuke.Services.Search.Entities;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
-using DotNetNuke.Entities.Modules;
-using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
@@ -14,12 +14,12 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context;
@@ -44,8 +44,6 @@ namespace ToSic.Sxc.Dnn.Search;
 /// </remarks>
 internal class SearchController : ServiceBase
 {
-    private readonly LazySvc<ILogStore> _logStore;
-
     public SearchController(
         AppsCacheSwitch appsCache,
         Generator<CodeCompiler> codeCompiler,
@@ -55,7 +53,8 @@ internal class SearchController : ServiceBase
         LazySvc<ILookUpEngineResolver> dnnLookUpEngineResolver,
         EngineFactory engineFactory,
         LazySvc<IAppLoaderTools> loaderTools,
-        LazySvc<ILogStore> logStore) : base("DNN.Search")
+        LazySvc<ILogStore> logStore,
+        Polymorphism.Internal.PolymorphConfigReader polymorphism) : base("DNN.Search")
     {
         ConnectServices(
             _appsCache = appsCache,
@@ -66,7 +65,8 @@ internal class SearchController : ServiceBase
             _loaderTools = loaderTools,
             _dnnLookUpEngineResolver = dnnLookUpEngineResolver,
             _moduleAndBlockBuilder = moduleAndBlockBuilder,
-            _logStore = logStore
+            _logStore = logStore,
+            _polymorphism = polymorphism
         );
     }
 
@@ -78,6 +78,8 @@ internal class SearchController : ServiceBase
     private readonly LazySvc<IAppLoaderTools> _loaderTools;
     private readonly LazySvc<ILookUpEngineResolver> _dnnLookUpEngineResolver;
     private readonly LazySvc<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
+    private readonly LazySvc<ILogStore> _logStore;
+    private readonly Polymorphism.Internal.PolymorphConfigReader _polymorphism;
 
 
     /// <summary>
@@ -122,6 +124,10 @@ internal class SearchController : ServiceBase
         var streamsToIndex = GetStreamsToIndex();
         if (!streamsToIndex.Any()) return l.ReturnAsOk("no streams to index");
 
+        // Figure out the current edition - if none, stop here
+        var polymorph = _polymorphism.Init(Block.App.AppState.List);
+        // New 2023-03-20 - if the view comes with a preset edition, it's an ajax-preview which should be respected
+        _edition = Block.View.Edition.NullIfNoValue() ?? polymorph.Edition();
 
         // Convert DNN SearchDocuments from 2sxc SearchInfos
         SearchItems = BuildInitialSearchInfos(streamsToIndex, DnnModule);
@@ -138,6 +144,8 @@ internal class SearchController : ServiceBase
     public IBlock Block;
     /// <summary>The SearchItems will be initialized, and must exist for the search-index to provide data.</summary>
     public Dictionary<string, List<ISearchItem>> SearchItems;
+
+    private string _edition = default;
 
     /// <summary>
     /// Get search info for each dnn module containing 2sxc data
@@ -339,8 +347,8 @@ internal class SearchController : ServiceBase
             .Combine(Block.View.IsShared ? site.SharedAppsRootRelative() : site.AppsRootPhysical, block.Context.AppState.Folder)
             .ForwardSlash();
         l.A($"compile ViewController class on path: {path}/{Block.View.ViewController}");
-        var instance = _codeCompiler.New().InstantiateClass(virtualPath: block.View.ViewController, appId: block.AppId,
-            className: null, relativePath: path, throwOnError: true);
+        var spec = new HotBuildSpec { AppId = block.AppId, Edition = _edition };
+        var instance = _codeCompiler.New().InstantiateClass(virtualPath: block.View.ViewController, spec: spec, className: null, relativePath: path, throwOnError: true);
         l.A("got instance of compiled ViewController class");
 
         // 2. Check if it implements ToSic.Sxc.Search.ICustomizeSearch - otherwise just return the empty search results as shown above

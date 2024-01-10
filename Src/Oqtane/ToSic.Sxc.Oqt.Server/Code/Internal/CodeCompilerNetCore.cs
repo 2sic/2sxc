@@ -5,7 +5,6 @@ using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Oqt.Server.Code.Internal;
@@ -27,16 +26,16 @@ internal class CodeCompilerNetCore : CodeCompiler
     protected override (Type Type, string ErrorMessage) GetCsHtmlType(string virtualPath)
         => throw new("Runtime Compile of .cshtml is Not Implemented in .net standard / core");
 
-    protected internal override AssemblyResult GetAssembly(string virtualPath, string className, int appId = 0)
+    protected internal override AssemblyResult GetAssembly(string virtualPath, string className, HotBuildSpec spec)
     {
         var l = Log.Fn<AssemblyResult>(
-            $"{nameof(virtualPath)}: '{virtualPath}'; {nameof(className)}: '{className}'; {nameof(appId)}: {appId}", timer: true);
+            $"{nameof(virtualPath)}: '{virtualPath}'; {nameof(className)}: '{className}'; {nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'", timer: true);
         var fullContentPath = _serverPaths.Value.FullContentPath(virtualPath.Backslash());
         var fullPath = NormalizeFullFilePath(fullContentPath);
         l.A($"New paths: '{fullContentPath}', '{fullPath}'");
         try
         {
-            return l.ReturnAsOk(new Compiler(_thisAppCodeLoader).Compile(fullPath, className, appId));
+            return l.ReturnAsOk(new Compiler(_thisAppCodeLoader).Compile(fullPath, className, spec));
         }
         catch (Exception ex)
         {

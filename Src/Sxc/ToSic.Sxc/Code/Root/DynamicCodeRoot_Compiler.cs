@@ -1,6 +1,7 @@
 ﻿using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Code;
 
@@ -19,7 +20,8 @@ public partial class DynamicCodeRoot
 
         // Compile
         var compiler = Services.CodeCompilerLazy.Value;
-        var instance = compiler.InstantiateClass(virtualPath, App.AppId, className: name, relativePath: relativePath, throwOnError: throwOnError);
+        var spec = new HotBuildSpec { AppId = App.AppId, Edition = Edition };
+        var instance = compiler.InstantiateClass(virtualPath, spec, className: name, relativePath: relativePath, throwOnError: throwOnError);
 
         if (instance == null)
             return l.ReturnNull("null / not found / error");

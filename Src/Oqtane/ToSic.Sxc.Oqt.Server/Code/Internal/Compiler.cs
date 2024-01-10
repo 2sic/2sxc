@@ -12,7 +12,6 @@ using System.Text;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Oqt.Server.Code.Internal
@@ -33,12 +32,12 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
         // Ensure that can't be kept alive by stack slot references (real- or JIT-introduced locals).
         // That could keep the SimpleUnloadableAssemblyLoadContext alive and prevent the unload.
         [MethodImpl(MethodImplOptions.NoInlining)]
-        internal AssemblyResult Compile(string sourceFile, string dllName, int appId)
+        internal AssemblyResult Compile(string sourceFile, string dllName, HotBuildSpec spec)
         {
-            var l = Log.Fn<AssemblyResult>($"Starting compilation of: '{sourceFile}', {nameof(dllName)}: {dllName}.");
+            var l = Log.Fn<AssemblyResult>($"Starting compilation of: '{sourceFile}'; {nameof(dllName)}: '{dllName}'; {nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'.");
 
-            var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(appId, Log)?.Assembly
-                               ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrNull(appId);
+            var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(spec, Log)?.Assembly
+                               ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrNull(spec);
 
             var encoding = Encoding.UTF8;
 

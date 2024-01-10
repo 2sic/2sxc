@@ -40,26 +40,26 @@ public class ThisAppCodeLoader : ServiceBase
     private readonly LazySvc<ThisAppCodeCompiler> _thisAppCodeCompilerLazy;
     private readonly AssemblyCacheManager _assemblyCacheManager;
 
-    public static AssemblyResult TryGetAssemblyOfCodeFromCache(int appId, ILog callerLog)
+    public static AssemblyResult TryGetAssemblyOfCodeFromCache(HotBuildSpec spec, ILog callerLog)
     {
-        var l = callerLog.Fn<AssemblyResult>($"{nameof(appId)}: {appId}");
+        var l = callerLog.Fn<AssemblyResult>($"{nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'");
 
-        var (result, _) = AssemblyCacheManager.TryGetThisAppCode(appId);
+        var (result, _) = AssemblyCacheManager.TryGetThisAppCode(spec);
         return result != null
             ? l.ReturnAsOk(result)
             : l.ReturnNull();
     }
 
-    public Assembly GetAppCodeAssemblyOrNull(int appId)
+    public Assembly GetAppCodeAssemblyOrNull(HotBuildSpec spec)
     {
         _logStore.Add(SxcLogging.SxcLogAppCodeLoader, Log);
 
         // Initial message for insights-overview
-        var l = Log.Fn<Assembly>($"{nameof(appId)}: {appId}", timer: true);
+        var l = Log.Fn<Assembly>($"{nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'", timer: true);
 
         try
         {
-            var assemblyResults = TryLoadAppCodeAssembly(appId);
+            var assemblyResults = TryLoadAppCodeAssembly(spec);
             return string.IsNullOrEmpty(assemblyResults?.ErrorMessages)
                 ? l.ReturnAsOk(assemblyResults?.Assembly)
                 : l.ReturnAsError(assemblyResults?.Assembly);
@@ -71,29 +71,29 @@ public class ThisAppCodeLoader : ServiceBase
         }
     }
 
-    private AssemblyResult TryLoadAppCodeAssembly(int appId)
+    private AssemblyResult TryLoadAppCodeAssembly(HotBuildSpec spec)
     {
-        var l = Log.Fn<AssemblyResult>($"{nameof(appId)}: {appId}");
+        var l = Log.Fn<AssemblyResult>($"{nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'");
 
-        var (result, cacheKey) = AssemblyCacheManager.TryGetThisAppCode(appId);
+        var (result, cacheKey) = AssemblyCacheManager.TryGetThisAppCode(spec);
         if (result != null)
             return l.ReturnAsOk(result);
 
         // Get paths
-        var (physicalPath, relativePath) = GetAppPaths(appId, ThisAppCodeFolder);
+        var (physicalPath, relativePath) = GetAppPaths(ThisAppCodeFolder, spec);
         l.A($"{nameof(physicalPath)}: '{physicalPath}'; {nameof(relativePath)}: '{relativePath}'");
 
         if (!Directory.Exists(physicalPath))
             return l.ReturnAsError(null, $"no folder {physicalPath}");
 
-        var assemblyResult = _thisAppCodeCompilerLazy.Value.GetAppCode(relativePath, appId);
+        var assemblyResult = _thisAppCodeCompilerLazy.Value.GetAppCode(relativePath, spec);
 
         if (assemblyResult.ErrorMessages.HasValue())
             return l.ReturnAsError(assemblyResult, assemblyResult.ErrorMessages);
 
         assemblyResult.WatcherFolders = new[] { physicalPath };
 
-        var (refsAssemblyPath, _) = GetAppPaths(appId, ThisAppBinFolder);
+        var (refsAssemblyPath, _) = GetAppPaths(ThisAppBinFolder, spec);
         CopyAssemblyForRefs(assemblyResult.AssemblyLocations[1], Path.Combine(refsAssemblyPath, ThisAppCodeCompiler.ThisAppCodeDll));
 
         // Add compiled assembly to cache
@@ -107,13 +107,14 @@ public class ThisAppCodeLoader : ServiceBase
         return l.ReturnAsOk(assemblyResult);
     }
 
-    private (string physicalPath, string relativePath) GetAppPaths(int appId, string folder)
+    private (string physicalPath, string relativePath) GetAppPaths(string folder, HotBuildSpec spec)
     {
-        var l = Log.Fn<(string physicalPath, string relativePath)>($"{nameof(appId)}: {appId}; {nameof(folder)}:'{folder}'");
-        var appPaths = _appPathsLazy.Value.Init(_site, _appStates.GetReader(appId));
-        var physicalPath = Path.Combine(appPaths.PhysicalPath, folder);
+        var l = Log.Fn<(string physicalPath, string relativePath)>($"{nameof(spec.AppId)}: {spec.AppId}; {nameof(folder)}:'{folder}'; {nameof(spec.Edition)}: '{spec.Edition}'");
+        var appPaths = _appPathsLazy.Value.Init(_site, _appStates.GetReader(spec.AppId));
+        var folderWithEdition = spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder;
+        var physicalPath = Path.Combine(appPaths.PhysicalPath, folderWithEdition);
         l.A($"{nameof(physicalPath)}: '{physicalPath}'");
-        var relativePath = Path.Combine(appPaths.RelativePath, folder);
+        var relativePath = Path.Combine(appPaths.RelativePath, folderWithEdition);
         l.A($"{nameof(relativePath)}: '{relativePath}'");
         return l.ReturnAsOk((physicalPath, relativePath));
     }

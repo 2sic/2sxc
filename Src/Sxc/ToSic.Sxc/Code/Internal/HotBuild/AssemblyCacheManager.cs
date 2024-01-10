@@ -17,13 +17,13 @@ public class AssemblyCacheManager() : ServiceBase(SxcLogging.SxcLogName + ".Asse
 
     #region Static Calls for AppCode - to use before requiring DI
 
-    public static (AssemblyResult Result, string cacheKey) TryGetThisAppCode(int appId)
+    public static (AssemblyResult Result, string cacheKey) TryGetThisAppCode(HotBuildSpec spec)
     {
-        var cacheKey = KeyAppCode(appId);
+        var cacheKey = KeyAppCode(spec);
         return (Get(cacheKey), cacheKey);
     }
 
-    private static string KeyAppCode(int appId) => $"{GlobalCacheRoot}a:{appId}.App.Code";
+    private static string KeyAppCode(HotBuildSpec spec) => $"{GlobalCacheRoot}a:{spec.AppId}.e:{spec.Edition}.ThisApp.Code";
 
     #endregion
 

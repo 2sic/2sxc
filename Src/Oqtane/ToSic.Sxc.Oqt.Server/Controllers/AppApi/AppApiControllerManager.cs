@@ -5,11 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.HotBuild;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Oqt.Server.Code.Internal;
 using ToSic.Sxc.Oqt.Server.Plumbing;
@@ -23,11 +22,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 /// </summary>
 internal class AppApiControllerManager: IHasLog
 {
-    public AppApiControllerManager(ApplicationPartManager partManager, AppApiFileSystemWatcher appApiFileSystemWatcher, ILogStore logStore, LazySvc<ThisAppCodeLoader> thisAppCodeLoader, ISxcContextResolver ctxResolver)
+    public AppApiControllerManager(ApplicationPartManager partManager, AppApiFileSystemWatcher appApiFileSystemWatcher, ILogStore logStore, LazySvc<ThisAppCodeLoader> thisAppCodeLoader, ISxcContextResolver ctxResolver, Sxc.Polymorphism.Internal.PolymorphConfigReader polymorphism)
     {
         _partManager = partManager;
         _thisAppCodeLoader = thisAppCodeLoader;
         _ctxResolver = ctxResolver;
+        _polymorphism = polymorphism;
         _compiledAppApiControllers = appApiFileSystemWatcher.CompiledAppApiControllers;
         Log = new Log(HistoryLogName, null, "AppApiControllerManager");
         logStore.Add(HistoryLogGroup, Log);
@@ -36,6 +36,7 @@ internal class AppApiControllerManager: IHasLog
     private readonly ApplicationPartManager _partManager;
     private readonly LazySvc<ThisAppCodeLoader> _thisAppCodeLoader;
     private readonly ISxcContextResolver _ctxResolver;
+    private readonly Sxc.Polymorphism.Internal.PolymorphConfigReader _polymorphism;
 
     public ILog Log { get; }
 
@@ -80,10 +81,23 @@ internal class AppApiControllerManager: IHasLog
         if (string.IsNullOrWhiteSpace(apiCode))
             throw new IOException($"Error, missing AppApi code in file {Path.GetFileName(apiFile)}.");
 
-        var appId = _ctxResolver.SetAppOrGetBlock("")?.AppState?.AppId ?? Eav.Constants.AppIdEmpty;
+        var spec = new HotBuildSpec
+        {
+            AppId = _ctxResolver.SetAppOrGetBlock("")?.AppState?.AppId ?? Eav.Constants.AppIdEmpty
+        };
+
+        // Figure out the current edition
+        var block = _ctxResolver.BlockOrNull();
+        if (block != null)
+        {
+            var polymorph = _polymorphism.Init(block.App.AppState.List);
+            // New 2023-03-20 - if the view comes with a preset edition, it's an ajax-preview which should be respected
+            spec.Edition = block.View?.Edition.NullIfNoValue() ?? polymorph.Edition();
+        }
+
         // Build new AppApi Controller
-        Log.A($"Compile assembly: {apiFile}, {dllName}");
-        var assemblyResult = new Compiler(_thisAppCodeLoader).Compile(apiFile, dllName, appId);
+        Log.A($"Compile assembly: {apiFile}; {nameof(dllName)}: '{dllName}'; {nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'");
+        var assemblyResult = new Compiler(_thisAppCodeLoader).Compile(apiFile, dllName, spec);
 
         // Add new key to concurrent dictionary, before registering new AppAPi controller.
         if (!_compiledAppApiControllers.TryAdd(apiFile, false))
