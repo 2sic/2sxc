@@ -1,7 +1,5 @@
 ﻿using DotNetNuke.Entities.Modules;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.Sxc.Dnn.Cms;
 

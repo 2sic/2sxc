@@ -1,11 +1,9 @@
 ﻿using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Controllers;
-using System;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.IO;
 using ToSic.Eav;
-using ToSic.Lib.Logging;
 using Exception = System.Exception;
 
 namespace ToSic.Sxc.Dnn.Install;

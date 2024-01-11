@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Web;
-using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Dnn.Compile
 {

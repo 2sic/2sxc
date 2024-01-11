@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Eav.Internal.Features;
+﻿using ToSic.Eav.Internal.Features;
 using ToSic.Eav.SysData;
 
 namespace ToSic.Sxc.Dnn.Features;

@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Dnn.Compile.AppDomain;
+﻿namespace ToSic.Sxc.Dnn.Compile.AppDomain;
 
 [PrivateApi]
 internal class CSharpAssemblyHandling : AppDomainHandling

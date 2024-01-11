@@ -1,16 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Web.UI;
+﻿using System.Web.UI;
 using DotNetNuke.Framework;
 using DotNetNuke.Framework.JavaScriptLibraries;
 using DotNetNuke.Web.Client;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using DotNetNuke.Web.Client.Providers;
 using ToSic.Eav;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sxc.Web.Internal.Url;

@@ -1,7 +1,5 @@
 ﻿using System.Web;
 using DotNetNuke.Common.Extensions;
-using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.Dnn;
 
 // ReSharper disable once CheckNamespace

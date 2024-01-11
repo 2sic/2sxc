@@ -4,14 +4,10 @@ using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Services.Localization;
-using System;
 using System.IO;
-using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Internal.Features;
-using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Internal.Plumbing;
 

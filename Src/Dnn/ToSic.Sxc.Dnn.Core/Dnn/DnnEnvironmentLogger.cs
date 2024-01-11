@@ -1,9 +1,7 @@
-﻿using System;
-using DotNetNuke.Entities.Modules;
+﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Eav.Integration.Environment;
 using ToSic.Sxc.Dnn.Search;
-using ToSic.Sxc.Search;
 
 namespace ToSic.Sxc.Dnn;
 

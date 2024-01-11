@@ -1,9 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Web.Compilation;
-using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
 

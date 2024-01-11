@@ -1,7 +1,5 @@
-﻿using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Web.Compilation;
-using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Dnn.Compile
 {

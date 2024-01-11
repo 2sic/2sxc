@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Web.Hosting;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using static System.IO.Directory;
 

@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Dnn.Compile
+﻿namespace ToSic.Sxc.Dnn.Compile
 {
     [PrivateApi]
     public interface IHostingEnvironmentWrapper

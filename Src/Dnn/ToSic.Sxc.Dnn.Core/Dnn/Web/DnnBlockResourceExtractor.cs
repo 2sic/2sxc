@@ -1,11 +1,8 @@
 ﻿using DotNetNuke.Web.Client;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Web.Internal;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.PageService;
-using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Dnn.Web;
 

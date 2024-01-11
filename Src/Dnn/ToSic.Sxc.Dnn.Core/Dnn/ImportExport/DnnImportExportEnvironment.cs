@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Sxc.Integration;
 

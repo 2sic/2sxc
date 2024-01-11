@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Eav.DataFormats.EavLight;
+﻿using ToSic.Eav.DataFormats.EavLight;
 
 namespace ToSic.Sxc.Compatibility.Sxc;
 

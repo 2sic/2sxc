@@ -1,7 +1,5 @@
-﻿using System;
-using DotNetNuke.Entities.Modules;
+﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;

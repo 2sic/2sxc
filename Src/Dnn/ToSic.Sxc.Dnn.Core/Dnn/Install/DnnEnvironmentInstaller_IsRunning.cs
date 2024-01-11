@@ -1,9 +1,7 @@
-﻿using System;
-using DotNetNuke.Entities.Portals;
+﻿using DotNetNuke.Entities.Portals;
 using System.IO;
 using System.Web.Hosting;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
 using static ToSic.Sxc.Dnn.DnnSxcSettings.Installation;
 
 namespace ToSic.Sxc.Dnn.Install;

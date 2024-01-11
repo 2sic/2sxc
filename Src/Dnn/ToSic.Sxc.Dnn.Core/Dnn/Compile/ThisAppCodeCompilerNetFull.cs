@@ -1,10 +1,6 @@
 ﻿using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
-using System;
 using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using System.IO;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Dnn.Compile;
 

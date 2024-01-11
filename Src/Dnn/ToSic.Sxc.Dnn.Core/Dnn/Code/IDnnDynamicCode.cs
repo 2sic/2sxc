@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Dnn.Code;
+﻿namespace ToSic.Sxc.Dnn.Code;
 
 /// <summary>
 /// This interface extends the IAppAndDataHelpers with the DNN Context.

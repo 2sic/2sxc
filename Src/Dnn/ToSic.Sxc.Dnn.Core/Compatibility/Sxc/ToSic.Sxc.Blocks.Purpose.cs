@@ -1,7 +1,4 @@
-﻿using System;
-using ToSic.Lib.Documentation;
-
-#if NETFRAMEWORK
+﻿#if NETFRAMEWORK
 namespace ToSic.Sxc.Blocks
 {
     /// <summary>

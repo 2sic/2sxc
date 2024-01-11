@@ -1,11 +1,8 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Net;
 using System.Net.Mail;
 using DotNetNuke.Entities.Host;
 using ToSic.Eav.Context;
-using ToSic.Lib.DI;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Dnn.Services;

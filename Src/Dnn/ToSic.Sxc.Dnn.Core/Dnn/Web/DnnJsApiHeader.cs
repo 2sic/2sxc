@@ -1,9 +1,6 @@
 ﻿using DotNetNuke.Common;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal.JsContext;
 
 namespace ToSic.Sxc.Dnn.Web;

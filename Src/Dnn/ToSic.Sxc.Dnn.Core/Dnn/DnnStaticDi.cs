@@ -1,11 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Web;
 using ToSic.Eav.Code.InfoSystem;
-using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Internal.Plumbing;
 
 namespace ToSic.Sxc.Dnn;

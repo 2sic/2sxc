@@ -1,10 +1,6 @@
-﻿using System;
-using DotNetNuke.Entities.Modules;
+﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Context;
-using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;

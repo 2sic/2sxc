@@ -1,6 +1,5 @@
 ﻿using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Data;
-using ToSic.Lib.Documentation;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Search;

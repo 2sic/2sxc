@@ -1,10 +1,5 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security.Roles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.DataSources.Internal;
 
 // ReSharper disable once CheckNamespace
