@@ -2,10 +2,9 @@
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 
-namespace ToSic.Sxc.Blocks;
+namespace ToSic.Sxc.Blocks.Internal;
 
 /// <summary>
 /// This contains the logic to decide which view a block will have

@@ -11,6 +11,7 @@ using IEntity = ToSic.Eav.Data.IEntity;
 using System.Dynamic;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Data.Internal.Dynamic;

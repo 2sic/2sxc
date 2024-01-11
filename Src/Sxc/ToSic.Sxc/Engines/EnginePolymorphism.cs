@@ -6,6 +6,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Polymorphism.Internal;
 
 namespace ToSic.Sxc.Engines;

@@ -3,6 +3,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Code;
 

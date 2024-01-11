@@ -12,6 +12,7 @@ using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Backend.Views;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;

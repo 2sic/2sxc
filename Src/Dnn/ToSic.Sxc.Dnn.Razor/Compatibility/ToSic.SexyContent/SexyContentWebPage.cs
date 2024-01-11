@@ -14,6 +14,7 @@ using ToSic.SexyContent.Search;
 using ToSic.Sxc;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Compatibility;

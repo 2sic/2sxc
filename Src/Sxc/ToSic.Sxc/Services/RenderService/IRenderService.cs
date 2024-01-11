@@ -3,9 +3,7 @@ using ToSic.Eav.Data;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal.Render;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
 
 namespace ToSic.Sxc.Services;

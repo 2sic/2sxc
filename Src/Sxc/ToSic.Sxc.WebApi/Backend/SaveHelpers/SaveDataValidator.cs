@@ -13,14 +13,9 @@ using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
-internal class SaveDataValidator: ValidatorBase
+internal class SaveDataValidator(EditDto package, ILog parentLog = null) : ValidatorBase(parentLog, "Val.Save")
 {
-    public EditDto Package;
-
-    public SaveDataValidator(EditDto package, ILog parentLog = null) : base(parentLog, "Val.Save")
-    {
-        Package = package;
-    }
+    public EditDto Package = package;
 
     public void PrepareForEntityChecks(WorkEntities workEntities)
     {

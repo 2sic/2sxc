@@ -7,6 +7,7 @@ using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;

@@ -5,6 +5,7 @@ using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Dnn.Pages;
 
 namespace ToSic.Sxc.Dnn.Backend.Context;

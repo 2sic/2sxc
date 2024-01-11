@@ -24,14 +24,17 @@ namespace ToSic.Sxc.Blocks;
 /// </summary>
 [Obsolete("Old name, used in 2-3 v12 apps released. Pls use ToSic.Sxc.Services.IRenderService instead.")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public interface IRenderService: ToSic.Sxc.Services.IRenderService
+public interface IRenderService
 {
     [PrivateApi]
-//#pragma warning disable CS0108, CS0114
-    new IRawHtmlString One(ICanBeItem parent, NoParamOrder noParamOrder = default,
+    //#pragma warning disable CS0108, CS0114
+    [Obsolete("Old interface. Pls use ToSic.Sxc.Services.IRenderService instead.")]
+    IRawHtmlString One(ICanBeItem parent, NoParamOrder noParamOrder = default,
         ICanBeEntity item = null, object data = null, string field = null, Guid? newGuid = null);
+
     [PrivateApi]
-    new IRawHtmlString All(ICanBeItem parent, NoParamOrder noParamOrder = default,
+    [Obsolete("Old interface. Pls use ToSic.Sxc.Services.IRenderService instead.")]
+    IRawHtmlString All(ICanBeItem parent, NoParamOrder noParamOrder = default,
         string field = null, string apps = null, int max = 100, string merge = null);
 //#pragma warning restore CS0108, CS0114
 }

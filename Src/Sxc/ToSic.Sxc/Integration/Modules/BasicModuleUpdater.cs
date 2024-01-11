@@ -4,6 +4,7 @@ using ToSic.Eav.Internal.Unknown;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Integration.Modules;

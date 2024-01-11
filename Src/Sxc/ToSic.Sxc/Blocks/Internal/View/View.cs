@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Blocks.Internal;
 
 [PrivateApi("Internal implementation - don't publish")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public partial class View(
+public class View(
     IEntity templateEntity,
     string[] languageCodes,
     ILog parentLog,

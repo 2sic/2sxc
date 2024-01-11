@@ -14,6 +14,7 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;

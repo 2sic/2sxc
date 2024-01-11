@@ -7,6 +7,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Engines;
 

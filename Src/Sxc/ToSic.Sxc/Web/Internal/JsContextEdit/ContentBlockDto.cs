@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using ToSic.Eav.Helpers;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Web.Internal.JsContextEdit;
 

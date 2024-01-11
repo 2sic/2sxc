@@ -7,6 +7,7 @@ using ToSic.Eav.Data.Shared;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal.JsContextEdit;
 using ToSic.Sxc.Web.Internal.PageFeatures;

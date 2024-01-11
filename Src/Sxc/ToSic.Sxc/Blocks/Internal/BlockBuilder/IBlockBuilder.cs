@@ -3,7 +3,7 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Engines;
 
-namespace ToSic.Sxc.Blocks;
+namespace ToSic.Sxc.Blocks.Internal;
 
 /// <summary>
 /// This is kind of the master-container for a content-management block. It's the wrapper which is in the CMS (DNN), and the module will talk with this

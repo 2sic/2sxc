@@ -8,6 +8,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Cms.Internal.Publishing;
 
 namespace ToSic.Sxc.Backend.SaveHelpers;

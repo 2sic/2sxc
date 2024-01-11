@@ -3,15 +3,12 @@ using ToSic.Eav.Apps;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps.Internal;
-using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Engines;
 using IApp = ToSic.Sxc.Apps.IApp;
 
-namespace ToSic.Sxc.Blocks;
+namespace ToSic.Sxc.Blocks.Internal;
 
 /// <summary>
 /// INTERNAL: A unit / block of output in a CMS. 
