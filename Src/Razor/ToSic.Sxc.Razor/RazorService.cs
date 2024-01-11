@@ -6,49 +6,40 @@ using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Razor.Internal;
 
-namespace ToSic.Sxc.Razor
+namespace ToSic.Sxc.Razor;
+
+internal class RazorService(LazySvc<IRazorRenderer> razorRendererLazy) : IRazorService
 {
-    internal class RazorService : IRazorService
+    /// <summary>
+    /// render razorPage
+    /// </summary>
+    /// <param name="partialName">virtual path to razorPage from 2sxc app root folder</param>
+    /// <param name="model">data</param>
+    /// <returns>string</returns>
+    public string Render(string partialName, object model = null)
     {
+        var razorPageVirtualPath = GetVirtualPath(partialName);
+        var razorPageModel = model ?? new {};
 
-        private readonly LazySvc<IRazorRenderer> _razorRendererLazy;
-
-        public RazorService(LazySvc<IRazorRenderer> razorRendererLazy)
-        {
-            _razorRendererLazy = razorRendererLazy;
-        }
-
-        /// <summary>
-        /// render razorPage
-        /// </summary>
-        /// <param name="partialName">virtual path to razorPage from 2sxc app root folder</param>
-        /// <param name="model">data</param>
-        /// <returns>string</returns>
-        public string Render(string partialName, object model = null)
-        {
-            var razorPageVirtualPath = GetVirtualPath(partialName);
-            var razorPageModel = model ?? new {};
-
-            var task = _razorRendererLazy.Value.RenderToStringAsync(razorPageVirtualPath, razorPageModel, null);
-            task.Wait();
-            return task.Result;
-        }
-
-        private string GetVirtualPath(string partialName)
-        {
-           //return $"~/2sxc/{CodeRoot.App.Site.Id}/{CodeRoot.App.Folder}/{partialName}";
-            return Path.Combine(CodeRoot.App.PathSwitch(false, PathTypes.PhysRelative), partialName).ForwardSlash();
-        }
-
-        #region Connect to DynamicCodeRoot
-
-        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
-        {
-            CodeRoot = codeRoot;
-        }
-
-        public IDynamicCodeRoot CodeRoot;
-
-        #endregion
+        var task = razorRendererLazy.Value.RenderToStringAsync(razorPageVirtualPath, razorPageModel, null);
+        task.Wait();
+        return task.Result;
     }
+
+    private string GetVirtualPath(string partialName)
+    {
+        //return $"~/2sxc/{CodeRoot.App.Site.Id}/{CodeRoot.App.Folder}/{partialName}";
+        return Path.Combine(CodeRoot.App.PathSwitch(false, PathTypes.PhysRelative), partialName).ForwardSlash();
+    }
+
+    #region Connect to DynamicCodeRoot
+
+    public void ConnectToRoot(IDynamicCodeRoot codeRoot)
+    {
+        CodeRoot = codeRoot;
+    }
+
+    public IDynamicCodeRoot CodeRoot;
+
+    #endregion
 }

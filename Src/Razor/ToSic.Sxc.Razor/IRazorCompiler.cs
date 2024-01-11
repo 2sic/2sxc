@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Internal.HotBuild;
 
-namespace ToSic.Sxc.Razor
+namespace ToSic.Sxc.Razor;
+
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public interface IRazorCompiler
 {
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public interface IRazorCompiler
-    {
-        Task<(IView view, ActionContext context)> CompileView(string templatePath, Action<RazorView> configure = null, IApp app = null, HotBuildSpec spec = default);
-    }
+    Task<(IView view, ActionContext context)> CompileView(string templatePath, Action<RazorView> configure = null, IApp app = null, HotBuildSpec spec = default);
 }

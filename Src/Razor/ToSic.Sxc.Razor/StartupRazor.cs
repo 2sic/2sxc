@@ -6,40 +6,39 @@ using ToSic.Sxc.Razor.DbgWip;
 using ToSic.Sxc.Razor.Internal;
 using ToSic.Sxc.Web.Internal.DotNet;
 
-namespace ToSic.Sxc.Razor
+namespace ToSic.Sxc.Razor;
+
+// ReSharper disable once InconsistentNaming
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public static class StartupRazor
 {
-    // ReSharper disable once InconsistentNaming
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public static class StartupRazor
+    public static IServiceCollection AddSxcRazor(this IServiceCollection services)
     {
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        public static IServiceCollection AddSxcRazor(this IServiceCollection services)
-        {
-            // .net Core parts
-            services.TryAddTransient<IHttp, HttpNetCore>();
+        // .net Core parts
+        services.TryAddTransient<IHttp, HttpNetCore>();
 
-            // Razor Parts
-            services.TryAddTransient<IRazorCompiler, RazorCompiler>();
-            services.TryAddTransient<IThisAppCodeRazorCompiler, ThisAppCodeRazorCompiler>();
-            services.TryAddTransient<IRazorRenderer, RazorRenderer>();
-            services.TryAddTransient<IRazorEngine, NetCoreRazorEngine>();
+        // Razor Parts
+        services.TryAddTransient<IRazorCompiler, RazorCompiler>();
+        services.TryAddTransient<IThisAppCodeRazorCompiler, ThisAppCodeRazorCompiler>();
+        services.TryAddTransient<IRazorRenderer, RazorRenderer>();
+        services.TryAddTransient<IRazorEngine, NetCoreRazorEngine>();
 
 
 
-            // debugging
-            //services.TryAddTransient<RazorReferenceManager>();
-            services.Replace(ServiceDescriptor.Singleton<IViewCompilerProvider, RuntimeViewCompilerProvider>());
-            services.TryAddSingleton<IViewCompiler, RuntimeViewCompiler>();
-            services.TryAddSingleton<CSharpCompiler>();
-            services.TryAddSingleton<RazorReferenceManager>();
-            services.TryAddSingleton<RuntimeCompilationFileProvider>();
+        // debugging
+        //services.TryAddTransient<RazorReferenceManager>();
+        services.Replace(ServiceDescriptor.Singleton<IViewCompilerProvider, RuntimeViewCompilerProvider>());
+        services.TryAddSingleton<IViewCompiler, RuntimeViewCompiler>();
+        services.TryAddSingleton<CSharpCompiler>();
+        services.TryAddSingleton<RazorReferenceManager>();
+        services.TryAddSingleton<RuntimeCompilationFileProvider>();
 
 
 
-            // Web
-            services.TryAddTransient<IRazorService, RazorService>();
+        // Web
+        services.TryAddTransient<IRazorService, RazorService>();
 
-            return services;
-        }
+        return services;
     }
 }

@@ -23,150 +23,149 @@ using ToSic.Sxc.Razor.Internal;
 using ToSic.Sxc.Services;
 
 // ReSharper disable once CheckNamespace
-namespace Custom.Hybrid
+namespace Custom.Hybrid;
+
+[PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
+// ReSharper disable once UnusedMember.Global
+public abstract class RazorTyped: OqtRazorBase<dynamic>, IHasCodeLog, IRazor, ISetDynamicModel, IDynamicCode16, IHasCodeHelp
 {
-    [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
-    // ReSharper disable once UnusedMember.Global
-    public abstract class RazorTyped: OqtRazorBase<dynamic>, IHasCodeLog, IRazor, ISetDynamicModel, IDynamicCode16, IHasCodeHelp
-    {
-        #region Constructor / DI / SysHelp
+    #region Constructor / DI / SysHelp
 
-        /// <summary>
-        /// Constructor - only available for inheritance
-        /// </summary>
-        [PrivateApi]
-        protected RazorTyped() : base(CompatibilityLevels.CompatibilityLevel16, "Oqt.Rzr16") { }
+    /// <summary>
+    /// Constructor - only available for inheritance
+    /// </summary>
+    [PrivateApi]
+    protected RazorTyped() : base(CompatibilityLevels.CompatibilityLevel16, "Oqt.Rzr16") { }
 
-        #endregion
+    #endregion
 
-        #region ServiceKit
+    #region ServiceKit
 
-        /// <inheritdoc cref="IDynamicCode16.Kit"/>
-        public ServiceKit16 Kit => _kit.Get(() => _DynCodeRoot.GetKit<ServiceKit16>());
-        private readonly GetOnce<ServiceKit16> _kit = new();
+    /// <inheritdoc cref="IDynamicCode16.Kit"/>
+    public ServiceKit16 Kit => _kit.Get(() => _DynCodeRoot.GetKit<ServiceKit16>());
+    private readonly GetOnce<ServiceKit16> _kit = new();
 
-        #endregion
+    #endregion
 
-        #region MyModel
+    #region MyModel
 
-        [PrivateApi("WIP v16.02")]
-        public ITypedModel MyModel => CodeHelper.MyModel;
+    [PrivateApi("WIP v16.02")]
+    public ITypedModel MyModel => CodeHelper.MyModel;
 
-        #endregion
+    #endregion
 
-        #region New App, Settings, Resources
+    #region New App, Settings, Resources
 
-        /// <inheritdoc cref="IDynamicCode.Link" />
-        public ILinkService Link => _DynCodeRoot.Link;
+    /// <inheritdoc cref="IDynamicCode.Link" />
+    public ILinkService Link => _DynCodeRoot.Link;
 
-        /// <inheritdoc />
-        public IAppTyped App => (IAppTyped)_DynCodeRoot.App;
+    /// <inheritdoc />
+    public IAppTyped App => (IAppTyped)_DynCodeRoot.App;
 
-        /// <inheritdoc cref="IDynamicCode16.AllResources" />
-        public ITypedStack AllResources => CodeHelper.AllResources;
+    /// <inheritdoc cref="IDynamicCode16.AllResources" />
+    public ITypedStack AllResources => CodeHelper.AllResources;
 
-        /// <inheritdoc cref="IDynamicCode16.AllSettings" />
-        public ITypedStack AllSettings => CodeHelper.AllSettings;
+    /// <inheritdoc cref="IDynamicCode16.AllSettings" />
+    public ITypedStack AllSettings => CodeHelper.AllSettings;
 
-        #endregion
+    #endregion
 
-        #region My... Stuff
+    #region My... Stuff
 
-        private TypedCode16Helper CodeHelper => SysHlp.CodeHelper;
+    private TypedCode16Helper CodeHelper => SysHlp.CodeHelper;
 
-        public ITypedItem MyItem => CodeHelper.MyItem;
+    public ITypedItem MyItem => CodeHelper.MyItem;
 
-        public IEnumerable<ITypedItem> MyItems => CodeHelper.MyItems;
+    public IEnumerable<ITypedItem> MyItems => CodeHelper.MyItems;
 
-        public ITypedItem MyHeader => CodeHelper.MyHeader;
+    public ITypedItem MyHeader => CodeHelper.MyHeader;
 
-        public IBlockInstance MyData => _DynCodeRoot.Data;
+    public IBlockInstance MyData => _DynCodeRoot.Data;
 
-        #endregion
+    #endregion
 
-        #region As Conversions
+    #region As Conversions
 
-        /// <inheritdoc cref="IDynamicCode16.AsItem" />
-        public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
-            => _DynCodeRoot._Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
+    /// <inheritdoc cref="IDynamicCode16.AsItem" />
+    public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
+        => _DynCodeRoot._Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
 
-        /// <inheritdoc cref="IDynamicCode16.AsItems" />
-        public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-            => _DynCodeRoot._Cdf.AsItems(list, propsRequired: propsRequired ?? true);
+    /// <inheritdoc cref="IDynamicCode16.AsItems" />
+    public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
+        => _DynCodeRoot._Cdf.AsItems(list, propsRequired: propsRequired ?? true);
 
-        /// <inheritdoc cref="IDynamicCode16.AsEntity" />
-        public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot._Cdf.AsEntity(thing);
+    /// <inheritdoc cref="IDynamicCode16.AsEntity" />
+    public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot._Cdf.AsEntity(thing);
 
-        /// <inheritdoc cref="IDynamicCode16.AsTyped" />
-        public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-            => _DynCodeRoot._Cdf.AsTyped(original, propsRequired: propsRequired);
+    /// <inheritdoc cref="IDynamicCode16.AsTyped" />
+    public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
+        => _DynCodeRoot._Cdf.AsTyped(original, propsRequired: propsRequired);
 
-        /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
-        public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-            => _DynCodeRoot._Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
+    /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
+    public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
+        => _DynCodeRoot._Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
 
-        /// <inheritdoc cref="IDynamicCode16.AsStack" />
-        public ITypedStack AsStack(params object[] items) => _DynCodeRoot._Cdf.AsStack(items);
+    /// <inheritdoc cref="IDynamicCode16.AsStack" />
+    public ITypedStack AsStack(params object[] items) => _DynCodeRoot._Cdf.AsStack(items);
 
-        #endregion
+    #endregion
 
 
-        /// <inheritdoc cref="IDynamicCode16.GetCode"/>
-        public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default) => SysHlp.GetCode(path, noParamOrder, className);
+    /// <inheritdoc cref="IDynamicCode16.GetCode"/>
+    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default) => SysHlp.GetCode(path, noParamOrder, className);
 
-        #region MyContext & UniqueKey
+    #region MyContext & UniqueKey
 
-        /// <inheritdoc cref="IDynamicCode16.MyContext" />
-        public ICmsContext MyContext => _DynCodeRoot.CmsContext;
+    /// <inheritdoc cref="IDynamicCode16.MyContext" />
+    public ICmsContext MyContext => _DynCodeRoot.CmsContext;
 
-        /// <inheritdoc cref="IDynamicCode16.MyPage" />
-        public ICmsPage MyPage => _DynCodeRoot.CmsContext.Page;
+    /// <inheritdoc cref="IDynamicCode16.MyPage" />
+    public ICmsPage MyPage => _DynCodeRoot.CmsContext.Page;
 
-        /// <inheritdoc cref="IDynamicCode16.MyUser" />
-        public ICmsUser MyUser => _DynCodeRoot.CmsContext.User;
+    /// <inheritdoc cref="IDynamicCode16.MyUser" />
+    public ICmsUser MyUser => _DynCodeRoot.CmsContext.User;
 
-        /// <inheritdoc cref="IDynamicCode16.MyView" />
-        public ICmsView MyView => _DynCodeRoot.CmsContext.View;
+    /// <inheritdoc cref="IDynamicCode16.MyView" />
+    public ICmsView MyView => _DynCodeRoot.CmsContext.View;
 
-        /// <inheritdoc cref="IDynamicCode16.UniqueKey" />
-        public string UniqueKey => Kit.Key.UniqueKey;
+    /// <inheritdoc cref="IDynamicCode16.UniqueKey" />
+    public string UniqueKey => Kit.Key.UniqueKey;
 
-        #endregion
+    #endregion
 
-        #region Dev Tools & Dev Helpers
+    #region Dev Tools & Dev Helpers
 
-        [PrivateApi("Not yet ready")]
-        public IDevTools DevTools => CodeHelper.DevTools;
+    [PrivateApi("Not yet ready")]
+    public IDevTools DevTools => CodeHelper.DevTools;
 
-        [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => CodeHelpDbV16.Compile16;
+    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => CodeHelpDbV16.Compile16;
 
-        #endregion
+    #endregion
 
 
-        /// <summary>
-        /// This is a tmp workaround to enable injecting the following properties in cshtml compiled with roslyn in Oqtane
-        /// </summary>
+    /// <summary>
+    /// This is a tmp workaround to enable injecting the following properties in cshtml compiled with roslyn in Oqtane
+    /// </summary>
 
-        [RazorInject]
-        public IModelExpressionProvider ModelExpressionProvider { get; set; } = (IModelExpressionProvider)null;
+    [RazorInject]
+    public IModelExpressionProvider ModelExpressionProvider { get; set; } = null;
 
-        [RazorInject]
-        public IUrlHelper Url { get; set; } = (IUrlHelper)null;
+    [RazorInject]
+    public IUrlHelper Url { get; set; } = null;
 
-        [RazorInject]
-        public IViewComponentHelper Component { get; set; } = (IViewComponentHelper)null;
+    [RazorInject]
+    public IViewComponentHelper Component { get; set; } = null;
 
-        [RazorInject]
-        public IJsonHelper Json { get; set; } = (IJsonHelper)null;
+    [RazorInject]
+    public IJsonHelper Json { get; set; } = null;
 
-        [RazorInject]
-        public IHtmlHelper<dynamic> Html { get; set; } = (IHtmlHelper<dynamic>)null;
+    [RazorInject]
+    public IHtmlHelper<dynamic> Html { get; set; } = null;
 
-        //public ViewDataDictionary<dynamic> ViewData => (ViewDataDictionary<dynamic>)PageContext?.ViewData;
+    //public ViewDataDictionary<dynamic> ViewData => (ViewDataDictionary<dynamic>)PageContext?.ViewData;
 
-        //public dynamic Model => ViewData.Model;
+    //public dynamic Model => ViewData.Model;
 
-        public PageContext PageContext { get; set; } = default!;
+    public PageContext PageContext { get; set; } = default!;
 
-    }
 }
