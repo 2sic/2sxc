@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Xml.Linq;
 using ToSic.Eav.Apps.ImportExport;
-using ToSic.Eav.Apps.Work;
+using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.ImportExport;
 using ToSic.Eav.Repositories;
 using ToSic.Lib.Logging;

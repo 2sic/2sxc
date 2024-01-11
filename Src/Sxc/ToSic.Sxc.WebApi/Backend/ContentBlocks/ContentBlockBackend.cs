@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
-using ToSic.Eav.Apps.Work;
+using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Security.Internal;
 using ToSic.Eav.Security.Permissions;

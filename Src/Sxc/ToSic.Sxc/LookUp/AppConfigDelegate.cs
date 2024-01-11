@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.Globalization;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
@@ -39,9 +40,9 @@ public class AppConfigDelegate : ServiceBase
     /// <summary>
     /// Generate a delegate which will be used to build the configuration based on a new sxc-instance
     /// </summary>
-    internal Func<App, IAppDataConfiguration> BuildForNewBlock(IContextOfBlock context, IBlock block)
+    internal Func<EavApp, IAppDataConfiguration> BuildForNewBlock(IContextOfBlock context, IBlock block)
     {
-        var l = Log.Fn<Func<App, IAppDataConfiguration>>($"showDrafts: {context.UserMayEdit}");
+        var l = Log.Fn<Func<EavApp, IAppDataConfiguration>>($"showDrafts: {context.UserMayEdit}");
         return l.Return(appToUse =>
         {
             // check if we'll use the config already on the sxc-instance, or generate a new one
@@ -55,9 +56,9 @@ public class AppConfigDelegate : ServiceBase
     /// <summary>
     /// Generate a delegate which will be used to build a basic configuration with very little context
     /// </summary>
-    internal Func<App, IAppDataConfiguration> Build(bool? showDrafts) => appToUse => 
+    internal Func<EavApp, IAppDataConfiguration> Build(bool? showDrafts) => appToUse => 
         new AppDataConfiguration(GetLookupEngineForContext(null, appToUse as IApp, null), showDrafts);
-    internal Func<App, IAppDataConfiguration> Build() => appToUse => 
+    internal Func<EavApp, IAppDataConfiguration> Build() => appToUse => 
         new AppDataConfiguration(GetLookupEngineForContext(null, appToUse as IApp, null));
 
 

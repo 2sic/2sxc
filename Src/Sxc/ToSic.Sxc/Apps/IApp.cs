@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Paths;
+﻿using ToSic.Eav.Apps.Integration;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
 

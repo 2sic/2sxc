@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.Caching;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Paths;
+using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataSource;

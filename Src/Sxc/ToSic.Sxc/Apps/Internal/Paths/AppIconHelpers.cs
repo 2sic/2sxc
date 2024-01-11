@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using ToSic.Eav.Apps.Paths;
+using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Data;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Plumbing;
@@ -9,7 +9,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using static System.StringComparison;
-using static ToSic.Eav.Apps.AppConstants;
+using static ToSic.Eav.Apps.Internal.AppConstants;
 
 namespace ToSic.Sxc.Apps.Internal;
 

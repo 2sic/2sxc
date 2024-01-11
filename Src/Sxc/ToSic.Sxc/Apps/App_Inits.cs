@@ -1,9 +1,9 @@
 ﻿using System;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Context;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using EavApp = ToSic.Eav.Apps.App;
 
 namespace ToSic.Sxc.Apps;
 

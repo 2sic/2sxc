@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Work;
+using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.DataSources.Sys.Internal;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Dto;

@@ -14,6 +14,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Web;
 using DotNetNuke.Services.Localization;
 using Microsoft.EntityFrameworkCore.Internal;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Integration;
 using ToSic.Eav.Internal.Features;
 using ToSic.Sxc.Integration.Paths;

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Work;
+using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.Cms.Internal;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;

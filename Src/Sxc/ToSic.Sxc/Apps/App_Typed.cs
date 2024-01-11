@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.DataSources;
-using ToSic.Eav.Apps.Decorators;
+using ToSic.Eav.Apps.Internal.MetadataDecorators;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Coding;

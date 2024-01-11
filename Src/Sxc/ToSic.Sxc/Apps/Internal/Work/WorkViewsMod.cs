@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Apps.Work;
+using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
@@ -66,7 +67,7 @@ public class WorkViewsMod : WorkUnitBase<IAppWorkCtx>
         if (templateId.HasValue)
             _entityUpdate.New(AppWorkCtx).UpdateParts(templateId.Value, values);
         else
-            _entityCreate.New(AppWorkCtx).Create(Eav.Apps.AppConstants.TemplateContentType, values);
+            _entityCreate.New(AppWorkCtx).Create(AppConstants.TemplateContentType, values);
 
         l.Done();
     }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using ToSic.Eav.Apps.Work;
+using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Admin.Query;

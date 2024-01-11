@@ -1,10 +1,10 @@
 ﻿using System;
-using ToSic.Eav.Apps.Paths;
+using ToSic.Eav.Apps.Integration;
 
 namespace ToSic.Sxc.Apps;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class AppAssetFolderMain: AppAssetFolder
+internal class AppAssetFolderMain(IAppPaths appPaths, string folder, bool shared) : AppAssetFolder
 {
     internal const string LocationSite = "site";
     internal const string LocationShared = "shared";
@@ -28,23 +28,15 @@ internal class AppAssetFolderMain: AppAssetFolder
     }
 
 
-    internal readonly IAppPaths AppPaths;
-    private readonly bool _shared;
+    internal readonly IAppPaths AppPaths = appPaths;
 
-    public AppAssetFolderMain(IAppPaths appPaths, string folder, bool shared)
-    {
-        Name = folder;
-        AppPaths = appPaths;
-        _shared = shared;
-    }
+    public override string Name { get; } = folder;
 
-    public override string Name { get; }
+    public override string Path => shared ? AppPaths.RelativePathShared : AppPaths.RelativePath;
 
-    public override string Path => _shared ? AppPaths.RelativePathShared : AppPaths.RelativePath;
+    public override string PhysicalPath => (shared ? AppPaths.PhysicalPathShared : AppPaths.PhysicalPath);
 
-    public override string PhysicalPath => (_shared ? AppPaths.PhysicalPathShared : AppPaths.PhysicalPath);
-
-    public override string Url => _shared ? AppPaths.PathShared : AppPaths.Path;
+    public override string Url => shared ? AppPaths.PathShared : AppPaths.Path;
 
 
 }

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Insights;
+using ToSic.Eav.Apps.Internal.Insights;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.WebApi.Sys.Insights;
 

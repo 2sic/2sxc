@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Text.RegularExpressions;
-using ToSic.Eav.Apps.Paths;
+using ToSic.Eav.Apps.Integration;
+using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.Apps.State;
-using ToSic.Eav.Apps.Work;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;

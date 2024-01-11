@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Paths;
+using ToSic.Eav.Apps.Integration;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Internal.Features;
@@ -129,7 +130,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
     /// <returns>list of paths to monitor</returns>
     private IList<string> AppPaths(List<IAppStateCache> dependentApps)
     {
-        if ((_block as BlockFromModule)?.App is not App app) return null;
+        if ((_block as BlockFromModule)?.App is not EavApp app) return null;
         if (dependentApps.SafeNone()) return null;
 
         var paths = new List<string>();

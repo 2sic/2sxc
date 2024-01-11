@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Paths;
+using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Lib.DI;
