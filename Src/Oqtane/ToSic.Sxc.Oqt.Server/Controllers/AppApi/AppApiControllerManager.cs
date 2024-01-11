@@ -12,6 +12,7 @@ using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Oqt.Server.Code.Internal;
 using ToSic.Sxc.Oqt.Server.Plumbing;
+using ToSic.Sxc.Polymorphism.Internal;
 using File = System.IO.File;
 using Log = ToSic.Lib.Logging.Log;
 
@@ -90,9 +91,11 @@ internal class AppApiControllerManager: IHasLog
         var block = _ctxResolver.BlockOrNull();
         if (block != null)
         {
-            var polymorph = _polymorphism.Init(block.App.AppState.List);
+            //var polymorph = _polymorphism.Init(block.Context.AppState.List);
             // New 2023-03-20 - if the view comes with a preset edition, it's an ajax-preview which should be respected
-            spec.Edition = block.View?.Edition.NullIfNoValue() ?? polymorph.Edition();
+            spec.Edition =
+                PolymorphConfigReader.UseViewEditionLazyGetEdition(block.View,
+                    () => _polymorphism.Init(block.Context.AppState.List)); //  block.View?.Edition.NullIfNoValue() ?? polymorph.Edition();
         }
 
         // Build new AppApi Controller

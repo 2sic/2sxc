@@ -34,9 +34,9 @@ public class EnginePolymorphism: ServiceBase
         subPath = view.EditionPath.TrimPrefixSlash();
 
         // Figure out the current edition - if none, stop here
-        var polymorph = _polymorphism.Init(appState.List);
         // New 2023-03-20 - if the view comes with a preset edition, it's an ajax-preview which should be respected
-        var edition = view.Edition.NullIfNoValue() ?? polymorph.Edition();
+        var edition = PolymorphConfigReader.UseViewEditionLazyGetEdition(view, () => _polymorphism.Init(appState.List));
+        // view.Edition.NullIfNoValue() ?? _polymorphism.Init(appState.List).Edition();
         if (edition == null)
             return l.ReturnNull("no edition detected");
         l.A($"edition '{edition}' detected");

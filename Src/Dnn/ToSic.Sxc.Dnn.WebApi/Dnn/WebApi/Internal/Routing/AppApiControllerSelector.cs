@@ -25,6 +25,7 @@ using ToSic.Sxc.Dnn.Backend.Sys;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Integration;
+using ToSic.Sxc.Polymorphism.Internal;
 
 namespace ToSic.Sxc.Dnn.WebApi;
 
@@ -116,7 +117,7 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
         // But we want to throw the exception here, otherwise it's re-wrapped.
         l.A("Path / Controller not found in shared, error will be thrown in a moment");
         var msgFinal = $"2sxc Api Controller Finder: Controller {controllerTypeName} not found in app and paths.";
-        throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.NotFound, new Exception(), msgFinal, sp.Build<CodeErrorHelpService>()));
+        throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.NotFound, new(), msgFinal, sp.Build<CodeErrorHelpService>()));
 
     }
 
@@ -158,8 +159,10 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
             if (block != null)
             {
                 spec.AppId = block.AppId;
-                var polymorph = sp.Build<Polymorphism.Internal.PolymorphConfigReader>().Init(block.App.AppState.List);
-                spec.Edition = block.View.Edition.NullIfNoValue() ?? polymorph.Edition();
+                //var polymorph = sp.Build<PolymorphConfigReader>().Init(block.Context.AppState.List);
+                spec.Edition = PolymorphConfigReader.UseViewEditionLazyGetEdition(block.View, 
+                    () => sp.Build<PolymorphConfigReader>().Init(block.Context.AppState.List));
+                //block.View.Edition.NullIfNoValue() ?? polymorph.Edition();
             }
             assembly = sp.Build<IRoslynBuildManager>().GetCompiledAssembly(fullPath, typeName, spec)?.Assembly;
         }
@@ -168,17 +171,17 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
             assembly = BuildManager.GetCompiledAssembly(fullPath);
         }
 
-        if (assembly == null) throw new Exception("Assembly not found or compiled to null (error).");
+        if (assembly == null) throw new("Assembly not found or compiled to null (error).");
 
         // TODO: stv, implement more robust FindMainType
         var type = assembly.GetType(typeName, true, true)
-                   ?? throw new Exception($"Type '{typeName}' not found in assembly. Could be a compile error or name mismatch.");
+                   ?? throw new($"Type '{typeName}' not found in assembly. Could be a compile error or name mismatch.");
 
         // help with path resolution for compilers running inside the created controller
         request?.Properties.Add(CodeCompiler.SharedCodeRootPathKeyInCache, folder);
         request?.Properties.Add(CodeCompiler.SharedCodeRootFullPathKeyInCache, fullPath);
 
-        return new HttpControllerDescriptor(configuration, type.Name, type);
+        return new(configuration, type.Name, type);
     }
 
     private static void AddToInsightsHistory(IServiceProvider sp, string url, ILog log)

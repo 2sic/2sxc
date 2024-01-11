@@ -29,6 +29,7 @@ using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Internal;
+using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sxc.Search;
 using static System.StringComparer;
 
@@ -126,9 +127,10 @@ internal class SearchController : ServiceBase
         if (!streamsToIndex.Any()) return l.ReturnAsOk("no streams to index");
 
         // Figure out the current edition - if none, stop here
-        var polymorph = _polymorphism.Init(Block.App.AppState.List);
         // New 2023-03-20 - if the view comes with a preset edition, it's an ajax-preview which should be respected
-        _edition = Block.View.Edition.NullIfNoValue() ?? polymorph.Edition();
+        _edition = PolymorphConfigReader.UseViewEditionLazyGetEdition(Block.View, () => _polymorphism.Init(Block.Context.AppState.List));
+        //Block.View.Edition.NullIfNoValue()
+        //           ?? _polymorphism.Init(Block.Context.AppState.List).Edition();
 
         // Convert DNN SearchDocuments from 2sxc SearchInfos
         SearchItems = BuildInitialSearchInfos(streamsToIndex, DnnModule);

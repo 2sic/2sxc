@@ -15,6 +15,7 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
+using ToSic.Sxc.Polymorphism.Internal;
 using RealController = ToSic.Eav.WebApi.ApiExplorer.ApiExplorerControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
@@ -60,10 +61,11 @@ public class ApiExplorerController : OqtStatefulControllerBase, IApiExplorerCont
         var block = CtxHlp.BlockOptional;
         if (block != null)
         {
-            var polymorphism = GetService<Sxc.Polymorphism.Internal.PolymorphConfigReader>();
-            var polymorph = polymorphism.Init(block.App.AppState.List);
+            //var polymorphism = GetService<PolymorphConfigReader>();
+            //var polymorph = GetService<PolymorphConfigReader>().Init(block.Context.AppState.List);
             // New 2023-03-20 - if the view comes with a preset edition, it's an ajax-preview which should be respected
-            spec.Edition = block.View?.Edition.NullIfNoValue() ?? polymorph.Edition();
+            spec.Edition = PolymorphConfigReader.UseViewEditionLazyGetEdition(block.View,
+                () => GetService<PolymorphConfigReader>().Init(block.Context.AppState.List));// block.View?.Edition.NullIfNoValue() ?? polymorph.Edition();
         }
 
         var thisAppCodeLoader = GetService<LazySvc<ThisAppCodeLoader>>();

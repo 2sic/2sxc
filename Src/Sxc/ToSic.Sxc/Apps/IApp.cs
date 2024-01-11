@@ -1,4 +1,6 @@
-﻿using ToSic.Eav.Apps.Integration;
+﻿using System.Collections.Generic;
+using ToSic.Eav.Apps.Integration;
+using ToSic.Eav.DataSource;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
 
@@ -43,6 +45,19 @@ public interface IApp:
         new
 #endif
     dynamic Resources { get;  }
+
+    #region Query
+
+    /// <summary>
+    /// All queries of the app, to access like App.Query["name"]
+    /// </summary>
+    /// <returns>A dictionary with all queries. Internally the dictionary will not be built unless accessed.</returns>
+    IDictionary<string, IQuery> Query { get; }
+
+    [PrivateApi]
+    IQuery GetQuery(string name);
+
+    #endregion
 
     /// <summary>
     /// The path to the current app, for linking JS/CSS files and

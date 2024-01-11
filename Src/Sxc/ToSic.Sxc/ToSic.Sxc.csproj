@@ -88,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Beta\" />
+    <Folder Include="DataSources\AppData\" />
     <Folder Include="Images\ResizeSettings\Internal\" />
     <Folder Include="Run\" />
   </ItemGroup>

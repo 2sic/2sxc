@@ -9,7 +9,7 @@ using ToSic.Sxc.Data;
 namespace ToSic.Sxc.Adam.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class Folder<TFolderId, TFileId> : Eav.Apps.Assets.Folder<TFolderId, TFileId>, IFolder
+public class Folder<TFolderId, TFileId> : Eav.Apps.Assets.Internal.Folder<TFolderId, TFileId>, IFolder
 {
     public Folder(AdamManager<TFolderId, TFileId> adamManager) => AdamManager = adamManager;
 

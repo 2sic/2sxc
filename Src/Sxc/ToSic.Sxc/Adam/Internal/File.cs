@@ -11,7 +11,7 @@ using ToSic.Sxc.Images.Internal;
 namespace ToSic.Sxc.Adam.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets.File<TFolderId, TFileId>,
+public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets.Internal.File<TFolderId, TFileId>,
 #if NETFRAMEWORK
 #pragma warning disable 618
     ToSic.SexyContent.Adam.AdamFile,

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Assets;
+using ToSic.Eav.Apps.Assets.Internal;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
@@ -68,7 +69,7 @@ public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>
     /// <param name="target"></param>
     /// <param name="errPrefix"></param>
     [AssertionMethod]
-    protected void VerifySecurityAndStructure(Eav.Apps.Assets.Folder<TFolderId, TFileId> parentFolder, IAssetWithParentSysId<TFolderId> target, string errPrefix)
+    protected void VerifySecurityAndStructure(Eav.Apps.Assets.Internal.Folder<TFolderId, TFileId> parentFolder, IAssetWithParentSysId<TFolderId> target, string errPrefix)
     {
         // In case the primary file system is used (usePortalRoot) then also check higher permissions
         if (AdamContext.UseSiteRoot && !AdamContext.Security.CanEditFolder(target)) 

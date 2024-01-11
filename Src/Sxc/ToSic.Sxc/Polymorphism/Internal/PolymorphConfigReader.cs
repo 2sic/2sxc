@@ -5,6 +5,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Polymorphism.Internal;
 
@@ -43,6 +44,11 @@ public class PolymorphConfigReader(IServiceProvider serviceProvider) : ServiceBa
         var parts = rule.Split('?');
         Resolver = parts[0];
         if (parts.Length > 0) Parameters = parts[1];
+    }
+
+    public static string UseViewEditionLazyGetEdition(IView view, Func<PolymorphConfigReader> lazyReader)
+    {
+        return view?.Edition.NullIfNoValue() ?? lazyReader().Edition();
     }
 
     public string Edition() => Log.Func(() =>
