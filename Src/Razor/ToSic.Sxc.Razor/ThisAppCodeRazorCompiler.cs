@@ -161,7 +161,7 @@ internal class ThisAppCodeRazorCompiler : ServiceBase, IThisAppCodeRazorCompiler
     {
         // get assembly - try to get from cache, otherwise compile
         var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(spec, Log)?.Assembly
-                           ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrNull(spec);
+                           ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrThrow(spec);
 
         var appRelativePathWithEdition = spec.Edition.HasValue() ? Path.Combine(app.RelativePath, spec.Edition) : app.RelativePath;
         if (codeAssembly != null) _assemblyResolver.AddAssembly(codeAssembly, appRelativePathWithEdition);

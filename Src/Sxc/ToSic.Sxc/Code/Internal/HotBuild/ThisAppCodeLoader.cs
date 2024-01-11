@@ -50,7 +50,7 @@ public class ThisAppCodeLoader : ServiceBase
             : l.ReturnNull();
     }
 
-    public Assembly GetAppCodeAssemblyOrNull(HotBuildSpec spec)
+    public Assembly GetAppCodeAssemblyOrThrow(HotBuildSpec spec)
     {
         // Add to global history and add specs
         var logSummary = _logStore.Add(SxcLogging.SxcLogAppCodeLoader, Log);
@@ -59,18 +59,13 @@ public class ThisAppCodeLoader : ServiceBase
         // Initial message for insights-overview
         var l = Log.Fn<Assembly>($"{spec}", timer: true);
 
-        try
-        {
-            var assemblyResults = TryLoadAppCodeAssembly(spec, logSummary);
-            return string.IsNullOrEmpty(assemblyResults?.ErrorMessages)
-                ? l.ReturnAsOk(assemblyResults?.Assembly)
-                : l.ReturnAsError(assemblyResults?.Assembly);
-        }
-        catch (Exception ex)
-        {
-            l.Ex(ex);
-            return l.ReturnAsError(null);
-        }
+        var assemblyResults = TryLoadAppCodeAssembly(spec, logSummary);
+
+        if (string.IsNullOrEmpty(assemblyResults?.ErrorMessages))
+            return l.ReturnAsOk(assemblyResults?.Assembly);
+        
+        l.ReturnAsError(null, assemblyResults.ErrorMessages);
+        throw new Exception(assemblyResults.ErrorMessages);
     }
 
     private AssemblyResult TryLoadAppCodeAssembly(HotBuildSpec spec, LogStoreEntry logSummary)

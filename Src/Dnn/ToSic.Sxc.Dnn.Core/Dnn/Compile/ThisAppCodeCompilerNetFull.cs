@@ -51,7 +51,7 @@ internal class ThisAppCodeCompilerNetFull : ThisAppCodeCompiler
             var errors = "";
             foreach (CompilerError error in results.Errors)
             {
-                var msg = $"Error ({error.ErrorNumber}): {error.ErrorText}";
+                var msg = $"{(error.IsWarning ? "Warning" : "Error")} ({error.ErrorNumber}): {error.ErrorText} in '{error.FileName}' (Line: {error.Line}, Column: {error.Column}).";
                 l.E(msg);
                 errors += $"{msg}\n";
             }

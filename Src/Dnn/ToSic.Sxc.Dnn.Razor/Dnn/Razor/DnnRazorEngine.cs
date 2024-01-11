@@ -150,7 +150,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
             
             // get assembly - try to get from cache, otherwise compile
             var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(spec, Log)?.Assembly 
-                               ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrNull(spec);
+                               ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrThrow(spec);
 
             var appRelativePathWithEdition = spec.Edition.HasValue() ? Path.Combine(App.RelativePath, spec.Edition) : App.RelativePath;
             _assemblyResolver.AddAssembly(codeAssembly, appRelativePathWithEdition);

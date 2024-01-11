@@ -88,7 +88,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             // Roslyn compiler need reference to location of dll, when dll is not in bin folder
             // get assembly - try to get from cache, otherwise compile
             var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(spec, Log)?.Assembly
-                               ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrNull(spec);
+                               ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrThrow(spec);
 
             _assemblyResolver.AddAssembly(codeAssembly);
 
@@ -109,7 +109,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
             var template = File.ReadAllText(fileFullPath);
             var (generatedAssembly, errors) = isCshtml
-                ? CompileTemplate(template, referencedAssemblies, className, DefaultNamespace)
+                ? CompileTemplate(template, referencedAssemblies, className, DefaultNamespace, fileFullPath)
                 : CompileCSharpCode(template, referencedAssemblies);
             if (generatedAssembly == null)
                 throw l.Ex(new Exception(
@@ -264,23 +264,23 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         /// Compiles the template into an assembly.
         /// </summary>
         /// <returns>The compiled assembly.</returns>
-        private (Assembly Assembly, List<CompilerError> Errors) CompileTemplate(string template, List<string> referencedAssemblies, string className, string defaultNamespace)
+        private (Assembly Assembly, List<CompilerError> Errors) CompileTemplate(string template, List<string> referencedAssemblies, string className, string defaultNamespace, string sourceFileName)
         {
             var l = Log.Fn<(Assembly, List<CompilerError>)>(timer: true, parameters: $"Template content length: {template.Length}");
-
-            //// fix template
-            //template = FixTemplate(template);
 
             // Find the base class for the template
             var baseClass = FindBaseClass(template);
             l.A($"Base class: {baseClass}");
 
+            var designTimeLineMappings = new Dictionary<int, GeneratedCodeMapping>();
+
             // Create the Razor template engine host
             var engine = CreateHost(className, baseClass, defaultNamespace);
 
+            // Generate C# code from Razor template
             var lTimer = Log.Fn("Generate Code", timer: true);
             using var reader = new StringReader(template);
-            var razorResults = engine.GenerateCode(reader);
+            var razorResults = engine.GenerateCode(reader, className, defaultNamespace, sourceFileName);
             lTimer.Done();
 
             lTimer = Log.Fn("Compiler Params", timer: true);
@@ -300,9 +300,6 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
             var compilerResults = codeProvider.CompileAssemblyFromDom(compilerParameters, razorResults.GeneratedCode);
             lTimer.Done();
-            //var compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, template);
-
-            //var mappings = razorResults.DesignTimeLineMappings;
 
             if (compilerResults.Errors.Count <= 0)
                 return l.ReturnAsOk((compilerResults.CompiledAssembly, null));
@@ -457,7 +454,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
             var host = new RazorEngineHost(new CSharpRazorCodeLanguage())
             {
-                DefaultBaseClass = baseClass, // TODO: @stv - do not provide our from cshtml
+                DefaultBaseClass = baseClass,
                 DefaultClassName = className,
                 DefaultNamespace = defaultNamespace
             };
