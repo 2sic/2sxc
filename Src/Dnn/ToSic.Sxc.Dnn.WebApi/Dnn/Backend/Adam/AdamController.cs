@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Web;
-using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
+﻿using System.Web;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.PublicApi;
-using ToSic.Sxc.Dnn.WebApi.Internal;
-using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Adam.AdamControllerReal<int>;
 
 namespace ToSic.Sxc.Dnn.Backend;
@@ -28,7 +21,7 @@ public class AdamController() : DnnSxcControllerBase("Adam"), IAdamController<in
     [HttpPost]
     [HttpPut]
     public object Upload(int appId, string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false) 
-        => Real.Upload(new HttpUploadedFile(Request, HttpContext.Current.Request), appId, contentType, guid, field, subFolder, usePortalRoot);
+        => Real.Upload(new(Request, HttpContext.Current.Request), appId, contentType, guid, field, subFolder, usePortalRoot);
 
     // Note: #AdamItemDto - as of now, we must use object because System.Io.Text.Json will otherwise not convert the object correctly :(
 

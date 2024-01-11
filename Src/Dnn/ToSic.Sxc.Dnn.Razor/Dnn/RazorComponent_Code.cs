@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Dnn;
+﻿namespace ToSic.Sxc.Dnn;
 
 abstract partial class RazorComponent
 {

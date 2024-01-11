@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
+﻿using System.Net;
 using ToSic.Lib.Exceptions;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
@@ -30,7 +27,7 @@ internal class DnnHttpErrors
         var exToShow = dnnUser?.IsSuperUser == true 
             ? exception 
             : new PublicException(ApiErrMessage + helpText);
-        return new HttpResponseException(request.CreateErrorResponse(code, exToShow));
+        return new(request.CreateErrorResponse(code, exToShow));
     }
 
 }

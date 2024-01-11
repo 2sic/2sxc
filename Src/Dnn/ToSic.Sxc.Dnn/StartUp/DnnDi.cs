@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Integration;
-using ToSic.Eav.StartUp;
 using ToSic.Eav.WebApi;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Backend;
@@ -14,7 +13,6 @@ using ToSic.Sxc.Engines;
 using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sxc.Startup;
-using ToSic.Sxc.WebApi;
 
 
 namespace ToSic.Sxc.Dnn.StartUp;

@@ -1,28 +1,18 @@
-﻿using System;
-using System.Web.Hosting;
-using System.Web.WebPages;
+﻿using System.Web.Hosting;
 using ToSic.Eav;
 using ToSic.Eav.Code.Help;
-using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Dnn.Code;
-using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Razor.Internal;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.Razor;
 
 [PrivateApi]
-internal class DnnRazorHelper: RazorHelperBase
+internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
 {
     #region Constructor / Init
-
-    public DnnRazorHelper() : base("Sxc.RzrHlp") { }
 
     public DnnRazorHelper Init(RazorComponentBase page, Func<string, object, HelperResult> renderPage)
     {

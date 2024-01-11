@@ -1,12 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Web;
-using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
+﻿using System.Web;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Sys.Licenses;
-using ToSic.Sxc.Dnn.WebApi;
-using ToSic.Sxc.Dnn.WebApi.Internal;
 using RealController = ToSic.Eav.WebApi.Sys.Licenses.LicenseControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Sys;
@@ -33,7 +27,7 @@ public class LicenseController() : DnnSxcControllerRoot("License"), ILicenseCont
     public LicenseFileResultDto Upload()
     {
         SysHlp.PreventServerTimeout300();
-        return Real.Upload(new HttpUploadedFile(Request, HttpContext.Current.Request));
+        return Real.Upload(new(Request, HttpContext.Current.Request));
     }
 
     /// <inheritdoc />

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
+﻿using System.Net;
 
 // The commands here should help Dnn WebAPIs 
 
@@ -85,7 +82,7 @@ partial class WebApiCoreShim
     {
         if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
         var response = Request.CreateResponse(HttpStatusCode.Redirect);
-        response.Headers.Location = new Uri(url);
+        response.Headers.Location = new(url);
         return response;
     }
 
@@ -106,7 +103,7 @@ partial class WebApiCoreShim
     {
         if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
         var response = Request.CreateResponse(HttpStatusCode.MovedPermanently);
-        response.Headers.Location = new Uri(url);
+        response.Headers.Location = new(url);
         return response;
     }
 

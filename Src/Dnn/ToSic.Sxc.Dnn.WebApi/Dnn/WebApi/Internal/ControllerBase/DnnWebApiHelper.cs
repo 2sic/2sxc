@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Web;
+﻿using System.Web;
 using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
@@ -19,7 +17,7 @@ internal class DnnWebApiHelper : CodeHelperBase
     public DnnWebApiHelper(IHasLog apiController, string historyLogGroup, string firstMessage = default) : base("Dnn.ApiHlp")
     {
         this.LinkLog(apiController.Log);
-        WebApiLogging = new DnnWebApiLogging(apiController.Log, GetService<ILogStore>(), historyLogGroup, firstMessage: firstMessage);
+        WebApiLogging = new(apiController.Log, GetService<ILogStore>(), historyLogGroup, firstMessage: firstMessage);
     }
 
     #endregion

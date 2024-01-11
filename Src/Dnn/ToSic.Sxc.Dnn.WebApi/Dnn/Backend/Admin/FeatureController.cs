@@ -1,12 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using ToSic.Eav.Internal.Features;
+﻿using ToSic.Eav.Internal.Features;
 using ToSic.Eav.SysData;
 using ToSic.Eav.WebApi.Admin.Features;
-using ToSic.Sxc.Dnn.WebApi;
-using ToSic.Sxc.Dnn.WebApi.Internal;
 using RealController = ToSic.Eav.WebApi.Admin.Features.FeatureControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;

@@ -1,17 +1,11 @@
-﻿using System.Collections.Generic;
-using System;
-using ToSic.Eav.Data;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Eav.Data;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.WebApi;
-using System.Web.Http;
 using ToSic.Sxc.Context;
 using System.IO;
-using System.Net.Http;
 using System.Web.Http.Results;
 using ToSic.Eav.WebApi;
 using ToSic.Lib.Coding;
@@ -19,7 +13,6 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Dnn.WebApi.Internal;
 using ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
 using ToSic.Sxc.Internal;
 
@@ -169,7 +162,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     private TypedCode16Helper CreateCodeHelper()
     {
-        return new TypedCode16Helper(_CodeApiSvc, MyData, null, false, "c# WebApiController");
+        return new(_CodeApiSvc, MyData, null, false, "c# WebApiController");
     }
 
     public ITypedItem MyItem => CodeHelper.MyItem;

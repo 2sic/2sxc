@@ -1,18 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Net.Http;
+﻿using System.IO;
 using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Hosting;
-using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Dnn.Integration;
-using ToSic.Sxc.Dnn.WebApi;
-using ToSic.Sxc.Dnn.WebApi.Internal;
 using RealController = ToSic.Eav.WebApi.ApiExplorer.ApiExplorerControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
@@ -42,7 +35,7 @@ public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSu
         Log.A($"Controller Virtual Path: {controllerVirtualPath}");
 
         if (!File.Exists(HostingEnvironment.MapPath(controllerVirtualPath)))
-            throw new Exception($"Error: can't find controller file: {controllerVirtualPath}");
+            throw new($"Error: can't find controller file: {controllerVirtualPath}");
 
         return BuildManager.GetCompiledAssembly(controllerVirtualPath);
     }

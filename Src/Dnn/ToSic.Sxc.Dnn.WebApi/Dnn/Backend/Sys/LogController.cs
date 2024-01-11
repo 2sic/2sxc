@@ -1,10 +1,5 @@
-﻿using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using ToSic.Eav.WebApi.Sys;
+﻿using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Dnn.WebApi;
-using ToSic.Sxc.Dnn.WebApi.Internal;
 using RealController = ToSic.Eav.WebApi.Sys.LogControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Sys;

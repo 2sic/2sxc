@@ -1,10 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Web.Http;
+﻿using System.IO;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
 

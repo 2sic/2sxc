@@ -1,5 +1,4 @@
 ﻿using System.Web;
-using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Dnn;
 

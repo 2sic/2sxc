@@ -1,9 +1,4 @@
-﻿using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Dnn.WebApi;
-using ToSic.Sxc.Dnn.WebApi.Internal;
+﻿using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Dnn.Backend.Module;
 

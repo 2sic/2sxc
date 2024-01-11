@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Sxc.Apps.Internal;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Dnn.Pages;
 
@@ -43,7 +41,7 @@ internal static class DnnContextDtoExtensions
         dto.CultureCode = page.CultureCode;
         dto.Visible = page.IsVisible;
         dto.Title = page.Title;
-        dto.Portal = new SiteDto(page.PortalID);
+        dto.Portal = new(page.PortalID);
         return dto;
     }
 

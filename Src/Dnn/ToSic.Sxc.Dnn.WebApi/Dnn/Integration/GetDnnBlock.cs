@@ -1,11 +1,8 @@
 ﻿using System.Linq;
-using System.Net.Http;
-using DotNetNuke.Web.Api;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Backend;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Dnn.Integration;

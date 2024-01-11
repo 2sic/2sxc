@@ -1,5 +1,4 @@
 ﻿using System.Web.Http.Controllers;
-using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal;
 
@@ -21,7 +20,7 @@ public abstract class DnnSxcControllerBase(string logSuffix, string insightsGrou
         DynHlp.InitializeBlockContext(controllerContext.Request);
     }
 
-    internal DynamicApiCodeHelpers DynHlp => _dynHlp ??= new DynamicApiCodeHelpers(this, SysHlp);
+    internal DynamicApiCodeHelpers DynHlp => _dynHlp ??= new(this, SysHlp);
     private DynamicApiCodeHelpers _dynHlp;
         
 }

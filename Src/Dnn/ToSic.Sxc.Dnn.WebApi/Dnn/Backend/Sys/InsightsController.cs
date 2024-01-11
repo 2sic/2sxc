@@ -1,7 +1,4 @@
-﻿using System.Web.Http;
-using ToSic.Sxc.Dnn.WebApi;
-using ToSic.Sxc.Dnn.WebApi.Internal;
-using RealController = ToSic.Eav.WebApi.Sys.Insights.InsightsControllerReal;
+﻿using RealController = ToSic.Eav.WebApi.Sys.Insights.InsightsControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Sys;
 

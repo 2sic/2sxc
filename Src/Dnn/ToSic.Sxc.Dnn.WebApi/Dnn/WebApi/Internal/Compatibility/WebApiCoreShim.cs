@@ -1,6 +1,4 @@
-﻿using System.Net.Http;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Services;
+﻿using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
 

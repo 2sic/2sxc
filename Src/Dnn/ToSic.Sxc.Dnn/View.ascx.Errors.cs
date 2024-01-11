@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.UI;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Sxc.Blocks.Internal;

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Web.Http.Controllers;
-using ToSic.Lib.Documentation;
-using ToSic.Sxc.Code;
+﻿using System.Web.Http.Controllers;
 using ToSic.Sxc.Code.Internal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal;

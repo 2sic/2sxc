@@ -1,12 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using ToSic.Eav.WebApi.Assets;
+﻿using ToSic.Eav.WebApi.Assets;
 using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Backend.Admin.AppFiles;
-using ToSic.Sxc.Dnn.WebApi.Internal;
-using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Admin.AppFiles.AppFilesControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;

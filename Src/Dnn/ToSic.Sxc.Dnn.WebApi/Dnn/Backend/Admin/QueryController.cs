@@ -1,15 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Web;
-using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
+﻿using System.Web;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
-using ToSic.Sxc.Dnn.WebApi.Internal;
-using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Admin.Query.QueryControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
@@ -29,7 +23,7 @@ public class QueryController() : DnnSxcControllerBase(RealController.LogSuffix, 
 
     [HttpGet] public QueryDefinitionDto Get(int appId, int? id = null) => Real.Get(appId, id);
 
-    [HttpGet] public IEnumerable<DataSourceDto> DataSources(int zoneId, int appId) => Real.DataSources(new AppIdentity(zoneId, appId));
+    [HttpGet] public IEnumerable<DataSourceDto> DataSources(int zoneId, int appId) => Real.DataSources(new(zoneId, appId));
 
     [HttpPost] public QueryDefinitionDto Save([FromBody] QueryDefinitionDto data, int appId, int id)
         => Real.Save(data, appId, id);

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
-using DotNetNuke.Web.Api;
+﻿using System.Web.Http.Dispatcher;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Dnn.Backend;
 using ToSic.Sxc.Dnn.Backend.Admin;

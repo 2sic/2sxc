@@ -1,35 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-using ToSic.Sxc;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Compatibility.Internal;
 using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.WebApi;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Dnn.Code;
-using ToSic.Sxc.Dnn.WebApi.Internal;
 using ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
 
 // ReSharper disable InheritdocInvalidUsage

@@ -1,12 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using ToSic.Eav.WebApi.Admin;
+﻿using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Zone;
-using ToSic.Sxc.Dnn.WebApi.Internal;
-using ToSic.Sxc.WebApi;
 using RealController = ToSic.Eav.WebApi.Admin.ZoneControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;

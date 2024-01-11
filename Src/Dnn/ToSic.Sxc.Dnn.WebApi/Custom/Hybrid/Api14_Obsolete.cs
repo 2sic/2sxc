@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using ToSic.Eav.Data;
+﻿using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
 // ReSharper disable once CheckNamespace
@@ -55,18 +52,18 @@ partial class Api14
     /// <inheritdoc/>
     [PrivateApi]
     public IEnumerable<dynamic> AsDynamic(IDataStream stream)
-        => throw new Exception($"AsDynamic for lists isn't supported here. Please use AsList(...) instead.");
+        => throw new($"AsDynamic for lists isn't supported here. Please use AsList(...) instead.");
 
     /// <inheritdoc/>
     [PrivateApi]
     public IEnumerable<dynamic> AsDynamic(IDataSource source)
-        => throw new Exception($"AsDynamic for lists isn't supported here. Please use AsList(...) instead.");
+        => throw new($"AsDynamic for lists isn't supported here. Please use AsList(...) instead.");
 
 
     /// <inheritdoc/>
     [PrivateApi]
     public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities)
-        => throw new Exception($"AsDynamic for lists isn't supported here. Please use AsList(...) instead.");
+        => throw new($"AsDynamic for lists isn't supported here. Please use AsList(...) instead.");
 
     #endregion
     #endregion

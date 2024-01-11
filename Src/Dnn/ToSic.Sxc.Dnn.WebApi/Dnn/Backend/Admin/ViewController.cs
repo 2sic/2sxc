@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Linq;
 using System.Web;
-using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
@@ -14,8 +8,6 @@ using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.Views;
 using ToSic.Sxc.Dnn.Backend.Context;
 using ToSic.Sxc.Dnn.Pages;
-using ToSic.Sxc.Dnn.WebApi.Internal;
-using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Admin.ViewControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
@@ -65,7 +57,7 @@ public class ViewController() : DnnSxcControllerBase(RealController.LogSuffix), 
     public ImportResultDto Import(int zoneId, int appId)
     {
         SysHlp.PreventServerTimeout300();
-        return Real.Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId, appId);
+        return Real.Import(new(Request, HttpContext.Current.Request), zoneId, appId);
     }
 
     /// <inheritdoc />

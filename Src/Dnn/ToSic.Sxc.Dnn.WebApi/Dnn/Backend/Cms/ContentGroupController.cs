@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using ToSic.Sxc.Backend.Cms;
-using ToSic.Sxc.Dnn.WebApi.Internal;
-using ToSic.Sxc.WebApi;
+﻿using ToSic.Sxc.Backend.Cms;
 using RealController = ToSic.Sxc.Backend.Cms.ContentGroupControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Cms;

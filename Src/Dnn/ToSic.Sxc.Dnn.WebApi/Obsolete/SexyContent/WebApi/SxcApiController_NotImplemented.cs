@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using ToSic.Eav;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Lib.Coding;
 using ToSic.Sxc.Data.Internal.Wrapper;
-using ToSic.Sxc.Dnn;
+using ApiController = ToSic.Sxc.Dnn.ApiController;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.WebApi;
@@ -16,7 +12,7 @@ partial class SxcApiController
 
     [PrivateApi]
     public dynamic AsDynamic(string json, string fallback = WrapperConstants.EmptyJson)
-        => throw new Exception($"The AsDynamic(string) is a new feature in 2sxc 10.20. {ApiController.ErrRecommendedNamespaces}");
+        => throw new($"The AsDynamic(string) is a new feature in 2sxc 10.20. {ApiController.ErrRecommendedNamespaces}");
 
 
     #endregion
@@ -25,7 +21,7 @@ partial class SxcApiController
 
     [PrivateApi]
     public IEnumerable<dynamic> AsList(object list)
-        => throw new Exception($"AsList is a new feature in 2sxc 10.20. {ApiController.ErrRecommendedNamespaces}");
+        => throw new($"AsList is a new feature in 2sxc 10.20. {ApiController.ErrRecommendedNamespaces}");
 
     #endregion
 

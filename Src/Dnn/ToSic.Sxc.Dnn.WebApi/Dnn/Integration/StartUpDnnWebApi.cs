@@ -1,6 +1,4 @@
-﻿using System.Net.Http.Formatting;
-using System.Web.Http;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Newtonsoft.Json;
 using ToSic.Eav.WebApi.ApiExplorer;
@@ -9,9 +7,7 @@ using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Dnn.Backend;
 using ToSic.Sxc.Dnn.Backend.Admin;
 using ToSic.Sxc.Dnn.WebApi.Context;
-using ToSic.Sxc.Dnn.WebApi.Internal;
 using ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
-using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn.Integration;
 

@@ -4,7 +4,6 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using ToSic.Eav.Serialization;
 using ToSic.Eav.WebApi.Serialization;
-using ToSic.Sxc.WebApi;
 
 // Special case: this should enforce json formatting
 // It's only needed in .net4x where the default is xml
@@ -74,7 +73,7 @@ public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfi
 
         JsonFormatterHelpers.SetCasing(jsonFormatterAttribute?.Casing ?? Casing.Unspecified, jsonSerializerOptions);
 
-        return new SystemTextJsonMediaTypeFormatter { JsonSerializerOptions = jsonSerializerOptions };
+        return new() { JsonSerializerOptions = jsonSerializerOptions };
     }
 
     private static EavJsonConverterFactory GetEavJsonConverterFactory(EntityFormat? entityFormat, HttpControllerDescriptor controllerDescriptor)

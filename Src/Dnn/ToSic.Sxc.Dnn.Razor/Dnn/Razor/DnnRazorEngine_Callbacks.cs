@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using DotNetNuke.Entities.Modules;
 using ToSic.Lib.Logging;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Context;
-using ToSic.Sxc.DataSources;
-using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.DataSources.Internal.Compatibility;
-using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Search;
 #pragma warning disable CS0618 // Type or member is obsolete

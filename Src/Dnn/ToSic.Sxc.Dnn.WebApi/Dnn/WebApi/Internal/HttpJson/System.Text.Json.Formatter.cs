@@ -28,8 +28,8 @@ internal class SystemTextJsonMediaTypeFormatter : MediaTypeFormatter
     public SystemTextJsonMediaTypeFormatter()
     {
         // Set default supported media types
-        SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/json"));
-        SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/json"));
+        SupportedMediaTypes.Add(new("application/json"));
+        SupportedMediaTypes.Add(new("text/json"));
 
         // Set default supported character encodings
         SupportedEncodings.Add(new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true));

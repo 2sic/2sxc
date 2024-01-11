@@ -1,8 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Net.Http;
+﻿using System.IO;
 using System.Web.Http.Controllers;
-using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Code.InfoSystem;
 using ToSic.Eav.Generics;
@@ -11,7 +8,6 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Backend.Adam;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Code.Internal.HotBuild;

@@ -1,7 +1,5 @@
 ﻿using System.Web.Http.Controllers;
-using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi;
-using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
 

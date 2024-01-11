@@ -1,9 +1,4 @@
-﻿using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using ToSic.Eav.WebApi.Admin.Metadata;
-using ToSic.Sxc.Dnn.WebApi.Internal;
-using ToSic.Sxc.WebApi;
+﻿using ToSic.Eav.WebApi.Admin.Metadata;
 using RealController = ToSic.Eav.WebApi.Admin.Metadata.MetadataControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;

@@ -1,7 +1,6 @@
 ﻿using DotNetNuke.Web.Api;
 using System.Configuration;
 using System.Web.Hosting;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Internal.Loaders;

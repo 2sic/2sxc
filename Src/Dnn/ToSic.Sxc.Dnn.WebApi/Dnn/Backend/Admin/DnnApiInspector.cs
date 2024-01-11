@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
-using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Lib.Services;
 
@@ -43,7 +39,7 @@ internal class DnnApiInspector() : ServiceBase(DnnConstants.LogName), IApiInspec
     {
         var dnnAuthList = member.GetCustomAttributes<DnnModuleAuthorizeAttribute>().ToList();
 
-        return new ApiSecurityDto
+        return new()
         {
             ignoreSecurity = member.GetCustomAttribute<AllowAnonymousAttribute>() != null,
             allowAnonymous = dnnAuthList.Any(a => a.AccessLevel == SecurityAccessLevel.Anonymous),

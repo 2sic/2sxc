@@ -5,12 +5,9 @@
 // I hope/assume it will be used if the other one fails.
 
 using System.Linq;
-using System.Net.Http;
 using System.Web;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Web.Api;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 
 namespace ToSic.Sxc.Dnn.Providers;

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using ToSic.Eav.WebApi.Cms;
-using ToSic.Sxc.Dnn.WebApi.Internal;
-using ToSic.Sxc.WebApi;
+﻿using ToSic.Eav.WebApi.Cms;
 using RealController = ToSic.Sxc.Backend.Cms.ListControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Cms;

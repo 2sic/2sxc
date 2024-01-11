@@ -1,22 +1,17 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Web;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Web;
+
 #pragma warning disable CS0618
 
 namespace ToSic.Sxc.Dnn;
 
-internal class RazorCodeManager: HelperBase
+internal class RazorCodeManager(RazorComponentBase parent, ILog parentLog) : HelperBase(parentLog, "Rzr.Code")
 {
-    public RazorComponentBase Parent;
-    public RazorCodeManager(RazorComponentBase parent, ILog parentLog): base(parentLog, "Rzr.Code")
-    {
-        Parent = parent;
-    }
+    public RazorComponentBase Parent = parent;
 
     /// <summary>
     /// The compiled code - or null

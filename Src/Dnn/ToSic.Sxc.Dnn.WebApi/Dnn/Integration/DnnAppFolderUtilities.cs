@@ -1,7 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Net;
-using System.Net.Http;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.DI;
@@ -74,7 +72,7 @@ public class DnnAppFolderUtilities: ServiceBase
         {
             const string msg = errPrefix + "App name is unknown - tried to check name in url (.../app/[app-name]/...) " +
                                "and tried app-detection using url-params/headers pageid/moduleid. " + errSuffix;
-            throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.BadRequest, new Exception(msg), msg, _errorHelp.Value));
+            throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.BadRequest, new(msg), msg, _errorHelp.Value));
         }
 
         return l.ReturnAsOk(appFolder);

@@ -1,13 +1,7 @@
-﻿using System.Net.Http;
-using System.Web;
-using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
+﻿using System.Web;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Sxc.Dnn.WebApi;
-using ToSic.Sxc.Dnn.WebApi.Internal;
 using RealController = ToSic.Sxc.Backend.Admin.AppPartsControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
@@ -46,7 +40,7 @@ public class AppPartsController() : DnnSxcControllerRoot(RealController.LogSuffi
     public ImportResultDto Import(int zoneId, int appId)
     {
         SysHlp.PreventServerTimeout300();
-        return Real.Import(uploadInfo: new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId: zoneId, appId: appId);
+        return Real.Import(uploadInfo: new(Request, HttpContext.Current.Request), zoneId: zoneId, appId: appId);
     }
 
     #endregion
