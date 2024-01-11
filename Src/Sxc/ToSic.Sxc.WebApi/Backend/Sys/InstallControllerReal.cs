@@ -15,7 +15,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Run;
+using ToSic.Sxc.Integration.Installation;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 #if NETFRAMEWORK

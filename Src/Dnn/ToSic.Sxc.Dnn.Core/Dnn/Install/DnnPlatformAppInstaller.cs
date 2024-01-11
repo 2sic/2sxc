@@ -9,7 +9,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
-using ToSic.Sxc.Run;
+using ToSic.Sxc.Integration.Installation;
 
 namespace ToSic.Sxc.Dnn.Install;
 

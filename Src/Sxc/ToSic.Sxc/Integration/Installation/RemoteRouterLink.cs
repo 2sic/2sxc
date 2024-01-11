@@ -4,7 +4,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Security.Fingerprint;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Run;
+namespace ToSic.Sxc.Integration.Installation;
 
 /// <summary>
 /// WIP - single location for building router links for installer and app/content infos

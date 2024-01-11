@@ -5,10 +5,10 @@ using ToSic.Eav.Data;
 using ToSic.Lib.Services;
 using App = ToSic.Sxc.Apps.App;
 
-namespace ToSic.Sxc.Run;
+namespace ToSic.Sxc.Integration;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class ImportExportEnvironmentBase: Eav.Apps.Run.ImportExportEnvironmentBase
+public abstract class SxcImportExportEnvironmentBase: Eav.Apps.Run.EavImportExportEnvironmentBase
 {
     #region constructor / DI
 
@@ -34,7 +34,7 @@ public abstract class ImportExportEnvironmentBase: Eav.Apps.Run.ImportExportEnvi
     /// <summary>
     /// DI Constructor
     /// </summary>
-    protected ImportExportEnvironmentBase(MyServices services, string logName) : base(services.Site, services.AppStates, logName)
+    protected SxcImportExportEnvironmentBase(MyServices services, string logName) : base(services.Site, services.AppStates, logName)
     {
         _services = services.ConnectServices(Log);
     }

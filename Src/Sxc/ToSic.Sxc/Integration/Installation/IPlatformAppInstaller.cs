@@ -2,8 +2,7 @@
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
 
-
-namespace ToSic.Sxc.Run;
+namespace ToSic.Sxc.Integration.Installation;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface IPlatformAppInstaller : IHasLog

@@ -22,9 +22,11 @@ using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Images.Internal;
+using ToSic.Sxc.Integration;
+using ToSic.Sxc.Integration.Installation;
+using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Internal.Plumbing;
 using ToSic.Sxc.LookUp;
-using ToSic.Sxc.Run;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
@@ -74,7 +76,7 @@ public static partial class RegisterSxcServices
         // Configuration Provider WIP
         services.TryAddTransient<AppConfigDelegate>();
         services.TryAddTransient<App>();
-        services.TryAddTransient<ImportExportEnvironmentBase.MyServices>();
+        services.TryAddTransient<SxcImportExportEnvironmentBase.MyServices>();
 
         // Rendering
         services.TryAddTransient<IRenderingHelper, RenderingHelper>();

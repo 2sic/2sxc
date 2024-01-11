@@ -5,8 +5,7 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 
-
-namespace ToSic.Sxc.Run;
+namespace ToSic.Sxc.Integration.Modules;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

@@ -6,8 +6,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 
-
-namespace ToSic.Sxc.Run;
+namespace ToSic.Sxc.Integration.Modules;
 
 /// <summary>
 /// Empty constructor for DI

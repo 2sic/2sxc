@@ -1,16 +1,17 @@
-﻿#if NETFRAMEWORK
-using System.Web.Hosting;
+﻿
 using ToSic.Eav.Data;
+using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;
+#if NETFRAMEWORK
+using System.Web.Hosting;
 #else
 using System;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 #endif
-using ToSic.Eav.Internal.Environment;
 
 
-namespace ToSic.Sxc.Run;
+namespace ToSic.Sxc.Integration.Paths;
 
 /// <summary>
 /// In the default implementation, all things have the same root so content-path and app-path

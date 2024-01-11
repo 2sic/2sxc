@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Run;
+﻿namespace ToSic.Sxc.Integration.Paths;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface ILinkPaths

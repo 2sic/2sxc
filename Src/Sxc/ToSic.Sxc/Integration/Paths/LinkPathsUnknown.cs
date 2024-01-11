@@ -1,9 +1,8 @@
 ﻿using System;
 using ToSic.Eav.Internal.Unknown;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 
-namespace ToSic.Sxc.Run;
+namespace ToSic.Sxc.Integration.Paths;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class LinkPathsUnknown(WarnUseOfUnknown<LinkServiceUnknown> _) : ILinkPaths, IIsUnknown

@@ -6,11 +6,11 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
-using ToSic.Sxc.Run;
+using ToSic.Sxc.Integration;
 
 namespace ToSic.Sxc.Dnn.ImportExport;
 
-internal class DnnImportExportEnvironment : ImportExportEnvironmentBase
+internal class DnnImportExportEnvironment : SxcImportExportEnvironmentBase
 {
     #region Constructors
 

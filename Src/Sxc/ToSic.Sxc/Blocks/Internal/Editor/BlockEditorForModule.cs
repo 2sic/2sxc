@@ -2,7 +2,7 @@
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Run;
+using ToSic.Sxc.Integration.Modules;
 
 namespace ToSic.Sxc.Blocks.Internal;
 

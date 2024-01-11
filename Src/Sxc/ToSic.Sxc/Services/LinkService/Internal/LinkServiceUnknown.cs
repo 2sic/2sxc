@@ -3,7 +3,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Images.Internal;
-using ToSic.Sxc.Run;
+using ToSic.Sxc.Integration.Paths;
 
 namespace ToSic.Sxc.Services.Internal;
 

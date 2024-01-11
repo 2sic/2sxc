@@ -1,13 +1,14 @@
-﻿#if NETFRAMEWORK
+﻿
+using System;
 using System.Web;
+#if NETFRAMEWORK
 #else
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http.Extensions;
 #endif
-using System;
 
 
-namespace ToSic.Sxc.Run;
+namespace ToSic.Sxc.Integration.Paths;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class LinkPaths: ILinkPaths
