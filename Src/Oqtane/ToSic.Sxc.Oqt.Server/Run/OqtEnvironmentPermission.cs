@@ -2,8 +2,8 @@
 using Oqtane.Security;
 using Oqtane.Shared;
 using System.Security.Claims;
-using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
+using ToSic.Eav.Integration.Security;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;

@@ -1,5 +1,5 @@
 ﻿using System;
-using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Context;
 using ToSic.Lib.Services;
 
@@ -11,14 +11,8 @@ namespace ToSic.Sxc.Cms.Internal.Publishing;
 /// </summary>
 // ReSharper disable once UnusedMember.Global
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class NoPagePublishing : ServiceBase, IPagePublishing
+public class NoPagePublishing() : ServiceBase("Eav.NoPubl"), IPagePublishing
 {
-    #region Constructors
-
-    public NoPagePublishing() : base("Eav.NoPubl") { }
-
-    #endregion
-
     public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
     {
         var info = new VersioningActionInfo();

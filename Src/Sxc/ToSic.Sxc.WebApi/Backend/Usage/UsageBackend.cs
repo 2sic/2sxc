@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Apps.Work;
+using ToSic.Eav.Security.Internal;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Errors;

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text.Json.Serialization;
-using ToSic.Eav.Apps.Enums;
+using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;

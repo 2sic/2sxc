@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Apps.Work;
+using ToSic.Eav.Security.Internal;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;

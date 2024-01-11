@@ -1,5 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using ToSic.Eav.Apps.Enums;
+using ToSic.Eav.Cms.Internal;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 

@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Enums;
+﻿using ToSic.Eav.Cms.Internal;
 
 namespace ToSic.Sxc.Cms.Internal.Publishing;
 

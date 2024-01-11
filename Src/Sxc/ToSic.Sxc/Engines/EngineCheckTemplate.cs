@@ -1,8 +1,8 @@
 ﻿using System;
-using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Code.Help;
 using ToSic.Eav.Context;
+using ToSic.Eav.Security.Internal;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;

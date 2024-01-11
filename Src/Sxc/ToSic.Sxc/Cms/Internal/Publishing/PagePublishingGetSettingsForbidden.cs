@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Enums;
+﻿using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Internal.Features;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Services;
@@ -15,7 +15,9 @@ public class PagePublishingGetSettingsForbidden: ServiceBase, IPagePublishingGet
 
     public PagePublishingGetSettingsForbidden(IFeaturesService featuresService) : base("Cms.PubForb")
     {
-        _featuresService = featuresService;
+        ConnectServices(
+            _featuresService = featuresService
+        );
     }
     private readonly IFeaturesService _featuresService;
 

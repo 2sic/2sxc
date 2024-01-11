@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
@@ -8,7 +9,7 @@ using App = ToSic.Sxc.Apps.App;
 namespace ToSic.Sxc.Integration;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class SxcImportExportEnvironmentBase: Eav.Apps.Run.EavImportExportEnvironmentBase
+public abstract class SxcImportExportEnvironmentBase: EavImportExportEnvironmentBase
 {
     #region constructor / DI
 

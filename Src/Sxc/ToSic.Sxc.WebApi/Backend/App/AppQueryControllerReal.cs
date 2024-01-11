@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Security.Internal;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Admin.App;
 using ToSic.Eav.WebApi.Admin.Query;

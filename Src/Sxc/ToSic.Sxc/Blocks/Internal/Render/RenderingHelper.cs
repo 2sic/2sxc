@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Web;
-using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Integration.Environment;
 using ToSic.Eav.Serialization;
 using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
