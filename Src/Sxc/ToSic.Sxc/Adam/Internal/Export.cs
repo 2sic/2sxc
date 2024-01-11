@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ToSic.Sxc.Adam.Internal;
+﻿namespace ToSic.Sxc.Adam.Internal;
 
 /// <summary>
 /// Export helper

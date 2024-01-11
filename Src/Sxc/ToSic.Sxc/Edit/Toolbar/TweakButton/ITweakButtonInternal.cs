@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 

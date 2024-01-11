@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.Logging;
-using ToSic.Razor.Markup;
+﻿using ToSic.Razor.Markup;
 
 namespace ToSic.Sxc.Web.Internal;
 

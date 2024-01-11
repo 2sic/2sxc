@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Code.InfoSystem;
 using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.DataSources.Internal.Compatibility;
 using static ToSic.Eav.Code.Infos.CodeInfoObsolete;

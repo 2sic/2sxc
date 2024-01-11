@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Images;
+﻿namespace ToSic.Sxc.Images;
 
 /// <summary>
 /// This is not ready yet.

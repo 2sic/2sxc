@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Eav.Data;
-using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Lib.Coding;
+﻿using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Data;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Data.Internal.Dynamic;
 using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Eav.Data.Debug;
+﻿using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Metadata;
-using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Data;
 

@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Data;
-using ToSic.Eav.DataSource.Internal.Query;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Eav.DataSource.Internal.Query;
 
 namespace ToSic.Sxc.Blocks.Internal;
 

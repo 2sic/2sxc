@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Code.Internal;
+﻿namespace ToSic.Sxc.Code.Internal;
 
 /// <summary>
 /// Carries information about what compatibility level to use. Important for components that have an older and newer API.

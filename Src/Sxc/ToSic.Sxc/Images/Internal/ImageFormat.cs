@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Images.Internal;
+﻿namespace ToSic.Sxc.Images.Internal;
 
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using ToSic.Eav;
+﻿using ToSic.Eav;
 using ToSic.Eav.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Internal.Render;

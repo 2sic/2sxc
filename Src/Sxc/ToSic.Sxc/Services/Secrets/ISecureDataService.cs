@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Services;
 

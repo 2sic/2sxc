@@ -1,6 +1,4 @@
 ﻿#if NETFRAMEWORK
-using ToSic.Lib.Documentation;
-
 namespace ToSic.Sxc.DataSources.Internal.Compatibility;
 
 /// <summary>

@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using ToSic.Lib.Logging;
-
-namespace ToSic.Sxc.Edit.Toolbar;
+﻿namespace ToSic.Sxc.Edit.Toolbar;
 
 internal static class ToolbarBuilderExtensions
 {

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Linq;
-using ToSic.Eav.Data;
-using ToSic.Eav.DataSource.Internal.Query;
+﻿using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps.Internal.Assets;
 using static ToSic.Sxc.Blocks.Internal.ViewConstants;
 using IEntity = ToSic.Eav.Data.IEntity;

@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Eav.Apps.Assets;
+﻿using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Apps.Assets.Internal;
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Data;

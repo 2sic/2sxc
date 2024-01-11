@@ -1,7 +1,5 @@
-﻿using System;
-using ToSic.Eav.Apps.Internal;
+﻿using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Identity;
-using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Adam.Internal;
 

@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Logging;
-
-namespace ToSic.Sxc.Integration.Installation;
+﻿namespace ToSic.Sxc.Integration.Installation;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface IEnvironmentInstaller: IHasLog

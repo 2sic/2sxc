@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Data.Internal;
+﻿namespace ToSic.Sxc.Data.Internal;
 
 /// <summary>
 /// Special helper object pass around a url when it started as a string

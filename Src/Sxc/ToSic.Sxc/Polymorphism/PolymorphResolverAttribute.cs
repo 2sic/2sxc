@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ToSic.Sxc.Polymorphism;
+﻿namespace ToSic.Sxc.Polymorphism;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

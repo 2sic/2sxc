@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Services;
-using ToSic.Eav.Context;
-using ToSic.Eav.Data;
+﻿using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.DataSources.Sys.Internal;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
 using static ToSic.Eav.Apps.AppStackConstants;
 

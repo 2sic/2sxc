@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Adam;
+﻿namespace ToSic.Sxc.Adam;
 
 /// <summary>
 /// An ADAM (Automatic Digital Asset Management) folder.

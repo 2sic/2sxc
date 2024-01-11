@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ToSic.Sxc.Backend.Cms;
+﻿namespace ToSic.Sxc.Backend.Cms;
 
 public interface IContentGroupController
 {

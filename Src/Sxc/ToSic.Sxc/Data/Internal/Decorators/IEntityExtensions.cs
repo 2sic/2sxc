@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Data;
-
-namespace ToSic.Sxc.Data.Internal.Decorators;
+﻿namespace ToSic.Sxc.Data.Internal.Decorators;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal static class IEntityExtensions

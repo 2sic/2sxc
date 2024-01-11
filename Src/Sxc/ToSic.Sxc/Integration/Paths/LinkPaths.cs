@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.Web;
+﻿using System.Web;
 #if NETFRAMEWORK
 #else
 using Microsoft.AspNetCore.Mvc;

@@ -1,5 +1,4 @@
 ﻿using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;

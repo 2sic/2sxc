@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Helpers;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;

@@ -1,9 +1,5 @@
-﻿using System;
-using ToSic.Eav.Data;
-using ToSic.Eav.Data.PiggyBack;
+﻿using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Internal;
 using static ToSic.Sxc.Images.Internal.ImageConstants;

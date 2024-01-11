@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ToSic.Sxc.Blocks.Internal;
+﻿namespace ToSic.Sxc.Blocks.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class ViewParts

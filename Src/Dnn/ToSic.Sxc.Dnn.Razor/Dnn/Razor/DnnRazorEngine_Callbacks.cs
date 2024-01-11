@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using DotNetNuke.Entities.Modules;
-using ToSic.Lib.Logging;
+﻿using DotNetNuke.Entities.Modules;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc.Blocks;

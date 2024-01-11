@@ -1,7 +1,4 @@
-﻿using ToSic.Eav.Data;
-using ToSic.Eav.WebApi.Dto;
-
-namespace ToSic.Sxc.Backend.Usage.Dto;
+﻿namespace ToSic.Sxc.Backend.Usage.Dto;
 
 public class ContentTypeDto: IdentifierDto
 {

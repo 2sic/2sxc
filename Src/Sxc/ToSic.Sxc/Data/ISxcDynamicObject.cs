@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Data;
+﻿namespace ToSic.Sxc.Data;
 
 /// <summary>
 /// Marks 2sxc dynamic objects.

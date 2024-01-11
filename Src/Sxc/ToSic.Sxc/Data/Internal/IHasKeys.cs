@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Data.Internal;
+﻿namespace ToSic.Sxc.Data.Internal;
 
 /// <summary>
 /// Interface for things that can check keys and/or existence of values.

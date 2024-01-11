@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Data;
-using ToSic.Sxc.Adam;
+﻿using ToSic.Sxc.Adam;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;

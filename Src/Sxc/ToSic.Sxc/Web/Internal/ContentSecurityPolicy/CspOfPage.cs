@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
+﻿using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;

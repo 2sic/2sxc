@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Caching;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
+﻿using System.Runtime.Caching;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Internal;
 

@@ -1,7 +1,5 @@
 ﻿#if NETFRAMEWORK
-using System;
 using ToSic.Eav.Apps.Services;
-using ToSic.Eav.Data;
 
 namespace ToSic.Sxc.DataSources.Internal.Compatibility;
 

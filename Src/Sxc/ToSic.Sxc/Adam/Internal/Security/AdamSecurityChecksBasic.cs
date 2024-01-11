@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Logging;
-
-namespace ToSic.Sxc.Adam.Internal;
+﻿namespace ToSic.Sxc.Adam.Internal;
 
 /// <summary>
 /// This is a simple AdamSecurityChecks which doesn't know much about the environment but works to get started.

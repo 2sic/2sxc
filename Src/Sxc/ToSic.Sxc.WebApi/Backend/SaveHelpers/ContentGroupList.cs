@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Internal.Work;
-using ToSic.Eav.Apps.State;
-using ToSic.Eav.Data;
+﻿using ToSic.Eav.Apps.State;
 using ToSic.Eav.WebApi.Formats;
-using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using static System.StringComparison;
 

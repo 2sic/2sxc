@@ -5,7 +5,6 @@
 
 using System.CodeDom.Compiler;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.Caching;
 using System.Text;
@@ -16,7 +15,6 @@ using System.Web.Razor.Generator;
 using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Dnn.Compile;

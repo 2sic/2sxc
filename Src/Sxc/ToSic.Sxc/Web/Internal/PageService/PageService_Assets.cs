@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using ToSic.Lib.Coding;
-using ToSic.Razor.Blade;
+﻿using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
+using Attribute = ToSic.Razor.Markup.Attribute;
 
 namespace ToSic.Sxc.Web.Internal.PageService;
 

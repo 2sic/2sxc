@@ -1,7 +1,4 @@
-﻿using System;
-using ToSic.Lib.Coding;
-
-namespace ToSic.Sxc.Edit.Toolbar;
+﻿namespace ToSic.Sxc.Edit.Toolbar;
 
 public partial interface IToolbarBuilder
 {

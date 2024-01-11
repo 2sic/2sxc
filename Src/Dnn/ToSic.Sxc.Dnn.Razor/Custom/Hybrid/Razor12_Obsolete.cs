@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Data;
-using ToSic.Eav.DataSource;
-using static ToSic.Sxc.Code.Internal.CodeErrorHelp.HelpForRazor12;
+﻿using static ToSic.Sxc.Code.Internal.CodeErrorHelp.HelpForRazor12;
 
  // ReSharper disable once CheckNamespace
  namespace Custom.Hybrid; 

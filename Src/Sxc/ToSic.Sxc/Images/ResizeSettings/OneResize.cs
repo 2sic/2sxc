@@ -1,7 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-
-namespace ToSic.Sxc.Images;
+﻿namespace ToSic.Sxc.Images;
 
 /// <summary>
 /// The final sizes to be used when resizing

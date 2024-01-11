@@ -1,6 +1,4 @@
-﻿using System;
-using ToSic.Lib.Coding;
-using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
+﻿using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 

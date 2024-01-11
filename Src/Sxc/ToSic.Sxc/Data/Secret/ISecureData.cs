@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Data;
+﻿namespace ToSic.Sxc.Data;
 
 /// <summary>
 /// This object contains decrypted data (if it was encrypted originally) and tells you if the data was encrypted, signed etc.

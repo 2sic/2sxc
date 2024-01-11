@@ -1,5 +1,4 @@
 ﻿using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Cms.Internal.Publishing;
 

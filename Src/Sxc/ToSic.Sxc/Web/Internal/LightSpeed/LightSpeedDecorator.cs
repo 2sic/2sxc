@@ -1,6 +1,4 @@
 ﻿using ToSic.Eav.Apps.State;
-using ToSic.Eav.Data;
-using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
 

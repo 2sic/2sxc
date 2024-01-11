@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Lib.Documentation;
-using ToSic.Sxc.Web.Internal.ClientAssets;
+﻿using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sxc.Web.Internal.PageService;

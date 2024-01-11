@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Eav.WebApi.Dto;
+﻿using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.WebApi.Security;
 
 namespace ToSic.Sxc.Backend.Views;

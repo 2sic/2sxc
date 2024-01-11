@@ -1,11 +1,7 @@
 ﻿#if NETFRAMEWORK
 
-using System;
-using System.Collections.Generic;
-using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
-using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Compatibility.Internal
 {

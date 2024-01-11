@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Plumbing;
 using static ToSic.Sxc.Internal.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images.Internal;

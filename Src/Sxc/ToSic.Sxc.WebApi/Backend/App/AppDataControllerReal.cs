@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ToSic.Eav.Data;
-using ToSic.Eav.WebApi.App;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
+﻿using ToSic.Eav.WebApi.App;
 
 namespace ToSic.Sxc.Backend.App;
 

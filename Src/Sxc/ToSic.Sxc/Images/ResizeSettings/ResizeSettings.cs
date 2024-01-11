@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Specialized;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
+﻿using System.Collections.Specialized;
 using static ToSic.Sxc.Images.Internal.ImageConstants;
 
 namespace ToSic.Sxc.Images;

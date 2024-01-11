@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Data.Internal.Docs;
+﻿namespace ToSic.Sxc.Data.Internal.Docs;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

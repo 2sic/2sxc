@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
+﻿using ToSic.Eav;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;

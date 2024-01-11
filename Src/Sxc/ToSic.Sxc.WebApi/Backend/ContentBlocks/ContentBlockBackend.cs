@@ -1,23 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Eav;
-using ToSic.Eav.Apps.Internal.Work;
+﻿using ToSic.Eav;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Security.Internal;
-using ToSic.Eav.Security.Permissions;
-using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Backend.InPage;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Cms.Internal.Publishing;
-using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sxc.Web.Internal.Url;
-using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Backend.ContentBlocks;
 

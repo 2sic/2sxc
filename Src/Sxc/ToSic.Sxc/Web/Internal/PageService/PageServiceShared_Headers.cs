@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using ToSic.Lib.Logging;
-using ToSic.Razor.Blade;
+﻿using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Web.Internal.PageService;
 

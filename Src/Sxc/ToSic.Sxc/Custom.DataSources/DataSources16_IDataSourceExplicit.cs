@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using ToSic.Eav.Caching;
-using ToSic.Eav.Data;
+﻿using ToSic.Eav.Caching;
 using ToSic.Eav.DataSource;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Logging;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.DataSource;

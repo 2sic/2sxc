@@ -1,8 +1,6 @@
 ﻿using ToSic.Eav.Code.InfoSystem;
 using ToSic.Eav.Internal.Licenses;
 using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Engines;

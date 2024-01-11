@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Images;
 

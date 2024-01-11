@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using ToSic.Eav;
 using ToSic.Eav.Code.Help;
-using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Coding;
 
 namespace ToSic.Sxc.Data.Internal.Typed;
 

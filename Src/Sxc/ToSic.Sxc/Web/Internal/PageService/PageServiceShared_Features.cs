@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ToSic.Sxc.Web.Internal.PageService;
+﻿namespace ToSic.Sxc.Web.Internal.PageService;
 
 partial class PageServiceShared
 {

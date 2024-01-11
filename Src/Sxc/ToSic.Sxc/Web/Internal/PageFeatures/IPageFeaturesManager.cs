@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ToSic.Sxc.Web.Internal.PageFeatures;
+﻿namespace ToSic.Sxc.Web.Internal.PageFeatures;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface IPageFeaturesManager

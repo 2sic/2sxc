@@ -1,7 +1,4 @@
-﻿using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Code.Internal;
+﻿using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 

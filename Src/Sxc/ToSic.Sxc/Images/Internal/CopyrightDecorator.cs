@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.Data;
-using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Images.Internal;
+﻿namespace ToSic.Sxc.Images.Internal;
 
 // TODO: LOCATION / NAMESPACE not final
 [PrivateApi("WIP v16.08")]

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ToSic.Sxc.Web.Internal.Url;
+﻿namespace ToSic.Sxc.Web.Internal.Url;
 
 /// <summary>
 /// Helper class to prepare data for use in a url parameter.

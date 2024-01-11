@@ -1,6 +1,4 @@
-﻿using System;
-using ToSic.Eav.Data;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.WebApi;
 

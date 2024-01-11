@@ -1,11 +1,7 @@
-﻿using System.Linq;
-using Custom.Hybrid;
+﻿using Custom.Hybrid;
 using DotNetNuke.Entities.Modules;
-using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
-using ToSic.Lib.Coding;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc.Adam;
@@ -20,9 +16,7 @@ using ToSic.Sxc.DataSources.Internal.Compatibility;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Internal;
 using ToSic.Sxc.Search;
-using ToSic.Sxc.Services;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 

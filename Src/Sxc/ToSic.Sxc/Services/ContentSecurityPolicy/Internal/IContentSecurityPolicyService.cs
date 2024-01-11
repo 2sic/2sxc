@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Services.Internal;
+﻿namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi("The service isn't publicly documented, as the functionality happens on the IPageService object")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

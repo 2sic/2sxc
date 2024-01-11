@@ -1,10 +1,6 @@
-﻿using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.Edit.Toolbar;
-using System;
-using ToSic.Lib.Coding;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services.Internal;
 

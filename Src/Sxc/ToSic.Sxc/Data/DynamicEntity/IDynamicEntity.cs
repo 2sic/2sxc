@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.Data;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Data.Internal.Docs;
+﻿using ToSic.Sxc.Data.Internal.Docs;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 #if !NETFRAMEWORK

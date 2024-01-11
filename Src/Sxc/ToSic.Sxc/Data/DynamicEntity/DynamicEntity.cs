@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Eav.Data;
-using ToSic.Eav.Data.PropertyLookup;
+﻿using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Metadata;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
 using IEntity = ToSic.Eav.Data.IEntity;
 using System.Dynamic;
-using ToSic.Lib.Coding;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data.Internal;

@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Data;
+﻿namespace ToSic.Sxc.Data;
 
 /// <summary>
 /// Publishing Information for <see cref="ITypedItem"/>s.

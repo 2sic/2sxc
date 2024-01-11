@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using ToSic.Eav.Metadata;
+﻿using ToSic.Eav.Metadata;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal.Url;
 using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;

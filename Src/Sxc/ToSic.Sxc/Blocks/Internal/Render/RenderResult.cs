@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Helpers;
+﻿using ToSic.Lib.Helpers;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;

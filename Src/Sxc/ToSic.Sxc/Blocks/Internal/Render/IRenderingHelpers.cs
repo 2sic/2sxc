@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-
-namespace ToSic.Sxc.Blocks.Internal.Render;
+﻿namespace ToSic.Sxc.Blocks.Internal.Render;
 
 [PrivateApi("Internal only")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

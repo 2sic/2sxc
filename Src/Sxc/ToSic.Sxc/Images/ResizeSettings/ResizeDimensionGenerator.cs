@@ -1,6 +1,4 @@
-﻿using System;
-using ToSic.Lib.Logging;
-using ToSic.Lib.Services;
+﻿using ToSic.Lib.Services;
 using ToSic.Sxc.Internal.Plumbing;
 using static ToSic.Sxc.Images.Internal.ImageConstants;
 using static ToSic.Sxc.Images.RecipeVariant;

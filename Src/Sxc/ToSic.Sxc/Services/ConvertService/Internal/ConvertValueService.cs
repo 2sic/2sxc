@@ -1,6 +1,4 @@
 ﻿using ToSic.Eav.Plumbing;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Services.Internal;

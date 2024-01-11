@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Logging;
-
-namespace ToSic.Sxc.Polymorphism;
+﻿namespace ToSic.Sxc.Polymorphism;
 
 /// <summary>
 /// A polymorphism resolver - which can determine alternate editions for a view / template

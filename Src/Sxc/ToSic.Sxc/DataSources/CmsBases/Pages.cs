@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Immutable;
-using System.Linq;
-using ToSic.Eav.Data;
+﻿using System.Collections.Immutable;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.DataSources.Internal;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.DataSources.Internal;
 using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 

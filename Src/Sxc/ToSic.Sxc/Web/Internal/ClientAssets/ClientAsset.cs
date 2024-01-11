@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ToSic.Sxc.Web.Internal.ClientAssets;
+﻿namespace ToSic.Sxc.Web.Internal.ClientAssets;
 
 internal class ClientAsset : IClientAsset
 {

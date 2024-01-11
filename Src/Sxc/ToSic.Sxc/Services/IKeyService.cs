@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-using ToSic.Sxc.Adam;
+﻿using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.Services;
 

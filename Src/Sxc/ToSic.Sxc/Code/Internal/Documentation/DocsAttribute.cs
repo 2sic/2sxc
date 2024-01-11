@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace ToSic.Sxc.Code.Internal.Documentation;
+﻿namespace ToSic.Sxc.Code.Internal.Documentation;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class DocsAttribute: Attribute

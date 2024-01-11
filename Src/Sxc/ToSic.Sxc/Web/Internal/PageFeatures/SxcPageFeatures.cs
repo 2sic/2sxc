@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.SysData;
+﻿using ToSic.Eav.SysData;
 using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Web.Internal.PageFeatures;

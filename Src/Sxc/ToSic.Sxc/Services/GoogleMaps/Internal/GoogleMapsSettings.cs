@@ -1,8 +1,5 @@
-﻿using ToSic.Eav.Data;
-using ToSic.Eav.Plumbing;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Services.Internal;

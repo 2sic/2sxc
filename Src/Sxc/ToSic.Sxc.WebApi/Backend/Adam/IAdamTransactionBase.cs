@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ToSic.Sxc.Backend.Adam;
+﻿namespace ToSic.Sxc.Backend.Adam;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface IAdamTransactionBase

@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Code;
+﻿namespace ToSic.Sxc.Code;
 
 /// <summary>
 /// Marks all Razor / WebAPI classes which provide logging functionality

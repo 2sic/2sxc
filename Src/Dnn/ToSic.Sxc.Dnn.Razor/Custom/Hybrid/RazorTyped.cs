@@ -1,9 +1,5 @@
-﻿using System.Linq;
-using ToSic.Eav.Code.Help;
-using ToSic.Eav.Data;
+﻿using ToSic.Eav.Code.Help;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
@@ -11,8 +7,6 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Internal;
-using ToSic.Sxc.Services;
 using static System.StringComparer;
 
 // ReSharper disable once CheckNamespace

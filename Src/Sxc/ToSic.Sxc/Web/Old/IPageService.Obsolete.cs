@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-using ToSic.Razor.Blade;
+﻿using ToSic.Razor.Blade;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Web;

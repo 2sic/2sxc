@@ -1,8 +1,6 @@
 ﻿using System.Web.Hosting;
 using ToSic.Eav;
 using ToSic.Eav.Code.Help;
-using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Dnn.Code;

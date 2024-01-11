@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav;
-using ToSic.Lib.Coding;
+﻿using ToSic.Eav;
 
 namespace ToSic.Sxc.Images;
 

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace ToSic.Sxc.Services.Tweaks;
+﻿namespace ToSic.Sxc.Services.Tweaks;
 
 internal class TweakConfigs
 {

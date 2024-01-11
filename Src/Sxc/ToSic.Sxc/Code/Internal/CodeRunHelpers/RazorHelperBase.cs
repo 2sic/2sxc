@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Internal.HotBuild;
 

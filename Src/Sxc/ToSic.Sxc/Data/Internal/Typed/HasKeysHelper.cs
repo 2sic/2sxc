@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using System.Linq;
-using ToSic.Lib.Coding;
 using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Data.Internal.Typed;

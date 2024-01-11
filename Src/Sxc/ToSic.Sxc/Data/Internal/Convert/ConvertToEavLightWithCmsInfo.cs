@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.Data;
-using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Internal;

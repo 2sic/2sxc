@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Web.Internal.PageService;
+﻿namespace ToSic.Sxc.Web.Internal.PageService;
 
 [PrivateApi("not final yet, probably will not be implemented like this")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

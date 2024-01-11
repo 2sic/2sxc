@@ -1,7 +1,4 @@
-﻿using System;
-using ToSic.Eav.Data;
-using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
+﻿using ToSic.Lib.DI;
 using ToSic.Sxc.Integration.Modules;
 
 namespace ToSic.Sxc.Blocks.Internal;

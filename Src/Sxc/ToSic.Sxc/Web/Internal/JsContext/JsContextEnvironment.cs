@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using ToSic.Eav;
+﻿using ToSic.Eav;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Web.Parameters;
 

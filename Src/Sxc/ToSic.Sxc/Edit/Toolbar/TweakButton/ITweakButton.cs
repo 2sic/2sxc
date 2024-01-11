@@ -1,8 +1,4 @@
-﻿using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-
-
-namespace ToSic.Sxc.Edit.Toolbar;
+﻿namespace ToSic.Sxc.Edit.Toolbar;
 
 /// <summary>
 /// Experimental new API in v15.07 to improve how to configure the Ui of a button.

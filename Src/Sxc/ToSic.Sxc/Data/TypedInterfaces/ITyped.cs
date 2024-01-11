@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text.Json.Serialization;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
+﻿using System.Text.Json.Serialization;
 using ToSic.Sxc.Data.Internal.Convert;
 
 namespace ToSic.Sxc.Data;

@@ -7,8 +7,6 @@ using System.Web;
 using System.Web.Compilation;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
-using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Blocks.Internal;
@@ -17,7 +15,6 @@ using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Dnn.Razor;
 

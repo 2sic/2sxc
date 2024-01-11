@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Internal.Catalogs;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Internal;
 using static ToSic.Sxc.Web.Internal.PageFeatures.SxcPageFeatures;
 

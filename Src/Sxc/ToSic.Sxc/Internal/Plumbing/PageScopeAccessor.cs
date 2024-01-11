@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ToSic.Sxc.Internal.Plumbing;
+﻿namespace ToSic.Sxc.Internal.Plumbing;
 
 /// <summary>
 /// Special helper to get a ServiceProvider of the page scope, in scenarios where each module has an own scope. 

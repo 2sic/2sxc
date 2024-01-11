@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using ToSic.Lib.Coding;
+﻿using System.Runtime.CompilerServices;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 

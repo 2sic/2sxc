@@ -1,5 +1,5 @@
 ﻿#if NETFRAMEWORK
-using System;
+
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Interfaces

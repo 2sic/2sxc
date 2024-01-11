@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using ToSic.Sxc.Blocks.Internal.Render;
+﻿using ToSic.Sxc.Blocks.Internal.Render;
 
 namespace ToSic.Sxc.Blocks.Internal;
 

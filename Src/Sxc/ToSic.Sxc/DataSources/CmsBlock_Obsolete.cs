@@ -1,7 +1,4 @@
-﻿using System;
-using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.DataSources;
+﻿namespace ToSic.Sxc.DataSources;
 
 public sealed partial class CmsBlock
 {

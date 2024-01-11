@@ -1,9 +1,4 @@
-﻿using System;
-using System.Linq;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Services.Tweaks;
+﻿namespace ToSic.Sxc.Services.Tweaks;
 
 internal class TweakValue
 {

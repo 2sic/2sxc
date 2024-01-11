@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using ToSic.Eav.Data;
+﻿using System.Dynamic;
 using ToSic.Eav.DataSource;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Data.Internal.Wrapper;
 
 namespace ToSic.Sxc.Data.Internal;

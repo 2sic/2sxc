@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
+﻿using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
 namespace ToSic.Sxc.Web.Internal.ClientAssets;
 

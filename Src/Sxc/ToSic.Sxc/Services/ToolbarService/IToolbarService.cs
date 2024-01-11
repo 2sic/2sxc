@@ -1,7 +1,4 @@
-﻿using System;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-using ToSic.Sxc.Edit.Toolbar;
+﻿using ToSic.Sxc.Edit.Toolbar;
 
 namespace ToSic.Sxc.Services;
 

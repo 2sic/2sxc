@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ToSic.Sxc.Data;
+﻿namespace ToSic.Sxc.Data;
 
 public partial interface IDynamicEntity
 {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Eav.Code.Help;
+﻿using ToSic.Eav.Code.Help;
 
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 

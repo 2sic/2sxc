@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using ToSic.Eav.Security.Permissions;
-using ToSic.Eav.WebApi.Dto;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Adam.Internal;
+﻿using ToSic.Sxc.Adam.Internal;
 
 namespace ToSic.Sxc.Backend.Adam;
 

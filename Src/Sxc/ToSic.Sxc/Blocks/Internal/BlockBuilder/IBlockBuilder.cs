@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Blocks.Internal.Render;
+﻿using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Engines;
 
 namespace ToSic.Sxc.Blocks.Internal;

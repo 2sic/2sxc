@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Coding;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Code.Internal.HotBuild;
+﻿using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Code.Internal;
 

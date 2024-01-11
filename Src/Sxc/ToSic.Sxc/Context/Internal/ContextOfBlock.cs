@@ -2,8 +2,6 @@
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Internal;
 using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Web.Internal.PageService;
 

@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Data;
-using ToSic.Lib.Documentation;
-using ToSic.Sxc.Blocks;
+﻿using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Data.Internal;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Lib.Logging;
-using ToSic.Eav.Metadata;
+﻿using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 

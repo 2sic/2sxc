@@ -1,7 +1,5 @@
 ﻿using ToSic.Eav.Apps.Internal.MetadataDecorators;
-using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
-using ToSic.Lib.Coding;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;

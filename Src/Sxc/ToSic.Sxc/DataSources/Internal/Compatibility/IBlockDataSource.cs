@@ -1,6 +1,5 @@
 ﻿#if NETFRAMEWORK
 using ToSic.Eav.DataSource;
-using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.DataSources.Internal.Compatibility;
 

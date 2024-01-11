@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Services;
+﻿namespace ToSic.Sxc.Services;
 
 /// <summary>
 /// System-Log Service to add messages to the global log in any platform Dnn/Oqtane

@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.Context;
-using ToSic.Eav.Data;
-
-namespace ToSic.Sxc.Backend.Cms;
+﻿namespace ToSic.Sxc.Backend.Cms;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class LoadSettingsProviderParameters

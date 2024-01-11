@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Code.Internal;
+﻿namespace ToSic.Sxc.Code.Internal;
 
 /// <summary>
 /// Special interface to mark all objects which have the current code context.

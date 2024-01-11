@@ -1,10 +1,8 @@
 ﻿using System.IO;
 using ToSic.Eav.Apps.Integration;
-using ToSic.Eav.Data;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;

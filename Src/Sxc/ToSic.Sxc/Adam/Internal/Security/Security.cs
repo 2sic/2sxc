@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Eav.Identity;
+﻿using ToSic.Eav.Identity;
 
 namespace ToSic.Sxc.Adam.Internal;
 

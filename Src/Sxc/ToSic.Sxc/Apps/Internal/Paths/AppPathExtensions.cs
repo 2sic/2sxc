@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Sxc.Blocks;

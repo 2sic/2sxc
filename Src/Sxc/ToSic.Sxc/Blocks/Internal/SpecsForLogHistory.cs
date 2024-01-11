@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Sxc.Apps;
+﻿using ToSic.Sxc.Apps;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.Blocks.Internal;

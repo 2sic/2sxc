@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using JetBrains.Annotations;
 using ToSic.Sxc.Apps.Internal.Assets;
 

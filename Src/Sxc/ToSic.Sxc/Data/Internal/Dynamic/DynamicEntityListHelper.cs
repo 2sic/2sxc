@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Eav.Data;
-using ToSic.Lib.Documentation;
-using ToSic.Sxc.Data.Internal.Decorators;
+﻿using ToSic.Sxc.Data.Internal.Decorators;
 
 namespace ToSic.Sxc.Data.Internal.Dynamic;
 

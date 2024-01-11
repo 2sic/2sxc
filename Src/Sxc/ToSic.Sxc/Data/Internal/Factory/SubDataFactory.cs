@@ -1,7 +1,4 @@
-﻿using ToSic.Eav.Data;
-using ToSic.Lib.Logging;
-
-namespace ToSic.Sxc.Data.Internal;
+﻿namespace ToSic.Sxc.Data.Internal;
 
 /// <summary>
 /// This helps create sub-items for a specific context, obeying the rules of the context

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Data.PiggyBack;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Serialization;
-using ToSic.Lib.Documentation;
 using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Images;

@@ -1,7 +1,5 @@
 ﻿#if NETFRAMEWORK
 
-using System;
-using ToSic.Lib.Documentation;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Internal;
 

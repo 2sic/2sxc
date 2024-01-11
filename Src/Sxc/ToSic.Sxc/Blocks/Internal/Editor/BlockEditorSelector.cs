@@ -1,6 +1,4 @@
-﻿using System;
-using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
+﻿using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Internal;
 

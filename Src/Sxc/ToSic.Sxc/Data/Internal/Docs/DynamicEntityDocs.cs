@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Coding;
-
-namespace ToSic.Sxc.Data.Internal.Docs;
+﻿namespace ToSic.Sxc.Data.Internal.Docs;
 
 /// <summary>
 /// This is minor cross-concerns aspect of Dynamic-Entity-like objects

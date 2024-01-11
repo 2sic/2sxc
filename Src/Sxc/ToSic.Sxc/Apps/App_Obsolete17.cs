@@ -1,7 +1,5 @@
 ﻿#if NETFRAMEWORK
-using System;
 using ToSic.Eav.Code.Infos;
-using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Apps
 {

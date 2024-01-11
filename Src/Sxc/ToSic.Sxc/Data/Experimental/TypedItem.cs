@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using ToSic.Eav.Data;
-using ToSic.Lib.Coding;
+﻿using System.Runtime.CompilerServices;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;

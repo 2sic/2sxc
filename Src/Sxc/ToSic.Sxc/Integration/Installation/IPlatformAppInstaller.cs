@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Context;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Integration.Installation;

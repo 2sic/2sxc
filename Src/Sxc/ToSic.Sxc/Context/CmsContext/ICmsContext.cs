@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Context;
+﻿namespace ToSic.Sxc.Context;
 
 /// <summary>
 /// This is the runtime context of your code in the CMS. It can tell you about the site, page, module etc. that you're on.

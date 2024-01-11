@@ -1,13 +1,7 @@
 ﻿#if NETFRAMEWORK
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.LookUp;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.SexyContent;
 using ToSic.Sxc.Data.Internal.Decorators;
 

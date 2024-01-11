@@ -1,7 +1,4 @@
-﻿using System;
-using ToSic.Eav.Data;
-
-namespace ToSic.Sxc.Data;
+﻿namespace ToSic.Sxc.Data;
 
 partial interface ITypedItem
 {

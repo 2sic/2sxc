@@ -1,6 +1,4 @@
-﻿
-using ToSic.Eav.Data;
-using ToSic.Eav.Internal.Environment;
+﻿using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;
 #if NETFRAMEWORK
 using System.Web.Hosting;

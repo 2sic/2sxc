@@ -1,6 +1,4 @@
-﻿using System;
-using ToSic.Eav.Data;
-using ToSic.Sxc.Data.Internal.Decorators;
+﻿using ToSic.Sxc.Data.Internal.Decorators;
 
 namespace ToSic.Sxc.Data.Internal;
 

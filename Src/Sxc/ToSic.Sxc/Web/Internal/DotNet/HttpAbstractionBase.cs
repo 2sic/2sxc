@@ -4,9 +4,7 @@ using System.Web.Hosting;
 #else
 using Microsoft.AspNetCore.Http;
 #endif
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 
 
 namespace ToSic.Sxc.Web.Internal.DotNet;

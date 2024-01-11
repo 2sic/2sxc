@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ToSic.Sxc.Internal.Plumbing;
+﻿namespace ToSic.Sxc.Internal.Plumbing;
 
 internal static partial class ParseObject
 {

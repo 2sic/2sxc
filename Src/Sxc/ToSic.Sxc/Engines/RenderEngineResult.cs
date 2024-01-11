@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ToSic.Sxc.Web;
+﻿using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 

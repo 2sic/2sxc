@@ -1,7 +1,4 @@
-﻿using System;
-using ToSic.Eav.Data;
-
-namespace ToSic.Sxc.Edit.Toolbar;
+﻿namespace ToSic.Sxc.Edit.Toolbar;
 
 internal class ToolbarBuilderConfiguration(
     ToolbarBuilderConfiguration original,

@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Sxc.Apps.Internal;
+﻿using ToSic.Sxc.Apps.Internal;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
 

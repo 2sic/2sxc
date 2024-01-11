@@ -1,8 +1,4 @@
-﻿using System;
-using ToSic.Eav.Data;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Logging;
-using ToSic.Razor.Markup;
+﻿using ToSic.Razor.Markup;
 using ToSic.Sxc.Edit.Toolbar;
 using IEntity = ToSic.Eav.Data.IEntity;
 

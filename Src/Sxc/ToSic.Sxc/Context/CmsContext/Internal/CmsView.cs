@@ -1,7 +1,5 @@
 ﻿using ToSic.Eav.Helpers;
 using ToSic.Eav.Metadata;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;

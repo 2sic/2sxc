@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using ToSic.Lib.Logging;
-
-namespace ToSic.Sxc.Blocks.Internal;
+﻿namespace ToSic.Sxc.Blocks.Internal;
 
 public partial class BlockEditorBase
 {

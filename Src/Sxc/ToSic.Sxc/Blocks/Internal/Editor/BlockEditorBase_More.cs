@@ -1,7 +1,4 @@
-﻿using System;
-using ToSic.Eav.Data;
-
-namespace ToSic.Sxc.Blocks.Internal;
+﻿namespace ToSic.Sxc.Blocks.Internal;
 
 public partial class BlockEditorBase
 {

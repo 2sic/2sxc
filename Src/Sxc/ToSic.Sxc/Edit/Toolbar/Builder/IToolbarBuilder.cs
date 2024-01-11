@@ -1,9 +1,4 @@
-﻿using System;
-using ToSic.Eav.Data;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-using ToSic.Razor.Markup;
+﻿using ToSic.Razor.Markup;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 

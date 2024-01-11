@@ -1,5 +1,4 @@
 ﻿using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Adam.Internal;
 

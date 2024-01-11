@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ToSic.Sxc.Internal.Plumbing;
+﻿namespace ToSic.Sxc.Internal.Plumbing;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal static class StringExtensions

@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Logging;
-
-namespace ToSic.Sxc.Adam.Internal;
+﻿namespace ToSic.Sxc.Adam.Internal;
 
 /// <summary>
 /// Basic implementation of the ADAM file system.

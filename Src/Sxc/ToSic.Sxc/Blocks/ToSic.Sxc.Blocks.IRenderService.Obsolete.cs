@@ -1,8 +1,4 @@
 ﻿#if NETFRAMEWORK
-using System;
-using ToSic.Eav.Data;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;

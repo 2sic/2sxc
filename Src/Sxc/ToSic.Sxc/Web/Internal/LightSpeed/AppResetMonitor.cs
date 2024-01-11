@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.Caching;
+﻿using System.Runtime.Caching;
 using ToSic.Eav.Apps.State;
 
 namespace ToSic.Sxc.Web.Internal.LightSpeed;

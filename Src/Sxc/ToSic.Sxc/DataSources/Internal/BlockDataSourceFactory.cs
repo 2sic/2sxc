@@ -3,8 +3,6 @@ using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Services;
 using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;

@@ -1,7 +1,4 @@
-﻿using System;
-using ToSic.Eav.Data;
-using ToSic.Lib.Coding;
-using ToSic.Razor.Blade;
+﻿using ToSic.Razor.Blade;
 using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data.Internal;

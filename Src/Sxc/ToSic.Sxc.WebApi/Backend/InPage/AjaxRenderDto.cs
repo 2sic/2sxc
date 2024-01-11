@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ToSic.Sxc.Backend.InPage;
+﻿namespace ToSic.Sxc.Backend.InPage;
 
 public class AjaxRenderDto
 {

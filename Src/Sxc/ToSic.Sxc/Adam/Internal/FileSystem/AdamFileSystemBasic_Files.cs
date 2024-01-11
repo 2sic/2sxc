@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using ToSic.Lib.Logging;
+﻿using System.IO;
 
 namespace ToSic.Sxc.Adam.Internal;
 

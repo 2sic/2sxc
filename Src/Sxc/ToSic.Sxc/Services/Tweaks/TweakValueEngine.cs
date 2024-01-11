@@ -1,7 +1,4 @@
-﻿using System;
-using ToSic.Lib.Logging;
-
-namespace ToSic.Sxc.Services.Tweaks;
+﻿namespace ToSic.Sxc.Services.Tweaks;
 
 /// <summary>
 /// Not in use yet

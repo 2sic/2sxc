@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Internal.Work;

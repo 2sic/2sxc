@@ -1,6 +1,4 @@
-﻿using System;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Helpers;
+﻿using ToSic.Lib.Helpers;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;

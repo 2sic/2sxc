@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ToSic.Sxc.Apps.Internal.Assets;
+﻿namespace ToSic.Sxc.Apps.Internal.Assets;
 
 /// <summary>
 /// Constants for App Assets

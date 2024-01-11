@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
+﻿using ToSic.Lib.Helpers;
 using ToSic.Razor.Html5;
 
 namespace ToSic.Sxc.Images;

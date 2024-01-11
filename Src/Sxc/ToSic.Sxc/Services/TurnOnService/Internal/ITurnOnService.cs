@@ -1,8 +1,6 @@
-﻿using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-using ToSic.Razor.Blade;
+﻿using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
+using Attribute = ToSic.Razor.Markup.Attribute;
 
 namespace ToSic.Sxc.Services.Internal;
 

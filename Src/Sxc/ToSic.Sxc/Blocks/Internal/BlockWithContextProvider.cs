@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Lib.Helpers;
+﻿using ToSic.Lib.Helpers;
 using ToSic.Sxc.Context.Internal;
 
 namespace ToSic.Sxc.Blocks.Internal;

@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-
-namespace ToSic.Sxc.Web.Internal.PageFeatures;
+﻿namespace ToSic.Sxc.Web.Internal.PageFeatures;
 
 [PrivateApi("Internal stuff, hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

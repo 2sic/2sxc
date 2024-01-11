@@ -1,7 +1,5 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Data;

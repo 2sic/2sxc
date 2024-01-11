@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using ToSic.Eav.Apps.Internal.Ui;
-using ToSic.Eav.Apps.Internal.Work;
+﻿using ToSic.Eav.Apps.Internal.Ui;
 using ToSic.Eav.Security.Internal;
-using ToSic.Eav.Security.Permissions;
-using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Backend.InPage;
 

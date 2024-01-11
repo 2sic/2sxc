@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ToSic.Eav.WebApi.Context;
-using ToSic.Eav.WebApi.Dto;
+﻿using ToSic.Eav.WebApi.Context;
 using ToSic.Sxc.Backend.Views;
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;

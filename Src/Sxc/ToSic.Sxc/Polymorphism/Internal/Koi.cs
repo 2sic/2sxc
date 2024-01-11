@@ -1,5 +1,4 @@
 ﻿using Connect.Koi;
-using ToSic.Lib.Logging;
 using static System.StringComparison;
 
 namespace ToSic.Sxc.Polymorphism.Internal;

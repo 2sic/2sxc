@@ -1,9 +1,5 @@
-﻿using System;
-using System.IO;
-using ToSic.Eav.Security.Permissions;
-using ToSic.Eav.WebApi.Dto;
+﻿using System.IO;
 using ToSic.Eav.WebApi.Errors;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Adam.Internal;
 
 namespace ToSic.Sxc.Backend.Adam;
