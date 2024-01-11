@@ -6,7 +6,6 @@ using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Data.Internal.Dynamic;
@@ -18,8 +17,8 @@ using static ToSic.Eav.Data.Shared.WrapperEquality;
 namespace ToSic.Sxc.Data.Internal.Typed;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName,
-    IWrapper<IEntity>, IHasMetadata, IEquatable<ITypedItem>
+internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName, IWrapper<IEntity>,
+    IEntityWrapper, IHasMetadata
 {
     #region Setup
 
@@ -89,10 +88,14 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
         if (b is null) return false;
         if (ReferenceEquals(this, b)) return true;
         if (b.GetType() != GetType()) return false;
-        return EqualsWrapper(this, (IWrapper<IEntity>)b);
+        return MultiWrapperEquality.EqualsWrapper(this, (IMultiWrapper<IEntity>)b);
     }
 
     bool IEquatable<ITypedItem>.Equals(ITypedItem other) => Equals(other);
+
+    List<IDecorator<IEntity>> IHasDecorators<IEntity>.Decorators => (Entity as IEntityWrapper)?.Decorators ?? [];
+
+    IEntity IMultiWrapper<IEntity>.RootContentsForEqualityCheck => (Entity as IEntityWrapper)?.RootContentsForEqualityCheck ?? Entity;
 
     #endregion
 
@@ -170,6 +173,8 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
     [PrivateApi]
     string ITyped.Url(string name, NoParamOrder noParamOrder, string fallback, bool? required)
         => ItemHelper.Url(name, noParamOrder, fallback, required);
+
+
 
 
     [PrivateApi]
