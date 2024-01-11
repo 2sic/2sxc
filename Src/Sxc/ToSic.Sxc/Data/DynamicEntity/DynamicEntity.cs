@@ -30,7 +30,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     public DynamicEntity(IEntity entity, CodeDataFactory cdf, bool propsRequired)
         : this(cdf, propsRequired, entity)
     {
-        ListHelper = new DynamicEntityListHelper(this, () => Debug, propsRequired: propsRequired, cdf);
+        ListHelper = new(this, () => Debug, propsRequired: propsRequired, cdf);
     }
 
     internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, bool propsRequired, CodeDataFactory cdf)
@@ -38,7 +38,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
             // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
             list.FirstOrDefault() ?? cdf.PlaceHolderInBlock(appIdOrNull, parent, field))
     {
-        ListHelper = new DynamicEntityListHelper(list, parent, field, () => Debug, propsRequired: propsRequired, cdf);
+        ListHelper = new(list, parent, field, () => Debug, propsRequired: propsRequired, cdf);
     }
     /// <summary>
     /// Internal helper to make a entity behave as a list, new in 12.03
@@ -53,7 +53,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
         Entity = entity;
         var entAsWrapper = Entity as IEntityWrapper;
         RootContentsForEqualityCheck = entAsWrapper?.RootContentsForEqualityCheck ?? Entity;
-        Decorators = entAsWrapper?.Decorators ?? new List<IDecorator<IEntity>>();
+        Decorators = entAsWrapper?.Decorators ?? [];
     }
 
 
@@ -63,23 +63,23 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     private readonly bool _propsRequired;
 
     [PrivateApi]
-    IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= new PropLookupWithPathEntity(Entity, canDebug: this);
+    IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= new(Entity, canDebug: this);
     private PropLookupWithPathEntity _propLookup;
 
     [PrivateApi]
-    internal GetAndConvertHelper GetHelper => _getHelper ??= new GetAndConvertHelper(this, Cdf, _propsRequired, childrenShouldBeDynamic: true, canDebug: this);
+    internal GetAndConvertHelper GetHelper => _getHelper ??= new(this, Cdf, _propsRequired, childrenShouldBeDynamic: true, canDebug: this);
     private GetAndConvertHelper _getHelper;
 
     [PrivateApi]
-    internal SubDataFactory SubDataFactory => _subData ??= new SubDataFactory(Cdf, _propsRequired, canDebug: this);
+    internal SubDataFactory SubDataFactory => _subData ??= new(Cdf, _propsRequired, canDebug: this);
     private SubDataFactory _subData;
 
     [PrivateApi]
-    internal CodeDynHelper DynHelper => _dynHelper ??= new CodeDynHelper(Entity, SubDataFactory);
+    internal CodeDynHelper DynHelper => _dynHelper ??= new(Entity, SubDataFactory);
     private CodeDynHelper _dynHelper;
 
     [PrivateApi]
-    internal ITypedItem TypedItem => _typedItem ??= new TypedItemOfEntity(this, Entity, Cdf, _propsRequired);
+    internal ITypedItem TypedItem => _typedItem ??= new(this, Entity, Cdf, _propsRequired);
     private TypedItemOfEntity _typedItem;
 
 
