@@ -1,8 +1,7 @@
 ﻿using ToSic.Lib.Logging;
 using ToSic.Razor.Markup;
 
-
-namespace ToSic.Sxc.Web;
+namespace ToSic.Sxc.Web.Internal;
 
 /// <summary>
 /// IMPORTANT: Changed to internal for v16.08. #InternalMaybeSideEffectDynamicRazor

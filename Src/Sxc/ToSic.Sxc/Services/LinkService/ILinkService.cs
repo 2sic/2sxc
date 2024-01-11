@@ -28,11 +28,13 @@ namespace ToSic.Sxc.Services;
 /// </remarks>
 [PublicApi]
 public interface ILinkService: INeedsDynamicCodeRoot, ICanDebug
-#if NETFRAMEWORK
-#pragma warning disable CS0618
-        , ILinkHelper
-#pragma warning restore CS0618
-#endif
+    // 2024-01-11 2dm #RemoveILinkHelper - removed, probably never in use, but it could be
+    // Preserve till 2024-07-01 (Start Q3), if not used, remove
+//#if NETFRAMEWORK
+//#pragma warning disable CS0618
+//        , ILinkHelper
+//#pragma warning restore CS0618
+//#endif
 {
     /// <summary>
     /// returns a link to the current page with parameters resolved in a way that DNN wants it

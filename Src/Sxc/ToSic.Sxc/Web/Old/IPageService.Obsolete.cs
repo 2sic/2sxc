@@ -34,22 +34,22 @@ public interface IPageService // : ToSic.Sxc.Services.IPageService
     // So for now we just leave it in
 
 #pragma warning disable CS0108, CS0114
-    [PrivateApi] string SetBase(string url = null);
-    [PrivateApi] string SetTitle(string value, string placeholder = null);
-    [PrivateApi] string SetDescription(string value, string placeholder = null);
-    [PrivateApi] string SetKeywords(string value, string placeholder = null);
-    [PrivateApi] string SetHttpStatus(int statusCode, string message = null);
-    [PrivateApi] string AddToHead(string tag);
-    [PrivateApi] string AddToHead(IHtmlTag tag);
-    [PrivateApi] string AddMeta(string name, string content);
-    [PrivateApi] string AddOpenGraph(string property, string content);
-    [PrivateApi] string AddJsonLd(string jsonString);
-    [PrivateApi] string AddJsonLd(object jsonObject);
-    [PrivateApi] string AddIcon(string path, NoParamOrder noParamOrder = default,
+    string SetBase(string url = null);
+    string SetTitle(string value, string placeholder = null);
+    string SetDescription(string value, string placeholder = null);
+    string SetKeywords(string value, string placeholder = null);
+    string SetHttpStatus(int statusCode, string message = null);
+    string AddToHead(string tag);
+    string AddToHead(IHtmlTag tag);
+    string AddMeta(string name, string content);
+    string AddOpenGraph(string property, string content);
+    string AddJsonLd(string jsonString);
+    string AddJsonLd(object jsonObject);
+    string AddIcon(string path, NoParamOrder noParamOrder = default,
         string rel = "", int size = 0, string type = null);
-    [PrivateApi] string AddIconSet(string path, NoParamOrder noParamOrder = default,
+    string AddIconSet(string path, NoParamOrder noParamOrder = default,
         object favicon = null, IEnumerable<string> rels = null, IEnumerable<int> sizes = null);
-    [PrivateApi] string Activate(params string[] keys);
+    string Activate(params string[] keys);
 #pragma warning restore CS0108, CS0114
 
 }

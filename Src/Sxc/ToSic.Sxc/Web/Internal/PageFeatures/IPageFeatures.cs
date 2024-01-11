@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Web.Internal.PageFeatures;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Web;
+namespace ToSic.Sxc.Web.Internal.PageFeatures;
 
 /// <summary>
 /// Part of the <see cref="ToSic.Sxc.Services.IPageService"/> to activate features on the page.
