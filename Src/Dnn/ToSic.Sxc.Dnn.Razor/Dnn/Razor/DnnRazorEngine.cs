@@ -8,6 +8,7 @@ using System.Runtime.ExceptionServices;
 using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -151,7 +152,8 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
             var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(spec, Log)?.Assembly 
                                ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrNull(spec);
 
-            _assemblyResolver.AddAssembly(codeAssembly, App.RelativePath);
+            var appRelativePathWithEdition = spec.Edition.HasValue() ? Path.Combine(App.RelativePath, spec.Edition) : App.RelativePath;
+            _assemblyResolver.AddAssembly(codeAssembly, appRelativePathWithEdition);
 
             compiledType = razorType.IsHotBuildSupported() 
                 ? _roslynBuildManager.Value.GetCompiledType(templatePath, spec)

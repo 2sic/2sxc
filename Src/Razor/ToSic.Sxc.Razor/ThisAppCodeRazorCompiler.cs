@@ -20,6 +20,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using ToSic.Eav.Internal.Environment;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
@@ -162,7 +163,8 @@ namespace ToSic.Sxc.Razor
             var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(spec, Log)?.Assembly
                                ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrNull(spec);
 
-            if (codeAssembly != null) _assemblyResolver.AddAssembly(codeAssembly, app.RelativePath);
+            var appRelativePathWithEdition = spec.Edition.HasValue() ? Path.Combine(app.RelativePath, spec.Edition) : app.RelativePath;
+            if (codeAssembly != null) _assemblyResolver.AddAssembly(codeAssembly, appRelativePathWithEdition);
 
             var assemblyLoadContext = new AssemblyLoadContext("UnLoadableAssemblyLoadContext", isCollectible: true);
 
