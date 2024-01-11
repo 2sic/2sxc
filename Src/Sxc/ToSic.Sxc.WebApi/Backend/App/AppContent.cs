@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using ToSic.Eav.Api.Api01;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Internal.Api01;
 using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.Context;
@@ -23,7 +23,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data.Internal.Convert;
-using static ToSic.Eav.Apps.Api.Api01.SaveApiAttributes;
+using static ToSic.Eav.Apps.Internal.Api01.SaveApiAttributes;
 
 namespace ToSic.Sxc.Backend.App;
 
@@ -43,7 +43,7 @@ public class AppContent : ServiceBase
         Generator<MultiPermissionsTypes> typesPermissions,
         Generator<MultiPermissionsItems> itemsPermissions,
         GenWorkDb<WorkFieldList> workFieldList,
-        LazySvc<SimpleDataController> dataControllerLazy) : base("Sxc.ApiApC")
+        LazySvc<SimpleDataEditService> dataControllerLazy) : base("Sxc.ApiApC")
     {
         ConnectServices(
             _workFieldList = workFieldList,
@@ -59,7 +59,7 @@ public class AppContent : ServiceBase
     private readonly EntityApi _entityApi;
     private readonly LazySvc<IConvertToEavLight> _entToDicLazy;
     private readonly ISxcContextResolver _ctxResolver;
-    private readonly LazySvc<SimpleDataController> _dataControllerLazy;
+    private readonly LazySvc<SimpleDataEditService> _dataControllerLazy;
 
     public AppContent Init(string appName)
     {
@@ -239,8 +239,8 @@ public class AppContent : ServiceBase
         }
     }
 
-    private SimpleDataController DataController(IAppIdentity app) => _dataController ??= _dataControllerLazy.Value.Init(app.ZoneId, app.AppId);
-    private SimpleDataController _dataController;
+    private SimpleDataEditService DataController(IAppIdentity app) => _dataController ??= _dataControllerLazy.Value.Init(app.ZoneId, app.AppId);
+    private SimpleDataEditService _dataController;
 
     #endregion
 
