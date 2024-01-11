@@ -47,7 +47,7 @@ public partial class DynamicCodeService
         var codeRoot = _myScopedServices.CodeRootGenerator.New()
             .BuildCodeRoot(customCodeOrNull: null, null, Log, CompatibilityLevels.CompatibilityLevel12);
         var app = App(zoneId: zoneId, appId: appId);
-        codeRoot.AttachApp(app);
+        ((IDynamicCodeRootInternal)codeRoot).AttachApp(app);
         return wrapLog.ReturnAsOk(codeRoot);
     }
 }

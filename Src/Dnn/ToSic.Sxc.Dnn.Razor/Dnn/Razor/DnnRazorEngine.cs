@@ -233,7 +233,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     /// <summary>
     /// Special old mechanism to always request jQuery and Rvt
     /// </summary>
-    public bool OldAutoLoadJQueryAndRvt => Webpage._DynCodeRoot.Cdf.CompatibilityLevel <= CompatibilityLevels.MaxLevelForAutoJQuery;
+    public bool OldAutoLoadJQueryAndRvt => Webpage._DynCodeRoot._Cdf.CompatibilityLevel <= CompatibilityLevels.MaxLevelForAutoJQuery;
 
 
     public HelperResult RenderPage(string templatePath, object data)

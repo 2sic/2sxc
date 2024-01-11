@@ -14,7 +14,7 @@ public static class IDynamicCodeKitExtensions
 
     internal static IDynamicCodeRoot SetCompatibility(this IDynamicCodeRoot codeRoot, int compatibility)
     {
-        codeRoot.Cdf.SetCompatibilityLevel(compatibility);
+        codeRoot._Cdf.SetCompatibilityLevel(compatibility);
         return codeRoot;
     }
 }

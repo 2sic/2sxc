@@ -29,7 +29,7 @@ internal partial class EditService : ServiceForDynamicCode, IEditService
     public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
     {
         base.ConnectToRoot(codeRoot);
-        SetBlock(codeRoot, codeRoot.Block);
+        SetBlock(codeRoot, ((IDynamicCodeRootInternal)codeRoot)._Block);
     }
 
     internal IEditService SetBlock(IDynamicCodeRoot codeRoot, IBlock block)

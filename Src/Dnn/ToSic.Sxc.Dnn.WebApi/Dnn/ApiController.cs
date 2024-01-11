@@ -71,16 +71,16 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
 
     #region AsDynamic implementations
     /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
-    public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot.Cdf.Json2Jacket(json, fallback);
+    public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot._Cdf.Json2Jacket(json, fallback);
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
-    public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.Cdf.CodeAsDyn(entity);
+    public dynamic AsDynamic(IEntity entity) => _DynCodeRoot._Cdf.CodeAsDyn(entity);
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
-    public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.Cdf.AsDynamicFromObject(dynamicEntity);
+    public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot._Cdf.AsDynamicFromObject(dynamicEntity);
 
     /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
-    public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.Cdf.AsEntity(dynamicEntity);
+    public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot._Cdf.AsEntity(dynamicEntity);
 
     #endregion
 
@@ -88,7 +88,7 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
     #region AsList
 
     /// <inheritdoc />
-    public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.Cdf.CodeAsDynList(list);
+    public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?._Cdf.CodeAsDynList(list);
 
     #endregion
 

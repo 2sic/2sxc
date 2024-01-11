@@ -76,9 +76,9 @@ namespace ToSic.Sxc.Code.Internal
         private void TryToBuildElementList()
         {
             dynCode.Log.A("try to build old List");
-            _list = new List<Element>();
+            _list = [];
 
-            if (dynCode.Data == null || dynCode.Block.View == null) return;
+            if (dynCode.Data == null || ((IDynamicCodeRootInternal)dynCode)._Block.View == null) return;
             if (!dynCode.Data.Out.ContainsKey(DataSourceConstants.StreamDefaultName)) return;
 
             var entities = dynCode.Data.List.ToList();
@@ -90,14 +90,14 @@ namespace ToSic.Sxc.Code.Internal
                 var el = new Element
                 {
                     EntityId = e.EntityId,
-                    Content = dynCode.Cdf.CodeAsDyn(e)
+                    Content = dynCode._Cdf.CodeAsDyn(e)
                 };
 
                 var editDecorator = e.GetDecorator<EntityInBlockDecorator>();
 
                 if (editDecorator != null)
                 {
-                    el.Presentation = editDecorator.Presentation == null ? null : dynCode.Cdf.CodeAsDyn(editDecorator.Presentation);
+                    el.Presentation = editDecorator.Presentation == null ? null : dynCode._Cdf.CodeAsDyn(editDecorator.Presentation);
                     el.SortOrder = editDecorator.SortOrder;
                 }
 

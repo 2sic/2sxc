@@ -13,6 +13,7 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
@@ -103,7 +104,7 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
                 // Look up if page publishing is enabled - if module context is not available, always false
                 base.Log.A($"AppId: {appId}");
                 var app = LoadAppOnly(appId, CtxResolver.Site().Site);
-                _DynCodeRoot.AttachApp(app);
+                ((IDynamicCodeRootInternal)_DynCodeRoot).AttachApp(app);
                 found = true;
             }
         }

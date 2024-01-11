@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class CspOfApp : ServiceForDynamicCode
 {
-    public int AppId => _DynCodeRoot?.Block?.AppId ?? 0;
+    public int AppId => ((IDynamicCodeRootInternal)_DynCodeRoot)?._Block?.AppId ?? 0;
 
     #region Constructor
 

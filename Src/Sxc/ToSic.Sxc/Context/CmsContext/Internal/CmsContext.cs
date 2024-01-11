@@ -6,6 +6,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services.Internal;
 
@@ -53,10 +54,10 @@ internal class CmsContext: ServiceForDynamicCode, ICmsContext
     private IAppStateInternal _siteAppState;
 
 
-    private IBlock RealBlockOrNull => _realBlock.Get(() => _DynCodeRoot?.Block);
+    private IBlock RealBlockOrNull => _realBlock.Get(() => ((IDynamicCodeRootInternal)_DynCodeRoot)?._Block);
     private readonly GetOnce<IBlock> _realBlock = new();
 
-    internal IContextOfBlock CtxBlockOrNull => _ctxBlock.Get(() => _DynCodeRoot?.Block?.Context);
+    internal IContextOfBlock CtxBlockOrNull => _ctxBlock.Get(() => ((IDynamicCodeRootInternal)_DynCodeRoot)?._Block?.Context);
     private readonly GetOnce<IContextOfBlock> _ctxBlock = new();
 
     #endregion

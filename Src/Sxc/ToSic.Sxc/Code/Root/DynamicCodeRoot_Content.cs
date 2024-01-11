@@ -29,13 +29,13 @@ public partial class DynamicCodeRoot
     private dynamic TryToBuildFirstOfStream(string sourceStream)
     {
         var l = Log.Fn<object>(sourceStream);
-        if (Data == null || Block.View == null) return l.ReturnNull("no data/block");
+        if (Data == null || _Block.View == null) return l.ReturnNull("no data/block");
         if (!Data.Out.ContainsKey(sourceStream)) return l.ReturnNull("stream not found");
 
         var list = Data[sourceStream].List.ToList();
         return !list.Any()
             ? l.ReturnNull("first is null") 
-            : l.Return(Cdf.AsDynamicFromEntities(list, false), "found");
+            : l.Return(_Cdf.AsDynamicFromEntities(list, false), "found");
     }
         
     #endregion

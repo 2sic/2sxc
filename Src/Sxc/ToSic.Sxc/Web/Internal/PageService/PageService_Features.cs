@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.WebResources;
 using static ToSic.Sxc.Web.WebResources.WebResourceConstants;
@@ -40,7 +41,7 @@ partial class PageService
         l.A($"Remaining keys: {string.Join(",", keys)}");
         var added = PageServiceShared.Activate(keys);
         // also add to this specific module, as we need a few module-level features to activate in case...
-        _DynCodeRoot?.Block?.BlockFeatureKeys.AddRange(added);
+        ((IDynamicCodeRootInternal)_DynCodeRoot)?._Block?.BlockFeatureKeys.AddRange(added);
 
         return l.ReturnAsOk(""); // empty string, just so it can be used as `@Kit.Page.Activate(...)` and not produce anything
     }

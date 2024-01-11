@@ -6,6 +6,7 @@ using ToSic.Eav.Code.Help;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Dnn.Code;
@@ -60,7 +61,8 @@ internal class DnnRazorHelper: RazorHelperBase
 
     #region Html Helper
 
-    internal IHtmlHelper Html => _html ??= _DynCodeRoot.GetService<HtmlHelper>().Init(Page, this, _DynCodeRoot.Block?.Context.User.IsSystemAdmin ?? false, _renderPage);
+    internal IHtmlHelper Html => _html ??= _DynCodeRoot.GetService<HtmlHelper>().Init(Page, this,
+        ((IDynamicCodeRootInternal)_DynCodeRoot)._Block?.Context.User.IsSystemAdmin ?? false, _renderPage);
     private IHtmlHelper _html;
 
     #endregion

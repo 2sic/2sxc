@@ -68,7 +68,7 @@ public abstract partial class SxcApiController() :
 
     [Obsolete]
     [PrivateApi]
-    public SxcHelper Sxc => _sxc ??= new SxcHelper(_DynCodeRoot?.Block?.Context?.UserMayEdit ?? false, SysHlp.GetService<IConvertToEavLight> ());
+    public SxcHelper Sxc => _sxc ??= new((_DynCodeRoot as IDynamicCodeRootInternal)?._Block?.Context?.UserMayEdit ?? false, SysHlp.GetService<IConvertToEavLight> ());
     [Obsolete]
     private SxcHelper _sxc;
 
@@ -89,42 +89,42 @@ public abstract partial class SxcApiController() :
     #region AsDynamic implementations
 
     /// <inheritdoc />
-    public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.Cdf.CodeAsDyn(entity);
+    public dynamic AsDynamic(IEntity entity) => _DynCodeRoot._Cdf.CodeAsDyn(entity);
 
     /// <inheritdoc />
-    public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.Cdf.AsDynamicFromObject(dynamicEntity);
+    public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot._Cdf.AsDynamicFromObject(dynamicEntity);
 
     /// <inheritdoc />
     [PublicApi("Careful - still Experimental in 12.02")]
-    public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.Cdf.MergeDynamic(entities);
+    public dynamic AsDynamic(params object[] entities) => _DynCodeRoot._Cdf.MergeDynamic(entities);
 
     /// <inheritdoc />
     [PrivateApi("old api, only available in old API controller")]
-    public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => _DynCodeRoot.Cdf.CodeAsDyn(entityKeyValuePair.Value);
+    public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => _DynCodeRoot._Cdf.CodeAsDyn(entityKeyValuePair.Value);
 
     /// <inheritdoc />
-    public IEnumerable<dynamic> AsDynamic(IDataStream stream) => _DynCodeRoot.Cdf.CodeAsDynList(stream.List);
+    public IEnumerable<dynamic> AsDynamic(IDataStream stream) => _DynCodeRoot._Cdf.CodeAsDynList(stream.List);
 
     /// <inheritdoc />
-    public IEntity AsEntity(object dynamicEntity) =>  _DynCodeRoot.Cdf.AsEntity(dynamicEntity);
+    public IEntity AsEntity(object dynamicEntity) =>  _DynCodeRoot._Cdf.AsEntity(dynamicEntity);
 
     /// <inheritdoc />
-    public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) =>  _DynCodeRoot.Cdf.CodeAsDynList(entities);
+    public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) =>  _DynCodeRoot._Cdf.CodeAsDynList(entities);
     #endregion
 
     #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
     [PrivateApi]
     [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-    public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => _DynCodeRoot.Cdf.CodeAsDyn(entity as IEntity);
+    public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => _DynCodeRoot._Cdf.CodeAsDyn(entity as IEntity);
 
 
     [PrivateApi]
     [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-    public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => _DynCodeRoot.Cdf.CodeAsDyn(entityKeyValuePair.Value as IEntity);
+    public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => _DynCodeRoot._Cdf.CodeAsDyn(entityKeyValuePair.Value as IEntity);
 
     [PrivateApi]
     [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-    public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => _DynCodeRoot.Cdf.CodeAsDynList(entities.Cast<IEntity>());
+    public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => _DynCodeRoot._Cdf.CodeAsDynList(entities.Cast<IEntity>());
     #endregion
 
 

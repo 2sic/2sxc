@@ -27,13 +27,13 @@ public class TypedCode16Helper: CodeHelperXxBase
         //this.LinkLog(codeRoot.Log);
     }
 
-    public ITypedItem MyItem => _myItem.Get(() => CodeRoot.Cdf.AsItem(Data.MyItem, propsRequired: DefaultStrict));
+    public ITypedItem MyItem => _myItem.Get(() => CodeRoot._Cdf.AsItem(Data.MyItem, propsRequired: DefaultStrict));
     private readonly GetOnce<ITypedItem> _myItem = new();
 
-    public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => CodeRoot.Cdf.AsItems(Data.MyItem, propsRequired: DefaultStrict));
+    public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => CodeRoot._Cdf.AsItems(Data.MyItem, propsRequired: DefaultStrict));
     private readonly GetOnce<IEnumerable<ITypedItem>> _myItems = new();
 
-    public ITypedItem MyHeader => _myHeader.Get(() => CodeRoot.Cdf.AsItem(Data.MyHeader, propsRequired: DefaultStrict));
+    public ITypedItem MyHeader => _myHeader.Get(() => CodeRoot._Cdf.AsItem(Data.MyHeader, propsRequired: DefaultStrict));
     private readonly GetOnce<ITypedItem> _myHeader = new();
 
     public ITypedModel MyModel => _myModel.Get(() => new TypedModel(_myModelData, CodeRoot, IsRazor, CodeFileName));

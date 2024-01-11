@@ -13,29 +13,29 @@ public partial class DynamicCodeRoot
 {
     /// <inheritdoc />
     [PublicApi]
-    public IDynamicStack Resources => _resources.Get(() => Cdf.AsDynStack(RootNameResources, ResSrc));
+    public IDynamicStack Resources => _resources.Get(() => _Cdf.AsDynStack(RootNameResources, ResSrc));
     private readonly GetOnce<DynamicStack> _resources = new();
 
     [PrivateApi]
-    public ITypedStack AllResources => _allRes.Get(() => Cdf.AsTypedStack(RootNameResources, ResSrc));
+    public ITypedStack AllResources => _allRes.Get(() => _Cdf.AsTypedStack(RootNameResources, ResSrc));
     private readonly GetOnce<ITypedStack> _allRes= new();
 
     private AppDataStackService AppSS => _appSetStackService ??= Services.DataStackService.Init(App.AppState);
     private AppDataStackService _appSetStackService;
 
-    private SettingsSources ResSrc => _resSrc.Get(() => AppSS.GetStack(AppStackConstants.Resources, Block?.View?.Resources));
+    private SettingsSources ResSrc => _resSrc.Get(() => AppSS.GetStack(AppStackConstants.Resources, _Block?.View?.Resources));
     private readonly GetOnce<SettingsSources> _resSrc = new();
 
 
-    private SettingsSources SetSrc => _setSrc.Get(() => AppSS.GetStack(AppStackConstants.Settings, Block?.View?.Settings));
+    private SettingsSources SetSrc => _setSrc.Get(() => AppSS.GetStack(AppStackConstants.Settings, _Block?.View?.Settings));
     private readonly GetOnce<SettingsSources> _setSrc = new();
 
     /// <inheritdoc />
     [PublicApi]
-    public IDynamicStack Settings => _settings.Get(() => Cdf.AsDynStack(RootNameSettings, SetSrc));
+    public IDynamicStack Settings => _settings.Get(() => _Cdf.AsDynStack(RootNameSettings, SetSrc));
     private readonly GetOnce<DynamicStack> _settings = new();
 
-    public ITypedStack AllSettings => _allSettings.Get(() => Cdf.AsTypedStack(RootNameSettings, SetSrc));
+    public ITypedStack AllSettings => _allSettings.Get(() => _Cdf.AsTypedStack(RootNameSettings, SetSrc));
     private readonly GetOnce<ITypedStack> _allSettings = new();
 
     dynamic IDynamicCode12.Resources => Resources;

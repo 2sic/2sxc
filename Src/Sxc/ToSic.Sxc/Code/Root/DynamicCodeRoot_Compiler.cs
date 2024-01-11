@@ -20,7 +20,7 @@ public partial class DynamicCodeRoot
 
         // Compile
         var compiler = Services.CodeCompilerLazy.Value;
-        var spec = new HotBuildSpec { AppId = App.AppId, Edition = Edition };
+        var spec = new HotBuildSpec { AppId = App.AppId, Edition = _edition };
         var instance = compiler.InstantiateClass(virtualPath, spec, className: name, relativePath: relativePath, throwOnError: throwOnError);
 
         if (instance == null)

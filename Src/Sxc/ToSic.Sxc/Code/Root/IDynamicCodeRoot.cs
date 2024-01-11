@@ -16,10 +16,10 @@ namespace ToSic.Sxc.Code;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface IDynamicCodeRoot : IDynamicCode12
 {
-    [PrivateApi("WIP")] IBlock Block { get; }
-
-    [PrivateApi] void AttachApp(IApp app);
-
+    //[PrivateApi("WIP")]
+    //IBlock _Block { get; }
+    //[PrivateApi]
+    //void AttachApp(IApp app);
 
     new IDynamicStack Resources { get; }
     new IDynamicStack Settings { get; }
@@ -27,7 +27,18 @@ public interface IDynamicCodeRoot : IDynamicCode12
     #region AsConverter (internal)
 
     [PrivateApi("internal use only")]
-    CodeDataFactory Cdf { get; }
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    CodeDataFactory _Cdf { get; }
 
     #endregion
+}
+
+internal interface IDynamicCodeRootInternal
+{
+    [PrivateApi]
+    void AttachApp(IApp app);
+
+    [PrivateApi("WIP")]
+    IBlock _Block { get; }
+
 }

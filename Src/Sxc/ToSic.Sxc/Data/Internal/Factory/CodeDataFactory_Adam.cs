@@ -4,6 +4,7 @@ using ToSic.Eav.Data;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Data.Internal;
 
@@ -27,7 +28,7 @@ partial class CodeDataFactory
         if (_DynCodeRoot is null)
             throw new Exception($"Can't create App Context for {nameof(AdamManager)} in {nameof(Internal.CodeDataFactory)} - no block, no App");
 
-        IContextOfApp contextOfApp = _DynCodeRoot.Block?.Context;
+        IContextOfApp contextOfApp = ((IDynamicCodeRootInternal)_DynCodeRoot)._Block?.Context;
         // TODO: @2dm - find out / document why this could even be null
         if (contextOfApp == null)
         {

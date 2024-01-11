@@ -22,7 +22,7 @@ internal class AdamService: IAdamService, INeedsDynamicCodeRoot
     /// <inheritdoc />
     public IFile File(int id)
     {
-        var admManager = (_codeRoot as DynamicCodeRoot)?.Cdf.AdamManager;
+        var admManager = (_codeRoot as DynamicCodeRoot)?._Cdf.AdamManager;
         return admManager?.File(id);
     }
 
@@ -45,7 +45,7 @@ internal class AdamService: IAdamService, INeedsDynamicCodeRoot
     /// <inheritdoc />
     public IFolder Folder(int id)
     {
-        var admManager = (_codeRoot as DynamicCodeRoot)?.Cdf.AdamManager;
+        var admManager = (_codeRoot as DynamicCodeRoot)?._Cdf.AdamManager;
         return admManager?.Folder(id);
     }
 

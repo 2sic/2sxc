@@ -24,7 +24,7 @@ internal class TypedModel(
 {
     private readonly bool _isRazor = isRazor;
     private readonly IDictionary<string, object> _paramsDictionary = paramsDictionary?.ToInvariant() ?? new Dictionary<string, object>();
-    private readonly TypedConverter _converter = new(codeRoot.Cdf);
+    private readonly TypedConverter _converter = new(codeRoot._Cdf);
 
     #region Check if parameters were supplied
 

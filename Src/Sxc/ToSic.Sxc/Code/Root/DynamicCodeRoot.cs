@@ -109,7 +109,7 @@ public abstract partial class DynamicCodeRoot : ServiceBase<DynamicCodeRoot.MySe
         if (block == null)
             return cLog.Return(this, "no block");
 
-        Block = block;
+        _Block = block;
         Data = block.Data;
         AttachApp(block.App);
 

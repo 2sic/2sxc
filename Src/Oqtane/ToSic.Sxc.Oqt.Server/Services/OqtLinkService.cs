@@ -49,7 +49,7 @@ internal class OqtLinkService : LinkServiceBase
     public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
     {
         base.ConnectToRoot(codeRoot);
-        _context = codeRoot.Block?.Context;
+        _context = ((IDynamicCodeRootInternal)codeRoot)._Block?.Context;
     }
 
     protected override string ToApi(string api, string parameters = null) => ApiNavigateUrl(api, parameters);

@@ -75,7 +75,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
             Log.A("DynCode.App is null");
             var app = GetAppOrNullFromUrlParams(services, request);
             if (app != null)
-                codeRoot.AttachApp(app);
+                ((IDynamicCodeRootInternal)codeRoot).AttachApp(app);
         }
 
         var reqProperties = request.Properties;

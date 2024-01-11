@@ -17,7 +17,7 @@ internal class DnnContext : IDnnContext, INeedsDynamicCodeRoot
     /// </summary>
     public void ConnectToRoot(IDynamicCodeRoot codeRoot)
     {
-        var moduleContext = codeRoot.Block?.Context?.Module;
+        var moduleContext = ((IDynamicCodeRootInternal)codeRoot)._Block?.Context?.Module;
         Module = (moduleContext as Module<ModuleInfo>)?.GetContents();
         // note: this may be a bug, I assume it should be Module.OwnerPortalId
         Portal = PortalSettings.Current ?? 
