@@ -1,13 +1,12 @@
 ﻿using System;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Polymorphism.Internal;
 
-namespace ToSic.Sxc.Code;
+namespace ToSic.Sxc.Code.Internal;
 
-public partial class DynamicCodeRoot : IDynamicCodeRootInternal
+public partial class CodeApiService : ICodeApiServiceInternal
 {
     [PrivateApi]
     public void AttachApp(IApp app)

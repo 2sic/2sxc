@@ -27,5 +27,5 @@ public class ServiceKit: ServiceForDynamicCode
     /// <typeparam name="TService"></typeparam>
     /// <returns></returns>
     [PrivateApi]
-    protected TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
+    protected TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
 }

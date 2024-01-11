@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Services;
 /// New in 2sxc 12.05
 /// </remarks>
 [PublicApi]
-public interface IMailService: INeedsDynamicCodeRoot
+public interface IMailService: INeedsCodeApiService
 {
     /// <summary>
     /// Quickly create a MailMessage object for further modification and then sending using <see cref="Send(MailMessage)"/>

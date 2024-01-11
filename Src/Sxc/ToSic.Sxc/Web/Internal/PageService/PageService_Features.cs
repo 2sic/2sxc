@@ -5,6 +5,7 @@ using ToSic.Lib.Coding;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.WebResources;
 using static ToSic.Sxc.Web.WebResources.WebResourceConstants;
@@ -41,7 +42,7 @@ partial class PageService
         l.A($"Remaining keys: {string.Join(",", keys)}");
         var added = PageServiceShared.Activate(keys);
         // also add to this specific module, as we need a few module-level features to activate in case...
-        ((IDynamicCodeRootInternal)_DynCodeRoot)?._Block?.BlockFeatureKeys.AddRange(added);
+        ((ICodeApiServiceInternal)_CodeApiSvc)?._Block?.BlockFeatureKeys.AddRange(added);
 
         return l.ReturnAsOk(""); // empty string, just so it can be used as `@Kit.Page.Activate(...)` and not produce anything
     }
@@ -97,6 +98,6 @@ partial class PageService
     private DynamicEntity WebResources => _webResources.Get(() => Settings?.Get(WebResourcesNode) as DynamicEntity);
     private readonly GetOnce<DynamicEntity> _webResources = new();
 
-    private DynamicStack Settings => _settings.Get(() => _DynCodeRoot?.Settings as DynamicStack);
+    private DynamicStack Settings => _settings.Get(() => _CodeApiSvc?.Settings as DynamicStack);
     private readonly GetOnce<DynamicStack> _settings = new();
 }

@@ -23,7 +23,7 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
     /// <param name="path"></param>
     /// <param name="overrideCodeRoot">Insert another code Root, ATM a patch for Oqtane Razor</param>
     /// <returns></returns>
-    protected string ResolvePathIfAbsoluteToApp(string path, IDynamicCodeRoot overrideCodeRoot = default)
+    protected string ResolvePathIfAbsoluteToApp(string path, ICodeApiService overrideCodeRoot = default)
     {
         var l = Log.Fn<string>(path);
         if (path == null || (!path.StartsWith("/") && !path.StartsWith("\\")))
@@ -33,7 +33,7 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
 
         if (!path.EndsWith(CodeCompiler.CsFileExtension))
             throw l.Done(new ArgumentException("Only '.cs' file paths can start with a slash"));
-        var app = (overrideCodeRoot ?? _DynCodeRoot)?.App
+        var app = (overrideCodeRoot ?? _CodeApiSvc)?.App
                   ?? throw l.Done(new Exception("Absolute paths require an App, which was null"));
         var appFolder = (app as IAppTyped)?.Folder?.Path
                         ?? throw l.Done(new Exception("Absolute paths require the App folder, which was null"));
@@ -75,7 +75,7 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
         try
         {
             object result = path.EndsWith(CodeCompiler.CsFileExtension)
-                ? _DynCodeRoot.CreateInstance(path, noParamOrder, name: name, relativePath: null, throwOnError: throwOnError)
+                ? _CodeApiSvc.CreateInstance(path, noParamOrder, name: name, relativePath: null, throwOnError: throwOnError)
                 : GetCodeCshtml(path);
             return l.Return(result, "ok");
         }

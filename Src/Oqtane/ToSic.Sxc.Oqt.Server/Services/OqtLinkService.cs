@@ -5,9 +5,8 @@ using System.Linq;
 using Oqtane.Models;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.Images;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Oqt.Server.Plumbing;
@@ -46,10 +45,10 @@ internal class OqtLinkService : LinkServiceBase
 
     private new OqtLinkPaths LinkPaths => (OqtLinkPaths) base.LinkPaths;
 
-    public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
+    public override void ConnectToRoot(ICodeApiService codeRoot)
     {
         base.ConnectToRoot(codeRoot);
-        _context = ((IDynamicCodeRootInternal)codeRoot)._Block?.Context;
+        _context = ((ICodeApiServiceInternal)codeRoot)._Block?.Context;
     }
 
     protected override string ToApi(string api, string parameters = null) => ApiNavigateUrl(api, parameters);

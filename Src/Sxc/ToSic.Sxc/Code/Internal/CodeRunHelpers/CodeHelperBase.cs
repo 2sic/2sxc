@@ -10,7 +10,7 @@ public class CodeHelperBase : ServiceForDynamicCode
     {
     }
 
-    public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
+    public override void ConnectToRoot(ICodeApiService codeRoot)
     {
         base.ConnectToRoot(codeRoot);
         // Make sure the Code-Log is reset, in case it was used before this call

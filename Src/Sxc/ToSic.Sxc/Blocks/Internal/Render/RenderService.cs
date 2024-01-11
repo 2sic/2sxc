@@ -8,6 +8,7 @@ using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Edit.EditService;
 using ToSic.Sxc.Services;
@@ -66,7 +67,7 @@ public class RenderService: ServiceForDynamicCode,
 
     private readonly MyServices _Deps;
 
-    public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
+    public override void ConnectToRoot(ICodeApiService codeRoot)
     {
         base.ConnectToRoot(codeRoot);
         _logIsInHistory = true; // if we link it to a parent, we don't need to add own entry in log history
@@ -172,11 +173,11 @@ public class RenderService: ServiceForDynamicCode,
     private IEditService GetEditService(IBlock blockOrNull)
     {
         // If we have a dyn-code, use that
-        if (_DynCodeRoot?.Edit != null) return _DynCodeRoot.Edit;
+        if (_CodeApiSvc?.Edit != null) return _CodeApiSvc.Edit;
 
         // Otherwise create a new one - even though it's not clear if this would have any real effect
         var newEdit = _Deps.EditGenerator.New();
-        newEdit.ConnectToRoot(_DynCodeRoot);
-        return ((EditService)newEdit).SetBlock(_DynCodeRoot, blockOrNull);
+        newEdit.ConnectToRoot(_CodeApiSvc);
+        return ((EditService)newEdit).SetBlock(_CodeApiSvc, blockOrNull);
     }
 }

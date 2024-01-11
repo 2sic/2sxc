@@ -12,6 +12,7 @@ using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
@@ -55,7 +56,7 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<WorkAppsRemove>();
 
         // Code
-        services.TryAddTransient<DynamicCodeRoot.MyServices>();
+        services.TryAddTransient<CodeApiService.MyServices>();
 
         // Block Editors
         services.TryAddTransient<BlockEditorForEntity>();

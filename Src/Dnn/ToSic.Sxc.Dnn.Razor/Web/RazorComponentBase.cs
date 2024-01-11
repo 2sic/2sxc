@@ -42,14 +42,14 @@ public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHa
 
     /// <inheritdoc />
     [PrivateApi]
-    public IDynamicCodeRoot _DynCodeRoot { get; private set; }
+    public ICodeApiService _CodeApiSvc { get; private set; }
 
     /// <inheritdoc />
     [PrivateApi]
-    public void ConnectToRoot(IDynamicCodeRoot codeRoot)
+    public void ConnectToRoot(ICodeApiService codeRoot)
     {
         SysHlp.ConnectToRoot(codeRoot);
-        _DynCodeRoot = codeRoot;
+        _CodeApiSvc = codeRoot;
     }
 
     /// <summary>

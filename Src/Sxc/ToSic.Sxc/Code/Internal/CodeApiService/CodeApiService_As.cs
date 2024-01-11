@@ -2,16 +2,14 @@
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
-namespace ToSic.Sxc.Code;
+namespace ToSic.Sxc.Code.Internal;
 
-public partial class DynamicCodeRoot
+public partial class CodeApiService
 {
     [PrivateApi]
     public CodeDataFactory _Cdf => _cdf.Get(() =>

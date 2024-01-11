@@ -7,6 +7,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Dnn.Code;
@@ -50,7 +51,7 @@ internal class DnnRazorHelper: RazorHelperBase
 
         // Only call the Page.ConnectToRoot, as it will call-back this objects ConnectToRoot
         // So don't call: ConnectToRoot(typedParent._DynCodeRoot);
-        Page.ConnectToRoot(typedParent._DynCodeRoot);
+        Page.ConnectToRoot(typedParent._CodeApiSvc);
 
         Log.A("@RenderPage:" + virtualPath);
     }
@@ -61,8 +62,8 @@ internal class DnnRazorHelper: RazorHelperBase
 
     #region Html Helper
 
-    internal IHtmlHelper Html => _html ??= _DynCodeRoot.GetService<HtmlHelper>().Init(Page, this,
-        ((IDynamicCodeRootInternal)_DynCodeRoot)._Block?.Context.User.IsSystemAdmin ?? false, _renderPage);
+    internal IHtmlHelper Html => _html ??= _CodeApiSvc.GetService<HtmlHelper>().Init(Page, this,
+        ((ICodeApiServiceInternal)_CodeApiSvc)._Block?.Context.User.IsSystemAdmin ?? false, _renderPage);
     private IHtmlHelper _html;
 
     #endregion
@@ -107,7 +108,7 @@ internal class DnnRazorHelper: RazorHelperBase
 
     #region DynamicModel and Factory
 
-    private CodeDataWrapper CodeDataWrapper => _dynJacketFactory.Get(() => _DynCodeRoot.GetService<CodeDataWrapper>());
+    private CodeDataWrapper CodeDataWrapper => _dynJacketFactory.Get(() => _CodeApiSvc.GetService<CodeDataWrapper>());
     private readonly GetOnce<CodeDataWrapper> _dynJacketFactory = new();
 
     /// <inheritdoc cref="IRazor14{TModel,TServiceKit}.DynamicModel"/>

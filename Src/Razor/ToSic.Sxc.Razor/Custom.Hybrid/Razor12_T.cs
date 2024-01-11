@@ -58,10 +58,10 @@ public abstract class Razor12<TModel>: OqtRazorBase<TModel>, IHasCodeLog, IRazor
     #region Content, Header, etc.
 
     /// <inheritdoc cref="IDynamicCode.Content" />
-    public dynamic Content => _DynCodeRoot.Content;
+    public dynamic Content => _CodeApiSvc.Content;
 
     /// <inheritdoc cref="IDynamicCode.Header" />
-    public dynamic Header => _DynCodeRoot.Header;
+    public dynamic Header => _CodeApiSvc.Header;
 
     #endregion
 
@@ -69,42 +69,42 @@ public abstract class Razor12<TModel>: OqtRazorBase<TModel>, IHasCodeLog, IRazor
     #region Link, Edit, App, Data
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => _DynCodeRoot.Link;
+    public ILinkService Link => _CodeApiSvc.Link;
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public IEditService Edit => _DynCodeRoot.Edit;
+    public IEditService Edit => _CodeApiSvc.Edit;
 
     /// <inheritdoc cref="IDynamicCode.App" />
-    public IApp App => _DynCodeRoot.App;
+    public IApp App => _CodeApiSvc.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IBlockInstance Data => _DynCodeRoot.Data;
+    public IBlockInstance Data => _CodeApiSvc.Data;
 
     #endregion
 
     #region AsDynamic in many variations + AsList
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
-    public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot._Cdf.Json2Jacket(json, fallback);
+    public dynamic AsDynamic(string json, string fallback = default) => _CodeApiSvc._Cdf.Json2Jacket(json, fallback);
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
-    public dynamic AsDynamic(IEntity entity) => _DynCodeRoot._Cdf.CodeAsDyn(entity);
+    public dynamic AsDynamic(IEntity entity) => _CodeApiSvc._Cdf.CodeAsDyn(entity);
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
-    public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot._Cdf.AsDynamicFromObject(dynamicEntity);
+    public dynamic AsDynamic(object dynamicEntity) => _CodeApiSvc._Cdf.AsDynamicFromObject(dynamicEntity);
 
     /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
-    public dynamic AsDynamic(params object[] entities) => _DynCodeRoot._Cdf.MergeDynamic(entities);
+    public dynamic AsDynamic(params object[] entities) => _CodeApiSvc._Cdf.MergeDynamic(entities);
 
     /// <inheritdoc cref="IDynamicCode.AsList" />
-    public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot._Cdf.CodeAsDynList(list);
+    public IEnumerable<dynamic> AsList(object list) => _CodeApiSvc._Cdf.CodeAsDynList(list);
 
     #endregion
 
     #region AsEntity
 
     /// <inheritdoc cref="IDynamicCode.AsEntity" />
-    public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot._Cdf.AsEntity(dynamicEntity);
+    public IEntity AsEntity(object dynamicEntity) => _CodeApiSvc._Cdf.AsEntity(dynamicEntity);
 
     #endregion
 
@@ -112,37 +112,37 @@ public abstract class Razor12<TModel>: OqtRazorBase<TModel>, IHasCodeLog, IRazor
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
     public T CreateSource<T>(IDataStream source) where T : IDataSource
-        => _DynCodeRoot.CreateSource<T>(source);
+        => _CodeApiSvc.CreateSource<T>(source);
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
     public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
-        => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
+        => _CodeApiSvc.CreateSource<T>(inSource, configurationProvider);
 
     #endregion
 
     #region Convert-Service - V12 only!
 
-    [PrivateApi] public IConvertService Convert => _DynCodeRoot.Convert;
+    [PrivateApi] public IConvertService Convert => _CodeApiSvc.Convert;
 
     #endregion
 
     #region Adam
 
     /// <inheritdoc cref="IDynamicCode.AsAdam" />
-    public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot.AsAdam(item, fieldName);
+    public IFolder AsAdam(ICanBeEntity item, string fieldName) => _CodeApiSvc.AsAdam(item, fieldName);
 
     #endregion
 
     #region CmsContext 
 
     /// <inheritdoc cref="IDynamicCode.CmsContext" />
-    public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
+    public ICmsContext CmsContext => _CodeApiSvc.CmsContext;
 
     /// <inheritdoc cref="IDynamicCode12.Resources" />
-    public dynamic Resources => _DynCodeRoot.Resources;
+    public dynamic Resources => _CodeApiSvc.Resources;
 
     /// <inheritdoc cref="IDynamicCode12.Settings" />
-    public dynamic Settings => _DynCodeRoot.Settings;
+    public dynamic Settings => _CodeApiSvc.Settings;
 
     #endregion
 

@@ -36,7 +36,7 @@ public class CodeHelper: CodeHelperBase
         // usually we don't have a relative path, so we use the preset path from when this class was instantiated
         var createPath = (_parent as IGetCodePath)?.CreateInstancePath;
         relativePath ??= createPath;
-        object instance = _DynCodeRoot?.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
+        object instance = _CodeApiSvc?.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
         return l.Return(instance);
     }
 

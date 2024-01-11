@@ -16,7 +16,7 @@ public class TypedCode16Helper: CodeHelperXxBase
     //protected readonly bool IsRazor;
     //protected readonly string CodeFileName;
     internal ContextData Data { get; }
-    public TypedCode16Helper(IDynamicCodeRoot codeRoot, IBlockInstance data, IDictionary<string, object> myModelData, bool isRazor, string codeFileName)
+    public TypedCode16Helper(ICodeApiService codeRoot, IBlockInstance data, IDictionary<string, object> myModelData, bool isRazor, string codeFileName)
         : base(codeRoot, isRazor, codeFileName, SxcLogging.SxcLogName + ".TCd16H")
     {
         //CodeRoot = codeRoot;
@@ -40,9 +40,9 @@ public class TypedCode16Helper: CodeHelperXxBase
     private readonly GetOnce<ITypedModel> _myModel = new();
 
 
-    public ITypedStack AllResources => (CodeRoot as DynamicCodeRoot)?.AllResources;
+    public ITypedStack AllResources => (CodeRoot as CodeApiService)?.AllResources;
 
-    public ITypedStack AllSettings => (CodeRoot as DynamicCodeRoot)?.AllSettings;
+    public ITypedStack AllSettings => (CodeRoot as CodeApiService)?.AllSettings;
 
     //public IDevTools DevTools => _devTools.Get(() => new DevTools(IsRazor, CodeFileName, Log));
     //private readonly GetOnce<IDevTools> _devTools = new GetOnce<IDevTools>();

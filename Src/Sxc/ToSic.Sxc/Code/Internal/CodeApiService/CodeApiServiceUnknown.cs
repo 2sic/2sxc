@@ -4,6 +4,6 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.Internal;
 
-internal class DynamicCodeRootUnknown(DynamicCodeRoot.MyServices services, WarnUseOfUnknown<DynamicCodeRootUnknown> _) : DynamicCodeRoot<object, ServiceKit>(services, LogScopes.Base)
+internal class CodeApiServiceUnknown(CodeApiService.MyServices services, WarnUseOfUnknown<CodeApiServiceUnknown> _) : CodeApiService<object, ServiceKit>(services, LogScopes.Base)
 {
 }

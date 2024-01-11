@@ -45,7 +45,7 @@ internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IVi
     /// <summary>
     /// Note: this is an explicit implementation, so in Dynamic Razor it won't work.
     /// </summary>
-    ITypedItem ICmsView.Settings => _settings.Get(() => parent._DynCodeRoot._Cdf.AsItem(_view.Settings));
+    ITypedItem ICmsView.Settings => _settings.Get(() => parent._CodeApiSvc._Cdf.AsItem(_view.Settings));
     private readonly GetOnce<ITypedItem> _settings = new();
 
 

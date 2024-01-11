@@ -24,13 +24,13 @@ namespace ToSic.Sxc.Razor;
 internal class NetCoreRazorEngine : EngineBase, IRazorEngine
 {
     private readonly LazySvc<CodeErrorHelpService> _errorHelp;
-    private readonly LazySvc<CodeRootFactory> _codeRootFactory;
+    private readonly LazySvc<CodeApiServiceFactory> _codeRootFactory;
     private readonly LazySvc<IRenderingHelper> _renderingHelper;
     public IRazorRenderer RazorRenderer { get; }
 
     #region Constructor / DI
 
-    public NetCoreRazorEngine(MyServices services, IRazorRenderer razorRenderer, LazySvc<CodeRootFactory> codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<IRenderingHelper> renderingHelper) : base(services)
+    public NetCoreRazorEngine(MyServices services, IRazorRenderer razorRenderer, LazySvc<CodeApiServiceFactory> codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<IRenderingHelper> renderingHelper) : base(services)
     {
         ConnectServices(
             _codeRootFactory = codeRootFactory,

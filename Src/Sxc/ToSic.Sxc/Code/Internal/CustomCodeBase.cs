@@ -29,7 +29,7 @@ public abstract class CustomCodeBase : ServiceForDynamicCode, ICompatibilityLeve
 
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public override void ConnectToRoot(IDynamicCodeRoot codeRoot) => base.Log.Do(() =>
+    public override void ConnectToRoot(ICodeApiService codeRoot) => base.Log.Do(() =>
     {
         base.ConnectToRoot(codeRoot);
         SysHlp.ConnectToRoot(codeRoot);

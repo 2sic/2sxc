@@ -30,7 +30,7 @@ internal class CmsServiceStringWysiwyg: ServiceForDynamicCode
             _imageExtractor = imageExtractor
         );
     }
-    private ServiceKit14 ServiceKit => _svcKit.Get(() => _DynCodeRoot.GetKit<ServiceKit14>());
+    private ServiceKit14 ServiceKit => _svcKit.Get(() => _CodeApiSvc.GetKit<ServiceKit14>());
     private readonly GetOnce<ServiceKit14> _svcKit = new();
 
     #endregion

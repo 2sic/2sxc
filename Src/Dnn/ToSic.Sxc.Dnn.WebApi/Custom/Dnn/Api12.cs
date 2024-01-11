@@ -20,5 +20,5 @@ public abstract class Api12(string logSuffix) : Hybrid.Api12(logSuffix), IDnnDyn
     protected Api12() : this("Dnn12") { }
 
     /// <inheritdoc cref="IHasDnn.Dnn"/>
-    public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
+    public IDnnContext Dnn => (_CodeApiSvc as IHasDnn)?.Dnn;
 }

@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Internal;
 // [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 [method: PrivateApi]
 public abstract class DnnSxcCustomControllerBase(string logSuffix, string insightsGroup = default)
-    : DnnSxcControllerBase(logSuffix, insightsGroup), IHasDynamicCodeRoot
+    : DnnSxcControllerBase(logSuffix, insightsGroup), IHasCodeApiService
 {
     #region Constructor & DI / Setup
 
@@ -36,7 +36,7 @@ public abstract class DnnSxcCustomControllerBase(string logSuffix, string insigh
         var init = DynHlp.Initialize(controllerContext);
         if (this is IGetCodePath thisWithPath)
             thisWithPath.CreateInstancePath = init.Path;
-        _DynCodeRoot = init.Root;
+        _CodeApiSvc = init.Root;
     }
 
     #endregion
@@ -45,7 +45,7 @@ public abstract class DnnSxcCustomControllerBase(string logSuffix, string insigh
 
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public IDynamicCodeRoot _DynCodeRoot { get; private set; }
+    public ICodeApiService _CodeApiSvc { get; private set; }
 
     /// <summary>
     /// The name of the logger in insights. The inheriting class should provide the real name to be used.

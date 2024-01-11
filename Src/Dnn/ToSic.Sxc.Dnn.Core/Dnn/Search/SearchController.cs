@@ -49,7 +49,7 @@ internal class SearchController : ServiceBase
     public SearchController(
         AppsCacheSwitch appsCache,
         Generator<CodeCompiler> codeCompiler,
-        Generator<CodeRootFactory> codeRootFactory,
+        Generator<CodeApiServiceFactory> codeRootFactory,
         Generator<ISite> siteGenerator,
         LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
         LazySvc<ILookUpEngineResolver> dnnLookUpEngineResolver,
@@ -74,7 +74,7 @@ internal class SearchController : ServiceBase
 
     private readonly AppsCacheSwitch _appsCache;
     private readonly Generator<CodeCompiler> _codeCompiler;
-    private readonly Generator<CodeRootFactory> _codeRootFactory;
+    private readonly Generator<CodeApiServiceFactory> _codeRootFactory;
     private readonly Generator<ISite> _siteGenerator;
     private readonly EngineFactory _engineFactory;
     private readonly LazySvc<IAppLoaderTools> _loaderTools;
@@ -358,7 +358,7 @@ internal class SearchController : ServiceBase
         if (!(instance is ICustomizeSearch customizeSearch)) return l.ReturnNull("exit, class do not implements ICustomizeSearch");
 
         // 3. Make sure it has the full context if it's based on DynamicCode (like Code12)
-        if (instance is INeedsDynamicCodeRoot instanceWithContext)
+        if (instance is INeedsCodeApiService instanceWithContext)
         {
             l.A($"attach DynamicCode context to class instance");
             var parentDynamicCodeRoot = _codeRootFactory.New()

@@ -16,6 +16,6 @@ namespace Custom.Dnn;
 public abstract class Razor12 : Hybrid.Razor12, IHasDnn, IRazor12, IDnnRazorCompatibility
 {
     /// <inheritdoc />
-    public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
+    public IDnnContext Dnn => (_CodeApiSvc as IHasDnn)?.Dnn;
 
 }

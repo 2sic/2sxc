@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Edit.Toolbar;
 /// So for now :( it must remain public.
 /// </remarks>
 [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-internal partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsDynamicCodeRoot
+internal partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsCodeApiService
 {
 
     #region Constructors and Init
@@ -72,14 +72,14 @@ internal partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, ITool
 
     private IAppIdentity _currentAppIdentity;
 
-    public void ConnectToRoot(IDynamicCodeRoot codeRoot)
+    public void ConnectToRoot(ICodeApiService codeRoot)
     {
         if (codeRoot == null) return;
         _DynCodeRoot = codeRoot;
         _currentAppIdentity = codeRoot.App;
         Services.ToolbarButtonHelper.Value.MainAppIdentity = _currentAppIdentity;
     }
-    private IDynamicCodeRoot _DynCodeRoot;
+    private ICodeApiService _DynCodeRoot;
 
     #endregion
 

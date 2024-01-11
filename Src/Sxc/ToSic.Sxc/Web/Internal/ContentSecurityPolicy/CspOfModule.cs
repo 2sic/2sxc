@@ -45,7 +45,7 @@ public class CspOfModule: ServiceForDynamicCode
     //private IDynamicCodeRoot _codeRoot;
     private DynamicStack CodeRootSettings()
     {
-        var stack = _DynCodeRoot?.Settings as DynamicStack;
+        var stack = _CodeApiSvc?.Settings as DynamicStack;
         // Enable this for detailed debugging
         //if (stack != null) stack.Debug = true;
         return stack;
@@ -86,7 +86,7 @@ public class CspOfModule: ServiceForDynamicCode
     {
         if (!_featuresService.IsEnabled(SxcFeatures.ContentSecurityPolicyTestUrl.NameId))
             return null;
-        var pageParameters = _DynCodeRoot?.CmsContext?.Page?.Parameters;
+        var pageParameters = _CodeApiSvc?.CmsContext?.Page?.Parameters;
         if (pageParameters == null) return null;
         pageParameters.TryGetValue(CspConstants.CspUrlParameter, out var cspParam);
         return cspParam;

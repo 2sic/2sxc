@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Services;
 
 [PrivateApi("Still WIP")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public interface IUserService: INeedsDynamicCodeRoot
+public interface IUserService: INeedsCodeApiService
 {
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)] 
     IUser Get(int id);

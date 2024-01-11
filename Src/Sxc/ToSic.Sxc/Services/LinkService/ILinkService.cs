@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Services;
 /// - Moved to this new `Services.ILinkService` in v13.05. The previous name will continue to work, but newer features will be missing on that interface. 
 /// </remarks>
 [PublicApi]
-public interface ILinkService: INeedsDynamicCodeRoot, ICanDebug
+public interface ILinkService: INeedsCodeApiService, ICanDebug
     // 2024-01-11 2dm #RemoveILinkHelper - removed, probably never in use, but it could be
     // Preserve till 2024-07-01 (Start Q3), if not used, remove
 //#if NETFRAMEWORK

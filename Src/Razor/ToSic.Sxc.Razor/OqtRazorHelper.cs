@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Engines;
@@ -16,7 +16,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
 {
     #region DynamicCode Attachment / Handling through ViewData
 
-    public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
+    public override void ConnectToRoot(ICodeApiService codeRoot)
     {
         base.ConnectToRoot(codeRoot);
         DynCodeRootMain = codeRoot;
@@ -24,12 +24,12 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
 
     private const string DynCode = "_dynCode";
 
-    public IDynamicCodeRoot DynCodeRootMain
+    public ICodeApiService DynCodeRootMain
     {
         get
         {
             // Child razor page will have _dynCode == null, so it is provided via ViewData from parent razor page.
-            if (_dynCode == null && owner.ViewData?[DynCode] is IDynamicCodeRoot cdRt)
+            if (_dynCode == null && owner.ViewData?[DynCode] is ICodeApiService cdRt)
                 _dynCode = cdRt;
 
             return _dynCode;
@@ -37,7 +37,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
 
         set => _dynCode = value;
     }
-    private IDynamicCodeRoot _dynCode;
+    private ICodeApiService _dynCode;
 
     public ViewDataDictionary<TModel> HandleViewDataInject(ViewDataDictionary<TModel> value)
     {
@@ -48,7 +48,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
     }
 
     // ReSharper disable once InconsistentNaming
-    public override IDynamicCodeRoot _DynCodeRoot => base._DynCodeRoot ?? DynCodeRootMain;
+    public override ICodeApiService _CodeApiSvc => base._CodeApiSvc ?? DynCodeRootMain;
 
     #endregion
 
@@ -70,7 +70,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
     private TypedCode16Helper CreateCodeHelper()
     {
         var myModelData = (_overridePageData ?? owner.Model)?.ToDicInvariantInsensitive();
-        return new(_DynCodeRoot, _DynCodeRoot.Data, myModelData, true, owner.Path);
+        return new(_CodeApiSvc, _CodeApiSvc.Data, myModelData, true, owner.Path);
     }
 
 
@@ -97,7 +97,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
     protected override string GetCodeFullPathForExistsCheck(string path)
     {
         var l = Log.Fn<string>(path);
-        var pathFinder = _DynCodeRoot.GetService<IServerPaths>();
+        var pathFinder = _CodeApiSvc.GetService<IServerPaths>();
         var fullPath = pathFinder.FullAppPath(path);
         return l.ReturnAndLog(fullPath);
     }

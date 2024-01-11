@@ -8,9 +8,9 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Dnn.Code;
 
 [PrivateApi]
-internal class DnnDynamicCodeRoot<TModel, TServiceKit>(DynamicCodeRoot.MyServices services)
-    : DynamicCodeRoot<TModel, TServiceKit>(services, DnnConstants.LogName), Sxc.Code.IDynamicCode, IDnnDynamicCode,
-        IHasDynamicCodeRoot
+internal class DnnCodeApiService<TModel, TServiceKit>(CodeApiService.MyServices services)
+    : CodeApiService<TModel, TServiceKit>(services, DnnConstants.LogName), Sxc.Code.IDynamicCode, IDnnDynamicCode,
+        IHasCodeApiService
     where TModel : class
     where TServiceKit : ServiceKit
 {

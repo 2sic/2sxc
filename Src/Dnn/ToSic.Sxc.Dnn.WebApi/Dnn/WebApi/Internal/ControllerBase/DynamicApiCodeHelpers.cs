@@ -12,6 +12,7 @@ using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context.Internal;
@@ -52,7 +53,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
     private bool _blockContextInitialized;
 
 
-    public (IDynamicCodeRoot Root, string Path) Initialize(HttpControllerContext controllerContext)
+    public (ICodeApiService Root, string Path) Initialize(HttpControllerContext controllerContext)
     {
         var request = controllerContext.Request;
         InitializeBlockContext(request);
@@ -62,7 +63,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
         Log.A($"HasBlock: {block != null}");
 
         var services = SysHlp.GetService<ApiControllerMyServices>().ConnectServices(Log);
-        var codeRoot = services.CodeRootFactory
+        var codeRoot = services.CodeApiServiceFactory
             .BuildCodeRoot(_owner, block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel10);
 
         SysHlp.ConnectToRoot(codeRoot);
@@ -75,7 +76,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
             Log.A("DynCode.App is null");
             var app = GetAppOrNullFromUrlParams(services, request);
             if (app != null)
-                ((IDynamicCodeRootInternal)codeRoot).AttachApp(app);
+                ((ICodeApiServiceInternal)codeRoot).AttachApp(app);
         }
 
         var reqProperties = request.Properties;

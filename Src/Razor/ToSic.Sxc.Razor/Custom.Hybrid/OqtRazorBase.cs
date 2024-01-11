@@ -42,7 +42,7 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
     #region GetService / Logs / DevTools
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
-    public TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
+    public TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public ICodeLog Log => SysHlp.CodeLog;
@@ -50,17 +50,17 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
     [PrivateApi] ILog IHasLog.Log => SysHlp.Log;
 
     [PrivateApi("Not yet ready")]
-    public IDevTools DevTools => _DynCodeRoot.DevTools;
+    public IDevTools DevTools => _CodeApiSvc.DevTools;
 
     #endregion
 
     #region DynCode Root
 
     [PrivateApi]
-    public IDynamicCodeRoot _DynCodeRoot => SysHlp.DynCodeRootMain;
+    public ICodeApiService _CodeApiSvc => SysHlp.DynCodeRootMain;
 
     [PrivateApi]
-    public void ConnectToRoot(IDynamicCodeRoot parent) => SysHlp.ConnectToRoot(parent);
+    public void ConnectToRoot(ICodeApiService parent) => SysHlp.ConnectToRoot(parent);
 
     [RazorInject]
     [PrivateApi]

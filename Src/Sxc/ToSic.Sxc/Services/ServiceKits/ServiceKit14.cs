@@ -57,7 +57,7 @@ public class ServiceKit14() : ServiceKit("Sxc.Kit14")
     /// The Edit service, same as the main Edit service
     /// </summary>
     // Important: must share the Edit from the _DynCodeRoot for scenarios where Enable was set manually
-    public IEditService Edit => _edit.Get(() => _DynCodeRoot.Edit ?? GetService<IEditService>());
+    public IEditService Edit => _edit.Get(() => _CodeApiSvc.Edit ?? GetService<IEditService>());
     private readonly GetOnce<IEditService> _edit = new();
 
 

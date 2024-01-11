@@ -12,6 +12,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Internal;
 using MailMessage = System.Net.Mail.MailMessage;
 
@@ -34,7 +35,7 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
     }
 
     /// <inheritdoc />
-    public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
+    public override void ConnectToRoot(ICodeApiService codeRoot)
     {
         base.ConnectToRoot(codeRoot);
         App = codeRoot.App;

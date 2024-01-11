@@ -38,7 +38,7 @@ public abstract class DynamicCode : CustomCodeBase, IHasCodeLog, IDynamicCode
     public new ICodeLog Log => SysHlp.CodeLog;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
-    public TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
+    public TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
 
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel10;
 
@@ -47,15 +47,15 @@ public abstract class DynamicCode : CustomCodeBase, IHasCodeLog, IDynamicCode
     #region App / Data / Content / Header
 
     /// <inheritdoc cref="IDynamicCode.App" />
-    public IApp App => _DynCodeRoot?.App;
+    public IApp App => _CodeApiSvc?.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IBlockInstance Data => _DynCodeRoot?.Data;
+    public IBlockInstance Data => _CodeApiSvc?.Data;
 
     /// <inheritdoc cref="IDynamicCode.Content" />
-    public dynamic Content => _DynCodeRoot?.Content;
+    public dynamic Content => _CodeApiSvc?.Content;
     /// <inheritdoc cref="IDynamicCode.Header" />
-    public dynamic Header => _DynCodeRoot?.Header;
+    public dynamic Header => _CodeApiSvc?.Header;
 
     #endregion
 
@@ -63,9 +63,9 @@ public abstract class DynamicCode : CustomCodeBase, IHasCodeLog, IDynamicCode
     #region Link and Edit
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => _DynCodeRoot?.Link;
+    public ILinkService Link => _CodeApiSvc?.Link;
     /// <inheritdoc cref="IDynamicCode.Edit" />
-    public IEditService Edit => _DynCodeRoot?.Edit;
+    public IEditService Edit => _CodeApiSvc?.Edit;
 
     #endregion
 
@@ -84,33 +84,33 @@ public abstract class DynamicCode : CustomCodeBase, IHasCodeLog, IDynamicCode
     #region Context, Settings, Resources
 
     /// <inheritdoc cref="IDynamicCode.CmsContext" />
-    public ICmsContext CmsContext => _DynCodeRoot?.CmsContext;
+    public ICmsContext CmsContext => _CodeApiSvc?.CmsContext;
 
     #endregion CmsContext
 
     #region AsDynamic and AsEntity
 
     /// <inheritdoc />
-    public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot?._Cdf.Json2Jacket(json, fallback);
+    public dynamic AsDynamic(string json, string fallback = default) => _CodeApiSvc?._Cdf.Json2Jacket(json, fallback);
 
     /// <inheritdoc />
-    public dynamic AsDynamic(IEntity entity) => _DynCodeRoot?._Cdf.CodeAsDyn(entity);
+    public dynamic AsDynamic(IEntity entity) => _CodeApiSvc?._Cdf.CodeAsDyn(entity);
 
     /// <inheritdoc />
-    public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot?._Cdf.AsDynamicFromObject(dynamicEntity);
+    public dynamic AsDynamic(object dynamicEntity) => _CodeApiSvc?._Cdf.AsDynamicFromObject(dynamicEntity);
 
     /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
-    public dynamic AsDynamic(params object[] entities) => _DynCodeRoot?._Cdf.MergeDynamic(entities);
+    public dynamic AsDynamic(params object[] entities) => _CodeApiSvc?._Cdf.MergeDynamic(entities);
 
     /// <inheritdoc />
-    public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot?._Cdf.AsEntity(dynamicEntity);
+    public IEntity AsEntity(object dynamicEntity) => _CodeApiSvc?._Cdf.AsEntity(dynamicEntity);
 
     #endregion
 
     #region AsList
 
     /// <inheritdoc />
-    public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?._Cdf.CodeAsDynList(list);
+    public IEnumerable<dynamic> AsList(object list) => _CodeApiSvc?._Cdf.CodeAsDynList(list);
 
     #endregion
 
@@ -118,11 +118,11 @@ public abstract class DynamicCode : CustomCodeBase, IHasCodeLog, IDynamicCode
 
     /// <inheritdoc />
     public T CreateSource<T>(IDataStream source) where T : IDataSource
-        => _DynCodeRoot.CreateSource<T>(source);
+        => _CodeApiSvc.CreateSource<T>(source);
 
     /// <inheritdoc />
     public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
-        => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
+        => _CodeApiSvc.CreateSource<T>(inSource, configurationProvider);
 
 
     #endregion
@@ -130,7 +130,7 @@ public abstract class DynamicCode : CustomCodeBase, IHasCodeLog, IDynamicCode
     #region AsAdam
 
     /// <inheritdoc />
-    public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot?.AsAdam(item, fieldName);
+    public IFolder AsAdam(ICanBeEntity item, string fieldName) => _CodeApiSvc?.AsAdam(item, fieldName);
 
     #endregion
 }

@@ -7,6 +7,7 @@ using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Edit.Toolbar;
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.Code;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class TypedModel(
     IDictionary<string, object> paramsDictionary,
-    IDynamicCodeRoot codeRoot,
+    ICodeApiService codeRoot,
     bool isRazor,
     string razorFileName)
     : ITypedModel

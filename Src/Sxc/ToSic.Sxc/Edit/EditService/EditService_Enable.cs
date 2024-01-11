@@ -26,7 +26,7 @@ partial class EditService
         //Eav.Parameters.Protect(noParamOrder,
         //    $"{nameof(js)},{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
 
-        var ps = _DynCodeRoot.GetKit<ServiceKit14>()?.Page;
+        var ps = _CodeApiSvc.GetKit<ServiceKit14>()?.Page;
         if (ps == null)
             return (null, "page service not found");
 

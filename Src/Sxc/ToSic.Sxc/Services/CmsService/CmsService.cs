@@ -24,7 +24,7 @@ internal class CmsService: ServiceForDynamicCode, ICmsService
     ) : base(SxcLogging.SxcLogName + ".CmsSrv")
     {
         ConnectServices(
-            _stringWysiwyg = stringWysiwyg.SetInit(s => s.ConnectToRoot(_DynCodeRoot))
+            _stringWysiwyg = stringWysiwyg.SetInit(s => s.ConnectToRoot(_CodeApiSvc))
         );
     }
 
@@ -42,7 +42,7 @@ internal class CmsService: ServiceForDynamicCode, ICmsService
         var field = thing as IField;
         var l = Log.Fn<IHtmlTag>($"Field: {field?.Name}");
         // Initialize the container helper, as we'll use it a few times
-        var cntHelper = new CmsServiceContainerHelper(_DynCodeRoot, field, container, classes, toolbar, Log);
+        var cntHelper = new CmsServiceContainerHelper(_CodeApiSvc, field, container, classes, toolbar, Log);
 
         // New v17 - preprocess the tweaks if available
         var value = field?.Raw?.ToString() ?? thing?.ToString();
@@ -71,7 +71,7 @@ internal class CmsService: ServiceForDynamicCode, ICmsService
             // ...wysiwyg
             if (inputType == InputTypes.InputTypeWysiwyg)
             {
-                var fieldAdam = _DynCodeRoot.AsAdam(field.Parent, field.Name);
+                var fieldAdam = _CodeApiSvc.AsAdam(field.Parent, field.Name);
                 var htmlResult = _stringWysiwyg.New()
                     .Init(field, contentType, attribute, fieldAdam, debug, imageSettings)
                     .HtmlForStringAndWysiwyg(value);

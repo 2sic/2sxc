@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Services;
 /// - Moved to `ToSic.Sxc.Services.IEditService` in v13.05
 /// </remarks>
 [PublicApi]
-public interface IEditService: IHasLog, INeedsDynamicCodeRoot
+public interface IEditService: IHasLog, INeedsCodeApiService
 // 2024-01-11 2dm #RemoveIInPageEditingSystem - removed, probably never in use, but it could be
 // Preserve till 2024-07-01 (Start Q3), if not used, remove
 //#if NETFRAMEWORK

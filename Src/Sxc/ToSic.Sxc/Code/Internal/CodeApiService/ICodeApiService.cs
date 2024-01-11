@@ -1,12 +1,10 @@
 ﻿using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
-namespace ToSic.Sxc.Code;
+namespace ToSic.Sxc.Code.Internal;
 
 /// <summary>
 /// This is the same as IDynamicCode, but the root object. 
@@ -14,7 +12,7 @@ namespace ToSic.Sxc.Code;
 /// </summary>
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public interface IDynamicCodeRoot : IDynamicCode12
+public interface ICodeApiService : IDynamicCode12
 {
     //[PrivateApi("WIP")]
     //IBlock _Block { get; }
@@ -33,7 +31,7 @@ public interface IDynamicCodeRoot : IDynamicCode12
     #endregion
 }
 
-internal interface IDynamicCodeRootInternal
+internal interface ICodeApiServiceInternal
 {
     [PrivateApi]
     void AttachApp(IApp app);

@@ -5,9 +5,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context;
@@ -18,7 +16,7 @@ using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 using IApp = ToSic.Sxc.Apps.IApp;
 // ReSharper disable InheritdocInvalidUsage
 
-namespace ToSic.Sxc.Code;
+namespace ToSic.Sxc.Code.Internal;
 
 /// <summary>
 /// Base class for any dynamic code root objects. <br/>
@@ -26,8 +24,8 @@ namespace ToSic.Sxc.Code;
 /// If you create code for dynamic compilation, you'll always inherit from ToSic.Sxc.Dnn.DynamicCode.
 /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
 /// </summary>
-[PublicApi]
-public abstract partial class DynamicCodeRoot : ServiceBase<DynamicCodeRoot.MyServices>, IDynamicCodeRoot
+[PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
+public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServices>, ICodeApiService
 {
     #region Constructor
 
@@ -73,7 +71,7 @@ public abstract partial class DynamicCodeRoot : ServiceBase<DynamicCodeRoot.MySe
     }
 
     [PrivateApi]
-    protected internal DynamicCodeRoot(MyServices services, string logPrefix) : base(services, logPrefix + ".DynCdR")
+    protected internal CodeApiService(MyServices services, string logPrefix) : base(services, logPrefix + ".DynCdR")
     {
         _serviceProvider = services.ServiceProvider;
 
@@ -95,16 +93,16 @@ public abstract partial class DynamicCodeRoot : ServiceBase<DynamicCodeRoot.MySe
     public TService GetService<TService>() where TService : class
     {
         var newService = _serviceProvider.Build<TService>(Log);
-        if (newService is INeedsDynamicCodeRoot newWithNeeds)
+        if (newService is INeedsCodeApiService newWithNeeds)
             newWithNeeds.ConnectToRoot(this);
         return newService;
     }
 
     [PrivateApi]
-    public virtual IDynamicCodeRoot InitDynCodeRoot(IBlock block, ILog parentLog)
+    public virtual ICodeApiService InitDynCodeRoot(IBlock block, ILog parentLog)
     {
         this.LinkLog(parentLog ?? block?.Log);
-        var cLog = Log.Fn<IDynamicCodeRoot>();
+        var cLog = Log.Fn<ICodeApiService>();
 
         if (block == null)
             return cLog.Return(this, "no block");
@@ -140,7 +138,7 @@ public abstract partial class DynamicCodeRoot : ServiceBase<DynamicCodeRoot.MySe
     #region Accessor to Root
 
     // ReSharper disable once InconsistentNaming
-    [PrivateApi] public IDynamicCodeRoot _DynCodeRoot => this;
+    [PrivateApi] public ICodeApiService _CodeApiSvc => this;
 
     #endregion
 

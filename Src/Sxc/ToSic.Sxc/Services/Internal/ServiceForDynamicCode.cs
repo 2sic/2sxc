@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Services.Internal;
 //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 [method: PrivateApi]
 public abstract class ServiceForDynamicCode(string logName)
-    : ServiceBase(logName), INeedsDynamicCodeRoot, IHasDynamicCodeRoot, ICanDebug
+    : ServiceBase(logName), INeedsCodeApiService, IHasCodeApiService, ICanDebug
 {
     /// <summary>
     /// Connect to CodeRoot and it's log
@@ -22,7 +22,7 @@ public abstract class ServiceForDynamicCode(string logName)
     /// <param name="codeRoot"></param>
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot) => ConnectToRoot(codeRoot, null);
+    public virtual void ConnectToRoot(ICodeApiService codeRoot) => ConnectToRoot(codeRoot, null);
 
     /// <summary>
     /// Connect to CodeRoot and a custom log
@@ -31,14 +31,14 @@ public abstract class ServiceForDynamicCode(string logName)
     /// <param name="parentLog"></param>
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public void ConnectToRoot(IDynamicCodeRoot codeRoot, ILog parentLog)
+    public void ConnectToRoot(ICodeApiService codeRoot, ILog parentLog)
     {
         // Avoid unnecessary reconnects
         if (_alreadyConnected) return;
         _alreadyConnected = true;
 
         // Remember the parent
-        _DynCodeRoot = codeRoot;
+        _CodeApiSvc = codeRoot;
         // Link the logs
         this.LinkLog(parentLog ?? codeRoot?.Log);
         // report connection in log
@@ -48,7 +48,7 @@ public abstract class ServiceForDynamicCode(string logName)
 
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public virtual IDynamicCodeRoot _DynCodeRoot { get; private set; }
+    public virtual ICodeApiService _CodeApiSvc { get; private set; }
 
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

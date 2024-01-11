@@ -42,10 +42,10 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     /// <param name="parent"></param>
     protected CodeTyped(IHasCodeContext parent) : base("Cst.CodeTy")
     {
-        if (parent is not IHasDynamicCodeRoot dynCodeParent)
+        if (parent is not IHasCodeApiService dynCodeParent)
             return;
 
-        base.ConnectToRoot(dynCodeParent._DynCodeRoot);
+        base.ConnectToRoot(dynCodeParent._CodeApiSvc);
     }
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
@@ -68,9 +68,9 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     public ServiceKit16 Kit => _kit.Get(() => CodeRootOrError().GetKit<ServiceKit16>());
     private readonly GetOnce<ServiceKit16> _kit = new();
 
-    private IDynamicCodeRoot CodeRootOrError([CallerMemberName] string propName = default)
+    private ICodeApiService CodeRootOrError([CallerMemberName] string propName = default)
     {
-        if (_DynCodeRoot != null) return _DynCodeRoot;
+        if (_CodeApiSvc != null) return _CodeApiSvc;
 
         var message = $"Can't access properties such as {propName}, because the Code-Context is not known. " +
                       $"This is typical in code which is in the **ThisCode** folder. " +

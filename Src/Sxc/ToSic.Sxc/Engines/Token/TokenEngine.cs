@@ -78,10 +78,10 @@ public class TokenEngine : EngineBase
 
     #region Constructor / DI
 
-    private readonly LazySvc<CodeRootFactory> _codeRootFactory;
+    private readonly LazySvc<CodeApiServiceFactory> _codeRootFactory;
     private readonly Generator<AppConfigDelegate> _appConfigDelegateGenerator;
 
-    public TokenEngine(MyServices services, LazySvc<CodeRootFactory> codeRootFactory, Generator<AppConfigDelegate> appConfigDelegateGenerator) : base(services) =>
+    public TokenEngine(MyServices services, LazySvc<CodeApiServiceFactory> codeRootFactory, Generator<AppConfigDelegate> appConfigDelegateGenerator) : base(services) =>
         ConnectServices(
             _codeRootFactory = codeRootFactory,
             _appConfigDelegateGenerator = appConfigDelegateGenerator
@@ -89,7 +89,7 @@ public class TokenEngine : EngineBase
 
     #endregion
 
-    private IDynamicCodeRoot _data;
+    private ICodeApiService _data;
 
     private TokenReplace _tokenReplace;
 

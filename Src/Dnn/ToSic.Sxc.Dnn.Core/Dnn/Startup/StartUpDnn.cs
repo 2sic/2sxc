@@ -16,6 +16,7 @@ using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Adam;
@@ -79,10 +80,10 @@ public static class StartUpDnnCore
         services.TryAddTransient<DnnInstallLogger>();
 
 
-        services.TryAddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
-        services.TryAddTransient<DnnDynamicCodeRoot>();
+        services.TryAddTransient<CodeApiService, DnnCodeApiService>();
+        services.TryAddTransient<DnnCodeApiService>();
         // New v14
-        services.TryAddTransient(typeof(DynamicCodeRoot<,>), typeof(DnnDynamicCodeRoot<,>));
+        services.TryAddTransient(typeof(CodeApiService<,>), typeof(DnnCodeApiService<,>));
 
 
         // ADAM

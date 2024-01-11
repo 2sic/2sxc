@@ -3,6 +3,7 @@ using ToSic.Eav.Context;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
 
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class CspOfApp : ServiceForDynamicCode
 {
-    public int AppId => ((IDynamicCodeRootInternal)_DynCodeRoot)?._Block?.AppId ?? 0;
+    public int AppId => ((ICodeApiServiceInternal)_CodeApiSvc)?._Block?.AppId ?? 0;
 
     #region Constructor
 
@@ -34,7 +35,7 @@ public class CspOfApp : ServiceForDynamicCode
     /// Important: page-parameters etc. are not available at this time, so don't try to get them until needed
     /// </summary>
     /// <param name="codeRoot"></param>
-    public override void ConnectToRoot(IDynamicCodeRoot codeRoot) => Log.Do(() =>
+    public override void ConnectToRoot(ICodeApiService codeRoot) => Log.Do(() =>
     {
         base.ConnectToRoot(codeRoot);
         // Also connect upstream CspOfModule in case it's not yet connected
@@ -53,7 +54,7 @@ public class CspOfApp : ServiceForDynamicCode
         var cLog = Log.Fn<string>(AppId.ToString());
 
         // Get Stack
-        if (!(_DynCodeRoot?.Settings is DynamicStack stack)) 
+        if (!(_CodeApiSvc?.Settings is DynamicStack stack)) 
             return cLog.ReturnNull("no stack");
 
         // Enable this for detailed debugging

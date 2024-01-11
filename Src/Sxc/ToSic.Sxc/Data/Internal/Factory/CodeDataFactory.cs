@@ -7,6 +7,7 @@ using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Internal;
@@ -69,11 +70,11 @@ public partial class CodeDataFactory: ServiceForDynamicCode
 
     // If we don't have a DynCodeRoot, try to generate the language codes and compatibility
     // There are cases where these were supplied using SetFallbacks, but in some cases none of this is known
-    internal string[] Dimensions => _dimensions.Get(() => _DynCodeRoot?.CmsContext.SafeLanguagePriorityCodes()
+    internal string[] Dimensions => _dimensions.Get(() => _CodeApiSvc?.CmsContext.SafeLanguagePriorityCodes()
                                                           ?? _siteOrNull.SafeLanguagePriorityCodes());
     private readonly GetOnce<string[]> _dimensions = new();
 
-    internal IBlock BlockOrNull => ((IDynamicCodeRootInternal)_DynCodeRoot)?._Block;
+    internal IBlock BlockOrNull => ((ICodeApiServiceInternal)_CodeApiSvc)?._Block;
 
     #endregion
 

@@ -102,8 +102,8 @@ public static class Factory
     public static IDnnDynamicCode DynamicCode(IBlockBuilder blockBuilder)
     {
         DnnStaticDi.CodeInfos.Warn(V13To17($"ToSic.Sxc.Dnn.Factory.{nameof(DynamicCode)}", "https://go.2sxc.org/brc-13-dnn-factory"));
-        return StaticBuild<CodeRootFactory>()
-                .BuildCodeRoot(customCodeOrNull: null, blockBuilder.Block, NewLog(), CompatibilityLevels.CompatibilityLevel10) as DnnDynamicCodeRoot;
+        return StaticBuild<CodeApiServiceFactory>()
+                .BuildCodeRoot(customCodeOrNull: null, blockBuilder.Block, NewLog(), CompatibilityLevels.CompatibilityLevel10) as DnnCodeApiService;
     }
 
     /// <summary>

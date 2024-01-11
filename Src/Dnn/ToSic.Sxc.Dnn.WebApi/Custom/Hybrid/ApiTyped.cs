@@ -38,7 +38,7 @@ namespace Custom.Hybrid;
 [DnnLogExceptions]
 //[DefaultToNewtonsoftForHttpJson] - // !!! v16 should now default to normal
 [JsonFormatter]
-public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynamicWebApi, IHasDynamicCodeRoot, IDynamicCode16, IGetCodePath
+public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynamicWebApi, IHasCodeApiService, IDynamicCode16, IGetCodePath
 {
     #region Setup
 
@@ -56,7 +56,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     /// <inheritdoc cref="IDynamicCodeKit{ServiceKit14}.Kit" />
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
-    public ServiceKit16 Kit => _kit.Get(() => _DynCodeRoot.GetKit<ServiceKit16>());
+    public ServiceKit16 Kit => _kit.Get(() => _CodeApiSvc.GetKit<ServiceKit16>());
     private readonly GetOnce<ServiceKit16> _kit = new();
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
@@ -74,7 +74,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => _DynCodeRoot?.Link;
+    public ILinkService Link => _CodeApiSvc?.Link;
 
     [PrivateApi("Not yet ready")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -85,16 +85,16 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     #region MyContext & UniqueKey
 
     /// <inheritdoc cref="IDynamicCode16.MyContext" />
-    public ICmsContext MyContext => _DynCodeRoot.CmsContext;
+    public ICmsContext MyContext => _CodeApiSvc.CmsContext;
 
     /// <inheritdoc cref="IDynamicCode16.MyPage" />
-    public ICmsPage MyPage => _DynCodeRoot.CmsContext.Page;
+    public ICmsPage MyPage => _CodeApiSvc.CmsContext.Page;
 
     /// <inheritdoc cref="IDynamicCode16.MyUser" />
-    public ICmsUser MyUser => _DynCodeRoot.CmsContext.User;
+    public ICmsUser MyUser => _CodeApiSvc.CmsContext.User;
 
     /// <inheritdoc cref="IDynamicCode16.MyView" />
-    public ICmsView MyView => _DynCodeRoot.CmsContext.View;
+    public ICmsView MyView => _CodeApiSvc.CmsContext.View;
 
     /// <inheritdoc cref="IDynamicCode16.UniqueKey" />
     public string UniqueKey => Kit.Key.UniqueKey;
@@ -140,7 +140,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     #region New App, Settings, Resources
 
     /// <inheritdoc />
-    public IAppTyped App => (IAppTyped)_DynCodeRoot.App;
+    public IAppTyped App => (IAppTyped)_CodeApiSvc.App;
 
     /// <inheritdoc cref="IDynamicCode16.AllResources" />
     public ITypedStack AllResources => CodeHelper.AllResources;
@@ -158,7 +158,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
     public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default) 
-        => _DynCodeRoot.CreateInstance(path, relativePath: ((IGetCodePath)this).CreateInstancePath, name: className);
+        => _CodeApiSvc.CreateInstance(path, relativePath: ((IGetCodePath)this).CreateInstancePath, name: className);
 
     #endregion
 
@@ -169,7 +169,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     private TypedCode16Helper CreateCodeHelper()
     {
-        return new TypedCode16Helper(_DynCodeRoot, MyData, null, false, "c# WebApiController");
+        return new TypedCode16Helper(_CodeApiSvc, MyData, null, false, "c# WebApiController");
     }
 
     public ITypedItem MyItem => CodeHelper.MyItem;
@@ -178,7 +178,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     public ITypedItem MyHeader => CodeHelper.MyHeader;
 
-    public IBlockInstance MyData => _DynCodeRoot.Data;
+    public IBlockInstance MyData => _CodeApiSvc.Data;
 
     #endregion
 
@@ -187,25 +187,25 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     /// <inheritdoc cref="IDynamicCode16.AsItem" />
     public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
-        => _DynCodeRoot._Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
+        => _CodeApiSvc._Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
 
     /// <inheritdoc cref="IDynamicCode16.AsItems" />
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _DynCodeRoot._Cdf.AsItems(list, propsRequired: propsRequired ?? true);
+        => _CodeApiSvc._Cdf.AsItems(list, propsRequired: propsRequired ?? true);
 
     /// <inheritdoc cref="IDynamicCode16.AsEntity" />
-    public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot._Cdf.AsEntity(thing);
+    public IEntity AsEntity(ICanBeEntity thing) => _CodeApiSvc._Cdf.AsEntity(thing);
 
     /// <inheritdoc cref="IDynamicCode16.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _DynCodeRoot._Cdf.AsTyped(original, propsRequired: propsRequired);
+        => _CodeApiSvc._Cdf.AsTyped(original, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _DynCodeRoot._Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
+        => _CodeApiSvc._Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsStack" />
-    public ITypedStack AsStack(params object[] items) => _DynCodeRoot._Cdf.AsStack(items);
+    public ITypedStack AsStack(params object[] items) => _CodeApiSvc._Cdf.AsStack(items);
 
     #endregion
 

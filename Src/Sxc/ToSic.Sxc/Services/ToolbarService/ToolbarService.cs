@@ -75,7 +75,7 @@ internal class ToolbarService: ServiceForDynamicCode, IToolbarService
         
         // The following lines must be just as this, because it's a functional object, where each call may return a new copy
         var tlb = _toolbarGenerator.New();
-        tlb.ConnectToRoot(_DynCodeRoot);
+        tlb.ConnectToRoot(_CodeApiSvc);
 
         tlb = ((ToolbarBuilder)tlb).Toolbar(toolbarTemplate: toolbarTemplate, target: target, tweak: tweak, ui: ui, parameters: parameters, prefill: prefill);
 

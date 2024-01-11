@@ -12,6 +12,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Services.Internal;
 
 
@@ -43,10 +44,10 @@ internal partial class DataService: ServiceForDynamicCode, IDataService
         );
     }
 
-    public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
+    public override void ConnectToRoot(ICodeApiService codeRoot)
     {
         base.ConnectToRoot(codeRoot);
-        Setup(codeRoot.App, () => (codeRoot as DynamicCodeRoot)?.LookUpForDataSources);
+        Setup(codeRoot.App, () => (codeRoot as CodeApiService)?.LookUpForDataSources);
     }
 
     [PrivateApi]
@@ -72,9 +73,9 @@ internal partial class DataService: ServiceForDynamicCode, IDataService
         }
 
         var newDs = new DataService(_dataSources, _catalog, _appStates, _queryManager, _user);
-        if (_DynCodeRoot != null)
+        if (_CodeApiSvc != null)
         {
-            newDs.ConnectToRoot(_DynCodeRoot);
+            newDs.ConnectToRoot(_CodeApiSvc);
             newDs.Setup(appIdentity, null);
         }
         else

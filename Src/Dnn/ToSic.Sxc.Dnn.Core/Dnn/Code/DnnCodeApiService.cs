@@ -1,5 +1,6 @@
 ﻿using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Dnn.Code;
@@ -8,5 +9,4 @@ namespace ToSic.Sxc.Dnn.Code;
 /// The basic DnnDynamicCode without explicitly typed model / kit
 /// </summary>
 [PrivateApi]
-internal class DnnDynamicCodeRoot(DynamicCodeRoot.MyServices services)
-    : DnnDynamicCodeRoot<object, ServiceKit>(services);
+internal class DnnCodeApiService(CodeApiService.MyServices services) : DnnCodeApiService<object, ServiceKit>(services);

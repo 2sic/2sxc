@@ -4,6 +4,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web;
@@ -26,13 +27,13 @@ internal partial class EditService : ServiceForDynamicCode, IEditService
     // 2024-01-10 2dm disabled #WrapInContext - was for internal only, seems not to be used? Was created 2018? https://github.com/2sic/2sxc/issues/1479
     //private readonly LazySvc<IRenderingHelper> _renderHelper;
 
-    public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
+    public override void ConnectToRoot(ICodeApiService codeRoot)
     {
         base.ConnectToRoot(codeRoot);
-        SetBlock(codeRoot, ((IDynamicCodeRootInternal)codeRoot)._Block);
+        SetBlock(codeRoot, ((ICodeApiServiceInternal)codeRoot)._Block);
     }
 
-    internal IEditService SetBlock(IDynamicCodeRoot codeRoot, IBlock block)
+    internal IEditService SetBlock(ICodeApiService codeRoot, IBlock block)
     {
         Block = block;
         var user = codeRoot?.CmsContext?.User;

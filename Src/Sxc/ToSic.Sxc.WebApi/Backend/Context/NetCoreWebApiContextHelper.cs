@@ -65,14 +65,14 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
         // Use the ServiceProvider of the current request to build DynamicCodeRoot
         // Note that BlockOptional was already retrieved in the base class
         var codeRoot = context.HttpContext.RequestServices
-            .Build<CodeRootFactory>()
+            .Build<CodeApiServiceFactory>()
             .BuildCodeRoot(_owner, BlockOptional, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel12);
         ConnectToRoot(codeRoot);
 
         AdamCode = codeRoot.GetService<AdamCode>();
 
         // In case SxcBlock was null, there is no instance, but we may still need the app
-        if (_DynCodeRoot.App == null)
+        if (_CodeApiSvc.App == null)
         {
             Log.A("DynCode.App is null");
             TryToAttachAppFromUrlParams(context);
@@ -104,7 +104,7 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
                 // Look up if page publishing is enabled - if module context is not available, always false
                 base.Log.A($"AppId: {appId}");
                 var app = LoadAppOnly(appId, CtxResolver.Site().Site);
-                ((IDynamicCodeRootInternal)_DynCodeRoot).AttachApp(app);
+                ((ICodeApiServiceInternal)_CodeApiSvc).AttachApp(app);
                 found = true;
             }
         }

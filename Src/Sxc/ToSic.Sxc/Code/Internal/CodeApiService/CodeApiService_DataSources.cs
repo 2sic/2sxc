@@ -6,9 +6,9 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
-namespace ToSic.Sxc.Code;
+namespace ToSic.Sxc.Code.Internal;
 
-public partial class DynamicCodeRoot
+public partial class CodeApiService
 {
     #region DataSource and ConfigurationProvider (for DS) section
 

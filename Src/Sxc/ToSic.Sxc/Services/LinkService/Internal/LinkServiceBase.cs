@@ -29,7 +29,7 @@ public abstract class LinkServiceBase : ServiceForDynamicCode, ILinkService
     private readonly LazySvc<ILinkPaths> _linkPathsLazy;
     public ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
-    [PrivateApi] protected IApp App => _DynCodeRoot.App;
+    [PrivateApi] protected IApp App => _CodeApiSvc.App;
 
 
     /// <inheritdoc />

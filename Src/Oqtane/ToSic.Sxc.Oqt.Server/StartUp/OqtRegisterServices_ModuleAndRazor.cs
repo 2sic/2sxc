@@ -10,6 +10,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Integration.Modules;
 using ToSic.Sxc.Oqt.Server.Blocks;
 using ToSic.Sxc.Oqt.Server.Cms;
@@ -62,8 +63,8 @@ partial class OqtRegisterServices
         // Views / Templates / Razor: View Builder
         services.TryAddTransient<IOqtSxcViewBuilder, OqtSxcViewBuilder>();
 
-        services.TryAddTransient<DynamicCodeRoot, OqtDynamicCodeRoot>();
-        services.TryAddTransient(typeof(DynamicCodeRoot<,>), typeof(OqtDynamicCodeRoot<,>));
+        services.TryAddTransient<CodeApiService, OqtCodeApiService>();
+        services.TryAddTransient(typeof(CodeApiService<,>), typeof(OqtCodeApiService<,>));
         services.TryAddTransient<IWebApiContextBuilder, OqtGetBlock>();
 
         // v13

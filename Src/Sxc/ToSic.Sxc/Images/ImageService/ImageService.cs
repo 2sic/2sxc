@@ -30,9 +30,9 @@ internal partial class ImageService: ServiceForDynamicCode, IImageService
     internal ImgResizeLinker ImgLinker { get; }
     internal IFeaturesService Features { get; }
 
-    internal IEditService EditOrNull => _DynCodeRoot?.Edit;
+    internal IEditService EditOrNull => _CodeApiSvc?.Edit;
 
-    internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => _DynCodeRoot?.GetService<IToolbarService>());
+    internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => _CodeApiSvc?.GetService<IToolbarService>());
     private readonly GetOnce<IToolbarService> _toolbarSvc = new();
 
     #endregion
@@ -57,9 +57,9 @@ internal partial class ImageService: ServiceForDynamicCode, IImageService
 
     private dynamic GetCodeRootSettingsByName(string strName) => Log.Func($"{strName}", () =>
     {
-        var result = _DynCodeRoot?.Settings?.Get($"Settings.Images.{strName}");
+        var result = _CodeApiSvc?.Settings?.Get($"Settings.Images.{strName}");
         return ((object)result, $"found: {result != null}");
-    }, enabled: Debug, message: $"code root: {_DynCodeRoot != null}");
+    }, enabled: Debug, message: $"code root: {_CodeApiSvc != null}");
 
     /// <summary>
     /// Convert to Multi-Resize Settings

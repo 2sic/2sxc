@@ -1,11 +1,10 @@
 ﻿using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.HotBuild;
 
-namespace ToSic.Sxc.Code;
+namespace ToSic.Sxc.Code.Internal;
 
-public partial class DynamicCodeRoot
+public partial class CodeApiService
 {
     #region SharedCode Compiler
 
@@ -29,7 +28,7 @@ public partial class DynamicCodeRoot
         var typeName = instance.GetType().FullName;
 
         // if it supports all our known context properties, attach them
-        if (instance is INeedsDynamicCodeRoot needsRoot)
+        if (instance is INeedsCodeApiService needsRoot)
         {
             l.A($"will attach root / Kit to {typeName}");
             needsRoot.ConnectToRoot(this);

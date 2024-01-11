@@ -47,9 +47,9 @@ static partial class RegisterSxcServices
         services.AddTransient<IPagePublishingGetSettings, PagePublishingGetSettingsForbidden>();
 
         // Code / Dynamic Code
-        services.TryAddTransient<CodeRootFactory>();
-        services.TryAddTransient<DynamicCodeRoot, DynamicCodeRootUnknown>();
-        services.TryAddTransient(typeof(DynamicCodeRoot<,>), typeof(DynamicCodeRootUnknown<,>));
+        services.TryAddTransient<CodeApiServiceFactory>();
+        services.TryAddTransient<CodeApiService, CodeApiServiceUnknown>();
+        services.TryAddTransient(typeof(CodeApiService<,>), typeof(CodeApiServiceUnknown<,>));
         services.TryAddTransient<IModule, ModuleUnknown>();
             
         // 11.08 - fallback in case not added

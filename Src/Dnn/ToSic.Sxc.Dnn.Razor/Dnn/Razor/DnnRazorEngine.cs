@@ -41,16 +41,16 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     #region Constructor / DI
 
     private readonly LazySvc<CodeErrorHelpService> _errorHelp;
-    private readonly CodeRootFactory _codeRootFactory;
+    private readonly CodeApiServiceFactory _codeApiServiceFactory;
     private readonly LazySvc<SourceAnalyzer> _sourceAnalyzer;
     private readonly LazySvc<ThisAppCodeLoader> _thisAppCodeLoader;
     private readonly LazySvc<IRoslynBuildManager> _roslynBuildManager;
     private readonly AssemblyResolver _assemblyResolver;
 
-    public DnnRazorEngine(MyServices helpers, CodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<SourceAnalyzer> sourceAnalyzer, LazySvc<ThisAppCodeLoader> thisAppCodeLoader, LazySvc<IRoslynBuildManager> roslynBuildManager, AssemblyResolver assemblyResolver) : base(helpers)
+    public DnnRazorEngine(MyServices helpers, CodeApiServiceFactory codeApiServiceFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<SourceAnalyzer> sourceAnalyzer, LazySvc<ThisAppCodeLoader> thisAppCodeLoader, LazySvc<IRoslynBuildManager> roslynBuildManager, AssemblyResolver assemblyResolver) : base(helpers)
     {
         ConnectServices(
-            _codeRootFactory = codeRootFactory,
+            _codeApiServiceFactory = codeApiServiceFactory,
             _errorHelp = errorHelp,
             _sourceAnalyzer = sourceAnalyzer,
             _thisAppCodeLoader = thisAppCodeLoader,
@@ -227,7 +227,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     private void InitHelpers(RazorComponentBase webPage)
     {
         var l = Log.Fn();
-        var dynCode = _codeRootFactory.BuildCodeRoot(webPage, Block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel9Old);
+        var dynCode = _codeApiServiceFactory.BuildCodeRoot(webPage, Block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel9Old);
         webPage.ConnectToRoot(dynCode);
         l.Done();
     }
@@ -235,7 +235,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     /// <summary>
     /// Special old mechanism to always request jQuery and Rvt
     /// </summary>
-    public bool OldAutoLoadJQueryAndRvt => Webpage._DynCodeRoot._Cdf.CompatibilityLevel <= CompatibilityLevels.MaxLevelForAutoJQuery;
+    public bool OldAutoLoadJQueryAndRvt => Webpage._CodeApiSvc._Cdf.CompatibilityLevel <= CompatibilityLevels.MaxLevelForAutoJQuery;
 
 
     public HelperResult RenderPage(string templatePath, object data)

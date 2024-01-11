@@ -32,7 +32,7 @@ namespace Custom.Hybrid;
 /// </summary>
 [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
 [JsonFormatter]
-public abstract class ApiTyped : OqtStatefulControllerBase, IDynamicWebApi, IHasCodeLog, IHasDynamicCodeRoot, IDynamicCode16
+public abstract class ApiTyped : OqtStatefulControllerBase, IDynamicWebApi, IHasCodeLog, IHasCodeApiService, IDynamicCode16
 {
     #region setup
 
@@ -61,13 +61,13 @@ public abstract class ApiTyped : OqtStatefulControllerBase, IDynamicWebApi, IHas
     public new ICodeLog Log => CtxHlp.CodeLog;
 
     // ReSharper disable once InconsistentNaming
-    [PrivateApi] public IDynamicCodeRoot _DynCodeRoot => CtxHlp._DynCodeRoot;
+    [PrivateApi] public ICodeApiService _CodeApiSvc => CtxHlp._CodeApiSvc;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
-    public new TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
+    public new TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
-    public ServiceKit16 Kit => _kit.Get(() => _DynCodeRoot.GetKit<ServiceKit16>());
+    public ServiceKit16 Kit => _kit.Get(() => _CodeApiSvc.GetKit<ServiceKit16>());
     private readonly GetOnce<ServiceKit16> _kit = new();
 
     [PrivateApi("Not yet ready")]
@@ -78,7 +78,7 @@ public abstract class ApiTyped : OqtStatefulControllerBase, IDynamicWebApi, IHas
     #region Link & Edit - added to API in 2sxc 10.01
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => _DynCodeRoot?.Link;
+    public ILinkService Link => _CodeApiSvc?.Link;
 
     #endregion
 
@@ -102,7 +102,7 @@ public abstract class ApiTyped : OqtStatefulControllerBase, IDynamicWebApi, IHas
     #region New App, Settings, Resources
 
     /// <inheritdoc />
-    public IAppTyped App => (IAppTyped)_DynCodeRoot?.App;
+    public IAppTyped App => (IAppTyped)_CodeApiSvc?.App;
 
     /// <inheritdoc cref="IDynamicCode16.AllResources" />
     public ITypedStack AllResources => CodeHelper.AllResources;
@@ -117,7 +117,7 @@ public abstract class ApiTyped : OqtStatefulControllerBase, IDynamicWebApi, IHas
     private TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
     private TypedCode16Helper _codeHelper;
 
-    private TypedCode16Helper CreateCodeHelper() => new(_DynCodeRoot, MyData, null, false, "c# WebApiController");
+    private TypedCode16Helper CreateCodeHelper() => new(_CodeApiSvc, MyData, null, false, "c# WebApiController");
 
     public ITypedItem MyItem => CodeHelper.MyItem;
 
@@ -125,7 +125,7 @@ public abstract class ApiTyped : OqtStatefulControllerBase, IDynamicWebApi, IHas
 
     public ITypedItem MyHeader => CodeHelper.MyHeader;
 
-    public IBlockInstance MyData => _DynCodeRoot.Data;
+    public IBlockInstance MyData => _CodeApiSvc.Data;
 
     #endregion
 
@@ -134,25 +134,25 @@ public abstract class ApiTyped : OqtStatefulControllerBase, IDynamicWebApi, IHas
 
     /// <inheritdoc cref="IDynamicCode16.AsItem" />
     public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
-        => _DynCodeRoot._Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
+        => _CodeApiSvc._Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
 
     /// <inheritdoc cref="IDynamicCode16.AsItems" />
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _DynCodeRoot._Cdf.AsItems(list, propsRequired: propsRequired ?? true);
+        => _CodeApiSvc._Cdf.AsItems(list, propsRequired: propsRequired ?? true);
 
     /// <inheritdoc cref="IDynamicCode16.AsEntity" />
-    public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot._Cdf.AsEntity(thing);
+    public IEntity AsEntity(ICanBeEntity thing) => _CodeApiSvc._Cdf.AsEntity(thing);
 
     /// <inheritdoc cref="IDynamicCode16.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _DynCodeRoot._Cdf.AsTyped(original, propsRequired: propsRequired);
+        => _CodeApiSvc._Cdf.AsTyped(original, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _DynCodeRoot._Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
+        => _CodeApiSvc._Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsStack" />
-    public ITypedStack AsStack(params object[] items) => _DynCodeRoot._Cdf.AsStack(items);
+    public ITypedStack AsStack(params object[] items) => _CodeApiSvc._Cdf.AsStack(items);
 
     #endregion
 
@@ -161,22 +161,22 @@ public abstract class ApiTyped : OqtStatefulControllerBase, IDynamicWebApi, IHas
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
     public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
     {
-        return _DynCodeRoot.CreateInstance(path, relativePath: (this as IGetCodePath).CreateInstancePath, name: className);
+        return _CodeApiSvc.CreateInstance(path, relativePath: (this as IGetCodePath).CreateInstancePath, name: className);
     }
 
     #region MyContext & UniqueKey
 
     /// <inheritdoc cref="IDynamicCode16.MyContext" />
-    public ICmsContext MyContext => _DynCodeRoot.CmsContext;
+    public ICmsContext MyContext => _CodeApiSvc.CmsContext;
 
     /// <inheritdoc cref="IDynamicCode16.MyPage" />
-    public ICmsPage MyPage => _DynCodeRoot.CmsContext.Page;
+    public ICmsPage MyPage => _CodeApiSvc.CmsContext.Page;
 
     /// <inheritdoc cref="IDynamicCode16.MyUser" />
-    public ICmsUser MyUser => _DynCodeRoot.CmsContext.User;
+    public ICmsUser MyUser => _CodeApiSvc.CmsContext.User;
 
     /// <inheritdoc cref="IDynamicCode16.MyView" />
-    public ICmsView MyView => _DynCodeRoot.CmsContext.View;
+    public ICmsView MyView => _CodeApiSvc.CmsContext.View;
 
     /// <inheritdoc cref="IDynamicCode16.UniqueKey" />
     public string UniqueKey => Kit.Key.UniqueKey;

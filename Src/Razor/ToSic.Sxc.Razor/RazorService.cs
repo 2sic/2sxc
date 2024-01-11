@@ -3,7 +3,7 @@ using ToSic.Eav.Helpers;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Apps.Internal;
-using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Razor.Internal;
 
 namespace ToSic.Sxc.Razor;
@@ -34,12 +34,12 @@ internal class RazorService(LazySvc<IRazorRenderer> razorRendererLazy) : IRazorS
 
     #region Connect to DynamicCodeRoot
 
-    public void ConnectToRoot(IDynamicCodeRoot codeRoot)
+    public void ConnectToRoot(ICodeApiService codeRoot)
     {
         CodeRoot = codeRoot;
     }
 
-    public IDynamicCodeRoot CodeRoot;
+    public ICodeApiService CodeRoot;
 
     #endregion
 }

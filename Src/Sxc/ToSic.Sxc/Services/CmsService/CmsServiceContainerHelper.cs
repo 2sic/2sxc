@@ -16,13 +16,13 @@ namespace ToSic.Sxc.Services.CmsService;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class CmsServiceContainerHelper: HelperBase
 {
-    private readonly IDynamicCodeRoot _dynCodeRoot;
+    private readonly ICodeApiService _dynCodeRoot;
     private readonly object _container;
     private string Classes { get; set; }
     private readonly bool? _toolbar;
     private readonly IField _field;
 
-    public CmsServiceContainerHelper(IDynamicCodeRoot dynCodeRoot,
+    public CmsServiceContainerHelper(ICodeApiService dynCodeRoot,
         IField field,
         object container,
         string classes,

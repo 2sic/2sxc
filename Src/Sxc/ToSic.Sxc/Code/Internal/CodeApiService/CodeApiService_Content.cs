@@ -4,9 +4,9 @@ using ToSic.Lib.Logging;
 using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 using static ToSic.Sxc.Blocks.Internal.ViewParts;
 
-namespace ToSic.Sxc.Code;
+namespace ToSic.Sxc.Code.Internal;
 
-public partial class DynamicCodeRoot
+public partial class CodeApiService
 {
     #region basic properties like Content, Header
 

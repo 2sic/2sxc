@@ -53,12 +53,12 @@ public partial class DynamicCodeService: ServiceBase<DynamicCodeService.MyServic
     public class MyScopedServices: MyServicesBase
     {
         public Generator<App> AppGenerator { get; }
-        public Generator<CodeRootFactory> CodeRootGenerator { get; }
+        public Generator<CodeApiServiceFactory> CodeRootGenerator { get; }
         public Generator<AppConfigDelegate> AppConfigDelegateGenerator { get; }
         public LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder { get; }
 
         public MyScopedServices(
-            Generator<CodeRootFactory> codeRootGenerator,
+            Generator<CodeApiServiceFactory> codeRootGenerator,
             Generator<App> appGenerator,
             Generator<AppConfigDelegate> appConfigDelegateGenerator,
             LazySvc<IModuleAndBlockBuilder> modAndBlockBuilder)

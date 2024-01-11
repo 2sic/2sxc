@@ -16,17 +16,17 @@ public class ApiControllerMyServices : MyServicesBase
 {
     public LazySvc<AppConfigDelegate> AppConfigDelegateLazy { get; }
     public LazySvc<Apps.App> AppOverrideLazy { get; }
-    public CodeRootFactory CodeRootFactory { get; }
+    public CodeApiServiceFactory CodeApiServiceFactory { get; }
     public DnnAppFolderUtilities AppFolderUtilities { get; }
 
     public ApiControllerMyServices(
-        CodeRootFactory codeRootFactory,
+        CodeApiServiceFactory codeApiServiceFactory,
         DnnAppFolderUtilities appFolderUtilities,
         LazySvc<Apps.App> appOverrideLazy,
         LazySvc<AppConfigDelegate> appConfigDelegateLazy)
     {
         ConnectServices(
-            CodeRootFactory = codeRootFactory,
+            CodeApiServiceFactory = codeApiServiceFactory,
             AppFolderUtilities = appFolderUtilities,
             AppOverrideLazy = appOverrideLazy,
             AppConfigDelegateLazy = appConfigDelegateLazy

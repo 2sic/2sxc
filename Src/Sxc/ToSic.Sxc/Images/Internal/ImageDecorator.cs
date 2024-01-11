@@ -5,6 +5,7 @@ using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Images.Internal;
@@ -96,7 +97,7 @@ public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBase
     /// <summary>
     /// Optionally add image-metadata recommendations
     /// </summary>
-    public static void AddRecommendations(IMetadataOf mdOf, string path, IDynamicCodeRoot codeRoot)
+    public static void AddRecommendations(IMetadataOf mdOf, string path, ICodeApiService codeRoot)
     {
         if (mdOf?.Target == null || !path.HasValue()) return;
         var ext = Path.GetExtension(path);
@@ -106,9 +107,9 @@ public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBase
 
     // TODO: THIS IS ALL very temporary - it should be in a proper service, 
     // but because we'll need to merge the code with v17, we try do keep it this way.
-    public static string[] GetImageRecommendations(IDynamicCodeRoot codeRoot)
+    public static string[] GetImageRecommendations(ICodeApiService codeRoot)
     {
-        if (!(codeRoot is DynamicCodeRoot codeRootTyped)) return ImageRecommendationsBasic;
+        if (!(codeRoot is CodeApiService codeRootTyped)) return ImageRecommendationsBasic;
 
         if (!codeRootTyped.GetService<IFeaturesService>().IsEnabled(BuiltInFeatures.CopyrightManagement.NameId))
             return ImageRecommendationsBasic;
