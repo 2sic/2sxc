@@ -8,6 +8,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web.Internal.PageService;
 using ToSic.Sxc.Web.PageService;
 

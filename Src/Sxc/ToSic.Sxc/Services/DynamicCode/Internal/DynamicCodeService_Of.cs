@@ -1,9 +1,10 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Internal;
 
-namespace ToSic.Sxc.Code;
+namespace ToSic.Sxc.Services.Internal;
 
 /// <summary>
 /// WIP - goal is to have a DI factory which creates DynamicCode objects for use in Skins and other external controls

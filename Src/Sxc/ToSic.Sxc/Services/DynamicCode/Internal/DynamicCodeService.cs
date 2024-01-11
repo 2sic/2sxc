@@ -3,19 +3,16 @@ using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Integration;
-using ToSic.Lib.Logging;
-using ToSic.Eav.Run;
 using ToSic.Lib.DI;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.LookUp;
-using ToSic.Sxc.Services;
 using App = ToSic.Sxc.Apps.App;
 
-namespace ToSic.Sxc.Code;
+namespace ToSic.Sxc.Services.Internal;
 
 /// <summary>
 /// WIP - goal is to have a DI factory which creates DynamicCode objects for use in Skins and other external controls

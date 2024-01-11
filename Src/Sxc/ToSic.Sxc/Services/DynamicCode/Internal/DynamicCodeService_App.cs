@@ -5,7 +5,7 @@ using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
 using IApp = ToSic.Sxc.Apps.IApp;
 
-namespace ToSic.Sxc.Code;
+namespace ToSic.Sxc.Services.Internal;
 
 /// <summary>
 /// WIP - goal is to have a DI factory which creates DynamicCode objects for use in Skins and other external controls
