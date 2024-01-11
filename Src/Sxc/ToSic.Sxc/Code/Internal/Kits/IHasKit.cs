@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Code.Internal;
 
 [PrivateApi("v14")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public interface IDynamicCodeKit<out TServiceKit> where TServiceKit : ServiceKit
+public interface IHasKit<out TServiceKit> where TServiceKit : ServiceKit
 {
     /// <summary>
     /// The Service Kit containing all kinds of services which are commonly used.

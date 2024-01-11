@@ -42,7 +42,7 @@ public class CodeApiServiceFactory(IServiceProvider serviceProvider) : ServiceBa
         var l = Log.Fn<CodeApiService>();
         try
         {
-            var requiredDynCode = typeof(IDynamicCodeKit<>);
+            var requiredDynCode = typeof(IHasKit<>);
 
             // 1. Detect if it's an IDynamicCode<TModel, TServiceKit>
             var interfaceOnCode = customType

@@ -54,7 +54,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     /// <param name="insightsGroup">Name of the section in Insights</param>
     protected ApiTyped(string insightsGroup) : base("Api16", insightsGroup) { }
 
-    /// <inheritdoc cref="IDynamicCodeKit{ServiceKit14}.Kit" />
+    /// <inheritdoc cref="IHasKit{TServiceKit}.Kit" />
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
     public ServiceKit16 Kit => _kit.Get(() => _CodeApiSvc.GetKit<ServiceKit16>());
     private readonly GetOnce<ServiceKit16> _kit = new();

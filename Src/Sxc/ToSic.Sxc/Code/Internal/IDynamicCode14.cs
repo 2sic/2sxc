@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// </summary>
 [PrivateApi("WIP v14.02")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public interface IDynamicCode14<out TModel, out TServiceKit> : /*ICompatibleToCode12,*/ /*IDynamicCode<TModel, TServiceKit>,*/ IDynamicCodeKit<TServiceKit>
+public interface IDynamicCode14<out TModel, out TServiceKit> : /*ICompatibleToCode12,*/ /*IDynamicCode<TModel, TServiceKit>,*/ IHasKit<TServiceKit>
     where TModel : class
     where TServiceKit : ServiceKit
 {

@@ -46,7 +46,7 @@ public abstract partial class Api14: DnnSxcCustomControllerBase, IDynamicCode14<
     protected Api14(string logSuffix) : base(logSuffix) { }
 
 
-    /// <inheritdoc cref="IDynamicCodeKit{ServiceKit14}.Kit" />
+    /// <inheritdoc cref="IHasKit{TServiceKit}.Kit" />
     public ServiceKit14 Kit => _kit.Get(() => _CodeApiSvc.GetKit<ServiceKit14>());
     private readonly GetOnce<ServiceKit14> _kit = new();
 
