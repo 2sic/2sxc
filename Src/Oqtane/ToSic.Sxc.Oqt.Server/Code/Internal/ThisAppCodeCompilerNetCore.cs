@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Internal.Environment;
@@ -35,30 +36,41 @@ internal class ThisAppCodeCompilerNetCore : ThisAppCodeCompiler
             if (errResult != null)
                 return l.ReturnAsError(errResult, errResult.ErrorMessages);
 
-            var assemblyLocations = GetAssemblyLocations(spec);
-            var dllName = Path.GetFileName(assemblyLocations[1]);
-            var assemblyResult = new Compiler(_thisAppCodeLoader).GetCompiledAssemblyFromFolder(sourceFiles, assemblyLocations[1], assemblyLocations[0], dllName);
+
+            var (symbolsPath, assemblyPath) = GetAssemblyLocations(spec);
+            var dllName = Path.GetFileName(assemblyPath);
+            var assemblyResult = new Compiler(_thisAppCodeLoader).GetCompiledAssemblyFromFolder(sourceFiles, assemblyPath, symbolsPath, dllName);
+
+            var dicInfos = new Dictionary<string, string>
+            {
+                ["DllName"] = dllName,
+                ["Files"] = sourceFiles.Length.ToString(),
+                ["Errors"] = assemblyResult.ErrorMessages.Length.ToString(),
+                ["Assembly"] = assemblyResult.Assembly?.FullName ?? "null",
+                ["AssemblyPath"] = assemblyPath,
+                ["SymbolsPath"] = symbolsPath,
+            };
 
             // Compile ok
             if (assemblyResult.ErrorMessages.IsEmpty())
             {
                 LogAllTypes(assemblyResult.Assembly);
-                return l.ReturnAsOk(new AssemblyResult(assembly: assemblyResult.Assembly, assemblyLocations: assemblyLocations));
+                return l.ReturnAsOk(new(assembly: assemblyResult.Assembly, assemblyLocations: [symbolsPath, assemblyPath], infos: dicInfos));
             }
 
-            return l.ReturnAsError(new AssemblyResult(errorMessages: assemblyResult.ErrorMessages), assemblyResult.ErrorMessages);
+            return l.ReturnAsError(new(errorMessages: assemblyResult.ErrorMessages, infos: dicInfos), assemblyResult.ErrorMessages);
         }
         catch (Exception ex)
         {
             l.Ex(ex);
             var errorMessage = $"Error: Can't compile '{ThisAppCodeDll}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. {ex.Message}";
-            return l.ReturnAsError(new AssemblyResult(errorMessages: errorMessage), "error");
+            return l.ReturnAsError(new(errorMessages: errorMessage), "error");
         }
     }
 
-    private string[] GetAssemblyLocations(HotBuildSpec spec)
+    private (string SymbolsPath, string AssemblyPath) GetAssemblyLocations(HotBuildSpec spec)
     {
-        var l = Log.Fn<string[]>($"{nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'");
+        var l = Log.Fn<(string, string)>($"{nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'");
         var tempAssemblyFolderPath = _serverPaths.Value.FullContentPath(@"App_Data\2sxc.bin");
         l.A($"TempAssemblyFolderPath: '{tempAssemblyFolderPath}'");
         // Ensure "2sxc.bin" folder exists to preserve dlls
@@ -71,7 +83,7 @@ internal class ThisAppCodeCompilerNetCore : ThisAppCodeCompiler
         l.A($"AssemblyFilePath: '{assemblyFilePath}'");
         var symbolsFilePath = Path.Combine(tempAssemblyFolderPath, $"{assemblyName}.pdb");
         l.A($"SymbolsFilePath: '{symbolsFilePath}'");
-        var assemblyLocations = new[] { symbolsFilePath, assemblyFilePath };
+        var assemblyLocations = ( symbolsFilePath, assemblyFilePath );
         return l.ReturnAsOk(assemblyLocations);
     }
 }

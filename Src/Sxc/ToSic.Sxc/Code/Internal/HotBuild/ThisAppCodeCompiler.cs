@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
@@ -27,8 +28,11 @@ public abstract class ThisAppCodeCompiler() : ServiceBase("Sxc.MyApCd")
         // Validate are there any C# files
         // TODO: if no files exist, it shouldn't be an error, because it could be that it's just not here yet
         return sourceFiles.Length == 0
-            ? l.ReturnAsError((sourceFiles, new AssemblyResult(errorMessages: $"Error: given path '{fullPath}' doesn't contain any {CsFiles} files"))) :
-            l.ReturnAsOk((sourceFiles, null));
+            ? l.ReturnAsError((sourceFiles, new(
+                    errorMessages: $"Error: given path '{fullPath}' doesn't contain any {CsFiles} files",
+                    infos: new() { ["Files"] = "0 (none found)" })
+                ))
+            : l.ReturnAsOk((sourceFiles, null));
     }
 
     /// <summary>
@@ -41,8 +45,9 @@ public abstract class ThisAppCodeCompiler() : ServiceBase("Sxc.MyApCd")
         string randomNameWithoutExtension;
         do
         {
-            var appIdWithEdition = spec.Edition.HasValue() ? $"{spec.AppId:00000}-{spec.Edition}" : $"{spec.AppId:00000}";
-            randomNameWithoutExtension = $"ThisApp.Code-{appIdWithEdition}-{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}";
+            var app = $"App-{spec.AppId:00000}";
+            var edition = spec.Edition.HasValue() ? $"-{spec.Edition}" : "";
+            randomNameWithoutExtension = $"{app}-ThisApp.{spec.Segment}{edition}-{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}";
         }
         while (File.Exists(Path.Combine(folderPath, $"{randomNameWithoutExtension}.dll")));
         return l.ReturnAsOk(randomNameWithoutExtension);

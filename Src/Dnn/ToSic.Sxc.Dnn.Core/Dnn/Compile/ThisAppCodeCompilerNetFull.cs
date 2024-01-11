@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using System;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.IO;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -36,15 +37,25 @@ internal class ThisAppCodeCompilerNetFull : ThisAppCodeCompiler
             if (errorResult != null)
                 return l.ReturnAsError(errorResult, errorResult.ErrorMessages);
 
-            var assemblyLocations = GetAssemblyLocations(spec);
+            var (symbolsPath, assemblyPath) = GetAssemblyLocations(spec);
 
-            var results = GetCompiledAssemblyFromFolder(sourceFiles, assemblyLocations[1]);
+            var results = GetCompiledAssemblyFromFolder(sourceFiles, assemblyPath);
+
+            var dicInfos = new Dictionary<string, string>
+            {
+                //["DllName"] = dllName,
+                ["Files"] = sourceFiles.Length.ToString(),
+                ["Errors"] = results.Errors.HasErrors.ToString(),
+                // ["Assembly"] = assemblyResult.Assembly?.FullName ?? "null",
+                ["AssemblyPath"] = assemblyPath,
+                ["SymbolsPath"] = symbolsPath,
+            };
 
             // Compile ok
             if (!results.Errors.HasErrors)
             {
                 LogAllTypes(results.CompiledAssembly);
-                return l.ReturnAsOk(new(assembly: results.CompiledAssembly, assemblyLocations: assemblyLocations));
+                return l.ReturnAsOk(new(assembly: results.CompiledAssembly, assemblyLocations: [symbolsPath, assemblyPath ], infos: dicInfos));
             }
 
             // Compile error case
@@ -56,7 +67,7 @@ internal class ThisAppCodeCompilerNetFull : ThisAppCodeCompiler
                 errors += $"{msg}\n";
             }
 
-            return l.ReturnAsError(new(errorMessages: errors), errors);
+            return l.ReturnAsError(new(errorMessages: errors, infos: dicInfos), errors);
         }
         catch (Exception ex)
         {
@@ -66,9 +77,9 @@ internal class ThisAppCodeCompilerNetFull : ThisAppCodeCompiler
         }
     }
 
-    private string[] GetAssemblyLocations(HotBuildSpec spec)
+    private (string SymbolsPath, string AssemblyPath) GetAssemblyLocations(HotBuildSpec spec)
     {
-        var l = Log.Fn<string[]>($"{nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'");
+        var l = Log.Fn<(string, string)>($"{nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'");
         var tempAssemblyFolderPath = Path.Combine(_hostingEnvironment.MapPath("~/App_Data"), "2sxc.bin");
         l.A($"TempAssemblyFolderPath: '{tempAssemblyFolderPath}'");
         // Ensure "2sxc.bin" folder exists to preserve dlls
@@ -81,7 +92,7 @@ internal class ThisAppCodeCompilerNetFull : ThisAppCodeCompiler
         l.A($"AssemblyFilePath: '{assemblyFilePath}'");
         var symbolsFilePath = Path.Combine(tempAssemblyFolderPath, $"{assemblyName}.pdb");
         l.A($"SymbolsFilePath: '{symbolsFilePath}'");
-        var assemblyLocations = new[] { symbolsFilePath, assemblyFilePath };
+        var assemblyLocations = (symbolsFilePath, assemblyFilePath);
         return l.ReturnAsOk(assemblyLocations);
     }
 

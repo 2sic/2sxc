@@ -10,7 +10,8 @@ public class AssemblyResult(
     string errorMessages = null,
     string[] assemblyLocations = null,
     string safeClassName = null,
-    Type mainType = default)
+    Type mainType = default, 
+    Dictionary<string, string> infos = default)
 {
     public Assembly Assembly { get; } = assembly;
     public string ErrorMessages { get; } = errorMessages;
@@ -29,6 +30,8 @@ public class AssemblyResult(
     /// </summary>
     // WIP - should be more functional, this get/set is still hacky
     public IList<string> WatcherFolders { get; set; }
+
+    public Dictionary<string, string> Infos { get; } = infos ?? [];
 
     public AssemblyResult((Assembly Assembly, string ErrorMessages) tuple) : this(tuple.Assembly, tuple.ErrorMessages)
     { }

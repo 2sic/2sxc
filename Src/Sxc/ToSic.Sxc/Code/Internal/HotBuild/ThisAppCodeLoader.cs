@@ -42,7 +42,7 @@ public class ThisAppCodeLoader : ServiceBase
 
     public static AssemblyResult TryGetAssemblyOfCodeFromCache(HotBuildSpec spec, ILog callerLog)
     {
-        var l = callerLog.Fn<AssemblyResult>($"{nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'");
+        var l = callerLog.Fn<AssemblyResult>($"{spec}");
 
         var (result, _) = AssemblyCacheManager.TryGetThisAppCode(spec);
         return result != null
@@ -88,6 +88,8 @@ public class ThisAppCodeLoader : ServiceBase
             return l.ReturnAsError(null, $"no folder {physicalPath}");
 
         var assemblyResult = _thisAppCodeCompilerLazy.Value.GetAppCode(relativePath, spec);
+
+        logSummary.UpdateSpecs(assemblyResult.Infos);
 
         if (assemblyResult.ErrorMessages.HasValue())
             return l.ReturnAsError(assemblyResult, assemblyResult.ErrorMessages);
