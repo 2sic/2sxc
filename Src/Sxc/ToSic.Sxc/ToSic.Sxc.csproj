@@ -88,6 +88,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Beta\" />
+    <Folder Include="Code\Internal\DynamicCodeService\" />
+    <Folder Include="Code\Root\" />
     <Folder Include="DataSources\AppData\" />
     <Folder Include="Images\ResizeSettings\Internal\" />
     <Folder Include="Run\" />

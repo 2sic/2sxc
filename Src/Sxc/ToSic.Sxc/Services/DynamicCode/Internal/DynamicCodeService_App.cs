@@ -17,8 +17,6 @@ public partial class DynamicCodeService
     public IApp App(NoParamOrder noParamOrder = default, int? zoneId = null, int? appId = null, ISite site = null, bool? withUnpublished = null)
     {
         MakeSureLogIsInHistory();
-        //Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(App),
-        //    $"{nameof(zoneId)}, {nameof(appId)} (required), {nameof(site)}, {nameof(withUnpublished)}");
 
         // Ensure AppId is provided
         var realAppId = appId ?? throw new ArgumentException($"At least the {nameof(appId)} is required and must be a valid AppId", nameof(appId));
