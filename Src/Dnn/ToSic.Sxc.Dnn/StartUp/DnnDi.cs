@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Integration;
 using ToSic.Eav.StartUp;
 using ToSic.Eav.WebApi;
 using ToSic.Razor.StartUp;
@@ -43,7 +44,7 @@ public static class DnnDi
             .AddAdamWebApi<int, int>()
             .AddSxcWebApi()
             .AddSxcCore()
-            .AddEav()
+            .AddEavEverything()
             .AddEavWebApiTypedAfterEav()
             .AddRazorBlade();
 
