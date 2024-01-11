@@ -1,5 +1,5 @@
 ﻿using System;
-using ToSic.Eav.Apps.Adam;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Identity;
 using ToSic.Lib.Logging;
 

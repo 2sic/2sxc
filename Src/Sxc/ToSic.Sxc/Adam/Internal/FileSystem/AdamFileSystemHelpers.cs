@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using ToSic.Eav.Apps.Adam;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;

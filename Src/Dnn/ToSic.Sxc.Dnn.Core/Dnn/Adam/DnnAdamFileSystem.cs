@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Configuration;
 using DotNetNuke.Services.FileSystem;
-using ToSic.Eav.Apps.Adam;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;

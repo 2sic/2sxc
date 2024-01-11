@@ -4,6 +4,7 @@ using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;

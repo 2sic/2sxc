@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using ToSic.Eav.Apps.ImportExport;
-using ToSic.Eav.Apps.ImportExport.ImportHelpers;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Context;
+using ToSic.Eav.ImportExport.Internal;
+using ToSic.Eav.ImportExport.Internal.ImportHelpers;
+using ToSic.Eav.ImportExport.Internal.Zip;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Persistence.Logging;
