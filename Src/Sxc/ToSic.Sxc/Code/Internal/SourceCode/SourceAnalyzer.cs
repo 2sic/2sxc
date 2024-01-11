@@ -1,11 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Code.Internal.SourceCode;
@@ -62,7 +62,7 @@ public class SourceAnalyzer : ServiceBase
         if (contents.Length < 10)
             return l.Return(CodeFileInfo.CodeFileUnknown, "file too short");
 
-        var isCs = path.ToLowerInvariant().EndsWith(CodeCompiler.CsFileExtension);
+        var isCs = path.ToLowerInvariant().EndsWith(CodeCompiler.CsFileExtension, StringComparison.InvariantCultureIgnoreCase);
         l.A($"isCs: {isCs}");
 
         if (isCs)
