@@ -23,7 +23,7 @@ public class AssemblyCacheManager() : ServiceBase(SxcLogging.SxcLogName + ".Asse
         return (Get(cacheKey), cacheKey);
     }
 
-    private static string KeyAppCode(HotBuildSpec spec) => $"{GlobalCacheRoot}a:{spec.AppId}.e:{spec.Edition}.ThisApp.Code";
+    private static string KeyAppCode(HotBuildSpec spec) => $"{GlobalCacheRoot}a:{spec.AppId}.e:{spec.Edition}.ThisApp.{spec.Segment}";
 
     #endregion
 

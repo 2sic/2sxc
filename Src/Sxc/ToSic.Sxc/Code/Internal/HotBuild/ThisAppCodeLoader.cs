@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Code.Internal.HotBuild;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ThisAppCodeLoader : ServiceBase
 {
-    public const string ThisAppCodeFolder = "ThisApp\\Code";
+    public const string ThisAppCodeBase = "ThisApp";
     public const string ThisAppBinFolder = "bin";
 
     public ThisAppCodeLoader(ILogStore logStore, ISite site, IAppStates appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, LazySvc<ThisAppCodeCompiler> thisAppCodeCompilerLazy, AssemblyCacheManager assemblyCacheManager) : base("Sys.AppCodeLoad")
@@ -52,14 +52,16 @@ public class ThisAppCodeLoader : ServiceBase
 
     public Assembly GetAppCodeAssemblyOrNull(HotBuildSpec spec)
     {
-        _logStore.Add(SxcLogging.SxcLogAppCodeLoader, Log);
+        // Add to global history and add specs
+        var logSummary = _logStore.Add(SxcLogging.SxcLogAppCodeLoader, Log);
+        logSummary.UpdateSpecs(spec.ToDictionary());
 
         // Initial message for insights-overview
-        var l = Log.Fn<Assembly>($"{nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'", timer: true);
+        var l = Log.Fn<Assembly>($"{spec}", timer: true);
 
         try
         {
-            var assemblyResults = TryLoadAppCodeAssembly(spec);
+            var assemblyResults = TryLoadAppCodeAssembly(spec, logSummary);
             return string.IsNullOrEmpty(assemblyResults?.ErrorMessages)
                 ? l.ReturnAsOk(assemblyResults?.Assembly)
                 : l.ReturnAsError(assemblyResults?.Assembly);
@@ -71,17 +73,21 @@ public class ThisAppCodeLoader : ServiceBase
         }
     }
 
-    private AssemblyResult TryLoadAppCodeAssembly(HotBuildSpec spec)
+    private AssemblyResult TryLoadAppCodeAssembly(HotBuildSpec spec, LogStoreEntry logSummary)
     {
-        var l = Log.Fn<AssemblyResult>($"{nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'");
+        var l = Log.Fn<AssemblyResult>($"{spec}");
 
         var (result, cacheKey) = AssemblyCacheManager.TryGetThisAppCode(spec);
+        logSummary.AddSpec("Cached", $"{result != null} on {cacheKey}");
+
         if (result != null)
             return l.ReturnAsOk(result);
 
         // Get paths
-        var (physicalPath, relativePath) = GetAppPaths(ThisAppCodeFolder, spec);
+        var (physicalPath, relativePath) = GetAppPaths(ThisAppCodeBase + "\\" + spec.Segment, spec);
         l.A($"{nameof(physicalPath)}: '{physicalPath}'; {nameof(relativePath)}: '{relativePath}'");
+        logSummary.AddSpec("PhysicalPath", physicalPath);
+        logSummary.AddSpec("RelativePath", relativePath);
 
         if (!Directory.Exists(physicalPath))
             return l.ReturnAsError(null, $"no folder {physicalPath}");
@@ -109,7 +115,7 @@ public class ThisAppCodeLoader : ServiceBase
 
     private (string physicalPath, string relativePath) GetAppPaths(string folder, HotBuildSpec spec)
     {
-        var l = Log.Fn<(string physicalPath, string relativePath)>($"{nameof(spec.AppId)}: {spec.AppId}; {nameof(folder)}:'{folder}'; {nameof(spec.Edition)}: '{spec.Edition}'");
+        var l = Log.Fn<(string physicalPath, string relativePath)>($"{spec}");
         var appPaths = _appPathsLazy.Value.Init(_site, _appStates.GetReader(spec.AppId));
         var folderWithEdition = spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder;
         var physicalPath = Path.Combine(appPaths.PhysicalPath, folderWithEdition);

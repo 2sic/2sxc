@@ -27,7 +27,7 @@ internal class ThisAppCodeCompilerNetFull : ThisAppCodeCompiler
 
     protected internal override AssemblyResult GetAppCode(string relativePath, HotBuildSpec spec)
     {
-        var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'");
+        var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {spec}");
 
         try
         {
@@ -44,7 +44,7 @@ internal class ThisAppCodeCompilerNetFull : ThisAppCodeCompiler
             if (!results.Errors.HasErrors)
             {
                 LogAllTypes(results.CompiledAssembly);
-                return l.ReturnAsOk(new AssemblyResult(assembly: results.CompiledAssembly, assemblyLocations: assemblyLocations));
+                return l.ReturnAsOk(new(assembly: results.CompiledAssembly, assemblyLocations: assemblyLocations));
             }
 
             // Compile error case
@@ -56,13 +56,13 @@ internal class ThisAppCodeCompilerNetFull : ThisAppCodeCompiler
                 errors += $"{msg}\n";
             }
 
-            return l.ReturnAsError(new AssemblyResult(errorMessages: errors), errors);
+            return l.ReturnAsError(new(errorMessages: errors), errors);
         }
         catch (Exception ex)
         {
             l.Ex(ex);
             var errorMessage = $"Error: Can't compile '{ThisAppCodeDll}' in {Path.GetFileName(relativePath)}. Details are logged into insights. {ex.Message}";
-            return l.ReturnAsError(new AssemblyResult(errorMessages: errorMessage));
+            return l.ReturnAsError(new(errorMessages: errorMessage));
         }
     }
 
