@@ -5,30 +5,25 @@ using ToSic.Eav.Plumbing;
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class GenNotExist
+internal class GenNotExist(string name, (string Code, string Comment)[] alt)
 {
     public GenNotExist(string name, params string[] alt) : this(name, alt?.Select(r => (r, null as string)).ToArray()) { }
-    public GenNotExist(string name, (string Code, string Comment) alt) : this(name, new[] { alt }) { }
-    public GenNotExist(string name, (string Code, string Comment)[] alt)
-    {
-        Name = name;
-        Alt = alt.SafeAny() ? alt : new (string, string)[] { ("unknown", null) };
-    }
+    public GenNotExist(string name, (string Code, string Comment) alt) : this(name, [alt]) { }
 
     protected virtual string HtmlRecommendations() => Alt.Length == 1
         ? HtmlRec(Alt[0])
         : $"<ol>{string.Join("\n", Alt.Select(HtmlRec))}</ol>";
 
-    public readonly string Name;
+    public readonly string Name = name;
     public string Comments;
-    public (string Code, string Comment)[] Alt;
+    public (string Code, string Comment)[] Alt = alt.SafeAny() ? alt : new (string, string)[] { ("unknown", null) };
     public string LinkCode;
     public string MsgNotSupportedIn;
 
     public virtual CodeHelp Generate()
     {
         var recHtml = HtmlRecommendations();
-        return new CodeHelp(name: $"Object-{Name}-DoesNotExist",
+        return new(name: $"Object-{Name}-DoesNotExist",
             detect: $"error CS0103: The name '{Name}' does not exist in the current context",
             linkCode: LinkCode,
             uiMessage: $@"

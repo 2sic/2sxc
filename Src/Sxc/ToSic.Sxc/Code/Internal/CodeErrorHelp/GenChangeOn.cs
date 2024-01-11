@@ -8,7 +8,8 @@ namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 internal class GenChangeOn : GenNotExist
 {
 
-    public GenChangeOn(string fullNamespace, string name, string alt) : this(fullNamespace, name, new[] { (alt, null as string) })
+    public GenChangeOn(string fullNamespace, string name, string alt) : this(fullNamespace, name, [(alt, null as string)
+    ])
     {
     }
 
@@ -27,7 +28,7 @@ internal class GenChangeOn : GenNotExist
 
     public override CodeHelp Generate()
     {
-        return new CodeHelp(name: $"{FullNameSpace}-{Name}-DoesNotExist",
+        return new(name: $"{FullNameSpace}-{Name}-DoesNotExist",
             detect: DetectTypeDoesNotContain(FullNameSpace, Name),
             linkCode: LinkCode,
             uiMessage: $@"

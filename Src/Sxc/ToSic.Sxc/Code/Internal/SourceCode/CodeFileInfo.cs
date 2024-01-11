@@ -22,34 +22,34 @@ public class CodeFileInfo
     public bool ThisApp { get; }
 
     // without base class
-    public static CodeFileInfo CodeFileUnknown = new("unknown", CodeFileTypes.Unknown, CodeHelpDbUnknown.CompileUnknown);
-    public static CodeFileInfo CodeFileUnknownWithThisAppCode = new("unknown", CodeFileTypes.Unknown, CodeHelpDbUnknown.CompileUnknown, true);
+    public static CodeFileInfo CodeFileUnknown = new("unknown", CodeFileTypes.Unknown, HelpForRazorCompileErrors.CompileUnknown);
+    public static CodeFileInfo CodeFileUnknownWithThisAppCode = new("unknown", CodeFileTypes.Unknown, HelpForRazorCompileErrors.CompileUnknown, true);
 
     // with some other base class
-    public static CodeFileInfo CodeFileOther = new("other", CodeFileTypes.Other, CodeHelpDbUnknown.CompileUnknown);
-    public static CodeFileInfo CodeFileOtherWithThisAppCode = new("other", CodeFileTypes.Other, CodeHelpDbUnknown.CompileUnknown, true);
+    public static CodeFileInfo CodeFileOther = new("other", CodeFileTypes.Other, HelpForRazorCompileErrors.CompileUnknown);
+    public static CodeFileInfo CodeFileOtherWithThisAppCode = new("other", CodeFileTypes.Other, HelpForRazorCompileErrors.CompileUnknown, true);
 
-    public static CodeFileInfo CodeFileNotFound = new("", CodeFileTypes.FileNotFound, new List<CodeHelp>());
+    public static CodeFileInfo CodeFileNotFound = new("", CodeFileTypes.FileNotFound, []);
 
-    public static List<CodeFileInfo> CodeFileList = new()
-    {
+    public static List<CodeFileInfo> CodeFileList =
+    [
         CodeFileUnknown,
         CodeFileUnknownWithThisAppCode,
         CodeFileOther,
         CodeFileOtherWithThisAppCode,
         // cshtml
-        new CodeFileInfo("Custom.Hybrid.Razor12", CodeFileTypes.V12, CodeHelpDbV12.Compile12),
-        new CodeFileInfo("Custom.Hybrid.Razor14", CodeFileTypes.V14, CodeHelpDbV14.Compile14),
-        new CodeFileInfo("Custom.Hybrid.RazorTyped", CodeFileTypes.V16, CodeHelpDbV16.Compile16),
-        new CodeFileInfo("Custom.Hybrid.Razor12", CodeFileTypes.V12, CodeHelpDbV12.Compile12, true),
-        new CodeFileInfo("Custom.Hybrid.Razor14", CodeFileTypes.V14, CodeHelpDbV14.Compile14, true),
-        new CodeFileInfo("Custom.Hybrid.RazorTyped", CodeFileTypes.V16, CodeHelpDbV16.Compile16, true),
+        new("Custom.Hybrid.Razor12", CodeFileTypes.V12, HelpForRazor12.Compile12),
+        new("Custom.Hybrid.Razor14", CodeFileTypes.V14, HelpForRazor14.Compile14),
+        new("Custom.Hybrid.RazorTyped", CodeFileTypes.V16, HelpForRazorTyped.Compile16),
+        new("Custom.Hybrid.Razor12", CodeFileTypes.V12, HelpForRazor12.Compile12, true),
+        new("Custom.Hybrid.Razor14", CodeFileTypes.V14, HelpForRazor14.Compile14, true),
+        new("Custom.Hybrid.RazorTyped", CodeFileTypes.V16, HelpForRazorTyped.Compile16, true),
         // c#
-        new CodeFileInfo("Custom.Hybrid.Code12", CodeFileTypes.V12, CodeHelpDbV12.Compile12),
-        new CodeFileInfo("Custom.Hybrid.Code14", CodeFileTypes.V14, CodeHelpDbV14.Compile14),
-        new CodeFileInfo("Custom.Hybrid.CodeTyped", CodeFileTypes.V16, CodeHelpDbV16.Compile16),
-        new CodeFileInfo("Custom.Hybrid.Code12", CodeFileTypes.V12, CodeHelpDbV12.Compile12, true),
-        new CodeFileInfo("Custom.Hybrid.Code14", CodeFileTypes.V14, CodeHelpDbV14.Compile14, true),
-        new CodeFileInfo("Custom.Hybrid.CodeTyped", CodeFileTypes.V16, CodeHelpDbV16.Compile16, true),
-    };
+        new("Custom.Hybrid.Code12", CodeFileTypes.V12, HelpForRazor12.Compile12),
+        new("Custom.Hybrid.Code14", CodeFileTypes.V14, HelpForRazor14.Compile14),
+        new("Custom.Hybrid.CodeTyped", CodeFileTypes.V16, HelpForRazorTyped.Compile16),
+        new("Custom.Hybrid.Code12", CodeFileTypes.V12, HelpForRazor12.Compile12, true),
+        new("Custom.Hybrid.Code14", CodeFileTypes.V14, HelpForRazor14.Compile14, true),
+        new("Custom.Hybrid.CodeTyped", CodeFileTypes.V16, HelpForRazorTyped.Compile16, true)
+    ];
 }

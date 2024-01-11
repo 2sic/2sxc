@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ToSic.Eav.Code.Help;
-using static ToSic.Sxc.Code.Internal.CodeErrorHelp.CodeHelpDb;
+using static ToSic.Sxc.Code.Internal.CodeErrorHelp.CodeHelpBuilder;
 
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeHelpDbV12
+public class HelpForRazor12
 {
     #region Methods to build Help DB
 
@@ -23,12 +22,12 @@ public class CodeHelpDbV12
     /// <summary>
     /// List re-used in v12 and v14
     /// </summary>
-    internal static List<CodeHelp> Issues12To14 => _help12And14 ??= BuildList(
+    internal static List<CodeHelp> Issues12To14 => _help12And14 ??= BuildListFromDiverseSources(
         // Access .List
-        ManyHelps(
+        BuildVariations(
             HelpNotExists12("List", "AsDynamic(Data)"),
-            h => new CodeHelp(h, detect: "does not contain a definition for 'List'"),
-            h => new CodeHelp(h,
+            h => new(h, detect: "does not contain a definition for 'List'"),
+            h => new(h,
                 detect:
                 @"error CS0305: Using the generic type 'System.Collections.Generic.List<T>' requires 1 type arguments")
         ),
@@ -100,14 +99,13 @@ You are probably trying to use the <code>Dnn</code> object which is not supporte
     #region Exceptions to throw in various not-supported cases
 
     internal static dynamic ExAsDynamicForList()
-        => throw new Exception("AsDynamic for lists isn't supported in RazorComponent. Please use AsList instead.");
+        => throw new("AsDynamic for lists isn't supported in RazorComponent. Please use AsList instead.");
 
     internal static dynamic ExCreateSourceString()
-        => throw new Exception(
-            $"CreateSource(string, ...) {IsNotSupportedIn12Plus}. Please use CreateSource<DataSourceTypeName>(...) instead.");
+        => throw new($"CreateSource(string, ...) {IsNotSupportedIn12Plus}. Please use CreateSource<DataSourceTypeName>(...) instead.");
 
     private static dynamic ExNotYetSupported(string original, string recommended)
-        => throw new Exception($"{original} {IsNotSupportedIn12Plus}. Use {recommended}.");
+        => throw new($"{original} {IsNotSupportedIn12Plus}. Use {recommended}.");
 
     public static object ExAsDynamicKvp() =>
         ExNotYetSupported("AsDynamic(KeyValuePair<int, IEntity>", "AsDynamic(IEnumerable<IEntity>...)");

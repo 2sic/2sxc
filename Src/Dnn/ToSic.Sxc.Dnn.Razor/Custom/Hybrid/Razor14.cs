@@ -113,7 +113,7 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
     [PrivateApi("Not yet ready")]
     public IDevTools DevTools => _CodeApiSvc.DevTools;
 
-    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => CodeHelpDbV14.Compile14;
+    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpForRazor14.Compile14;
 
     #endregion
 

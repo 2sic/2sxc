@@ -4,7 +4,7 @@ using ToSic.Eav.Code.Help;
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class CodeHelpList
+internal class HelpForCommonProblems
 {
     private static readonly CodeHelp IEntityOnEavNamespace = new(name: "ToSic.Eav.IEntity",
         detect: "error CS0234: The type or namespace name 'IEntity' does not exist in the namespace 'ToSic.Eav",
@@ -32,20 +32,22 @@ internal class CodeHelpList
         linkCode: "named-params",
         uiMessage: "Many methods have optional parameters - these must be named, otherwise you see this error.");
 
-    public static List<CodeHelp> ListInvalidCast = new()
-    {
+    public static List<CodeHelp> HelpForInvalidCast =
+    [
         IEntityOnEavNamespace
-    };
+    ];
 
-    public static List<CodeHelp> ListHttpCompile = new(ListInvalidCast)
-    {
+    public static List<CodeHelp> HelpForHttpCompile =
+    [
+        ..HelpForInvalidCast,
         DynamicList,
         DynamicEntity,
-        NoParamOrderUsed,
-    };
+        NoParamOrderUsed
+    ];
 
-    public static List<CodeHelp> ListRuntime = new(ListInvalidCast)
-    {
-        MethodOnObjectNotFound,
-    };
+    public static List<CodeHelp> HelpForRuntimeProblems =
+    [
+        ..HelpForInvalidCast,
+        MethodOnObjectNotFound
+    ];
 }

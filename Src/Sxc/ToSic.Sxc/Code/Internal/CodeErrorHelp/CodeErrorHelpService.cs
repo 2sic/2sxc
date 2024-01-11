@@ -90,11 +90,11 @@ public class CodeErrorHelpService: ServiceBase
             //        Parameters.HelpLink,
             //        uiMessage: " ", detailsHtml: nae.Intro.Replace("\n", "<br>") + (nae.ParamNames.HasValue() ? $"<br>Param Names: <code>{nae.ParamNames}</code>": ""));
             case RuntimeBinderException _:
-                return FindHelp(ex, CodeHelpList.ListRuntime);
+                return FindHelp(ex, HelpForCommonProblems.HelpForRuntimeProblems);
             case InvalidCastException _:
-                return FindHelp(ex, CodeHelpList.ListInvalidCast);
+                return FindHelp(ex, HelpForCommonProblems.HelpForInvalidCast);
             case HttpCompileException _:
-                return FindHelp(ex, CodeHelpList.ListHttpCompile);
+                return FindHelp(ex, HelpForCommonProblems.HelpForHttpCompile);
             default:
                 return null;
         }

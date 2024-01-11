@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Code.Help;
-using static ToSic.Sxc.Code.Internal.CodeErrorHelp.CodeHelpDbV12;
+using static ToSic.Sxc.Code.Internal.CodeErrorHelp.HelpForRazor12;
 
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class CodeHelpDbV14
+internal class HelpForRazor14
 {
-    internal static List<CodeHelp> Compile14 => _help ??= CodeHelpDb.BuildList(
+    internal static List<CodeHelp> Compile14 => _help ??= CodeHelpBuilder.BuildListFromDiverseSources(
         // All which are common in 12 and 14
         Issues12To14,
 

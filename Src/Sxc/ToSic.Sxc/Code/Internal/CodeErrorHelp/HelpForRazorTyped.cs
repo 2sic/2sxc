@@ -3,13 +3,13 @@ using ToSic.Eav.Code.Help;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
-using static ToSic.Sxc.Code.Internal.CodeErrorHelp.CodeHelpDb;
+using static ToSic.Sxc.Code.Internal.CodeErrorHelp.CodeHelpBuilder;
 
 
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeHelpDbV16
+public class HelpForRazorTyped
 {
     #region Methods to help build the data
 
@@ -23,37 +23,36 @@ public class CodeHelpDbV16
     /// <summary>
     /// Compile Help for RazorTyped etc.
     /// </summary>
-    public static List<CodeHelp> Compile16 => _help ??= BuildList(
+    public static List<CodeHelp> Compile16 => _help ??= BuildListFromDiverseSources(
         // use old `Convert` object
-        CodeHelpDbV14.SystemConvertIncorrectUse,
+        HelpForRazor14.SystemConvertIncorrectUse,
 
         // Use Dnn
-        CodeHelpDbV12.DnnObjectNotInHybrid,
+        HelpForRazor12.DnnObjectNotInHybrid,
 
         // use `CreateSource(name)
         NotExists("CreateSource", "Kit.Data.CreateSource(...)"),
         NotExists("CreateInstance", "GetCode(...)"),
 
         // Use AsDynamic(...)
-        new GenNotExist("AsDynamic", new[]
-        {
+        new GenNotExist("AsDynamic", [
             ("AsItem(...)", "to get a standard ITypedItem"),
             ("AsItemList(...)", "to get a list of ITypedItem"),
             ("AsTyped(...)", "to get a ITyped from an anonymous object"),
             ("AsStack(...)", "to get a typed stack which merges various objects"),
-            ("Kit.Json.ToTyped(string)", "to get an ITyped from a json string"),
-        })
+            ("Kit.Json.ToTyped(string)", "to get an ITyped from a json string")
+        ])
         {
             MsgNotSupportedIn = IsNotSupportedIn16Plus,
         },
 
         // Access .List
         // TODO: Resulting API NAMING NOT FINAL
-        ManyHelps(
+        BuildVariations(
             NotExists("List", "MyItems", "AsItems(MyData.Get())"),
-            h => new CodeHelp(h, detect: "does not contain a definition for 'List'"),
-            h => new CodeHelp(h, detect: "error CS0305: Using the generic type " +
-                                         "'System.Collections.Generic.List<T>' requires 1 type arguments")
+            h => new(h, detect: "does not contain a definition for 'List'"),
+            h => new(h, detect: "error CS0305: Using the generic type " +
+                                "'System.Collections.Generic.List<T>' requires 1 type arguments")
         ),
 
         // Core data objects like Content, Presentation, List...
@@ -65,24 +64,23 @@ public class CodeHelpDbV16
 
         // Settings / Resources
         NotExists("Settings", "App.Settings", "AllSettings"),
-        ManyHelps(
+        BuildVariations(
             NotExists("Resources", "App.Resources", "AllResources"),
-            h => new CodeHelp(h, detect: "does not exist in the namespace " +
-                                         "'Resources' (are you missing an assembly reference?)"),
-            h => new CodeHelp(h, detect: "error CS0118: 'Resources' is a " +
-                                         "'namespace' but is used like a 'variable'"),
-            h => new CodeHelp(h, detectRegex: true, detect: "error CS0234: The type or namespace name " +
-                                                            "'.*' does not exist in the namespace 'Resources' \\(are you missing an assembly reference\\?\\)")
+            h => new(h, detect: "does not exist in the namespace " +
+                                "'Resources' (are you missing an assembly reference?)"),
+            h => new(h, detect: "error CS0118: 'Resources' is a " +
+                                "'namespace' but is used like a 'variable'"),
+            h => new(h, detectRegex: true, detect: "error CS0234: The type or namespace name " +
+                                                   "'.*' does not exist in the namespace 'Resources' \\(are you missing an assembly reference\\?\\)")
         ),
 
         // Edit object
-        new GenNotExist("Edit", new[]
-        {
+        new GenNotExist("Edit", [
             ("Kit.Toolbar.Default()...", "to build a standard toolbar"),
             ("Kit.Toolbar.Empty()...", "to start with an empty toolbar"),
             ("MyUser.IsContentAdmin", "to find out if edit is enabled"),
             ("Kit.Edit", "to really use the Edit object (not often needed, as the replacements are better)")
-        })
+        ])
         {
             MsgNotSupportedIn = IsNotSupportedIn16Plus,
         },

@@ -6,18 +6,18 @@ using ToSic.Eav.Code.Help;
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeHelpDb
+internal class CodeHelpBuilder
 {
     /// <summary>
     /// Get a list containing the first help and various derived helps
     /// </summary>
     /// <param name="first"></param>
-    /// <param name="funcs"></param>
+    /// <param name="generators"></param>
     /// <returns></returns>
-    public static List<CodeHelp> ManyHelps(CodeHelp first, params Func<CodeHelp, CodeHelp>[] funcs)
+    public static List<CodeHelp> BuildVariations(CodeHelp first, params Func<CodeHelp, CodeHelp>[] generators)
     {
         var result = new List<CodeHelp> { first };
-        result.AddRange(funcs.Select(func => func(first)));
+        result.AddRange(generators.Select(func => func(first)));
         return result;
     }
 
@@ -27,15 +27,13 @@ public class CodeHelpDb
     /// </summary>
     /// <param name="parts"></param>
     /// <returns></returns>
-    public static List<CodeHelp> BuildList(params object[] parts) =>
-        parts?.SelectMany(r =>
-        {
-            switch (r)
+    public static List<CodeHelp> BuildListFromDiverseSources(params object[] parts)
+        => parts?.SelectMany(r => r switch
             {
-                case CodeHelp ch: return new[] { ch };
-                case GenNotExist gen: return new[] { gen.Generate() };
-                case IEnumerable<CodeHelp> list: return list;
-                default: return Array.Empty<CodeHelp>();
-            }
-        }).ToList();
+                CodeHelp ch => new[] { ch },
+                GenNotExist gen => new[] { gen.Generate() },
+                IEnumerable<CodeHelp> list => list,
+                _ => Array.Empty<CodeHelp>()
+            })
+            .ToList();
 }

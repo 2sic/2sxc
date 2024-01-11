@@ -138,7 +138,7 @@ public abstract class RazorTyped: OqtRazorBase<dynamic>, IHasCodeLog, IRazor, IS
     [PrivateApi("Not yet ready")]
     public IDevTools DevTools => CodeHelper.DevTools;
 
-    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => CodeHelpDbV16.Compile16;
+    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpForRazorTyped.Compile16;
 
     #endregion
 
