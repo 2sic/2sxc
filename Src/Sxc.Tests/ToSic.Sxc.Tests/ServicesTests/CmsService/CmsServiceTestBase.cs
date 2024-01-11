@@ -7,6 +7,7 @@ using ToSic.Eav.Core.Tests;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.ImportExport;
+using ToSic.Eav.Integration;
 using ToSic.Eav.Internal.Loaders;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;

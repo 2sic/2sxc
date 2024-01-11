@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.ImportExport.Options;
+using ToSic.Eav.ImportExport.Internal.Options;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Dnn.WebApi.Internal;

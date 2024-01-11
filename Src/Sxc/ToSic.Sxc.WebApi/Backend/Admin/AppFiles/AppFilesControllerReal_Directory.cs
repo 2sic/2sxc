@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ToSic.Eav.ImportExport.Internal;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
@@ -38,7 +39,7 @@ partial class AppFilesControllerReal
             try
             {
                 // todo: possibly re-include subfolders with ".data"
-                if (Eav.ImportExport.Settings.ExcludeFolders.Contains(d.Name)) continue;
+                if (Settings.ExcludeFolders.Contains(d.Name)) continue;
                 folders.Add(d);
                 FullDirList(d, searchPattern, folders, files, opt);
             }

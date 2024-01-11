@@ -9,14 +9,16 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.ImportExport;
+using ToSic.Eav.ImportExport.Internal;
+using ToSic.Eav.ImportExport.Internal.Xml;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
-using ToSic.Eav.ImportExport.Serialization;
 using ToSic.Eav.ImportExport.Validation;
 using ToSic.Eav.Integration.Environment;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Security;
+using ToSic.Eav.Serialization.Internal;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Infrastructure;
@@ -87,7 +89,7 @@ public class ViewsExportImport : ServiceBase
         var app = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
         var bundle = new BundleEntityWithAssets
         {
-            Entity = app.StateCache.List.One(viewId).IfOfType(Eav.ImportExport.Settings.TemplateContentType) // .Data[Eav.ImportExport.Settings.TemplateContentType].One(viewId)
+            Entity = app.StateCache.List.One(viewId).IfOfType(Settings.TemplateContentType) // .Data[Eav.ImportExport.Settings.TemplateContentType].One(viewId)
         };
 
         var appPaths = _appPathSvc.Init(_site, app);
@@ -148,9 +150,9 @@ public class ViewsExportImport : ServiceBase
                 throw new NullReferenceException("At least one file returned a null-item, something is wrong");
 
             // 1.1 Verify these are view-entities
-            if (!bundles.All(v => v.Entity.Type.Is(Eav.ImportExport.Settings.TemplateContentType)))
+            if (!bundles.All(v => v.Entity.Type.Is(Settings.TemplateContentType)))
                 throw new Exception("At least one of the uploaded items is not a view configuration. " +
-                                    "Expected all to be " + Eav.ImportExport.Settings.TemplateContentType);
+                                    "Expected all to be " + Settings.TemplateContentType);
 
             // 2. Import the views
             // todo: construction of this should go into init
