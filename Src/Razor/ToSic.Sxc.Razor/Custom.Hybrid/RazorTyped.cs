@@ -80,7 +80,7 @@ namespace Custom.Hybrid
 
         public ITypedItem MyHeader => CodeHelper.MyHeader;
 
-        public IBlockRun MyData => _DynCodeRoot.Data;
+        public IBlockInstance MyData => _DynCodeRoot.Data;
 
         #endregion
 

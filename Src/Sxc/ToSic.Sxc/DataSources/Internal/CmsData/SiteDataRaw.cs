@@ -22,7 +22,7 @@ namespace ToSic.Sxc.DataSources.Internal;
 /// <remarks>
 /// Make sure the property names never change, as they are critical for the created Entity.
 /// </remarks>
-[InternalApi_DoNotUse_MayChangeWithoutNotice]
+[PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class SiteDataRaw: IRawEntity
 {

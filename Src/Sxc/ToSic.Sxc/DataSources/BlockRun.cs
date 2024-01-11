@@ -21,7 +21,7 @@ namespace ToSic.Sxc.DataSources;
 /// </remarks>
 [PrivateApi("used to be Internal... till 16.01, then changed to private to hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal partial class ContextData : PassThrough, IBlockRun
+internal partial class ContextData : PassThrough, IBlockInstance
 {
     #region Constructor and Init
 

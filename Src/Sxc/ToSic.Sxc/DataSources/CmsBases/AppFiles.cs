@@ -36,7 +36,7 @@ namespace ToSic.Sxc.DataSources;
     Type = DataSourceType.Source,
     Audience = Audience.Advanced,
     UiHint = "Files and folders in the App folder")]
-[InternalApi_DoNotUse_MayChangeWithoutNotice("still wip / finishing specs etc.")]
+[PrivateApi("Was till v17 InternalApi_DoNotUse_MayChangeWithoutNotice(still wip / finishing specs etc.)")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AppFiles: CustomDataSourceAdvanced
 {

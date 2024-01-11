@@ -53,9 +53,9 @@ public interface IBlock: IAppIdentity, IHasLog
     IApp App { get; }
 
     /// <summary>
-    /// The <see cref="IBlockRun"/> which delivers data for this block (will be used by the <see cref="IEngine"/> together with the View)
+    /// The <see cref="IBlockInstance"/> which delivers data for this block (will be used by the <see cref="IEngine"/> together with the View)
     /// </summary>
-    IBlockRun Data { get; }
+    IBlockInstance Data { get; }
 
     [PrivateApi("might rename this some time")]
     bool IsContentApp { get; }

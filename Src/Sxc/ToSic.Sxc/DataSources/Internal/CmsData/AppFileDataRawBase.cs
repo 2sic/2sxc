@@ -5,7 +5,7 @@ using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
-[InternalApi_DoNotUse_MayChangeWithoutNotice]
+[PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public abstract class AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
 {

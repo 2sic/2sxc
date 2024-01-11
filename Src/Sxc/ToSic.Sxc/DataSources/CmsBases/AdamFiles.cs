@@ -37,7 +37,7 @@ namespace ToSic.Sxc.DataSources;
     DynamicOut = false,
     ConfigurationType = "" // TODO: ...
 )]
-[InternalApi_DoNotUse_MayChangeWithoutNotice("still wip / finishing specs etc.")]
+[PrivateApi("Was till v17 InternalApi_DoNotUse_MayChangeWithoutNotice(still wip / finishing specs etc.)")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AdamFiles : DataSourceBase
 {

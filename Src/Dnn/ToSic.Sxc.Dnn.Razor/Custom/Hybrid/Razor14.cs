@@ -90,7 +90,7 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
     public dynamic Header => _DynCodeRoot.Header;
 
     /// <inheritdoc />
-    public IBlockRun Data => _DynCodeRoot.Data;
+    public IBlockInstance Data => _DynCodeRoot.Data;
 
     #endregion
 

@@ -20,7 +20,7 @@ namespace ToSic.SexyContent
     public interface IAppAndDataHelpers
     {
         IApp App { get; }
-        IBlockRun Data { get; }
+        IBlockInstance Data { get; }
 
         /// <summary>
         /// Transform a IEntity to a DynamicEntity as dynamic object

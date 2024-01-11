@@ -110,12 +110,12 @@ public abstract class SexyContentWebPage :
 
     // This is explicitly implemented so the interfaces don't complain
     // but actually we're not showing this - in reality we're showing the Old (see above)
-    IBlockRun IAppAndDataHelpers.Data => _DynCodeRoot.Data;
+    IBlockInstance IAppAndDataHelpers.Data => _DynCodeRoot.Data;
         
     #endregion
 
     /// <inheritdoc />
-    IBlockRun IDynamicCode.Data => _DynCodeRoot.Data;
+    IBlockInstance IDynamicCode.Data => _DynCodeRoot.Data;
 
     public RazorPermissions Permissions => new(_DynCodeRoot.Block?.Context.UserMayEdit ?? false);
 

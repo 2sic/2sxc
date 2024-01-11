@@ -30,9 +30,9 @@ public class BlockDataSourceFactory: ServiceBase
 
 
     [PrivateApi]
-    internal IBlockRun GetContextDataSource(IBlock block, ILookUpEngine configLookUp)
+    internal IBlockInstance GetContextDataSource(IBlock block, ILookUpEngine configLookUp)
     {
-        var wrapLog = Log.Fn<IBlockRun>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.UserMayEdit}, view:{block.View?.Name}");
+        var wrapLog = Log.Fn<IBlockInstance>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.UserMayEdit}, view:{block.View?.Name}");
         var view = block.View;
 
         // Get ModuleDataSource

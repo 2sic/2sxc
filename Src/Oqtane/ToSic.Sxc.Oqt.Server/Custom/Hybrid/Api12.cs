@@ -75,7 +75,7 @@ public abstract class Api12 : OqtStatefulControllerBase, IDynamicWebApi, IDynami
     public IApp App => _DynCodeRoot?.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IBlockRun Data => _DynCodeRoot?.Data;
+    public IBlockInstance Data => _DynCodeRoot?.Data;
 
     /// <inheritdoc cref="IDynamicCode12.Resources" />
     public dynamic Resources => _DynCodeRoot.Resources;

@@ -163,13 +163,13 @@ public abstract partial class BlockBase : ServiceBase<BlockBase.MyServices>, IBl
 
 
 
-    public IBlockRun Data => _data.GetL(Log, l =>
+    public IBlockInstance Data => _data.GetL(Log, l =>
     {
         l.A($"About to load data source with possible app configuration provider. App is probably null: {App}");
         var dataSource = Services.BdsFactoryLazy.Value.GetContextDataSource(this, App?.ConfigurationProvider);
         return dataSource;
     });
-    private readonly GetOnce<IBlockRun> _data = new();
+    private readonly GetOnce<IBlockInstance> _data = new();
 
     public BlockConfiguration Configuration { get; protected set; }
         

@@ -83,7 +83,7 @@ public abstract partial class SxcApiController() :
     public IApp App => _DynCodeRoot.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IBlockRun Data => _DynCodeRoot.Data;
+    public IBlockInstance Data => _DynCodeRoot.Data;
 
 
     #region AsDynamic implementations

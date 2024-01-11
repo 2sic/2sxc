@@ -67,7 +67,7 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
     public new IApp App => _DynCodeRoot.App;
 
     /// <inheritdoc />
-    public IBlockRun Data => _DynCodeRoot.Data;
+    public IBlockInstance Data => _DynCodeRoot.Data;
 
     #endregion
 

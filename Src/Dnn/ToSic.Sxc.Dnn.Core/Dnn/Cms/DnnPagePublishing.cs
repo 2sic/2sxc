@@ -154,7 +154,7 @@ internal partial class DnnPagePublishing : ServiceBase, IPagePublishing
 
     }
 
-    private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, IBlockRun data, string key)
+    private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, IBlockInstance data, string key)
     {
         var cont = data.GetStream(key, nullIfNotFound: true)?.List.ToImmutableList(); //  data.Out.ContainsKey(key) ? data[key]?.List?.ToImmutableList() : null;
         Log.A($"TryToAddStream(..., ..., key:{key}), found:{cont != null} add⋮{cont?.Count ?? 0}" );

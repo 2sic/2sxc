@@ -16,7 +16,7 @@ public class TypedCode16Helper: CodeHelperXxBase
     //protected readonly bool IsRazor;
     //protected readonly string CodeFileName;
     internal ContextData Data { get; }
-    public TypedCode16Helper(IDynamicCodeRoot codeRoot, IBlockRun data, IDictionary<string, object> myModelData, bool isRazor, string codeFileName)
+    public TypedCode16Helper(IDynamicCodeRoot codeRoot, IBlockInstance data, IDictionary<string, object> myModelData, bool isRazor, string codeFileName)
         : base(codeRoot, isRazor, codeFileName, SxcLogging.SxcLogName + ".TCd16H")
     {
         //CodeRoot = codeRoot;
