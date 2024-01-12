@@ -14,7 +14,7 @@ using ToSic.Sxc.Services;
 namespace Custom.DataSource;
 
 /// <summary>
-/// The Base Class for any Dynamic DataSources.
+/// The Base Class for custom Dynamic DataSources in your App.
 /// </summary>
 [PublicApi]
 public abstract partial class DataSource16: ServiceBase<DataSource16.MyServices>, IDataSource, IAppIdentitySync

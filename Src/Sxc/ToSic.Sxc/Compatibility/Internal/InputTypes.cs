@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Compatibility.Internal;
 
-internal class InputTypes
+public class InputTypes
 {
     public static string InputTypeWysiwyg = "string-wysiwyg";
 
@@ -11,7 +11,7 @@ internal class InputTypes
     /// to keep things streamlined, we don't want to clutter the system with additional type definitions
     /// even though they are the same.
     /// </summary>
-    private static Dictionary<string, string> _inputTypeMap = new()
+    private static readonly Dictionary<string, string> InputTypeMap = new()
     {
         // This one would be used once multiple wysiwyg implementations would need
         // to explicitly say TinyMCE. As of now, the default is the same
@@ -27,7 +27,7 @@ internal class InputTypes
     };
 
     internal static string MapInputTypeV10(string original) =>
-        _inputTypeMap.TryGetValue(original, out var result)
+        InputTypeMap.TryGetValue(original, out var result)
             ? result
             : original;
 }

@@ -6,7 +6,6 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
-using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -17,8 +16,15 @@ using ToSic.Sxc.Services;
 namespace Custom.Hybrid;
 
 /// <summary>
-/// Base class for v16 Pro Dynamic Code files.
+/// Base class for v16 [Typed](xref:NetCode.TypedCode.Index) CSharp files.
+/// Use it to create custom CS code in your App.
+/// 
+/// It provides the <see cref="ServiceKit16"/> on property `Kit` which contains all the popular services to create amazing stuff.
 /// </summary>
+/// <remarks>
+/// Important: This is very different from Razor12 or Razor14, as it doesn't rely on `dynamic` code.
+/// Be aware of this since the APIs are very different - see [Typed Code](xref:NetCode.TypedCode.Index).
+/// </remarks>
 [PublicApi]
 public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
 {

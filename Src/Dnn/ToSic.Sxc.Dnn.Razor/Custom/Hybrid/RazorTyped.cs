@@ -13,13 +13,14 @@ using static System.StringComparer;
 namespace Custom.Hybrid;
 
 /// <summary>
-/// Base class for v14 Dynamic Razor files.
-/// Will provide the <see cref="ServiceKit14"/> on property `Kit`.
-/// This contains all the popular services used in v14, so that your code can be lighter. 
+/// Base class for v16 [Typed](xref:NetCode.TypedCode.Index) Razor files.
+/// Use it to create custom CS code in your App.
+/// 
+/// It provides the <see cref="ServiceKit16"/> on property `Kit` which contains all the popular services to create amazing stuff.
 /// </summary>
 /// <remarks>
-/// Important: This is very different from Razor12 or Razor14, as it doesn't rely on `dynamic` code any more.
-/// Be aware of this since the APIs are very different.
+/// Important: This is very different from Razor12 or Razor14, as it doesn't rely on `dynamic` code.
+/// Be aware of this since the APIs are very different - see [Typed Code](xref:NetCode.TypedCode.Index).
 /// </remarks>
 [PublicApi]
 public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IHasCodeHelp, IGetCodePath, ISetDynamicModel, ICanUseRoslynCompiler
