@@ -21,15 +21,20 @@ public interface ITweakButton
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="type">Optional type, like `info` (default), `warning`, `help`</param>
     /// <param name="background">Background color.</param>
+    /// <param name="delay">Delay show by this duration in ms. If mouse leaves before, it won't appear (new v17).</param>
+    /// <param name="linger">Linger by this duration in ms after the mouse leaves (new v17).</param>
     /// <returns></returns>
     /// <remarks>
-    /// * New feature in v15.07
+    /// * Added in v15.07
+    /// * `delay` and `linger` added in v17
     /// </remarks>
     ITweakButton Note(
         string note = default,
         NoParamOrder noParamOrder = default,
         string type = default,
-        string background = default
+        string background = default,
+        int delay = default,
+        int linger = default
     );
 
     /// <summary>

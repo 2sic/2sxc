@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Edit.Toolbar;
 
 /// <summary>
 /// IMPORTANT: Changed to internal for v16.08. #InternalMaybeSideEffectDynamicRazor
-/// This is how it should be done, but it could have a side-effect in dynamic razor in edge cases where interface-type is "forgotton" by Razor.
+/// This is how it should be done, but it could have a side effect in dynamic razor in edge cases where interface-type is "forgotten" by Razor.
 /// Keep unless we run into trouble.
 /// Remove this comment 2024 end of Q1 if all works, otherwise re-document why it must be public
 /// </summary>
@@ -42,13 +42,20 @@ internal class TweakButton: ITweakButton, ITweakButtonInternal
         string note,
         NoParamOrder noParamOrder = default,
         string type = default,
-        string background = default
+        string background = default,
+        int delay = default,
+        int linger = default
     )
     {
-        //Protect(noParamOrder, $"{nameof(type)}");
         var noteProps = new Dictionary<string, object> { [nameof(note)] = note };
+        //void AddIfNotDefault<T>(string name, T value)
+        //{
+        //    if (value != default) noteProps[name] = value;
+        //}
         if (type != default) noteProps[nameof(type)] = type;
         if (background != default) noteProps[nameof(background)] = background;
+        if (delay != default) noteProps[nameof(delay)] = delay;
+        if (linger != default) noteProps[nameof(linger)] = linger;
         return Ui(new { note = noteProps });
     }
         
@@ -57,7 +64,6 @@ internal class TweakButton: ITweakButton, ITweakButtonInternal
     public ITweakButton Color(string color = default, NoParamOrder noParamOrder = default, string background = default,
         string foreground = default)
     {
-        //Protect(noParamOrder, $"{nameof(background)}, {nameof(foreground)}");
         if (color == default)
         {
             color = background;
