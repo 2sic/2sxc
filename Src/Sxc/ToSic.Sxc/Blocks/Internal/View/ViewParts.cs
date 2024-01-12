@@ -33,8 +33,8 @@ internal class ViewParts
 
     #region Field Pairs for saving / loading
 
-    public static string[] ContentPair = { Content, Presentation };
-    public static string[] HeaderPair = { FieldHeader, FieldHeaderPresentation };
+    public static string[] ContentPair = [Content, Presentation];
+    public static string[] HeaderPair = [FieldHeader, FieldHeaderPresentation];
 
     public static string[] PickFieldPair(string primaryField)
     {

@@ -46,7 +46,7 @@ public class RenderResult(string html) : TagText(null), IRenderResult
     public string HttpStatusMessage { get; set; }
 
     /// <inheritdoc />
-    public List<IDependentApp> DependentApps { get; } = new();
+    public List<IDependentApp> DependentApps { get; } = [];
 
 
     public int ModuleId { get; set; }

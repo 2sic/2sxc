@@ -40,7 +40,7 @@ public abstract partial class BlockResourceExtractor(PageServiceShared pageServi
     public RenderEngineResult Process(string html, ClientAssetsExtractSettings settings)
     {
         // Pre-Flush Assets, so each call gets its own list
-        Assets = new List<IClientAsset>();
+        Assets = [];
         var (template, include2SxcJs) = ExtractFromHtml(html, settings);
         return new RenderEngineResult(template, include2SxcJs, Assets);
     }

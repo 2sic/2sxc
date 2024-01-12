@@ -124,13 +124,13 @@ public abstract partial class BlockBase : ServiceBase<BlockBase.MyServices>, IBl
 
     public bool ContentGroupExists => Configuration?.Exists ?? false;
 
-    public List<string> BlockFeatureKeys { get; } = new();
+    public List<string> BlockFeatureKeys { get; } = [];
 
 
     public int ParentId { get; protected set; }
 
     public bool DataIsMissing { get; private set; }
-    public List<ProblemReport> Problems { get; } = new();
+    public List<ProblemReport> Problems { get; } = [];
 
     public int ContentBlockId { get; protected set; }
         
