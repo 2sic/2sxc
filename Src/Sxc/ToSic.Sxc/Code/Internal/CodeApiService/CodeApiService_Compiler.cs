@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Apps.Internal;
-using ToSic.Sxc.Code.Internal.HotBuild;
+﻿using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Code.Internal;
 
@@ -19,7 +18,6 @@ public partial class CodeApiService
         // Compile
         var compiler = Services.CodeCompilerLazy.Value;
         var spec = new HotBuildSpec { AppId = App.AppId, Edition = _edition };
-        spec.SetHasThisAppInEdition(App.PhysicalPathSwitch(isShared: false)); // TODO: stv, find if app is global/shared
         var instance = compiler.InstantiateClass(virtualPath, spec, className: name, relativePath: relativePath, throwOnError: throwOnError);
 
         if (instance == null)

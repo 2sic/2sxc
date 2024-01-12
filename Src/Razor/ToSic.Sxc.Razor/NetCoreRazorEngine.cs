@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Code.Internal;
@@ -75,9 +74,6 @@ internal class NetCoreRazorEngine : EngineBase, IRazorEngine
         {
             if (string.IsNullOrEmpty(TemplatePath)) return (null, null);
 
-            var spec = new HotBuildSpec() { AppId = App.AppId, Edition = Edition };
-            spec.SetHasThisAppInEdition(App.PhysicalPathSwitch(isShared: Block.View.IsShared));
-
             var result = await RazorRenderer.RenderToStringAsync(TemplatePath, new object(),
                 rzv =>
                 {
@@ -91,7 +87,7 @@ internal class NetCoreRazorEngine : EngineBase, IRazorEngine
                     // Note: Don't set the purpose here any more, it's a deprecated feature in 12+
                 }, 
                 App, 
-                spec);
+                new() { AppId = App.AppId, Edition = Edition });
             var writer = new StringWriter();
             await writer.WriteAsync(result);
             return (writer, null);

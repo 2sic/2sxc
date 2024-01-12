@@ -45,7 +45,7 @@ internal class ThisAppCodeCompilerNetCore : ThisAppCodeCompiler
             {
                 ["DllName"] = dllName,
                 ["Files"] = sourceFiles.Length.ToString(),
-                ["Errors"] = (assemblyResult.ErrorMessages?.Length ?? 0).ToString(),
+                ["Errors"] = assemblyResult.ErrorMessages.Length.ToString(),
                 ["Assembly"] = assemblyResult.Assembly?.FullName ?? "null",
                 ["AssemblyPath"] = assemblyPath,
                 ["SymbolsPath"] = symbolsPath,

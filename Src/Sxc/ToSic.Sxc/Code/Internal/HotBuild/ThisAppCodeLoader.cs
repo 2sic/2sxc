@@ -75,7 +75,7 @@ public class ThisAppCodeLoader : ServiceBase
             return l.ReturnAsOk(result);
 
         // Get paths
-        var (physicalPath, relativePath) = GetAppPathsWithEditionOrFallback(ThisAppCodeBase + "\\" + spec.Segment, spec);
+        var (physicalPath, relativePath) = GetAppPaths(ThisAppCodeBase + "\\" + spec.Segment, spec);
         l.A($"{nameof(physicalPath)}: '{physicalPath}'; {nameof(relativePath)}: '{relativePath}'");
         logSummary.AddSpec("PhysicalPath", physicalPath);
         logSummary.AddSpec("RelativePath", relativePath);
@@ -92,7 +92,7 @@ public class ThisAppCodeLoader : ServiceBase
 
         assemblyResult.WatcherFolders = new[] { physicalPath };
 
-        var (refsAssemblyPath, _) = GetAppPathsWithEditionOrFallback(ThisAppBinFolder, spec);
+        var (refsAssemblyPath, _) = GetAppPaths(ThisAppBinFolder, spec);
         CopyAssemblyForRefs(assemblyResult.AssemblyLocations[1], Path.Combine(refsAssemblyPath, ThisAppCodeCompiler.ThisAppCodeDll));
 
         // Add compiled assembly to cache
@@ -106,21 +106,14 @@ public class ThisAppCodeLoader : ServiceBase
         return l.ReturnAsOk(assemblyResult);
     }
 
-    /// <summary>
-    /// Get partial paths for ThisApp segment with fallback to AppRoot when there is no files in current edition ThisApp segment 
-    /// </summary>
-    /// <param name="folder"></param>
-    /// <param name="spec"></param>
-    /// <returns></returns>
-    /// <remarks>Use this method only when building ThisApp related paths</remarks>
-    private (string physicalPath, string relativePath) GetAppPathsWithEditionOrFallback(string folder, HotBuildSpec spec)
+    private (string physicalPath, string relativePath) GetAppPaths(string folder, HotBuildSpec spec)
     {
         var l = Log.Fn<(string physicalPath, string relativePath)>($"{spec}");
         var appPaths = _appPathsLazy.Value.Init(_site, _appStates.GetReader(spec.AppId));
-        var folderWithEditionOrFallbackToAppRoot = spec.HasThisAppSegmentInEdition ? Path.Combine(spec.Edition, folder) : folder;
-        var physicalPath = Path.Combine(appPaths.PhysicalPath, folderWithEditionOrFallbackToAppRoot);
+        var folderWithEdition = spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder;
+        var physicalPath = Path.Combine(appPaths.PhysicalPath, folderWithEdition);
         l.A($"{nameof(physicalPath)}: '{physicalPath}'");
-        var relativePath = Path.Combine(appPaths.RelativePath, folderWithEditionOrFallbackToAppRoot);
+        var relativePath = Path.Combine(appPaths.RelativePath, folderWithEdition);
         l.A($"{nameof(relativePath)}: '{relativePath}'");
         return l.ReturnAsOk((physicalPath, relativePath));
     }

@@ -12,7 +12,6 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal;
@@ -345,7 +344,6 @@ internal class SearchController : ServiceBase
             .ForwardSlash();
         l.A($"compile ViewController class on path: {path}/{Block.View.ViewController}");
         var spec = new HotBuildSpec { AppId = block.AppId, Edition = _edition };
-        spec.SetHasThisAppInEdition(block.App.PhysicalPathSwitch(isShared: block.View.IsShared));
         var instance = _codeCompiler.New().InstantiateClass(virtualPath: block.View.ViewController, spec: spec, className: null, relativePath: path, throwOnError: true);
         l.A("got instance of compiled ViewController class");
 
