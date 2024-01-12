@@ -13,6 +13,7 @@ using ToSic.Eav.Helpers;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
@@ -154,10 +155,9 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
             if (block != null)
             {
                 spec.AppId = block.AppId;
-                //var polymorph = sp.Build<PolymorphConfigReader>().Init(block.Context.AppState.List);
                 spec.Edition = PolymorphConfigReader.UseViewEditionLazyGetEdition(block.View, 
                     () => sp.Build<PolymorphConfigReader>().Init(block.Context.AppState.List));
-                //block.View.Edition.NullIfNoValue() ?? polymorph.Edition();
+                spec.SetHasThisAppInEdition(block.App.PhysicalPathSwitch(isShared: block.View.IsShared));
             }
             assembly = sp.Build<IRoslynBuildManager>().GetCompiledAssembly(fullPath, typeName, spec)?.Assembly;
         }

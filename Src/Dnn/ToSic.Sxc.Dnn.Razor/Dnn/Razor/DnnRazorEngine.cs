@@ -9,6 +9,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
+using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.HotBuild;
@@ -136,7 +137,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
         try
         {
             var spec = new HotBuildSpec { AppId = App.AppId, Edition = Edition };
-            
+            spec.SetHasThisAppInEdition(App.PhysicalPathSwitch(isShared: Block.View.IsShared));
             // get assembly - try to get from cache, otherwise compile
             var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(spec, Log)?.Assembly 
                                ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrThrow(spec);
