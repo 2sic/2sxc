@@ -104,7 +104,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
     }
 
     [PrivateApi]
-    protected abstract (string Contents, List<Exception> Exception) RenderImplementation(RenderSpecs specs);
+    protected abstract (string Contents, List<Exception> Exception) RenderEntryRazor(RenderSpecs specs);
 
     /// <inheritdoc />
     public virtual RenderEngineResult Render(RenderSpecs specs)
@@ -115,7 +115,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
         var preFlightResult = CheckExpectedNoRenderConditions();
         if (preFlightResult != null) return l.Return(preFlightResult, $"error: {preFlightResult.ErrorCode}");
 
-        var renderedTemplate = RenderImplementation(specs);
+        var renderedTemplate = RenderEntryRazor(specs);
         var depMan = Services.BlockResourceExtractor;
         var result = depMan.Process(renderedTemplate.Contents);
         if (renderedTemplate.Exception != null)

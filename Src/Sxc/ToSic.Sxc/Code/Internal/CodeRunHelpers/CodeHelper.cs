@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Code.Internal.HotBuild;
-
-namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
+﻿namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class CodeHelper: CodeHelperBase

@@ -25,7 +25,7 @@ public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHa
     internal DnnRazorHelper SysHlp => _sysHlp ??= new DnnRazorHelper().Init(this, RenderFunction);
     private DnnRazorHelper _sysHlp;
 
-    HelperResult RenderFunction(string path, object data)
+    private HelperResult RenderFunction(string path, object data)
     {
         if (this is ICanUseRoslynCompiler supportAppCode)
             return supportAppCode.RoslynRenderPage(path, data);

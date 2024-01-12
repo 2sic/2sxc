@@ -53,12 +53,12 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
 
 
     [PrivateApi]
-    private RazorComponentBase Webpage
+    private RazorComponentBase EntryRazorComponent
     {
-        get => Log.Getter(() => _webpage);
-        set => Log.Setter(() => _webpage = value);
+        get => Log.Getter(() => _entryRazorComponent);
+        set => Log.Setter(() => _entryRazorComponent = value);
     }
-    private RazorComponentBase _webpage;
+    private RazorComponentBase _entryRazorComponent;
 
     /// <inheritdoc />
     [PrivateApi]
@@ -68,7 +68,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
         base.Init(block);
         try
         {
-            Webpage = InitWebpage(TemplatePath);
+            EntryRazorComponent = InitWebpage(TemplatePath);
         }
         // Catch web.config Error on DNNs upgraded to 7
         catch (ConfigurationErrorsException exc)
@@ -116,7 +116,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     }
 
     [PrivateApi]
-    protected override (string, List<Exception>) RenderImplementation(RenderSpecs specs) => RenderImplementation(Webpage, specs);
+    protected override (string, List<Exception>) RenderEntryRazor(RenderSpecs specs) => RenderImplementation(EntryRazorComponent, specs);
 
     private (string, List<Exception>) RenderImplementation(RazorComponentBase webpage, RenderSpecs specs)
     {
@@ -217,15 +217,19 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     private void InitHelpers(RazorComponentBase webPage)
     {
         var l = Log.Fn();
-        var dynCode = _codeApiServiceFactory.BuildCodeRoot(webPage, Block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel9Old);
-        webPage.ConnectToRoot(dynCode);
+        // Only generate this for the first / top EntryRazorComponent
+        // All children which are then generated here should re-use that CodeApiService
+        _sharedCodeApiService ??= _codeApiServiceFactory.BuildCodeRoot(webPage, Block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel9Old);
+        webPage.ConnectToRoot(_sharedCodeApiService);
         l.Done();
     }
+
+    private ICodeApiService _sharedCodeApiService;
 
     /// <summary>
     /// Special old mechanism to always request jQuery and Rvt
     /// </summary>
-    public bool OldAutoLoadJQueryAndRvt => Webpage._CodeApiSvc._Cdf.CompatibilityLevel <= CompatibilityLevels.MaxLevelForAutoJQuery;
+    public bool OldAutoLoadJQueryAndRvt => EntryRazorComponent._CodeApiSvc._Cdf.CompatibilityLevel <= CompatibilityLevels.MaxLevelForAutoJQuery;
 
 
     internal HelperResult RenderPage(string templatePath, object data)

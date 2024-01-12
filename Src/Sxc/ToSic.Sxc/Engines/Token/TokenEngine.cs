@@ -111,7 +111,7 @@ public class TokenEngine : EngineBase
     }
 
     [PrivateApi]
-    protected override (string Contents, List<Exception> Exception) RenderImplementation(RenderSpecs specs)
+    protected override (string Contents, List<Exception> Exception) RenderEntryRazor(RenderSpecs specs)
     {
         var templateSource = File.ReadAllText(Services.ServerPaths.FullAppPath(TemplatePath));
         // Convert old <repeat> elements to the new ones

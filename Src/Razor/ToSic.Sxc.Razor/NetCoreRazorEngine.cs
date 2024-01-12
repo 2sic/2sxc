@@ -45,7 +45,7 @@ internal class NetCoreRazorEngine : EngineBase, IRazorEngine
     #endregion
 
     /// <inheritdoc/>
-    protected override (string Contents, List<Exception> Exception) RenderImplementation(RenderSpecs specs)
+    protected override (string Contents, List<Exception> Exception) RenderEntryComponent(RenderSpecs specs)
     {
         var l = Log.Fn<(string, List<Exception>)>();
         var task = RenderTask();
