@@ -5,9 +5,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Installation;
@@ -76,9 +74,11 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         LogTimer.DoInTimer(() => Log.Do(timer: true, action: () =>
         {
             #region Lightspeed output caching
+            var useLightspeed = OutputCache?.IsEnabled ?? false;
             if (OutputCache?.Existing != null) Log.A("Lightspeed hit - will use cached");
-            var renderResult = OutputCache?.Existing?.Data ?? Block.BlockBuilder.Run(true, null);
-            finalMessage = OutputCache?.IsEnabled != true ? "" :
+            var renderResult = OutputCache?.Existing?.Data
+                               ?? Block.BlockBuilder.Run(true, specs: new() { UseLightspeed = useLightspeed });
+            finalMessage = !useLightspeed ? "" :
                 OutputCache?.Existing?.Data != null ? "⚡⚡" : "⚡⏳";
             OutputCache?.Save(renderResult);
 

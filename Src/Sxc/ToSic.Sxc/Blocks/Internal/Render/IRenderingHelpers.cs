@@ -14,7 +14,8 @@ public interface IRenderingHelper: IHasLog
         string tag = "div",
         bool addLineBreaks = true,
         string errorCode = default,
-        List<Exception> exsOrNull = default
+        List<Exception> exsOrNull = default,
+        RenderStatistics statistics = default
     );
 
     string DesignErrorMessage(List<Exception> exs, bool addToEventLog, string msgVisitors = null, string additionalInfo = null, bool addContextWrapper = false, bool encodeMessage = true);

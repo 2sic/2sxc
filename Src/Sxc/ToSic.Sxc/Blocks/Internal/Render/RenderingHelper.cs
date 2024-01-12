@@ -59,12 +59,11 @@ internal class RenderingHelper: ServiceBase, IRenderingHelper
         string tag = SxcUiConstants.DefaultContextTag,
         bool addLineBreaks = true,
         string errorCode = default,
-        List<Exception> exsOrNull = default
+        List<Exception> exsOrNull = default,
+        RenderStatistics statistics = default
     )
     {
-        //Eav.Parameters.Protect(noParamOrder, $"{nameof(instanceId)},{nameof(contentBlockId)},{nameof(editContext)},{nameof(tag)},{nameof(addLineBreaks)}");
-
-        var contextAttribs = ContextAttributes(instanceId, contentBlockId, editContext, errorCode, exsOrNull);
+        var contextAttribs = ContextAttributes(instanceId, contentBlockId, editContext, errorCode, exsOrNull, statistics);
 
         var lineBreaks = addLineBreaks ? "\n" : "";
 
@@ -73,7 +72,8 @@ internal class RenderingHelper: ServiceBase, IRenderingHelper
                $"{lineBreaks}</{tag}>";
     }
 
-    private string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos, string errorCode, List<Exception> exsOrNull)
+    private string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos, string errorCode,
+        List<Exception> exsOrNull, RenderStatistics statistics)
     {
         var contextAttribs = "";
         if (instanceId != 0) contextAttribs += $" data-cb-instance='{instanceId}'";
@@ -81,7 +81,7 @@ internal class RenderingHelper: ServiceBase, IRenderingHelper
         if (contentBlockId != 0) contextAttribs += $" data-cb-id='{contentBlockId}'";
 
         // optionally add editing infos
-        var context = _jsContextAllGen.New().GetJsContext(AppRootPath, Block, errorCode, exsOrNull);
+        var context = _jsContextAllGen.New().GetJsContext(AppRootPath, Block, errorCode, exsOrNull, statistics);
         var contextInfos = JsonSerializer.Serialize(context, JsonOptions.SafeJsonForHtmlAttributes);
         if (includeEditInfos) contextAttribs += Build.Attribute("data-edit-context", contextInfos);
         return contextAttribs;

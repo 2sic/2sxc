@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
@@ -43,7 +44,7 @@ internal class NetCoreRazorEngine : EngineBase, IRazorEngine
     #endregion
 
     /// <inheritdoc/>
-    protected override (string, List<Exception>) RenderImplementation(object data)
+    protected override (string Contents, List<Exception> Exception) RenderImplementation(RenderSpecs specs)
     {
         var l = Log.Fn<(string, List<Exception>)>();
         var task = RenderTask();

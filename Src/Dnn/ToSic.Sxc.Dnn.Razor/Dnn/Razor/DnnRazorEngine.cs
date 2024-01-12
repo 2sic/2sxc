@@ -115,13 +115,13 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     }
 
     [PrivateApi]
-    protected override (string, List<Exception>) RenderImplementation(object data) => RenderImplementation(Webpage, data);
+    protected override (string, List<Exception>) RenderImplementation(RenderSpecs specs) => RenderImplementation(Webpage, specs);
 
-    private (string, List<Exception>) RenderImplementation(RazorComponentBase webpage, object data)
+    private (string, List<Exception>) RenderImplementation(RazorComponentBase webpage, RenderSpecs specs)
     {
         var l = Log.Fn<(string, List<Exception>)>();
         var writer = new StringWriter();
-        var result = Render(webpage, writer, data);
+        var result = Render(webpage, writer, specs.Data);
         return l.ReturnAsOk((result.writer.ToString(), result.exception));
     }
 
@@ -227,10 +227,10 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     public bool OldAutoLoadJQueryAndRvt => Webpage._CodeApiSvc._Cdf.CompatibilityLevel <= CompatibilityLevels.MaxLevelForAutoJQuery;
 
 
-    public HelperResult RenderPage(string templatePath, object data)
+    internal HelperResult RenderPage(string templatePath, object data)
     {
         var page = InitWebpage(templatePath);
-        var (resultString, exceptions) = RenderImplementation(page, data);
+        var (resultString, exceptions) = RenderImplementation(page, new(){Data = data});
         return new HelperResult(writer => writer.Write(resultString));
     }
 }

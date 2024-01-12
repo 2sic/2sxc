@@ -57,7 +57,7 @@ public class ContentBlockBackend : BlockWebApiBackendBase
 
         // now return a rendered instance
         var newContentBlock = _entityBlockGenerator.New().Init(Block, null, entityId);
-        return newContentBlock.BlockBuilder.Run(true, null);
+        return newContentBlock.BlockBuilder.Run(true, specs: new());
     }
 
     // todo: probably move to CmsManager.Block
@@ -140,7 +140,7 @@ public class ContentBlockBackend : BlockWebApiBackendBase
             Block.View = template;
         }
 
-        var result = Block.BlockBuilder.Run(true, null);
+        var result = Block.BlockBuilder.Run(true, specs: new());
         return callLog.ReturnAsOk(result);
     }
 

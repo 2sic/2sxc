@@ -83,7 +83,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
 
         // Throw Exception if Template does not exist
         if (!File.Exists(Services.ServerPaths.FullAppPath(templatePath)))
-            throw new RenderingException(new CodeHelp(name: "Template File Not Found", detect: "",
+            throw new RenderingException(new(name: "Template File Not Found", detect: "",
                 linkCode: "err-template-not-found", uiMessage: $"The template file '{templatePath}' does not exist."));
 
         // check common errors
@@ -104,10 +104,10 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
     }
 
     [PrivateApi]
-    protected abstract (string Contents, List<Exception> Exception) RenderImplementation(object data);
+    protected abstract (string Contents, List<Exception> Exception) RenderImplementation(RenderSpecs specs);
 
     /// <inheritdoc />
-    public virtual RenderEngineResult Render(object data)
+    public virtual RenderEngineResult Render(RenderSpecs specs)
     {
         var l = Log.Fn<RenderEngineResult>(timer: true);
             
@@ -115,11 +115,11 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
         var preFlightResult = CheckExpectedNoRenderConditions();
         if (preFlightResult != null) return l.Return(preFlightResult, $"error: {preFlightResult.ErrorCode}");
 
-        var renderedTemplate = RenderImplementation(data);
+        var renderedTemplate = RenderImplementation(specs);
         var depMan = Services.BlockResourceExtractor;
         var result = depMan.Process(renderedTemplate.Contents);
         if (renderedTemplate.Exception != null)
-            result = new RenderEngineResult(result, exsOrNull: renderedTemplate.Exception);
+            result = new(result, exsOrNull: renderedTemplate.Exception);
         return l.ReturnAsOk(result);
     }
 

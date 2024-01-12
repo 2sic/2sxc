@@ -36,7 +36,7 @@ public class SimpleRenderer: ServiceBase
         // render it
         l.A("found, will render");
         var cb = _blkFrmEntGen.New().Init(parentBlock, entity);
-        var result = cb.BlockBuilder.Run(false, data);
+        var result = cb.BlockBuilder.Run(false, specs: new() { Data = data });
 
         // Special: during Run() various things are picked up like header changes, activations etc.
         // Depending on the code flow, it could have picked up changes of other templates (not this one)
@@ -56,7 +56,7 @@ public class SimpleRenderer: ServiceBase
         var attribs = edit.ContextAttributes(parent, field: cbFieldName, newGuid: newGuid);
         var inner = subItem == null ? "": Render(block, subItem.Entity, data: data);
         var cbClasses = edit.Enabled ? WrapperSingleItem : "";
-        return l.Return(string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner}));
+        return l.Return(string.Format(WrapperTemplate, [cbClasses, attribs, inner]));
     }
 
     public string RenderListWithContext(IBlock block, IEntity parent, string fieldName, string apps, int max, IEditService edit)
@@ -72,12 +72,11 @@ public class SimpleRenderer: ServiceBase
         //    foreach (var cb in items)
         //        innerBuilder.Append(Render(block, cb.Entity));
 
-        var result = string.Format(WrapperTemplate, new object[]
-        {
+        var result = string.Format(WrapperTemplate, [
             edit.Enabled ? WrapperMultiItems : "",
             edit.ContextAttributes(parent, field: fieldName, apps: apps, max: max),
             innerBuilder
-        });
+        ]);
         return l.Return(result);
     }
 }

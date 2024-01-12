@@ -128,14 +128,14 @@ public partial class View : PortalModuleBase, IActionable
                     // Try to build the html and everything
                     data = OutputCache?.Existing?.Data;
 
-                    finalMessage = OutputCache?.IsEnabled != true ? "" : data != null ? "⚡⚡" : "⚡⏳";
+                    var useLightspeed = OutputCache?.IsEnabled ?? false;
+                    finalMessage = !useLightspeed ? "" : data != null ? "⚡⚡" : "⚡⏳";
 
-                    data = data ?? RenderViewAndGatherJsCssSpecs();
+                    data ??= RenderViewAndGatherJsCssSpecs(useLightspeed);
                     // in this case assets & page settings were not applied
                     try
                     {
-                        var pageChanges = GetService<DnnPageChanges>();
-                        pageChanges.Apply(Page, data);
+                        GetService<DnnPageChanges>().Apply(Page, data);
                     }
                     catch
                     {
@@ -175,7 +175,7 @@ public partial class View : PortalModuleBase, IActionable
         l.Done();
     }
 
-    private IRenderResult RenderViewAndGatherJsCssSpecs()
+    private IRenderResult RenderViewAndGatherJsCssSpecs(bool useLightspeed)
     {
         var l = Log.Fn<IRenderResult>(message: $"module {ModuleId} on page {TabId}", timer: true);
 
@@ -184,7 +184,7 @@ public partial class View : PortalModuleBase, IActionable
         {
             var bb = Block.BlockBuilder;
             if (RenderNaked) bb.WrapInDiv = false;
-            result = (RenderResult)bb.Run(true, null);
+            result = (RenderResult)bb.Run(true, specs: new() { UseLightspeed = useLightspeed });
 
             if (result.Errors?.Any() ?? false)
             {

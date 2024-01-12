@@ -157,7 +157,7 @@ public class RenderService: ServiceForDynamicCode,
         //Protect(noParamOrder, $"{nameof(data)}");
         MakeSureLogIsInHistory();
         var block = _Deps.Builder.Value.GetProvider(pageId, moduleId).LoadBlock().BlockBuilder;
-        var result = block.Run(true, data);
+        var result = block.Run(true, specs: new() { Data = data });
         return l.ReturnAsOk(result);
     }
 

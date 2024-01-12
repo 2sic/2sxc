@@ -19,7 +19,7 @@ partial class DnnRazorEngine
         Init(block);
     });
 
-    public override RenderEngineResult Render(object data)
+    public override RenderEngineResult Render(RenderSpecs specs)
     {
         var l = Log.Fn<RenderEngineResult>();
 
@@ -27,10 +27,12 @@ partial class DnnRazorEngine
 #pragma warning disable CS0618
         CustomizeData();
 #pragma warning restore CS0618
-        return l.Return(base.Render(data));
+        return l.Return(base.Render(specs));
     }
 
+#pragma warning disable CS0618 // Type or member is obsolete
     protected Purpose Purpose = Purpose.WebView;
+#pragma warning restore CS0618 // Type or member is obsolete
 
 
     /// <inheritdoc />

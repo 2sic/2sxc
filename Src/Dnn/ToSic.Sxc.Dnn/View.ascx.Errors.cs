@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Web.UI;
+﻿using System.Web.UI;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
@@ -43,7 +42,7 @@ partial class View
                             contentBlockId: Block.ContentBlockId,
                             editContext: true,
                             errorCode: BlockBuildingConstants.ErrorGeneral,
-                            exsOrNull: new List<Exception> { ex });
+                            exsOrNull: [ex]);
                 }
                 catch { /* ignore */ }
 

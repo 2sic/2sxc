@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Helpers;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Internal.Render;
 
 namespace ToSic.Sxc.Web.Internal.JsContextEdit;
 
@@ -22,11 +22,34 @@ public class ContentBlockDto : EntityDto
     public bool HasContent { get; }
     public bool SupportsAjax { get; }
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public string Edition { get; }
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public string TemplatePath { get; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string Edition { get; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string TemplatePath { get; }
+
+    [JsonPropertyName("templateIsShared")]
     public bool TemplateIsShared { get; }
 
-    public ContentBlockDto(IBlock block)
+    /// <summary>
+    /// The view name to show on the layout button, new v17
+    /// </summary>
+    [JsonPropertyName("viewName")]
+    public string ViewName { get; }
+
+    /// <summary>
+    /// The app name to show on the layout button, new v17
+    /// </summary>
+    [JsonPropertyName("appName")]
+    public string AppName { get; }
+
+    [JsonPropertyName("renderMs")]
+    public int RenderMs { get; }
+
+    [JsonPropertyName("renderLightspeed")]
+    public bool RenderLightspeed { get; }
+
+    public ContentBlockDto(IBlock block, RenderStatistics statistics)
     {
         IsCreated = block.ContentGroupExists;
         IsContent = block.IsContentApp;
@@ -35,6 +58,7 @@ public class ContentBlockDto : EntityDto
         Id = block.Configuration?.Id ?? 0;
         Guid = block.Configuration?.Guid ?? Guid.Empty;
         AppId = block.AppId;
+        AppName = app?.Name ?? "";
         AppUrl = app?.Path ?? "" + "/";
         AppSharedUrl = app?.PathShared ?? "" + "/";
         AppSettingsId = app?.Settings?.Entity?.Attributes?.Count > 0
@@ -47,11 +71,15 @@ public class ContentBlockDto : EntityDto
         ZoneId = block.ZoneId;
         TemplateId = block.View?.Id ?? 0;
         Edition = block.View?.Edition;
+        ViewName = block.View?.Name;
         TemplatePath = block.View?.EditionPath.PrefixSlash();
         TemplateIsShared = block.View?.IsShared ?? false;
         QueryId = block.View?.Query?.Id; // will be null if not defined
         ContentTypeName = block.View?.ContentType ?? "";
         IsList = block.Configuration?.View?.UseForList ?? false;
         SupportsAjax = block.IsContentApp || (block.App?.Configuration?.EnableAjax ?? false);
+
+        RenderMs = statistics?.RenderMs ?? -1;
+        RenderLightspeed = statistics?.UseLightSpeed ?? false;
     }
 }

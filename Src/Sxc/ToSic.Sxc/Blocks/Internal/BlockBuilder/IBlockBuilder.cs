@@ -18,10 +18,10 @@ public interface IBlockBuilder: IHasLog
     ///     This means it's the outer-most render which is happening.
     ///     This changes if things like header changes, features etc. are picked up - which should only happen at top level
     /// </param>
-    /// <param name="data">Data to be added to the model of the main template/razor</param>
+    /// <param name="specs">Data to be added to the model of the main template/razor</param>
     /// <returns></returns>
     [PrivateApi]
-    IRenderResult Run(bool topLevel, object data = default);
+    IRenderResult Run(bool topLevel, RenderSpecs specs);
 
     [PrivateApi]
     IRenderingHelper RenderingHelper { get; }

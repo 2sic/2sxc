@@ -17,14 +17,15 @@ public partial class BlockBuilder
     public IRenderingHelper RenderingHelper => _rendHelp.Get(() => Services.RenderHelpGen.New().Init(Block));
     private readonly GetOnce<IRenderingHelper> _rendHelp = new();
 
-    public IRenderResult Run(bool topLevel, object data)
+    public IRenderResult Run(bool topLevel, RenderSpecs specs)
     {
         // Cache Result on multiple runs
         if (_result != null) return _result;
         var l = Log.Fn<IRenderResult>(timer: true);
         try
         {
-            var (html, isErr, exsOrNull) = RenderInternal(data);
+            var (html, isErr, exsOrNull) = RenderInternal(specs);
+
             var result = new RenderResult(html)
             {
                 IsError = isErr,
@@ -82,9 +83,9 @@ public partial class BlockBuilder
 
     private IRenderResult _result;
 
-    private (string Html, bool IsError, List<Exception> exsOrNull) RenderInternal(object data)
+    private (string Html, bool IsError, List<Exception> exsOrNull) RenderInternal(RenderSpecs specs)
     {
-        var l = Log.Fn<(string, bool, List<Exception>)>();
+        var l = Log.Fn<(string, bool, List<Exception>)>(timer: true);
 
         var exceptions = new List<Exception>();
         try
@@ -127,7 +128,7 @@ public partial class BlockBuilder
                     {
                         Log.A("standard case, found template, will render");
                         var engine = GetEngine();
-                        var renderEngineResult = engine.Render(data);
+                        var renderEngineResult = engine.Render(specs);
                         body = renderEngineResult.Html;
                         if (renderEngineResult.ExceptionsOrNull != null)
                             exceptions.AddRange(renderEngineResult.ExceptionsOrNull);;
@@ -184,6 +185,7 @@ public partial class BlockBuilder
 
             #endregion
 
+            var stats = new RenderStatistics { RenderMs = (int)l.Timer.ElapsedMilliseconds, UseLightSpeed = specs.UseLightspeed};
 
             // Wrap
             var result = WrapInDiv
@@ -192,7 +194,8 @@ public partial class BlockBuilder
                     contentBlockId: Block.ContentBlockId,
                     editContext: addEditCtx, 
                     errorCode: errorCode,
-                    exsOrNull: exceptions)
+                    exsOrNull: exceptions,
+                    statistics: stats)
                 : bodyWithAddOns;
             #endregion
 
@@ -219,7 +222,7 @@ public partial class BlockBuilder
         if (!string.IsNullOrEmpty(notReady))
         {
             Log.A("system isn't ready,show upgrade message");
-            var result = RenderingHelper.DesignErrorMessage(new List<Exception>{new(notReady)}, true, encodeMessage: false); // don't encode, as it contains special links
+            var result = RenderingHelper.DesignErrorMessage([new(notReady)], true, encodeMessage: false); // don't encode, as it contains special links
             return (result, true);
         }
 

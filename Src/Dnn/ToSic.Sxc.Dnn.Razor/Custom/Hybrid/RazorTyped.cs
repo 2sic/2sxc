@@ -179,16 +179,11 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
 
     #endregion
 
-    void ICanUseRoslynCompiler.AttachRazorEngine(DnnRazorEngine razorEngine)
-    {
-        if (_razorEngine == null) _razorEngine = razorEngine;
-    }
+    void ICanUseRoslynCompiler.AttachRazorEngine(DnnRazorEngine razorEngine) => _razorEngine ??= razorEngine;
     private DnnRazorEngine _razorEngine;
 
     public HelperResult RoslynRenderPage(string virtualPath, object data)
     {
-        // TODO: switch based on razorType.ThisApp
-        //return base.RenderPage(virtualPath, data);
-        return _razorEngine?.RenderPage(this.NormalizePath(virtualPath), data);
+        return _razorEngine?.RenderPage(NormalizePath(virtualPath), data);
     }
 }

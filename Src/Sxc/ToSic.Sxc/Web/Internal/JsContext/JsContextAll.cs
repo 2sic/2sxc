@@ -4,6 +4,7 @@ using ToSic.Eav.Data.Shared;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal.JsContextEdit;
 using ToSic.Sxc.Web.Internal.PageFeatures;
@@ -40,21 +41,22 @@ public class JsContextAll : ServiceBase
     private readonly JsContextLanguage _jsLangCtx;
     private readonly IJsApiService _jsApiService;
 
-    public JsContextAll GetJsContext(string systemRootUrl, IBlock block, string errorCode, List<Exception> exsOrNull)
+    public JsContextAll GetJsContext(string systemRootUrl, IBlock block, string errorCode, List<Exception> exsOrNull,
+        RenderStatistics statistics)
     {
         var l = Log.Fn<JsContextAll>();
         var ctx = block.Context;
 
-        Environment = new JsContextEnvironment(systemRootUrl, ctx);
+        Environment = new(systemRootUrl, ctx);
         Language = _jsLangCtx.Init(ctx.Site);
 
         // New in v13 - if the view is from remote, don't allow design
         var blockCanDesign = block.View?.Entity.HasAncestor() ?? false ? (bool?)false : null;
 
-        User = new JsContextUser(ctx.User);
+        User = new(ctx.User);
 
-        ContentBlockReference = new ContentBlockReferenceDto(block, ctx.Publishing.Mode);
-        ContentBlock = new ContentBlockDto(block);
+        ContentBlockReference = new(block, ctx.Publishing.Mode);
+        ContentBlock = new(block, statistics);
 
         // If auto toolbar is false / not certain, and we have features activated...
         // find out if the Toolbars-Auto is enabled, in which case we should activate them
@@ -65,13 +67,13 @@ public class JsContextAll : ServiceBase
         );
 
         l.A($"{nameof(autoToolbar)}: {autoToolbar}");
-        Ui = new UiDto(autoToolbar);
+        Ui = new(autoToolbar);
         JsApi = _jsApiService.GetJsApi(pageId: Environment.PageId,
             siteRoot: null,
             rvt: null
         );
 
-        error = new ErrorDto(block, errorCode, exsOrNull, _codeWarnings);
+        error = new(block, errorCode, exsOrNull, _codeWarnings);
         return l.Return(this);
     }
 }

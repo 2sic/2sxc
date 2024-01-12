@@ -37,7 +37,7 @@ public class DnnClientResources: ServiceBase
     private bool? _forcePre1025Behavior;
 
 
-    internal IList<IPageFeature> Features => _features ??= BlockBuilder?.Run(true, null)?.Features ?? new List<IPageFeature>();
+    internal IList<IPageFeature> Features => _features ??= BlockBuilder?.Run(true, specs: new())?.Features ?? new List<IPageFeature>();
     private IList<IPageFeature> _features;
 
     public IList<IPageFeature> AddEverything(IList<IPageFeature> features = null)
