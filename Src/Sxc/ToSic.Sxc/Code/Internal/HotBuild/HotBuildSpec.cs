@@ -3,16 +3,17 @@
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class HotBuildSpec(int appId, string edition = default, HotBuildEnum segment = HotBuildEnum.Code)
 {
-    public int AppId { get; private set; } = appId;
+    public int AppId { get; } = appId;
 
-    public string Edition { get; private set; } = edition;
+    public string Edition { get; } = edition;
 
-    public HotBuildEnum Segment { get; private set; } = segment;
+    public HotBuildEnum Segment { get; } = segment;
 
     /// <summary>
     /// Override ToString for better debugging
     /// </summary>
-    public override string ToString() => $"{nameof(HotBuildSpec)} - {nameof(AppId)}: {AppId}; {nameof(Edition)}: '{Edition}'; {nameof(Segment)}: '{Segment}'";
+    public override string ToString() => _toString ??= $"{nameof(HotBuildSpec)} - {nameof(AppId)}: {AppId}; {nameof(Edition)}: '{Edition}'; {nameof(Segment)}: '{Segment}'";
+    private string _toString;
 
     /// <summary>
     /// Create a dictionary of the specs for logging
