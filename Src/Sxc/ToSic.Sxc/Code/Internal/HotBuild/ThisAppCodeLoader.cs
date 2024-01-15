@@ -93,10 +93,7 @@ public class ThisAppCodeLoader : ServiceBase
         l.A($"{nameof(physicalPath)}: '{physicalPath}'; {nameof(relativePath)}: '{relativePath}'");
         logSummary.AddSpec("PhysicalPath", physicalPath);
         logSummary.AddSpec("RelativePath", relativePath);
-
-        if (!Directory.Exists(physicalPath))
-            return l.ReturnAsError(null, $"no folder {physicalPath}");
-
+ 
         var assemblyResult = _thisAppCodeCompilerLazy.Value.GetAppCode(relativePath, spec);
 
         logSummary.UpdateSpecs(assemblyResult.Infos);
@@ -104,10 +101,12 @@ public class ThisAppCodeLoader : ServiceBase
         if (assemblyResult.ErrorMessages.HasValue())
             return l.ReturnAsError(assemblyResult, assemblyResult.ErrorMessages);
 
-        assemblyResult.WatcherFolders = new[] { physicalPath };
+        assemblyResult.WatcherFolders = GetWatcherFolders(assemblyResult, spec, physicalPath);
+        foreach (var watcherFolder in assemblyResult.WatcherFolders) l.A($"{nameof(watcherFolder)}: {watcherFolder}");
 
         var (refsAssemblyPath, _) = GetAppPaths(ThisAppBinFolder, spec);
-        CopyAssemblyForRefs(assemblyResult.AssemblyLocations[1], Path.Combine(refsAssemblyPath, ThisAppCodeCompiler.ThisAppCodeDll));
+        if (!assemblyResult.WithoutCode)
+            CopyAssemblyForRefs(assemblyResult.AssemblyLocations[1], Path.Combine(refsAssemblyPath, ThisAppCodeCompiler.ThisAppCodeDll));
 
         // Add compiled assembly to cache
         _assemblyCacheManager.Add(
@@ -118,6 +117,49 @@ public class ThisAppCodeLoader : ServiceBase
         );
 
         return l.ReturnAsOk(assemblyResult);
+    }
+
+    private static string[] GetWatcherFolders(AssemblyResult assemblyResult, HotBuildSpec spec, string physicalPath)
+    {
+        var watcherFolders = new List<string>();
+
+        // take ThisApp segment folder as watcher folder (eg. ...\edition\ThisApp\Code)
+        var watcherFolder = physicalPath;
+        if (Directory.Exists(watcherFolder)) watcherFolders.Add(watcherFolder);
+
+        // take parent folder (eg. ...\edition\ThisApp)
+        watcherFolder = Path.GetDirectoryName(watcherFolder);
+        if (watcherFolder == null) return watcherFolders.ToArray();
+        if (Directory.Exists(watcherFolder)) watcherFolders.Add(watcherFolder);
+
+        // take grandparent folder (eg. ...\edition)
+        watcherFolder = Path.GetDirectoryName(watcherFolder);
+        if (watcherFolder == null) return watcherFolders.ToArray();
+        if (Directory.Exists(watcherFolder)) watcherFolders.Add(watcherFolder);
+
+        if (spec.Edition.IsEmpty() || !assemblyResult.WithoutCode) return watcherFolders.ToArray();
+
+        // take root app folder (eg. ...\)
+        watcherFolder = Path.GetDirectoryName(watcherFolder);
+        if (watcherFolder == null) return watcherFolders.ToArray();
+        if (Directory.Exists(watcherFolder)) 
+            watcherFolders.Add(watcherFolder);
+        else
+            return watcherFolders.ToArray();
+
+        watcherFolder = Path.Combine(watcherFolder, ThisAppCodeBase);
+        if (Directory.Exists(watcherFolder)) 
+            watcherFolders.Add(watcherFolder);
+        else
+            return watcherFolders.ToArray();
+
+        watcherFolder = Path.Combine(watcherFolder, spec.Segment.ToString());
+        if (Directory.Exists(watcherFolder)) 
+            watcherFolders.Add(watcherFolder);
+        else
+            return watcherFolders.ToArray();
+
+        return watcherFolders.ToArray();
     }
 
     public (string physicalPath, string relativePath) GetAppPaths(string folder, HotBuildSpec spec)

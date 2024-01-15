@@ -29,9 +29,9 @@ internal class ThisAppCodeCompilerNetFull : ThisAppCodeCompiler
         try
         {
             // Get all C# files in the folder
-            var (sourceFiles, errorResult) = GetSourceFilesOrError(NormalizeFullPath(_hostingEnvironment.MapPath(relativePath)));
-            if (errorResult != null)
-                return l.ReturnAsError(errorResult, errorResult.ErrorMessages);
+            var sourceFiles = GetSourceFiles(NormalizeFullPath(_hostingEnvironment.MapPath(relativePath)));
+            if (sourceFiles.Length == 0)
+                return l.ReturnAsOk(new());
 
             var (symbolsPath, assemblyPath) = GetAssemblyLocations(spec);
 

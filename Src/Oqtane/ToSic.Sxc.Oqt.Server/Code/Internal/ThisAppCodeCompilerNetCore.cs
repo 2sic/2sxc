@@ -31,11 +31,9 @@ internal class ThisAppCodeCompilerNetCore : ThisAppCodeCompiler
 
         try
         {
-            var (sourceFiles, errResult) = GetSourceFilesOrError(NormalizeFullPath(_serverPaths.Value.FullContentPath(virtualPath.Backslash())));
-
-            if (errResult != null)
-                return l.ReturnAsError(errResult, errResult.ErrorMessages);
-
+            var sourceFiles = GetSourceFiles(NormalizeFullPath(_serverPaths.Value.FullContentPath(virtualPath.Backslash())));
+            if (sourceFiles.Length == 0)
+                return l.ReturnAsOk(new());
 
             var (symbolsPath, assemblyPath) = GetAssemblyLocations(spec);
             var dllName = Path.GetFileName(assemblyPath);

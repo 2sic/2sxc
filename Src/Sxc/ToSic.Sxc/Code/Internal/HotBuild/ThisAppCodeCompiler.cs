@@ -14,23 +14,19 @@ public abstract class ThisAppCodeCompiler() : ServiceBase("Sxc.MyApCd")
 
     protected internal abstract AssemblyResult GetAppCode(string relativePath, HotBuildSpec spec);
 
-    protected (string[] SourceFiles, AssemblyResult ErrorResult) GetSourceFilesOrError(string fullPath)
+    protected string[] GetSourceFiles(string fullPath)
     {
-        var l = Log.Fn<(string[], AssemblyResult)>(timer: true);
+        var l = Log.Fn<string[]>(timer: true);
+
+        if (!Directory.Exists(fullPath))
+            return l.ReturnAsOk([]);
 
         var sourceFiles = Directory.GetFiles(fullPath, $"*{CsFiles}", UseSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
 
         // Log all files
         foreach (var sourceFile in sourceFiles) l.A(sourceFile);
 
-        // Validate are there any C# files
-        // TODO: if no files exist, it shouldn't be an error, because it could be that it's just not here yet
-        return sourceFiles.Length == 0
-            ? l.ReturnAsError((sourceFiles, new(
-                    errorMessages: $"Error: given path '{fullPath}' doesn't contain any {CsFiles} files",
-                    infos: new() { ["Files"] = "0 (none found)" })
-                ))
-            : l.ReturnAsOk((sourceFiles, null));
+        return l.ReturnAsOk(sourceFiles);
     }
 
     /// <summary>

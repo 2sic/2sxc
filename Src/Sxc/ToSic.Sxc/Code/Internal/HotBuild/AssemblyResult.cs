@@ -13,7 +13,7 @@ public class AssemblyResult(
 {
     public Assembly Assembly { get; } = assembly;
     public string ErrorMessages { get; } = errorMessages;
-    public string[] AssemblyLocations { get; } = assemblyLocations;
+    public string[] AssemblyLocations { get; } = assemblyLocations ?? []; // TODO: refactor this to not use array
     public string SafeClassName { get; } = safeClassName;
 
     /// <summary>
@@ -33,5 +33,7 @@ public class AssemblyResult(
 
     public AssemblyResult((Assembly Assembly, string ErrorMessages) tuple) : this(tuple.Assembly, tuple.ErrorMessages)
     { }
+
+    public bool WithoutCode => Assembly == null && ErrorMessages == null;
 
 }
