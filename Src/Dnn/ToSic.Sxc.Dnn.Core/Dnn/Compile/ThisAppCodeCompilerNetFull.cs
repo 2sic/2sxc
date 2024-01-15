@@ -75,7 +75,7 @@ internal class ThisAppCodeCompilerNetFull : ThisAppCodeCompiler
 
     private (string SymbolsPath, string AssemblyPath) GetAssemblyLocations(HotBuildSpec spec)
     {
-        var l = Log.Fn<(string, string)>($"{nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'");
+        var l = Log.Fn<(string, string)>($"{spec}");
         var tempAssemblyFolderPath = Path.Combine(_hostingEnvironment.MapPath("~/App_Data"), "2sxc.bin");
         l.A($"TempAssemblyFolderPath: '{tempAssemblyFolderPath}'");
         // Ensure "2sxc.bin" folder exists to preserve dlls

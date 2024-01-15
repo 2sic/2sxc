@@ -21,7 +21,7 @@ internal class CodeCompilerNetFull : CodeCompiler
 
     protected internal override AssemblyResult GetAssembly(string relativePath, string className, HotBuildSpec spec)
     {
-        var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {nameof(className)}: '{className}'; {nameof(spec.AppId)}:{spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'", timer: true);
+        var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {nameof(className)}: '{className}'; {spec}", timer: true);
 
         AssemblyResult ReportError(Exception ex, string additionalInfo)
         {

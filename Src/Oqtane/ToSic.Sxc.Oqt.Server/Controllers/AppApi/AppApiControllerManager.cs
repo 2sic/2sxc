@@ -82,24 +82,16 @@ internal class AppApiControllerManager: IHasLog
         if (string.IsNullOrWhiteSpace(apiCode))
             throw new IOException($"Error, missing AppApi code in file {Path.GetFileName(apiFile)}.");
 
-        var spec = new HotBuildSpec
-        {
-            AppId = _ctxResolver.SetAppOrGetBlock("")?.AppState?.AppId ?? Eav.Constants.AppIdEmpty
-        };
+        var spec = new HotBuildSpec(_ctxResolver.SetAppOrGetBlock("")?.AppState?.AppId ?? Eav.Constants.AppIdEmpty);
 
         // Figure out the current edition
         var block = _ctxResolver.BlockOrNull();
         if (block != null)
-        {
-            //var polymorph = _polymorphism.Init(block.Context.AppState.List);
-            // New 2023-03-20 - if the view comes with a preset edition, it's an ajax-preview which should be respected
-            spec.Edition =
-                PolymorphConfigReader.UseViewEditionLazyGetEdition(block.View,
-                    () => _polymorphism.Init(block.Context.AppState.List)); //  block.View?.Edition.NullIfNoValue() ?? polymorph.Edition();
-        }
+            spec = new HotBuildSpec(spec.AppId,
+                edition: PolymorphConfigReader.UseViewEditionLazyGetEdition(block.View, () => _polymorphism.Init(block.Context.AppState.List)));
 
         // Build new AppApi Controller
-        Log.A($"Compile assembly: {apiFile}; {nameof(dllName)}: '{dllName}'; {nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'");
+        Log.A($"Compile assembly: {apiFile}; {nameof(dllName)}: '{dllName}'; {spec}");
         var assemblyResult = new Compiler(_thisAppCodeLoader).Compile(apiFile, dllName, spec);
 
         // Add new key to concurrent dictionary, before registering new AppAPi controller.

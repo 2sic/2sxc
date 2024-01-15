@@ -36,6 +36,20 @@ public class ThisAppCodeLoader : ServiceBase
     private readonly LazySvc<ThisAppCodeCompiler> _thisAppCodeCompilerLazy;
     private readonly AssemblyCacheManager _assemblyCacheManager;
 
+
+    public (Assembly, HotBuildSpec) TryGetOrFallback(HotBuildSpec spec)
+    {
+        var assembly = TryGetAssemblyOfCodeFromCache(spec, Log)?.Assembly;
+        if (assembly != null) return (assembly, spec);
+
+        assembly = GetAppCodeAssemblyOrThrow(spec);
+        if (assembly != null) return (assembly, spec);
+
+        return spec.Edition.IsEmpty()
+            ? (null, spec) 
+            : TryGetOrFallback(spec.CloneWithoutEdition()); // fallback to non-edition in root of app
+    }
+
     public static AssemblyResult TryGetAssemblyOfCodeFromCache(HotBuildSpec spec, ILog callerLog)
     {
         var l = callerLog.Fn<AssemblyResult>($"{spec}");
@@ -106,11 +120,13 @@ public class ThisAppCodeLoader : ServiceBase
         return l.ReturnAsOk(assemblyResult);
     }
 
-    private (string physicalPath, string relativePath) GetAppPaths(string folder, HotBuildSpec spec)
+    public (string physicalPath, string relativePath) GetAppPaths(string folder, HotBuildSpec spec)
     {
         var l = Log.Fn<(string physicalPath, string relativePath)>($"{spec}");
         var appPaths = _appPathsLazy.Value.Init(_site, _appStates.GetReader(spec.AppId));
-        var folderWithEdition = spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder;
+        var folderWithEdition = folder.HasValue() 
+            ? (spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder)
+            : spec.Edition;
         var physicalPath = Path.Combine(appPaths.PhysicalPath, folderWithEdition);
         l.A($"{nameof(physicalPath)}: '{physicalPath}'");
         var relativePath = Path.Combine(appPaths.RelativePath, folderWithEdition);

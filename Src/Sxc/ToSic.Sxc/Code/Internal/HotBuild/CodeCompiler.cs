@@ -29,7 +29,7 @@ public abstract class CodeCompiler : ServiceBase
 
     internal object InstantiateClass(string virtualPath, HotBuildSpec spec, string className = null, string relativePath = null, bool throwOnError = true)
     {
-        var l = Log.Fn<object>($"{virtualPath}, {nameof(className)}:{className}, {nameof(relativePath)}:{relativePath}, {throwOnError}");
+        var l = Log.Fn<object>($"{virtualPath}; {spec}; {nameof(className)}:{className}; {nameof(relativePath)}:{relativePath}; {nameof(throwOnError)}: {throwOnError}");
 
         // Perform various checks on the path values
         var hasErrorMessage = CheckIfPathsOkAndCleanUp(ref virtualPath, relativePath);
@@ -71,7 +71,7 @@ public abstract class CodeCompiler : ServiceBase
 
     public (Type Type, string ErrorMessages) GetTypeOrErrorMessages(string relativePath, string className, bool throwOnError, HotBuildSpec spec)
     {
-        var l = Log.Fn<(Type Type, string ErrorMessages)>($"{nameof(relativePath)}: '{relativePath}'; {nameof(className)} '{className}'; {nameof(throwOnError)}: {throwOnError}; {nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'");
+        var l = Log.Fn<(Type Type, string ErrorMessages)>($"{nameof(relativePath)}: '{relativePath}'; {nameof(className)} '{className}'; {nameof(throwOnError)}: {throwOnError}; {spec}");
 
         // if no name provided, use the name which is the same as the file name
         className ??= Path.GetFileNameWithoutExtension(relativePath) ?? Eav.Constants.NullNameId;

@@ -1,13 +1,13 @@
 ﻿namespace ToSic.Sxc.Code.Internal.HotBuild;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class HotBuildSpec
+public class HotBuildSpec(int appId, string edition = default, HotBuildEnum segment = HotBuildEnum.Code)
 {
-    public int AppId { get; set; }
+    public int AppId { get; private set; } = appId;
 
-    public string Edition { get; set; }
+    public string Edition { get; private set; } = edition;
 
-    public HotBuildEnum Segment { get; set; } = HotBuildEnum.Code;
+    public HotBuildEnum Segment { get; private set; } = segment;
 
     /// <summary>
     /// Override ToString for better debugging
@@ -23,4 +23,6 @@ public class HotBuildSpec
         { "Edition", Edition },
         { "Segment", Segment.ToString() },
     };
+
+    public HotBuildSpec CloneWithoutEdition() => new(AppId, null, Segment);
 }

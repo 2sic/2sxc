@@ -29,7 +29,7 @@ internal class CodeCompilerNetCore : CodeCompiler
     protected internal override AssemblyResult GetAssembly(string virtualPath, string className, HotBuildSpec spec)
     {
         var l = Log.Fn<AssemblyResult>(
-            $"{nameof(virtualPath)}: '{virtualPath}'; {nameof(className)}: '{className}'; {nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'", timer: true);
+            $"{nameof(virtualPath)}: '{virtualPath}'; {nameof(className)}: '{className}'; {spec}", timer: true);
         var fullContentPath = _serverPaths.Value.FullContentPath(virtualPath.Backslash());
         var fullPath = NormalizeFullFilePath(fullContentPath);
         l.A($"New paths: '{fullContentPath}', '{fullPath}'");

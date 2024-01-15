@@ -34,10 +34,11 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal AssemblyResult Compile(string sourceFile, string dllName, HotBuildSpec spec)
         {
-            var l = Log.Fn<AssemblyResult>($"Starting compilation of: '{sourceFile}'; {nameof(dllName)}: '{dllName}'; {nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'.");
+            var l = Log.Fn<AssemblyResult>($"Starting compilation of: '{sourceFile}'; {nameof(dllName)}: '{dllName}'; {spec}'.");
 
-            var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(spec, Log)?.Assembly
-                               ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrThrow(spec);
+            //var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(spec, Log)?.Assembly
+            //                   ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrThrow(spec);
+            var (codeAssembly, _) = _thisAppCodeLoader.Value.TryGetOrFallback(spec);
 
             var encoding = Encoding.UTF8;
 

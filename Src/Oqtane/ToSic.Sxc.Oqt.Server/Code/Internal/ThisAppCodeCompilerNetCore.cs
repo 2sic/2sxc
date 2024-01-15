@@ -27,7 +27,7 @@ internal class ThisAppCodeCompilerNetCore : ThisAppCodeCompiler
 
     protected internal override AssemblyResult GetAppCode(string virtualPath, HotBuildSpec spec)
     {
-        var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'", timer: true);
+        var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {spec}", timer: true);
 
         try
         {
@@ -45,7 +45,7 @@ internal class ThisAppCodeCompilerNetCore : ThisAppCodeCompiler
             {
                 ["DllName"] = dllName,
                 ["Files"] = sourceFiles.Length.ToString(),
-                ["Errors"] = assemblyResult.ErrorMessages.Length.ToString(),
+                ["Errors"] = assemblyResult.ErrorMessages?.Length.ToString(),
                 ["Assembly"] = assemblyResult.Assembly?.FullName ?? "null",
                 ["AssemblyPath"] = assemblyPath,
                 ["SymbolsPath"] = symbolsPath,
@@ -70,7 +70,7 @@ internal class ThisAppCodeCompilerNetCore : ThisAppCodeCompiler
 
     private (string SymbolsPath, string AssemblyPath) GetAssemblyLocations(HotBuildSpec spec)
     {
-        var l = Log.Fn<(string, string)>($"{nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'");
+        var l = Log.Fn<(string, string)>($"{spec}");
         var tempAssemblyFolderPath = _serverPaths.Value.FullContentPath(@"App_Data\2sxc.bin");
         l.A($"TempAssemblyFolderPath: '{tempAssemblyFolderPath}'");
         // Ensure "2sxc.bin" folder exists to preserve dlls

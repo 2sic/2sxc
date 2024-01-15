@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
         public AssemblyResult GetCompiledAssembly(string virtualPath, string className, HotBuildSpec spec)
         {
-            var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {nameof(spec.AppId)}: {spec.AppId}; {nameof(spec.Edition)}: '{spec.Edition}'", timer: true);
+            var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {spec};", timer: true);
 
             var fileFullPath = HostingEnvironment.MapPath(virtualPath);
 
@@ -83,12 +83,13 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
             // Roslyn compiler need reference to location of dll, when dll is not in bin folder
             // get assembly - try to get from cache, otherwise compile
-            var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(spec, Log)?.Assembly
-                               ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrThrow(spec);
-
+            //var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(spec, Log)?.Assembly
+            //                   ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrThrow(spec);
+            var (codeAssembly, specOut) = _thisAppCodeLoader.Value.TryGetOrFallback(spec);
             _assemblyResolver.AddAssembly(codeAssembly);
 
-            var thisAppCode = AssemblyCacheManager.TryGetThisAppCode(spec);
+            var thisAppCode = AssemblyCacheManager.TryGetThisAppCode(specOut);
+
             var thisAppCodeAssembly = thisAppCode.Result?.Assembly;
             if (thisAppCodeAssembly != null)
             {

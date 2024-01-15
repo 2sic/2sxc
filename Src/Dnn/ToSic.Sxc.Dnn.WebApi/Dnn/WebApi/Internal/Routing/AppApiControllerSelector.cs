@@ -149,16 +149,11 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
         if (hasThisApp)
         {
             // Figure edition
-            var spec = new HotBuildSpec();
+            HotBuildSpec spec = null;
             var block = sp.Build<DnnGetBlock>().GetCmsBlock(request).LoadBlock();
             if (block != null)
-            {
-                spec.AppId = block.AppId;
-                //var polymorph = sp.Build<PolymorphConfigReader>().Init(block.Context.AppState.List);
-                spec.Edition = PolymorphConfigReader.UseViewEditionLazyGetEdition(block.View, 
-                    () => sp.Build<PolymorphConfigReader>().Init(block.Context.AppState.List));
-                //block.View.Edition.NullIfNoValue() ?? polymorph.Edition();
-            }
+                spec = new HotBuildSpec(block.AppId, 
+                    edition: PolymorphConfigReader.UseViewEditionLazyGetEdition(block.View, () => sp.Build<PolymorphConfigReader>().Init(block.Context.AppState.List)));
             assembly = sp.Build<IRoslynBuildManager>().GetCompiledAssembly(fullPath, typeName, spec)?.Assembly;
         }
         else

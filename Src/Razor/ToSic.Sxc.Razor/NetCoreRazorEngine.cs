@@ -87,7 +87,7 @@ internal class NetCoreRazorEngine : EngineBase, IRazorEngine
                     // Note: Don't set the purpose here any more, it's a deprecated feature in 12+
                 }, 
                 App, 
-                new() { AppId = App.AppId, Edition = Edition });
+                new HotBuildSpec(App.AppId, Edition));
             var writer = new StringWriter();
             await writer.WriteAsync(result);
             return (writer, null);

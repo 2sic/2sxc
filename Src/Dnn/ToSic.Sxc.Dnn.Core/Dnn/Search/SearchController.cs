@@ -343,7 +343,8 @@ internal class SearchController : ServiceBase
             .Combine(Block.View.IsShared ? site.SharedAppsRootRelative() : site.AppsRootPhysical, block.Context.AppState.Folder)
             .ForwardSlash();
         l.A($"compile ViewController class on path: {path}/{Block.View.ViewController}");
-        var spec = new HotBuildSpec { AppId = block.AppId, Edition = _edition };
+        var spec = new HotBuildSpec(block.AppId, _edition);
+        l.A($"prepare spec: {spec}");
         var instance = _codeCompiler.New().InstantiateClass(virtualPath: block.View.ViewController, spec: spec, className: null, relativePath: path, throwOnError: true);
         l.A("got instance of compiled ViewController class");
 

@@ -1,17 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Razor.Language;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -108,7 +105,7 @@ internal class ThisAppCodeRazorCompiler : ServiceBase, IThisAppCodeRazorCompiler
                 _executedAlready = true;
             }
 
-            var firstAttempt = await GetViewWithAppCodeAsync(templatePath, app, spec);
+            var firstAttempt = GetViewWithAppCodeAsync(templatePath, app, spec);
             l.A($"firstAttempt: {firstAttempt}");
 
             if (removeThis != null)
@@ -157,35 +154,53 @@ internal class ThisAppCodeRazorCompiler : ServiceBase, IThisAppCodeRazorCompiler
         throw new InvalidOperationException(errorMessage);
     }
 
-    private async Task<ViewEngineResult> GetViewWithAppCodeAsync(string templatePath, IApp app, HotBuildSpec spec)
+    private ViewEngineResult GetViewWithAppCodeAsync(string templatePath, IApp app, HotBuildSpec spec)
     {
+        var l = Log.Fn<ViewEngineResult>($"{nameof(templatePath)}:{templatePath}; {nameof(app.RelativePath)}:{app.RelativePath}; {spec}", timer: true);
+
         // get assembly - try to get from cache, otherwise compile
-        var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(spec, Log)?.Assembly
-                           ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrThrow(spec);
+        //var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(spec, Log)?.Assembly
+        //                   ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrThrow(spec);
+        var (codeAssembly, _) = _thisAppCodeLoader.Value.TryGetOrFallback(spec);
+        l.A($"has ThisApp.Code assembly: {codeAssembly != null}");
 
-        var appRelativePathWithEdition = spec.Edition.HasValue() ? Path.Combine(app.RelativePath, spec.Edition) : app.RelativePath;
-        if (codeAssembly != null) _assemblyResolver.AddAssembly(codeAssembly, appRelativePathWithEdition);
+        if (codeAssembly != null)
+        {
+            var appRelativePathWithEdition = spec.Edition.HasValue() ? Path.Combine(app.RelativePath, spec.Edition) : app.RelativePath;
+            l.A($"{nameof(appRelativePathWithEdition)}: {appRelativePathWithEdition}");
 
-        var assemblyLoadContext = new AssemblyLoadContext("UnLoadableAssemblyLoadContext", isCollectible: true);
+            // add assembly to resolver, so it will be provided to the compiler when used in cshtml
+            _assemblyResolver.AddAssembly(codeAssembly, appRelativePathWithEdition);
+        }
 
-        var refs = GetMetadataReferences(codeAssembly?.Location);
+        // setup RazorProjectEngine
         var fileSystem = RazorProjectFileSystem.Create(app.PhysicalPath);
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, fileSystem, (RazorProjectEngineBuilder builder) =>
         {
-            builder.AddDefaultImports(DefaultImports);
+            builder.AddDefaultImports(DefaultImports); // implicit usings
         });
         var projectItem = fileSystem.GetItem(_serverPaths.Value.FullContentPath(templatePath));
+
+        var lProcess = Log.Fn($"generate codeDocument from razor", timer: true);
         var codeDocument = projectEngine.Process(projectItem);
+        lProcess.Done();
 
+        var lGenerateCode = Log.Fn("generate c# code from codeDocument", timer: true);
         var generatedCode = codeDocument.GetCSharpDocument().GeneratedCode;
+        lGenerateCode.Done();
 
-        // 2. Compilation
+        var lParse = Log.Fn("generate SyntaxTree from c# code", timer: true);
         var syntaxTree = CSharpSyntaxTree.ParseText(
             generatedCode,
             // Add necessary using directives
             new(LanguageVersion.Latest),
             encoding: Encoding.UTF8
         );
+        lParse.Done();
+
+        var lRefs = Log.Fn("prepare metadata references", timer: true);
+        var refs = GetMetadataReferences(codeAssembly?.Location);
+        lRefs.Done();
 
         var compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
             .WithGeneralDiagnosticOption(ReportDiagnostic.Suppress); // suppress all warning, to not be treated as compile errors
@@ -194,16 +209,18 @@ internal class ThisAppCodeRazorCompiler : ServiceBase, IThisAppCodeRazorCompiler
         //    { "CS1701", ReportDiagnostic.Suppress }
         //});
 
+        var lCompilation = Log.Fn($"compile: {templatePath}", timer: true);
         var compilation = CSharpCompilation.Create(Path.GetFileNameWithoutExtension(templatePath))
             .WithOptions(compilationOptions)
-            .AddReferences(/*GetMetadataReferences(appCodeFullPath)*/refs)
+            .AddReferences(refs)
             .AddSyntaxTrees(syntaxTree);
+
 
         using var peStream = new MemoryStream();
         var result = compilation.Emit(peStream);
         if (!result.Success)
         {
-            //l.E("Compilation done with error.");
+            l.E("Compilation done with error.");
             var errors = new List<string>();
 
             var failures = result.Diagnostics.Where(diagnostic =>
@@ -215,12 +232,19 @@ internal class ThisAppCodeRazorCompiler : ServiceBase, IThisAppCodeRazorCompiler
                 errors.Add($"{diagnostic.Id}: {diagnostic.GetMessage()}");
             }
 
-            throw new InvalidOperationException(string.Join("\n", errors));
+            var errorMessage = string.Join("\n", errors);
+            lCompilation.E(errorMessage);
+            lCompilation.Done();
+            l.Done();
+            throw new InvalidOperationException(errorMessage);
         }
+        lCompilation.Done();
 
+        var lCreate = Log.Fn($"create instance", timer: true);
         peStream.Seek(0, SeekOrigin.Begin);
 
         // 3. Loading and Execution
+        var assemblyLoadContext = new AssemblyLoadContext("UnLoadableAssemblyLoadContext", isCollectible: true);
         var assembly = assemblyLoadContext.LoadFromStream(peStream);
 
         var viewType = assembly.GetType("Razor.Template");
@@ -228,15 +252,16 @@ internal class ThisAppCodeRazorCompiler : ServiceBase, IThisAppCodeRazorCompiler
         var instance = Activator.CreateInstance(viewType);
 
         assemblyLoadContext.Unload();
+        lCreate.Done();
 
         if (instance is not IRazorPage page)
-            return ViewEngineResult.NotFound(templatePath, new string[] { "View not found" });
+            return l.ReturnAsError(ViewEngineResult.NotFound(templatePath, new string[] { "View not found" }), "View not found");
 
         page.Path = templatePath;
 
         // Create an IView instance from the compiled assembly
         var viewInstance = new RazorView(_viewEngine, _pageActivator, Array.Empty<IRazorPage>(), page, HtmlEncoder.Default, new(templatePath));
-        return ViewEngineResult.Found(templatePath, viewInstance);
+        return l.ReturnAsOk(ViewEngineResult.Found(templatePath, viewInstance));
     }
 
     private string[] DefaultImports => _defaultImports.Get(GetDefaultImports);

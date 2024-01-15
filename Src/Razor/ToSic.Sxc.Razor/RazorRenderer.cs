@@ -36,7 +36,7 @@ internal class RazorRenderer : ServiceBase, IRazorRenderer
 
     public async Task<string> RenderToStringAsync<TModel>(string templatePath, TModel model, Action<RazorView> configure, IApp app = null, HotBuildSpec spec = default)
     {
-        var l = Log.Fn<string>($"{nameof(templatePath)}: '{templatePath}'; {nameof(app.PhysicalPath)}: '{app?.PhysicalPath}'; {nameof(spec.AppId)}: {spec?.AppId}; {nameof(spec.Edition)}: {spec?.Edition}");
+        var l = Log.Fn<string>($"{nameof(templatePath)}: '{templatePath}'; {nameof(app.PhysicalPath)}: '{app?.PhysicalPath}'; {spec}");
 
         // TODO: SHOULD OPTIMIZE so the file doesn't need to read multiple times
         // 1. probably change so the CodeFileInfo contains the source code

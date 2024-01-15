@@ -151,7 +151,7 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
                 try
                 {
                     // TODO: AppDataSource do not support Edition
-                    var spec = new HotBuildSpec { AppId = appId, Edition = default };
+                    var spec = new HotBuildSpec(appId);
 
                     var (type, errorMessages) = compiler.GetTypeOrErrorMessages(
                         relativePath: Path.Combine(relativePath, Path.GetFileName(dataSourceFile)),

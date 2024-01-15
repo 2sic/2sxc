@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Reflection;
 using ToSic.Eav.Internal.Environment;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Lib.DI;
@@ -52,21 +51,13 @@ public class ApiExplorerController : OqtStatefulControllerBase, IApiExplorerCont
         var appFolder = GetService<AppFolder>().GetAppFolder();
         var pathFromRoot = OqtServerPaths.GetAppApiPath(siteId, appFolder, path);
 
-        var spec = new HotBuildSpec 
-        { 
-            AppId = CtxHlp.BlockOptional?.AppId ?? Eav.Constants.AppIdEmpty
-        };
-
+        var spec = new HotBuildSpec(CtxHlp.BlockOptional?.AppId ?? Eav.Constants.AppIdEmpty); 
+        
         // Figure out the current edition
         var block = CtxHlp.BlockOptional;
         if (block != null)
-        {
-            //var polymorphism = GetService<PolymorphConfigReader>();
-            //var polymorph = GetService<PolymorphConfigReader>().Init(block.Context.AppState.List);
-            // New 2023-03-20 - if the view comes with a preset edition, it's an ajax-preview which should be respected
-            spec.Edition = PolymorphConfigReader.UseViewEditionLazyGetEdition(block.View,
-                () => GetService<PolymorphConfigReader>().Init(block.Context.AppState.List));// block.View?.Edition.NullIfNoValue() ?? polymorph.Edition();
-        }
+            spec = new HotBuildSpec(spec.AppId,
+                edition: PolymorphConfigReader.UseViewEditionLazyGetEdition(block.View,() => GetService<PolymorphConfigReader>().Init(block.Context.AppState.List)));
 
         var thisAppCodeLoader = GetService<LazySvc<ThisAppCodeLoader>>();
         Log.A($"Controller path from root: {pathFromRoot}");

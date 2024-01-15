@@ -39,7 +39,7 @@ public abstract class ThisAppCodeCompiler() : ServiceBase("Sxc.MyApCd")
     /// <returns>The generated random name.</returns>
     protected virtual string GetAppCodeDllName(string folderPath, HotBuildSpec spec)
     {
-        var l = Log.Fn<string>($"{nameof(folderPath)}: '{folderPath}'; {nameof(spec.AppId)}: {spec.AppId}; ; {nameof(spec.Edition)}: '{spec.Edition}'", timer: true);
+        var l = Log.Fn<string>($"{nameof(folderPath)}: '{folderPath}'; {spec}", timer: true);
         string randomNameWithoutExtension;
         do
         {
