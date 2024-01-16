@@ -742,7 +742,7 @@
             version="01.10.03.01" - ToSic.Imageflow.Dnn v01.02.01 is OK
             version="01.10.04.01" - ToSic.Imageflow.Dnn v01.02.02 is OK
     -->
-    <package name="ToSic.Imageflow.Dnn" type="Library" version="01.10.04.01">
+    <package name="ToSic.Imageflow.Dnn" type="Library" version="01.10.05.01">
       <friendlyName>Imageflow</friendlyName>
 
       <description>
@@ -1774,7 +1774,7 @@
                     <bindingRedirect oldVersion="0.0.0.0-4.0.3.0" newVersion="4.0.3.0" xmlns="urn:schemas-microsoft-com:asm.v1"/>
                   </node>
 
-                  <!-- 10 - Imageflow add codeBase and update bindingRedirects for bin\Imageflow\System.Memory.dll, version 4.0.1.1 (aka 4.5.4) -->
+                  <!-- 10 - Imageflow add codeBase and update bindingRedirects for bin\Imageflow\System.Memory.dll, version 4.0.1.2 (aka 4.5.5) -->
                   <!--<node path="/configuration/runtime/ab:assemblyBinding"
                         targetpath="/configuration/runtime/ab:assemblyBinding[ab:dependentAssembly/ab:assemblyIdentity/@name='System.Memory']"
                         action="add"
@@ -1785,8 +1785,8 @@
                       <assemblyIdentity name="System.Memory" publicKeyToken="cc7b13ffcd2ddd51" />
                       <codeBase version="4.0.1.1" href="bin\Imageflow\System.Memory.dll" />
                     </dependentAssembly>
-                  </node>-->
-                  <!--<node path="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Memory'][ab:bindingRedirect]/ab:codeBase[@href='bin\Imageflow\System.Memory.dll']"
+                  </node>
+                  <node path="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Memory'][ab:bindingRedirect]/ab:codeBase[@href='bin\Imageflow\System.Memory.dll']"
                         action="remove"
                         collision="overwrite"
                         nameSpace="urn:schemas-microsoft-com:asm.v1"
@@ -1955,7 +1955,6 @@
 
       </components>
     </package>
-
 
     <!-- Keep the 4th version number part as it is needed to prevent "repair install" message that DNN
       shows when upgrading 2sxc: https://github.com/2sic/2sxc/issues/1555
