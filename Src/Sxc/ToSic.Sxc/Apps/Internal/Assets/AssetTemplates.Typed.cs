@@ -7,7 +7,7 @@ public partial class AssetTemplates
     public static readonly TemplateInfo RazorTyped = new("cshtml-typed", "Razor Typed", ".cshtml", "DetailsTemplate", ForTemplate, TypeRazor)
     {
         Body = @"@inherits Custom.Hybrid.RazorTyped
-@* go.2sxc.org/cs-typed *@
+@* FYI: this inherits from RazorTyped to use the latest APIs. Learn more on https://go.2sxc.org/cs-typed *@
 
 <div @Kit.Toolbar.Default(MyItem)>
     Put your content here
@@ -16,30 +16,31 @@ public partial class AssetTemplates
         
     };
 
-    /*
+    
     public static readonly TemplateInfo CsTyped =
-        new("cs-code-hybrid", "C# Code Hybrid", ".cs", "Helpers", ForCode, TypeNone)
+        new("cs-code-typed", "C# Code Typed", ".cs", "Helpers", ForCode, TypeNone)
         {
             Body = @"// Important notes:
 // - This class should have the same name as the file it's in
-// - This inherits from Custom.Hybrid.Code14
-//   which will automatically provide the common objects like App, CmsContext, Data etc.
+// - This inherits from Custom.Hybrid.CodeTyped
+//   which will automatically provide the common objects like App, MyContext, Data etc.
 //   from the current context to use in your code
+//   Learn more on https://go.2sxc.org/cs-typed
 using ToSic.Sxc.Services; // Make it easier to use https://go.2sxc.org/services
 
-public class " + CsCodeTemplateName + @" : Custom.Hybrid.Code14 {
+public class " + CsCodeTemplateName + @" : Custom.Hybrid.CodeTyped {
   public string SayHello() {
     return ""Hello from shared functions!"";
   }
 }
 ",
-            Description = "c# code hybrid template",
+            Description = "c# code typed template",
         };
 
 
 
     public static readonly TemplateInfo ApiTyped =
-        new("cs-api-hybrid", "WebApi Hybrid", ".cs", "My", ForApi, TypeNone)
+        new("cs-api-typed", "WebApi Typed", ".cs", "My", ForApi, TypeNone)
         {
             Body = @"#if NETCOREAPP // Oqtane
 using Microsoft.AspNetCore.Authorization;
@@ -51,9 +52,10 @@ using DotNetNuke.Web.Api;
 using ToSic.Sxc.Services; // Make it easier to use https://go.2sxc.org/services
 
 [AllowAnonymous]      // define that all commands can be accessed without a login
-// Inherit from Custom.Hybrid.Api14 to get features like App, CmsContext, Data etc.
+// Inherit from Custom.Hybrid.ApiTyped to get features like App, MyContext, Data etc.
 // see https://docs.2sxc.org/web-api/custom/index.html
-public class " + CsApiTemplateControllerName + @" : Custom.Hybrid.Api14
+// Learn more on https://go.2sxc.org/cs-typed
+public class " + CsApiTemplateControllerName + @" : Custom.Hybrid.ApiTyped
 {
     [HttpGet]        // [HttpGet] says we're listening to GET requests
     public string Hello()
@@ -71,14 +73,13 @@ public class " + CsApiTemplateControllerName + @" : Custom.Hybrid.Api14
     }
 }
 ",
-            Description = "c# WebApi controller hybrid template",
+            Description = "c# WebApi controller typed template",
             Suffix = "Controller",
         };
 
-
-
+    /*
     public static readonly TemplateInfo DataSourceTyped =
-        new("data-source-hybrid", "DataSource Hybrid", ".cs", "MyDataSource", ForDataSource, TypeNone)
+        new("data-source-typed", "DataSource Typed", ".cs", "MyDataSource", ForDataSource, TypeNone)
         {
             Body = @"// Template Dynamic DataSource - learn about this on https://go.2sxc.org/DsCustom
 using System;
@@ -86,7 +87,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.DataSource;
 
-// Class name must match file name, and must extend Custom.DataSource.DataSource16
+// Class name must match file name, and must extend Custom.DataSource.DataSourceTyped
 public class " + CsDataSourceName + @" : Custom.DataSource.DataSource16
 {
   // Constructor: must forward MyServices to the base class
