@@ -41,8 +41,9 @@ public partial class AssetTemplates : ServiceBase
     public List<TemplateInfo> GetTemplates() => _templates ??= new()
     {
         RazorHybrid,
+        RazorTyped,
         RazorDnn,
-        DnnCsCode,
+        // DnnCsCode,
         CsHybrid,
         ApiHybrid,
         DataSourceHybrid,

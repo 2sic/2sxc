@@ -18,30 +18,30 @@ public partial class AssetTemplates
         Description = "razor page dnn template",
     };
 
-    /// <summary>
-    /// This only works for Dnn, Hybrid doesn't have this concept as we can't access functions from outside
-    /// </summary>
-    public static readonly TemplateInfo DnnCsCode =
-        new("cshtml-code-hybrid", "Razor Code (Dnn only)", ".code.cshtml", "DetailsTemplate", ForTemplate, TypeRazor)
-        {
-            Body = @"@inherits Custom.Dnn.Razor12
-@* This inherits statement gets you features like App, CmsContext, Data as well as Dnn etc. - you can delete this comment *@
-@using ToSic.Razor.Blade;
-@using ToSic.Sxc.Services; @* Make it easier to use https://go.2sxc.org/services *@
+//    /// <summary>
+//    /// This only works for Dnn, Hybrid doesn't have this concept as we can't access functions from outside
+//    /// </summary>
+//    public static readonly TemplateInfo DnnCsCode =
+//        new("cshtml-code-hybrid", "Razor Code (Dnn only)", ".code.cshtml", "DetailsTemplate", ForTemplate, TypeRazor)
+//        {
+//            Body = @"@inherits Custom.Dnn.Razor12
+//@* This inherits statement gets you features like App, CmsContext, Data as well as Dnn etc. - you can delete this comment *@
+//@using ToSic.Razor.Blade;
+//@using ToSic.Sxc.Services; @* Make it easier to use https://go.2sxc.org/services *@
 
-@functions {
-  public string Hello() {
-    return ""Hello from inner code"";
-  }
+//@functions {
+//  public string Hello() {
+//    return ""Hello from inner code"";
+//  }
 
-  dynamic MessageHelper(string message) {
-    return Tag.Div(message + ""!"");
-  }
-}
-",
-            Description = "razor page c# code hybrid template",
-            PlatformTypes = PlatformType.Dnn,
-        };
+//  dynamic MessageHelper(string message) {
+//    return Tag.Div(message + ""!"");
+//  }
+//}
+//",
+//            Description = "razor page c# code hybrid template",
+//            PlatformTypes = PlatformType.Dnn,
+//        };
 
 
 
