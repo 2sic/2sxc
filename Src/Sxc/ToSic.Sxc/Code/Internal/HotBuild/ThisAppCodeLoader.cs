@@ -75,7 +75,7 @@ public class ThisAppCodeLoader : ServiceBase
             return l.ReturnAsOk(assemblyResults?.Assembly);
         
         l.ReturnAsError(null, assemblyResults.ErrorMessages);
-        throw new Exception(assemblyResults.ErrorMessages);
+        throw new(assemblyResults.ErrorMessages);
     }
 
     private AssemblyResult TryLoadAppCodeAssembly(HotBuildSpec spec, LogStoreEntry logSummary)

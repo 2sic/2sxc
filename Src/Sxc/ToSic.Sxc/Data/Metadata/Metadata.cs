@@ -12,11 +12,11 @@ internal partial class Metadata: DynamicEntity, IMetadata, IHasPropLookup
     {
         _metadata = metadata;
     }
-    IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= new PropLookupMetadata(this, () => Debug);
+    IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= new(this, () => Debug);
     private PropLookupMetadata _propLookup;
 
     [PrivateApi]
-    private CodeItemHelper ItemHelper => _itemHelper ??= new CodeItemHelper(GetHelper, this);
+    private CodeItemHelper ItemHelper => _itemHelper ??= new(GetHelper, this);
     private CodeItemHelper _itemHelper;
 
     [PrivateApi("Hide this")]

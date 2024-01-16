@@ -65,7 +65,7 @@ public class WorkViews: WorkUnitBase<IAppWorkCtxPlus>
 
     private IView ViewOfEntity(IEntity templateEntity, object templateId) =>
         templateEntity == null
-            ? throw new Exception("The template with id '" + templateId + "' does not exist.")
+            ? throw new("The template with id '" + templateId + "' does not exist.")
             : new View(templateEntity, new[] { _cultureResolver.CurrentCultureCode }, Log, _qDefBuilder);
 
 

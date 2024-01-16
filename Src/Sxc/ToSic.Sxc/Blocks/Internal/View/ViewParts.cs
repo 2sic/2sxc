@@ -49,7 +49,7 @@ internal class ViewParts
             case HeaderLower:   // new in 11.13, trying to move away from ListContent naming
                 return HeaderPair;
             default:
-                throw new Exception($"tried to find field pair, but input was '{primaryField}' - can't figure it out.");
+                throw new($"tried to find field pair, but input was '{primaryField}' - can't figure it out.");
         }
     }
 

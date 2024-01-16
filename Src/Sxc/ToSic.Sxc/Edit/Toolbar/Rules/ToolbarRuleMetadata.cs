@@ -27,7 +27,7 @@ internal class ToolbarRuleMetadata(
     {
         if (string.IsNullOrWhiteSpace(typeName)) return "error=NoContentType";
         if (typeName.Contains(",")) return "error=CommaFoundInContentType";
-        if (!(Target is IHasMetadata hasMetadata)) return "error=TargetWithoutMetadata";
+        if (Target is not IHasMetadata hasMetadata) return "error=TargetWithoutMetadata";
 
         // 1. check if it's a valid target
         var targetId = hasMetadata.Metadata.Target;

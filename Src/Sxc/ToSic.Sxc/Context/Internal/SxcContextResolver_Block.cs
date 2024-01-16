@@ -17,9 +17,9 @@ partial class SxcContextResolver
     public IBlock BlockOrNull() => _block.Get(() => _blcCtx?.LoadBlock());
     private readonly GetOnce<IBlock> _block = new();
 
-    public IBlock BlockRequired() => BlockOrNull() ?? throw new Exception("Block required but missing. It was not attached");
+    public IBlock BlockRequired() => BlockOrNull() ?? throw new("Block required but missing. It was not attached");
 
-    public IContextOfBlock BlockContextRequired() => BlockContextOrNull() ?? throw new Exception("Block context required but not known. It was not attached.");
+    public IContextOfBlock BlockContextRequired() => BlockContextOrNull() ?? throw new("Block context required but not known. It was not attached.");
 
     public IContextOfBlock BlockContextOrNull() => _blockContext.Get(() => _blcCtx?.ContextOfBlock);
     private readonly GetOnce<IContextOfBlock> _blockContext = new();

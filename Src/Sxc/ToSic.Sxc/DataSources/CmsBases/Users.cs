@@ -170,7 +170,7 @@ public partial class Users : CustomDataSourceAdvanced
         var relationships = new LazyLookup<object, IEntity>();
         var userFactory = _dataFactory.New(options: CmsUserRaw.Options,
             relationships: relationships,
-            rawConvertOptions: new RawConvertOptions(addKeys: new []{ "Roles"}));
+            rawConvertOptions: new(addKeys: new []{ "Roles"}));
 
         var users = userFactory.Create(usersRaw);
         var roles = EmptyList;
@@ -201,7 +201,7 @@ public partial class Users : CustomDataSourceAdvanced
     private List<CmsUserRaw> GetUsersAndFilter() => Log.Func(l =>
     {
         var users = _provider.GetUsersInternal()?.ToList();
-        if (users == null || !users.Any()) return (new List<CmsUserRaw>(), "null/empty");
+        if (users == null || !users.Any()) return (new(), "null/empty");
 
         foreach (var filter in GetAllFilters())
             users = users.Where(filter).ToList();

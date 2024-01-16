@@ -22,7 +22,7 @@ internal class EntityInBlockDecorator: EntityInListDecorator
         IEntity presentation = DefPresentation,
         bool isDemoItem = DefDemo, 
         IEntity parent = default) =>
-        new(entity, new EntityInBlockDecorator(field, index, presentation, isDemoItem, parent: parent));
+        new(entity, new(field, index, presentation, isDemoItem, parent: parent));
 
     protected const IEntity DefPresentation = null;
     protected const bool DefDemo = false;

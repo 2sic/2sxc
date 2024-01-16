@@ -85,7 +85,7 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
 
         // if no root exists then quit now
         if (root == null)
-            return (new List<AdamItemDataRaw>(), "null/empty");
+            return (new(), "null/empty");
 
         AddAdamItemsFromFolder(root, list);
 

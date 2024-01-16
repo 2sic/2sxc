@@ -42,7 +42,7 @@ public class EngineAppRequirements: ServiceBase
             var rsList = reqStatus.ToList();
             var exList2 = rsList
                 .Select(r => new RenderingException(
-                    new CodeHelp(ErrHelpRequirementsNotMet, name: r.Aspect.Name, uiMessage: $"Requirement <em>{r.Aspect.Name}</em> is missing ({r.Aspect.NameId})", linkCode: "sysfeats")))
+                    new(ErrHelpRequirementsNotMet, name: r.Aspect.Name, uiMessage: $"Requirement <em>{r.Aspect.Name}</em> is missing ({r.Aspect.NameId})", linkCode: "sysfeats")))
                 .Cast<Exception>()
                 .ToList();
 

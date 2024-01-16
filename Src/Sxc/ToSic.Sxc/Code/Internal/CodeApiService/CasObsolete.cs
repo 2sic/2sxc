@@ -44,7 +44,7 @@ public class CodeApiServiceObsolete(ICodeApiService dynCode)
                              $" This has been deprecated since ca. v4 and has been removed now. " +
                              $" Please use the newer {nameof(CreateSource)}<Type>(...) overload.";
 
-            throw new Exception(errMessage, ex);
+            throw new(errMessage, ex);
         }
     }
 

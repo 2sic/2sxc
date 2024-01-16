@@ -83,6 +83,6 @@ internal partial class DataService
                      "If you wish to disable this, set 'debug: false'. " +
                      "These are the error details: \n" +
                      more;
-        return new ExceptionSuperUserOnly(new Exception(intro));
+        return new ExceptionSuperUserOnly(new(intro));
     }
 }

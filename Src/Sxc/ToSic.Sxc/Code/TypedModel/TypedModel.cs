@@ -62,7 +62,7 @@ internal class TypedModel(
     private T GetInternal<T>(string name, NoParamOrder noParamOrder, T fallback, object fallbackAsObj, bool? required, [CallerMemberName] string method = default)
     {
         // If we have a clear fallback, don't make it required
-        if (!(fallbackAsObj is null) || (fallback != null && fallback.IsNotDefault()))
+        if (fallbackAsObj is not null || (fallback != null && fallback.IsNotDefault()))
             required = false;
 
         var found = GetInternalObj(name, noParamOrder, required, method: method);

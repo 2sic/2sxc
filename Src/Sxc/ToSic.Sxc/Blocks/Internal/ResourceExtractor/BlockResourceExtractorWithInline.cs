@@ -12,7 +12,7 @@ public class BlockResourceExtractorWithInline: BlockResourceExtractor
 {
     public BlockResourceExtractorWithInline(PageServiceShared pageServiceShared): base(pageServiceShared) { }
 
-    protected override ClientAssetsExtractSettings Settings => _settings.Get(() => new ClientAssetsExtractSettings(extractAll: true));
+    protected override ClientAssetsExtractSettings Settings => _settings.Get(() => new(extractAll: true));
     private readonly GetOnce<ClientAssetsExtractSettings> _settings = new();
 
     protected override (string Template, bool Include2sxcJs) ExtractFromHtml(string html, ClientAssetsExtractSettings settings)

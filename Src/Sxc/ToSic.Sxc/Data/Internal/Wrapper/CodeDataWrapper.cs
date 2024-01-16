@@ -34,7 +34,7 @@ public class CodeDataWrapper: ServiceBase
     public WrapObjectDynamic FromObject(object data, WrapperSettings settings)
     {
         var preWrap = new PreWrapObject(data, settings, this);
-        return new WrapObjectDynamic(preWrap, this);
+        return new(preWrap, this);
     }
 
     public ITyped TypedFromObject(object data, WrapperSettings settings)

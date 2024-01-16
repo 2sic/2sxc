@@ -34,7 +34,7 @@ partial class CodeDataFactory
                                  : null);
                 return new { index, original, lookup };
             })
-            .Where(s => !(s.original is null))
+            .Where(s => s.original is not null)
             .ToList();
 
         // If strict (new implementation for typed) throw error if unexpected data arrived

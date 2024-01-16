@@ -41,7 +41,7 @@ public class AssetEditor : ServiceBase
     public AssetEditor Init(IAppStateInternal appState, string path, bool global, int viewId)
     {
         InitShared(appState);
-        EditInfo = new AssetEditInfo(_appState.AppId, _appState.Name, path, global);
+        EditInfo = new(_appState.AppId, _appState.Name, path, global);
         if (viewId == 0) return this;
 
         var view = _workViews.New(appState).Get(viewId);

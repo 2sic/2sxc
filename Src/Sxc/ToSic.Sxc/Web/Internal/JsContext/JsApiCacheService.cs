@@ -33,7 +33,7 @@ public class JsApiCacheService : ServiceBase
                 _cache = (ConcurrentDictionary<int, JsApi>)_http.Current.Items[JsApiKey];
             if (_cache == null)
             {
-                _cache = new ConcurrentDictionary<int, JsApi>();
+                _cache = new();
                 _http.Current.Items[JsApiKey] = _cache;
             }
         }
@@ -41,7 +41,7 @@ public class JsApiCacheService : ServiceBase
         if (_cache.TryGetValue(pageId, out var jsApi))
             return jsApi;
 
-        jsApi = new JsApi
+        jsApi = new()
         {
             platform = platform.ToLowerInvariant(),
             page = pageId,

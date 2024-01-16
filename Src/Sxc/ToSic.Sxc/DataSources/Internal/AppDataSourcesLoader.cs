@@ -54,7 +54,7 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
             // just so we don't keep trying to do this on every query
             if (!Directory.Exists(physicalPath))
                 return l.Return((new List<DataSourceInfo>(),
-                    new CacheItemPolicy { SlidingExpiration = new TimeSpan(0, 5, 0) }), "error");
+                    new CacheItemPolicy { SlidingExpiration = new(0, 5, 0) }), "error");
 
             policy.ChangeMonitors.Add(new FolderChangeMonitor(new List<string> { physicalPath }));
 
@@ -116,7 +116,7 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
                 if (!vq._DynamicInWasSet) vq.DynamicIn = true;
 
                 // 4. Build DataSourceInfo with the manually built Visual Query Attribute
-                return l2.ReturnAsOk(new DataSourceInfo(pair.Type, false, overrideVisualQuery: vq));
+                return l2.ReturnAsOk(new(pair.Type, false, overrideVisualQuery: vq));
             })
             .Where(dsi => dsi != null)
             .ToList();
@@ -160,18 +160,18 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
                         spec: spec);
 
                     if (!errorMessages.HasValue())
-                        return new TempDsInfo { ClassName = className, Type = type };
+                        return new() { ClassName = className, Type = type };
                     l.E(errorMessages);
-                    return new TempDsInfo
+                    return new()
                     {
                         ClassName = className, Type = type,
-                        Error = new DataSourceInfoError("Error Compiling", errorMessages)
+                        Error = new("Error Compiling", errorMessages)
                     };
                 }
                 catch (Exception ex)
                 {
                     l.Ex(ex);
-                    return new TempDsInfo { ClassName = className, Error = new DataSourceInfoError("Unknown Exception", ex.Message) };                    }
+                    return new TempDsInfo { ClassName = className, Error = new("Unknown Exception", ex.Message) };                    }
             })
             .ToList();
 

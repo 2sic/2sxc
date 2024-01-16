@@ -77,7 +77,7 @@ partial class EditService
         }
 
         var result = inTag
-            ? new RawHtmlString(itmToolbar.ToolbarAsAttributes())
+            ? new(itmToolbar.ToolbarAsAttributes())
             : new RawHtmlString(itmToolbar.ToolbarAsTag);
         return l.Return(result, "ok");
     }

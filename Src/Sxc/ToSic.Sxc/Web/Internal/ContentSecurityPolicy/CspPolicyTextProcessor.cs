@@ -31,7 +31,7 @@ public class CspPolicyTextProcessor: HelperBase
             if(splitIndex == -1 || splitIndex >= line.Length) continue;
             var key = line.Substring(0, splitIndex);
             var value = line.Substring(splitIndex + 1).Trim();
-            result.Add(new KeyValuePair<string, string>(key, value));
+            result.Add(new(key, value));
         }
 
         return wrapLog.Return(result, result.Count.ToString());

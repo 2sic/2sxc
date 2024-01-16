@@ -17,7 +17,7 @@ partial class PageServiceShared
     /// </summary>
     internal string Queue(PageProperties property, string value, PageChangeModes change, string token)
     {
-        PropertyChanges.Add(new PagePropertyChange
+        PropertyChanges.Add(new()
         {
             ChangeMode = GetMode(change),
             Property = property,

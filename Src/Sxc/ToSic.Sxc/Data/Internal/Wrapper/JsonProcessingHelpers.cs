@@ -40,7 +40,7 @@ internal class JsonProcessingHelpers
     /// <returns></returns>
     public static (JsonNode Node, bool Repackaged) NeutralizeValueToObjectOrArray(JsonNode node)
     {
-        if (!(node is JsonValue jValue)) return (node, false);
+        if (node is not JsonValue jValue) return (node, false);
         var je = jValue.GetValue<JsonElement>();
         switch (je.ValueKind)
         {

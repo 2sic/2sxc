@@ -28,7 +28,7 @@ internal class UrlValueFilterNames: UrlValueProcess
     public override NameObjectSet Process(NameObjectSet set)
     {
         return PropSerializeMap.TryGetValue(set.Name, out var reallyUse)
-            ? new NameObjectSet(set, keep: reallyUse) 
+            ? new(set, keep: reallyUse) 
             : new NameObjectSet(set, keep: PropSerializeDefault); 
     }
 }

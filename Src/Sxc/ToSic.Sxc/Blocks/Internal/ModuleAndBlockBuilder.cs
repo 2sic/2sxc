@@ -24,7 +24,7 @@ public abstract class ModuleAndBlockBuilder: ServiceBase, IModuleAndBlockBuilder
         if (moduleInfo != null) return;
         var msg = $"Can't find module {moduleId} on page {pageId}. Maybe you reversed the ID-order?";
         Log.A(msg);
-        throw new Exception(msg);
+        throw new(msg);
     }
 
     public BlockWithContextProvider GetProvider(int pageId, int moduleId)
@@ -32,13 +32,13 @@ public abstract class ModuleAndBlockBuilder: ServiceBase, IModuleAndBlockBuilder
         var wrapLog = Log.Fn<BlockWithContextProvider>($"{pageId}, {moduleId}");
         var module = GetModuleImplementation(pageId, moduleId);
         var ctx = GetContextOfBlock(module, pageId);
-        return wrapLog.ReturnAsOk(new BlockWithContextProvider(ctx, () => _blockGenerator.New().Init(ctx)));
+        return wrapLog.ReturnAsOk(new(ctx, () => _blockGenerator.New().Init(ctx)));
     }
 
     public BlockWithContextProvider GetProvider<TPlatformModule>(TPlatformModule module, int? page) where TPlatformModule : class
     {
         var ctx = GetContextOfBlock(module, page);
-        return new BlockWithContextProvider(ctx, () => _blockGenerator.New().Init(ctx));
+        return new(ctx, () => _blockGenerator.New().Init(ctx));
     }
 
     protected abstract IContextOfBlock GetContextOfBlock(IModule module, int? pageId);

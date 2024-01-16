@@ -103,7 +103,7 @@ public class AdamFiles : DataSourceBase
         _provider.Configure(appId: AppId, entityIds: EntityIds, entityGuids: EntityGuids, fields: Fields, filter: Filter);
         var find = _provider.GetInternal();
 
-        var adamFactory = _dataFactory.New(options: new DataFactoryOptions(AdamItemDataRaw.Options, appId: AppId));
+        var adamFactory = _dataFactory.New(options: new(AdamItemDataRaw.Options, appId: AppId));
 
         var entities = adamFactory.Create(source.SelectMany(o => find(o)));
 

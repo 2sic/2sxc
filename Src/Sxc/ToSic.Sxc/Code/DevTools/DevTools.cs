@@ -24,7 +24,7 @@ internal class DevTools: ServiceBase, IDevTools
     {
         var l = Log.Fn($"{nameof(target)}: '{target?.GetType()}', {nameof(debug)}: {debug}");
         
-        if (!(target is ICanDebug canDebug))
+        if (target is not ICanDebug canDebug)
             throw new ArgumentException($"Can't enable debug on {nameof(target)} as it doesn't support {nameof(ICanDebug)}");
         canDebug.Debug = debug;
         l.Done();

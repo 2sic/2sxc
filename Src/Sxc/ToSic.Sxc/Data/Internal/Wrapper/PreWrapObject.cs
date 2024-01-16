@@ -77,7 +77,7 @@ internal partial class PreWrapObject: PreWrapBase, /*IWrapper<object>,*/ IProper
     public override TryGetResult TryGetWrap(string name, bool wrapDefault = true)
     {
         if (name.IsEmptyOrWs() || _innerObject == null)
-            return new TryGetResult(false, null, null);
+            return new(false, null, null);
 
         var isPath = name.Contains(PropertyStack.PathSeparator.ToString());
 
@@ -94,21 +94,21 @@ internal partial class PreWrapObject: PreWrapBase, /*IWrapper<object>,*/ IProper
             if (i == pathParts.Length - 1 || !result.Found) return result;
 
             node = (result.Result as IHasPropLookup)?.PropertyLookup as PreWrapObject;
-            if (node == null) return new TryGetResult(false, null, null);
+            if (node == null) return new(false, null, null);
         }
-        return new TryGetResult(false, null, null);
+        return new(false, null, null);
 
     }
 
     private TryGetResult TryGetFromNode(string name, PreWrapObject preWrap, bool wrapDefault)
     {
         if (!preWrap.PropDic.TryGetValue(name, out var lookup))
-            return new TryGetResult(false, null, null);
+            return new(false, null, null);
 
         var result = lookup.GetValue(preWrap._innerObject);
 
         // Probably re-wrap for further dynamic navigation!
-        return new TryGetResult(true, result,
+        return new(true, result,
             Settings.WrapChildren && wrapDefault
                 ? _wrapper.ChildNonJsonWrapIfPossible(result, Settings.WrapRealObjects, Settings)
                 : result);

@@ -38,7 +38,7 @@ public partial class XmlImportFull: XmlImportWithFiles
         l.A("Now import templates - if found");
 
         var xmlSource = doc.Element(XmlConstants.RootNode)
-                        ?? throw new Exception("error import - xmlSource should always exist");
+                        ?? throw new("error import - xmlSource should always exist");
 
         if (xmlSource.Elements(XmlConstants.Templates).Any())
         {

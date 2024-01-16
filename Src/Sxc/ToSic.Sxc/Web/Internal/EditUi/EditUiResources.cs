@@ -50,7 +50,7 @@ public class EditUiResources: ServiceBase
 
     public EditUiResourcesSpecs GetResources(bool enabled, int siteId, EditUiResourceSettings settings)
     {
-        if (!enabled) return new EditUiResourcesSpecs();
+        if (!enabled) return new();
         var cdnRoot = "";
         var useAltCdn = false;
         var html = "";
@@ -81,7 +81,7 @@ public class EditUiResources: ServiceBase
             html += "\n" + string.Format(LinkTagTemplate, url);
         }
         html += "\n";
-        return new EditUiResourcesSpecs { HtmlHead = html };
+        return new() { HtmlHead = html };
     }
 
     public class EditUiResourcesSpecs

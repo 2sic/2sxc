@@ -11,7 +11,7 @@ partial class PageServiceShared
 
     [PrivateApi]
     internal void AddToHttp(string name, string value) =>
-        HttpHeaders.Add(new HttpHeader(name, value));
+        HttpHeaders.Add(new(name, value));
 
     [PrivateApi]
     public List<HttpHeader> HttpHeaders { get; } = new();

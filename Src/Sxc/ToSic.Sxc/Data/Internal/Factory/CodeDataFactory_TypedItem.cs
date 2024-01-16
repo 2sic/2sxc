@@ -114,7 +114,7 @@ partial class CodeDataFactory
                     : l.Return(new List<ITypedItem>(), "typed but converted to null; empty list");
             // Check for IEnumerable but make sure it's not a string
             // Should come fairly late, because some things like DynamicEntities can also be enumerated
-            case IEnumerable asEnumerable when !(asEnumerable is string):
+            case IEnumerable asEnumerable when asEnumerable is not string:
                 return l.Return(asEnumerable.Cast<object>().Select(e => AsItemInternal(e, MaxRecursions, propsRequired: propsRequired)), "IEnumerable");
             default:
                 return FallbackOrErrorAndLog($"can't convert '{list.GetType()}'", $"Type '{list.GetType()}' cannot be converted.");

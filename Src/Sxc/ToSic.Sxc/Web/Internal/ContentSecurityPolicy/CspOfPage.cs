@@ -40,7 +40,7 @@ public class CspOfPage: ServiceBase
                 return wrapLog.Return(finalizer.Finalize(mergedPolicy).ToString(), "found 1");
 
             // Pre-copy, so we never change the original!
-            mergedPolicy = new CspParameters(mergedPolicy);
+            mergedPolicy = new(mergedPolicy);
 
             // If many, merge the settings of each additional policy list
             foreach (var cspS in relevant.Skip(1))

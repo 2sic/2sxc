@@ -67,7 +67,7 @@ public class ObjectToUrl
             }
 
         if (set.Value == null) return null;
-        if (set.Value is string strValue) return new UrlValuePair(set.FullName, strValue);
+        if (set.Value is string strValue) return new(set.FullName, strValue);
 
         var valueType = set.Value.GetType();
 
@@ -83,15 +83,15 @@ public class ObjectToUrl
                 $"The field: '{set.FullName}', isGeneric: {isGeneric} with base type {valueType} to add to url seems to have a confusing setup");
 
             if (valueElemType.IsPrimitive || valueElemType == typeof(string))
-                return new UrlValuePair(set.FullName,
+                return new(set.FullName,
                     $"{ArrayBoxStart}{string.Join(ArraySeparator, enumerable.Cast<object>())}{ArrayBoxEnd}");
 
-            return new UrlValuePair(set.FullName, "array-like-but-unclear-what");
+            return new(set.FullName, "array-like-but-unclear-what");
         }
 
         return valueType.IsSimpleType()
             // Simple type - just serialize, except for bool, which should be lower-cased
-            ? new UrlValuePair(set.FullName,
+            ? new(set.FullName,
                 set.Value is bool ? set.Value.ToString().ToLowerInvariant() : set.Value.ToString())
             // Complex object, recursive serialize with current name as prefix
             : new UrlValuePair(null, Serialize(set.Value, set.FullName + DepthSeparator), true);
@@ -144,7 +144,7 @@ public class ObjectToUrl
                 // Check if it's a key value pair (from a dictionary) - eg. on note
                 var kvpPair = PropOfKvp(data);
                 var preSerialize = kvpPair != null
-                    ? new NameObjectSet(kvpPair.Name, kvpPair.Value, prefix)
+                    ? new(kvpPair.Name, kvpPair.Value, prefix)
                     : new NameObjectSet(x.Name, x.GetValue(data, null), prefix);
                 return ValueSerialize(preSerialize);
             })
@@ -168,10 +168,10 @@ public class ObjectToUrl
             
         //var argTypes = baseType.GetGenericArguments();
         // now process the values
-        if (!(valueType.GetProperty("Key")?.GetValue(value, null) is string kvpKey))
+        if (valueType.GetProperty("Key")?.GetValue(value, null) is not string kvpKey)
             return null;
 
-        return !(valueType.GetProperty("Value")?.GetValue(value, null) is object kvpValue) 
+        return valueType.GetProperty("Value")?.GetValue(value, null) is not object kvpValue 
             ? null 
             : new NameObjectSet(name: kvpKey, value: kvpValue);
     }

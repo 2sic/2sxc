@@ -62,7 +62,7 @@ public class CodeJsonWrapper: ServiceBase
 
     private IEnumerable<ITyped> JsonArrayToTypedList(JsonArray array, bool errorIfNotPossible)
     {
-        if (!errorIfNotPossible && array.Any(jItem => !(jItem is JsonObject)))
+        if (!errorIfNotPossible && array.Any(jItem => jItem is not JsonObject))
             return null;
 
         return array.Select((j, index) => j is JsonObject jo
@@ -100,10 +100,10 @@ public class CodeJsonWrapper: ServiceBase
 
 
     internal DynamicJacket CreateDynJacketObject(JsonObject jsonObject) =>
-        new(this, new PreWrapJsonObject(this, jsonObject));
+        new(this, new(this, jsonObject));
 
     private DynamicJacketList CreateDynJacketList(JsonArray jsonArray) =>
-        new(this, new PreWrapJsonArray(this, jsonArray));
+        new(this, new(this, jsonArray));
 
     //private WrapObjectTyped CreateTypedList(JsonArray jsonArray) => 
     //    _wrapTypeGenerator.New().Setup(new PreWrapJsonArray(this, jsonArray));
@@ -115,7 +115,7 @@ public class CodeJsonWrapper: ServiceBase
         IfJsonTryConvertTo<TResult>(object original, Func<JsonObject, TResult> toObj, Func<JsonArray, TResult> toArr) where TResult : class
     {
         var l = Log.Fn<(TResult Jacket, bool Ok, JsonValueKind ValueKind)>();
-        if (!(original is JsonNode jsonNode))
+        if (original is not JsonNode jsonNode)
             return l.Return((null, false, JsonValueKind.Undefined), "not json node");
 
         // 2023-08-24 2dm simplified this by preprocessing. Leave the code in till end of September 2023 
@@ -161,7 +161,7 @@ public class CodeJsonWrapper: ServiceBase
     [PrivateApi]
     internal object IfJsonGetValueOrJacket(object original)
     {
-        if (!(original is JsonNode jsonNode)) return original;
+        if (original is not JsonNode jsonNode) return original;
 
         if (!Settings.WrapToDynamic)
         {
@@ -183,7 +183,7 @@ public class CodeJsonWrapper: ServiceBase
 
 
         // If not a value-type, assume we can't process it
-        if (!(jsonNode is JsonValue jValue)) return original;
+        if (jsonNode is not JsonValue jValue) return original;
 
         return JsonValueGetContents(jValue);
     }

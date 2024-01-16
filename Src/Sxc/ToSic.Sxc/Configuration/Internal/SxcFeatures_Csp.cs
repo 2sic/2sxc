@@ -7,7 +7,7 @@ public partial class SxcFeatures
 {
     public static readonly Feature ContentSecurityPolicy = new(
         "ContentSecurityPolicy",
-        new Guid("e5c99abf-9bc4-4e6c-9cc4-4bda22c0ab85"),
+        new("e5c99abf-9bc4-4e6c-9cc4-4bda22c0ab85"),
         "Enable Content Security Policy and related APIs. ",
         false,
         false,
@@ -18,7 +18,7 @@ public partial class SxcFeatures
         
     public static readonly Feature ContentSecurityPolicyTestUrl = new(
         "ContentSecurityPolicyTestUrl",
-        new Guid("94c3d7e5-5d89-4a68-b710-95bfc29199ba"),
+        new("94c3d7e5-5d89-4a68-b710-95bfc29199ba"),
         "Enable the parameter ?csp=true in URL for testing.",
         false,
         false,
@@ -28,7 +28,7 @@ public partial class SxcFeatures
     );
     public static readonly Feature ContentSecurityPolicyEnforceTemp = new(
         "ContentSecurityPolicyEnforceTemp",
-        new Guid("ece0943d-f3c0-422c-9d06-c20b9b83df8d"),
+        new("ece0943d-f3c0-422c-9d06-c20b9b83df8d"),
         "Enable CSP on all pages (temporary setting).",
         false,
         false,
@@ -39,7 +39,7 @@ public partial class SxcFeatures
 
     public static readonly Feature CdnSourcePublic = new(
         nameof(CdnSourcePublic),
-        new Guid("b8b993d3-a02b-4099-a2a8-c06bf8961a66"),
+        new("b8b993d3-a02b-4099-a2a8-c06bf8961a66"),
         "Change CDN source for public Web Resources",
         false,
         false,
@@ -49,7 +49,7 @@ public partial class SxcFeatures
     );
     public static readonly Feature CdnSourceEdit = new(
         nameof(CdnSourceEdit),
-        new Guid("34dce40e-30fc-4d4f-b1ab-8fcface90e61"),
+        new("34dce40e-30fc-4d4f-b1ab-8fcface90e61"),
         "Change CDN source for Edit Web Resources",
         false,
         false,
@@ -61,7 +61,7 @@ public partial class SxcFeatures
     // Note: not in use ATM
     public static readonly Feature CdnSourceAdmin = new(
         nameof(CdnSourceAdmin),
-        new Guid("c799c71e-aa4a-4a30-ae8a-e177e615a36c"),
+        new("c799c71e-aa4a-4a30-ae8a-e177e615a36c"),
         "Change CDN source for Admin Web Resources",
         false,
         false,
@@ -73,7 +73,7 @@ public partial class SxcFeatures
     // Note: not in use ATM
     public static readonly Feature CdnSourceDev = new(
         nameof(CdnSourceDev),
-        new Guid("81a51003-ad55-491e-9749-d74529496465"),
+        new("81a51003-ad55-491e-9749-d74529496465"),
         "Change CDN source for Development Web Resources",
         false,
         false,

@@ -37,7 +37,7 @@ internal class AppIdResolver: ServiceBase
         // get app from AppName
         var aid = _appFinder/* _zoneRuntime.Init(zoneId, Log)*/.FindAppId(zoneId, appPath, true);
         if (aid <= Eav.Constants.AppIdEmpty && required)
-            throw new Exception($"App required but can't find App based on the name '{appPath}'");
+            throw new($"App required but can't find App based on the name '{appPath}'");
 
         return wrapLog.Return(aid, $"found app:{aid}");
     }

@@ -17,7 +17,7 @@ public partial class CodeApiService
         // otherwise try to fallback to the App configuration provider, which has a lot, but not the module-context
         ?? App?.ConfigurationProvider
         // show explanation what went wrong
-        ?? throw new Exception("Tried to get Lookups for creating data-sources; neither module-context nor app is known.")
+        ?? throw new("Tried to get Lookups for creating data-sources; neither module-context nor app is known.")
     );
     private readonly GetOnce<ILookUpEngine> _lookupEngine = new();
 

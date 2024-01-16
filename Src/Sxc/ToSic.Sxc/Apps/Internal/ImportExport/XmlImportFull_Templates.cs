@@ -22,7 +22,7 @@ public partial class XmlImportFull
 
         // The state must come from the DB, and not from the cache
         // Otherwise it will auto-initialize, which it shouldn't do when importing data
-        var appBuilder = _repositoryLoader.AppStateBuilderRaw(AppId, new CodeRefTrail());
+        var appBuilder = _repositoryLoader.AppStateBuilderRaw(AppId, new());
 
         var viewsMod = _workViewsMod.New(appBuilder.Reader);
 
@@ -40,7 +40,7 @@ public partial class XmlImportFull
 
                 if (!string.IsNullOrEmpty(contentTypeStaticName) && appBuilder.Reader.GetContentType(contentTypeStaticName) == null)
                 {
-                    Messages.Add(new Message($"Content Type for Template \'{name}\' could not be found. The template has not been imported.",
+                    Messages.Add(new($"Content Type for Template \'{name}\' could not be found. The template has not been imported.",
                         Message.MessageTypes.Warning));
                     continue;
                 }
@@ -54,7 +54,7 @@ public partial class XmlImportFull
                     if (RepositoryHasEntity(entityGuid))
                         demoEntityId = GetLatestRepositoryId(entityGuid);
                     else
-                        Messages.Add(new Message($"Demo Entity for Template \'{name}\' could not be found. (Guid: {demoEntityGuid})", Message.MessageTypes.Information));
+                        Messages.Add(new($"Demo Entity for Template \'{name}\' could not be found. (Guid: {demoEntityGuid})", Message.MessageTypes.Information));
 
                 }
 
@@ -81,7 +81,7 @@ public partial class XmlImportFull
                     if (RepositoryHasEntity(entityGuid))
                         queryEntityId = GetLatestRepositoryId(entityGuid);
                     else
-                        Messages.Add(new Message($"Query Entity for Template \'{name}\' could not be found. (Guid: {queryEntityGuid.Value})", Message.MessageTypes.Information));
+                        Messages.Add(new($"Query Entity for Template \'{name}\' could not be found. (Guid: {queryEntityGuid.Value})", Message.MessageTypes.Information));
                 }
 
                 var useForList = false;
@@ -110,7 +110,7 @@ public partial class XmlImportFull
                             .Value;
                     if (xmlItemType == null || xmlContentTypeStaticName == null || xmlDemoEntityGuidString == null)
                     {
-                        Messages.Add(new Message(
+                        Messages.Add(new(
                             $"trouble with template '{name}' - either type, static or guid are null",
                             Message.MessageTypes.Error));
                         return null;
@@ -172,13 +172,13 @@ public partial class XmlImportFull
                         listPresentationTypeStaticName, listPresentationDemoEntityId, type, isHidden, location,
                         useForList, publishData, streamsToPublish, queryEntityId, viewNameInUrl);
 
-                Messages.Add(new Message($"Template \'{name}\' successfully imported.",
+                Messages.Add(new($"Template \'{name}\' successfully imported.",
                     Message.MessageTypes.Information));
             }
 
             catch (Exception)
             {
-                Messages.Add(new Message($"Import for template \'{name}\' failed.",
+                Messages.Add(new($"Import for template \'{name}\' failed.",
                     Message.MessageTypes.Information));
             }
 

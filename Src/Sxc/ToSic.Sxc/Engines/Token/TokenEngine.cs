@@ -103,7 +103,7 @@ public class TokenEngine : EngineBase
     private void InitTokenReplace()
     {
         var confProv = _appConfigDelegateGenerator.New().GetLookupEngineForContext(Block.Context, Block.App, Block);
-        _tokenReplace = new TokenReplace(confProv);
+        _tokenReplace = new(confProv);
             
         // Add the Content and ListContent property sources used always
         confProv.Add(new LookUpForTokenTemplate(SourcePropertyName.ListContent, _data.Header));

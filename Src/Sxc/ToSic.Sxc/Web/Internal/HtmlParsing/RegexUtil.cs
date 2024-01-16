@@ -37,23 +37,23 @@ internal class RegexUtil
     public const string PriorityKey = "Priority";
     public const string PositionKey = "Position";
 
-    public static readonly Lazy<Regex> AttributesDetection = new(() => new Regex(AttributesFormula, RegexOptions.IgnoreCase));
-    public static readonly Lazy<Regex> ImagesDetection = new(() => new Regex(ImagesWithDataCmsidFormula, RegexOptions.IgnoreCase));
-    public static readonly Lazy<Regex> ScriptSrcDetection = new(() => new Regex(ScriptSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline));
+    public static readonly Lazy<Regex> AttributesDetection = new(() => new(AttributesFormula, RegexOptions.IgnoreCase));
+    public static readonly Lazy<Regex> ImagesDetection = new(() => new(ImagesWithDataCmsidFormula, RegexOptions.IgnoreCase));
+    public static readonly Lazy<Regex> ScriptSrcDetection = new(() => new(ScriptSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline));
     // note: 2dm created this, because I wasn't sure if changing the original to ML would have side effects
-    public static Regex ScriptSrcDetectionMultiLine => ScriptSrcDetMl.Get(() => new Regex(ScriptSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline));
+    public static Regex ScriptSrcDetectionMultiLine => ScriptSrcDetMl.Get(() => new(ScriptSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline));
     private static readonly GetOnce<Regex> ScriptSrcDetMl = new();
 
-    public static readonly Lazy<Regex> ScriptContentDetection = new(() => new Regex(ScriptContentFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline));
-    public static readonly Lazy<Regex> StyleDetection = new(() => new Regex(StyleSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline));
+    public static readonly Lazy<Regex> ScriptContentDetection = new(() => new(ScriptContentFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline));
+    public static readonly Lazy<Regex> StyleDetection = new(() => new(StyleSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline));
     // note: 2dm created this, because I wasn't sure if changing the original to ML would have side effects
-    public static Regex StyleDetectionMultiLine => StyleSrcDetMl.Get(() => new Regex(StyleSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline));
+    public static Regex StyleDetectionMultiLine => StyleSrcDetMl.Get(() => new(StyleSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline));
     private static readonly GetOnce<Regex> StyleSrcDetMl = new();
-    public static Regex IntegrityAttribute => IntegrAttr.Get(() => new Regex(IntegrityAttributeFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline));
+    public static Regex IntegrityAttribute => IntegrAttr.Get(() => new(IntegrityAttributeFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline));
     private static readonly GetOnce<Regex> IntegrAttr = new();
-    public static readonly Lazy<Regex> StyleRelDetect = new(() => new Regex(StyleRelFormula, RegexOptions.IgnoreCase));
-    public static readonly Lazy<Regex> OptimizeDetection = new(() => new Regex(ClientDependencyRegex, RegexOptions.IgnoreCase));
-    public static readonly Lazy<Regex> IdDetection = new(() => new Regex(IdFormula, RegexOptions.IgnoreCase));
+    public static readonly Lazy<Regex> StyleRelDetect = new(() => new(StyleRelFormula, RegexOptions.IgnoreCase));
+    public static readonly Lazy<Regex> OptimizeDetection = new(() => new(ClientDependencyRegex, RegexOptions.IgnoreCase));
+    public static readonly Lazy<Regex> IdDetection = new(() => new(IdFormula, RegexOptions.IgnoreCase));
 
     //// language=regex
     //private const string WysiwygWidthNumFormula = "wysiwyg-width(?<num>\\d+)of(?<all>\\d+)";
@@ -62,6 +62,6 @@ internal class RegexUtil
 
     // language=regex
     private const string WysiwygWidthFormula = "wysiwyg-(?<percent>\\d+)";
-    public static readonly Lazy<Regex> WysiwygWidthLazy = new(() => new Regex(WysiwygWidthFormula, RegexOptions.IgnoreCase));
+    public static readonly Lazy<Regex> WysiwygWidthLazy = new(() => new(WysiwygWidthFormula, RegexOptions.IgnoreCase));
 
 }

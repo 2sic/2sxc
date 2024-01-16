@@ -203,7 +203,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
         }
     }
 
-    public OutputCacheItem Fresh => _fresh ??= new OutputCacheItem();
+    public OutputCacheItem Fresh => _fresh ??= new();
     private OutputCacheItem _fresh;
 
 
@@ -235,7 +235,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
         get
         {
             if (_ocm != null) return _ocm;
-            ConnectServices(_ocm = new OutputCacheManager());
+            ConnectServices(_ocm = new());
             return _ocm;
         }
     }

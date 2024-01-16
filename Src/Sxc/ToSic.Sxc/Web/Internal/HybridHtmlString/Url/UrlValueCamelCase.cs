@@ -14,6 +14,6 @@ internal class UrlValueCamelCase : UrlValueProcess
         var firstCharLower = char.ToLowerInvariant(set.Name[0]);
         if (firstCharLower == set.Name[0]) return set;
         var newName = firstCharLower + set.Name.Substring(1);
-        return new NameObjectSet(set, newName);
+        return new(set, newName);
     }
 }

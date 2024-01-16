@@ -94,7 +94,7 @@ public class AppFiles: CustomDataSourceAdvanced
     private IImmutableList<IEntity> GetMultiAccess(string streamName) => _multiAccess.Get(() =>
     {
         var (folders, files) = GetInternal();
-        return new Dictionary<string, IImmutableList<IEntity>>(OrdinalIgnoreCase)
+        return new(OrdinalIgnoreCase)
         {
             { StreamDefaultName, folders.Concat(files).ToImmutableList() },
             { StreamFolders, folders },
@@ -119,11 +119,11 @@ public class AppFiles: CustomDataSourceAdvanced
             return ((EmptyList, EmptyList), "null/empty");
 
         // Convert Folders to Entities
-        var folderFactory = _dataFactory.New(options: new DataFactoryOptions(AppFolderDataRaw.Options, appId: AppId));
+        var folderFactory = _dataFactory.New(options: new(AppFolderDataRaw.Options, appId: AppId));
         var folders = folderFactory.Create(rawFolders);
 
         // Convert Files to Entities
-        var fileFactory = _dataFactory.New(options: new DataFactoryOptions(AppFileDataRaw.Options, appId: AppId),
+        var fileFactory = _dataFactory.New(options: new(AppFileDataRaw.Options, appId: AppId),
             // Make sure we share relationships source with folders, as files need folders and folders need files
             relationships: folderFactory.Relationships);
         var files = fileFactory.Create(rawFiles);

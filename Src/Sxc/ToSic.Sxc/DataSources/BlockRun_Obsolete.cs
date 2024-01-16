@@ -24,7 +24,7 @@ partial class ContextData: IBlockDataSource
             if (_cache != null) return _cache;
             // on first access report problem
             _codeChanges.Value.Warn(CaV8To17("Data.Cache", "https://go.2sxc.org/brc-13-datasource-cache"));
-            return _cache = new CacheWithGetContentType(_appStates.GetReader(this));
+            return _cache = new(_appStates.GetReader(this));
         }
     }
 

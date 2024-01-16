@@ -10,5 +10,5 @@ internal class CmsEditDecorator : IDecorator<IEntity>
     }
 
     public static EntityDecorator12<CmsEditDecorator> Wrap(IEntity entity, bool enableEdit) =>
-        new(entity, new CmsEditDecorator(enableEdit));
+        new(entity, new(enableEdit));
 }

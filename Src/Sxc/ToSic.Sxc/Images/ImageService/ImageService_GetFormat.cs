@@ -19,7 +19,7 @@ partial class ImageService
         if (ImageConstants.FileTypes.TryGetValue(extension, out var result))
             return Features.IsEnabled(ImageServiceMultiFormat.NameId)
                 ? result
-                : new ImageFormat(result, false);
+                : new(result, false);
 
         // 3. Otherwise just return an object without known mime type
         return new ImageFormat(extension, "", false);

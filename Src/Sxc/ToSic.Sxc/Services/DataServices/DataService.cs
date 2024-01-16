@@ -81,7 +81,7 @@ internal partial class DataService: ServiceForDynamicCode, IDataService
         return newDs;
     }
 
-    private DataSourceOptionsMs OptionsMs => _optionsHandler.Get(() => new DataSourceOptionsMs(_appIdentity, _getLookup));
+    private DataSourceOptionsMs OptionsMs => _optionsHandler.Get(() => new(_appIdentity, _getLookup));
     private readonly GetOnce<DataSourceOptionsMs> _optionsHandler = new();
 
     private Func<ILookUpEngine> _getLookup;

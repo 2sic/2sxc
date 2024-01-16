@@ -18,7 +18,7 @@ public class DynamicJsonConverter: JsonConverter<object>
 
     public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
     {
-        if (!(value is IHasJsonSource hasJsonSource))
+        if (value is not IHasJsonSource hasJsonSource)
             throw new ArgumentException($"Object should be a {nameof(IHasJsonSource)}", nameof(value));
 
         JsonSerializer.Serialize(writer, hasJsonSource.JsonSource, options);

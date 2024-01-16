@@ -36,7 +36,7 @@ public class WorkBlocksMod : WorkUnitBase<IAppWorkCtxWithDb>
         {
             l.A($"doesn't exist, will create new CG with template#{templateId}");
             // #ExtractEntitySave - verified
-            var guid = _workEntCreate.New(AppWorkCtx).Create(WorkBlocks.BlockTypeName, new Dictionary<string, object>
+            var guid = _workEntCreate.New(AppWorkCtx).Create(WorkBlocks.BlockTypeName, new()
             {
                 {ViewParts.TemplateContentType, new List<int> {templateId}},
                 {ViewParts.Content, new List<int>()},

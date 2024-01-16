@@ -35,11 +35,11 @@ internal class DynamicStack: DynamicObject,
     public IPropertyLookup PropertyLookup { get; }
 
     [PrivateApi]
-    internal GetAndConvertHelper GetHelper => _getHelper ??= new GetAndConvertHelper(this, Cdf, Strict, childrenShouldBeDynamic: true, canDebug: this);
+    internal GetAndConvertHelper GetHelper => _getHelper ??= new(this, Cdf, Strict, childrenShouldBeDynamic: true, canDebug: this);
     private GetAndConvertHelper _getHelper;
 
     [PrivateApi]
-    internal SubDataFactory SubDataFactory => _subData ??= new SubDataFactory(Cdf, Strict, canDebug: this);
+    internal SubDataFactory SubDataFactory => _subData ??= new(Cdf, Strict, canDebug: this);
     private SubDataFactory _subData;
 
     /// <inheritdoc />

@@ -79,7 +79,7 @@ internal partial class ImageService: ServiceForDynamicCode, IImageService
         object toolbar = default,
         object recipe = null)
         => new ResponsiveImage(this,
-            new ResponsiveParams(nameof(Img), link, noParamOrder,
+            new(nameof(Img), link, noParamOrder,
                 Settings(settings, factor: factor, width: width, recipe: recipe),
                 imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass, imgAttributes: CreateAttribDic(imgAttributes), toolbar: toolbar),
             Log);
@@ -101,7 +101,7 @@ internal partial class ImageService: ServiceForDynamicCode, IImageService
         object toolbar = default,
         object recipe = default)
         => new ResponsivePicture(this,
-            new ResponsiveParams(nameof(Picture), link, noParamOrder,
+            new(nameof(Picture), link, noParamOrder,
                 Settings(settings, factor: factor, width: width, recipe: recipe),
                 imgAlt: imgAlt, imgAltFallback: imgAltFallback,
                 imgClass: imgClass, imgAttributes: CreateAttribDic(imgAttributes), pictureClass: pictureClass, pictureAttributes: CreateAttribDic(pictureAttributes), toolbar: toolbar),

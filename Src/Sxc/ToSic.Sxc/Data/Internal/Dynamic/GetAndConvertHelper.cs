@@ -31,7 +31,7 @@ internal class GetAndConvertHelper
     private readonly bool _childrenShouldBeDynamic;
     private readonly ICanDebug _canDebug;
 
-    internal SubDataFactory SubDataFactory => _subData ??= new SubDataFactory(Cdf, PropsRequired, _canDebug);
+    internal SubDataFactory SubDataFactory => _subData ??= new(Cdf, PropsRequired, _canDebug);
     private SubDataFactory _subData;
 
 
@@ -78,7 +78,7 @@ internal class GetAndConvertHelper
         var l = logOrNull.Fn<TryGetResult>($"Type: {Parent.GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookupLink)}:{lookupLink}");
 
         if (!field.HasValue())
-            return l.Return(new TryGetResult(false, null), "field null/empty");
+            return l.Return(new(false, null), "field null/empty");
 
         // This determines if we should access & store in cache
         // check if we already have it in the cache - but only in default case (no language, lookup=true)
@@ -98,7 +98,7 @@ internal class GetAndConvertHelper
 
         // check Entity is null (in cases where null-objects are asked for properties)
         if (resultSet == null)
-            return l.Return(new TryGetResult(false, null), "result null");
+            return l.Return(new(false, null), "result null");
 
         l.A($"Result... IsFinal: {resultSet.IsFinal}, Source Name: {resultSet.Name}, SourceIndex: {resultSet.SourceIndex}, FieldType: {resultSet.FieldType}");
 

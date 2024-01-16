@@ -11,7 +11,7 @@ partial class PreWrapObject
     [PrivateApi]
     public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
     {
-        if (_innerObject == null) return new List<PropertyDumpItem>();
+        if (_innerObject == null) return new();
 
         if (string.IsNullOrEmpty(path)) path = DumpSourceName;
 
@@ -34,7 +34,7 @@ partial class PreWrapObject
             .Where(r =>
             {
                 var result = r.Pdi.Property.Result;
-                return result != null && !(result is string) && !result.GetType().IsValueType;
+                return result != null && result is not string && !result.GetType().IsValueType;
             }).Select(p =>
             {
                 var maybeDump = _wrapper.ChildNonJsonWrapIfPossible(data: p.Pdi.Property.Result, wrapNonAnon: false,
@@ -45,7 +45,7 @@ partial class PreWrapObject
                     CanDump = maybeDump as IPropertyLookup ?? (maybeDump as IHasPropLookup)?.PropertyLookup,
                 };
             })
-            .Where(p => !(p.CanDump is null))
+            .Where(p => p.CanDump is not null)
             .ToList();
         var deeperLookups = deeperProperties.SelectMany(p =>
             p.CanDump._Dump(specs, path + PropertyDumpItem.Separator + p.Field));

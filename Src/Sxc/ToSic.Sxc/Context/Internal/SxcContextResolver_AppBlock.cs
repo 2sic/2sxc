@@ -35,7 +35,7 @@ partial class SxcContextResolver
             return SetApp(identity);
 
         ctx = BlockContextOrNull();
-        return ctx ?? throw new Exception($"Tried to auto detect app by name '{nameOrPath}', url params or block context, all failed.");
+        return ctx ?? throw new($"Tried to auto detect app by name '{nameOrPath}', url params or block context, all failed.");
     }
 
 }

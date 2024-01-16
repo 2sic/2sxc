@@ -27,8 +27,8 @@ internal class ToolbarRuleForEntity: ToolbarRuleTargeted
         if (target is int intTarget) EditInfo.entityId = intTarget;
         if (contentType != null) EditInfo.contentType = contentType;
 
-        if (propsSkip != null) _urlValueFilterNames = new UrlValueFilterNames(true, propsSkip);
-        else if (propsKeep != null) _urlValueFilterNames = new UrlValueFilterNames(false, propsKeep);
+        if (propsSkip != null) _urlValueFilterNames = new(true, propsSkip);
+        else if (propsKeep != null) _urlValueFilterNames = new(false, propsKeep);
     }
 
     /// <summary>
@@ -40,7 +40,7 @@ internal class ToolbarRuleForEntity: ToolbarRuleTargeted
     protected IEntity TargetEntity => _entity.Get(() => Target as IEntity ?? (Target as ICanBeEntity)?.Entity);
     private readonly GetOnce<IEntity> _entity = new();
 
-    internal EntityEditInfo EditInfo => _editInfo.Get(() => new EntityEditInfo(TargetEntity));
+    internal EntityEditInfo EditInfo => _editInfo.Get(() => new(TargetEntity));
     private readonly GetOnce<EntityEditInfo> _editInfo = new();
 
     protected override string DecoratorTypeName => TargetEntity?.Type?.Name;

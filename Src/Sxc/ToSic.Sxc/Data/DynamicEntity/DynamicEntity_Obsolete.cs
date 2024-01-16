@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Data
                     return new System.Web.HtmlString("");
 
                 if (Cdf.CompatibilityLevel > CompatibilityLevels.MaxLevelForEntityDotToolbar)
-                    throw new Exception("content.Toolbar is deprecated in the new RazorComponent. Use @Edit.TagToolbar(content) or @Edit.Toolbar(content) instead. See https://go.2sxc.org/EditToolbar");
+                    throw new("content.Toolbar is deprecated in the new RazorComponent. Use @Edit.TagToolbar(content) or @Edit.Toolbar(content) instead. See https://go.2sxc.org/EditToolbar");
 
                 var toolbar = new Edit.Toolbar.ItemToolbar(Entity).ToolbarAsTag;
                 return new System.Web.HtmlString(toolbar);
@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Data
         public IRawHtmlString Render()
         {
             if (Cdf.CompatibilityLevel > CompatibilityLevels.MaxLevelForEntityDotRender)
-                throw new Exception("content.Render() is deprecated in the new RazorComponent. Use GetService&lt;ToSic.Sxc.Services.IRenderService&gt;().One(content) instead.");
+                throw new("content.Render() is deprecated in the new RazorComponent. Use GetService&lt;ToSic.Sxc.Services.IRenderService&gt;().One(content) instead.");
 
             return Cdf.Services.RenderService.One(this);
         }

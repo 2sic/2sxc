@@ -184,7 +184,7 @@ public class CspOfModule: ServiceForDynamicCode
     public List<CspParameters> CspParameters()
     {
         var wrapLog = Log.Fn<List<CspParameters>>();
-        if (!IsEnabled) return wrapLog.Return(new List<CspParameters>(), "disabled");
+        if (!IsEnabled) return wrapLog.Return(new(), "disabled");
 
         if (Policies.Any())
         {
@@ -196,7 +196,7 @@ public class CspOfModule: ServiceForDynamicCode
             AddCspService(policyCsp);
         }
 
-        if (!CspServices.Any()) return wrapLog.Return(new List<CspParameters>(), "no services to add");
+        if (!CspServices.Any()) return wrapLog.Return(new(), "no services to add");
         var result = CspServices.Select(c => c?.Policy).Where(c => c != null).ToList();
         return wrapLog.ReturnAsOk(result);
 

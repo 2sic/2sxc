@@ -37,16 +37,16 @@ internal class PreWrapJsonArray(CodeJsonWrapper wrapper, JsonArray jsonArray)
     public override TryGetResult TryGetWrap(string name, bool wrapDefault = true)
     {
         if (UnwrappedContents == null || !UnwrappedContents.Any())
-            return new TryGetResult(false, null, null);
+            return new(false, null, null);
 
         var found = UnwrappedContents.FirstOrDefault(p =>
         {
-            if (!(p is JsonObject pJObject)) return false;
+            if (p is not JsonObject pJObject) return false;
             return HasPropertyWithValue(pJObject, "Name", name)
                    || HasPropertyWithValue(pJObject, "Title", name);
         });
 
-        return new TryGetResult(false, found,
+        return new(false, found,
             Wrapper.IfJsonGetValueOrJacket(found));
     }
 
@@ -61,7 +61,7 @@ internal class PreWrapJsonArray(CodeJsonWrapper wrapper, JsonArray jsonArray)
     }
 
     public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
-        => new() { new PropertyDumpItem { Path = $"Not supported on {nameof(DynamicJacketList)}" } };
+        => new() { new() { Path = $"Not supported on {nameof(DynamicJacketList)}" } };
 
 
 }

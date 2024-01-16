@@ -30,7 +30,7 @@ public abstract class PagePublishingGetSettingsBase: ServiceBase, IPagePublishin
     public BlockPublishingSettings SettingsOfModule(int moduleId)
     {
         var mode = Requirements(moduleId);
-        return new BlockPublishingSettings
+        return new()
         {
             AllowDraft = mode != PublishingMode.DraftForbidden,
             ForceDraft = mode == PublishingMode.DraftRequired, 

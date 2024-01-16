@@ -45,19 +45,19 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
     #region Helpers / Services
 
     [PrivateApi]
-    private GetAndConvertHelper GetHelper => _getHelper ??= new GetAndConvertHelper(this, Cdf, _propsRequired, childrenShouldBeDynamic: false, canDebug: this);
+    private GetAndConvertHelper GetHelper => _getHelper ??= new(this, Cdf, _propsRequired, childrenShouldBeDynamic: false, canDebug: this);
     private GetAndConvertHelper _getHelper;
 
     [PrivateApi]
-    private SubDataFactory SubDataFactory => _subData ??= new SubDataFactory(Cdf, _propsRequired, canDebug: this);
+    private SubDataFactory SubDataFactory => _subData ??= new(Cdf, _propsRequired, canDebug: this);
     private SubDataFactory _subData;
 
     [PrivateApi]
-    private CodeDynHelper DynHelper => _dynHelper ??= new CodeDynHelper(Entity, SubDataFactory);
+    private CodeDynHelper DynHelper => _dynHelper ??= new(Entity, SubDataFactory);
     private CodeDynHelper _dynHelper;
 
     [PrivateApi]
-    private CodeItemHelper ItemHelper => _itemHelper ??= new CodeItemHelper(GetHelper, this);
+    private CodeItemHelper ItemHelper => _itemHelper ??= new(GetHelper, this);
     private CodeItemHelper _itemHelper;
 
     #endregion
@@ -65,7 +65,7 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
     #region Special Interface Implementations: IHasPropLookup, IJsonSource, ICanBeItem
 
     [PrivateApi]
-    IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= new PropLookupWithPathEntity(Entity, canDebug: this);
+    IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= new(Entity, canDebug: this);
     private PropLookupWithPathEntity _propLookup;
 
     [PrivateApi] IBlock ICanBeItem.TryGetBlockContext() => Cdf?.BlockOrNull;
@@ -243,7 +243,7 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
             return (this as ITypedItem).Parents(type: type, field: field).FirstOrDefault();
             
         return (DynHelper.Parent as DynamicEntity)?.TypedItem
-               ?? throw new Exception(
+               ?? throw new(
                    $"You tried to access {nameof(ITypedItem.Parent)}({nameof(current)}: true). This should get the original Item which was used to find this one, but this item doesn't seem to have one. " +
                    $"It's only set if this Item was created from another Item using {nameof(ITypedItem.Child)}(...) or {nameof(ITypedItem.Children)}(...). " +
                    $"Were you trying to use {nameof(ITypedItem.Parents)}(...)?");
@@ -278,7 +278,7 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
             var first = field.Before(dot);
             var rest = Text.After(field, dot);
             if (first.IsEmptyOrWs() || rest.IsEmptyOrWs())
-                throw new Exception($"Got path '{field}' but either first or rest are empty");
+                throw new($"Got path '{field}' but either first or rest are empty");
             // on the direct child, don't apply type filter, as the intermediate step could be anything
             var child = (this as ITypedItem).Child(first, required: required);
             if (child == null) return CreateEmptyChildList();

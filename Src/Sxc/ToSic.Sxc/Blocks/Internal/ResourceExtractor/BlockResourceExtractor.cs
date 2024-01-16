@@ -19,7 +19,7 @@ public abstract partial class BlockResourceExtractor(PageServiceShared pageServi
 
     #region Settings
 
-    protected virtual ClientAssetsExtractSettings Settings => _settings.Get(() => new ClientAssetsExtractSettings(
+    protected virtual ClientAssetsExtractSettings Settings => _settings.Get(() => new(
         extractAll: false
     ));
     private readonly GetOnce<ClientAssetsExtractSettings> _settings = new();
@@ -42,7 +42,7 @@ public abstract partial class BlockResourceExtractor(PageServiceShared pageServi
         // Pre-Flush Assets, so each call gets its own list
         Assets = [];
         var (template, include2SxcJs) = ExtractFromHtml(html, settings);
-        return new RenderEngineResult(template, include2SxcJs, Assets);
+        return new(template, include2SxcJs, Assets);
     }
 
     protected abstract (string Template, bool Include2sxcJs) ExtractFromHtml(string html, ClientAssetsExtractSettings settings);

@@ -58,7 +58,7 @@ public class WorkBlocks: WorkUnitBase<IAppWorkCtxPlus>
         return l.Return(found
                 ? new BlockConfiguration(groupEntity, AppWorkCtx, null, _qDefBuilder, _cultureResolver.CurrentCultureCode, Log)
                     .WarnIfMissingData()
-                : new BlockConfiguration(null, AppWorkCtx, null, _qDefBuilder, _cultureResolver.CurrentCultureCode, Log)
+                : new(null, AppWorkCtx, null, _qDefBuilder, _cultureResolver.CurrentCultureCode, Log)
                 {
                     DataIsMissing = true
                 },
@@ -73,7 +73,7 @@ public class WorkBlocks: WorkUnitBase<IAppWorkCtxPlus>
         var createTempBlockForPreview = blockId.Guid == Guid.Empty;
         l.A($"{nameof(createTempBlockForPreview)}:{createTempBlockForPreview}");
         var result = createTempBlockForPreview
-            ? new BlockConfiguration(null, AppWorkCtx, AppWorkCtx.Data.List.One(blockId.PreviewView), _qDefBuilder, _cultureResolver.CurrentCultureCode, Log)
+            ? new(null, AppWorkCtx, AppWorkCtx.Data.List.One(blockId.PreviewView), _qDefBuilder, _cultureResolver.CurrentCultureCode, Log)
             : GetBlockConfig(blockId.Guid);
         result.BlockIdentifierOrNull = blockId;
         return l.Return(result);

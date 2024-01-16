@@ -32,6 +32,6 @@ public class BlockEditorSelector: ServiceBase
     {
         if (block is BlockFromModule) return _blkEdtForMod.Value;
         if (block is BlockFromEntity) return _blkEdtForEnt.Value;
-        throw new Exception("Can't find BlockEditor - the base block type in unknown");
+        throw new("Can't find BlockEditor - the base block type in unknown");
     }
 }

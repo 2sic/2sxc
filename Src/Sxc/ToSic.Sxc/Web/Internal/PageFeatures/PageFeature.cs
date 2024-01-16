@@ -23,12 +23,12 @@ public class PageFeature(
     /// <summary>
     /// Primary identifier to activate the feature
     /// </summary>
-    public string NameId { get; } = key ?? throw new Exception("key is required");
+    public string NameId { get; } = key ?? throw new("key is required");
 
     /// <summary>
     /// Name of this feature. 
     /// </summary>
-    public string Name { get; } = name ?? throw new Exception("name is required");
+    public string Name { get; } = name ?? throw new("name is required");
 
     public string Html { get; set; } = html;
 

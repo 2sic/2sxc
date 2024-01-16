@@ -55,17 +55,17 @@ internal class WebResourceProcessor: HelperBase
         if (webRes.Get(WebResEnabledField) as bool? == false) return l.ReturnNull("not enabled");
 
         // Check if we really have HTML to use
-        if (!(webRes.Get(WebResHtmlField) is string html) || html.IsEmpty()) return l.ReturnNull("no html");
+        if (webRes.Get(WebResHtmlField) is not string html || html.IsEmpty()) return l.ReturnNull("no html");
 
         // TODO: HANDLE AUTO-ENABLE-OPTIMIZATIONS
         var autoOptimize = webRes.Get(WebResAutoOptimizeField, fallback: false);
 
         if (!CdnSource.HasValue() || CdnSource == CdnDefault)
-            return l.Return(new PageFeatureFromSettings(key, html: html, autoOptimize: autoOptimize), "ok, using built-in cdn-path");
+            return l.Return(new(key, html: html, autoOptimize: autoOptimize), "ok, using built-in cdn-path");
 
         // check if feature is enabled
         if (!_features.IsEnabled(SxcFeatures.CdnSourcePublic.NameId))
-            return l.Return(new PageFeatureFromSettings(key, html: html, autoOptimize: autoOptimize), "ok, cdn-swap feature not enabled");
+            return l.Return(new(key, html: html, autoOptimize: autoOptimize), "ok, cdn-swap feature not enabled");
 
         // Set new root based on CdnSource settings
         var newRoot = CdnSource + VersionSuffix;
@@ -96,7 +96,7 @@ internal class WebResourceProcessor: HelperBase
             html = html.Replace(orig, "");
         }
 
-        return l.Return(new PageFeatureFromSettings(key, html: html, autoOptimize: autoOptimize), 
+        return l.Return(new(key, html: html, autoOptimize: autoOptimize), 
             $"ok; root now {newRoot}");
     }
 

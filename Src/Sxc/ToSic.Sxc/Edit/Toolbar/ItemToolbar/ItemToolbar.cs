@@ -28,14 +28,14 @@ internal class ItemToolbar: ItemToolbarBase
         // Case 2 build a toolbar based on the actions or just from empty definition
         if (actions == null)
         {
-            Actions.Add(new ItemToolbarAction(entity) {contentType = newType, prefill = prefill});
+            Actions.Add(new(entity) {contentType = newType, prefill = prefill});
             return;
         }
 
         // Case 3 - we have multiple actions
         var actList = actions.Split(',').Select(p => p.Trim()).ToList();
         foreach (var act in actList)
-            Actions.Add(new ItemToolbarAction(entity)
+            Actions.Add(new(entity)
             {
                 action = act,
                 contentType = newType,

@@ -25,7 +25,7 @@ partial class EditService
         if (!Enabled) return null;
         //Parameters.Protect(noParamOrder, $"{nameof(field)},{nameof(contentType)},{nameof(newGuid)}");
 
-        if (field == null) throw new Exception("need parameter 'field'");
+        if (field == null) throw new("need parameter 'field'");
 
         var serialized = JsonSerializer.Serialize(new
         {

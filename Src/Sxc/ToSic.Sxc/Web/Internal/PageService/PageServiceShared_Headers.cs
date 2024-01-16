@@ -17,7 +17,7 @@ partial class PageServiceShared
     internal void Add(IHtmlTag tag, string identifier = null)
     {
         if (tag == null) return;
-        Headers.Add(new HeadChange { ChangeMode = GetMode(PageChangeModes.Append), Tag = tag, ReplacementIdentifier = identifier });
+        Headers.Add(new() { ChangeMode = GetMode(PageChangeModes.Append), Tag = tag, ReplacementIdentifier = identifier });
     }
 
 }

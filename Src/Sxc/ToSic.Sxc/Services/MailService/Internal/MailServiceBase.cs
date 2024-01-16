@@ -51,7 +51,7 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
             Log.Ex(ex);
             if (_userLazy.Value.IsSystemAdmin)
                 throw;
-            throw new Exception("SMTP configuration problem.");
+            throw new("SMTP configuration problem.");
         }
     });
 
@@ -146,7 +146,7 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
             case MailAddress fromMailAddress:
                 return fromMailAddress;
             case string fromString:
-                return new MailAddress(fromString);
+                return new(fromString);
             default:
                 throw new ArgumentException($"Trying to parse e-mails for {addressType} but got unknown type for {nameof(mailAddress)}");
         }
@@ -215,14 +215,14 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
                 return wrapLog.ReturnTrue(nameof(IEnumerable<Attachment>));
 
             case IFile inputFile:
-                targetAttachments.Add(new Attachment(
+                targetAttachments.Add(new(
                     new FileStream(inputFile.PhysicalPath, FileMode.Open, FileAccess.Read, FileShare.Read),
                     inputFile.FullName));
                 return wrapLog.ReturnTrue(nameof(IFile));
 
             case IEnumerable<IFile> inputFiles:
                 foreach (var file in inputFiles)
-                    targetAttachments.Add(new Attachment(
+                    targetAttachments.Add(new(
                         new FileStream(file.PhysicalPath, FileMode.Open, FileAccess.Read, FileShare.Read),
                         file.FullName));
                 return wrapLog.ReturnTrue(nameof(IEnumerable<IFile>));

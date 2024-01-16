@@ -21,7 +21,7 @@ public static class ToolbarServiceExtensions
         string ui = null
     )
     {
-        if (!(toolbarService is ToolbarService typed)) return;
+        if (toolbarService is not ToolbarService typed) return;
         typed._setDemoDefaults(ui);
     }
 }

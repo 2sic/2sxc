@@ -28,7 +28,7 @@ internal class ProblemSuggestions
 
             foreach (var ex in unique)
                 if ((ex as IExceptionWithHelp)?.Helps is List<CodeHelp> helps)
-                    helps.ForEach(h => suggestions.Add(new ProblemReport
+                    helps.ForEach(h => suggestions.Add(new()
                     {
                         Link = h.Link.NullIfNoValue(),
                         Message = h.DetailsHtml ?? h.UiMessage,
@@ -40,11 +40,11 @@ internal class ProblemSuggestions
         if (errorCode == null || block?.App == null) return suggestions;
 
         // Special suggestion for Blog v6.0.0/1
-        AddWarning1601(block.App, "Blog", Blog6NameId, new Version(6, 0, 0), suggestions, "app-blog-upgrade601");
-        AddWarning1601(block.App, "Blog", Blog6NameId, new Version(6, 0, 1), suggestions, "app-blog-upgrade601");
+        AddWarning1601(block.App, "Blog", Blog6NameId, new(6, 0, 0), suggestions, "app-blog-upgrade601");
+        AddWarning1601(block.App, "Blog", Blog6NameId, new(6, 0, 1), suggestions, "app-blog-upgrade601");
 
         // Special Suggestions for Mobius 5.7.0
-        AddWarning1601(block.App, "Mobius", Mobius5NameId, new Version(5, 7, 0), suggestions, "app-mobius-upgrade570");
+        AddWarning1601(block.App, "Mobius", Mobius5NameId, new(5, 7, 0), suggestions, "app-mobius-upgrade570");
 
         return suggestions;
     }
@@ -52,7 +52,7 @@ internal class ProblemSuggestions
     private static void AddWarning1601(IApp app, string appName, string nameId, Version version, List<ProblemReport> suggestions, string shortLink)
     {
         if (app.NameId != nameId || app.Configuration.Version.CompareTo(version) != 0) return;
-        suggestions.Add(new ProblemReport
+        suggestions.Add(new()
         {
             Scope = ProblemReport.ErrorScope.app,
             Severity = ProblemReport.ErrorSeverity.error,

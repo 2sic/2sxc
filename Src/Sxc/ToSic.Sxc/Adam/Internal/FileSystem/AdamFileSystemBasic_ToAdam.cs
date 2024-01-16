@@ -15,7 +15,7 @@ public partial class AdamFileSystemBasic
         // todo: unclear if we need both, but we need the url for the compare-if-same-path
         var relativePath = _adamPaths.RelativeFromAdam(path);
         var relativeUrl = relativePath.ForwardSlash();
-        return new File<string, string>(AdamManager)
+        return new(AdamManager)
         {
             FullName = f.Name,
             Extension = f.Extension.TrimStart('.'),
@@ -39,7 +39,7 @@ public partial class AdamFileSystemBasic
         var f = new DirectoryInfo(physicalPath);
 
         var relativePath = _adamPaths.RelativeFromAdam(path);
-        return new Folder<string, string>(AdamManager)
+        return new(AdamManager)
         {
             Path = relativePath,
             SysId = relativePath,

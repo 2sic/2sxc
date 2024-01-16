@@ -55,7 +55,7 @@ internal class OutputCacheManager : ServiceBase
                 policy.UpdateCallback = updateCallback;
 
             Log.Do(message: $"cache set cacheKey:{cacheKey}", timer: true, action: () => 
-                Cache.Set(new CacheItem(cacheKey, data), policy));
+                Cache.Set(new(cacheKey, data), policy));
 
             return l.ReturnAsOk(cacheKey);
         }

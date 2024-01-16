@@ -37,7 +37,7 @@ internal class TweakInput<TInput>(TweakInput<TInput> original = default, TweakCo
     {
         var tweak = new TweakConfig<Func<ITweakData<TInput>, int, ITweakData<TInput>>>(nameId,
             (v, index) => new TweakData<TInput>(v, changeFunc(v), index), step, target);
-        return new TweakInput<TInput>(this, tweak);
+        return new(this, tweak);
     }
 
     internal ITweakData<TInput> Preprocess(TInput html, string name = TweakValue.NameDefault) 

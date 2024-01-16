@@ -31,9 +31,9 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
     internal BlockConfiguration WarnIfMissingData()
     {
         if (Entity != null) return this;
-        throw new Exception("BlockConfiguration entity is null. " +
-                            "This usually happens when you are duplicating a site, and have not yet imported the other content/apps. " +
-                            "If that is your issue, check 2sxc.org/help?tag=export-import");
+        throw new("BlockConfiguration entity is null. " +
+                  "This usually happens when you are duplicating a site, and have not yet imported the other content/apps. " +
+                  "If that is your issue, check 2sxc.org/help?tag=export-import");
     }
         
     /// <summary>
@@ -71,9 +71,9 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
     {
         get
         {
-            if (Entity == null) return new List<IEntity> {null};
+            if (Entity == null) return new() {null};
             var list = Entity.Children(ViewParts.Content);
-            return list.Count > 0 ? list : new List<IEntity> {null};
+            return list.Count > 0 ? list : new() {null};
         }
     }
 
@@ -93,7 +93,7 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
                 case ViewParts.PresentationLower: return Presentation;
                 case ViewParts.ListContentLower: return Header;
                 case ViewParts.ListPresentationLower: return HeaderPresentation;
-                default: throw new Exception("Type " + type + " not allowed");
+                default: throw new("Type " + type + " not allowed");
             }
         }
     }

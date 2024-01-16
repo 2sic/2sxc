@@ -91,9 +91,9 @@ public class PageChangeSummary: ServiceBase
         foreach (var settingFeature in featuresFromSettings)
         {
             var autoOpt = settingFeature.AutoOptimize;
-            var extracted = _resourceExtractor.Value.Process(settingFeature.Html, new ClientAssetsExtractSettings(
-                css: new ClientAssetExtractSettings(autoOpt, AddToBottom, CssDefaultPriority, false, false),
-                js: new ClientAssetExtractSettings(autoOpt, AddToBottom, JsDefaultPriority, autoOpt, autoOpt)));
+            var extracted = _resourceExtractor.Value.Process(settingFeature.Html, new(
+                css: new(autoOpt, AddToBottom, CssDefaultPriority, false, false),
+                js: new(autoOpt, AddToBottom, JsDefaultPriority, autoOpt, autoOpt)));
             l.A($"Feature: {settingFeature.Name} - assets extracted: {extracted.Assets.Count}");
             if (!extracted.Assets.Any()) continue;
 

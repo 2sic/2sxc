@@ -42,7 +42,7 @@ public class ErrorDto
             }));
 
         if (codeWarnings.GetObsoletes().Any())
-            problems.Add(new ProblemReport
+            problems.Add(new()
             {
                 Code = "obsolete",
                 Severity = ErrorSeverity.warning
@@ -50,7 +50,7 @@ public class ErrorDto
 
         var appId = block.App?.AppId;
         if (appId != null && codeWarnings.CodeInfoStats.AppHasWarnings(appId.Value))
-            problems.Add(new ProblemReport
+            problems.Add(new()
             {
                 Code = "obsolete-app",
                 Severity = ErrorSeverity.warning

@@ -32,7 +32,7 @@ internal abstract class UrlValueProcess
     {
         var obj = set.Value;
         return obj is string str && str.HasValue() && UnsafeChars.Any(c => str.Contains(c))
-            ? new NameObjectSet(set, value: $"{Base64Prefix}{Base64.Encode(str)}")
+            ? new(set, value: $"{Base64Prefix}{Base64.Encode(str)}")
             : set;
     }
 

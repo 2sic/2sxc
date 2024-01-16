@@ -37,7 +37,7 @@ public abstract class CodeCompiler : ServiceBase
         {
             l.A($"Error: {hasErrorMessage}");
             l.ReturnNull("failed");
-            if (throwOnError) throw new Exception(hasErrorMessage);
+            if (throwOnError) throw new(hasErrorMessage);
             return null;
         }
 
@@ -59,7 +59,7 @@ public abstract class CodeCompiler : ServiceBase
         {
             l.A($"{errorMessages}; throw error: {throwOnError}");
             l.ReturnNull("failed");
-            if (throwOnError) throw new Exception(errorMessages);
+            if (throwOnError) throw new(errorMessages);
             return null;
         }
 
@@ -153,7 +153,7 @@ public abstract class CodeCompiler : ServiceBase
     {
         var l = Log.Fn($"{nameof(virtualPath)}: {virtualPath}");
 
-        if (!(instance is IGetCodePath codeForwarding))
+        if (instance is not IGetCodePath codeForwarding)
         {
             l.Done("didn't attach");
             return;

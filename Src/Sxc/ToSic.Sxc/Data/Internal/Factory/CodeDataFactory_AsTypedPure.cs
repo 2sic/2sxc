@@ -38,7 +38,7 @@ partial class CodeDataFactory
         if (list is IEnumerable<ITyped> alreadyTyped)
             return l.Return(alreadyTyped, "already typed");
 
-        if (!(list is IEnumerable enumerable))
+        if (list is not IEnumerable enumerable)
             throw new ArgumentException($"The object provided to {NameOfAsTypedList} is not enumerable/array so it can't be converted.", nameof(list));
 
         var itemsRequired = required != false;

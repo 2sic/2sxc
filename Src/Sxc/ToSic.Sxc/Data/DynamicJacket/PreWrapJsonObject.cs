@@ -55,7 +55,7 @@ internal class PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item)
     public override TryGetResult TryGetWrap(string name, bool wrapDefault = true)
     {
         if (name.IsEmptyOrWs() || item == null || !item.Any())
-            return new TryGetResult(false, null, null);
+            return new(false, null, null);
 
         var isPath = name.Contains(PropertyStack.PathSeparator.ToString());
         if (!isPath)
@@ -70,9 +70,9 @@ internal class PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item)
             // last one or not found - return a not-found
             if (i == pathParts.Length -1 || !result.Found) return result;
             node = result.Raw as JsonObject;
-            if (node == null) return new TryGetResult(false, null, null);
+            if (node == null) return new(false, null, null);
         }
-        return new TryGetResult(false, null, null);
+        return new(false, null, null);
     }
 
     private TryGetResult TryGetFromNode(string name, JsonObject node)
@@ -81,7 +81,7 @@ internal class PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item)
             .FirstOrDefault(p => p.Key.EqualsInsensitive(name));
 
         var found = !result.Equals(default(KeyValuePair<string, JsonNode>));
-        return new TryGetResult(found, result.Value, found ? Wrapper.IfJsonGetValueOrJacket(result.Value) : null);
+        return new(found, result.Value, found ? Wrapper.IfJsonGetValueOrJacket(result.Value) : null);
     }
 
     #endregion
@@ -92,13 +92,13 @@ internal class PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item)
 
     public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
     {
-        if (item == null || !item.Any()) return new List<PropertyDumpItem>();
+        if (item == null || !item.Any()) return new();
 
         if (string.IsNullOrEmpty(path)) path = DumpSourceName;
 
         var allProperties = item.ToList();
 
-        var simpleProps = allProperties.Where(p => !(p.Value is JsonObject));
+        var simpleProps = allProperties.Where(p => p.Value is not JsonObject);
         var resultDynChildren = simpleProps.Select(p => new PropertyDumpItem
             {
                 Path = path + PropertyDumpItem.Separator + p.Key,
@@ -115,7 +115,7 @@ internal class PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item)
                 var jacket = Wrapper.CreateDynJacketObject(p.Value.AsObject());
                 return ((IHasPropLookup)jacket).PropertyLookup._Dump(specs, path + PropertyDumpItem.Separator + p.Key);
             })
-            .Where(p => !(p is null));
+            .Where(p => p is not null);
 
         resultDynChildren.AddRange(objectProps);
 

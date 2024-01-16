@@ -27,7 +27,7 @@ partial class ToolbarBuilder
         if (target is IHasMetadata withMetadata)
             target = withMetadata.Metadata;
 
-        if (!(target is IMetadataOf mdOf))
+        if (target is not IMetadataOf mdOf)
             return l.Return(Array.Empty<string>(), "not metadata");
 
         var recommendations = mdOf?.Target?.Recommendations ?? Array.Empty<string>();

@@ -17,7 +17,7 @@ public class HttpNetCore : HttpAbstractionBase, IHttp
             if (_queryStringValues != null) return _queryStringValues;
             // ReSharper disable once ConvertIfStatementToReturnStatement
             if (Request == null) 
-                return _queryStringValues = new NameValueCollection();
+                return _queryStringValues = new();
 
             var paramList = new NameValueCollection();
             Request.Query.ToList().ForEach(i => paramList.Add(i.Key, i.Value));

@@ -14,7 +14,7 @@ public abstract class AdamFileSystemBasic<TFolder, TFile>: ServiceBase, IAdamFil
     {
         ConnectServices(
             _adamPaths = adamPaths,
-            FsHelpers = new AdamFileSystemHelpers(adamPaths)
+            FsHelpers = new(adamPaths)
         );
     }
 

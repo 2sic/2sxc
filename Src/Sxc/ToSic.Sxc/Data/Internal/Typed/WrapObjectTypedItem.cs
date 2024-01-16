@@ -76,7 +76,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
         var blank = Enumerable.Empty<ITypedItem>();
         var r = PreWrap.TryGetWrap(field);
         if (!r.Found || r.Raw == null || r.Raw.GetType().IsValueType) return blank;
-        if (!(r.Raw is IEnumerable re))
+        if (r.Raw is not IEnumerable re)
         {
             var rawWrapped = Wrapper.TypedItemFromObject(r.Raw, PreWrap.Settings);
             return rawWrapped == null ? null : new[] { rawWrapped };
@@ -173,11 +173,11 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
         var objList = raw != null
             ? raw is IEnumerable rawEnum
                 ? rawEnum.Cast<object>().ToList()
-                : new List<object> { raw }
-            : new List<object>();
+                : new() { raw }
+            : new();
 
         var df = Cdf.Value.Services.DataFactory.New(
-            options: new DataFactoryOptions(appId: Cdf.Value.BlockOrNull?.AppId, autoId: false));
+            options: new(appId: Cdf.Value.BlockOrNull?.AppId, autoId: false));
         var mdEntities = objList
             .Where(o => o != null)
             .Select(o =>

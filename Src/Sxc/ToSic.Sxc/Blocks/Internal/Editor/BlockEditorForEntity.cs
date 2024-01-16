@@ -20,7 +20,7 @@ public class BlockEditorForEntity : BlockEditorBase
     #region methods which the entity-implementation must customize 
 
     protected override void SavePreviewTemplateId(Guid templateGuid)
-        => Update(new Dictionary<string, object>
+        => Update(new()
         {
             {ViewParts.TemplateContentType, templateGuid.ToString()}
         });
@@ -53,7 +53,7 @@ public class BlockEditorForEntity : BlockEditorBase
     #region private helpers
 
     private void UpdateValue(string key, object value) 
-        => Update(new Dictionary<string, object> { { key, value } });
+        => Update(new() { { key, value } });
 
     private void Update(Dictionary<string, object> newValues)
     {

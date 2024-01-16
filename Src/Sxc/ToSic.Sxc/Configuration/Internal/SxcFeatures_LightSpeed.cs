@@ -7,7 +7,7 @@ public partial class SxcFeatures
 {
     public static readonly Feature LightSpeedOutputCache = new(
         "LightSpeedOutputCache",
-        new Guid("61654bca-b76b-4c15-9173-5643de6b4baa"),
+        new("61654bca-b76b-4c15-9173-5643de6b4baa"),
         "LightSpeed Output Cache",
         false,
         false,
@@ -18,7 +18,7 @@ public partial class SxcFeatures
 
     public static readonly Feature LightSpeedOutputCacheAppFileChanges = new(
         "LightSpeedOutputCacheAppFileChanges",
-        new Guid("3f4c7d29-568d-44de-bd76-77e8572560f7"),
+        new("3f4c7d29-568d-44de-bd76-77e8572560f7"),
         "LightSpeed Output Cache - Monitor App file changes",
         false,
         false,

@@ -108,7 +108,7 @@ public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBase
     // but because we'll need to merge the code with v17, we try do keep it this way.
     public static string[] GetImageRecommendations(ICodeApiService codeRoot)
     {
-        if (!(codeRoot is CodeApiService codeRootTyped)) return ImageRecommendationsBasic;
+        if (codeRoot is not CodeApiService codeRootTyped) return ImageRecommendationsBasic;
 
         if (!codeRootTyped.GetService<IFeaturesService>().IsEnabled(BuiltInFeatures.CopyrightManagement.NameId))
             return ImageRecommendationsBasic;

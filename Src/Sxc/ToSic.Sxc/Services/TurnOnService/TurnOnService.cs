@@ -53,7 +53,7 @@ internal class TurnOnService: ServiceBase, ITurnOnService
 
     private static object PickOrBuildSpecs(object runOrSpecs, object require, object data)
     {
-        if (!(runOrSpecs is string run)) return runOrSpecs;
+        if (runOrSpecs is not string run) return runOrSpecs;
 
         if (require is null && data is null) return new { run };
         if (require is null) return new { run, data };

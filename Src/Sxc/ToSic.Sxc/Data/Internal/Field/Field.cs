@@ -64,7 +64,7 @@ public class Field: IField
 
     private IMetadataOf MetadataOfValue => _itemMd.Get(() =>
     {
-        if (!(Raw is string rawString) || string.IsNullOrWhiteSpace(rawString)) return null;
+        if (Raw is not string rawString || string.IsNullOrWhiteSpace(rawString)) return null;
         var appState = _cdf?.BlockOrNull?.Context?.AppState;
         var md = appState?.GetMetadataOf(TargetTypes.CmsItem, rawString, "");
         ImageDecorator.AddRecommendations(md, Url, _cdf?._CodeApiSvc); // needs the url so it can check if we use image recommendations

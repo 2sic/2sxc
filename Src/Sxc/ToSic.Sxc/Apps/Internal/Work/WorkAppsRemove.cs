@@ -36,10 +36,10 @@ public class WorkAppsRemove: ServiceBase
         // check portal assignment and that it's not the default app
         // enable restore for DefaultApp
         if (appId == _appStates.DefaultAppId(zoneId) && fullDelete)
-            throw new Exception("The default app of a zone cannot be removed.");
+            throw new("The default app of a zone cannot be removed.");
 
         if (appId == Eav.Constants.MetaDataAppId)
-            throw new Exception("The special old global app cannot be removed.");
+            throw new("The special old global app cannot be removed.");
 
         // todo: maybe verify the app is of this portal; I assume delete will fail anyhow otherwise
 

@@ -71,7 +71,7 @@ public class AssemblyCacheManager() : ServiceBase(SxcLogging.SxcLogName + ".Asse
         try
         {
             l.Do(message: $"cache set cacheKey:{cacheKey}", timer: true,
-                action: () => Cache.Set(new CacheItem(cacheKey, data), policy));
+                action: () => Cache.Set(new(cacheKey, data), policy));
 
             return l.ReturnAsOk(cacheKey);
         }
