@@ -22,46 +22,45 @@ public class SourceAnalyzer : ServiceBase
     public CodeFileInfo TypeOfVirtualPath(string virtualPath)
     {
         var l = Log.Fn<CodeFileInfo>($"{nameof(virtualPath)}: '{virtualPath}'");
-        string sourceCode = default;
+        string fullPath = default, sourceCode = default;
         try
         {
-            
-            sourceCode = GetFileContentsOfVirtualPath(virtualPath);
+            (var _, fullPath, sourceCode) = GetFileContentsOfVirtualPath(virtualPath);
             return sourceCode == null
                 ? l.ReturnAndLog(CodeFileInfo.CodeFileNotFound)
-                : l.ReturnAndLog(AnalyzeContent(virtualPath, sourceCode));
+                : l.ReturnAndLog(AnalyzeContent(virtualPath, fullPath, sourceCode));
         }
         catch
         {
-            return l.ReturnAndLog(CodeFileInfo.CodeFileUnknown(sourceCode), "error trying to find type");
+            return l.ReturnAndLog(CodeFileInfo.CodeFileUnknown(sourceCode, relativePath: virtualPath, fullPath: fullPath), "error trying to find type");
         }
     }
 
-    private string GetFileContentsOfVirtualPath(string virtualPath)
+    private (string relativePath, string fullPath, string sourceCode) GetFileContentsOfVirtualPath(string relativePath)
     {
-        var l = Log.Fn<string>($"{nameof(virtualPath)}: '{virtualPath}'");
+        var l = Log.Fn<(string, string, string)>($"{nameof(relativePath)}: '{relativePath}'");
 
-        if (virtualPath.IsEmptyOrWs())
-            return l.Return(null, "no path");
+        if (relativePath.IsEmptyOrWs())
+            return l.Return((relativePath, null, null), "no relativePath");
 
-        var path = _serverPaths.FullContentPath(virtualPath);
-        if (path == null || path.IsEmptyOrWs())
-            return l.Return(null, "no path");
+        var fullPath = _serverPaths.FullContentPath(relativePath);
+        if (fullPath == null || fullPath.IsEmptyOrWs())
+            return l.Return((relativePath, fullPath, null), "no relativePath");
 
-        if (!File.Exists(path))
-            return l.Return(null, "file not found");
+        if (!File.Exists(fullPath))
+            return l.Return((relativePath, fullPath, null), "file not found");
 
-        var sourceCode = File.ReadAllText(path);
-        return l.Return(sourceCode, $"found, {sourceCode.Length} bytes");
+        var sourceCode = File.ReadAllText(fullPath);
+        return l.Return((relativePath, fullPath, sourceCode), $"found, {sourceCode.Length} bytes");
     }
 
-    private CodeFileInfo AnalyzeContent(string path, string sourceCode)
+    private CodeFileInfo AnalyzeContent(string relativePath, string fullPath, string sourceCode)
     {
-        var l = Log.Fn<CodeFileInfo>($"{nameof(path)}:{path}");
+        var l = Log.Fn<CodeFileInfo>($"{nameof(relativePath)}:{relativePath}");
         if (sourceCode.Length < 10)
             return l.Return(CodeFileInfo.CodeFileUnknown(sourceCode), "file too short");
 
-        var isCs = path.ToLowerInvariant().EndsWith(CodeCompiler.CsFileExtension, StringComparison.InvariantCultureIgnoreCase);
+        var isCs = relativePath.ToLowerInvariant().EndsWith(CodeCompiler.CsFileExtension, StringComparison.InvariantCultureIgnoreCase);
         l.A($"isCs: {isCs}");
 
         if (isCs)
@@ -69,32 +68,38 @@ public class SourceAnalyzer : ServiceBase
             var csHasThisAppCode = IsThisAppCodeUsedInCs(sourceCode);
             l.A($"cs, thisApp: {csHasThisAppCode}");
 
-            var className = Path.GetFileNameWithoutExtension(path);
+            var className = Path.GetFileNameWithoutExtension(relativePath);
             l.A($"cs, className: {className}");
 
             var baseClass = ExtractBaseClass(sourceCode, className);
             l.A($"cs, baseClass: {baseClass}");
 
             if (baseClass.IsEmptyOrWs())
-                return l.Return(csHasThisAppCode ? CodeFileInfo.CodeFileUnknownWithThisAppCode(sourceCode) : CodeFileInfo.CodeFileUnknown(sourceCode), "Ok, cs file without base class");
+                return l.Return(csHasThisAppCode 
+                    ? CodeFileInfo.CodeFileUnknownWithThisAppCode(sourceCode, relativePath: relativePath, fullPath: fullPath) 
+                    : CodeFileInfo.CodeFileUnknown(sourceCode, relativePath: relativePath, fullPath: fullPath)
+                    , "Ok, cs file without base class");
 
             var csBaseClassMatch = CodeFileInfo.CodeFileInfoTemplates
                 .FirstOrDefault(cf => cf.Inherits.EqualsInsensitive(baseClass) && cf.ThisApp == csHasThisAppCode);
 
             return csBaseClassMatch != null
-                ? l.ReturnAndLog(new(csBaseClassMatch, sourceCode: sourceCode))
-                : l.Return(csHasThisAppCode ? CodeFileInfo.CodeFileOtherWithThisAppCode(sourceCode) : CodeFileInfo.CodeFileOther(sourceCode), "Ok, cs file with other base class");
+                ? l.ReturnAndLog(new(csBaseClassMatch, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath))
+                : l.Return(csHasThisAppCode 
+                    ? CodeFileInfo.CodeFileOtherWithThisAppCode(sourceCode, relativePath: relativePath, fullPath: fullPath) 
+                    : CodeFileInfo.CodeFileOther(sourceCode, relativePath: relativePath, fullPath: fullPath)
+                    , "Ok, cs file with other base class");
         }
 
         // Cshtml part
         var inheritsMatch = Regex.Match(sourceCode, @"@inherits\s+(?<BaseName>[\w\.]+)", RegexOptions.Multiline);
 
         if (!inheritsMatch.Success)
-            return l.Return(CodeFileInfo.CodeFileUnknown(sourceCode), "no inherits found");
+            return l.Return(CodeFileInfo.CodeFileUnknown(sourceCode, relativePath: relativePath, fullPath: fullPath), "no inherits found");
 
         var ns = inheritsMatch.Groups["BaseName"].Value;
         if (ns.IsEmptyOrWs())
-            return l.Return(CodeFileInfo.CodeFileUnknown(sourceCode));
+            return l.Return(CodeFileInfo.CodeFileUnknown(sourceCode, relativePath: relativePath, fullPath: fullPath));
 
         var cshtmlHasThisAppCode = IsThisAppCodeUsedInCshtml(sourceCode);
 
@@ -102,8 +107,8 @@ public class SourceAnalyzer : ServiceBase
             .FirstOrDefault(cf => cf.Inherits.EqualsInsensitive(ns) && cf.ThisApp == cshtmlHasThisAppCode);
 
         return findMatch != null
-            ? l.ReturnAndLog(new(findMatch, sourceCode: sourceCode))
-            : l.Return(CodeFileInfo.CodeFileOther(sourceCode), $"namespace '{ns}' can't be found");
+            ? l.ReturnAndLog(new(findMatch, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath))
+            : l.Return(CodeFileInfo.CodeFileOther(sourceCode, relativePath: relativePath, fullPath: fullPath), $"namespace '{ns}' can't be found");
     }
 
     private static bool IsThisAppCodeUsedInCshtml(string sourceCode)

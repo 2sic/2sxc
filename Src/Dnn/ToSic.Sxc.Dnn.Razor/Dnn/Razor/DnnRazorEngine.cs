@@ -130,15 +130,14 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
         object page = null;
         Type compiledType;
         // TODO: SHOULD OPTIMIZE so the file doesn't need to read multiple times
-        // 1. probably change so the CodeFileInfo contains the source code
-        var razorType = _sourceAnalyzer.Value.TypeOfVirtualPath(templatePath);
+        var codeFileInfo = _sourceAnalyzer.Value.TypeOfVirtualPath(templatePath);
         try
         {
             var specWithEdition = new HotBuildSpec(App.AppId, Edition);
             l.A($"prepare spec: {specWithEdition}");
 
-            compiledType = razorType.IsHotBuildSupported() 
-                ? _roslynBuildManager.Value.GetCompiledType(templatePath, specWithEdition)
+            compiledType = codeFileInfo.IsHotBuildSupported() 
+                ? _roslynBuildManager.Value.GetCompiledType(codeFileInfo, specWithEdition)
                 : BuildManager.GetCompiledType(templatePath);
         }
         catch (Exception compileEx)
@@ -148,8 +147,8 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
             // 2. Try to find base type - or warn if not found
             // 3. ...
             
-            l.A($"Razor Type: {razorType}");
-            var ex = l.Ex(_errorHelp.Value.AddHelpForCompileProblems(compileEx, razorType));
+            l.A($"Razor Type: {codeFileInfo}");
+            var ex = l.Ex(_errorHelp.Value.AddHelpForCompileProblems(compileEx, codeFileInfo));
             // Special form of throw to preserve details about the call stack
             ExceptionDispatchInfo.Capture(ex).Throw();
             throw; // fake throw, just so the code shows what happens

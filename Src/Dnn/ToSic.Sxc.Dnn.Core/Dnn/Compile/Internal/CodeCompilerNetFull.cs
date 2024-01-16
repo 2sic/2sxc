@@ -34,13 +34,12 @@ internal class CodeCompilerNetFull : CodeCompiler
         try
         {
             // TODO: SHOULD OPTIMIZE so the file doesn't need to read multiple times
-            // 1. probably change so the CodeFileInfo contains the source code
-            var code = _sourceAnalyzer.Value.TypeOfVirtualPath(relativePath);
+            var codeFileInfo = _sourceAnalyzer.Value.TypeOfVirtualPath(relativePath);
 
             try
             {
-                if (code.IsHotBuildSupported())
-                    return l.Return(_roslynBuildManager.GetCompiledAssembly(relativePath, className, spec),
+                if (codeFileInfo.IsHotBuildSupported())
+                    return l.Return(_roslynBuildManager.GetCompiledAssembly(codeFileInfo, className, spec),
                         "Ok, RoslynBuildManager");
             }
             catch (Exception ex)

@@ -145,8 +145,8 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
     private HttpControllerDescriptor BuildDescriptor(HttpRequestMessage request, string folder, string fullPath, string typeName, IServiceProvider sp)
     {
         Assembly assembly;
-        var hasThisApp = sp.Build<SourceAnalyzer>().TypeOfVirtualPath(fullPath).ThisApp;
-        if (hasThisApp)
+        var codeFileInfo = sp.Build<SourceAnalyzer>().TypeOfVirtualPath(fullPath);
+        if (codeFileInfo.ThisApp)
         {
             // Figure edition
             HotBuildSpec spec = null;
@@ -154,7 +154,7 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
             if (block != null)
                 spec = new HotBuildSpec(block.AppId, 
                     edition: PolymorphConfigReader.UseViewEditionLazyGetEdition(block.View, () => sp.Build<PolymorphConfigReader>().Init(block.Context.AppState.List)));
-            assembly = sp.Build<IRoslynBuildManager>().GetCompiledAssembly(fullPath, typeName, spec)?.Assembly;
+            assembly = sp.Build<IRoslynBuildManager>().GetCompiledAssembly(codeFileInfo, typeName, spec)?.Assembly;
         }
         else
         {

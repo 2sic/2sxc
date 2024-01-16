@@ -9,7 +9,6 @@ using System.Reflection;
 using System.Runtime.Caching;
 using System.Text;
 using System.Web;
-using System.Web.Hosting;
 using System.Web.Razor;
 using System.Web.Razor.Generator;
 using ToSic.Eav.Caching.CachingMonitors;
@@ -17,6 +16,7 @@ using ToSic.Eav.Helpers;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
 using CodeCompiler = ToSic.Sxc.Code.Internal.HotBuild.CodeCompiler;
 
@@ -52,20 +52,18 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         /// <summary>
         /// Manage template compilations, cache the assembly and returns the generated type.
         /// </summary>
-        /// <param name="templatePath">Relative path to template file.</param>
+        /// <param name="codeFileInfo"></param>
         /// <param name="spec"></param>
         /// <returns>The generated type for razor cshtml.</returns>
-        public Type GetCompiledType(string templatePath, HotBuildSpec spec)
-            => GetCompiledAssembly(templatePath, null, spec).MainType;
+        public Type GetCompiledType(CodeFileInfo codeFileInfo, HotBuildSpec spec)
+            => GetCompiledAssembly(codeFileInfo, null, spec).MainType;
 
-        public AssemblyResult GetCompiledAssembly(string virtualPath, string className, HotBuildSpec spec)
+        public AssemblyResult GetCompiledAssembly(CodeFileInfo codeFileInfo, string className, HotBuildSpec spec)
         {
-            var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {spec};", timer: true);
-
-            var fileFullPath = HostingEnvironment.MapPath(virtualPath);
+            var l = Log.Fn<AssemblyResult>($"{codeFileInfo}; {spec};", timer: true);
 
             // Check if the template is already in the assembly cache
-            var (result, cacheKey) = AssemblyCacheManager.TryGetTemplate(fileFullPath);
+            var (result, cacheKey) = AssemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath);
             if (result != null)
             {
                 var cacheAssembly = result.Assembly;
@@ -76,7 +74,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             }
 
             // If the assembly was not in the cache, we need to compile it
-            l.A($"Template not found in cache. Path: {fileFullPath}");
+            l.A($"Template not found in cache. Path: {codeFileInfo.FullPath}");
 
             // Initialize the list of referenced assemblies with the default ones
             List<string> referencedAssemblies = [.. DefaultReferencedAssemblies.Value];
@@ -99,18 +97,17 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             }
 
             // Compile the template
-            var pathLowerCase = virtualPath.ToLowerInvariant();
+            var pathLowerCase = codeFileInfo.RelativePath.ToLowerInvariant();
             var isCshtml = pathLowerCase.EndsWith(CodeCompiler.CsHtmlFileExtension);
-            if (isCshtml) className = GetSafeClassName(fileFullPath);
+            if (isCshtml) className = GetSafeClassName(codeFileInfo.FullPath);
             l.A($"Compiling template. Class: {className}");
 
-            var template = File.ReadAllText(fileFullPath);
             var (generatedAssembly, errors) = isCshtml
-                ? CompileTemplate(template, referencedAssemblies, className, DefaultNamespace, fileFullPath)
-                : CompileCSharpCode(template, referencedAssemblies);
+                ? CompileTemplate(codeFileInfo.SourceCode, referencedAssemblies, className, DefaultNamespace, codeFileInfo.FullPath)
+                : CompileCSharpCode(codeFileInfo.SourceCode, referencedAssemblies);
             if (generatedAssembly == null)
                 throw l.Ex(new Exception(
-                    $"Found {errors.Count} errors compiling Razor '{fileFullPath}' (length: {template.Length}, lines: {template.Split('\n').Length}): {ErrorMessagesFromCompileErrors(errors)}"));
+                    $"Found {errors.Count} errors compiling Razor '{codeFileInfo.FullPath}' (length: {codeFileInfo.SourceCode.Length}, lines: {codeFileInfo.SourceCode.Split('\n').Length}): {ErrorMessagesFromCompileErrors(errors)}"));
 
             // Add the compiled assembly to the cache
 
@@ -118,7 +115,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             // otherwise all caches keep getting flushed when any file changes
             // TODO: must also watch for global shared code changes
 
-            var fileChangeMon = new HostFileChangeMonitor(new[] { fileFullPath });
+            var fileChangeMon = new HostFileChangeMonitor(new[] { codeFileInfo.FullPath });
             var sharedFolderChangeMon = thisAppCode.Result == null ? null : new FolderChangeMonitor(thisAppCode.Result.WatcherFolders);
             var changeMonitors = thisAppCode.Result == null
                 ? new ChangeMonitor[] { fileChangeMon }
