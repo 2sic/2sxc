@@ -22,16 +22,18 @@ public class SourceAnalyzer : ServiceBase
     public CodeFileInfo TypeOfVirtualPath(string virtualPath)
     {
         var l = Log.Fn<CodeFileInfo>($"{nameof(virtualPath)}: '{virtualPath}'");
+        string sourceCode = default;
         try
         {
-            var contents = GetFileContentsOfVirtualPath(virtualPath);
-            return contents == null
+            
+            sourceCode = GetFileContentsOfVirtualPath(virtualPath);
+            return sourceCode == null
                 ? l.ReturnAndLog(CodeFileInfo.CodeFileNotFound)
-                : l.ReturnAndLog(AnalyzeContent(virtualPath, contents));
+                : l.ReturnAndLog(AnalyzeContent(virtualPath, sourceCode));
         }
         catch
         {
-            return l.ReturnAndLog(CodeFileInfo.CodeFileUnknown, "error trying to find type");
+            return l.ReturnAndLog(CodeFileInfo.CodeFileUnknown(sourceCode), "error trying to find type");
         }
     }
 
@@ -49,59 +51,59 @@ public class SourceAnalyzer : ServiceBase
         if (!File.Exists(path))
             return l.Return(null, "file not found");
 
-        var contents = File.ReadAllText(path);
-        return l.Return(contents, $"found, {contents.Length} bytes");
+        var sourceCode = File.ReadAllText(path);
+        return l.Return(sourceCode, $"found, {sourceCode.Length} bytes");
     }
 
-    public CodeFileInfo AnalyzeContent(string path, string contents)
+    private CodeFileInfo AnalyzeContent(string path, string sourceCode)
     {
         var l = Log.Fn<CodeFileInfo>($"{nameof(path)}:{path}");
-        if (contents.Length < 10)
-            return l.Return(CodeFileInfo.CodeFileUnknown, "file too short");
+        if (sourceCode.Length < 10)
+            return l.Return(CodeFileInfo.CodeFileUnknown(sourceCode), "file too short");
 
         var isCs = path.ToLowerInvariant().EndsWith(CodeCompiler.CsFileExtension, StringComparison.InvariantCultureIgnoreCase);
         l.A($"isCs: {isCs}");
 
         if (isCs)
         {
-            var csHasThisAppCode = IsThisAppCodeUsedInCs(contents);
+            var csHasThisAppCode = IsThisAppCodeUsedInCs(sourceCode);
             l.A($"cs, thisApp: {csHasThisAppCode}");
 
             var className = Path.GetFileNameWithoutExtension(path);
             l.A($"cs, className: {className}");
 
-            var baseClass = ExtractBaseClass(contents, className);
+            var baseClass = ExtractBaseClass(sourceCode, className);
             l.A($"cs, baseClass: {baseClass}");
 
             if (baseClass.IsEmptyOrWs())
-                return l.Return(csHasThisAppCode ? CodeFileInfo.CodeFileUnknownWithThisAppCode : CodeFileInfo.CodeFileUnknown, "Ok, cs file without base class");
+                return l.Return(csHasThisAppCode ? CodeFileInfo.CodeFileUnknownWithThisAppCode(sourceCode) : CodeFileInfo.CodeFileUnknown(sourceCode), "Ok, cs file without base class");
 
-            var csBaseClassMatch = CodeFileInfo.CodeFileList
+            var csBaseClassMatch = CodeFileInfo.CodeFileList(sourceCode)
                 .FirstOrDefault(cf => cf.Inherits.EqualsInsensitive(baseClass) && cf.ThisApp == csHasThisAppCode);
 
             return csBaseClassMatch != null
                 ? l.ReturnAndLog(csBaseClassMatch)
-                : l.Return(csHasThisAppCode ? CodeFileInfo.CodeFileOtherWithThisAppCode : CodeFileInfo.CodeFileOther, "Ok, cs file with other base class");
+                : l.Return(csHasThisAppCode ? CodeFileInfo.CodeFileOtherWithThisAppCode(sourceCode) : CodeFileInfo.CodeFileOther(sourceCode), "Ok, cs file with other base class");
         }
 
         // Cshtml part
-        var inheritsMatch = Regex.Match(contents, @"@inherits\s+(?<BaseName>[\w\.]+)", RegexOptions.Multiline);
+        var inheritsMatch = Regex.Match(sourceCode, @"@inherits\s+(?<BaseName>[\w\.]+)", RegexOptions.Multiline);
 
         if (!inheritsMatch.Success)
-            return l.Return(CodeFileInfo.CodeFileUnknown, "no inherits found");
+            return l.Return(CodeFileInfo.CodeFileUnknown(sourceCode), "no inherits found");
 
         var ns = inheritsMatch.Groups["BaseName"].Value;
         if (ns.IsEmptyOrWs())
-            return l.Return(CodeFileInfo.CodeFileUnknown);
+            return l.Return(CodeFileInfo.CodeFileUnknown(sourceCode));
 
-        var cshtmlHasThisAppCode = IsThisAppCodeUsedInCshtml(contents);
+        var cshtmlHasThisAppCode = IsThisAppCodeUsedInCshtml(sourceCode);
 
-        var findMatch = CodeFileInfo.CodeFileList
+        var findMatch = CodeFileInfo.CodeFileList(sourceCode)
             .FirstOrDefault(cf => cf.Inherits.EqualsInsensitive(ns) && cf.ThisApp == cshtmlHasThisAppCode);
 
         return findMatch != null
             ? l.ReturnAndLog(findMatch)
-            : l.Return(CodeFileInfo.CodeFileOther, $"namespace '{ns}' can't be found");
+            : l.Return(CodeFileInfo.CodeFileOther(sourceCode), $"namespace '{ns}' can't be found");
     }
 
     private static bool IsThisAppCodeUsedInCshtml(string sourceCode)
