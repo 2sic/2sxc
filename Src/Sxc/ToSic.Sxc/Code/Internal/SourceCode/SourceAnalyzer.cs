@@ -78,11 +78,11 @@ public class SourceAnalyzer : ServiceBase
             if (baseClass.IsEmptyOrWs())
                 return l.Return(csHasThisAppCode ? CodeFileInfo.CodeFileUnknownWithThisAppCode(sourceCode) : CodeFileInfo.CodeFileUnknown(sourceCode), "Ok, cs file without base class");
 
-            var csBaseClassMatch = CodeFileInfo.CodeFileList(sourceCode)
+            var csBaseClassMatch = CodeFileInfo.CodeFileInfoTemplates
                 .FirstOrDefault(cf => cf.Inherits.EqualsInsensitive(baseClass) && cf.ThisApp == csHasThisAppCode);
 
             return csBaseClassMatch != null
-                ? l.ReturnAndLog(csBaseClassMatch)
+                ? l.ReturnAndLog(new(csBaseClassMatch, sourceCode: sourceCode))
                 : l.Return(csHasThisAppCode ? CodeFileInfo.CodeFileOtherWithThisAppCode(sourceCode) : CodeFileInfo.CodeFileOther(sourceCode), "Ok, cs file with other base class");
         }
 
@@ -98,11 +98,11 @@ public class SourceAnalyzer : ServiceBase
 
         var cshtmlHasThisAppCode = IsThisAppCodeUsedInCshtml(sourceCode);
 
-        var findMatch = CodeFileInfo.CodeFileList(sourceCode)
+        var findMatch = CodeFileInfo.CodeFileInfoTemplates
             .FirstOrDefault(cf => cf.Inherits.EqualsInsensitive(ns) && cf.ThisApp == cshtmlHasThisAppCode);
 
         return findMatch != null
-            ? l.ReturnAndLog(findMatch)
+            ? l.ReturnAndLog(new(findMatch, sourceCode: sourceCode))
             : l.Return(CodeFileInfo.CodeFileOther(sourceCode), $"namespace '{ns}' can't be found");
     }
 
