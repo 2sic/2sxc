@@ -8,7 +8,11 @@ using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 
 namespace ToSic.Sxc.Images;
 
-internal class ResponsivePicture: ResponsiveBase, IResponsivePicture
+/// <remarks>
+/// Must be public, otherwise it breaks in dynamic use :(
+/// </remarks>
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class ResponsivePicture: ResponsiveBase, IResponsivePicture
 {
     internal ResponsivePicture(ImageService imgService, ResponsiveParams callParams, ILog parentLog) : base(imgService, callParams, parentLog, "Picture")
     {
