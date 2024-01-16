@@ -51,7 +51,7 @@ internal class ThisAppCodeCompilerNetFull : ThisAppCodeCompiler
             if (!results.Errors.HasErrors)
             {
                 LogAllTypes(results.CompiledAssembly);
-                return l.ReturnAsOk(new(assembly: results.CompiledAssembly, assemblyLocations: [symbolsPath, assemblyPath ], infos: dicInfos));
+                return l.ReturnAsOk(new(assembly: results.CompiledAssembly, assemblyLocations: [symbolsPath, assemblyPath], infos: dicInfos));
             }
 
             // Compile error case

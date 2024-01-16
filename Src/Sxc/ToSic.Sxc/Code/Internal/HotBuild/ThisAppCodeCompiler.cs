@@ -33,7 +33,7 @@ public abstract class ThisAppCodeCompiler() : ServiceBase("Sxc.MyApCd")
     /// Generates a random name for a dll file and ensures it does not already exist in the "2sxc.bin" folder.
     /// </summary>
     /// <returns>The generated random name.</returns>
-    protected virtual string GetAppCodeDllName(string folderPath, HotBuildSpec spec)
+    protected string GetAppCodeDllName(string folderPath, HotBuildSpec spec)
     {
         var l = Log.Fn<string>($"{nameof(folderPath)}: '{folderPath}'; {spec}", timer: true);
         string randomNameWithoutExtension;

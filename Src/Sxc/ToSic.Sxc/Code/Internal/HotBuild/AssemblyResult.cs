@@ -24,16 +24,16 @@ public class AssemblyResult(
 
     /// <summary>
     /// The list of folders which must be watched for changes when using this assembly.
-    /// ATM just used for AppCode assemblies, should maybe be in a inheriting class...
+    /// ATM just used for AppCode assemblies, should maybe be in an inheriting class...
     /// </summary>
     // WIP - should be more functional, this get/set is still hacky
     public IList<string> WatcherFolders { get; set; }
 
     public Dictionary<string, string> Infos { get; } = infos ?? [];
 
-    public AssemblyResult((Assembly Assembly, string ErrorMessages) tuple) : this(tuple.Assembly, tuple.ErrorMessages)
-    { }
-
-    public bool WithoutCode => Assembly == null && ErrorMessages == null;
-
+    /// <summary>
+    /// True if an assembly was created without compile errors.
+    /// </summary>
+    public bool HasAssembly => Assembly != null;
+    
 }

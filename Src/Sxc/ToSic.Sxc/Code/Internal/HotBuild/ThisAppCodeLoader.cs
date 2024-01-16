@@ -102,18 +102,22 @@ public class ThisAppCodeLoader : ServiceBase
             return l.ReturnAsError(assemblyResult, assemblyResult.ErrorMessages);
 
         assemblyResult.WatcherFolders = GetWatcherFolders(assemblyResult, spec, physicalPath);
-        foreach (var watcherFolder in assemblyResult.WatcherFolders) l.A($"{nameof(watcherFolder)}: {watcherFolder}");
+        l.A("Folders to watch:");
+        foreach (var watcherFolder in assemblyResult.WatcherFolders)
+            l.A($"- '{watcherFolder}'");
 
-        var (refsAssemblyPath, _) = GetAppPaths(ThisAppBinFolder, spec);
-        if (!assemblyResult.WithoutCode)
-            CopyAssemblyForRefs(assemblyResult.AssemblyLocations[1], Path.Combine(refsAssemblyPath, ThisAppCodeCompiler.ThisAppCodeDll));
+        // Idea: put dll in the App/bin folder, for VS Intellisense - ATM not relevant
+        //var (refsAssemblyPath, _) = GetAppPaths(ThisAppBinFolder, spec);
+        //if (assemblyResult.HasAssembly)
+        //    CopyAssemblyForRefs(assemblyResult.AssemblyLocations[1], Path.Combine(refsAssemblyPath, ThisAppCodeCompiler.ThisAppCodeDll));
 
         // Add compiled assembly to cache
         _assemblyCacheManager.Add(
             cacheKey,
             assemblyResult,
-            changeMonitor: new ChangeMonitor[] { new FolderChangeMonitor(assemblyResult.WatcherFolders) },
-            updateCallback: _ => AssembliesDelete(assemblyResult.AssemblyLocations.Append(refsAssemblyPath))
+            changeMonitor: new ChangeMonitor[] { new FolderChangeMonitor(assemblyResult.WatcherFolders) }
+            // Idea: put dll in the App/bin folder, for VS Intellisense - ATM not relevant
+            // updateCallback: _ => AssembliesDelete(assemblyResult.AssemblyLocations.Append(refsAssemblyPath))
         );
 
         return l.ReturnAsOk(assemblyResult);
@@ -124,42 +128,53 @@ public class ThisAppCodeLoader : ServiceBase
         var watcherFolders = new List<string>();
 
         // take ThisApp segment folder as watcher folder (eg. ...\edition\ThisApp\Code)
-        var watcherFolder = physicalPath;
-        if (Directory.Exists(watcherFolder)) watcherFolders.Add(watcherFolder);
+        var codeFolder = physicalPath;
+        IfExistsThenAdd(codeFolder);
 
         // take parent folder (eg. ...\edition\ThisApp)
-        watcherFolder = Path.GetDirectoryName(watcherFolder);
-        if (watcherFolder == null) return watcherFolders.ToArray();
-        if (Directory.Exists(watcherFolder)) watcherFolders.Add(watcherFolder);
+        var thisAppFolder = Path.GetDirectoryName(codeFolder);
+        if (thisAppFolder.IsEmpty()) return [.. watcherFolders];
+        IfExistsThenAdd(thisAppFolder);
 
         // take grandparent folder (eg. ...\edition)
-        watcherFolder = Path.GetDirectoryName(watcherFolder);
-        if (watcherFolder == null) return watcherFolders.ToArray();
-        if (Directory.Exists(watcherFolder)) watcherFolders.Add(watcherFolder);
+        var thisAppParentFolder = Path.GetDirectoryName(thisAppFolder);
+        if (thisAppParentFolder.IsEmpty()) return [.. watcherFolders];
+        IfExistsThenAdd(thisAppParentFolder);
 
-        if (spec.Edition.IsEmpty() || !assemblyResult.WithoutCode) return watcherFolders.ToArray();
+        // if no edition was used, then we were already in the root, and should stop now.
+        if (spec.Edition.IsEmpty()) return [.. watcherFolders];
 
-        // take root app folder (eg. ...\)
-        watcherFolder = Path.GetDirectoryName(watcherFolder);
-        if (watcherFolder == null) return watcherFolders.ToArray();
-        if (Directory.Exists(watcherFolder)) 
-            watcherFolders.Add(watcherFolder);
-        else
-            return watcherFolders.ToArray();
+        // If we have an edition, and it has an assembly, we don't need to watch the root folder
+        if (assemblyResult.HasAssembly) return [.. watcherFolders];
 
-        watcherFolder = Path.Combine(watcherFolder, ThisAppCodeBase);
-        if (Directory.Exists(watcherFolder)) 
-            watcherFolders.Add(watcherFolder);
-        else
-            return watcherFolders.ToArray();
+        // If we had an edition and no assembly, then we need to watch the root folder
+        // we need to add more folders to watch for cache invalidation
 
-        watcherFolder = Path.Combine(watcherFolder, spec.Segment.ToString());
-        if (Directory.Exists(watcherFolder)) 
-            watcherFolders.Add(watcherFolder);
-        else
-            return watcherFolders.ToArray();
+        // App Root folder (eg. ...\)
+        var appRootFolder = Path.GetDirectoryName(thisAppParentFolder);
+        if (appRootFolder.IsEmpty()) return [.. watcherFolders];
+        // Add to watcher list if it exists, otherwise exit, since we can't have subfolders
+        if (!IfExistsThenAdd(appRootFolder)) return [.. watcherFolders];
 
-        return watcherFolders.ToArray();
+        // 
+        var appRootThisApp = Path.Combine(appRootFolder, ThisAppCodeBase);
+        // Add to watcher list if it exists, otherwise exit, since we can't have subfolders
+        if (!IfExistsThenAdd(appRootThisApp)) return [.. watcherFolders];
+
+        var appRootThisAppCode = Path.Combine(appRootThisApp, spec.Segment.ToString());
+        // Add to watcher list if it exists, otherwise exit, since we can't have subfolders
+        if (!IfExistsThenAdd(appRootThisAppCode)) return [.. watcherFolders];
+
+        // all done
+        return [.. watcherFolders];
+
+        // Helper to add and return info if it exists
+        bool IfExistsThenAdd(string folder)
+        {
+            if (!Directory.Exists(folder)) return false;
+            watcherFolders.Add(folder);
+            return true;
+        }   
     }
 
     public (string physicalPath, string relativePath) GetAppPaths(string folder, HotBuildSpec spec)
@@ -176,29 +191,29 @@ public class ThisAppCodeLoader : ServiceBase
         return l.ReturnAsOk((physicalPath, relativePath));
     }
 
-    private static void AssembliesDelete(IEnumerable<string> list)
-    {
-        if (list == null) return;
-        foreach (var assembly in list)
-        {
-            try
-            {
-                File.Delete(assembly);
-            }
-            catch
-            {
-                // ignore
-            }
-        }
-    }
+    // Idea: put dll in the App/bin folder, for VS Intellisense - ATM not relevant
+    //private static void AssembliesDelete(IEnumerable<string> list)
+    //{
+    //    if (list == null) return;
+    //    foreach (var assembly in list)
+    //    {
+    //        try
+    //        {
+    //            File.Delete(assembly);
+    //        }
+    //        catch
+    //        {
+    //            // ignore
+    //        }
+    //    }
+    //}
 
-    private static void CopyAssemblyForRefs(string source, string destination)
-    {
-        if (!File.Exists(source)) return;
-
-        var destinationFolder = Path.GetDirectoryName(destination);
-        if (destinationFolder != null) Directory.CreateDirectory(destinationFolder);
-
-        File.Copy(source, destination, true);
-    }
+    // Idea: put dll in the App/bin folder, for VS Intellisense - ATM not relevant
+    //private static void CopyAssemblyForRefs(string source, string destination)
+    //{
+    //    if (!File.Exists(source)) return;
+    //    var destinationFolder = Path.GetDirectoryName(destination);
+    //    if (destinationFolder != null) Directory.CreateDirectory(destinationFolder);
+    //    File.Copy(source, destination, true);
+    //}
 }
