@@ -7,23 +7,13 @@ using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
-using ToSic.Sxc.Images.Internal;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal;
 using static System.StringComparer;
 using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 using static ToSic.Sxc.Images.Internal.ImageDecorator;
 
-namespace ToSic.Sxc.Images;
+namespace ToSic.Sxc.Images.Internal;
 
-/// <summary>
-/// IMPORTANT: Changed to internal for v16.08. #InternalMaybeSideEffectDynamicRazor
-/// This is how it should be done, but it could have a side-effect in dynamic razor in edge cases where interface-type is "forgotten" by Razor.
-/// Keep unless we run into trouble.
-/// Remove this comment 2024 end of Q1 if all works, otherwise re-document why it must be public
-///
-/// Note: this could also affect .Picture and .Image base classes
-/// </summary>
 /// <remarks>
 /// Must be public, otherwise it breaks in dynamic use :(
 /// </remarks>

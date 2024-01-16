@@ -3,10 +3,9 @@ using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Images.Internal;
 using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 
-namespace ToSic.Sxc.Images;
+namespace ToSic.Sxc.Images.Internal;
 
 /// <remarks>
 /// Must be public, otherwise it breaks in dynamic use :(

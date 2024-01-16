@@ -1,7 +1,7 @@
 ﻿using ToSic.Lib.Helpers;
 using ToSic.Razor.Html5;
 
-namespace ToSic.Sxc.Images;
+namespace ToSic.Sxc.Images.Internal;
 
 /// <remarks>
 /// Must be public, otherwise it breaks in dynamic use :(
