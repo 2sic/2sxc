@@ -102,7 +102,7 @@ internal class DnnModuleUpdater : ServiceBase, IPlatformModuleUpdater
 
         // Do not allow saving the temporary template id if a ContentGroup exists for this module
         if (settings[ModuleSettingNames.ContentGroup] != null)
-            throw new Exception("Preview template id cannot be set for a module that already has content.");
+            throw new("Preview template id cannot be set for a module that already has content.");
 
         UpdateInstanceSettingForAllLanguages(instanceId, ModuleSettingNames.PreviewView, previewView.ToString(), Log);
     }

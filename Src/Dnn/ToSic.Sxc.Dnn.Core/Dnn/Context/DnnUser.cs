@@ -44,7 +44,7 @@ internal class DnnUser: ServiceBase, IUser<UserInfo>
     private DnnSiteAdminPermissions _getAdminPermissions() => _adminPermissions.Get(
         () => UnwrappedContents != null 
             ? _dnnSecurity.Value.UserMayAdminThis(UnwrappedContents) 
-            : new DnnSiteAdminPermissions(false)
+            : new(false)
     );
     private readonly GetOnce<DnnSiteAdminPermissions> _adminPermissions = new();
 
@@ -57,11 +57,11 @@ internal class DnnUser: ServiceBase, IUser<UserInfo>
     private static List<int> BuildRoleList()
     {
         var psCurrent = PortalSettings.Current;
-        if (psCurrent == null) return new List<int>();
+        if (psCurrent == null) return new();
 
         var portalId = psCurrent.PortalId;
         var user = psCurrent.UserInfo;
-        if (user == null) return new List<int>();
+        if (user == null) return new();
 
         var rc = new DotNetNuke.Security.Roles.RoleController();
         return user.Roles

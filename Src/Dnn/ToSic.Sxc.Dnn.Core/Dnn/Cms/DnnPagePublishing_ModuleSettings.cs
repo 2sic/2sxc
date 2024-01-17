@@ -19,7 +19,7 @@ partial class DnnPagePublishing
 
         public ModuleVersions(int instanceId, ILog parentLog): base(parentLog, "Dnn.ModVer")
         {
-            _settingsHelper = new ModuleSettingsHelper(instanceId);
+            _settingsHelper = new(instanceId);
         }
 
 

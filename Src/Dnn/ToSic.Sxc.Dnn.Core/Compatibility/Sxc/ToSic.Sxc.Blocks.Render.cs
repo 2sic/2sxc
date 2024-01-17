@@ -69,7 +69,7 @@ public class Render
         var cdf = parent.Cdf;
         // First do version checks -should not be allowed if compatibility is too low
         if (cdf.CompatibilityLevel > CompatibilityLevels.MaxLevelForStaticRender)
-            throw new Exception(
+            throw new(
                 "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. " +
                 "For v14+ use the Kit.Render (IRenderService) or for v12+ use the GetService<ToSic.Sxc.Services.IRenderService>().");
 

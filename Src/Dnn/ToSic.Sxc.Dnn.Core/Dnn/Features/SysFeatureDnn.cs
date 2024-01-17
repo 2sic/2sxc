@@ -8,7 +8,7 @@ public class SysFeatureDnn: SysFeatureDetector
 
     private static readonly SysFeature DefStatic = new(
         "Dnn",
-        new Guid("00cb8d98-bfac-4a18-b7de-b1237498f183"),
+        new("00cb8d98-bfac-4a18-b7de-b1237498f183"),
         "Dnn"
     );
 

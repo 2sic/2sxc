@@ -10,7 +10,7 @@ internal class DnnBlockResourceExtractor: BlockResourceExtractor
 {
     public DnnBlockResourceExtractor(PageServiceShared pageServiceShared): base(pageServiceShared) { }
 
-    protected override ClientAssetsExtractSettings Settings => _settings.Get(() => new ClientAssetsExtractSettings(
+    protected override ClientAssetsExtractSettings Settings => _settings.Get(() => new(
         extractAll: false,
         cssPriority: (int)FileOrder.Css.DefaultPriority,
         jsPriority: (int)FileOrder.Js.DefaultPriority));

@@ -86,7 +86,7 @@ public class DnnModule: Module<ModuleInfo>
             var previewTemplateString = settings[ModuleSettingNames.PreviewView]?.ToString();
             var overrideView = !string.IsNullOrEmpty(previewTemplateString)
                 ? Guid.Parse(previewTemplateString)
-                : new Guid();
+                : new();
 
             // Create identifier
             return _blockIdentifier = new BlockIdentifier(zoneId, appId, appNameId, blockGuid, overrideView);
@@ -97,7 +97,7 @@ public class DnnModule: Module<ModuleInfo>
     private (int AppId, string AppNameId) GetInstanceAppIdAndName(int zoneId)
     {
         var l = Log.Fn<(int, string)>($"{zoneId}");
-        var module = UnwrappedModule ?? throw new Exception("instance is not ModuleInfo");
+        var module = UnwrappedModule ?? throw new("instance is not ModuleInfo");
         var msg = $"get appid from instance for Z:{zoneId} Mod:{module.ModuleID}";
         if (IsContent)
         {

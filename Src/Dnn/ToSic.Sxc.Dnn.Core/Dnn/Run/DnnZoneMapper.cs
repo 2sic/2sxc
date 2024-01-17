@@ -43,7 +43,7 @@ internal class DnnZoneMapper : ZoneMapperBase
         // additional protection against invalid portalId which may come from bad dnn configs and execute in search-index mode
         // see https://github.com/2sic/2sxc/issues/1054
         if (siteId < 0)
-            throw new Exception("Can't get zone for invalid portal ID: " + siteId);
+            throw new("Can't get zone for invalid portal ID: " + siteId);
 
         var c = PortalController.Instance.GetPortalSettings(siteId);
 

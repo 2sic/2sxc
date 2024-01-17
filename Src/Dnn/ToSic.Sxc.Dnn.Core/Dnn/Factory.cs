@@ -174,7 +174,7 @@ public static class Factory
         var app = StaticBuild<App>(log);
         if (site != null) app.PreInit(site);
         site ??= GetSite(log: log);
-        var appIdentity = zoneId == AutoLookupZoneId ? new AppIdentityPure(site.ZoneId, appId) : new AppIdentityPure(zoneId, appId);
+        var appIdentity = zoneId == AutoLookupZoneId ? new(site.ZoneId, appId) : new AppIdentityPure(zoneId, appId);
         var appStuff = app.Init(appIdentity, StaticBuild<AppConfigDelegate>(log).Build(showDrafts));
         return appStuff;
     }

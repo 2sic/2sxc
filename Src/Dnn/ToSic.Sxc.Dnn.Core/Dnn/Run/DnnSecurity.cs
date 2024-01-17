@@ -56,29 +56,29 @@ public class DnnSecurity : ServiceBase
     internal DnnSiteAdminPermissions UserMayAdminThis(UserInfo user)
     {
         // Null-Check
-        if (IsAnonymous(user)) return new DnnSiteAdminPermissions(false);
+        if (IsAnonymous(user)) return new(false);
 
         // Super always AppAdmin
-        if (user.IsSuperUser) return new DnnSiteAdminPermissions(true);
+        if (user.IsSuperUser) return new(true);
 
         var portal = PortalSettings.Current;
 
         // Skip the remaining tests if the portal isn't known
-        if (portal == null) return new DnnSiteAdminPermissions(false);
+        if (portal == null) return new(false);
 
         // Non-SuperUsers must be Admin AND in the group SxcAppAdmins
-        if (!user.IsInRole(portal.AdministratorRoleName ?? "Administrators")) return new DnnSiteAdminPermissions(false);
+        if (!user.IsInRole(portal.AdministratorRoleName ?? "Administrators")) return new(false);
 
         var hasSpecialGroup = PortalHasExplicitAdminGroups(portal.PortalId);
-        if (hasSpecialGroup && IsExplicitAdmin(user)) return new DnnSiteAdminPermissions(true);
+        if (hasSpecialGroup && IsExplicitAdmin(user)) return new(true);
 
         // If the special group doesn't exist, then the admin-state (which is true - since he got here) is valid
-        return new DnnSiteAdminPermissions(true, !hasSpecialGroup);
+        return new(true, !hasSpecialGroup);
     }
 
 
     internal List<int> RoleList(UserInfo user, int? portalId = null) =>
-        IsAnonymous(user) ? new List<int>() : user.Roles
+        IsAnonymous(user) ? new() : user.Roles
             .Select(r => RoleController.Instance.GetRoleByName(portalId ?? user.PortalID, r))
             .Where(r => r != null)
             .Select(r => r.RoleID)
@@ -91,7 +91,7 @@ public class DnnSecurity : ServiceBase
     internal CmsUserRaw CmsUserBuilder(UserInfo user, int siteId)
     {
         var adminInfo = UserMayAdminThis(user);
-        return new CmsUserRaw
+        return new()
         {
             Id = user.UserID,
             Guid = UserGuid(user),

@@ -79,7 +79,7 @@ internal class DnnXmlExporter: XmlExporter
     {
         var fileController = FileManager.Instance;
         var file = fileController.GetFile(fileId);
-        return new TenantFileItem
+        return new()
         {
             Id = fileId,
             RelativePath = file?.RelativePath.Replace('/', '\\'),

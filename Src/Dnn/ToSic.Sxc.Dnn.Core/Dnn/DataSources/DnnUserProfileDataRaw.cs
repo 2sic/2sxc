@@ -139,7 +139,7 @@ public class DnnUserProfile : CustomDataSourceAdvanced
         else
         {
             var userIds = UserIds.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
-            users = new ArrayList();
+            users = new();
             foreach (var user in userIds.Select(userId => UserController.GetUserById(portalId, userId)))
                 users.Add(user);
         }
@@ -163,7 +163,7 @@ public class DnnUserProfile : CustomDataSourceAdvanced
             results.Add(dnnUserProfile);
         }
         l.A($"results: {results.Count}");
-        var userProfileDataFactory = _dataFactory.New(options: new DataFactoryOptions(DnnUserProfileDataRaw.Options, typeName: ContentType?.NullIfNoValue()));
+        var userProfileDataFactory = _dataFactory.New(options: new(DnnUserProfileDataRaw.Options, typeName: ContentType?.NullIfNoValue()));
         return l.Return(userProfileDataFactory.Create(results), "ok");
     }
 

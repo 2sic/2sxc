@@ -28,7 +28,7 @@ internal class CodeCompilerNetFull : CodeCompiler
             var errorMessage =
                 $"Can't compile '{className}' in {Path.GetFileName(relativePath)}. Details are logged into insights. {additionalInfo}" +
                 ex.Message;
-            return new AssemblyResult(errorMessages: errorMessage);
+            return new(errorMessages: errorMessage);
         }
 
         try
@@ -49,7 +49,7 @@ internal class CodeCompilerNetFull : CodeCompiler
 
             try
             {
-                return l.Return(new AssemblyResult(BuildManager.GetCompiledAssembly(relativePath)), "Ok, BuildManager");
+                return l.Return(new(BuildManager.GetCompiledAssembly(relativePath)), "Ok, BuildManager");
             }
             catch (Exception ex)
             {

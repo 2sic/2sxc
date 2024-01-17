@@ -221,7 +221,7 @@ internal class SearchController : ServiceBase
     {
         DnnEnvironmentLogger.AddSearchExceptionToLog(modInfo, e, nameof(SearchController));
         Log.Ex(e);
-        return new List<SearchDocument>();
+        return new();
     }
         
         
@@ -258,7 +258,7 @@ internal class SearchController : ServiceBase
         foreach (var stream in streamsToIndex)
         {
             var entities = stream.Value.List.ToImmutableList();
-            var searchInfoList = searchInfoDictionary[stream.Key] = new List<ISearchItem>();
+            var searchInfoList = searchInfoDictionary[stream.Key] = new();
 
             searchInfoList.AddRange(entities.Select(entity =>
             {

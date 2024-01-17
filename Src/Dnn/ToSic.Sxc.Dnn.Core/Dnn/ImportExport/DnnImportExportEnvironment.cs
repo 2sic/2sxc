@@ -46,7 +46,7 @@ internal class DnnImportExportEnvironment : SxcImportExportEnvironmentBase
             l.A(msg);
             if (exception == null) return;
             messages.Add(exception is InvalidFileExtensionException
-                ? new Message(msg, Message.MessageTypes.Error)
+                ? new(msg, Message.MessageTypes.Error)
                 : new Message(msg, Message.MessageTypes.Warning));
 
             Exceptions.LogException(exception);
@@ -76,7 +76,7 @@ internal class DnnImportExportEnvironment : SxcImportExportEnvironmentBase
                 }
             }
             else
-                messages.Add(new Message("File '" + destinationFileName + "' not copied because it already exists", Message.MessageTypes.Warning));
+                messages.Add(new("File '" + destinationFileName + "' not copied because it already exists", Message.MessageTypes.Warning));
         }
 
         // Call the method recursively to handle subdirectories
@@ -173,7 +173,7 @@ internal class DnnImportExportEnvironment : SxcImportExportEnvironmentBase
                 {
                     var msg = $"Had problem with folder '{folder.Key}' path '{folder.Value}' - you'll have to figure out yourself if this is a problem";
                     l.A(msg);
-                    importLog.Add(new Message(msg, Message.MessageTypes.Warning));
+                    importLog.Add(new(msg, Message.MessageTypes.Warning));
                 }
 
             return $"done - final count {folderIdCorrectionList.Count}";

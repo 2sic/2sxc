@@ -17,7 +17,7 @@ internal class DnnSitesDsProvider: SitesDataSourceProvider
         var l = Log.Fn<List<SiteDataRaw>>($"PortalId: {PortalSettings.Current?.PortalId ?? -1}");
         var portals = PortalController.Instance.GetPortals().OfType<PortalInfo>().ToList();
 
-        if (/*portals == null || */!portals.Any()) return l.Return(new List<SiteDataRaw>(), "null/empty");
+        if (/*portals == null || */!portals.Any()) return l.Return(new(), "null/empty");
 
         var result = portals
             .Select(s => new SiteDataRaw
@@ -42,7 +42,7 @@ internal class DnnSitesDsProvider: SitesDataSourceProvider
     private string GetUrl(int portalId, string cultureCode)
     {
         var primaryPortalAlias = PortalAliasController.Instance.GetPortalAliasesByPortalId(portalId)
-            .GetAliasByPortalIdAndSettings(portalId, result: null, cultureCode, settings: new FriendlyUrlSettings(portalId));
+            .GetAliasByPortalIdAndSettings(portalId, result: null, cultureCode, settings: new(portalId));
         return primaryPortalAlias.HTTPAlias;
     }
 

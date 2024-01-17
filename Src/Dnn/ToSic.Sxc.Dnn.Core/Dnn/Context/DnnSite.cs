@@ -43,7 +43,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     private ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
     /// <inheritdoc />
-    public override ISite Init(int siteId, ILog parentLog) => TryInitPortal(new PortalSettings(siteId), parentLog);
+    public override ISite Init(int siteId, ILog parentLog) => TryInitPortal(new(siteId), parentLog);
 
     #endregion
 
