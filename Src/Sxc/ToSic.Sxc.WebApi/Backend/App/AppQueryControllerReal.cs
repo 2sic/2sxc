@@ -135,8 +135,15 @@ public class AppQueryControllerReal: ServiceBase , IAppQueryController
 
         _dataConverter.WithGuid = includeGuid;
         if (_dataConverter is ConvertToEavLightWithCmsInfo serializerWithEdit)
-            serializerWithEdit.WithEdit = context.UserMayEdit; // userMayEdit;
+            serializerWithEdit.WithEdit = context.UserMayEdit;
         if (stream == AllStreams) stream = null;
+
+
+        // New v17 experimental with special fields
+        var extraParams = new QueryODataParams(query.Configuration);
+        if (_dataConverter is ConvertToEavLight serializerWithOData)
+            serializerWithOData.SelectFields = extraParams.SelectFields;
+
         var result = _dataConverter.Convert(query, stream?.Split(','), more?.Guids);
         return l.Return(result);
     }
