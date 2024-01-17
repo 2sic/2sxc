@@ -20,7 +20,7 @@ public class CodeDataServices: MyServicesBase
     {
         ConnectServices(
             _valueConverterLazy = valueConverterLazy,
-            _renderServiceGenerator = renderServiceGenerator,
+            RenderServiceGenerator = renderServiceGenerator,
             _scrub = scrub,
             _forCode = forCode,
             _dataFactory = dataFactory
@@ -32,9 +32,15 @@ public class CodeDataServices: MyServicesBase
     internal IValueConverter ValueConverterOrNull => _valueConverterLazy.Value;
     private readonly LazySvc<IValueConverter> _valueConverterLazy;
 
-    internal IRenderService RenderService => _renderServiceGenerator.New();
-    private readonly Generator<IRenderService> _renderServiceGenerator;
+    /// <summary>
+    /// This is used in special cases where static Render is called.
+    /// It's not elegant, but necessary to maintain old code.
+    /// </summary>
+    internal readonly Generator<IRenderService> RenderServiceGenerator;
 
+    /// <summary>
+    /// This is provided so that ITypedItems can use Scrub in the String APIs
+    /// </summary>
     internal IScrub Scrub => _scrub.Value;
     private readonly LazySvc<IScrub> _scrub;
 

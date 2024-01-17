@@ -4,9 +4,7 @@ using ToSic.Eav.Data.Build;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Internal.Wrapper;
@@ -66,7 +64,14 @@ public partial class CodeDataFactory: ServiceForDynamicCode
 
     #region CodeDataServices
 
-    public CodeDataServices Services => _codeDataServices.Value;
+    public CodeDataServices Services => _services.Get(() => 
+    {
+        var cds = _codeDataServices.Value;
+        // if the render service is ever needed, it should be connected to the root
+        cds.RenderServiceGenerator.SetInit(nowRs => (nowRs as INeedsCodeApiService)?.ConnectToRoot(_CodeApiSvc));
+        return cds;
+    });
+    private readonly GetOnce<CodeDataServices> _services = new();
 
     // If we don't have a DynCodeRoot, try to generate the language codes and compatibility
     // There are cases where these were supplied using SetFallbacks, but in some cases none of this is known
