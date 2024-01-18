@@ -1,26 +1,19 @@
 ﻿using Custom.Hybrid;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Web;
 using System.Web.Compilation;
-using System.Web.WebPages;
 using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Help;
+using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Code.Internal.CodeErrorHelp;
+using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
-using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.Razor;
 
@@ -36,16 +29,16 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     #region Constructor / DI
 
     private readonly LazySvc<CodeErrorHelpService> _errorHelp;
-    private readonly CodeRootFactory _codeRootFactory;
+    private readonly CodeApiServiceFactory _codeApiServiceFactory;
     private readonly LazySvc<SourceAnalyzer> _sourceAnalyzer;
     private readonly LazySvc<ThisAppCodeLoader> _thisAppCodeLoader;
     private readonly LazySvc<IRoslynBuildManager> _roslynBuildManager;
     private readonly AssemblyResolver _assemblyResolver;
 
-    public DnnRazorEngine(MyServices helpers, CodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<SourceAnalyzer> sourceAnalyzer, LazySvc<ThisAppCodeLoader> thisAppCodeLoader, LazySvc<IRoslynBuildManager> roslynBuildManager, AssemblyResolver assemblyResolver) : base(helpers)
+    public DnnRazorEngine(MyServices helpers, CodeApiServiceFactory codeApiServiceFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<SourceAnalyzer> sourceAnalyzer, LazySvc<ThisAppCodeLoader> thisAppCodeLoader, LazySvc<IRoslynBuildManager> roslynBuildManager, AssemblyResolver assemblyResolver) : base(helpers)
     {
         ConnectServices(
-            _codeRootFactory = codeRootFactory,
+            _codeApiServiceFactory = codeApiServiceFactory,
             _errorHelp = errorHelp,
             _sourceAnalyzer = sourceAnalyzer,
             _thisAppCodeLoader = thisAppCodeLoader,
@@ -58,12 +51,12 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
 
 
     [PrivateApi]
-    private RazorComponentBase Webpage
+    private RazorComponentBase EntryRazorComponent
     {
-        get => Log.Getter(() => _webpage);
-        set => Log.Setter(() => _webpage = value);
+        get => Log.Getter(() => _entryRazorComponent);
+        set => Log.Setter(() => _entryRazorComponent = value);
     }
-    private RazorComponentBase _webpage;
+    private RazorComponentBase _entryRazorComponent;
 
     /// <inheritdoc />
     [PrivateApi]
@@ -73,7 +66,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
         base.Init(block);
         try
         {
-            Webpage = InitWebpage(TemplatePath);
+            EntryRazorComponent = InitWebpage(TemplatePath);
         }
         // Catch web.config Error on DNNs upgraded to 7
         catch (ConfigurationErrorsException exc)
@@ -121,13 +114,13 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     }
 
     [PrivateApi]
-    protected override (string, List<Exception>) RenderImplementation(object data) => RenderImplementation(Webpage, data);
+    protected override (string, List<Exception>) RenderEntryRazor(RenderSpecs specs) => RenderImplementation(EntryRazorComponent, specs);
 
-    private (string, List<Exception>) RenderImplementation(RazorComponentBase webpage, object data)
+    private (string, List<Exception>) RenderImplementation(RazorComponentBase webpage, RenderSpecs specs)
     {
         var l = Log.Fn<(string, List<Exception>)>();
         var writer = new StringWriter();
-        var result = Render(webpage, writer, data);
+        var result = Render(webpage, writer, specs.Data);
         return l.ReturnAsOk((result.writer.ToString(), result.exception));
     }
 
@@ -137,18 +130,14 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
         object page = null;
         Type compiledType;
         // TODO: SHOULD OPTIMIZE so the file doesn't need to read multiple times
-        // 1. probably change so the CodeFileInfo contains the source code
-        var razorType = _sourceAnalyzer.Value.TypeOfVirtualPath(templatePath);
+        var codeFileInfo = _sourceAnalyzer.Value.TypeOfVirtualPath(templatePath);
         try
         {
-            // get assembly - try to get from cache, otherwise compile
-            var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(App.AppId, Log)?.Assembly 
-                               ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrNull(App.AppId);
+            var specWithEdition = new HotBuildSpec(App.AppId, Edition);
+            l.A($"prepare spec: {specWithEdition}");
 
-            _assemblyResolver.AddAssembly(codeAssembly, App.RelativePath);
-
-            compiledType = razorType.ThisAppRequirements() 
-                ? _roslynBuildManager.Value.GetCompiledType(templatePath, App.AppId)
+            compiledType = codeFileInfo.IsHotBuildSupported() 
+                ? _roslynBuildManager.Value.GetCompiledType(codeFileInfo, specWithEdition)
                 : BuildManager.GetCompiledType(templatePath);
         }
         catch (Exception compileEx)
@@ -158,8 +147,8 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
             // 2. Try to find base type - or warn if not found
             // 3. ...
             
-            l.A($"Razor Type: {razorType}");
-            var ex = l.Ex(_errorHelp.Value.AddHelpForCompileProblems(compileEx, razorType));
+            l.A($"Razor Type: {codeFileInfo}");
+            var ex = l.Ex(_errorHelp.Value.AddHelpForCompileProblems(compileEx, codeFileInfo));
             // Special form of throw to preserve details about the call stack
             ExceptionDispatchInfo.Capture(ex).Throw();
             throw; // fake throw, just so the code shows what happens
@@ -219,21 +208,25 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     private void InitHelpers(RazorComponentBase webPage)
     {
         var l = Log.Fn();
-        var dynCode = _codeRootFactory.BuildCodeRoot(webPage, Block, Log, compatibilityFallback: Constants.CompatibilityLevel9Old);
-        webPage.ConnectToRoot(dynCode);
+        // Only generate this for the first / top EntryRazorComponent
+        // All children which are then generated here should re-use that CodeApiService
+        _sharedCodeApiService ??= _codeApiServiceFactory.BuildCodeRoot(webPage, Block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel9Old);
+        webPage.ConnectToRoot(_sharedCodeApiService);
         l.Done();
     }
+
+    private ICodeApiService _sharedCodeApiService;
 
     /// <summary>
     /// Special old mechanism to always request jQuery and Rvt
     /// </summary>
-    public bool OldAutoLoadJQueryAndRvt => Webpage._DynCodeRoot.Cdf.CompatibilityLevel <= Constants.MaxLevelForAutoJQuery;
+    public bool OldAutoLoadJQueryAndRvt => EntryRazorComponent._CodeApiSvc._Cdf.CompatibilityLevel <= CompatibilityLevels.MaxLevelForAutoJQuery;
 
 
-    public HelperResult RenderPage(string templatePath, object data)
+    internal HelperResult RenderPage(string templatePath, object data)
     {
         var page = InitWebpage(templatePath);
-        var (resultString, exceptions) = RenderImplementation(page, data);
+        var (resultString, exceptions) = RenderImplementation(page, new(){Data = data});
         return new HelperResult(writer => writer.Write(resultString));
     }
 }

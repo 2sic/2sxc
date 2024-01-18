@@ -1,17 +1,14 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Data;
-using ToSic.Lib.Logging;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Serialization;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
 using ToSic.Razor.Markup;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.EditService;
 
-public partial class EditService
+partial class EditService
 {
     #region Context Attributes
 
@@ -28,7 +25,7 @@ public partial class EditService
         if (!Enabled) return null;
         //Parameters.Protect(noParamOrder, $"{nameof(field)},{nameof(contentType)},{nameof(newGuid)}");
 
-        if (field == null) throw new Exception("need parameter 'field'");
+        if (field == null) throw new("need parameter 'field'");
 
         var serialized = JsonSerializer.Serialize(new
         {
@@ -44,32 +41,33 @@ public partial class EditService
         return Build.Attribute(innerContentAttribute, serialized); // new HybridHtmlString(innerContentAttribute + "='" + serialized + "'");
     }
 
-    /// <inheritdoc/>
-    [PrivateApi]
-    public IRawHtmlString WrapInContext(object content,
-        NoParamOrder noParamOrder = default,
-        string tag = Constants.DefaultContextTag,
-        bool full = false,
-        bool? enableEdit = null,
-        int instanceId = 0,
-        int contentBlockId = 0
-    )
-    {
-        //Parameters.Protect(noParamOrder, $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
+    // 2024-01-10 2dm disabled #WrapInContext - was for internal only, seems not to be used? Was created 2018? https://github.com/2sic/2sxc/issues/1479
+    ///// <inheritdoc/>
+    //[PrivateApi]
+    //public IRawHtmlString WrapInContext(object content,
+    //    NoParamOrder noParamOrder = default,
+    //    string tag = SxcUiConstants.DefaultContextTag,
+    //    bool full = false,
+    //    bool? enableEdit = null,
+    //    int instanceId = 0,
+    //    int contentBlockId = 0
+    //)
+    //{
+    //    //Parameters.Protect(noParamOrder, $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
 
-        var renderingHelper = _renderHelper.Value;
+    //    var renderingHelper = _renderHelper.Value;
 
-        return new RawHtmlString(
-            renderingHelper.WrapInContext(content.ToString(),
-                instanceId: instanceId > 0
-                    ? instanceId
-                    : Block.ParentId,
-                contentBlockId: contentBlockId > 0
-                    ? contentBlockId
-                    : Block.ContentBlockId,
-                editContext: enableEdit ?? Enabled)
-        );
-    }
+    //    return new RawHtmlString(
+    //        renderingHelper.WrapInContext(content.ToString(),
+    //            instanceId: instanceId > 0
+    //                ? instanceId
+    //                : Block.ParentId,
+    //            contentBlockId: contentBlockId > 0
+    //                ? contentBlockId
+    //                : Block.ContentBlockId,
+    //            editContext: enableEdit ?? Enabled)
+    //    );
+    //}
 
     #endregion Context Attributes
 }

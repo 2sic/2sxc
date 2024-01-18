@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Eav.Plumbing;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Context.Raw;
+﻿using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Context.Internal.Raw;
 
 namespace ToSic.Sxc.DataSources;
 
@@ -39,7 +35,7 @@ public partial class Users
             .Select(u => Guid.TryParse(u.Trim(), out var userGuid) ? userGuid : Guid.Empty)
             .Where(u => u != Guid.Empty).ToList();
         return userGuidFilter.Any()
-            ? (Func<CmsUserRaw, bool>)(u => u.Guid != Guid.Empty && userGuidFilter.Contains(u.Guid))
+            ? u => u.Guid != Guid.Empty && userGuidFilter.Contains(u.Guid)
             : null;
     }
 
@@ -49,7 +45,7 @@ public partial class Users
             .Select(u => int.TryParse(u.Trim(), out var userId) ? userId : -1)
             .Where(u => u != -1).ToList();
         return userIdFilter.Any()
-            ? (Func<CmsUserRaw, bool>)(u => userIdFilter.Contains(u.Id))
+            ? u => userIdFilter.Contains(u.Id)
             : null;
     }
 
@@ -70,7 +66,7 @@ public partial class Users
             .Where(u => u != Guid.Empty)
             .ToList();
         return excludeUserGuidsFilter.Any()
-            ? (Func<CmsUserRaw, bool>)(u => u.Guid != Guid.Empty && !excludeUserGuidsFilter.Contains(u.Guid))
+            ? u => u.Guid != Guid.Empty && !excludeUserGuidsFilter.Contains(u.Guid)
             : null;
     }
 
@@ -82,7 +78,7 @@ public partial class Users
             .Where(u => u != -1)
             .ToList();
         return excludeUserIdsFilter.Any()
-            ? (Func<CmsUserRaw, bool>)(u => !excludeUserIdsFilter.Contains(u.Id))
+            ? u => !excludeUserIdsFilter.Contains(u.Id)
             : null;
     }
 
@@ -90,7 +86,7 @@ public partial class Users
     {
         var rolesFilter = Roles.RolesCsvListToInt(RoleIds);
         return rolesFilter.Any()
-            ? (Func<CmsUserRaw, bool>)(u => u.Roles.Any(r => rolesFilter.Contains(r)))
+            ? u => u.Roles.Any(r => rolesFilter.Contains(r))
             : null;
     }
 
@@ -98,7 +94,7 @@ public partial class Users
     {
         var excludeRolesFilter = Roles.RolesCsvListToInt(ExcludeRoleIds);
         return excludeRolesFilter.Any()
-            ? (Func<CmsUserRaw, bool>)(u => !u.Roles.Any(r => excludeRolesFilter.Contains(r)))
+            ? u => !u.Roles.Any(r => excludeRolesFilter.Contains(r))
             : null;
     }
 

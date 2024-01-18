@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using ToSic.Lib.Documentation;
+﻿using System.IO;
 
 namespace ToSic.Sxc.Dnn.Compile.AppDomain;
 

@@ -1,23 +1,25 @@
 ﻿using Custom.DataSource;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Blocks.Renderers;
+using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Edit.EditService;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.CmsService;
 using ToSic.Sxc.Services.DataServices;
-using ToSic.Sxc.Web.ContentSecurityPolicy;
-using ToSic.Sxc.Web.PageService;
+using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
+using ToSic.Sxc.Web.Internal.PageService;
+using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
 namespace ToSic.Sxc.Startup;
 
-public static partial class RegisterSxcServices
+static partial class RegisterSxcServices
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static IServiceCollection AddServicesAndKits(this IServiceCollection services)
     {
         services.TryAddTransient<IContentSecurityPolicyService, ContentSecurityPolicyService>();
@@ -31,10 +33,11 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<RenderService.MyServices>();
         services.TryAddTransient<SimpleRenderer>();
         services.TryAddTransient<InTextContentBlockRenderer>();
+#if NETFRAMEWORK
 #pragma warning disable CS0618
         services.TryAddTransient<Blocks.IRenderService, RenderService>();  // Obsolete, but keep for the few apps we already released in v12
 #pragma warning restore CS0618
-
+#endif
 
         // WIP 12.05 - json converter
         services.TryAddTransient<IJsonService, JsonService>();
@@ -77,7 +80,7 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<DataSource16.MyServices>();
 
         // v16 AsConverter
-        services.TryAddTransient<CodeDataFactory>();
+        services.TryAddTransient<CodeDataFactory>(sp => ActivatorUtilities.CreateInstance<CodeDataFactory>(sp));
         services.TryAddTransient<CodeDataServices>();
 
         // Kits v14+

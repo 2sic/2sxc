@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Eav.Data;
-using ToSic.Eav.Plumbing;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Data.Typed;
+using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
 using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
-using static ToSic.Sxc.Data.Typed.TypedHelpers;
+using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data;
 
@@ -161,7 +155,7 @@ internal partial class Metadata: ITypedItem
         if (parents == null) return new List<ITypedItem>(0);
 
         var list = Cdf.AsItems(parents).ToList();
-        return list.Any() ? list : new List<ITypedItem>(0);
+        return list.Any() ? list : new(0);
     }
 
     IPublishing ITypedItem.Publishing => _publishing.Get(() => new Publishing(this, Cdf));
@@ -186,7 +180,7 @@ internal partial class Metadata: ITypedItem
         if (children == null) return new List<ITypedItem>(0);
 
         var list = Cdf.AsItems(children).ToList();
-        return list.Any() ? list : new List<ITypedItem>(0);
+        return list.Any() ? list : new(0);
     }
 
     /// <inheritdoc />

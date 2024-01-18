@@ -1,21 +1,26 @@
 ﻿using Connect.Koi.Detectors;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.Adam;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Help;
+using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Polymorphism;
-using ToSic.Sxc.Run;
+using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Integration.Installation;
+using ToSic.Sxc.Integration.Modules;
+using ToSic.Sxc.Integration.Paths;
+using ToSic.Sxc.Polymorphism.Internal;
+using ToSic.Sxc.Razor.Internal;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Web.Internal.JsContext;
 
 namespace ToSic.Sxc.Startup;
 
-public static partial class RegisterSxcServices
+static partial class RegisterSxcServices
 {
 
     /// <summary>
@@ -27,6 +32,7 @@ public static partial class RegisterSxcServices
     /// <remarks>
     /// All calls in here MUST use TryAddTransient, and never without the Try
     /// </remarks>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static IServiceCollection AddSxcCoreFallbackServices(this IServiceCollection services)
     {
         // basic environment, pages, modules etc.
@@ -41,9 +47,9 @@ public static partial class RegisterSxcServices
         services.AddTransient<IPagePublishingGetSettings, PagePublishingGetSettingsForbidden>();
 
         // Code / Dynamic Code
-        services.TryAddTransient<CodeRootFactory>();
-        services.TryAddTransient<DynamicCodeRoot, DynamicCodeRootUnknown>();
-        services.TryAddTransient(typeof(DynamicCodeRoot<,>), typeof(DynamicCodeRootUnknown<,>));
+        services.TryAddTransient<CodeApiServiceFactory>();
+        services.TryAddTransient<CodeApiService, CodeApiServiceUnknown>();
+        services.TryAddTransient(typeof(CodeApiService<,>), typeof(CodeApiServiceUnknown<,>));
         services.TryAddTransient<IModule, ModuleUnknown>();
             
         // 11.08 - fallback in case not added
@@ -57,6 +63,7 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<ILinkService, LinkServiceUnknown>();
 
         // v12.05
+        // 2024-01-09 2dm seems unused
         services.TryAddTransient<IRazorService, RazorServiceUnknown>();
 
         // v12.05

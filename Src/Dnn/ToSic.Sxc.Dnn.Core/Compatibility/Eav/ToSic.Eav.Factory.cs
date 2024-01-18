@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
 using ToSic.Eav.Code.Infos;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.Dnn;
 using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 

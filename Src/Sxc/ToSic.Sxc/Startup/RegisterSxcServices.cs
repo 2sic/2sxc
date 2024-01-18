@@ -1,43 +1,50 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Context;
-using ToSic.Eav.DataSource.Catalog;
+using ToSic.Eav.Context.Internal;
+using ToSic.Eav.DataSource.Internal.AppDataSources;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.StartUp;
-using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Apps.Paths;
-using ToSic.Sxc.Apps.Work;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Blocks.Edit;
-using ToSic.Sxc.Blocks.Output;
+using ToSic.Sxc.Apps.Internal;
+using ToSic.Sxc.Apps.Internal.Work;
+using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Help;
-using ToSic.Sxc.Code.Helpers;
+using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.CodeRunHelpers;
+using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Data.Typed;
-using ToSic.Sxc.Data.Wrapper;
-using ToSic.Sxc.DataSources;
-using ToSic.Sxc.DotNet;
+using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Data.Internal.Typed;
+using ToSic.Sxc.Data.Internal.Wrapper;
+using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Images.Internal;
+using ToSic.Sxc.Integration;
+using ToSic.Sxc.Integration.Installation;
+using ToSic.Sxc.Integration.Paths;
+using ToSic.Sxc.Internal.Plumbing;
 using ToSic.Sxc.LookUp;
-using ToSic.Sxc.Plumbing;
-using ToSic.Sxc.Run;
-using ToSic.Sxc.Services.GoogleMaps;
+using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.Web.ContentSecurityPolicy;
-using ToSic.Sxc.Web.EditUi;
-using ToSic.Sxc.Web.JsContext;
-using ToSic.Sxc.Web.LightSpeed;
-using ToSic.Sxc.Web.PageFeatures;
-using ToSic.Sxc.Web.PageService;
+using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
+using ToSic.Sxc.Web.Internal.DotNet;
+using ToSic.Sxc.Web.Internal.EditUi;
+using ToSic.Sxc.Web.Internal.JsContext;
+using ToSic.Sxc.Web.Internal.LightSpeed;
+using ToSic.Sxc.Web.Internal.PageFeatures;
+using ToSic.Sxc.Web.Internal.PageService;
 
 namespace ToSic.Sxc.Startup;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public static partial class RegisterSxcServices
 {
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static IServiceCollection AddSxcCore(this IServiceCollection services)
     {
         // Runtimes - new: better architecture v16.07+
@@ -49,7 +56,7 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<WorkAppsRemove>();
 
         // Code
-        services.TryAddTransient<DynamicCodeRoot.MyServices>();
+        services.TryAddTransient<CodeApiService.MyServices>();
 
         // Block Editors
         services.TryAddTransient<BlockEditorForEntity>();
@@ -71,7 +78,7 @@ public static partial class RegisterSxcServices
         // Configuration Provider WIP
         services.TryAddTransient<AppConfigDelegate>();
         services.TryAddTransient<App>();
-        services.TryAddTransient<ImportExportEnvironmentBase.MyServices>();
+        services.TryAddTransient<SxcImportExportEnvironmentBase.MyServices>();
 
         // Rendering
         services.TryAddTransient<IRenderingHelper, RenderingHelper>();
@@ -86,17 +93,17 @@ public static partial class RegisterSxcServices
 
 
         // Context stuff, which is explicitly scoped
-        services.TryAddScoped<Context.IContextResolver, Context.ContextResolver>();
+        services.TryAddScoped<ISxcContextResolver, SxcContextResolver>();
         // New v15.04 WIP
-        services.TryAddScoped<Eav.Context.IContextResolver>(x => x.GetRequiredService<Context.IContextResolver>());
-        services.TryAddScoped<IContextResolverUserPermissions>(x => x.GetRequiredService<Context.IContextResolver>());
+        services.TryAddScoped<IContextResolver>(x => x.GetRequiredService<ISxcContextResolver>());
+        services.TryAddScoped<IContextResolverUserPermissions>(x => x.GetRequiredService<ISxcContextResolver>());
         services.TryAddScoped<AppIdResolver>();
 
 
         // JS UI Context
         services.TryAddTransient<JsContextAll>();
         services.TryAddTransient<JsContextLanguage>();
-        services.TryAddScoped<JsApiCache>(); // v16.01
+        services.TryAddScoped<JsApiCacheService>(); // v16.01
 
         // Adam stuff
         services.TryAddTransient<AdamSecurityChecksBase, AdamSecurityChecksBasic>();
@@ -109,7 +116,7 @@ public static partial class RegisterSxcServices
         services.AddNetVariations();
 
         // Polymorphism
-        services.TryAddTransient<Polymorphism.Polymorphism>();
+        services.TryAddTransient<Polymorphism.Internal.PolymorphConfigReader>();
 
 
         // 2022-02-07 2dm experimental
@@ -174,7 +181,7 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<EditUiResources>();
 
         // v15
-        services.TryAddTransient<DynamicCodeDataSources>();
+        services.TryAddTransient<CodeCreateDataSourceSvc>();
 
         // v16 DynamicJacket and DynamicRead factories
         services.TryAddTransient<CodeDataWrapper>();
@@ -201,6 +208,7 @@ public static partial class RegisterSxcServices
         return services;
     }
 
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static IServiceCollection AddCmsContext(this IServiceCollection services)
     {
         services.TryAddTransient<ICmsContext, CmsContext>();
@@ -211,6 +219,7 @@ public static partial class RegisterSxcServices
         return services;
     }
 
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static IServiceCollection ExternalConfig(this IServiceCollection services)
     {
         // new v15
@@ -218,6 +227,7 @@ public static partial class RegisterSxcServices
         return services;
     }
 
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static IServiceCollection AddKoi(this IServiceCollection services)
     {
         services.TryAddTransient<Connect.Koi.KoiCss.Dependencies>();
@@ -226,7 +236,8 @@ public static partial class RegisterSxcServices
         return services;
     }
 
-        
+
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static IServiceCollection AddNetVariations(this IServiceCollection services)
     {
 #if NETFRAMEWORK

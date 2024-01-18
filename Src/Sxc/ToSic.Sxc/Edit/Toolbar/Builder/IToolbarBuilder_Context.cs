@@ -1,23 +1,20 @@
-﻿using System;
-using ToSic.Eav.Data;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
+﻿namespace ToSic.Sxc.Edit.Toolbar;
 
-
-namespace ToSic.Sxc.Edit.Toolbar;
-
-public partial interface IToolbarBuilder
+internal interface IToolbarBuilderInternal
 {
-
-    [PrivateApi]
+    [PrivateApi("WIP / Debugging")]
+    [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     ToolbarContext GetContext();
 
     [PrivateApi("WIP 14.07.04")]
+    [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     IToolbarBuilder Context(
         object target
     );
+}
 
-
+public partial interface IToolbarBuilder
+{
     /// <summary>
     /// Set the main target of this toolbar.
     /// </summary>

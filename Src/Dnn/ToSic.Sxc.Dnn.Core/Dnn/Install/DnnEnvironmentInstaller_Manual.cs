@@ -1,6 +1,4 @@
-﻿using System;
-using System.Web;
-using ToSic.Lib.Logging;
+﻿using System.Web;
 using static ToSic.Sxc.Dnn.DnnSxcSettings.Installation;
 
 namespace ToSic.Sxc.Dnn.Install;

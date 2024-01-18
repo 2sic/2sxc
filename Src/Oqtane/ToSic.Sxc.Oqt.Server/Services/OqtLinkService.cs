@@ -5,12 +5,14 @@ using System.Linq;
 using Oqtane.Models;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Images;
+using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Images.Internal;
+using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
-using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Oqt.Server.Services;
 
@@ -24,7 +26,7 @@ internal class OqtLinkService : LinkServiceBase
     private readonly IPageRepository _pageRepository;
     private readonly SiteStateInitializer _siteStateInitializer;
     private readonly LazySvc<IAliasRepository> _aliasRepositoryLazy;
-    private Sxc.Context.IContextOfBlock _context;
+    private IContextOfBlock _context;
 
     public OqtLinkService(
         IPageRepository pageRepository,
@@ -34,17 +36,19 @@ internal class OqtLinkService : LinkServiceBase
         LazySvc<IAliasRepository> aliasRepositoryLazy
     ) : base(imgLinker, linkPathsLazy)
     {
-        _pageRepository = pageRepository;
-        _siteStateInitializer = siteStateInitializer;
-        _aliasRepositoryLazy = aliasRepositoryLazy;
+        ConnectServices(
+            _pageRepository = pageRepository,
+            _siteStateInitializer = siteStateInitializer,
+            _aliasRepositoryLazy = aliasRepositoryLazy
+        );
     }
 
     private new OqtLinkPaths LinkPaths => (OqtLinkPaths) base.LinkPaths;
 
-    public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
+    public override void ConnectToRoot(ICodeApiService codeRoot)
     {
         base.ConnectToRoot(codeRoot);
-        _context = codeRoot.Block?.Context;
+        _context = ((ICodeApiServiceInternal)codeRoot)._Block?.Context;
     }
 
     protected override string ToApi(string api, string parameters = null) => ApiNavigateUrl(api, parameters);

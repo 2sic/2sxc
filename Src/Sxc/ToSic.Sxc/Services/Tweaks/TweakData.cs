@@ -1,14 +1,11 @@
-﻿using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Services.Tweaks;
+﻿namespace ToSic.Sxc.Services.Tweaks;
 
 /// <summary>
 /// WIP 16.08 Helper to let a tweak operation modify a value
 /// </summary>
 /// <typeparam name="TValue"></typeparam>
 [PrivateApi("WIP v17")]
-public class TweakData<TValue>: ITweakData<TValue>
+internal class TweakData<TValue>: ITweakData<TValue>
 {
     internal TweakData(TValue initial, string name, string step, int stepIndex)
     {

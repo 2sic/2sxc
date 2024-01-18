@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Lib.Documentation;
+using ToSic.Sxc.DataSources.Internal;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -21,11 +22,10 @@ namespace ToSic.Sxc.DataSources;
     ConfigurationType = "",
     NameId = "a11c28fb-7d8d-40a2-a22c-50beaa019e41",
     HelpLink = "https://go.2sxc.org/ds-sites",
-    Icon = Icons.Globe,
+    Icon = DataSourceIcons.Globe,
     NiceName = "Sites",
     Type = DataSourceType.Source,
     UiHint = "Sites in this CMS")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class Sites: CustomDataSource
 {
     [PrivateApi]

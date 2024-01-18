@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Dynamic;
-using System.Linq;
-using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Lib.Coding;
 using ToSic.Lib.Data;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
+using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Data.Internal.Dynamic;
 
 namespace ToSic.Sxc.Data;
 
 [PrivateApi("Keep implementation hidden, only publish interface")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class DynamicStack: DynamicObject,
-    /*IDynamicEntityBase,*/
+internal class DynamicStack: DynamicObject,
     IWrapper<IPropertyStack>,
     IDynamicStack,
     IHasPropLookup,
@@ -25,7 +19,7 @@ public class DynamicStack: DynamicObject,
 {
     #region Constructor and Helpers (Composition)
 
-    public DynamicStack(string name, CodeDataFactory cdf, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources)
+    public DynamicStack(string name, Internal.CodeDataFactory cdf, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources)
     {
         Cdf = cdf;
         var stack = new PropertyStack().Init(name, sources);
@@ -33,7 +27,7 @@ public class DynamicStack: DynamicObject,
         PropertyLookup = new PropLookupStack(stack, () => Debug);
     }
     // ReSharper disable once InconsistentNaming
-    [PrivateApi] public CodeDataFactory Cdf { get; }
+    [PrivateApi] public Internal.CodeDataFactory Cdf { get; }
     private readonly IPropertyStack _stack;
     private const bool Strict = false;
 
@@ -41,11 +35,11 @@ public class DynamicStack: DynamicObject,
     public IPropertyLookup PropertyLookup { get; }
 
     [PrivateApi]
-    internal GetAndConvertHelper GetHelper => _getHelper ??= new GetAndConvertHelper(this, Cdf, Strict, childrenShouldBeDynamic: true, canDebug: this);
+    internal GetAndConvertHelper GetHelper => _getHelper ??= new(this, Cdf, Strict, childrenShouldBeDynamic: true, canDebug: this);
     private GetAndConvertHelper _getHelper;
 
     [PrivateApi]
-    internal SubDataFactory SubDataFactory => _subData ??= new SubDataFactory(Cdf, Strict, canDebug: this);
+    internal SubDataFactory SubDataFactory => _subData ??= new(Cdf, Strict, canDebug: this);
     private SubDataFactory _subData;
 
     /// <inheritdoc />
@@ -130,17 +124,10 @@ public class DynamicStack: DynamicObject,
 
     #endregion
 
-
     #region Any*** properties just for documentation
 
-    public bool AnyBooleanProperty => true;
-    public DateTime AnyDateTimeProperty => DateTime.Now;
-    public IEnumerable<IDynamicEntity> AnyChildrenProperty => null;
-    public string AnyJsonProperty => null;
-    public string AnyLinkOrFileProperty => null;
-    public decimal AnyNumberProperty => 0;
-    public string AnyStringProperty => null;
-    //public IEnumerable<DynamicEntity> AnyTitleOfAnEntityInTheList => null;
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public dynamic AnyProperty => null;
 
     #endregion
 

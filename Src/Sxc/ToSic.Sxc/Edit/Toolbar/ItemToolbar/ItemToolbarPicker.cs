@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Eav.Data;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Plumbing;
 using ToSic.Razor.Markup;
 
 namespace ToSic.Sxc.Edit.Toolbar;
@@ -21,8 +17,8 @@ internal class ItemToolbarPicker
         if (isV10)
         {
             // check conflicting prefill format
-            if (prefill != null && !(prefill is string))
-                throw new Exception("Tried to build toolbar in new V10 format, but prefill is not a string. In V10.27+ it expects a string in url format like field=value&field2=value2");
+            if (prefill != null && prefill is not string)
+                throw new("Tried to build toolbar in new V10 format, but prefill is not a string. In V10.27+ it expects a string in url format like field=value&field2=value2");
 
             return new ItemToolbarV10(entity, newType, (string)prefill, settings as string, toolbar);
         }
@@ -32,7 +28,7 @@ internal class ItemToolbarPicker
         {
             // check conflicting parameters
             if (actions != null || newType != null || prefill != null)
-                throw new Exception(
+                throw new(
                     "trying to build toolbar but got both toolbar and actions/prefill/newType - this is conflicting, cannot continue");
         }
 
@@ -59,14 +55,14 @@ internal class ItemToolbarPicker
     {
         // Fix 14.04 - I believe this case somehow got lost in history
         if (toolbar is string strToolbar)
-            return new List<string> { strToolbar };
+            return new() { strToolbar };
 
         // Note: This is a bit complex because previously we checked for this:
         // return toolbar is IEnumerable<string> array && array.FirstOrDefault() != null;
         // But that failed, because sometimes razor made the new [] { "..." } be an object list instead
         // This is why it's more complex that you would intuitively do it - see https://github.com/2sic/2sxc/issues/2561
 
-        if (!(toolbar is IEnumerable<object> objEnum)) return null;
+        if (toolbar is not IEnumerable<object> objEnum) return null;
         var asArray = objEnum.ToArray();
         return !asArray.All(o => o is string || o is IRawHtmlString)
             ? null

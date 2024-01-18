@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.DataSources.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Tests.DataSources

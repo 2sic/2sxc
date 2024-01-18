@@ -4,8 +4,9 @@ using System;
 using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Shared;
 
@@ -21,10 +22,12 @@ internal class OqtModuleAndBlockBuilder : ModuleAndBlockBuilder
         RequestHelper requestHelper
     ) : base(blockGenerator, OqtConstants.OqtLogPrefix)
     {
-        _moduleGenerator = moduleGenerator;
-        _contextGenerator = contextGenerator;
-        _moduleRepositoryGenerator = moduleRepositoryGenerator;
-        _requestHelper = requestHelper;
+        ConnectServices(
+            _moduleGenerator = moduleGenerator,
+            _contextGenerator = contextGenerator,
+            _moduleRepositoryGenerator = moduleRepositoryGenerator,
+            _requestHelper = requestHelper
+        );
     }
 
     private readonly Generator<IModule> _moduleGenerator;

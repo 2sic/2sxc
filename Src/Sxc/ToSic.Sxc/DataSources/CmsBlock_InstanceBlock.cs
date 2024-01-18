@@ -1,6 +1,5 @@
-﻿using System;
-using ToSic.Lib.Documentation;
-using ToSic.Sxc.Blocks;
+﻿using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.LookUp;
 using LookUpConstants = ToSic.Sxc.LookUp.LookUpConstants;
 
@@ -22,11 +21,11 @@ public sealed partial class CmsBlock
             if (_block != null) return _block;
 
             if (!HasInstanceContext)
-                throw new Exception("value provider didn't have sxc provider - can't use module data source");
+                throw new("value provider didn't have sxc provider - can't use module data source");
 
             var instanceProvider = Configuration.LookUpEngine.FindSource(LookUpConstants.InstanceContext) as LookUpCmsBlock;
             _block = instanceProvider?.Block
-                     ?? throw new Exception("value provider didn't have sxc provider - can't use module data source");
+                     ?? throw new("value provider didn't have sxc provider - can't use module data source");
 
             return _block;
         }

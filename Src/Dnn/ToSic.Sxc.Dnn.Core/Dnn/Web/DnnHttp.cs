@@ -1,5 +1,5 @@
 ﻿using System.Collections.Specialized;
-using ToSic.Sxc.DotNet;
+using ToSic.Sxc.Web.Internal.DotNet;
 
 namespace ToSic.Sxc.Dnn.Web;
 

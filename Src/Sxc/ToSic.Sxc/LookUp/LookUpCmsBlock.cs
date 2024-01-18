@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.DataSource.Query;
+﻿using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.LookUp;
 

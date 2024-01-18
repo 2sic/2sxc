@@ -1,22 +1,21 @@
-﻿using System.Collections.Generic;
-using ToSic.Lib.Coding;
+﻿using ToSic.Sxc.Data.Internal.Docs;
 
 namespace ToSic.Sxc.Data;
 
-public partial interface ITypedItem
+partial interface ITypedItem
 {
     #region parents / children
 
-    /// <inheritdoc cref="ITypedRelationships.Child"/>
+    /// <inheritdoc cref="ITypITypedRelationshipsDocsld"/>
     ITypedItem Child(string name, NoParamOrder noParamOrder = default, bool? required = default);
 
-    /// <inheritdoc cref="ITypedRelationships.Children"/>
+    /// <inheritdoc cref="ITypedRelationshipsDocs.Children"/>
     IEnumerable<ITypedItem> Children(string field = default, NoParamOrder noParamOrder = default, string type = default, bool? required = default);
 
-    /// <inheritdoc cref="ITypedRelationships.Parent"/>
+    /// <inheritdoc cref="ITypedRelationshipsDocs.Parent"/>
     ITypedItem Parent(NoParamOrder noParamOrder = default, bool? current = default, string type = default, string field = default);
 
-    /// <inheritdoc cref="ITypedRelationships.Parents"/>
+    /// <inheritdoc cref="ITypedRelationshipsDocs.Parents"/>
     IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder = default, string type = default, string field = default);
 
     #endregion

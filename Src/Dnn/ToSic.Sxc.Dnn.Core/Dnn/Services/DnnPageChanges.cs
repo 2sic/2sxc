@@ -1,26 +1,20 @@
 ﻿using DotNetNuke.Web.Client.ClientResourceManagement;
 using DotNetNuke.Web.Client.Providers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.UI;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Dnn;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
-using ToSic.Sxc.Web.ContentSecurityPolicy;
-using ToSic.Sxc.Web.PageFeatures;
-using ToSic.Sxc.Web.PageService;
-using static ToSic.Sxc.Web.ClientAssetConstants;
-using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
+using ToSic.Sxc.Web.Internal.ClientAssets;
+using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
+using ToSic.Sxc.Web.Internal.PageFeatures;
+using ToSic.Sxc.Web.Internal.PageService;
+using static ToSic.Sxc.Web.Internal.ClientAssets.ClientAssetConstants;
 
 namespace ToSic.Sxc.Dnn.Services;
 
@@ -122,7 +116,7 @@ public class DnnPageChanges : ServiceBase
 
         // Register CSP changes for applying once all modules have been prepared
         // Note that in cached scenarios, CspEnabled is true, but it may have been turned off since
-        if (result.CspEnabled && _featuresService.Value.IsEnabled(BuiltInFeatures.ContentSecurityPolicy.NameId))
+        if (result.CspEnabled && _featuresService.Value.IsEnabled(SxcFeatures.ContentSecurityPolicy.NameId))
             PageCsp(result.CspEnforced).Add(result.CspParameters);
 
         if (page?.Response == null) return l.Return(0, "error, HttpResponse is null");

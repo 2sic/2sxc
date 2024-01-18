@@ -1,14 +1,10 @@
-﻿using System;
-using ToSic.Eav.Data;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Logging;
-using ToSic.Razor.Markup;
+﻿using ToSic.Razor.Markup;
 using ToSic.Sxc.Edit.Toolbar;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Edit.EditService;
 
-public partial class EditService
+partial class EditService
 {
     private readonly string innerContentAttribute = "data-list-context";
 
@@ -81,7 +77,7 @@ public partial class EditService
         }
 
         var result = inTag
-            ? new RawHtmlString(itmToolbar.ToolbarAsAttributes())
+            ? new(itmToolbar.ToolbarAsAttributes())
             : new RawHtmlString(itmToolbar.ToolbarAsTag);
         return l.Return(result, "ok");
     }

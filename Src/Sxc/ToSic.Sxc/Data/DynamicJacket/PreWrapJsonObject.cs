@@ -1,48 +1,37 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Nodes;
-using ToSic.Eav.Data;
+﻿using System.Text.Json.Nodes;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Coding;
 using ToSic.Lib.Data;
-using ToSic.Sxc.Data.Typed;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Typed;
+using ToSic.Sxc.Data.Internal.Wrapper;
 
 namespace ToSic.Sxc.Data;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class PreWrapJsonObject: PreWrapJsonBase, IWrapper<JsonObject>
+internal class PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item)
+    : PreWrapJsonBase(wrapper, item), IWrapper<JsonObject>
 {
+    public JsonObject GetContents() => item;
 
-    internal PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item): base(wrapper, item)
-    {
-        _jObject = item;
-    }
-
-    private readonly JsonObject _jObject;
-
-    public JsonObject GetContents() => _jObject;
-
-    public override object JsonSource => _jObject;
+    public override object JsonSource => item;
 
     #region Keys
 
     public override IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default) 
-        => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, _jObject.Select(p => p.Key));
+        => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, item.Select(p => p.Key));
 
     public override bool ContainsKey(string name)
     {
-        if (name.IsEmptyOrWs() || _jObject == null) 
+        if (name.IsEmptyOrWs() || item == null) 
             return false;
 
         var isPath = name.Contains(PropertyStack.PathSeparator.ToString());
         if (!isPath)
-            return JsonObjectContainsKey(_jObject, name);
+            return JsonObjectContainsKey(item, name);
 
         var pathParts = PropertyStack.SplitPathIntoParts(name);
-        var node = _jObject;
+        var node = item;
         for (var i = 0; i < pathParts.Length; i++)
         {
             var part = pathParts[i];
@@ -65,15 +54,15 @@ internal class PreWrapJsonObject: PreWrapJsonBase, IWrapper<JsonObject>
 
     public override TryGetResult TryGetWrap(string name, bool wrapDefault = true)
     {
-        if (name.IsEmptyOrWs() || _jObject == null || !_jObject.Any())
-            return new TryGetResult(false, null, null);
+        if (name.IsEmptyOrWs() || item == null || !item.Any())
+            return new(false, null, null);
 
         var isPath = name.Contains(PropertyStack.PathSeparator.ToString());
         if (!isPath)
-            return TryGetFromNode(name, _jObject);
+            return TryGetFromNode(name, item);
 
         var pathParts = PropertyStack.SplitPathIntoParts(name);
-        var node = _jObject;
+        var node = item;
         for (var i = 0; i < pathParts.Length; i++)
         {
             var part = pathParts[i];
@@ -81,9 +70,9 @@ internal class PreWrapJsonObject: PreWrapJsonBase, IWrapper<JsonObject>
             // last one or not found - return a not-found
             if (i == pathParts.Length -1 || !result.Found) return result;
             node = result.Raw as JsonObject;
-            if (node == null) return new TryGetResult(false, null, null);
+            if (node == null) return new(false, null, null);
         }
-        return new TryGetResult(false, null, null);
+        return new(false, null, null);
     }
 
     private TryGetResult TryGetFromNode(string name, JsonObject node)
@@ -92,7 +81,7 @@ internal class PreWrapJsonObject: PreWrapJsonBase, IWrapper<JsonObject>
             .FirstOrDefault(p => p.Key.EqualsInsensitive(name));
 
         var found = !result.Equals(default(KeyValuePair<string, JsonNode>));
-        return new TryGetResult(found, result.Value, found ? Wrapper.IfJsonGetValueOrJacket(result.Value) : null);
+        return new(found, result.Value, found ? Wrapper.IfJsonGetValueOrJacket(result.Value) : null);
     }
 
     #endregion
@@ -103,13 +92,13 @@ internal class PreWrapJsonObject: PreWrapJsonBase, IWrapper<JsonObject>
 
     public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
     {
-        if (_jObject == null || !_jObject.Any()) return new List<PropertyDumpItem>();
+        if (item == null || !item.Any()) return new();
 
         if (string.IsNullOrEmpty(path)) path = DumpSourceName;
 
-        var allProperties = _jObject.ToList();
+        var allProperties = item.ToList();
 
-        var simpleProps = allProperties.Where(p => !(p.Value is JsonObject));
+        var simpleProps = allProperties.Where(p => p.Value is not JsonObject);
         var resultDynChildren = simpleProps.Select(p => new PropertyDumpItem
             {
                 Path = path + PropertyDumpItem.Separator + p.Key,
@@ -126,7 +115,7 @@ internal class PreWrapJsonObject: PreWrapJsonBase, IWrapper<JsonObject>
                 var jacket = Wrapper.CreateDynJacketObject(p.Value.AsObject());
                 return ((IHasPropLookup)jacket).PropertyLookup._Dump(specs, path + PropertyDumpItem.Separator + p.Key);
             })
-            .Where(p => !(p is null));
+            .Where(p => p is not null);
 
         resultDynChildren.AddRange(objectProps);
 

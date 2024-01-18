@@ -1,11 +1,10 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
-using System;
-using ToSic.Eav.Apps.Security;
+using ToSic.Eav.Integration.Security;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Context.Internal;
 
 namespace ToSic.Sxc.Dnn.Run;
 

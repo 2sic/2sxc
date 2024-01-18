@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-using ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Data;
 
 
 namespace ToSic.Sxc.Services;

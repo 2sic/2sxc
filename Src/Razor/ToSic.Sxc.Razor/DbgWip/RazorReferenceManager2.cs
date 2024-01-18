@@ -11,78 +11,69 @@ using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Options;
 
-namespace ToSic.Sxc.Razor.DbgWip
+namespace ToSic.Sxc.Razor.DbgWip;
+
+internal class RazorReferenceManager(
+    ApplicationPartManager partManager,
+    IOptions<MvcRazorRuntimeCompilationOptions> options)
 {
-    internal class RazorReferenceManager
+    private readonly MvcRazorRuntimeCompilationOptions _options = options.Value;
+    private object _compilationReferencesLock = new();
+    private bool _compilationReferencesInitialized;
+    private IReadOnlyList<MetadataReference>? _compilationReferences;
+
+    //_options.AdditionalReferencePaths.Add(@"A:\2sxc\oqtane\oqtane.framework\Oqtane.Server\App_Data\2sxc.bin\App-0389.dll");
+
+    public virtual IReadOnlyList<MetadataReference> CompilationReferences
     {
-        private readonly ApplicationPartManager _partManager;
-        private readonly MvcRazorRuntimeCompilationOptions _options;
-        private object _compilationReferencesLock = new object();
-        private bool _compilationReferencesInitialized;
-        private IReadOnlyList<MetadataReference>? _compilationReferences;
-
-        public RazorReferenceManager(
-            ApplicationPartManager partManager,
-            IOptions<MvcRazorRuntimeCompilationOptions> options)
+        get
         {
-            _partManager = partManager;
-            _options = options.Value;
-            //_options.AdditionalReferencePaths.Add(@"A:\2sxc\oqtane\oqtane.framework\Oqtane.Server\App_Data\2sxc.bin\App-0389.dll");
+            return LazyInitializer.EnsureInitialized(
+                ref _compilationReferences,
+                ref _compilationReferencesInitialized,
+                ref _compilationReferencesLock,
+                GetCompilationReferences)!;
         }
+    }
 
-        public virtual IReadOnlyList<MetadataReference> CompilationReferences
+    private IReadOnlyList<MetadataReference> GetCompilationReferences()
+    {
+        var referencePaths = GetReferencePaths();
+        var md = referencePaths
+            .Select(CreateMetadataReference)
+            .ToList();
+        //md.Add(MetadataReference.CreateFromFile(@"A:\2sxc\oqtane\oqtane.framework\Oqtane.Server\App_Data\2sxc.bin\App-0389a.dll"));
+        return md;
+    }
+
+    // For unit testing
+    internal IEnumerable<string> GetReferencePaths()
+    {
+        var referencePaths = new List<string>(_options.AdditionalReferencePaths.Count);
+
+        foreach (var part in partManager.ApplicationParts)
         {
-            get
+            if (part is ICompilationReferencesProvider compilationReferenceProvider)
             {
-                return LazyInitializer.EnsureInitialized(
-                    ref _compilationReferences,
-                    ref _compilationReferencesInitialized,
-                    ref _compilationReferencesLock,
-                    GetCompilationReferences)!;
+                referencePaths.AddRange(compilationReferenceProvider.GetReferencePaths());
+            }
+            else if (part is AssemblyPart assemblyPart)
+            {
+                referencePaths.AddRange(assemblyPart.GetReferencePaths());
             }
         }
 
-        private IReadOnlyList<MetadataReference> GetCompilationReferences()
-        {
-            var referencePaths = GetReferencePaths();
-            var md = referencePaths
-                .Select(CreateMetadataReference)
-                .ToList();
-            //md.Add(MetadataReference.CreateFromFile(@"A:\2sxc\oqtane\oqtane.framework\Oqtane.Server\App_Data\2sxc.bin\App-0389a.dll"));
-            return md;
-        }
+        referencePaths.AddRange(_options.AdditionalReferencePaths);
 
-        // For unit testing
-        internal IEnumerable<string> GetReferencePaths()
-        {
-            var referencePaths = new List<string>(_options.AdditionalReferencePaths.Count);
+        return referencePaths;
+    }
 
-            foreach (var part in _partManager.ApplicationParts)
-            {
-                if (part is ICompilationReferencesProvider compilationReferenceProvider)
-                {
-                    referencePaths.AddRange(compilationReferenceProvider.GetReferencePaths());
-                }
-                else if (part is AssemblyPart assemblyPart)
-                {
-                    referencePaths.AddRange(assemblyPart.GetReferencePaths());
-                }
-            }
+    private static MetadataReference CreateMetadataReference(string path)
+    {
+        using var stream = File.OpenRead(path);
+        var moduleMetadata = ModuleMetadata.CreateFromStream(stream, PEStreamOptions.PrefetchMetadata);
+        var assemblyMetadata = AssemblyMetadata.Create(moduleMetadata);
 
-            referencePaths.AddRange(_options.AdditionalReferencePaths);
-
-            return referencePaths;
-        }
-
-        private static MetadataReference CreateMetadataReference(string path)
-        {
-            using (var stream = File.OpenRead(path))
-            {
-                var moduleMetadata = ModuleMetadata.CreateFromStream(stream, PEStreamOptions.PrefetchMetadata);
-                var assemblyMetadata = AssemblyMetadata.Create(moduleMetadata);
-
-                return assemblyMetadata.GetReference(filePath: path);
-            }
-        }
+        return assemblyMetadata.GetReference(filePath: path);
     }
 }

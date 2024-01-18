@@ -1,11 +1,9 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Coding;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-public partial class ToolbarBuilder
+partial class ToolbarBuilder
 {
     private IToolbarBuilder AddAdminAction(
         string verb,
@@ -20,7 +18,7 @@ public partial class ToolbarBuilder
     {
         // Eav.Parameters.Protect(noParamOrder, "See docs", methodName);
         var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, ui: ui, parameters: parameters, methodName: methodName);
-        var uiTweaked = PrepareUi(ui, tweaks: tweaks?.UiMerge);
+        var uiTweaked = PrepareUi(ui, tweaks: (tweaks as ITweakButtonInternal)?.UiMerge);
         var paramsTweaked = Utils.PrepareParams(parameters, tweaks);
         TargetCheck(target);
         return this.AddInternal(new ToolbarRuleCustom(

@@ -1,27 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using ToSic.Eav;
 using ToSic.Eav.Code.Help;
-using ToSic.Eav.Data;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
-using Constants = ToSic.Sxc.Constants;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
 
 /// <summary>
-/// Base class for v16 Pro Dynamic Code files.
+/// Base class for v16 [Typed](xref:NetCode.TypedCode.Index) CSharp files.
+/// Use it to create custom CS code in your App.
+/// 
+/// It provides the <see cref="ServiceKit16"/> on property `Kit` which contains all the popular services to create amazing stuff.
 /// </summary>
+/// <remarks>
+/// Important: This is very different from Razor12 or Razor14, as it doesn't rely on `dynamic` code.
+/// Be aware of this since the APIs are very different - see [Typed Code](xref:NetCode.TypedCode.Index).
+/// </remarks>
 [PublicApi]
-public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
+public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
 {
 
     #region Constructor / Setup
@@ -38,10 +43,10 @@ public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
     /// <param name="parent"></param>
     protected CodeTyped(IHasCodeContext parent) : base("Cst.CodeTy")
     {
-        if (parent is not IHasDynamicCodeRoot dynCodeParent)
+        if (parent is not IHasCodeApiService dynCodeParent)
             return;
 
-        base.ConnectToRoot(dynCodeParent._DynCodeRoot);
+        base.ConnectToRoot(dynCodeParent._CodeApiSvc);
     }
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
@@ -51,10 +56,12 @@ public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
     public TService GetService<TService>() where TService : class => CodeRootOrError().GetService<TService>();
 
     private TypedCode16Helper CodeHelper 
-        => _codeHelper ??= new TypedCode16Helper(CodeRootOrError(), MyData, null, false, "c# code file");
+        => _codeHelper ??= new(CodeRootOrError(), MyData, null, false, "c# code file");
     private TypedCode16Helper _codeHelper;
 
-    [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel16;
+    [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
 
     #endregion
 
@@ -62,9 +69,9 @@ public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
     public ServiceKit16 Kit => _kit.Get(() => CodeRootOrError().GetKit<ServiceKit16>());
     private readonly GetOnce<ServiceKit16> _kit = new();
 
-    private IDynamicCodeRoot CodeRootOrError([CallerMemberName] string propName = default)
+    private ICodeApiService CodeRootOrError([CallerMemberName] string propName = default)
     {
-        if (_DynCodeRoot != null) return _DynCodeRoot;
+        if (_CodeApiSvc != null) return _CodeApiSvc;
 
         var message = $"Can't access properties such as {propName}, because the Code-Context is not known. " +
                       $"This is typical in code which is in the **ThisCode** folder. " +
@@ -78,6 +85,7 @@ public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
     #region Stuff added by Code12
 
     [PrivateApi("Not yet ready")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public IDevTools DevTools => CodeHelper.DevTools;
 
     #endregion
@@ -116,7 +124,7 @@ public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
     public ITypedStack AllSettings => CodeHelper.AllSettings;
 
 
-    public IContextData MyData => CodeRootOrError().Data;
+    public IBlockInstance MyData => CodeRootOrError().Data;
 
     #endregion
 
@@ -135,25 +143,25 @@ public abstract class CodeTyped : DynamicCodeBase, IHasCodeLog, IDynamicCode16
 
     /// <inheritdoc cref="IDynamicCode16.AsItem" />
     public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
-        => CodeRootOrError().Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
+        => CodeRootOrError()._Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
 
     /// <inheritdoc cref="IDynamicCode16.AsItems" />
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => CodeRootOrError().Cdf.AsItems(list, propsRequired: propsRequired ?? true);
+        => CodeRootOrError()._Cdf.AsItems(list, propsRequired: propsRequired ?? true);
 
     /// <inheritdoc cref="IDynamicCode16.AsEntity" />
-    public IEntity AsEntity(ICanBeEntity thing) => CodeRootOrError().Cdf.AsEntity(thing);
+    public IEntity AsEntity(ICanBeEntity thing) => CodeRootOrError()._Cdf.AsEntity(thing);
 
     /// <inheritdoc cref="IDynamicCode16.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => CodeRootOrError().Cdf.AsTyped(original, propsRequired: propsRequired);
+        => CodeRootOrError()._Cdf.AsTyped(original, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => CodeRootOrError().Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
+        => CodeRootOrError()._Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsStack" />
-    public ITypedStack AsStack(params object[] items) => CodeRootOrError().Cdf.AsStack(items);
+    public ITypedStack AsStack(params object[] items) => CodeRootOrError()._Cdf.AsStack(items);
 
     #endregion
 

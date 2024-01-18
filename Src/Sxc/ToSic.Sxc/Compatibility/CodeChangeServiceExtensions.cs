@@ -1,7 +1,6 @@
-﻿using System;
-using ToSic.Eav.Code.Infos;
-using ToSic.Lib.Logging;
+﻿using ToSic.Eav.Code.Infos;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using CodeInfoService = ToSic.Eav.Code.InfoSystem.CodeInfoService;
 
 namespace ToSic.Sxc.Compatibility;

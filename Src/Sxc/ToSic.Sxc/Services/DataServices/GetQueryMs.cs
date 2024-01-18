@@ -1,10 +1,9 @@
 ﻿using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Query;
+using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Services.DataServices;
 
@@ -17,7 +16,7 @@ internal class GetQueryMs: ServiceBase
     private readonly LazySvc<QueryManager> _queryManager;
     private readonly DataSourceOptionsMs _optionsMs;
 
-    internal GetQueryMs(LazySvc<QueryManager> queryManager, DataSourceOptionsMs optionsMs, ILog parentLog): base(Constants.SxcLogName + ".DtGqMs")
+    internal GetQueryMs(LazySvc<QueryManager> queryManager, DataSourceOptionsMs optionsMs, ILog parentLog): base(SxcLogging.SxcLogName + ".DtGqMs")
     {
         this._queryManager = queryManager;
         this._optionsMs = optionsMs;

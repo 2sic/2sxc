@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DotNetNuke.Entities.Portals;
+﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Security.Permissions;
-using ToSic.Lib.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Coding;
-using ToSic.Lib.Logging;
+using ToSic.Sxc.DataSources.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources;
@@ -44,10 +40,10 @@ internal class DnnPagesDsProvider: PagesDataSourceProvider
         catch (Exception ex)
         {
             l.Ex(ex);
-            return l.Return(new List<PageDataRaw>(), "error");
+            return l.Return(new(), "error");
         }
 
-        if (pages == null || !pages.Any()) return l.Return(new List<PageDataRaw>(), "null/empty");
+        if (pages == null || !pages.Any()) return l.Return(new(), "null/empty");
 
         try
         {
@@ -91,7 +87,7 @@ internal class DnnPagesDsProvider: PagesDataSourceProvider
         catch (Exception ex)
         {
             l.Ex(ex);
-            return l.Return(new List<PageDataRaw>(), "error");
+            return l.Return(new(), "error");
         }
     }
 

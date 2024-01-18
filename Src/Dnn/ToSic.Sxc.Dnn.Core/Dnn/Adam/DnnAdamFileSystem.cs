@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
 using System.Web.Configuration;
 using DotNetNuke.Services.FileSystem;
-using ToSic.Eav.Apps.Adam;
-using ToSic.Lib.Logging;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Internal;
 
 namespace ToSic.Sxc.Dnn.Adam;
 
-internal class DnnAdamFileSystem : ServiceBase, IAdamFileSystem<int, int>
+internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem<int, int>
 {
     #region Constructor / DI / Init
-
-    public DnnAdamFileSystem(): base("Dnn.FilSys") { }
 
     public void Init(AdamManager<int, int> adamManager)
     {
@@ -160,7 +155,7 @@ internal class DnnAdamFileSystem : ServiceBase, IAdamFileSystem<int, int>
     {
         var l = Log.Fn<List<Folder<int, int>>>($"folder:{folder.Id}");
         var fldObj = GetDnnFolder(folder.AsDnn().SysId);
-        if (fldObj == null) return l.Return(new List<Folder<int, int>>(), "");
+        if (fldObj == null) return l.Return(new(), "");
 
         var firstList = _dnnFolders.GetFolders(fldObj);
         var folders = firstList?.Select(DnnToAdam).ToList()
@@ -185,7 +180,7 @@ internal class DnnAdamFileSystem : ServiceBase, IAdamFileSystem<int, int>
         var l = Log.Fn<List<File<int, int>>>($"folder:{folder.Id}");
         var fldObj = _dnnFolders.GetFolder(folder.AsDnn().SysId);
         // sometimes the folder doesn't exist for whatever reason
-        if (fldObj == null) return l.Return(new List<File<int, int>>(), "");
+        if (fldObj == null) return l.Return(new(), "");
 
         // try to find the files
         var firstList = _dnnFolders.GetFiles(fldObj);
@@ -233,7 +228,7 @@ internal class DnnAdamFileSystem : ServiceBase, IAdamFileSystem<int, int>
             
         if (dnnFileInfo == null) throw l.Done(new ArgumentNullException(nameof(dnnFileInfo), ErrorDnnObjectNull));
 
-        return l.ReturnAsOk(new File<int, int>(AdamManager)
+        return l.ReturnAsOk(new(AdamManager)
         {
             FullName = dnnFileInfo.FileName,
             Extension = dnnFileInfo.Extension,

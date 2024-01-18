@@ -3,11 +3,15 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Data;
+using ToSic.Eav.Integration;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Blocks.Output;
-using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Integration.Modules;
 using ToSic.Sxc.Oqt.Server.Blocks;
 using ToSic.Sxc.Oqt.Server.Cms;
 using ToSic.Sxc.Oqt.Server.Data;
@@ -15,9 +19,7 @@ using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Server.Polymorphism;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.Services;
-using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.WebApi.Infrastructure;
 using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
@@ -61,15 +63,15 @@ partial class OqtRegisterServices
         // Views / Templates / Razor: View Builder
         services.TryAddTransient<IOqtSxcViewBuilder, OqtSxcViewBuilder>();
 
-        services.TryAddTransient<DynamicCodeRoot, OqtDynamicCodeRoot>();
-        services.TryAddTransient(typeof(DynamicCodeRoot<,>), typeof(OqtDynamicCodeRoot<,>));
+        services.TryAddTransient<CodeApiService, OqtCodeApiService>();
+        services.TryAddTransient(typeof(CodeApiService<,>), typeof(OqtCodeApiService<,>));
         services.TryAddTransient<IWebApiContextBuilder, OqtGetBlock>();
 
         // v13
         services.TryAddTransient<IModuleAndBlockBuilder, OqtModuleAndBlockBuilder>();
 
         // Views / Templates / Razor: Polymorphism Resolvers
-        services.TryAddTransient<Sxc.Polymorphism.Koi>();
+        services.TryAddTransient<Sxc.Polymorphism.Internal.Koi>();
         services.TryAddTransient<Permissions>();
         services.TryAddTransient<Connect.Koi.Detectors.ICssFrameworkDetector, OqtKoiCssFrameworkDetector>();
 

@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Context;
+﻿namespace ToSic.Sxc.Context;
 
 /// <summary>
 /// This is the runtime context of your code in the CMS. It can tell you about the site, page, module etc. that you're on.
@@ -52,6 +50,12 @@ public interface ICmsContext
     ICmsView View { get; }
 
 
+    /// <summary>
+    /// Information about the current block
+    ///
+    /// Not published yet, as it's not clear if it will be the correct block on inner-content?
+    /// </summary>
     [PrivateApi("WIP v13")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     ICmsBlock Block { get; }
 }

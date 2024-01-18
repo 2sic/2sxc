@@ -1,26 +1,19 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Coding;
 using ToSic.Lib.Data;
-using ToSic.Sxc.Data.Typed;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Typed;
+using ToSic.Sxc.Data.Internal.Wrapper;
 
 
 namespace ToSic.Sxc.Data;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class PreWrapJsonArray: PreWrapJsonBase, IWrapper<JsonArray>
+internal class PreWrapJsonArray(CodeJsonWrapper wrapper, JsonArray jsonArray)
+    : PreWrapJsonBase(wrapper, jsonArray), IWrapper<JsonArray>
 {
-    public PreWrapJsonArray(CodeJsonWrapper wrapper, JsonArray jsonArray): base(wrapper, jsonArray)
-    {
-        UnwrappedContents = jsonArray;
-    }
-
-    protected readonly JsonArray UnwrappedContents;
+    protected readonly JsonArray UnwrappedContents = jsonArray;
 
     public JsonArray GetContents() => UnwrappedContents;
 
@@ -44,16 +37,16 @@ internal class PreWrapJsonArray: PreWrapJsonBase, IWrapper<JsonArray>
     public override TryGetResult TryGetWrap(string name, bool wrapDefault = true)
     {
         if (UnwrappedContents == null || !UnwrappedContents.Any())
-            return new TryGetResult(false, null, null);
+            return new(false, null, null);
 
         var found = UnwrappedContents.FirstOrDefault(p =>
         {
-            if (!(p is JsonObject pJObject)) return false;
+            if (p is not JsonObject pJObject) return false;
             return HasPropertyWithValue(pJObject, "Name", name)
                    || HasPropertyWithValue(pJObject, "Title", name);
         });
 
-        return new TryGetResult(false, found,
+        return new(false, found,
             Wrapper.IfJsonGetValueOrJacket(found));
     }
 
@@ -68,7 +61,7 @@ internal class PreWrapJsonArray: PreWrapJsonBase, IWrapper<JsonArray>
     }
 
     public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
-        => new() { new PropertyDumpItem { Path = $"Not supported on {nameof(DynamicJacketList)}" } };
+        => new() { new() { Path = $"Not supported on {nameof(DynamicJacketList)}" } };
 
 
 }

@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Coding;
-
-namespace ToSic.Sxc.Services;
+﻿namespace ToSic.Sxc.Services;
 
 public partial interface IPageService
 {

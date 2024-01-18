@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.DataSources;
+﻿using ToSic.Eav.DataSources.Internal;
 
 namespace ToSic.Sxc.Dnn.DataSources;
 

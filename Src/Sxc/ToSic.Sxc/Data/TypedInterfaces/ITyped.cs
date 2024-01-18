@@ -1,7 +1,5 @@
-﻿using System;
-using System.Text.Json.Serialization;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
+﻿using System.Text.Json.Serialization;
+using ToSic.Sxc.Data.Internal.Convert;
 
 namespace ToSic.Sxc.Data;
 
@@ -147,6 +145,7 @@ public partial interface ITyped
     #region Debugging
 
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     string ToString();
 
     #endregion

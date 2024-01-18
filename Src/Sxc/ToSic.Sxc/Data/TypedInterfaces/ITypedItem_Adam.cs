@@ -1,9 +1,8 @@
-﻿using ToSic.Lib.Coding;
-using ToSic.Sxc.Adam;
+﻿using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.Data;
 
-public partial interface ITypedItem
+partial interface ITypedItem
 {
     /// <summary>
     /// Get the ADAM (Automatic Digital Asset Manager) for this field.

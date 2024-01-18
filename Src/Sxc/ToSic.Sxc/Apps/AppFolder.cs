@@ -1,16 +1,17 @@
-﻿using System;
-using ToSic.Lib.Services;
+﻿using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Context.Internal;
 
 namespace ToSic.Sxc.Apps;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AppFolder: ServiceBase
 {
-    public AppFolder(IContextResolver ctxResolver) : base("AppFolder") 
+    public AppFolder(ISxcContextResolver ctxResolver) : base("AppFolder") 
         => _ctxResolver = ctxResolver;
-    private readonly IContextResolver _ctxResolver;
+    private readonly ISxcContextResolver _ctxResolver;
 
     /// <summary>
     /// This is necessary for special calls where the _ctxResolve may not yet be complete...

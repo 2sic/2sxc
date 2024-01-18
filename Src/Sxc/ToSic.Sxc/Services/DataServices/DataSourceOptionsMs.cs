@@ -1,17 +1,16 @@
-﻿using System;
-using ToSic.Eav.Apps;
+﻿using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Services.DataServices;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class DataSourceOptionsMs: ServiceBase
 {
-    internal DataSourceOptionsMs(IAppIdentity appIdentity, Func<ILookUpEngine> getLookup): base(Constants.SxcLogName + "DtOptH")
+    internal DataSourceOptionsMs(IAppIdentity appIdentity, Func<ILookUpEngine> getLookup): base(SxcLogging.SxcLogName + "DtOptH")
     {
         _appIdentity = appIdentity;
         _getLookup = getLookup;
@@ -28,7 +27,7 @@ internal class DataSourceOptionsMs: ServiceBase
         // Ensure we have a valid AppIdentity
         var appIdentity = _appIdentity ?? (options as IDataSourceOptions)?.AppIdentity
             ?? (identityRequired
-                ? throw new Exception(
+                ? throw new(
                     "Creating a DataSource requires an AppIdentity which must either be supplied by the context, " +
                     $"(the Module / WebApi call) or provided manually by spawning a new {nameof(IDataService)} with the AppIdentity using 'New(...).")
                 : new AppIdentity(0, 0)

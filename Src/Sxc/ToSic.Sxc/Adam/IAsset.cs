@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Metadata;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal;
 
 namespace ToSic.Sxc.Adam;
 
@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Adam;
 /// Describes an ADAM (Automatic Digital Asset Management) asset. <br/>
 /// This contains properties which both <see cref="IFolder"/> and <see cref="IFile"/> have in common.
 /// </summary>
-[PublicApi_Stable_ForUseInYourCode]
+[PublicApi]
 public interface IAsset: IHasMetadata, IFromField
 {
     #region Metadata

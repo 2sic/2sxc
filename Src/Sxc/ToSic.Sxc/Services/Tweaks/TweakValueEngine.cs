@@ -1,9 +1,9 @@
-﻿using System;
-using ToSic.Lib.Logging;
+﻿namespace ToSic.Sxc.Services.Tweaks;
 
-namespace ToSic.Sxc.Services.Tweaks;
-
-public class TweakValueEngine
+/// <summary>
+/// Not in use yet
+/// </summary>
+internal class TweakValueEngine
 {
     public TValue MaybeTweakValue<TValue>(TValue value, Func<ITweakData<TValue>, ITweakData<TValue>> func, ILog log)
     {

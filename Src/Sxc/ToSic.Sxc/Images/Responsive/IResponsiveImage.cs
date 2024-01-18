@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-using ToSic.Razor.Blade;
+﻿using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Edit.Toolbar;
@@ -49,7 +48,7 @@ public interface IResponsiveImage: IRawHtmlString
     /// <summary>
     /// Extended description, typically used in galleries.
     /// </summary>
-    [PrivateApi("WIP v16.04")]
+    /// <remarks>Added in v16.04</remarks>
     string DescriptionExtended { get; }
 
     /// <summary>
@@ -63,6 +62,7 @@ public interface IResponsiveImage: IRawHtmlString
     /// The outermost tag - name not yet final
     /// </summary>
     [PrivateApi("Name not yet final")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     IHtmlTag Tag { get; }
 
     /// <summary>

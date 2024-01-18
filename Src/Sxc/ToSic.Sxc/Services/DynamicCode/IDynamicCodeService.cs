@@ -1,8 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Services;

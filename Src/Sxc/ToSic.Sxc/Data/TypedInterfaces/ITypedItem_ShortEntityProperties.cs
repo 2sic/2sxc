@@ -1,9 +1,6 @@
-﻿using System;
-using ToSic.Eav.Data;
+﻿namespace ToSic.Sxc.Data;
 
-namespace ToSic.Sxc.Data;
-
-public partial interface ITypedItem
+partial interface ITypedItem
 {
     /// <summary>
     /// The ID of the underlying entity.

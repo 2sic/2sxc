@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using ToSic.Lib.Documentation;
-using ToSic.Sxc.Blocks;
+﻿using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Search;
 
@@ -9,7 +7,7 @@ using ToSic.Sxc.Search;
 namespace ToSic.Sxc.Dnn.Web;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public interface IEngineDnnOldCompatibility
+internal interface IEngineDnnOldCompatibility
 {
     bool OldAutoLoadJQueryAndRvt { get; }
 

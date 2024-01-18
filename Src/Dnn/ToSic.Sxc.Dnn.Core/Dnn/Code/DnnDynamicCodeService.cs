@@ -1,14 +1,11 @@
-﻿using System;
-using System.Web;
+﻿using System.Web;
 using System.Web.UI;
 using ToSic.Eav.Context;
-using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Web.PageService;
+using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Web.Internal.PageService;
 
 namespace ToSic.Sxc.Dnn.Code;
 

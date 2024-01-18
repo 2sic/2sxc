@@ -1,7 +1,4 @@
 ﻿#if NETFRAMEWORK
-using System;
-using ToSic.Eav.Data;
-using ToSic.Lib.Documentation;
 using ToSic.Razor.Markup;
 using IEntity = ToSic.Eav.Data.IEntity;
 

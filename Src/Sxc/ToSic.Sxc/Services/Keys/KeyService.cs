@@ -1,12 +1,10 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Services;
+﻿namespace ToSic.Sxc.Services;
 
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class KeyService : IKeyService
 {
-    private UniqueKeysServices UniqueKeysSvc => _uniqueKeysServices ??= new UniqueKeysServices();
+    private UniqueKeysServices UniqueKeysSvc => _uniqueKeysServices ??= new();
     private UniqueKeysServices _uniqueKeysServices;
 
     /// <inheritdoc cref="IKeyService.UniqueKey"/>

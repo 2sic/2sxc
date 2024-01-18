@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Security;
+﻿using System.Web.Security;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Context;
-using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Internal;
 using static ToSic.Sxc.Dnn.Run.DnnSecurity;
 
 namespace ToSic.Sxc.Dnn.Context;
@@ -27,7 +24,7 @@ internal class DnnUser: ServiceBase, IUser<UserInfo>
     private string GetUserIdentityToken ()
     {
         var userId = Id;
-        var token = userId == -1 ? Constants.Anonymous : $"{DnnConstants.UserTokenPrefix}{userId}";
+        var token = userId == -1 ? SxcUserConstants.Anonymous : $"{DnnConstants.UserTokenPrefix}{userId}";
         return token;
     }
 
@@ -47,7 +44,7 @@ internal class DnnUser: ServiceBase, IUser<UserInfo>
     private DnnSiteAdminPermissions _getAdminPermissions() => _adminPermissions.Get(
         () => UnwrappedContents != null 
             ? _dnnSecurity.Value.UserMayAdminThis(UnwrappedContents) 
-            : new DnnSiteAdminPermissions(false)
+            : new(false)
     );
     private readonly GetOnce<DnnSiteAdminPermissions> _adminPermissions = new();
 
@@ -60,11 +57,11 @@ internal class DnnUser: ServiceBase, IUser<UserInfo>
     private static List<int> BuildRoleList()
     {
         var psCurrent = PortalSettings.Current;
-        if (psCurrent == null) return new List<int>();
+        if (psCurrent == null) return new();
 
         var portalId = psCurrent.PortalId;
         var user = psCurrent.UserInfo;
-        if (user == null) return new List<int>();
+        if (user == null) return new();
 
         var rc = new DotNetNuke.Security.Roles.RoleController();
         return user.Roles

@@ -1,7 +1,4 @@
-﻿using System;
-using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Context;
+﻿namespace ToSic.Sxc.Context;
 
 /// <summary>
 /// The types of platforms which 2sxc could be running on

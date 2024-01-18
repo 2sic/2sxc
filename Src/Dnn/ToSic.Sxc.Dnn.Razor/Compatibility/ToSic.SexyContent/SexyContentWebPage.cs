@@ -1,34 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Custom.Hybrid;
+﻿using Custom.Hybrid;
 using DotNetNuke.Entities.Modules;
-using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Search;
-using ToSic.Sxc;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Compatibility;
+using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Compatibility.Internal;
 using ToSic.Sxc.Compatibility.RazorPermissions;
 using ToSic.Sxc.Compatibility.Sxc;
-using ToSic.Sxc.Context;
-using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.DataSources.Internal.Compatibility;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Search;
-using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -65,21 +53,21 @@ public abstract class SexyContentWebPage :
     #region Helpers linked through AppAndData Helpers
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => _DynCodeRoot.Link;
+    public ILinkService Link => _CodeApiSvc.Link;
 
     [PrivateApi]
     public dynamic DynamicModel => throw new NotSupportedException($"{nameof(DynamicModel)} not implemented on {nameof(SexyContentWebPage)}. {RazorComponent.NotImplementedUseCustomBase}");
 
     /// <inheritdoc cref="IDynamicCode.Edit" />
-    public IEditService Edit => _DynCodeRoot.Edit;
+    public IEditService Edit => _CodeApiSvc.Edit;
 
-    public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
+    public IDnnContext Dnn => (_CodeApiSvc as IHasDnn)?.Dnn;
 
 #pragma warning disable 612
     /// <inheritdoc />
     [PrivateApi("never public, shouldn't be in use elsewhere")]
     [Obsolete]
-    public SxcHelper Sxc => _sxc ??= new SxcHelper(_DynCodeRoot.Block?.Context.UserMayEdit ?? false, GetService<IConvertToEavLight>());
+    public SxcHelper Sxc => _sxc ??= new(((ICodeApiServiceInternal)_CodeApiSvc)._Block?.Context.UserMayEdit ?? false, GetService<IConvertToEavLight>());
     [Obsolete]
     private SxcHelper _sxc;
 #pragma warning restore 612
@@ -87,64 +75,64 @@ public abstract class SexyContentWebPage :
     /// <summary>
     /// Old API - probably never used, but we shouldn't remove it as we could break some existing code out there
     /// </summary>
-    [PrivateApi] public IBlock Block => _DynCodeRoot.Block;
+    [PrivateApi] public IBlock Block => ((ICodeApiServiceInternal)_CodeApiSvc)._Block;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
-    public TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
+    public TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
 
-    [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel9Old;
+    [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel9Old;
 
     /// <inheritdoc />
-    public new IApp App => _DynCodeRoot.App;
+    public new IApp App => _CodeApiSvc.App;
 
     #region Data - with old interface #DataInAddWontWork
 
     /// <inheritdoc />
-    public IBlockDataSource Data => (IBlockDataSource)_DynCodeRoot.Data;
+    public IBlockDataSource Data => (IBlockDataSource)_CodeApiSvc.Data;
 
     // This is explicitly implemented so the interfaces don't complain
     // but actually we're not showing this - in reality we're showing the Old (see above)
-    IContextData IAppAndDataHelpers.Data => _DynCodeRoot.Data;
+    IBlockInstance IAppAndDataHelpers.Data => _CodeApiSvc.Data;
         
     #endregion
 
     /// <inheritdoc />
-    IContextData IDynamicCode.Data => _DynCodeRoot.Data;
+    IBlockInstance IDynamicCode.Data => _CodeApiSvc.Data;
 
-    public RazorPermissions Permissions => new(_DynCodeRoot.Block?.Context.UserMayEdit ?? false);
+    public RazorPermissions Permissions => new(((ICodeApiServiceInternal)_CodeApiSvc)._Block?.Context.UserMayEdit ?? false);
 
     #region AsDynamic in many variations
 
     /// <inheritdoc />
     [Obsolete]
-    public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.Cdf.CodeAsDyn(entity);
+    public dynamic AsDynamic(IEntity entity) => _CodeApiSvc._Cdf.CodeAsDyn(entity);
 
 
     /// <inheritdoc />
-    public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.Cdf.AsDynamicFromObject(dynamicEntity);
+    public dynamic AsDynamic(object dynamicEntity) => _CodeApiSvc._Cdf.AsDynamicFromObject(dynamicEntity);
 
     /// <inheritdoc />
     [PublicApi("Careful - still Experimental in 12.02")]
-    public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.Cdf.MergeDynamic(entities);
+    public dynamic AsDynamic(params object[] entities) => _CodeApiSvc._Cdf.MergeDynamic(entities);
 
     // todo: only in "old" controller, not in new one
     /// <inheritdoc />
     [Obsolete]
-    public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => _DynCodeRoot.Cdf.CodeAsDyn(entityKeyValuePair.Value);
+    public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => _CodeApiSvc._Cdf.CodeAsDyn(entityKeyValuePair.Value);
 
 
 
     /// <inheritdoc />
     [Obsolete]
-    public IEnumerable<dynamic> AsDynamic(IDataStream stream) => _DynCodeRoot.Cdf.CodeAsDynList(stream.List);
+    public IEnumerable<dynamic> AsDynamic(IDataStream stream) => _CodeApiSvc._Cdf.CodeAsDynList(stream.List);
 
     /// <inheritdoc />
-    public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.Cdf.AsEntity(dynamicEntity);
+    public IEntity AsEntity(object dynamicEntity) => _CodeApiSvc._Cdf.AsEntity(dynamicEntity);
 
 
     /// <inheritdoc />
     [Obsolete]
-    public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => _DynCodeRoot.Cdf.CodeAsDynList(entities);
+    public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => _CodeApiSvc._Cdf.CodeAsDynList(entities);
 
     #endregion
 
@@ -173,16 +161,16 @@ public abstract class SexyContentWebPage :
     #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
     [PrivateApi]
     [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-    public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => _DynCodeRoot.Cdf.CodeAsDyn(entity as IEntity);
+    public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => _CodeApiSvc._Cdf.CodeAsDyn(entity as IEntity);
 
 
     [PrivateApi]
     [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-    public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => _DynCodeRoot.Cdf.CodeAsDyn(entityKeyValuePair.Value as IEntity);
+    public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => _CodeApiSvc._Cdf.CodeAsDyn(entityKeyValuePair.Value as IEntity);
 
     [PrivateApi]
     [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-    public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => _DynCodeRoot.Cdf.CodeAsDynList(entities.Cast<IEntity>());
+    public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => _CodeApiSvc._Cdf.CodeAsDynList(entities.Cast<IEntity>());
     #endregion
 
 
@@ -190,27 +178,27 @@ public abstract class SexyContentWebPage :
     /// <inheritdoc />
     [Obsolete]
     public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
-        => new DynamicCodeObsolete(_DynCodeRoot).CreateSource(typeName, inSource, configurationProvider);
+        => new CodeApiServiceObsolete(_CodeApiSvc).CreateSource(typeName, inSource, configurationProvider);
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
     [Obsolete("this is the old implementation with ILookUp Engine, don't think it was ever used publicly because people couldn't create these engines")]
     public T CreateSource<T>(IDataSource inSource = default, ILookUpEngine configurationProvider = default) where T : IDataSource
-        => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
+        => _CodeApiSvc.CreateSource<T>(inSource, configurationProvider);
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
     public T CreateSource<T>(IDataStream source) where T : IDataSource
-        => _DynCodeRoot.CreateSource<T>(source);
+        => _CodeApiSvc.CreateSource<T>(source);
 
     #endregion
 
 
     #region Content, Header, etc. and List
     /// <inheritdoc cref="IDynamicCode.Content" />
-    public dynamic Content => _DynCodeRoot.Content;
+    public dynamic Content => _CodeApiSvc.Content;
 
     [Obsolete("use Content.Presentation instead")]
     [PrivateApi]
-    public dynamic Presentation => _DynCodeRoot.Content?.Presentation;
+    public dynamic Presentation => _CodeApiSvc.Content?.Presentation;
 
     /// <summary>
     /// We are blocking this property on purpose, so that people will want to migrate to the new RazorComponent
@@ -222,13 +210,13 @@ public abstract class SexyContentWebPage :
 
 #pragma warning disable 618
     [Obsolete("Use Header instead")]
-    public dynamic ListContent => _DynCodeRoot.Header;
+    public dynamic ListContent => _CodeApiSvc.Header;
 
     [Obsolete("Use Header.Presentation instead")]
-    public dynamic ListPresentation => _DynCodeRoot.Header?.Presentation;
+    public dynamic ListPresentation => _CodeApiSvc.Header?.Presentation;
 
     [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
-    public List<Element> List => _list ??= new DynamicCodeObsolete(_DynCodeRoot).ElementList;
+    public List<Element> List => _list ??= new CodeApiServiceObsolete(_CodeApiSvc).ElementList;
     [Obsolete("don't use any more")]
     private List<Element> _list;
 #pragma warning restore 618
@@ -264,14 +252,14 @@ public abstract class SexyContentWebPage :
     #region Adam 
 
     /// <inheritdoc cref="IDynamicCode.AsAdam" />
-    public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot.AsAdam(item, fieldName);
+    public IFolder AsAdam(ICanBeEntity item, string fieldName) => _CodeApiSvc.AsAdam(item, fieldName);
 
     #endregion
 
     #region CmsContext
 
     /// <inheritdoc cref="IDynamicCode.CmsContext" />
-    public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
+    public ICmsContext CmsContext => _CodeApiSvc.CmsContext;
 
     #endregion
 

@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Data;
+﻿namespace ToSic.Sxc.Data;
 
 /// <summary>
 /// This object contains decrypted data (if it was encrypted originally) and tells you if the data was encrypted, signed etc.
@@ -18,20 +16,20 @@ public interface ISecureData<out T>
     /// </summary>
     T Value { get; }
 
-    [PrivateApi("not final yet")]
-    bool IsEncrypted { get; }
+    //[PrivateApi("not final yet")]
+    //bool IsEncrypted { get; }
 
-    [PrivateApi("not final yet")]
-    bool IsSigned { get; }
+    //[PrivateApi("not final yet")]
+    //bool IsSigned { get; }
 
-    [PrivateApi("not final yet")]
-    SecretAuthorities Authority { get; }
+    //[PrivateApi("not final yet")]
+    //SecureDataAuthorities Authority { get; }
 
     /// <summary>
     /// Determines if the data is secure data, so it's either encrypted or signed
     /// </summary>
-    [PrivateApi("name not final yet")]
-    bool IsSecure { get; }
+    /// <remarks>made public in v17.01</remarks>
+    bool IsSecured { get; }
 
 
     /// <summary>

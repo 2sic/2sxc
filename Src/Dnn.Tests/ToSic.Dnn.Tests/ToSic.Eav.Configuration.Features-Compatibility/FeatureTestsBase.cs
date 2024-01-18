@@ -3,10 +3,10 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Tests.Mocks;
 using ToSic.Eav.Data;
 using ToSic.Eav.Internal.Loaders;
-using ToSic.Eav.Run;
 using ToSic.Testing.Shared;
 using ToSic.Testing.Shared.Mocks;
 using ToSic.Eav.ImportExport;
+using ToSic.Eav.Integration;
 
 namespace ToSic.Dnn.Tests.ToSic.Eav.Configuration.Features_Compatibility
 {

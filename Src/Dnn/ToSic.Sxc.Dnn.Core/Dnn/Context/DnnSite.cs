@@ -1,21 +1,16 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Web.Hosting;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-using ToSic.Eav.Run;
-using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Run;
-using ToSic.Sxc.Web;
 using DotNetNuke.Services.Localization;
-using Microsoft.EntityFrameworkCore.Internal;
+using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Integration;
 using ToSic.Eav.Internal.Features;
+using ToSic.Sxc.Integration.Paths;
+using ToSic.Sxc.Web.Internal.Url;
 using static ToSic.Eav.Context.IZoneCultureResolverExtensions;
 using ISite = ToSic.Eav.Context.ISite;
 
@@ -48,7 +43,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     private ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
     /// <inheritdoc />
-    public override ISite Init(int siteId, ILog parentLog) => TryInitPortal(new PortalSettings(siteId), parentLog);
+    public override ISite Init(int siteId, ILog parentLog) => TryInitPortal(new(siteId), parentLog);
 
     #endregion
 

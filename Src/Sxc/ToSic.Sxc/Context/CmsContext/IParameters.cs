@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-using ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal;
 
 namespace ToSic.Sxc.Context;
 
@@ -75,31 +73,25 @@ public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
     /// Add another URL parameter and return a new <see cref="IParameters"/>.
     /// If the name/key already exists, it will extend it, add a simple 
     /// Otherwise please use <see cref="Set(string,string)"/>
-    /// 
-    /// _Important: this does not change the current object, it returns a new object._
     /// </summary>
     /// <param name="key"></param>
-    /// <returns></returns>
+    /// <returns>A _new_ <see cref="IParameters"/>, the original is not modified.</returns>
     IParameters Add(string key);
 
     /// <summary>
     /// Add another URL parameter and return a new <see cref="IParameters"/>.
     /// If the name/key already exists, it will extend it, so the parameter will have 2 values.
-    /// Otherwise please use <see cref="Set(string,string)"/>
-    /// 
-    /// _Important: this does not change the current object, it returns a new object._
+    /// Otherwise, please use <see cref="Set(string,string)"/>
     /// </summary>
     /// <param name="key">the key</param>
     /// <param name="value">the value</param>
-    /// <returns>A new <see cref="IParameters"/> object</returns>
+    /// <returns>A _new_ <see cref="IParameters"/>, the original is not modified.</returns>
     IParameters Add(string key, string value);
 
     /// <summary>
     /// Add another URL parameter and return a new <see cref="IParameters"/>.
     /// If the name/key already exists, it will extend it, so the parameter will have 2 values.
-    /// Otherwise please use <see cref="Set(string,string)"/>
-    /// 
-    /// _Important: this does not change the current object, it returns a new object._
+    /// Otherwise, please use <see cref="Set(string,string)"/>
     ///
     /// Note also that this takes an `object` and will do some special conversions.
     /// For example, bool values are lower case `true`|`false`, numbers are culture invariant and dates
@@ -107,26 +99,22 @@ public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
     /// </summary>
     /// <param name="key">the key</param>
     /// <param name="value">object! value</param>
-    /// <returns>A new <see cref="IParameters"/> object</returns>
+    /// <returns>A _new_ <see cref="IParameters"/>, the original is not modified.</returns>
     /// <remarks>Added in v15.0</remarks>
     IParameters Add(string key, object value);
 
     /// <summary>
     /// Add another URL parameter and return a new <see cref="IParameters"/>.
     /// If the name/key already exists, it will just overwrite it.
-    /// 
-    /// _Important: this does not change the current object, it returns a new object._
     /// </summary>
     /// <param name="name"></param>
     /// <param name="value"></param>
-    /// <returns>A new <see cref="IParameters"/> object</returns>
+    /// <returns>A _new_ <see cref="IParameters"/>, the original is not modified.</returns>
     IParameters Set(string name, string value);
 
     /// <summary>
     /// Add another URL parameter and return a new <see cref="IParameters"/>.
     /// If the name/key already exists, it will just overwrite it.
-    /// 
-    /// _Important: this does not change the current object, it returns a new object._
     ///
     /// Note also that this takes an `object` and will do some special conversions.
     /// For example, bool values are lower case `true`|`false`, numbers are culture invariant and dates
@@ -134,28 +122,77 @@ public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
     /// </summary>
     /// <param name="name">the key</param>
     /// <param name="value">object! value</param>
-    /// <returns>A new <see cref="IParameters"/> object</returns>
+    /// <returns>A _new_ <see cref="IParameters"/>, the original is not modified.</returns>
     /// <remarks>Added in v15.0</remarks>
     IParameters Set(string name, object value);
 
     /// <summary>
     /// Add another URL parameter and return a new <see cref="IParameters"/>.
     /// If the name/key already exists, it will just overwrite it.
-    /// 
-    /// _Important: this does not change the current object, it returns a new object._
     /// </summary>
     /// <param name="name"></param>
-    /// <returns></returns>
+    /// <returns>A _new_ <see cref="IParameters"/>, the original is not modified.</returns>
     IParameters Set(string name);
 
     /// <summary>
     /// Remove a parameter and return a new <see cref="IParameters"/>.
-    ///
-    /// _Important: this does not change the current object, it returns a new object._
     /// </summary>
     /// <param name="name"></param>
-    /// <returns></returns>
+    /// <returns>A _new_ <see cref="IParameters"/>, the original is not modified.</returns>
     IParameters Remove(string name);
+
+    ///// <summary>
+    ///// Remove a parameter **value** and return a new <see cref="IParameters"/>.
+    ///// This only removes a specific value, for example if you start with `id=27&amp;id=42` and remove `id=27`, then the result will be `id=42`.
+    ///// </summary>
+    ///// <param name="name"></param>
+    ///// <param name="value"></param>
+    ///// <remarks>Added in v17.01</remarks>
+    ///// <returns>A _new_ <see cref="IParameters"/>, the original is not modified.</returns>
+    //IParameters Remove(string name, string value);
+
+    /// <summary>
+    /// Remove a parameter **value** and return a new <see cref="IParameters"/>.
+    /// This only removes a specific value, for example if you start with `id=27&amp;id=42` and remove `id=27`, then the result will be `id=42`.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="value"></param>
+    /// <returns>A _new_ <see cref="IParameters"/>, the original is not modified.</returns>
+    /// <remarks>Added in v17.01</remarks>
+    IParameters Remove(string name, object value);
+
+    #endregion
+
+    #region Toggle (new v17)
+
+    ///// <summary>
+    ///// Toggle a parameter value and return a new <see cref="IParameters"/>.
+    /////
+    ///// This means that if the parameter was previously set with the same value, it will be un-set, otherwise it will be added.
+    ///// </summary>
+    ///// <param name="name"></param>
+    ///// <param name="value"></param>
+    ///// <remarks>Added in v17.01</remarks>
+    //IParameters Toggle(string name, string value);
+
+    /// <summary>
+    /// Toggle a parameter value and return a new <see cref="IParameters"/>.
+    ///
+    /// This means that if the parameter was previously set with the same value, it will be un-set, otherwise it will be added.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="value"></param>
+    /// <returns>A _new_ <see cref="IParameters"/>, the original is not modified.</returns>
+    /// <remarks>Added in v17.01</remarks>
+    IParameters Toggle(string name, object value);
+
+    /// <summary>
+    /// Filter all parameters to only keep the keys listed in `names`.
+    /// </summary>
+    /// <param name="names">one or more names to keep, comma-separated.</param>
+    /// <returns>A _new_ <see cref="IParameters"/>, the original is not modified.</returns>
+    /// <remarks>Added in v17.01</remarks>
+    public IParameters Filter(string names);
 
     #endregion
 

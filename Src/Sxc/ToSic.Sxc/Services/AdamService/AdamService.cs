@@ -1,26 +1,27 @@
-﻿using ToSic.Lib.Documentation;
-using ToSic.Sxc.Adam;
+﻿using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Services;
 
 [PrivateApi("hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class AdamService: IAdamService, INeedsDynamicCodeRoot
+internal class AdamService: IAdamService, INeedsCodeApiService
 {
     #region Constructor etc.
 
     [PrivateApi]        
-    public void ConnectToRoot(IDynamicCodeRoot codeRoot) => _codeRoot = codeRoot;
-    private IDynamicCodeRoot _codeRoot;
+    public void ConnectToRoot(ICodeApiService codeRoot) => _codeRoot = codeRoot;
+    private ICodeApiService _codeRoot;
 
     #endregion
 
     /// <inheritdoc />
     public IFile File(int id)
     {
-        var admManager = (_codeRoot as DynamicCodeRoot)?.Cdf.AdamManager;
+        var admManager = (_codeRoot as CodeApiService)?._Cdf.AdamManager;
         return admManager?.File(id);
     }
 
@@ -43,7 +44,7 @@ internal class AdamService: IAdamService, INeedsDynamicCodeRoot
     /// <inheritdoc />
     public IFolder Folder(int id)
     {
-        var admManager = (_codeRoot as DynamicCodeRoot)?.Cdf.AdamManager;
+        var admManager = (_codeRoot as CodeApiService)?._Cdf.AdamManager;
         return admManager?.Folder(id);
     }
 

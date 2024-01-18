@@ -6,30 +6,29 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Diagnostics;
 
-namespace ToSic.Sxc.Razor.DbgWip
+namespace ToSic.Sxc.Razor.DbgWip;
+
+internal class CompilationFailedException : Exception, ICompilationException
 {
-    internal class CompilationFailedException : Exception, ICompilationException
+    public CompilationFailedException(
+        IEnumerable<CompilationFailure> compilationFailures)
+        : base(FormatMessage(compilationFailures))
     {
-        public CompilationFailedException(
-                IEnumerable<CompilationFailure> compilationFailures)
-            : base(FormatMessage(compilationFailures))
+        if (compilationFailures == null)
         {
-            if (compilationFailures == null)
-            {
-                throw new ArgumentNullException(nameof(compilationFailures));
-            }
-
-            CompilationFailures = compilationFailures;
+            throw new ArgumentNullException(nameof(compilationFailures));
         }
 
-        public IEnumerable<CompilationFailure> CompilationFailures { get; }
+        CompilationFailures = compilationFailures;
+    }
 
-        private static string FormatMessage(IEnumerable<CompilationFailure> compilationFailures)
-        {
-            return "Resources.CompilationFailed" + Environment.NewLine +
-                string.Join(
-                    Environment.NewLine,
-                    compilationFailures.SelectMany(f => f.Messages!).Select(message => message!.FormattedMessage));
-        }
+    public IEnumerable<CompilationFailure> CompilationFailures { get; }
+
+    private static string FormatMessage(IEnumerable<CompilationFailure> compilationFailures)
+    {
+        return "Resources.CompilationFailed" + Environment.NewLine +
+               string.Join(
+                   Environment.NewLine,
+                   compilationFailures.SelectMany(f => f.Messages!).Select(message => message!.FormattedMessage));
     }
 }

@@ -1,13 +1,11 @@
 ﻿using System.Collections.Immutable;
-using System.Linq;
-using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
-using static ToSic.Eav.DataSource.DataSourceConstants;
+using ToSic.Sxc.DataSources.Internal;
+using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 
 // Important Info to people working with this
 // It depends on abstract provder, that must be overriden in each platform
@@ -23,19 +21,19 @@ namespace ToSic.Sxc.DataSources;
 ///
 /// To figure out the properties returned and what they match up to, see <see cref="AdamItemDataRaw"/> TODO
 /// </summary>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("still wip / finishing specs etc.")]
 [VisualQuery(
     NiceName = "Adam",
     UiHint = "Files and folders in the Adam",
     NameId = "ee1d0cb6-5086-4d59-b16a-d0dc7b594bf2",
     HelpLink = "https://go.2sxc.org/ds-adam",
-    Icon = Icons.Tree,
+    Icon = DataSourceIcons.Tree,
     Type = DataSourceType.Lookup,
     Audience = Audience.Advanced,
     In = new[] { InStreamDefaultRequired },
     DynamicOut = false,
     ConfigurationType = "" // TODO: ...
 )]
+[PrivateApi("Was till v17 InternalApi_DoNotUse_MayChangeWithoutNotice(still wip / finishing specs etc.)")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AdamFiles : DataSourceBase
 {
@@ -80,20 +78,19 @@ public class AdamFiles : DataSourceBase
             _dataFactory = dataDataFactory
         );
 
-        ProvideOut(GetDefault);
+        ProvideOut(GetInternal);
         ProvideOut(GetFolders, "Folders");
         ProvideOut(GetFiles, "Files");
     }
     #endregion
 
-    [PrivateApi]
-    public IImmutableList<IEntity> GetDefault() => GetInternal();
+    private IImmutableList<IEntity> GetFolders() => GetInternal()
+        .Where(e => e.GetBestValue<bool>("IsFolder", null))
+        .ToImmutableList();
 
-    [PrivateApi]
-    public IImmutableList<IEntity> GetFolders() => GetInternal().Where(e => e.GetBestValue<bool>("IsFolder", null)).ToImmutableList();
-
-    [PrivateApi]
-    public IImmutableList<IEntity> GetFiles() => GetInternal().Where(e => !e.GetBestValue<bool>("IsFolder", null)).ToImmutableList();
+    private IImmutableList<IEntity> GetFiles() => GetInternal()
+        .Where(e => !e.GetBestValue<bool>("IsFolder", null))
+        .ToImmutableList();
 
     private IImmutableList<IEntity> GetInternal() => _getInternal.Get(() => Log.Func(l =>
     {
@@ -106,7 +103,7 @@ public class AdamFiles : DataSourceBase
         _provider.Configure(appId: AppId, entityIds: EntityIds, entityGuids: EntityGuids, fields: Fields, filter: Filter);
         var find = _provider.GetInternal();
 
-        var adamFactory = _dataFactory.New(options: new DataFactoryOptions(AdamItemDataRaw.Options, appId: AppId));
+        var adamFactory = _dataFactory.New(options: new(AdamItemDataRaw.Options, appId: AppId));
 
         var entities = adamFactory.Create(source.SelectMany(o => find(o)));
 

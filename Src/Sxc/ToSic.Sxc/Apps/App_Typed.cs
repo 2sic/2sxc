@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.DataSources;
-using ToSic.Eav.Apps.Decorators;
-using ToSic.Eav.Data;
+﻿using ToSic.Eav.Apps.Internal.MetadataDecorators;
 using ToSic.Eav.DataSource;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Services.DataServices;
 using static ToSic.Sxc.Apps.AppAssetFolderMain;
 

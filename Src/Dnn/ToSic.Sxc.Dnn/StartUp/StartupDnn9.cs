@@ -1,5 +1,4 @@
-﻿using System;
-using DotNetNuke.DependencyInjection;
+﻿using DotNetNuke.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ToSic.Sxc.Dnn.StartUp;

@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using ToSic.Sxc.Blocks.Output;
+using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Tests.Blocks.Output
 {

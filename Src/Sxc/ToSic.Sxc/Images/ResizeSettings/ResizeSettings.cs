@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Specialized;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-using static ToSic.Sxc.Images.ImageConstants;
+﻿using System.Collections.Specialized;
+using static ToSic.Sxc.Images.Internal.ImageConstants;
 
 namespace ToSic.Sxc.Images;
 
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class ResizeSettings : IResizeSettings
+internal class ResizeSettings : IResizeSettings, IResizeSettingsInternal
 {
     public int Width { get; } = IntIgnore;
     public int Height { get; } = IntIgnore;
@@ -71,9 +68,15 @@ internal class ResizeSettings : IResizeSettings
         Factor = factor ?? original.Factor;
         Parameters = parameters ?? original.Parameters;
         AspectRatio = aspectRatio ?? original.AspectRatio;
-        UseAspectRatio = original.UseAspectRatio;
-        UseFactorMap = original.UseFactorMap;
-        Advanced = advanced ?? original.Advanced;
+
+        // workaround, as it's not part of the interface ATM
+        if (original is ResizeSettings typed)
+        {
+            UseAspectRatio = typed.UseAspectRatio;
+            UseFactorMap = typed.UseFactorMap;
+        }
+
+        Advanced = advanced ?? (original as IResizeSettingsInternal)?.Advanced;
     }
 
 }

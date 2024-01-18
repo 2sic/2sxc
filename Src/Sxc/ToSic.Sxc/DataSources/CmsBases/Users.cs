@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
+﻿using System.Collections.Immutable;
 using ToSic.Eav.Context;
-using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Data.Source;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Services;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Context.Raw;
-using static ToSic.Eav.DataSource.DataSourceConstants;
+using ToSic.Sxc.Context.Internal.Raw;
+using ToSic.Sxc.DataSources.Internal;
+using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -29,14 +25,13 @@ namespace ToSic.Sxc.DataSources;
 [PublicApi]
 [VisualQuery(
     NiceName = "Users",
-    Icon = Icons.UserCircled,
+    Icon = DataSourceIcons.UserCircled,
     UiHint = "Users in this site",
     HelpLink = "https://go.2sxc.org/ds-users",
     NameId = "93ac53c6-adc6-4218-b979-48d1071a5765", // random & unique Guid
     Type = DataSourceType.Source,
     ConfigurationType = "ac11fae7-1916-4d2d-8583-09872e1e6966"
 )]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public partial class Users : CustomDataSourceAdvanced
 {
     private readonly IDataSourceGenerator<Roles> _rolesGenerator;
@@ -175,7 +170,7 @@ public partial class Users : CustomDataSourceAdvanced
         var relationships = new LazyLookup<object, IEntity>();
         var userFactory = _dataFactory.New(options: CmsUserRaw.Options,
             relationships: relationships,
-            rawConvertOptions: new RawConvertOptions(addKeys: new []{ "Roles"}));
+            rawConvertOptions: new(addKeys: new []{ "Roles"}));
 
         var users = userFactory.Create(usersRaw);
         var roles = EmptyList;
@@ -206,7 +201,7 @@ public partial class Users : CustomDataSourceAdvanced
     private List<CmsUserRaw> GetUsersAndFilter() => Log.Func(l =>
     {
         var users = _provider.GetUsersInternal()?.ToList();
-        if (users == null || !users.Any()) return (new List<CmsUserRaw>(), "null/empty");
+        if (users == null || !users.Any()) return (new(), "null/empty");
 
         foreach (var filter in GetAllFilters())
             users = users.Where(filter).ToList();

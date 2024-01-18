@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-using ToSic.Sxc.Dnn.Code;
+﻿using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 
 namespace ToSic.Sxc.Dnn;
@@ -14,5 +13,5 @@ namespace ToSic.Sxc.Dnn;
 public abstract class DynamicCode : Sxc.Code.DynamicCode, Sxc.Code.IDynamicCode, IDnnDynamicCode
 {
     /// <inheritdoc />
-    public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
+    public IDnnContext Dnn => (_CodeApiSvc as IHasDnn)?.Dnn;
 }

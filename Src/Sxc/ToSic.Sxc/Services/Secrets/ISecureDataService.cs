@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Services;
 
@@ -14,8 +12,14 @@ namespace ToSic.Sxc.Services;
 [PublicApi]
 public interface ISecureDataService: IHasLog, ICanDebug
 {
+    /// <summary>
+    /// Read an input value and return a secure data object.
+    /// This will contain the readable value and additional information if it was encrypted or not, etc.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
     ISecureData<string> Parse(string value);
 
-    [PrivateApi("WIP v15.01")]
-    string Create(string value);
+    //[PrivateApi("WIP v15.01")]
+    //string Create(string value);
 }

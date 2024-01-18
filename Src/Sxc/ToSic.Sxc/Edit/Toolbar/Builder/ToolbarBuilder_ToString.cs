@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
+﻿using System.Text.Json;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Data;
 using ToSic.Eav.Serialization;
-using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Services;
 using static ToSic.Sxc.Edit.Toolbar.ItemToolbarBase;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleToolbar;
@@ -13,7 +9,7 @@ using Attribute = ToSic.Razor.Markup.Attribute;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-public partial class ToolbarBuilder
+partial class ToolbarBuilder
 {
     private const string ErrRenderMessage = "error: can't render toolbar to html, missing context";
 
@@ -65,7 +61,7 @@ public partial class ToolbarBuilder
             return true;
         }
 
-        if (!AddRuleIfFound<ToolbarRuleToolbar>(t => new ToolbarRuleToolbar(Empty, t.Ui)))
+        if (!AddRuleIfFound<ToolbarRuleToolbar>(t => new(Empty, t.Ui)))
             rules.Add(new ToolbarRuleToolbar(Empty));
         AddRuleIfFound<ToolbarRuleForParams>();
         AddRuleIfFound<ToolbarRuleSettings>();

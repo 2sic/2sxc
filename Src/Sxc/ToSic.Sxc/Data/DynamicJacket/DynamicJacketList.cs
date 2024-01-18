@@ -1,18 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
+﻿using System.Dynamic;
 using System.Text.Json.Nodes;
-using ToSic.Lib.Documentation;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Wrapper;
 
 namespace ToSic.Sxc.Data;
 
 /// <summary>
 /// This is a DynamicJacket for JSON arrays. You can enumerate through it. 
 /// </summary>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
+[PrivateApi("was Internal-API till v17 - just use the objects from AsDynamic, don't use this directly")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class DynamicJacketList : DynamicJacketBase<JsonArray>, IReadOnlyList<object>
+internal class DynamicJacketList : DynamicJacketBase<JsonArray>, IReadOnlyList<object>
 {
     /// <inheritdoc />
     internal DynamicJacketList(CodeJsonWrapper wrapper, PreWrapJsonArray preWrap) : base(wrapper, preWrap.GetContents())

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Logging;
-
+﻿using System.Runtime.CompilerServices;
 using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleForEntity;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
@@ -11,7 +6,7 @@ using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-public partial class ToolbarBuilder
+partial class ToolbarBuilder
 {
     private class CleanedParams
     {
@@ -42,10 +37,10 @@ public partial class ToolbarBuilder
         var parsWithPrefill = Utils.Prefill2Url.SerializeWithChild(paramsString, prefill, PrefixPrefill);
         if (fields != default)
             parsWithPrefill = Utils.Filter2Url.SerializeWithChild(parsWithPrefill, new { fields });
-        return new CleanedParams
+        return new()
         {
             Operation = ToolbarRuleOperation.Pick(operation, defOp),
-            Ui = PrepareUi(ui, uiMerge, uiMergePrefix, tweaks: tweaks?.UiMerge),
+            Ui = PrepareUi(ui, uiMerge, uiMergePrefix, tweaks: (tweaks as ITweakButtonInternal)?.UiMerge),
             Parameters = Utils.Filter2Url.SerializeWithChild(parsWithPrefill, filter, PrefixFilters)
         };
 

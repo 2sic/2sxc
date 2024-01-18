@@ -5,7 +5,7 @@ using System;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using RealController = ToSic.Sxc.WebApi.Cms.ListControllerReal;
+using RealController = ToSic.Sxc.Backend.Cms.ListControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 
@@ -18,10 +18,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
 [Authorize(Roles = RoleNames.Admin)]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ListController : OqtStatefulControllerBase, IListController
+public class ListController() : OqtStatefulControllerBase(RealController.LogSuffix), IListController
 {
-    public ListController(): base(RealController.LogSuffix) { }
-
     private RealController Real => GetService<RealController>();
 
 

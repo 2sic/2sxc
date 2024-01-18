@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using ToSic.Eav.Data;
+﻿using System.Collections.Immutable;
 using ToSic.Eav.DataSource;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Data.Decorators;
-using static ToSic.Eav.DataSource.DataSourceConstants;
+using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Data.Internal.Decorators;
+using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 
 namespace ToSic.Sxc.DataSources;
 
@@ -79,21 +75,21 @@ public sealed partial class CmsBlock
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception("trouble adding to output-list, id was " + entityId, ex);
+                        throw new("trouble adding to output-list, id was " + entityId, ex);
                     }
                     prevIdForErrorReporting = entityId;
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("problems looping items - had to stop on id " + i + "; current entity is " + entityId + "; prev is " + prevIdForErrorReporting, ex);
+                throw new("problems looping items - had to stop on id " + i + "; current entity is " + entityId + "; prev is " + prevIdForErrorReporting, ex);
             }
 
             return (entitiesToDeliver.ToImmutableList(), $"stream:{(isListHeader ? "list" : "content")} - items⋮{entitiesToDeliver.Count}");
         }
         catch (Exception ex)
         {
-            throw new Exception("Error loading items of a module - probably the module-id is incorrect - happens a lot with test-values on visual queries.", ex);
+            throw new("Error loading items of a module - probably the module-id is incorrect - happens a lot with test-values on visual queries.", ex);
         }
     });
 
@@ -136,7 +132,7 @@ public sealed partial class CmsBlock
         }
         catch (Exception ex)
         {
-            throw new Exception("trouble adding presentationList of " + entityId, ex);
+            throw new("trouble adding presentationList of " + entityId, ex);
         }
 
     }

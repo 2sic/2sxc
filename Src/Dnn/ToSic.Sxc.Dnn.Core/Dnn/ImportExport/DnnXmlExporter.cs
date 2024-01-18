@@ -1,11 +1,12 @@
 ﻿using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Context;
-using ToSic.Eav.ImportExport.Environment;
-using ToSic.Eav.Persistence.Xml;
-using ToSic.Sxc.Adam;
-using IContextResolver = ToSic.Sxc.Context.IContextResolver;
+using ToSic.Eav.ImportExport.Internal;
+using ToSic.Eav.ImportExport.Internal.Xml;
+using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Internal;
+using FileManager = DotNetNuke.Services.FileSystem.FileManager;
 
 namespace ToSic.Sxc.Dnn.ImportExport;
 
@@ -13,7 +14,7 @@ internal class DnnXmlExporter: XmlExporter
 {
     #region Constructor / DI
 
-    public DnnXmlExporter(AdamManager<int, int> adamManager, IContextResolver ctxResolver, XmlSerializer xmlSerializer, IAppStates appStates)
+    public DnnXmlExporter(AdamManager<int, int> adamManager, ISxcContextResolver ctxResolver, XmlSerializer xmlSerializer, IAppStates appStates)
         : base(xmlSerializer, appStates, ctxResolver, DnnConstants.LogName)
     {
         ConnectServices(
@@ -28,7 +29,7 @@ internal class DnnXmlExporter: XmlExporter
 
     protected override void PostContextInit(IContextOfApp appContext)
     {
-        AdamManager.Init(ctx: appContext, compatibility: Constants.CompatibilityLevel10, cdf: null);
+        AdamManager.Init(ctx: appContext, compatibility: CompatibilityLevels.CompatibilityLevel10, cdf: null);
     }
 
     #endregion
@@ -78,7 +79,7 @@ internal class DnnXmlExporter: XmlExporter
     {
         var fileController = FileManager.Instance;
         var file = fileController.GetFile(fileId);
-        return new TenantFileItem
+        return new()
         {
             Id = fileId,
             RelativePath = file?.RelativePath.Replace('/', '\\'),

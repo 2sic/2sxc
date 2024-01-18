@@ -1,10 +1,9 @@
 ﻿using ToSic.Eav.Metadata;
-using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Context;
 
-[PrivateApi("WIP v13")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+// Note: was WIP 13 till v17
+[PublicApi]
 public interface ICmsBlock: IHasMetadata
 {
     /// <summary>

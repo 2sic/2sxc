@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
-using ToSic.Eav.DataSources.Sys;
+using ToSic.Eav.DataSources.Sys.Internal;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
-using RealController = ToSic.Sxc.WebApi.Admin.AppControllerReal;
+using RealController = ToSic.Sxc.Backend.Admin.AppControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)] can't be used, because it forces the security

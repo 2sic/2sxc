@@ -10,8 +10,9 @@ using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Run;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Integration.Paths;
+using ToSic.Sxc.Web.Internal.Url;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources;

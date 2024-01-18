@@ -1,18 +1,17 @@
-﻿using ToSic.Lib.Documentation;
-using ToSic.Lib.Helpers;
-using ToSic.Sxc.Code;
+﻿using ToSic.Lib.Helpers;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Dnn.Code;
 
 [PrivateApi]
-internal class DnnDynamicCodeRoot<TModel, TServiceKit> : DynamicCodeRoot<TModel, TServiceKit>, Sxc.Code.IDynamicCode, IDnnDynamicCode, IHasDynamicCodeRoot
+internal class DnnCodeApiService<TModel, TServiceKit>(CodeApiService.MyServices services)
+    : CodeApiService<TModel, TServiceKit>(services, DnnConstants.LogName), Sxc.Code.IDynamicCode, IDnnDynamicCode,
+        IHasCodeApiService
     where TModel : class
     where TServiceKit : ServiceKit
 {
-    public DnnDynamicCodeRoot(MyServices services): base(services, DnnConstants.LogName) { }
-
     /// <summary>
     /// Dnn context with module, page, portal etc.
     /// </summary>

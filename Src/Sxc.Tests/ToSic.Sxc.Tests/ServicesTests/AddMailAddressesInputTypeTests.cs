@@ -2,6 +2,8 @@
 using System;
 using System.Linq;
 using System.Net.Mail;
+using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.ServicesTests
@@ -14,7 +16,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         {
             var expected = new MailAddressCollection { Addresses };
             var actual = new MailAddressCollection();
-            MailService().AddMailAddresses("test", actual, expected);
+            ((MailServiceBase)MailService()).AddMailAddresses("test", actual, expected);
             CollectionAssert.AreEquivalent(expected, actual);
         }
 
@@ -24,7 +26,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             var mailAddressCollection = new MailAddressCollection { Addresses };
             var expected = mailAddressCollection.ToArray();
             var actual = new MailAddressCollection();
-            MailService().AddMailAddresses("test", actual, expected);
+            ((MailServiceBase)MailService()).AddMailAddresses("test", actual, expected);
             CollectionAssert.AreEquivalent(mailAddressCollection, actual);
         }
 
@@ -33,7 +35,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         {
             var expected = Emails.Split(',');
             var actual = new MailAddressCollection();
-            MailService().AddMailAddresses("test", actual, expected);
+            ((MailServiceBase)MailService()).AddMailAddresses("test", actual, expected);
             AreEqual(expected.Length, actual.Count);
         }
 
@@ -43,7 +45,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             const string addresses = @"a@a.com,,,c@c.com,d@d.com";
             var expected = addresses.Split(',');
             var actual = new MailAddressCollection();
-            MailService().AddMailAddresses("test", actual, expected);
+            ((MailServiceBase)MailService()).AddMailAddresses("test", actual, expected);
             AreEqual(expected.Length, actual.Count+2);
         }
 
@@ -52,7 +54,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         {
             const int expected = 4; // number of emails in Emails string
             var actual = new MailAddressCollection();
-            MailService().AddMailAddresses("test", actual, Emails);
+            ((MailServiceBase)MailService()).AddMailAddresses("test", actual, Emails);
             AreEqual(expected, actual.Count);
         }
 
@@ -62,7 +64,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             const string emailsWithNonStandardSeparator = @"a@a.com;b@b.com;c@c.com;d@d.com";
             const int expected = 4; // number of emails
             var actual = new MailAddressCollection();
-            MailService().AddMailAddresses("test", actual, emailsWithNonStandardSeparator);
+            ((MailServiceBase)MailService()).AddMailAddresses("test", actual, emailsWithNonStandardSeparator);
             AreEqual(expected, actual.Count);
         }
 
@@ -71,7 +73,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public void InvalidString()
         {
             // An invalid character was found in the mail header.
-            MailService().MailAddress("test", @";;;ffff@@@@@@gggggg");
+            ((MailServiceBase)MailService()).MailAddress("test", @";;;ffff@@@@@@gggggg");
         }
 
         [TestMethod]
@@ -80,7 +82,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             // The parameter 'mailAddresses' can be empty string.
             const int expected = 0; // number of emails
             var actual = new MailAddressCollection();
-            MailService().AddMailAddresses("test", actual, string.Empty);
+            ((MailServiceBase)MailService()).AddMailAddresses("test", actual, string.Empty);
             AreEqual(expected, actual.Count);
         }
 
@@ -90,7 +92,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             // The parameter 'mailAddresses' can be null.
             const int expected = 0; // number of emails
             var actual = new MailAddressCollection();
-            MailService().AddMailAddresses("test", actual, null);
+            ((MailServiceBase)MailService()).AddMailAddresses("test", actual, null);
             AreEqual(expected, actual.Count);
         }
 
@@ -100,7 +102,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         {
             var mailAddresses = new { a = "test" }; // unknown type
             // Trying to parse e-mails for test but got unknown type for mailAddresses.
-            MailService().AddMailAddresses("test", new MailAddressCollection(), mailAddresses);
+            ((MailServiceBase)MailService()).AddMailAddresses("test", new MailAddressCollection(), mailAddresses);
         }
     }
 }

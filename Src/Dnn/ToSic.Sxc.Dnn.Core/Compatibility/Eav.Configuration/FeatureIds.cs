@@ -1,6 +1,4 @@
-﻿using System;
-using ToSic.Eav.Internal.Features;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Eav.Internal.Features;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Eav.Configuration;

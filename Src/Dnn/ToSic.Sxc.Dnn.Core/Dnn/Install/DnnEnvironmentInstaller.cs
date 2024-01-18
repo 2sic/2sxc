@@ -1,8 +1,6 @@
 ﻿using ToSic.Eav.Internal.Configuration;
-using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Run;
+using ToSic.Sxc.Integration.Installation;
 
 namespace ToSic.Sxc.Dnn.Install;
 

@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
-using ToSic.Sxc.Run;
+using ToSic.Sxc.Integration;
 
 namespace ToSic.Sxc.Dnn.ImportExport;
 
-internal class DnnImportExportEnvironment : ImportExportEnvironmentBase
+internal class DnnImportExportEnvironment : SxcImportExportEnvironmentBase
 {
     #region Constructors
 
@@ -49,7 +46,7 @@ internal class DnnImportExportEnvironment : ImportExportEnvironmentBase
             l.A(msg);
             if (exception == null) return;
             messages.Add(exception is InvalidFileExtensionException
-                ? new Message(msg, Message.MessageTypes.Error)
+                ? new(msg, Message.MessageTypes.Error)
                 : new Message(msg, Message.MessageTypes.Warning));
 
             Exceptions.LogException(exception);
@@ -79,7 +76,7 @@ internal class DnnImportExportEnvironment : ImportExportEnvironmentBase
                 }
             }
             else
-                messages.Add(new Message("File '" + destinationFileName + "' not copied because it already exists", Message.MessageTypes.Warning));
+                messages.Add(new("File '" + destinationFileName + "' not copied because it already exists", Message.MessageTypes.Warning));
         }
 
         // Call the method recursively to handle subdirectories
@@ -176,7 +173,7 @@ internal class DnnImportExportEnvironment : ImportExportEnvironmentBase
                 {
                     var msg = $"Had problem with folder '{folder.Key}' path '{folder.Value}' - you'll have to figure out yourself if this is a problem";
                     l.A(msg);
-                    importLog.Add(new Message(msg, Message.MessageTypes.Warning));
+                    importLog.Add(new(msg, Message.MessageTypes.Warning));
                 }
 
             return $"done - final count {folderIdCorrectionList.Count}";

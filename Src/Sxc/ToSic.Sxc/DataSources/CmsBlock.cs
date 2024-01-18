@@ -1,14 +1,14 @@
 ﻿using System.Collections.Immutable;
-using ToSic.Eav.Apps.Work;
+using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Services;
 using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.Work;
-using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Apps.Internal.Work;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -21,18 +21,17 @@ namespace ToSic.Sxc.DataSources;
 /// It could also find that the template specifies a query, in which case it would retrieve that. <br/>
 /// <em>Was previously called ModuleDataSource</em>
 /// </summary>
-[PublicApi_Stable_ForUseInYourCode]
+[PublicApi]
 [VisualQuery(
     NiceName = "CMS Block",
     UiHint = "Data for this CMS Block (instance/module)",
-    Icon = Icons.RecentActor,
+    Icon = DataSourceIcons.RecentActor,
     Type = DataSourceType.Source, 
     NameId = "ToSic.Sxc.DataSources.CmsBlock, ToSic.Sxc",
     ConfigurationType = "7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02",
-    In = new []{DataSourceConstants.StreamDefaultName},
+    In = [DataSourceConstants.StreamDefaultName],
     HelpLink = "https://docs.2sxc.org/api/dot-net/ToSic.Sxc.DataSources.CmsBlock.html",
-    NameIds = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    NameIds = ["ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent"])]
 public sealed partial class CmsBlock : DataSourceBase
 {
     [PrivateApi] internal const string InstanceLookupName = "module";
@@ -84,7 +83,7 @@ public sealed partial class CmsBlock : DataSourceBase
     private readonly MyServices _services;
     #endregion
 
-    public override IDataSourceLink Link => _link.Get(() => new DataSourceLink(null, dataSource: this)
+    public override IDataSourceLink Link => _link.Get(() => BreachExtensions.CreateEmptyLink(this) // new DataSourceLink(null, dataSource: this)
         .AddStream(name: ViewParts.StreamHeader)
         .AddStream(name: ViewParts.StreamHeaderOld));
     private readonly GetOnce<IDataSourceLink> _link = new();

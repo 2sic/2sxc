@@ -1,7 +1,5 @@
 ﻿using DotNetNuke.Entities.Modules;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.Sxc.Dnn.Cms;
 
@@ -21,7 +19,7 @@ partial class DnnPagePublishing
 
         public ModuleVersions(int instanceId, ILog parentLog): base(parentLog, "Dnn.ModVer")
         {
-            _settingsHelper = new ModuleSettingsHelper(instanceId);
+            _settingsHelper = new(instanceId);
         }
 
 

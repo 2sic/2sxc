@@ -1,10 +1,11 @@
 ﻿using System;
-using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Cms;

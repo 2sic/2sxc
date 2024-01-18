@@ -1,14 +1,9 @@
-﻿using System;
-using ToSic.Eav.Data;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-using ToSic.Razor.Blade;
-using ToSic.Razor.Markup;
+﻿using ToSic.Razor.Markup;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Data;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Web;
 // ReSharper disable RedundantExtendsListEntry
 #pragma warning disable CS0108, CS0114
@@ -26,13 +21,15 @@ namespace ToSic.Sxc.Services;
 /// - First version created ca. v2 - originally as `ToSic.Sxc.Web.IInPageEditEditingHelper`
 /// - Moved to `ToSic.Sxc.Services.IEditService` in v13.05
 /// </remarks>
-[PublicApi_Stable_ForUseInYourCode]
-public interface IEditService: IHasLog, INeedsDynamicCodeRoot
-#if NETFRAMEWORK
-#pragma warning disable CS0618
-        , IInPageEditingSystem
-#pragma warning restore CS0618
-#endif
+[PublicApi]
+public interface IEditService: IHasLog, INeedsCodeApiService
+// 2024-01-11 2dm #RemoveIInPageEditingSystem - removed, probably never in use, but it could be
+// Preserve till 2024-07-01 (Start Q3), if not used, remove
+//#if NETFRAMEWORK
+//#pragma warning disable CS0618
+//        , IInPageEditingSystem
+//#pragma warning restore CS0618
+//#endif
 {
     /// <summary>
     /// If editing is enabled or not
@@ -184,32 +181,33 @@ public interface IEditService: IHasLog, INeedsDynamicCodeRoot
         string apps = null,
         int max = 100);
 
-    /// <summary>
-    /// Wrap something in a context wrapper-tag
-    /// This is mainly meant for internal use
-    /// </summary>
-    /// <param name="content">the string / tags to wrap</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    /// <param name="tag">optional tag to use for the wrapper, default is div</param>
-    /// <param name="full">include full context (default is partial context only)</param>
-    /// <param name="enableEdit">include information needed for editing</param>
-    /// <param name="instanceId">id to include in context - important for API calls</param>
-    /// <param name="contentBlockId">content block this is for - important for API calls</param>
-    /// <returns></returns>
-    /// <remarks>
-    /// **History** <br/>
-    /// 1. Introduced in 2sxc 8.4
-    /// 1. Enhanced to return `IRawHtmlString` instead of `IHybridHtmlString` in 16.02
-    /// </remarks>
-    [PrivateApi]
-    IRawHtmlString WrapInContext(object content,
-        NoParamOrder noParamOrder = default,
-        string tag = Constants.DefaultContextTag,
-        bool full = false,
-        bool? enableEdit = null,
-        int instanceId = 0,
-        int contentBlockId = 0
-    );
+    // 2024-01-10 2dm disabled #WrapInContext - was for internal only, seems not to be used? Was created 2018? https://github.com/2sic/2sxc/issues/1479
+    ///// <summary>
+    ///// Wrap something in a context wrapper-tag
+    ///// This is mainly meant for internal use
+    ///// </summary>
+    ///// <param name="content">the string / tags to wrap</param>
+    ///// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    ///// <param name="tag">optional tag to use for the wrapper, default is div</param>
+    ///// <param name="full">include full context (default is partial context only)</param>
+    ///// <param name="enableEdit">include information needed for editing</param>
+    ///// <param name="instanceId">id to include in context - important for API calls</param>
+    ///// <param name="contentBlockId">content block this is for - important for API calls</param>
+    ///// <returns></returns>
+    ///// <remarks>
+    ///// **History** <br/>
+    ///// 1. Introduced in 2sxc 8.4
+    ///// 1. Enhanced to return `IRawHtmlString` instead of `IHybridHtmlString` in 16.02
+    ///// </remarks>
+    //[PrivateApi]
+    //IRawHtmlString WrapInContext(object content,
+    //    NoParamOrder noParamOrder = default,
+    //    string tag = SxcUiConstants.DefaultContextTag,
+    //    bool full = false,
+    //    bool? enableEdit = null,
+    //    int instanceId = 0,
+    //    int contentBlockId = 0
+    //);
 
     /// <summary>
     /// Ensure that the UI will load the correct assets to enable editing. See [](xref:NetCode.Razor.Edit.Enable)
@@ -262,6 +260,6 @@ public interface IEditService: IHasLog, INeedsDynamicCodeRoot
     /// <returns>A string but as HtmlString, so it can be used with @Attribute(...)</returns>
     IRawHtmlString Attribute(string name, object value);
 
-    [PrivateApi("internal use only")]
-    IEditService SetBlock(IDynamicCodeRoot codeRoot, IBlock block);
+    //[PrivateApi("internal use only")]
+    //IEditService SetBlock(IDynamicCodeRoot codeRoot, IBlock block);
 }

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DotNetNuke.Entities.Portals;
+﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Languages;
-using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Apps.Internal.Work;
+using ToSic.Eav.Cms.Internal.Languages;
 using ToSic.Eav.Context;
-using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
+using ToSic.Eav.Integration;
 using ToSic.Sxc.Dnn.Context;
 
 namespace ToSic.Sxc.Dnn.Run;
@@ -47,7 +43,7 @@ internal class DnnZoneMapper : ZoneMapperBase
         // additional protection against invalid portalId which may come from bad dnn configs and execute in search-index mode
         // see https://github.com/2sic/2sxc/issues/1054
         if (siteId < 0)
-            throw new Exception("Can't get zone for invalid portal ID: " + siteId);
+            throw new("Can't get zone for invalid portal ID: " + siteId);
 
         var c = PortalController.Instance.GetPortalSettings(siteId);
 

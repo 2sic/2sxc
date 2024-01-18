@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ToSic.Eav.Data;
-using ToSic.Lib.Documentation;
-using static ToSic.Eav.Data.MultiWrapperEquality;
+﻿using static ToSic.Eav.Data.MultiWrapperEquality;
 
 // Since DynamicEntity... is a wrapper,
 // These things ensure that various standalone wrappers are still regarded as equals

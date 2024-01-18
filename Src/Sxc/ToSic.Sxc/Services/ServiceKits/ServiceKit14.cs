@@ -1,8 +1,8 @@
 ﻿using Connect.Koi;
-using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Services;
 
@@ -13,13 +13,9 @@ namespace ToSic.Sxc.Services;
 /// * History: Added v14.04
 /// </remarks>
 [PublicApi]
-public class ServiceKit14: ServiceKit
+[method: PrivateApi("Public constructor for DI")]
+public class ServiceKit14() : ServiceKit("Sxc.Kit14")
 {
-    [PrivateApi("Public constructor for DI")]
-    public ServiceKit14() : base("Sxc.Kit14")
-    {
-    }
-
     /// <summary>
     /// The ADAM Service, used to retrieve files and maybe more. 
     /// </summary>
@@ -53,7 +49,6 @@ public class ServiceKit14: ServiceKit
     /// <remarks>
     /// * added in v15.06
     /// </remarks>
-    [PrivateApi("WIP not yet public for v15 - added v15.06")]
     public IDataService Data => _data.Get(GetService<IDataService>);
     private readonly GetOnce<IDataService> _data = new();
 
@@ -61,12 +56,12 @@ public class ServiceKit14: ServiceKit
     /// The Edit service, same as the main Edit service
     /// </summary>
     // Important: must share the Edit from the _DynCodeRoot for scenarios where Enable was set manually
-    public IEditService Edit => _edit.Get(() => _DynCodeRoot.Edit ?? GetService<IEditService>());
+    public IEditService Edit => _edit.Get(() => _CodeApiSvc.Edit ?? GetService<IEditService>());
     private readonly GetOnce<IEditService> _edit = new();
 
 
     /// <summary>
-    /// The Features services, used to check if features are enabled
+    /// The Features service, used to check if features are enabled
     /// </summary>
     public IFeaturesService Feature => _features.Get(GetService<IFeaturesService>);
     private readonly GetOnce<IFeaturesService> _features = new();
@@ -116,6 +111,7 @@ public class ServiceKit14: ServiceKit
     /// If we create a Kit15, this should be removed
     /// </summary>
     [PrivateApi("was the official name before v15.06, probably never used publicly, but should stay in for a while")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public new ISystemLogService Log => SystemLog;
 
 
@@ -160,6 +156,7 @@ public class ServiceKit14: ServiceKit
     private readonly GetOnce<IToolbarService> _toolbar = new();
 
     [PrivateApi("Experimental in v15.03")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public IUserService User => _users.Get(GetService<IUserService>);
     private readonly GetOnce<IUserService> _users = new();
 }

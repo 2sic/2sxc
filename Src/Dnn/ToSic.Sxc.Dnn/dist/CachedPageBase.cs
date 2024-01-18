@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Caching;
@@ -8,16 +7,14 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Urls;
 using DotNetNuke.Framework;
 using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Integration.Environment;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
-using ToSic.Sxc.Web.EditUi;
+using ToSic.Sxc.Web.Internal.EditUi;
+using ToSic.Sxc.Web.Internal.JsContext;
 
 namespace ToSic.Sxc.Dnn.dist;
 

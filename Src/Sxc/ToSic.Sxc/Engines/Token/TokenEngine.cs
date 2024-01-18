@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.LookUp;
 
 // ReSharper disable once CheckNamespace
@@ -75,10 +74,10 @@ public class TokenEngine : EngineBase
 
     #region Constructor / DI
 
-    private readonly LazySvc<CodeRootFactory> _codeRootFactory;
+    private readonly LazySvc<CodeApiServiceFactory> _codeRootFactory;
     private readonly Generator<AppConfigDelegate> _appConfigDelegateGenerator;
 
-    public TokenEngine(MyServices services, LazySvc<CodeRootFactory> codeRootFactory, Generator<AppConfigDelegate> appConfigDelegateGenerator) : base(services) =>
+    public TokenEngine(MyServices services, LazySvc<CodeApiServiceFactory> codeRootFactory, Generator<AppConfigDelegate> appConfigDelegateGenerator) : base(services) =>
         ConnectServices(
             _codeRootFactory = codeRootFactory,
             _appConfigDelegateGenerator = appConfigDelegateGenerator
@@ -86,7 +85,7 @@ public class TokenEngine : EngineBase
 
     #endregion
 
-    private IDynamicCodeRoot _data;
+    private ICodeApiService _data;
 
     private TokenReplace _tokenReplace;
 
@@ -99,12 +98,12 @@ public class TokenEngine : EngineBase
     }
 
     private void InitDataHelper() => _data = _codeRootFactory.Value
-        .BuildCodeRoot(null, Block, Log, Constants.CompatibilityLevel9Old);
+        .BuildCodeRoot(null, Block, Log, CompatibilityLevels.CompatibilityLevel9Old);
 
     private void InitTokenReplace()
     {
         var confProv = _appConfigDelegateGenerator.New().GetLookupEngineForContext(Block.Context, Block.App, Block);
-        _tokenReplace = new TokenReplace(confProv);
+        _tokenReplace = new(confProv);
             
         // Add the Content and ListContent property sources used always
         confProv.Add(new LookUpForTokenTemplate(SourcePropertyName.ListContent, _data.Header));
@@ -112,7 +111,7 @@ public class TokenEngine : EngineBase
     }
 
     [PrivateApi]
-    protected override (string, List<Exception>) RenderImplementation(object data)
+    protected override (string Contents, List<Exception> Exception) RenderEntryRazor(RenderSpecs specs)
     {
         var templateSource = File.ReadAllText(Services.ServerPaths.FullAppPath(TemplatePath));
         // Convert old <repeat> elements to the new ones
@@ -162,7 +161,7 @@ public class TokenEngine : EngineBase
         {
             // Create property sources for the current data item (for the current data item and its list information)
             var propertySources = new Dictionary<string, ILookUp>();
-            propertySources.Add(sourceName, new LookUpForTokenTemplate(sourceName, _data.Cdf.AsDynamic(dataItems.ElementAt(i), propsRequired: false), i, itemsCount));
+            propertySources.Add(sourceName, new LookUpForTokenTemplate(sourceName, _data._Cdf.AsDynamic(dataItems.ElementAt(i), propsRequired: false), i, itemsCount));
             builder.Append(RenderSection(template, propertySources));
         }
 

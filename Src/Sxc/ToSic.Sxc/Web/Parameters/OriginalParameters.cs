@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Text.Json;
 using ToSic.Eav.Serialization;
 
@@ -17,7 +16,7 @@ internal class OriginalParameters
     /// <returns></returns>
     public static NameValueCollection GetOverrideParams(NameValueCollection requestParams)
     {
-        if (requestParams == null) return new NameValueCollection();
+        if (requestParams == null) return new();
 
         var paramSet = requestParams[NameInUrlForOriginalParameters];
         if (string.IsNullOrEmpty(paramSet)) return requestParams; // just return requestParams (when origParams are not provided)

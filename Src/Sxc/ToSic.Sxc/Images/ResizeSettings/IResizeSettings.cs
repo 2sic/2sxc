@@ -1,5 +1,4 @@
 ﻿using System.Collections.Specialized;
-using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Images;
 
@@ -67,16 +66,24 @@ public interface IResizeSettings
     /// </summary>
     NameValueCollection Parameters { get; }
 
-    [PrivateApi("WIP")] 
-    bool UseFactorMap { get; }
+    //[PrivateApi("WIP")] 
+    //bool UseFactorMap { get; }
 
-    [PrivateApi]
-    bool UseAspectRatio { get; }
+    //[PrivateApi("WIP")]
+    //bool UseAspectRatio { get; }
 
+    ///// <summary>
+    ///// Settings which are used when img/picture tags are generated with multiple resizes
+    ///// </summary>
+    //[InternalApi_DoNotUse_MayChangeWithoutNotice("Still WIP")]
+    //AdvancedSettings Advanced { get; }
+}
+
+internal interface IResizeSettingsInternal
+{
     /// <summary>
     /// Settings which are used when img/picture tags are generated with multiple resizes
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("Still WIP")]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("Still WIP - will move to public once official, and then probably an IAdvancedSettings")]
     AdvancedSettings Advanced { get; }
-
 }

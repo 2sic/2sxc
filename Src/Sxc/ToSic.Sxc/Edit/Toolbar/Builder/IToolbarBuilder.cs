@@ -1,10 +1,6 @@
-﻿using System;
-using ToSic.Eav.Data;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-using ToSic.Razor.Markup;
+﻿using ToSic.Razor.Markup;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
@@ -24,17 +20,17 @@ namespace ToSic.Sxc.Edit.Toolbar;
 /// * most commands extended with [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) in v15.07
 /// </remarks>
 [PublicApi]
-public partial interface IToolbarBuilder: IRawHtmlString, IHasLog, INeedsDynamicCodeRoot
+public partial interface IToolbarBuilder: IRawHtmlString, IHasLog, INeedsCodeApiService
 {
-    [PrivateApi("internal use only")]
-    IToolbarBuilder Toolbar(
-        string toolbarTemplate,
-        object target = default,
-        NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = default,
-        object parameters = default,
-        object prefill = default
-    );
+    //[PrivateApi("internal use only")]
+    //IToolbarBuilder Toolbar(
+    //    string toolbarTemplate,
+    //    object target = default,
+    //    NoParamOrder noParamOrder = default,
+    //    Func<ITweakButton, ITweakButton> tweak = default,
+    //    object ui = default,
+    //    object parameters = default,
+    //    object prefill = default
+    //);
 
 }

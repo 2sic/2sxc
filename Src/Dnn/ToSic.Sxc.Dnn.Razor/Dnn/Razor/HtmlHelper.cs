@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Web;
-using System.Web.WebPages;
+﻿using System.Web;
 using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Code.Help;
-using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Code.Internal.CodeErrorHelp;
+using ToSic.Sxc.Code.Internal.SourceCode;
 using static System.StringComparer;
-using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
+using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Dnn.Razor;
@@ -124,7 +117,8 @@ internal class HtmlHelper: ServiceBase, IHtmlHelper
         // Note that if anything breaks here, it will just use the normal error - but for what breaks in here
         // Note that if withHelp already has help, it won't be extended any more
         exWithHelp = _codeErrService.Value.AddHelpIfKnownError(exWithHelp, _page);
-        var nice = _page._DynCodeRoot.Block.BlockBuilder.RenderingHelper.DesignErrorMessage(new List<Exception>{exWithHelp}, true);
+        var nice = ((ICodeApiServiceInternal)_page._CodeApiSvc)._Block.BlockBuilder.RenderingHelper.DesignErrorMessage(
+            [exWithHelp], true);
         _helper.Add(exWithHelp);
         return nice;
     }

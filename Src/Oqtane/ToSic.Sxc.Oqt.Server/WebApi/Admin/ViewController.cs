@@ -9,10 +9,10 @@ using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Routing;
+using ToSic.Sxc.Backend.Admin;
+using ToSic.Sxc.Backend.Views;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.WebApi.Admin;
-using ToSic.Sxc.WebApi.Views;
-using RealController = ToSic.Sxc.WebApi.Admin.ViewControllerReal;
+using RealController = ToSic.Sxc.Backend.Admin.ViewControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 

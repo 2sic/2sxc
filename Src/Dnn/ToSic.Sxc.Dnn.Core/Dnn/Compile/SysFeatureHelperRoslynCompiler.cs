@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using ToSic.Lib.Documentation;
-using ToSic.Sxc.Dnn.Compile.AppDomain;
+﻿using ToSic.Sxc.Dnn.Compile.AppDomain;
 
 namespace ToSic.Sxc.Dnn.Compile;
 

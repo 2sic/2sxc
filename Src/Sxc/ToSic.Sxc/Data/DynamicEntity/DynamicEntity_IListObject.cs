@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Data;
+﻿namespace ToSic.Sxc.Data;
 // Backward compatible enumeration interface for people casting as IList<dynamic>
 
 public partial class DynamicEntity: IList<object>

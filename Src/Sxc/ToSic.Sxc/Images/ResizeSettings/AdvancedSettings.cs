@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Data.PiggyBack;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Serialization;
-using ToSic.Lib.Documentation;
 using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Images;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AdvancedSettings : IHasPiggyBack
+internal class AdvancedSettings : IHasPiggyBack
 {
     [JsonConstructor]
     public AdvancedSettings(Recipe recipe = default)
@@ -47,7 +43,7 @@ public class AdvancedSettings : IHasPiggyBack
 
         // Parse any single rule It's just one rule which should be used
         if (value is Recipe mrrValue)
-            return new AdvancedSettings(mrrValue);
+            return new(mrrValue);
 
         return null;
     }
@@ -68,7 +64,7 @@ public class AdvancedSettings : IHasPiggyBack
             l.Ex(ex);
         }
 
-        return (new AdvancedSettings(), "new");
+        return (new(), "new");
     });
 
     [PrivateApi]
@@ -95,6 +91,6 @@ public class AdvancedSettings : IHasPiggyBack
     /// </summary>
     [PrivateApi("internal use only")]
     [JsonIgnore]
-    public PiggyBack PiggyBack => _piggyBack ??= new PiggyBack();
+    public PiggyBack PiggyBack => _piggyBack ??= new();
     private PiggyBack _piggyBack;
 }

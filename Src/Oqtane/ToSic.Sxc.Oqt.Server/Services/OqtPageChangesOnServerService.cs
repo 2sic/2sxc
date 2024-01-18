@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web.Url;
-using CspOfPage = ToSic.Sxc.Web.ContentSecurityPolicy.CspOfPage;
-using CspParameters = ToSic.Sxc.Web.ContentSecurityPolicy.CspParameters;
+using ToSic.Sxc.Web.Internal.Url;
+using CspOfPage = ToSic.Sxc.Web.Internal.ContentSecurityPolicy.CspOfPage;
+using CspParameters = ToSic.Sxc.Web.Internal.ContentSecurityPolicy.CspParameters;
 
 namespace ToSic.Sxc.Oqt.Server.Services;
 
@@ -19,7 +20,7 @@ internal class OqtPageChangesOnServerService : ServiceBase, IOqtPageChangesOnSer
     private readonly LazySvc<IFeaturesService> _featuresService;
     private readonly Generator<CspOfPage> _cspOfPage;
 
-    public OqtPageChangesOnServerService(IHttpContextAccessor httpContextAccessor, LazySvc<IFeaturesService> featuresService, Generator<CspOfPage> cspOfPage) : base($"{Constants.SxcLogName}.OqtPgChService")
+    public OqtPageChangesOnServerService(IHttpContextAccessor httpContextAccessor, LazySvc<IFeaturesService> featuresService, Generator<CspOfPage> cspOfPage) : base($"{SxcLogging.SxcLogName}.OqtPgChService")
     {
         ConnectServices(
             _httpContextAccessor = httpContextAccessor,

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ToSic.Eav.Metadata;
+﻿using ToSic.Eav.Metadata;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 

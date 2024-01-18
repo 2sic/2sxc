@@ -1,7 +1,5 @@
-﻿using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Code;
+﻿using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web;
 #pragma warning disable CS0108, CS0114
@@ -25,13 +23,15 @@ namespace ToSic.Sxc.Services;
 /// - Created ca. v2 as `ToSic.Sxc.Web.ILinkHelper`
 /// - Moved to this new `Services.ILinkService` in v13.05. The previous name will continue to work, but newer features will be missing on that interface. 
 /// </remarks>
-[PublicApi_Stable_ForUseInYourCode]
-public interface ILinkService: INeedsDynamicCodeRoot, ICanDebug
-#if NETFRAMEWORK
-#pragma warning disable CS0618
-        , ILinkHelper
-#pragma warning restore CS0618
-#endif
+[PublicApi]
+public interface ILinkService: INeedsCodeApiService, ICanDebug
+    // 2024-01-11 2dm #RemoveILinkHelper - removed, probably never in use, but it could be
+    // Preserve till 2024-07-01 (Start Q3), if not used, remove
+//#if NETFRAMEWORK
+//#pragma warning disable CS0618
+//        , ILinkHelper
+//#pragma warning restore CS0618
+//#endif
 {
     /// <summary>
     /// returns a link to the current page with parameters resolved in a way that DNN wants it

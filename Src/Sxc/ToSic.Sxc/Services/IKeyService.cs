@@ -1,12 +1,11 @@
-﻿using ToSic.Lib.Documentation;
-using ToSic.Sxc.Adam;
+﻿using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.Services;
 
 /// <summary>
 /// WIP 16.04
 /// </summary>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("Still WIP in v16.04")]
+[PublicApi]
 public interface IKeyService
 {
     /// <summary>
@@ -26,11 +25,12 @@ public interface IKeyService
     /// </summary>
     /// <remarks>
     /// If you get a fresh <see cref="IKeyService"/> it will also create a new UniqueKey.
-    /// So your code should usually use the built in property `UniqueKey` which comes from teh shared ServiceKit <see cref="ServiceKit16.Key"/>.
+    /// So your code should usually use the built-in property `UniqueKey` which comes from the shared ServiceKit <see cref="ServiceKit16.Key"/>.
     /// </remarks>
     string UniqueKey { get; }
 
     [PrivateApi("not yet sure if we should publish this")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     string UniqueKeyOf(object data);
 
     /// <summary>

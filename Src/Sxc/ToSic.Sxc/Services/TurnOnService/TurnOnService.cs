@@ -1,8 +1,8 @@
-﻿using ToSic.Lib.Coding;
-using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
+﻿using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Internal;
+using ToSic.Sxc.Services.Internal;
 using Attribute = ToSic.Razor.Markup.Attribute;
 
 namespace ToSic.Sxc.Services;
@@ -13,7 +13,7 @@ internal class TurnOnService: ServiceBase, ITurnOnService
     private const string TagName = "turnOn";
     private const string AttributeName = "turn-on";
 
-    public TurnOnService(LazySvc<IHtmlTagsService> htmlTagsService) : base(Constants.SxcLogName + ".TrnOnS")
+    public TurnOnService(LazySvc<IHtmlTagsService> htmlTagsService) : base(SxcLogging.SxcLogName + ".TrnOnS")
     {
         ConnectServices(
             _htmlTagsService = htmlTagsService
@@ -53,7 +53,7 @@ internal class TurnOnService: ServiceBase, ITurnOnService
 
     private static object PickOrBuildSpecs(object runOrSpecs, object require, object data)
     {
-        if (!(runOrSpecs is string run)) return runOrSpecs;
+        if (runOrSpecs is not string run) return runOrSpecs;
 
         if (require is null && data is null) return new { run };
         if (require is null) return new { run, data };

@@ -5,13 +5,8 @@ using ToSic.Eav.LookUp;
 namespace ToSic.Sxc.LookUp
 {
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public class TicksLookUp : LookUpBase
+    public class TicksLookUp() : LookUpBase("Ticks")
     {
-        public TicksLookUp()
-        {
-            Name = "Ticks";
-        }
-
         public override string Get(string key, string format)
         {
             return key.ToLowerInvariant() switch

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Web.Http;
 using DotNetNuke.Services.Log.EventLog;
-using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Dnn.Run;
 

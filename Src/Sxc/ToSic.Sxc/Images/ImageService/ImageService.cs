@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Eav.Generics;
+﻿using ToSic.Eav.Generics;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Coding;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
+using ToSic.Sxc.Images.Internal;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.Images;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public partial class ImageService: ServiceForDynamicCode, IImageService
+internal partial class ImageService: ServiceForDynamicCode, IImageService
 {
     #region Constructor and Inits
 
-    public ImageService(ImgResizeLinker imgLinker, IFeaturesService features) : base(Constants.SxcLogName + ".ImgSvc")
+    public ImageService(ImgResizeLinker imgLinker, IFeaturesService features) : base(SxcLogging.SxcLogName + ".ImgSvc")
     {
         ConnectServices(
             Features = features,
@@ -27,9 +25,9 @@ public partial class ImageService: ServiceForDynamicCode, IImageService
     internal ImgResizeLinker ImgLinker { get; }
     internal IFeaturesService Features { get; }
 
-    internal IEditService EditOrNull => _DynCodeRoot?.Edit;
+    internal IEditService EditOrNull => _CodeApiSvc?.Edit;
 
-    internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => _DynCodeRoot?.GetService<IToolbarService>());
+    internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => _CodeApiSvc?.GetService<IToolbarService>());
     private readonly GetOnce<IToolbarService> _toolbarSvc = new();
 
     #endregion
@@ -54,9 +52,9 @@ public partial class ImageService: ServiceForDynamicCode, IImageService
 
     private dynamic GetCodeRootSettingsByName(string strName) => Log.Func($"{strName}", () =>
     {
-        var result = _DynCodeRoot?.Settings?.Get($"Settings.Images.{strName}");
+        var result = _CodeApiSvc?.Settings?.Get($"Settings.Images.{strName}");
         return ((object)result, $"found: {result != null}");
-    }, enabled: Debug, message: $"code root: {_DynCodeRoot != null}");
+    }, enabled: Debug, message: $"code root: {_CodeApiSvc != null}");
 
     /// <summary>
     /// Convert to Multi-Resize Settings
@@ -81,7 +79,7 @@ public partial class ImageService: ServiceForDynamicCode, IImageService
         object toolbar = default,
         object recipe = null)
         => new ResponsiveImage(this,
-            new ResponsiveParams(nameof(Img), link, noParamOrder,
+            new(nameof(Img), link, noParamOrder,
                 Settings(settings, factor: factor, width: width, recipe: recipe),
                 imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass, imgAttributes: CreateAttribDic(imgAttributes), toolbar: toolbar),
             Log);
@@ -103,7 +101,7 @@ public partial class ImageService: ServiceForDynamicCode, IImageService
         object toolbar = default,
         object recipe = default)
         => new ResponsivePicture(this,
-            new ResponsiveParams(nameof(Picture), link, noParamOrder,
+            new(nameof(Picture), link, noParamOrder,
                 Settings(settings, factor: factor, width: width, recipe: recipe),
                 imgAlt: imgAlt, imgAltFallback: imgAltFallback,
                 imgClass: imgClass, imgAttributes: CreateAttribDic(imgAttributes), pictureClass: pictureClass, pictureAttributes: CreateAttribDic(pictureAttributes), toolbar: toolbar),

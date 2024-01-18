@@ -1,14 +1,9 @@
-﻿using System;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
+﻿using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-public partial class ToolbarBuilder
+partial class ToolbarBuilder
 {
-
-    [PrivateApi("WIP v15.04")]
     public IToolbarBuilder Info(
         NoParamOrder noParamOrder = default,
         string link = default,

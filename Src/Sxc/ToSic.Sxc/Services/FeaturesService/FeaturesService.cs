@@ -1,14 +1,13 @@
-﻿using System;
-using ToSic.Eav.Internal.Features;
-using ToSic.Lib.Logging;
+﻿using ToSic.Eav.Internal.Features;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Services;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class FeaturesService: ServiceBase, IFeaturesService, ICanDebug
 {
-    public FeaturesService(IEavFeaturesService root) : base($"{Constants.SxcLogName}.FeatSv")
+    public FeaturesService(IEavFeaturesService root) : base($"{SxcLogging.SxcLogName}.FeatSv")
         => _root = root;
 
     private readonly IEavFeaturesService _root;

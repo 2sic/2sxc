@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
 using ToSic.Eav.Apps;
-using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
@@ -24,7 +20,7 @@ namespace ToSic.Sxc.Edit.Toolbar;
 /// So for now :( it must remain public.
 /// </remarks>
 [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsDynamicCodeRoot
+internal partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsCodeApiService
 {
 
     #region Constructors and Init
@@ -66,27 +62,27 @@ public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolba
         Rules.AddRange(replaceRules ?? parent.Rules);
     }
 
-    public ILog Log { get; } = new Log(Constants.SxcLogName + ".TlbBld");
+    public ILog Log { get; } = new Log(SxcLogging.SxcLogName + ".TlbBld");
 
     private IAppIdentity _currentAppIdentity;
 
-    public void ConnectToRoot(IDynamicCodeRoot codeRoot)
+    public void ConnectToRoot(ICodeApiService codeRoot)
     {
         if (codeRoot == null) return;
         _DynCodeRoot = codeRoot;
         _currentAppIdentity = codeRoot.App;
         Services.ToolbarButtonHelper.Value.MainAppIdentity = _currentAppIdentity;
     }
-    private IDynamicCodeRoot _DynCodeRoot;
+    private ICodeApiService _DynCodeRoot;
 
     #endregion
 
     private ToolbarBuilderConfiguration _configuration;
 
-    private ToolbarBuilderUtilities Utils => _utils ??= new ToolbarBuilderUtilities();
+    private ToolbarBuilderUtilities Utils => _utils ??= new();
     private ToolbarBuilderUtilities _utils;
 
-    public List<ToolbarRuleBase> Rules { get; } = new();
+    internal List<ToolbarRuleBase> Rules { get; } = [];
 
     public IToolbarBuilder Toolbar(
         string toolbarTemplate,

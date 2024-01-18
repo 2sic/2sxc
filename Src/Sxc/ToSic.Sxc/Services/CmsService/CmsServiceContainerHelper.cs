@@ -1,13 +1,11 @@
-﻿using System;
-using System.Linq;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Decorators;
+using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
 
 namespace ToSic.Sxc.Services.CmsService;
@@ -15,13 +13,13 @@ namespace ToSic.Sxc.Services.CmsService;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class CmsServiceContainerHelper: HelperBase
 {
-    private readonly IDynamicCodeRoot _dynCodeRoot;
+    private readonly ICodeApiService _dynCodeRoot;
     private readonly object _container;
     private string Classes { get; set; }
     private readonly bool? _toolbar;
     private readonly IField _field;
 
-    public CmsServiceContainerHelper(IDynamicCodeRoot dynCodeRoot,
+    public CmsServiceContainerHelper(ICodeApiService dynCodeRoot,
         IField field,
         object container,
         string classes,

@@ -1,14 +1,13 @@
-﻿using System.Linq;
-using ToSic.Eav.Data;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Utils;
-using ToSic.Sxc.Web.PageFeatures;
-using static ToSic.Sxc.Blocks.RenderService;
+using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Web.Internal.HtmlParsing;
+using ToSic.Sxc.Web.Internal.PageFeatures;
+using static ToSic.Sxc.Blocks.Internal.Render.RenderService;
 
 namespace ToSic.Sxc.Services.CmsService;
 
@@ -28,7 +27,7 @@ internal class CmsServiceStringWysiwyg: ServiceForDynamicCode
             _imageExtractor = imageExtractor
         );
     }
-    private ServiceKit14 ServiceKit => _svcKit.Get(() => _DynCodeRoot.GetKit<ServiceKit14>());
+    private ServiceKit14 ServiceKit => _svcKit.Get(() => _CodeApiSvc.GetKit<ServiceKit14>());
     private readonly GetOnce<ServiceKit14> _svcKit = new();
 
     #endregion
@@ -76,10 +75,10 @@ internal class CmsServiceStringWysiwyg: ServiceForDynamicCode
         var l = Log.Fn<CmsProcessed>();
         var html = value ?? Field.Raw as string;
         if (string.IsNullOrWhiteSpace(html))
-            return l.Return(new CmsProcessed(false, null, null), "no html, treat as unknown, return null to let parent do wrapping with original");
+            return l.Return(new(false, null, null), "no html, treat as unknown, return null to let parent do wrapping with original");
 
         // 1. We got HTML, so first we must ensure the feature is activated
-        ServiceKit.Page.Activate(BuiltInFeatures.CmsWysiwyg.NameId);
+        ServiceKit.Page.Activate(SxcPageFeatures.CmsWysiwyg.NameId);
 
         // 2. Check Inner Content
         html = ProcessInnerContent(html);
@@ -92,7 +91,7 @@ internal class CmsServiceStringWysiwyg: ServiceForDynamicCode
         // and check if we have an img tags with data-cmsid="file:..." attributes
         var imgTags = RegexUtil.ImagesDetection.Value.Matches(html);
         if (imgTags.Count == 0)
-            return l.Return(new CmsProcessed(true, html, classes), "can't find img tags with data-cmsid, done");
+            return l.Return(new(true, html, classes), "can't find img tags with data-cmsid, done");
         var imgSettings = ImageSettings ?? "Wysiwyg";
         l.A($"Found {imgTags.Count} images to process with settings: {imgSettings}");
 
@@ -115,7 +114,7 @@ internal class CmsServiceStringWysiwyg: ServiceForDynamicCode
         }
 
         // reconstruct the original html and return wrapped in the realContainer
-        return l.Return(new CmsProcessed(true, html, classes), "wysiwyg changed with images");
+        return l.Return(new(true, html, classes), "wysiwyg changed with images");
     }
 
     private string ProcessInnerContent(string html) 

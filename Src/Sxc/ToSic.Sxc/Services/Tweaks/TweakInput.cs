@@ -1,9 +1,4 @@
-﻿using System;
-using System.Linq;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Services.Tweaks;
+﻿namespace ToSic.Sxc.Services.Tweaks;
 
 internal class TweakValue
 {
@@ -12,15 +7,10 @@ internal class TweakValue
     public const string StepAfter = "after";
 }
 
-internal class TweakInput<TInput>: ITweakInput<TInput>
+internal class TweakInput<TInput>(TweakInput<TInput> original = default, TweakConfig additional = default)
+    : ITweakInput<TInput>
 {
-
-    public TweakInput(TweakInput<TInput> original = default, TweakConfig additional = default)
-    {
-        Tweaks = new TweakConfigs(original?.Tweaks, additional);
-    }
-
-    public TweakConfigs Tweaks { get; }
+    public TweakConfigs Tweaks { get; } = new(original?.Tweaks, additional);
 
     [PublicApi]
     public ITweakInput<TInput> Input(TInput replace, NoParamOrder protector = default)//, string step = default)
@@ -47,7 +37,7 @@ internal class TweakInput<TInput>: ITweakInput<TInput>
     {
         var tweak = new TweakConfig<Func<ITweakData<TInput>, int, ITweakData<TInput>>>(nameId,
             (v, index) => new TweakData<TInput>(v, changeFunc(v), index), step, target);
-        return new TweakInput<TInput>(this, tweak);
+        return new(this, tweak);
     }
 
     internal ITweakData<TInput> Preprocess(TInput html, string name = TweakValue.NameDefault) 

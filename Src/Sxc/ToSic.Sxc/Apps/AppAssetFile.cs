@@ -1,5 +1,5 @@
-﻿using System;
-using ToSic.Eav.Apps.Assets;
+﻿using ToSic.Eav.Apps.Assets;
+using ToSic.Eav.Apps.Assets.Internal;
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Data;
 using IAsset = ToSic.Sxc.Adam.IAsset;
@@ -34,7 +34,7 @@ internal abstract class AppAssetFile: IFile
     #region Properties which are simply not implemented ATM
 
     public int Size => 0;
-    public SizeInfo SizeInfo => new(0);
+    public ISizeInfo SizeInfo => new SizeInfo(0);
     public int FolderId => -1;
 
     public IField Field { get; set; }

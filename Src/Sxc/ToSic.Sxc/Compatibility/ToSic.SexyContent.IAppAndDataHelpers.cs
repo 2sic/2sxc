@@ -1,10 +1,9 @@
 ﻿#if NETFRAMEWORK
-using System;
-using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent
@@ -19,7 +18,7 @@ namespace ToSic.SexyContent
     public interface IAppAndDataHelpers
     {
         IApp App { get; }
-        IContextData Data { get; }
+        IBlockInstance Data { get; }
 
         /// <summary>
         /// Transform a IEntity to a DynamicEntity as dynamic object

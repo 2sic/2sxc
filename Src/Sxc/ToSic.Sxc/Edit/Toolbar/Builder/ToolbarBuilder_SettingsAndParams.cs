@@ -1,11 +1,8 @@
-﻿using System;
-using ToSic.Eav.Apps.Assets;
-using ToSic.Eav.Data;
-using ToSic.Lib.Coding;
+﻿using ToSic.Eav.Apps.Assets;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-public partial class ToolbarBuilder
+partial class ToolbarBuilder
 {
     public IToolbarBuilder Settings(
         NoParamOrder noParamOrder = default,
@@ -65,9 +62,9 @@ public partial class ToolbarBuilder
     private void TargetCheck(object target)
     {
         if (target is IAsset)
-            throw new Exception("Got a 'target' parameter which seems to be an adam-file. " +
-                                "This is not allowed. " +
-                                "Were you trying to target the .Metadata of this file? if so, add .Metadata to the target object.");
+            throw new("Got a 'target' parameter which seems to be an adam-file. " +
+                      "This is not allowed. " +
+                      "Were you trying to target the .Metadata of this file? if so, add .Metadata to the target object.");
 
     }
 

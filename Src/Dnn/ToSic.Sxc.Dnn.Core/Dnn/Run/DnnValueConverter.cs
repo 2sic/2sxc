@@ -4,15 +4,12 @@ using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Services.Localization;
-using System;
 using System.IO;
-using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Internal.Features;
-using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
-using ToSic.Sxc.Plumbing;
+using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Internal.Plumbing;
 
 namespace ToSic.Sxc.Dnn.Run;
 
@@ -107,7 +104,7 @@ internal class DnnValueConverter : ValueConverterBase
             if (!_featuresLazy.Value.IsEnabled(BuiltInFeatures.AdamRestrictLookupToEntity.Guid)) return result;
 
             // check if it's in this item. We won't check the field, just the item, so the field is ""
-            return !Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", filePath)
+            return !Security.PathIsInItemAdam(itemGuid, "", filePath)
                 ? null
                 : result;
         }

@@ -1,20 +1,15 @@
 ﻿using DotNetNuke.Entities.Users;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
+using ToSic.Eav.Integration;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
-using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Dnn.Run;
 
@@ -23,11 +18,11 @@ namespace ToSic.Sxc.Dnn.DataSources;
 /// <summary>
 /// Get DNN user profiles as <see cref="IEntity"/> objects of one or many users.
 /// </summary>
-[PublicApi_Stable_ForUseInYourCode]
+[PublicApi]
 [VisualQuery(
     NiceName = "Dnn User Profiles",
     UiHint = "Users profiles of specified users in Dnn",
-    Icon = Icons.Face,
+    Icon = DataSourceIcons.Face,
     Type = DataSourceType.Source, 
     NameId = "ToSic.Sxc.Dnn.DataSources.DnnUserProfile, ToSic.Sxc.Dnn",
     ConfigurationType = "|Config ToSic.SexyContent.DataSources.DnnUserProfileDataSource",
@@ -144,7 +139,7 @@ public class DnnUserProfile : CustomDataSourceAdvanced
         else
         {
             var userIds = UserIds.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
-            users = new ArrayList();
+            users = new();
             foreach (var user in userIds.Select(userId => UserController.GetUserById(portalId, userId)))
                 users.Add(user);
         }
@@ -168,7 +163,7 @@ public class DnnUserProfile : CustomDataSourceAdvanced
             results.Add(dnnUserProfile);
         }
         l.A($"results: {results.Count}");
-        var userProfileDataFactory = _dataFactory.New(options: new DataFactoryOptions(DnnUserProfileDataRaw.Options, typeName: ContentType?.NullIfNoValue()));
+        var userProfileDataFactory = _dataFactory.New(options: new(DnnUserProfileDataRaw.Options, typeName: ContentType?.NullIfNoValue()));
         return l.Return(userProfileDataFactory.Create(results), "ok");
     }
 

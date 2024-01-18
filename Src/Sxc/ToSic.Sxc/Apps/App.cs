@@ -1,13 +1,11 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Paths;
+using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.LookUp;
+using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 using CodeInfoService = ToSic.Eav.Code.InfoSystem.CodeInfoService;
-using EavApp = ToSic.Eav.Apps.App;
 
 namespace ToSic.Sxc.Apps;
 
@@ -17,7 +15,7 @@ namespace ToSic.Sxc.Apps;
 /// </summary>
 [PrivateApi("hide implementation - IMPORTANT: was PublicApi_Stable_ForUseInYourCode up to 16.03!")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public partial class App : EavApp, IApp
+public partial class App : Eav.Apps.Internal.EavApp, IApp
 {
     #region DI Constructors
 

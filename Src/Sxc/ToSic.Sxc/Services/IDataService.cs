@@ -1,7 +1,5 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
 
 
 namespace ToSic.Sxc.Services;
@@ -27,6 +25,7 @@ public interface IDataService
     /// <param name="appId"></param>
     /// <returns></returns>
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     IDataService New(NoParamOrder noParamOrder = default,
         IAppIdentity appIdentity = default,
         int zoneId = default,

@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Edit.Toolbar;
+﻿namespace ToSic.Sxc.Edit.Toolbar;
 
 public partial interface IToolbarBuilder
 {
@@ -39,6 +37,7 @@ public partial interface IToolbarBuilder
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     /// <param name="target">_optional_ entity-like target, see [target guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Target)</param>
     [PrivateApi("wip")]
+    [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     IToolbarBuilder AsJson(
         object target = null
     );

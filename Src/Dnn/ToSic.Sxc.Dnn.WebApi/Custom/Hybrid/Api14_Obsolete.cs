@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using ToSic.Eav.Data;
+﻿using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
-using ToSic.Lib.Documentation;
-using ToSic.Sxc.Code.Help;
+using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
@@ -20,7 +17,7 @@ partial class Api14
     [PrivateApi]
     [Obsolete("throws error with fix-instructions. Use CreateSource<type> instead.")]
     public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
-        => CodeHelpDbV12.ExCreateSourceString();
+        => HelpForRazor12.ExCreateSourceString();
 
     #endregion
 
@@ -29,18 +26,18 @@ partial class Api14
     [PrivateApi]
     [Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
     public dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity)
-        => CodeHelpDbV12.ExAsDynamicInterfacesIEntity();
+        => HelpForRazor12.ExAsDynamicInterfacesIEntity();
 
 
     [PrivateApi]
     [Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
     public dynamic AsDynamic(KeyValuePair<int, ToSic.Eav.Interfaces.IEntity> entityKeyValuePair)
-        => CodeHelpDbV12.AsDynamicKvpInterfacesIEntity();
+        => HelpForRazor12.AsDynamicKvpInterfacesIEntity();
 
     [Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
     [PrivateApi]
     public IEnumerable<dynamic> AsDynamic(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities)
-        => CodeHelpDbV12.AsDynamicIEnumInterfacesIEntity();
+        => HelpForRazor12.AsDynamicIEnumInterfacesIEntity();
 
 
     #endregion
@@ -49,24 +46,24 @@ partial class Api14
 
     [PrivateApi]
     [Obsolete("throws error with fix-instructions. Use AsDynamic(IEnumerable<IEntity>...)")]
-    public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => CodeHelpDbV12.ExAsDynamicKvp();
+    public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => HelpForRazor12.ExAsDynamicKvp();
 
     #region Old AsDynamic with correct warnings
     /// <inheritdoc/>
     [PrivateApi]
     public IEnumerable<dynamic> AsDynamic(IDataStream stream)
-        => throw new Exception($"AsDynamic for lists isn't supported here. Please use AsList(...) instead.");
+        => throw new($"AsDynamic for lists isn't supported here. Please use AsList(...) instead.");
 
     /// <inheritdoc/>
     [PrivateApi]
     public IEnumerable<dynamic> AsDynamic(IDataSource source)
-        => throw new Exception($"AsDynamic for lists isn't supported here. Please use AsList(...) instead.");
+        => throw new($"AsDynamic for lists isn't supported here. Please use AsList(...) instead.");
 
 
     /// <inheritdoc/>
     [PrivateApi]
     public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities)
-        => throw new Exception($"AsDynamic for lists isn't supported here. Please use AsList(...) instead.");
+        => throw new($"AsDynamic for lists isn't supported here. Please use AsList(...) instead.");
 
     #endregion
     #endregion
@@ -75,20 +72,20 @@ partial class Api14
 
     [PrivateApi]
     [Obsolete("use Content.Presentation instead")]
-    public dynamic Presentation => CodeHelpDbV12.ExPresentation();
+    public dynamic Presentation => HelpForRazor12.ExPresentation();
 
 
     [PrivateApi]
     [Obsolete("Use Header instead")]
-    public dynamic ListContent => CodeHelpDbV12.ExListContent();
+    public dynamic ListContent => HelpForRazor12.ExListContent();
 
     [PrivateApi]
     [Obsolete("Use Header.Presentation instead")]
-    public dynamic ListPresentation => CodeHelpDbV12.ExListPresentation();
+    public dynamic ListPresentation => HelpForRazor12.ExListPresentation();
 
     [PrivateApi]
     [Obsolete("This is an old way used to loop things - removed in RazorComponent")]
-    public IEnumerable<dynamic> List => CodeHelpDbV12.ExList();
+    public IEnumerable<dynamic> List => HelpForRazor12.ExList();
 
     #endregion
 

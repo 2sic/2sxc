@@ -1,20 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Coding;
-using ToSic.Sxc.Web.Url;
+using ToSic.Sxc.Web.Internal.Url;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleForEntity;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
 /// <summary>
 /// IMPORTANT: Changed to internal for v16.08. #InternalMaybeSideEffectDynamicRazor
-/// This is how it should be done, but it could have a side-effect in dynamic razor in edge cases where interface-type is "forgotton" by Razor.
+/// This is how it should be done, but it could have a side effect in dynamic razor in edge cases where interface-type is "forgotten" by Razor.
 /// Keep unless we run into trouble.
 /// Remove this comment 2024 end of Q1 if all works, otherwise re-document why it must be public
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class TweakButton: ITweakButton
+internal class TweakButton: ITweakButton, ITweakButtonInternal
 {
     public IImmutableList<object> UiMerge { get; }
     public IImmutableList<object> ParamsMerge { get; }
@@ -27,8 +25,8 @@ internal class TweakButton: ITweakButton
 
     private TweakButton(ITweakButton original, IImmutableList<object> uiMerge = default, IImmutableList<object> paramsMerge = default)
     {
-        UiMerge = uiMerge ?? original.UiMerge;
-        ParamsMerge = paramsMerge ?? original.ParamsMerge;
+        UiMerge = uiMerge ?? (original as ITweakButtonInternal)?.UiMerge ?? ImmutableList.Create<object>();
+        ParamsMerge = paramsMerge ?? (original as ITweakButtonInternal)?.ParamsMerge ?? ImmutableList.Create<object>();
     }
 
     /// <summary>
@@ -44,13 +42,20 @@ internal class TweakButton: ITweakButton
         string note,
         NoParamOrder noParamOrder = default,
         string type = default,
-        string background = default
+        string background = default,
+        int delay = default,
+        int linger = default
     )
     {
-        //Protect(noParamOrder, $"{nameof(type)}");
         var noteProps = new Dictionary<string, object> { [nameof(note)] = note };
+        //void AddIfNotDefault<T>(string name, T value)
+        //{
+        //    if (value != default) noteProps[name] = value;
+        //}
         if (type != default) noteProps[nameof(type)] = type;
         if (background != default) noteProps[nameof(background)] = background;
+        if (delay != default) noteProps[nameof(delay)] = delay;
+        if (linger != default) noteProps[nameof(linger)] = linger;
         return Ui(new { note = noteProps });
     }
         
@@ -59,7 +64,6 @@ internal class TweakButton: ITweakButton
     public ITweakButton Color(string color = default, NoParamOrder noParamOrder = default, string background = default,
         string foreground = default)
     {
-        //Protect(noParamOrder, $"{nameof(background)}, {nameof(foreground)}");
         if (color == default)
         {
             color = background;
@@ -82,7 +86,7 @@ internal class TweakButton: ITweakButton
 
     public ITweakButton Position(int value) => Ui("pos", value);
 
-    public ITweakButton Ui(object value) => value == null ? this : new TweakButton(this, UiMerge.Add(value));
+    public ITweakButton Ui(object value) => value == null ? this : new(this, UiMerge.Add(value));
 
     public ITweakButton Ui(string name, object value) => (value ?? name) == null ? this : Ui($"{name}={value}");
 
@@ -94,7 +98,7 @@ internal class TweakButton: ITweakButton
 
     public ITweakButton FormParameters(string name, object value) => (value ?? name) == null ? this : FormParameters($"{name}={value}");
 
-    public ITweakButton Parameters(object value) => value == null ? this : new TweakButton(this, paramsMerge: ParamsMerge.Add(value));
+    public ITweakButton Parameters(object value) => value == null ? this : new(this, paramsMerge: ParamsMerge.Add(value));
     public ITweakButton Parameters(string name, object value) => (value ?? name) == null ? this : Parameters($"{name}={value}");
 
     public ITweakButton Prefill(object value) => value == null ? this : Parameters(new ObjectToUrl().SerializeChild(value, PrefixPrefill));

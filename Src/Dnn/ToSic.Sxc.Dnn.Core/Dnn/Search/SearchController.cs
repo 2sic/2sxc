@@ -1,29 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DotNetNuke.Entities.Modules;
+using DotNetNuke.Services.Search.Entities;
 using System.Collections.Immutable;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
-using DotNetNuke.Entities.Modules;
-using DotNetNuke.Services.Search.Entities;
-using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.LookUp;
-using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code;
+using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Internal;
+using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sxc.Search;
 using static System.StringComparer;
 
@@ -40,18 +39,17 @@ namespace ToSic.Sxc.Dnn.Search;
 /// </remarks>
 internal class SearchController : ServiceBase
 {
-    private readonly LazySvc<ILogStore> _logStore;
-
     public SearchController(
         AppsCacheSwitch appsCache,
         Generator<CodeCompiler> codeCompiler,
-        Generator<CodeRootFactory> codeRootFactory,
+        Generator<CodeApiServiceFactory> codeRootFactory,
         Generator<ISite> siteGenerator,
         LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
         LazySvc<ILookUpEngineResolver> dnnLookUpEngineResolver,
         EngineFactory engineFactory,
         LazySvc<IAppLoaderTools> loaderTools,
-        LazySvc<ILogStore> logStore) : base("DNN.Search")
+        LazySvc<ILogStore> logStore,
+        Polymorphism.Internal.PolymorphConfigReader polymorphism) : base("DNN.Search")
     {
         ConnectServices(
             _appsCache = appsCache,
@@ -62,18 +60,21 @@ internal class SearchController : ServiceBase
             _loaderTools = loaderTools,
             _dnnLookUpEngineResolver = dnnLookUpEngineResolver,
             _moduleAndBlockBuilder = moduleAndBlockBuilder,
-            _logStore = logStore
+            _logStore = logStore,
+            _polymorphism = polymorphism
         );
     }
 
     private readonly AppsCacheSwitch _appsCache;
     private readonly Generator<CodeCompiler> _codeCompiler;
-    private readonly Generator<CodeRootFactory> _codeRootFactory;
+    private readonly Generator<CodeApiServiceFactory> _codeRootFactory;
     private readonly Generator<ISite> _siteGenerator;
     private readonly EngineFactory _engineFactory;
     private readonly LazySvc<IAppLoaderTools> _loaderTools;
     private readonly LazySvc<ILookUpEngineResolver> _dnnLookUpEngineResolver;
     private readonly LazySvc<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
+    private readonly LazySvc<ILogStore> _logStore;
+    private readonly Polymorphism.Internal.PolymorphConfigReader _polymorphism;
 
 
     /// <summary>
@@ -118,6 +119,11 @@ internal class SearchController : ServiceBase
         var streamsToIndex = GetStreamsToIndex();
         if (!streamsToIndex.Any()) return l.ReturnAsOk("no streams to index");
 
+        // Figure out the current edition - if none, stop here
+        // New 2023-03-20 - if the view comes with a preset edition, it's an ajax-preview which should be respected
+        _edition = PolymorphConfigReader.UseViewEditionLazyGetEdition(Block.View, () => _polymorphism.Init(Block.Context.AppState.List));
+        //Block.View.Edition.NullIfNoValue()
+        //           ?? _polymorphism.Init(Block.Context.AppState.List).Edition();
 
         // Convert DNN SearchDocuments from 2sxc SearchInfos
         SearchItems = BuildInitialSearchInfos(streamsToIndex, DnnModule);
@@ -134,6 +140,8 @@ internal class SearchController : ServiceBase
     public IBlock Block;
     /// <summary>The SearchItems will be initialized, and must exist for the search-index to provide data.</summary>
     public Dictionary<string, List<ISearchItem>> SearchItems;
+
+    private string _edition = default;
 
     /// <summary>
     /// Get search info for each dnn module containing 2sxc data
@@ -213,7 +221,7 @@ internal class SearchController : ServiceBase
     {
         DnnEnvironmentLogger.AddSearchExceptionToLog(modInfo, e, nameof(SearchController));
         Log.Ex(e);
-        return new List<SearchDocument>();
+        return new();
     }
         
         
@@ -250,7 +258,7 @@ internal class SearchController : ServiceBase
         foreach (var stream in streamsToIndex)
         {
             var entities = stream.Value.List.ToImmutableList();
-            var searchInfoList = searchInfoDictionary[stream.Key] = new List<ISearchItem>();
+            var searchInfoList = searchInfoDictionary[stream.Key] = new();
 
             searchInfoList.AddRange(entities.Select(entity =>
             {
@@ -335,21 +343,20 @@ internal class SearchController : ServiceBase
             .Combine(Block.View.IsShared ? site.SharedAppsRootRelative() : site.AppsRootPhysical, block.Context.AppState.Folder)
             .ForwardSlash();
         l.A($"compile ViewController class on path: {path}/{Block.View.ViewController}");
-        var instance = _codeCompiler.New().InstantiateClass(virtualPath: block.View.ViewController, appId: block.AppId,
-            className: null, relativePath: path, throwOnError: true);
+        var spec = new HotBuildSpec(block.AppId, _edition);
+        l.A($"prepare spec: {spec}");
+        var instance = _codeCompiler.New().InstantiateClass(virtualPath: block.View.ViewController, spec: spec, className: null, relativePath: path, throwOnError: true);
         l.A("got instance of compiled ViewController class");
 
         // 2. Check if it implements ToSic.Sxc.Search.ICustomizeSearch - otherwise just return the empty search results as shown above
         if (!(instance is ICustomizeSearch customizeSearch)) return l.ReturnNull("exit, class do not implements ICustomizeSearch");
 
         // 3. Make sure it has the full context if it's based on DynamicCode (like Code12)
-        if (instance is INeedsDynamicCodeRoot instanceWithContext)
+        if (instance is INeedsCodeApiService instanceWithContext)
         {
             l.A($"attach DynamicCode context to class instance");
             var parentDynamicCodeRoot = _codeRootFactory.New()
-                .BuildCodeRoot(null, block, Log, Constants.CompatibilityLevel10);
-            //.InitDynCodeRoot(block, Log) //, Constants.CompatibilityLevel10)
-            //.SetCompatibility(Constants.CompatibilityLevel10);
+                .BuildCodeRoot(null, block, Log, CompatibilityLevels.CompatibilityLevel10);
             instanceWithContext.ConnectToRoot(parentDynamicCodeRoot);
         }
 

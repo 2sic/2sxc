@@ -3,12 +3,9 @@ using DotNetNuke.Framework;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Helpers;
-using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Edit;
-using ToSic.Sxc.Services;
-using ToSic.Sxc.Web.JsContext;
+using ToSic.Sxc.Web.Internal.JsContext;
 
 namespace ToSic.Sxc.Dnn.Web;
 
@@ -18,15 +15,15 @@ public class DnnJsApiService : ServiceBase, IJsApiService
 {
     public const string PortalIdParamName = "portalId";
 
-    public DnnJsApiService(JsApiCache jsApiCache) : base("DnnJsAPi")
+    public DnnJsApiService(JsApiCacheService jsApiCache) : base("DnnJsAPi")
     {
         ConnectServices(_jsApiCache = jsApiCache);
     }
 
-    private readonly JsApiCache _jsApiCache;
+    private readonly JsApiCacheService _jsApiCache;
 
     public string GetJsApiJson(int? pageId = null, string siteRoot = null, string rvt = null) 
-        => InpageCms.JsApiJson(GetJsApi(pageId, siteRoot, rvt));
+        => JsApi.JsApiJson(GetJsApi(pageId, siteRoot, rvt));
 
     public JsApi GetJsApi(int? pageId = null, string siteRoot = null, string rvt = null)
     {
@@ -51,12 +48,12 @@ public class DnnJsApiService : ServiceBase, IJsApiService
     internal static (string SiteApiRoot, string AppApiRoot) GetApiRoots(string siteRoot = null)
     {
         siteRoot = siteRoot ?? ServicesFramework.GetServiceFrameworkRoot();
-        var apiRoot = siteRoot + $"api/{InpageCms.ExtensionPlaceholder}/";
+        var apiRoot = siteRoot + $"api/{JsApi.ExtensionPlaceholder}/";
             
         // appApiRoot is the same as apiRoot - the UI will add "app" to it later on 
         // but app-api root shouldn't contain generic modules-name, as it's always 2sxc
         var appApiRoot = apiRoot;
-        appApiRoot = appApiRoot.Replace(InpageCms.ExtensionPlaceholder, "2sxc");
+        appApiRoot = appApiRoot.Replace(JsApi.ExtensionPlaceholder, "2sxc");
 
         return (apiRoot, appApiRoot);
     }

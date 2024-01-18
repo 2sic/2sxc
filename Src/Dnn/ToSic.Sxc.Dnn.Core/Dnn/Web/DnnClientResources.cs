@@ -1,18 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Web.UI;
+﻿using System.Web.UI;
 using DotNetNuke.Framework;
 using DotNetNuke.Framework.JavaScriptLibraries;
 using DotNetNuke.Web.Client;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using DotNetNuke.Web.Client.Providers;
 using ToSic.Eav;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Web.PageFeatures;
-using ToSic.Sxc.Web.Url;
+using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Web.Internal.PageFeatures;
+using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Dnn.Web;
 
@@ -41,7 +37,7 @@ public class DnnClientResources: ServiceBase
     private bool? _forcePre1025Behavior;
 
 
-    internal IList<IPageFeature> Features => _features ??= BlockBuilder?.Run(true, null)?.Features ?? new List<IPageFeature>();
+    internal IList<IPageFeature> Features => _features ??= BlockBuilder?.Run(true, specs: new())?.Features ?? new List<IPageFeature>();
     private IList<IPageFeature> _features;
 
     public IList<IPageFeature> AddEverything(IList<IPageFeature> features = null)
@@ -52,9 +48,9 @@ public class DnnClientResources: ServiceBase
         features = features ?? Features;
 
         // normal scripts
-        var editJs = features.Contains(BuiltInFeatures.JsCmsInternal);
-        var readJs = features.Contains(BuiltInFeatures.JsCore);
-        var editCss = features.Contains(BuiltInFeatures.ToolbarsInternal);
+        var editJs = features.Contains(SxcPageFeatures.JsCmsInternal);
+        var readJs = features.Contains(SxcPageFeatures.JsCore);
+        var editCss = features.Contains(SxcPageFeatures.ToolbarsInternal);
 
         if (!readJs && !editJs && !editCss && !features.Any())
             return l.Return(features, "nothing to add");
@@ -106,13 +102,13 @@ public class DnnClientResources: ServiceBase
             var priority = (int)FileOrder.Js.DefaultPriority - 2;
 
             // add edit-mode CSS
-            if (editCss) RegisterCss(page, $"{root}{BuiltInFeatures.ToolbarsInternal.UrlWip}");
+            if (editCss) RegisterCss(page, $"{root}{SxcPageFeatures.ToolbarsInternal.UrlWip}");
 
             // add read-js
             if (readJs || editJs)
             {
                 l.A("add $2sxc api and headers");
-                RegisterJs(page, ver, $"{root}{BuiltInFeatures.JsCore.UrlWip}", true, priority);
+                RegisterJs(page, ver, $"{root}{SxcPageFeatures.JsCore.UrlWip}", true, priority);
                 MustAddHeaders = true;
             }
 
@@ -121,17 +117,17 @@ public class DnnClientResources: ServiceBase
             {
                 l.A("add 2sxc edit api; also needs anti-forgery");
                 // note: the inpage only works if it's not in the head, so we're adding it below
-                RegisterJs(page, ver, $"{root}{BuiltInFeatures.JsCmsInternal.UrlWip}", false, priority + 1);
+                RegisterJs(page, ver, $"{root}{SxcPageFeatures.JsCmsInternal.UrlWip}", false, priority + 1);
             }
 
-            if (features.Contains(BuiltInFeatures.JQuery))
+            if (features.Contains(SxcPageFeatures.JQuery))
                 JavaScript.RequestRegistration(CommonJs.jQuery);
 
-            if (features.Contains(BuiltInFeatures.TurnOn))
-                RegisterJs(page, ver, $"{root}{BuiltInFeatures.TurnOn.UrlWip}", true, priority + 10);
+            if (features.Contains(SxcPageFeatures.TurnOn))
+                RegisterJs(page, ver, $"{root}{SxcPageFeatures.TurnOn.UrlWip}", true, priority + 10);
 
-            if (features.Contains(BuiltInFeatures.CmsWysiwyg))
-                RegisterCss(page, $"{root}{BuiltInFeatures.CmsWysiwyg.UrlWip}");
+            if (features.Contains(SxcPageFeatures.CmsWysiwyg))
+                RegisterCss(page, $"{root}{SxcPageFeatures.CmsWysiwyg.UrlWip}");
         });
 
 

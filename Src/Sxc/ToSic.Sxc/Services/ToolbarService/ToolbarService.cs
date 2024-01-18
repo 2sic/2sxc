@@ -1,10 +1,8 @@
-﻿using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.Edit.Toolbar;
-using System;
-using ToSic.Lib.Coding;
+using ToSic.Sxc.Internal;
+using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Services;
 
@@ -14,7 +12,7 @@ internal class ToolbarService: ServiceForDynamicCode, IToolbarService
 {
     #region Constructor & Init
 
-    public ToolbarService(Generator<IToolbarBuilder> toolbarGenerator) : base($"{Constants.SxcLogName}.TlbSvc")
+    public ToolbarService(Generator<IToolbarBuilder> toolbarGenerator) : base($"{SxcLogging.SxcLogName}.TlbSvc")
         => ConnectServices(_toolbarGenerator = toolbarGenerator);
     private readonly Generator<IToolbarBuilder> _toolbarGenerator;
 
@@ -73,9 +71,9 @@ internal class ToolbarService: ServiceForDynamicCode, IToolbarService
         
         // The following lines must be just as this, because it's a functional object, where each call may return a new copy
         var tlb = _toolbarGenerator.New();
-        tlb.ConnectToRoot(_DynCodeRoot);
+        tlb.ConnectToRoot(_CodeApiSvc);
 
-        tlb = tlb.Toolbar(toolbarTemplate: toolbarTemplate, target: target, tweak: tweak, ui: ui, parameters: parameters, prefill: prefill);
+        tlb = ((ToolbarBuilder)tlb).Toolbar(toolbarTemplate: toolbarTemplate, target: target, tweak: tweak, ui: ui, parameters: parameters, prefill: prefill);
 
         if (_defaultUi.HasValue())
             tlb = tlb.Settings(ui: _defaultUi);

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using ToSic.Lib.Documentation;
-using static ToSic.Sxc.Plumbing.ParseObject;
+﻿using static ToSic.Sxc.Internal.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images;
 

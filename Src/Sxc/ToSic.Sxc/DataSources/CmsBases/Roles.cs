@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using ToSic.Eav.Data;
+﻿using System.Collections.Immutable;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Documentation;
-using static ToSic.Eav.DataSource.DataSourceConstants;
+using ToSic.Sxc.DataSources.Internal;
+using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -24,14 +20,13 @@ namespace ToSic.Sxc.DataSources;
 [PublicApi]
 [VisualQuery(
     NiceName = "Roles (User Roles)",
-    Icon = Icons.UserCircled,
+    Icon = DataSourceIcons.UserCircled,
     UiHint = "Roles in this site",
     HelpLink = "https://go.2sxc.org/ds-roles",
     NameId = "eee54266-d7ad-4f5e-9422-2d00c8f93b45",
     Type = DataSourceType.Source,
     ConfigurationType = "1b9fd9d1-dde0-40ad-bb66-5cd7f30de18d"
 )]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class Roles : CustomDataSourceAdvanced
 {
     private readonly IDataFactory _rolesFactory;
@@ -87,8 +82,7 @@ public class Roles : CustomDataSourceAdvanced
 
     #endregion
 
-    [PrivateApi]
-    public IImmutableList<IEntity> GetList() => Log.Func(l =>
+    private IImmutableList<IEntity> GetList() => Log.Func(l =>
     {
         var roles = _provider.GetRolesInternal()?.ToList();
         l.A($"found {roles?.Count} roles");
@@ -131,7 +125,7 @@ public class Roles : CustomDataSourceAdvanced
     [PrivateApi]
     internal static List<int> RolesCsvListToInt(string stringList)
     {
-        if (!stringList.HasValue()) return new List<int>();
+        if (!stringList.HasValue()) return new();
         return stringList.Split(Separator)
             .Select(r => int.TryParse(r.Trim(), out var roleId) ? roleId : int.MinValue)
             .Where(r => r != int.MinValue)

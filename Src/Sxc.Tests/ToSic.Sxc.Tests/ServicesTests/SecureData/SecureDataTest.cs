@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             var result = sds.Parse(original);
             Trace.WriteLine($"Test: '{testName}'; Result: '{result.Value}'");
             Assert.AreEqual(expected, result.Value);
-            Assert.AreEqual(mustBeSecure, result.IsSecure, "Must be Secure");
+            Assert.AreEqual(mustBeSecure, result.IsSecured, "Must be Secure");
         }
 
         //[DataRow("test translate", "Secure:OaB/h/7jUZomSeEvhfFUhCvmrsH6XfmDykIpgXH9JBf6SxoTPY3FjW6O3PebeZ8X")]
@@ -99,7 +99,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public void TestRoundTrip(string testName, string value)
         {
             var secDataService = GetSecureDataService();
-            var encrypted = secDataService.Create(value);
+            var encrypted = ((SecureDataService)secDataService).Create(value);
             Trace.WriteLine("Encrypted: " + encrypted);
 
             var decrypted = secDataService.Parse(encrypted);

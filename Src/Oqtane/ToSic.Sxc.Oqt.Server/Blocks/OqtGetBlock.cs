@@ -3,10 +3,10 @@ using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Context;
+using ToSic.Sxc.Backend.Context;
+using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Oqt.Server.Context;
-using ToSic.Sxc.WebApi.Infrastructure;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks;
 
@@ -18,7 +18,7 @@ internal class OqtGetBlock: ServiceBase, IWebApiContextBuilder
     public OqtGetBlock(
         LazySvc<IModuleRepository> modRepoLazy,
         RequestHelper requestHelper,
-        IContextResolver contextResolverToInit,
+        ISxcContextResolver contextResolverToInit,
         Generator<IContextOfBlock> cntOfBlkGen,
         Generator<BlockFromModule> blkFromModGen,
         Generator<BlockFromEntity> blkFromEntGen
@@ -36,12 +36,12 @@ internal class OqtGetBlock: ServiceBase, IWebApiContextBuilder
 
     private readonly LazySvc<IModuleRepository> _modRepoLazy;
     private readonly RequestHelper _requestHelper;
-    private readonly IContextResolver _contextResolverToInit;
+    private readonly ISxcContextResolver _contextResolverToInit;
     private readonly Generator<IContextOfBlock> _cntOfBlkGen;
     private readonly Generator<BlockFromModule> _blkFromModGen;
     private readonly Generator<BlockFromEntity> _blkFromEntGen;
 
-    public IContextResolver PrepareContextResolverForApiRequest()
+    public ISxcContextResolver PrepareContextResolverForApiRequest()
     {
         if (_alreadyTriedToLoad) return _contextResolverToInit;
         _alreadyTriedToLoad = true;
@@ -71,7 +71,7 @@ internal class OqtGetBlock: ServiceBase, IWebApiContextBuilder
         var block = _blkFromModGen.New().Init(ctx);
 
         // only if it's negative, do we load the inner block
-        var contentBlockId = _requestHelper.GetTypedHeader(Sxc.WebApi.SxcWebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
+        var contentBlockId = _requestHelper.GetTypedHeader(Sxc.Backend.SxcWebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
         if (contentBlockId >= 0)
             return wrapLog.Return(new(ctx, () => block), "found block");
 

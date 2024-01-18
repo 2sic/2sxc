@@ -2,16 +2,16 @@
 using Microsoft.AspNetCore.Hosting;
 using Oqtane.Repository;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Eav.Helpers;
-using ToSic.Eav.ImportExport.Environment;
-using ToSic.Eav.Persistence.Xml;
-using ToSic.Sxc.Adam;
+using ToSic.Eav.ImportExport.Internal;
+using ToSic.Eav.ImportExport.Internal.Xml;
+using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Shared;
-using IContextResolver = ToSic.Sxc.Context.IContextResolver;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
@@ -27,7 +27,7 @@ internal class OqtXmlExporter : XmlExporter
 
     public OqtXmlExporter(
         AdamManager<int, int> adamManager,
-        IContextResolver ctxResolver,
+        ISxcContextResolver ctxResolver,
         XmlSerializer xmlSerializer,
         IWebHostEnvironment hostingEnvironment,
         LazySvc<IFileRepository> fileRepositoryLazy,
@@ -51,7 +51,7 @@ internal class OqtXmlExporter : XmlExporter
 
     protected override void PostContextInit(IContextOfApp appContext)
     {
-        AdamManager.Init(appContext, cdf: null, Constants.CompatibilityLevel10);
+        AdamManager.Init(appContext, cdf: null, CompatibilityLevels.CompatibilityLevel10);
     }
 
 

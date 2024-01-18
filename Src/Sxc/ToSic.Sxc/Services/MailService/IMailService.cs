@@ -1,8 +1,6 @@
 ﻿using System.Net.Mail;
 using System.Text;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Services;
@@ -16,7 +14,7 @@ namespace ToSic.Sxc.Services;
 /// New in 2sxc 12.05
 /// </remarks>
 [PublicApi]
-public interface IMailService: INeedsDynamicCodeRoot
+public interface IMailService: INeedsCodeApiService
 {
     /// <summary>
     /// Quickly create a MailMessage object for further modification and then sending using <see cref="Send(MailMessage)"/>
@@ -121,7 +119,11 @@ public interface IMailService: INeedsDynamicCodeRoot
         object attachments = null
     );
 
-    [PrivateApi] MailAddress MailAddress(string addressType, object mailAddress);
+    // 2024-01-10 2dm internalized - doesn't seem in use, and also not clear why we would have this
+    // was probably an experiment from STV during dev, but we shouldn't keep it in the interface
+    //[PrivateApi] MailAddress MailAddress(string addressType, object mailAddress);
 
-    [PrivateApi] bool AddMailAddresses(string addressType, MailAddressCollection targetMails, object mailAddresses);
+    // 2024-01-10 2dm internalized - doesn't seem in use, and also not clear why we would have this
+    // was probably an experiment from STV during dev, but we shouldn't keep it in the interface
+    //[PrivateApi] bool AddMailAddresses(string addressType, MailAddressCollection targetMails, object mailAddresses);
 }

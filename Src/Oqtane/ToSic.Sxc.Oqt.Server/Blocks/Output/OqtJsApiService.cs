@@ -4,12 +4,11 @@ using Microsoft.AspNetCore.Http;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Edit;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web.JsContext;
+using ToSic.Sxc.Web.Internal.JsContext;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output;
 
@@ -17,10 +16,10 @@ internal class OqtJsApiService : ServiceBase, IJsApiService
 {
     private readonly IAntiforgery _antiForgery;
     private readonly IHttpContextAccessor _http;
-    private readonly JsApiCache _jsApiCache;
+    private readonly JsApiCacheService _jsApiCache;
     private readonly SiteStateInitializer _siteStateInitializer;
 
-    public OqtJsApiService(IAntiforgery antiForgery, IHttpContextAccessor http, JsApiCache jsApiCache, SiteStateInitializer siteStateInitializer) : base("OqtJsApi")
+    public OqtJsApiService(IAntiforgery antiForgery, IHttpContextAccessor http, JsApiCacheService jsApiCache, SiteStateInitializer siteStateInitializer) : base("OqtJsApi")
     {
         ConnectServices(
             _antiForgery = antiForgery,
@@ -31,7 +30,7 @@ internal class OqtJsApiService : ServiceBase, IJsApiService
     }
 
     public string GetJsApiJson(int? pageId = null, string siteRoot = null, string rvt = null) 
-        => InpageCms.JsApiJson(GetJsApi(pageId, siteRoot, rvt));
+        => JsApi.JsApiJson(GetJsApi(pageId, siteRoot, rvt));
 
     public JsApi GetJsApi(int? pageId = null, string siteRoot = null, string rvt = null)
     {

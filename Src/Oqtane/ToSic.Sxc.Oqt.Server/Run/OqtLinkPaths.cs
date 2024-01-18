@@ -1,23 +1,16 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using ToSic.Eav.Helpers;
+using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Oqt.Server.Plumbing;
-using ToSic.Sxc.Run;
 using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
-internal class OqtLinkPaths: ILinkPaths
+internal class OqtLinkPaths(IHttpContextAccessor contextAccessor, SiteStateInitializer siteStateInitializer)
+    : ILinkPaths
 {
-    public OqtLinkPaths(IHttpContextAccessor contextAccessor, SiteStateInitializer siteStateInitializer)
-    {
-        _contextAccessor = contextAccessor;
-        _siteStateInitializer = siteStateInitializer;
-    }
-
-    private readonly IHttpContextAccessor _contextAccessor;
-    private readonly SiteStateInitializer _siteStateInitializer;
-    public HttpContext Current => _contextAccessor.HttpContext;
+    public HttpContext Current => contextAccessor.HttpContext;
 
     #region Paths
 
@@ -34,7 +27,7 @@ internal class OqtLinkPaths: ILinkPaths
 
     public string AppFromTheDomainRoot(string appFolder, string pagePath)
     {
-        var siteRoot = OqtPageOutput.GetSiteRoot(_siteStateInitializer.InitializedState).TrimLastSlash();
+        var siteRoot = OqtPageOutput.GetSiteRoot(siteStateInitializer.InitializedState).TrimLastSlash();
         return AppFromTheDomainRoot(siteRoot, appFolder, pagePath);
     }
 
@@ -42,12 +35,12 @@ internal class OqtLinkPaths: ILinkPaths
 
     #endregion
 
-    public string GetCurrentRequestUrl() => _contextAccessor.HttpContext?.Request?.GetEncodedUrl() ?? string.Empty;
+    public string GetCurrentRequestUrl() => contextAccessor.HttpContext?.Request?.GetEncodedUrl() ?? string.Empty;
 
     public string GetCurrentLinkRoot()
     {
-        var scheme = _contextAccessor?.HttpContext?.Request?.Scheme ?? "http";
-        var alias = _siteStateInitializer.InitializedState.Alias;
+        var scheme = contextAccessor?.HttpContext?.Request?.Scheme ?? "http";
+        var alias = siteStateInitializer.InitializedState.Alias;
         var domainName = string.IsNullOrEmpty(alias.Path)
             ? alias.Name
             : alias.Name.Substring(0, alias.Name.Length - alias.Path.Length - 1);

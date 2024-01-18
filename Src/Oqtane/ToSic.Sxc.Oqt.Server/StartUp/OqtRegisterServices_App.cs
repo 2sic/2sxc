@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.ImportExport.Internal;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Security;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.LookUps;
 using ToSic.Sxc.Oqt.Server.Run;

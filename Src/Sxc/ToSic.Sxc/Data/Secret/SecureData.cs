@@ -1,28 +1,21 @@
 ﻿using ToSic.Eav.Plumbing;
-using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data;
 
 [PrivateApi("hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class SecureData<T>: ISecureData<T>
+internal class SecureData<T>(T result, bool isSecure) : ISecureData<T>
 {
-    public SecureData(T result, bool isSecure)
-    {
-        Value = result;
-        IsSecure = isSecure;
-    }
+    public T Value { get; internal set; } = result;
 
-    public T Value { get; internal set; }
-
-    public bool IsEncrypted { get; internal set; } = false;
-    public bool IsSigned { get; internal set; } = false;
-    public SecretAuthorities Authority { get; internal set; } = SecretAuthorities.None;
-    public bool IsSecure { get; internal set; }
+    //public bool IsEncrypted { get; internal set; } = false;
+    //public bool IsSigned { get; internal set; } = false;
+    //public SecureDataAuthorities Authority { get; internal set; } = SecureDataAuthorities.None;
+    public bool IsSecured { get; internal set; } = isSecure;
 
 
     public bool IsSecuredBy(string authorityName) 
-        => IsSecure && "preset".EqualsInsensitive(authorityName);
+        => IsSecured && "preset".EqualsInsensitive(authorityName);
 
     public override string ToString() => Value.ToString();
 }

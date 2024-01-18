@@ -1,10 +1,6 @@
-﻿using System;
-using ToSic.Eav.Data;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-using ToSic.Razor.Markup;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Data;
+﻿using ToSic.Razor.Markup;
+using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sxc.Data.Internal;
 
 namespace ToSic.Sxc.Services;
 
@@ -20,7 +16,7 @@ namespace ToSic.Sxc.Services;
 /// * Introduced in v12.05 but on another namespace which still works for compatibility
 /// * Moved to ToSic.Sxc.Services in v13
 /// </remarks>
-[PublicApi_Stable_ForUseInYourCode]
+[PublicApi]
 public interface IRenderService
 {
     /// <summary>

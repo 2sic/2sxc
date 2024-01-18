@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Text.Json;
-using ToSic.Lib.Coding;
+﻿using System.Text.Json;
 using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Wrapper;
-
+using ToSic.Sxc.Data.Internal.Wrapper;
 using static ToSic.Eav.Serialization.JsonOptions;
 
 namespace ToSic.Sxc.Services;

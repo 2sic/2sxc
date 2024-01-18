@@ -1,16 +1,11 @@
 ﻿using ToSic.Eav.Internal.Unknown;
-using ToSic.Eav.Run;
-using ToSic.Lib.Documentation;
-using ToSic.Sxc.Context.Query;
 
 namespace ToSic.Sxc.Context;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class PageUnknown: IPage, IIsUnknown
+internal class PageUnknown(WarnUseOfUnknown<PageUnknown> _) : IPage, IIsUnknown
 {
-    public PageUnknown(WarnUseOfUnknown<PageUnknown> _) { }
-
     public IPage Init(int id)
     {
         Id = id;
@@ -21,6 +16,6 @@ public class PageUnknown: IPage, IIsUnknown
 
     public string Url => Eav.Constants.UrlNotInitialized;
 
-    public IParameters Parameters => new Parameters(null);
+    public IParameters Parameters => new Parameters.Parameters(null);
 
 }

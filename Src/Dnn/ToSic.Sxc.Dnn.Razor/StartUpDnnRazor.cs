@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Razor;
+using ToSic.Sxc.Dnn.Razor.Internal;
 
 namespace ToSic.Sxc;
 

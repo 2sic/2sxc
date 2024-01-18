@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Web.Url;
+using ToSic.Sxc.Web.Internal.Url;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests

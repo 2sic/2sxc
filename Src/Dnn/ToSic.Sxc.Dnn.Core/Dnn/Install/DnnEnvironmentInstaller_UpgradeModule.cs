@@ -1,11 +1,9 @@
 ﻿using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Controllers;
-using System;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.IO;
 using ToSic.Eav;
-using ToSic.Lib.Logging;
 using Exception = System.Exception;
 
 namespace ToSic.Sxc.Dnn.Install;
@@ -39,8 +37,8 @@ partial class DnnEnvironmentInstaller
         if (version != "01.00.00" && IsUpgradeComplete(version, true, "- Check on Start UpgradeModule"))
         {
             _installLogger.LogStep(version, "Apparently trying to update this version, but this versions upgrade is apparently completed, will abort");
-            throw new Exception("2sxc upgrade for version " + version +
-                                " started, but it looks like the upgrade for this version is already complete. Aborting upgrade.");
+            throw new("2sxc upgrade for version " + version +
+                      " started, but it looks like the upgrade for this version is already complete. Aborting upgrade.");
         }
         _installLogger.LogStep(version, "version / upgrade-complete test passed");
 
@@ -48,8 +46,8 @@ partial class DnnEnvironmentInstaller
         if (IsUpgradeRunning)
         {
             _installLogger.LogStep(version, "Apparently upgrade is running, will abort");
-            throw new Exception("2sxc upgrade for version " + version +
-                                " started, but the upgrade is already running. Aborting upgrade.");
+            throw new("2sxc upgrade for version " + version +
+                      " started, but the upgrade is already running. Aborting upgrade.");
         }
         _installLogger.LogStep(version, "is-upgrade-running test passed");
 
@@ -63,7 +61,7 @@ partial class DnnEnvironmentInstaller
             {
                 // All versions before 8.11 should trigger this
                 case "08.11.00":
-                    throw new Exception("Trying to upgrade a 7 or 8 version - which isn't supported in v9.20+. Please upgrade to the latest 8.12 or 9.15before trying to upgrade to a 9.20+");
+                    throw new("Trying to upgrade a 7 or 8 version - which isn't supported in v9.20+. Please upgrade to the latest 8.12 or 9.15before trying to upgrade to a 9.20+");
 
                 // case "15.00.00": // moved to 15.02 because of we accidentally skipped upgrades in 15.01 - see bug #2997
                 // case "15.02.00": // originally moved to here, but the Settings.Installation.LastVersionWithServerChanges had not been upgraded

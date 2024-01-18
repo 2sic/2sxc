@@ -1,17 +1,13 @@
-﻿using System;
-using ToSic.Lib.Logging;
-using ToSic.Lib.Services;
-using ToSic.Sxc.Plumbing;
-using static ToSic.Sxc.Images.ImageConstants;
+﻿using ToSic.Lib.Services;
+using ToSic.Sxc.Internal.Plumbing;
+using static ToSic.Sxc.Images.Internal.ImageConstants;
 using static ToSic.Sxc.Images.RecipeVariant;
-using static ToSic.Sxc.Plumbing.ParseObject;
+using static ToSic.Sxc.Internal.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images;
 
-internal class ResizeDimensionGenerator: ServiceBase
+internal class ResizeDimensionGenerator() : ServiceBase("Img.ResDim")
 {
-    public ResizeDimensionGenerator(): base("Img.ResDim") { }
-
     public bool Debug = false;
         
 
@@ -55,7 +51,7 @@ internal class ResizeDimensionGenerator: ServiceBase
 
         dim = KeepInRangeProportional(dim);
 
-        return new OneResize
+        return new()
         {
             Width = dim.Width,
             Height = dim.Height

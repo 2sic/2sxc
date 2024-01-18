@@ -1,5 +1,5 @@
 ﻿using System.Dynamic;
-using ToSic.Lib.Documentation;
+using ToSic.Sxc.Data.Internal.Dynamic;
 
 namespace ToSic.Sxc.Data;
 

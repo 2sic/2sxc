@@ -1,12 +1,12 @@
-﻿using System;
-using ToSic.Eav.Apps.Security;
-using ToSic.Eav.Apps.Services;
+﻿using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Code.Help;
 using ToSic.Eav.Context;
+using ToSic.Eav.Security.Internal;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Engines;
 
@@ -36,10 +36,10 @@ public class EngineCheckTemplate: ServiceBase
             throw new RenderingException(ErrHelpTypeMissing);
     }
 
-    private static CodeHelp ErrHelpConfigMissing = new(name: "Template Config missing", detect: "",
+    private static readonly CodeHelp ErrHelpConfigMissing = new(name: "Template Config missing", detect: "",
         linkCode: "err-view-config-missing", uiMessage: "Template Configuration Missing");
 
-    private static CodeHelp ErrHelpTypeMissing = new(name: "Content Type Missing", detect: "", linkCode: "err-view-type-missing",
+    private static readonly CodeHelp ErrHelpTypeMissing = new(name: "Content Type Missing", detect: "", linkCode: "err-view-type-missing",
         uiMessage: "The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
 
 
@@ -61,7 +61,7 @@ public class EngineCheckTemplate: ServiceBase
                 $"{ErrorHelpNotAuthorized.UiMessage} See {ErrorHelpNotAuthorized.LinkCode}"));
     }
 
-    private static CodeHelp ErrorHelpNotAuthorized = new(name: "Not authorized", detect: "",
+    private static readonly CodeHelp ErrorHelpNotAuthorized = new(name: "Not authorized", detect: "",
         linkCode: "http://2sxc.org/help?tag=view-permissions",
         uiMessage: "This view is not accessible for the current user. To give access, change permissions in the view settings.");
 }

@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Eav.Data;
-using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Lib.Coding;
+﻿using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Data;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Razor.Markup;
-using static ToSic.Sxc.Data.Typed.TypedHelpers;
+using ToSic.Sxc.Data.Internal.Dynamic;
+using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data;
 
@@ -16,13 +10,13 @@ namespace ToSic.Sxc.Data;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPropLookup, ICanDebug, ICanGetByName
 {
-    public TypedStack(string name, CodeDataFactory cdf, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources)
+    public TypedStack(string name, Internal.CodeDataFactory cdf, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources)
     {
         _stack = new PropertyStack().Init(name, sources);
         Cdf = cdf;
         PropertyLookup = new PropLookupStack(_stack, () => Debug);
-        _helper = new GetAndConvertHelper(this, cdf, propsRequired: false, childrenShouldBeDynamic: false, canDebug: this);
-        _itemHelper = new CodeItemHelper(_helper, this);
+        _helper = new(this, cdf, propsRequired: false, childrenShouldBeDynamic: false, canDebug: this);
+        _itemHelper = new(_helper, this);
     }
 
     private readonly IPropertyStack _stack;
@@ -33,7 +27,7 @@ internal class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPropLookup
 
     public IPropertyStack GetContents() => _stack;
 
-    public CodeDataFactory Cdf { get; }
+    public Internal.CodeDataFactory Cdf { get; }
 
     public bool Debug { get; set; }
 

@@ -1,7 +1,4 @@
-﻿using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Code;
+﻿namespace ToSic.Sxc.Code;
 
 /// <summary>
 /// WIP!!!

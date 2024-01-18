@@ -17,7 +17,7 @@ internal class OqtPrerenderService : ServiceBase, IOqtPrerenderService
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IThemeRepository _themes;
 
-    public OqtPrerenderService(IHttpContextAccessor httpContextAccessor, IThemeRepository themes) : base($"{Constants.SxcLogName}.OqtPrerndSrv")
+    public OqtPrerenderService(IHttpContextAccessor httpContextAccessor, IThemeRepository themes) : base($"Oqt.PrerndSrv")
     {
         _httpContextAccessor = httpContextAccessor;
         _themes = themes;

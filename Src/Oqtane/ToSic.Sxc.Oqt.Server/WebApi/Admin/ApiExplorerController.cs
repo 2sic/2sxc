@@ -8,12 +8,13 @@ using ToSic.Eav.WebApi.Routing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Oqt.Server.Code;
+using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Oqt.Server.Code.Internal;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
+using ToSic.Sxc.Polymorphism.Internal;
 using RealController = ToSic.Eav.WebApi.ApiExplorer.ApiExplorerControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
@@ -47,9 +48,17 @@ public class ApiExplorerController : OqtStatefulControllerBase, IApiExplorerCont
         // get path from root
         var siteStateInitializer = GetService<SiteStateInitializer>();
         var siteId = siteStateInitializer.InitializedState.Alias.SiteId;
-        var appId = CtxHlp.BlockOptional?.AppId ?? Eav.Constants.AppIdEmpty;
         var appFolder = GetService<AppFolder>().GetAppFolder();
         var pathFromRoot = OqtServerPaths.GetAppApiPath(siteId, appFolder, path);
+
+        var spec = new HotBuildSpec(CtxHlp.BlockOptional?.AppId ?? Eav.Constants.AppIdEmpty); 
+        
+        // Figure out the current edition
+        var block = CtxHlp.BlockOptional;
+        if (block != null)
+            spec = new HotBuildSpec(spec.AppId,
+                edition: PolymorphConfigReader.UseViewEditionLazyGetEdition(block.View,() => GetService<PolymorphConfigReader>().Init(block.Context.AppState.List)));
+
         var thisAppCodeLoader = GetService<LazySvc<ThisAppCodeLoader>>();
         Log.A($"Controller path from root: {pathFromRoot}");
 
@@ -64,6 +73,6 @@ public class ApiExplorerController : OqtStatefulControllerBase, IApiExplorerCont
         var controllerFolder = pathFromRoot.Substring(0, pathFromRoot.LastIndexOf(@"\"));
         var dllName = AppApiDynamicRouteValueTransformer.GetDllName(controllerFolder, apiFile);
 
-        return new Compiler(thisAppCodeLoader).Compile(apiFile, dllName, appId).Assembly;
+        return new Compiler(thisAppCodeLoader).Compile(apiFile, dllName, spec).Assembly;
     }
 }

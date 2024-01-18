@@ -1,10 +1,6 @@
 ﻿using Custom.Hybrid;
-using System.Web.WebPages;
-using ToSic.Lib.Documentation;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Razor;
-using ToSic.Sxc.Dnn.Web;
 using IHasLog = ToSic.Lib.Logging.IHasLog;
 using ILog = ToSic.Lib.Logging.ILog;
 
@@ -29,7 +25,7 @@ public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHa
     internal DnnRazorHelper SysHlp => _sysHlp ??= new DnnRazorHelper().Init(this, RenderFunction);
     private DnnRazorHelper _sysHlp;
 
-    HelperResult RenderFunction(string path, object data)
+    private HelperResult RenderFunction(string path, object data)
     {
         if (this is ICanUseRoslynCompiler supportAppCode)
             return supportAppCode.RoslynRenderPage(path, data);
@@ -40,14 +36,14 @@ public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHa
 
     /// <inheritdoc />
     [PrivateApi]
-    public IDynamicCodeRoot _DynCodeRoot { get; private set; }
+    public ICodeApiService _CodeApiSvc { get; private set; }
 
     /// <inheritdoc />
     [PrivateApi]
-    public void ConnectToRoot(IDynamicCodeRoot codeRoot)
+    public void ConnectToRoot(ICodeApiService codeRoot)
     {
         SysHlp.ConnectToRoot(codeRoot);
-        _DynCodeRoot = codeRoot;
+        _CodeApiSvc = codeRoot;
     }
 
     /// <summary>

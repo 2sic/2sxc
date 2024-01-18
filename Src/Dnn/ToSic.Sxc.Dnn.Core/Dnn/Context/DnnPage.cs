@@ -1,10 +1,8 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.Helpers;
-using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.Internal.DotNet;
 
 namespace ToSic.Sxc.Dnn.Context;
 

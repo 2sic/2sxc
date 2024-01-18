@@ -1,16 +1,18 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.StartUp;
+using ToSic.Eav.Integration;
 using ToSic.Eav.WebApi;
 using ToSic.Razor.StartUp;
+using ToSic.Sxc.Backend;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Startup;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Polymorphism;
+using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sxc.Startup;
-using ToSic.Sxc.WebApi;
 
 
 namespace ToSic.Sxc.Dnn.StartUp;
@@ -40,7 +42,7 @@ public static class DnnDi
             .AddAdamWebApi<int, int>()
             .AddSxcWebApi()
             .AddSxcCore()
-            .AddEav()
+            .AddEavEverything()
             .AddEavWebApiTypedAfterEav()
             .AddRazorBlade();
 

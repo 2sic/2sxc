@@ -1,9 +1,7 @@
-﻿using System;
-using DotNetNuke.Entities.Modules;
+﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
-using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Integration.Environment;
 using ToSic.Sxc.Dnn.Search;
-using ToSic.Sxc.Search;
 
 namespace ToSic.Sxc.Dnn;
 
@@ -28,7 +26,7 @@ public class DnnEnvironmentLogger: IEnvironmentLogger
         if (errCount == SearchErrorsMax)
         {
             Exceptions.LogException(new SearchIndexException(moduleInfo,
-                new Exception(
+                new(
                     $"Hit {SearchErrorsMax} SearchIndex exceptions in 2sxc modules, will stop reporting them to not flood the error log. \n" +
                     $"To start reporting again up to {SearchErrorsMax} just restart the application. \n" +
                     $"To show more errors change 'ToSic.Sxc.Dnn.{nameof(DnnBusinessController)}.{nameof(SearchErrorsMax)}' to a higher number in some code of yours like in a temporary razor view. " +

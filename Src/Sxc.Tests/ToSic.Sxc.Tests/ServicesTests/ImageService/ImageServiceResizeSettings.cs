@@ -1,8 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Images;
 using System.Linq;
+using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Tests.ServicesTests.ImageService;
-using ToSic.Sxc.Web.Url;
+using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Tests.ServicesTests
 {

@@ -1,24 +1,22 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.Api.Api01;
-using ToSic.Eav.Data;
-using ToSic.Eav.DataSource.Caching;
+﻿using ToSic.Eav.Apps.Internal.Api01;
+using ToSic.Eav.DataSource.Internal.Caching;
+using ToSic.Eav.DataSources.Internal;
 using ToSic.Lib.DI;
 
-namespace ToSic.Sxc.Apps
+namespace ToSic.Sxc.Apps;
+
+internal class AppDataTyped(
+    Eav.DataSources.App.MyServices services,
+    LazySvc<SimpleDataEditService> dataController,
+    LazySvc<IDataSourceCacheService> dsCacheSvc)
+    : AppDataWithCrud(services, dataController, dsCacheSvc), IAppDataTyped
 {
-    internal class AppDataTyped: ToSic.Eav.Apps.DataSources.AppDataWithCrud, IAppDataTyped
-    {
-        public AppDataTyped(MyServices services, LazySvc<SimpleDataController> dataController, LazySvc<IDataSourceCacheService> dsCacheSvc) : base(services, dataController, dsCacheSvc)
-        {
-        }
+    #region Content Types
 
-        #region Content Types
+    IEnumerable<IContentType> IAppDataTyped.GetContentTypes() => AppState.ContentTypes;
 
-        IEnumerable<IContentType> IAppDataTyped.GetContentTypes() => AppState.ContentTypes;
+    IContentType IAppDataTyped.GetContentType(string name) => AppState.GetContentType(name);
 
-        IContentType IAppDataTyped.GetContentType(string name) => AppState.GetContentType(name);
+    #endregion
 
-        #endregion
-
-    }
 }

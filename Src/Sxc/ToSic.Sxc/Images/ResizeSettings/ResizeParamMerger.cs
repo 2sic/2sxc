@@ -1,19 +1,16 @@
-﻿using System;
-using ToSic.Eav.Data;
-using ToSic.Eav.Data.PiggyBack;
+﻿using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using static ToSic.Sxc.Images.ImageConstants;
-using static ToSic.Sxc.Plumbing.ParseObject;
+using ToSic.Sxc.Internal;
+using static ToSic.Sxc.Images.Internal.ImageConstants;
+using static ToSic.Sxc.Internal.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images;
 
 /// <summary>
 /// This merges predefined settings with custom specified parameters to create a stable resize-Parameters object for further use
 /// </summary>
-internal class ResizeParamMerger: HelperBase
+internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcLogging.SxcLogName}.ImgRPM")
 {
     private const string ResizeModeField = "ResizeMode";
     private const string ScaleModeField = "ScaleMode";
@@ -22,8 +19,6 @@ internal class ResizeParamMerger: HelperBase
     private const string HeightField = "Height";
     private const string AspectRatioField = "AspectRatio";
     private const string AdvancedField = "Advanced";
-
-    public ResizeParamMerger(ILog parentLog) : base(parentLog, $"{Constants.SxcLogName}.ImgRPM") { }
 
     public bool Debug = false;
 
@@ -56,7 +51,7 @@ internal class ResizeParamMerger: HelperBase
         var resP = new ResizeParams(Log);
 
         if (settings is IResizeSettings typeSettings)
-            return (new ResizeSettings(
+            return (new(
                 typeSettings,
                 format: resP.FormatOrNull(format),
                 width: resP.WidthOrNull(width),

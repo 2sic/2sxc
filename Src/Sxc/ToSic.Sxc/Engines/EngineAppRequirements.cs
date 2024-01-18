@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Eav.Apps.State;
+﻿using ToSic.Eav.Apps.State;
 using ToSic.Eav.Code.Help;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Internal.Requirements;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.SysData;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.Internal;
+using ToSic.Sxc.Web.Internal.ClientAssets;
 
 namespace ToSic.Sxc.Engines;
 
@@ -44,7 +42,7 @@ public class EngineAppRequirements: ServiceBase
             var rsList = reqStatus.ToList();
             var exList2 = rsList
                 .Select(r => new RenderingException(
-                    new CodeHelp(ErrHelpRequirementsNotMet, name: r.Aspect.Name, uiMessage: $"Requirement <em>{r.Aspect.Name}</em> is missing ({r.Aspect.NameId})", linkCode: "sysfeats")))
+                    new(ErrHelpRequirementsNotMet, name: r.Aspect.Name, uiMessage: $"Requirement <em>{r.Aspect.Name}</em> is missing ({r.Aspect.NameId})", linkCode: "sysfeats")))
                 .Cast<Exception>()
                 .ToList();
 
@@ -70,7 +68,7 @@ public class EngineAppRequirements: ServiceBase
                 "</p>",
                 EngineMessages.Warning);
 
-            var result = new RenderEngineResult(html, false, new List<IClientAsset>(), null, exList2);
+            var result = new RenderEngineResult(html, false, [], null, exList2);
             return l.Return(result, "error");
         }
 

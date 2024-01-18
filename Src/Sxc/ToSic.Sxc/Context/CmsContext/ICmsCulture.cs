@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Context;
+﻿namespace ToSic.Sxc.Context;
 
 /// <summary>
 /// Information about the cultures/languages used.

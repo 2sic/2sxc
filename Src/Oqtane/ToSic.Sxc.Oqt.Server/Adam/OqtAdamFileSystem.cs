@@ -10,6 +10,7 @@ using ToSic.Eav.Helpers;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Dev;

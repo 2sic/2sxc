@@ -1,13 +1,13 @@
 ﻿using System.IO;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Decorators;
-using ToSic.Eav.Apps.Paths;
+using ToSic.Eav.Apps.Integration;
+using ToSic.Eav.Apps.Internal.MetadataDecorators;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
-using static ToSic.Eav.Apps.AppConstants;
+using static ToSic.Eav.Apps.Internal.AppConstants;
 
 namespace ToSic.Sxc.Apps;
 

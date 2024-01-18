@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Dnn.Web;
-
-namespace ToSic.Sxc.Dnn;
+﻿namespace ToSic.Sxc.Dnn;
 
 /// <summary>
 /// Modify any objects on DNN Razor to match the newer .net core conventions.

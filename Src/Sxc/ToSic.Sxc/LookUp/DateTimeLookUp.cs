@@ -5,13 +5,8 @@ using ToSic.Eav.LookUp;
 namespace ToSic.Sxc.LookUp
 {
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public class DateTimeLookUp : LookUpBase
+    public class DateTimeLookUp() : LookUpBase("DateTime")
     {
-        public DateTimeLookUp()
-        {
-            Name = "DateTime";
-        }
-
         public override string Get(string key, string format)
         {
             return key.ToLowerInvariant() switch

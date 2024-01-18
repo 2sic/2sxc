@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using DotNetNuke.Entities.Modules;
+﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
-using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Search;
-using ToSic.Sxc.Search;
 
 namespace ToSic.Sxc.Dnn;
 

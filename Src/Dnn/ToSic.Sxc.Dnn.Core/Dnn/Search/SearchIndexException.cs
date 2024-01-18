@@ -1,6 +1,4 @@
-﻿using System;
-using DotNetNuke.Entities.Modules;
-using ToSic.Lib.Documentation;
+﻿using DotNetNuke.Entities.Modules;
 
 namespace ToSic.Sxc.Dnn.Search;
 

@@ -7,8 +7,9 @@ using Oqtane.Shared;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.Blocks;
-using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Apps.Internal;
+using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Oqt.Server.Pages;
 
@@ -50,7 +51,7 @@ public class Pages: ServiceBase
 
         // filter the results
         var allMods = sxcAll
-            .Where(m => m.Module.Settings.ContainsKey(Settings.ModuleSettingContentGroup) && m.Module.Settings[Settings.ModuleSettingContentGroup] != Guid.Empty.ToString())
+            .Where(m => m.Module.Settings.ContainsKey(ModuleSettingNames.ContentGroup) && m.Module.Settings[ModuleSettingNames.ContentGroup] != Guid.Empty.ToString())
             .ToList();
 
         return wrapLog.Return(allMods, $"{allMods.Count}");
@@ -66,7 +67,7 @@ public class Pages: ServiceBase
         dto.Path = view.Path;
         dto.Blocks = blocks
             .Where(b => b.View.Guid == view.Guid)
-            .Select(blWMod => ContentBlockDtoBuilder(blWMod, pageModules.Where(m => m.Module.Settings[Settings.ModuleSettingContentGroup] == blWMod.Guid.ToString()).ToList()));
+            .Select(blWMod => ContentBlockDtoBuilder(blWMod, pageModules.Where(m => m.Module.Settings[ModuleSettingNames.ContentGroup] == blWMod.Guid.ToString()).ToList()));
         return dto;
     }
 

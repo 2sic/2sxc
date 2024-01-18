@@ -1,26 +1,16 @@
-﻿using System;
-using System.Web.Hosting;
-using System.Web.WebPages;
-using Custom.Hybrid;
+﻿using System.Web.Hosting;
 using ToSic.Eav;
 using ToSic.Eav.Code.Help;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Code.CodeHelpers;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Code.Internal.CodeRunHelpers;
+using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Dnn.Code;
-using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.Razor;
 
 [PrivateApi]
-internal class DnnRazorHelper: RazorHelperBase
+internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
 {
     #region Constructor / Init
-
-    public DnnRazorHelper() : base("Sxc.RzrHlp") { }
 
     public DnnRazorHelper Init(RazorComponentBase page, Func<string, object, HelperResult> renderPage)
     {
@@ -49,7 +39,7 @@ internal class DnnRazorHelper: RazorHelperBase
 
         // Only call the Page.ConnectToRoot, as it will call-back this objects ConnectToRoot
         // So don't call: ConnectToRoot(typedParent._DynCodeRoot);
-        Page.ConnectToRoot(typedParent._DynCodeRoot);
+        Page.ConnectToRoot(typedParent._CodeApiSvc);
 
         Log.A("@RenderPage:" + virtualPath);
     }
@@ -60,7 +50,8 @@ internal class DnnRazorHelper: RazorHelperBase
 
     #region Html Helper
 
-    internal IHtmlHelper Html => _html ??= _DynCodeRoot.GetService<HtmlHelper>().Init(Page, this, _DynCodeRoot.Block?.Context.User.IsSystemAdmin ?? false, _renderPage);
+    internal IHtmlHelper Html => _html ??= _CodeApiSvc.GetService<HtmlHelper>().Init(Page, this,
+        ((ICodeApiServiceInternal)_CodeApiSvc)._Block?.Context.User.IsSystemAdmin ?? false, _renderPage);
     private IHtmlHelper _html;
 
     #endregion
@@ -105,7 +96,7 @@ internal class DnnRazorHelper: RazorHelperBase
 
     #region DynamicModel and Factory
 
-    private CodeDataWrapper CodeDataWrapper => _dynJacketFactory.Get(() => _DynCodeRoot.GetService<CodeDataWrapper>());
+    private CodeDataWrapper CodeDataWrapper => _dynJacketFactory.Get(() => _CodeApiSvc.GetService<CodeDataWrapper>());
     private readonly GetOnce<CodeDataWrapper> _dynJacketFactory = new();
 
     /// <inheritdoc cref="IRazor14{TModel,TServiceKit}.DynamicModel"/>

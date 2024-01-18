@@ -13,7 +13,8 @@ using ToSic.Sxc.Oqt.Server.Blocks.Output;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.Web.EditUi;
+using ToSic.Sxc.Web.Internal.EditUi;
+using ToSic.Sxc.Web.Internal.JsContext;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers;
 

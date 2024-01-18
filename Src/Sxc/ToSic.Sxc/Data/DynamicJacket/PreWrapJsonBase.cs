@@ -1,17 +1,13 @@
 ﻿using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Wrapper;
 
 namespace ToSic.Sxc.Data;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal abstract class PreWrapJsonBase: PreWrapBase, IPreWrap, IPropertyLookup
+internal abstract class PreWrapJsonBase(CodeJsonWrapper wrapper, object data)
+    : PreWrapBase(data), IPreWrap, IPropertyLookup
 {
-    internal PreWrapJsonBase(CodeJsonWrapper wrapper, object data): base(data)
-    {
-        Wrapper = wrapper;
-    }
-
-    public readonly CodeJsonWrapper Wrapper;
+    public readonly CodeJsonWrapper Wrapper = wrapper;
 
     public override WrapperSettings Settings => Wrapper.Settings;
         

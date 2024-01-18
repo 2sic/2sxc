@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Linq;
 using Oqtane.Infrastructure;
 using Oqtane.Repository;
-using ToSic.Eav.Apps.Languages;
+using ToSic.Eav.Cms.Internal.Languages;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Oqt.Shared;

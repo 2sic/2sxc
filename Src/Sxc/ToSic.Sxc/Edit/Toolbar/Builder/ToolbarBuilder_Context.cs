@@ -1,14 +1,11 @@
-﻿using System.Linq;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Data;
-using ToSic.Lib.Logging;
+﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-public partial class ToolbarBuilder
+partial class ToolbarBuilder: IToolbarBuilderInternal
 {
     private const int NoAppId = -1;
 
@@ -35,7 +32,7 @@ public partial class ToolbarBuilder
     private ToolbarContext GenerateContext(object target, string context) => Log.Func($"{nameof(context)}:{context}", () =>
     {
         // Check if context had already been prepared
-        if (context.ContainsInsensitive("context:")) return (new ToolbarContext(context), "contains context:");
+        if (context.ContainsInsensitive("context:")) return (new(context), "contains context:");
 
         if (target == null) return (null, "no target");
         if (context.EqualsInsensitive(false.ToString())) return (null, "context=false");

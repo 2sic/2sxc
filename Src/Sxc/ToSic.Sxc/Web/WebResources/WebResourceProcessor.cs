@@ -1,13 +1,11 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Utils;
-using ToSic.Sxc.Web.PageFeatures;
-using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
+using ToSic.Sxc.Web.Internal.HtmlParsing;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.Web.WebResources;
 
@@ -57,17 +55,17 @@ internal class WebResourceProcessor: HelperBase
         if (webRes.Get(WebResEnabledField) as bool? == false) return l.ReturnNull("not enabled");
 
         // Check if we really have HTML to use
-        if (!(webRes.Get(WebResHtmlField) is string html) || html.IsEmpty()) return l.ReturnNull("no html");
+        if (webRes.Get(WebResHtmlField) is not string html || html.IsEmpty()) return l.ReturnNull("no html");
 
         // TODO: HANDLE AUTO-ENABLE-OPTIMIZATIONS
         var autoOptimize = webRes.Get(WebResAutoOptimizeField, fallback: false);
 
         if (!CdnSource.HasValue() || CdnSource == CdnDefault)
-            return l.Return(new PageFeatureFromSettings(key, html: html, autoOptimize: autoOptimize), "ok, using built-in cdn-path");
+            return l.Return(new(key, html: html, autoOptimize: autoOptimize), "ok, using built-in cdn-path");
 
         // check if feature is enabled
-        if (!_features.IsEnabled(BuiltInFeatures.CdnSourcePublic.NameId))
-            return l.Return(new PageFeatureFromSettings(key, html: html, autoOptimize: autoOptimize), "ok, cdn-swap feature not enabled");
+        if (!_features.IsEnabled(SxcFeatures.CdnSourcePublic.NameId))
+            return l.Return(new(key, html: html, autoOptimize: autoOptimize), "ok, cdn-swap feature not enabled");
 
         // Set new root based on CdnSource settings
         var newRoot = CdnSource + VersionSuffix;
@@ -98,7 +96,7 @@ internal class WebResourceProcessor: HelperBase
             html = html.Replace(orig, "");
         }
 
-        return l.Return(new PageFeatureFromSettings(key, html: html, autoOptimize: autoOptimize), 
+        return l.Return(new(key, html: html, autoOptimize: autoOptimize), 
             $"ok; root now {newRoot}");
     }
 

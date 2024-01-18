@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="17.00.00">
+    <package name="2SexyContent" type="Module" version="17.01.00">
       <friendlyName> Content</friendlyName>
       <description>2sxc is a DNN Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -69,7 +69,7 @@
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>17.00.00</version>
+              <version>17.01.00</version>
             </script>
           </scripts>
         </component>
@@ -120,7 +120,7 @@
               <businessControllerClass>ToSic.SexyContent.DnnBusinessController</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
               <!-- This must contain all versions which have upgrade-code. By convention, we also add the main entry versions, even if no upgrade code exists for them -->
-              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,10.00.00,11.00.00,12.00.00,13.00.00,13.01.00,13.04.00,14.00.00,15.00.00,15.02.00,16.00.00,16.07.01,17.00.00</upgradeVersionsList>
+              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,10.00.00,11.00.00,12.00.00,13.00.00,13.01.00,13.04.00,14.00.00,15.00.00,15.02.00,16.00.00,16.07.01,17.00.00,17.01.00</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>
@@ -624,7 +624,7 @@
       </components>
     </package>
 
-    <package name="2SexyContent-App" type="Module" version="17.00.00">
+    <package name="2SexyContent-App" type="Module" version="17.01.00">
       <friendlyName> App</friendlyName>
       <description>2sxc App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>
@@ -742,7 +742,7 @@
             version="01.10.03.01" - ToSic.Imageflow.Dnn v01.02.01 is OK
             version="01.10.04.01" - ToSic.Imageflow.Dnn v01.02.02 is OK
     -->
-    <package name="ToSic.Imageflow.Dnn" type="Library" version="01.10.04.01">
+    <package name="ToSic.Imageflow.Dnn" type="Library" version="01.10.05.01">
       <friendlyName>Imageflow</friendlyName>
 
       <description>
@@ -1774,7 +1774,7 @@
                     <bindingRedirect oldVersion="0.0.0.0-4.0.3.0" newVersion="4.0.3.0" xmlns="urn:schemas-microsoft-com:asm.v1"/>
                   </node>
 
-                  <!-- 10 - Imageflow add codeBase and update bindingRedirects for bin\Imageflow\System.Memory.dll, version 4.0.1.1 (aka 4.5.4) -->
+                  <!-- 10 - Imageflow add codeBase and update bindingRedirects for bin\Imageflow\System.Memory.dll, version 4.0.1.2 (aka 4.5.5) -->
                   <!--<node path="/configuration/runtime/ab:assemblyBinding"
                         targetpath="/configuration/runtime/ab:assemblyBinding[ab:dependentAssembly/ab:assemblyIdentity/@name='System.Memory']"
                         action="add"
@@ -1785,8 +1785,8 @@
                       <assemblyIdentity name="System.Memory" publicKeyToken="cc7b13ffcd2ddd51" />
                       <codeBase version="4.0.1.1" href="bin\Imageflow\System.Memory.dll" />
                     </dependentAssembly>
-                  </node>-->
-                  <!--<node path="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Memory'][ab:bindingRedirect]/ab:codeBase[@href='bin\Imageflow\System.Memory.dll']"
+                  </node>
+                  <node path="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Memory'][ab:bindingRedirect]/ab:codeBase[@href='bin\Imageflow\System.Memory.dll']"
                         action="remove"
                         collision="overwrite"
                         nameSpace="urn:schemas-microsoft-com:asm.v1"
@@ -1955,7 +1955,6 @@
 
       </components>
     </package>
-
 
     <!-- Keep the 4th version number part as it is needed to prevent "repair install" message that DNN
       shows when upgrading 2sxc: https://github.com/2sic/2sxc/issues/1555

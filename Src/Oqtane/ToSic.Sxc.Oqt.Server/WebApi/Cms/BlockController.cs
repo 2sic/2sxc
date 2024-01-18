@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
-using ToSic.Eav.Apps.Ui;
+using ToSic.Eav.Apps.Internal.Ui;
 using ToSic.Eav.WebApi.Routing;
+using ToSic.Sxc.Backend.Cms;
+using ToSic.Sxc.Backend.InPage;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.WebApi.Cms;
-using ToSic.Sxc.WebApi.InPage;
-using RealController = ToSic.Sxc.WebApi.Cms.BlockControllerReal;
+using RealController = ToSic.Sxc.Backend.Cms.BlockControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 
@@ -22,10 +22,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [ApiController]
 // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class BlockController : OqtStatefulControllerBase, IBlockController
+public class BlockController() : OqtStatefulControllerBase(RealController.LogSuffix), IBlockController
 {
-    public BlockController(): base(RealController.LogSuffix) { }
-
     private RealController Real => GetService<RealController>();
 
 

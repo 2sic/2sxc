@@ -5,14 +5,14 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Context;
+using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
-using ToSic.Sxc.Web.LightSpeed;
-using ToSic.Sxc.Web.Url;
+using ToSic.Sxc.Web.Internal.LightSpeed;
+using ToSic.Sxc.Web.Internal.Url;
 using Page = Oqtane.Models.Page;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks;
@@ -27,13 +27,12 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         Output.OqtPageOutput pageOutput,
         IContextOfBlock contextOfBlockEmpty,
         BlockFromModule blockModuleEmpty,
-        IContextResolver contextResolverForLookUps,
+        ISxcContextResolver contextResolverForLookUps,
         ILogStore logStore,
         GlobalTypesCheck globalTypesCheck,
         IOutputCache outputCache
     ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
     {
-
         ConnectServices(
             _contextOfBlockEmpty = contextOfBlockEmpty,
             _blockModuleEmpty = blockModuleEmpty,
@@ -48,7 +47,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     public Output.OqtPageOutput PageOutput { get; }
     private readonly IContextOfBlock _contextOfBlockEmpty;
     private readonly BlockFromModule _blockModuleEmpty;
-    private readonly IContextResolver _contextResolverForLookUps;
+    private readonly ISxcContextResolver _contextResolverForLookUps;
     private readonly GlobalTypesCheck _globalTypesCheck;
     private readonly IOutputCache _outputCache;
 
@@ -75,9 +74,11 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         LogTimer.DoInTimer(() => Log.Do(timer: true, action: () =>
         {
             #region Lightspeed output caching
+            var useLightspeed = OutputCache?.IsEnabled ?? false;
             if (OutputCache?.Existing != null) Log.A("Lightspeed hit - will use cached");
-            var renderResult = OutputCache?.Existing?.Data ?? Block.BlockBuilder.Run(true, null);
-            finalMessage = OutputCache?.IsEnabled != true ? "" :
+            var renderResult = OutputCache?.Existing?.Data
+                               ?? Block.BlockBuilder.Run(true, specs: new() { UseLightspeed = useLightspeed });
+            finalMessage = !useLightspeed ? "" :
                 OutputCache?.Existing?.Data != null ? "⚡⚡" : "⚡⏳";
             OutputCache?.Save(renderResult);
 
@@ -115,7 +116,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     }
 
     // convert System.Collections.Generic.IList<ToSic.Sxc.Web.PageService.HttpHeader> to System.Collections.Generic.IList<ToSic.Sxc.Oqt.Shared.HttpHeader>
-    private static IList<HttpHeader> ConvertHttpHeaders(IList<Web.PageService.HttpHeader> httpHeaders) 
+    private static IList<HttpHeader> ConvertHttpHeaders(IList<Web.Internal.PageService.HttpHeader> httpHeaders) 
         => httpHeaders.Select(httpHeader => new HttpHeader(httpHeader.Name, httpHeader.Value)).ToList();
 
     internal Alias Alias;

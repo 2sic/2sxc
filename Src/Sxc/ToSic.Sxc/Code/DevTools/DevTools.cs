@@ -1,8 +1,5 @@
-﻿using System;
-using System.Linq;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Logging;
-using ToSic.Lib.Services;
+﻿using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Code;
 
@@ -12,7 +9,7 @@ internal class DevTools: ServiceBase, IDevTools
     public bool IsRazor { get; }
     public string RazorFileName { get; }
 
-    public DevTools(bool isRazor, string razorFileName, ILog parentLog): base($"{Constants.SxcLogName}.DevTls")
+    public DevTools(bool isRazor, string razorFileName, ILog parentLog): base($"{SxcLogging.SxcLogName}.DevTls")
     {
         IsRazor = isRazor;
         RazorFileName = razorFileName;
@@ -27,7 +24,7 @@ internal class DevTools: ServiceBase, IDevTools
     {
         var l = Log.Fn($"{nameof(target)}: '{target?.GetType()}', {nameof(debug)}: {debug}");
         
-        if (!(target is ICanDebug canDebug))
+        if (target is not ICanDebug canDebug)
             throw new ArgumentException($"Can't enable debug on {nameof(target)} as it doesn't support {nameof(ICanDebug)}");
         canDebug.Debug = debug;
         l.Done();

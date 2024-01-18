@@ -1,26 +1,28 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Apps.Environment;
-using ToSic.Eav.Apps.ImportExport;
-using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.ImportExport.Internal;
+using ToSic.Eav.Integration;
+using ToSic.Eav.Integration.Environment;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Internal.Loaders;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.Run;
 using ToSic.Eav.Security;
 using ToSic.Eav.StartUp;
-using ToSic.Sxc.Adam;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Blocks.Output;
-using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Adam;
 using ToSic.Sxc.Dnn.Cms;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Compile;
+using ToSic.Sxc.Dnn.Compile.Internal;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.Install;
@@ -30,9 +32,11 @@ using ToSic.Sxc.Dnn.Search;
 using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.StartUp;
 using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Run;
+using ToSic.Sxc.Integration.Installation;
+using ToSic.Sxc.Integration.Modules;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.Internal.DotNet;
+using ToSic.Sxc.Web.Internal.JsContext;
 
 namespace ToSic.Sxc.Dnn.Startup;
 
@@ -74,10 +78,10 @@ public static class StartUpDnnCore
         services.TryAddTransient<DnnInstallLogger>();
 
 
-        services.TryAddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
-        services.TryAddTransient<DnnDynamicCodeRoot>();
+        services.TryAddTransient<CodeApiService, DnnCodeApiService>();
+        services.TryAddTransient<DnnCodeApiService>();
         // New v14
-        services.TryAddTransient(typeof(DynamicCodeRoot<,>), typeof(DnnDynamicCodeRoot<,>));
+        services.TryAddTransient(typeof(CodeApiService<,>), typeof(DnnCodeApiService<,>));
 
 
         // ADAM

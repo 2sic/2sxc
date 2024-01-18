@@ -1,7 +1,4 @@
-﻿using System;
-using ToSic.Eav.Data;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Sxc.Data.Internal;
 
 namespace ToSic.Sxc.Data;
 

@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using ToSic.Eav;
 using ToSic.Eav.Code.Help;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.Paths;
+using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Blocks.Output;
-using static ToSic.Sxc.Blocks.BlockBuildingConstants;
+using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Internal;
+using static ToSic.Sxc.Blocks.Internal.BlockBuildingConstants;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IDataSource = ToSic.Eav.DataSource.IDataSource;
 
@@ -61,6 +57,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
 
     [PrivateApi] protected IView Template;
     [PrivateApi] protected string TemplatePath;
+    [PrivateApi] protected string Edition;
     [PrivateApi] protected IApp App;
     [PrivateApi] protected IDataSource DataSource;
     [PrivateApi] protected IBlock Block;
@@ -68,7 +65,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
     /// <summary>
     /// Empty constructor, so it can be used in dependency injection
     /// </summary>
-    protected EngineBase(MyServices services) : base(services, $"{Constants.SxcLogName}.EngBas") { }
+    protected EngineBase(MyServices services) : base(services, $"{SxcLogging.SxcLogName}.EngBas") { }
 
     #endregion
 
@@ -80,13 +77,13 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
         var view = block.View;
         var appState = block.Context.AppState;
         var appPathRootInInstallation = block.App.PathSwitch(view.IsShared, PathTypes.PhysRelative);
-        var polymorphPathOrNull = Services.EnginePolymorphism.PolymorphTryToSwitchPath(appPathRootInInstallation, view, appState);
+        var (polymorphPathOrNull, edition) = Services.EnginePolymorphism.PolymorphTryToSwitchPath(appPathRootInInstallation, view, appState);
         var templatePath = polymorphPathOrNull ??
                            Path.Combine(appPathRootInInstallation, view.Path).ToAbsolutePathForwardSlash();
 
         // Throw Exception if Template does not exist
         if (!File.Exists(Services.ServerPaths.FullAppPath(templatePath)))
-            throw new RenderingException(new CodeHelp(name: "Template File Not Found", detect: "",
+            throw new RenderingException(new(name: "Template File Not Found", detect: "",
                 linkCode: "err-template-not-found", uiMessage: $"The template file '{templatePath}' does not exist."));
 
         // check common errors
@@ -98,6 +95,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
         // All ok, set properties
         Block = block;
         Template = view;
+        Edition = edition;
         TemplatePath = templatePath;
         App = Block.App;
         DataSource = Block.Data;
@@ -106,10 +104,10 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
     }
 
     [PrivateApi]
-    protected abstract (string Contents, List<Exception> Exception) RenderImplementation(object data);
+    protected abstract (string Contents, List<Exception> Exception) RenderEntryRazor(RenderSpecs specs);
 
     /// <inheritdoc />
-    public virtual RenderEngineResult Render(object data)
+    public virtual RenderEngineResult Render(RenderSpecs specs)
     {
         var l = Log.Fn<RenderEngineResult>(timer: true);
             
@@ -117,11 +115,11 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
         var preFlightResult = CheckExpectedNoRenderConditions();
         if (preFlightResult != null) return l.Return(preFlightResult, $"error: {preFlightResult.ErrorCode}");
 
-        var renderedTemplate = RenderImplementation(data);
+        var renderedTemplate = RenderEntryRazor(specs);
         var depMan = Services.BlockResourceExtractor;
         var result = depMan.Process(renderedTemplate.Contents);
         if (renderedTemplate.Exception != null)
-            result = new RenderEngineResult(result, exsOrNull: renderedTemplate.Exception);
+            result = new(result, exsOrNull: renderedTemplate.Exception);
         return l.ReturnAsOk(result);
     }
 

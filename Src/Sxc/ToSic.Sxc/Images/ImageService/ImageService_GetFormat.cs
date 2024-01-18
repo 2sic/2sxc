@@ -1,9 +1,10 @@
 ﻿using System.IO;
-using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
+using ToSic.Sxc.Images.Internal;
+using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 
 namespace ToSic.Sxc.Images;
 
-public partial class ImageService
+partial class ImageService
 {
     /// <inheritdoc />
     public IImageFormat GetFormat(string path)
@@ -18,7 +19,7 @@ public partial class ImageService
         if (ImageConstants.FileTypes.TryGetValue(extension, out var result))
             return Features.IsEnabled(ImageServiceMultiFormat.NameId)
                 ? result
-                : new ImageFormat(result, false);
+                : new(result, false);
 
         // 3. Otherwise just return an object without known mime type
         return new ImageFormat(extension, "", false);

@@ -1,6 +1,4 @@
-﻿using System;
-
-#if NETFRAMEWORK
+﻿#if NETFRAMEWORK
 
 // This is included for compatibility
 // It was changed in 2sxc 10.20. 01, but some code in the wild probably uses this for comparison.

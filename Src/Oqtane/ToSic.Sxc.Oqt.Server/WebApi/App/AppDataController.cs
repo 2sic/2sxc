@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using ToSic.Eav.WebApi.App;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using RealController = ToSic.Sxc.WebApi.App.AppDataControllerReal;
+using RealController = ToSic.Sxc.Backend.App.AppDataControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 
@@ -19,10 +19,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 [Route(OqtWebApiConstants.AppRootPathNdLang + "/{appPath}/data")] // new, v13
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppDataController: OqtStatefulControllerBase, IAppDataController
+public class AppDataController() : OqtStatefulControllerBase(RealController.LogSuffix), IAppDataController
 {
-    public AppDataController(): base(RealController.LogSuffix) { }
-
     private RealController Real => GetService<RealController>();
 
 

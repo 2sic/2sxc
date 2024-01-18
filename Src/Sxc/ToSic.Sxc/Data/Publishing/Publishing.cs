@@ -1,13 +1,12 @@
 ﻿using ToSic.Eav.Apps.State;
-using ToSic.Eav.Data;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Data;
 
-internal class Publishing(ITypedItem currentItem, CodeDataFactory cdf) : HelperBase(cdf.Log, "Pub"), IPublishing
+internal class Publishing(ITypedItem currentItem, Internal.CodeDataFactory cdf) : HelperBase(cdf.Log, "Pub"), IPublishing
 {
-    private readonly IAppStateInternal _appState = cdf._DynCodeRoot.App.AppState.Internal();
+    private readonly IAppStateInternal _appState = cdf._CodeApiSvc.App.AppState.Internal();
 
     // Always supported on IEntity
     public bool IsSupported => true;

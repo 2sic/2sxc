@@ -2,8 +2,10 @@
 using ToSic.Eav.Internal.Loaders;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Wrapper;
+using ToSic.Sxc.Data.Internal.Dynamic;
+using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
 

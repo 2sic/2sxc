@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using ToSic.Eav.Data;
+﻿using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSources;
-using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal.Convert;
 
 namespace ToSic.Sxc.Compatibility.Sxc;
 

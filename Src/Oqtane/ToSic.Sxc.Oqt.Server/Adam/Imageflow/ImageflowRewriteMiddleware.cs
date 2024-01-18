@@ -2,8 +2,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ToSic.Sxc.Images.ImageflowRewrite;
-using ToSic.Sxc.Web.Url;
+using ToSic.Sxc.Images.Internal;
+using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 

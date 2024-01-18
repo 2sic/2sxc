@@ -1,10 +1,7 @@
-﻿using System;
-using System.Linq;
-using ToSic.Eav;
+﻿using ToSic.Eav;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataSource;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Logging;
+using ToSic.Eav.DataSource.Internal.Errors;
 using static ToSic.Eav.Data.DataConstants;
 
 
@@ -86,6 +83,6 @@ internal partial class DataService
                      "If you wish to disable this, set 'debug: false'. " +
                      "These are the error details: \n" +
                      more;
-        return new ExceptionSuperUserOnly(new Exception(intro));
+        return new ExceptionSuperUserOnly(new(intro));
     }
 }

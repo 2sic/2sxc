@@ -1,33 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Eav.Data;
-using ToSic.Eav.Data.Debug;
+﻿using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Metadata;
-using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Data;
 
-internal class PropLookupMetadata: IPropertyLookup //, ICanBeEntity
+internal class PropLookupMetadata(IHasMetadata parent, Func<bool> getDebug) : IPropertyLookup
 {
-    private readonly Func<bool> _getDebug;
-
-    public IHasMetadata Parent { get; }
-    //public IEntity Entity { get; }
-    //public IPropertyLookup Upstream { get; }
-
-    public PropLookupMetadata(IHasMetadata parent, /*IEntity entity, IPropertyLookup upstream,*/ Func<bool> getDebug)
-    {
-        _getDebug = getDebug;
-        Parent = parent;
-        //Entity = entity;
-        //Upstream = upstream;
-    }
+    public IHasMetadata Parent { get; } = parent;
 
     public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
     {
-        specs = specs.SubLog("Sxc.DynEnt", _getDebug());
+        specs = specs.SubLog("Sxc.DynEnt", getDebug());
         var safeWrap = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), "DynEntity");
         // check Entity is null (in cases where null-objects are asked for properties)
         if (Parent?.Metadata == null) return safeWrap.ReturnNull("no parent with metadata");

@@ -8,16 +8,16 @@ using ToSic.Eav.Helpers;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
+using ToSic.Sxc.Integration;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Run;
 using IO = System.IO;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
-internal class OqtImportExportEnvironment : ImportExportEnvironmentBase
+internal class OqtImportExportEnvironment : SxcImportExportEnvironmentBase
 {
     private readonly IServerPaths _oqtServerPaths;
     private readonly IFileRepository _oqtFileRepository;

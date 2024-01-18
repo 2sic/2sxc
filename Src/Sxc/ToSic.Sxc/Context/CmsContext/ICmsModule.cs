@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Metadata;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Context;
@@ -39,9 +38,11 @@ public interface ICmsModule: IHasMetadata
     int Id { get; }
 
     [PrivateApi("WIP v13")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     ICmsBlock Block { get; }
 
     [PrivateApi("WIP")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 #pragma warning disable CS0108, CS0114
     IMetadata Metadata { get; }
 #pragma warning restore CS0108, CS0114

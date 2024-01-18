@@ -1,15 +1,13 @@
-﻿using System;
-using DotNetNuke.Entities.Modules;
+﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code;
+using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Context;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.LookUp;
 using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 using App = ToSic.Sxc.Apps.App;
@@ -99,8 +97,8 @@ public static class Factory
     public static IDnnDynamicCode DynamicCode(IBlockBuilder blockBuilder)
     {
         DnnStaticDi.CodeInfos.Warn(V13To17($"ToSic.Sxc.Dnn.Factory.{nameof(DynamicCode)}", "https://go.2sxc.org/brc-13-dnn-factory"));
-        return StaticBuild<CodeRootFactory>()
-                .BuildCodeRoot(customCodeOrNull: null, blockBuilder.Block, NewLog(), Constants.CompatibilityLevel10) as DnnDynamicCodeRoot;
+        return StaticBuild<CodeApiServiceFactory>()
+                .BuildCodeRoot(customCodeOrNull: null, blockBuilder.Block, NewLog(), CompatibilityLevels.CompatibilityLevel10) as DnnCodeApiService;
     }
 
     /// <summary>
@@ -176,7 +174,7 @@ public static class Factory
         var app = StaticBuild<App>(log);
         if (site != null) app.PreInit(site);
         site ??= GetSite(log: log);
-        var appIdentity = zoneId == AutoLookupZoneId ? new AppIdentityPure(site.ZoneId, appId) : new AppIdentityPure(zoneId, appId);
+        var appIdentity = zoneId == AutoLookupZoneId ? new(site.ZoneId, appId) : new AppIdentityPure(zoneId, appId);
         var appStuff = app.Init(appIdentity, StaticBuild<AppConfigDelegate>(log).Build(showDrafts));
         return appStuff;
     }

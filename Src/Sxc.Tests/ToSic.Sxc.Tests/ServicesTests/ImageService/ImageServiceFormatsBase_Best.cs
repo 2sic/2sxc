@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Tests.ServicesTests.ImageService;
 
 namespace ToSic.Sxc.Tests.ServicesTests

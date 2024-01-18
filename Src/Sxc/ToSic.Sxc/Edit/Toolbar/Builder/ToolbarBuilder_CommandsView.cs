@@ -1,13 +1,11 @@
-﻿using System;
-using ToSic.Eav.Plumbing;
-using ToSic.Lib.Coding;
-using ToSic.Sxc.Web.Url;
+﻿using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Web.Internal.Url;
 using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-public partial class ToolbarBuilder
+partial class ToolbarBuilder
 {
     public IToolbarBuilder Layout(
         object target = null,

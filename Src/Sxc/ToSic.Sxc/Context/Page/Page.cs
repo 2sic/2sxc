@@ -1,12 +1,12 @@
 ﻿using ToSic.Lib.DI;
-using ToSic.Sxc.Context.Query;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.Internal.DotNet;
 using ToSic.Sxc.Web.Parameters;
 
 namespace ToSic.Sxc.Context;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class Page: IPage
+internal class Page: IPage
 {
     #region Constructor / DI
 
@@ -27,7 +27,7 @@ public class Page: IPage
     public int Id { get; private set; } = Eav.Constants.NullId;
 
 
-    public IParameters Parameters => _parameters ??= new Parameters(OriginalParameters.GetOverrideParams(_httpLazy.Value?.QueryStringParams));
+    public IParameters Parameters => _parameters ??= new Parameters.Parameters(OriginalParameters.GetOverrideParams(_httpLazy.Value?.QueryStringParams));
     private IParameters _parameters;
 
 

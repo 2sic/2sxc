@@ -1,12 +1,11 @@
-﻿using System;
-using ToSic.Eav.Code.Infos;
+﻿using ToSic.Eav.Code.Infos;
 using ToSic.Eav.Data;
 using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Internal;
 using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 
 // ReSharper disable once CheckNamespace
@@ -69,8 +68,8 @@ public class Render
     {
         var cdf = parent.Cdf;
         // First do version checks -should not be allowed if compatibility is too low
-        if (cdf.CompatibilityLevel > Constants.MaxLevelForStaticRender)
-            throw new Exception(
+        if (cdf.CompatibilityLevel > CompatibilityLevels.MaxLevelForStaticRender)
+            throw new(
                 "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. " +
                 "For v14+ use the Kit.Render (IRenderService) or for v12+ use the GetService<ToSic.Sxc.Services.IRenderService>().");
 
@@ -78,7 +77,7 @@ public class Render
         var block = cdf.BlockOrNull;
         DnnStaticDi.CodeInfos.WarnSxc(WarnObsolete.UsedAs(appId: parent.Entity.AppId, specificId: $"View:{block?.View?.Id}"), block: block);
 
-        return cdf.Services.RenderService;
+        return cdf.Services.RenderServiceGenerator.New();
     }
 
     private static readonly ICodeInfo WarnObsolete = V13To17("Deprecated Static RenderService", "https://go.2sxc.org/brc-13-static-render");

@@ -1,9 +1,7 @@
 ﻿using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
-using System;
 using System.CodeDom.Compiler;
 using System.IO;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
+using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Dnn.Compile;
 
 // ReSharper disable once CheckNamespace
@@ -24,64 +22,73 @@ internal class ThisAppCodeCompilerNetFull : ThisAppCodeCompiler
         );
     }
 
-    protected internal override AssemblyResult GetAppCode(string relativePath, int appId = 0)
+    protected internal override AssemblyResult GetAppCode(string relativePath, HotBuildSpec spec)
     {
-        var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {nameof(appId)}: {appId}");
+        var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {spec}");
 
         try
         {
-
             // Get all C# files in the folder
-            var (sourceFiles, errorResult) = GetSourceFilesOrError(NormalizeFullPath(_hostingEnvironment.MapPath(relativePath)));
-            if (errorResult != null)
-                return l.ReturnAsError(errorResult, errorResult.ErrorMessages);
+            var sourceFiles = GetSourceFiles(NormalizeFullPath(_hostingEnvironment.MapPath(relativePath)));
+            if (sourceFiles.Length == 0)
+                return l.ReturnAsOk(new());
 
-            var assemblyLocations = GetAssemblyLocations(appId);
+            var (symbolsPath, assemblyPath) = GetAssemblyLocations(spec);
 
-            var results = GetCompiledAssemblyFromFolder(sourceFiles, assemblyLocations[1]);
+            var results = GetCompiledAssemblyFromFolder(sourceFiles, assemblyPath);
+
+            var dicInfos = new Dictionary<string, string>
+            {
+                //["DllName"] = dllName,
+                ["Files"] = sourceFiles.Length.ToString(),
+                ["Errors"] = results.Errors.HasErrors.ToString(),
+                // ["Assembly"] = assemblyResult.Assembly?.FullName ?? "null",
+                ["AssemblyPath"] = assemblyPath,
+                ["SymbolsPath"] = symbolsPath,
+            };
 
             // Compile ok
             if (!results.Errors.HasErrors)
             {
                 LogAllTypes(results.CompiledAssembly);
-                return l.ReturnAsOk(new AssemblyResult(assembly: results.CompiledAssembly, assemblyLocations: assemblyLocations));
+                return l.ReturnAsOk(new(assembly: results.CompiledAssembly, assemblyLocations: [symbolsPath, assemblyPath], infos: dicInfos));
             }
 
             // Compile error case
             var errors = "";
             foreach (CompilerError error in results.Errors)
             {
-                var msg = $"Error ({error.ErrorNumber}): {error.ErrorText}";
+                var msg = $"{(error.IsWarning ? "Warning" : "Error")} ({error.ErrorNumber}): {error.ErrorText} in '{error.FileName}' (Line: {error.Line}, Column: {error.Column}).";
                 l.E(msg);
                 errors += $"{msg}\n";
             }
 
-            return l.ReturnAsError(new AssemblyResult(errorMessages: errors), errors);
+            return l.ReturnAsError(new(errorMessages: errors, infos: dicInfos), errors);
         }
         catch (Exception ex)
         {
             l.Ex(ex);
             var errorMessage = $"Error: Can't compile '{ThisAppCodeDll}' in {Path.GetFileName(relativePath)}. Details are logged into insights. {ex.Message}";
-            return l.ReturnAsError(new AssemblyResult(errorMessages: errorMessage));
+            return l.ReturnAsError(new(errorMessages: errorMessage));
         }
     }
 
-    private string[] GetAssemblyLocations(int appId)
+    private (string SymbolsPath, string AssemblyPath) GetAssemblyLocations(HotBuildSpec spec)
     {
-        var l = Log.Fn<string[]>($"{nameof(appId)}: {appId}");
+        var l = Log.Fn<(string, string)>($"{spec}");
         var tempAssemblyFolderPath = Path.Combine(_hostingEnvironment.MapPath("~/App_Data"), "2sxc.bin");
         l.A($"TempAssemblyFolderPath: '{tempAssemblyFolderPath}'");
         // Ensure "2sxc.bin" folder exists to preserve dlls
         Directory.CreateDirectory(tempAssemblyFolderPath);
 
         // need random name, because assemblies has to be preserved on disk, and we can not replace them until AppDomain is unloaded 
-        var assemblyName = GetAppCodeDllName(tempAssemblyFolderPath, appId);
+        var assemblyName = GetAppCodeDllName(tempAssemblyFolderPath, spec);
         l.A($"AssemblyName: '{assemblyName}'");
         var assemblyFilePath = Path.Combine(tempAssemblyFolderPath, $"{assemblyName}.dll");
         l.A($"AssemblyFilePath: '{assemblyFilePath}'");
         var symbolsFilePath = Path.Combine(tempAssemblyFolderPath, $"{assemblyName}.pdb");
         l.A($"SymbolsFilePath: '{symbolsFilePath}'");
-        var assemblyLocations = new[] { symbolsFilePath, assemblyFilePath };
+        var assemblyLocations = (symbolsFilePath, assemblyFilePath);
         return l.ReturnAsOk(assemblyLocations);
     }
 

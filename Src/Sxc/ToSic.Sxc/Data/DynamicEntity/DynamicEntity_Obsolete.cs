@@ -1,8 +1,7 @@
 ﻿#if NETFRAMEWORK
 
-using System;
-using ToSic.Lib.Documentation;
 using ToSic.Razor.Markup;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Data
 {
@@ -25,8 +24,8 @@ namespace ToSic.Sxc.Data
                 if (!userMayEdit)
                     return new System.Web.HtmlString("");
 
-                if (Cdf.CompatibilityLevel > Constants.MaxLevelForEntityDotToolbar)
-                    throw new Exception("content.Toolbar is deprecated in the new RazorComponent. Use @Edit.TagToolbar(content) or @Edit.Toolbar(content) instead. See https://go.2sxc.org/EditToolbar");
+                if (Cdf.CompatibilityLevel > CompatibilityLevels.MaxLevelForEntityDotToolbar)
+                    throw new("content.Toolbar is deprecated in the new RazorComponent. Use @Edit.TagToolbar(content) or @Edit.Toolbar(content) instead. See https://go.2sxc.org/EditToolbar");
 
                 var toolbar = new Edit.Toolbar.ItemToolbar(Entity).ToolbarAsTag;
                 return new System.Web.HtmlString(toolbar);
@@ -37,10 +36,10 @@ namespace ToSic.Sxc.Data
         [PrivateApi("probably we won't continue recommending to use this, but first we must provide an alternative")]
         public IRawHtmlString Render()
         {
-            if (Cdf.CompatibilityLevel > Constants.MaxLevelForEntityDotRender)
-                throw new Exception("content.Render() is deprecated in the new RazorComponent. Use GetService&lt;ToSic.Sxc.Services.IRenderService&gt;().One(content) instead.");
+            if (Cdf.CompatibilityLevel > CompatibilityLevels.MaxLevelForEntityDotRender)
+                throw new("content.Render() is deprecated in the new RazorComponent. Use GetService&lt;ToSic.Sxc.Services.IRenderService&gt;().One(content) instead.");
 
-            return Cdf.Services.RenderService.One(this);
+            return Cdf.Services.RenderServiceGenerator.New().One(this);
         }
 
         [PrivateApi("shouldn't be used, but it may be published by accident, so shouldn't be removed. ")]

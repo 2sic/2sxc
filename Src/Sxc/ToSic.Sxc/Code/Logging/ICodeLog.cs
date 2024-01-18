@@ -1,8 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
-using System;
 using ToSic.Lib.Data;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Code;
 
@@ -106,7 +103,6 @@ public interface ICodeLog: IWrapper<ILog>
     /// In scenarios like search-indexing it will default to false.
     /// You can then do `Log.Preserve = true;` to temporarily activate it while debugging.
     /// </summary>
-    [PrivateApi]
     bool Preserve { get; set; }
 
 }

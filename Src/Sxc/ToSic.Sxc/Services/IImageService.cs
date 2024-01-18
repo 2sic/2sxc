@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
+﻿using ToSic.Eav;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Images.Internal;
 
 namespace ToSic.Sxc.Services;
 
@@ -26,6 +23,7 @@ public interface IImageService: ICanDebug
     /// <returns></returns>
     /// <remarks>Only works for the basic, known image types</remarks>
     [PrivateApi("Not sure if this is needed outside...")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     IImageFormat GetFormat(string path);
 
 

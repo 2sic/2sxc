@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ToSic.Sxc.Engines;
+﻿namespace ToSic.Sxc.Engines;
 
 /// <summary>
 /// Attribute to mark all IEngine implementations

@@ -1,5 +1,4 @@
-﻿using System.Web.WebPages;
-using ToSic.Sxc.Dnn.Razor;
+﻿using ToSic.Sxc.Dnn.Razor;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;

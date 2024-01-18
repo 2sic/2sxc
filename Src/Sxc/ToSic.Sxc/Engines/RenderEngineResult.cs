@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using ToSic.Sxc.Web;
+﻿using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.Internal;
+using ToSic.Sxc.Web.Internal.ClientAssets;
 
 namespace ToSic.Sxc.Engines;
 
@@ -26,7 +26,7 @@ public class RenderEngineResult
     {
         Html = html;
         ActivateJsApi = activateJsApi;
-        Assets = assets ?? new List<IClientAsset>();
+        Assets = assets ?? [];
         ErrorCode = errorCode;
         ExceptionsOrNull = exsOrNull;
     }

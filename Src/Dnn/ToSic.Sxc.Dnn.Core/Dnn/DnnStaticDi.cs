@@ -1,12 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Web;
 using ToSic.Eav.Code.InfoSystem;
-using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Plumbing;
+using ToSic.Sxc.Internal.Plumbing;
 
 namespace ToSic.Sxc.Dnn;
 
@@ -19,7 +15,7 @@ public static class DnnStaticDi
     private static Func<IServiceProvider> _getGlobalDnnServiceProvider;
 
     public static void StaticDiReady(Func<IServiceProvider> spFunc = null) 
-        => _getGlobalDnnServiceProvider = spFunc ?? throw new Exception("Can't start Static DI for old Dnn, because the ServiceCollection is null.");
+        => _getGlobalDnnServiceProvider = spFunc ?? throw new("Can't start Static DI for old Dnn, because the ServiceCollection is null.");
 
     /// <summary>
     /// This is a special internal resolver for static objects
@@ -47,7 +43,7 @@ public static class DnnStaticDi
     public static IServiceProvider GetGlobalScopedServiceProvider() => GetGlobalServiceProvider().CreateScope().ServiceProvider;
 
     [PrivateApi("Very internal, to use at startup, so singletons are not lost")]
-    private /*public*/ static IServiceProvider GetGlobalServiceProvider() => Sp.Get(() => _getGlobalDnnServiceProvider?.Invoke() ?? throw new Exception("can't access global DNN service provider"));
+    private /*public*/ static IServiceProvider GetGlobalServiceProvider() => Sp.Get(() => _getGlobalDnnServiceProvider?.Invoke() ?? throw new("can't access global DNN service provider"));
     private static readonly GetOnce<IServiceProvider> Sp = new();
 
     [PrivateApi("This is just a temporary solution - shouldn't be used long term")]

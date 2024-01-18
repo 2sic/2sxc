@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Lib.Logging;
-using ToSic.Eav.Metadata;
+﻿using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-public partial class ToolbarBuilder
+partial class ToolbarBuilder
 {
     private List<string> GetMetadataTypeNames(object target, string contentTypes)
     {
@@ -31,7 +27,7 @@ public partial class ToolbarBuilder
         if (target is IHasMetadata withMetadata)
             target = withMetadata.Metadata;
 
-        if (!(target is IMetadataOf mdOf))
+        if (target is not IMetadataOf mdOf)
             return l.Return(Array.Empty<string>(), "not metadata");
 
         var recommendations = mdOf?.Target?.Recommendations ?? Array.Empty<string>();

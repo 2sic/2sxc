@@ -1,6 +1,4 @@
-﻿using System;
-using ToSic.Eav.Data;
-using ToSic.Eav.Data.Build;
+﻿using ToSic.Eav.Data.Build;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.DataSources;
