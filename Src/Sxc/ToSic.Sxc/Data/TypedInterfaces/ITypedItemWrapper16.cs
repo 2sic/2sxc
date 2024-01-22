@@ -6,7 +6,5 @@ namespace ToSic.Sxc.Data;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface ITypedItemWrapper16
 {
-#pragma warning disable IDE1006
     void Setup(ITypedItem baseItem, ServiceKit16 addKit);
-#pragma warning restore IDE1006
 }
