@@ -37,17 +37,21 @@ public class ThisAppLoader : ServiceBase
     private readonly AssemblyCacheManager _assemblyCacheManager;
 
 
-    public (Assembly, HotBuildSpec) TryGetOrFallback(HotBuildSpec spec)
+    public (Assembly Assembly, HotBuildSpec Specs) TryGetOrFallback(HotBuildSpec spec)
     {
+        var l = Log.Fn<(Assembly, HotBuildSpec)>(spec.ToString());
         var assembly = TryGetAssemblyOfThisAppFromCache(spec, Log)?.Assembly;
-        if (assembly != null) return (assembly, spec);
+        if (assembly != null) return l.Return((assembly, spec), "cached");
 
         assembly = GetThisAppAssemblyOrThrow(spec);
-        if (assembly != null) return (assembly, spec);
+        if (assembly != null) return l.Return((assembly, spec), "compiled");
 
-        return spec.Edition.IsEmpty()
-            ? (null, spec) 
-            : TryGetOrFallback(spec.CloneWithoutEdition()); // fallback to non-edition in root of app
+        if (spec.Edition.IsEmpty()) return l.Return((null, spec), "assembly empty, no edition, done");
+
+        // try get root edition
+        var rootSpec = spec.CloneWithoutEdition();
+        var pairFromRoot = TryGetOrFallback(rootSpec);
+        return l.Return(pairFromRoot, pairFromRoot.Assembly == null ? "assembly without edition null" : "assembly without edition found");
     }
 
     public static AssemblyResult TryGetAssemblyOfThisAppFromCache(HotBuildSpec spec, ILog callerLog)
