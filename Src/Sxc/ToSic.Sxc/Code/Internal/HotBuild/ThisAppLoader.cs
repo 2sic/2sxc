@@ -75,9 +75,11 @@ public class ThisAppLoader : ServiceBase
 
         var assemblyResults = TryLoadAppAssembly(spec, logSummary);
 
+        // All OK (no errors) - return
         if (string.IsNullOrEmpty(assemblyResults?.ErrorMessages))
             return l.ReturnAsOk(assemblyResults?.Assembly);
         
+        // Problems - log and throw
         l.ReturnAsError(null, assemblyResults.ErrorMessages);
         throw new(assemblyResults.ErrorMessages);
     }
