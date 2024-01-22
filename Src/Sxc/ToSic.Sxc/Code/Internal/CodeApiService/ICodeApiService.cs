@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Data;
 using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
 namespace ToSic.Sxc.Code.Internal;
@@ -13,11 +11,6 @@ namespace ToSic.Sxc.Code.Internal;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface ICodeApiService : IDynamicCode12
 {
-    //[PrivateApi("WIP")]
-    //IBlock _Block { get; }
-    //[PrivateApi]
-    //void AttachApp(IApp app);
-
     new IDynamicStack Resources { get; }
     new IDynamicStack Settings { get; }
 
@@ -28,14 +21,4 @@ public interface ICodeApiService : IDynamicCode12
     CodeDataFactory _Cdf { get; }
 
     #endregion
-}
-
-internal interface ICodeApiServiceInternal
-{
-    [PrivateApi]
-    void AttachApp(IApp app);
-
-    [PrivateApi("WIP")]
-    IBlock _Block { get; }
-
 }
