@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Edit.Toolbar;
+﻿using ToSic.Sxc.Edit.Toolbar.Internal;
+
+namespace ToSic.Sxc.Edit.Toolbar;
 
 /// <summary>
 /// This is a decorator for Content-Types, which allows special configuration of buttons etc. on that type

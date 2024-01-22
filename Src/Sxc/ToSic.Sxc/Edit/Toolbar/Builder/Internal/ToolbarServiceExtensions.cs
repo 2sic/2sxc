@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Edit.Toolbar;
+﻿namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
 internal static class ToolbarBuilderExtensions
 {

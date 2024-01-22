@@ -3,11 +3,10 @@ using ToSic.Eav.Apps;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Internal;
 
-namespace ToSic.Sxc.Edit.Toolbar;
+namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
 /// <summary>
 /// INTERNAL: Toolbar Builder implementation.
@@ -17,10 +16,11 @@ namespace ToSic.Sxc.Edit.Toolbar;
 /// Reason is that as soon as we run something like `Kit.Toolbar.Empty(Content)` in a razor file,
 /// the result is dynamic - so the compiler evaluates the final object at runtime.
 /// If the ToolbarBuilder is internal, things start to fail.
+/// eg. AsTag() will fail, saying that RawHtmlString doesn't have that
 /// So for now :( it must remain public.
 /// </remarks>
 [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-internal partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsCodeApiService
+public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsCodeApiService
 {
 
     #region Constructors and Init
@@ -39,7 +39,7 @@ internal partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, ITool
         }
 
         internal readonly LazySvc<IAppStates> AppStatesLazy;
-        public LazySvc<ToolbarButtonDecoratorHelper> ToolbarButtonHelper { get; }
+        internal LazySvc<ToolbarButtonDecoratorHelper> ToolbarButtonHelper { get; }
     }
 
     /// <summary>

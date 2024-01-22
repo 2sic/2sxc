@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps.Assets;
 
-namespace ToSic.Sxc.Edit.Toolbar;
+namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
 partial class ToolbarBuilder
 {

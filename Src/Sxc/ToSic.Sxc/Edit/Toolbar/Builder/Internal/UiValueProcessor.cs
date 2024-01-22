@@ -4,7 +4,7 @@ using ToSic.Eav.Serialization;
 using ToSic.Sxc.Web.Internal.Url;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarButtonDecorator;
 
-namespace ToSic.Sxc.Edit.Toolbar;
+namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
 internal class UiValueProcessor: UrlValueProcess
 {

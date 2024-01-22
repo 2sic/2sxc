@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using ToSic.Eav.Plumbing;
 
-namespace ToSic.Sxc.Edit.Toolbar;
+namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
 partial class ToolbarBuilder
 {

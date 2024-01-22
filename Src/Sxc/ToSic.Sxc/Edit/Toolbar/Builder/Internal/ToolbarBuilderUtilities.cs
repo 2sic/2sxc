@@ -2,7 +2,7 @@
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Web.Internal.Url;
 
-namespace ToSic.Sxc.Edit.Toolbar;
+namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
 /// <summary>
 /// Special utilities for the Toolbar Builder,

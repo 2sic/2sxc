@@ -1,6 +1,6 @@
 ﻿using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
-namespace ToSic.Sxc.Edit.Toolbar;
+namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
 partial class ToolbarBuilder
 {

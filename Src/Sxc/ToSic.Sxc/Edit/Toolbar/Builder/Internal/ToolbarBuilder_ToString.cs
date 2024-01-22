@@ -7,7 +7,7 @@ using static ToSic.Sxc.Edit.Toolbar.ItemToolbarBase;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleToolbar;
 using Attribute = ToSic.Razor.Markup.Attribute;
 
-namespace ToSic.Sxc.Edit.Toolbar;
+namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
 partial class ToolbarBuilder
 {

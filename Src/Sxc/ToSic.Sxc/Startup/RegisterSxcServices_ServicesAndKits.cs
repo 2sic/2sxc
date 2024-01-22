@@ -6,6 +6,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Edit.EditService;
 using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Edit.Toolbar.Internal;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.CmsService;

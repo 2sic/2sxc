@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Edit.Toolbar.Internal;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services.Internal;
 

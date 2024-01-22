@@ -7,6 +7,7 @@ using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Edit.Toolbar.Internal;
 
 namespace ToSic.Sxc.Services.CmsService;
 

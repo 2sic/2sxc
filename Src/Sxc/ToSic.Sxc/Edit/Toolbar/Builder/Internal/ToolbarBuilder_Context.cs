@@ -3,7 +3,7 @@ using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
 
-namespace ToSic.Sxc.Edit.Toolbar;
+namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
 partial class ToolbarBuilder: IToolbarBuilderInternal
 {
@@ -24,7 +24,7 @@ partial class ToolbarBuilder: IToolbarBuilderInternal
     /// or any of the rules have one
     /// </summary>
     /// <returns></returns>
-    public ToolbarContext GetContext()
+    ToolbarContext IToolbarBuilderInternal.GetContext()
         => Rules.OfType<ToolbarRuleContext>().FirstOrDefault()?.Context
            ?? Rules.FirstOrDefault(r => r.Context != null)?.Context;
 
