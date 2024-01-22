@@ -179,11 +179,58 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
 
     #endregion
 
+    #region Roslyn WIP - SHOULD PROBABLY OPTIMIZE THIS
+
     void ICanUseRoslynCompiler.AttachRazorEngine(DnnRazorEngine razorEngine) => _razorEngine ??= razorEngine;
     private DnnRazorEngine _razorEngine;
 
-    public HelperResult RoslynRenderPage(string virtualPath, object data)
+    HelperResult ICanUseRoslynCompiler.RoslynRenderPage(string virtualPath, object data) 
+        => _razorEngine?.RenderPage(NormalizePath(virtualPath), data);
+
+    #endregion
+
+    /// <summary>
+    /// EXPERIMENTAL
+    /// </summary>
+    /// <param name="source"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    protected T AsItem<T>(ICanBeEntity source) where T : class, ITypedItemWrapper16, ITypedItem, new()
     {
-        return _razorEngine?.RenderPage(NormalizePath(virtualPath), data);
+        var item = source as ITypedItem ?? _CodeApiSvc._Cdf.AsItem(source);
+        var wrapper = new T();
+        wrapper.Setup(item, Kit);
+        return wrapper;
     }
+
+    /// <summary>
+    /// EXPERIMENTAL
+    /// </summary>
+    /// <param name="source"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    protected IEnumerable<T> AsItems<T>(IEnumerable<ICanBeEntity> source) where T : class, ITypedItemWrapper16, ITypedItem, new()
+    {
+        var items = SafeItems().Select(i =>
+        {
+            var wrapper = new T();
+            wrapper.Setup(i, Kit);
+            return wrapper;
+        });
+        return items;
+
+        IEnumerable<ITypedItem> SafeItems()
+        {
+            if (source == null || !source.Any()) return [];
+            if (source is IEnumerable<ITypedItem> alreadyOk) return alreadyOk;
+            return _CodeApiSvc._Cdf.AsItems(source);
+        }
+    }
+
+    
+
 }
