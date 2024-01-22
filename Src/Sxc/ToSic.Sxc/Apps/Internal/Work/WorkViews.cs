@@ -66,7 +66,7 @@ public class WorkViews: WorkUnitBase<IAppWorkCtxPlus>
     private IView ViewOfEntity(IEntity templateEntity, object templateId) =>
         templateEntity == null
             ? throw new("The template with id '" + templateId + "' does not exist.")
-            : new View(templateEntity, new[] { _cultureResolver.CurrentCultureCode }, Log, _qDefBuilder);
+            : new View(templateEntity, [_cultureResolver.CurrentCultureCode], Log, _qDefBuilder);
 
 
     internal IEnumerable<TemplateUiInfo> GetCompatibleViews(IApp app, BlockConfiguration blockConfiguration)

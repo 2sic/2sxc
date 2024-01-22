@@ -11,5 +11,5 @@ internal class PagesDataSourceProviderUnknown: PagesDataSourceProvider
     public override List<PageDataRaw> GetPagesInternal(NoParamOrder noParamOrder = default,
         bool includeHidden = default, bool includeDeleted = default, bool includeAdmin = default,
         bool includeSystem = default, bool includeLinks = default, bool requireViewPermissions = true,
-        bool requireEditPermissions = true) => new();
+        bool requireEditPermissions = true) => [];
 }

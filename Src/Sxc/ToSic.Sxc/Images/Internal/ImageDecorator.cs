@@ -118,8 +118,8 @@ public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBase
             ? ImageRecommendationsCopyright
             : ImageRecommendationsBasic;
     }
-    private static string[] ImageRecommendationsBasic => new[] { TypeNameId };
-    private static string[] ImageRecommendationsCopyright => new[] { CopyrightDecorator.TypeNameId, TypeNameId };
+    private static string[] ImageRecommendationsBasic => [TypeNameId];
+    private static string[] ImageRecommendationsCopyright => [CopyrightDecorator.TypeNameId, TypeNameId];
 
     #endregion
 }

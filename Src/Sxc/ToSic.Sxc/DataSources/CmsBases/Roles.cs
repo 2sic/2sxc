@@ -125,7 +125,7 @@ public class Roles : CustomDataSourceAdvanced
     [PrivateApi]
     internal static List<int> RolesCsvListToInt(string stringList)
     {
-        if (!stringList.HasValue()) return new();
+        if (!stringList.HasValue()) return [];
         return stringList.Split(Separator)
             .Select(r => int.TryParse(r.Trim(), out var roleId) ? roleId : int.MinValue)
             .Where(r => r != int.MinValue)

@@ -58,7 +58,7 @@ internal class JsonProcessingHelpers
     public static (bool IsComplex, bool IsArray) AnalyzeJson(string json)
     {
         // find first possible opening character
-        var firstCharPos = json.IndexOfAny(new[] { JObjStart, JArrayStart });
+        var firstCharPos = json.IndexOfAny([JObjStart, JArrayStart]);
         return firstCharPos <= -1
             ? (false, false)
             : (true, json[firstCharPos] == JArrayStart);

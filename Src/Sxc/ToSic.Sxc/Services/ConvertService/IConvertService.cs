@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Services;
 /// New in v12.05
 /// </remarks>
 [PublicApi]
-[Docs(AutoLink = true, Messages = new [] {"Helper to convert any object into another - like a string to int."} )]
+[Docs(AutoLink = true, Messages = ["Helper to convert any object into another - like a string to int."])]
 public interface IConvertService
 {
     // Important internal information

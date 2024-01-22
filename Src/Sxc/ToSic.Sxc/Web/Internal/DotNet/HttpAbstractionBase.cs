@@ -31,7 +31,7 @@ public abstract class HttpAbstractionBase: IHttp
         _queryStringKeyValuePairs = qs?.AllKeys
                                         .Select(key => new KeyValuePair<string, string>(key, qs[key]))
                                         .ToList()
-                                    ?? new List<KeyValuePair<string, string>>();
+                                    ?? [];
         return _queryStringKeyValuePairs;
     }
     private List<KeyValuePair<string, string>> _queryStringKeyValuePairs;

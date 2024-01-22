@@ -14,7 +14,7 @@ partial class PageServiceShared
         HttpHeaders.Add(new(name, value));
 
     [PrivateApi]
-    public List<HttpHeader> HttpHeaders { get; } = new();
+    public List<HttpHeader> HttpHeaders { get; } = [];
 
     #endregion
 

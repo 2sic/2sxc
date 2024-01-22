@@ -55,7 +55,7 @@ public class CspOfModule: ServiceForDynamicCode
     /// <summary>
     /// Each App will register itself here to be added to the CSP list
     /// </summary>
-    private List<CspOfApp> AppCsps = new();
+    private List<CspOfApp> AppCsps = [];
 
     internal bool RegisterAppCsp(CspOfApp appCsp)
     {
@@ -179,12 +179,12 @@ public class CspOfModule: ServiceForDynamicCode
 
 
     internal void AddCspService(ContentSecurityPolicyServiceBase provider) => CspServices.Add(provider);
-    internal readonly List<ContentSecurityPolicyServiceBase> CspServices = new();
+    internal readonly List<ContentSecurityPolicyServiceBase> CspServices = [];
 
     public List<CspParameters> CspParameters()
     {
         var wrapLog = Log.Fn<List<CspParameters>>();
-        if (!IsEnabled) return wrapLog.Return(new(), "disabled");
+        if (!IsEnabled) return wrapLog.Return([], "disabled");
 
         if (Policies.Any())
         {
@@ -196,7 +196,7 @@ public class CspOfModule: ServiceForDynamicCode
             AddCspService(policyCsp);
         }
 
-        if (!CspServices.Any()) return wrapLog.Return(new(), "no services to add");
+        if (!CspServices.Any()) return wrapLog.Return([], "no services to add");
         var result = CspServices.Select(c => c?.Policy).Where(c => c != null).ToList();
         return wrapLog.ReturnAsOk(result);
 

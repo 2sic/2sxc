@@ -9,8 +9,8 @@ public class Export<TFolderId, TFileId>(AdamManager<TFolderId, TFileId> adm)
 {
     private readonly Folder<TFolderId, TFileId> _root = adm.RootFolder;
     // todo #adamid - should use TFile/TFolder
-    private readonly List<TFileId> _fileIds = new();
-    private readonly List<TFolderId> _folderIds = new();
+    private readonly List<TFileId> _fileIds = [];
+    private readonly List<TFolderId> _folderIds = [];
 
     private readonly IAdamFileSystem<TFolderId, TFileId> _envFs = adm.AdamFs;
 

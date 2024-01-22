@@ -17,14 +17,14 @@ internal static class ResizeSettingsExtensions
         if (subRecipes.SafeNone()) return mainRecipe;
 
         // Prepare list of frameworks, targets and factors to use in the loops
-        var frameworks = cssFramework == null ? new[] { (string)null } : new[] { cssFramework, null };
+        var frameworks = cssFramework == null ? [(string)null] : new[] { cssFramework, null };
 
         var primaryTarget = srcSetType == SrcSetType.Img ? "img" : "source";
         var targetsToTest = new[] { primaryTarget, Recipe.RuleForDefault };
 
         var factor = DNearZero(resizeSettings.Factor) ? 1 : resizeSettings.Factor;
         var factorsToTest = useFactors
-            ? new[] { (double?)factor, null }
+            ? [(double?)factor, null]
             : new[] { (double?)null };
 
         // Get PiggyBack cache to rarely rerun LINQ

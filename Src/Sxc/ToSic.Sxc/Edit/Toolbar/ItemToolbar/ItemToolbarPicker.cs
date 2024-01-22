@@ -55,7 +55,7 @@ internal class ItemToolbarPicker
     {
         // Fix 14.04 - I believe this case somehow got lost in history
         if (toolbar is string strToolbar)
-            return new() { strToolbar };
+            return [strToolbar];
 
         // Note: This is a bit complex because previously we checked for this:
         // return toolbar is IEnumerable<string> array && array.FirstOrDefault() != null;

@@ -12,7 +12,7 @@ internal class PageFeatures(IPageFeaturesManager pfm) : IPageFeatures
         return realKeys;
     }
 
-    private List<PageFeatureFromSettings> FeaturesFromSettings { get; } = new();
+    private List<PageFeatureFromSettings> FeaturesFromSettings { get; } = [];
 
     public void FeaturesFromSettingsAdd(PageFeatureFromSettings newFeature) => FeaturesFromSettings.Add(newFeature);
 
@@ -36,7 +36,7 @@ internal class PageFeatures(IPageFeaturesManager pfm) : IPageFeatures
 
 
 
-    private List<string> FeatureKeys { get; } = new();
+    private List<string> FeatureKeys { get; } = [];
 
 
     public List<IPageFeature> GetFeaturesWithDependentsAndFlush(ILog log) => log.Func(() =>

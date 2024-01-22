@@ -14,12 +14,13 @@ internal abstract class UrlValueProcess
     public static string Base64Prefix = "base64:";
     public static string Json64Prefix = "json64:";
 
-    public static char[] UnsafeChars = {
+    public static char[] UnsafeChars =
+    [
         '\n', '\r',
         '<', '>',
         '"', '\'',
         '=', '&', '?', '#'
-    };
+    ];
 
     /// <summary>
     /// Converts any string value which contains unsafe characters to base64

@@ -61,7 +61,7 @@ internal class PreWrapJsonArray(CodeJsonWrapper wrapper, JsonArray jsonArray)
     }
 
     public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
-        => new() { new() { Path = $"Not supported on {nameof(DynamicJacketList)}" } };
+        => [new() { Path = $"Not supported on {nameof(DynamicJacketList)}" }];
 
 
 }

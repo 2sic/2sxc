@@ -19,7 +19,7 @@ internal class DynamicEntityListHelper
     public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, bool propsRequired, Internal.CodeDataFactory cdf)
         : this(cdf, propsRequired, getDebug)
     {
-        _list = new() { singleItem ?? throw new ArgumentException(nameof(singleItem)) };
+        _list = [singleItem ?? throw new ArgumentException(nameof(singleItem))];
     }
         
     public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug, bool propsRequired, Internal.CodeDataFactory cdf)

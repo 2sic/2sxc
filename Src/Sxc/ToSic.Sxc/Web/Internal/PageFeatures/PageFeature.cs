@@ -44,7 +44,7 @@ public class PageFeature(
 
     public Requirement Requirement { get; } = new(ConditionIsPageFeature, key);
 
-    public List<Requirement> Requirements { get; } = requirements ?? new List<Requirement>();
+    public List<Requirement> Requirements { get; } = requirements ?? [];
 
     /// <summary>
     /// Temporary URL for internal features which need to store the URL someplace

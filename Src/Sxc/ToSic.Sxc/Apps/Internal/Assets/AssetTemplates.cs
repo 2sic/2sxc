@@ -38,8 +38,8 @@ public partial class AssetTemplates : ServiceBase
     {
     }
 
-    public List<TemplateInfo> GetTemplates() => _templates ??= new()
-    {
+    public List<TemplateInfo> GetTemplates() => _templates ??=
+    [
         RazorHybrid,
         RazorTyped,
         RazorDnn,
@@ -54,8 +54,8 @@ public partial class AssetTemplates : ServiceBase
         DnnSearch,
         Markdown,
         EmptyTextFile,
-        EmptyFile,
-    };
+        EmptyFile
+    ];
     private static List<TemplateInfo> _templates;
 
     // TODO: @STV This should probably become obsolete once you change the objects above

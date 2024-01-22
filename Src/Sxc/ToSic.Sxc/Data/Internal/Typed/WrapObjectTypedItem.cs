@@ -170,8 +170,8 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
         var objList = raw != null
             ? raw is IEnumerable rawEnum
                 ? rawEnum.Cast<object>().ToList()
-                : new() { raw }
-            : new();
+                : [raw]
+            : [];
 
         var df = Cdf.Value.Services.DataFactory.New(
             options: new(appId: Cdf.Value.BlockOrNull?.AppId, autoId: false));

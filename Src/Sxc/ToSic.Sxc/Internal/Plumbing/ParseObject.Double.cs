@@ -25,7 +25,7 @@ internal static partial class ParseObject
         if (value is string strValue && !string.IsNullOrWhiteSpace(strValue))
         {
             // check for separator
-            var separator = strValue.IndexOfAny(new[] { ':', '/' });
+            var separator = strValue.IndexOfAny([':', '/']);
             if (separator > 0) // if it starts with the separator, something is wrong
             {
                 var leftPart = strValue.Substring(0, separator);

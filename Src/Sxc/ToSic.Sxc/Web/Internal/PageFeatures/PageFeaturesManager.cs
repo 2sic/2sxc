@@ -13,7 +13,7 @@ internal class PageFeaturesManager: IPageFeaturesManager
 
     public List<IPageFeature> GetWithDependents(List<string> keys)
     {
-        if (keys == null || !keys.Any()) return new();
+        if (keys == null || !keys.Any()) return [];
         var collected = Get(keys);
 
         var added = collected;

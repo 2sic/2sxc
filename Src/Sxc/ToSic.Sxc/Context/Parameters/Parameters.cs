@@ -20,7 +20,7 @@ internal partial class Parameters : IParameters
 
     public Parameters(NameValueCollection originals)
     {
-        Nvc = originals ?? new NameValueCollection();
+        Nvc = originals ?? [];
     }
 
     protected readonly NameValueCollection Nvc;

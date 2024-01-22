@@ -11,7 +11,7 @@ partial class PreWrapObject
     [PrivateApi]
     public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
     {
-        if (_innerObject == null) return new();
+        if (_innerObject == null) return [];
 
         if (string.IsNullOrEmpty(path)) path = DumpSourceName;
 

@@ -201,7 +201,7 @@ public partial class Users : CustomDataSourceAdvanced
     private List<CmsUserRaw> GetUsersAndFilter() => Log.Func(l =>
     {
         var users = _provider.GetUsersInternal()?.ToList();
-        if (users == null || !users.Any()) return (new(), "null/empty");
+        if (users == null || !users.Any()) return ([], "null/empty");
 
         foreach (var filter in GetAllFilters())
             users = users.Where(filter).ToList();

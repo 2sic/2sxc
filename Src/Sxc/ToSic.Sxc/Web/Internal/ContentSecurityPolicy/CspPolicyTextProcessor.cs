@@ -27,7 +27,7 @@ public class CspPolicyTextProcessor: HelperBase
 
         foreach (var line in lines)
         {
-            var splitIndex = line.IndexOfAny(new[] { ':', ' ' });
+            var splitIndex = line.IndexOfAny([':', ' ']);
             if(splitIndex == -1 || splitIndex >= line.Length) continue;
             var key = line.Substring(0, splitIndex);
             var value = line.Substring(splitIndex + 1).Trim();

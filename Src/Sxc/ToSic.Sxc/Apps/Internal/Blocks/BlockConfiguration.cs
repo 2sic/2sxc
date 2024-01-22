@@ -71,17 +71,17 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
     {
         get
         {
-            if (Entity == null) return new() {null};
+            if (Entity == null) return [null];
             var list = Entity.Children(ViewParts.Content);
-            return list.Count > 0 ? list : new() {null};
+            return list.Count > 0 ? list : [null];
         }
     }
 
-    public List<IEntity> Presentation => Entity?.Children(ViewParts.Presentation) ?? new List<IEntity>();
+    public List<IEntity> Presentation => Entity?.Children(ViewParts.Presentation) ?? [];
 
-    public List<IEntity> Header => Entity?.Children(ViewParts.FieldHeader) ?? new List<IEntity>();
+    public List<IEntity> Header => Entity?.Children(ViewParts.FieldHeader) ?? [];
 
-    public List<IEntity> HeaderPresentation => Entity?.Children(ViewParts.ListPresentation) ?? new List<IEntity>();
+    public List<IEntity> HeaderPresentation => Entity?.Children(ViewParts.ListPresentation) ?? [];
 
     public List<IEntity> this[string type]
     {

@@ -34,6 +34,6 @@ internal class PropLookupStack: IPropertyLookup
     }
 
     public List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) =>
-        Stack?._Dump(specs, path) ?? new List<PropertyDumpItem>();
+        Stack?._Dump(specs, path) ?? [];
 
 }

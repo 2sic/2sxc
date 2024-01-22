@@ -15,7 +15,7 @@ public class CspOfPage: ServiceBase
         );
     }
 
-    public List<CspParameters> CspParameters { get; } = new();
+    public List<CspParameters> CspParameters { get; } = [];
 
     public void Add(IList<CspParameters> additional) => CspParameters.AddRange(additional);
 

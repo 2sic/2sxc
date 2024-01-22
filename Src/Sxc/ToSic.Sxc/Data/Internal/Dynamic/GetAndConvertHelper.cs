@@ -87,7 +87,7 @@ internal class GetAndConvertHelper
             return l.Return(cached, "cached");
 
         // use the standard dimensions or overload
-        var languages = language == null ? Cdf.Dimensions : new[] { language };
+        var languages = language == null ? Cdf.Dimensions : [language];
         l.A($"cache-key: {cacheKey}, {nameof(languages)}:{languages}");
 
         // Get the field or the path if it has one

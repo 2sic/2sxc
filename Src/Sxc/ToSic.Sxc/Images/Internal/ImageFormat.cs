@@ -21,8 +21,8 @@ public class ImageFormat : IImageFormat
         MimeType = mimeType;
         CanResize = canResize;
         ResizeFormats = canResize
-            ? better?.Union(new []{this}).ToList() ?? new List<IImageFormat> { this }
-            : new();
+            ? better?.Union(new []{this}).ToList() ?? [this]
+            : [];
     }
 
     public ImageFormat(IImageFormat original, bool preserveSizes)

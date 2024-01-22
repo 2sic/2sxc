@@ -18,7 +18,7 @@ internal class ModuleService() : ServiceBase(SxcLogging.SxcLogName + ".ModSvc"),
     }
 
     public IReadOnlyCollection<IHtmlTag> MoreTags => _moreTags;
-    private readonly List<IHtmlTag> _moreTags = new();
+    private readonly List<IHtmlTag> _moreTags = [];
 
-    private readonly HashSet<string> ExistingKeys = new();
+    private readonly HashSet<string> ExistingKeys = [];
 }

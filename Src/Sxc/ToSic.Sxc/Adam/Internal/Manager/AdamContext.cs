@@ -122,10 +122,10 @@ public abstract class AdamContext: ServiceBase<AdamContext.MyServices>
     public IContextOfApp Context;
 
     public readonly Guid[] FeaturesForRestrictedUsers =
-    {
+    [
         PublicUploadFiles.Guid,
-        PublicEditForm.Guid,
-    };
+        PublicEditForm.Guid
+    ];
 
 
     /// <summary>

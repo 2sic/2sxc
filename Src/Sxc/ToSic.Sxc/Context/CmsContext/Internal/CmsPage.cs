@@ -17,7 +17,7 @@ internal class CmsPage(CmsContext parent, IMetadataOfSource appState, LazySvc<IP
     {
         var md = appState.GetMetadataOf(TargetTypes.Page, Id, Url);
         if (md == null) return null;
-        md.Target.Recommendations = new[] { Decorators.NoteDecoratorName, Decorators.OpenGraphName };
+        md.Target.Recommendations = [Decorators.NoteDecoratorName, Decorators.OpenGraphName];
         return md;
     }
 }

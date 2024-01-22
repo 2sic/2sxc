@@ -48,7 +48,7 @@ partial class ToolbarBuilder
     )
     {
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters);
-        return EntityRule("fields", target, pars, propsKeep: new[] { KeyContentType }, contentType: target as string).Builder;
+        return EntityRule("fields", target, pars, propsKeep: [KeyContentType], contentType: target as string).Builder;
     }
 
 
