@@ -39,6 +39,8 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
 
     public bool Debug { get; set; }
 
+    public override string ToString() => $"{GetType().Name}: '{(this as ITypedItem).Title}' ({Entity})";
+
     IEntity IWrapper<IEntity>.GetContents() => Entity;
 
 

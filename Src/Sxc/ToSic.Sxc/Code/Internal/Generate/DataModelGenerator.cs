@@ -23,6 +23,9 @@ internal class DataModelGenerator
         // TODO:
         // - add comment with date/time stamp
         // - add comment with version of generator
+        // - add attribute to mention what data-type it's for, in case the name doesn't match to help with errors
+        // - consider modifying the ToString to better show what it's doing
+        // - check Equals of the new objects
         var sb = new StringBuilder();
         // Generate usings
         sb.Append(GenerateUsings());

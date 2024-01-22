@@ -41,7 +41,13 @@ public abstract class Item16Experimental(ITypedItem item, NoParamOrder protector
     ITypedItem ICanBeItem.Item => item;
 
     protected ServiceKit16 Kit => kit;
-    
+
+    public override string ToString()
+    {
+        var msg = $"Custom Data Model {GetType().FullName}";
+        return item == null ? $"{msg} without backing data (null)" : msg + $" for id:{Id} ({item})";
+    }
+
     /// <summary>
     /// Get a value from the current item, which has the same name as the calling property.
     /// Usage:
