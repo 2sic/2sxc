@@ -12,9 +12,9 @@ using ToSic.Sxc.Code.Internal.HotBuild;
 namespace ToSic.Sxc.Oqt.Server.Code.Internal;
 
 [PrivateApi]
-internal class ThisAppCodeCompilerNetCore : ThisAppCodeCompiler
+internal class ThisAppCompilerNetCore : ThisAppCompiler
 {
-    public ThisAppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, LazySvc<ThisAppCodeLoader> thisAppCodeLoader)
+    public ThisAppCompilerNetCore(LazySvc<IServerPaths> serverPaths, LazySvc<ThisAppLoader> thisAppCodeLoader)
     {
         ConnectServices(
             _serverPaths = serverPaths,
@@ -23,9 +23,9 @@ internal class ThisAppCodeCompilerNetCore : ThisAppCodeCompiler
     }
 
     private readonly LazySvc<IServerPaths> _serverPaths;
-    private readonly LazySvc<ThisAppCodeLoader> _thisAppCodeLoader;
+    private readonly LazySvc<ThisAppLoader> _thisAppCodeLoader;
 
-    protected internal override AssemblyResult GetAppCode(string virtualPath, HotBuildSpec spec)
+    protected internal override AssemblyResult GetThisApp(string virtualPath, HotBuildSpec spec)
     {
         var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {spec}", timer: true);
 
@@ -61,7 +61,7 @@ internal class ThisAppCodeCompilerNetCore : ThisAppCodeCompiler
         catch (Exception ex)
         {
             l.Ex(ex);
-            var errorMessage = $"Error: Can't compile '{ThisAppCodeDll}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. {ex.Message}";
+            var errorMessage = $"Error: Can't compile '{ThisAppDll}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. {ex.Message}";
             return l.ReturnAsError(new(errorMessages: errorMessage), "error");
         }
     }

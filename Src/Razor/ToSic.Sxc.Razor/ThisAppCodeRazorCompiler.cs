@@ -40,7 +40,7 @@ internal class ThisAppCodeRazorCompiler : ServiceBase, IThisAppCodeRazorCompiler
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IActionContextAccessor _actionContextAccessor;
     private readonly IRazorPageActivator _pageActivator;
-    private readonly LazySvc<ThisAppCodeLoader> _thisAppCodeLoader;
+    private readonly LazySvc<ThisAppLoader> _thisAppCodeLoader;
     private readonly LazySvc<IServerPaths> _serverPaths;
     private readonly AssemblyResolver _assemblyResolver;
 
@@ -51,7 +51,7 @@ internal class ThisAppCodeRazorCompiler : ServiceBase, IThisAppCodeRazorCompiler
         IHttpContextAccessor httpContextAccessor,
         IActionContextAccessor actionContextAccessor,
         IRazorPageActivator pageActivator,
-        LazySvc<ThisAppCodeLoader> thisAppCodeLoader,
+        LazySvc<ThisAppLoader> thisAppCodeLoader,
         LazySvc<IServerPaths> serverPaths,
         AssemblyResolver assemblyResolver) : base($"{SxcLogging.SxcLogName}.RzrCmp")
     {
@@ -159,8 +159,8 @@ internal class ThisAppCodeRazorCompiler : ServiceBase, IThisAppCodeRazorCompiler
         var l = Log.Fn<ViewEngineResult>($"{nameof(templatePath)}:{templatePath}; {nameof(app.RelativePath)}:{app.RelativePath}; {spec}", timer: true);
 
         // get assembly - try to get from cache, otherwise compile
-        //var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(spec, Log)?.Assembly
-        //                   ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrThrow(spec);
+        //var codeAssembly = ThisAppLoader.TryGetAssemblyOfThisAppFromCache(spec, Log)?.Assembly
+        //                   ?? _thisAppCodeLoader.Value.GetThisAppAssemblyOrThrow(spec);
         var (codeAssembly, _) = _thisAppCodeLoader.Value.TryGetOrFallback(spec);
         l.A($"has ThisApp.Code assembly: {codeAssembly != null}");
 

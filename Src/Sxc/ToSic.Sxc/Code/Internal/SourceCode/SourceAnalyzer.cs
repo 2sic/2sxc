@@ -65,8 +65,8 @@ public class SourceAnalyzer : ServiceBase
 
         if (isCs)
         {
-            var csHasThisAppCode = IsThisAppCodeUsedInCs(sourceCode);
-            l.A($"cs, thisApp: {csHasThisAppCode}");
+            var csHasThisApp = IsThisAppUsedInCs(sourceCode);
+            l.A($"cs, thisApp: {csHasThisApp}");
 
             var className = Path.GetFileNameWithoutExtension(relativePath);
             l.A($"cs, className: {className}");
@@ -75,18 +75,18 @@ public class SourceAnalyzer : ServiceBase
             l.A($"cs, baseClass: {baseClass}");
 
             if (baseClass.IsEmptyOrWs())
-                return l.Return(csHasThisAppCode 
-                    ? CodeFileInfo.CodeFileUnknownWithThisAppCode(sourceCode, relativePath: relativePath, fullPath: fullPath) 
+                return l.Return(csHasThisApp 
+                    ? CodeFileInfo.CodeFileUnknownWithThisApp(sourceCode, relativePath: relativePath, fullPath: fullPath) 
                     : CodeFileInfo.CodeFileUnknown(sourceCode, relativePath: relativePath, fullPath: fullPath)
                     , "Ok, cs file without base class");
 
             var csBaseClassMatch = CodeFileInfo.CodeFileInfoTemplates
-                .FirstOrDefault(cf => cf.Inherits.EqualsInsensitive(baseClass) && cf.ThisApp == csHasThisAppCode);
+                .FirstOrDefault(cf => cf.Inherits.EqualsInsensitive(baseClass) && cf.ThisApp == csHasThisApp);
 
             return csBaseClassMatch != null
                 ? l.ReturnAndLog(new(csBaseClassMatch, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath))
-                : l.Return(csHasThisAppCode 
-                    ? CodeFileInfo.CodeFileOtherWithThisAppCode(sourceCode, relativePath: relativePath, fullPath: fullPath) 
+                : l.Return(csHasThisApp 
+                    ? CodeFileInfo.CodeFileOtherWithThisApp(sourceCode, relativePath: relativePath, fullPath: fullPath) 
                     : CodeFileInfo.CodeFileOther(sourceCode, relativePath: relativePath, fullPath: fullPath)
                     , "Ok, cs file with other base class");
         }
@@ -101,7 +101,7 @@ public class SourceAnalyzer : ServiceBase
         if (ns.IsEmptyOrWs())
             return l.Return(CodeFileInfo.CodeFileUnknown(sourceCode, relativePath: relativePath, fullPath: fullPath));
 
-        var cshtmlHasThisAppCode = IsThisAppCodeUsedInCshtml(sourceCode);
+        var cshtmlHasThisAppCode = IsThisAppUsedInCshtml(sourceCode);
 
         var findMatch = CodeFileInfo.CodeFileInfoTemplates
             .FirstOrDefault(cf => cf.Inherits.EqualsInsensitive(ns) && cf.ThisApp == cshtmlHasThisAppCode);
@@ -111,22 +111,21 @@ public class SourceAnalyzer : ServiceBase
             : l.Return(CodeFileInfo.CodeFileOther(sourceCode, relativePath: relativePath, fullPath: fullPath), $"namespace '{ns}' can't be found");
     }
 
-    private static bool IsThisAppCodeUsedInCshtml(string sourceCode)
+    private static bool IsThisAppUsedInCshtml(string sourceCode)
     {
-        // Pattern to match '@using ThisApp.Code' not commented out
-
         // TODO: stv, update code because this code is not robust enough
-        // it does not handle all edge cases, event it does not work correctly in some cases
+        // it does not correctly handle all edge cases
 
+        // Pattern to match '@using ThisApp' not commented out
         const string pattern = @"
             # Ignore leading whitespaces
             (?<=^\s*)
 
             # Match the @using statement
-            @using\s+ThisApp\.Code
+            @using\s+ThisApp
 
             # Ensure that it's not part of a comment
-            (?<!@(/\*)[\s\S]*?@using\s+ThisApp\.Code) # Not in Razor comment";
+            (?<!@(/\*)[\s\S]*?@using\s+ThisApp) # Not in Razor comment";
 
         var options = RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace;
         var thisAppMatch = Regex.Match(sourceCode, pattern, options);
@@ -134,24 +133,24 @@ public class SourceAnalyzer : ServiceBase
         return thisAppMatch.Success;
     }
 
-    private static bool IsThisAppCodeUsedInCs(string sourceCode)
+    private static bool IsThisAppUsedInCs(string sourceCode)
     {
-        // Pattern to match 'using ThisApp.Code;' not in single-line or multi-line comments
-
         // TODO: stv, update code because this code is not robust enough
-        // it does not handle all edge cases, event it does not work correctly in some cases
+        // it does not correctly handle all edge cases
+
+        // Pattern to match 'using ThisApp;' or ': ThisApp' not in single-line or multi-line comments
         const string pattern = @"
             # Ignore leading whitespaces
             (?<=^\s*)
 
-            # Match the 'using ThisApp.Code;' statement
-            using\s+ThisApp\.Code\s*;
+            # Match either 'using ThisApp;' or ': ThisApp'
+            (using\s+ThisApp\s*;|:\s*ThisApp\s*(?={|,|\s))
 
             # Ensure that it's not part of a single-line comment
-            (?<!//.*using\s+ThisApp\.Code\s*;)
+            (?<!//.*(?:using\s+ThisApp\s*;|:\s*ThisApp\s*(?={|,|\s)))
 
             # Ensure that it's not part of a multi-line comment
-            (?<!/\*[\s\S]*?using\s+ThisApp\.Code\s*;)";
+            (?<!/\*[\s\S]*?(?:using\s+ThisApp\s*;|:\s*ThisApp\s*(?={|,|\s)))";
 
         var options = RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace;
         var thisAppMatch = Regex.Match(sourceCode, pattern, options);

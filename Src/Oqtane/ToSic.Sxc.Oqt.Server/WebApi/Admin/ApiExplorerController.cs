@@ -59,7 +59,7 @@ public class ApiExplorerController : OqtStatefulControllerBase, IApiExplorerCont
             spec = new HotBuildSpec(spec.AppId,
                 edition: PolymorphConfigReader.UseViewEditionLazyGetEdition(block.View,() => GetService<PolymorphConfigReader>().Init(block.Context.AppState.List)));
 
-        var thisAppCodeLoader = GetService<LazySvc<ThisAppCodeLoader>>();
+        var thisAppCodeLoader = GetService<LazySvc<ThisAppLoader>>();
         Log.A($"Controller path from root: {pathFromRoot}");
 
         // get full path

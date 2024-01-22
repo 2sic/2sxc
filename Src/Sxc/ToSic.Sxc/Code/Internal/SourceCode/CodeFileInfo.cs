@@ -39,13 +39,13 @@ public class CodeFileInfo
     // without base class
     public static CodeFileInfo CodeFileUnknown(string sourceCode, string relativePath = default, string fullPath = default) 
         => new("unknown", CodeFileTypes.Unknown, HelpForRazorCompileErrors.CompileUnknown, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath);
-    public static CodeFileInfo CodeFileUnknownWithThisAppCode(string sourceCode, string relativePath = default, string fullPath = default) 
+    public static CodeFileInfo CodeFileUnknownWithThisApp(string sourceCode, string relativePath = default, string fullPath = default) 
         => new ("unknown", CodeFileTypes.Unknown, HelpForRazorCompileErrors.CompileUnknown, true, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath);
 
     // with some other base class
     public static CodeFileInfo CodeFileOther(string sourceCode, string relativePath = default, string fullPath = default) 
         => new ("other", CodeFileTypes.Other, HelpForRazorCompileErrors.CompileUnknown, sourceCode: sourceCode);
-    public static CodeFileInfo CodeFileOtherWithThisAppCode(string sourceCode, string relativePath = default, string fullPath = default) 
+    public static CodeFileInfo CodeFileOtherWithThisApp(string sourceCode, string relativePath = default, string fullPath = default) 
         => new ("other", CodeFileTypes.Other, HelpForRazorCompileErrors.CompileUnknown, true, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath);
 
     public static CodeFileInfo CodeFileNotFound = new("", CodeFileTypes.FileNotFound, []);
@@ -57,9 +57,9 @@ public class CodeFileInfo
     internal static List<CodeFileInfo> CodeFileInfoTemplates =
     [
         CodeFileUnknown(null),
-        CodeFileUnknownWithThisAppCode(null),
+        CodeFileUnknownWithThisApp(null),
         CodeFileOther(null),
-        CodeFileOtherWithThisAppCode(null),
+        CodeFileOtherWithThisApp(null),
         // cshtml
         new("Custom.Hybrid.Razor12", CodeFileTypes.V12, HelpForRazor12.Compile12, sourceCode: null),
         new("Custom.Hybrid.Razor14", CodeFileTypes.V14, HelpForRazor14.Compile14, sourceCode: null),

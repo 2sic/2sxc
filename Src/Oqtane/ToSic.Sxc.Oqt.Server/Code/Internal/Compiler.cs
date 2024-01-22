@@ -22,9 +22,9 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
     // https://laurentkempe.com/2019/02/18/dynamically-compile-and-run-code-using-dotNET-Core-3.0/
     public class Compiler : ServiceBase
     {
-        private readonly LazySvc<ThisAppCodeLoader> _thisAppCodeLoader;
+        private readonly LazySvc<ThisAppLoader> _thisAppCodeLoader;
 
-        public Compiler(LazySvc<ThisAppCodeLoader> thisAppCodeLoader) : base("Sys.CodCpl")
+        public Compiler(LazySvc<ThisAppLoader> thisAppCodeLoader) : base("Sys.CodCpl")
         {
             _thisAppCodeLoader = thisAppCodeLoader;
         }
@@ -36,8 +36,8 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
         {
             var l = Log.Fn<AssemblyResult>($"Starting compilation of: '{sourceFile}'; {nameof(dllName)}: '{dllName}'; {spec}'.");
 
-            //var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(spec, Log)?.Assembly
-            //                   ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrThrow(spec);
+            //var codeAssembly = ThisAppLoader.TryGetAssemblyOfThisAppFromCache(spec, Log)?.Assembly
+            //                   ?? _thisAppCodeLoader.Value.GetThisAppAssemblyOrThrow(spec);
             var (codeAssembly, _) = _thisAppCodeLoader.Value.TryGetOrFallback(spec);
 
             var encoding = Encoding.UTF8;

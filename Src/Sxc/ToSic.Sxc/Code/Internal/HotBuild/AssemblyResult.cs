@@ -27,7 +27,7 @@ public class AssemblyResult(
     /// ATM just used for AppCode assemblies, should maybe be in an inheriting class...
     /// </summary>
     // WIP - should be more functional, this get/set is still hacky
-    public IList<string> WatcherFolders { get; set; }
+    public IDictionary<string, bool> WatcherFolders { get; set; }
 
     public Dictionary<string, string> Infos { get; } = infos ?? [];
 

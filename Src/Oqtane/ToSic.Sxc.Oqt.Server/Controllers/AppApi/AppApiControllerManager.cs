@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 /// </summary>
 internal class AppApiControllerManager: IHasLog
 {
-    public AppApiControllerManager(ApplicationPartManager partManager, AppApiFileSystemWatcher appApiFileSystemWatcher, ILogStore logStore, LazySvc<ThisAppCodeLoader> thisAppCodeLoader, ISxcContextResolver ctxResolver, Sxc.Polymorphism.Internal.PolymorphConfigReader polymorphism)
+    public AppApiControllerManager(ApplicationPartManager partManager, AppApiFileSystemWatcher appApiFileSystemWatcher, ILogStore logStore, LazySvc<ThisAppLoader> thisAppCodeLoader, ISxcContextResolver ctxResolver, Sxc.Polymorphism.Internal.PolymorphConfigReader polymorphism)
     {
         _partManager = partManager;
         _thisAppCodeLoader = thisAppCodeLoader;
@@ -35,7 +35,7 @@ internal class AppApiControllerManager: IHasLog
     }
     private readonly ConcurrentDictionary<string, bool> _compiledAppApiControllers;
     private readonly ApplicationPartManager _partManager;
-    private readonly LazySvc<ThisAppCodeLoader> _thisAppCodeLoader;
+    private readonly LazySvc<ThisAppLoader> _thisAppCodeLoader;
     private readonly ISxcContextResolver _ctxResolver;
     private readonly Sxc.Polymorphism.Internal.PolymorphConfigReader _polymorphism;
 

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
@@ -6,13 +7,13 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class ThisAppCodeCompiler() : ServiceBase("Sxc.MyApCd")
+public abstract class ThisAppCompiler() : ServiceBase("Sxc.MyApCd")
 {
     public const string CsFiles = ".cs";
-    public const bool UseSubfolders = false;
-    public const string ThisAppCodeDll = "ThisApp.Code.dll";
+    public const bool UseSubfolders = true;
+    public const string ThisAppDll = "ThisApp.dll";
 
-    protected internal abstract AssemblyResult GetAppCode(string relativePath, HotBuildSpec spec);
+    protected internal abstract AssemblyResult GetThisApp(string relativePath, HotBuildSpec spec);
 
     protected string[] GetSourceFiles(string fullPath)
     {
@@ -21,13 +22,19 @@ public abstract class ThisAppCodeCompiler() : ServiceBase("Sxc.MyApCd")
         if (!Directory.Exists(fullPath))
             return l.ReturnAsOk([]);
 
-        var sourceFiles = Directory.GetFiles(fullPath, $"*{CsFiles}", UseSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+        //var sourceFiles = GetSourceFilesInFolder(Path.Combine(fullPath, HotBuildEnum.Code.ToString()))
+        //    .Concat(GetSourceFilesInFolder(Path.Combine(fullPath, HotBuildEnum.Data.ToString()))).ToArray();
+
+        // Build the ThisApp folder with subfolders
+        var sourceFiles = GetSourceFilesInFolder(fullPath);
 
         // Log all files
         foreach (var sourceFile in sourceFiles) l.A(sourceFile);
 
         return l.ReturnAsOk(sourceFiles);
     }
+
+    private static string[] GetSourceFilesInFolder(string fullPath) => Directory.GetFiles(fullPath, $"*{CsFiles}", UseSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
 
     /// <summary>
     /// Generates a random name for a dll file and ensures it does not already exist in the "2sxc.bin" folder.
@@ -40,8 +47,8 @@ public abstract class ThisAppCodeCompiler() : ServiceBase("Sxc.MyApCd")
         do
         {
             var app = $"App-{spec.AppId:00000}";
-            var edition = spec.Edition.HasValue() ? $"-{spec.Edition}" : "";
-            randomNameWithoutExtension = $"{app}-ThisApp.{spec.Segment}{edition}-{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}";
+            var edition = spec.Edition.HasValue() ? $".{spec.Edition}" : "";
+            randomNameWithoutExtension = $"{app}-ThisApp{edition}-{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}";
         }
         while (File.Exists(Path.Combine(folderPath, $"{randomNameWithoutExtension}.dll")));
         return l.ReturnAsOk(randomNameWithoutExtension);

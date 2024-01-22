@@ -31,11 +31,11 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     private readonly LazySvc<CodeErrorHelpService> _errorHelp;
     private readonly CodeApiServiceFactory _codeApiServiceFactory;
     private readonly LazySvc<SourceAnalyzer> _sourceAnalyzer;
-    private readonly LazySvc<ThisAppCodeLoader> _thisAppCodeLoader;
+    private readonly LazySvc<ThisAppLoader> _thisAppCodeLoader;
     private readonly LazySvc<IRoslynBuildManager> _roslynBuildManager;
     private readonly AssemblyResolver _assemblyResolver;
 
-    public DnnRazorEngine(MyServices helpers, CodeApiServiceFactory codeApiServiceFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<SourceAnalyzer> sourceAnalyzer, LazySvc<ThisAppCodeLoader> thisAppCodeLoader, LazySvc<IRoslynBuildManager> roslynBuildManager, AssemblyResolver assemblyResolver) : base(helpers)
+    public DnnRazorEngine(MyServices helpers, CodeApiServiceFactory codeApiServiceFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<SourceAnalyzer> sourceAnalyzer, LazySvc<ThisAppLoader> thisAppCodeLoader, LazySvc<IRoslynBuildManager> roslynBuildManager, AssemblyResolver assemblyResolver) : base(helpers)
     {
         ConnectServices(
             _codeApiServiceFactory = codeApiServiceFactory,

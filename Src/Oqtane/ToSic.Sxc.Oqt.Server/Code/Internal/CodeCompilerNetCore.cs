@@ -13,9 +13,9 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal;
 internal class CodeCompilerNetCore : CodeCompiler
 {
     private readonly LazySvc<IServerPaths> _serverPaths;
-    private readonly LazySvc<ThisAppCodeLoader> _thisAppCodeLoader;
+    private readonly LazySvc<ThisAppLoader> _thisAppCodeLoader;
 
-    public CodeCompilerNetCore(IServiceProvider serviceProvider, LazySvc<IServerPaths> serverPaths, LazySvc<ThisAppCodeLoader> thisAppCodeLoader) : base(serviceProvider)
+    public CodeCompilerNetCore(IServiceProvider serviceProvider, LazySvc<IServerPaths> serverPaths, LazySvc<ThisAppLoader> thisAppCodeLoader) : base(serviceProvider)
     {
         ConnectServices(
             _serverPaths = serverPaths,
