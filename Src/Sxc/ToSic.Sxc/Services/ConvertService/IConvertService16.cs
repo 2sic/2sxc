@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Code.Internal.Documentation;
+using ToSic.Sxc.Data;
 
 // 2024-01-22 2dm
 // Remove all convert methods which are just missing the optional parameters, to make the API smaller.
@@ -212,4 +213,18 @@ public interface IConvertService16
     /// Sub-Service to convert JSON
     /// </summary>
     IJsonService Json { get; }
+
+    #region New v17 As conversions
+
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    T As<T>(ICanBeEntity source)
+        where T : class, ITypedItemWrapper16, ITypedItem, new();
+
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source)
+        where T : class, ITypedItemWrapper16, ITypedItem, new();
+
+    #endregion
 }
