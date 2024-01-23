@@ -11,15 +11,9 @@ using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Oqt.Server.Custom;
 
-internal class OqtWebApiShim
+internal class OqtWebApiShim(HttpResponse response, ControllerBase owner)
 {
-    private readonly ControllerBase _owner;
-    public HttpResponse Response { get; }
-    public OqtWebApiShim(HttpResponse response, ControllerBase owner)
-    {
-        _owner = owner;
-        Response = response;
-    }
+    public HttpResponse Response { get; } = response;
 
     public dynamic File(NoParamOrder noParamOrder = default,
         // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
@@ -39,7 +33,7 @@ internal class OqtWebApiShim
         // check if this may just be a call to the built in file, which has two strings
         // this can only be possible if only the virtualPath and contentType were set
         if (!string.IsNullOrWhiteSpace(virtualPath))
-            return _owner.File(virtualPath, contentType, fileDownloadName);
+            return owner.File(virtualPath, contentType, fileDownloadName);
 
         // add only header "Content-Disposition: inline, file..."
         if (download != true)
@@ -62,22 +56,22 @@ internal class OqtWebApiShim
                 contentType = CustomApiHelpers.XmlContentTypeFromContent(true, contentType);
                 encoding = CustomApiHelpers.GetEncoding(xmlDoc);
                 mediaTypeHeaderValue = CustomApiHelpers.PrepareMediaTypeHeaderValue(contentType, encoding).ToString();
-                return _owner.File(xmlStream, mediaTypeHeaderValue, fileDownloadName);
+                return owner.File(xmlStream, mediaTypeHeaderValue, fileDownloadName);
             case string stringBody:
                 contentType = CustomApiHelpers.XmlContentTypeFromContent(CustomApiHelpers.IsValidXml(stringBody), contentType);
                 encoding = CustomApiHelpers.GetEncoding(stringBody);
                 mediaTypeHeaderValue = CustomApiHelpers.PrepareMediaTypeHeaderValue(contentType, encoding).ToString();
-                return _owner.File(System.Text.Encoding.UTF8.GetBytes(stringBody), mediaTypeHeaderValue, fileDownloadName);
+                return owner.File(System.Text.Encoding.UTF8.GetBytes(stringBody), mediaTypeHeaderValue, fileDownloadName);
             case Stream streamBody:
                 contentType = CustomApiHelpers.XmlContentTypeFromContent(CustomApiHelpers.IsValidXml(streamBody), contentType);
                 encoding = CustomApiHelpers.GetEncoding(streamBody);
                 mediaTypeHeaderValue = CustomApiHelpers.PrepareMediaTypeHeaderValue(contentType, encoding).ToString();
-                return _owner.File(streamBody, mediaTypeHeaderValue, fileDownloadName);
+                return owner.File(streamBody, mediaTypeHeaderValue, fileDownloadName);
             case byte[] charBody:
                 contentType = CustomApiHelpers.XmlContentTypeFromContent(CustomApiHelpers.IsValidXml(charBody), contentType);
                 encoding = CustomApiHelpers.GetEncoding(charBody);
                 mediaTypeHeaderValue = CustomApiHelpers.PrepareMediaTypeHeaderValue(contentType, encoding).ToString();
-                return _owner.File(charBody, mediaTypeHeaderValue, fileDownloadName);
+                return owner.File(charBody, mediaTypeHeaderValue, fileDownloadName);
             default:
                 throw new ArgumentException("Tried to provide file download but couldn't find content");
         }

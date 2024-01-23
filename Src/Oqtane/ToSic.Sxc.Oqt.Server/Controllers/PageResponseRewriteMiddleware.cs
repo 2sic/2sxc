@@ -9,21 +9,14 @@ namespace ToSic.Sxc.Oqt.Server.Controllers;
 /// <summary>
 /// WIP: response rewrite for razor pages (CSP, meta, etc...)
 /// </summary>
-internal class PageResponseRewriteMiddleware
+internal class PageResponseRewriteMiddleware(RequestDelegate next)
 {
-    private readonly RequestDelegate _next;
-
-    public PageResponseRewriteMiddleware(RequestDelegate next)
-    {
-        _next = next;
-    }
-
     public async Task InvokeAsync(HttpContext context)
     {
         context.Response.Headers.Add("test-dev-page-middleware", "2sxc");
 
         // Call the next delegate/middleware in the pipeline.
-        await _next(context);
+        await next(context);
     }
 }
 

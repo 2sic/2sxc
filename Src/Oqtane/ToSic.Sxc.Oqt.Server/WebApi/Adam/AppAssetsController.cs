@@ -12,8 +12,5 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam;
 //[Route(WebApiConstants.WebApiStateRoot + "/adam/{appName}")]
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppAssetsController: WebApi.AppAssetsControllerBase
-{
-    public AppAssetsController(MyServices services) 
-        : base(services, OqtAssetsFileHelper.RouteAdam, "Assets") { }
-}
+public class AppAssetsController(AppAssetsControllerBase.MyServices services)
+    : WebApi.AppAssetsControllerBase(services, OqtAssetsFileHelper.RouteAdam, "Assets");

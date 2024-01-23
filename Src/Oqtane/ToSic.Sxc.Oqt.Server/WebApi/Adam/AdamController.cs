@@ -26,10 +26,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam;
 [Route(OqtWebApiConstants.AppRootPathOrLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
 [Route(OqtWebApiConstants.AppRootPathNdLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AdamController : OqtStatefulControllerBase, IAdamController<int>
+public class AdamController() : OqtStatefulControllerBase("Adam"), IAdamController<int>
 {
-    public AdamController(): base("Adam") { }
-
     private RealController Real => GetService<RealController>();
 
     // Note: #AdamItemDto - as of now, we must use object because System.Io.Text.Json will otherwise not convert the object correctly :(

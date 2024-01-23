@@ -11,8 +11,5 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 [Route(OqtWebApiConstants.SharedRootPathOrLang + "/{appName}/")]
 [Route(OqtWebApiConstants.SharedRootPathNdLang + "/{appName}/")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppSharedController: AppAssetsControllerBase
-{
-    public AppSharedController(MyServices services) 
-        : base(services, OqtAssetsFileHelper.RouteShared, "Shared") { }
-}
+public class AppSharedController(AppAssetsControllerBase.MyServices services)
+    : AppAssetsControllerBase(services, OqtAssetsFileHelper.RouteShared, "Shared");

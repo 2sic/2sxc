@@ -29,10 +29,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Authorize(Roles = RoleNames.Admin)]
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ApiExplorerController : OqtStatefulControllerBase, IApiExplorerController
+public class ApiExplorerController() : OqtStatefulControllerBase(RealController.LogSuffix), IApiExplorerController
 {
-    public ApiExplorerController() : base(RealController.LogSuffix) { }
-
     private RealController Real => GetService<RealController>();
 
     [HttpGet]

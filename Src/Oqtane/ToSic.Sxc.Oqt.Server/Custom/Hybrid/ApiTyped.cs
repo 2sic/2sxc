@@ -32,13 +32,12 @@ namespace Custom.Hybrid;
 /// </summary>
 [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
 [JsonFormatter]
-public abstract class ApiTyped : OqtStatefulControllerBase, IDynamicWebApi, IHasCodeLog, IHasCodeApiService, IDynamicCode16
+public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(logSuffix), IDynamicWebApi, IHasCodeLog,
+    IHasCodeApiService, IDynamicCode16
 {
     #region setup
 
     protected ApiTyped() : this(EavWebApiConstants.HistoryNameWebApi) { }
-
-    protected ApiTyped(string logSuffix) : base(logSuffix) { }
 
     /// <summary>
     /// Our custom dynamic 2sxc app api controllers, depends on event OnActionExecuting to provide dependencies (without DI in constructor).

@@ -18,10 +18,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Authorize(Roles = RoleNames.Admin)]
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeController : OqtControllerBase
+public class CodeController() : OqtControllerBase(false, RealController.LogSuffix)
 {
-    public CodeController() : base(false, RealController.LogSuffix) { }
-
     private RealController Real => GetService<RealController>();
 
 

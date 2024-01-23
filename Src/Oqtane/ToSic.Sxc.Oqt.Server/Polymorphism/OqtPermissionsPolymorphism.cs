@@ -7,15 +7,8 @@ namespace ToSic.Sxc.Oqt.Server.Polymorphism;
 
 [PolymorphResolver("Permissions")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class Permissions : IResolver
+public class Permissions(IUser oqtUser) : IResolver
 {
-    private readonly IUser _oqtUser;
-
-    public Permissions(IUser oqtUser)
-    {
-        _oqtUser = oqtUser;
-    }
-
     public string Name => "Permissions";
 
     public const string ModeIsSuperUser = "IsSuperUser";
@@ -25,7 +18,7 @@ public class Permissions : IResolver
         var wrapLog = log.Fn<string>();
         if (!string.Equals(parameters, ModeIsSuperUser, InvariantCultureIgnoreCase))
             return wrapLog.ReturnNull("unknown param");
-        var isSuper = _oqtUser.IsSystemAdmin;
+        var isSuper = oqtUser.IsSystemAdmin;
         var result = isSuper ? "staging" : "live";
         return wrapLog.ReturnAndLog(result);
     }

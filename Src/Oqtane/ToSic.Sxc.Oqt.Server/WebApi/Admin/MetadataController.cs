@@ -18,10 +18,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class MetadataController : OqtStatefulControllerBase, IMetadataController
+public class MetadataController() : OqtStatefulControllerBase(RealController.LogSuffix), IMetadataController
 {
-    public MetadataController(): base(RealController.LogSuffix) { }
-
     private RealController Real => GetService<RealController>();
 
 

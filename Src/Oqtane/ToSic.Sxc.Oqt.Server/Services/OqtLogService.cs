@@ -5,18 +5,11 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Oqt.Server.Services;
 
-internal class OqtSystemLogService : ISystemLogService
+internal class OqtSystemLogService(ILogManager logManager) : ISystemLogService
 {
-    private readonly ILogManager _logManager;
-
-    public OqtSystemLogService(ILogManager logManager)
-    {
-        _logManager = logManager;
-    }
-        
     public void Add(string title, string message)
     {
-        _logManager.Log(LogLevel.Information, title, LogFunction.Other, message);
+        logManager.Log(LogLevel.Information, title, LogFunction.Other, message);
     }
 }
 

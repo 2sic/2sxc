@@ -14,8 +14,5 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 // Beta routes
 //[Route(WebApiConstants.WebApiStateRoot + "/assets/{appName}")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppAssetsController: AppAssetsControllerBase
-{
-    public AppAssetsController(MyServices services) 
-        : base(services, OqtAssetsFileHelper.RouteAssets, "Assets") { }
-}
+public class AppAssetsController(AppAssetsControllerBase.MyServices services)
+    : AppAssetsControllerBase(services, OqtAssetsFileHelper.RouteAssets, "Assets");

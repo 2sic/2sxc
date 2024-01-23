@@ -14,35 +14,28 @@ using ToSic.Sxc.Internal;
 namespace ToSic.Sxc.Oqt.Server.Pages;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class Pages: ServiceBase
+public class Pages(
+    IPageModuleRepository pageModuleRepository,
+    IPageRepository pageRepository,
+    ISettingRepository settingRepository)
+    : ServiceBase("Oqt.Pages")
 {
-    private readonly IPageModuleRepository _pageModuleRepository;
-    private readonly IPageRepository _pageRepository;
-    private readonly ISettingRepository _settingRepository;
-
-    public Pages(IPageModuleRepository pageModuleRepository, IPageRepository pageRepository, ISettingRepository settingRepository) : base("Oqt.Pages")
-    {
-        _pageModuleRepository = pageModuleRepository;
-        _pageRepository = pageRepository;
-        _settingRepository = settingRepository;
-    }
-
     public List<PageModule> AllModulesWithContent(int siteId)
     {
         var wrapLog = Log.Fn<List<PageModule>>($"{siteId}");
 
         // create an array with all modules
-        var sxcContents = _pageModuleRepository.GetPageModules(siteId)
+        var sxcContents = pageModuleRepository.GetPageModules(siteId)
             .Where(pm => pm.Module.ModuleDefinitionName.Contains("ToSic.Sxc.Oqt.Content, ToSic.Sxc.Oqtane.Client")).ToList();
 
-        var sxcApps = _pageModuleRepository.GetPageModules(siteId)
+        var sxcApps = pageModuleRepository.GetPageModules(siteId)
             .Where(pm => pm.Module.ModuleDefinitionName.Contains("ToSic.Sxc.Oqt.App, ToSic.Sxc.Oqtane.Client")).ToList();
 
         var sxcAll = sxcContents.Union(sxcApps).ToList();
 
         Log.A($"Mods for Content: {sxcContents.Count}, App: {sxcApps.Count}, Total: {sxcAll.Count}");
 
-        var settings = _settingRepository.GetSettings(EntityNames.Module).ToList();
+        var settings = settingRepository.GetSettings(EntityNames.Module).ToList();
         foreach (var pageModule in sxcAll)
         {
             pageModule.Module.Settings = settings.Where(item => item.EntityId == pageModule.ModuleId)                   
@@ -76,7 +69,7 @@ public class Pages: ServiceBase
         dto ??= new();
         dto.Id = block.Id;
         dto.Guid = block.Guid;
-        dto.Modules = blockModules.Select(m => InstanceDtoBuilder(m, _pageRepository.GetPage(m.PageId)));
+        dto.Modules = blockModules.Select(m => InstanceDtoBuilder(m, pageRepository.GetPage(m.PageId)));
         return dto;
     }
 

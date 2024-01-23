@@ -23,10 +23,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppFilesController : OqtStatefulControllerBase, IAppFilesController
+public class AppFilesController() : OqtStatefulControllerBase(RealController.LogSuffix), IAppFilesController
 {
-    public AppFilesController(): base(RealController.LogSuffix) { }
-
     private RealController Real => GetService<RealController>();
 
 

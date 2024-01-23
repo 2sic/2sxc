@@ -20,15 +20,8 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
     // Code is based on DynamicRun by Laurent Kempé
     // https://github.com/laurentkempe/DynamicRun
     // https://laurentkempe.com/2019/02/18/dynamically-compile-and-run-code-using-dotNET-Core-3.0/
-    public class Compiler : ServiceBase
+    public class Compiler(LazySvc<ThisAppLoader> thisAppCodeLoader) : ServiceBase("Sys.CodCpl")
     {
-        private readonly LazySvc<ThisAppLoader> _thisAppCodeLoader;
-
-        public Compiler(LazySvc<ThisAppLoader> thisAppCodeLoader) : base("Sys.CodCpl")
-        {
-            _thisAppCodeLoader = thisAppCodeLoader;
-        }
-
         // Ensure that can't be kept alive by stack slot references (real- or JIT-introduced locals).
         // That could keep the SimpleUnloadableAssemblyLoadContext alive and prevent the unload.
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -38,7 +31,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
 
             //var codeAssembly = ThisAppLoader.TryGetAssemblyOfThisAppFromCache(spec, Log)?.Assembly
             //                   ?? _thisAppCodeLoader.Value.GetThisAppAssemblyOrThrow(spec);
-            var (codeAssembly, _) = _thisAppCodeLoader.Value.TryGetOrFallback(spec);
+            var (codeAssembly, _) = thisAppCodeLoader.Value.TryGetOrFallback(spec);
 
             var encoding = Encoding.UTF8;
 

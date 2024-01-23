@@ -30,13 +30,12 @@ namespace Custom.Hybrid;
 /// It is without dependencies in class constructor, commonly provided with DI.
 /// </summary>
 [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
-public abstract class Api12 : OqtStatefulControllerBase, IDynamicWebApi, IDynamicCode12, IHasCodeLog, IHasCodeApiService
+public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuffix), IDynamicWebApi, IDynamicCode12,
+    IHasCodeLog, IHasCodeApiService
 {
     #region Setup
 
     protected Api12() : this(EavWebApiConstants.HistoryNameWebApi) { }
-
-    protected Api12(string logSuffix) : base(logSuffix) { }
 
     [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
