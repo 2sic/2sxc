@@ -4,12 +4,9 @@ using static System.String;
 
 namespace ToSic.Sxc.Backend.Cms;
 
-internal class LoadSettingsForContentType: LoadSettingsProviderBase, ILoadSettingsProvider
+internal class LoadSettingsForContentType()
+    : LoadSettingsProviderBase($"{SxcLogging.SxcLogName}.LdStCT"), ILoadSettingsProvider
 {
-    public LoadSettingsForContentType() : base($"{SxcLogging.SxcLogName}.LdStCT")
-    {
-    }
-
     public Dictionary<string, object> GetSettings(LoadSettingsProviderParameters parameters) => Log.Func(l =>
     {
         // find all keys which may be necessary

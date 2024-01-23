@@ -1,12 +1,8 @@
 ﻿namespace ToSic.Sxc.Backend.Cms;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class LoadSettingsProviderBase: ServiceBase
+public abstract class LoadSettingsProviderBase(string logName) : ServiceBase(logName)
 {
-    protected LoadSettingsProviderBase(string logName) : base(logName)
-    {
-    }
-
     protected Dictionary<string, object> SettingsByKeys(PropertyStack appSettings, List<string> keys) => Log.Func(l =>
     {
         // Try to find each setting

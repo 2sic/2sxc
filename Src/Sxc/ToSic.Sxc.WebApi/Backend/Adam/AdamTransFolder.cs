@@ -4,10 +4,10 @@ using ToSic.Eav.WebApi.Errors;
 namespace ToSic.Sxc.Backend.Adam;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AdamTransFolder<TFolderId, TFileId> : AdamTransactionBase<AdamTransFolder<TFolderId, TFileId>, TFolderId, TFileId>
+public class AdamTransFolder<TFolderId, TFileId>(
+    AdamTransactionBase<AdamTransFolder<TFolderId, TFileId>, TFolderId, TFileId>.MyServices services)
+    : AdamTransactionBase<AdamTransFolder<TFolderId, TFileId>, TFolderId, TFileId>(services, "Adm.TrnFld")
 {
-    public AdamTransFolder(MyServices services) : base(services, "Adm.TrnFld") { }
-
     public IList<AdamItemDto> Folder(string parentSubfolder, string newFolder)
     {
         var logCall = Log.Fn<IList<AdamItemDto>>($"get folders for subfld:{parentSubfolder}, new:{newFolder}");

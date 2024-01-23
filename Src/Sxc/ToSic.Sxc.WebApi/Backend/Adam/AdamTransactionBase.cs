@@ -6,8 +6,10 @@ using ToSic.Sxc.Adam.Internal;
 namespace ToSic.Sxc.Backend.Adam;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>
-    : ServiceBase<AdamTransactionBase<T, TFolderId, TFileId>.MyServices>, IAdamTransactionBase
+public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>(
+    AdamTransactionBase<T, TFolderId, TFileId>.MyServices services,
+    string logName)
+    : ServiceBase<AdamTransactionBase<T, TFolderId, TFileId>.MyServices>(services, logName), IAdamTransactionBase
     where T : AdamTransactionBase<T, TFolderId, TFileId>
 {
 
@@ -29,10 +31,6 @@ public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>
                 CtxResolver = ctxResolver
             );
         }
-    }
-
-    protected AdamTransactionBase(MyServices services, string logName) : base(services, logName)
-    {
     }
 
     public T Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot)
