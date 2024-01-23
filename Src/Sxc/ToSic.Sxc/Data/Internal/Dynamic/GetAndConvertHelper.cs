@@ -8,34 +8,28 @@ using static System.StringComparer;
 namespace ToSic.Sxc.Data.Internal.Dynamic;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class GetAndConvertHelper
+internal class GetAndConvertHelper(
+    IHasPropLookup parent,
+    Internal.CodeDataFactory cdf,
+    bool propsRequired,
+    bool childrenShouldBeDynamic,
+    ICanDebug canDebug)
 {
     #region Setup and Log
 
 
-    public Internal.CodeDataFactory Cdf { get; }
+    public Internal.CodeDataFactory Cdf { get; } = cdf;
 
-    public bool PropsRequired { get; }
+    public bool PropsRequired { get; } = propsRequired;
 
-    public GetAndConvertHelper(IHasPropLookup parent, Internal.CodeDataFactory cdf, bool propsRequired, bool childrenShouldBeDynamic, ICanDebug canDebug)
-    {
-        _childrenShouldBeDynamic = childrenShouldBeDynamic;
-        _canDebug = canDebug;
-        Parent = parent;
-        Cdf = cdf;
-        PropsRequired = propsRequired;
-    }
-
-    public bool Debug => _debug ?? _canDebug.Debug;
+    public bool Debug => _debug ?? canDebug.Debug;
     private bool? _debug;
-    private readonly bool _childrenShouldBeDynamic;
-    private readonly ICanDebug _canDebug;
 
-    internal SubDataFactory SubDataFactory => _subData ??= new(Cdf, PropsRequired, _canDebug);
+    internal SubDataFactory SubDataFactory => _subData ??= new(Cdf, PropsRequired, canDebug);
     private SubDataFactory _subData;
 
 
-    public IHasPropLookup Parent { get; }
+    public IHasPropLookup Parent { get; } = parent;
 
     public ILog LogOrNull => _logOrNull.Get(() => Cdf?.Log?.SubLogOrNull("DynEnt", Debug));
     private readonly GetOnce<ILog> _logOrNull = new();
@@ -151,7 +145,7 @@ internal class GetAndConvertHelper
         // Note 2021-06-08 if the parent is _not_ an IEntity, this will throw an error. Could happen in the DynamicStack, but that should never have such children
         if (value is IEnumerable<IEntity> children)
         {
-            if (_childrenShouldBeDynamic)
+            if (childrenShouldBeDynamic)
             {
                 l.A($"Convert entity list as {nameof(DynamicEntity)}");
                 var dynEnt = new DynamicEntity(children.ToArray(), parent, field, null, propsRequired: PropsRequired, Cdf);
@@ -168,7 +162,7 @@ internal class GetAndConvertHelper
         }
 
         // special debug of path if possible
-        if (_canDebug.Debug)
+        if (canDebug.Debug)
             try
             {
                     

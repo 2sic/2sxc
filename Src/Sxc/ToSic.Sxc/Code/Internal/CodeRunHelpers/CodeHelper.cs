@@ -1,14 +1,9 @@
 ﻿namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeHelper: CodeHelperBase
+public class CodeHelper() : CodeHelperBase("Sxc.CdHlp")
 {
     #region Setup
-
-    public CodeHelper() : base("Sxc.CdHlp")
-    {
-
-    }
 
     public CodeHelper Init(CustomCodeBase parent)
     {

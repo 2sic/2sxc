@@ -12,8 +12,9 @@ namespace ToSic.Sxc.Integration.Paths;
 public class LinkPaths: ILinkPaths
 {
 #if !NETFRAMEWORK
-        public LinkPaths(IUrlHelper urlHelper) => _urlHelper = urlHelper;
-        private readonly IUrlHelper _urlHelper;
+    // ReSharper disable once ConvertToPrimaryConstructor
+    public LinkPaths(IUrlHelper urlHelper) => _urlHelper = urlHelper;
+    private readonly IUrlHelper _urlHelper;
 #endif
 
     public string AsSeenFromTheDomainRoot(string virtualPath)

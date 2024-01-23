@@ -12,17 +12,9 @@ namespace ToSic.Sxc.Blocks.Internal;
 /// 4. which in turn requires the context - so it would loop and die
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class BlockWithContextProvider
+public class BlockWithContextProvider(IContextOfBlock contextOfBlock, Func<IBlock> delayedBlockGen)
 {
-
-    public BlockWithContextProvider(IContextOfBlock contextOfBlock, Func<IBlock> delayedBlockGen)
-    {
-        _delayedBlockGen = delayedBlockGen;
-        ContextOfBlock = contextOfBlock;
-    }
-    private readonly Func<IBlock> _delayedBlockGen;
-
-    public IContextOfBlock ContextOfBlock { get; }
-    public IBlock LoadBlock() => _block.Get(_delayedBlockGen);
+    public IContextOfBlock ContextOfBlock { get; } = contextOfBlock;
+    public IBlock LoadBlock() => _block.Get(delayedBlockGen);
     private readonly GetOnce<IBlock> _block = new();
 }

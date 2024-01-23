@@ -7,12 +7,8 @@ using ToSic.Sxc.Web.Internal.HtmlParsing;
 namespace ToSic.Sxc.Services.CmsService;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class CmsServiceImageExtractor: ServiceBase
+internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
 {
-    public CmsServiceImageExtractor() : base("Sxc.ImgExt")
-    {
-    }
-
     internal ImageProperties ExtractImageProperties(string oldImgTag, Guid guid, IFolder folder)
     {
         var l = Log.Fn<ImageProperties>($"old: '{oldImgTag}'");

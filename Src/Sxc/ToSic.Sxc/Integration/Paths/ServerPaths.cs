@@ -22,6 +22,7 @@ internal class ServerPaths: ServerPathsBase
     // NOTE: The .net standard is probably never used
     // As Oqtane has it's own ServerPaths
     // So we should probably drop this soon
+    // ReSharper disable once ConvertToPrimaryConstructor
     public ServerPaths(IHostingEnvironment hostingEnvironment)
     {
         _hostingEnvironment = hostingEnvironment;
@@ -40,7 +41,8 @@ internal class ServerPaths: ServerPathsBase
     }
 
 #else
-        public ServerPaths(LazySvc<IValueConverter> valueConverterLazy)
+    // ReSharper disable once ConvertToPrimaryConstructor
+    public ServerPaths(LazySvc<IValueConverter> valueConverterLazy)
         {
             _valueConverterLazy = valueConverterLazy;
         }

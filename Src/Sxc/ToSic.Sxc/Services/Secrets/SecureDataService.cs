@@ -16,14 +16,10 @@ namespace ToSic.Sxc.Services;
 /// </summary>
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class SecureDataService: ServiceBase, ISecureDataService
+internal class SecureDataService(AesCryptographyService aes)
+    : ServiceBase($"{SxcLogging.SxcLogName}.SecDtS"), ISecureDataService
 {
-    public readonly AesCryptographyService Aes;
-
-    public SecureDataService(AesCryptographyService aes) : base($"{SxcLogging.SxcLogName}.SecDtS")
-    {
-        Aes = aes;
-    }
+    public readonly AesCryptographyService Aes = aes;
 
     public const string PrefixSecure = "secure:";
     public const string PrefixIv = "iv:";

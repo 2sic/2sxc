@@ -17,23 +17,14 @@ using static ToSic.Eav.Data.Shared.WrapperEquality;
 namespace ToSic.Sxc.Data.Internal.Typed;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName, IWrapper<IEntity>,
-    IEntityWrapper, IHasMetadata
+internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFactory cdf, bool propsRequired)
+    : ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName, IWrapper<IEntity>,
+        IEntityWrapper, IHasMetadata
 {
     #region Setup
 
-    public TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFactory cdf, bool propsRequired)
-    {
-        Entity = entity;
-        Cdf = cdf;
-        _dyn = dyn;
-        _propsRequired = propsRequired;
-    }
-
-    public IEntity Entity { get; }
-    private readonly DynamicEntity _dyn;
-    private CodeDataFactory Cdf { get; }
-    private readonly bool _propsRequired;
+    public IEntity Entity { get; } = entity;
+    private CodeDataFactory Cdf { get; } = cdf;
 
     #endregion
 
@@ -47,11 +38,11 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
     #region Helpers / Services
 
     [PrivateApi]
-    private GetAndConvertHelper GetHelper => _getHelper ??= new(this, Cdf, _propsRequired, childrenShouldBeDynamic: false, canDebug: this);
+    private GetAndConvertHelper GetHelper => _getHelper ??= new(this, Cdf, propsRequired, childrenShouldBeDynamic: false, canDebug: this);
     private GetAndConvertHelper _getHelper;
 
     [PrivateApi]
-    private SubDataFactory SubDataFactory => _subData ??= new(Cdf, _propsRequired, canDebug: this);
+    private SubDataFactory SubDataFactory => _subData ??= new(Cdf, propsRequired, canDebug: this);
     private SubDataFactory _subData;
 
     [PrivateApi]
@@ -137,7 +128,7 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
         => ItemHelper.Attribute(name, noParamOrder, fallback, required);
 
     [PrivateApi]
-    dynamic ITypedItem.Dyn => _dyn;
+    dynamic ITypedItem.Dyn => dyn;
 
 
     [PrivateApi]
@@ -317,7 +308,7 @@ internal class TypedItemOfEntity: ITypedItem, IHasPropLookup, ICanDebug, ICanBeI
     #region Fields, Html, Picture
 
     [PrivateApi]
-    IField ITypedItem.Field(string name, NoParamOrder noParamOrder, bool? required) => Cdf.Field(this, name, _propsRequired, noParamOrder, required);
+    IField ITypedItem.Field(string name, NoParamOrder noParamOrder, bool? required) => Cdf.Field(this, name, propsRequired, noParamOrder, required);
 
     IHtmlTag ITypedItem.Html(
         string name,

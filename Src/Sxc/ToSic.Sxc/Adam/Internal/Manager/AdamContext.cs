@@ -20,7 +20,8 @@ namespace ToSic.Sxc.Adam.Internal;
 /// It's abstract, because there will be a typed implementation inheriting this
 /// </remarks>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class AdamContext: ServiceBase<AdamContext.MyServices>
+public abstract class AdamContext(AdamContext.MyServices services, string logName)
+    : ServiceBase<AdamContext.MyServices>(services, logName ?? "Adm.Ctx")
 {
     #region Constructor and DI
 
@@ -43,9 +44,6 @@ public abstract class AdamContext: ServiceBase<AdamContext.MyServices>
         }
     }
 
-    protected AdamContext(MyServices services, string logName) : base(services, logName ?? "Adm.Ctx")
-    {
-    }
     public AdamSecurityChecksBase Security;
     public MultiPermissionsTypes Permissions;
 

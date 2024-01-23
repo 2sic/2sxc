@@ -6,25 +6,25 @@ using ToSic.Sxc.Internal;
 namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class TypedCode16Helper: CodeHelperXxBase
+public class TypedCode16Helper(
+    ICodeApiService codeRoot,
+    IBlockInstance data,
+    IDictionary<string, object> myModelData,
+    bool isRazor,
+    string codeFileName)
+    : CodeHelperXxBase(codeRoot, isRazor, codeFileName, SxcLogging.SxcLogName + ".TCd16H")
 {
     public bool DefaultStrict = true;
 
     //protected readonly IDynamicCodeRoot CodeRoot;
-    private readonly IDictionary<string, object> _myModelData;
     //protected readonly bool IsRazor;
     //protected readonly string CodeFileName;
-    internal ContextData Data { get; }
-    public TypedCode16Helper(ICodeApiService codeRoot, IBlockInstance data, IDictionary<string, object> myModelData, bool isRazor, string codeFileName)
-        : base(codeRoot, isRazor, codeFileName, SxcLogging.SxcLogName + ".TCd16H")
-    {
-        //CodeRoot = codeRoot;
-        _myModelData = myModelData;
-        //IsRazor = isRazor;
-        //CodeFileName = codeFileName;
-        Data = data as ContextData;
-        //this.LinkLog(codeRoot.Log);
-    }
+    internal ContextData Data { get; } = data as ContextData;
+
+    //CodeRoot = codeRoot;
+    //IsRazor = isRazor;
+    //CodeFileName = codeFileName;
+    //this.LinkLog(codeRoot.Log);
 
     public ITypedItem MyItem => _myItem.Get(() => CodeRoot._Cdf.AsItem(Data.MyItem, propsRequired: DefaultStrict));
     private readonly GetOnce<ITypedItem> _myItem = new();
@@ -35,7 +35,7 @@ public class TypedCode16Helper: CodeHelperXxBase
     public ITypedItem MyHeader => _myHeader.Get(() => CodeRoot._Cdf.AsItem(Data.MyHeader, propsRequired: DefaultStrict));
     private readonly GetOnce<ITypedItem> _myHeader = new();
 
-    public ITypedModel MyModel => _myModel.Get(() => new TypedModel(_myModelData, CodeRoot, IsRazor, CodeFileName));
+    public ITypedModel MyModel => _myModel.Get(() => new TypedModel(myModelData, CodeRoot, IsRazor, CodeFileName));
     private readonly GetOnce<ITypedModel> _myModel = new();
 
 

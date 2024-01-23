@@ -10,18 +10,10 @@ using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CspOfModule: ServiceForDynamicCode
+public class CspOfModule(IUser user, IFeaturesService featuresService)
+    : ServiceForDynamicCode($"{CspConstants.LogPrefix}.ModLvl")
 {
     #region Constructor
-
-    public CspOfModule(IUser user, IFeaturesService featuresService): base($"{CspConstants.LogPrefix}.ModLvl")
-    {
-        _user = user;
-        _featuresService = featuresService;
-    }
-
-    private readonly IUser _user;
-    private readonly IFeaturesService _featuresService;
 
     ///// <summary>
     ///// Connect to code root, so page-parameters and settings will be available later on.
@@ -81,7 +73,7 @@ public class CspOfModule: ServiceForDynamicCode
 
     private string CspUrlParam => _cspUrlParam.Get(Log, () =>
     {
-        if (!_featuresService.IsEnabled(SxcFeatures.ContentSecurityPolicyTestUrl.NameId))
+        if (!featuresService.IsEnabled(SxcFeatures.ContentSecurityPolicyTestUrl.NameId))
             return null;
         var pageParameters = _CodeApiSvc?.CmsContext?.Page?.Parameters;
         if (pageParameters == null) return null;
@@ -100,7 +92,7 @@ public class CspOfModule: ServiceForDynamicCode
     private CspSettingsReader SiteCspSettings => _siteCspSettings.Get(Log, () =>
     {
         var pageSettings = CodeRootSettings()?.GetStack(AppStackConstants.PartSiteSystem, AppStackConstants.PartGlobalSystem, AppStackConstants.PartPresetSystem);
-        return new CspSettingsReader(pageSettings, _user, UrlIsDevMode, Log);
+        return new CspSettingsReader(pageSettings, user, UrlIsDevMode, Log);
     });
     private readonly GetOnce<CspSettingsReader> _siteCspSettings = new();
 
@@ -121,9 +113,9 @@ public class CspOfModule: ServiceForDynamicCode
     internal bool IsEnabled => _enabled.Get(Log, () =>
     {
         // Check features
-        if (!_featuresService.IsEnabled(SxcFeatures.ContentSecurityPolicy.NameId))
+        if (!featuresService.IsEnabled(SxcFeatures.ContentSecurityPolicy.NameId))
             return false;
-        if(_featuresService.IsEnabled(SxcFeatures.ContentSecurityPolicyEnforceTemp.NameId))
+        if(featuresService.IsEnabled(SxcFeatures.ContentSecurityPolicyEnforceTemp.NameId))
             return true;
 
         // Try settings

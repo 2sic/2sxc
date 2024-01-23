@@ -33,6 +33,7 @@ internal partial class ContextData : PassThrough, IBlockInstance
     }
 #else
         [PrivateApi("not meant for public use")]
+        // ReSharper disable once ConvertToPrimaryConstructor
         public ContextData(MyServices services) : base(services, "Sxc.BlckDs")
         {
         }

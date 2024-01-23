@@ -5,20 +5,13 @@ using ToSic.Eav.Plumbing;
 namespace ToSic.Sxc.Data;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class PropLookupStack: IPropertyLookup
+internal class PropLookupStack(IPropertyStack stack, Func<bool> getDebug) : IPropertyLookup
 {
-    private readonly Func<bool> _getDebug;
-    public IPropertyStack Stack { get; }
-
-    public PropLookupStack(IPropertyStack stack, Func<bool> getDebug)
-    {
-        _getDebug = getDebug;
-        Stack = stack;
-    }
+    public IPropertyStack Stack { get; } = stack;
 
     public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
     {
-        specs = specs.SubLog("Sxc.DynStk", _getDebug());
+        specs = specs.SubLog("Sxc.DynStk", getDebug());
         path = path.KeepOrNew().Add("DynStack", specs.Field);
 
         var l = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), nameof(PropLookupStack));

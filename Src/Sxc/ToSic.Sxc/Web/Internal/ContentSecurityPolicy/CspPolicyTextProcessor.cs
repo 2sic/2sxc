@@ -4,12 +4,8 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CspPolicyTextProcessor: HelperBase
+public class CspPolicyTextProcessor(ILog parentLog) : HelperBase(parentLog, $"{CspConstants.LogPrefix}.TxtPrc")
 {
-    public CspPolicyTextProcessor(ILog parentLog) : base(parentLog, $"{CspConstants.LogPrefix}.TxtPrc")
-    {
-    }
-
     public List<KeyValuePair<string,string>> Parse(string policyText)
     {
         var wrapLog = Log.Fn<List<KeyValuePair<string, string>>>();

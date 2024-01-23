@@ -5,10 +5,9 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Cms.Internal.Publishing;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class PagePublishingGetSettingsBase: ServiceBase, IPagePublishingGetSettings
+public abstract class PagePublishingGetSettingsBase(string logPrefix)
+    : ServiceBase(logPrefix + ".PubRes"), IPagePublishingGetSettings
 {
-    protected PagePublishingGetSettingsBase(string logPrefix) : base(logPrefix + ".PubRes") { }
-
     private PublishingMode Requirements(int instanceId) => Log.Func($"{instanceId}", () =>
     {
         if (instanceId < 0) return (PublishingMode.DraftOptional, "no instance");

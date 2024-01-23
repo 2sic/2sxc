@@ -20,7 +20,8 @@ namespace ToSic.Sxc.DataSources.Internal;
 /// Must be overriden in each platform.
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppFilesDataSourceProvider : ServiceBase<AppFilesDataSourceProvider.MyServices>
+public class AppFilesDataSourceProvider(AppFilesDataSourceProvider.MyServices services)
+    : ServiceBase<AppFilesDataSourceProvider.MyServices>(services, $"{SxcLogging.SxcLogName}.AppFls")
 {
     public class MyServices : MyServicesBase
     {
@@ -46,10 +47,6 @@ public class AppFilesDataSourceProvider : ServiceBase<AppFilesDataSourceProvider
                 Site = site
             );
         }
-    }
-
-    public AppFilesDataSourceProvider(MyServices services) : base(services, $"{SxcLogging.SxcLogName}.AppFls")
-    {
     }
 
     public AppFilesDataSourceProvider Configure(

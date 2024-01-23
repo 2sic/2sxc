@@ -7,12 +7,8 @@ using ToSic.Sxc.Context.Internal;
 namespace ToSic.Sxc.Apps;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppFolder: ServiceBase
+public class AppFolder(ISxcContextResolver ctxResolver) : ServiceBase("AppFolder")
 {
-    public AppFolder(ISxcContextResolver ctxResolver) : base("AppFolder") 
-        => _ctxResolver = ctxResolver;
-    private readonly ISxcContextResolver _ctxResolver;
-
     /// <summary>
     /// This is necessary for special calls where the _ctxResolve may not yet be complete...
     /// Important: not sure if this is actually needed, I believe the ctxResolver is always initialized on all web-api requests...?
@@ -21,13 +17,13 @@ public class AppFolder: ServiceBase
     /// <returns></returns>
     public AppFolder Init(BlockWithContextProvider getBlock)
     {
-        _ctxResolver.AttachBlock(getBlock);
+        ctxResolver.AttachBlock(getBlock);
         return this;
     }
 
     public string GetAppFolder()
     {
-        var ctx = _ctxResolver.AppNameRouteBlock("");
+        var ctx = ctxResolver.AppNameRouteBlock("");
         return ctx.AppState.Folder;
     }
 }

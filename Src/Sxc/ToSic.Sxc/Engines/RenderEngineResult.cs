@@ -5,7 +5,12 @@ using ToSic.Sxc.Web.Internal.ClientAssets;
 namespace ToSic.Sxc.Engines;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class RenderEngineResult
+public class RenderEngineResult(
+    string html,
+    bool activateJsApi,
+    List<IClientAsset> assets,
+    string errorCode = default,
+    List<Exception> exsOrNull = default)
 {
     public RenderEngineResult(
         RenderEngineResult original,
@@ -22,22 +27,13 @@ public class RenderEngineResult
     {
     }
 
-    public RenderEngineResult(string html, bool activateJsApi, List<IClientAsset> assets, string errorCode = default, List<Exception> exsOrNull = default)
-    {
-        Html = html;
-        ActivateJsApi = activateJsApi;
-        Assets = assets ?? [];
-        ErrorCode = errorCode;
-        ExceptionsOrNull = exsOrNull;
-    }
+    public string Html { get; } = html;
 
-    public string Html { get; }
+    public bool ActivateJsApi { get; } = activateJsApi;
 
-    public bool ActivateJsApi { get; }
+    public List<IClientAsset> Assets { get; } = assets ?? [];
 
-    public List<IClientAsset> Assets { get; }
+    public string ErrorCode { get; } = errorCode;
 
-    public string ErrorCode { get; }
-
-    public List<Exception> ExceptionsOrNull { get; }
+    public List<Exception> ExceptionsOrNull { get; } = exsOrNull;
 }

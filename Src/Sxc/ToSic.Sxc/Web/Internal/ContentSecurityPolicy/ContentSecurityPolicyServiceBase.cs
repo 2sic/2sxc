@@ -10,10 +10,9 @@ namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 /// </summary>
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ContentSecurityPolicyServiceBase : ServiceBase, IContentSecurityPolicyService
+public class ContentSecurityPolicyServiceBase()
+    : ServiceBase($"{SxcLogging.SxcLogName}.CspSvc"), IContentSecurityPolicyService
 {
-    public ContentSecurityPolicyServiceBase(): base($"{SxcLogging.SxcLogName}.CspSvc") { }
-
     public CspParameters Policy = [];
 
     public virtual bool IsEnforced => false;
