@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Metadata;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
@@ -6,7 +7,7 @@ partial class ToolbarBuilder
 {
     private List<string> GetMetadataTypeNames(object target, string contentTypes)
     {
-        var types = contentTypes?.Split(',').Select(s => s.Trim()).ToArray() ?? Array.Empty<string>();
+        var types = contentTypes.CsvToArrayWithoutEmpty();// ?.Split(',').Select(s => s.Trim()).ToArray() ?? Array.Empty<string>();
         if (!types.Any())
             types = FindMetadataRecommendations(target);
 

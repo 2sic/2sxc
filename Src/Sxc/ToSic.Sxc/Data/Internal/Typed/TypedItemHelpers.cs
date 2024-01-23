@@ -63,7 +63,7 @@ internal class TypedItemHelpers
         {
             case string scrubStr:
                 return scrubStr.HasValue()
-                    ? scrubSvc().Only(value, scrubStr.Split(',').Select(s => s.Trim()).ToArray())
+                    ? scrubSvc().Only(value, scrubStr.CsvToArrayWithoutEmpty() /*.Split(',').Select(s => s.Trim()).ToArray()*/)
                     : value;
             case bool scrubBln:
                 return scrubBln ? scrubSvc().All(value) : value;

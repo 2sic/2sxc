@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Internal;
+﻿using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Internal;
 using static System.String;
 
 namespace ToSic.Sxc.Backend.Cms;
@@ -14,8 +15,9 @@ internal class LoadSettingsForContentType: LoadSettingsProviderBase, ILoadSettin
         // find all keys which may be necessary
         var settingsKeys = parameters.ContentTypes
             .SelectMany(ct => (ct.Metadata.DetailsOrNull?.AdditionalSettings ?? "")
-                .Split(',')
-                .Select(s => s.Trim())
+                .CsvToArrayWithoutEmpty()
+                //.Split(',')
+                //.Select(s => s.Trim())
             )
             .Where(c => !IsNullOrWhiteSpace(c))
             // Only include settings which have the full path

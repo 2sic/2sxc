@@ -66,8 +66,8 @@ internal partial class Parameters : IParameters
                 {
                     var nullValues = Nvc[null];
                     if (nullValues == null) continue;
-                    foreach (var nullKey in nullValues.Split(','))
-                        if(!string.IsNullOrEmpty(nullKey) && !_originalsAsDic.ContainsKey(nullKey))
+                    foreach (var nullKey in nullValues.CsvToArrayWithoutEmpty()) //.Split(','))
+                        if (/*!string.IsNullOrEmpty(nullKey) && */ !_originalsAsDic.ContainsKey(nullKey))
                             _originalsAsDic[nullKey] = null;
                 }
             }
@@ -132,9 +132,7 @@ internal partial class Parameters : IParameters
     public IParameters Filter(string names)
     {
         if (names == null || names.IsEmptyOrWs()) return this;
-        var keysToKeep = names.Split(',')
-            .Select(k => k.Trim())
-            .ToList();
+        var keysToKeep = names.CsvToArrayWithoutEmpty();
 
         var oldKeys = Nvc.AllKeys;
         var removeKeys = oldKeys.Where(k => !keysToKeep.Contains(k, StringComparer.InvariantCultureIgnoreCase)).ToList();

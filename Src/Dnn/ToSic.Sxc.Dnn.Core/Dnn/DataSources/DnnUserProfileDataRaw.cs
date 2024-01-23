@@ -127,7 +127,7 @@ public class DnnUserProfile : CustomDataSourceAdvanced
         var realTenant = _services.Site.Id != Eav.Constants.NullId ? _services.Site : _services.ZoneMapper.SiteOfApp(AppId);
         l.A($"realTenant {realTenant.Id}");
 
-        var properties = Properties.Split(',').Select(p => p.Trim()).ToArray();
+        var properties = Properties.CsvToArrayWithoutEmpty(); //.Split(',').Select(p => p.Trim()).ToArray();
         var portalId = realTenant.Id;
 
         // read all user Profiles

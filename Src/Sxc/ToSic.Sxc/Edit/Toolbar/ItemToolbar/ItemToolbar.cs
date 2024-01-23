@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Serialization;
 using ToSic.Sxc.Web;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -33,7 +34,7 @@ internal class ItemToolbar: ItemToolbarBase
         }
 
         // Case 3 - we have multiple actions
-        var actList = actions.Split(',').Select(p => p.Trim()).ToList();
+        var actList = actions.CsvToArrayWithoutEmpty();// .Split(',').Select(p => p.Trim()).ToList();
         foreach (var act in actList)
             Actions.Add(new(entity)
             {

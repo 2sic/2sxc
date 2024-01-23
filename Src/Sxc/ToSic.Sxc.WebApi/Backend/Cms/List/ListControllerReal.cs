@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.State;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Internal;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Sxc.Blocks.Internal;
@@ -71,7 +72,7 @@ public partial class ListControllerReal: BlockWebApiBackendBase, IHasLog, IListC
             // check field list (default to content-block fields)
             var fieldList = fields == null || fields == ViewParts.ContentLower
                 ? ViewParts.ContentPair
-                : fields.Split(',').Select(f => f.Trim()).ToArray();
+                : fields.CsvToArrayWithoutEmpty(); //.Split(',').Select(f => f.Trim()).ToArray();
             action.Invoke(target, fieldList, forceDraft);
         });
     }
