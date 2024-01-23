@@ -19,7 +19,8 @@ namespace ToSic.Sxc.Blocks.Internal;
 /// </summary>
 [PrivateApi("not sure yet what to call this, maybe BlockHost or something")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public partial class BlockBuilder : ServiceBase<BlockBuilder.MyServices>, IBlockBuilder
+public partial class BlockBuilder(BlockBuilder.MyServices services)
+    : ServiceBase<BlockBuilder.MyServices>(services, "Sxc.BlkBld"), IBlockBuilder
 {
     public class MyServices: MyServicesBase
     {
@@ -55,7 +56,6 @@ public partial class BlockBuilder : ServiceBase<BlockBuilder.MyServices>, IBlock
     }
 
     #region Constructor
-    public BlockBuilder(MyServices services) : base(services, "Sxc.BlkBld") { }
 
     public BlockBuilder Init(IBlockBuilder rootBlockBuilder, IBlock cb)
     {

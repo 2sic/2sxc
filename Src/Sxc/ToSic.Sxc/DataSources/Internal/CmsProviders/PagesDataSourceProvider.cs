@@ -8,14 +8,9 @@ namespace ToSic.Sxc.DataSources.Internal;
 /// Must be overriden in each platform.
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class PagesDataSourceProvider: ServiceBase
+public abstract class PagesDataSourceProvider(string logName) : ServiceBase(logName)
 {
     public const int NoParent = 0;
-
-    protected PagesDataSourceProvider(string logName) : base(logName)
-    {
-
-    }
 
     /// <summary>
     /// FYI: The filters are not actually implemented yet.

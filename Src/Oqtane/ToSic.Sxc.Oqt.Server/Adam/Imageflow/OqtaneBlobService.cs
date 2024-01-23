@@ -12,18 +12,15 @@ using ToSic.Sxc.Oqt.Server.Plumbing;
 
 namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 
-internal class OqtaneBlobService : IBlobProvider
+internal class OqtaneBlobService(IServiceProvider serviceProvider) : IBlobProvider
 {
     private const string Prefix = "/";
     private const string AdamPath = "/adam/";
     private const string SxcPath = "/assets/";
     private const string SharedPath = "/shared/";
 
-    private readonly IServiceProvider _serviceProvider;
-
     // TODO: Why do we need the IServiceProvider? this should probably get Generators or something
-    public OqtaneBlobService(IServiceProvider serviceProvider)
-        => _serviceProvider = serviceProvider; // service provider is need to create new scope on each image request
+    // service provider is need to create new scope on each image request
 
     public IEnumerable<string> GetPrefixes() 
         => Enumerable.Repeat(Prefix, 1);
@@ -44,7 +41,7 @@ internal class OqtaneBlobService : IBlobProvider
             var route = GetRoute(virtualPath);
 
             // We need new scope on each request to avoid sharing the same instance of services.
-            using var scope = _serviceProvider.CreateScope();
+            using var scope = serviceProvider.CreateScope();
 
             var webHostEnvironment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
             if (ExistUnderWebRootPath(webHostEnvironment, virtualPath, out var webRootFilePath)) BlobData(webRootFilePath);

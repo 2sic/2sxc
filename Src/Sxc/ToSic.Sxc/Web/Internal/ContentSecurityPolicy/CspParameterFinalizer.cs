@@ -4,11 +4,8 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CspParameterFinalizer: ServiceBase
+public class CspParameterFinalizer() : ServiceBase($"{CspConstants.LogPrefix}.ParFin")
 {
-    public CspParameterFinalizer(): base($"{CspConstants.LogPrefix}.ParFin")
-    { }
-
     public CspParameters Finalize(CspParameters original)
     {
         var wrapLog = Log.Fn<CspParameters>();

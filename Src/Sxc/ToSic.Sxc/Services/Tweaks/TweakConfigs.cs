@@ -13,7 +13,7 @@ internal class TweakConfigs
 
     private TweakConfigs(IEnumerable<TweakConfig> tweaks, TweakConfig additional = default)
     {
-        List = tweaks?.ToList() ?? new();
+        List = tweaks?.ToList() ?? [];
         if (additional != default) List.Add(additional);
     }
 

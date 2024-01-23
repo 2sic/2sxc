@@ -12,7 +12,7 @@ using ToSic.Sxc.Oqt.Shared;
 namespace ToSic.Sxc.Oqt.Server.Adam;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class OqtAssetsFileHelper: ServiceBase
+public class OqtAssetsFileHelper() : ServiceBase(OqtConstants.OqtLogPrefix + ".FilHlp")
 {
     public const string RouteAdam = "adam";
     public const string RouteAssets = "assets";
@@ -21,10 +21,6 @@ public class OqtAssetsFileHelper: ServiceBase
     public static readonly Regex RiskyDetector = Eav.Security.Files.FileNames.RiskyDownloadDetector;
 
     public const string FallbackMimeType = MimeHelper.FallbackType;
-
-    public OqtAssetsFileHelper() : base(OqtConstants.OqtLogPrefix + ".FilHlp")
-    {
-    }
 
 
     public static string GetMimeType(string fileName)

@@ -4,7 +4,8 @@ using ToSic.Eav.Plumbing;
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class GenChangeOn : GenNotExist
+internal class GenChangeOn(string fullNamespace, string name, (string Code, string Comment)[] alt)
+    : GenNotExist(name, alt)
 {
 
     public GenChangeOn(string fullNamespace, string name, string alt) : this(fullNamespace, name, [(alt, null as string)
@@ -12,12 +13,7 @@ internal class GenChangeOn : GenNotExist
     {
     }
 
-    public GenChangeOn(string fullNamespace, string name, (string Code, string Comment)[] alt) : base(name, alt)
-    {
-        FullNameSpace = fullNamespace;
-    }
-
-    public readonly string FullNameSpace;
+    public readonly string FullNameSpace = fullNamespace;
     public string MsgWhichWasCommon;
     public string NotOn;
 

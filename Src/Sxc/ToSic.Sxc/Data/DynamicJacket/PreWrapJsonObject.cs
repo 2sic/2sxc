@@ -92,7 +92,7 @@ internal class PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item)
 
     public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
     {
-        if (item == null || !item.Any()) return new();
+        if (item == null || !item.Any()) return [];
 
         if (string.IsNullOrEmpty(path)) path = DumpSourceName;
 

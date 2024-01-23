@@ -25,13 +25,13 @@ internal static class CodeChangeServiceExtensions
     }
 
     public static string[] LogBlockDetails(IBlock block) => block != null
-        ? new[]
-        {
+        ?
+        [
             $"Site ({block.Context?.Site?.Id}): {block.Context?.Site?.UrlRoot}",
             $"Page ({block.Context?.Page?.Id}): {block.Context?.Page?.Url}",
             $"App ({block.App?.AppId}) Name: {block.App?.Name}",
             $"View ({block.View?.Id}): {block.View?.Name}"
-        }
+        ]
         : Array.Empty<string>();
 
 }

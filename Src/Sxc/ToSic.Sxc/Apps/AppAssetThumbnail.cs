@@ -12,20 +12,10 @@ using static ToSic.Eav.Apps.Internal.AppConstants;
 namespace ToSic.Sxc.Apps;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class AppAssetThumbnail : AppAssetFile
+internal class AppAssetThumbnail(IAppState appState, IAppPaths appPaths, LazySvc<GlobalPaths> globalPaths)
+    : AppAssetFile
 {
-    private readonly IAppPaths _appPaths;
-    private readonly IAppState _appState;
-    private readonly LazySvc<GlobalPaths> _globalPaths;
-
-    public AppAssetThumbnail(IAppState appState, IAppPaths appPaths, LazySvc<GlobalPaths> globalPaths)
-    {
-        _appPaths = appPaths;
-        _appState = appState;
-        _globalPaths = globalPaths;
-    }
-
-    public override string Url => _url.Get(() => GetUrl(_appState, _appPaths, _globalPaths));
+    public override string Url => _url.Get(() => GetUrl(appState, appPaths, globalPaths));
     private readonly GetOnce<string> _url = new();
 
     public static string GetUrl(IAppState appState, IAppPaths appPaths, LazySvc<GlobalPaths> globalPaths)

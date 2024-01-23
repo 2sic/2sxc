@@ -1,10 +1,10 @@
 ﻿namespace ToSic.Sxc.Backend.Adam;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AdamTransRename<TFolderId, TFileId> : AdamTransactionBase<AdamTransRename<TFolderId, TFileId>, TFolderId, TFileId>
+public class AdamTransRename<TFolderId, TFileId>(
+    AdamTransactionBase<AdamTransRename<TFolderId, TFileId>, TFolderId, TFileId>.MyServices services)
+    : AdamTransactionBase<AdamTransRename<TFolderId, TFileId>, TFolderId, TFileId>(services, "Adm.TrnRen")
 {
-    public AdamTransRename(MyServices services) : base(services, "Adm.TrnRen") { }
-
     public bool Rename(string parentSubfolder, bool isFolder, TFolderId folderId, TFileId fileId, string newName)
     {
         Log.A("");

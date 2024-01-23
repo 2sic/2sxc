@@ -30,22 +30,22 @@ public class SxcPageFeatures
     /// <remarks>
     /// Published the key '2sxc.JsCore' in v13.00, do not change
     /// </remarks>
-    public static PageFeature JsCore = new("2sxc.JsCore", "2sxc core js APIs", needs: new[]
-    {
+    public static PageFeature JsCore = new("2sxc.JsCore", "2sxc core js APIs", needs:
+    [
         ContextPage.NameId
-    }, urlWip: "js/2sxc.api.min.js");
+    ], urlWip: "js/2sxc.api.min.js");
 
     /// <summary>
     /// The INTERNAL USE 2sxc JS libraries for cms / edit actions.
     /// This one doesn't check requirements, and is the one which is added automatically. 
     /// </summary>
-    public static PageFeature JsCmsInternal = new("Internal.JsCms", "2sxc inpage editing APIs - internal version without checks", needs: new[]
-    {
+    public static PageFeature JsCmsInternal = new("Internal.JsCms", "2sxc inpage editing APIs - internal version without checks", needs:
+    [
         JsCore.NameId,
-        ContextModule.NameId,
-    }, urlWip: "dist/inpage/inpage.min.js");
+        ContextModule.NameId
+    ], urlWip: "dist/inpage/inpage.min.js");
 
-    private static readonly List<Requirement> RequiresPublicEditForm = new() { PublicEditForm.Requirement };
+    private static readonly List<Requirement> RequiresPublicEditForm = [PublicEditForm.Requirement];
 
     /// <summary>
     /// The 2sxc JS libraries for cms / edit actions
@@ -55,7 +55,7 @@ public class SxcPageFeatures
     /// </remarks>
     public static PageFeature JsCms = new("2sxc.JsCms", 
         "2sxc inpage editing APIs", 
-        needs: new[] { JsCmsInternal.NameId },
+        needs: [JsCmsInternal.NameId],
         requirements: RequiresPublicEditForm);
 
     /// <summary>
@@ -87,11 +87,11 @@ public class SxcPageFeatures
     /// WIP - this will probably be moved to local only in future, ATM it's global though
     /// </summary>
     public static PageFeature ToolbarsAutoInternal = new("Internal.ToolbarsAuto",
-        "Ensure that the toolbars automatically appear", needs: new[]
-        {
+        "Ensure that the toolbars automatically appear", needs:
+        [
             ContextPage.NameId,
-            ToolbarsInternal.NameId,
-        });
+            ToolbarsInternal.NameId
+        ]);
 
     /// <summary>
     /// WIP - this will probably be moved to local only in future, ATM it's global though

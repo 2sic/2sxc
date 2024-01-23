@@ -23,10 +23,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class FieldController : OqtStatefulControllerBase, IFieldController
+public class FieldController() : OqtStatefulControllerBase(RealController.LogSuffix), IFieldController
 {
-    public FieldController(): base(RealController.LogSuffix) { }
-
     private RealController Real => GetService<RealController>();
 
     #region Fields - Get, Reorder, Data-Types (for dropdown), etc.

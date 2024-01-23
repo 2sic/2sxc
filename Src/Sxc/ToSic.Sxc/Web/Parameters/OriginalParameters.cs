@@ -16,7 +16,7 @@ internal class OriginalParameters
     /// <returns></returns>
     public static NameValueCollection GetOverrideParams(NameValueCollection requestParams)
     {
-        if (requestParams == null) return new();
+        if (requestParams == null) return [];
 
         var paramSet = requestParams[NameInUrlForOriginalParameters];
         if (string.IsNullOrEmpty(paramSet)) return requestParams; // just return requestParams (when origParams are not provided)

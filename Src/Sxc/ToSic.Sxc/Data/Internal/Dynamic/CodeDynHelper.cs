@@ -6,16 +6,10 @@ using ToSic.Sxc.Data.Internal.Typed;
 namespace ToSic.Sxc.Data.Internal.Dynamic;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class CodeDynHelper
+internal class CodeDynHelper(IEntity entity, SubDataFactory subDataFactory)
 {
-    public IEntity Entity { get; }
-    public SubDataFactory SubDataFactory { get; }
-
-    public CodeDynHelper(IEntity entity, SubDataFactory subDataFactory)
-    {
-        Entity = entity;
-        SubDataFactory = subDataFactory;
-    }
+    public IEntity Entity { get; } = entity;
+    public SubDataFactory SubDataFactory { get; } = subDataFactory;
 
     public IDynamicEntity Presentation => _prs.Get(() => SubDataFactory.SubDynEntityOrNull(Entity.GetDecorator<EntityInBlockDecorator>()?.Presentation));
     private readonly GetOnce<IDynamicEntity> _prs = new();

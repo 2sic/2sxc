@@ -4,6 +4,7 @@ using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Entities.Users;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Dnn.Run;
 
 namespace ToSic.Sxc.Dnn.Context;

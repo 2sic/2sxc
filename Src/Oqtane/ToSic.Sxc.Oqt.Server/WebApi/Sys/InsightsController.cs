@@ -11,10 +11,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
     
 [ApiController]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class InsightsController : OqtControllerBase
+public class InsightsController() : OqtControllerBase(false, RealController.LogSuffix)
 {
-    public InsightsController(): base(false, RealController.LogSuffix) { }
-
     private RealController Real => GetService<RealController>();
 
 

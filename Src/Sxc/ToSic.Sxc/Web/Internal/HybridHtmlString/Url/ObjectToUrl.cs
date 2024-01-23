@@ -113,7 +113,7 @@ public class ObjectToUrl
         // Get all properties on the object
         var properties = objectList
             .Cast<object>()
-            .SelectMany(d => PropsOfOne(d, prefix) ?? new List<UrlValuePair>())
+            .SelectMany(d => PropsOfOne(d, prefix) ?? [])
             .Where(d => d != null)
             .ToList();
 
@@ -132,7 +132,7 @@ public class ObjectToUrl
         // Case #2: Already a string, return that
         if (data is string str)
             return str.HasValue()
-                ? new List<UrlValuePair> { new(null, str, true) }
+                ? [new(null, str, true)]
                 : null;
 
         // Case #3: It's an object or an array of objects (but not a string)

@@ -9,10 +9,9 @@ using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.Web.WebResources;
 
-internal class WebResourceProcessor: HelperBase
+internal class WebResourceProcessor(IFeaturesService features, string cdnSource, ILog parentLog)
+    : HelperBase(parentLog, "Sxc.WebRHl")
 {
-    private readonly IFeaturesService _features;
-
     #region Constants
 
     // Note: this should not change often
@@ -37,13 +36,7 @@ internal class WebResourceProcessor: HelperBase
 
     #region Constructor
 
-    public string CdnSource { get; }
-
-    public WebResourceProcessor(IFeaturesService features, string cdnSource, ILog parentLog) : base(parentLog, "Sxc.WebRHl")
-    {
-        _features = features;
-        CdnSource = cdnSource;
-    }
+    public string CdnSource { get; } = cdnSource;
 
     #endregion
 
@@ -64,7 +57,7 @@ internal class WebResourceProcessor: HelperBase
             return l.Return(new(key, html: html, autoOptimize: autoOptimize), "ok, using built-in cdn-path");
 
         // check if feature is enabled
-        if (!_features.IsEnabled(SxcFeatures.CdnSourcePublic.NameId))
+        if (!features.IsEnabled(SxcFeatures.CdnSourcePublic.NameId))
             return l.Return(new(key, html: html, autoOptimize: autoOptimize), "ok, cdn-swap feature not enabled");
 
         // Set new root based on CdnSource settings

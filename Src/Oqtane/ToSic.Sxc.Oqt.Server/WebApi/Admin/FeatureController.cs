@@ -18,10 +18,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class FeatureController : OqtStatefulControllerBase, IFeatureController
+public class FeatureController() : OqtStatefulControllerBase(RealController.LogSuffix), IFeatureController
 {
-    public FeatureController(): base(RealController.LogSuffix) { }
-
     private RealController Real => GetService<RealController>();
 
 

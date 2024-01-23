@@ -147,7 +147,7 @@ public static class StartUpDnnCore
         // v17
         services.TryAddSingleton<IHostingEnvironmentWrapper, HostingEnvironmentWrapper>();
         services.TryAddSingleton<IReferencedAssembliesProvider, ReferencedAssembliesProvider>();
-        services.TryAddTransient<ThisAppCodeCompiler, ThisAppCodeCompilerNetFull>();
+        services.TryAddTransient<ThisAppCompiler, ThisAppCompilerNetFull>();
 
         return services;
     }

@@ -7,7 +7,7 @@ public static class IHasKitExtensions
 {
     public static TServiceKit GetKit<TServiceKit>(this ICodeApiService codeRoot) where TServiceKit : ServiceKit
     {
-        if (codeRoot is IHasKit<TServiceKit> withKit && withKit.Kit != null)
+        if (codeRoot is IHasKit<TServiceKit> { Kit: not null } withKit)
             return withKit.Kit;
         return codeRoot.GetService<TServiceKit>();
     }

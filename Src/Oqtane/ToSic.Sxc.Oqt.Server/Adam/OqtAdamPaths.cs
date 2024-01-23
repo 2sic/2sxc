@@ -11,15 +11,9 @@ namespace ToSic.Sxc.Oqt.Server.Adam;
 /// <summary>
 /// Basic AdamPaths resolver, assumes that files are in Content/[tenant]/site/[site]/adam for now
 /// </summary>
-internal class OqtAdamPaths: AdamPathsBase
+internal class OqtAdamPaths(IServerPaths serverPaths, SiteStateInitializer siteStateInitializer)
+    : AdamPathsBase(serverPaths, OqtConstants.OqtLogPrefix)
 {
-    private readonly SiteStateInitializer _siteStateInitializer;
-
-    public OqtAdamPaths(IServerPaths serverPaths, SiteStateInitializer siteStateInitializer) : base(serverPaths, OqtConstants.OqtLogPrefix)
-    {
-        _siteStateInitializer = siteStateInitializer;
-    }
-
     public string Path(string path)
     {
         var original = base.Url(path);
@@ -38,7 +32,7 @@ internal class OqtAdamPaths: AdamPathsBase
             parts[1] = "adam";
 
             // Insert alias path.
-            var alias = _siteStateInitializer.InitializedState.Alias;
+            var alias = siteStateInitializer.InitializedState.Alias;
             var aliasPath = alias.Path;
             parts.Insert(0, $"{aliasPath}/app");
 

@@ -18,7 +18,7 @@ internal class ItemToolbarV10(
     : ItemToolbarBase(logName ?? "TlbV10")
 {
     protected readonly string Settings = settings;
-    protected readonly List<string> Rules = ItemToolbarPicker.ToolbarV10OrNull(toolbar) ?? new List<string>();
+    protected readonly List<string> Rules = ItemToolbarPicker.ToolbarV10OrNull(toolbar) ?? [];
     protected readonly EntityEditInfo TargetAction = new(entity) { contentType = newType, prefill = prefill };
 
     public override string ToolbarAsTag 

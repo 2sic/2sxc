@@ -5,14 +5,9 @@ using ToSic.Sxc.Code.Internal.Documentation;
 namespace ToSic.Sxc.Backend.Admin;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeControllerReal : ServiceBase
+public class CodeControllerReal() : ServiceBase("Api.CodeRl")
 {
     public const string LogSuffix = "Code";
-
-    public CodeControllerReal() : base("Api.CodeRl")
-    {
-
-    }
 
     public class HelpItem
     {

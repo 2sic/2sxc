@@ -8,19 +8,13 @@ using ToSic.Sxc.Oqt.Shared.Dev;
 
 namespace ToSic.Sxc.Oqt.Server.Integration;
 
-internal class SettingsHelper
+internal class SettingsHelper(ISettingRepository settingRepository)
 {
-    private readonly ISettingRepository _settingRepository;
     public Dictionary<string, string> Settings;
-
-    public SettingsHelper(ISettingRepository settingRepository)
-    {
-        _settingRepository = settingRepository;
-    }
 
     public SettingsHelper Init(string entityName, int? id)
     {
-        Settings = GetSettings(_settingRepository.GetSettings(entityName, id ?? -1).ToList());
+        Settings = GetSettings(settingRepository.GetSettings(entityName, id ?? -1).ToList());
         return this;
     }
 
@@ -34,14 +28,14 @@ internal class SettingsHelper
 
     public Setting GetSetting(string entityName, int entityId, string settingName)
     {
-        return _settingRepository
+        return settingRepository
             .GetSettings(entityName, entityId)
             .FirstOrDefault(item => item.SettingName == settingName);
     }
 
     public void DeleteSetting(string entityName, int entityId, string settingName)
     {
-        var delete = _settingRepository
+        var delete = settingRepository
             .GetSettings(entityName, entityId)
             .FirstOrDefault(item => item.SettingName == settingName);
 
@@ -52,13 +46,13 @@ internal class SettingsHelper
             delete.SettingValue = string.Empty;
             delete.ModifiedOn = DateTime.Now;
             delete.ModifiedBy = WipConstants.SettingsChangeUserId;
-            _settingRepository.UpdateSetting(delete);
+            settingRepository.UpdateSetting(delete);
         }
     }
 
     public void UpdateSetting(string entityName, int entityId, string settingName, string settingValue)
     {
-        var update = _settingRepository
+        var update = settingRepository
             .GetSettings(entityName, entityId)
             .FirstOrDefault(item => item.SettingName == settingName);
 
@@ -67,10 +61,10 @@ internal class SettingsHelper
             update.SettingValue = settingValue;
             update.ModifiedOn = DateTime.Now;
             update.ModifiedBy = WipConstants.SettingsChangeUserId;
-            _settingRepository.UpdateSetting(update);
+            settingRepository.UpdateSetting(update);
         }
         else
-            _settingRepository.AddSetting(new()
+            settingRepository.AddSetting(new()
             {
                 CreatedBy = WipConstants.SettingsChangeUserId,
                 CreatedOn = DateTime.Now,

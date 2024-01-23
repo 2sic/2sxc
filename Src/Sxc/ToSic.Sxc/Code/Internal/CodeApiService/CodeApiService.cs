@@ -95,6 +95,17 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
         return newService;
     }
 
+    TService ICodeApiServiceInternal.GetKitService<TService>()
+    {
+        if (_kitServices.TryGetValue(typeof(TService), out var service))
+            return (TService)service;
+        var generated = _CodeApiSvc.GetService<TService>();
+        _kitServices[typeof(TService)] = generated;
+        return generated;
+    }
+    private readonly Dictionary<Type, object> _kitServices = new();
+
+
     [PrivateApi]
     public virtual ICodeApiService InitDynCodeRoot(IBlock block, ILog parentLog)
     {
@@ -119,15 +130,14 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
     public IBlockInstance Data { get; private set; }
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    // Note that ILinkHelper uses INeedsCodeRoot, so if initialized in GetService this will be auto-provided
-    public ILinkService Link => _link ??= GetService<ILinkService>();
+    public ILinkService Link => _link ??= (this as ICodeApiServiceInternal).GetKitService<ILinkService>();
     private ILinkService _link;
 
 
     #region Edit
 
     /// <inheritdoc />
-    public IEditService Edit => _edit ??= GetService<IEditService>();
+    public IEditService Edit => _edit ??= (this as ICodeApiServiceInternal).GetKitService<IEditService>();
     private IEditService _edit;
 
     #endregion

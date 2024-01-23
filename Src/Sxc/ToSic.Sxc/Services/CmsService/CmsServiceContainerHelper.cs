@@ -7,35 +7,24 @@ using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Edit.Toolbar.Internal;
 
 namespace ToSic.Sxc.Services.CmsService;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class CmsServiceContainerHelper: HelperBase
+internal class CmsServiceContainerHelper(
+    ICodeApiService dynCodeRoot,
+    IField field,
+    object container,
+    string classes,
+    bool? toolbar,
+    ILog parentLog)
+    : HelperBase(parentLog, "Cms.SvcCnt")
 {
-    private readonly ICodeApiService _dynCodeRoot;
-    private readonly object _container;
-    private string Classes { get; set; }
-    private readonly bool? _toolbar;
-    private readonly IField _field;
-
-    public CmsServiceContainerHelper(ICodeApiService dynCodeRoot,
-        IField field,
-        object container,
-        string classes,
-        bool? toolbar,
-        ILog parentLog
-    ) : base(parentLog,"Cms.SvcCnt")
-    {
-        _dynCodeRoot = dynCodeRoot;
-        _field = field;
-        _container = container;
-        Classes = classes;
-        _toolbar = toolbar;
-    }
+    private string Classes { get; set; } = classes;
 
 
-    private ServiceKit14 ServiceKit => _svcKit.Get(() => _dynCodeRoot.GetKit<ServiceKit14>());
+    private ServiceKit14 ServiceKit => _svcKit.Get(() => dynCodeRoot.GetKit<ServiceKit14>());
     private readonly GetOnce<ServiceKit14> _svcKit = new();
 
 
@@ -48,7 +37,7 @@ internal class CmsServiceContainerHelper: HelperBase
     public IHtmlTag Wrap(object contents, bool defaultToolbar)
     {
         var l = Log.Fn<IHtmlTag>($"{nameof(defaultToolbar)}: {defaultToolbar}");
-        var tag = GetContainer(_container);
+        var tag = GetContainer(container);
         tag = tag.Wrap(contents);
         // If tag is not a real tag (no name) then it also can't have classes or toolbars; just finish and return
         if (!tag.TagName.HasValue())
@@ -58,20 +47,20 @@ internal class CmsServiceContainerHelper: HelperBase
         if (Classes.HasValue()) tag = tag.Class(Classes);
 
         // Add Toolbar if relevant
-        if (_field.Parent.IsDemoItem)
+        if (field.Parent.IsDemoItem)
             return l.Return(tag, "demo-item, so no toolbar");
 
-        if (_field.Parent.Entity.DisableInlineEditSafe())
+        if (field.Parent.Entity.DisableInlineEditSafe())
             return l.Return(tag, "decorator no-edit");
 
-        var toolbar = _toolbar ?? defaultToolbar;
-        if (!toolbar || _field == null)
+        var toolbar1 = toolbar ?? defaultToolbar;
+        if (!toolbar1 || field == null)
             return l.Return(tag, "no toolbar added");
 
         l.A("Will add toolbar");
-        tag = tag.Attr(ServiceKit.Toolbar.Empty().Edit(_field.Parent, tweak: b => b
+        tag = tag.Attr(ServiceKit.Toolbar.Empty().Edit(field.Parent, tweak: b => b
             .Icon(EditFieldIcon)
-            .Parameters(ToolbarBuilder.BetaEditUiFieldsParamName, _field.Name)
+            .Parameters(ToolbarBuilder.BetaEditUiFieldsParamName, field.Name)
         ));
         return l.Return(tag, "added toolbar");
 

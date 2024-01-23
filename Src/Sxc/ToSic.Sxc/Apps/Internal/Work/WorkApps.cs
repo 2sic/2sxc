@@ -5,6 +5,7 @@ using ToSic.Eav.Apps.Internal.Ui;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Environment;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 
@@ -61,10 +62,11 @@ public class WorkApps : ServiceBase
         if (string.IsNullOrWhiteSpace(filter)) return l.Return(list, "unfiltered");
 
         // New feature in 10.27 - if app-list is provided, only return these
-        var appNames = filter.Split(',')
-            .Select(s => s.Trim())
-            .Where(s => !string.IsNullOrWhiteSpace(s))
-            .ToList();
+        var appNames = filter.CsvToArrayWithoutEmpty();
+            //.Split(',')
+            //.Select(s => s.Trim())
+            //.Where(s => !string.IsNullOrWhiteSpace(s))
+            //.ToList();
         list = list.Where(ap => appNames
                 .Any(name => string.Equals(name, ap.Name, StringComparison.InvariantCultureIgnoreCase)))
             .ToList();

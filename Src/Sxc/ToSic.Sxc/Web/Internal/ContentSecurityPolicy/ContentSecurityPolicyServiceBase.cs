@@ -10,11 +10,10 @@ namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 /// </summary>
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ContentSecurityPolicyServiceBase : ServiceBase, IContentSecurityPolicyService
+public class ContentSecurityPolicyServiceBase()
+    : ServiceBase($"{SxcLogging.SxcLogName}.CspSvc"), IContentSecurityPolicyService
 {
-    public ContentSecurityPolicyServiceBase(): base($"{SxcLogging.SxcLogName}.CspSvc") { }
-
-    public CspParameters Policy = new();
+    public CspParameters Policy = [];
 
     public virtual bool IsEnforced => false;
 
@@ -23,10 +22,10 @@ public class ContentSecurityPolicyServiceBase : ServiceBase, IContentSecurityPol
     public void Add(string name, params string[] values)
     {
         if (values == null || values.Length == 0)
-            values = new string[] { null };
+            values = [null];
 
         // Split values, so that each value is standalone - in case future merging requires clean-up
-        var valuesSplit = values.SelectMany(v => v == null ? new string[] { null } : v.Split(' '));
+        var valuesSplit = values.SelectMany(v => v == null ? [null] : v.Split(' '));
         foreach (var v in valuesSplit)
             Policy.Add(name, v);
     }

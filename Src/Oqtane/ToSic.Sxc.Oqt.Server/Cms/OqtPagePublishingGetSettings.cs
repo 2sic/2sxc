@@ -4,12 +4,10 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Cms;
 
-internal class OqtPagePublishingGetGetSettings: PagePublishingGetSettingsBase
+internal class OqtPagePublishingGetGetSettings() : PagePublishingGetSettingsBase(OqtConstants.OqtLogPrefix)
 {
     #region Constructor / DI
 
-    public OqtPagePublishingGetGetSettings() : base(OqtConstants.OqtLogPrefix) { }
-        
     #endregion
 
 

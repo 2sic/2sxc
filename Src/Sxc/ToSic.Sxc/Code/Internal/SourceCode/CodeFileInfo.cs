@@ -6,23 +6,23 @@ namespace ToSic.Sxc.Code.Internal.SourceCode;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class CodeFileInfo
 {
-    private CodeFileInfo(string inherits, CodeFileTypes type, List<CodeHelp> help, bool thisApp = false, string sourceCode = default, string relativePath = default, string fullPath = default)
+    private CodeFileInfo(string inherits, CodeFileTypes type, List<CodeHelp> help, bool useThisApp = false, string sourceCode = default, string relativePath = default, string fullPath = default)
     {
         Inherits = inherits;
         Type = type;
         Help = help ?? [];
-        ThisApp = thisApp;
+        ThisApp = useThisApp;
         SourceCode = sourceCode;
         RelativePath = relativePath;
         FullPath = fullPath;
     }
 
-    internal CodeFileInfo(CodeFileInfo original, string sourceCode, string relativePath = default, string fullPath = default)
+    internal CodeFileInfo(CodeFileInfo original, string sourceCode, string relativePath = default, string fullPath = default, bool? useThisApp = default)
     {
         Inherits = original.Inherits;
         Type = original.Type;
         Help = original.Help;
-        ThisApp = original.ThisApp;
+        ThisApp = useThisApp ?? original.ThisApp;
         SourceCode = sourceCode;
         RelativePath = relativePath ?? original.RelativePath;
         FullPath = fullPath ?? original.FullPath;
@@ -36,44 +36,53 @@ public class CodeFileInfo
     public List<CodeHelp> Help { get; }
     public bool ThisApp { get; }
 
+    // TODO: @STV - pls review my changes where I killed most functions and duplicate types, and if ok, remove the commented out code below
+
     // without base class
-    public static CodeFileInfo CodeFileUnknown(string sourceCode, string relativePath = default, string fullPath = default) 
-        => new("unknown", CodeFileTypes.Unknown, HelpForRazorCompileErrors.CompileUnknown, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath);
-    public static CodeFileInfo CodeFileUnknownWithThisAppCode(string sourceCode, string relativePath = default, string fullPath = default) 
-        => new ("unknown", CodeFileTypes.Unknown, HelpForRazorCompileErrors.CompileUnknown, true, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath);
+    public static CodeFileInfo TemplateUnknown = new("unknown", CodeFileTypes.Unknown, HelpForRazorCompileErrors.CompileUnknown);
+    //public static CodeFileInfo CodeFileUnknown(string sourceCode, string relativePath = default, string fullPath = default, bool useThisApp = default)
+    //    => new("unknown", CodeFileTypes.Unknown, HelpForRazorCompileErrors.CompileUnknown, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath, useThisApp: useThisApp);
+    //public static CodeFileInfo CodeFileUnknownWithThisApp(string sourceCode, string relativePath = default, string fullPath = default) 
+    //    => new ("unknown", CodeFileTypes.Unknown, HelpForRazorCompileErrors.CompileUnknown, true, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath);
 
     // with some other base class
-    public static CodeFileInfo CodeFileOther(string sourceCode, string relativePath = default, string fullPath = default) 
-        => new ("other", CodeFileTypes.Other, HelpForRazorCompileErrors.CompileUnknown, sourceCode: sourceCode);
-    public static CodeFileInfo CodeFileOtherWithThisAppCode(string sourceCode, string relativePath = default, string fullPath = default) 
-        => new ("other", CodeFileTypes.Other, HelpForRazorCompileErrors.CompileUnknown, true, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath);
+    public static CodeFileInfo TemplateOther = new("other", CodeFileTypes.Other, HelpForRazorCompileErrors.CompileUnknown);
+    //public static CodeFileInfo CodeFileOther(string sourceCode, string relativePath = default, string fullPath = default, bool useThisApp = default) 
+    //    => new ("other", CodeFileTypes.Other, HelpForRazorCompileErrors.CompileUnknown, sourceCode: sourceCode, fullPath: fullPath, useThisApp: useThisApp);
+    //public static CodeFileInfo CodeFileOtherWithThisApp(string sourceCode, string relativePath = default, string fullPath = default) 
+    //    => new ("other", CodeFileTypes.Other, HelpForRazorCompileErrors.CompileUnknown, true, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath);
 
     public static CodeFileInfo CodeFileNotFound = new("", CodeFileTypes.FileNotFound, []);
 
+    public static CodeFileInfo CodeFileInheritsThisApp = new("ThisApp.*", CodeFileTypes.V16, HelpForRazorTyped.Compile16, sourceCode: null);
     /// <summary>
     /// Template CodeFile objects for different types of files.
     /// They don't contain the source code, which would be added later if needed.
     /// </summary>
     internal static List<CodeFileInfo> CodeFileInfoTemplates =
     [
-        CodeFileUnknown(null),
-        CodeFileUnknownWithThisAppCode(null),
-        CodeFileOther(null),
-        CodeFileOtherWithThisAppCode(null),
+        TemplateUnknown,
+        //CodeFileUnknown(null),
+        //CodeFileUnknownWithThisApp(null),
+        TemplateOther,
+        //CodeFileOther(null),
+        //CodeFileOtherWithThisApp(null),
         // cshtml
         new("Custom.Hybrid.Razor12", CodeFileTypes.V12, HelpForRazor12.Compile12, sourceCode: null),
         new("Custom.Hybrid.Razor14", CodeFileTypes.V14, HelpForRazor14.Compile14, sourceCode: null),
         new("Custom.Hybrid.RazorTyped", CodeFileTypes.V16, HelpForRazorTyped.Compile16, sourceCode: null),
-        new("Custom.Hybrid.Razor12", CodeFileTypes.V12, HelpForRazor12.Compile12, true, sourceCode: null),
-        new("Custom.Hybrid.Razor14", CodeFileTypes.V14, HelpForRazor14.Compile14, true, sourceCode: null),
-        new("Custom.Hybrid.RazorTyped", CodeFileTypes.V16, HelpForRazorTyped.Compile16, true, sourceCode: null),
+
+        // 2024-01-22 2dm - disable this, doesn't make sense to duplicate just with different thisApp
+        //new("Custom.Hybrid.Razor12", CodeFileTypes.V12, HelpForRazor12.Compile12, true, sourceCode: null),
+        //new("Custom.Hybrid.Razor14", CodeFileTypes.V14, HelpForRazor14.Compile14, true, sourceCode: null),
+        //new("Custom.Hybrid.RazorTyped", CodeFileTypes.V16, HelpForRazorTyped.Compile16, true, sourceCode: null),
         // c#
         new("Custom.Hybrid.Code12", CodeFileTypes.V12, HelpForRazor12.Compile12, sourceCode: null),
         new("Custom.Hybrid.Code14", CodeFileTypes.V14, HelpForRazor14.Compile14, sourceCode: null),
         new("Custom.Hybrid.CodeTyped", CodeFileTypes.V16, HelpForRazorTyped.Compile16, sourceCode: null),
-        new("Custom.Hybrid.Code12", CodeFileTypes.V12, HelpForRazor12.Compile12, true, sourceCode: null),
-        new("Custom.Hybrid.Code14", CodeFileTypes.V14, HelpForRazor14.Compile14, true, sourceCode: null),
-        new("Custom.Hybrid.CodeTyped", CodeFileTypes.V16, HelpForRazorTyped.Compile16, true, sourceCode: null)
+        //new("Custom.Hybrid.Code12", CodeFileTypes.V12, HelpForRazor12.Compile12, true, sourceCode: null),
+        //new("Custom.Hybrid.Code14", CodeFileTypes.V14, HelpForRazor14.Compile14, true, sourceCode: null),
+        //new("Custom.Hybrid.CodeTyped", CodeFileTypes.V16, HelpForRazorTyped.Compile16, true, sourceCode: null)
     ];
 
     /// <summary>

@@ -7,12 +7,10 @@ namespace ToSic.Sxc.Oqt.Server.Adam;
 
 // TODO: @STV - this doesn't seem to be used, as it's not even registered in DI
 // Pls find out why, and if we don't need it, remove
-internal class OqtAdamItemDtoMaker<TFolderId, TFileId> : AdamItemDtoMaker<TFolderId, TFileId>
+internal class OqtAdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TFileId>.MyServices services)
+    : AdamItemDtoMaker<TFolderId, TFileId>(services)
 {
     #region Constructor / DI
-
-    public OqtAdamItemDtoMaker(MyServices services): base(services) { }
-
 
     #endregion
 

@@ -63,8 +63,8 @@ public class WorkBlocksMod : WorkUnitBase<IAppWorkCtxWithDb>
                 {
                     // hitting (+) if the list is empty add two demo items (because we already see one demo item)
                     if (lists.Lists.First().Value.Count == 0) // on non, add 2 null items
-                        lists.Add(0, new int?[] { null, null });
-                    return lists.Add(index, new int?[] { null, null });
+                        lists.Add(0, [null, null]);
+                    return lists.Add(index, [null, null]);
                 });
     }
 

@@ -1,11 +1,10 @@
 ﻿namespace ToSic.Sxc.Backend.Adam;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AdamTransDelete<TFolderId, TFileId> : AdamTransactionBase<AdamTransDelete<TFolderId, TFileId>, TFolderId, TFileId>
+public class AdamTransDelete<TFolderId, TFileId>(
+    AdamTransactionBase<AdamTransDelete<TFolderId, TFileId>, TFolderId, TFileId>.MyServices services)
+    : AdamTransactionBase<AdamTransDelete<TFolderId, TFileId>, TFolderId, TFileId>(services, "Adm.TrnDel")
 {
-    public AdamTransDelete(MyServices services) 
-        : base(services, "Adm.TrnDel") { }
-
     public bool Delete(string parentSubfolder, bool isFolder, TFolderId id, TFileId fileId)
     {
         Log.A($"delete");

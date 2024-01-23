@@ -15,7 +15,7 @@ public class Purpose
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public partial class AssetTemplates : ServiceBase
+public partial class AssetTemplates() : ServiceBase("SxcAss.Templt")
 {
     #region Constants
 
@@ -34,12 +34,8 @@ public partial class AssetTemplates : ServiceBase
     #endregion
 
 
-    public AssetTemplates() : base("SxcAss.Templt")
-    {
-    }
-
-    public List<TemplateInfo> GetTemplates() => _templates ??= new()
-    {
+    public List<TemplateInfo> GetTemplates() => _templates ??=
+    [
         RazorHybrid,
         RazorTyped,
         RazorDnn,
@@ -54,8 +50,8 @@ public partial class AssetTemplates : ServiceBase
         DnnSearch,
         Markdown,
         EmptyTextFile,
-        EmptyFile,
-    };
+        EmptyFile
+    ];
     private static List<TemplateInfo> _templates;
 
     // TODO: @STV This should probably become obsolete once you change the objects above

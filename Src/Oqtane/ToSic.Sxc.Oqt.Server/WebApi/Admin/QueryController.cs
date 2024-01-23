@@ -24,10 +24,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class QueryController : OqtStatefulControllerBase, IQueryController
+public class QueryController() : OqtStatefulControllerBase(RealController.LogSuffix), IQueryController
 {
-    public QueryController() : base(RealController.LogSuffix) { }
-
     private RealController Real => GetService<RealController>();
 
     [HttpGet] public QueryDefinitionDto Get(int appId, int? id = null) => Real.Get(appId, id);

@@ -12,17 +12,9 @@ using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Server.Services;
 
-internal class OqtPrerenderService : ServiceBase, IOqtPrerenderService
+internal class OqtPrerenderService(IHttpContextAccessor httpContextAccessor, IThemeRepository themes)
+    : ServiceBase($"Oqt.PrerndSrv"), IOqtPrerenderService
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IThemeRepository _themes;
-
-    public OqtPrerenderService(IHttpContextAccessor httpContextAccessor, IThemeRepository themes) : base($"Oqt.PrerndSrv")
-    {
-        _httpContextAccessor = httpContextAccessor;
-        _themes = themes;
-    }
-
     public string GetPrerenderHtml(bool isPrerendered, OqtViewResultsDto viewResults, SiteState siteState, string themeType)
     {
         try
@@ -49,13 +41,13 @@ internal class OqtPrerenderService : ServiceBase, IOqtPrerenderService
 
     private bool HasUserAgentSignature()
     {
-        var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
+        var userAgent = httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
         return userAgent.HasValue && _userAgentSignatures.Exists(x => userAgent.Value.ToString().Contains(x, StringComparison.InvariantCultureIgnoreCase));
     }
 
     public bool CheckForKeyInQueryString(string key)
     {
-        var queryCollection = _httpContextAccessor.HttpContext?.Request.Query;
+        var queryCollection = httpContextAccessor.HttpContext?.Request.Query;
         return queryCollection != null && queryCollection.ContainsKey(key);
     }
 
@@ -613,7 +605,7 @@ internal class OqtPrerenderService : ServiceBase, IOqtPrerenderService
         return html;
     }
 
-    private Theme Theme(string themeType) => _theme ??= _themes.GetThemes().FirstOrDefault(item => item.Themes.Any(item => item.TypeName == themeType));
+    private Theme Theme(string themeType) => _theme ??= themes.GetThemes().FirstOrDefault(item => item.Themes.Any(item => item.TypeName == themeType));
     private Theme _theme;
     #endregion
 
@@ -675,11 +667,11 @@ internal class OqtPrerenderService : ServiceBase, IOqtPrerenderService
 
     private bool Executed // for execution once per request
     {
-        get => (_httpContextAccessor?.HttpContext?.Items[ExecutedKey] as bool?) ?? false;
+        get => (httpContextAccessor?.HttpContext?.Items[ExecutedKey] as bool?) ?? false;
         set
         {
-            if (_httpContextAccessor?.HttpContext != null)
-                _httpContextAccessor.HttpContext.Items[ExecutedKey] = value;
+            if (httpContextAccessor?.HttpContext != null)
+                httpContextAccessor.HttpContext.Items[ExecutedKey] = value;
         }
     }
     private const string ExecutedKey = "PrerenderServiceExecuted";
@@ -688,11 +680,11 @@ internal class OqtPrerenderService : ServiceBase, IOqtPrerenderService
     #region Html
     private string Html // for execution once per request
     {
-        get => (_httpContextAccessor?.HttpContext?.Items[PrerenderHtmlFragmentKey] as string) ?? string.Empty;
+        get => (httpContextAccessor?.HttpContext?.Items[PrerenderHtmlFragmentKey] as string) ?? string.Empty;
         set
         {
-            if (_httpContextAccessor?.HttpContext != null)
-                _httpContextAccessor.HttpContext.Items[PrerenderHtmlFragmentKey] = value;
+            if (httpContextAccessor?.HttpContext != null)
+                httpContextAccessor.HttpContext.Items[PrerenderHtmlFragmentKey] = value;
         }
     }
     private const string PrerenderHtmlFragmentKey = "PrerenderHtmlFragment"; 

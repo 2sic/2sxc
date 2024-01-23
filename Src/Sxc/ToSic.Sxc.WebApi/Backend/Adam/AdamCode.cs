@@ -16,19 +16,11 @@ namespace ToSic.Sxc.Backend.Adam;
 /// </summary>
 [PrivateApi("Used by DynamicApiController and Hybrid.Api12_DynCode")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AdamCode: ServiceForDynamicCode
+public class AdamCode(
+    Generator<AdamTransUpload<int, int>> adamUploadGenerator,
+    LazySvc<IEavFeaturesService> featuresLazy)
+    : ServiceForDynamicCode("AdamCode", connect: [adamUploadGenerator, featuresLazy])
 {
-    public AdamCode(Generator<AdamTransUpload<int, int>> adamUploadGenerator, LazySvc<IEavFeaturesService> featuresLazy) : base("AdamCode")
-    {
-        ConnectServices(
-            _adamUploadGenerator = adamUploadGenerator,
-            _featuresLazy = featuresLazy
-        );
-    }
-
-    private readonly Generator<AdamTransUpload<int, int>> _adamUploadGenerator;
-    private readonly LazySvc<IEavFeaturesService> _featuresLazy;
-
     public IFile SaveInAdam(NoParamOrder noParamOrder = default,
         Stream stream = null,
         string fileName = null,
@@ -42,11 +34,11 @@ public class AdamCode: ServiceForDynamicCode
 
         var feats = new[] { SaveInAdamApi.Guid, PublicUploadFiles.Guid };
 
-        if (!_featuresLazy.Value.IsEnabled(feats, "can't save in ADAM", out var exp))
+        if (!featuresLazy.Value.IsEnabled(feats, "can't save in ADAM", out var exp))
             throw exp;
 
         var appId = ((ICodeApiServiceInternal)_CodeApiSvc)?._Block?.AppId ?? _CodeApiSvc?.App?.AppId ?? throw new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
-        return _adamUploadGenerator.New()
+        return adamUploadGenerator.New()
             .Init(appId, contentType, guid.Value, field, false)
             .UploadOne(stream, fileName, subFolder, true);
     }

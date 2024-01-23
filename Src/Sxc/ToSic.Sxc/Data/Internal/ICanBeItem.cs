@@ -16,6 +16,10 @@ namespace ToSic.Sxc.Data.Internal;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface ICanBeItem: ICanBeEntity
 {
+    /// <summary>
+    /// Important: Always implement explicitly, so it doesn't appear in the API
+    /// </summary>
+    /// <returns></returns>
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     IBlock TryGetBlockContext();

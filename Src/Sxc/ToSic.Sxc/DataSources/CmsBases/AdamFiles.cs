@@ -29,7 +29,7 @@ namespace ToSic.Sxc.DataSources;
     Icon = DataSourceIcons.Tree,
     Type = DataSourceType.Lookup,
     Audience = Audience.Advanced,
-    In = new[] { InStreamDefaultRequired },
+    In = [InStreamDefaultRequired],
     DynamicOut = false,
     ConfigurationType = "" // TODO: ...
 )]

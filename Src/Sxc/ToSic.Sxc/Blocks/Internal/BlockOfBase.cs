@@ -17,7 +17,8 @@ using IApp = ToSic.Sxc.Apps.IApp;
 namespace ToSic.Sxc.Blocks.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract partial class BlockBase : ServiceBase<BlockBase.MyServices>, IBlock
+public abstract partial class BlockBase(BlockBase.MyServices services, string logName)
+    : ServiceBase<BlockBase.MyServices>(services, logName), IBlock
 {
     #region Constructor and DI
 
@@ -49,10 +50,6 @@ public abstract partial class BlockBase : ServiceBase<BlockBase.MyServices>, IBl
         public LazySvc<BlockBuilder> BlockBuilder { get; }
         public GenWorkPlus<WorkViews> WorkViews { get; }
         public GenWorkPlus<WorkBlocks> AppBlocks { get; }
-    }
-
-    protected BlockBase(MyServices services, string logName) : base(services, logName)
-    {
     }
 
     protected void Init(IContextOfBlock context, IAppIdentity appId)

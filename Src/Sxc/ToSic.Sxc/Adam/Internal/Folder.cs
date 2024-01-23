@@ -6,11 +6,10 @@ using ToSic.Sxc.Data;
 namespace ToSic.Sxc.Adam.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class Folder<TFolderId, TFileId> : Eav.Apps.Assets.Internal.Folder<TFolderId, TFileId>, IFolder
+public class Folder<TFolderId, TFileId>(AdamManager<TFolderId, TFileId> adamManager)
+    : Eav.Apps.Assets.Internal.Folder<TFolderId, TFileId>, IFolder
 {
-    public Folder(AdamManager<TFolderId, TFileId> adamManager) => AdamManager = adamManager;
-
-    protected AdamManager<TFolderId, TFileId> AdamManager { get; }
+    protected AdamManager<TFolderId, TFileId> AdamManager { get; } = adamManager;
 
     /// <inheritdoc />
     [JsonIgnore]

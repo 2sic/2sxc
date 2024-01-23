@@ -6,12 +6,8 @@ namespace ToSic.Sxc.Adam.Internal;
 /// Basic AdamPaths resolver, assumes that files are in wwwroot/adam for now.
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AdamPathsWwwroot : AdamPathsBase
+public class AdamPathsWwwroot(IServerPaths serverPaths) : AdamPathsBase(serverPaths, LogScopes.Base)
 {
-    public AdamPathsWwwroot(IServerPaths serverPaths) : base(serverPaths, LogScopes.Base)
-    {
-    }
-
     /// <summary>
     /// This will just assume that the path - containing 'wwwroot' will not have the 'wwwroot' in the link from outside
     /// </summary>

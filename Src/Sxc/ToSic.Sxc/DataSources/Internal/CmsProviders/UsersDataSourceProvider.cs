@@ -9,11 +9,8 @@ namespace ToSic.Sxc.DataSources.Internal;
 /// Must be overriden in each platform.
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class UsersDataSourceProvider: ServiceBase
+public abstract class UsersDataSourceProvider(string logName) : ServiceBase(logName)
 {
-    protected UsersDataSourceProvider(string logName) : base(logName)
-    { }
-
     /// <summary>
     /// The inner list retrieving the users.
     /// </summary>

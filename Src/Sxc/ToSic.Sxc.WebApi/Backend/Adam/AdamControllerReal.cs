@@ -4,30 +4,14 @@ using ToSic.Eav.WebApi.Errors;
 namespace ToSic.Sxc.Backend.Adam;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AdamControllerReal<TIdentifier>: ServiceBase
+public class AdamControllerReal<TIdentifier>(
+    LazySvc<AdamTransUpload<TIdentifier, TIdentifier>> adamUpload,
+    LazySvc<AdamTransGetItems<TIdentifier, TIdentifier>> adamItems,
+    LazySvc<AdamTransFolder<TIdentifier, TIdentifier>> adamFolders,
+    LazySvc<AdamTransDelete<TIdentifier, TIdentifier>> adamDelete,
+    LazySvc<AdamTransRename<TIdentifier, TIdentifier>> adamRename)
+    : ServiceBase("Api.Adam", connect: [adamUpload, adamItems, adamFolders, adamDelete, adamRename])
 {
-    public AdamControllerReal(
-        LazySvc<AdamTransUpload<TIdentifier, TIdentifier>> adamUpload,
-        LazySvc<AdamTransGetItems<TIdentifier, TIdentifier>> adamItems,
-        LazySvc<AdamTransFolder<TIdentifier, TIdentifier>> adamFolders,
-        LazySvc<AdamTransDelete<TIdentifier, TIdentifier>> adamDelete,
-        LazySvc<AdamTransRename<TIdentifier, TIdentifier>> adamRename
-    ) : base("Api.Adam")
-    {
-        ConnectServices(
-            _adamUpload = adamUpload,
-            _adamItems = adamItems,
-            _adamFolders = adamFolders,
-            _adamDelete = adamDelete,
-            _adamRename = adamRename
-        );
-    }
-    private readonly LazySvc<AdamTransUpload<TIdentifier, TIdentifier>> _adamUpload;
-    private readonly LazySvc<AdamTransGetItems<TIdentifier, TIdentifier>> _adamItems;
-    private readonly LazySvc<AdamTransFolder<TIdentifier, TIdentifier>> _adamFolders;
-    private readonly LazySvc<AdamTransDelete<TIdentifier, TIdentifier>> _adamDelete;
-    private readonly LazySvc<AdamTransRename<TIdentifier, TIdentifier>> _adamRename;
-
     public AdamItemDto Upload(HttpUploadedFile uploadInfo, int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false)
     {
         // wrap all of it in try/catch, to reformat error in better way for js to tell the user
@@ -44,7 +28,7 @@ public class AdamControllerReal<TIdentifier>: ServiceBase
             }
 
             var (fileName, stream) = uploadInfo.GetStream();
-            var uploader = _adamUpload.Value.Init(appId, contentType, guid, field, usePortalRoot);
+            var uploader = adamUpload.Value.Init(appId, contentType, guid, field, usePortalRoot);
             return uploader.UploadOne(stream, subFolder, fileName);
         }
         catch (HttpExceptionAbstraction he)
@@ -62,24 +46,24 @@ public class AdamControllerReal<TIdentifier>: ServiceBase
     public IEnumerable</*AdamItemDto*/object> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
     {
         var callLog = Log.Fn<IEnumerable<AdamItemDto>>($"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
-        var results = _adamItems.Value
+        var results = adamItems.Value
             .Init(appId, contentType, guid, field, usePortalRoot)
             .ItemsInField(subfolder);
         return callLog.ReturnAsOk(results);
     }
 
     public IEnumerable</*AdamItemDto*/object> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
-        => _adamFolders.Value
+        => adamFolders.Value
             .Init(appId, contentType, guid, field, usePortalRoot)
             .Folder(subfolder, newFolder);
         
     public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, TIdentifier id, bool usePortalRoot)
-        => _adamDelete.Value
+        => adamDelete.Value
             .Init(appId, contentType, guid, field, usePortalRoot)
             .Delete(subfolder, isFolder, id, id);
 
     public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, TIdentifier id, string newName, bool usePortalRoot)
-        => _adamRename.Value
+        => adamRename.Value
             .Init(appId, contentType, guid, field, usePortalRoot)
             .Rename(subfolder, isFolder, id, id, newName);
 

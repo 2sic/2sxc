@@ -3,15 +3,9 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Backend.Cms;
 
-internal class LoadSettingsApiKeys: LoadSettingsProviderBase, ILoadSettingsProvider
+internal class LoadSettingsApiKeys(LazySvc<ISecureDataService> secureDataService)
+    : LoadSettingsProviderBase($"{SxcLogging.SxcLogName}.StApiK"), ILoadSettingsProvider
 {
-    private readonly LazySvc<ISecureDataService> _secureDataService;
-
-    public LoadSettingsApiKeys(LazySvc<ISecureDataService> secureDataService) : base($"{SxcLogging.SxcLogName}.StApiK")
-    {
-        _secureDataService = secureDataService;
-    }
-
     public Dictionary<string, object> GetSettings(LoadSettingsProviderParameters parameters) => Log.Func(l =>
     {
         var stack = parameters.ContextOfApp.AppSettings;
@@ -28,7 +22,7 @@ internal class LoadSettingsApiKeys: LoadSettingsProviderBase, ILoadSettingsProvi
                 if (!(prop.Result is string strResult))
                     return null;
 
-                var decrypted = _secureDataService.Value.Parse(strResult);
+                var decrypted = secureDataService.Value.Parse(strResult);
                 return new
                 {
                     Key = key,

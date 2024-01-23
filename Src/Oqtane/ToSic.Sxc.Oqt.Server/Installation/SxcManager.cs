@@ -11,22 +11,15 @@ namespace ToSic.Sxc.Oqt.Server.Installation;
 /// WARNING: Careful when renaming / moving, the name is listed in the ModuleInfo.cs in the Client.
 /// </remarks>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class SxcManager : IInstallable
+public class SxcManager(ISqlRepository sql) : IInstallable
 {
-    private ISqlRepository _sql;
-
-    public SxcManager(ISqlRepository sql)
-    {
-        _sql = sql;
-    }
-
     public bool Install(Tenant tenant, string version)
     {
-        return _sql.ExecuteScript(tenant, GetType().Assembly, "ToSic.Sxc." + version + ".sql");
+        return sql.ExecuteScript(tenant, GetType().Assembly, "ToSic.Sxc." + version + ".sql");
     }
 
     public bool Uninstall(Tenant tenant)
     {
-        return _sql.ExecuteScript(tenant, GetType().Assembly, "ToSic.Sxc.Uninstall.sql");
+        return sql.ExecuteScript(tenant, GetType().Assembly, "ToSic.Sxc.Uninstall.sql");
     }
 }

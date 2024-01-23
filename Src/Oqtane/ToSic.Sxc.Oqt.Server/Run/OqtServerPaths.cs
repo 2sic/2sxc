@@ -8,30 +8,20 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
-internal class OqtServerPaths : ServerPathsBase
+internal class OqtServerPaths(IWebHostEnvironment hostingEnvironment, LazySvc<IFileRepository> fileRepository)
+    : ServerPathsBase
 {
-    public OqtServerPaths(IWebHostEnvironment hostingEnvironment, LazySvc<IFileRepository> fileRepository)
-    {
-            
-        _hostingEnvironment = hostingEnvironment;
-        _fileRepository = fileRepository;
-    }
-
-    private readonly IWebHostEnvironment _hostingEnvironment;
-    private readonly LazySvc<IFileRepository> _fileRepository;
-
-
     public override string FullAppPath(string virtualPath) => FullContentPath(virtualPath);
 
 
     public override string FullContentPath(string virtualPath)
     {
         var path = virtualPath.Backslash().TrimPrefixSlash();
-        return Path.Combine(_hostingEnvironment.ContentRootPath, path);
+        return Path.Combine(hostingEnvironment.ContentRootPath, path);
     }
 
 
-    protected override string FullPathOfReference(int id) => _fileRepository.Value.GetFilePath(id);
+    protected override string FullPathOfReference(int id) => fileRepository.Value.GetFilePath(id);
 
     public static string GetAppRootWithSiteId(int siteId)
     {

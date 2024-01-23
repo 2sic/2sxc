@@ -22,42 +22,21 @@ namespace ToSic.Sxc.Oqt.Server.Controllers;
 [Route(ControllerRoutes.ApiRoute)]
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class OqtSxcRenderController : ModuleControllerBase
+public class OqtSxcRenderController(
+    IHttpContextAccessor accessor,
+    IOqtSxcViewBuilder sxcOqtane,
+    IAliasRepository aliases,
+    ISiteRepository sites,
+    IPageRepository pages,
+    IModuleRepository modules,
+    IModuleDefinitionRepository definitions,
+    ISettingRepository settings,
+    IUserPermissions userPermissions,
+    ILogManager logger,
+    Oqtane.Shared.SiteState siteState)
+    : ModuleControllerBase(logger, accessor)
 {
-    public OqtSxcRenderController(IHttpContextAccessor accessor,
-        IOqtSxcViewBuilder sxcOqtane,
-        IAliasRepository aliases,
-        ISiteRepository sites,
-        IPageRepository pages,
-        IModuleRepository modules,
-        IModuleDefinitionRepository moduleDefinitions,
-        ISettingRepository settings,
-        IUserPermissions userPermissions,
-        ILogManager logger,
-        Oqtane.Shared.SiteState siteState) : base(logger, accessor)
-    {
-        _accessor = accessor;
-        _sxcOqtane = sxcOqtane;
-        _aliases = aliases;
-        _sites = sites;
-        _pages = pages;
-        _modules = modules;
-        _moduleDefinitions = moduleDefinitions;
-        _settings = settings;
-        _userPermissions = userPermissions;
-        _siteState = siteState;
-    }
-
-    private readonly IHttpContextAccessor _accessor;
-    private readonly IOqtSxcViewBuilder _sxcOqtane;
-    private readonly IAliasRepository _aliases;
-    private readonly ISiteRepository _sites;
-    private readonly IPageRepository _pages;
-    private readonly IModuleRepository _modules;
-    private readonly IModuleDefinitionRepository _moduleDefinitions;
-    private readonly ISettingRepository _settings;
-    private readonly IUserPermissions _userPermissions;
-    private readonly Oqtane.Shared.SiteState _siteState;
+    private readonly IHttpContextAccessor _accessor = accessor;
 
     [HttpGet("{aliasId:int}/{pageId:int}/{moduleId:int}/{culture}/{preRender:bool}/Prepare")]
     //[Authorize(Policy = PolicyNames.ViewModule)]
@@ -68,7 +47,7 @@ public class OqtSxcRenderController : ModuleControllerBase
             if (moduleId != AuthEntityId(EntityNames.Module))
                 return Forbidden("Unauthorized OqtSxcRenderController Get Attempt {ModuleId}", moduleId);
 
-            var alias = _aliases.GetAlias(aliasId);
+            var alias = aliases.GetAlias(aliasId);
             if (alias == null)
                 return Forbidden("Unauthorized Alias Get Attempt {AliasId}", aliasId);
 
@@ -76,29 +55,29 @@ public class OqtSxcRenderController : ModuleControllerBase
             _accessor.HttpContext.Items.TryAdd("AliasFor2sxc", alias);
 
             // Store Alias in SiteState for background processing.
-            if (_siteState != null) _siteState.Alias = alias;
+            if (siteState != null) siteState.Alias = alias;
 
             // Set User culture
             if (culture != CultureInfo.CurrentUICulture.Name) OqtCulture.SetCulture(culture);
 
-            var site = _sites.GetSite(alias.SiteId);
+            var site = sites.GetSite(alias.SiteId);
             if (site == null)
                 return Forbidden("Unauthorized Site Get Attempt {SiteId}", alias.SiteId);
 
-            var page = _pages.GetPage(pageId);
-            if (page == null || page.SiteId != alias.SiteId || !_userPermissions.IsAuthorized(User, EntityNames.Page, pageId, PermissionNames.View))
+            var page = pages.GetPage(pageId);
+            if (page == null || page.SiteId != alias.SiteId || !userPermissions.IsAuthorized(User, EntityNames.Page, pageId, PermissionNames.View))
                 return Forbidden("Unauthorized Page Get Attempt {pageId}", pageId);
 
-            var module = _modules.GetModule(moduleId);
-            if (module == null || module.SiteId != alias.SiteId || !_userPermissions.IsAuthorized(User, "View", module.Permissions))
+            var module = modules.GetModule(moduleId);
+            if (module == null || module.SiteId != alias.SiteId || !userPermissions.IsAuthorized(User, "View", module.Permissions))
                 return Forbidden("Unauthorized Module Get Attempt {ModuleId}", moduleId);
 
-            var moduleDefinitions = _moduleDefinitions.GetModuleDefinitions(module.SiteId).ToList();
+            var moduleDefinitions = definitions.GetModuleDefinitions(module.SiteId).ToList();
             module.ModuleDefinition = moduleDefinitions.Find(item => item.ModuleDefinitionName == module.ModuleDefinitionName);
 
-            module.Settings = _settings.GetSettings(EntityNames.Module, moduleId).ToDictionary(setting => setting.SettingName, setting => setting.SettingValue);
+            module.Settings = settings.GetSettings(EntityNames.Module, moduleId).ToDictionary(setting => setting.SettingName, setting => setting.SettingValue);
 
-            return _sxcOqtane.Prepare(alias, site, page, module, preRender);
+            return sxcOqtane.Prepare(alias, site, page, module, preRender);
         }
         catch (Exception ex)
         {

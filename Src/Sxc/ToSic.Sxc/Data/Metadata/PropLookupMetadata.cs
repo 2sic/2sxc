@@ -31,5 +31,5 @@ internal class PropLookupMetadata(IHasMetadata parent, Func<bool> getDebug) : IP
     // but the Metadata isn't expected to dump properly
     // May need some tweaking to just iterate through all, if really needed
     public List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
-        => Parent?.Metadata?.FirstOrDefault()/* Entity*/?._Dump(specs, path) ?? new List<PropertyDumpItem>();
+        => Parent?.Metadata?.FirstOrDefault()/* Entity*/?._Dump(specs, path) ?? [];
 }

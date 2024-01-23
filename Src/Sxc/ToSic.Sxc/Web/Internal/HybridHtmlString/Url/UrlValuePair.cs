@@ -4,17 +4,11 @@
 /// Helper class to prepare data for use in a url parameter.
 /// Especially useful to ensure that the value part is encoded, but not re-encoded.
 /// </summary>
-internal class UrlValuePair
+internal class UrlValuePair(string name, string value, bool isEncoded = false)
 {
-    public UrlValuePair(string name, string value, bool isEncoded = false)
-    {
-        Name = name;
-        Value = value;
-        IsEncoded = isEncoded;
-    }
-    public string Name { get; }
-    public string Value { get; }
-    public bool IsEncoded { get; }
+    public string Name { get; } = name;
+    public string Value { get; } = value;
+    public bool IsEncoded { get; } = isEncoded;
 
     public override string ToString()
     {

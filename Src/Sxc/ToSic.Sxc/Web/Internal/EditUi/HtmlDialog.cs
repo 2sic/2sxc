@@ -15,13 +15,14 @@ public class HtmlDialog
     public const string CustomHeadersPlaceholder = "@customheaders";
     public const string JsApiPlaceholder = "@jsapi";
 
-    public static string[] Placeholders = {
+    public static string[] Placeholders =
+    [
         BasePlaceholder,
         CacheBreakPlaceholder,
         CustomBodyPlaceholder,
         CustomHeadersPlaceholder,
-        JsApiPlaceholder,
-    };
+        JsApiPlaceholder
+    ];
 
     public static string CleanImport(string html)
     {

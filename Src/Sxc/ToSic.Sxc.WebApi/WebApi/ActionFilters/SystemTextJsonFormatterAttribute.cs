@@ -102,17 +102,14 @@ public class SystemTextJsonFormatterAttribute : ActionFilterAttribute, IControll
     }
 }
 
-public class SystemTextJsonBodyModelBinder : BodyModelBinder
+public class SystemTextJsonBodyModelBinder(
+    ILoggerFactory loggerFactory,
+    ArrayPool<char> charPool,
+    IHttpRequestStreamReaderFactory readerFactory,
+    ObjectPoolProvider objectPoolProvider,
+    IOptions<MvcOptions> mvcOptions)
+    : BodyModelBinder(GetInputFormatters(loggerFactory, charPool, objectPoolProvider, mvcOptions), readerFactory)
 {
-    public SystemTextJsonBodyModelBinder(
-        ILoggerFactory loggerFactory,
-        ArrayPool<char> charPool,
-        IHttpRequestStreamReaderFactory readerFactory,
-        ObjectPoolProvider objectPoolProvider,
-        IOptions<MvcOptions> mvcOptions)
-        : base(GetInputFormatters(loggerFactory, charPool, objectPoolProvider, mvcOptions), readerFactory)
-    { }
-
     private static IInputFormatter[] GetInputFormatters(
         ILoggerFactory loggerFactory,
         ArrayPool<char> charPool,

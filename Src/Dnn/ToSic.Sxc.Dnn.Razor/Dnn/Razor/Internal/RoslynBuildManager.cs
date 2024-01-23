@@ -34,10 +34,10 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         private const string FallbackBaseClass = "System.Web.WebPages.WebPageBase";
 
         private readonly AssemblyCacheManager _assemblyCacheManager;
-        private readonly LazySvc<ThisAppCodeLoader> _thisAppCodeLoader;
+        private readonly LazySvc<ThisAppLoader> _thisAppCodeLoader;
         private readonly AssemblyResolver _assemblyResolver;
 
-        public RoslynBuildManager(AssemblyCacheManager assemblyCacheManager, LazySvc<ThisAppCodeLoader> thisAppCodeLoader, AssemblyResolver assemblyResolver) : base("Dnn.RoslynBuildManager")
+        public RoslynBuildManager(AssemblyCacheManager assemblyCacheManager, LazySvc<ThisAppLoader> thisAppCodeLoader, AssemblyResolver assemblyResolver) : base("Dnn.RoslynBuildManager")
         {
             ;
             ConnectServices(
@@ -81,12 +81,12 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
             // Roslyn compiler need reference to location of dll, when dll is not in bin folder
             // get assembly - try to get from cache, otherwise compile
-            //var codeAssembly = ThisAppCodeLoader.TryGetAssemblyOfCodeFromCache(spec, Log)?.Assembly
-            //                   ?? _thisAppCodeLoader.Value.GetAppCodeAssemblyOrThrow(spec);
+            //var codeAssembly = ThisAppLoader.TryGetAssemblyOfThisAppFromCache(spec, Log)?.Assembly
+            //                   ?? _thisAppCodeLoader.Value.GetThisAppAssemblyOrThrow(spec);
             var (codeAssembly, specOut) = _thisAppCodeLoader.Value.TryGetOrFallback(spec);
             _assemblyResolver.AddAssembly(codeAssembly);
 
-            var thisAppCode = AssemblyCacheManager.TryGetThisAppCode(specOut);
+            var thisAppCode = AssemblyCacheManager.TryGetThisApp(specOut);
 
             var thisAppCodeAssembly = thisAppCode.Result?.Assembly;
             if (thisAppCodeAssembly != null)

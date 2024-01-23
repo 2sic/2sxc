@@ -29,10 +29,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Authorize(Roles = RoleNames.Admin)]
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ApiExplorerController : OqtStatefulControllerBase, IApiExplorerController
+public class ApiExplorerController() : OqtStatefulControllerBase(RealController.LogSuffix), IApiExplorerController
 {
-    public ApiExplorerController() : base(RealController.LogSuffix) { }
-
     private RealController Real => GetService<RealController>();
 
     [HttpGet]
@@ -59,7 +57,7 @@ public class ApiExplorerController : OqtStatefulControllerBase, IApiExplorerCont
             spec = new HotBuildSpec(spec.AppId,
                 edition: PolymorphConfigReader.UseViewEditionLazyGetEdition(block.View,() => GetService<PolymorphConfigReader>().Init(block.Context.AppState.List)));
 
-        var thisAppCodeLoader = GetService<LazySvc<ThisAppCodeLoader>>();
+        var thisAppCodeLoader = GetService<LazySvc<ThisAppLoader>>();
         Log.A($"Controller path from root: {pathFromRoot}");
 
         // get full path

@@ -12,7 +12,8 @@ namespace ToSic.Sxc.DataSources.Internal;
 /// Must be overriden in each platform.
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class SitesDataSourceProvider: ServiceBase<SitesDataSourceProvider.MyServices>
+public abstract class SitesDataSourceProvider(SitesDataSourceProvider.MyServices services, string logName)
+    : ServiceBase<SitesDataSourceProvider.MyServices>(services, logName)
 {
     public class MyServices : MyServicesBase
     {
@@ -30,10 +31,6 @@ public abstract class SitesDataSourceProvider: ServiceBase<SitesDataSourceProvid
             );
         }
 
-    }
-        
-    protected SitesDataSourceProvider(MyServices services, string logName) : base(services, logName)
-    {
     }
 
     /// <summary>

@@ -1,72 +1,93 @@
-﻿using ToSic.Eav.Plumbing;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
+﻿using ToSic.Lib.DI;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Services.Internal;
 
-
-// ReSharper disable MethodOverloadWithOptionalParameter
+// 2024-01-22 2dm
+// Remove all convert methods which are just missing the optional parameters, to make the API smaller.
+// Assume it has no side effects, must watch.
+// Remove this note 2024-Q3 (ca. July)
 
 namespace ToSic.Sxc.Services;
 
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class ConvertService16: ServiceBase, IConvertService16
+internal class ConvertService16(
+    ConvertValueService cnvSvc,
+    LazySvc<ConvertForCodeService> code,
+    LazySvc<IJsonService> json)
+    : ServiceForDynamicCode("Sxc.CnvSrv", connect: [cnvSvc, code, json]), IConvertService16
 {
-    private readonly LazySvc<ConvertForCodeService> _code;
-    private readonly ConvertValueService _cnvSvc;
 
-    public ConvertService16(ConvertValueService cnvSvc, LazySvc<ConvertForCodeService> code, LazySvc<IJsonService> json): base("Sxc.CnvSrv")
-    {
-        ConnectServices(
-            _cnvSvc = cnvSvc,
-            _code = code,
-            _jsonLazy = json
-        );
-    }
+    #region New v17 As conversions
 
-    public bool OptimizeNumbers => true;
+    /// <summary>
+    /// EXPERIMENTAL
+    /// </summary>
+    /// <param name="source"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    T IConvertService16.As<T>(ICanBeEntity source) => _CodeApiSvc._Cdf.AsCustom<T>(source, Kit);
 
-    public bool OptimizeBoolean => true;
+    /// <summary>
+    /// EXPERIMENTAL
+    /// </summary>
+    /// <param name="source"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    IEnumerable<T> IConvertService16.AsList<T>(IEnumerable<ICanBeEntity> source) => _CodeApiSvc._Cdf.AsCustomList<T>(source, Kit);
 
-    public T To<T>(object value) => value.ConvertOrDefault<T>(numeric: OptimizeNumbers, truthy: OptimizeBoolean);
+    private ServiceKit16 Kit => _kit16 ??= _CodeApiSvc.GetKit<ServiceKit16>();
+    private ServiceKit16 _kit16;
 
-    public T To<T>(object value, NoParamOrder noParamOrder = default, T fallback = default) => _cnvSvc.To(value, noParamOrder, fallback);
+    #endregion
 
-    public int ToInt(object value) => _cnvSvc.To<int>(value);
-    public int ToInt(object value, NoParamOrder noParamOrder = default, int fallback = 0) => _cnvSvc.To(value, fallback: fallback);
+    //public bool OptimizeNumbers => true;
 
-    public Guid ToGuid(object value) => _cnvSvc.To<Guid>(value);
-    public Guid ToGuid(object value, NoParamOrder noParamOrder = default, Guid fallback = default) => _cnvSvc.To(value, fallback: fallback);
+    //public bool OptimizeBoolean => true;
 
-    public float ToFloat(object value) => _cnvSvc.To<float>(value);
-    public float ToFloat(object value, NoParamOrder noParamOrder = default, float fallback = default) => _cnvSvc.To(value, fallback: fallback);
+    //public T To<T>(object value) => value.ConvertOrDefault<T>(numeric: OptimizeNumbers, truthy: OptimizeBoolean);
 
-    public decimal ToDecimal(object value) => _cnvSvc.To<decimal>(value);
-    public decimal ToDecimal(object value, NoParamOrder noParamOrder = default, decimal fallback = default) => _cnvSvc.To(value, fallback: fallback);
+    public T To<T>(object value, NoParamOrder noParamOrder = default, T fallback = default) => cnvSvc.To(value, noParamOrder, fallback);
 
-    public double ToDouble(object value) => _cnvSvc.To<double>(value);
-    public double ToDouble(object value, NoParamOrder noParamOrder = default, double fallback = default) => _cnvSvc.To(value, fallback: fallback);
+    //public int ToInt(object value) => _cnvSvc.To<int>(value);
+    public int ToInt(object value, NoParamOrder noParamOrder = default, int fallback = 0) => cnvSvc.To(value, fallback: fallback);
 
-    public bool ToBool(object value) => _cnvSvc.To<bool>(value);
-    public bool ToBool(object value, NoParamOrder noParamOrder = default, bool fallback = false) => _cnvSvc.To(value, fallback: fallback);
+    //public Guid ToGuid(object value) => _cnvSvc.To<Guid>(value);
+    public Guid ToGuid(object value, NoParamOrder noParamOrder = default, Guid fallback = default) => cnvSvc.To(value, fallback: fallback);
+
+    //public float ToFloat(object value) => _cnvSvc.To<float>(value);
+    public float ToFloat(object value, NoParamOrder noParamOrder = default, float fallback = default) => cnvSvc.To(value, fallback: fallback);
+
+    //public decimal ToDecimal(object value) => _cnvSvc.To<decimal>(value);
+    public decimal ToDecimal(object value, NoParamOrder noParamOrder = default, decimal fallback = default) => cnvSvc.To(value, fallback: fallback);
+
+    //public double ToDouble(object value) => _cnvSvc.To<double>(value);
+    public double ToDouble(object value, NoParamOrder noParamOrder = default, double fallback = default) => cnvSvc.To(value, fallback: fallback);
+
+    //public bool ToBool(object value) => _cnvSvc.To<bool>(value);
+    public bool ToBool(object value, NoParamOrder noParamOrder = default, bool fallback = false) => cnvSvc.To(value, fallback: fallback);
         
-    public string ToString(object value) => _cnvSvc.To<string>(value);
+    //public string ToString(object value) => _cnvSvc.To<string>(value);
 
     public string ToString(object value, NoParamOrder noParamOrder = default, string fallback = default, bool fallbackOnNull = true) 
-        => _cnvSvc.ToString(value, noParamOrder, fallback, fallbackOnNull);
+        => cnvSvc.ToString(value, noParamOrder, fallback, fallbackOnNull);
 
-    public string ForCode(object value) => _code.Value.ForCode(value);
-    public string ForCode(object value, NoParamOrder noParamOrder = default, string fallback = default) => _code.Value.ForCode(value, noParamOrder, fallback);
+    //public string ForCode(object value) => _code.Value.ForCode(value);
+    public string ForCode(object value, NoParamOrder noParamOrder = default, string fallback = default) => code.Value.ForCode(value, noParamOrder, fallback);
         
 
-    public IJsonService Json => _jsonLazy.Value;
-    private readonly LazySvc<IJsonService> _jsonLazy;
+    public IJsonService Json => json.Value;
 
-    #region Invisible Converts for backward compatibility
 
-    public int ToInt32(object value) => ToInt(value);
+    #region Invisible Converts for backward compatibility - 2dm removed 2024-01-22 since it's not in the interface and can't be in use - del 2024-Q3
 
-    public float ToSingle(object value) => ToFloat(value);
+    //public int ToInt32(object value) => ToInt(value);
+
+    //public float ToSingle(object value) => ToFloat(value);
 
     #endregion
 }

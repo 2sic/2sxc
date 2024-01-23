@@ -8,11 +8,8 @@ namespace ToSic.Sxc.DataSources.Internal;
 /// Must be overriden in each platform.
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class RolesDataSourceProvider: ServiceBase
+public abstract class RolesDataSourceProvider(string logName) : ServiceBase(logName)
 {
-    protected RolesDataSourceProvider(string logName) : base(logName)
-    { }
-
     /// <summary>
     /// The inner list retrieving roles. 
     /// </summary>

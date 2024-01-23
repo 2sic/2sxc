@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using ToSic.Eav.Data.Build;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
@@ -7,11 +6,9 @@ using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Images;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Services.Tweaks;
 using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
@@ -173,8 +170,8 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
         var objList = raw != null
             ? raw is IEnumerable rawEnum
                 ? rawEnum.Cast<object>().ToList()
-                : new() { raw }
-            : new();
+                : [raw]
+            : [];
 
         var df = Cdf.Value.Services.DataFactory.New(
             options: new(appId: Cdf.Value.BlockOrNull?.AppId, autoId: false));
@@ -216,7 +213,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     }
     #endregion
 
-    public IBlock TryGetBlockContext() => Cdf?.Value.BlockOrNull;
+    IBlock ICanBeItem.TryGetBlockContext() => Cdf?.Value.BlockOrNull;
 
     public ITypedItem Item => this;
 

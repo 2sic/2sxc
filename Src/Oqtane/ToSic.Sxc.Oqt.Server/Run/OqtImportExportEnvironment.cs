@@ -17,19 +17,13 @@ using IO = System.IO;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
-internal class OqtImportExportEnvironment : SxcImportExportEnvironmentBase
+internal class OqtImportExportEnvironment(
+    SxcImportExportEnvironmentBase.MyServices services,
+    IServerPaths oqtServerPaths,
+    IFileRepository oqtFileRepository,
+    IFolderRepository oqtFolderRepository)
+    : SxcImportExportEnvironmentBase(services, $"{OqtConstants.OqtLogPrefix}.IExEnv")
 {
-    private readonly IServerPaths _oqtServerPaths;
-    private readonly IFileRepository _oqtFileRepository;
-    private readonly IFolderRepository _oqtFolderRepository;
-
-    public OqtImportExportEnvironment(MyServices services, IServerPaths oqtServerPaths, IFileRepository oqtFileRepository, IFolderRepository oqtFolderRepository) : base(services, $"{OqtConstants.OqtLogPrefix}.IExEnv")
-    {
-        _oqtServerPaths = oqtServerPaths;
-        _oqtFileRepository = oqtFileRepository;
-        _oqtFolderRepository = oqtFolderRepository;
-    }
-
     /// <inheritdoc />
     /// <summary>
     /// Copy all files from SourceFolder to DestinationFolder
@@ -48,7 +42,7 @@ internal class OqtImportExportEnvironment : SxcImportExportEnvironmentBase
         destinationFolder = destinationFolder.EnsureOqtaneFolderFormat();
 
         var destinationVirtualPath = IO.Path.Combine(oqtSite.ContentPath, destinationFolder);
-        var destinationFolderFullPath = _oqtServerPaths.FullContentPath(destinationVirtualPath);
+        var destinationFolderFullPath = oqtServerPaths.FullContentPath(destinationVirtualPath);
 
         if (!IO.Directory.Exists(destinationFolderFullPath))
         {
@@ -57,7 +51,7 @@ internal class OqtImportExportEnvironment : SxcImportExportEnvironmentBase
             AddFolder(destinationFolder);
         }
 
-        var folderInfo = _oqtFolderRepository.GetFolder(siteId, destinationFolder.EnsureOqtaneFolderFormat());
+        var folderInfo = oqtFolderRepository.GetFolder(siteId, destinationFolder.EnsureOqtaneFolderFormat());
 
         void MassLog(string msg, Exception exception)
         {
@@ -195,7 +189,7 @@ internal class OqtImportExportEnvironment : SxcImportExportEnvironmentBase
     {
         var callLog = Log.Fn<File>($"Add {fileName}, folderId:{parent.FolderId}, siteId {oqtSite.Id}");
 
-        var fullContentPath = IO.Path.Combine(_oqtServerPaths.FullContentPath(oqtSite.ContentPath), parent.Path);
+        var fullContentPath = IO.Path.Combine(oqtServerPaths.FullContentPath(oqtSite.ContentPath), parent.Path);
         IO.Directory.CreateDirectory(fullContentPath);
         var filePath = IO.Path.Combine(fullContentPath, fileName);
         using (var stream = new IO.FileStream(filePath, IO.FileMode.Create))
@@ -214,7 +208,7 @@ internal class OqtImportExportEnvironment : SxcImportExportEnvironmentBase
             ImageHeight = 0,
             ImageWidth = 0
         };
-        var oqtFile = _oqtFileRepository.AddFile(oqtFileData);
+        var oqtFile = oqtFileRepository.AddFile(oqtFileData);
         return callLog.ReturnAsOk(oqtFile);
     }
 
@@ -223,10 +217,10 @@ internal class OqtImportExportEnvironment : SxcImportExportEnvironmentBase
     private bool FileExists(Folder folderInfo, string fileName) => GetFile(folderInfo, fileName) != null;
 
     private File GetFile(Folder folderInfo, string fileName)
-        => _oqtFileRepository.GetFiles(folderInfo.FolderId, false)
+        => oqtFileRepository.GetFiles(folderInfo.FolderId, false)
             .FirstOrDefault(f => f.Name.Equals(fileName, StringComparison.OrdinalIgnoreCase));
 
-    private Folder GetOqtFolderByPath(string path) => _oqtFolderRepository.GetFolder(Site.Id, path.EnsureOqtaneFolderFormat());
+    private Folder GetOqtFolderByPath(string path) => oqtFolderRepository.GetFolder(Site.Id, path.EnsureOqtaneFolderFormat());
 
     private Folder AddFolder(string path)
     {
@@ -266,7 +260,7 @@ internal class OqtImportExportEnvironment : SxcImportExportEnvironmentBase
     private Folder CreateVirtualFolder(Folder parentFolder, string path, string folder)
     {
         var newVirtualFolder = AdamFolderHelper.NewVirtualFolder(Site.Id, parentFolder.FolderId, path, folder);
-        _oqtFolderRepository.AddFolder(newVirtualFolder);
+        oqtFolderRepository.AddFolder(newVirtualFolder);
         return newVirtualFolder;
     }
 }

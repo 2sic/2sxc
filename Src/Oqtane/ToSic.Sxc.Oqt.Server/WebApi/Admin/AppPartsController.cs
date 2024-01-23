@@ -17,10 +17,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppPartsController : OqtStatefulControllerBase, IAppPartsController
+public class AppPartsController() : OqtStatefulControllerBase(RealController.LogSuffix), IAppPartsController
 {
-    public AppPartsController(): base(RealController.LogSuffix) { }
-
     private RealController Real => GetService<RealController>();
 
 

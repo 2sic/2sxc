@@ -28,6 +28,6 @@ internal class PropLookupWithPathEntity(IEntity entity, ICanDebug canDebug) :
     }
 
     public List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) 
-        => Entity?._Dump(specs, path) ?? new List<PropertyDumpItem>();
+        => Entity?._Dump(specs, path) ?? [];
 
 }

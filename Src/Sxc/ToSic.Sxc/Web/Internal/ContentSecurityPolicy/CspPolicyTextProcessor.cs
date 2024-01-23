@@ -4,12 +4,8 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CspPolicyTextProcessor: HelperBase
+public class CspPolicyTextProcessor(ILog parentLog) : HelperBase(parentLog, $"{CspConstants.LogPrefix}.TxtPrc")
 {
-    public CspPolicyTextProcessor(ILog parentLog) : base(parentLog, $"{CspConstants.LogPrefix}.TxtPrc")
-    {
-    }
-
     public List<KeyValuePair<string,string>> Parse(string policyText)
     {
         var wrapLog = Log.Fn<List<KeyValuePair<string, string>>>();
@@ -27,7 +23,7 @@ public class CspPolicyTextProcessor: HelperBase
 
         foreach (var line in lines)
         {
-            var splitIndex = line.IndexOfAny(new[] { ':', ' ' });
+            var splitIndex = line.IndexOfAny([':', ' ']);
             if(splitIndex == -1 || splitIndex >= line.Length) continue;
             var key = line.Substring(0, splitIndex);
             var value = line.Substring(splitIndex + 1).Trim();

@@ -9,26 +9,19 @@ using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal.DotNet;
 using ToSic.Sxc.Web.Internal.Url;
-using Page = ToSic.Sxc.Context.Page;
+using Page = ToSic.Sxc.Context.Internal.Page;
 
 namespace ToSic.Sxc.Oqt.Server.Context;
 
-internal class OqtPage : Page, IWrapper<Oqtane.Models.Page>
+internal class OqtPage(
+    LazySvc<IHttp> httpBlazor,
+    SiteState siteState,
+    LazySvc<IAliasRepository> aliasRepository,
+    LazySvc<IPageRepository> pages,
+    LazySvc<ILinkPaths> linkPathsLazy)
+    : Page(httpBlazor), IWrapper<Oqtane.Models.Page>
 {
-    private readonly SiteState _siteState;
-    private readonly LazySvc<IAliasRepository> _aliasRepository;
-    private readonly LazySvc<IPageRepository> _pages;
-    private readonly LazySvc<ILinkPaths> _linkPathsLazy;
-
     public Alias Alias { get; set; }
-
-    public OqtPage(LazySvc<IHttp> httpBlazor, SiteState siteState, LazySvc<IAliasRepository> aliasRepository, LazySvc<IPageRepository> pages, LazySvc<ILinkPaths> linkPathsLazy) : base(httpBlazor)
-    {
-        _siteState = siteState;
-        _aliasRepository = aliasRepository;
-        _pages = pages;
-        _linkPathsLazy = linkPathsLazy;
-    }
 
     protected Oqtane.Models.Page UnwrappedPage;
     public Oqtane.Models.Page GetContents() => UnwrappedPage;
@@ -36,13 +29,13 @@ internal class OqtPage : Page, IWrapper<Oqtane.Models.Page>
     {
         base.Init(id);
 
-        UnwrappedPage = _pages.Value.GetPage(id);
+        UnwrappedPage = pages.Value.GetPage(id);
 
         Url = GetUrl(GetAlias(UnwrappedPage.SiteId));
         return this;
     }
 
-    private ILinkPaths LinkPaths => _linkPathsLazy.Value;
+    private ILinkPaths LinkPaths => linkPathsLazy.Value;
 
     public string GetUrl(Alias alias)
     {
@@ -54,9 +47,9 @@ internal class OqtPage : Page, IWrapper<Oqtane.Models.Page>
 
     private Alias GetAlias(int siteId)
     {
-        Alias ??= _siteState.Alias;
+        Alias ??= siteState.Alias;
         if (Alias != null && Alias.SiteId == siteId) return Alias;
-        Alias = _aliasRepository.Value.GetAliases().OrderBy(a => a.Name).FirstOrDefault(a => a.SiteId == siteId); // best guess
+        Alias = aliasRepository.Value.GetAliases().OrderBy(a => a.Name).FirstOrDefault(a => a.SiteId == siteId); // best guess
         return Alias;
     }
 }

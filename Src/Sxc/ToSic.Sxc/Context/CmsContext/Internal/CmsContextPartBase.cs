@@ -34,7 +34,7 @@ internal abstract class CmsContextPartBase<T> : Wrapper<T>, IHasMetadata where T
     protected IMetadataOf ExtendWithRecommendations(IMetadataOf md)
     {
         if (md == null) return null;
-        md.Target.Recommendations = new[] { Decorators.NoteDecoratorName };
+        md.Target.Recommendations = [Decorators.NoteDecoratorName];
         return md;
     }
 }

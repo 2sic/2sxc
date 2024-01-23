@@ -9,14 +9,9 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 // Based on https://stackoverflow.com/questions/58685966/adding-assemblies-types-to-be-made-available-to-razor-page-at-runtime to work
 namespace ToSic.Sxc.Oqt.Server.Plumbing;
 
-internal class CompilationReferencesProvider: AssemblyPart, ICompilationReferencesProvider
+internal class CompilationReferencesProvider(Assembly assembly) : AssemblyPart(assembly), ICompilationReferencesProvider
 {
-    private readonly Assembly _assembly;
-
-    public CompilationReferencesProvider(Assembly assembly) : base(assembly)
-    {
-        _assembly = assembly;
-    }
+    private readonly Assembly _assembly = assembly;
 
     public IEnumerable<string> GetReferencePaths()
     {

@@ -10,11 +10,9 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Cms;
 
-internal class OqtPagePublishing : ServiceBase, IPagePublishing
+internal class OqtPagePublishing() : ServiceBase($"{OqtConstants.OqtLogPrefix}.Publsh"), IPagePublishing
 {
     #region Constructor / DI
-
-    public OqtPagePublishing() : base($"{OqtConstants.OqtLogPrefix}.Publsh") { }
 
     #endregion
 

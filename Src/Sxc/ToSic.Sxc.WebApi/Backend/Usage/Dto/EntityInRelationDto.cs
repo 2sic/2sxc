@@ -1,13 +1,7 @@
 ﻿namespace ToSic.Sxc.Backend.Usage.Dto;
 
-class EntityInRelationDto: EntityDto
+class EntityInRelationDto(IEntity entity, string relationship, string key) : EntityDto(entity)
 {
-    public string Relationship;
-    public string Key;
-
-    public EntityInRelationDto(IEntity entity, string relationship, string key) : base(entity)
-    {
-        Relationship = relationship;
-        Key = key;
-    }
+    public string Relationship = relationship;
+    public string Key = key;
 }

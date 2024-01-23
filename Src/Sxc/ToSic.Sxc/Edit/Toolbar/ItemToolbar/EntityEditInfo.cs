@@ -71,5 +71,5 @@ internal class EntityEditInfo
     internal const string KeyFields = "fields";
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public string fields { get; set; }
 
-    internal static string[] KeysOfLists = { KeyIndex, KeyUseModule, KeyParent, KeyFields };
+    internal static string[] KeysOfLists = [KeyIndex, KeyUseModule, KeyParent, KeyFields];
 }

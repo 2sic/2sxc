@@ -122,7 +122,7 @@ public static class UrlHelpers
             .ToList()
             .ForEach(k =>
             {
-                var values = source.GetValues(k) ?? new string[] { null }; // catch null-values
+                var values = source.GetValues(k) ?? [null]; // catch null-values
 
                 foreach (var v in values)
                 {

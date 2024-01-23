@@ -8,5 +8,5 @@ internal class SitesDataSourceProviderUnknown: SitesDataSourceProvider
     public SitesDataSourceProviderUnknown(MyServices services, WarnUseOfUnknown<SitesDataSourceProviderUnknown> _): base(services, $"{SxcLogging.SxcLogName}.{LogConstants.NameUnknown}")
     { }
 
-    public override List<SiteDataRaw> GetSitesInternal() => new();
+    public override List<SiteDataRaw> GetSitesInternal() => [];
 }

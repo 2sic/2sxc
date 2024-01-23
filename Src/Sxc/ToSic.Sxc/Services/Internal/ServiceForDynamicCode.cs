@@ -1,5 +1,4 @@
 ﻿using ToSic.Lib.Services;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 
 namespace ToSic.Sxc.Services.Internal;
@@ -14,6 +13,8 @@ namespace ToSic.Sxc.Services.Internal;
 public abstract class ServiceForDynamicCode(string logName)
     : ServiceBase(logName), INeedsCodeApiService, IHasCodeApiService, ICanDebug
 {
+    protected ServiceForDynamicCode(string logName, NoParamOrder protect = default, object[] connect = default) : this(logName) { }
+
     /// <summary>
     /// Connect to CodeRoot and it's log
     /// </summary>

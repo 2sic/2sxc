@@ -26,10 +26,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class TypeController : OqtStatefulControllerBase, ITypeController
+public class TypeController() : OqtStatefulControllerBase(RealController.LogSuffix), ITypeController
 {
-    public TypeController(): base(RealController.LogSuffix) { }
-
     private RealController Real => GetService<RealController>();
 
 
