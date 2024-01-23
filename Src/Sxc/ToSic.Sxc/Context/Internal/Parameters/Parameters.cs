@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Context.Internal;
 /// If any parameter (eg 'something') is dynamic, the second Set(...) would fail, because it can't find the method on `object`.
 /// </remarks>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal partial class Parameters : IParameters
+public partial class Parameters : IParameters
 {
     #region Constructor
 
