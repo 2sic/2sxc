@@ -1664,7 +1664,7 @@
                 "Metadata": [
                   {
                     "Id": 182569,
-                    "Version": 4,
+                    "Version": 5,
                     "Guid": "6160ff26-0910-4649-860c-aae7dab1cd39",
                     "Type": {
                       "Id": "@All",
@@ -1735,7 +1735,7 @@
                   },
                   {
                     "Id": 182571,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "995d4aef-97a3-4871-9b29-286fe701df17",
                     "Type": {
                       "Id": "@String",
@@ -1755,7 +1755,7 @@
                   },
                   {
                     "Id": 182572,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "ec4933d4-2601-4642-a4f9-05a632a031b7",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -1785,7 +1785,7 @@
                           "en-us": "Scope=System.Fields"
                         },
                         "Value": {
-                          "en-us": "StaticName"
+                          "en-us": "Name"
                         }
                       },
                       "Boolean": {
