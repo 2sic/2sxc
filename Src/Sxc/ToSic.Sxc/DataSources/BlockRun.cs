@@ -23,7 +23,6 @@ internal partial class ContextData : PassThrough, IBlockInstance
     #region Constructor and Init
 
 #if NETFRAMEWORK
-    [PrivateApi("not meant for public use")]
     public ContextData(MyServices services, ToSic.Eav.Apps.IAppStates appStates, LazySvc<CodeInfoService> codeChanges) : base(services, "Sxc.BlckDs")
     {
         ConnectServices(
@@ -32,10 +31,11 @@ internal partial class ContextData : PassThrough, IBlockInstance
         );
     }
 #else
-        [PrivateApi("not meant for public use")]
-        // ReSharper disable once ConvertToPrimaryConstructor
-        public ContextData(MyServices services) : base(services, "Sxc.BlckDs")
-        {
+
+#pragma warning disable IDE0290 // Use primary constructor
+    public ContextData(MyServices services) : base(services, "Sxc.BlckDs")
+#pragma warning restore IDE0290 // Use primary constructor
+    {
         }
 #endif
 
@@ -58,9 +58,6 @@ internal partial class ContextData : PassThrough, IBlockInstance
     private Query _querySource;
     internal void SetBlock(CmsBlock blockSource) => _blockSource = blockSource;
     private CmsBlock _blockSource;
-
-    // #DataInAddWontWork
-    // private IReadOnlyDictionary<string, IDataStream> PickOut => _querySource?.Out ?? base.Out;
 
     public override IReadOnlyDictionary<string, IDataStream> Out => _querySource?.Out ?? base.Out;
 
