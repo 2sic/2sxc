@@ -9,7 +9,7 @@ using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal.DotNet;
 using ToSic.Sxc.Web.Internal.Url;
-using Page = ToSic.Sxc.Context.Page;
+using Page = ToSic.Sxc.Context.Internal.Page;
 
 namespace ToSic.Sxc.Oqt.Server.Context;
 

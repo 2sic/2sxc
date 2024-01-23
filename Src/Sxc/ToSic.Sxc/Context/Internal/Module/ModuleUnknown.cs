@@ -1,8 +1,7 @@
 ﻿using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Internal.Unknown;
-using ToSic.Eav.Run;
 
-namespace ToSic.Sxc.Context;
+namespace ToSic.Sxc.Context.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class ModuleUnknown: IModule, IIsUnknown

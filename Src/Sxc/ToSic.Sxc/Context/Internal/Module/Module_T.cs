@@ -2,7 +2,7 @@
 using ToSic.Lib.Data;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Context;
+namespace ToSic.Sxc.Context.Internal;
 
 /// <summary>
 /// A base implementation of the block information wrapping the CMS specific object along with it.

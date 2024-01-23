@@ -1,7 +1,7 @@
 ﻿using System.Collections.Specialized;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Web.Internal.Url;
-using Parameters = ToSic.Sxc.Context.Parameters.Parameters;
+using Parameters = ToSic.Sxc.Context.Internal.Parameters;
 
 namespace ToSic.Sxc.Tests.LinksAndImages
 {

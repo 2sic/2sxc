@@ -5,9 +5,9 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Internal.Typed;
 
-namespace ToSic.Sxc.Context.Parameters;
+namespace ToSic.Sxc.Context.Internal;
 
-internal partial class Parameters: ITyped
+partial class Parameters: ITyped
 {
     [PrivateApi]
     bool ITyped.ContainsKey(string name)

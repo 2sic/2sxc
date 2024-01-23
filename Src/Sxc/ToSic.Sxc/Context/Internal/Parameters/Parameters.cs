@@ -5,12 +5,15 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.Internal.Url;
 
-namespace ToSic.Sxc.Context.Parameters;
+namespace ToSic.Sxc.Context.Internal;
 
 /// <summary>
 /// This should provide cross-platform, neutral way to have page parameters in the Razor
 /// </summary>
-[PrivateApi("Hide implementation")]
+/// <remarks>
+/// This MUST be public, because in dyn-code you could have Parameters.Set("key", something).Set(...).Set(...).
+/// If any parameter (eg 'something') is dynamic, the second Set(...) would fail, because it can't find the method on `object`.
+/// </remarks>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal partial class Parameters : IParameters
 {

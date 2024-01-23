@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Internal.Unknown;
 
-namespace ToSic.Sxc.Context;
+namespace ToSic.Sxc.Context.Internal;
 
 internal class PlatformUnknown: Platform, IIsUnknown
 {

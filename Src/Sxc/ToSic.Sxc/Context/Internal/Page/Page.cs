@@ -1,9 +1,8 @@
 ﻿using ToSic.Lib.DI;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal.DotNet;
 using ToSic.Sxc.Web.Parameters;
 
-namespace ToSic.Sxc.Context;
+namespace ToSic.Sxc.Context.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class Page: IPage
@@ -27,7 +26,7 @@ internal class Page: IPage
     public int Id { get; private set; } = Eav.Constants.NullId;
 
 
-    public IParameters Parameters => _parameters ??= new Parameters.Parameters(OriginalParameters.GetOverrideParams(_httpLazy.Value?.QueryStringParams));
+    public IParameters Parameters => _parameters ??= new Parameters(OriginalParameters.GetOverrideParams(_httpLazy.Value?.QueryStringParams));
     private IParameters _parameters;
 
 

@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Context;
+﻿namespace ToSic.Sxc.Context.Internal;
 
 /// <summary>
 /// General platform information
