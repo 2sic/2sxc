@@ -1,10 +1,10 @@
 ﻿using ToSic.Eav.Plumbing;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal;
 
 [PrivateApi("hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class SecureData<T>(T result, bool isSecure) : ISecureData<T>
+public class SecureData<T>(T result, bool isSecure) : ISecureData<T>
 {
     public T Value { get; internal set; } = result;
 
