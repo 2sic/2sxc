@@ -4,7 +4,7 @@ using ToSic.Razor.Markup;
 using ToSic.Sxc.Data.Internal.Dynamic;
 using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal.Stack;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

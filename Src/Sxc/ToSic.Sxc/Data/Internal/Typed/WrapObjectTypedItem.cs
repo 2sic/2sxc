@@ -162,7 +162,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     #region Not Supported Properties such as Entity, Type, Child, Folder, Presentation, Metadata
 
-    IMetadata ITypedItem.Metadata => _metadata ??= BuildMetadata(PreWrap.TryGetWrap(nameof(Metadata)).Raw);
+    IMetadata ITypedItem.Metadata => _metadata ??= BuildMetadata(PreWrap.TryGetWrap(nameof(Metadata.Metadata)).Raw);
     private IMetadata _metadata;
 
     private IMetadata BuildMetadata(object raw)

@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps.Services;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal.Stack;
 using static ToSic.Eav.Apps.AppStackConstants;
 using SettingsSources = System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, ToSic.Eav.Data.PropertyLookup.IPropertyLookup>>;
 

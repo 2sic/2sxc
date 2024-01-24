@@ -2,14 +2,14 @@
 using System.Dynamic;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Data;
-using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Internal.Dynamic;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal.Stack;
 
+// Must be pbulic so that `Resources.Get...` work
 [PrivateApi("Keep implementation hidden, only publish interface")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class DynamicStack: DynamicObject,
+public class DynamicStack: DynamicObject,
     IWrapper<IPropertyStack>,
     IDynamicStack,
     IHasPropLookup,

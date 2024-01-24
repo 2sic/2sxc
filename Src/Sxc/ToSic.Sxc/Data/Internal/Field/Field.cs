@@ -58,7 +58,7 @@ public class Field: IField
 
 
     // 2023-08-14 v16.03 removed by 2dm as never used; KISS
-    public IMetadata Metadata => _dynMeta.Get(() => new Metadata(MetadataOfValue, _cdf));
+    public IMetadata Metadata => _dynMeta.Get(() => new Metadata.Metadata(MetadataOfValue, _cdf));
     private readonly GetOnce<IMetadata> _dynMeta = new();
 
 

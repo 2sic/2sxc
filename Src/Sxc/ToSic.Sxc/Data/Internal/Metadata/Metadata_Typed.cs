@@ -9,7 +9,7 @@ using ToSic.Sxc.Services.Tweaks;
 using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal.Metadata;
 
 internal partial class Metadata: ITypedItem
 {
