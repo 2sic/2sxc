@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Services;
+using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Services;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
 /// </summary>
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
-public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServices>, ICodeApiService
+public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServices>, ICodeApiService, IHasPiggyBack
 {
     #region Constructor
 
@@ -84,6 +85,9 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
     [PrivateApi] public ICmsContext CmsContext { get; }
 
     #endregion
+
+
+    PiggyBack IHasPiggyBack.PiggyBack { get; } = new();
 
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
@@ -151,4 +155,5 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
 
     [PrivateApi("Not yet ready")]
     public IDevTools DevTools => throw new NotImplementedException("This is a future feature, we're just reserving the object name");
+
 }

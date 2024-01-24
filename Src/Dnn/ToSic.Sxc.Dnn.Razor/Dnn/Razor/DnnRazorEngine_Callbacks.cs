@@ -55,7 +55,7 @@ partial class DnnRazorEngine
         (EntryRazorComponent as RazorComponent)?.CustomizeSearch(searchInfos, moduleInfo, beginDate);
 
         // also call old signature
-        if (!(EntryRazorComponent is SexyContentWebPage asWebPage)) return;
+        if (EntryRazorComponent is not SexyContentWebPage asWebPage) return;
         var oldSignature = searchInfos.ToDictionary(si => si.Key, si => si.Value.Cast<ISearchInfo>().ToList());
         asWebPage.CustomizeSearch(oldSignature, ((Module<ModuleInfo>)moduleInfo).GetContents(), beginDate);
         searchInfos.Clear();

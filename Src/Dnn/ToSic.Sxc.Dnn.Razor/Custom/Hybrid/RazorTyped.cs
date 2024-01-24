@@ -6,6 +6,7 @@ using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Razor;
+using ToSic.Sxc.Dnn.Razor.Internal;
 using ToSic.Sxc.Engines;
 using static System.StringComparer;
 
@@ -29,6 +30,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
 
     /// <inheritdoc cref="DnnRazorHelper.RenderPageNotSupported"/>
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public override HelperResult RenderPage(string path, params object[] data)
         => SysHlp.RenderPageNotSupported();
 
@@ -57,7 +59,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
                               .Where(pair => pair.Key is string)
                               .ToDictionary(pair => pair.Key.ToString(), pair => pair.Value, InvariantCultureIgnoreCase);
 
-        return new TypedCode16Helper(_CodeApiSvc, _CodeApiSvc.Data, myModelData, false, Path);
+        return new(_CodeApiSvc, _CodeApiSvc.Data, myModelData, false, Path);
     }
 
 
@@ -176,16 +178,6 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     #region CreateInstance
 
     [PrivateApi] string IGetCodePath.CreateInstancePath { get; set; }
-
-    #endregion
-
-    #region Roslyn WIP - SHOULD PROBABLY OPTIMIZE THIS
-
-    void ICanUseRoslynCompiler.AttachRazorEngine(DnnRazorEngine razorEngine) => _razorEngine ??= razorEngine;
-    private DnnRazorEngine _razorEngine;
-
-    HelperResult ICanUseRoslynCompiler.RoslynRenderPage(string virtualPath, object data) 
-        => _razorEngine?.RenderPage(NormalizePath(virtualPath), data);
 
     #endregion
 

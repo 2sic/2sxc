@@ -169,15 +169,15 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             // validations
             var message = $"relativePath:'{relativePath}' is not in format '/Portals/site-id-or-name/2sxc/app-folder-name/etc...'";
             if (string.IsNullOrEmpty(relativePath) || !relativePath.StartsWith("/Portals/"))
-                throw new Exception(message);
+                throw new(message);
 
             var startPos = relativePath.IndexOf("/2sxc/", 10); // start from 10 to skip '/' before 'site-id-or-name'
-            if (startPos < 0) throw new Exception(message);
+            if (startPos < 0) throw new(message);
 
             // find position of 5th slash in relativePath 
             var pos = startPos + 6; // skipping first 4 slashes
             pos = relativePath.IndexOf('/', pos + 1);
-            if (pos < 0) throw new Exception(message);
+            if (pos < 0) throw new(message);
 
             return relativePath.Substring(0, pos).Backslash();
         }

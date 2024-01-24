@@ -1,5 +1,4 @@
-﻿using Custom.Hybrid;
-using ToSic.Sxc.Dnn;
+﻿using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Razor;
 using IHasLog = ToSic.Lib.Logging.IHasLog;
 using ILog = ToSic.Lib.Logging.ILog;
@@ -22,16 +21,21 @@ public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHa
     /// For architecture of Composition over Inheritance.
     /// </summary>
     [PrivateApi]
-    internal DnnRazorHelper SysHlp => _sysHlp ??= new DnnRazorHelper().Init(this, RenderFunction);
+    internal DnnRazorHelper SysHlp => _sysHlp ??= new DnnRazorHelper().Init(this);
     private DnnRazorHelper _sysHlp;
 
-    private HelperResult RenderFunction(string path, object data)
+    /// <summary>
+    /// Internal access to the underlying RenderPage.
+    /// This is needed by the render helper to provide the default behavior
+    /// if we are not using Roslyn
+    /// </summary>
+    internal HelperResult BaseRenderPage(string path, object data = null)
     {
-        if (this is ICanUseRoslynCompiler supportAppCode)
-            return supportAppCode.RoslynRenderPage(path, data);
-        
-        // handle conversion from 'object' to 'params object[]'
-        return data == null ? base.RenderPage(path) : base.RenderPage(path, data);
+        var l = (this as IHasLog).Log.Fn<HelperResult>($"{nameof(path)}: '{path}', {nameof(data)}: {data != null}");
+        // TODO: VERIFY / handle conversion from 'object' to 'params object[]'
+        return data == null
+            ? l.Return(base.RenderPage(path), "default render, no data")
+            : l.Return(base.RenderPage(path, data), "default render with data");
     }
 
     /// <inheritdoc />

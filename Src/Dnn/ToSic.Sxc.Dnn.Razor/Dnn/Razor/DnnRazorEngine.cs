@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Web;
 using System.Web.Compilation;
+using ToSic.Eav.Data.PiggyBack;
 using ToSic.Lib.DI;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
@@ -80,7 +81,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     }
 
     [PrivateApi]
-    protected HttpContextBase HttpContextCurrent => 
+    private HttpContextBase HttpContextCurrent => 
         _httpContext.Get(() => HttpContext.Current == null ? null : new HttpContextWrapper(HttpContext.Current));
     private readonly GetOnce<HttpContextBase> _httpContext = new();
 
@@ -100,7 +101,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
 
         try
         {
-            page.ExecutePageHierarchy(new WebPageContext(HttpContextCurrent, page, data), writer, page);
+            page.ExecutePageHierarchy(new(HttpContextCurrent, page, data), writer, page);
         }
         catch (Exception maybeIEntityCast)
         {
@@ -182,7 +183,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
         if (objectValue == null)
             throw new InvalidOperationException($"The webpage found at '{templatePath}' was not created.");
 
-        if (!(objectValue is RazorComponentBase pageToInit))
+        if (objectValue is not RazorComponentBase pageToInit)
             throw new InvalidOperationException($"The webpage at '{templatePath}' must derive from RazorComponentBase.");
         //Webpage = pageToInit;
 
@@ -199,7 +200,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
         if (pageToInit is SexyContentWebPage oldPage) oldPage.InstancePurpose = (InstancePurposes)Purpose;
 #pragma warning restore 618, CS0612
 
-        if (pageToInit is ICanUseRoslynCompiler appCodePage) appCodePage.AttachRazorEngine(this);
+        //if (pageToInit is ICanUseRoslynCompiler appCodePage) appCodePage.AttachRazorEngine(this);
 
         InitHelpers(pageToInit);
         return l.ReturnAsOk(pageToInit);
@@ -210,7 +211,12 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
         var l = Log.Fn();
         // Only generate this for the first / top EntryRazorComponent
         // All children which are then generated here should re-use that CodeApiService
+        var createCodeApiService = _sharedCodeApiService == null;
         _sharedCodeApiService ??= _codeApiServiceFactory.BuildCodeRoot(webPage, Block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel9Old);
+
+        // If we just created a new CodeApiService, we must add this razor engine to it's piggyback
+        if (createCodeApiService)
+            _sharedCodeApiService.GetPiggyBack(nameof(DnnRazorEngine), () => this);
         webPage.ConnectToRoot(_sharedCodeApiService);
         l.Done();
     }
@@ -227,6 +233,6 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     {
         var page = InitWebpage(templatePath);
         var (resultString, exceptions) = RenderImplementation(page, new(){Data = data});
-        return new HelperResult(writer => writer.Write(resultString));
+        return new(writer => writer.Write(resultString));
     }
 }

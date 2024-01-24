@@ -20,6 +20,7 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
 {
     /// <inheritdoc cref="DnnRazorHelper.RenderPageNotSupported"/>
     [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public override HelperResult RenderPage(string path, params object[] data)
         => SysHlp.RenderPageNotSupported();
 

@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data;
+﻿using ToSic.Eav.Data.PiggyBack;
+using ToSic.Sxc.Data;
 using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
 namespace ToSic.Sxc.Code.Internal;
@@ -9,7 +10,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// </summary>
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public interface ICodeApiService : IDynamicCode12
+public interface ICodeApiService : IDynamicCode12, IHasPiggyBack
 {
     new IDynamicStack Resources { get; }
     new IDynamicStack Settings { get; }

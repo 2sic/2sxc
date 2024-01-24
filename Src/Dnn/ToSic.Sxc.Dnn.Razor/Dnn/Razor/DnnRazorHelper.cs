@@ -12,15 +12,13 @@ internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
 {
     #region Constructor / Init
 
-    public DnnRazorHelper Init(RazorComponentBase page, Func<string, object, HelperResult> renderPage)
+    public DnnRazorHelper Init(RazorComponentBase page)
     {
         Page = page;
-        _renderPage = renderPage;
         return this;
     }
 
     public RazorComponentBase Page { get; private set; }
-    private Func<string, object, HelperResult> _renderPage;
 
     #endregion
 
@@ -33,7 +31,7 @@ internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
         Page.Context = parentPage.Context;
 
         // Return if parent page is not a SexyContentWebPage
-        if (!(parentPage is RazorComponentBase typedParent)) return;
+        if (parentPage is not RazorComponentBase typedParent) return;
 
         ParentPage = typedParent;
 
@@ -41,7 +39,7 @@ internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
         // So don't call: ConnectToRoot(typedParent._DynCodeRoot);
         Page.ConnectToRoot(typedParent._CodeApiSvc);
 
-        Log.A("@RenderPage:" + virtualPath);
+        Log.A($"{nameof(virtualPath)} for Render etc.:{virtualPath}");
     }
 
     internal RazorComponentBase ParentPage { get; set; }
@@ -51,7 +49,7 @@ internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
     #region Html Helper
 
     internal IHtmlHelper Html => _html ??= _CodeApiSvc.GetService<HtmlHelper>().Init(Page, this,
-        ((ICodeApiServiceInternal)_CodeApiSvc)._Block?.Context.User.IsSystemAdmin ?? false, _renderPage);
+        ((ICodeApiServiceInternal)_CodeApiSvc)._Block?.Context.User.IsSystemAdmin ?? false);
     private IHtmlHelper _html;
 
     #endregion
@@ -75,7 +73,7 @@ internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
     protected override object GetCodeCshtml(string path)
     {
         // ReSharper disable once ConvertTypeCheckToNullCheck
-        if (!(Page is IHasDnn))
+        if (Page is not IHasDnn)
             throw new ExceptionWithHelp(new CodeHelp(name: "create-instance-cshtml-only-in-old-code",
                 detect: null,
                 uiMessage: "CreateInstance(*.cshtml) is not supported in Hybrid Razor. Use .cs files instead."));
