@@ -140,15 +140,15 @@ public abstract class SexyContentWebPage :
 
     [PrivateApi]
     public IEnumerable<dynamic> AsList(object list)
-        => throw new Exception("AsList is a newer feature in 2sxc. To use it, change your template type to " + nameof(Razor12) + " see https://go.2sxc.org/RazorComponent");
+        => throw new("AsList is a newer feature in 2sxc. To use it, change your template type to " + nameof(Razor12) + " see https://go.2sxc.org/RazorComponent");
 
     [PrivateApi]
     public dynamic Resources
-        => throw new Exception("Resources is a newer feature in 2sxc. To use it, change your template type to " + nameof(Razor12) + " see https://go.2sxc.org/RazorComponent");
+        => throw new("Resources is a newer feature in 2sxc. To use it, change your template type to " + nameof(Razor12) + " see https://go.2sxc.org/RazorComponent");
 
     [PrivateApi]
     public dynamic Settings
-        => throw new Exception("Settings is a newer feature in 2sxc. To use it, change your template type to " + nameof(Razor12) + " see https://go.2sxc.org/RazorComponent");
+        => throw new("Settings is a newer feature in 2sxc. To use it, change your template type to " + nameof(Razor12) + " see https://go.2sxc.org/RazorComponent");
 
     #endregion
 
@@ -204,9 +204,9 @@ public abstract class SexyContentWebPage :
     /// We are blocking this property on purpose, so that people will want to migrate to the new RazorComponent
     /// </summary>
     [PrivateApi]
-    public dynamic Header => throw new Exception("The header property is a new feature in 2sxc 10.20. " +
-                                                 "To use it, change your template type to inherit from " +
-                                                 nameof(RazorComponent) + " see https://go.2sxc.org/RazorComponent");
+    public dynamic Header => throw new("The header property is a new feature in 2sxc 10.20. " +
+                                       "To use it, change your template type to inherit from " +
+                                       nameof(RazorComponent) + " see https://go.2sxc.org/RazorComponent");
 
 #pragma warning disable 618
     [Obsolete("Use Header instead")]
@@ -223,8 +223,8 @@ public abstract class SexyContentWebPage :
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
     public dynamic AsDynamic(string json, string fallback = WrapperConstants.EmptyJson)
-        => throw new Exception("The AsDynamic(string) is a new feature in 2sxc 10.20. To use it, change your template type to inherit from " 
-                               + nameof(RazorComponent) + " see https://go.2sxc.org/RazorComponent");
+        => throw new("The AsDynamic(string) is a new feature in 2sxc 10.20. To use it, change your template type to inherit from " 
+                     + nameof(RazorComponent) + " see https://go.2sxc.org/RazorComponent");
 
     #endregion
 

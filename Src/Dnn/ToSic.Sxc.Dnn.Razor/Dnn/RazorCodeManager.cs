@@ -63,9 +63,9 @@ internal class RazorCodeManager(RazorComponentBase parent, ILog parentLog) : Hel
         try
         {
             var compiled = Parent.SysHlp.CreateInstance(codeFile);
-            if (compiled != null && !(compiled is RazorComponentCode))
+            if (compiled != null && compiled is not RazorComponentCode)
             {
-                throw new Exception(
+                throw new(
                     $"Tried to compile the .Code file, but the type is '{compiled.GetType().Name}'. " +
                     $"Expected that it inherits from '{nameof(RazorComponentCode)}'. " +
                     "Please add '@inherits ToSic.Sxc.Dnn.RazorComponentCode' to the beginning of the 'xxx.code.cshtml' file. ");
@@ -86,9 +86,9 @@ internal class RazorCodeManager(RazorComponentBase parent, ILog parentLog) : Hel
         switch (innerException)
         {
             case FileNotFoundException _:
-                return new Exception("Tried to compile matching .Code file - but couldn't find it. \n", innerException);
+                return new("Tried to compile matching .Code file - but couldn't find it. \n", innerException);
             case HttpCompileException _:
-                return new Exception("Error compiling .Code file. \n", innerException);
+                return new("Error compiling .Code file. \n", innerException);
             default:
                 return innerException;
         }
