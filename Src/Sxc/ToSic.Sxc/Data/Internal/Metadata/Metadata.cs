@@ -2,7 +2,8 @@
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Data.Internal.Dynamic;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Internal.Metadata;
+
 
 [PrivateApi("Hide implementation")]
 internal partial class Metadata: DynamicEntity, IMetadata, IHasPropLookup

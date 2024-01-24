@@ -2,6 +2,7 @@
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal.Stack;
 
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 

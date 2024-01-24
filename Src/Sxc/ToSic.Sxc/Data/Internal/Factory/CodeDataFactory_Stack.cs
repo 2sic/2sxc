@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Data.Internal.Stack;
 
 namespace ToSic.Sxc.Data.Internal;
 
