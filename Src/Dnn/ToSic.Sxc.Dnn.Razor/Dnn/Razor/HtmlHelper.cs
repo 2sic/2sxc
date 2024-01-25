@@ -106,7 +106,7 @@ internal class HtmlHelper(
             // Try to compile with Roslyn
             // Will exit if the child has an old base class which would expect PageData["..."] properties
             // Because that would be empty https://github.com/2sic/2sxc/issues/3260
-            var probablyHotBuild = DnnRazorEngine.RenderSubPage(_page, path, data);
+            var probablyHotBuild = DnnRazorCompiler.RenderSubPage(_page, path, data);
             if (probablyHotBuild.UsesHotBuild)
                 return l.Return(probablyHotBuild.Instance, "used HotBuild");
             l.A("Tried to use Roslyn, but detected old base class so will do fallback because of PageData");
