@@ -1,5 +1,4 @@
 ﻿using System.Web;
-using Custom.Hybrid;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
@@ -97,21 +96,14 @@ internal class HtmlHelper(
     /// <returns></returns>
     private HelperResult RenderWithRoslynOrClassic(string path, object data)
     {
-        var l = (this as IHasLog).Log.Fn<HelperResult>();
-        
-        // Classic setup without Roslyn, use the built-in RenderPage
-        if (_page is not ICanUseRoslynCompiler)
-            return l.Return(_page.BaseRenderPage(path, data), $"default render {(data == null ? "no" : "with")} data");
+        var useRoslyn = _page is ICanUseRoslynCompiler;
+        var l = (this as IHasLog).Log.Fn<HelperResult>($"{nameof(useRoslyn)}: {useRoslyn}");
 
-        // We can use Roslyn
-        l.A($"Use Roslyn / existing {nameof(DnnRazorEngine)}");
-
-        // Find the RazorEngine which MUST be on the CodeApiService PiggyBack, or throw an error
-        var razorEngine = _page._CodeApiSvc.PiggyBack.GetOrGenerate(nameof(DnnRazorEngine), () => (DnnRazorEngine)null)
-                          ?? throw l.Ex(new Exception($"Error finding {nameof(DnnRazorEngine)} on {nameof(_page._CodeApiSvc)}. This is very unexpected."));
-
-        // Let the RazorEngine render the page
-        return l.ReturnAsOk(razorEngine.RenderPage(_page.NormalizePath(path), data));
+        return useRoslyn 
+            // We can use Roslyn
+            ? l.ReturnAsOk(DnnRazorEngine.RenderSubPage(_page, path, data))
+            // Classic setup without Roslyn, use the built-in RenderPage
+            : l.Return(_page.BaseRenderPage(path, data), $"default render {(data == null ? "no" : "with")} data");
     }
 
 

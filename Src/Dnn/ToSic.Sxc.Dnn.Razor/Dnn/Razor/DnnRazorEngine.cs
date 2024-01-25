@@ -1,11 +1,11 @@
-﻿using Custom.Hybrid;
-using System.Configuration;
+﻿using System.Configuration;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Web;
 using System.Web.Compilation;
 using ToSic.Eav.Data.PiggyBack;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
@@ -32,19 +32,15 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     private readonly LazySvc<CodeErrorHelpService> _errorHelp;
     private readonly CodeApiServiceFactory _codeApiServiceFactory;
     private readonly LazySvc<SourceAnalyzer> _sourceAnalyzer;
-    private readonly LazySvc<ThisAppLoader> _thisAppCodeLoader;
     private readonly LazySvc<IRoslynBuildManager> _roslynBuildManager;
-    private readonly AssemblyResolver _assemblyResolver;
 
-    public DnnRazorEngine(MyServices helpers, CodeApiServiceFactory codeApiServiceFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<SourceAnalyzer> sourceAnalyzer, LazySvc<ThisAppLoader> thisAppCodeLoader, LazySvc<IRoslynBuildManager> roslynBuildManager, AssemblyResolver assemblyResolver) : base(helpers)
+    public DnnRazorEngine(MyServices helpers, CodeApiServiceFactory codeApiServiceFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<SourceAnalyzer> sourceAnalyzer, LazySvc<IRoslynBuildManager> roslynBuildManager) : base(helpers)
     {
         ConnectServices(
             _codeApiServiceFactory = codeApiServiceFactory,
             _errorHelp = errorHelp,
             _sourceAnalyzer = sourceAnalyzer,
-            _thisAppCodeLoader = thisAppCodeLoader,
-            _roslynBuildManager = roslynBuildManager,
-            _assemblyResolver = assemblyResolver
+            _roslynBuildManager = roslynBuildManager
         );
     }
 
@@ -86,7 +82,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     private readonly GetOnce<HttpContextBase> _httpContext = new();
 
     [PrivateApi]
-    private (TextWriter writer, List<Exception> exception) Render(RazorComponentBase page, TextWriter writer, object data)
+    private (TextWriter writer, List<Exception> exceptions) Render(RazorComponentBase page, TextWriter writer, object data)
     {
         var l = Log.Fn<(TextWriter writer, List<Exception> exception)>(message: "will render into TextWriter");
         try
@@ -115,14 +111,18 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
     }
 
     [PrivateApi]
-    protected override (string, List<Exception>) RenderEntryRazor(RenderSpecs specs) => RenderImplementation(EntryRazorComponent, specs);
-
-    private (string, List<Exception>) RenderImplementation(RazorComponentBase webpage, RenderSpecs specs)
+    protected override (string, List<Exception>) RenderEntryRazor(RenderSpecs specs)
     {
-        var l = Log.Fn<(string, List<Exception>)>();
+        var (writer, exceptions) = RenderImplementation(EntryRazorComponent, specs);
+        return (writer.ToString(), exceptions);
+    }
+
+    private (TextWriter writer, List<Exception> exceptions) RenderImplementation(RazorComponentBase webpage, RenderSpecs specs)
+    {
+        ILogCall<(TextWriter writer, List<Exception> exceptions)> l = Log.Fn<(TextWriter, List<Exception>)>();
         var writer = new StringWriter();
         var result = Render(webpage, writer, specs.Data);
-        return l.ReturnAsOk((result.writer.ToString(), result.exception));
+        return l.ReturnAsOk(result);
     }
 
     private object CreateWebPageInstance(string templatePath)
@@ -185,7 +185,6 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
 
         if (objectValue is not RazorComponentBase pageToInit)
             throw new InvalidOperationException($"The webpage at '{templatePath}' must derive from RazorComponentBase.");
-        //Webpage = pageToInit;
 
         pageToInit.Context = HttpContextCurrent;
         pageToInit.VirtualPath = templatePath;
@@ -199,8 +198,6 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
 #pragma warning disable 618, CS0612
         if (pageToInit is SexyContentWebPage oldPage) oldPage.InstancePurpose = (InstancePurposes)Purpose;
 #pragma warning restore 618, CS0612
-
-        //if (pageToInit is ICanUseRoslynCompiler appCodePage) appCodePage.AttachRazorEngine(this);
 
         InitHelpers(pageToInit);
         return l.ReturnAsOk(pageToInit);
@@ -223,16 +220,35 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
 
     private ICodeApiService _sharedCodeApiService;
 
+    #region Helpers for Rendering Sub-Components
+
+    internal static HelperResult RenderSubPage(RazorComponentBase page, string templatePath, object data)
+    {
+        var l = (page as IHasLog).Log.Fn<HelperResult>();
+        // Find the RazorEngine which MUST be on the CodeApiService PiggyBack, or throw an error
+        var razorEngine = page._CodeApiSvc.PiggyBack.GetOrGenerate(nameof(DnnRazorEngine), () => (DnnRazorEngine)null)
+                          ?? throw l.Ex(new Exception($"Error finding {nameof(DnnRazorEngine)}. This is very unexpected."));
+
+        // Figure out the real path, and make sure it's lower case
+        // so the ID in a cache remains the same no matter how it was called
+        var path = page.NormalizePath(templatePath).ToLowerInvariant();
+
+        var subPage = razorEngine.InitWebpage(path);
+        var (writer, exceptions) = razorEngine.RenderImplementation(subPage, new() { Data = data });
+
+        // Log any exceptions which may have occurred
+        if (exceptions.SafeAny())
+            exceptions.ForEach(e => l.Ex(e));
+
+        return l.ReturnAsOk(new(w => w.Write(writer)));
+    }
+
+
+    #endregion
+
     /// <summary>
     /// Special old mechanism to always request jQuery and Rvt
     /// </summary>
     public bool OldAutoLoadJQueryAndRvt => EntryRazorComponent._CodeApiSvc._Cdf.CompatibilityLevel <= CompatibilityLevels.MaxLevelForAutoJQuery;
 
-
-    internal HelperResult RenderPage(string templatePath, object data)
-    {
-        var page = InitWebpage(templatePath);
-        var (resultString, exceptions) = RenderImplementation(page, new(){Data = data});
-        return new(writer => writer.Write(resultString));
-    }
 }
