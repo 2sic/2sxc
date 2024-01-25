@@ -14,6 +14,7 @@ using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
+using ToSic.Sxc.Dnn.Razor.Internal;
 using ToSic.Sxc.Engines;
 
 namespace ToSic.Sxc.Dnn.Razor;
@@ -50,7 +51,7 @@ public partial class DnnRazorEngine(
         base.Init(block);
         try
         {
-            EntryRazorComponent = InitWebpage(TemplatePath);
+            EntryRazorComponent = InitWebpage(TemplatePath, false)?.Instance;
         }
         // Catch web.config Error on DNNs upgraded to 7
         catch (ConfigurationErrorsException exc)
@@ -113,19 +114,20 @@ public partial class DnnRazorEngine(
         return l.ReturnAsOk(result);
     }
 
-    private object CreateWebPageInstance(string templatePath)
+    private RazorBuildTempResult<object> CreateWebPageInstance(string templatePath)
     {
-        var l = Log.Fn<object>();
+        var l = Log.Fn<RazorBuildTempResult<object>>();
         object page = null;
         Type compiledType;
         // TODO: SHOULD OPTIMIZE so the file doesn't need to read multiple times
         var codeFileInfo = sourceAnalyzer.Value.TypeOfVirtualPath(templatePath);
+        var specWithEdition = new HotBuildSpec(App.AppId, Edition);
+        l.A($"prepare spec: {specWithEdition}");
+        var useHotBuild = codeFileInfo.IsHotBuildSupported();
         try
         {
-            var specWithEdition = new HotBuildSpec(App.AppId, Edition);
-            l.A($"prepare spec: {specWithEdition}");
 
-            compiledType = codeFileInfo.IsHotBuildSupported() 
+            compiledType = useHotBuild
                 ? roslynBuildManager.Value.GetCompiledType(codeFileInfo, specWithEdition)
                 : BuildManager.GetCompiledType(templatePath);
         }
@@ -149,8 +151,8 @@ public partial class DnnRazorEngine(
                 return l.ReturnNull("type not found");
 
             page = Activator.CreateInstance(compiledType);
-            var pageObjectValue = RuntimeHelpers.GetObjectValue(page);
-            return l.ReturnAsOk(pageObjectValue);
+            var pageObjectValue = RuntimeHelpers.GetObjectValue(page);  // seems to do unboxing, why???
+            return l.ReturnAsOk(new(pageObjectValue, useHotBuild));
         }
         catch (Exception createInstanceException)
         {
@@ -161,12 +163,17 @@ public partial class DnnRazorEngine(
         }
     }
 
-    private RazorComponentBase InitWebpage(string templatePath)
+    private RazorBuildTempResult<RazorComponentBase> InitWebpage(string templatePath, bool exitIfNoHotBuild)
     {
-        var l = Log.Fn<RazorComponentBase>();
+        var l = Log.Fn<RazorBuildTempResult<RazorComponentBase>>();
         if (string.IsNullOrEmpty(templatePath)) return l.ReturnNull("null path");
 
-        var objectValue = RuntimeHelpers.GetObjectValue(CreateWebPageInstance(templatePath));
+        // Try to build, but exit if we don't use HotBuild
+        var razorBuild = CreateWebPageInstance(templatePath);
+        if (exitIfNoHotBuild && !razorBuild.UsesHotBuild)
+            return l.Return(new(null, false));
+
+        var objectValue = RuntimeHelpers.GetObjectValue(razorBuild.Instance);
         // ReSharper disable once JoinNullCheckWithUsage
         if (objectValue == null)
             throw new InvalidOperationException($"The webpage found at '{templatePath}' was not created.");
@@ -188,7 +195,7 @@ public partial class DnnRazorEngine(
 #pragma warning restore 618, CS0612
 
         InitHelpers(pageToInit);
-        return l.ReturnAsOk(pageToInit);
+        return l.ReturnAsOk(new(pageToInit, razorBuild.UsesHotBuild));
     }
 
     private void InitHelpers(RazorComponentBase webPage)
@@ -210,25 +217,32 @@ public partial class DnnRazorEngine(
 
     #region Helpers for Rendering Sub-Components
 
-    internal static HelperResult RenderSubPage(RazorComponentBase page, string templatePath, object data)
+    internal static RazorBuildTempResult<HelperResult> RenderSubPage(RazorComponentBase parent, string templatePath, object data)
     {
-        var l = (page as IHasLog).Log.Fn<HelperResult>();
+        var l = (parent as IHasLog).Log.Fn<RazorBuildTempResult<HelperResult>>();
         // Find the RazorEngine which MUST be on the CodeApiService PiggyBack, or throw an error
-        var razorEngine = page._CodeApiSvc.PiggyBack.GetOrGenerate(nameof(DnnRazorEngine), () => (DnnRazorEngine)null)
+        var razorEngine = parent._CodeApiSvc.PiggyBack.GetOrGenerate(nameof(DnnRazorEngine), () => (DnnRazorEngine)null)
                           ?? throw l.Ex(new Exception($"Error finding {nameof(DnnRazorEngine)}. This is very unexpected."));
 
         // Figure out the real path, and make sure it's lower case
         // so the ID in a cache remains the same no matter how it was called
-        var path = page.NormalizePath(templatePath).ToLowerInvariant();
+        var path = parent.NormalizePath(templatePath).ToLowerInvariant();
 
-        var subPage = razorEngine.InitWebpage(path);
-        var (writer, exceptions) = razorEngine.RenderImplementation(subPage, new() { Data = data });
+        var subPage = razorEngine.InitWebpage(path, true);
+
+        // Exit if we don't use HotBuild, because then we must revert back to classic render
+        // Reason is that otherwise the PageData property - used on very old classes - would not be populated
+        // Doing this from our compiler is super-hard, because it would use a lot of internal Microsoft APIs
+        if (!subPage.UsesHotBuild)
+            return l.Return(new(null, false), "exit, not HotBuild");
+
+        var (writer, exceptions) = razorEngine.RenderImplementation(subPage.Instance, new() { Data = data });
 
         // Log any exceptions which may have occurred
         if (exceptions.SafeAny())
             exceptions.ForEach(e => l.Ex(e));
 
-        return l.ReturnAsOk(new(w => w.Write(writer)));
+        return l.ReturnAsOk(new(new(w => w.Write(writer)), true));
     }
 
 

@@ -99,11 +99,19 @@ internal class HtmlHelper(
         var useRoslyn = _page is ICanUseRoslynCompiler;
         var l = (this as IHasLog).Log.Fn<HelperResult>($"{nameof(useRoslyn)}: {useRoslyn}");
 
-        return useRoslyn 
-            // We can use Roslyn
-            ? l.ReturnAsOk(DnnRazorEngine.RenderSubPage(_page, path, data))
-            // Classic setup without Roslyn, use the built-in RenderPage
-            : l.Return(_page.BaseRenderPage(path, data), $"default render {(data == null ? "no" : "with")} data");
+        // We can use Roslyn
+        // Classic setup without Roslyn, use the built-in RenderPage
+        if (useRoslyn)
+        {
+            // Try to compile with Roslyn
+            // Will exit if the child has an old base class which would expect PageData["..."] properties
+            // Because that would be empty https://github.com/2sic/2sxc/issues/3260
+            var probablyHotBuild = DnnRazorEngine.RenderSubPage(_page, path, data);
+            if (probablyHotBuild.UsesHotBuild)
+                return l.Return(probablyHotBuild.Instance, "used HotBuild");
+            l.A("Tried to use Roslyn, but detected old base class so will do fallback because of PageData");
+        }
+        return l.Return(_page.BaseRenderPage(path, data), $"default render {(data == null ? "no" : "with")} data");
     }
 
 
