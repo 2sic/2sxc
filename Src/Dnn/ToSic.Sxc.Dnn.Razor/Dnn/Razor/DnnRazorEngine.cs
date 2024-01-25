@@ -25,28 +25,15 @@ namespace ToSic.Sxc.Dnn.Razor;
 [EngineDefinition(Name = "Razor")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 // ReSharper disable once UnusedMember.Global
-public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCompatibility
+public partial class DnnRazorEngine(
+    EngineBase.MyServices helpers,
+    CodeApiServiceFactory codeApiServiceFactory,
+    LazySvc<CodeErrorHelpService> errorHelp,
+    LazySvc<SourceAnalyzer> sourceAnalyzer,
+    LazySvc<IRoslynBuildManager> roslynBuildManager)
+    : EngineBase(helpers, connect: [codeApiServiceFactory, errorHelp, sourceAnalyzer, roslynBuildManager]),
+        IRazorEngine, IEngineDnnOldCompatibility
 {
-    #region Constructor / DI
-
-    private readonly LazySvc<CodeErrorHelpService> _errorHelp;
-    private readonly CodeApiServiceFactory _codeApiServiceFactory;
-    private readonly LazySvc<SourceAnalyzer> _sourceAnalyzer;
-    private readonly LazySvc<IRoslynBuildManager> _roslynBuildManager;
-
-    public DnnRazorEngine(MyServices helpers, CodeApiServiceFactory codeApiServiceFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<SourceAnalyzer> sourceAnalyzer, LazySvc<IRoslynBuildManager> roslynBuildManager) : base(helpers)
-    {
-        ConnectServices(
-            _codeApiServiceFactory = codeApiServiceFactory,
-            _errorHelp = errorHelp,
-            _sourceAnalyzer = sourceAnalyzer,
-            _roslynBuildManager = roslynBuildManager
-        );
-    }
-
-    #endregion
-
-
     [PrivateApi]
     private RazorComponentBase EntryRazorComponent
     {
@@ -97,11 +84,12 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
 
         try
         {
-            page.ExecutePageHierarchy(new(HttpContextCurrent, page, data), writer, page);
+            var webPageContext = new WebPageContext(HttpContextCurrent, page, data);
+            page.ExecutePageHierarchy(webPageContext, writer, page);
         }
         catch (Exception maybeIEntityCast)
         {
-            var ex = l.Ex(_errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast, page));
+            var ex = l.Ex(errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast, page));
             // Special form of throw to preserve details about the call stack
             ExceptionDispatchInfo.Capture(ex).Throw();
             throw; // fake throw, just so the code shows what happens
@@ -131,14 +119,14 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
         object page = null;
         Type compiledType;
         // TODO: SHOULD OPTIMIZE so the file doesn't need to read multiple times
-        var codeFileInfo = _sourceAnalyzer.Value.TypeOfVirtualPath(templatePath);
+        var codeFileInfo = sourceAnalyzer.Value.TypeOfVirtualPath(templatePath);
         try
         {
             var specWithEdition = new HotBuildSpec(App.AppId, Edition);
             l.A($"prepare spec: {specWithEdition}");
 
             compiledType = codeFileInfo.IsHotBuildSupported() 
-                ? _roslynBuildManager.Value.GetCompiledType(codeFileInfo, specWithEdition)
+                ? roslynBuildManager.Value.GetCompiledType(codeFileInfo, specWithEdition)
                 : BuildManager.GetCompiledType(templatePath);
         }
         catch (Exception compileEx)
@@ -149,7 +137,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
             // 3. ...
             
             l.A($"Razor Type: {codeFileInfo}");
-            var ex = l.Ex(_errorHelp.Value.AddHelpForCompileProblems(compileEx, codeFileInfo));
+            var ex = l.Ex(errorHelp.Value.AddHelpForCompileProblems(compileEx, codeFileInfo));
             // Special form of throw to preserve details about the call stack
             ExceptionDispatchInfo.Capture(ex).Throw();
             throw; // fake throw, just so the code shows what happens
@@ -166,7 +154,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
         }
         catch (Exception createInstanceException)
         {
-            var ex = l.Ex(_errorHelp.Value.AddHelpIfKnownError(createInstanceException, page));
+            var ex = l.Ex(errorHelp.Value.AddHelpIfKnownError(createInstanceException, page));
             // Special form of throw to preserve details about the call stack
             ExceptionDispatchInfo.Capture(ex).Throw();
             throw; // fake throw, just so the code shows what happens
@@ -209,7 +197,7 @@ public partial class DnnRazorEngine : EngineBase, IRazorEngine, IEngineDnnOldCom
         // Only generate this for the first / top EntryRazorComponent
         // All children which are then generated here should re-use that CodeApiService
         var createCodeApiService = _sharedCodeApiService == null;
-        _sharedCodeApiService ??= _codeApiServiceFactory.BuildCodeRoot(webPage, Block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel9Old);
+        _sharedCodeApiService ??= codeApiServiceFactory.BuildCodeRoot(webPage, Block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel9Old);
 
         // If we just created a new CodeApiService, we must add this razor engine to it's piggyback
         if (createCodeApiService)

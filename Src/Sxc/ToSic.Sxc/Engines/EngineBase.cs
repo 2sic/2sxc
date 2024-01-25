@@ -64,7 +64,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
     /// <summary>
     /// Empty constructor, so it can be used in dependency injection
     /// </summary>
-    protected EngineBase(MyServices services) : base(services, $"{SxcLogging.SxcLogName}.EngBas") { }
+    protected EngineBase(MyServices services, object[] connect = default) : base(services, $"{SxcLogging.SxcLogName}.EngBas", connect: connect) { }
 
     #endregion
 
