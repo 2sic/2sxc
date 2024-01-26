@@ -45,7 +45,7 @@ partial class SxcContextResolver
         var ctx = SetAppOrNull(nameOrPath);
         if (ctx != null) return ctx;
 
-        var identity = AppIdResolver.Value.GetAppIdFromRoute();
+        var identity = appIdResolverLazy.Value.GetAppIdFromRoute();
         if (identity != null)
             return SetApp(identity);
 
