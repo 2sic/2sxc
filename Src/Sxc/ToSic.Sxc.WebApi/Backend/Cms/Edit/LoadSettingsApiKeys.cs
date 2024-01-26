@@ -6,8 +6,9 @@ namespace ToSic.Sxc.Backend.Cms;
 internal class LoadSettingsApiKeys(LazySvc<ISecureDataService> secureDataService)
     : LoadSettingsProviderBase($"{SxcLogging.SxcLogName}.StApiK"), ILoadSettingsProvider
 {
-    public Dictionary<string, object> GetSettings(LoadSettingsProviderParameters parameters) => Log.Func(l =>
+    public Dictionary<string, object> GetSettings(LoadSettingsProviderParameters parameters) 
     {
+        var l = Log.Fn<Dictionary<string, object>>();
         var stack = parameters.ContextOfApp.AppSettings;
 
         var apiKeyNames = new List<string>
@@ -37,6 +38,6 @@ internal class LoadSettingsApiKeys(LazySvc<ISecureDataService> secureDataService
             .Where(v => v?.Value != null)
             .ToDictionary(k => k.Key, k => k.Value as object);
 
-        return result;
-    });
+        return l.Return(result);
+    }
 }

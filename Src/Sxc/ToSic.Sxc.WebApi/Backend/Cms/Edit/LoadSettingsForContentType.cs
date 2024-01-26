@@ -7,14 +7,13 @@ namespace ToSic.Sxc.Backend.Cms;
 internal class LoadSettingsForContentType()
     : LoadSettingsProviderBase($"{SxcLogging.SxcLogName}.LdStCT"), ILoadSettingsProvider
 {
-    public Dictionary<string, object> GetSettings(LoadSettingsProviderParameters parameters) => Log.Func(l =>
+    public Dictionary<string, object> GetSettings(LoadSettingsProviderParameters parameters)
     {
+        var l = Log.Fn<Dictionary<string, object>>();
         // find all keys which may be necessary
         var settingsKeys = parameters.ContentTypes
-            .SelectMany(ct => (ct.Metadata.DetailsOrNull?.AdditionalSettings ?? "")
-                .CsvToArrayWithoutEmpty()
-                //.Split(',')
-                //.Select(s => s.Trim())
+            .SelectMany(ct =>
+                (ct.Metadata.DetailsOrNull?.AdditionalSettings ?? "").CsvToArrayWithoutEmpty()
             )
             .Where(c => !IsNullOrWhiteSpace(c))
             // Only include settings which have the full path
@@ -25,6 +24,6 @@ internal class LoadSettingsForContentType()
         // Try to find each setting
         var settings = SettingsByKeys(parameters.ContextOfApp.AppSettings, settingsKeys);
 
-        return (settings, $"{settings.Count}");
-    });
+        return l.Return(settings, $"{settings.Count}");
+    }
 }
