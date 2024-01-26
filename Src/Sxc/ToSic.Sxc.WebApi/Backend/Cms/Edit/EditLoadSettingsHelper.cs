@@ -8,30 +8,13 @@ using static System.StringComparer;
 namespace ToSic.Sxc.Backend.Cms;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class EditLoadSettingsHelper: ServiceBase
+public class EditLoadSettingsHelper(
+    LazySvc<JsonSerializer> jsonSerializerGenerator,
+    IEnumerable<ILoadSettingsProvider> loadSettingsProviders,
+    GenWorkPlus<WorkEntities> appEntities)
+    : ServiceBase(SxcLogging.SxcLogName + ".LodSet",
+        connect: [jsonSerializerGenerator, loadSettingsProviders, appEntities])
 {
-    private readonly GenWorkPlus<WorkEntities> _appEntities;
-
-    #region Constructor / DI
-
-    private readonly IEnumerable<ILoadSettingsProvider> _loadSettingsProviders;
-    private readonly LazySvc<JsonSerializer> _jsonSerializerGenerator;
-
-    public EditLoadSettingsHelper(
-        LazySvc<JsonSerializer> jsonSerializerGenerator,
-        IEnumerable<ILoadSettingsProvider> loadSettingsProviders,
-        GenWorkPlus<WorkEntities> appEntities
-    ) : base(SxcLogging.SxcLogName + ".LodSet")
-    {
-        ConnectServices(
-            _jsonSerializerGenerator = jsonSerializerGenerator,
-            _loadSettingsProviders = loadSettingsProviders,
-            _appEntities = appEntities
-        );
-    }
-
-    #endregion
-
     /// <summary>
     /// WIP v15.
     /// Later it should be built using a list of services that provide settings to the UI.
@@ -54,7 +37,7 @@ public class EditLoadSettingsHelper: ServiceBase
             InputTypes = allInputTypes
         };
 
-        var settingsFromProviders = _loadSettingsProviders.Select(lsp =>
+        var settingsFromProviders = loadSettingsProviders.Select(lsp =>
             {
                 try
                 {
@@ -91,11 +74,11 @@ public class EditLoadSettingsHelper: ServiceBase
             if (!hasWysiwyg)
                 return l.Return(new List<JsonEntity>(), "no wysiwyg field");
 
-            var entities = _appEntities.New(appWorkCtx)
+            var entities = appEntities.New(appWorkCtx)
                 .GetWithParentAppsExperimental("StringWysiwygConfiguration")
                 .ToList();
 
-            var jsonSerializer = _jsonSerializerGenerator.Value.SetApp(appWorkCtx.AppState);
+            var jsonSerializer = jsonSerializerGenerator.Value.SetApp(appWorkCtx.AppState);
             var result = entities.Select(e => jsonSerializer.ToJson(e)).ToList();
 
             return l.Return(result, $"{result.Count}");

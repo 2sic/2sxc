@@ -70,7 +70,7 @@ partial class EditLoadBackend
 
         l.A("Found these input types to load: " + string.Join(", ", fields));
 
-        var allInputType = _inputTypes.New(appCtx).GetInputTypes();
+        var allInputType = inputTypes.New(appCtx).GetInputTypes();
 
         var found = allInputType
             .Where(it => fields.Contains(it.Type))
@@ -100,7 +100,7 @@ partial class EditLoadBackend
     {
         var l = Log.Fn<IEntity>();
         var type = appSysCtx.AppState.GetContentType(header.ContentTypeName);
-        var ent = _entityBuilder.EmptyOfType(appId, header.Guid, header.EntityId, type);
+        var ent = entityBuilder.EmptyOfType(appId, header.Guid, header.EntityId, type);
         return l.Return(ent);
     }
 }
