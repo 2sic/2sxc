@@ -20,7 +20,7 @@ internal class LoadSettingsApiKeys(LazySvc<ISecureDataService> secureDataService
         var result = apiKeyNames.Select(key =>
             {
                 var prop = stack.InternalGetPath(key, Log);
-                if (!(prop.Result is string strResult))
+                if (prop.Result is not string strResult)
                     return null;
 
                 var decrypted = secureDataService.Value.Parse(strResult);

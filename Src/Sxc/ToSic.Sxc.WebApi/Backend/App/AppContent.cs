@@ -170,7 +170,7 @@ public class AppContent : ServiceBase
         if (objectOrNull == null) 
             return wrapLog.ReturnFalse($"'{ParentRelationship}' value is null");
 
-        if (!(objectOrNull is JsonObject parentRelationship))
+        if (objectOrNull is not JsonObject parentRelationship)
             return wrapLog.ReturnNull($"'{ParentRelationship}' value is not JsonObject");
 
         var parentGuid = (Guid?)parentRelationship[ParentRelParent];
@@ -201,7 +201,7 @@ public class AppContent : ServiceBase
         if (objectOrNull == null) 
             return (null, $"'{Attributes.JsonKeyMetadataFor}' value is null");
 
-        if (!(objectOrNull is JsonObject metadataFor))
+        if (objectOrNull is not JsonObject metadataFor)
             return (null, $"'{Attributes.JsonKeyMetadataFor}' value is not JsonObject");
 
         var metaData = new Target(GetTargetType(metadataFor[Attributes.TargetNiceName]?.AsValue()), null,
