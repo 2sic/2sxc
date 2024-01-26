@@ -46,12 +46,12 @@ public class AppsBackend: ServiceBase
         AppMetadataDto lightspeed = null;
         var lightSpeedDeco = LightSpeedDecorator.GetFromAppStatePiggyBack(state.StateCache, Log);
         if (lightSpeedDeco.Entity != null)
-            lightspeed = new AppMetadataDto { Id = lightSpeedDeco.Id, Title = lightSpeedDeco.Title, IsEnabled = lightSpeedDeco.IsEnabled };
+            lightspeed = new () { Id = lightSpeedDeco.Id, Title = lightSpeedDeco.Title, IsEnabled = lightSpeedDeco.IsEnabled };
 
         var paths = _appPathsGen.New().Init(_context.Site, state);
         var thumbnail = AppAssetThumbnail.GetUrl(state, paths, _globalPaths);
 
-        return new AppDto
+        return new ()
         {
             Id = state.AppId,
             IsApp = state.NameId != Eav.Constants.DefaultAppGuid &&

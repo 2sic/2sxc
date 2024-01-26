@@ -140,8 +140,8 @@ public class ViewsExportImport : ServiceBase
 
             // 1.1 Verify these are view-entities
             if (!bundles.All(v => v.Entity.Type.Is(Settings.TemplateContentType)))
-                throw new Exception("At least one of the uploaded items is not a view configuration. " +
-                                    "Expected all to be " + Settings.TemplateContentType);
+                throw new("At least one of the uploaded items is not a view configuration. " +
+                          "Expected all to be " + Settings.TemplateContentType);
 
             // 2. Import the views
             // todo: construction of this should go into init
@@ -154,12 +154,12 @@ public class ViewsExportImport : ServiceBase
             foreach (var asset in assets) assetMan.Create(GetRealPath(appPaths, asset), asset);
 
             // 3. possibly show messages / issues
-            return callLog.ReturnAsOk(new ImportResultDto(true));
+            return callLog.ReturnAsOk(new(true));
         }
         catch (Exception ex)
         {
             _envLogger.LogException(ex);
-            return callLog.Return(new ImportResultDto(false, ex.Message, Message.MessageTypes.Error), "error");
+            return callLog.Return(new(false, ex.Message, Message.MessageTypes.Error), "error");
         }
     }
 

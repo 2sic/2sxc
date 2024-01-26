@@ -90,8 +90,7 @@ public class ContentBlockBackend : BlockWebApiBackendBase
         var resources = new List<AjaxResourceDtoWIP>();
         var ver = EavSystemInfo.VersionWithStartUpBuild;
         if (result.Features.Contains(SxcPageFeatures.TurnOn))
-            resources.Add(new AjaxResourceDtoWIP
-                { Url = UrlHelpers.QuickAddUrlParameter(root.SuffixSlash() + SxcPageFeatures.TurnOn.UrlWip, "v", ver) });
+            resources.Add(new() { Url = UrlHelpers.QuickAddUrlParameter(root.SuffixSlash() + SxcPageFeatures.TurnOn.UrlWip, "v", ver) });
 
         l.A("2.2. Add JS & CSS which were stripped before");
         resources.AddRange(result.Assets.Select(asset => new AjaxResourceDtoWIP
@@ -108,7 +107,7 @@ public class ContentBlockBackend : BlockWebApiBackendBase
         var mergedFeatures  = string.Join("\n", result.FeaturesFromSettings.Select(mc => mc.Html));
 
         l.A("4.1. Process optimizers");
-        var renderResult = _optimizer.Value.Process(mergedFeatures, new ClientAssetsExtractSettings(extractAll: true));
+        var renderResult = _optimizer.Value.Process(mergedFeatures, new(extractAll: true));
         var rest = renderResult.Html;
         if (!string.IsNullOrWhiteSpace(rest)) 
             l.A("Warning: Rest after extraction should be empty - not handled ATM");
@@ -121,7 +120,7 @@ public class ContentBlockBackend : BlockWebApiBackendBase
             Attributes = asset.HtmlAttributes,
         }));
 
-        return l.ReturnAsOk(new AjaxRenderDto
+        return l.ReturnAsOk(new()
         {
             Html = result.Html,
             Resources = resources

@@ -76,13 +76,13 @@ public class ViewControllerReal : ServiceBase, IViewController
         var wrapLog = Log.Fn<ImportResultDto>();
             
         if (!uploadInfo.HasFiles())
-            return wrapLog.Return(new ImportResultDto(false, "no file uploaded", Message.MessageTypes.Error), "no file uploaded");
+            return wrapLog.Return(new(false, "no file uploaded", Message.MessageTypes.Error), "no file uploaded");
 
         var streams = new List<FileUploadDto>();
         for (var i = 0; i < uploadInfo.Count; i++)
         {
             var (fileName, stream) = uploadInfo.GetStream(i);
-            streams.Add(new FileUploadDto {Name = fileName, Stream = stream});
+            streams.Add(new() {Name = fileName, Stream = stream});
         }
         var result = _viewExportImport.Value.ImportView(zoneId, appId, streams, _context.Value.Site.DefaultCultureCode);
 

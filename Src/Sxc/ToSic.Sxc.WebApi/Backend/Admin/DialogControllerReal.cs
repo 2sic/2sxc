@@ -43,7 +43,7 @@ public class DialogControllerReal: ServiceBase, IDialogController
 
         var cb = _uiContextBuilder.InitApp(appContext?.AppState);
 
-        return new DialogContextStandaloneDto
+        return new()
         {
             Context = cb.Get(Ctx.General, CtxEnable.All),
         };

@@ -58,14 +58,14 @@ public partial class EditLoadPrefetchHelper: ServiceBase
                 .ToArray();
 
             // stop here if nothing found, otherwise the backend will return all entities
-            if (!entities.Any()) return l.Return(new List<EntityForPickerDto>(), "none found");
+            if (!entities.Any()) return l.Return(new(), "none found");
 
             var items = _entityPickerBackend.GetForEntityPicker(appId, entities, null, allowFromAllScopes: true);
             return l.Return(items, $"{items.Count}");
         }
         catch
         {
-            return l.Return(new List<EntityForPickerDto>
+            return l.Return(new ()
             {
                 new() {Id = -1, Text = "Error occurred pre-fetching entities", Value = Guid.Empty}
             }, "error");

@@ -19,12 +19,12 @@ public class AdamControllerReal<TIdentifier>(
         {
             // Check if the request contains multipart/form-data.
             if (!uploadInfo.IsMultipart())
-                return new AdamItemDto("doesn't look like a file-upload");
+                return new("doesn't look like a file-upload");
 
             if (!uploadInfo.HasFiles())
             {
                 Log.A("Error, no files");
-                return new AdamItemDto("No file was uploaded.");
+                return new("No file was uploaded.");
             }
 
             var (fileName, stream) = uploadInfo.GetStream();
@@ -34,11 +34,11 @@ public class AdamControllerReal<TIdentifier>(
         catch (HttpExceptionAbstraction he)
         {
             // Our abstraction places an extra message in the value, not sure if this is right, but that's how it is. 
-            return new AdamItemDto(he.Message + "\n" + he.Value);
+            return new(he.Message + "\n" + he.Value);
         }
         catch (Exception e)
         {
-            return new AdamItemDto(e.Message + "\n" + e.Message);
+            return new(e.Message + "\n" + e.Message);
         }
     }
 

@@ -41,13 +41,13 @@ public class AppStackBackend: ServiceBase
         // Ensure we have the correct stack name
         var partName = SystemStackHelpers.GetStackNameOrNull(part);
         if (partName == null)
-            throw new Exception($"Parameter '{nameof(part)}' must be {RootNameSettings} or {RootNameResources}");
+            throw new($"Parameter '{nameof(part)}' must be {RootNameSettings} or {RootNameResources}");
         var viewMixin = GetViewSettingsForMixin(viewGuid, languages, appState, partName);
         var results = GetStackDump(appState, partName, languages, viewMixin);
 
         results = SystemStackHelpers.ApplyKeysFilter(results, key);
         if (!results.Any())
-            return new List<AppStackDataRaw>();
+            return new();
 
         var final = SystemStackHelpers.ReducePropertiesToRelevantOnes(results);
 
@@ -65,7 +65,7 @@ public class AppStackBackend: ServiceBase
         var settings = _dataStackService.Init(appState).GetStack(partName, viewSettingsMixin);
 
         // Dump results
-        var results = settings._Dump(new PropReqSpecs(null, languages, Log), null);
+        var results = settings._Dump(new(null, languages, Log), null);
         return results;
     }
 
@@ -76,7 +76,7 @@ public class AppStackBackend: ServiceBase
         if (viewGuid != null)
         {
             var viewEnt = appState.List.One(viewGuid.Value);
-            if (viewEnt == null) throw new Exception($"Tried to get view but not found. Guid was {viewGuid}");
+            if (viewEnt == null) throw new($"Tried to get view but not found. Guid was {viewGuid}");
             var view = new View(viewEnt, languages, Log, _qDefBuilder);
 
             viewStackPart = realName == RootNameSettings ? view.Settings : view.Resources;

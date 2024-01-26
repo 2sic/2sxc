@@ -52,7 +52,7 @@ public class ExportContent : ServiceBase
         var entities = _workEntities.New(appCtx).All();
         var templates = _workViews.New(appCtx).GetAll();
 
-        return new ExportPartsOverviewDto
+        return new()
         {
             ContentTypes = contentTypes.Select(c => new ExportPartsContentTypesDto
             {

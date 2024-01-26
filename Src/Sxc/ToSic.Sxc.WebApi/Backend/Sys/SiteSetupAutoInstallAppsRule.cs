@@ -20,8 +20,9 @@ internal class SiteSetupAutoInstallAppsRule(IEntity entity) : EntityBasedType(en
 
     public string Url => GetThis("");
 
-    public AppInstallRuleDto GetRuleDto() => new()
-    {
+    public AppInstallRuleDto GetRuleDto() =>
+        new()
+        {
         name = Title,
         appGuid = AppGuid,
         mode = Mode,

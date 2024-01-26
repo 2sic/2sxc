@@ -70,7 +70,7 @@ public class AppPartsControllerReal : ServiceBase, IAppPartsController
         var wrapLog = Log.Fn<ImportResultDto>();
 
         if (!uploadInfo.HasFiles()) 
-            return wrapLog.Return(new ImportResultDto(false, "no file uploaded"), "no file uploaded");
+            return wrapLog.Return(new(false, "no file uploaded"), "no file uploaded");
 
         var (fileName, stream) = uploadInfo.GetStream(0);
 

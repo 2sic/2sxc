@@ -147,7 +147,7 @@ public class ImportContent: ServiceBase
 
             // are there any entities from bundles for import?
             if (!isEnabled || packages.All(p => p.Value.Bundles?.Any(b => b.Entities.SafeAny()) != true))
-                return (new ImportResultDto(true), "ok (types only)");
+                return (new(true), "ok (types only)");
 
             // 2. Create Entities
 
@@ -192,7 +192,7 @@ public class ImportContent: ServiceBase
             }
 
             // 3. possibly show messages / issues
-            return (new ImportResultDto(true), "ok (with entities)");
+            return (new(true), "ok (with entities)");
         }
         catch (Exception ex)
         {

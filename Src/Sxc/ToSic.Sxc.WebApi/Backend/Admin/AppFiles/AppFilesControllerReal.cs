@@ -25,7 +25,7 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
         _user = user;
         ConnectServices(
             _assetEditorGenerator = assetEditorGenerator,
-            _assetTemplates = new AssetTemplates(),
+            _assetTemplates = new(),
             _appStates = appStates,
             _appPaths = appPaths
         );
@@ -133,7 +133,7 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
                 defId = AssetTemplates.Token.Key;
         }
 
-        return new TemplatesDto
+        return new()
         {
             Default = defId,
             Templates = templateInfos

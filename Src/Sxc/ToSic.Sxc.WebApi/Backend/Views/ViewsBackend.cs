@@ -59,9 +59,9 @@ public class ViewsBackend: ServiceBase
             HasQuery = view.QueryRaw != null,
             Used = view.Entity.Parents().Count,
             IsShared = view.IsShared,
-            EditInfo = new EditInfoDto(view.Entity),
+            EditInfo = new(view.Entity),
             Metadata = ser?.CreateListOfSubEntities(view.Metadata, SubEntitySerialization.AllTrue()),
-            Permissions = new HasPermissionsDto {Count = view.Entity.Metadata.Permissions.Count()},
+            Permissions = new() {Count = view.Entity.Metadata.Permissions.Count()},
         }).ToList();
         return l.Return(views, $"{views.Count}");
     }
@@ -77,7 +77,7 @@ public class ViewsBackend: ServiceBase
     private static ViewContentTypeDto TypeSpecs(IEnumerable<IContentType> allCTs, string staticName, IEntity maybeEntity)
     {
         var found = allCTs.FirstOrDefault(ct => ct.NameId == staticName);
-        return new ViewContentTypeDto
+        return new()
         {
             StaticName = staticName, Id = found?.Id ?? 0, Name = found == null ? "no content type" : found.Name,
             DemoId = maybeEntity?.EntityId ?? 0,

@@ -89,7 +89,7 @@ public class ResetApp: ServiceBase
         if (!File.Exists(filePath))
         {
             result.Success = false;
-            result.Messages.Add(new Message($"Can't find the {Eav.Constants.AppDataFile} in the folder", Message.MessageTypes.Error));
+            result.Messages.Add(new($"Can't find the {Eav.Constants.AppDataFile} in the folder", Message.MessageTypes.Error));
             return result;
         }
 

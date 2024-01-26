@@ -26,7 +26,9 @@ public class EditLoadSettingsHelper(
     {
         var l = Log.Fn<EditSettingsDto>();
         var allInputTypes = jsonTypes
-            .SelectMany(ct => ct.Attributes.Select(at => at.InputType))
+            .SelectMany(ct => ct.Attributes
+                .Select(at => at.InputType)
+            )
             .Distinct()
             .ToList();
 
@@ -47,7 +49,7 @@ public class EditLoadSettingsHelper(
                 {
                     l.E($"Error on {lsp.GetType().Name}");
                     l.Ex(e);
-                    return new Dictionary<string, object>();
+                    return [];
                 }
             })
             .ToList();
@@ -72,7 +74,7 @@ public class EditLoadSettingsHelper(
         {
             var hasWysiwyg = allInputTypes.Any(it => it.ContainsInsensitive("wysiwyg"));
             if (!hasWysiwyg)
-                return l.Return(new List<JsonEntity>(), "no wysiwyg field");
+                return l.Return(new(), "no wysiwyg field");
 
             var entities = appEntities.New(appWorkCtx)
                 .GetWithParentAppsExperimental("StringWysiwygConfiguration")
@@ -86,7 +88,7 @@ public class EditLoadSettingsHelper(
         catch (Exception ex)
         {
             l.Ex(ex);
-            return l.Return(new List<JsonEntity>(), "error");
+            return l.Return(new(), "error");
         }
     }
         

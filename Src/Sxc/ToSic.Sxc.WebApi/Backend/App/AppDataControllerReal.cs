@@ -40,7 +40,7 @@ public class AppDataControllerReal: ServiceBase, IAppDataController
                 entityApi => entityApi.GetOrThrow(contentType, guid), appPath);
 
 #pragma warning disable S112 // General exceptions should never be thrown
-        throw new Exception("id neither int/guid, can't process");
+        throw new("id neither int/guid, can't process");
 #pragma warning restore S112 // General exceptions should never be thrown
     }
 
@@ -87,7 +87,7 @@ public class AppDataControllerReal: ServiceBase, IAppDataController
         }
 
 #pragma warning disable S112 // General exceptions should never be thrown
-        throw new Exception("id neither int/guid, can't process");
+        throw new("id neither int/guid, can't process");
 #pragma warning restore S112 // General exceptions should never be thrown
     }
 

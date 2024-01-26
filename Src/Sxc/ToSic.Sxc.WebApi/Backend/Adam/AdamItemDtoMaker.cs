@@ -75,7 +75,7 @@ public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TF
             {
                 Id = m.EntityId,
                 Guid = m.EntityGuid,
-                Type = new JsonType(m)
+                Type = new(m)
             })
             .ToArray();
         return result.Any() ? result : null;
