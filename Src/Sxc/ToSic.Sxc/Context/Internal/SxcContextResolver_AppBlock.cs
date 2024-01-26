@@ -1,24 +1,39 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
+using ToSic.Sxc.Configuration.Internal;
 
 namespace ToSic.Sxc.Context.Internal;
 
 partial class SxcContextResolver
 {
-
     public IContextOfApp GetBlockOrSetApp(int appId)
     {
         // get the current block context
-        var ctx = BlockContextOrNull();
+        var moduleCtx = BlockContextOrNull();
+
+        // If there is no block context, then just use a "blank" app context
+        // This way security checks can only verify the App but not any module permissions
+        if (moduleCtx == null)
+            return SetApp(new AppIdentity(Site().Site.ZoneId, appId));;
 
         // if there is a block context, make sure it's of the requested app (or no app was specified)
         // then return that
         // note: an edge case is that a block context exists, but no app was selected - then AppState is null
-        if (ctx != null && (appId == 0 || appId == ctx.AppState?.AppId)) return ctx;
 
-        // if block was found but we're working on another app (like through app-admin)
-        // then ignore block permissions / context and only return app
-        return SetApp(new AppIdentity(Site().Site.ZoneId, appId));
+
+        // If the app in the request matches the app in the context, everything is fine
+        if (appId == moduleCtx.AppState?.AppId) return moduleCtx;
+        
+        // If the app in the request doesn't match the app in the context
+        // Set the app in the context to the real one to be sure about security check
+        // We still want to preserve the ModuleContext, so security checks can
+        // still verify module permissions.
+        // Only do this if the feature is enabled, as we are opening security when we do this
+        if (!featuresService.Value.IsEnabled(SxcFeatures.PermissionPrioritizeModuleContext.NameId))
+            return SetApp(new AppIdentity(Site().Site.ZoneId, appId));
+
+        moduleCtx.ResetApp(new AppIdentity(Site().Site.ZoneId, appId));
+        return moduleCtx;
     }
 
 

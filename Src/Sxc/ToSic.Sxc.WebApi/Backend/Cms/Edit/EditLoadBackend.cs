@@ -80,7 +80,7 @@ public partial class EditLoadBackend: ServiceBase
         var l = Log.Fn<EditDto>($"load many a#{appId}, items⋮{items.Count}");
         // Security check
         var context = _ctxResolver.GetBlockOrSetApp(appId);
-        //var showDrafts = context.UserMayEdit;
+        
 
         // do early permission check - but at this time it may be that we don't have the types yet
         // because they may be group/id combinations, without type information which we'll look up afterwards
@@ -90,7 +90,11 @@ public partial class EditLoadBackend: ServiceBase
             .ConvertListIndexToId(items);
         TryToAutoFindMetadataSingleton(items, context.AppState);
 
-        // now look up the types, and repeat security check with type-names
+        // Special Edge Case
+        // If the user is Module-Admin then we can skip the remaining checks
+        // This is important because the main context may not contain the module
+
+        // Look up the types, and repeat security check with type-names
         var permCheck = _typesPermissions.New().Init(context, context.AppState, items);
         if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
             throw HttpException.PermissionDenied(error);

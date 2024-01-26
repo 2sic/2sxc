@@ -1,10 +1,12 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Web.Internal.PageService;
-using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Context.Internal;
 
+/// <summary>
+/// TODO: SHOULD actually be called ContextOfModule!
+/// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface IContextOfBlock: IContextOfApp
 {

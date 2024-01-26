@@ -2,25 +2,21 @@
 using ToSic.Eav.Context.Internal;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Context.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal partial class SxcContextResolver: ContextResolver, ISxcContextResolver
+internal partial class SxcContextResolver(
+    LazySvc<AppIdResolver> appIdResolverLazy,
+    Generator<IContextOfSite> contextOfSite,
+    Generator<IContextOfApp> contextOfApp,
+    Lazy<IFeaturesService> featuresService)
+    : ContextResolver(contextOfSite, contextOfApp, "Sxc.CtxRes", connect: [appIdResolverLazy]), ISxcContextResolver
 {
     #region Constructor / DI
         
-    protected readonly LazySvc<AppIdResolver> AppIdResolver;
-
-    public SxcContextResolver(
-        LazySvc<AppIdResolver> appIdResolverLazy,
-        Generator<IContextOfSite> contextOfSite,
-        Generator<IContextOfApp> contextOfApp) : base(contextOfSite, contextOfApp, "Sxc.CtxRes")
-    {
-        ConnectServices(
-            AppIdResolver = appIdResolverLazy
-        );
-    }
+    protected readonly LazySvc<AppIdResolver> AppIdResolver = appIdResolverLazy;
 
     #endregion
 
