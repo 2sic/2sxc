@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.ImportExport.Json;
-using ToSic.Eav.Plumbing;
-using ToSic.Eav.Serialization.Internal;
+﻿using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Backend.Cms;
@@ -9,14 +7,13 @@ namespace ToSic.Sxc.Backend.Cms;
 /// Load additional content-type definitions which are used by pickers.
 /// This is so the UI can determine the best names for the create-new buttons.
 /// </summary>
-/// <param name="jsonSerializerGenerator"></param>
-internal class LoadSettingsForPickerSources(Generator<JsonSerializer> jsonSerializerGenerator) : LoadSettingsProviderBase($"{SxcLogging.SxcLogName}.LdPikS"), ILoadSettingsProvider
+internal class LoadSettingsForPickerSources() : LoadSettingsProviderBase($"{SxcLogging.SxcLogName}.LdPikS"), ILoadSettingsContentTypesProvider
 {
     public static string[] PickerNames = ["entity-picker", "string-picker"];
-
-    public Dictionary<string, object> GetSettings(LoadSettingsProviderParameters parameters)
+    
+    public List<IContentType> GetContentTypes(LoadSettingsProviderParameters parameters)
     {
-        var l = Log.Fn<Dictionary<string, object>>();
+        var l = Log.Fn<List<IContentType>>();
 
         // Find all attributes which show a picker
         var pickerAttributes = parameters.ContentTypes
@@ -52,7 +49,7 @@ internal class LoadSettingsForPickerSources(Generator<JsonSerializer> jsonSerial
             .Where(s => s.HasValue())
             // TODO: INFO @SDV - he probably has comma separated values
             .SelectMany(s => s
-                    // TODO!!! NEW-LINES seem to be saved wrong!
+                // TODO!!! NEW-LINES seem to be saved wrong!
                 .Replace("\\n", "\n")
                 .LinesToArrayWithoutEmpty())
             .ToList();
@@ -71,30 +68,7 @@ internal class LoadSettingsForPickerSources(Generator<JsonSerializer> jsonSerial
 
         if (typesToEnableCreate.Count == 0) return l.Return([], "no types to enable create");
 
-        try
-        {
-            // Setup Type Serializer - same as EditLoadBackend
-            var serializerForTypes = jsonSerializerGenerator.New().SetApp(parameters.ContextOfApp.AppState);
-            var serSettings = new JsonSerializationSettings
-            {
-                CtIncludeInherited = true,
-                CtAttributeIncludeInheritedMetadata = true,
-                CtWithEntities = false,
-            };
-
-
-            var nameMap = typesToEnableCreate.ToDictionary(
-                t => t.NameId,
-                t => serializerForTypes.ToPackage(t.Type, serSettings)
-            );
-
-            return l.Return(new() { ["PickerCreateTypes"] = nameMap }, $"all ok, found {nameMap.Count}");
-        }
-        catch (Exception e)
-        {
-            l.Ex(e);
-            return l.Return([], "error serializing; skip");
-        }
-
+        var typesOnly = typesToEnableCreate.Select(t => t.Type).ToList();
+        return l.Return(typesOnly, $"{typesOnly.Count}");
     }
 }

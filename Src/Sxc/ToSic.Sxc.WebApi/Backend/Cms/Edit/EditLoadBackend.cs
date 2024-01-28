@@ -125,6 +125,8 @@ public partial class EditLoadBackend(
 
         #endregion
 
+        #region Input Types on ContentTypes and general definitions
+
         // Fix not-supported input-type names; map to correct name
         result.ContentTypes
             .ForEach(jt => jt.Attributes
@@ -132,6 +134,8 @@ public partial class EditLoadBackend(
 
         // load input-field configurations
         result.InputTypes = GetNecessaryInputTypes(result.ContentTypes, appWorkCtx);
+
+        #endregion
 
         // also include UI features
         result.Features = uiData.Features(permCheck);

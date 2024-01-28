@@ -2,7 +2,6 @@
 using ToSic.Eav.Internal.Features;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services.Internal;
-using static System.StringComparer;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Backend.Cms;
@@ -25,11 +24,9 @@ internal class LoadSettingsForGpsDefaults(
                 : MapsCoordinates.Defaults;
         }
 
-        var result = new Dictionary<string, object>(InvariantCultureIgnoreCase)
+        var result = new Dictionary<string, object>
         {
-            {
-                $"{googleMapsSettings.SettingsIdentifier}.{nameof(GoogleMapsSettings.DefaultCoordinates)}", coordinates
-            }
+            [$"{googleMapsSettings.SettingsIdentifier}.{nameof(GoogleMapsSettings.DefaultCoordinates)}"] = coordinates,
         };
         return l.Return(result, $"{result.Count}");
     }
