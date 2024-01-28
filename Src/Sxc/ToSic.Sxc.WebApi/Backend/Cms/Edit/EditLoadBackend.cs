@@ -99,7 +99,8 @@ public partial class EditLoadBackend(
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out error))
                 throw l.Ex(HttpException.PermissionDenied(error));
 
-        // load content-types
+        #region Load content-types and additional data (eg. formulas)
+
         var serializerForTypes = jsonSerializerGenerator.New().SetApp(appState);
         serializerForTypes.ValueConvertHyperlinks = true;
         var usedTypes = UsedTypes(list, appWorkCtx);
@@ -108,16 +109,21 @@ public partial class EditLoadBackend(
             CtIncludeInherited = true,
             CtAttributeIncludeInheritedMetadata = true
         };
+
         var jsonTypes = usedTypes
             .Select(t => serializerForTypes.ToPackage(t, serSettings))
             .ToList();
+
         result.ContentTypes = jsonTypes
             .Select(t => t.ContentType)
             .ToList();
+
         // Also add global Entities like Formulas which would not be included otherwise
         result.ContentTypeItems = jsonTypes
             .SelectMany(t => t.Entities)
             .ToList();
+
+        #endregion
 
         // Fix not-supported input-type names; map to correct name
         result.ContentTypes

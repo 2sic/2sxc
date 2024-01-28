@@ -20,7 +20,7 @@ internal class LoadSettingsForGpsDefaults(
         if (features.Value.IsEnabled(BuiltInFeatures.EditUiGpsCustomDefaults.NameId))
         {
             var getMaps = parameters.ContextOfApp.AppSettings.InternalGetPath(googleMapsSettings.SettingsIdentifier);
-            coordinates = getMaps.GetFirstResultEntity() is IEntity mapsEntity
+            coordinates = getMaps.GetFirstResultEntity() is { } mapsEntity
                 ? googleMapsSettings.Init(mapsEntity).DefaultCoordinates
                 : MapsCoordinates.Defaults;
         }
