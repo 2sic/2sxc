@@ -119,14 +119,24 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         return tag;
     }
 
+    #region Toolbar
+
     /// <inheritdoc />
+    // note: it's a method but ATM always returns the cached toolbar
+    // still implemented as a method, so we could add future parameters if necessary
+    // It's also marked as internal, because it's not yet final and may change
     public IToolbarBuilder Toolbar() => _toolbar.Get(() =>
     {
-        if (Params.Toolbar is false) return null;
-        if (Params.Toolbar is IToolbarBuilder customToolbar) return customToolbar;
+        var l = Log.Fn<IToolbarBuilder>();
+        switch (Params.Toolbar)
+        {
+            case false: return l.ReturnNull("false");
+            case IToolbarBuilder customToolbar: return l.Return(customToolbar, "already set");
+        }
 
         // If we're creating an image for a string value, it won't have a field or parent.
-        if (Params.Field?.Parent == null || Params.HasMetadataOrNull == null) return null;
+        if (Params.Field?.Parent == null || Params.HasMetadataOrNull == null)
+            return l.ReturnNull("no field or no metadata");
 
         // Determine if this is an "own" adam file, because only field-owned files should allow config
         var isInSameEntity = Security.PathIsInItemAdam(Params.Field.Parent.Guid, "", Src);
@@ -142,18 +152,31 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         imgTlb = imgTlb?.Metadata(Params.HasMetadataOrNull,
             tweak: btn =>
             {
+                // add label
                 btn = btn.Tooltip($"{ToolbarConstants.ToolbarLabelPrefix}MetadataImage");
+
+                // Try to add note
+                var note = (Params.Settings as ResizeSettings)?.ToHtmlInfo();
+                if (note.HasValue())
+                    btn = btn.Note(note, format: "html", background: "#DFC2F2", delay: 1000);
+
+                // if image is from elsewhere, show warning
                 return isInSameEntity ? btn : btn.FormParameters(ShowWarningGlobalFile, true);
             });
 
-        return imgTlb;
+        return l.ReturnAsOk(imgTlb);
     });
 
     private readonly GetOnce<IToolbarBuilder> _toolbar = new();
 
+    #endregion
+
+
+    /// <inheritdoc />
     public string Description => _description.Get(() => Params.Field?.ImageDecoratorOrNull?.Description);
     private readonly GetOnce<string> _description = new();
 
+    /// <inheritdoc />
     public string DescriptionExtended => _descriptionDet.Get(() => Params.Field?.ImageDecoratorOrNull?.DescriptionExtended);
     private readonly GetOnce<string> _descriptionDet = new();
 
@@ -179,11 +202,14 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         var hasOnImgClass = codePart.HasValue();
         var hasOnAttrs = TryGetAttribute(ThisResize.Recipe?.Attributes, key, out var attrValue);
 
-        // Must use null if neither are useful
-        if (!hasOnAttrs && !hasOnImgClass) return l.Return(null, "null/nothing");
-        if (hasOnImgClass && hasOnAttrs) return l.Return($"{codePart} {attrValue}", "both");
-        if (hasOnImgClass) return l.Return(codePart, "code only");
-        return l.Return(attrValue, "attr only");
+        return hasOnImgClass switch
+        {
+            // Must use null if neither are useful
+            false when !hasOnAttrs => l.ReturnNull("null/nothing"),
+            true when hasOnAttrs => l.Return($"{codePart} {attrValue}", "both"),
+            true => l.Return(codePart, "code only"),
+            _ => l.Return(attrValue, "attr only")
+        };
     }
 
     [PrivateApi]

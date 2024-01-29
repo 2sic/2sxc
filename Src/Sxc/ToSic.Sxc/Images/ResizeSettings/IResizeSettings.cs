@@ -13,6 +13,9 @@ namespace ToSic.Sxc.Images;
 [PublicApi("Still WIP")]
 public interface IResizeSettings
 {
+    [PrivateApi("new v17, not public yet")]
+    string BasedOn { get; }
+
     /// <summary>
     /// Width to resize to.
     /// If 0, width will not be changed

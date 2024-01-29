@@ -39,22 +39,24 @@ internal partial class ImageService: ServiceForDynamicCode, IImageService
     /// </summary>
     /// <param name="settings"></param>
     /// <returns></returns>
-    private object GetBestSettings(object settings) => Log.Func(() =>
+    private object GetBestSettings(object settings)
     {
-        if (settings == null || settings is bool boolSettings && boolSettings)
-            return ((object)GetCodeRootSettingsByName("Content"), "null/default");
+        var l = Debug ? Log.Fn<object>() : null;
 
-        if (settings is string strName && !string.IsNullOrWhiteSpace(strName))
-            return ((object)GetCodeRootSettingsByName(strName), $"name: {strName}");
+        return settings switch
+        {
+            null or true => l.Return(GetCodeRootSettingsByName("Content"), "null/default"),
+            string strName when strName.HasValue() => l.Return(GetCodeRootSettingsByName(strName), $"name: {strName}"),
+            _ => l.Return(settings, "unchanged")
+        };
+    }
 
-        return (settings, "unchanged");
-    }, enabled: Debug);
-
-    private dynamic GetCodeRootSettingsByName(string strName) => Log.Func($"{strName}", () =>
+    private object GetCodeRootSettingsByName(string strName)
     {
+        var l = Debug ? Log.Fn<object>($"{strName}; code root: {_CodeApiSvc != null}") : null;
         var result = _CodeApiSvc?.Settings?.Get($"Settings.Images.{strName}");
-        return ((object)result, $"found: {result != null}");
-    }, enabled: Debug, message: $"code root: {_CodeApiSvc != null}");
+        return l.Return((object)result, $"found: {result != null}");
+    }
 
     /// <summary>
     /// Convert to Multi-Resize Settings
@@ -79,7 +81,7 @@ internal partial class ImageService: ServiceForDynamicCode, IImageService
         object toolbar = default,
         object recipe = null)
         => new ResponsiveImage(this,
-            new(nameof(Img), link, noParamOrder,
+            new(link, noParamOrder,
                 Settings(settings, factor: factor, width: width, recipe: recipe),
                 imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass, imgAttributes: CreateAttribDic(imgAttributes), toolbar: toolbar),
             Log);
@@ -101,7 +103,7 @@ internal partial class ImageService: ServiceForDynamicCode, IImageService
         object toolbar = default,
         object recipe = default)
         => new ResponsivePicture(this,
-            new(nameof(Picture), link, noParamOrder,
+            new(link, noParamOrder,
                 Settings(settings, factor: factor, width: width, recipe: recipe),
                 imgAlt: imgAlt, imgAltFallback: imgAltFallback,
                 imgClass: imgClass, imgAttributes: CreateAttribDic(imgAttributes), pictureClass: pictureClass, pictureAttributes: CreateAttribDic(pictureAttributes), toolbar: toolbar),
