@@ -125,6 +125,7 @@ public static class StartupWebApi
         services.AddTransient<ILoadSettingsProvider, LoadSettingsForGpsDefaults>();
         services.AddTransient<ILoadSettingsProvider, LoadSettingsForContentType>();
         services.AddTransient<ILoadSettingsProvider, LoadSettingsApiKeys>();
+        services.AddTransient<ILoadSettingsContentTypesProvider, LoadSettingsForPickerSources>();
         return services;
     }
 

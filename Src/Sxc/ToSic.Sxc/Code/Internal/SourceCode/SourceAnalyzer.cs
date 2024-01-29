@@ -8,31 +8,22 @@ using ToSic.Sxc.Code.Internal.HotBuild;
 namespace ToSic.Sxc.Code.Internal.SourceCode;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class SourceAnalyzer : ServiceBase
+public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc", connect: [serverPaths])
 {
-    private readonly IServerPaths _serverPaths;
-
-    public SourceAnalyzer(IServerPaths serverPaths) : base("Sxc.RzrSrc")
-    {
-        ConnectServices(
-            _serverPaths = serverPaths
-        );
-    }
-
     public CodeFileInfo TypeOfVirtualPath(string virtualPath)
     {
         var l = Log.Fn<CodeFileInfo>($"{nameof(virtualPath)}: '{virtualPath}'");
         string fullPath = default, sourceCode = default;
         try
         {
-            (_, fullPath, sourceCode) = GetFileContentsOfVirtualPath(virtualPath);
-            return sourceCode == null
-                ? l.ReturnAndLog(CodeFileInfo.CodeFileNotFound)
-                : l.ReturnAndLog(AnalyzeContent(virtualPath, fullPath, sourceCode));
+          (_, fullPath, sourceCode) = GetFileContentsOfVirtualPath(virtualPath);
+          return sourceCode == null
+              ? l.ReturnAndLog(CodeFileInfo.CodeFileNotFound)
+              : l.ReturnAndLog(AnalyzeContent(virtualPath, fullPath, sourceCode));
         }
         catch
         {
-            return l.ReturnAndLog(new(CodeFileInfo.TemplateUnknown, sourceCode: sourceCode, relativePath: virtualPath, fullPath: fullPath), "error trying to find type");
+          return l.ReturnAndLog(new(CodeFileInfo.TemplateUnknown, sourceCode: sourceCode, relativePath: virtualPath, fullPath: fullPath), "error trying to find type");
         }
     }
 
@@ -43,9 +34,9 @@ public class SourceAnalyzer : ServiceBase
         if (relativePath.IsEmptyOrWs())
             return l.Return((relativePath, null, null), "no relativePath");
 
-        var fullPath = _serverPaths.FullContentPath(relativePath);
-        if (fullPath == null || fullPath.IsEmptyOrWs())
-            return l.Return((relativePath, fullPath, null), "no relativePath");
+    var fullPath = serverPaths.FullContentPath(relativePath);
+    if (fullPath == null || fullPath.IsEmptyOrWs())
+      return l.Return((relativePath, fullPath, null), "no relativePath");
 
         if (!File.Exists(fullPath))
             return l.Return((relativePath, fullPath, null), "file not found");
@@ -127,7 +118,7 @@ public class SourceAnalyzer : ServiceBase
                 $"namespace '{ns}' can't be found");
 
         // Helper to build the CodeFileInfo based on a template and all the specs provided originally
-        CodeFileInfo BuildCfi(CodeFileInfo original, bool useThisApp) 
+        CodeFileInfo BuildCfi(CodeFileInfo original, bool useThisApp)
             => new(original, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath, useThisApp: useThisApp);
     }
 
@@ -155,28 +146,27 @@ public class SourceAnalyzer : ServiceBase
 
     private static bool IsThisAppUsedInCs(string sourceCode)
     {
-        // TODO: stv, update code because this code is not robust enough
-        // it does not correctly handle all edge cases
-
-        // Pattern to match 'using ThisApp;' or ': ThisApp' not in single-line or multi-line comments
+        // Pattern to match 'using ThisApp;' or ': ThisApp' allowing for additional namespace segments
+        // not in single-line or multi-line comments
         const string pattern = @"
-            # Ignore leading whitespaces
-            (?<=^\s*)
+        # Ignore leading whitespaces
+        (?<=^\s*)
 
-            # Match either 'using ThisApp;' or ': ThisApp'
-            (using\s+ThisApp\s*;|:\s*ThisApp\s*(?={|,|\s))
+        # Match either 'using ThisApp;' or ': ThisApp' with optional additional namespace segments
+        (using\s+ThisApp(?:\.\w+)*\s*;|:\s*ThisApp(?:\.\w+)*\s*(?={|,|\s))
 
-            # Ensure that it's not part of a single-line comment
-            (?<!//.*(?:using\s+ThisApp\s*;|:\s*ThisApp\s*(?={|,|\s)))
+        # Ensure that it's not part of a single-line comment
+        (?<!//.*(?:using\s+ThisApp(?:\.\w+)*\s*;|:\s*ThisApp(?:\.\w+)*\s*(?={|,|\s)))
 
-            # Ensure that it's not part of a multi-line comment
-            (?<!/\*[\s\S]*?(?:using\s+ThisApp\s*;|:\s*ThisApp\s*(?={|,|\s)))";
+        # Ensure that it's not part of a multi-line comment
+        (?<!/\*[\s\S]*?(?:using\s+ThisApp(?:\.\w+)*\s*;|:\s*ThisApp(?:\.\w+)*\s*(?={|,|\s)))";
 
         var options = RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace;
         var thisAppMatch = Regex.Match(sourceCode, pattern, options);
 
         return thisAppMatch.Success;
     }
+
 
 
     /// <summary>
@@ -199,8 +189,8 @@ public class SourceAnalyzer : ServiceBase
         if (sourceCode.IsEmptyOrWs() || className.IsEmptyOrWs()) return null;
         var pattern = $@"class\s+{className}\s*:\s*([^\s{{,]+)";
         var match = Regex.Match(sourceCode, pattern, RegexOptions.IgnoreCase);
-        return match.Success && match.Groups.Count > 1 
-            ? match.Groups[1].Value 
+        return match.Success && match.Groups.Count > 1
+            ? match.Groups[1].Value
             : null;
     }
 }

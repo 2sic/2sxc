@@ -59,7 +59,7 @@ public class ContentGroupControllerReal: ServiceBase, IContentGroupController
 
         var header = cg.Header.FirstOrDefault();
 
-        return new EntityInListDto
+        return new()
         {
             Index = 0,
             Id = header?.EntityId ?? 0,

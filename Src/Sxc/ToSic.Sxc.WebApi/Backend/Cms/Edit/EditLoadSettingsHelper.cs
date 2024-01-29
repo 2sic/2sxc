@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.ImportExport.Json;
+﻿using System.Collections;
+using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Serialization.Internal;
@@ -8,30 +9,14 @@ using static System.StringComparer;
 namespace ToSic.Sxc.Backend.Cms;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class EditLoadSettingsHelper: ServiceBase
+public class EditLoadSettingsHelper(
+    Generator<JsonSerializer> jsonSerializerGenerator,
+    IEnumerable<ILoadSettingsProvider> loadSettingsProviders,
+    IEnumerable<ILoadSettingsContentTypesProvider> loadSettingsTypesProviders,
+    GenWorkPlus<WorkEntities> appEntities)
+    : ServiceBase(SxcLogging.SxcLogName + ".LodSet",
+        connect: [jsonSerializerGenerator, loadSettingsProviders, appEntities])
 {
-    private readonly GenWorkPlus<WorkEntities> _appEntities;
-
-    #region Constructor / DI
-
-    private readonly IEnumerable<ILoadSettingsProvider> _loadSettingsProviders;
-    private readonly LazySvc<JsonSerializer> _jsonSerializerGenerator;
-
-    public EditLoadSettingsHelper(
-        LazySvc<JsonSerializer> jsonSerializerGenerator,
-        IEnumerable<ILoadSettingsProvider> loadSettingsProviders,
-        GenWorkPlus<WorkEntities> appEntities
-    ) : base(SxcLogging.SxcLogName + ".LodSet")
-    {
-        ConnectServices(
-            _jsonSerializerGenerator = jsonSerializerGenerator,
-            _loadSettingsProviders = loadSettingsProviders,
-            _appEntities = appEntities
-        );
-    }
-
-    #endregion
-
     /// <summary>
     /// WIP v15.
     /// Later it should be built using a list of services that provide settings to the UI.
@@ -43,7 +28,9 @@ public class EditLoadSettingsHelper: ServiceBase
     {
         var l = Log.Fn<EditSettingsDto>();
         var allInputTypes = jsonTypes
-            .SelectMany(ct => ct.Attributes.Select(at => at.InputType))
+            .SelectMany(ct => ct.Attributes
+                .Select(at => at.InputType)
+            )
             .Distinct()
             .ToList();
 
@@ -54,48 +41,94 @@ public class EditLoadSettingsHelper: ServiceBase
             InputTypes = allInputTypes
         };
 
-        var settingsFromProviders = _loadSettingsProviders.Select(lsp =>
-            {
-                try
-                {
-                    return lsp.LinkLog(Log).GetSettings(lspParameters);
-                }
-                catch (Exception e)
-                {
-                    l.E($"Error on {lsp.GetType().Name}");
-                    l.Ex(e);
-                    return new Dictionary<string, object>();
-                }
-            })
-            .ToList();
-
-        var finalSettings = new Dictionary<string, object>(InvariantCultureIgnoreCase);
-        foreach (var pair in settingsFromProviders.SelectMany(sfp => sfp))
-            finalSettings[pair.Key] = pair.Value;
-
         var settings = new EditSettingsDto
         {
-            Values = finalSettings,
-            Entities = SettingsEntities(appWorkCtx, allInputTypes),
+            Values = GetOrEmptyOnError(() => GetValues(lspParameters), () => nameof(GetValues)),
+            Entities = GetSettingsEntities(appWorkCtx, allInputTypes),
+            ContentTypes = GetOrEmptyOnError(() => GetContentTypes(lspParameters), () => nameof(GetContentTypes))
         };
         return l.Return(settings);
     }
-        
 
-    private List<JsonEntity> SettingsEntities(IAppWorkCtxPlus appWorkCtx, List<string> allInputTypes)
+    private TList GetOrEmptyOnError<TList>(Func<TList> getList, Func<string> errMessage) where TList : class, IEnumerable, new()
+    {
+        var l = Log.Fn<TList>();
+        try
+        {
+            return l.ReturnAsOk(getList());
+        }
+        catch (Exception e)
+        {
+            l.E($"Error: {errMessage()}");
+            l.Ex(e);
+            return l.ReturnAsError(new());
+        }
+    }
+
+    private Dictionary<string, object> GetValues(LoadSettingsProviderParameters lspParameters)
+    {
+        var l = Log.Fn<Dictionary<string, object>>();
+
+        // Get all settings from all providers
+        var settingsFromProviders = loadSettingsProviders
+            .Select(lsp => GetOrEmptyOnError(
+                () => lsp.LinkLog(Log).GetSettings(lspParameters),
+                () => $"Error on {lsp.GetType().Name}")
+            )
+            .ToList();
+
+        // Merge all settings into one dictionary
+        var finalSettings = new Dictionary<string, object>(InvariantCultureIgnoreCase);
+        foreach (var pair in settingsFromProviders.SelectMany(sfp => sfp))
+            finalSettings[pair.Key] = pair.Value;
+        return l.Return(finalSettings, $"{finalSettings.Count}");
+    }
+
+    public List<JsonContentType> GetContentTypes(LoadSettingsProviderParameters parameters)
+    {
+        var l = Log.Fn<List<JsonContentType>>();
+
+        // Load all types from the providers
+        var typesFromProviders = loadSettingsTypesProviders
+            .SelectMany(lsp => GetOrEmptyOnError(
+                () => lsp.LinkLog(Log).GetContentTypes(parameters),
+                () => $"Error GetContentTypes of {lsp.GetType().Name}")
+            )
+            .ToList();
+
+        // Setup Type Serializer - same as EditLoadBackend
+        var serializerForTypes = jsonSerializerGenerator.New().SetApp(parameters.ContextOfApp.AppState);
+        var serSettings = new JsonSerializationSettings
+        {
+            CtIncludeInherited = true,
+            CtAttributeIncludeInheritedMetadata = true,
+            CtWithEntities = false,
+        };
+
+
+        var nameMap = typesFromProviders
+            .Select(t => serializerForTypes.ToPackage(t, serSettings).ContentType)
+            .ToList();
+
+        return l.Return(nameMap, $"all ok, found {nameMap.Count}");
+    }
+
+
+
+    private List<JsonEntity> GetSettingsEntities(IAppWorkCtxPlus appWorkCtx, IEnumerable<string> allInputTypes)
     {
         var l = Log.Fn<List<JsonEntity>>();
         try
         {
             var hasWysiwyg = allInputTypes.Any(it => it.ContainsInsensitive("wysiwyg"));
             if (!hasWysiwyg)
-                return l.Return(new List<JsonEntity>(), "no wysiwyg field");
+                return l.Return([], "no wysiwyg field");
 
-            var entities = _appEntities.New(appWorkCtx)
+            var entities = appEntities.New(appWorkCtx)
                 .GetWithParentAppsExperimental("StringWysiwygConfiguration")
                 .ToList();
 
-            var jsonSerializer = _jsonSerializerGenerator.Value.SetApp(appWorkCtx.AppState);
+            var jsonSerializer = jsonSerializerGenerator.New().SetApp(appWorkCtx.AppState);
             var result = entities.Select(e => jsonSerializer.ToJson(e)).ToList();
 
             return l.Return(result, $"{result.Count}");
@@ -103,7 +136,7 @@ public class EditLoadSettingsHelper: ServiceBase
         catch (Exception ex)
         {
             l.Ex(ex);
-            return l.Return(new List<JsonEntity>(), "error");
+            return l.Return([], "error");
         }
     }
         

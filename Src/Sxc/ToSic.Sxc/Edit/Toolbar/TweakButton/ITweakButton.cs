@@ -22,11 +22,13 @@ public interface ITweakButton
     /// <param name="type">Optional type, like `info` (default), `warning`, `help`</param>
     /// <param name="background">Background color.</param>
     /// <param name="delay">Delay show by this duration in ms. If mouse leaves before, it won't appear (new v17).</param>
-    /// <param name="linger">Linger by this duration in ms after the mouse leaves (new v17).</param>
+    /// <param name="linger">Linger by this duration in ms after the mouse leaves - new v17.</param>
+    /// <param name="format">`html` or `text` (default) - new v17</param>
     /// <returns></returns>
     /// <remarks>
     /// * Added in v15.07
     /// * `delay` and `linger` added in v17
+    /// * `format` added in v17
     /// </remarks>
     ITweakButton Note(
         string note = default,
@@ -34,7 +36,8 @@ public interface ITweakButton
         string type = default,
         string background = default,
         int delay = default,
-        int linger = default
+        int linger = default,
+        string format = default
     );
 
     /// <summary>

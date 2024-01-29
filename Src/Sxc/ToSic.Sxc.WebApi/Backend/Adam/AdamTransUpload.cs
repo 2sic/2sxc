@@ -75,7 +75,7 @@ public partial class AdamTransUpload<TFolderId, TFileId>: AdamTransactionBase<Ad
         var fileSize = stream.Length;
         Log.A($"file size: {fileSize} (max size is {maxSize})");
         if (fileSize > maxSize)
-            throw new Exception($"file too large, {fileSize} is more than {maxSize}");
+            throw new($"file too large, {fileSize} is more than {maxSize}");
 
         // remove forbidden / troubling file name characters
         fileName = fileName

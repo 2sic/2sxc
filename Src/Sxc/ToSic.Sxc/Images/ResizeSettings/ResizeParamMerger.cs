@@ -35,63 +35,62 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
         object aspectRatio = null,
         string parameters = null,
         AdvancedSettings advanced = default
-    ) => Log.Func(l =>
+    )
     {
-        //Eav.Parameters.Protect(noParamOrder, $"{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
-
-        // check common mistakes
+        var l = (Debug ? Log : null).Fn<ResizeSettings>();
+        // Common mistake: both height and aspect ratio provided
         if (aspectRatio != null && height != null)
         {
-            (l as ILogCall<ResizeSettings>)?.ReturnNull("error");
+            l.ReturnNull("error");
             const string messageOnlyOneOrNone = "only one or none of these should be provided, other can be zero";
             throw new ArgumentOutOfRangeException($"{nameof(aspectRatio)},{nameof(height)}", messageOnlyOneOrNone);
         }
 
         // Helper for resize parameters
-        var resP = new ResizeParams(Log);
+        var paramHelper = new ResizeParams(Log);
 
+        // If we already got resize settings, then clone/merge
         if (settings is IResizeSettings typeSettings)
-            return (new(
+            return l.Return(new(
                 typeSettings,
-                format: resP.FormatOrNull(format),
-                width: resP.WidthOrNull(width),
-                height: resP.HeightOrNull(height),
-                aspectRatio: resP.AspectRatioOrNull(aspectRatio),
-                factor: resP.FactorOrNull(factor),
-                quality: resP.QualityOrNull(quality),
-                resizeMode: resP.ResizeModeOrNull(resizeMode),
-                scaleMode: resP.ScaleModeOrNull(scaleMode),
-                parameters: resP.ParametersOrNull(parameters),
+                format: paramHelper.FormatOrNull(format),
+                width: paramHelper.WidthOrNull(width),
+                height: paramHelper.HeightOrNull(height),
+                aspectRatio: paramHelper.AspectRatioOrNull(aspectRatio),
+                factor: paramHelper.FactorOrNull(factor),
+                quality: paramHelper.QualityOrNull(quality),
+                resizeMode: paramHelper.ResizeModeOrNull(resizeMode),
+                scaleMode: paramHelper.ScaleModeOrNull(scaleMode),
+                parameters: paramHelper.ParametersOrNull(parameters),
                 advanced: advanced
             ), $"Is {nameof(ResizeSettings)}, will clone/init");
 
         // Check if the settings is the expected type or null/other type
         var getSettings = settings as ICanGetByName;
-        l.A(Debug, $"Has Settings:{getSettings != null}");
+        l.A($"Has Settings:{getSettings != null}");
 
-        var formatValue = resP.FormatOrNull(format);
+        var formatValue = paramHelper.FormatOrNull(format);
 
-        var resizeParams = BuildCoreSettings(resP, width, height, factor, aspectRatio, formatValue, getSettings);
+        var resizeParams = BuildCoreSettings(paramHelper, width, height, factor, aspectRatio, formatValue, getSettings);
 
-        // Add parameters if known
-        resizeParams.Parameters = resP.ParametersOrNull(parameters);
+        // Add more URL parameters if known
+        resizeParams.Parameters = paramHelper.ParametersOrNull(parameters);
 
-        // Aspects which aren't affected by scale
-        var qParamInt2 = resP.QualityOrNull(quality);
+        // Aspects which aren't affected by aspect ratio
+        var qParamInt2 = paramHelper.QualityOrNull(quality);
         resizeParams.Quality = qParamInt2 ?? IntOrZeroAsNull(getSettings?.Get(QualityField)) ?? IntIgnore;
         resizeParams.ResizeMode =
-            resP.ResizeModeOrNull(KeepBestString(resizeMode, getSettings?.Get(ResizeModeField)));
-        resizeParams.ScaleMode = resP.ScaleModeOrNull(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
+            paramHelper.ResizeModeOrNull(KeepBestString(resizeMode, getSettings?.Get(ResizeModeField)));
+        resizeParams.ScaleMode = paramHelper.ScaleModeOrNull(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
 
         resizeParams.Advanced = GetMultiResizeSettings(advanced, getSettings);
 
-        return (resizeParams, "");
-    }, enabled: Debug);
+        return l.Return(resizeParams, "");
+    }
 
     private AdvancedSettings GetMultiResizeSettings(AdvancedSettings advanced, ICanGetByName getSettings)
     {
         if (advanced != null) return advanced;
-        AdvancedSettings ParseAdvancedSettingsJson(object value) => AdvancedSettings.FromJson(value, Log);
         try
         {
             // Check if we have a property-lookup (usually an entity) and if yes, use the piggy-back
@@ -109,14 +108,13 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
         }
 
         return null;
+
+        AdvancedSettings ParseAdvancedSettingsJson(object value) => AdvancedSettings.FromJson(value, Log);
     }
 
     internal ResizeSettings BuildCoreSettings(ResizeParams resP, object width, object height, object factor, object aspectRatio, string format, ICanGetByName settingsOrNull)
     {
-        void IfDebugLogPair<T>(string prefix, (T W, T H) values)
-        {
-            if (Debug) Log.A($"{prefix}: W:{values.W}, H:{values.H}");
-        }
+        var l = (Debug ? Log : null).Fn<ResizeSettings>();
 
         // Try to pre-process parameters and prefer them
         // The manually provided values must remember Zeros because they deactivate presets
@@ -131,15 +129,23 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
         IfDebugLogPair("Safe", safe);
 
         var factorFinal = resP.FactorOrNull(factor) ?? IntIgnore;
-        double arFinal = resP.AspectRatioOrNull(aspectRatio)
-                         ?? resP.AspectRatioOrNull(settingsOrNull?.Get(AspectRatioField)) ?? IntIgnore;
-        Log.A(Debug, $"Resize Factor: {factorFinal}, Aspect Ratio: {arFinal}");
+        var arFinal = resP.AspectRatioOrNull(aspectRatio)
+                      ?? resP.AspectRatioOrNull(settingsOrNull?.Get(AspectRatioField)) ?? IntIgnore;
+        l.A(Debug, $"Resize Factor: {factorFinal}, Aspect Ratio: {arFinal}");
 
-        var resizeSettings = new ResizeSettings(parameters.W, parameters.H,
-            safe.W, safe.H,
-            arFinal, factorFinal, format);
+        var basedOnName = settingsOrNull?.Get("ItemIdentifier") as string;
 
-        return resizeSettings;
+        var resizeSettings = new ResizeSettings(width: parameters.W, height: parameters.H,
+            fallbackWidth: safe.W, fallbackHeight: safe.H,
+            aspectRatio: arFinal, factor: factorFinal, format: format, basedOn: basedOnName);
+
+        return l.Return(resizeSettings);
+
+        // Helper to debug
+        void IfDebugLogPair<T>(string prefix, (T W, T H) values)
+        {
+            if (Debug) Log.A($"{prefix}: W:{values.W}, H:{values.H}");
+        }
     }
         
 }

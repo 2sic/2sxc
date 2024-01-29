@@ -35,9 +35,9 @@ partial class EditLoadPrefetchHelper
         }
         catch (Exception ex)
         {
-            return new Dictionary<string, LinkInfoDto>
+            return new()
             {
-                {"Error", new LinkInfoDto { Value = "An error occurred pre-fetching the links " + ex.Message } }
+                {"Error", new() { Value = "An error occurred pre-fetching the links " + ex.Message } }
             };
         }
     }
@@ -52,7 +52,7 @@ partial class EditLoadPrefetchHelper
         }
         catch
         {
-            return new LinkInfoDto { Value = "error" };
+            return new() { Value = "error" };
         }
     }
     private readonly GetOnce<HyperlinkBackend<int, int>> _hyperlinkBackend = new();

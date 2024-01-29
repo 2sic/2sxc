@@ -116,7 +116,7 @@ public class ContentGroupList: ServiceBase
                           ?? bundle.FirstOrDefault(e =>
                               string.Equals(e.Header.Field, ViewParts.FieldHeader, OrdinalIgnoreCase));
         if (primaryItem == null)
-            throw new Exception("unexpected group-entity assignment, cannot figure it out");
+            throw new("unexpected group-entity assignment, cannot figure it out");
         return primaryItem;
     }
 
@@ -126,7 +126,7 @@ public class ContentGroupList: ServiceBase
     private static int GetIdFromGuidOrError(IReadOnlyDictionary<Guid, int> postSaveIds, Guid guid)
     {
         if (!postSaveIds.ContainsKey(guid))
-            throw new Exception("Saved entity not found - not able to update BlockConfiguration");
+            throw new("Saved entity not found - not able to update BlockConfiguration");
 
         return postSaveIds[guid];
     }

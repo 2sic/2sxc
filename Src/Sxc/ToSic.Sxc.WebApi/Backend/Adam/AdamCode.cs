@@ -30,14 +30,14 @@ public class AdamCode(
         string subFolder = "")
     {
         if (stream == null || fileName == null || contentType == null || guid == null || field == null)
-            throw new Exception();
+            throw new();
 
         var feats = new[] { SaveInAdamApi.Guid, PublicUploadFiles.Guid };
 
         if (!featuresLazy.Value.IsEnabled(feats, "can't save in ADAM", out var exp))
             throw exp;
 
-        var appId = ((ICodeApiServiceInternal)_CodeApiSvc)?._Block?.AppId ?? _CodeApiSvc?.App?.AppId ?? throw new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
+        var appId = ((ICodeApiServiceInternal)_CodeApiSvc)?._Block?.AppId ?? _CodeApiSvc?.App?.AppId ?? throw new("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
         return adamUploadGenerator.New()
             .Init(appId, contentType, guid.Value, field, false)
             .UploadOne(stream, fileName, subFolder, true);

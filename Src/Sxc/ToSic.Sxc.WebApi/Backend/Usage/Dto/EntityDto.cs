@@ -10,6 +10,6 @@ public class EntityDto: IdentifierDto
         Id = entity.EntityId;
         Guid = entity.EntityGuid;
         Title = entity.GetBestTitle();
-        Type = new ContentTypeDto(entity.Type);
+        Type = new(entity.Type);
     }
 }

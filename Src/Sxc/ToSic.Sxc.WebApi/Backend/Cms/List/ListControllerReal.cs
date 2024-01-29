@@ -80,7 +80,7 @@ public partial class ListControllerReal: BlockWebApiBackendBase, IHasLog, IListC
     private IEntity FindOrThrow(Guid? parent)
     {
         var target = parent == null ? CtxResolver.BlockRequired().Configuration.Entity : ContextOfBlock.AppState.List.One(parent.Value); 
-        if (target == null) throw new Exception($"Can't find parent {parent}");
+        if (target == null) throw new($"Can't find parent {parent}");
         return ContextOfBlock.AppState.GetDraftOrKeep(target);
     }
 }

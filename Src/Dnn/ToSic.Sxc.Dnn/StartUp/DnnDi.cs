@@ -46,10 +46,6 @@ public static class DnnDi
             .AddEavWebApiTypedAfterEav()
             .AddRazorBlade();
 
-        // temp polymorphism - later put into AddPolymorphism
-        services.TryAddTransient<Koi>();
-        services.TryAddTransient<Permissions>();
-
         // Remember this for later, when we must start the Static Dependency Injection
         OriginalServiceCollection = services;
 
@@ -61,10 +57,12 @@ public static class DnnDi
 
     public static IServiceCollection AddDnnPlugins(this IServiceCollection services)
     {
-        services.TryAddTransient<IRazorEngine, DnnRazorEngine>();
-
         // Integrate KOI Dnn-Parts
         services.TryAddTransient<Connect.Koi.Detectors.ICssFrameworkDetector, Connect.Koi.Dnn.DetectAndCacheDnnThemeCssFramework>();
+
+        // temp polymorphism - later put into AddPolymorphism
+        services.TryAddTransient<Koi>();
+        services.TryAddTransient<Permissions>();
 
         return services;
     }

@@ -82,7 +82,7 @@ public class ExportApp: ServiceBase
 
         var appHasCustomParent = appRead.HasCustomParentApp();
 
-        return l.Return(new AppExportInfoDto
+        return l.Return(new()
         {
             Name = appRead.Name,
             Guid = appRead.NameId,

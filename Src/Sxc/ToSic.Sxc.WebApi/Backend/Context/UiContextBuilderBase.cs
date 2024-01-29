@@ -97,7 +97,7 @@ public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>,
 
         var converted = Services.LanguagesBackend.Value.GetLanguagesOfApp(AppStateOrNull);
 
-        return new ContextLanguageDto
+        return new()
         {
             Current = site.CurrentCultureCode,
             Primary = converted.Any() ? site.DefaultCultureCode : site.CurrentCultureCode, // in special case when no languages are available, use the current culture to fix translation issue in UI
@@ -115,7 +115,7 @@ public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>,
         if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
 
         // Otherwise also add the global app id
-        result.PrimaryApp = result.DefaultApp = new AppIdentity(1, 1);
+        result.PrimaryApp = result.DefaultApp = new(1, 1);
         return result;
     }
 
@@ -195,7 +195,7 @@ public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>,
                 ? "Site" 
                 : "App";
 
-        result.Permissions = new HasPermissionsDto { Count = AppStateOrNull.Metadata.Permissions.Count() };
+        result.Permissions = new() { Count = AppStateOrNull.Metadata.Permissions.Count() };
 
         result.IsShared = AppStateOrNull.IsShared();
         result.IsInherited = AppStateOrNull.IsInherited();

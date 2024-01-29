@@ -11,8 +11,12 @@ public partial class SxcFeatures
 {
     public static void Register(FeaturesCatalog cat) =>
         cat.Register(
+            // CorePlus
             RazorThrowPartial,
             RenderThrowPartialSystemAdmin,
+            PermissionPrioritizeModuleContext,
+
+            // CSP
             ContentSecurityPolicy,
             ContentSecurityPolicyTestUrl,
             ContentSecurityPolicyEnforceTemp,
@@ -32,6 +36,8 @@ public partial class SxcFeatures
 
             LightSpeedOutputCache,
             LightSpeedOutputCacheAppFileChanges
+
+
         );
 
 

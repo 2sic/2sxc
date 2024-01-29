@@ -23,7 +23,7 @@ partial class AppFilesControllerReal
 
         // if the directory doesn't exist, return empty list
         if (!Directory.Exists(fullPath))
-            return new List<string>();
+            return new();
 
         var opt = withSubfolders
             ? SearchOption.AllDirectories
@@ -57,6 +57,6 @@ partial class AppFilesControllerReal
             ? All(appId, global: true, path: path, mask: mask, withSubfolders: true, returnFolders: false)
                 .Select(f => new AllFileDto { Path = f, Shared = true }).ToArray()
             : Array.Empty<AllFileDto>();
-        return new AllFilesDto { Files = localFiles.Union(globalFiles),};
+        return new() { Files = localFiles.Union(globalFiles),};
     }
 }

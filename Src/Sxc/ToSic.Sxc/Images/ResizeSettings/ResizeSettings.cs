@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using ToSic.Eav.Plumbing;
 using static ToSic.Sxc.Images.Internal.ImageConstants;
 
 namespace ToSic.Sxc.Images;
@@ -7,6 +8,11 @@ namespace ToSic.Sxc.Images;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class ResizeSettings : IResizeSettings, IResizeSettingsInternal
 {
+    /// <summary>
+    /// Name of the settings used initially
+    /// </summary>
+    public string BasedOn { get; }
+
     public int Width { get; } = IntIgnore;
     public int Height { get; } = IntIgnore;
     public int Quality { get; set; } = IntIgnore;
@@ -26,7 +32,7 @@ internal class ResizeSettings : IResizeSettings, IResizeSettingsInternal
     /// <summary>
     /// Constructor to create new
     /// </summary>
-    public ResizeSettings(int? width, int? height, int fallbackWidth, int fallbackHeight, double aspectRatio, double factor, string format)
+    public ResizeSettings(int? width, int? height, int fallbackWidth, int fallbackHeight, double aspectRatio, double factor, string format, string basedOn)
     {
         Width = width ?? fallbackWidth;
         Height = height ?? fallbackHeight;
@@ -38,6 +44,7 @@ internal class ResizeSettings : IResizeSettings, IResizeSettingsInternal
         AspectRatio = aspectRatio;
         Factor = factor;
         Format = format;
+        BasedOn = basedOn;
     }
 
     /// <summary>
@@ -69,6 +76,8 @@ internal class ResizeSettings : IResizeSettings, IResizeSettingsInternal
         Parameters = parameters ?? original.Parameters;
         AspectRatio = aspectRatio ?? original.AspectRatio;
 
+        BasedOn = original.BasedOn;
+
         // workaround, as it's not part of the interface ATM
         if (original is ResizeSettings typed)
         {
@@ -79,4 +88,25 @@ internal class ResizeSettings : IResizeSettings, IResizeSettingsInternal
         Advanced = advanced ?? (original as IResizeSettingsInternal)?.Advanced;
     }
 
+    public string ToHtmlInfo()
+    {
+        const string notSet = "default/not set";
+        const double floatTolerance = 0.01;
+        var result = @"<strong>🖼️ Resize Specs</strong>
+
+Based On: " + (BasedOn.HasValue() ? $"<strong>Settings.Images.{BasedOn}</strong>" : "<em>no presets</em>") + @$"
+Width: {(Width != IntIgnore ? Width : notSet)}
+Height: {(Height != IntIgnore ? Height : notSet)}
+Quality: {(Quality != IntIgnore ? Quality : notSet)}
+ResizeMode: {ResizeMode ?? notSet}
+ScaleMode: {ScaleMode ?? notSet}
+Format: {Format ?? notSet}
+Factor: {(Math.Abs(Factor - IntIgnore) > floatTolerance ? Factor : notSet)}
+AspectRatio: {(Math.Abs(AspectRatio - IntIgnore) > floatTolerance ? AspectRatio : notSet)}
+Url Parameters: {Parameters}
+
+<em>This is the primary size. Other responsive sizes derive from this.</em>";
+        //result += $", Advanced: {Advanced}";
+        return result.Replace(", ", "\n").Replace("\n", "<br>\n");
+    }
 }

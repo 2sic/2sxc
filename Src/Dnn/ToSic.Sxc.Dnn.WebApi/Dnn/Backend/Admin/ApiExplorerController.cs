@@ -5,7 +5,11 @@ using System.Web.Hosting;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Internal.SourceCode;
+using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Integration;
+using ToSic.Sxc.Polymorphism.Internal;
 using RealController = ToSic.Eav.WebApi.ApiExplorer.ApiExplorerControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
@@ -27,6 +31,9 @@ public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSu
 
     private Assembly GetCompiledAssembly(string path)
     {
+        var className = Path.GetFileNameWithoutExtension(path);
+        Log.A($"Class name: {className}");
+
         var controllerVirtualPath =
             Path.Combine(
                 SysHlp.GetService<DnnAppFolderUtilities>().GetAppFolderVirtualPath(Request, SysHlp.GetService<ISite>()), 
@@ -37,7 +44,27 @@ public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSu
         if (!File.Exists(HostingEnvironment.MapPath(controllerVirtualPath)))
             throw new($"Error: can't find controller file: {controllerVirtualPath}");
 
-        return BuildManager.GetCompiledAssembly(controllerVirtualPath);
+        Assembly assembly;
+        var codeFileInfo = SysHlp.GetService<SourceAnalyzer>().TypeOfVirtualPath(controllerVirtualPath);
+        if (codeFileInfo.ThisApp)
+        {
+            Log.A("has ThisApp");
+            // Figure edition
+            HotBuildSpec spec = null;
+            var block = SysHlp.GetService<DnnGetBlock>().GetCmsBlock(Request).LoadBlock();
+            if (block != null)
+                spec = new HotBuildSpec(block.AppId,
+                    edition: PolymorphConfigReader.UseViewEditionLazyGetEdition(block.View, () => SysHlp.GetService<PolymorphConfigReader>().Init(block.Context.AppState.List)));
+            assembly = SysHlp.GetService<IRoslynBuildManager>().GetCompiledAssembly(codeFileInfo, className, spec)?.Assembly;
+        }
+        else
+        {
+            assembly = BuildManager.GetCompiledAssembly(controllerVirtualPath);
+        }
+
+        if (assembly == null) throw new("Assembly not found or compiled to null (error).");
+
+        return assembly;
     }
 
 }

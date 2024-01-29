@@ -37,7 +37,7 @@ public class HyperlinkBackend<TFolderId, TFileId>: ServiceBase
         {
             // nothing to resolve
             if (string.IsNullOrEmpty(hyperlink))
-                return new LinkInfoDto { Value = hyperlink };
+                return new() { Value = hyperlink };
 
             var context = _ctxResolver.GetBlockOrSetApp(appId);
             // different security checks depending on the link-type
@@ -53,12 +53,12 @@ public class HyperlinkBackend<TFolderId, TFileId>: ServiceBase
                 // only people who have some full edit permissions may actually look up pages
                 var permCheckPage = _appPermissions.New().Init(context, context.AppState);
                 var userMay= permCheckPage.UserMayOnAll(GrantSets.WritePublished);
-                return new LinkInfoDto {Value = userMay ? resolved : hyperlink};
+                return new() {Value = userMay ? resolved : hyperlink};
             }
 
             // for file, we need guid & field - otherwise return the original unmodified
             if (guid == default || string.IsNullOrEmpty(field) || string.IsNullOrEmpty(contentType))
-                return new LinkInfoDto { Value = hyperlink };
+                return new() { Value = hyperlink };
 
             var isOutsideOfAdam = !Security.PathIsInItemAdam(guid, field, resolved);
 
@@ -76,18 +76,18 @@ public class HyperlinkBackend<TFolderId, TFileId>: ServiceBase
 
             // link was not able to match,
             if (!parts.IsMatch || parts.Id == 0) 
-                return new LinkInfoDto { Value = hyperlink };
+                return new() { Value = hyperlink };
 
             // Note: kind of temporary solution, will fail if TFileId isn't int!
             var file = ((IAdamFileSystem<int, int>)adamContext.AdamManager.AdamFs).GetFile(parts.Id);
             var dtoMaker = _adamDtoMaker.New().Init(AdamContext);
             // if everything worked till now, it's ok to return the result
             var adam = dtoMaker.Create(file as File<TFolderId, TFileId>);
-            return new LinkInfoDto {Adam = adam, Value = adam.Url};
+            return new() {Adam = adam, Value = adam.Url};
         }
         catch
         {
-            return new LinkInfoDto { Value = hyperlink };
+            return new() { Value = hyperlink };
         }
     }
 

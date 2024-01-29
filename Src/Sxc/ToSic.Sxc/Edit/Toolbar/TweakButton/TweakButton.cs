@@ -44,21 +44,24 @@ internal class TweakButton: ITweakButton, ITweakButtonInternal
         string type = default,
         string background = default,
         int delay = default,
-        int linger = default
+        int linger = default,
+        string format = default
     )
     {
         var noteProps = new Dictionary<string, object> { [nameof(note)] = note };
-        //void AddIfNotDefault<T>(string name, T value)
-        //{
-        //    if (value != default) noteProps[name] = value;
-        //}
         if (type != default) noteProps[nameof(type)] = type;
         if (background != default) noteProps[nameof(background)] = background;
         if (delay != default) noteProps[nameof(delay)] = delay;
         if (linger != default) noteProps[nameof(linger)] = linger;
+        if (format != default) noteProps["asHtml"] = format.EqualsInsensitive("html");
         return Ui(new { note = noteProps });
+
+        //void AddIfNotDefault<T>(string name, T value)
+        //{
+        //    if (value != default) noteProps[name] = value;
+        //}
     }
-        
+
     public ITweakButton Show(bool show = true) => Ui("show", show.ToString().ToLowerInvariant());
 
     public ITweakButton Color(string color = default, NoParamOrder noParamOrder = default, string background = default,

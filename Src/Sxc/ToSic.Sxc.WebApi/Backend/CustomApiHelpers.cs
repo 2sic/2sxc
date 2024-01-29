@@ -149,7 +149,7 @@ public class CustomApiHelpers
 
     public static MediaTypeHeaderValue PrepareMediaTypeHeaderValue(string contentType, Encoding encoding)
     {
-        return new MediaTypeHeaderValue(contentType)
+        return new(contentType)
         {
             CharSet = encoding.WebName // do not use HeaderName or BodyName because it is used for mail agents
         };
@@ -158,9 +158,9 @@ public class CustomApiHelpers
     public static ContentDispositionHeaderValue PrepareContentDispositionHeaderValue(bool? download, string fileDownloadName)
     {
         if (string.IsNullOrWhiteSpace(fileDownloadName))
-            return new ContentDispositionHeaderValue("inline");
+            return new("inline");
         return download != true
-            ? new ContentDispositionHeaderValue("inline")
+            ? new("inline")
             {
                 FileName = fileDownloadName
             }
