@@ -3,13 +3,15 @@ using System.IO;
 using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Configuration;
+using static System.StringComparer;
 
 namespace ToSic.Sxc.Dnn.Compile
 {
     [PrivateApi]
     public class ReferencedAssembliesProvider : IReferencedAssembliesProvider
     {
-        private static readonly ConcurrentDictionary<string, List<string>> ReferencedAssembliesCache = new ConcurrentDictionary<string, List<string>>();
+        
+        private static readonly ConcurrentDictionary<string, List<string>> ReferencedAssembliesCache = new(InvariantCultureIgnoreCase);
 
         public List<string> Locations(string virtualPath)
         {
