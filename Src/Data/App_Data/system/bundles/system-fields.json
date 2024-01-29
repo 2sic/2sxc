@@ -5344,99 +5344,6 @@
                 ]
               },
               {
-                "Name": "IncludeParentApps",
-                "Type": "Boolean",
-                "InputType": "boolean-tristate",
-                "IsTitle": false,
-                "Metadata": [
-                  {
-                    "Id": 166488,
-                    "Version": 3,
-                    "Guid": "1b0366c5-c470-4ab5-985a-933913c9e474",
-                    "Type": {
-                      "Id": "@All",
-                      "Name": "@All"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "CustomJavaScript": {
-                          "en-us": ""
-                        },
-                        "DefaultValue": {
-                          "en-us": ""
-                        },
-                        "InputType": {
-                          "en-us": "boolean-tristate"
-                        },
-                        "Name": {
-                          "en-us": "Include Parent Apps (highly experimental!)"
-                        },
-                        "Notes": {
-                          "en-us": ""
-                        },
-                        "Placeholder": {
-                          "en-us": ""
-                        },
-                        "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Entity": {
-                        "Errors": {
-                          "*": []
-                        },
-                        "Formulas": {
-                          "*": [
-                            "ad349f10-e944-4972-96d3-b7959c12f895"
-                          ]
-                        },
-                        "Warnings": {
-                          "*": []
-                        }
-                      },
-                      "Boolean": {
-                        "Disabled": {
-                          "en-us": false
-                        },
-                        "DisableTranslation": {
-                          "en-us": false
-                        },
-                        "Required": {
-                          "en-us": false
-                        },
-                        "VisibleInEditUI": {
-                          "en-us": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 166489,
-                    "Version": 1,
-                    "Guid": "474922ac-89d3-4c30-a995-3c488221dc01",
-                    "Type": {
-                      "Id": "@Boolean",
-                      "Name": "@Boolean"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "TitleFalse": {
-                          "en-us": ""
-                        },
-                        "TitleIndeterminate": {
-                          "en-us": ""
-                        },
-                        "TitleTrue": {
-                          "en-us": ""
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  }
-                ]
-              },
-              {
                 "Name": "GroupExperimentalDebugOnly",
                 "Type": "Empty",
                 "InputType": "empty-default",
@@ -5886,34 +5793,6 @@
                 "String": {
                   "Formula": {
                     "en-us": "// new formula syntax - see https://r.2sxc.org/formulas\nv2((data, context) => {\n  return context.debug;\n});"
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Field.Settings.Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 166490,
-              "Version": 1,
-              "Guid": "ad349f10-e944-4972-96d3-b7959c12f895",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "function v1 (data, context) {\n  return context.debug;\n}"
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
@@ -9534,6 +9413,48 @@
                   }
                 },
                 "Owner": "dnn:userid=1",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "@string-dropdown-query"
+                }
+              },
+              {
+                "Id": 183695,
+                "Version": 1,
+                "Guid": "3c274d21-241c-4700-ad1a-97485aa191db",
+                "Type": {
+                  "Id": "ContentType-InputType",
+                  "Name": "ContentType-InputType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AngularAssets": {
+                      "en-us": ""
+                    },
+                    "ConfigTypes": {
+                      "en-us": "@string-dropdown-query"
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "Label": {
+                      "en-us": "String Dropdown from Query"
+                    },
+                    "Type": {
+                      "en-us": "string-query"
+                    }
+                  },
+                  "Boolean": {
+                    "DisableI18n": {
+                      "en-us": false
+                    },
+                    "UseAdam": {
+                      "en-us": false
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
                 "For": {
                   "Target": "ContentType",
                   "TargetType": 5,

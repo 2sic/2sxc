@@ -1568,7 +1568,7 @@
                 "Metadata": [
                   {
                     "Id": 182568,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "b9ecd6c9-4785-4c6a-9fda-0a0438c9b6b9",
                     "Type": {
                       "Id": "@All",
@@ -1589,10 +1589,10 @@
                           "en-us": "empty-default"
                         },
                         "Name": {
-                          "en-us": "Custom Configuration of Input (WIP v16.08 BETA)"
+                          "en-us": "Custom Configuration of Input"
                         },
                         "Notes": {
-                          "en-us": "<p>This will override the default behavior to determine which content-types are used to configure this input type (new ca. 16.10).</p>"
+                          "en-us": "<p>This will override the default behavior to determine which content-types are used to configure this input type (new v17).</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -1639,7 +1639,7 @@
                   },
                   {
                     "Id": 182570,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "f796d14c-996c-464b-b23c-984b8d90727d",
                     "Type": {
                       "Id": "@empty-default",
