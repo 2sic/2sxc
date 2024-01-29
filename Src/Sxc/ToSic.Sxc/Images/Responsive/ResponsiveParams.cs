@@ -32,9 +32,10 @@ internal class ResponsiveParams
     public object Toolbar { get; }
 
     internal ResponsiveParams(
-        string method,
         object target,
-        NoParamOrder noParamOrder = default,
+#pragma warning disable IDE0060
+        NoParamOrder protector = default,
+#pragma warning restore IDE0060
         IResizeSettings settings = default,
         string imgAlt = default,
         string imgAltFallback = default,
@@ -45,9 +46,6 @@ internal class ResponsiveParams
         object toolbar = default
     )
     {
-        //Parameters.ProtectAgainstMissingParameterNames(noParamOrder, method,
-        //    $"{nameof(target)}, {nameof(settings)}, factor, {nameof(imgAlt)}, {nameof(imgClass)}, recipe");
-
         Field = target as IField ?? (target as IFromField)?.Field;
         HasMetadataOrNull = target as IHasMetadata ?? Field;
         Link = target as IHasLink ?? new HasLink(target as string);
