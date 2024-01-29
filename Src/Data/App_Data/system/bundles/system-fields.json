@@ -9421,7 +9421,7 @@
               },
               {
                 "Id": 183695,
-                "Version": 1,
+                "Version": 2,
                 "Guid": "3c274d21-241c-4700-ad1a-97485aa191db",
                 "Type": {
                   "Id": "ContentType-InputType",
@@ -9442,7 +9442,7 @@
                       "en-us": "String Dropdown from Query"
                     },
                     "Type": {
-                      "en-us": "string-query"
+                      "en-us": "@string-dropdown-query"
                     }
                   },
                   "Boolean": {
