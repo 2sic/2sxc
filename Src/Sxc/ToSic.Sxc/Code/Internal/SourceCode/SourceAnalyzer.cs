@@ -11,21 +11,21 @@ namespace ToSic.Sxc.Code.Internal.SourceCode;
 public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc", connect: [serverPaths])
 {
     public CodeFileInfo TypeOfVirtualPath(string virtualPath)
-  {
-    var l = Log.Fn<CodeFileInfo>($"{nameof(virtualPath)}: '{virtualPath}'");
-    string fullPath = default, sourceCode = default;
-    try
     {
-      (_, fullPath, sourceCode) = GetFileContentsOfVirtualPath(virtualPath);
-      return sourceCode == null
-          ? l.ReturnAndLog(CodeFileInfo.CodeFileNotFound)
-          : l.ReturnAndLog(AnalyzeContent(virtualPath, fullPath, sourceCode));
+        var l = Log.Fn<CodeFileInfo>($"{nameof(virtualPath)}: '{virtualPath}'");
+        string fullPath = default, sourceCode = default;
+        try
+        {
+          (_, fullPath, sourceCode) = GetFileContentsOfVirtualPath(virtualPath);
+          return sourceCode == null
+              ? l.ReturnAndLog(CodeFileInfo.CodeFileNotFound)
+              : l.ReturnAndLog(AnalyzeContent(virtualPath, fullPath, sourceCode));
+        }
+        catch
+        {
+          return l.ReturnAndLog(new(CodeFileInfo.TemplateUnknown, sourceCode: sourceCode, relativePath: virtualPath, fullPath: fullPath), "error trying to find type");
+        }
     }
-    catch
-    {
-      return l.ReturnAndLog(new(CodeFileInfo.TemplateUnknown, sourceCode: sourceCode, relativePath: virtualPath, fullPath: fullPath), "error trying to find type");
-    }
-  }
 
   private (string relativePath, string fullPath, string sourceCode) GetFileContentsOfVirtualPath(string relativePath)
   {
