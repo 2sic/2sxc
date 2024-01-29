@@ -8,18 +8,9 @@ using ToSic.Sxc.Code.Internal.HotBuild;
 namespace ToSic.Sxc.Code.Internal.SourceCode;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class SourceAnalyzer : ServiceBase
+public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc", connect: [serverPaths])
 {
-  private readonly IServerPaths _serverPaths;
-
-  public SourceAnalyzer(IServerPaths serverPaths) : base("Sxc.RzrSrc")
-  {
-    ConnectServices(
-        _serverPaths = serverPaths
-    );
-  }
-
-  public CodeFileInfo TypeOfVirtualPath(string virtualPath)
+    public CodeFileInfo TypeOfVirtualPath(string virtualPath)
   {
     var l = Log.Fn<CodeFileInfo>($"{nameof(virtualPath)}: '{virtualPath}'");
     string fullPath = default, sourceCode = default;
@@ -43,7 +34,7 @@ public class SourceAnalyzer : ServiceBase
     if (relativePath.IsEmptyOrWs())
       return l.Return((relativePath, null, null), "no relativePath");
 
-    var fullPath = _serverPaths.FullContentPath(relativePath);
+    var fullPath = serverPaths.FullContentPath(relativePath);
     if (fullPath == null || fullPath.IsEmptyOrWs())
       return l.Return((relativePath, fullPath, null), "no relativePath");
 
