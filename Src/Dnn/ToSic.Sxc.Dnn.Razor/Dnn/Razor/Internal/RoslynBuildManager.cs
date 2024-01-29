@@ -1,14 +1,8 @@
-﻿//using Microsoft.CodeAnalysis;
-//using Microsoft.CodeAnalysis.CSharp;
-//using Microsoft.CodeAnalysis.Emit;
-//using Microsoft.CodeAnalysis.Text;
-
-using System.CodeDom.Compiler;
+﻿using System.CodeDom.Compiler;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Caching;
 using System.Text;
-using System.Web;
 using System.Web.Razor;
 using System.Web.Razor.Generator;
 using ToSic.Eav.Caching.CachingMonitors;
@@ -36,18 +30,17 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         private readonly AssemblyCacheManager _assemblyCacheManager;
         private readonly LazySvc<ThisAppLoader> _thisAppCodeLoader;
         private readonly AssemblyResolver _assemblyResolver;
+        private readonly IReferencedAssembliesProvider _referencedAssembliesProvider;
 
-        public RoslynBuildManager(AssemblyCacheManager assemblyCacheManager, LazySvc<ThisAppLoader> thisAppCodeLoader, AssemblyResolver assemblyResolver) : base("Dnn.RoslynBuildManager")
+        public RoslynBuildManager(AssemblyCacheManager assemblyCacheManager, LazySvc<ThisAppLoader> thisAppCodeLoader, AssemblyResolver assemblyResolver, IReferencedAssembliesProvider referencedAssembliesProvider) : base("Dnn.RoslynBuildManager")
         {
-            ;
             ConnectServices(
                 _assemblyCacheManager = assemblyCacheManager,
                 _thisAppCodeLoader = thisAppCodeLoader,
-                _assemblyResolver = assemblyResolver
+                _assemblyResolver = assemblyResolver,
+                _referencedAssembliesProvider = referencedAssembliesProvider
             );
         }
-
-        private static readonly Lazy<List<string>> DefaultReferencedAssemblies = new(GetDefaultReferencedAssemblies);
 
         /// <summary>
         /// Manage template compilations, cache the assembly and returns the generated type.
@@ -77,7 +70,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             l.A($"Template not found in cache. Path: {codeFileInfo.FullPath}");
 
             // Initialize the list of referenced assemblies with the default ones
-            List<string> referencedAssemblies = [.. DefaultReferencedAssemblies.Value];
+            var referencedAssemblies = _referencedAssembliesProvider.Locations(codeFileInfo.RelativePath);
 
             // Roslyn compiler need reference to location of dll, when dll is not in bin folder
             // get assembly - try to get from cache, otherwise compile
@@ -182,56 +175,6 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             return relativePath.Substring(0, pos).Backslash();
         }
 
-        private static List<string> GetDefaultReferencedAssemblies()
-        {
-            // TODO: @STV - this is different here and in the AppCode
-            // it's unclear why, so either make it the same, or document why it's different
-            var referencedAssemblies = new List<string>
-            {
-                "System.dll",
-                "System.Core.dll",
-                typeof(IHtmlString).Assembly.Location, // System.Web
-                "Microsoft.CSharp.dll" // dynamic support!
-            };
-
-            try
-            {
-                foreach (var dll in Directory.GetFiles(HttpRuntime.BinDirectory, "*.dll"))
-                    if (IsValidAssembly(dll)) referencedAssemblies.Add(dll);
-            }
-            catch
-            {
-                // sink
-            }
-
-            // deduplicate referencedAssemblies by filename, keep last duplicate
-            referencedAssemblies = referencedAssemblies
-                //.Where(IsValidAssembly)
-                .GroupBy(Path.GetFileName)
-                .Select(g => g.Last())
-                .ToList();
-
-            return referencedAssemblies;
-        }
-
-        /// <summary>
-        /// We need to skip invalid assemblies to not break compile process
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
-        private static bool IsValidAssembly(string filePath)
-        {
-            try
-            {
-                Assembly.ReflectionOnlyLoadFrom(filePath);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         private string GetSafeClassName(string templateFullPath)
         {
             if (!string.IsNullOrWhiteSpace(templateFullPath))
@@ -265,8 +208,6 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             // Find the base class for the template
             var baseClass = FindBaseClass(template);
             l.A($"Base class: {baseClass}");
-
-            var designTimeLineMappings = new Dictionary<int, GeneratedCodeMapping>();
 
             // Create the Razor template engine host
             var engine = CreateHost(className, baseClass, defaultNamespace);
@@ -304,59 +245,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             return l.ReturnAsError((null, errorList), "error");
         }
 
-        // TODO: use roslyn compiler directly (need nuget packages)
-        //private (Assembly Assembly, List<string> Errors) RoslynCompileTemplate(string template, List<string> referencedAssemblies, string className)
-        //{
-        //    var l = Log.Fn<(Assembly, List<string>)>(timer: true, parameters: $"Template content length: {template.Length}");
 
-        //    // Find the base class for the template
-        //    var baseClass = FindTemplateType(template);
-        //    l.A($"Base class: {baseClass}");
-
-        //    // Create the Razor template engine host
-        //    var engine = CreateHost(className, baseClass);
-
-        //    var lTimer = Log.Fn("Generate Code", timer: true);
-        //    using var reader = new StringReader(template);
-        //    var razorResults = engine.GenerateCode(reader);
-        //    var syntaxTree = CSharpSyntaxTree.ParseText(SourceText.From(template));
-        //    lTimer.Done();
-
-        //    lTimer = Log.Fn("Compiler Params", timer: true);
-        //    var references = referencedAssemblies.Select(r => MetadataReference.CreateFromFile(r)).ToList();
-        //    lTimer.Done();
-
-        //    // Compile the template into an assembly
-        //    lTimer = Log.Fn("Compile", timer: true);
-        //    var compilation = CSharpCompilation.Create(
-        //        "CompiledTemplateAssembly",
-        //        new[] { syntaxTree },
-        //        references,
-        //        new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
-        //            .WithOptimizationLevel(OptimizationLevel.Debug)
-        //            .WithWarningLevel(4)
-        //            .WithLanguageVersion(LanguageVersion.CSharp8)
-        //    );
-        //    using var ms = new MemoryStream();
-        //    EmitResult result = compilation.Emit(ms);
-        //    lTimer.Done();
-
-        //    if (!result.Success)
-        //    {
-        //        // Handle compilation errors
-        //        var errorList = result.Diagnostics
-        //            .Where(diagnostic => diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error)
-        //            .Select(diagnostic => diagnostic.ToString())
-        //            .ToList();
-
-        //        return l.ReturnAsError((null, errorList), "Compilation error");
-        //    }
-
-        //    ms.Seek(0, SeekOrigin.Begin);
-        //    var compiledAssembly = Assembly.Load(ms.ToArray());
-
-        //    return l.ReturnAsOk((compiledAssembly, null));
-        //}
 
         /// <summary>
         /// Compiles the C# code into an assembly.

@@ -27,6 +27,9 @@ internal class ThisAppCompilerNetFull : ThisAppCompiler
 
         try
         {
+            // store it, so we can provide it to _referencedAssembliesProvider.Locations()
+            _relativePath = relativePath;
+
             // Get all C# files in the folder
             var sourceFiles = GetSourceFiles(NormalizeFullPath(_hostingEnvironment.MapPath(relativePath)));
             if (sourceFiles.Length == 0)
@@ -71,6 +74,7 @@ internal class ThisAppCompilerNetFull : ThisAppCompiler
             return l.ReturnAsError(new(errorMessages: errorMessage));
         }
     }
+    private string _relativePath;
 
     private (string SymbolsPath, string AssemblyPath) GetAssemblyLocations(HotBuildSpec spec)
     {
@@ -105,7 +109,7 @@ internal class ThisAppCompilerNetFull : ThisAppCompiler
             };
 
         // Add all referenced assemblies
-        parameters.ReferencedAssemblies.AddRange(_referencedAssembliesProvider.Locations());
+        parameters.ReferencedAssemblies.AddRange(_referencedAssembliesProvider.Locations(_relativePath).ToArray());
 
         var codeProvider = new CSharpCodeProvider();
         var compilerResults = codeProvider.CompileAssemblyFromFile(parameters, sourceFiles);
@@ -114,5 +118,5 @@ internal class ThisAppCompilerNetFull : ThisAppCompiler
             ? l.ReturnAsError(compilerResults)
             : l.ReturnAsOk(compilerResults);
     }
-
+    
 }

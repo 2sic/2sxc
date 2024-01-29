@@ -3,6 +3,6 @@
     [PrivateApi]
     public interface IReferencedAssembliesProvider
     {
-        string[] Locations();
+        List<string> Locations(string virtualPath);
     }
 }
