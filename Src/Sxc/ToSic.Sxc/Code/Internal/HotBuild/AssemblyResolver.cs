@@ -25,6 +25,13 @@ public class AssemblyResolver
     private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         => _assemblyCache.TryGetValue(args.Name, out var assembly) ? assembly : null;
 
+    public void AddAssemblies(List<Assembly> assemblies, string appRelativePath = null)
+    {
+        if (assemblies == null) return;
+        foreach (var r in assemblies) 
+            AddAssembly(r, appRelativePath);
+    }
+
     public void AddAssembly(Assembly assembly, string appRelativePath = null)
     {
         if (assembly == null) return;

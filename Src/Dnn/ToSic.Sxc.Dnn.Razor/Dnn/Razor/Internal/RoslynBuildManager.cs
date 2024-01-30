@@ -34,14 +34,16 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
         private readonly AssemblyCacheManager _assemblyCacheManager;
         private readonly LazySvc<ThisAppLoader> _thisAppCodeLoader;
+        private readonly LazySvc<DependenciesLoader> _dependenciesLoader;
         private readonly AssemblyResolver _assemblyResolver;
         private readonly IReferencedAssembliesProvider _referencedAssembliesProvider;
 
-        public RoslynBuildManager(AssemblyCacheManager assemblyCacheManager, LazySvc<ThisAppLoader> thisAppCodeLoader, AssemblyResolver assemblyResolver, IReferencedAssembliesProvider referencedAssembliesProvider) : base("Dnn.RoslynBuildManager")
+        public RoslynBuildManager(AssemblyCacheManager assemblyCacheManager, LazySvc<ThisAppLoader> thisAppCodeLoader, LazySvc<DependenciesLoader> dependenciesLoader, AssemblyResolver assemblyResolver, IReferencedAssembliesProvider referencedAssembliesProvider) : base("Dnn.RoslynBuildManager")
         {
             ConnectServices(
                 _assemblyCacheManager = assemblyCacheManager,
                 _thisAppCodeLoader = thisAppCodeLoader,
+                _dependenciesLoader = dependenciesLoader,
                 _assemblyResolver = assemblyResolver,
                 _referencedAssembliesProvider = referencedAssembliesProvider
             );
@@ -95,6 +97,21 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
                 var assemblyLocation = thisAppCodeAssembly.Location;
                 referencedAssemblies.Add(assemblyLocation);
                 l.A($"Added reference to ThisApp.Code assembly: {assemblyLocation}");
+            }
+
+
+            var (dependencies, specOut2) = _dependenciesLoader.Value.TryGetOrFallback(spec);
+            _assemblyResolver.AddAssemblies(dependencies);
+
+            //var cachedDependencies = AssemblyCacheManager.TryGetDependencies(specOut2);
+            if (/*cachedDependencies.Results*/dependencies != null)
+            {
+                foreach (var dependency in /*cachedDependencies.Results*/dependencies)
+                {
+                    var assemblyLocation = dependency/*.Assembly*/.Location;
+                    referencedAssemblies.Add(assemblyLocation);
+                    l.A($"Added reference to dependency assembly: {assemblyLocation}");
+                }
             }
 
             // Compile the template

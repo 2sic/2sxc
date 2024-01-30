@@ -20,10 +20,14 @@ internal class ThisAppCompilerNetCore : ThisAppCompiler
             _serverPaths = serverPaths,
             _thisAppCodeLoader = thisAppCodeLoader
         );
+        _tempAssemblyFolderPath = _serverPaths.Value.FullContentPath(@"App_Data\2sxc.bin");
+        // Ensure "2sxc.bin" folder exists to preserve dlls
+        Directory.CreateDirectory(_tempAssemblyFolderPath);
     }
 
     private readonly LazySvc<IServerPaths> _serverPaths;
     private readonly LazySvc<ThisAppLoader> _thisAppCodeLoader;
+
 
     protected internal override AssemblyResult GetThisApp(string virtualPath, HotBuildSpec spec)
     {
@@ -64,24 +68,5 @@ internal class ThisAppCompilerNetCore : ThisAppCompiler
             var errorMessage = $"Error: Can't compile '{ThisAppDll}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. {ex.Message}";
             return l.ReturnAsError(new(errorMessages: errorMessage), "error");
         }
-    }
-
-    private (string SymbolsPath, string AssemblyPath) GetAssemblyLocations(HotBuildSpec spec)
-    {
-        var l = Log.Fn<(string, string)>($"{spec}");
-        var tempAssemblyFolderPath = _serverPaths.Value.FullContentPath(@"App_Data\2sxc.bin");
-        l.A($"TempAssemblyFolderPath: '{tempAssemblyFolderPath}'");
-        // Ensure "2sxc.bin" folder exists to preserve dlls
-        Directory.CreateDirectory(tempAssemblyFolderPath);
-
-        // need name 
-        var assemblyName = GetAppCodeDllName(tempAssemblyFolderPath, spec);
-        l.A($"AssemblyName: '{assemblyName}'");
-        var assemblyFilePath = Path.Combine(tempAssemblyFolderPath, $"{assemblyName}.dll");
-        l.A($"AssemblyFilePath: '{assemblyFilePath}'");
-        var symbolsFilePath = Path.Combine(tempAssemblyFolderPath, $"{assemblyName}.pdb");
-        l.A($"SymbolsFilePath: '{symbolsFilePath}'");
-        var assemblyLocations = ( symbolsFilePath, assemblyFilePath );
-        return l.ReturnAsOk(assemblyLocations);
     }
 }
