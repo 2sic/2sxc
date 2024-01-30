@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Text.Json.Serialization;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
@@ -7,6 +8,7 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Data.Internal.Convert;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Internal;
@@ -16,6 +18,7 @@ using static ToSic.Eav.Data.Shared.WrapperEquality;
 
 namespace ToSic.Sxc.Data.Internal.Typed;
 
+[JsonConverter(typeof(DynamicJsonConverter))]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeService> forCodeConverter)
     : WrapObjectTyped(scrubSvc, forCodeConverter), ITypedItem

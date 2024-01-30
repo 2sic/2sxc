@@ -14,7 +14,7 @@ internal class PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item)
 {
     public JsonObject GetContents() => item;
 
-    public override object JsonSource => item;
+    public override object JsonSource() => item;
 
     #region Keys
 

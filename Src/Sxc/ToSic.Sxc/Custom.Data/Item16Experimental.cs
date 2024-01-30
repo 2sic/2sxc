@@ -5,6 +5,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Data.Internal.Convert;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Tweaks;
@@ -46,6 +47,11 @@ public abstract class Item16Experimental(ITypedItem item, NoParamOrder protector
     {
         var msg = $"Custom Data Model {GetType().FullName}";
         return item == null ? $"{msg} without backing data (null)" : msg + $" for id:{Id} ({item})";
+    }
+
+    object IHasJsonSource.JsonSource()
+    {
+        throw new NotImplementedException();
     }
 
     /// <summary>

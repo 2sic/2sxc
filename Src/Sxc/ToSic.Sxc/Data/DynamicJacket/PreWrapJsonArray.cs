@@ -17,7 +17,7 @@ internal class PreWrapJsonArray(CodeJsonWrapper wrapper, JsonArray jsonArray)
 
     public JsonArray GetContents() => UnwrappedContents;
 
-    public override object JsonSource => UnwrappedContents;
+    public override object JsonSource() => UnwrappedContents;
 
     #region Keys
 

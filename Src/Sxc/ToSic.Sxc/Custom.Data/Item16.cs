@@ -1,10 +1,12 @@
 ﻿using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Data.Internal.Convert;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Tweaks;
@@ -16,9 +18,10 @@ namespace Custom.Data;
 /// Base class for custom data objects, which are typed and can be used in Razor Components
 /// </summary>
 [PrivateApi("WIP, don't publish yet")]
+[JsonConverter(typeof(DynamicJsonConverter))]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 // ReSharper disable once UnusedMember.Global
-public abstract class Item16: ICanBeEntity, ITypedItem, ITypedItemWrapper16
+public abstract class Item16: ICanBeEntity, ITypedItem, ITypedItemWrapper16, IHasJsonSource
 {
     private ITypedItem item;
     private ServiceKit16 kit;
@@ -201,4 +204,5 @@ public abstract class Item16: ICanBeEntity, ITypedItem, ITypedItemWrapper16
 
     #endregion
 
+    object IHasJsonSource.JsonSource() => item?.JsonSource();
 }
