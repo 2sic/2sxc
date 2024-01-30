@@ -28,13 +28,11 @@ public abstract partial class BlockBase(BlockBase.MyServices services, string lo
         GenWorkPlus<WorkBlocks> appBlocks,
         LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
         LazySvc<App> appLazy,
-        LazySvc<AppConfigDelegate> appConfigDelegateLazy,
         LazySvc<BlockBuilder> blockBuilder)
-        : MyServicesBase(connect: [bdsFactoryLazy, appLazy, appConfigDelegateLazy, blockBuilder, workViews, appBlocks])
+        : MyServicesBase(connect: [bdsFactoryLazy, appLazy, blockBuilder, workViews, appBlocks])
     {
         internal LazySvc<BlockDataSourceFactory> BdsFactoryLazy { get; } = bdsFactoryLazy;
         internal LazySvc<App> AppLazy { get; } = appLazy;
-        internal LazySvc<AppConfigDelegate> AppConfigDelegateLazy { get; } = appConfigDelegateLazy;
         public LazySvc<BlockBuilder> BlockBuilder { get; } = blockBuilder;
         public GenWorkPlus<WorkViews> WorkViews { get; } = workViews;
         public GenWorkPlus<WorkBlocks> AppBlocks { get; } = appBlocks;
@@ -77,10 +75,7 @@ public abstract partial class BlockBase(BlockBase.MyServices services, string lo
         // Get App for this block
         App = Services.AppLazy.Value
             .PreInit(Context.Site)
-            .Init(this.PureIdentity(),
-                Services.AppConfigDelegateLazy.Value.BuildForNewBlock(Context, this),
-                new SxcAppDataConfigSpecs { BlockForLookupOrNull = this }
-            );
+            .Init(this.PureIdentity(), new SxcAppDataConfigSpecs { BlockForLookupOrNull = this });
         l.A("App created");
 
         // note: requires EditAllowed, which isn't ready till App is created

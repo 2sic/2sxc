@@ -1,9 +1,7 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Integration;
+﻿using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.LookUp;
 using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 using CodeInfoService = ToSic.Eav.Code.InfoSystem.CodeInfoService;
 
@@ -23,8 +21,6 @@ public partial class App : Eav.Apps.Internal.EavApp, IApp
     public App(MyServices services, 
         LazySvc<GlobalPaths> globalPaths, 
         LazySvc<IAppPathsMicroSvc> appPathsLazy,
-        Generator<IAppStates> appStates,
-        Generator<AppConfigDelegate> appConfigDelegate, 
         LazySvc<CodeDataFactory> cdf,
         LazySvc<CodeInfoService> codeChanges)
         : base(services, "App.SxcApp")
@@ -32,8 +28,6 @@ public partial class App : Eav.Apps.Internal.EavApp, IApp
         ConnectServices(
             _globalPaths = globalPaths,
             _appPathsLazy = appPathsLazy,
-            _appStates = appStates,
-            _appConfigDelegate = appConfigDelegate,
             _cdfLazy = cdf.SetInit(asc => asc.SetFallbacks(Site)),
             _codeChanges = codeChanges
         );
@@ -41,8 +35,6 @@ public partial class App : Eav.Apps.Internal.EavApp, IApp
 
     private readonly LazySvc<GlobalPaths> _globalPaths;
     private readonly LazySvc<IAppPathsMicroSvc> _appPathsLazy;
-    private readonly Generator<IAppStates> _appStates;
-    private readonly Generator<AppConfigDelegate> _appConfigDelegate;
     private readonly LazySvc<CodeInfoService> _codeChanges;
     private readonly LazySvc<CodeDataFactory> _cdfLazy;
 

@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Web.Http.Controllers;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Code.InfoSystem;
 using ToSic.Eav.Generics;
 using ToSic.Lib.Coding;
@@ -109,8 +108,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
                 l.A($"AppId: {appState.AppId}");
                 var app = services.AppOverrideLazy.Value
                     .PreInit(siteCtx.Site)
-                    .Init(appState.PureIdentity(), services.AppConfigDelegateLazy.Value.Build(),
-                        new());
+                    .Init(appState.PureIdentity(), new());
                 return l.Return(app, $"found #{app.AppId}");
             }
         }

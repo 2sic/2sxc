@@ -18,11 +18,11 @@ public partial class App
     /// Main constructor which auto-configures the app-data
     /// </summary>
     [PrivateApi]
-    public new App Init(IAppIdentityPure appIdentity, Func<EavApp, IAppDataConfiguration> buildConfig, AppDataConfigSpecs dataSpecs)
+    public new App Init(IAppIdentityPure appIdentity, AppDataConfigSpecs dataSpecs)
     {
         var l = Log.Fn<App>();
-        base.Init(appIdentity, buildConfig, dataSpecs);
-        return buildConfig == null 
+        base.Init(appIdentity, dataSpecs);
+        return dataSpecs == null 
             ? l.Return(this, "App only initialized for light use - .Data shouldn't be used") 
             : l.ReturnAsOk(this);
     }

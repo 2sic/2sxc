@@ -7,8 +7,6 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Internal;
-using ToSic.Sxc.LookUp;
-using ToSic.Sxc.LookUp.Internal;
 using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Services.Internal;
@@ -49,27 +47,15 @@ public partial class DynamicCodeService: ServiceBase<DynamicCodeService.MyServic
         public LazySvc<IAppStates> AppStates { get; }
     }
 
-    public class MyScopedServices: MyServicesBase
+    public class MyScopedServices(
+        Generator<CodeApiServiceFactory> codeRootGenerator,
+        Generator<App> appGenerator,
+        LazySvc<IModuleAndBlockBuilder> modAndBlockBuilder)
+        : MyServicesBase(connect: [codeRootGenerator, appGenerator, modAndBlockBuilder])
     {
-        public Generator<App> AppGenerator { get; }
-        public Generator<CodeApiServiceFactory> CodeRootGenerator { get; }
-        public Generator<AppConfigDelegate> AppConfigDelegateGenerator { get; }
-        public LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder { get; }
-
-        public MyScopedServices(
-            Generator<CodeApiServiceFactory> codeRootGenerator,
-            Generator<App> appGenerator,
-            Generator<AppConfigDelegate> appConfigDelegateGenerator,
-            Generator<SxcAppDataConfigProvider> appDataConfigProvider,
-            LazySvc<IModuleAndBlockBuilder> modAndBlockBuilder)
-        {
-            ConnectServices(
-                CodeRootGenerator = codeRootGenerator,
-                AppGenerator = appGenerator,
-                AppConfigDelegateGenerator = appConfigDelegateGenerator,
-                ModAndBlockBuilder = modAndBlockBuilder
-            );
-        }
+        public Generator<App> AppGenerator { get; } = appGenerator;
+        public Generator<CodeApiServiceFactory> CodeRootGenerator { get; } = codeRootGenerator;
+        public LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder { get; } = modAndBlockBuilder;
     }
 
     public DynamicCodeService(MyServices services): this(services, $"{SxcLogging.SxcLogName}.DCS") { }

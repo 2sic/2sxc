@@ -75,7 +75,6 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<BlockBase.MyServices>();
 
         // Configuration Provider WIP
-        services.TryAddTransient<AppConfigDelegate>();
         services.TryAddTransient<IAppDataConfigProvider, SxcAppDataConfigProvider>(); // new v17
         services.TryAddTransient<App>();
         services.TryAddTransient<SxcImportExportEnvironmentBase.MyServices>();

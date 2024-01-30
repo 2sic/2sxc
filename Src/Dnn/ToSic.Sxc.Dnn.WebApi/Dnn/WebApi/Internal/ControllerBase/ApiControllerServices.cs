@@ -2,7 +2,6 @@
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Dnn.Integration;
-using ToSic.Sxc.LookUp;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal;
 
@@ -12,24 +11,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Internal;
 /// But for consistency, we're building a comparable structure here.
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ApiControllerMyServices : MyServicesBase
+public class ApiControllerMyServices(
+    CodeApiServiceFactory codeApiServiceFactory,
+    DnnAppFolderUtilities appFolderUtilities,
+    LazySvc<Apps.App> appOverrideLazy)
+    : MyServicesBase(connect: [codeApiServiceFactory, appFolderUtilities, appOverrideLazy])
 {
-    public LazySvc<AppConfigDelegate> AppConfigDelegateLazy { get; }
-    public LazySvc<Apps.App> AppOverrideLazy { get; }
-    public CodeApiServiceFactory CodeApiServiceFactory { get; }
-    public DnnAppFolderUtilities AppFolderUtilities { get; }
-
-    public ApiControllerMyServices(
-        CodeApiServiceFactory codeApiServiceFactory,
-        DnnAppFolderUtilities appFolderUtilities,
-        LazySvc<Apps.App> appOverrideLazy,
-        LazySvc<AppConfigDelegate> appConfigDelegateLazy)
-    {
-        ConnectServices(
-            CodeApiServiceFactory = codeApiServiceFactory,
-            AppFolderUtilities = appFolderUtilities,
-            AppOverrideLazy = appOverrideLazy,
-            AppConfigDelegateLazy = appConfigDelegateLazy
-        );
-    }
+    public LazySvc<Apps.App> AppOverrideLazy { get; } = appOverrideLazy;
+    public CodeApiServiceFactory CodeApiServiceFactory { get; } = codeApiServiceFactory;
+    public DnnAppFolderUtilities AppFolderUtilities { get; } = appFolderUtilities;
 }

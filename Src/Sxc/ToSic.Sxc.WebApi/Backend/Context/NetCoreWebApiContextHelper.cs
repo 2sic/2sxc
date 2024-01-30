@@ -119,10 +119,7 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
         var l = Log.Fn<IApp>($"{appId}");
         var app = _helper.GetService<Apps.App>();
         app.PreInit(site);
-        return l.Return(app.Init(new AppIdentityPure(site.ZoneId, appId),
-            _helper.GetService<AppConfigDelegate>().Build(),
-            new()
-            ));
+        return l.Return(app.Init(new AppIdentityPure(site.ZoneId, appId), new()));
     }
 
 
