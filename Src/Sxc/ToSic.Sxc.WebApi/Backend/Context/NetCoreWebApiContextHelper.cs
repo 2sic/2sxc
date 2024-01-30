@@ -1,26 +1,18 @@
 ﻿#if NETCOREAPP
-using System;
 using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Code;
-using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Lib.Coding;
-using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Backend.Adam;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
-using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.LookUp;
-using ToSic.Sxc.WebApi;
+using ToSic.Sxc.LookUp.Internal;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Backend.Context;
@@ -127,7 +119,10 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
         var l = Log.Fn<IApp>($"{appId}");
         var app = _helper.GetService<Apps.App>();
         app.PreInit(site);
-        return l.Return(app.Init(new AppIdentityPure(site.ZoneId, appId), _helper.GetService<AppConfigDelegate>().Build()));
+        return l.Return(app.Init(new AppIdentityPure(site.ZoneId, appId),
+            _helper.GetService<AppConfigDelegate>().Build(),
+            new()
+            ));
     }
 
 

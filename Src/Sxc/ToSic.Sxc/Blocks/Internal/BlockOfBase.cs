@@ -11,6 +11,7 @@ using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.LookUp.Internal;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -22,34 +23,21 @@ public abstract partial class BlockBase(BlockBase.MyServices services, string lo
 {
     #region Constructor and DI
 
-    public class MyServices: MyServicesBase
+    public class MyServices(
+        GenWorkPlus<WorkViews> workViews,
+        GenWorkPlus<WorkBlocks> appBlocks,
+        LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
+        LazySvc<App> appLazy,
+        LazySvc<AppConfigDelegate> appConfigDelegateLazy,
+        LazySvc<BlockBuilder> blockBuilder)
+        : MyServicesBase(connect: [bdsFactoryLazy, appLazy, appConfigDelegateLazy, blockBuilder, workViews, appBlocks])
     {
-
-        public MyServices(
-            GenWorkPlus<WorkViews> workViews,
-            GenWorkPlus<WorkBlocks> appBlocks,
-            LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
-            LazySvc<App> appLazy,
-            LazySvc<AppConfigDelegate> appConfigDelegateLazy,
-            LazySvc<BlockBuilder> blockBuilder
-        )
-        {
-            ConnectServices(
-                BdsFactoryLazy = bdsFactoryLazy,
-                AppLazy = appLazy,
-                AppConfigDelegateLazy = appConfigDelegateLazy,
-                BlockBuilder = blockBuilder,
-                WorkViews = workViews,
-                AppBlocks = appBlocks
-            );
-        }
-
-        internal LazySvc<BlockDataSourceFactory> BdsFactoryLazy { get; }
-        internal LazySvc<App> AppLazy { get; }
-        internal LazySvc<AppConfigDelegate> AppConfigDelegateLazy { get; }
-        public LazySvc<BlockBuilder> BlockBuilder { get; }
-        public GenWorkPlus<WorkViews> WorkViews { get; }
-        public GenWorkPlus<WorkBlocks> AppBlocks { get; }
+        internal LazySvc<BlockDataSourceFactory> BdsFactoryLazy { get; } = bdsFactoryLazy;
+        internal LazySvc<App> AppLazy { get; } = appLazy;
+        internal LazySvc<AppConfigDelegate> AppConfigDelegateLazy { get; } = appConfigDelegateLazy;
+        public LazySvc<BlockBuilder> BlockBuilder { get; } = blockBuilder;
+        public GenWorkPlus<WorkViews> WorkViews { get; } = workViews;
+        public GenWorkPlus<WorkBlocks> AppBlocks { get; } = appBlocks;
     }
 
     protected void Init(IContextOfBlock context, IAppIdentity appId)
@@ -89,7 +77,10 @@ public abstract partial class BlockBase(BlockBase.MyServices services, string lo
         // Get App for this block
         App = Services.AppLazy.Value
             .PreInit(Context.Site)
-            .Init(this.PureIdentity(), Services.AppConfigDelegateLazy.Value.BuildForNewBlock(Context, this));
+            .Init(this.PureIdentity(),
+                Services.AppConfigDelegateLazy.Value.BuildForNewBlock(Context, this),
+                new SxcAppDataConfigSpecs { BlockForLookupOrNull = this }
+            );
         l.A("App created");
 
         // note: requires EditAllowed, which isn't ready till App is created

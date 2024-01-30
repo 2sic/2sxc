@@ -8,6 +8,7 @@ using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.LookUp.Internal;
 using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Services.Internal;
@@ -59,6 +60,7 @@ public partial class DynamicCodeService: ServiceBase<DynamicCodeService.MyServic
             Generator<CodeApiServiceFactory> codeRootGenerator,
             Generator<App> appGenerator,
             Generator<AppConfigDelegate> appConfigDelegateGenerator,
+            Generator<SxcAppDataConfigProvider> appDataConfigProvider,
             LazySvc<IModuleAndBlockBuilder> modAndBlockBuilder)
         {
             ConnectServices(
