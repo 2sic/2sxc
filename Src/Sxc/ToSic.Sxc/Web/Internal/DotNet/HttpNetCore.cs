@@ -1,6 +1,5 @@
 ﻿#if !NETFRAMEWORK
 using System.Collections.Specialized;
-using System.Linq;
 using Microsoft.AspNetCore.Http;
 
 namespace ToSic.Sxc.Web.Internal.DotNet;
