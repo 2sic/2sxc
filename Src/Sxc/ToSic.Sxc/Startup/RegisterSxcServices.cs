@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Internal;
 using ToSic.Eav.DataSource.Internal.AppDataSources;
@@ -11,7 +12,6 @@ using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
@@ -22,15 +22,14 @@ using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Images;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Integration;
 using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Internal.Plumbing;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.LookUp.Internal;
 using ToSic.Sxc.Services.Internal;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.DotNet;
 using ToSic.Sxc.Web.Internal.EditUi;
@@ -77,6 +76,7 @@ public static partial class RegisterSxcServices
 
         // Configuration Provider WIP
         services.TryAddTransient<AppConfigDelegate>();
+        services.TryAddTransient<IAppDataConfigProvider, SxcAppDataConfigProvider>(); // new v17
         services.TryAddTransient<App>();
         services.TryAddTransient<SxcImportExportEnvironmentBase.MyServices>();
 

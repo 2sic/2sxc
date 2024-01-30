@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Context;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -20,16 +21,18 @@ public partial class DynamicCodeService
 
         // lookup zoneId if not provided
         var realZoneId = zoneId ?? Services.AppStates.Value.IdentityOfApp(realAppId).ZoneId;
-        return App(new AppIdentityPure(realZoneId, realAppId), site, withUnpublished: withUnpublished);
+        return App(new AppIdentityPure(realZoneId, realAppId), site, showDrafts: withUnpublished);
     }
 
-    public IApp AppOfSite() => AppOfSite(siteId: null);
+    /// <inheritdoc />
+    public IApp AppOfSite() => AppOfSite(noParamOrder: default);
 
+    /// <inheritdoc />
     // ReSharper disable once MethodOverloadWithOptionalParameter
     public IApp AppOfSite(NoParamOrder noParamOrder = default, int? siteId = null, ISite site = null, bool? withUnpublished = null)
         => App(GetPrimaryAppIdentity(siteId, site), site, withUnpublished);
 
-    private IAppIdentityPure GetPrimaryAppIdentity(int? siteId, ISite site)
+    private IAppIdentityPure GetPrimaryAppIdentity(int? siteId, ISite site = default)
     {
         siteId ??= site?.Id ?? Services.Site.Value.Id;
         var zoneId = Services.ZoneMapper.Value.GetZoneId(siteId.Value);
@@ -38,12 +41,15 @@ public partial class DynamicCodeService
     }
 
 
-    private IApp App(IAppIdentityPure appIdentity, ISite site, bool? withUnpublished = null)
+    private IApp App(IAppIdentityPure appIdentity, ISite site, bool? showDrafts = null)
     {
-        var wrapLog = Log.Fn<IApp>($"{appIdentity.Show()}, site:{site != null}, showDrafts: {withUnpublished}");
+        var wrapLog = Log.Fn<IApp>($"{appIdentity.Show()}, site:{site != null}, showDrafts: {showDrafts}");
         var app = _myScopedServices.AppGenerator.New();
         if (site != null) app.PreInit(site);
-        var appStuff = app.Init(appIdentity, _myScopedServices.AppConfigDelegateGenerator.New().Build(withUnpublished));
+        var appStuff = app.Init(appIdentity,
+            _myScopedServices.AppConfigDelegateGenerator.New().Build(showDrafts),
+            new() { ShowDrafts = showDrafts }
+            );
         return wrapLog.Return(appStuff);
     }
 
