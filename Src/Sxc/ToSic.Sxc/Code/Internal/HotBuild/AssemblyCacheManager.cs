@@ -24,15 +24,11 @@ public class AssemblyCacheManager() : ServiceBase(SxcLogging.SxcLogName + ".Asse
 
     #region Static Calls Only - for use before the object is created using DI
 
-    private static string KeyTemplate(string templateFullPath) => $"{GlobalCacheRoot}v:{templateFullPath.ToLowerInvariant()}";
+    internal static string KeyTemplate(string templateFullPath) => $"{GlobalCacheRoot}v:{templateFullPath.ToLowerInvariant()}";
 
     private static AssemblyResult Get(string key) => Cache[key] as AssemblyResult;
 
-    public static (AssemblyResult Result, string cacheKey) TryGetTemplate(string templateFullPath)
-    {
-        var cacheKey = KeyTemplate(templateFullPath);
-        return (Get(cacheKey), cacheKey);
-    }
+    public static AssemblyResult TryGetTemplate(string templateFullPath) => Get(KeyTemplate(templateFullPath));
 
     #endregion
 
