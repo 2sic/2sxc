@@ -205,4 +205,59 @@ public abstract class Item16: ICanBeEntity, ITypedItem, ITypedItemWrapper16, IHa
     #endregion
 
     object IHasJsonSource.JsonSource() => item?.JsonSource();
+
+    #region New Child<T> / Children<T>
+
+    /// <summary>
+    /// EXPERIMENTAL
+    /// </summary>
+    /// <returns></returns>
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public T Child<T>([CallerMemberName] string name = default, NoParamOrder protector = default,
+        bool? required = default, bool nullIfNull = false)
+        where T : class, ITypedItemWrapper16, ITypedItem, new()
+        => Kit._CodeApiSvc._Cdf.AsCustom<T>(
+            source: Child(name, required: required),
+            kit: Kit, protector: protector, nullIfNull: nullIfNull
+        );
+
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public IEnumerable<T> Children<T>([CallerMemberName] string field = default, NoParamOrder protector = default,
+        string type = default,
+        bool? required = default, bool nullIfNull = default)
+        where T : class, ITypedItemWrapper16, ITypedItem, new()
+        => Kit._CodeApiSvc._Cdf.AsCustomList<T>(
+            source: Children(field: field, noParamOrder: protector, type: type, required: required),
+            kit: Kit, protector: protector, nullIfNull: nullIfNull
+        );
+
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public T Parent<T>(NoParamOrder protector = default, bool? current = default, string type = default,
+        string field = default, bool nullIfNull = false)
+        where T : class, ITypedItemWrapper16, ITypedItem, new()
+        => Kit._CodeApiSvc._Cdf.AsCustom<T>(
+            source: Parent(noParamOrder: protector, current: current, type: type, field: field),
+            kit: Kit, protector: protector, nullIfNull: nullIfNull
+        );
+
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public IEnumerable<T> Parents<T>(NoParamOrder protector = default,
+        string type = default, string field = default,
+        bool nullIfNull = default)
+        where T : class, ITypedItemWrapper16, ITypedItem, new()
+        => Kit._CodeApiSvc._Cdf.AsCustomList<T>(
+            source: Parents(noParamOrder: protector, field: field, type: type),
+            kit: Kit, protector: protector, nullIfNull: nullIfNull
+        );
+
+
+    ///// <inheritdoc />
+    //public IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder = default, string type = default, string field = default) => item.Parents(noParamOrder, type, field);
+
+
+    #endregion
 }

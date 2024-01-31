@@ -22,7 +22,7 @@ partial class CodeDataFactory
     /// </summary>
     [PrivateApi("WIP, don't publish yet")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public IEnumerable<T> AsCustomList<T>(IEnumerable<ICanBeEntity> source, ServiceKit16 kit, NoParamOrder protector = default, bool nullIfNull = default)
+    public IEnumerable<T> AsCustomList<T>(IEnumerable<ICanBeEntity> source, ServiceKit16 kit, NoParamOrder protector, bool nullIfNull)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
     {
         if (nullIfNull && source == null) return null;
