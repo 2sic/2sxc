@@ -12,7 +12,7 @@ public abstract class ThisAppCompiler() : ServiceBase("Sxc.MyApCd")
     public const bool UseSubfolders = true;
     public const string ThisAppDll = "ThisApp.dll";
 
-    protected string _tempAssemblyFolderPath;
+    protected string TempAssemblyFolderPath;
 
     protected internal abstract AssemblyResult GetThisApp(string relativePath, HotBuildSpec spec);
 
@@ -96,14 +96,14 @@ public abstract class ThisAppCompiler() : ServiceBase("Sxc.MyApCd")
     protected (string SymbolsPath, string AssemblyPath) GetAssemblyLocations(HotBuildSpec spec)
     {
         var l = Log.Fn<(string, string)>($"{spec}");
-        l.A($"TempAssemblyFolderPath: '{_tempAssemblyFolderPath}'");
+        l.A($"TempAssemblyFolderPath: '{TempAssemblyFolderPath}'");
 
         // need name 
-        var assemblyName = GetAppCodeDllName(_tempAssemblyFolderPath, spec);
+        var assemblyName = GetAppCodeDllName(TempAssemblyFolderPath, spec);
         l.A($"AssemblyName: '{assemblyName}'");
-        var assemblyFilePath = Path.Combine(_tempAssemblyFolderPath, $"{assemblyName}.dll");
+        var assemblyFilePath = Path.Combine(TempAssemblyFolderPath, $"{assemblyName}.dll");
         l.A($"AssemblyFilePath: '{assemblyFilePath}'");
-        var symbolsFilePath = Path.Combine(_tempAssemblyFolderPath, $"{assemblyName}.pdb");
+        var symbolsFilePath = Path.Combine(TempAssemblyFolderPath, $"{assemblyName}.pdb");
         l.A($"SymbolsFilePath: '{symbolsFilePath}'");
         var assemblyLocations = (symbolsFilePath, assemblyFilePath);
         return l.ReturnAsOk(assemblyLocations);
@@ -112,12 +112,12 @@ public abstract class ThisAppCompiler() : ServiceBase("Sxc.MyApCd")
     protected internal string GetDependencyAssemblyLocations(string dependency, HotBuildSpec spec)
     {
         var l = Log.Fn<string>($"{spec}");
-        l.A($"TempAssemblyFolderPath: '{_tempAssemblyFolderPath}'");
+        l.A($"TempAssemblyFolderPath: '{TempAssemblyFolderPath}'");
 
         // need random name, because assemblies has to be preserved on disk, and we can not replace them until AppDomain is unloaded 
-        var assemblyName = GetDependencyDllName(dependency, _tempAssemblyFolderPath, spec);
+        var assemblyName = GetDependencyDllName(dependency, TempAssemblyFolderPath, spec);
         l.A($"AssemblyName: '{assemblyName}'");
-        var assemblyFilePath = Path.Combine(_tempAssemblyFolderPath, $"{assemblyName}.dll");
+        var assemblyFilePath = Path.Combine(TempAssemblyFolderPath, $"{assemblyName}.dll");
         l.A($"AssemblyFilePath: '{assemblyFilePath}'");
 
         return l.ReturnAsOk(assemblyFilePath);

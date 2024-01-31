@@ -28,16 +28,17 @@ public class AssemblyResolver
     public void AddAssemblies(List<Assembly> assemblies, string appRelativePath = null)
     {
         if (assemblies == null) return;
-        foreach (var r in assemblies) 
-            AddAssembly(r, appRelativePath);
+        foreach (var assembly in assemblies) 
+            AddAssembly(assembly, appRelativePath);
     }
 
     public void AddAssembly(Assembly assembly, string appRelativePath = null)
     {
         if (assembly == null) return;
-        _assemblyCache.TryAdd(assembly.GetName().FullName, assembly);
+        _assemblyCache[assembly.GetName().FullName] = assembly;
 
-        if (appRelativePath != null) _assemblyPathPerApp.TryAdd(appRelativePath, assembly.Location);
+        if (appRelativePath != null && !string.IsNullOrEmpty(assembly.Location)) 
+            _assemblyPathPerApp[appRelativePath] = assembly.Location;
     }
 
     public string GetAssemblyLocation(string appRelativePath)

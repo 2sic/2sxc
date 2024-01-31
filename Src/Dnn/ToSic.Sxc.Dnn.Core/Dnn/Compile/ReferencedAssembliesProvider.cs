@@ -3,19 +3,32 @@ using System.IO;
 using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Configuration;
+using ToSic.Lib.Services;
+using ToSic.Sxc.Code.Internal.HotBuild;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.Dnn.Compile
 {
     [PrivateApi]
-    public class ReferencedAssembliesProvider : IReferencedAssembliesProvider
+    public class ReferencedAssembliesProvider : ServiceBase, IReferencedAssembliesProvider
     {
-        
-        private static readonly ConcurrentDictionary<string, List<string>> ReferencedAssembliesCache = new(InvariantCultureIgnoreCase);
+        private readonly Lazy<DependenciesLoader> _dependenciesLoader;
+        private readonly AssemblyResolver _assemblyResolver;
 
-        public List<string> Locations(string virtualPath)
+        // cache of referenced assemblies per virtual path
+        private readonly ConcurrentDictionary<string, List<string>> _referencedAssembliesCache = new(InvariantCultureIgnoreCase);
+
+        public ReferencedAssembliesProvider(Lazy<DependenciesLoader> dependenciesLoader, AssemblyResolver assemblyResolver) : base("Sxc.RefAP")
         {
-            if (ReferencedAssembliesCache.TryGetValue(virtualPath, out var cachedResult))
+            ConnectServices(
+                _dependenciesLoader = dependenciesLoader,
+                _assemblyResolver = assemblyResolver
+                );
+        }
+
+        public List<string> Locations(string virtualPath, HotBuildSpec spec)
+        {
+            if (_referencedAssembliesCache.TryGetValue(virtualPath, out var cachedResult))
                 return [..cachedResult];
 
             var referencedAssemblies = new List<string>(AppReferencedAssemblies());
@@ -37,6 +50,17 @@ namespace ToSic.Sxc.Dnn.Compile
                 }
             }
 
+            if (spec != null)
+            {
+                // TODO: need to invalidate this cache (_referencedAssembliesCache, _assemblyResolver, ...) if there is change in Dependencies folder
+                var (dependencies, _) = _dependenciesLoader.Value.TryGetOrFallback(spec);
+                _assemblyResolver.AddAssemblies(dependencies);
+
+                if (dependencies != null)
+                    foreach (var dependency in dependencies)
+                        referencedAssemblies.Add(dependency.Location);
+            }
+
             // deduplicate referencedAssemblies by filename, keep last duplicate
             referencedAssemblies = referencedAssemblies
                 //.Where(IsValidAssembly)
@@ -44,7 +68,7 @@ namespace ToSic.Sxc.Dnn.Compile
                 .Select(g => g.Last())
                 .ToList();
 
-            ReferencedAssembliesCache.TryAdd(virtualPath, referencedAssemblies);
+            _referencedAssembliesCache.TryAdd(virtualPath, referencedAssemblies);
 
             return [..referencedAssemblies];
         }
