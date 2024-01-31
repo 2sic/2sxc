@@ -1,32 +1,33 @@
-﻿using ToSic.Eav.LookUp;
+﻿using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.LookUp;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.LookUp;
+using ToSic.Sxc.LookUp.Internal;
 
 namespace ToSic.Sxc.Backend.Admin.Query;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class QueryControllerReal: QueryControllerBase<QueryControllerReal>
 {
+    private readonly Generator<IAppDataConfigProvider> _tokenEngineWithContext;
     private readonly GenWorkPlus<WorkViews> _workViews;
     public const string LogSuffix = "Query";
     public const string LogGroup = EavWebApiConstants.HistoryNameWebApi + "-query";
 
     private readonly ISxcContextResolver _contextResolver;
-    private readonly AppConfigDelegate _appConfigMaker;
 
     public QueryControllerReal(
         MyServices services,
         GenWorkPlus<WorkViews> workViews,
         ISxcContextResolver contextResolver,
-        AppConfigDelegate appConfigMaker
+        Generator<IAppDataConfigProvider> tokenEngineWithContext
     ) : base(services, "Api." + LogSuffix)
     {
         ConnectServices(
             _workViews = workViews,
             _contextResolver = contextResolver,
-            _appConfigMaker = appConfigMaker
+            _tokenEngineWithContext = tokenEngineWithContext
         );
     }
     /// <summary>
@@ -62,10 +63,11 @@ public class QueryControllerReal: QueryControllerBase<QueryControllerReal>
     public QueryRunDto RunDev(int appId, int id, int top)
         => RunDevInternal(appId, id, LookUpEngineWithBlockRequired(), top, builtQuery => builtQuery.Main);
 
-    private LookUpEngine LookUpEngineWithBlockRequired()
+    private ILookUpEngine LookUpEngineWithBlockRequired()
     {
         var block = _contextResolver.BlockRequired();
-        var lookUps = _appConfigMaker.GetLookupEngineForContext(block.Context, block.App, block);
+        var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = block };
+        var lookUps = _tokenEngineWithContext.New().GetDataConfiguration(block.App as EavApp, specs).Configuration;
         return lookUps;
     }
 

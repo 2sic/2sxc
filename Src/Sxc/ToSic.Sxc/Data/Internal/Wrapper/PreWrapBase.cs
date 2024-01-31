@@ -3,13 +3,14 @@ using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Data;
+using ToSic.Sxc.Data.Internal.Convert;
 using ToSic.Sxc.Data.Internal.Typed;
 using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data.Internal.Wrapper;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal abstract class PreWrapBase(object data) : IWrapper<object>
+internal abstract class PreWrapBase(object data) : IWrapper<object>, IHasJsonSource
 {
     #region IWrapper
 
@@ -21,7 +22,7 @@ internal abstract class PreWrapBase(object data) : IWrapper<object>
 
     #region Abstract things which must be implemented like TryGetWrap
 
-    public abstract object JsonSource { get; }
+    public abstract object JsonSource();
 
     public abstract TryGetResult TryGetWrap(string name, bool wrapDefault = true);
 

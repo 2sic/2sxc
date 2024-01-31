@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Metadata;
+using ToSic.Sxc.Data.Internal.Convert;
 using ToSic.Sxc.Data.Internal.Dynamic;
 
 namespace ToSic.Sxc.Data.Internal.Metadata;
@@ -53,6 +54,8 @@ internal partial class Metadata: DynamicEntity, IMetadata, IHasPropLookup
         //return EqualsWrapper(this, (IWrapper<IEntity>)b);
         return false;
     }
+
+    object IHasJsonSource.JsonSource() => throw new NotImplementedException();
 
     bool IEquatable<ITypedItem>.Equals(ITypedItem other) => Equals(other);
 

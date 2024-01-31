@@ -9,7 +9,6 @@ using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Internal;
-using ToSic.Sxc.LookUp;
 using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -176,7 +175,7 @@ public static class Factory
         if (site != null) app.PreInit(site);
         site ??= GetSite(log: log);
         var appIdentity = zoneId == AutoLookupZoneId ? new(site.ZoneId, appId) : new AppIdentityPure(zoneId, appId);
-        var appStuff = app.Init(appIdentity, StaticBuild<AppConfigDelegate>(log).Build(showDrafts));
+        var appStuff = app.Init(appIdentity, new() { ShowDrafts = showDrafts });
         return appStuff;
     }
 

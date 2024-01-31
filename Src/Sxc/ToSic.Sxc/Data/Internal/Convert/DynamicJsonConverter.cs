@@ -21,7 +21,7 @@ public class DynamicJsonConverter: JsonConverter<object>
         if (value is not IHasJsonSource hasJsonSource)
             throw new ArgumentException($"Object should be a {nameof(IHasJsonSource)}", nameof(value));
 
-        JsonSerializer.Serialize(writer, hasJsonSource.JsonSource, options);
+        JsonSerializer.Serialize(writer, hasJsonSource.JsonSource(), options);
     }
 
     public override bool CanConvert(Type objectType) =>

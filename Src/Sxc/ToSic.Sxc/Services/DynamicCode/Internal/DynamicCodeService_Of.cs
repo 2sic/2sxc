@@ -34,10 +34,10 @@ public partial class DynamicCodeService
     }
 
     /// <inheritdoc />
-    public IDynamicCode12 OfSite() => OfApp(GetPrimaryAppIdentity(null, Services.Site.Value));
+    public IDynamicCode12 OfSite() => OfApp(GetPrimaryAppIdentity(null));
 
     /// <inheritdoc />
-    public IDynamicCode12 OfSite(int siteId) => OfApp(GetPrimaryAppIdentity(siteId, null));
+    public IDynamicCode12 OfSite(int siteId) => OfApp(GetPrimaryAppIdentity(siteId));
 
     private IDynamicCode12 OfAppInternal(int? zoneId = null, int? appId = null)
     {

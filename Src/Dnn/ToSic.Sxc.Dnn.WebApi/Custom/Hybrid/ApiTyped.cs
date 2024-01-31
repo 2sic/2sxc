@@ -283,4 +283,31 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     #endregion
 
+    #region As / AsList WIP v17
+
+    /// <summary>
+    /// EXPERIMENTAL
+    /// </summary>
+    /// <param name="source"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    protected T As<T>(ICanBeEntity source)
+        where T : class, ITypedItemWrapper16, ITypedItem, new()
+        => _CodeApiSvc._Cdf.AsCustom<T>(source, Kit);
+
+    /// <summary>
+    /// EXPERIMENTAL
+    /// </summary>
+    /// <param name="source"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    protected IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source)
+        where T : class, ITypedItemWrapper16, ITypedItem, new()
+        => _CodeApiSvc._Cdf.AsCustomList<T>(source, Kit);
+
+    #endregion
 }

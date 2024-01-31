@@ -147,7 +147,7 @@ public class WrapObjectTyped(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeSer
     #region Explicit interfaces for Json, PropertyLookup etc.
 
     [PrivateApi]
-    object IHasJsonSource.JsonSource => PreWrap.JsonSource;
+    object IHasJsonSource.JsonSource() => PreWrap.JsonSource();
 
     #endregion
 

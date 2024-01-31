@@ -2,14 +2,14 @@
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.LookUp.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Engines;
@@ -20,9 +20,12 @@ namespace ToSic.Sxc.Engines;
 [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
 [EngineDefinition(Name = "Token")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class TokenEngine : EngineBase
+public class TokenEngine(
+    EngineBase.MyServices services,
+    LazySvc<CodeApiServiceFactory> codeRootFactory,
+    Generator<IAppDataConfigProvider> tokenEngineWithContext)
+    : EngineBase(services, connect: [codeRootFactory, tokenEngineWithContext])
 {
-
     #region Replacement List to still support old Tokens
     // Version 6 to 7
     /// <summary>
@@ -72,19 +75,6 @@ public class TokenEngine : EngineBase
         | RegexOptions.IgnorePatternWhitespace);
     #endregion
 
-    #region Constructor / DI
-
-    private readonly LazySvc<CodeApiServiceFactory> _codeRootFactory;
-    private readonly Generator<AppConfigDelegate> _appConfigDelegateGenerator;
-
-    public TokenEngine(MyServices services, LazySvc<CodeApiServiceFactory> codeRootFactory, Generator<AppConfigDelegate> appConfigDelegateGenerator) : base(services) =>
-        ConnectServices(
-            _codeRootFactory = codeRootFactory,
-            _appConfigDelegateGenerator = appConfigDelegateGenerator
-        );
-
-    #endregion
-
     private ICodeApiService _data;
 
     private TokenReplace _tokenReplace;
@@ -97,12 +87,14 @@ public class TokenEngine : EngineBase
         InitTokenReplace();
     }
 
-    private void InitDataHelper() => _data = _codeRootFactory.Value
+    private void InitDataHelper() => _data = codeRootFactory.Value
         .BuildCodeRoot(null, Block, Log, CompatibilityLevels.CompatibilityLevel9Old);
 
     private void InitTokenReplace()
     {
-        var confProv = _appConfigDelegateGenerator.New().GetLookupEngineForContext(Block.Context, Block.App, Block);
+        var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = Block };
+        var appDataConfig = tokenEngineWithContext.New().GetDataConfiguration(Block.App as EavApp, specs);
+        var confProv = appDataConfig.Configuration;
         _tokenReplace = new(confProv);
             
         // Add the Content and ListContent property sources used always

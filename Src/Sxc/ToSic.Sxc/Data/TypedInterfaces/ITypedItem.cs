@@ -1,4 +1,6 @@
-﻿using ToSic.Sxc.Data.Internal;
+﻿using System.Text.Json.Serialization;
+using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Data.Internal.Convert;
 
 namespace ToSic.Sxc.Data;
 
@@ -11,7 +13,8 @@ namespace ToSic.Sxc.Data;
 /// Introduced in 2sxc 16.01
 /// </remarks>
 [PublicApi]
-public partial interface ITypedItem: ITyped, ICanBeEntity, ICanBeItem, IEquatable<ITypedItem>
+[JsonConverter(typeof(DynamicJsonConverter))]
+public partial interface ITypedItem: ITyped, ICanBeEntity, ICanBeItem, IEquatable<ITypedItem>, IHasJsonSource
 {
     /// <summary>
     /// A dynamic accessor for properties, to quickly get values when you don't care about type safety.

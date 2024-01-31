@@ -1,4 +1,5 @@
 ﻿using System.CodeDom.Compiler;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Caching;
@@ -7,11 +8,13 @@ using System.Web.Razor;
 using System.Web.Razor.Generator;
 using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
+using static System.StringComparer;
 using CodeCompiler = ToSic.Sxc.Code.Internal.HotBuild.CodeCompiler;
 
 namespace ToSic.Sxc.Dnn.Razor.Internal
@@ -21,6 +24,8 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
     /// </summary>
     public class RoslynBuildManager : ServiceBase, IRoslynBuildManager
     {
+        private static readonly ConcurrentDictionary<string, object> CompileAssemblyLocks = new(InvariantCultureIgnoreCase);
+
         private const string DefaultNamespace = "RazorHost";
 
         // TODO: THIS IS PROBABLY Wrong, but not important for now
@@ -29,14 +34,16 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
         private readonly AssemblyCacheManager _assemblyCacheManager;
         private readonly LazySvc<ThisAppLoader> _thisAppCodeLoader;
+        private readonly LazySvc<DependenciesLoader> _dependenciesLoader;
         private readonly AssemblyResolver _assemblyResolver;
         private readonly IReferencedAssembliesProvider _referencedAssembliesProvider;
 
-        public RoslynBuildManager(AssemblyCacheManager assemblyCacheManager, LazySvc<ThisAppLoader> thisAppCodeLoader, AssemblyResolver assemblyResolver, IReferencedAssembliesProvider referencedAssembliesProvider) : base("Dnn.RoslynBuildManager")
+        public RoslynBuildManager(AssemblyCacheManager assemblyCacheManager, LazySvc<ThisAppLoader> thisAppCodeLoader, LazySvc<DependenciesLoader> dependenciesLoader, AssemblyResolver assemblyResolver, IReferencedAssembliesProvider referencedAssembliesProvider) : base("Dnn.RoslynBuildManager")
         {
             ConnectServices(
                 _assemblyCacheManager = assemblyCacheManager,
                 _thisAppCodeLoader = thisAppCodeLoader,
+                _dependenciesLoader = dependenciesLoader,
                 _assemblyResolver = assemblyResolver,
                 _referencedAssembliesProvider = referencedAssembliesProvider
             );
@@ -53,21 +60,24 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
         public AssemblyResult GetCompiledAssembly(CodeFileInfo codeFileInfo, string className, HotBuildSpec spec)
         {
+            var l = Log.Fn<AssemblyResult>($"{codeFileInfo}; {spec};");
+
+            var lockObject = new object();
+            if (!CompileAssemblyLocks.TryAdd(codeFileInfo.FullPath, lockObject))
+                CompileAssemblyLocks.TryGetValue(codeFileInfo.FullPath, out lockObject);
+
+            var result = new TryLockTryDo(lockObject).Call(
+                condition: () => AssemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath)?.MainType == null,
+                generator: () => OnCacheMiss(codeFileInfo, className, spec),
+                cacheOrDefault: AssemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath));
+
+            return l.ReturnAsOk(result);
+
+        }
+
+        private AssemblyResult OnCacheMiss(CodeFileInfo codeFileInfo, string className, HotBuildSpec spec)
+        {
             var l = Log.Fn<AssemblyResult>($"{codeFileInfo}; {spec};", timer: true);
-
-            // Check if the template is already in the assembly cache
-            var (result, cacheKey) = AssemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath);
-            if (result != null)
-            {
-                var cacheAssembly = result.Assembly;
-                var cacheClassName = result.SafeClassName;
-                l.A($"Template found in cache. Assembly: {cacheAssembly?.FullName}, Class: {cacheClassName}");
-                if (result.MainType != null)
-                    return l.ReturnAsOk(result);
-            }
-
-            // If the assembly was not in the cache, we need to compile it
-            l.A($"Template not found in cache. Path: {codeFileInfo.FullPath}");
 
             // Initialize the list of referenced assemblies with the default ones
             var referencedAssemblies = _referencedAssembliesProvider.Locations(codeFileInfo.RelativePath);
@@ -87,6 +97,21 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
                 var assemblyLocation = thisAppCodeAssembly.Location;
                 referencedAssemblies.Add(assemblyLocation);
                 l.A($"Added reference to ThisApp.Code assembly: {assemblyLocation}");
+            }
+
+
+            var (dependencies, specOut2) = _dependenciesLoader.Value.TryGetOrFallback(spec);
+            _assemblyResolver.AddAssemblies(dependencies);
+
+            //var cachedDependencies = AssemblyCacheManager.TryGetDependencies(specOut2);
+            if (/*cachedDependencies.Results*/dependencies != null)
+            {
+                foreach (var dependency in /*cachedDependencies.Results*/dependencies)
+                {
+                    var assemblyLocation = dependency/*.Assembly*/.Location;
+                    referencedAssemblies.Add(assemblyLocation);
+                    l.A($"Added reference to dependency assembly: {assemblyLocation}");
+                }
             }
 
             // Compile the template
@@ -121,7 +146,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             var assemblyResult = new AssemblyResult(generatedAssembly, safeClassName: className, mainType: mainType);
 
             _assemblyCacheManager.Add(
-                cacheKey: cacheKey,
+                cacheKey: AssemblyCacheManager.KeyTemplate(codeFileInfo.FullPath),
                 data: assemblyResult,
                 duration: 3600,
                 changeMonitor: changeMonitors,

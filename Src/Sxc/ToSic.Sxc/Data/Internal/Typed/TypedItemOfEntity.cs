@@ -7,15 +7,18 @@ using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Data.Internal.Convert;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Data.Internal.Dynamic;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
 using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 using static ToSic.Eav.Data.Shared.WrapperEquality;
+using System.Text.Json.Serialization;
 
 namespace ToSic.Sxc.Data.Internal.Typed;
 
+[JsonConverter(typeof(DynamicJsonConverter))]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFactory cdf, bool propsRequired)
     : ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName, IWrapper<IEntity>,
@@ -31,6 +34,8 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     public bool Debug { get; set; }
 
     public override string ToString() => $"{GetType().Name}: '{(this as ITypedItem).Title}' ({Entity})";
+
+    object IHasJsonSource.JsonSource() => Entity;
 
     IEntity IWrapper<IEntity>.GetContents() => Entity;
 

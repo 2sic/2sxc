@@ -31,7 +31,7 @@ internal abstract class DynamicJacketBase: DynamicObject, IReadOnlyList<object>,
     IPropertyLookup IHasPropLookup.PropertyLookup => PreWrap;
 
     [PrivateApi]
-    object IHasJsonSource.JsonSource => PreWrap.JsonSource;
+    object IHasJsonSource.JsonSource() => PreWrap.JsonSource();
 
     #endregion
 

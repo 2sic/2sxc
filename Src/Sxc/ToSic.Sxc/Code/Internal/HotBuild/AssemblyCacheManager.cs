@@ -1,4 +1,5 @@
-﻿using System.Runtime.Caching;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Runtime.Caching;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Internal;
 
@@ -10,33 +11,36 @@ public class AssemblyCacheManager() : ServiceBase(SxcLogging.SxcLogName + ".Asse
 {
     private const string GlobalCacheRoot = "2sxc.AssemblyCache.Module.";
 
-    #region Static Calls for AppCode - to use before requiring DI
-
+    
+    #region Static Calls for ThisApp - to use before requiring DI
     public static (AssemblyResult Result, string cacheKey) TryGetThisApp(HotBuildSpec spec)
     {
         var cacheKey = KeyAppCode(spec);
         return (Get(cacheKey), cacheKey);
     }
-
     private static string KeyAppCode(HotBuildSpec spec) => $"{GlobalCacheRoot}a:{spec.AppId}.e:{spec.Edition}.ThisApp";
+    #endregion
 
+    #region Static Calls for Dependecies - to use before requiring DI
+    public static (List<AssemblyResult> Results, string cacheKey) TryGetDependencies(HotBuildSpec spec)
+    {
+        var cacheKey = KeyDependency(spec);
+        return (Cache[cacheKey] as List<AssemblyResult>, cacheKey);
+    }
+    private static string KeyDependency(HotBuildSpec spec) => $"{GlobalCacheRoot}a:{spec.AppId}.e:{spec.Edition}.d:{DependenciesLoader.DependenciesFolder}";
     #endregion
 
     #region Static Calls Only - for use before the object is created using DI
 
-    private static string KeyTemplate(string templateFullPath) => $"{GlobalCacheRoot}v:{templateFullPath.ToLowerInvariant()}";
+    internal static string KeyTemplate(string templateFullPath) => $"{GlobalCacheRoot}v:{templateFullPath.ToLowerInvariant()}";
 
     private static AssemblyResult Get(string key) => Cache[key] as AssemblyResult;
 
-    public static (AssemblyResult Result, string cacheKey) TryGetTemplate(string templateFullPath)
-    {
-        var cacheKey = KeyTemplate(templateFullPath);
-        return (Get(cacheKey), cacheKey);
-    }
+    public static AssemblyResult TryGetTemplate(string templateFullPath) => Get(KeyTemplate(templateFullPath));
 
     #endregion
 
-    public string Add(string cacheKey, AssemblyResult data, int duration = 3600, IList<ChangeMonitor> changeMonitor = null, CacheEntryUpdateCallback updateCallback = null)
+    public string Add(string cacheKey, object data, int duration = 3600, IList<ChangeMonitor> changeMonitor = null, CacheEntryUpdateCallback updateCallback = null)
     {
         var l = Log.Fn<string>($"{nameof(cacheKey)}: {cacheKey}; {nameof(duration)}: {duration}", timer: true);
 

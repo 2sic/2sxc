@@ -16,14 +16,14 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
         string fullPath = default, sourceCode = default;
         try
         {
-          (_, fullPath, sourceCode) = GetFileContentsOfVirtualPath(virtualPath);
-          return sourceCode == null
-              ? l.ReturnAndLog(CodeFileInfo.CodeFileNotFound)
-              : l.ReturnAndLog(AnalyzeContent(virtualPath, fullPath, sourceCode));
+            (_, fullPath, sourceCode) = GetFileContentsOfVirtualPath(virtualPath);
+            return sourceCode == null
+                ? l.ReturnAndLog(CodeFileInfo.CodeFileNotFound)
+                : l.ReturnAndLog(AnalyzeContent(virtualPath, fullPath, sourceCode));
         }
         catch
         {
-          return l.ReturnAndLog(new(CodeFileInfo.TemplateUnknown, sourceCode: sourceCode, relativePath: virtualPath, fullPath: fullPath), "error trying to find type");
+            return l.ReturnAndLog(new(CodeFileInfo.TemplateUnknown, sourceCode: sourceCode, relativePath: virtualPath, fullPath: fullPath), "error trying to find type");
         }
     }
 
@@ -34,9 +34,9 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
         if (relativePath.IsEmptyOrWs())
             return l.Return((relativePath, null, null), "no relativePath");
 
-    var fullPath = serverPaths.FullContentPath(relativePath);
-    if (fullPath == null || fullPath.IsEmptyOrWs())
-      return l.Return((relativePath, fullPath, null), "no relativePath");
+        var fullPath = serverPaths.FullContentPath(relativePath);
+        if (fullPath == null || fullPath.IsEmptyOrWs())
+            return l.Return((relativePath, fullPath, null), "no relativePath");
 
         if (!File.Exists(fullPath))
             return l.Return((relativePath, fullPath, null), "file not found");
@@ -146,20 +146,22 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
 
     private static bool IsThisAppUsedInCs(string sourceCode)
     {
-        // Pattern to match 'using ThisApp;' or ': ThisApp' allowing for additional namespace segments
+        // Pattern to match 'using ThisApp;' with optional additional namespace segments
+        // or inheritance code ': ThisApp' with additional namespace segments followed
+        // by optional whitespace and either a comma or opening curly brace
         // not in single-line or multi-line comments
         const string pattern = @"
         # Ignore leading whitespaces
         (?<=^\s*)
 
-        # Match either 'using ThisApp;' or ': ThisApp' with optional additional namespace segments
-        (using\s+ThisApp(?:\.\w+)*\s*;|:\s*ThisApp(?:\.\w+)*\s*(?={|,|\s))
+        # Match either 'using ThisApp;' or ': ThisApp' with additional namespace segments
+        (using\s+ThisApp(?:\.\w+)*\s*;|(?:.*):\s*ThisApp(?:\.\w+)+\s*(?={|,|\s))
 
         # Ensure that it's not part of a single-line comment
-        (?<!//.*(?:using\s+ThisApp(?:\.\w+)*\s*;|:\s*ThisApp(?:\.\w+)*\s*(?={|,|\s)))
+        (?<!//.*(?:using\s+ThisApp(?:\.\w+)*\s*;|(?:.*):\s*ThisApp(?:\.\w+)+\s*(?={|,|\s)))
 
         # Ensure that it's not part of a multi-line comment
-        (?<!/\*[\s\S]*?(?:using\s+ThisApp(?:\.\w+)*\s*;|:\s*ThisApp(?:\.\w+)*\s*(?={|,|\s)))";
+        (?<!/\*[\s\S]*?(?:using\s+ThisApp(?:\.\w+)*\s*;|(?:.*):\s*ThisApp(?:\.\w+)+\s*(?={|,|\s)))";
 
         var options = RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace;
         var thisAppMatch = Regex.Match(sourceCode, pattern, options);

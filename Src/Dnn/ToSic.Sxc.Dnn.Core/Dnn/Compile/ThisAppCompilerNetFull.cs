@@ -20,7 +20,12 @@ internal class ThisAppCompilerNetFull : ThisAppCompiler
             _hostingEnvironment = hostingEnvironment,
             _referencedAssembliesProvider = referencedAssembliesProvider
         );
+
+        _tempAssemblyFolderPath = Path.Combine(_hostingEnvironment.MapPath("~/App_Data"), "2sxc.bin");
+        // Ensure "2sxc.bin" folder exists to preserve dlls
+        Directory.CreateDirectory(_tempAssemblyFolderPath);
     }
+
     protected internal override AssemblyResult GetThisApp(string relativePath, HotBuildSpec spec)
     {
         var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {spec}");
@@ -76,25 +81,6 @@ internal class ThisAppCompilerNetFull : ThisAppCompiler
     }
     private string _relativePath;
 
-    private (string SymbolsPath, string AssemblyPath) GetAssemblyLocations(HotBuildSpec spec)
-    {
-        var l = Log.Fn<(string, string)>($"{spec}");
-        var tempAssemblyFolderPath = Path.Combine(_hostingEnvironment.MapPath("~/App_Data"), "2sxc.bin");
-        l.A($"TempAssemblyFolderPath: '{tempAssemblyFolderPath}'");
-        // Ensure "2sxc.bin" folder exists to preserve dlls
-        Directory.CreateDirectory(tempAssemblyFolderPath);
-
-        // need random name, because assemblies has to be preserved on disk, and we can not replace them until AppDomain is unloaded 
-        var assemblyName = GetAppCodeDllName(tempAssemblyFolderPath, spec);
-        l.A($"AssemblyName: '{assemblyName}'");
-        var assemblyFilePath = Path.Combine(tempAssemblyFolderPath, $"{assemblyName}.dll");
-        l.A($"AssemblyFilePath: '{assemblyFilePath}'");
-        var symbolsFilePath = Path.Combine(tempAssemblyFolderPath, $"{assemblyName}.pdb");
-        l.A($"SymbolsFilePath: '{symbolsFilePath}'");
-        var assemblyLocations = (symbolsFilePath, assemblyFilePath);
-        return l.ReturnAsOk(assemblyLocations);
-    }
-
     private CompilerResults GetCompiledAssemblyFromFolder(string[] sourceFiles, string assemblyFilePath)
     {
         var l = Log.Fn<CompilerResults>($"{nameof(sourceFiles)}: {sourceFiles.Length}; {nameof(assemblyFilePath)}: '{assemblyFilePath}'", timer: true);
@@ -118,5 +104,4 @@ internal class ThisAppCompilerNetFull : ThisAppCompiler
             ? l.ReturnAsError(compilerResults)
             : l.ReturnAsOk(compilerResults);
     }
-    
 }

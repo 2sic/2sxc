@@ -117,5 +117,5 @@ internal partial class PreWrapObject: PreWrapBase, /*IWrapper<object>,*/ IProper
 
 
 
-    public override object JsonSource => _innerObject;
+    public override object JsonSource() => _innerObject;
 }
