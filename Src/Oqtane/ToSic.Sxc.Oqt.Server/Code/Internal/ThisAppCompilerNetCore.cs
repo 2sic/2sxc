@@ -20,9 +20,9 @@ internal class ThisAppCompilerNetCore : ThisAppCompiler
             _serverPaths = serverPaths,
             _thisAppCodeLoader = thisAppCodeLoader
         );
-        _tempAssemblyFolderPath = _serverPaths.Value.FullContentPath(@"App_Data\2sxc.bin");
+        TempAssemblyFolderPath = _serverPaths.Value.FullContentPath(@"App_Data\2sxc.bin");
         // Ensure "2sxc.bin" folder exists to preserve dlls
-        Directory.CreateDirectory(_tempAssemblyFolderPath);
+        Directory.CreateDirectory(TempAssemblyFolderPath);
     }
 
     private readonly LazySvc<IServerPaths> _serverPaths;
