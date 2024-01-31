@@ -13,13 +13,13 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal;
 internal class CodeCompilerNetCore : CodeCompiler
 {
     private readonly LazySvc<IServerPaths> _serverPaths;
-    private readonly LazySvc<ThisAppLoader> _thisAppCodeLoader;
+    private readonly Generator<Compiler> _compiler;
 
-    public CodeCompilerNetCore(IServiceProvider serviceProvider, LazySvc<IServerPaths> serverPaths, LazySvc<ThisAppLoader> thisAppCodeLoader) : base(serviceProvider)
+    public CodeCompilerNetCore(IServiceProvider serviceProvider, LazySvc<IServerPaths> serverPaths, Generator<Compiler> compiler) : base(serviceProvider)
     {
         ConnectServices(
             _serverPaths = serverPaths,
-            _thisAppCodeLoader = thisAppCodeLoader
+            _compiler = compiler
         );
     }
 
@@ -35,7 +35,7 @@ internal class CodeCompilerNetCore : CodeCompiler
         l.A($"New paths: '{fullContentPath}', '{fullPath}'");
         try
         {
-            return l.ReturnAsOk(new Compiler(_thisAppCodeLoader).Compile(fullPath, className, spec));
+            return l.ReturnAsOk(_compiler.New().Compile(fullPath, className, spec));
         }
         catch (Exception ex)
         {

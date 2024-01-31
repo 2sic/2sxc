@@ -32,6 +32,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 public class ApiExplorerController() : OqtStatefulControllerBase(RealController.LogSuffix), IApiExplorerController
 {
     private RealController Real => GetService<RealController>();
+    private Generator<Compiler> Compiler => GetService<Generator<Compiler>>();
 
     [HttpGet]
     public IActionResult Inspect(string path)
@@ -71,6 +72,6 @@ public class ApiExplorerController() : OqtStatefulControllerBase(RealController.
         var controllerFolder = pathFromRoot.Substring(0, pathFromRoot.LastIndexOf(@"\"));
         var dllName = AppApiDynamicRouteValueTransformer.GetDllName(controllerFolder, apiFile);
 
-        return new Compiler(thisAppCodeLoader).Compile(apiFile, dllName, spec).Assembly;
+        return Compiler.New().Compile(apiFile, dllName, spec).Assembly;
     }
 }

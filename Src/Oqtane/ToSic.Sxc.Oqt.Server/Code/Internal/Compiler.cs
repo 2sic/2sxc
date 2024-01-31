@@ -6,13 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Razor;
 
 namespace ToSic.Sxc.Oqt.Server.Code.Internal
 {
@@ -20,8 +20,19 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
     // Code is based on DynamicRun by Laurent Kempé
     // https://github.com/laurentkempe/DynamicRun
     // https://laurentkempe.com/2019/02/18/dynamically-compile-and-run-code-using-dotNET-Core-3.0/
-    public class Compiler(LazySvc<ThisAppLoader> thisAppCodeLoader) : ServiceBase("Sys.CodCpl")
+    internal class Compiler : ServiceBase
     {
+        private readonly LazySvc<ThisAppLoader> _thisAppCodeLoader;
+        private readonly HotBuildReferenceManager _referenceManager;
+
+        public Compiler(LazySvc<ThisAppLoader> thisAppCodeLoader, HotBuildReferenceManager referenceManager) : base("Sys.CodCpl")
+        {
+            ConnectServices(
+                _thisAppCodeLoader = thisAppCodeLoader,
+                _referenceManager = referenceManager
+                );
+        }
+
         // Ensure that can't be kept alive by stack slot references (real- or JIT-introduced locals).
         // That could keep the SimpleUnloadableAssemblyLoadContext alive and prevent the unload.
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -31,7 +42,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
 
             //var codeAssembly = ThisAppLoader.TryGetAssemblyOfThisAppFromCache(spec, Log)?.Assembly
             //                   ?? _thisAppCodeLoader.Value.GetThisAppAssemblyOrThrow(spec);
-            var (codeAssembly, _) = thisAppCodeLoader.Value.TryGetOrFallback(spec);
+            var (codeAssembly, _) = _thisAppCodeLoader.Value.TryGetOrFallback(spec);
 
             var encoding = Encoding.UTF8;
 
@@ -51,7 +62,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
             var compilation = CSharpCompilation.Create(
                 $"{assemblyName}.dll",
                 syntaxTrees,
-                references: GetMetadataReferences(codeAssembly?.Location),
+                references: _referenceManager.GetMetadataReferences(codeAssembly?.Location, spec),
                 options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
                     optimizationLevel: OptimizationLevel.Debug,
                     assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default));
@@ -98,7 +109,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
         // Ensure that can't be kept alive by stack slot references (real- or JIT-introduced locals).
         // That could keep the SimpleUnloadableAssemblyLoadContext alive and prevent the unload.
         [MethodImpl(MethodImplOptions.NoInlining)]
-        internal AssemblyResult GetCompiledAssemblyFromFolder(string[] sourceFiles, string assemblyFilePath, string pdbFilePath, string dllName)
+        internal AssemblyResult GetCompiledAssemblyFromFolder(string[] sourceFiles, string assemblyFilePath, string pdbFilePath, string dllName, HotBuildSpec spec)
         {
             var l = Log.Fn<AssemblyResult>($"{nameof(sourceFiles)}: {sourceFiles.Length}; {nameof(assemblyFilePath)}: '{assemblyFilePath}'", timer: true);
 
@@ -121,7 +132,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
             var compilation = CSharpCompilation.Create(
                 dllName,
                 syntaxTrees,
-                references: References,
+                references: _referenceManager.GetMetadataReferences(assemblyFilePath, spec),
                 options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
                     optimizationLevel: OptimizationLevel.Debug,
                     assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default));
@@ -165,80 +176,5 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
 
             return l.ReturnAsOk(new AssemblyResult(assembly, /*assemblyBytes,*/ null));
         }
-
-        #region References
-        private static List<MetadataReference> GetMetadataReferences(string appCodeFullPath)
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(appCodeFullPath) && File.Exists(appCodeFullPath))
-                    return References.Union(new List<MetadataReference>()
-                            { MetadataReference.CreateFromFile(appCodeFullPath) })
-                        .ToList();
-            }
-            catch
-            {
-                // sink
-            };
-
-            return References;
-        }
-
-        private static List<MetadataReference> References => _references ??= GetMetadataReferences();
-        private static List<MetadataReference> _references;
-
-        private static List<MetadataReference> GetMetadataReferences()
-        {
-            var references = new List<MetadataReference>();
-            //AddMetadataReferenceFromFile(references, typeof(object).Assembly.Location); // Commented because it solves error when "refs" are referenced.
-            AddMetadataReferenceFromAssemblyName(references, "netstandard, Version=2.0.0.0");
-            Assembly.GetEntryAssembly()?.GetReferencedAssemblies().ToList()
-                .ForEach(assemblyName => AddMetadataReferenceFromAssemblyName(references, assemblyName));
-
-            // Add references to all dll's in bin folder.
-            var dllLocation = AppContext.BaseDirectory;
-            var dllPath = Path.GetDirectoryName(dllLocation);
-            foreach (string dllFile in Directory.GetFiles(dllPath, "*.dll")) AddMetadataReferenceFromFile(references, dllFile);
-            foreach (string dllFile in Directory.GetFiles(Path.Combine(dllPath, "refs"), "*.dll")) AddMetadataReferenceFromFile(references, dllFile);
-
-            return references;
-        }
-
-        private static void AddMetadataReferenceFromAssemblyName(List<MetadataReference> references, string assemblyName)
-        {
-            try
-            {
-                references.Add(MetadataReference.CreateFromFile(Assembly.Load(assemblyName).Location));
-            }
-            catch
-            {
-                // sink
-            }
-        }
-
-        private static void AddMetadataReferenceFromAssemblyName(List<MetadataReference> references, AssemblyName assemblyName)
-        {
-            try
-            {
-                references.Add(MetadataReference.CreateFromFile(Assembly.Load(assemblyName).Location));
-            }
-            catch
-            {
-                // sink
-            }
-        }
-
-        private static void AddMetadataReferenceFromFile(List<MetadataReference> references, string dllFile)
-        {
-            try
-            {
-                references.Add(MetadataReference.CreateFromFile(dllFile));
-            }
-            catch
-            {
-                // sink
-            }
-        }
-        #endregion
     }
 }

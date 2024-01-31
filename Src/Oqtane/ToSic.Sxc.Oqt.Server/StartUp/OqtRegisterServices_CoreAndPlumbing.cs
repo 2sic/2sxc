@@ -6,6 +6,7 @@ using ToSic.Eav.Security.Encryption;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.Integration.Paths;
+using ToSic.Sxc.Oqt.Server.Code.Internal;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Server.Integration;
@@ -13,7 +14,6 @@ using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.Services;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal.DotNet;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
@@ -27,6 +27,7 @@ partial class OqtRegisterServices
     {
         services.TryAddTransient<IServerPaths, OqtServerPaths>();
         services.AddScoped<ILinkPaths, OqtLinkPaths>();
+        services.TryAddTransient<Compiler>();
 
         // TODO: Review - it looks a bit fishy to have the same class as singleton and transient
         services.AddSingleton<IPlatform, OqtPlatformContext>();
