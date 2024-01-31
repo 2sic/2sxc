@@ -232,4 +232,17 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
 
     #endregion
 
+    #region As Conversions
+
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool nullIfNull = false)
+        where T : class, ITypedItemWrapper16, ITypedItem, new();
+
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
+        where T : class, ITypedItemWrapper16, ITypedItem, new();
+
+    #endregion
 }

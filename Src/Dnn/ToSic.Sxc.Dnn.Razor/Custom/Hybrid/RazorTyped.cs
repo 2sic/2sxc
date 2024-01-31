@@ -183,29 +183,27 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
 
     #region AsItem / AsItems (old) - should be removed ASAP
 
-    /// <summary>
-    /// EXPERIMENTAL
-    /// </summary>
-    /// <param name="source"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    [PrivateApi("WIP, don't publish yet")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    protected T AsItem<T>(ICanBeEntity source)
-        where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => _CodeApiSvc._Cdf.AsCustom<T>(source, Kit);
+    ///// <summary>
+    ///// EXPERIMENTAL
+    ///// </summary>
+    ///// <returns></returns>
+    //[PrivateApi("WIP, don't publish yet")]
+    //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    //protected T AsItem<T>(ICanBeEntity source, NoParamOrder protector = default, bool nullIfNull = false)
+    //    where T : class, ITypedItemWrapper16, ITypedItem, new()
+    //    => _CodeApiSvc._Cdf.AsCustom<T>(source: source, kit: Kit, protector: protector, nullIfNull: nullIfNull);
 
-    /// <summary>
-    /// EXPERIMENTAL
-    /// </summary>
-    /// <param name="source"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    [PrivateApi("WIP, don't publish yet")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    protected IEnumerable<T> AsItems<T>(IEnumerable<ICanBeEntity> source)
-        where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => _CodeApiSvc._Cdf.AsCustomList<T>(source, Kit);
+    ///// <summary>
+    ///// EXPERIMENTAL
+    ///// </summary>
+    ///// <param name="source"></param>
+    ///// <typeparam name="T"></typeparam>
+    ///// <returns></returns>
+    //[PrivateApi("WIP, don't publish yet")]
+    //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    //protected IEnumerable<T> AsItems<T>(IEnumerable<ICanBeEntity> source)
+    //    where T : class, ITypedItemWrapper16, ITypedItem, new()
+    //    => _CodeApiSvc._Cdf.AsCustomList<T>(source, Kit);
 
     #endregion
 
@@ -214,26 +212,26 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     /// <summary>
     /// EXPERIMENTAL
     /// </summary>
-    /// <param name="source"></param>
-    /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     [PrivateApi("WIP, don't publish yet")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    protected T As<T>(ICanBeEntity source)
+    public T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool nullIfNull = false)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => _CodeApiSvc._Cdf.AsCustom<T>(source, Kit);
+        => _CodeApiSvc._Cdf.AsCustom<T>(source: source, kit: Kit, protector: protector, nullIfNull: nullIfNull);
 
     /// <summary>
     /// EXPERIMENTAL
     /// </summary>
     /// <param name="source"></param>
+    /// <param name="protector"></param>
+    /// <param name="nullIfNull"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     [PrivateApi("WIP, don't publish yet")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    protected IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source)
+    public IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => _CodeApiSvc._Cdf.AsCustomList<T>(source, Kit);
+        => _CodeApiSvc._Cdf.AsCustomList<T>(source: source, kit: Kit, protector: protector, nullIfNull: nullIfNull);
 
     #endregion
 
