@@ -3,16 +3,17 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web.Internal.Url;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleForEntity;
 
-namespace ToSic.Sxc.Edit.Toolbar;
+namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
 /// <summary>
-/// IMPORTANT: Changed to internal for v16.08. #InternalMaybeSideEffectDynamicRazor
-/// This is how it should be done, but it could have a side effect in dynamic razor in edge cases where interface-type is "forgotten" by Razor.
-/// Keep unless we run into trouble.
-/// Remove this comment 2024 end of Q1 if all works, otherwise re-document why it must be public
+/// Must be public because of side effect with old/dynamic razor.
+/// Example which would fail if it's internal:
+/// - `tweak: b => b.Tooltip(Resources.LabelRegistrations).Filter("EventDate", d.EntityId))`
+/// In this case `.Filter` would fail because the tooltip comes from a dynamic object,
+/// so then the compiler will eval the resulting object and it can't be internal.
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class TweakButton: ITweakButton, ITweakButtonInternal
+public class TweakButton: ITweakButton, ITweakButtonInternal
 {
     public IImmutableList<object> UiMerge { get; }
     public IImmutableList<object> ParamsMerge { get; }
