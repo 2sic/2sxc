@@ -107,7 +107,7 @@ public class ThisAppLoader : ServiceBase
         if (assemblyResult.ErrorMessages.HasValue())
             return l.ReturnAsError(assemblyResult, assemblyResult.ErrorMessages);
 
-        assemblyResult.WatcherFolders = GetWatcherFolders(assemblyResult, spec, physicalPath);
+        assemblyResult.WatcherFolders = GetWatcherFolders(assemblyResult, spec, physicalPath, Log);
         l.A("Folders to watch:");
         foreach (var watcherFolder in assemblyResult.WatcherFolders)
             l.A($"- '{watcherFolder}'");
@@ -129,54 +129,56 @@ public class ThisAppLoader : ServiceBase
         return l.ReturnAsOk(assemblyResult);
     }
 
-    private static IDictionary<string, bool> GetWatcherFolders(AssemblyResult assemblyResult, HotBuildSpec spec, string physicalPath)
+    private static IDictionary<string, bool> GetWatcherFolders(AssemblyResult assemblyResult, HotBuildSpec spec, string physicalPathThisApp, ILog log)
     {
-        var watcherFolders = new Dictionary<string, bool>();
+        var l = log.Fn<IDictionary<string, bool>>($"{nameof(physicalPathThisApp)}: {physicalPathThisApp}");
+        var folders = new Dictionary<string, bool>();
 
         // take ThisApp folder (eg. ...\edition\ThisApp)
-        var thisAppFolder = physicalPath;
-        IfExistsThenAdd(thisAppFolder, true);
+        IfExistsThenAdd(physicalPathThisApp, true);
 
         // take parent folder (eg. ...\edition)
-        var thisAppParentFolder = Path.GetDirectoryName(thisAppFolder);
-        if (thisAppParentFolder.IsEmpty()) return new Dictionary<string, bool>(watcherFolders);
+        var thisAppParentFolder = Path.GetDirectoryName(physicalPathThisApp);
+        if (thisAppParentFolder.IsEmpty()) return l.Return(folders, $"exit {nameof(thisAppParentFolder)}");
         IfExistsThenAdd(thisAppParentFolder, false);
 
         // if no edition was used, then we were already in the root, and should stop now.
-        if (spec.Edition.IsEmpty()) return new Dictionary<string, bool>(watcherFolders);
+        if (spec.Edition.IsEmpty()) return l.Return(folders, $"exit {nameof(spec.Edition)}");
 
         // If we have an edition, and it has an assembly, we don't need to watch the root folder
-        if (assemblyResult.HasAssembly) return new Dictionary<string, bool>(watcherFolders);
+        if (assemblyResult.HasAssembly) return l.Return(folders, $"exit {nameof(assemblyResult.HasAssembly)}");
 
         // If we had an edition and no assembly, then we need to watch the root folder
         // we need to add more folders to watch for cache invalidation
 
         // App Root folder (eg. ...\)
         var appRootFolder = Path.GetDirectoryName(thisAppParentFolder);
-        if (appRootFolder.IsEmpty()) return new Dictionary<string, bool>(watcherFolders);
+        if (appRootFolder.IsEmpty()) return l.Return(folders, $"exit {nameof(appRootFolder)}.IsEmpty");
         // Add to watcher list if it exists, otherwise exit, since we can't have subfolders
-        if (!IfExistsThenAdd(appRootFolder, false)) return new Dictionary<string, bool>(watcherFolders);
+        if (!IfExistsThenAdd(appRootFolder, false)) return l.Return(folders, $"{nameof(appRootFolder)}");
 
         // 
         var appRootThisApp = Path.Combine(appRootFolder, ThisAppBase);
         // Add to watcher list if it exists, otherwise exit, since we can't have subfolders
-        if (!IfExistsThenAdd(appRootThisApp, true)) return new Dictionary<string, bool>(watcherFolders);
+        if (!IfExistsThenAdd(appRootThisApp, true)) return l.Return(folders, $"{nameof(appRootThisApp)}");
 
         // all done
-        return new Dictionary<string, bool>(watcherFolders);
+        return l.ReturnAsOk(folders);
 
         // Helper to add and return info if it exists
         bool IfExistsThenAdd(string folder, bool watchSubfolders)
         {
-            if (!Directory.Exists(folder)) return false;
-            watcherFolders.Add(folder, watchSubfolders);
-            return true;
+            var l2 = log.Fn<bool>(folder);
+            if (!Directory.Exists(folder)) return l2.ReturnFalse();
+            folders.Add(folder, watchSubfolders);
+            return l2.ReturnTrue();
         }   
     }
 
     public (string physicalPath, string relativePath) GetAppPaths(string folder, HotBuildSpec spec)
     {
-        var l = Log.Fn<(string physicalPath, string relativePath)>($"{spec}");
+        var l = Log.Fn<(string physicalPath, string relativePath)>($"{nameof(folder)}: '{folder}'; {spec}");
+        l.A($"site id: {_site.Id}, ...: {_site.AppsRootPhysicalFull}");
         var appPaths = _appPathsLazy.Value.Init(_site, _appStates.GetReader(spec.AppId));
         var folderWithEdition = folder.HasValue() 
             ? (spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder)
