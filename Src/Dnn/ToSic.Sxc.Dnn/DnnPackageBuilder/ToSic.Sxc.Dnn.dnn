@@ -327,7 +327,7 @@
             <!-- ToSic.Eav.DataSources PackageReference -->
             <assembly>
               <name>System.Data.SqlClient.dll</name>
-              <version>4.6.1.5</version>
+              <version>4.6.1.6</version>
             </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
