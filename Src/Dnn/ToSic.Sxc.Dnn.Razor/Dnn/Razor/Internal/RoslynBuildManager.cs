@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         /// <param name="spec"></param>
         /// <returns>The generated type for razor cshtml.</returns>
         public Type GetCompiledType(CodeFileInfo codeFileInfo, HotBuildSpec spec)
-            => GetCompiledAssembly(codeFileInfo, null, spec).MainType;
+            => GetCompiledAssembly(codeFileInfo, null, spec)?.MainType;
 
         public AssemblyResult GetCompiledAssembly(CodeFileInfo codeFileInfo, string className, HotBuildSpec spec)
         {
