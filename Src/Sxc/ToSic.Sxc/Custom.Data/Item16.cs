@@ -251,10 +251,6 @@ public abstract class Item16: ICanBeEntity, ITypedItem, ITypedItemWrapper16, IHa
             kit: Kit, protector: protector, nullIfNull: false
         );
 
-
-    ///// <inheritdoc />
-    //public IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder = default, string type = default, string field = default) => item.Parents(noParamOrder, type, field);
-
-
+    
     #endregion
 }
