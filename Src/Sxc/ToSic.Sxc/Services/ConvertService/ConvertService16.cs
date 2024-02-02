@@ -23,22 +23,20 @@ internal class ConvertService16(
     /// <summary>
     /// EXPERIMENTAL
     /// </summary>
-    /// <param name="source"></param>
-    /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     [PrivateApi("WIP, don't publish yet")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    T IConvertService16.As<T>(ICanBeEntity source) => _CodeApiSvc._Cdf.AsCustom<T>(source, Kit);
+    T IConvertService16.As<T>(ICanBeEntity source, NoParamOrder protector, bool nullIfNull)
+        => _CodeApiSvc._Cdf.AsCustom<T>(source: source, kit: Kit, protector: protector, nullIfNull: nullIfNull);
 
     /// <summary>
     /// EXPERIMENTAL
     /// </summary>
-    /// <param name="source"></param>
-    /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     [PrivateApi("WIP, don't publish yet")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    IEnumerable<T> IConvertService16.AsList<T>(IEnumerable<ICanBeEntity> source) => _CodeApiSvc._Cdf.AsCustomList<T>(source, Kit);
+    IEnumerable<T> IConvertService16.AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector, bool nullIfNull)
+        => _CodeApiSvc._Cdf.AsCustomList<T>(source: source, kit: Kit, protector: protector, nullIfNull: nullIfNull);
 
     private ServiceKit16 Kit => _kit16 ??= _CodeApiSvc.GetKit<ServiceKit16>();
     private ServiceKit16 _kit16;

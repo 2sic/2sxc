@@ -14,19 +14,19 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal;
 [PrivateApi]
 internal class ThisAppCompilerNetCore : ThisAppCompiler
 {
-    public ThisAppCompilerNetCore(LazySvc<IServerPaths> serverPaths, LazySvc<ThisAppLoader> thisAppCodeLoader)
+    public ThisAppCompilerNetCore(LazySvc<IServerPaths> serverPaths, Generator<Compiler> compiler)
     {
         ConnectServices(
             _serverPaths = serverPaths,
-            _thisAppCodeLoader = thisAppCodeLoader
+            _compiler = compiler
         );
-        _tempAssemblyFolderPath = _serverPaths.Value.FullContentPath(@"App_Data\2sxc.bin");
+        TempAssemblyFolderPath = _serverPaths.Value.FullContentPath(@"App_Data\2sxc.bin");
         // Ensure "2sxc.bin" folder exists to preserve dlls
-        Directory.CreateDirectory(_tempAssemblyFolderPath);
+        Directory.CreateDirectory(TempAssemblyFolderPath);
     }
 
     private readonly LazySvc<IServerPaths> _serverPaths;
-    private readonly LazySvc<ThisAppLoader> _thisAppCodeLoader;
+    private readonly Generator<Compiler> _compiler;
 
 
     protected internal override AssemblyResult GetThisApp(string virtualPath, HotBuildSpec spec)
@@ -41,7 +41,7 @@ internal class ThisAppCompilerNetCore : ThisAppCompiler
 
             var (symbolsPath, assemblyPath) = GetAssemblyLocations(spec);
             var dllName = Path.GetFileName(assemblyPath);
-            var assemblyResult = new Compiler(_thisAppCodeLoader).GetCompiledAssemblyFromFolder(sourceFiles, assemblyPath, symbolsPath, dllName);
+            var assemblyResult = _compiler.New().GetCompiledAssemblyFromFolder(sourceFiles, assemblyPath, symbolsPath, dllName, spec);
 
             var dicInfos = new Dictionary<string, string>
             {

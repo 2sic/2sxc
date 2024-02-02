@@ -31,10 +31,9 @@ public static class StartupRazor
         services.Replace(ServiceDescriptor.Singleton<IViewCompilerProvider, RuntimeViewCompilerProvider>());
         services.TryAddSingleton<IViewCompiler, RuntimeViewCompiler>();
         services.TryAddSingleton<CSharpCompiler>();
-        services.TryAddSingleton<RazorReferenceManager>();
+        services.TryAddSingleton<RazorReferenceManager, RazorReferenceManagerEnhanced>();
         services.TryAddSingleton<RuntimeCompilationFileProvider>();
-
-
+        services.TryAddTransient<HotBuildReferenceManager>();
 
         // Web
         services.TryAddTransient<IRazorService, RazorService>();

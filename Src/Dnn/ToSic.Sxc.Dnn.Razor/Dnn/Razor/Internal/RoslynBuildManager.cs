@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         /// <param name="spec"></param>
         /// <returns>The generated type for razor cshtml.</returns>
         public Type GetCompiledType(CodeFileInfo codeFileInfo, HotBuildSpec spec)
-            => GetCompiledAssembly(codeFileInfo, null, spec).MainType;
+            => GetCompiledAssembly(codeFileInfo, null, spec)?.MainType;
 
         public AssemblyResult GetCompiledAssembly(CodeFileInfo codeFileInfo, string className, HotBuildSpec spec)
         {
@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             var l = Log.Fn<AssemblyResult>($"{codeFileInfo}; {spec};", timer: true);
 
             // Initialize the list of referenced assemblies with the default ones
-            var referencedAssemblies = _referencedAssembliesProvider.Locations(codeFileInfo.RelativePath);
+            var referencedAssemblies = _referencedAssembliesProvider.Locations(codeFileInfo.RelativePath, spec);
 
             // Roslyn compiler need reference to location of dll, when dll is not in bin folder
             // get assembly - try to get from cache, otherwise compile
@@ -97,21 +97,6 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
                 var assemblyLocation = thisAppCodeAssembly.Location;
                 referencedAssemblies.Add(assemblyLocation);
                 l.A($"Added reference to ThisApp.Code assembly: {assemblyLocation}");
-            }
-
-
-            var (dependencies, specOut2) = _dependenciesLoader.Value.TryGetOrFallback(spec);
-            _assemblyResolver.AddAssemblies(dependencies);
-
-            //var cachedDependencies = AssemblyCacheManager.TryGetDependencies(specOut2);
-            if (/*cachedDependencies.Results*/dependencies != null)
-            {
-                foreach (var dependency in /*cachedDependencies.Results*/dependencies)
-                {
-                    var assemblyLocation = dependency/*.Assembly*/.Location;
-                    referencedAssemblies.Add(assemblyLocation);
-                    l.A($"Added reference to dependency assembly: {assemblyLocation}");
-                }
             }
 
             // Compile the template

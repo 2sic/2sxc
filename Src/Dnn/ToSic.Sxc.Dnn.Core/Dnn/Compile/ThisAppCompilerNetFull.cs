@@ -21,9 +21,9 @@ internal class ThisAppCompilerNetFull : ThisAppCompiler
             _referencedAssembliesProvider = referencedAssembliesProvider
         );
 
-        _tempAssemblyFolderPath = Path.Combine(_hostingEnvironment.MapPath("~/App_Data"), "2sxc.bin");
+        TempAssemblyFolderPath = Path.Combine(_hostingEnvironment.MapPath("~/App_Data"), "2sxc.bin");
         // Ensure "2sxc.bin" folder exists to preserve dlls
-        Directory.CreateDirectory(_tempAssemblyFolderPath);
+        Directory.CreateDirectory(TempAssemblyFolderPath);
     }
 
     protected internal override AssemblyResult GetThisApp(string relativePath, HotBuildSpec spec)
@@ -34,6 +34,7 @@ internal class ThisAppCompilerNetFull : ThisAppCompiler
         {
             // store it, so we can provide it to _referencedAssembliesProvider.Locations()
             _relativePath = relativePath;
+            _spec = spec;
 
             // Get all C# files in the folder
             var sourceFiles = GetSourceFiles(NormalizeFullPath(_hostingEnvironment.MapPath(relativePath)));
@@ -80,6 +81,7 @@ internal class ThisAppCompilerNetFull : ThisAppCompiler
         }
     }
     private string _relativePath;
+    private HotBuildSpec _spec;
 
     private CompilerResults GetCompiledAssemblyFromFolder(string[] sourceFiles, string assemblyFilePath)
     {
@@ -95,7 +97,7 @@ internal class ThisAppCompilerNetFull : ThisAppCompiler
             };
 
         // Add all referenced assemblies
-        parameters.ReferencedAssemblies.AddRange(_referencedAssembliesProvider.Locations(_relativePath).ToArray());
+        parameters.ReferencedAssemblies.AddRange(_referencedAssembliesProvider.Locations(_relativePath, _spec).ToArray());
 
         var codeProvider = new CSharpCodeProvider();
         var compilerResults = codeProvider.CompileAssemblyFromFile(parameters, sourceFiles);

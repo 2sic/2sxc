@@ -351,4 +351,51 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
 
 
     IMetadataOf IHasMetadata.Metadata => (DynHelper.Metadata as IHasMetadata)?.Metadata;
+
+    #region New Child<T> / Children<T> - disabled as ATM Kit is missing
+
+    ///// <summary>
+    ///// EXPERIMENTAL
+    ///// </summary>
+    ///// <returns></returns>
+    //[PrivateApi("WIP, don't publish yet")]
+    //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    //public T Child<T>([CallerMemberName] string name = default, NoParamOrder protector = default, bool? required = default)
+    //    where T : class, ITypedItemWrapper16, ITypedItem, new()
+    //    => Kit._CodeApiSvc._Cdf.AsCustom<T>(
+    //        source: (this as ITypedItem).Child(name, required: required),
+    //        kit: Kit, protector: protector, nullIfNull: true
+    //    );
+
+    //[PrivateApi("WIP, don't publish yet")]
+    //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    //public IEnumerable<T> Children<T>([CallerMemberName] string field = default, NoParamOrder protector = default,
+    //    string type = default, bool? required = default)
+    //    where T : class, ITypedItemWrapper16, ITypedItem, new()
+    //    => Kit._CodeApiSvc._Cdf.AsCustomList<T>(
+    //        source: (this as ITypedItem).Children(field: field, noParamOrder: protector, type: type, required: required),
+    //        kit: Kit, protector: protector, nullIfNull: false
+    //    );
+
+    //[PrivateApi("WIP, don't publish yet")]
+    //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    //public T Parent<T>(NoParamOrder protector = default, bool? current = default, string type = default,
+    //    string field = default)
+    //    where T : class, ITypedItemWrapper16, ITypedItem, new()
+    //    => Kit._CodeApiSvc._Cdf.AsCustom<T>(
+    //        source: (this as ITypedItem).Parent(noParamOrder: protector, current: current, type: type, field: field),
+    //        kit: Kit, protector: protector, nullIfNull: true
+    //    );
+
+    //[PrivateApi("WIP, don't publish yet")]
+    //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    //public IEnumerable<T> Parents<T>(NoParamOrder protector = default,
+    //    string type = default, string field = default)
+    //    where T : class, ITypedItemWrapper16, ITypedItem, new()
+    //    => Kit._CodeApiSvc._Cdf.AsCustomList<T>(
+    //        source: (this as ITypedItem).Parents(noParamOrder: protector, field: field, type: type),
+    //        kit: Kit, protector: protector, nullIfNull: false
+    //    );
+
+    #endregion
 }

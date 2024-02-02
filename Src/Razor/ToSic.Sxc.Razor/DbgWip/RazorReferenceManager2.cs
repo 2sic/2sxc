@@ -68,7 +68,7 @@ internal class RazorReferenceManager(
         return referencePaths;
     }
 
-    private static MetadataReference CreateMetadataReference(string path)
+    protected static MetadataReference CreateMetadataReference(string path)
     {
         using var stream = File.OpenRead(path);
         var moduleMetadata = ModuleMetadata.CreateFromStream(stream, PEStreamOptions.PrefetchMetadata);

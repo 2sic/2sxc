@@ -23,10 +23,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 /// </summary>
 internal class AppApiControllerManager: IHasLog
 {
-    public AppApiControllerManager(ApplicationPartManager partManager, AppApiFileSystemWatcher appApiFileSystemWatcher, ILogStore logStore, LazySvc<ThisAppLoader> thisAppCodeLoader, ISxcContextResolver ctxResolver, Sxc.Polymorphism.Internal.PolymorphConfigReader polymorphism)
+    public AppApiControllerManager(ApplicationPartManager partManager, AppApiFileSystemWatcher appApiFileSystemWatcher, ILogStore logStore, Generator<Compiler> compiler, ISxcContextResolver ctxResolver, Sxc.Polymorphism.Internal.PolymorphConfigReader polymorphism)
     {
         _partManager = partManager;
-        _thisAppCodeLoader = thisAppCodeLoader;
+        _compiler = compiler;
         _ctxResolver = ctxResolver;
         _polymorphism = polymorphism;
         _compiledAppApiControllers = appApiFileSystemWatcher.CompiledAppApiControllers;
@@ -35,7 +35,7 @@ internal class AppApiControllerManager: IHasLog
     }
     private readonly ConcurrentDictionary<string, bool> _compiledAppApiControllers;
     private readonly ApplicationPartManager _partManager;
-    private readonly LazySvc<ThisAppLoader> _thisAppCodeLoader;
+    private readonly Generator<Compiler> _compiler;
     private readonly ISxcContextResolver _ctxResolver;
     private readonly Sxc.Polymorphism.Internal.PolymorphConfigReader _polymorphism;
 
@@ -92,7 +92,7 @@ internal class AppApiControllerManager: IHasLog
 
         // Build new AppApi Controller
         Log.A($"Compile assembly: {apiFile}; {nameof(dllName)}: '{dllName}'; {spec}");
-        var assemblyResult = new Compiler(_thisAppCodeLoader).Compile(apiFile, dllName, spec);
+        var assemblyResult = _compiler.New().Compile(apiFile, dllName, spec);
 
         // Add new key to concurrent dictionary, before registering new AppAPi controller.
         if (!_compiledAppApiControllers.TryAdd(apiFile, false))
