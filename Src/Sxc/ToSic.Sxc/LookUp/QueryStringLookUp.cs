@@ -1,17 +1,17 @@
 ﻿using System.Collections.Specialized;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal.DotNet;
 using ToSic.Sxc.Web.Parameters;
 
 namespace ToSic.Sxc.LookUp;
 
 /// <summary>
-/// Constructor for DI
+/// LookUp provider for query string parameters.
+/// It handles the normal `key=value` query string parameters and also the special `OriginalParameters` query string parameter.
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class QueryStringLookUp(LazySvc<IHttp> httpLazy) : LookUpBase("QueryString")
+public class QueryStringLookUp(LazySvc<IHttp> httpLazy) : LookUpBase(LookUpConstants.SourceQueryString)
 {
     private NameValueCollection _source;
     private NameValueCollection _originalParams;
@@ -32,11 +32,7 @@ public class QueryStringLookUp(LazySvc<IHttp> httpLazy) : LookUpBase("QueryStrin
     {
         if (string.IsNullOrEmpty(originalParametersQueryStringValue)) return string.Empty;
 
-        if (_originalParams == null)
-        {
-            var originalParams = new NameValueCollection { { OriginalParameters.NameInUrlForOriginalParameters, originalParametersQueryStringValue } };
-            _originalParams = OriginalParameters.GetOverrideParams(originalParams);
-        }
+        _originalParams ??= OriginalParameters.GetOverrideParams(originalParametersQueryStringValue);
 
         return _originalParams[key];
     }

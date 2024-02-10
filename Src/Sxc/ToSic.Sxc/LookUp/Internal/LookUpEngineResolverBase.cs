@@ -1,14 +1,44 @@
 ﻿using ToSic.Eav.LookUp;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Web.Internal.DotNet;
 
 namespace ToSic.Sxc.LookUp.Internal;
 
-public abstract class LookUpEngineResolverBase(LazySvc<IHttp> httpLazy, string logName, NoParamOrder protect = default, object[] connect = default)
-    : ServiceBase(logName, protect, [..connect ?? [], httpLazy]), ILookUpEngineResolver
+public class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> lookUps, string logName, NoParamOrder protect = default, object[] connect = default)
+    : ServiceBase(logName, protect, connect), ILookUpEngineResolver
 {
-    public abstract ILookUpEngine GetLookUpEngine(int moduleId);
+    /// <summary>
+    /// Get the lookup engine - if possible from cache, otherwise create a new one
+    /// </summary>
+    /// <param name="moduleId"></param>
+    /// <returns></returns>
+    public virtual ILookUpEngine GetLookUpEngine(int moduleId)
+    {
+        var l = Log.Fn<ILookUpEngine>($"{nameof(moduleId)}:{moduleId}");
+
+        // Try Cached first
+        // if we already have a list of shared sources, return that
+        // as the sources don't change per request, but per module
+        if (TryReuseFromCache(moduleId, out var cached))
+            return l.Return(cached, $"reuse {cached.Sources.Count} sources");
+
+        var luEngine = BuildLookupEngine(moduleId);
+        return l.Return(AddToCache(moduleId, luEngine), "created and cached for reuse");
+    }
+
+    /// <summary>
+    /// Build a new lookup engine - to be overriden in Dnn and other implementations
+    /// </summary>
+    /// <param name="moduleId"></param>
+    /// <returns></returns>
+    protected virtual LookUpEngine BuildLookupEngine(int moduleId)
+    {
+        var l = Log.Fn<LookUpEngine>($"{nameof(moduleId)}:{moduleId}");
+        var luEngine = new LookUpEngine(Log);
+        AddHttpAndDiSources(luEngine).UseIfNotNull(luEngine.Add);
+        return l.Return(luEngine);
+    }
 
     /// <summary>
     /// Cache sources by module ID, so we don't have to re-create them every time.
@@ -22,7 +52,7 @@ public abstract class LookUpEngineResolverBase(LazySvc<IHttp> httpLazy, string l
         return engine;
     }
 
-    protected bool TryGetFromCache(int moduleId, out LookUpEngine engine)
+    protected bool TryReuseFromCache(int moduleId, out LookUpEngine engine)
     {
         if (!SourcesByModuleId.TryGetValue(moduleId, out var sources))
         {
@@ -45,34 +75,23 @@ public abstract class LookUpEngineResolverBase(LazySvc<IHttp> httpLazy, string l
     /// </summary>
     /// <param name="existingList"></param>
     /// <returns></returns>
-    protected List<ILookUp> GetHttpSources(LookUpEngine existingList)
+    protected List<ILookUp> AddHttpAndDiSources(LookUpEngine existingList)
     {
         var l = Log.Fn<List<ILookUp>>($"provider: {existingList.Sources.Count}");
-        var http = httpLazy.Value;
-        if (http.Current == null)
-            return l.Return([], "no http context");
 
         l.A("Found Http-Context, will ty to add params for querystring, server etc.");
 
         // Prepare additions to return
-        var additions = new List<ILookUp>();
-        
-        var paramList = http.QueryStringParams;
+        var additions = lookUps.Value
+            .Where(lu => !existingList.HasSource(lu.Name))
+            .ToList();
 
-        // add "query" if it was not already added previously (Oqt has it)
+        // add "query" if it was not already added previously (Oqt has it) based on "querystring"
         if (!existingList.HasSource(LookUpConstants.SourceQuery))
-            additions.Add(new LookUpInNameValueCollection(LookUpConstants.SourceQuery, paramList));
+            additions
+                .FirstOrDefault(lu => lu.Name.EqualsInsensitive(LookUpConstants.SourceQueryString))
+                .UseIfNotNull(qsl => additions.Add(new LookUpInLookUps(LookUpConstants.SourceQuery, qsl)));
 
-#if NETFRAMEWORK
-        // old (Dnn only)
-        if (!existingList.HasSource(LookUpConstants.OldDnnSourceQueryString))
-            additions.Add(new LookUpInNameValueCollection(LookUpConstants.OldDnnSourceQueryString, paramList));
-        if (!existingList.HasSource("form"))
-            additions.Add(new LookUpInNameValueCollection("form", http.Request.Form));
-        //provider.Add(new LookUpInNameValueCollection("server", http.Request.ServerVariables)); // deprecated
-#else
-        // "Not Yet Implemented in .net standard #TodoNetStandard" - might not actually support this
-#endif
         return l.Return(additions, $"{additions.Count} additions");
     }
 }

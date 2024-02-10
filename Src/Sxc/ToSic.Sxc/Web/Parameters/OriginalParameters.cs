@@ -19,8 +19,13 @@ internal class OriginalParameters
         if (requestParams == null) return [];
 
         var paramSet = requestParams[NameInUrlForOriginalParameters];
-        if (string.IsNullOrEmpty(paramSet)) return requestParams; // just return requestParams (when origParams are not provided)
+        return string.IsNullOrEmpty(paramSet)
+            ? requestParams  // just return requestParams (when origParams are not provided)
+            : GetOverrideParams(paramSet);
+    }
 
+    public static NameValueCollection GetOverrideParams(string paramSet)
+    {
         var urlParams = new NameValueCollection();
 
         // Workaround for deserializing KeyValuePair -it requires lowercase properties(case sensitive),
