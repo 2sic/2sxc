@@ -42,27 +42,27 @@ internal class LookUpInAppProperty(string name, IApp app) : LookUpBase(name)
     public override string Get(string key, string strFormat)
     {
         key = key.ToLowerInvariant();
-        if (key == "path")
-            return app.Path;
-        if (key == "physicalpath")
-            return app.PhysicalPath;
+        switch (key)
+        {
+            case "path":
+                return app.Path;
+            case "physicalpath":
+                return app.PhysicalPath;
+            // Maybe someday: also retrieve metadata like Folder, Name, Version
+        }
 
         var subToken = CheckAndGetSubToken(key);
 
-        if (subToken.HasSubtoken)
+        if (!subToken.HasSubtoken) return string.Empty;
+
+        var subProvider = subToken.Source switch
         {
-            var subProvider =
-                subToken.Source == "settings"
-                    ? Settings
-                    : subToken.Source == "resources" ? Resources : null;
-            if (subProvider != null)
-                return subProvider.Get(subToken.Rest, strFormat);
-        }
+            "settings" => Settings,
+            "resources" => Resources,
+            _ => null
+        };
 
-        // Maybe someday: also retrieve metadata like Folder, Name, Version
-        // var found = base.Get(key, strFormat, ref notFound);
-
-        return string.Empty;
+        return subProvider?.Get(subToken.Rest, strFormat) ?? string.Empty;
     }
 
 }

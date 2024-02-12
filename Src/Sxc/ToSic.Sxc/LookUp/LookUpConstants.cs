@@ -29,5 +29,5 @@ public class LookUpConstants
     public const string OldDnnSiteId = "portalid";
 
     public const string SourceQuery = "query";
-    public const string OldDnnSourceQueryString = "querystring";
+    public const string SourceQueryString = "querystring";
 }

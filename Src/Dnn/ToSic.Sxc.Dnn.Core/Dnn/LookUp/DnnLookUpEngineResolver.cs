@@ -12,27 +12,36 @@ namespace ToSic.Sxc.Dnn.LookUp;
 /// Retrieves the current engine for a specific module. <br/>
 /// Internally it asks DNN for the current Property-Access objects and prepares them for use in EAV.
 /// </summary>
-internal class DnnLookUpEngineResolver(IZoneCultureResolver cultureResolver, LazySvc<IHttp> httpLazy)
-    : LookUpEngineResolverBase(httpLazy, "Dnn.LookUp", connect: [cultureResolver]), ILookUpEngineResolver
+internal class DnnLookUpEngineResolver(IZoneCultureResolver cultureResolver, LazySvc<IHttp> httpLazy, LazySvc<IEnumerable<ILookUp>> lookUps)
+    : LookUpEngineResolverBase(lookUps, "Dnn.LookUp", connect: [cultureResolver, httpLazy])
 {
-    /// <inheritdoc />
-    public override ILookUpEngine GetLookUpEngine(int moduleId)
+    protected override LookUpEngine BuildLookupEngine(int moduleId)
     {
-        var l = Log.Fn<ILookUpEngine>($"{nameof(moduleId)}:{moduleId}");
+        var l = Log.Fn<LookUpEngine>($"{nameof(moduleId)}:{moduleId}");
         return PortalSettings.Current == null
-            ? l.Return(new LookUpEngine(Log), "no context")
-            : l.Return(GenerateDnnBasedLookupEngine(PortalSettings.Current, moduleId), "with site");
+            ? l.Return(base.BuildLookupEngine(moduleId), "no context, use base")
+            : l.Return(BuildDnnBasedLookupEngine(PortalSettings.Current, moduleId), "with site");
     }
 
     [PrivateApi]
-    public LookUpEngine GenerateDnnBasedLookupEngine(PortalSettings portalSettings, int moduleId)
+    public LookUpEngine LookUpEngineOfPortalSettings(PortalSettings portalSettings, int moduleId)
     {
         var l = Log.Fn<LookUpEngine>($"{nameof(moduleId)}: {moduleId}");
 
-        // if we already have a list of shared sources, return that
-        // as the sources don't change per request, but per module
-        if (TryGetFromCache(moduleId, out var cached))
+        //// if we already have a list of shared sources, return that
+        //// as the sources don't change per request, but per module
+        if (TryReuseFromCache(moduleId, out var cached))
             return l.Return(cached, $"reuse {cached.Sources.Count} sources");
+
+        var lookupEngine = BuildDnnBasedLookupEngine(portalSettings, moduleId);
+
+        return l.ReturnAsOk(AddToCache(moduleId, lookupEngine));
+    }
+
+    [PrivateApi]
+    private LookUpEngine BuildDnnBasedLookupEngine(PortalSettings portalSettings, int moduleId)
+    {
+        var l = Log.Fn<LookUpEngine>($"{nameof(moduleId)}: {moduleId}");
 
         // Otherwise build using Dnn Built-In Sources and HttpSources and more
         var dnnUsr = portalSettings.UserInfo;
@@ -45,15 +54,15 @@ internal class DnnLookUpEngineResolver(IZoneCultureResolver cultureResolver, Laz
             .ToList();
 
         // must already add, as we'll later check if some specific ones exist
-        var providers = new LookUpEngine(Log);
-        providers.Add(lookUps);
-        GetHttpSources(providers).UseIfNotNull(providers.Add);
+        var lookupEngine = new LookUpEngine(Log);
+        lookupEngine.Add(lookUps);
+        AddHttpAndDiSources(lookupEngine).UseIfNotNull(lookupEngine.Add);
 
         // Expand the Lookup for "module" to also have an "id" property
         var additions = new List<ILookUp>();
-        if (providers.HasSource(SourceModule))
+        if (lookupEngine.HasSource(SourceModule))
         {
-            var original = providers.Sources[SourceModule];
+            var original = lookupEngine.Sources[SourceModule];
             var modAdditional = new LookUpInDictionary(SourceModule, new Dictionary<string, string>
             {
                 { KeyId, original.Get(OldDnnModuleId) }
@@ -62,26 +71,28 @@ internal class DnnLookUpEngineResolver(IZoneCultureResolver cultureResolver, Laz
         }
 
         // Create the lookup for "site" based on the "portal" and only give it "id" & "guid"
-        if (providers.HasSource(OldDnnSiteSource))
+        if (lookupEngine.HasSource(OldDnnSiteSource))
             additions.Add(new LookUpInDictionary(SourceSite, new Dictionary<string, string>
             {
-                { KeyId, providers.Sources[OldDnnSiteSource].Get(OldDnnSiteId) },
+                { KeyId, lookupEngine.Sources[OldDnnSiteSource].Get(OldDnnSiteId) },
                 { KeyGuid, $"{DotNetNuke.Common.Globals.GetPortalSettings()?.GUID}" }
             }));
 
         // Create the lookup for "page" based on the "tab" and only give it "id" & "guid"
-        if (providers.HasSource(OldDnnPageSource))
+        if (lookupEngine.HasSource(OldDnnPageSource))
             additions.Add(new LookUpInDictionary(SourcePage, new Dictionary<string, string>
             {
-                { KeyId, providers.Sources[OldDnnPageSource].Get(OldDnnPageId) },
+                { KeyId, lookupEngine.Sources[OldDnnPageSource].Get(OldDnnPageId) },
                 { KeyGuid, $"{DotNetNuke.Common.Globals.GetPortalSettings()?.ActiveTab?.UniqueId}" }
             }));
 
-        providers.Add(additions);
+        lookupEngine.Add(additions);
+
+        if (!lookupEngine.HasSource("form"))
+            additions.Add(new LookUpInNameValueCollection("form", httpLazy.Value.Request.Form));
 
         // Note: Not implemented in Dnn: "Tenant" source
 
-        return l.ReturnAsOk(AddToCache(moduleId, providers));
+        return l.ReturnAsOk(lookupEngine);
     }
-
 }

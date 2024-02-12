@@ -299,7 +299,7 @@ internal class SearchController : ServiceBase
             try
             {
                 var getLookups = _dnnLookUpEngineResolver.Value;
-                var dnnLookUps = (getLookups as DnnLookUpEngineResolver)?.GenerateDnnBasedLookupEngine(site.GetContents(), dnnModule.ModuleID);
+                var dnnLookUps = (getLookups as DnnLookUpEngineResolver)?.LookUpEngineOfPortalSettings(site.GetContents(), dnnModule.ModuleID);
                 ((LookUpEngine) dataSource.Configuration.LookUpEngine).Link(dnnLookUps);
             }
             catch (Exception e)

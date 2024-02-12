@@ -181,32 +181,6 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
 
     #endregion
 
-    #region AsItem / AsItems (old) - should be removed ASAP
-
-    ///// <summary>
-    ///// EXPERIMENTAL
-    ///// </summary>
-    ///// <returns></returns>
-    //[PrivateApi("WIP, don't publish yet")]
-    //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    //protected T AsItem<T>(ICanBeEntity source, NoParamOrder protector = default, bool nullIfNull = false)
-    //    where T : class, ITypedItemWrapper16, ITypedItem, new()
-    //    => _CodeApiSvc._Cdf.AsCustom<T>(source: source, kit: Kit, protector: protector, nullIfNull: nullIfNull);
-
-    ///// <summary>
-    ///// EXPERIMENTAL
-    ///// </summary>
-    ///// <param name="source"></param>
-    ///// <typeparam name="T"></typeparam>
-    ///// <returns></returns>
-    //[PrivateApi("WIP, don't publish yet")]
-    //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    //protected IEnumerable<T> AsItems<T>(IEnumerable<ICanBeEntity> source)
-    //    where T : class, ITypedItemWrapper16, ITypedItem, new()
-    //    => _CodeApiSvc._Cdf.AsCustomList<T>(source, Kit);
-
-    #endregion
-
     #region As / AsList WIP v17
 
     /// <summary>

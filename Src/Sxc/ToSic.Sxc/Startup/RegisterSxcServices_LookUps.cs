@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.LookUp.Internal;
 
 namespace ToSic.Sxc.Startup;
 
@@ -15,14 +16,17 @@ static partial class RegisterSxcServices
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static IServiceCollection AddSxcCoreLookUps(this IServiceCollection services)
     {
-#if NETCOREAPP
-        services.TryAddTransient<ILookUpEngineResolver, LookUpEngineResolverGeneric>();
+        // QueryStringLookUp is used in Dnn and Oqtane
+        // It does both standard QueryString lookup but also respects OriginalParameters for AJAX cases
 
         services.AddTransient<ILookUp, QueryStringLookUp>();
+
+        // This is more of a fallback, in DNN it's pre-registered so it won't use this
+        services.TryAddTransient<ILookUpEngineResolver, LookUpEngineResolverBase>();
+
+#if NETCOREAPP
         services.AddTransient<ILookUp, DateTimeLookUp>();
         services.AddTransient<ILookUp, TicksLookUp>();
-#else
-            services.TryAddTransient<QueryStringLookUp>();
 #endif
 
         return services;
