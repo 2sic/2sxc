@@ -29,7 +29,7 @@ public class EntityPickerBackend: ServiceBase
     #endregion
 
     // 2dm 2023-01-22 #maybeSupportIncludeParentApps
-    public IEnumerable<EntityForPickerDto> GetForEntityPicker(int appId, string[] items, string contentTypeName/*, bool includeParentApps*/) => Log.Func(() =>
+    public IEnumerable<EntityForPickerDto> GetForEntityPicker(int appId, string[] items, string contentTypeName) => Log.Func(() =>
     {
         var context = _ctxResolver.GetBlockOrSetApp(appId);
         // do security check
@@ -42,6 +42,6 @@ public class EntityPickerBackend: ServiceBase
         // maybe in the future, ATM not relevant
         var withDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
 
-        return _entityPickerApi.GetForEntityPicker(appId, items, contentTypeName, withDrafts/*, includeParentApps*/);
+        return _entityPickerApi.GetForEntityPicker(appId, items, contentTypeName, withDrafts);
     });
 }

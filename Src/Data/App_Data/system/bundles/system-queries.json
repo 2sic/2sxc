@@ -193,7 +193,7 @@
         },
         {
           "Id": 42938,
-          "Version": 10,
+          "Version": 18,
           "Guid": "95041b6d-8669-4941-a516-47725acfe6ec",
           "Type": {
             "Id": "DataPipeline",
@@ -217,7 +217,7 @@
                 "en-us": "018a942b-1bad-4124-978c-0d0c35633be1:Default>Out:Default"
               },
               "TestParameters": {
-                "en-us": "[Module:ModuleID]=6936\n[QueryString:ContentTypeName]=@All"
+                "en-us": "[QueryString:ContentTypeName]=@All,@Entity"
               },
               "VisualDesignerData": {
                 "en-us": "{\"ShowDataSourceDetails\":true}"
@@ -236,7 +236,7 @@
           "Metadata": [
             {
               "Id": 42980,
-              "Version": 5,
+              "Version": 9,
               "Guid": "018a942b-1bad-4124-978c-0d0c35633be1",
               "Type": {
                 "Id": "DataPipelinePart",
@@ -2427,7 +2427,7 @@
         },
         {
           "Id": 182535,
-          "Version": 3,
+          "Version": 13,
           "Guid": "ca79c11d-0c2e-422a-8bcb-0a89d493ecc0",
           "Type": {
             "Id": "DataPipeline",
@@ -2436,33 +2436,33 @@
           "Attributes": {
             "String": {
               "Description": {
-                "*": ""
+                "en-us": "Entity picker for UI with special security, as security is handled in the data source. "
               },
               "Name": {
-                "*": "System.EntityPicker"
+                "en-us": "System.EntityPicker"
               },
               "Params": {
-                "*": ""
+                "en-us": ""
               },
               "StreamsOut": {
-                "*": "Default,Header"
+                "en-us": "Default,Header"
               },
               "StreamWiring": {
-                "*": "d0fac9fe-78ce-464a-8696-57fb5f69646d:Default>Out:Default"
+                "en-us": "d0fac9fe-78ce-464a-8696-57fb5f69646d:Default>Out:Default"
               },
               "TestParameters": {
-                "*": ""
+                "en-us": "[QueryString:TypeNames]=SystemExportDecorator,@All\n[QueryString:xx-ItemIds]=42930,42931"
               },
               "VisualDesignerData": {
-                "*": "{\"ShowDataSourceDetails\":true}"
+                "en-us": "{\"ShowDataSourceDetails\":true}"
               }
             },
             "Boolean": {
               "AllowEdit": {
-                "*": true
+                "en-us": true
               },
               "HiddenInQueryPicker": {
-                "*": false
+                "en-us": false
               }
             }
           },
@@ -2470,7 +2470,7 @@
           "Metadata": [
             {
               "Id": 182537,
-              "Version": 2,
+              "Version": 7,
               "Guid": "d0fac9fe-78ce-464a-8696-57fb5f69646d",
               "Type": {
                 "Id": "DataPipelinePart",
@@ -2513,6 +2513,40 @@
                     "*": [
                       "1fac6138-39c7-4ab6-9c54-9cf3e4ffd5ed"
                     ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "ca79c11d-0c2e-422a-8bcb-0a89d493ecc0"
+              }
+            },
+            {
+              "Id": 183752,
+              "Version": 1,
+              "Guid": "c324500c-8dd9-41ec-a7ae-b30809384e2f",
+              "Type": {
+                "Id": "PermissionConfiguration",
+                "Name": "PermissionConfiguration"
+              },
+              "Attributes": {
+                "String": {
+                  "Condition": {
+                    "en-us": "SecurityAccessLevel.View"
+                  },
+                  "Grant": {
+                    "en-us": "r"
+                  },
+                  "Identity": {
+                    "en-us": ""
+                  },
+                  "PermissionType": {
+                    "en-us": ""
+                  },
+                  "Title": {
+                    "en-us": "Allow Anonymous Access with View Permission"
                   }
                 }
               },
