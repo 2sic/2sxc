@@ -2,11 +2,10 @@
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.LookUp.Internal;
 
-public class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> lookUps, string logName = $"{SxcLogging.SxcLogName}.LUpEnR", NoParamOrder protect = default, object[] connect = default)
+public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> lookUps, string logName, NoParamOrder protect = default, object[] connect = default)
     : ServiceBase(logName, protect, connect), ILookUpEngineResolver
 {
     /// <summary>
