@@ -3,9 +3,11 @@ using ToSic.Sxc.Data.Internal;
 
 namespace ToSic.Sxc.Code.Internal.Generate;
 
-internal class GenerateTypedProperty
+internal class GenerateTypedProperty: GeneratePropertyBase
 {
-    public GeneratedCode Generate(GenerateCodeHelper GenHelper, IContentTypeAttribute attribute)
+    public override string ForDataType => throw new NotImplementedException();
+
+    public override GeneratedCode Generate(GenerateCodeHelper genHelper, IContentTypeAttribute attribute, int indent)
     {
         // TODO:
         // - figure out MethodName - eg. String(...)
@@ -17,13 +19,13 @@ internal class GenerateTypedProperty
         var sb = new StringBuilder();
         sb.AppendLine();
 
-        var indent = GenHelper.Indentation(DataModelGenerator.DepthProperty);
+        var indentStr = genHelper.Indentation(indent);
         var type = ValueTypeHelpers.GetType(attribute.Type);
         if (type == null)
-            return new( sb.AppendLine(indent + $"// Nothing generated for {attribute.Name} as type-specs missing"));
+            return new( sb.AppendLine(indentStr + $"// Nothing generated for {attribute.Name} as type-specs missing"));
 
-        sb.Append(GenHelper.XmlComment(indent, summary: $"todo - {attribute.Name}"));
-        return new(sb.AppendLine($"{indent}public {type.Name} {attribute.Name} => {nameof(ICanBeItem.Item)}.{attribute.Type}();"));
+        sb.Append(genHelper.XmlComment(indentStr, summary: $"todo - {attribute.Name}"));
+        return new(sb.AppendLine($"{indentStr}public {type.Name} {attribute.Name} => {nameof(ICanBeItem.Item)}.{attribute.Type}();"));
 
     }
 }
