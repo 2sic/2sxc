@@ -2,6 +2,7 @@
 using Microsoft.JSInterop;
 using Oqtane.Models;
 using Oqtane.Shared;
+using Oqtane.UI;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -51,6 +52,14 @@ public partial class Index : ModuleProBase
 
     #endregion
 
+    /// <summary>
+    /// Lifecycle method is executed for every component parameters change
+    /// </summary>
+    /// <remarks>
+    /// This method is called before the first render of the component and whenever the component's parameters are updated: PageState, ModuleState, ModuleInstance.
+    /// Route change will create new PageState in Oqtane Router, etc...
+    /// </remarks>
+    /// <returns></returns>
     protected override async Task OnParametersSetAsync()
     {
         try
@@ -59,15 +68,17 @@ public partial class Index : ModuleProBase
 
             Log($"1: OnParametersSetAsync(NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
 
-            // Call 2sxc engine only when is necessary to render control.
-            if (ShouldRender() && (string.IsNullOrEmpty(RenderedUri)
-                                   || (!NavigationManager.Uri.StartsWith(RenderedPage, InvariantCultureIgnoreCase))
-                                   || (!NavigationManager.Uri.Equals(RenderedUri, InvariantCultureIgnoreCase) && NavigationManager.Uri.StartsWith(RenderedPage, InvariantCultureIgnoreCase))))
+            // Call 2sxc engine only when is necessary to render control, because it is heavy operation and
+            // OnParametersSetAsync is executed more than ounce for single page navigation change.
+            // 2sxc module render state depends on AliasId, PageId, ModuleId, Culture, Query...
+            // Optimally it should be executed ounce for single page navigation change, but with correct PageId and ModuleId.
+            // Still during change of PageState and ModuleState sometimes we get old ModuleId from older page, before we get correct ModuleId from new page.
+            if (ShouldRender() && IsUriNewOrChanged())
             {
-                RenderedUri = NavigationManager.Uri;
-                RenderedPage = NavigationManager.Uri.RemoveQueryAndFragment();
                 Log($"1.1: RenderUri:{RenderedUri}");
 
+                // Ensure that only one thread is rendering the module at a time.
+                // This prevents exception "Some Stream-Wirings were not created" #3291
                 using (await RenderSpecificLockManager.LockAsync(/*ModuleState.RenderId*/ RenderId))
                 {
                     await Initialize2SxcContentBlock();
@@ -86,6 +97,25 @@ public partial class Index : ModuleProBase
         {
             LogError(ex);
         }
+    }
+
+    /// <summary>
+    /// Filter to render the control only when is necessary.
+    /// </summary>
+    /// <returns></returns>
+    private bool IsUriNewOrChanged()
+    {
+        var isUriNewOrChanged = (string.IsNullOrEmpty(RenderedUri)
+                || (!NavigationManager.Uri.StartsWith(RenderedPage, InvariantCultureIgnoreCase))
+                || (!NavigationManager.Uri.Equals(RenderedUri, InvariantCultureIgnoreCase) && NavigationManager.Uri.StartsWith(RenderedPage, InvariantCultureIgnoreCase)));
+
+        if (isUriNewOrChanged)
+        {
+            // preserve values for subsequent detection of uri change
+            RenderedUri = NavigationManager.Uri;
+            RenderedPage = NavigationManager.Uri.RemoveQueryAndFragment();
+        }
+        return isUriNewOrChanged;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
