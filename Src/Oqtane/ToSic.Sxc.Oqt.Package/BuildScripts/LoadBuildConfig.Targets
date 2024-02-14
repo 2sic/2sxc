@@ -10,6 +10,8 @@
   <UsingTask Condition="'$(MSBuildRuntimeType)' != 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll " TaskName="GetBuildConfig"/>
   <UsingTask Condition="'$(MSBuildRuntimeType)' == 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net7.0\ToSic.Sxc.BuildTasks.dll " TaskName="ColorMessage"/>
   <UsingTask Condition="'$(MSBuildRuntimeType)' != 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll " TaskName="ColorMessage"/>
+  <UsingTask Condition="'$(MSBuildRuntimeType)' == 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net7.0\ToSic.Sxc.BuildTasks.dll " TaskName="ModifyXmlDocumentation"/>
+  <UsingTask Condition="'$(MSBuildRuntimeType)' != 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll " TaskName="ModifyXmlDocumentation"/>
 
   <Target Name="BuildConfigTarget" AfterTargets="CheckBuildTool">
 

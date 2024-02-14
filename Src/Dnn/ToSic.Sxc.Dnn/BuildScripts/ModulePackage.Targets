@@ -6,6 +6,7 @@
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <Import Project="MSBuild.Community.Tasks.Targets" />
+  <UsingTask TaskName="ModifyXmlDocumentation" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll" />
 
   <!-- The Dnn Build Package - Should only run after release compile -->
   <Target Name="PackageModule" AfterTargets="Build" DependsOnTargets="BuildConfigTarget" Condition=" '$(Configuration)|$(Platform)|$(SourceExist)' == 'Release|AnyCPU|true' ">
@@ -169,6 +170,9 @@
     <CreateItem Include="DnnPackageBuilder/**\*.sqldataprovider">
       <Output TaskParameter="Include" ItemName="SqlDataProviderFiles" />
     </CreateItem>
+
+    <!-- Run the modification task for each documentation file -->
+    <ModifyXmlDocumentation XmlDocumentationPath="%(AssemblyDocumentation.Identity)" />
 
     <Copy SourceFiles="@(AssemblyInclude)" DestinationFolder="$(TempPackageFolder)\bin" />
     <Copy SourceFiles="@(AssemblyHelper)" DestinationFolder="$(TempPackagePdbFolder)\bin" />
