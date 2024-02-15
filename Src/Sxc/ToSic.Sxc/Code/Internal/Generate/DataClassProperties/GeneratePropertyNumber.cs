@@ -4,16 +4,28 @@ internal class GeneratePropertyNumber: GeneratePropertyBase
 {
     public override ValueTypes ForDataType => ValueTypes.Number;
 
-    public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
+    public override List<CodeFragment> Generate(CodeGenSpecs specs, IContentTypeAttribute attribute, int tabs)
     {
         var name = attribute.Name;
 
-        return [
-            GenPropSnip(tabs, "int", name, "Int", summary:
+        var decimals = attribute.Metadata.GetBestValue<int>("Decimals");
+        
+        return decimals == 0
+            ?
             [
-                $"Get the int of {name}.",
-                $"To get other types use methods such as .Decimal(\"{name}\")"
-            ]),
-        ];
+                GenPropSnip(tabs, "int", name, "Int", summary:
+                [
+                    $"{name} as int.",
+                    $"To get other types use methods such as .Decimal(\"{name}\")"
+                ]),
+            ]
+            :
+            [
+                GenPropSnip(tabs, "decimal", name, "Decimal", summary:
+                [
+                    $"{name} as decimal.",
+                    $"To get other types use methods such as .Int(\"{name}\")"
+                ]),
+            ];
     }
 }

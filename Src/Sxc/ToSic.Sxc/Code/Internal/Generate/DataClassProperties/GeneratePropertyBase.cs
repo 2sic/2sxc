@@ -9,7 +9,7 @@ internal abstract class GeneratePropertyBase
     protected CodeGenHelper CodeGenHelper => _codeGenHelper ??= new(new());
     private CodeGenHelper _codeGenHelper;
 
-    public abstract List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs);
+    public abstract List<CodeFragment> Generate(CodeGenSpecs specs, IContentTypeAttribute attribute, int tabs);
 
     protected CodeFragment GenPropSnip(int tabs, string returnType, string name, string method,
         NoParamOrder protector = default, string[] summary = default, string parameters = default, bool priority = true, List<string> usings = default)

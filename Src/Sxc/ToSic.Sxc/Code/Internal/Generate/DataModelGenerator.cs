@@ -22,9 +22,21 @@ public class DataModelGenerator(IUser user, IAppStates appStates) : ServiceBase(
         if (edition.HasValue())
             Specs.Edition = edition;
 
+        // Prepare App State and add to Specs
         var appCache = appStates.GetCacheState(appId);
         AppState = appStates.ToReader(appCache);
+        Specs.AppState = AppState;
         Specs.AppName = AppState.Name;
+
+        // Prepare Content Types and add to Specs, so the generators know what is available
+        // Generate classes for all types in scope Default
+        var types = AppState.ContentTypes.OfScope(Scopes.Default).ToList();
+        var appResources = AppState.GetContentType(AppLoadConstants.TypeAppResources);
+        if (appResources != null) types.Add(appResources);
+        var appSettings = AppState.GetContentType(AppLoadConstants.TypeAppSettings);
+        if (appSettings != null) types.Add(appSettings);
+
+        Specs.ExportedContentContentTypes = types;
         return this;
     }
 
@@ -56,14 +68,7 @@ public class DataModelGenerator(IUser user, IAppStates appStates) : ServiceBase(
 
     internal List<CodeFileRaw> DataFiles()
     {
-        // Generate classes for all types in scope Default
-        var types = AppState.ContentTypes.OfScope(Scopes.Default).ToList();
-        var appResources = AppState.GetContentType(AppLoadConstants.TypeAppResources);
-        if (appResources != null) types.Add(appResources);
-        var appSettings = AppState.GetContentType(AppLoadConstants.TypeAppSettings);
-        if (appSettings != null) types.Add(appSettings);
-
-        var classFiles = types
+        var classFiles = Specs.ExportedContentContentTypes
             .Select(t => new DataClassGenerator(this, t, t.Name?.Replace("-", "")).PrepareFile())
             .ToList();
         return classFiles;

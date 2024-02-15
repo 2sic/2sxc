@@ -1,10 +1,15 @@
-﻿using ToSic.Sxc.Code.Internal.HotBuild;
+﻿using ToSic.Eav.Apps;
+using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Code.Internal.Generate;
 
 public class CodeGenSpecs
 {
     public string AppName { get; set; } = "App";
+
+    internal IAppState AppState { get; set; }
+
+    public List<IContentType> ExportedContentContentTypes { get; set; }
 
     /// <summary>
     /// Namespace for the data classes

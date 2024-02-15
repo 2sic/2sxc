@@ -60,7 +60,7 @@ internal class DataClassGenerator(DataModelGenerator dmg, IContentType type, str
             .SelectMany(set =>
             {
                 return set.Generators
-                    .SelectMany(p => p.Generate(set.Attribute, Specs.TabsProperty));
+                    .SelectMany(p => p.Generate(Specs, set.Attribute, Specs.TabsProperty));
             })
             .ToList();
 
@@ -127,7 +127,7 @@ internal class DataClassGenerator(DataModelGenerator dmg, IContentType type, str
              Default properties such as `.Title` or `.Id` are provided in the base class.
              Most properties have a simple access, such as `.{firstPropertyName}`.
              For other properties or uses, the common method such as
-             `IsNotEmpty("FieldName")`, `String("FieldName")`, `Children(...)`, `Picture(...)`, `.Html(...)` and more can be used.
+             .IsNotEmpty("FieldName"), .String("FieldName"), .Children(...), .Picture(...), .Html(...) and more can be used.
              """);
 
     public string AutoGenClassComment() => 

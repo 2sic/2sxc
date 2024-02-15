@@ -4,7 +4,7 @@ internal class GeneratePropertyString: GeneratePropertyBase
 {
     public override ValueTypes ForDataType => ValueTypes.String;
 
-    public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
+    public override List<CodeFragment> Generate(CodeGenSpecs specs, IContentTypeAttribute attribute, int tabs)
     {
         var name = attribute.Name;
         return
