@@ -6,10 +6,15 @@
 /// </summary>
 /// <param name="code"></param>
 /// <param name="usings"></param>
-internal class GenCodeSnippet(string nameId, string code, bool priority = true, List<string> usings = default)
+internal class GenCodeSnippet(string nameId, string code, bool priority = true, List<string> usings = default, string closing = default)
 {
     public string NameId { get; } = nameId;
-    public string Code { get; } = code;
+    //public string Code { get; } = code;
+    //public string Closing { get; } = closing;
     public bool Priority { get; } = priority;
     public List<string> Usings { get; } = usings ?? [];
+
+    public override string ToString() => ToString(null);
+
+    public string ToString(string contents) => code + contents + closing;
 }

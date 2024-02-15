@@ -11,7 +11,7 @@ internal class GeneratePropertyString: GeneratePropertyBase
     {
         var name = attribute.Name;
         return [
-            new(name, GenerateProperty(tabs, "string", name, "String", parameters: "fallback: \"\"")),
+            new(nameId: name, code: GenerateProperty(tabs: tabs, returnType: "string", name: name, method: "String", parameters: "fallback: \"\"")),
         ];
     }
 }

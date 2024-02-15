@@ -8,5 +8,5 @@ internal class GeneratePropertyBool: GeneratePropertyBase
     public override ValueTypes ForDataType => ValueTypes.Boolean;
 
     public override List<GenCodeSnippet> Generate(IContentTypeAttribute attribute, int tabs) 
-        => [new(attribute.Name, GenerateProperty(tabs, "bool", attribute.Name, "Bool"))];
+        => [new(nameId: attribute.Name, code: GenerateProperty(tabs, "bool", attribute.Name, "Bool"))];
 }
