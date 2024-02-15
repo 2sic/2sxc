@@ -55,7 +55,7 @@ public class DataModelGenerator(IUser user, IAppStates appStates) : ServiceBase(
         return sb.ToString();
     }
 
-    private List<CodeFileRaw> DataFiles()
+    internal List<CodeFileRaw> DataFiles()
     {
         // Generate classes for all types in scope Default
         var types = AppState.ContentTypes.OfScope(Scopes.Default).ToList();
