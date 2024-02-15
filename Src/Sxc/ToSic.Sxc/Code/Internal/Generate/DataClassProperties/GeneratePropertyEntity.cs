@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices.ComTypes;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Code.Internal.Generate;
@@ -24,30 +23,17 @@ internal class GeneratePropertyEntity: GeneratePropertyBase
 
         // ReSharper disable once InvertIf
         if (entityType.HasValue())
-        {
             specs.ExportedContentContentTypes
                 .FirstOrDefault(t => entityType.EqualsInsensitive(t.Name))
                 .UseIfNotNull(ct =>
                 {
+                    // Switch the result type
                     resultType = ct.Name;
+                    // Make the method generic returning the expected type
                     method += $"<{resultType}>";
+                    // No usings needed, as the type is already in the namespace
                     usings = null;
                 });
-            //var ct = specs.ExportedContentContentTypes.FirstOrDefault(t => entityType.EqualsInsensitive(t.Name));
-            //if (ct != null)
-            //{
-            //    resultType = ct.Name;
-            //    method += $"<{resultType}>";
-            //    usings = null;
-            //    //return
-            //    //[
-            //    //    GenPropSnip(tabs, string.Format(result, resultType), name, method, usings: usings, summary:
-            //    //    [
-            //    //        $"{msgPrefix} {resultType}.",
-            //    //    ]),
-            //    //];
-            //}
-        }
 
         return
         [
