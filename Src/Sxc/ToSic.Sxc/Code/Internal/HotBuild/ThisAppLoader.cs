@@ -96,7 +96,7 @@ public class ThisAppLoader : ServiceBase
 
         // Get paths
         var (physicalPath, relativePath) = GetAppPaths(ThisAppBase, spec);
-        l.A($"{nameof(physicalPath)}: '{physicalPath}'; {nameof(relativePath)}: '{relativePath}'");
+        //l.A($"{nameof(physicalPath)}: '{physicalPath}'; {nameof(relativePath)}: '{relativePath}'");
         logSummary.AddSpec("PhysicalPath", physicalPath);
         logSummary.AddSpec("RelativePath", relativePath);
  
@@ -184,9 +184,9 @@ public class ThisAppLoader : ServiceBase
             ? (spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder)
             : spec.Edition;
         var physicalPath = Path.Combine(appPaths.PhysicalPath, folderWithEdition);
-        l.A($"{nameof(physicalPath)}: '{physicalPath}'");
+        //l.A($"{nameof(physicalPath)}: '{physicalPath}'");
         var relativePath = Path.Combine(appPaths.RelativePath, folderWithEdition);
-        l.A($"{nameof(relativePath)}: '{relativePath}'");
+        //l.A($"{nameof(relativePath)}: '{relativePath}'");
         return l.ReturnAsOk((physicalPath, relativePath));
     }
 

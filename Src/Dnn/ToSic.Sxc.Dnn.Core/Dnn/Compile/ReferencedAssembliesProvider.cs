@@ -12,13 +12,13 @@ namespace ToSic.Sxc.Dnn.Compile
     [PrivateApi]
     public class ReferencedAssembliesProvider : ServiceBase, IReferencedAssembliesProvider
     {
-        private readonly Lazy<DependenciesLoader> _dependenciesLoader;
+        private readonly DependenciesLoader _dependenciesLoader;
         private readonly AssemblyResolver _assemblyResolver;
 
         // cache of referenced assemblies per virtual path
-        private readonly ConcurrentDictionary<string, List<string>> _referencedAssembliesCache = new(InvariantCultureIgnoreCase);
+        private static readonly ConcurrentDictionary<string, List<string>> ReferencedAssembliesCache = new(InvariantCultureIgnoreCase);
 
-        public ReferencedAssembliesProvider(Lazy<DependenciesLoader> dependenciesLoader, AssemblyResolver assemblyResolver) : base("Sxc.RefAP")
+        public ReferencedAssembliesProvider(DependenciesLoader dependenciesLoader, AssemblyResolver assemblyResolver) : base("Sxc.RefAP")
         {
             ConnectServices(
                 _dependenciesLoader = dependenciesLoader,
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Dnn.Compile
 
         public List<string> Locations(string virtualPath, HotBuildSpec spec)
         {
-            if (_referencedAssembliesCache.TryGetValue(virtualPath, out var cachedResult))
+            if (ReferencedAssembliesCache.TryGetValue(virtualPath, out var cachedResult))
                 return [..cachedResult];
 
             var referencedAssemblies = new List<string>(AppReferencedAssemblies());
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Dnn.Compile
             if (spec != null)
             {
                 // TODO: need to invalidate this cache (_referencedAssembliesCache, _assemblyResolver, ...) if there is change in Dependencies folder
-                var (dependencies, _) = _dependenciesLoader.Value.TryGetOrFallback(spec);
+                var (dependencies, _) = _dependenciesLoader.TryGetOrFallback(spec);
                 _assemblyResolver.AddAssemblies(dependencies);
 
                 if (dependencies != null)
@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Dnn.Compile
                 .Select(g => g.Last())
                 .ToList();
 
-            _referencedAssembliesCache.TryAdd(virtualPath, referencedAssemblies);
+            ReferencedAssembliesCache.TryAdd(virtualPath, referencedAssemblies);
 
             return [..referencedAssemblies];
         }

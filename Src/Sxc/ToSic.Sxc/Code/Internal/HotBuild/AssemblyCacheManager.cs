@@ -22,7 +22,7 @@ public class AssemblyCacheManager() : ServiceBase(SxcLogging.SxcLogName + ".Asse
     #endregion
 
     #region Static Calls for Dependecies - to use before requiring DI
-    public static (List<AssemblyResult> Results, string cacheKey) TryGetDependencies(HotBuildSpec spec)
+    public static (List<AssemblyResult> assemblyResults, string cacheKey) TryGetDependencies(HotBuildSpec spec)
     {
         var cacheKey = KeyDependency(spec);
         return (Cache[cacheKey] as List<AssemblyResult>, cacheKey);
