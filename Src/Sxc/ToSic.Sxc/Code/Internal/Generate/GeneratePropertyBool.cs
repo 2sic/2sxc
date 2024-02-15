@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace ToSic.Sxc.Code.Internal.Generate;
+﻿namespace ToSic.Sxc.Code.Internal.Generate;
 
 /// <summary>
 /// Empty properties don't result in any code
@@ -9,9 +7,6 @@ internal class GeneratePropertyBool: GeneratePropertyBase
 {
     public override ValueTypes ForDataType => ValueTypes.Boolean;
 
-    public override GeneratedCode Generate(GenerateCodeHelper genHelper, IContentTypeAttribute attribute, int indent)
-    {
-        var indentStr = genHelper.Indentation(indent);
-        return new(new StringBuilder().AppendLine(GenerateProperty(indentStr, "bool", attribute.Name, "Bool")));
-    }
+    public override List<GenCodeSnippet> Generate(IContentTypeAttribute attribute, int tabs) 
+        => [new(attribute.Name, GenerateProperty(tabs, "bool", attribute.Name, "Bool"))];
 }

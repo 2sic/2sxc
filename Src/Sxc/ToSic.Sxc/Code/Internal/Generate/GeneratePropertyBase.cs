@@ -2,12 +2,16 @@
 
 internal abstract class GeneratePropertyBase
 {
-    public abstract string ForDataType { get; }
+    public abstract ValueTypes ForDataType { get; }
 
-    public abstract GeneratedCode Generate(GenerateCodeHelper genHelper, IContentTypeAttribute attribute, int indent);
+    protected GenerateCodeHelper CodeHelper => _codeHelper ??= new();
+    private GenerateCodeHelper _codeHelper;
 
-    protected string GenerateProperty(string indent, string returnType, string name, string method)
-        => $"{indent}public {returnType} {name} => {method}();";
-    protected string GenerateProperty(string indent, string returnType, string name, string method, string parameters)
-        => $"{indent}public {returnType} {name} => {method}({parameters});";
+    public abstract List<GenCodeSnippet> Generate(IContentTypeAttribute attribute, int tabs);
+
+    protected string GenerateProperty(int tabs, string returnType, string name, string method)
+        => $"{CodeHelper.Indentation(tabs)}public {returnType} {name} => {method}(\"{name}\");";
+
+    protected string GenerateProperty(int tabs, string returnType, string name, string method, string parameters)
+        => $"{CodeHelper.Indentation(tabs)}public {returnType} {name} => {method}(\"{name}\", {parameters});";
 }

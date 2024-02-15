@@ -1,13 +1,15 @@
 ﻿using System.Text;
 using ToSic.Eav.Apps;
-using ToSic.Sxc.Data.Internal;
+using ToSic.Lib.Helpers;
+using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Code.Internal.Generate;
 
 /// <summary>
 /// Experimental
 /// </summary>
-internal class DataModelGenerator
+public class DataModelGenerator() : ServiceBase(SxcLogging.SxcLogName + ".DMoGen")
 {
     internal const int DepthNamespace = 0;
     internal const int DepthClass = 1;
@@ -15,6 +17,8 @@ internal class DataModelGenerator
     internal const int Indent = 4;
     internal const string NamespaceBody = "[NAMESPACE-BODY]";
     internal const string ClassBody = "[CLASS-BODY]";
+
+
 
     internal GenerateCodeHelper GenHelper = new();
 
@@ -38,10 +42,15 @@ internal class DataModelGenerator
         foreach (var type in types)
         {
             var classSb = GenerateClass(type.Name);
-            var propsSb = new StringBuilder();
-            foreach (var attribute in type.Attributes) 
-                propsSb.Append(GenerateProperty(attribute));
-            classSb.Replace(ClassBody, propsSb.ToString());
+            var (hasProps, propsSb) = ClassProperties(type.Attributes.ToList());
+            if (hasProps)
+                classSb.Replace(ClassBody, propsSb.ToString());
+
+            //var propsSb = new StringBuilder();
+            //foreach (var attribute in type.Attributes) 
+            //    propsSb.Append(GenerateProperty(attribute));
+            //classSb.Replace(ClassBody, propsSb.ToString());
+
             classesSb.Append(classSb);
         }
 
@@ -93,25 +102,70 @@ internal class DataModelGenerator
         return sb;
     }
 
-    public StringBuilder GenerateProperty(IContentTypeAttribute attribute)
+    public (bool, StringBuilder) ClassProperties(List<IContentTypeAttribute> attributes)
     {
-        // TODO:
-        // - figure out MethodName - eg. String(...)
-        // - figure out fallback value
-        // - possible multi-properties eg. Link, LinkUrl, Image / Images
-        // - add XML comment
 
-        // String builder with empty line
+        // Generate all properties with the helpers
+        var propsSnippets = attributes
+            .Select(a => new
+            {
+                Attribute = a,
+                Generators = PropertyGenerators.Where(p => p.ForDataType == a.Type).ToList()
+            })
+            .Where(a => a.Generators.Any())
+            .SelectMany(set =>
+            {
+                return set.Generators
+                    .SelectMany(p => p.Generate(set.Attribute, DepthProperty));
+            })
+            .ToList();
+
+        if (!propsSnippets.Any())
+            return (false, null);
+
+        // Detect duplicate names as this would fail
+        // If we have duplicates, keep the first with a real priority
+        var deduplicated = propsSnippets
+            .GroupBy(ps => ps.NameId)
+            .SelectMany(g => g.OrderBy(ps => ps.Priority ? 0 : 1).Take(1))
+            .ToList();
+
         var sb = new StringBuilder();
-        sb.AppendLine();
+        foreach (var genCode in deduplicated)
+            sb.Append(genCode.Code);
 
-        var indent = GenHelper.Indentation(DepthProperty);
-        var type = ValueTypeHelpers.GetType(attribute.Type);
-        if (type == null)
-            return sb.AppendLine(indent + $"// Nothing generated for {attribute.Name} as type-specs missing");
-
-        sb.Append(GenHelper.XmlComment(indent, summary: $"todo - {attribute.Name}"));
-        return sb.AppendLine($"{indent}public {type.Name} {attribute.Name} => {nameof(ICanBeItem.Item)}.{attribute.Type}();");
+        return (true, sb);
     }
 
+    //public StringBuilder GenerateProperty(IContentTypeAttribute attribute)
+    //{
+    //    // TODO:
+    //    // - figure out MethodName - eg. String(...)
+    //    // - figure out fallback value
+    //    // - possible multi-properties eg. Link, LinkUrl, Image / Images
+    //    // - add XML comment
+
+    //    // String builder with empty line
+    //    var sb = new StringBuilder();
+    //    sb.AppendLine();
+
+    //    var indent = GenHelper.Indentation(DepthProperty);
+    //    var type = ValueTypeHelpers.GetType(attribute.Type);
+    //    if (type == null)
+    //        return sb.AppendLine(indent + $"// Nothing generated for {attribute.Name} as type-specs missing");
+
+    //    sb.Append(GenHelper.XmlComment(indent, summary: $"todo - {attribute.Name}"));
+    //    return sb.AppendLine($"{indent}public {type.Name} {attribute.Name} => {nameof(ICanBeItem.Item)}.{attribute.Type}();");
+    //}
+
+    private List<GeneratePropertyBase> PropertyGenerators => _propGenerators.Get(() =>
+    [
+        new GeneratePropertyBool(),
+        new GeneratePropertyString(),
+        new GeneratePropertyEmpty(),
+        new GeneratePropertyHyperlink(),
+        // new GeneratePropertyNumber(),
+        // new GeneratePropertyDateTime(),
+    ]);
+    private readonly GetOnce<List<GeneratePropertyBase>> _propGenerators = new();
 }
