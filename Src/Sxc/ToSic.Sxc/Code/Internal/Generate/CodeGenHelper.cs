@@ -3,11 +3,9 @@ using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Code.Internal.Generate;
 
-internal class CodeGenHelper
+internal class CodeGenHelper(CodeGenSpecs specs)
 {
-    internal const int Indent = 2;
-
-    public string Indentation(int depth) => new(' ', Indent * depth);
+    public string Indent(int depth) => new(' ', specs.TabSize * depth);
 
     public void AddLines(StringBuilder sb, int lines)
     {
@@ -26,7 +24,7 @@ internal class CodeGenHelper
         // Summary
         var sb = new StringBuilder();
         AddLines(sb, padBefore);
-        var indent = Indentation(tabs);
+        var indent = Indent(tabs);
         foreach (var l in comment) sb.AppendLine($"{indent}// {l}");
         AddLines(sb, padAfter);
 
@@ -44,7 +42,7 @@ internal class CodeGenHelper
 
         // Summary
         var sb = new StringBuilder();
-        var indent = Indentation(tabs);
+        var indent = Indent(tabs);
         AddLines(sb, padBefore);
 
         if (summary.Length == 1)

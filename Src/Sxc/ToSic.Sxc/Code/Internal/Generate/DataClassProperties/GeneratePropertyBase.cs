@@ -6,7 +6,7 @@ internal abstract class GeneratePropertyBase
 {
     public abstract ValueTypes ForDataType { get; }
 
-    protected CodeGenHelper CodeGenHelper => _codeGenHelper ??= new();
+    protected CodeGenHelper CodeGenHelper => _codeGenHelper ??= new(new());
     private CodeGenHelper _codeGenHelper;
 
     public abstract List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs);
@@ -23,6 +23,6 @@ internal abstract class GeneratePropertyBase
         if (parameters.HasValue())
             parameters = ", " + parameters;
 
-        return $"{CodeGenHelper.Indentation(tabs)}public {returnType} {name} => {method}(\"{name}\"{parameters});";
+        return $"{CodeGenHelper.Indent(tabs)}public {returnType} {name} => {method}(\"{name}\"{parameters});";
     }
 }
