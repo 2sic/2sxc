@@ -7,6 +7,6 @@ internal class GeneratePropertyEmpty: GeneratePropertyBase
     /// <summary>
     /// Empty is - empty - so we don't generate anything
     /// </summary>
-    public override List<GenCodeSnippet> Generate(IContentTypeAttribute attribute, int tabs) 
+    public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs) 
         => [];
 }

@@ -3,7 +3,7 @@
 /// <summary>
 /// Object which contains the info to generate the class code file.
 /// </summary>
-internal class GenCodeClass(string typeName, string body, string introComment)
+internal class CodeFileRaw(string typeName, string body, string introComment)
 {
     /// <summary>
     /// The file name to store into.

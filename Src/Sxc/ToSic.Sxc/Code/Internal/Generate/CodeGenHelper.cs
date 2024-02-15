@@ -3,7 +3,7 @@ using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Code.Internal.Generate;
 
-internal class GenerateCodeHelper
+internal class CodeGenHelper
 {
     internal const int Indent = 2;
 

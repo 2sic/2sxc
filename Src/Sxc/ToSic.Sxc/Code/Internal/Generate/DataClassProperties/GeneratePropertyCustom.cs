@@ -6,7 +6,7 @@ internal class GeneratePropertyCustom: GeneratePropertyBase
 {
     public override ValueTypes ForDataType => ValueTypes.Custom;
 
-    public override List<GenCodeSnippet> Generate(IContentTypeAttribute attribute, int tabs)
+    public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
     {
         if (attribute.InputType() != "@custom-gps")
             return [];

@@ -6,7 +6,7 @@
 /// </summary>
 /// <param name="code"></param>
 /// <param name="usings"></param>
-internal class GenCodeSnippet(string nameId, string code, bool priority = true, List<string> usings = default, string closing = default)
+internal class CodeFragment(string nameId, string code, bool priority = true, List<string> usings = default, string closing = default)
 {
     public string NameId { get; } = nameId;
     public bool Priority { get; } = priority;

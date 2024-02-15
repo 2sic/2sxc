@@ -6,15 +6,15 @@ internal abstract class GeneratePropertyBase
 {
     public abstract ValueTypes ForDataType { get; }
 
-    protected GenerateCodeHelper CodeHelper => _codeHelper ??= new();
-    private GenerateCodeHelper _codeHelper;
+    protected CodeGenHelper CodeGenHelper => _codeGenHelper ??= new();
+    private CodeGenHelper _codeGenHelper;
 
-    public abstract List<GenCodeSnippet> Generate(IContentTypeAttribute attribute, int tabs);
+    public abstract List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs);
 
-    protected GenCodeSnippet GenPropSnip(int tabs, string returnType, string name, string method,
+    protected CodeFragment GenPropSnip(int tabs, string returnType, string name, string method,
         NoParamOrder protector = default, string[] summary = default, string parameters = default, bool priority = true, List<string> usings = default)
     {
-        var comment = CodeHelper.XmlComment(tabs, summary);
+        var comment = CodeGenHelper.XmlComment(tabs, summary);
         return new(name, comment + GenProp(tabs, returnType, name, method, parameters: parameters), priority: priority, usings: usings);
     }
 
@@ -23,6 +23,6 @@ internal abstract class GeneratePropertyBase
         if (parameters.HasValue())
             parameters = ", " + parameters;
 
-        return $"{CodeHelper.Indentation(tabs)}public {returnType} {name} => {method}(\"{name}\"{parameters});";
+        return $"{CodeGenHelper.Indentation(tabs)}public {returnType} {name} => {method}(\"{name}\"{parameters});";
     }
 }

@@ -4,7 +4,7 @@ internal class GeneratePropertyBool: GeneratePropertyBase
 {
     public override ValueTypes ForDataType => ValueTypes.Boolean;
 
-    public override List<GenCodeSnippet> Generate(IContentTypeAttribute attribute, int tabs)
+    public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
     {
         var name = attribute.Name;
 

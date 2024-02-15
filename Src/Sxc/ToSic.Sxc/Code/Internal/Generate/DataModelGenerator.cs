@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Code.Internal.Generate;
 /// <summary>
 /// Experimental
 /// </summary>
-public class DataModelGenerator(IUser user) : ServiceBase(SxcLogging.SxcLogName + ".DMoGen")
+public class DataModelGenerator(IUser user, IAppStates appStates) : ServiceBase(SxcLogging.SxcLogName + ".DMoGen")
 {
     internal const int DepthNamespace = 0;
     internal const int DepthClass = 1;
@@ -22,47 +22,63 @@ public class DataModelGenerator(IUser user) : ServiceBase(SxcLogging.SxcLogName 
     internal const string InheritsDataItem16 = "Custom.Data.Item16";
 
     internal IUser User = user;
-    internal GenerateCodeHelper GenHelper = new();
+    internal CodeGenHelper CodeGenHelper = new();
 
-    public string Generate(IAppState state, string edition = default)
+    public DataModelGenerator Setup(int appId, string edition)
+    {
+        var appCache = appStates.GetCacheState(appId);
+        AppState = appStates.ToReader(appCache);
+        Edition = edition;
+        return this;
+    }
+
+    public string Edition { get; private set; }
+
+    public IAppState AppState { get; private set; }
+
+    public string Dump()
     {
         // TODO: @2dm
         // - check Equals of the new objects
         // - check serialization
         var sb = new StringBuilder();
 
-        // Generate classes for all types in scope Default
-        var types = state.ContentTypes.OfScope(Scopes.Default).ToList();
-        var appResources = state.GetContentType(AppLoadConstants.TypeAppResources);
-        if (appResources != null) types.Add(appResources);
-        var appSettings = state.GetContentType(AppLoadConstants.TypeAppSettings);
-        if (appSettings != null) types.Add(appSettings);
-
-        var classFiles = types
-            .Select(t => new DataClassGenerator(this, t, t.Name?.Replace("-", ""), edition).PrepareFile())
-            .ToList();
-
+        var classFiles = DataFiles();
         foreach (var classSb in classFiles)
         {
+            sb.AppendLine($"// ----------------------- file: {classSb.FileName} ----------------------- ");
             sb.AppendLine(classSb.FileContents);
             sb.AppendLine();
-            sb.AppendLine("// -----------------------");
             sb.AppendLine();
         }
-
 
         return sb.ToString();
     }
 
+    private List<CodeFileRaw> DataFiles()
+    {
+        // Generate classes for all types in scope Default
+        var types = AppState.ContentTypes.OfScope(Scopes.Default).ToList();
+        var appResources = AppState.GetContentType(AppLoadConstants.TypeAppResources);
+        if (appResources != null) types.Add(appResources);
+        var appSettings = AppState.GetContentType(AppLoadConstants.TypeAppSettings);
+        if (appSettings != null) types.Add(appSettings);
 
-    internal GenCodeSnippet NamespaceWrapper(string @namespace)
+        var classFiles = types
+            .Select(t => new DataClassGenerator(this, t, t.Name?.Replace("-", ""), Edition).PrepareFile())
+            .ToList();
+        return classFiles;
+    }
+
+
+    internal CodeFragment NamespaceWrapper(string @namespace)
     {
         return new("namespace", $"namespace {@namespace}" + "\n{", closing: "}");
     }
 
-    internal GenCodeSnippet ClassWrapper(string className, bool isAbstract, bool partial, string inherits)
+    internal CodeFragment ClassWrapper(string className, bool isAbstract, bool partial, string inherits)
     {
-        var indent = GenHelper.Indentation(DepthClass);
+        var indent = CodeGenHelper.Indentation(DepthClass);
         var specifiers = (isAbstract ? "abstract " : "") + (partial ? "partial " : "");
         inherits = inherits.NullOrUse(i => $": {i}");
 
