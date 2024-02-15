@@ -1,8 +1,5 @@
 ﻿namespace ToSic.Sxc.Code.Internal.Generate;
 
-/// <summary>
-/// Empty properties don't result in any code
-/// </summary>
 internal class GeneratePropertyDateTime: GeneratePropertyBase
 {
     public override ValueTypes ForDataType => ValueTypes.DateTime;

@@ -21,11 +21,8 @@ internal class DataClassGenerator(DataModelGenerator dmg, IContentType type, str
 
         // Generate AutoGen class with properties
         var classAutoGen = dmg.ClassWrapper(autoGenClassName, true, false, DataModelGenerator.InheritsDataItem16);
-        var (hasProps, propsSb, usings, firstProperty) = ClassProperties(type.Attributes.ToList());
-        var classCode = // hasProps
-                /*?*/ classAutoGen.ToString(propsSb)
-            //: classAutoGen.ToString();
-            ;
+        var (_, propsSb, usings, firstProperty) = ClassProperties(type.Attributes.ToList());
+        var classCode = classAutoGen.ToString(propsSb);
 
 
         var fullBody =
@@ -82,6 +79,7 @@ internal class DataClassGenerator(DataModelGenerator dmg, IContentType type, str
 
         var usings = deduplicated.SelectMany(ps => ps.Usings)
             .Distinct()
+            .OrderBy(u => u)
             .ToList();
 
         return l.Return((true, sb.ToString(), usings, deduplicated.First().NameId));

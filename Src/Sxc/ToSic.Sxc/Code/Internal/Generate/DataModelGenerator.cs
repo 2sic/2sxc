@@ -45,7 +45,9 @@ public class DataModelGenerator(IUser user) : ServiceBase(SxcLogging.SxcLogName 
         foreach (var classSb in classFiles)
         {
             sb.AppendLine(classSb.FileContents);
+            sb.AppendLine();
             sb.AppendLine("// -----------------------");
+            sb.AppendLine();
         }
 
 

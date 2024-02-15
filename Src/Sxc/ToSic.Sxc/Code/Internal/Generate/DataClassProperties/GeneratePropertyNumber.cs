@@ -1,8 +1,5 @@
 ﻿namespace ToSic.Sxc.Code.Internal.Generate;
 
-/// <summary>
-/// Empty properties don't result in any code
-/// </summary>
 internal class GeneratePropertyNumber: GeneratePropertyBase
 {
     public override ValueTypes ForDataType => ValueTypes.Number;

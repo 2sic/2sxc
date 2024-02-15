@@ -1,8 +1,5 @@
 ﻿namespace ToSic.Sxc.Code.Internal.Generate;
 
-/// <summary>
-/// Empty properties don't result in any code
-/// </summary>
 internal class GeneratePropertyHyperlink: GeneratePropertyBase
 {
     public override ValueTypes ForDataType => ValueTypes.Hyperlink;
@@ -10,16 +7,6 @@ internal class GeneratePropertyHyperlink: GeneratePropertyBase
     public override List<GenCodeSnippet> Generate(IContentTypeAttribute attribute, int tabs)
     {
         var name = attribute.Name;
-
-        //var fileComment = CodeHelper.XmlComment(tabs, summary:
-        //[
-        //    $"Get the file object for {name} - or null if it's empty or not referencing a file."
-        //]);
-
-        //var folderComment = CodeHelper.XmlComment(tabs, summary:
-        //[
-        //    $"Get the folder object for {name}."
-        //]);
 
         return
         [
