@@ -36,7 +36,7 @@ internal class DataClassGenerator(DataModelGenerator dmg, IContentType type, str
             + dmg.NamespaceWrapper(DataModelGenerator.DataNamespace)
                 .ToString(fullBody);
 
-        return new(className, fileContents, FileIntroComment(dmg.User.Name));
+        return new(autoGenClassName, fileContents, FileIntroComment(dmg.User.Name));
     }
 
     #endregion
