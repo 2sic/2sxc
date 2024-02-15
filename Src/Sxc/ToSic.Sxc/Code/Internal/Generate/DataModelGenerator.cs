@@ -55,6 +55,11 @@ public class DataModelGenerator(IUser user, IAppStates appStates) : ServiceBase(
         return sb.ToString();
     }
 
+    public void GenerateAndSaveFiles()
+    {
+        /* TODO: @STV */
+    }
+
     internal List<CodeFileRaw> DataFiles()
     {
         // Generate classes for all types in scope Default
