@@ -37,13 +37,13 @@
   <Target Name="PostBuild" AfterTargets="Build" DependsOnTargets="BuildConfigTarget" Condition="'$(SourceExist)|$(OqtaneExist)' == 'true|true'">
 
     <!-- XML documentation -->
-    <ItemGroup>
+    <ItemGroup Condition="'$(Configuration)'=='Release'">
       <AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.xml" />
       <AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.Oqtane.*.xml" Exclude="**\ToSic.Sxc.Oqtane.Package.xml" />
       <AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.Razor.xml" />
     </ItemGroup>
     <!-- Run the modification task for each documentation file -->
-    <ModifyXmlDocumentation XmlDocumentationPath="%(AssemblyDocumentation.Identity)" />
+    <ModifyXmlDocumentation XmlDocumentationPath="%(AssemblyDocumentation.Identity)" Condition="'$(Configuration)'=='Release'"/>
     
     <PropertyGroup>
       <OqtaneInstallPackage Condition=" '$(OqtaneInstallPackage)' == '' ">$(MSBuildProjectDirectory)\..\..\..\InstallPackages\OqtaneModule\</OqtaneInstallPackage>
