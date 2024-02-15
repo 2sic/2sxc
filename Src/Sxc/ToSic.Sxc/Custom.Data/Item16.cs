@@ -251,6 +251,14 @@ public abstract class Item16: ICanBeEntity, ITypedItem, ITypedItemWrapper16, IHa
             kit: Kit, protector: protector, nullIfNull: false
         );
 
-    
+    protected GpsCoordinates ToGps(string name) 
+        => Kit.Json.To<GpsCoordinates>(String(name));
+
+    public class GpsCoordinates
+    {
+        public decimal Latitude { get; set; }
+        public decimal Longitude { get; set; }
+    }
+
     #endregion
 }

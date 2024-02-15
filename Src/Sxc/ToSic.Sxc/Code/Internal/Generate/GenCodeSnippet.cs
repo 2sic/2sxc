@@ -9,8 +9,6 @@
 internal class GenCodeSnippet(string nameId, string code, bool priority = true, List<string> usings = default, string closing = default)
 {
     public string NameId { get; } = nameId;
-    //public string Code { get; } = code;
-    //public string Closing { get; } = closing;
     public bool Priority { get; } = priority;
     public List<string> Usings { get; } = usings ?? [];
 

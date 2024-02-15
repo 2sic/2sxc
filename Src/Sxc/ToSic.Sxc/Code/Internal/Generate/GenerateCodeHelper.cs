@@ -14,41 +14,60 @@ internal class GenerateCodeHelper
         for (var i = 0; i < lines; i++) sb.AppendLine();
     }
 
-    public StringBuilder CodeComment(string indent, string comment, int padBefore, int padAfter, int altGap)
+    public string CodeComment(int tabs, string comment, int padBefore = 1, int padAfter = default, int altGap = 1) 
+        => CodeComment(tabs, comment.SplitNewLine(), padBefore, padAfter, altGap);
+
+    public string CodeComment(int tabs, string[] comment, int padBefore = 1, int padAfter = default, int altGap = 1)
     {
-        var sb = new StringBuilder();
+        // If nothing, return empty lines as much as altGap
+        if (!comment.SafeAny())
+            return new('\n', altGap);
 
         // Summary
-        if (comment.HasValue()) 
+        var sb = new StringBuilder();
+        AddLines(sb, padBefore);
+        var indent = Indentation(tabs);
+        foreach (var l in comment) sb.AppendLine($"{indent}// {l}");
+        AddLines(sb, padAfter);
+
+        return sb.ToString();
+    }
+
+    public string XmlComment(int tabs, string summary = default, int padBefore = 1, int padAfter = default, int altGap = 1)
+        => XmlComment(tabs, summary.SplitNewLine(), padBefore, padAfter, altGap);
+
+    public string XmlComment(int tabs, string[] summary = default, int padBefore = 1, int padAfter = default, int altGap = 1)
+    {
+        // If nothing, return empty lines as much as altGap
+        if (summary.SafeNone() || (summary.Length == 1 && summary[0].IsEmptyOrWs()))
+            return new('\n', altGap);
+
+        // Summary
+        var sb = new StringBuilder();
+        var indent = Indentation(tabs);
+        AddLines(sb, padBefore);
+
+        if (summary.Length == 1)
         {
-            AddLines(sb, padBefore);
-            comment
-                .SplitNewLine()
-                .ToList()
-                .ForEach(l => sb.AppendLine($"{indent}// {l}"));
+            sb.AppendLine($"{indent}/// <summary>{summary[0]}</summary>");
             AddLines(sb, padAfter);
-        }
-        else
-        {
-            AddLines(sb, altGap);
+            return sb.ToString();
         }
 
-        return sb;
+        sb.AppendLine($"{indent}/// <summary>");
+        foreach (var l in summary) sb.AppendLine($"{indent}/// {l}");
+        sb.AppendLine($"{indent}/// </summary>");
+        AddLines(sb, padAfter);
+
+        return sb.ToString();
     }
 
-    public StringBuilder XmlComment(string indent, NoParamOrder protector = default, string summary = default)
+    public string GenerateUsings(List<string> usings)
     {
+        if (usings == null || !usings.Any()) return null;
         var sb = new StringBuilder();
-
-        // Summary
-        if (summary.HasValue())
-        {
-            sb.AppendLine($"{indent}/// <summary>");
-            sb.AppendLine($"{indent}/// {summary}");
-            sb.AppendLine($"{indent}/// </summary>");
-        }
-
-        return sb;
+        foreach (var u in usings) sb.AppendLine($"using {u};");
+        sb.AppendLine();
+        return sb.ToString();
     }
-
 }
