@@ -46,7 +46,7 @@ public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSu
 
         Assembly assembly;
         var codeFileInfo = SysHlp.GetService<SourceAnalyzer>().TypeOfVirtualPath(controllerVirtualPath);
-        if (codeFileInfo.ThisApp)
+        if (codeFileInfo.AppCode)
         {
             Log.A("has AppCode");
             // Figure edition

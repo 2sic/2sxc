@@ -98,7 +98,7 @@ internal class DataClassGenerator(DataModelGenerator dmg, IContentType type, str
           // See also: https://go.2sxc.org/hotbuild-autogen
           // To extend it, create a "{{className}}.cs" with this contents:
           /*
-          namespace ThisApp.Data
+          namespace AppCode.Data
           {
             public partial class {{className}}
             {

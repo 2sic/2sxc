@@ -10,6 +10,6 @@ public static class CodeFileInfoExtensions
     /// <param name="razorType"></param>
     /// <returns></returns>
     public static bool IsHotBuildSupported(this CodeFileInfo razorType)
-        => razorType.ThisApp
+        => razorType.AppCode
            && razorType.Type == CodeFileTypes.V16;
 }

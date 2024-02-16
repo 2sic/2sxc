@@ -146,7 +146,7 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
     {
         Assembly assembly;
         var codeFileInfo = sp.Build<SourceAnalyzer>().TypeOfVirtualPath(fullPath);
-        if (codeFileInfo.ThisApp)
+        if (codeFileInfo.AppCode)
         {
             // Figure edition
             HotBuildSpec spec = null;

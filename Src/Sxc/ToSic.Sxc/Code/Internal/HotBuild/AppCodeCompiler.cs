@@ -6,15 +6,15 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class ThisAppCompiler() : ServiceBase("Sxc.MyApCd")
+public abstract class AppCodeCompiler() : ServiceBase("Sxc.MyApCd")
 {
     public const string CsFiles = ".cs";
     public const bool UseSubfolders = true;
-    public const string ThisAppDll = "AppCode.dll";
+    public const string AppCodeDll = "AppCode.dll";
 
     protected string TempAssemblyFolderPath;
 
-    protected internal abstract AssemblyResult GetThisApp(string relativePath, HotBuildSpec spec);
+    protected internal abstract AssemblyResult GetAppCode(string relativePath, HotBuildSpec spec);
 
     protected string[] GetSourceFiles(string fullPath)
     {

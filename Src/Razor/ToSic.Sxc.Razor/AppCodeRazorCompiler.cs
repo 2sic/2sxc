@@ -28,7 +28,7 @@ using IView = Microsoft.AspNetCore.Mvc.ViewEngines.IView;
 
 namespace ToSic.Sxc.Razor;
 
-internal class ThisAppCodeRazorCompiler : ServiceBase, IThisAppCodeRazorCompiler
+internal class AppCodeRazorCompiler : ServiceBase, IAppCodeRazorCompiler
 {
     // TODO: Copy of code from RazorCompiler.cs - should be refactored to use the same code
 
@@ -40,19 +40,19 @@ internal class ThisAppCodeRazorCompiler : ServiceBase, IThisAppCodeRazorCompiler
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IActionContextAccessor _actionContextAccessor;
     private readonly IRazorPageActivator _pageActivator;
-    private readonly LazySvc<ThisAppLoader> _thisAppCodeLoader;
+    private readonly LazySvc<AppCodeLoader> _appCodeLoader;
     private readonly LazySvc<IServerPaths> _serverPaths;
     private readonly AssemblyResolver _assemblyResolver;
     private readonly HotBuildReferenceManager _referenceManager;
 
-    public ThisAppCodeRazorCompiler(
+    public AppCodeRazorCompiler(
         ApplicationPartManager applicationPartManager,
         IRazorViewEngine viewEngine,
         IServiceProvider serviceProvider,
         IHttpContextAccessor httpContextAccessor,
         IActionContextAccessor actionContextAccessor,
         IRazorPageActivator pageActivator,
-        LazySvc<ThisAppLoader> thisAppCodeLoader,
+        LazySvc<AppCodeLoader> appCodeLoader,
         LazySvc<IServerPaths> serverPaths,
         AssemblyResolver assemblyResolver,
         HotBuildReferenceManager referenceManager) : base($"{SxcLogging.SxcLogName}.RzrCmp")
@@ -64,7 +64,7 @@ internal class ThisAppCodeRazorCompiler : ServiceBase, IThisAppCodeRazorCompiler
             _httpContextAccessor = httpContextAccessor,
             _actionContextAccessor = actionContextAccessor,
             _pageActivator = pageActivator,
-            _thisAppCodeLoader = thisAppCodeLoader,
+            _appCodeLoader = appCodeLoader,
             _serverPaths = serverPaths,
             _assemblyResolver = assemblyResolver,
             _referenceManager = referenceManager
@@ -161,9 +161,9 @@ internal class ThisAppCodeRazorCompiler : ServiceBase, IThisAppCodeRazorCompiler
         var l = Log.Fn<ViewEngineResult>($"{nameof(templatePath)}:{templatePath}; {nameof(app.RelativePath)}:{app.RelativePath}; {spec}", timer: true);
 
         // get assembly - try to get from cache, otherwise compile
-        //var codeAssembly = ThisAppLoader.TryGetAssemblyOfThisAppFromCache(spec, Log)?.Assembly
-        //                   ?? _thisAppCodeLoader.Value.GetThisAppAssemblyOrThrow(spec);
-        var (codeAssembly, _) = _thisAppCodeLoader.Value.TryGetOrFallback(spec);
+        //var codeAssembly = AppCodeLoader.TryGetAssemblyOfAppCodeFromCache(spec, Log)?.Assembly
+        //                   ?? _appCodeLoader.Value.GetAppCodeAssemblyOrThrow(spec);
+        var (codeAssembly, _) = _appCodeLoader.Value.TryGetOrFallback(spec);
         l.A($"has AppCode assembly: {codeAssembly != null}");
 
         if (codeAssembly != null)

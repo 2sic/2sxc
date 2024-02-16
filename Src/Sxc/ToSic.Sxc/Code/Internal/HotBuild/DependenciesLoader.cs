@@ -17,7 +17,7 @@ public class DependenciesLoader : ServiceBase
 
     public const string DependenciesFolder = "Dependencies";
 
-    public DependenciesLoader(ILogStore logStore, ISite site, IAppStates appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, AssemblyCacheManager assemblyCacheManager, LazySvc<ThisAppCompiler> thisAppCompilerLazy) : base("Sys.AppCodeLoad")
+    public DependenciesLoader(ILogStore logStore, ISite site, IAppStates appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, AssemblyCacheManager assemblyCacheManager, LazySvc<AppCodeCompiler> appCodeCompilerLazy) : base("Sys.AppCodeLoad")
     {
         ConnectServices(
             _logStore = logStore,
@@ -25,7 +25,7 @@ public class DependenciesLoader : ServiceBase
             _appStates = appStates,
             _appPathsLazy = appPathsLazy,
             _assemblyCacheManager = assemblyCacheManager,
-            _thisAppCompilerLazy = thisAppCompilerLazy
+            _appCodeCompilerLazy = appCodeCompilerLazy
         );
     }
     private readonly ILogStore _logStore;
@@ -33,7 +33,7 @@ public class DependenciesLoader : ServiceBase
     private readonly IAppStates _appStates;
     private readonly LazySvc<IAppPathsMicroSvc> _appPathsLazy;
     private readonly AssemblyCacheManager _assemblyCacheManager;
-    private readonly LazySvc<ThisAppCompiler> _thisAppCompilerLazy;
+    private readonly LazySvc<AppCodeCompiler> _appCodeCompilerLazy;
 
 
     public (List<Assembly> Assemblies, HotBuildSpec Specs) TryGetOrFallback(HotBuildSpec spec)
@@ -105,7 +105,7 @@ public class DependenciesLoader : ServiceBase
             {
                 //var assembly = Assembly.Load(File.ReadAllBytes(dependency));
 
-                var location = _thisAppCompilerLazy.Value.GetDependencyAssemblyLocations(dependency, spec);
+                var location = _appCodeCompilerLazy.Value.GetDependencyAssemblyLocations(dependency, spec);
                 File.Copy(dependency, location, true);
                 var assembly = Assembly.LoadFrom(location);
                 assemblyResults.Add(new AssemblyResult(assembly, assemblyLocations: [dependency]));
@@ -137,14 +137,14 @@ public class DependenciesLoader : ServiceBase
     //{
     //    var watcherFolders = new Dictionary<string, bool>();
 
-    //    // take ThisApp folder (eg. ...\edition\AppCode)
-    //    var thisAppFolder = physicalPath;
-    //    IfExistsThenAdd(thisAppFolder, true);
+    //    // take AppCode folder (eg. ...\edition\AppCode)
+    //    var appCodeFolder = physicalPath;
+    //    IfExistsThenAdd(appCodeFolder, true);
 
     //    // take parent folder (eg. ...\edition)
-    //    var thisAppParentFolder = Path.GetDirectoryName(thisAppFolder);
-    //    if (thisAppParentFolder.IsEmpty()) return new Dictionary<string, bool>(watcherFolders);
-    //    IfExistsThenAdd(thisAppParentFolder, false);
+    //    var appCodeParentFolder = Path.GetDirectoryName(appCodeFolder);
+    //    if (appCodeParentFolder.IsEmpty()) return new Dictionary<string, bool>(watcherFolders);
+    //    IfExistsThenAdd(appCodeParentFolder, false);
 
     //    // if no edition was used, then we were already in the root, and should stop now.
     //    if (spec.Edition.IsEmpty()) return new Dictionary<string, bool>(watcherFolders);
@@ -156,15 +156,15 @@ public class DependenciesLoader : ServiceBase
     //    // we need to add more folders to watch for cache invalidation
 
     //    // App Root folder (eg. ...\)
-    //    var appRootFolder = Path.GetDirectoryName(thisAppParentFolder);
+    //    var appRootFolder = Path.GetDirectoryName(appCodeParentFolder);
     //    if (appRootFolder.IsEmpty()) return new Dictionary<string, bool>(watcherFolders);
     //    // Add to watcher list if it exists, otherwise exit, since we can't have subfolders
     //    if (!IfExistsThenAdd(appRootFolder, false)) return new Dictionary<string, bool>(watcherFolders);
 
     //    // 
-    //    var appRootThisApp = Path.Combine(appRootFolder, DependenciesFolder);
+    //    var appRootAppCode = Path.Combine(appRootFolder, DependenciesFolder);
     //    // Add to watcher list if it exists, otherwise exit, since we can't have subfolders
-    //    if (!IfExistsThenAdd(appRootThisApp, true)) return new Dictionary<string, bool>(watcherFolders);
+    //    if (!IfExistsThenAdd(appRootAppCode, true)) return new Dictionary<string, bool>(watcherFolders);
 
     //    // all done
     //    return new Dictionary<string, bool>(watcherFolders);

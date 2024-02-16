@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Dnn.Compile
     /// DNN on start need to clean the "2sxc.bin", because it is used to temporary save shared temp AppCode assemblies.
     /// </summary>
     [PrivateApi]
-    public static class ThisAppCode
+    public static class AppCode
     {
         private static bool Cleaned { get; set; }
         private static readonly object CleaningLock = new();

@@ -58,8 +58,8 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
 
         if (isCs)
         {
-            var csUseThisApp = IsThisAppUsedInCs(sourceCode);
-            l.A($"cs, appCode: {csUseThisApp}");
+            var csUseAppCode = IsAppCodeUsedInCs(sourceCode);
+            l.A($"cs, appCode: {csUseAppCode}");
 
             var className = Path.GetFileNameWithoutExtension(relativePath);
             l.A($"cs, className: {className}");
@@ -69,7 +69,7 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
 
             if (baseClass.IsEmptyOrWs())
                 return l.Return(
-                    BuildCfi(CodeFileInfo.TemplateUnknown, csUseThisApp),
+                    BuildCfi(CodeFileInfo.TemplateUnknown, csUseAppCode),
                     //CodeFileInfo.CodeFileUnknown(sourceCode, relativePath: relativePath, fullPath: fullPath, useAppCode: csUseAppCode),
                     "Ok, cs file without base class");
 
@@ -77,9 +77,9 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
                 .FirstOrDefault(cf => cf.Inherits == baseClass); // && cf.AppCode == csHasAppCode);
 
             return csBaseClassMatch != null
-                ? l.ReturnAndLog(new(csBaseClassMatch, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath, useThisApp: csUseThisApp))
+                ? l.ReturnAndLog(new(csBaseClassMatch, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath, useAppCode: csUseAppCode))
                 : l.Return(
-                    BuildCfi(CodeFileInfo.TemplateOther, csUseThisApp),
+                    BuildCfi(CodeFileInfo.TemplateOther, csUseAppCode),
                     //CodeFileInfo.CodeFileOther(sourceCode, relativePath: relativePath, fullPath: fullPath, useAppCode: csUseAppCode),
                     "Ok, cs file with other base class");
         }
@@ -103,26 +103,26 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
 
         // check @inherits AppCode.Something
         if (ns.StartsWith("AppCode."))
-            return l.Return(BuildCfi(CodeFileInfo.CodeFileInheritsThisApp, true));
+            return l.Return(BuildCfi(CodeFileInfo.CodeFileInheritsAppCode, true));
 
-        var razorUseThisApp = IsThisAppUsedInCshtml(sourceCode);
+        var razorUseAppCode = IsAppCodeUsedInCshtml(sourceCode);
 
         var findMatch = CodeFileInfo.CodeFileInfoTemplates
             .FirstOrDefault(cf => cf.Inherits == ns); // && cf.AppCode == cshtmlHasAppCode);
 
         return findMatch != null
-            ? l.ReturnAndLog(BuildCfi(findMatch, razorUseThisApp))
+            ? l.ReturnAndLog(BuildCfi(findMatch, razorUseAppCode))
             : l.Return(
-                BuildCfi(CodeFileInfo.TemplateOther, razorUseThisApp),
+                BuildCfi(CodeFileInfo.TemplateOther, razorUseAppCode),
                 //CodeFileInfo.CodeFileOther(sourceCode, relativePath: relativePath, fullPath: fullPath), 
                 $"namespace '{ns}' can't be found");
 
         // Helper to build the CodeFileInfo based on a template and all the specs provided originally
-        CodeFileInfo BuildCfi(CodeFileInfo original, bool useThisApp)
-            => new(original, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath, useThisApp: useThisApp);
+        CodeFileInfo BuildCfi(CodeFileInfo original, bool useAppCode)
+            => new(original, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath, useAppCode: useAppCode);
     }
 
-    private static bool IsThisAppUsedInCshtml(string sourceCode)
+    private static bool IsAppCodeUsedInCshtml(string sourceCode)
     {
         // TODO: stv, update code because this code is not robust enough
         // it does not correctly handle all edge cases
@@ -139,12 +139,12 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
             (?<!@(/\*)[\s\S]*?@using\s+AppCode) # Not in Razor comment";
 
         var options = RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace;
-        var thisAppMatch = Regex.Match(sourceCode, pattern, options);
+        var appCodeMatch = Regex.Match(sourceCode, pattern, options);
 
-        return thisAppMatch.Success;
+        return appCodeMatch.Success;
     }
 
-    private static bool IsThisAppUsedInCs(string sourceCode)
+    private static bool IsAppCodeUsedInCs(string sourceCode)
     {
         // Pattern to match 'using AppCode;' with optional additional namespace segments
         // or inheritance code ': AppCode' with additional namespace segments followed
@@ -164,9 +164,9 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
         (?<!/\*[\s\S]*?(?:using\s+AppCode(?:\.\w+)*\s*;|(?:.*):\s*AppCode(?:\.\w+)+\s*(?={|,|\s)))";
 
         var options = RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace;
-        var thisAppMatch = Regex.Match(sourceCode, pattern, options);
+        var appCodeMatch = Regex.Match(sourceCode, pattern, options);
 
-        return thisAppMatch.Success;
+        return appCodeMatch.Success;
     }
 
 

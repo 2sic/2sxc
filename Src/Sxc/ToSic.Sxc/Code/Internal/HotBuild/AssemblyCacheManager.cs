@@ -13,7 +13,7 @@ public class AssemblyCacheManager() : ServiceBase(SxcLogging.SxcLogName + ".Asse
 
     
     #region Static Calls for AppCode - to use before requiring DI
-    public static (AssemblyResult Result, string cacheKey) TryGetThisApp(HotBuildSpec spec)
+    public static (AssemblyResult Result, string cacheKey) TryGetAppCode(HotBuildSpec spec)
     {
         var cacheKey = KeyAppCode(spec);
         return (Get(cacheKey), cacheKey);

@@ -33,16 +33,16 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         private const string FallbackBaseClass = "System.Web.WebPages.WebPageBase";
 
         private readonly AssemblyCacheManager _assemblyCacheManager;
-        private readonly LazySvc<ThisAppLoader> _thisAppCodeLoader;
+        private readonly LazySvc<AppCodeLoader> _appCodeLoader;
         private readonly LazySvc<DependenciesLoader> _dependenciesLoader;
         private readonly AssemblyResolver _assemblyResolver;
         private readonly IReferencedAssembliesProvider _referencedAssembliesProvider;
 
-        public RoslynBuildManager(AssemblyCacheManager assemblyCacheManager, LazySvc<ThisAppLoader> thisAppCodeLoader, LazySvc<DependenciesLoader> dependenciesLoader, AssemblyResolver assemblyResolver, IReferencedAssembliesProvider referencedAssembliesProvider) : base("Dnn.RoslynBuildManager")
+        public RoslynBuildManager(AssemblyCacheManager assemblyCacheManager, LazySvc<AppCodeLoader> appCodeLoader, LazySvc<DependenciesLoader> dependenciesLoader, AssemblyResolver assemblyResolver, IReferencedAssembliesProvider referencedAssembliesProvider) : base("Dnn.RoslynBuildManager")
         {
             ConnectServices(
                 _assemblyCacheManager = assemblyCacheManager,
-                _thisAppCodeLoader = thisAppCodeLoader,
+                _appCodeLoader = appCodeLoader,
                 _dependenciesLoader = dependenciesLoader,
                 _assemblyResolver = assemblyResolver,
                 _referencedAssembliesProvider = referencedAssembliesProvider
@@ -84,17 +84,17 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
             // Roslyn compiler need reference to location of dll, when dll is not in bin folder
             // get assembly - try to get from cache, otherwise compile
-            //var codeAssembly = ThisAppLoader.TryGetAssemblyOfThisAppFromCache(spec, Log)?.Assembly
-            //                   ?? _thisAppCodeLoader.Value.GetThisAppAssemblyOrThrow(spec);
-            var (codeAssembly, specOut) = _thisAppCodeLoader.Value.TryGetOrFallback(spec);
+            //var codeAssembly = AppCodeLoader.TryGetAssemblyOfAppCodeFromCache(spec, Log)?.Assembly
+            //                   ?? _appCodeLoader.Value.GetAppCodeAssemblyOrThrow(spec);
+            var (codeAssembly, specOut) = _appCodeLoader.Value.TryGetOrFallback(spec);
             _assemblyResolver.AddAssembly(codeAssembly);
 
-            var thisAppCode = AssemblyCacheManager.TryGetThisApp(specOut);
+            var appCode = AssemblyCacheManager.TryGetAppCode(specOut);
 
-            var thisAppCodeAssembly = thisAppCode.Result?.Assembly;
-            if (thisAppCodeAssembly != null)
+            var appCodeAssembly = appCode.Result?.Assembly;
+            if (appCodeAssembly != null)
             {
-                var assemblyLocation = thisAppCodeAssembly.Location;
+                var assemblyLocation = appCodeAssembly.Location;
                 referencedAssemblies.Add(assemblyLocation);
                 l.A($"Added reference to AppCode assembly: {assemblyLocation}");
             }
@@ -119,8 +119,8 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             // TODO: must also watch for global shared code changes
 
             var fileChangeMon = new HostFileChangeMonitor(new[] { codeFileInfo.FullPath });
-            var sharedFolderChangeMon = thisAppCode.Result == null ? null : new FolderChangeMonitor(thisAppCode.Result.WatcherFolders);
-            var changeMonitors = thisAppCode.Result == null
+            var sharedFolderChangeMon = appCode.Result == null ? null : new FolderChangeMonitor(appCode.Result.WatcherFolders);
+            var changeMonitors = appCode.Result == null
                 ? new ChangeMonitor[] { fileChangeMon }
                 : [fileChangeMon, sharedFolderChangeMon];
 

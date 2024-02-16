@@ -1,4 +1,4 @@
 ﻿namespace ToSic.Sxc.Razor;
 
-public interface IThisAppCodeRazorCompiler : IRazorCompiler
+public interface IAppCodeRazorCompiler : IRazorCompiler
 { }
