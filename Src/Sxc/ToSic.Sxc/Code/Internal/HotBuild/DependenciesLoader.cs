@@ -137,7 +137,7 @@ public class DependenciesLoader : ServiceBase
     //{
     //    var watcherFolders = new Dictionary<string, bool>();
 
-    //    // take ThisApp folder (eg. ...\edition\ThisApp)
+    //    // take ThisApp folder (eg. ...\edition\AppCode)
     //    var thisAppFolder = physicalPath;
     //    IfExistsThenAdd(thisAppFolder, true);
 

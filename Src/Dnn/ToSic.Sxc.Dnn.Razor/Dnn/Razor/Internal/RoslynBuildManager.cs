@@ -96,7 +96,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             {
                 var assemblyLocation = thisAppCodeAssembly.Location;
                 referencedAssemblies.Add(assemblyLocation);
-                l.A($"Added reference to ThisApp.Code assembly: {assemblyLocation}");
+                l.A($"Added reference to AppCode assembly: {assemblyLocation}");
             }
 
             // Compile the template

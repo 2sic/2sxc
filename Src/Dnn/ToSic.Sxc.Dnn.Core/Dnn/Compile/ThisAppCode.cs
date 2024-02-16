@@ -4,7 +4,7 @@ using System.Web;
 namespace ToSic.Sxc.Dnn.Compile
 {
     /// <summary>
-    /// DNN on start need to clean the "2sxc.bin", because it is used to temporary save shared temp ThisApp.Code assemblies.
+    /// DNN on start need to clean the "2sxc.bin", because it is used to temporary save shared temp AppCode assemblies.
     /// </summary>
     [PrivateApi]
     public static class ThisAppCode

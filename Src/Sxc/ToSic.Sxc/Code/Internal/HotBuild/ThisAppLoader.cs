@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Code.Internal.HotBuild;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ThisAppLoader : ServiceBase
 {
-    public const string ThisAppBase = "ThisApp";
+    public const string ThisAppBase = "AppCode";
     //public const string ThisAppBinFolder = "bin";
 
     public ThisAppLoader(ILogStore logStore, ISite site, IAppStates appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, LazySvc<ThisAppCompiler> thisAppCompilerLazy, AssemblyCacheManager assemblyCacheManager) : base("Sys.AppCodeLoad")
@@ -134,7 +134,7 @@ public class ThisAppLoader : ServiceBase
         var l = log.Fn<IDictionary<string, bool>>($"{nameof(physicalPathThisApp)}: {physicalPathThisApp}");
         var folders = new Dictionary<string, bool>();
 
-        // take ThisApp folder (eg. ...\edition\ThisApp)
+        // take ThisApp folder (eg. ...\edition\AppCode)
         IfExistsThenAdd(physicalPathThisApp, true);
 
         // take parent folder (eg. ...\edition)

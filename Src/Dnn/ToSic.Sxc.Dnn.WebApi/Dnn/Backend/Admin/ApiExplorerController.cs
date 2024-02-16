@@ -48,7 +48,7 @@ public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSu
         var codeFileInfo = SysHlp.GetService<SourceAnalyzer>().TypeOfVirtualPath(controllerVirtualPath);
         if (codeFileInfo.ThisApp)
         {
-            Log.A("has ThisApp");
+            Log.A("has AppCode");
             // Figure edition
             HotBuildSpec spec = null;
             var block = SysHlp.GetService<DnnGetBlock>().GetCmsBlock(Request).LoadBlock();

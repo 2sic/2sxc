@@ -54,7 +54,7 @@ public class CodeFileInfo
 
     public static CodeFileInfo CodeFileNotFound = new("", CodeFileTypes.FileNotFound, []);
 
-    public static CodeFileInfo CodeFileInheritsThisApp = new("ThisApp.*", CodeFileTypes.V16, HelpForRazorTyped.Compile16, sourceCode: null);
+    public static CodeFileInfo CodeFileInheritsThisApp = new("AppCode.*", CodeFileTypes.V16, HelpForRazorTyped.Compile16, sourceCode: null);
     /// <summary>
     /// Template CodeFile objects for different types of files.
     /// They don't contain the source code, which would be added later if needed.
@@ -72,7 +72,7 @@ public class CodeFileInfo
         new("Custom.Hybrid.Razor14", CodeFileTypes.V14, HelpForRazor14.Compile14, sourceCode: null),
         new("Custom.Hybrid.RazorTyped", CodeFileTypes.V16, HelpForRazorTyped.Compile16, sourceCode: null),
 
-        // 2024-01-22 2dm - disable this, doesn't make sense to duplicate just with different thisApp
+        // 2024-01-22 2dm - disable this, doesn't make sense to duplicate just with different AppCode
         //new("Custom.Hybrid.Razor12", CodeFileTypes.V12, HelpForRazor12.Compile12, true, sourceCode: null),
         //new("Custom.Hybrid.Razor14", CodeFileTypes.V14, HelpForRazor14.Compile14, true, sourceCode: null),
         //new("Custom.Hybrid.RazorTyped", CodeFileTypes.V16, HelpForRazorTyped.Compile16, true, sourceCode: null),
@@ -101,7 +101,7 @@ public class CodeFileInfo
         { "SourceCode", SourceCode?.Length.ToString() },
         { "Inherits", Inherits },
         { "Type", Type.ToString() },
-        { "ThisApp", ThisApp.ToString() },
+        { "AppCode", ThisApp.ToString() },
     };
 
 }

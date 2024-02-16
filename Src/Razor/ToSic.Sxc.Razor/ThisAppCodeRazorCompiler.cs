@@ -164,7 +164,7 @@ internal class ThisAppCodeRazorCompiler : ServiceBase, IThisAppCodeRazorCompiler
         //var codeAssembly = ThisAppLoader.TryGetAssemblyOfThisAppFromCache(spec, Log)?.Assembly
         //                   ?? _thisAppCodeLoader.Value.GetThisAppAssemblyOrThrow(spec);
         var (codeAssembly, _) = _thisAppCodeLoader.Value.TryGetOrFallback(spec);
-        l.A($"has ThisApp.Code assembly: {codeAssembly != null}");
+        l.A($"has AppCode assembly: {codeAssembly != null}");
 
         if (codeAssembly != null)
         {
