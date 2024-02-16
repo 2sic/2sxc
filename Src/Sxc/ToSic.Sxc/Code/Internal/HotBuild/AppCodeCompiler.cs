@@ -6,15 +6,15 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class ThisAppCompiler() : ServiceBase("Sxc.MyApCd")
+public abstract class AppCodeCompiler() : ServiceBase("Sxc.MyApCd")
 {
     public const string CsFiles = ".cs";
     public const bool UseSubfolders = true;
-    public const string ThisAppDll = "ThisApp.dll";
+    public const string AppCodeDll = "AppCode.dll";
 
     protected string TempAssemblyFolderPath;
 
-    protected internal abstract AssemblyResult GetThisApp(string relativePath, HotBuildSpec spec);
+    protected internal abstract AssemblyResult GetAppCode(string relativePath, HotBuildSpec spec);
 
     protected string[] GetSourceFiles(string fullPath)
     {
@@ -26,7 +26,7 @@ public abstract class ThisAppCompiler() : ServiceBase("Sxc.MyApCd")
         //var sourceFiles = GetSourceFilesInFolder(Path.Combine(fullPath, HotBuildEnum.Code.ToString()))
         //    .Concat(GetSourceFilesInFolder(Path.Combine(fullPath, HotBuildEnum.Data.ToString()))).ToArray();
 
-        // Build the ThisApp folder with subfolders
+        // Build the AppCode folder with subfolders
         var sourceFiles = GetSourceFilesInFolder(fullPath);
 
         // Log all files
@@ -49,7 +49,7 @@ public abstract class ThisAppCompiler() : ServiceBase("Sxc.MyApCd")
         {
             var app = $"App-{spec.AppId:00000}";
             var edition = spec.Edition.HasValue() ? $".{spec.Edition}" : "";
-            randomNameWithoutExtension = $"{app}-ThisApp{edition}-{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}";
+            randomNameWithoutExtension = $"{app}-AppCode{edition}-{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}";
         }
         while (File.Exists(Path.Combine(folderPath, $"{randomNameWithoutExtension}.dll")));
         return l.ReturnAsOk(randomNameWithoutExtension);

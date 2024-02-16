@@ -236,7 +236,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
 
     /// <summary>
     /// Convert an Entity or TypedItem into a strongly typed object.
-    /// Typically, the type will be from your `ThisApp.Data`.
+    /// Typically, the type will be from your `AppCode.Data`.
     /// </summary>
     /// <typeparam name="T">the target type</typeparam>
     /// <param name="source">the source object - an `IEntity` or `ITypedItem`</param>
@@ -250,7 +250,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
 
     /// <summary>
     /// Convert a list of Entities or TypedItems into a strongly typed list.
-    /// Typically, the type will be from your `ThisApp.Data`.
+    /// Typically, the type will be from your `AppCode.Data`.
     /// </summary>
     /// <typeparam name="T">the target type</typeparam>
     /// <param name="source">the source object - a List/Enumerable of `IEntity` or `ITypedItem`</param>
