@@ -22,10 +22,10 @@ internal class GeneratePropertyEntity: GeneratePropertyBase
         var usings = UsingTypedItems;
 
         var msgReturns = allowMulti
-            ? "Will always return a IEnumerable, but can be empty."
-            : "Will always return a single item, but can be null.";
+            ? "An IEnumerable of specified type, but can be empty."
+            : "A single item OR null if nothing found, so you can use ?? to provide alternate objects.";
 
-        // ReSharper disable once InvertIf
+        // If we know the entity type, we can use the actual type instead of ITypedItem
         if (entityType.HasValue())
             specs.ExportedContentContentTypes
                 .FirstOrDefault(t => entityType.EqualsInsensitive(t.Name))
@@ -41,10 +41,10 @@ internal class GeneratePropertyEntity: GeneratePropertyBase
 
         return
         [
-            GenPropSnip(tabs, string.Format(result, resultType), name, method, usings: usings, summary:
-            [
-                $"{msgPrefix} {resultType}.",
-            ]),
+            GenPropSnip(tabs, string.Format(result, resultType), name, method, usings: usings,
+                summary: [$"{msgPrefix} {resultType}."],
+                returns: [msgReturns]
+            ),
         ];
     }
 

@@ -12,9 +12,10 @@ internal abstract class GeneratePropertyBase
     public abstract List<CodeFragment> Generate(CodeGenSpecs specs, IContentTypeAttribute attribute, int tabs);
 
     protected CodeFragment GenPropSnip(int tabs, string returnType, string name, string method,
-        NoParamOrder protector = default, string[] summary = default, string parameters = default, bool priority = true, List<string> usings = default)
+        NoParamOrder protector = default, string[] summary = default, string[] returns = default,
+        string parameters = default, bool priority = true, List<string> usings = default)
     {
-        var comment = CodeGenHelper.XmlComment(tabs, summary: summary);
+        var comment = CodeGenHelper.XmlComment(tabs, summary: summary, returns: returns);
         return new(name, comment + GenProp(tabs, returnType, name, method, parameters: parameters), priority: priority, usings: usings);
     }
 

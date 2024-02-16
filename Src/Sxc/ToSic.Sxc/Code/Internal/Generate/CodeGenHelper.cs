@@ -31,31 +31,49 @@ internal class CodeGenHelper(CodeGenSpecs specs)
         return sb.ToString();
     }
 
-    public string XmlComment(int tabs, string summary = default, int padBefore = 1, int padAfter = default, int altGap = 1)
-        => XmlComment(tabs, summary.SplitNewLine(), padBefore, padAfter, altGap);
+    public string XmlComment(int tabs, string summary = default, string[] returns = default, int padBefore = 1, int padAfter = default,
+        int altGap = 1)
+        => XmlComment(tabs, summary: summary.SplitNewLine(), padBefore: padBefore, padAfter: padAfter, altGap: altGap);
 
-    public string XmlComment(int tabs, string[] summary = default, int padBefore = 1, int padAfter = default, int altGap = 1)
+    public string XmlComment(int tabs, string[] summary = default, string[] returns = default, int padBefore = 1, int padAfter = default, int altGap = 1)
     {
-        // If nothing, return empty lines as much as altGap
-        if (summary.SafeNone() || (summary.Length == 1 && summary[0].IsEmptyOrWs()))
+        // 1. If nothing, return empty lines as much as altGap
+        // first merge all the comments to see if we have any
+        var merged = (summary ?? []).Concat(returns ?? []).ToList();
+        if (!merged.Any() || merged.All(s => s.IsEmptyOrWs()))
             return new('\n', altGap);
 
-        // Summary
         var sb = new StringBuilder();
-        var indent = Indent(tabs);
         AddLines(sb, padBefore);
+        var indent = Indent(tabs);
 
-        if (summary.Length == 1)
-        {
-            sb.AppendLine($"{indent}/// <summary>{summary[0]}</summary>");
-            AddLines(sb, padAfter);
-            return sb.ToString();
-        }
+        // Summary
+        var summaryComment = XmlCommentOne(indent, "summary", summary);
+        if (summaryComment.HasValue()) sb.AppendLine(summaryComment);
 
-        sb.AppendLine($"{indent}/// <summary>");
-        foreach (var l in summary) sb.AppendLine($"{indent}/// {l}");
-        sb.AppendLine($"{indent}/// </summary>");
+        // Returns
+        var returnsComment = XmlCommentOne(indent, "returns", returns);
+        if (returnsComment.HasValue()) sb.AppendLine(returnsComment);
+
         AddLines(sb, padAfter);
+
+        return sb.ToString();
+    }
+    private static string XmlCommentOne(string indent, string tagName, string[] comments = default)
+    {
+        // If nothing, return empty lines as much as altGap
+        if (comments == null || comments.All(s => s.IsEmptyOrWs()))
+            return null;
+
+        // Single liner
+        if (comments.Length == 1)
+            return $"{indent}/// <{tagName}>{comments[0]}</{tagName}>";
+
+        // Multi-liner
+        var sb = new StringBuilder();
+        sb.AppendLine($"{indent}/// <{tagName}>");
+        foreach (var l in comments) sb.AppendLine($"{indent}/// {l}");
+        sb.AppendLine($"{indent}/// </{tagName}>");
 
         return sb.ToString();
     }
