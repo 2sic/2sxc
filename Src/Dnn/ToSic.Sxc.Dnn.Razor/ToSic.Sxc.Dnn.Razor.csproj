@@ -11,10 +11,11 @@
     <AssemblyName>ToSic.Sxc.Dnn.Razor</AssemblyName>
     <TargetFramework>net472</TargetFramework>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <SccProjectName>SAK</SccProjectName>
+    <!-- 2024-02-16 2dm - seem to be very old Source Control tags, disabled. if all is ok, remove 2024-04+ https://stackoverflow.com/questions/56859076/do-csproj-files-in-git-need-xml-tags-sccprojectname-scclocalpath-sccauxpath-s -->
+    <!--<SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProvider>SAK</SccProvider>-->
     <TargetFrameworkProfile />
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
