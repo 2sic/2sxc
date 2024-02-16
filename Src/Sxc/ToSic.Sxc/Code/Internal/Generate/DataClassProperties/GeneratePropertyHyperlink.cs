@@ -12,7 +12,7 @@ internal class GeneratePropertyHyperlink: GeneratePropertyBase
         [
             GenPropSnip(tabs, "string", name, "Url", summary:
             [
-                $"Get the link on {name}.",
+                $"{name} as link (url). <br/>",
                 $"To get the underlying value like 'file:72' use String(\"{name}\")"
             ]),
             GenPropSnip(tabs, "IFile", name + "File", "File", priority: false, usings: UsingAdam, summary:

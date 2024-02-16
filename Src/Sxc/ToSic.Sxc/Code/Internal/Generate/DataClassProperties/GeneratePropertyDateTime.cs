@@ -12,7 +12,7 @@ internal class GeneratePropertyDateTime: GeneratePropertyBase
         [
             GenPropSnip(tabs, "DateTime", name, "DateTime", usings: UsingDateTime, summary:
             [
-                $"Get the DateTime of {name}.",
+                $"{name} as DateTime.",
             ]),
         ];
     }

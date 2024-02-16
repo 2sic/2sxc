@@ -13,7 +13,7 @@ internal class GeneratePropertyString: GeneratePropertyBase
                 parameters: "fallback: \"\"",
                 summary:
                 [
-                    $"{name} as string. For advanced manipulation like scrubHtml, use .String(\"{name}\", ...)"
+                    $"{name} as string. <br/>For advanced manipulation like scrubHtml, use .String(\"{name}\", scrubHtml: true) etc."
                 ]),
         ];
     }

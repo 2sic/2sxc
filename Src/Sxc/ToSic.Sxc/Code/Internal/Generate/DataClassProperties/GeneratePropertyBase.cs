@@ -14,7 +14,7 @@ internal abstract class GeneratePropertyBase
     protected CodeFragment GenPropSnip(int tabs, string returnType, string name, string method,
         NoParamOrder protector = default, string[] summary = default, string parameters = default, bool priority = true, List<string> usings = default)
     {
-        var comment = CodeGenHelper.XmlComment(tabs, summary);
+        var comment = CodeGenHelper.XmlComment(tabs, summary: summary);
         return new(name, comment + GenProp(tabs, returnType, name, method, parameters: parameters), priority: priority, usings: usings);
     }
 

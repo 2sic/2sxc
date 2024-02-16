@@ -122,12 +122,13 @@ internal class DataClassGenerator(DataModelGenerator dmg, IContentType type, str
              """)
         + dmg.CodeGenHelper.XmlComment(Specs.TabsClass, summary:
             $"""
-             {className} data object. Generated {DateTime.Now:u}. Re-generate whenever you change the ContentType.
-
-             Default properties such as `.Title` or `.Id` are provided in the base class.
-             Most properties have a simple access, such as `.{firstPropertyName}`.
-             For other properties or uses, the common method such as
-             .IsNotEmpty("FieldName"), .String("FieldName"), .Children(...), .Picture(...), .Html(...) and more can be used.
+             {className} data. <br/>
+             Generated {DateTime.Now:u}. Re-generate whenever you change the ContentType. <br/>
+             <br/>
+             Default properties such as `.Title` or `.Id` are provided in the base class. <br/>
+             Most properties have a simple access, such as `.{firstPropertyName}`. <br/>
+             For other properties or uses, use methods such as
+             .IsNotEmpty("FieldName"), .String("FieldName"), .Children(...), .Picture(...), .Html(...).
              """);
 
     public string AutoGenClassComment() => 

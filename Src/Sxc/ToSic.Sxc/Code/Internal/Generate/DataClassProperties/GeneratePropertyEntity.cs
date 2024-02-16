@@ -21,6 +21,10 @@ internal class GeneratePropertyEntity: GeneratePropertyBase
         var resultType = nameof(ITypedItem);
         var usings = UsingTypedItems;
 
+        var msgReturns = allowMulti
+            ? "Will always return a IEnumerable, but can be empty."
+            : "Will always return a single item, but can be null.";
+
         // ReSharper disable once InvertIf
         if (entityType.HasValue())
             specs.ExportedContentContentTypes

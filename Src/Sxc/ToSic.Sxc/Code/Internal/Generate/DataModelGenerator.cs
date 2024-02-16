@@ -80,10 +80,10 @@ public class DataModelGenerator(IUser user, IAppStates appStates) : ServiceBase(
         return new("namespace", $"{CodeGenHelper.Indent(Specs.TabsNamespace)}namespace {@namespace}" + "\n{", closing: "}");
     }
 
-    internal CodeFragment ClassWrapper(string className, bool isAbstract, bool partial, string inherits)
+    internal CodeFragment ClassWrapper(string className, bool isAbstract, bool isPartial, string inherits)
     {
         var indent = CodeGenHelper.Indent(Specs.TabsClass);
-        var specifiers = (isAbstract ? "abstract " : "") + (partial ? "partial " : "");
+        var specifiers = (isAbstract ? "abstract " : "") + (isPartial ? "partial " : "");
         inherits = inherits.NullOrUse(i => $": {i}");
 
         var start = $$"""

@@ -10,7 +10,7 @@ internal class GeneratePropertyBool: GeneratePropertyBase
 
         return [GenPropSnip(tabs, "bool", name, "Bool", summary:
         [
-            $"Get the bool of {name}.",
+            $"{name} as bool. <br/>",
             $"To get nullable use .Get(\"{name}\") as bool?;"
         ])];
     }

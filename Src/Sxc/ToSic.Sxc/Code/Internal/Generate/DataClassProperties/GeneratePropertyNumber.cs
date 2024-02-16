@@ -15,7 +15,7 @@ internal class GeneratePropertyNumber: GeneratePropertyBase
             [
                 GenPropSnip(tabs, "int", name, "Int", summary:
                 [
-                    $"{name} as int.",
+                    $"{name} as int. <br/>",
                     $"To get other types use methods such as .Decimal(\"{name}\")"
                 ]),
             ]
@@ -23,7 +23,7 @@ internal class GeneratePropertyNumber: GeneratePropertyBase
             [
                 GenPropSnip(tabs, "decimal", name, "Decimal", summary:
                 [
-                    $"{name} as decimal.",
+                    $"{name} as decimal. <br/>",
                     $"To get other types use methods such as .Int(\"{name}\")"
                 ]),
             ];
