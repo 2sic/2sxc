@@ -1,8 +1,11 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Text;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Code.Internal.Generate;
@@ -10,10 +13,10 @@ namespace ToSic.Sxc.Code.Internal.Generate;
 /// <summary>
 /// Experimental
 /// </summary>
-public class DataModelGenerator(IUser user, IAppStates appStates) : ServiceBase(SxcLogging.SxcLogName + ".DMoGen")
+public class DataModelGenerator(ISite site, IUser user, IAppStates appStates, IAppPathsMicroSvc appPaths) : ServiceBase(SxcLogging.SxcLogName + ".DMoGen")
 {
     internal CodeGenSpecs Specs { get; } = new();
-    
+
     internal IUser User = user;
     internal CodeGenHelper CodeGenHelper = new(new());
 
@@ -63,8 +66,39 @@ public class DataModelGenerator(IUser user, IAppStates appStates) : ServiceBase(
 
     public void GenerateAndSaveFiles()
     {
-        /* TODO: @STV */
+        var logCall = Log.Fn();
+
+        var physicalPath = GetAppCodeDataPhysicalPath();
+        logCall.A($"{nameof(physicalPath)}: '{physicalPath}'");
+
+        var classFiles = DataFiles();
+        foreach (var classSb in classFiles)
+        {
+            logCall.A($"Writing {classSb.FileName}; Content: {classSb.FileContents.Length}");
+            File.WriteAllText(Path.Combine(physicalPath, classSb.FileName), classSb.FileContents);
+        }
+
+        logCall.Done();
     }
+
+    private string GetAppCodeDataPhysicalPath()
+    {
+        var appFullPath = appPaths.Init(site, AppState).PhysicalPath;
+        var appWithEdition = Specs.Edition.HasValue() ? Path.Combine(appFullPath, Specs.Edition) : appFullPath;
+
+        // TODO: sanitize path because 'edition' is user provided
+        var appWithEditionNormalized = new DirectoryInfo(appWithEdition).FullName;
+       
+        if (!Directory.Exists(appWithEditionNormalized)) throw new DirectoryNotFoundException(appWithEditionNormalized);
+
+        var physicalPath = Path.Combine(appWithEditionNormalized, AppCodeLoader.AppCodeBase, "Data");
+
+        // ensure the folder exists
+        Directory.CreateDirectory(physicalPath);
+
+        return physicalPath;
+    }
+
 
     internal List<CodeFileRaw> DataFiles()
     {

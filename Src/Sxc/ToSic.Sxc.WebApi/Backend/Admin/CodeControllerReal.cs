@@ -1,11 +1,12 @@
 ﻿using System.Reflection;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code.Internal.Documentation;
+using ToSic.Sxc.Code.Internal.Generate;
 
 namespace ToSic.Sxc.Backend.Admin;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeControllerReal() : ServiceBase("Api.CodeRl")
+public class CodeControllerReal(DataModelGenerator modelGenerator) : ServiceBase("Api.CodeRl")
 {
     public const string LogSuffix = "Code";
 
@@ -54,4 +55,15 @@ public class CodeControllerReal() : ServiceBase("Api.CodeRl")
         return wrapLog.ReturnAsOk(_inlineHelp);
     }
     private static IEnumerable<HelpItem> _inlineHelp;
+
+    public void GenerateDataModels(int appId, string edition)
+    {
+        var wrapLog = Log.Fn($"{nameof(appId)}:{appId};{nameof(edition)}:{edition}", timer: true);
+
+        var dataModelGenerator = modelGenerator.Setup(appId, edition);
+        dataModelGenerator.GenerateAndSaveFiles();
+
+        wrapLog.Done();
+    }
+
 }
