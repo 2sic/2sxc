@@ -62,9 +62,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         {
             var l = Log.Fn<AssemblyResult>($"{codeFileInfo}; {spec};");
 
-            var lockObject = new object();
-            if (!CompileAssemblyLocks.TryAdd(codeFileInfo.FullPath, lockObject))
-                CompileAssemblyLocks.TryGetValue(codeFileInfo.FullPath, out lockObject);
+            var lockObject = CompileAssemblyLocks.GetOrAdd(codeFileInfo.FullPath, new object());
 
             var result = new TryLockTryDo(lockObject).Call(
                 condition: () => AssemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath)?.MainType == null,
