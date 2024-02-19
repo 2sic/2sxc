@@ -21,9 +21,15 @@ internal class GeneratePropertyEntity: GeneratePropertyBase
         var resultType = nameof(ITypedItem);
         var usings = UsingTypedItems;
 
+        // TODO: CONSIDER GOING TO lIST - REQUIRES A ToList at the end.
+
         var msgReturns = allowMulti
             ? "An IEnumerable of specified type, but can be empty."
             : "A single item OR null if nothing found, so you can use ?? to provide alternate objects.";
+
+        var msgRemarks = allowMulti
+            ? "Generated to return child-list child because field settings had Multi-Value=true. "
+            : "Generated to only return 1 child because field settings had Multi-Value=false. ";
 
         // If we know the entity type, we can use the actual type instead of ITypedItem
         if (entityType.HasValue())
@@ -37,12 +43,14 @@ internal class GeneratePropertyEntity: GeneratePropertyBase
                     method += $"<{resultType}>";
                     // No usings needed, as the type is already in the namespace
                     usings = null;
+                    msgRemarks += $"The type {resultType} was specified in the field settings.";
                 });
 
         return
         [
-            GenPropSnip(tabs, string.Format(result, resultType), name, method, usings: usings,
+            GenPropSnip(tabs, string.Format(result, resultType), name, method, cache: true, usings: usings,
                 summary: [$"{msgPrefix} {resultType}."],
+                remarks: [msgRemarks],
                 returns: [msgReturns]
             ),
         ];

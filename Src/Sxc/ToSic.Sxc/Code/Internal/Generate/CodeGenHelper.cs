@@ -31,11 +31,11 @@ internal class CodeGenHelper(CodeGenSpecs specs)
         return sb.ToString();
     }
 
-    public string XmlComment(int tabs, string summary = default, string[] returns = default, int padBefore = 1, int padAfter = default,
+    public string XmlComment(int tabs, string summary = default, string returns = default, int padBefore = 1, int padAfter = default,
         int altGap = 1)
-        => XmlComment(tabs, summary: summary.SplitNewLine(), padBefore: padBefore, padAfter: padAfter, altGap: altGap);
+        => XmlComment(tabs, summary: summary.SplitNewLine(), returns: returns.SplitNewLine(), padBefore: padBefore, padAfter: padAfter, altGap: altGap);
 
-    public string XmlComment(int tabs, string[] summary = default, string[] returns = default, int padBefore = 1, int padAfter = default, int altGap = 1)
+    public string XmlComment(int tabs, string[] summary = default, string[] remarks = default, string[] returns = default, int padBefore = 1, int padAfter = default, int altGap = 1)
     {
         // 1. If nothing, return empty lines as much as altGap
         // first merge all the comments to see if we have any
@@ -49,11 +49,15 @@ internal class CodeGenHelper(CodeGenSpecs specs)
 
         // Summary
         var summaryComment = XmlCommentOne(indent, "summary", summary);
-        if (summaryComment.HasValue()) sb.AppendLine(summaryComment);
+        if (summaryComment.HasValue()) sb.Append(summaryComment);
+
+        // Remarks
+        var remarksComment = XmlCommentOne(indent, "remarks", remarks);
+        if (remarksComment.HasValue()) sb.Append(remarksComment);
 
         // Returns
         var returnsComment = XmlCommentOne(indent, "returns", returns);
-        if (returnsComment.HasValue()) sb.AppendLine(returnsComment);
+        if (returnsComment.HasValue()) sb.Append(returnsComment);
 
         AddLines(sb, padAfter);
 
@@ -66,8 +70,9 @@ internal class CodeGenHelper(CodeGenSpecs specs)
             return null;
 
         // Single liner
-        if (comments.Length == 1)
-            return $"{indent}/// <{tagName}>{comments[0]}</{tagName}>";
+        // 2024-02-16 2dm disabled for now, seems like an optimization but the code is harder to read
+        //if (comments.Length == 1)
+        //    return $"{indent}/// <{tagName}>{comments[0]}</{tagName}>";
 
         // Multi-liner
         var sb = new StringBuilder();
