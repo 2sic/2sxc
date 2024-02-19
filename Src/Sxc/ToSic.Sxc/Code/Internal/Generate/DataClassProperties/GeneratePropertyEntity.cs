@@ -14,7 +14,7 @@ internal class GeneratePropertyEntity: GeneratePropertyBase
         var entityType = attribute.Metadata.GetBestValue<string>("EntityType");
         var allowMulti = attribute.Metadata.GetBestValue<bool>("AllowMultiValue");
 
-        var msgPrefix = $"{name} as " + (allowMulti ? "list" : "single item") + "of";
+        var msgPrefix = $"{name} as " + (allowMulti ? "list" : "single item") + " of";
         // var msgSuffix = "Use methods such as .Children(\"{name}\") or .Child(\"{name}\") to get the actual items.";
         var method = allowMulti ? "Children" : "Child";
         var result = allowMulti ? "IEnumerable<{0}>" : "{0}";
@@ -42,7 +42,7 @@ internal class GeneratePropertyEntity: GeneratePropertyBase
                     // Make the method generic returning the expected type
                     method += $"<{resultType}>";
                     // No usings needed, as the type is already in the namespace
-                    usings = null;
+                    usings = allowMulti ? UsingList : [];
                     msgRemarks += $"The type {resultType} was specified in the field settings.";
                 });
 
@@ -55,6 +55,11 @@ internal class GeneratePropertyEntity: GeneratePropertyBase
             ),
         ];
     }
+
+    private List<string> UsingList { get; } =
+    [
+        "System.Collections.Generic",
+    ];
 
     private List<string> UsingTypedItems { get; } =
     [
