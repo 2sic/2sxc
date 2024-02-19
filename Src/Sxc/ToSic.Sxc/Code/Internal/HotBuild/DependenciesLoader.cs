@@ -40,17 +40,17 @@ public class DependenciesLoader : ServiceBase
     {
         var l = Log.Fn<(List<Assembly>, HotBuildSpec)>(spec.ToString());
         var (assemblyResults, cacheKey) = TryGetAssemblyOfDependenciesFromCache(spec, Log);
-        if (assemblyResults != null) return l.Return((assemblyResults.Select(r => r.Assembly).ToList(), spec), "cached");
+        if (assemblyResults != null) return l.Return((assemblyResults.Select(r => r.Assembly).ToList(), spec), "Dependencies where cached.");
 
         var assemblies = LoadDependencyAssembliesOrNull(spec, cacheKey);
-        if (assemblies != null) return l.Return((assemblies, spec), "loaded");
+        if (assemblies != null) return l.Return((assemblies, spec), $"Dependencies loaded from {spec.Edition}");
 
-        if (spec.Edition.IsEmpty()) return l.Return((null, spec), "assembly empty, no edition, done");
+        if (spec.Edition.IsEmpty()) return l.Return((null, spec), "Dependencies not found in <app-root>, done.");
 
         // try get root edition
         var rootSpec = spec.CloneWithoutEdition();
         var pairFromRoot = TryGetOrFallback(rootSpec);
-        return l.Return(pairFromRoot, pairFromRoot.Assemblies == null ? "assembly without edition null" : "assembly without edition found");
+        return l.Return(pairFromRoot, pairFromRoot.Assemblies == null ? "Dependencies not found in <app-root>, null." : "Dependencies found in <app-root>.");
     }
 
     private static (List<AssemblyResult> assemblyResults, string cacheKey) TryGetAssemblyOfDependenciesFromCache(HotBuildSpec spec, ILog callerLog)

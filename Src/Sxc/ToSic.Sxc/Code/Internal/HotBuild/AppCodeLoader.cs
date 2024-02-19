@@ -41,17 +41,17 @@ public class AppCodeLoader : ServiceBase
     {
         var l = Log.Fn<(Assembly, HotBuildSpec)>(spec.ToString());
         var assembly = TryGetAssemblyOfAppCodeFromCache(spec, Log)?.Assembly;
-        if (assembly != null) return l.Return((assembly, spec), "cached");
+        if (assembly != null) return l.Return((assembly, spec), "AppCode assembly was cached.");
 
         assembly = GetAppCodeAssemblyOrThrow(spec);
-        if (assembly != null) return l.Return((assembly, spec), "compiled");
+        if (assembly != null) return l.Return((assembly, spec), $"AppCode assembly compiled in {spec.Edition}.");
 
-        if (spec.Edition.IsEmpty()) return l.Return((null, spec), "assembly empty, no edition, done");
+        if (spec.Edition.IsEmpty()) return l.Return((null, spec), "AppCode not found in <app-root>, done.");
 
         // try get root edition
         var rootSpec = spec.CloneWithoutEdition();
         var pairFromRoot = TryGetOrFallback(rootSpec);
-        return l.Return(pairFromRoot, pairFromRoot.Assembly == null ? "assembly without edition null" : "assembly without edition found");
+        return l.Return(pairFromRoot, pairFromRoot.Assembly == null ? "AppCode not found in <app-root>, null." : "AppCode found in <app-root>.");
     }
 
     public static AssemblyResult TryGetAssemblyOfAppCodeFromCache(HotBuildSpec spec, ILog callerLog)
