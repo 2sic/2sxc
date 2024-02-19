@@ -1,4 +1,5 @@
 ﻿using Custom.Data;
+using ToSic.Sxc.Cms.Data;
 
 namespace ToSic.Sxc.Code.Internal.Generate;
 
@@ -15,12 +16,12 @@ internal class GeneratePropertyCustom: GeneratePropertyBase
 
         return
         [
-            GenPropSnip(tabs, "GpsCoordinates", name, "ToGps", usings: UsingCustomData, summary:
+            GenPropSnip(tabs, "GpsCoordinates", name, "Gps", usings: UsingCustomData, summary:
             [
                 $"{name} as GPS Coordinates object with {nameof(GpsCoordinates.Latitude)} and {nameof(GpsCoordinates.Longitude)}.",
             ]),
         ];
     }
 
-    private List<string> UsingCustomData { get; } = ["Custom.Data"];
+    private List<string> UsingCustomData { get; } = [typeof(GpsCoordinates).Namespace];
 }

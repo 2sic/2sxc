@@ -4,6 +4,7 @@ using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Cms.Data;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Internal.Convert;
@@ -251,7 +252,8 @@ public abstract class Item16: ICanBeEntity, ITypedItem, ITypedItemWrapper16, IHa
             kit: Kit, protector: protector, nullIfNull: false
         );
 
-    protected GpsCoordinates ToGps(string name) => Kit.Json.To<GpsCoordinates>(String(name));
+    protected GpsCoordinates Gps(string name, NoParamOrder protector = default, bool? required = default)
+        => Kit.Json.To<GpsCoordinates>(String(name, required: required, fallback: "{}"));
 
     #endregion
 }

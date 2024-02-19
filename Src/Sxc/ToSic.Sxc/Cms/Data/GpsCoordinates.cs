@@ -1,5 +1,8 @@
-﻿namespace Custom.Data;
+﻿namespace ToSic.Sxc.Cms.Data;
 
+/// <summary>
+/// Represents GPS coordinates.
+/// </summary>
 public class GpsCoordinates
 {
     public decimal Latitude { get; set; }
