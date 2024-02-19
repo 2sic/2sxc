@@ -103,8 +103,8 @@ internal class DnnRazorCompiler(
         // TODO: @STV SHOULD OPTIMIZE so the file doesn't need to read multiple times
         var codeFileInfo = sourceAnalyzer.Value.TypeOfVirtualPath(templatePath);
         
-        l.A($"prepare spec: {HotBuildSpecs}");
         var useHotBuild = codeFileInfo.IsHotBuildSupported();
+        l.A($"{nameof(HotBuildSpecs)} prepare spec: {HotBuildSpecs}; {nameof(useHotBuild)}: {useHotBuild}");
         try
         {
             compiledType = useHotBuild

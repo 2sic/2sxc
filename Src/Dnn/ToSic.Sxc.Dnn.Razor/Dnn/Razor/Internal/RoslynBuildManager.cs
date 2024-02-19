@@ -64,12 +64,28 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
             var lockObject = CompileAssemblyLocks.GetOrAdd(codeFileInfo.FullPath, new object());
 
-            var result = new TryLockTryDo(lockObject).Call(
-                condition: () => AssemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath)?.MainType == null,
+            // 2024-02-19 Something is buggy here, so I must add logging to find out what's going on
+            // ATM it appears that sometimes it returns null, but I don't know why
+            // I believe it's mostly on first startup or something
+            var (result, generated, message) = new TryLockTryDo(lockObject).Call(
+                conditionToGenerate: () => AssemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath)?.MainType == null,
                 generator: () => OnCacheMiss(codeFileInfo, className, spec),
-                cacheOrDefault: AssemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath));
+                cacheOrFallback: () => AssemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath)
+            );
 
-            return l.ReturnAsOk(result);
+            // ReSharper disable once InvertIf
+            if (!generated)
+            {
+                l.E("Object was not generated - additional logs to better find root cause next time this happens");
+                l.A($"result: {result}");
+                l.A($"message: {message}");
+                var cache = AssemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath);
+                l.A($"{nameof(cache)}: {cache}");
+                l.A($"{nameof(cache.MainType)}: {cache?.MainType}");
+                l.A($"{nameof(cache.HasAssembly)}: {cache?.HasAssembly}");
+            }
+
+            return l.Return(result, message);
 
         }
 
