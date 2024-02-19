@@ -17,6 +17,7 @@ public class AppCodeLoader : ServiceBase
 {
     public const string AppCodeBase = "AppCode";
     //public const string AppCodeBinFolder = "bin";
+    private const string AppRoot = HotBuildSpec.AppRoot;
 
     public AppCodeLoader(ILogStore logStore, ISite site, IAppStates appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, LazySvc<AppCodeCompiler> appCompilerLazy, AssemblyCacheManager assemblyCacheManager) : base("Sys.AppCodeLoad")
     {
@@ -44,14 +45,14 @@ public class AppCodeLoader : ServiceBase
         if (assembly != null) return l.Return((assembly, spec), "AppCode assembly was cached.");
 
         assembly = GetAppCodeAssemblyOrThrow(spec);
-        if (assembly != null) return l.Return((assembly, spec), $"AppCode assembly compiled in {spec.Edition}.");
+        if (assembly != null) return l.Return((assembly, spec), $"AppCode assembly compiled in '{(spec.Edition.IsEmpty() ? AppRoot : spec.Edition)}'.");
 
-        if (spec.Edition.IsEmpty()) return l.Return((null, spec), "AppCode not found in <app-root>, done.");
+        if (spec.Edition.IsEmpty()) return l.Return((null, spec), $"AppCode not found in '{AppRoot}', done.");
 
         // try get root edition
         var rootSpec = spec.CloneWithoutEdition();
         var pairFromRoot = TryGetOrFallback(rootSpec);
-        return l.Return(pairFromRoot, pairFromRoot.Assembly == null ? "AppCode not found in <app-root>, null." : "AppCode found in <app-root>.");
+        return l.Return(pairFromRoot, pairFromRoot.Assembly == null ? $"AppCode not found in '{AppRoot}', null." : $"AppCode found in '{AppRoot}'.");
     }
 
     public static AssemblyResult TryGetAssemblyOfAppCodeFromCache(HotBuildSpec spec, ILog callerLog)
