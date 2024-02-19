@@ -7,7 +7,12 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 
-// TODO: @STV - PLS EXPLAIN what this does / what it's for
+
+/// <summary>
+/// The AppApiFileSystemWatcher class is ensuring that the 2sxc app's in runtime remains up-to-date with the latest changes to its web APIs by tracking updates in .cs files.
+/// FileSystemWatcher monitor changes within the 2sxc application's source files. This detection is crucial for the application's runtime to know when web APIs implementation has changed, 
+/// necessitating the removal of the outdated API components from the application's runtime.
+/// </summary>
 internal class AppApiFileSystemWatcher : IDisposable, IHasLog
 {
     private readonly FileSystemWatcher _watcher;
