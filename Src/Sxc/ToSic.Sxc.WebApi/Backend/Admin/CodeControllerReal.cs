@@ -1,12 +1,14 @@
-﻿using System.Reflection;
+﻿using System.IO;
+using System.Reflection;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code.Internal.Documentation;
 using ToSic.Sxc.Code.Internal.Generate;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Backend.Admin;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeControllerReal(DataModelGenerator modelGenerator) : ServiceBase("Api.CodeRl")
+public class CodeControllerReal(DataModelGenerator modelGenerator, LazySvc<IJsonService> json) : ServiceBase("Api.CodeRl")
 {
     public const string LogSuffix = "Code";
 
@@ -66,4 +68,32 @@ public class CodeControllerReal(DataModelGenerator modelGenerator) : ServiceBase
         wrapLog.Done();
     }
 
+    public EditionsDto GetEditions(int appId)
+    {
+        var l = Log.Fn<EditionsDto>($"{nameof(appId)}:{appId}");
+
+        var pathToDotAppJson = modelGenerator.Setup(appId).GetPathToDotAppJson();
+        l.A($"path to app.json: {pathToDotAppJson}");
+        if (File.Exists(pathToDotAppJson))
+        {
+            l.A($"has app.json");
+            var editionsJson = json.Value.To<EditionsJson>(File.ReadAllText(pathToDotAppJson));
+
+            if (editionsJson?.Editions?.Count > 0)
+            {
+                l.A($"has editions in app.json: {editionsJson?.Editions?.Count}");
+                return l.ReturnAsOk(editionsJson.ToEditionsDto());
+            }
+        }
+
+        l.A("editions are not specified, so using default edition data");
+        // default data
+        var nothingSpecified = new EditionsDto()
+        {
+            IsConfigured = false,
+            Editions = [ new EditionDto { Name = "", Description = "Root edition" } ]
+        };
+
+        return l.Return(nothingSpecified, "editions not specified in app.json");
+    }
 }

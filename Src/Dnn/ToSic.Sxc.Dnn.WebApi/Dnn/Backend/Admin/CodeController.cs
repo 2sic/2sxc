@@ -1,4 +1,5 @@
-﻿using RealController = ToSic.Sxc.Backend.Admin.CodeControllerReal;
+﻿using ToSic.Sxc.Backend.Admin;
+using RealController = ToSic.Sxc.Backend.Admin.CodeControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
@@ -18,4 +19,11 @@ public class CodeController() : DnnSxcControllerBase(RealController.LogSuffix)
     //[SupportedModules(DnnSupportedModuleNames)]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
     public void GenerateDataModels(int appId, string edition = default) => Real.GenerateDataModels(appId, edition);
+
+    [HttpGet]
+    [JsonFormatter]
+    [ValidateAntiForgeryToken]
+    [SupportedModules(DnnSupportedModuleNames)]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+    public EditionsDto GetEditions(int appId) => Real.GetEditions(appId);
 }

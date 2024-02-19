@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Context;
@@ -20,7 +21,7 @@ public class DataModelGenerator(ISite site, IUser user, IAppStates appStates, IA
     internal IUser User = user;
     internal CodeGenHelper CodeGenHelper = new(new());
 
-    public DataModelGenerator Setup(int appId, string edition)
+    public DataModelGenerator Setup(int appId, string edition = default)
     {
         if (edition.HasValue())
             Specs.Edition = edition;
@@ -81,9 +82,11 @@ public class DataModelGenerator(ISite site, IUser user, IAppStates appStates, IA
         logCall.Done();
     }
 
+    private string GetAppFullPath() => appPaths.Init(site, AppState).PhysicalPath;
+
     private string GetAppCodeDataPhysicalPath()
     {
-        var appFullPath = appPaths.Init(site, AppState).PhysicalPath;
+        var appFullPath = GetAppFullPath();
         var appWithEdition = Specs.Edition.HasValue() ? Path.Combine(appFullPath, Specs.Edition) : appFullPath;
 
         // TODO: sanitize path because 'edition' is user provided
@@ -98,6 +101,8 @@ public class DataModelGenerator(ISite site, IUser user, IAppStates appStates, IA
 
         return physicalPath;
     }
+
+    internal string GetPathToDotAppJson() => Path.Combine(GetAppFullPath(), Constants.AppDataProtectedFolder, Constants.AppJson);
 
 
     internal List<CodeFileRaw> DataFiles()

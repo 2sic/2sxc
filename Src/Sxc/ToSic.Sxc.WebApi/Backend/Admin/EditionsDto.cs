@@ -1,0 +1,17 @@
+﻿namespace ToSic.Sxc.Backend.Admin
+{
+    /// <summary>
+    /// Used to serialize 'editions' to json for UI
+    /// </summary>
+    public class EditionsDto
+    {
+        public bool IsConfigured { get; set; }
+        public List<EditionDto> Editions { get; set; } = [];
+    }
+
+    public class EditionDto
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+}
