@@ -38,7 +38,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     protected CodeTyped() : base("Cst.CodeTy") { }
 
     /// <summary>
-    /// Special constructor for code files in the `ThisCode` which need the context - such as the Kit.
+    /// Special constructor for code files in the `AppCode` which need the context - such as the Kit.
     /// </summary>
     /// <param name="parent"></param>
     protected CodeTyped(IHasCodeContext parent) : base("Cst.CodeTy")
@@ -74,7 +74,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
         if (_CodeApiSvc != null) return _CodeApiSvc;
 
         var message = $"Can't access properties such as {propName}, because the Code-Context is not known. " +
-                      $"This is typical in code which is in the **ThisCode** folder. " +
+                      $"This is typical in code which is in the **AppCode** folder. " +
                       $"Make sure the caller of the code uses 'this' in the constructor - " +
                       $"eg. 'new {GetType().Name}(this)' and that the class {GetType().Name} has a constructor which passes it to the base class " +
                       $"like public {GetType().Name}({nameof(IHasCodeContext)} parent) : base(parent) {{ }} ";
