@@ -1,9 +1,9 @@
 ﻿using Oqtane.Repository;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Oqt.Server.Services;
@@ -24,7 +24,7 @@ internal class OqtUsersService : UsersServiceBase
 
     public override string PlatformIdentityTokenPrefix => OqtConstants.UserTokenPrefix;
 
-    public override IUser PlatformUserInformationDto(int userId)
+    protected override ICmsUser PlatformUserInformationDto(int userId)
     {
         var user = _userRepository.Value.GetUser(userId, false);
         return user == null ? null : _oqtSecurity.Value.CmsUserBuilder(user);

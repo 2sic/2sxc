@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Unknown;
 using ToSic.Lib.DI;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal.Raw;
 
 namespace ToSic.Sxc.Services.Internal;
@@ -13,5 +14,5 @@ internal class UsersServiceUnknown : UsersServiceBase, IIsUnknown
 
     public override string PlatformIdentityTokenPrefix => $"{Eav.Constants.NullNameId}:";
 
-    public override IUser PlatformUserInformationDto(int userId) => new CmsUserRaw();
+    protected override ICmsUser PlatformUserInformationDto(int userId) => new CmsUserRaw();
 }

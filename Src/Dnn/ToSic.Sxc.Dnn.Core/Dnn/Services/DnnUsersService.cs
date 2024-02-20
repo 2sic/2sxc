@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Entities.Users;
 using ToSic.Eav.Context;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Services.Internal;
 
@@ -18,7 +19,7 @@ internal class DnnUsersService : UsersServiceBase
 
     public override string PlatformIdentityTokenPrefix => DnnConstants.UserTokenPrefix;
 
-    public override IUser PlatformUserInformationDto(int userId)
+    protected override ICmsUser PlatformUserInformationDto(int userId)
     {
         var user = UserController.Instance.GetUserById(SiteId, userId);
         if (user == null) return null;
