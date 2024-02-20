@@ -91,6 +91,7 @@ public class OqtStartup : IServerStartup
         var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
         globalConfig.GlobalFolder = Path.Combine(env.ContentRootPath, "wwwroot\\Modules", OqtConstants.PackageName);
         globalConfig.AppDataTemplateFolder = Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.AppDataProtectedFolder, Eav.Constants.NewAppFolder);
+        globalConfig.NewAppsTemplateFolder = Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.AppDataProtectedFolder, Eav.Constants.NewAppsFolder);
         globalConfig.DataFolder = Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.AppDataProtectedFolder, Eav.Constants.FolderSystem);
         globalConfig.TemporaryFolder = Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.TemporaryFolder);
         globalConfig.InstructionsFolder = Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.InstructionsFolder);
