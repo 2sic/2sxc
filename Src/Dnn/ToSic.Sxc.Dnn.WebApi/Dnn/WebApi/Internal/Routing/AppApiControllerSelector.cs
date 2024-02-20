@@ -128,7 +128,7 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
         // note: this may look like something you could optimize/cache the result, but that's a bad idea
         // because when the file changes, the type-object will be different, so please don't optimize :)
         var exists = File.Exists(HostingEnvironment.MapPath(controllerPath));
-        var descriptor = exists ? BuildDescriptor(request, controllerFolder, controllerPath, controllerTypeName, sp) : null;
+        var descriptor = exists ? BuildDescriptor(log,request, controllerFolder, controllerPath, controllerTypeName, edition.TrimLastSlash(), sp) : null;
         return l.Return(descriptor, $"{nameof(exists)}: {exists}");
     }
 
@@ -142,36 +142,43 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
         return edition;
     }
 
-    private HttpControllerDescriptor BuildDescriptor(HttpRequestMessage request, string folder, string fullPath, string typeName, IServiceProvider sp)
+    private HttpControllerDescriptor BuildDescriptor(ILog log, HttpRequestMessage request, string folder, string fullPath, string typeName, string edition, IServiceProvider sp)
     {
+        var l = log.Fn<HttpControllerDescriptor>();
         Assembly assembly;
-        var codeFileInfo = sp.Build<SourceAnalyzer>().TypeOfVirtualPath(fullPath);
+        var codeFileInfo = sp.Build<SourceAnalyzer>().LinkLog(log).TypeOfVirtualPath(fullPath);
         if (codeFileInfo.AppCode)
         {
+            l.A("AppCode - use Roslyn");
             // Figure edition
             HotBuildSpec spec = null;
             var block = sp.Build<DnnGetBlock>().GetCmsBlock(request).LoadBlock();
+            l.A($"has block: {block != null}");
             if (block != null)
-                spec = new HotBuildSpec(block.AppId, 
-                    edition: PolymorphConfigReader.UseViewEditionLazyGetEdition(block.View, () => sp.Build<PolymorphConfigReader>().Init(block.Context.AppState.List)));
+            {
+                spec = new(block.AppId, edition: edition);
+                l.A($"{nameof(spec)}: {spec}");
+            }
             assembly = sp.Build<IRoslynBuildManager>().GetCompiledAssembly(codeFileInfo, typeName, spec)?.Assembly;
         }
         else
         {
+            l.A("no AppCode - use BuildManager");
             assembly = BuildManager.GetCompiledAssembly(fullPath);
         }
 
-        if (assembly == null) throw new("Assembly not found or compiled to null (error).");
+        if (assembly == null) throw l.Ex(new Exception("Assembly not found or compiled to null (error)."));
 
         // TODO: stv, implement more robust FindMainType
         var type = assembly.GetType(typeName, true, true)
-                   ?? throw new($"Type '{typeName}' not found in assembly. Could be a compile error or name mismatch.");
+                   ?? throw l.Ex(new Exception($"Type '{typeName}' not found in assembly. Could be a compile error or name mismatch."));
 
         // help with path resolution for compilers running inside the created controller
         request?.Properties.Add(CodeCompiler.SharedCodeRootPathKeyInCache, folder);
         request?.Properties.Add(CodeCompiler.SharedCodeRootFullPathKeyInCache, fullPath);
 
-        return new(configuration, type.Name, type);
+        var result = new HttpControllerDescriptor(configuration, type.Name, type);
+        return l.Return(result);
     }
 
     private static void AddToInsightsHistory(IServiceProvider sp, string url, ILog log)
