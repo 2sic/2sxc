@@ -20,7 +20,6 @@ using ToSic.Sxc.Dnn.Backend.Sys;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Integration;
-using ToSic.Sxc.Polymorphism.Internal;
 
 namespace ToSic.Sxc.Dnn.WebApi;
 
@@ -146,7 +145,7 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
     {
         var l = log.Fn<HttpControllerDescriptor>();
         Assembly assembly;
-        var codeFileInfo = sp.Build<SourceAnalyzer>().LinkLog(log).TypeOfVirtualPath(fullPath);
+        var codeFileInfo = sp.Build<SourceAnalyzer>(log).TypeOfVirtualPath(fullPath);
         if (codeFileInfo.AppCode)
         {
             l.A("AppCode - use Roslyn");

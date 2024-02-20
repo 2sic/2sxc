@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
@@ -48,9 +49,8 @@ internal class SearchController : ServiceBase
         LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
         LazySvc<ILookUpEngineResolver> dnnLookUpEngineResolver,
         EngineFactory engineFactory,
-        LazySvc<IAppLoaderTools> loaderTools,
         LazySvc<ILogStore> logStore,
-        Polymorphism.Internal.PolymorphConfigReader polymorphism) : base("DNN.Search")
+        PolymorphConfigReader polymorphism) : base("DNN.Search")
     {
         ConnectServices(
             _appsCache = appsCache,
@@ -58,7 +58,6 @@ internal class SearchController : ServiceBase
             _codeRootFactory = codeRootFactory,
             _siteGenerator = siteGenerator,
             _engineFactory = engineFactory,
-            _loaderTools = loaderTools,
             _dnnLookUpEngineResolver = dnnLookUpEngineResolver,
             _moduleAndBlockBuilder = moduleAndBlockBuilder,
             _logStore = logStore,
@@ -71,11 +70,10 @@ internal class SearchController : ServiceBase
     private readonly Generator<CodeApiServiceFactory> _codeRootFactory;
     private readonly Generator<ISite> _siteGenerator;
     private readonly EngineFactory _engineFactory;
-    private readonly LazySvc<IAppLoaderTools> _loaderTools;
     private readonly LazySvc<ILookUpEngineResolver> _dnnLookUpEngineResolver;
     private readonly LazySvc<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
     private readonly LazySvc<ILogStore> _logStore;
-    private readonly Polymorphism.Internal.PolymorphConfigReader _polymorphism;
+    private readonly PolymorphConfigReader _polymorphism;
 
 
     /// <summary>
@@ -101,8 +99,7 @@ internal class SearchController : ServiceBase
 
         // Ensure cache builds up with correct primary language
         // In case it's not loaded yet
-        var appLoaderTool = _loaderTools.Value;
-        _appsCache.Value.Load(module.BlockIdentifier, DnnSite.DefaultCultureCode, appLoaderTool);
+        _appsCache.Value.Load(module.BlockIdentifier.PureIdentity(), DnnSite.DefaultCultureCode, _appsCache.AppLoaderTools);
 
         Block = _moduleAndBlockBuilder.Value.GetProvider(DnnModule, null).LoadBlock();
 
