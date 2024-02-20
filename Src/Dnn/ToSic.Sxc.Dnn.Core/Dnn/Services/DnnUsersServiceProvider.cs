@@ -1,16 +1,15 @@
 ﻿using DotNetNuke.Entities.Users;
-using ToSic.Eav.Context;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Dnn.Services;
 
-internal class DnnUsersService : UsersServiceBase
+internal class DnnUsersServiceProvider : UserSourceProvider
 {
     private readonly LazySvc<DnnSecurity> _dnnSecurity;
 
-    public DnnUsersService(LazySvc<IContextOfSite> context, LazySvc<DnnSecurity> dnnSecurity) : base(context)
+    public DnnUsersServiceProvider(LazySvc<DnnSecurity> dnnSecurity) : base("Dnn.UsersSvc")
     {
         ConnectServices(
             _dnnSecurity = dnnSecurity
@@ -19,10 +18,10 @@ internal class DnnUsersService : UsersServiceBase
 
     public override string PlatformIdentityTokenPrefix => DnnConstants.UserTokenPrefix;
 
-    protected override ICmsUser PlatformUserInformationDto(int userId)
+    internal override ICmsUser PlatformUserInformationDto(int userId, int siteId)
     {
-        var user = UserController.Instance.GetUserById(SiteId, userId);
+        var user = UserController.Instance.GetUserById(siteId, userId);
         if (user == null) return null;
-        return _dnnSecurity.Value.CmsUserBuilder(user, SiteId);
+        return _dnnSecurity.Value.CmsUserBuilder(user, siteId);
     }
 }

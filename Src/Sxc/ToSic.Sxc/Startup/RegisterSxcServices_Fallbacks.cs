@@ -80,9 +80,6 @@ static partial class RegisterSxcServices
         services.TryAddTransient<ILinkPaths, LinkPathsUnknown>();
         services.TryAddTransient<IModuleAndBlockBuilder, ModuleAndBlockBuilderUnknown>();
 
-        // v13.04
-        services.TryAddTransient<IUserService, UsersServiceUnknown>();
-
         // Koi, mainly so tests don't fail
         services.TryAddTransient<ICssFrameworkDetector, CssFrameworkDetectorUnknown>();
 
@@ -95,6 +92,10 @@ static partial class RegisterSxcServices
         // v16
         services.TryAddScoped<IJsApiService, JsApiServiceUnknown>();
         services.TryAddTransient<CodeErrorHelpService>();
+
+        // v17.01
+        services.TryAddTransient<IUserService, UsersService>();
+        services.TryAddTransient<UserSourceProvider, UsersServiceProviderUnknown>();
 
         return services;
     }

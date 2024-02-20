@@ -9,21 +9,23 @@ using static System.StringComparison;
 namespace ToSic.Sxc.Services.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class UsersServiceBase : ServiceForDynamicCode, IUserService
+public class UsersService : ServiceForDynamicCode, IUserService
 {
+    private readonly UserSourceProvider _provider;
 
-    protected UsersServiceBase(LazySvc<IContextOfSite> context) : base($"{SxcLogName}.UsrInfoSrv")
+    public UsersService(LazySvc<IContextOfSite> context, UserSourceProvider provider) : base($"{SxcLogName}.UsrInfoSrv")
     {
         ConnectServices(
-            _context = context
+            _context = context,
+            _provider = provider
         );
     }
 
     private readonly LazySvc<IContextOfSite> _context;
 
-    public abstract string PlatformIdentityTokenPrefix { get; }
+    //private string PlatformIdentityTokenPrefix => _provider.PlatformIdentityTokenPrefix;
 
-    protected abstract ICmsUser PlatformUserInformationDto(int userId);
+    //private ICmsUser PlatformUserInformationDto(int userId) => _provider.PlatformUserInformationDto(userId, SiteId);
 
     public ICmsUser Get(string identityToken)
     {
@@ -44,7 +46,7 @@ public abstract class UsersServiceBase : ServiceForDynamicCode, IUserService
         if (userId == CmsUserRaw.UnknownUser.Id)
             return l.Return(CmsUserRaw.UnknownUser, "err");
 
-        var userDto = PlatformUserInformationDto(userId);
+        var userDto = _provider.PlatformUserInformationDto(userId, SiteId);
 
         return userDto != null
             ? l.ReturnAsOk(userDto)
@@ -54,7 +56,7 @@ public abstract class UsersServiceBase : ServiceForDynamicCode, IUserService
     /// <summary>
     /// Helper method to get SiteId.
     /// </summary>
-    protected int SiteId => _context.Value.Site.Id;
+    private int SiteId => _context.Value.Site.Id;
 
     /// <summary>
     /// Helper method to parse UserID from user identity token.
@@ -71,7 +73,7 @@ public abstract class UsersServiceBase : ServiceForDynamicCode, IUserService
         if (identityToken.EqualsInsensitive(SxcUserConstants.Anonymous))
             return l.Return(CmsUserRaw.AnonymousUser.Id, "ok (anonymous)");
 
-        var prefix = PlatformIdentityTokenPrefix;
+        var prefix = _provider.PlatformIdentityTokenPrefix;
         if (identityToken.StartsWith(prefix, InvariantCultureIgnoreCase))
             identityToken = identityToken.Substring(prefix.Length);
 

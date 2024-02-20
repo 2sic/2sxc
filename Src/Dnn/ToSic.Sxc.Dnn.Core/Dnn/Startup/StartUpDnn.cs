@@ -35,6 +35,7 @@ using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.Integration.Modules;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web.Internal.DotNet;
 using ToSic.Sxc.Web.Internal.JsContext;
 
@@ -126,9 +127,6 @@ public static class StartUpDnnCore
         // v13
         services.TryAddTransient<IModuleAndBlockBuilder, DnnModuleAndBlockBuilder>();
 
-        // v13.04
-        services.TryAddTransient<IUserService, DnnUsersService>();
-
         // v13.12
         services.AddTransient<IStartUpRegistrations, DnnStartUpRegistrations>();   // must be Add, not TryAdd
 
@@ -148,6 +146,9 @@ public static class StartUpDnnCore
         services.TryAddSingleton<IHostingEnvironmentWrapper, HostingEnvironmentWrapper>();
         services.TryAddTransient<IReferencedAssembliesProvider, ReferencedAssembliesProvider>();
         services.TryAddTransient<AppCodeCompiler, AppCodeCompilerNetFull>();
+
+        //v17.01
+        services.TryAddTransient<UserSourceProvider, DnnUsersServiceProvider>();
 
         return services;
     }
