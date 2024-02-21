@@ -37,18 +37,6 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     /// </summary>
     protected CodeTyped() : base("Cst.CodeTy") { }
 
-    /// <summary>
-    /// Special constructor for code files in the `AppCode` which need the context - such as the Kit.
-    /// </summary>
-    /// <param name="parent"></param>
-    protected CodeTyped(IHasCodeContext parent) : base("Cst.CodeTy")
-    {
-        if (parent is not IHasCodeApiService dynCodeParent)
-            return;
-
-        base.ConnectToRoot(dynCodeParent._CodeApiSvc);
-    }
-
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => SysHlp.CodeLog;
 

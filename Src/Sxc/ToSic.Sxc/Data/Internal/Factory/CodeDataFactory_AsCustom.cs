@@ -11,6 +11,8 @@ partial class CodeDataFactory
         where T : class, ITypedItemWrapper16, ITypedItem, new()
     {
         if (nullIfNull && source == null) return null;
+        if (source is T alreadyT) return alreadyT;
+
         var item = source as ITypedItem ?? AsItem(source);
         var wrapper = new T();
         wrapper.Setup(item, kit);
@@ -26,6 +28,8 @@ partial class CodeDataFactory
         where T : class, ITypedItemWrapper16, ITypedItem, new()
     {
         if (nullIfNull && source == null) return null;
+        if (source is IEnumerable<T> alreadyListT) return alreadyListT;
+
         var items = SafeItems().Select(i =>
         {
             var wrapper = new T();

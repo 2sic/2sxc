@@ -14,10 +14,11 @@ partial class CodeDataFactory
 
     public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? required = default, ITypedItem fallback = default, bool? propsRequired = default, bool? mock = default)
     {
+        // If we need mock data, return a fake object
         if (mock == true)
             return _codeDataWrapper.Value.TypedItemFromObject(data,
                 WrapperSettings.Typed(true, true, propsRequired ?? true),
-                new LazyLike<Internal.CodeDataFactory>(this));
+                new LazyLike<CodeDataFactory>(this));
 
         return AsItemInternal(data, MaxRecursions, propsRequired: propsRequired ?? false) ?? fallback;
     }
