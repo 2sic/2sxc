@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Collections.Generic;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -27,7 +28,7 @@ public class CodeController() : OqtControllerBase(false, RealController.LogSuffi
 
     [HttpGet]
     [Authorize(Roles = RoleNames.Host)]
-    public void GenerateDataModels(int appId, string edition = default) => Real.GenerateDataModels(appId, edition);
+    public RichResult GenerateDataModels(int appId, string edition = default) => Real.GenerateDataModels(appId, edition);
 
     [HttpGet]
     [JsonFormatter]

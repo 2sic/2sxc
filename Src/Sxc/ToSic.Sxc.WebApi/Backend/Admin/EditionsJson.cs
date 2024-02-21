@@ -19,8 +19,15 @@
         public static EditionsDto ToEditionsDto(this EditionsJson editionsJson)
             => new()
             {
+                Ok = true,
                 IsConfigured = true,
-                Editions = editionsJson.Editions.Select(e => new EditionDto() { Name = e.Key, Description = e.Value.Description }).ToList()
+                Editions = editionsJson.Editions
+                    .Select(e => new EditionDto
+                    {
+                        Name = e.Key,
+                        Description = e.Value.Description
+                    })
+                    .ToList()
             };
     }
 }

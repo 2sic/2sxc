@@ -58,14 +58,20 @@ public class CodeControllerReal(DataModelGenerator modelGenerator, LazySvc<IJson
     }
     private static IEnumerable<HelpItem> _inlineHelp;
 
-    public void GenerateDataModels(int appId, string edition)
+    public RichResult GenerateDataModels(int appId, string edition)
     {
-        var wrapLog = Log.Fn($"{nameof(appId)}:{appId};{nameof(edition)}:{edition}", timer: true);
+        var l = Log.Fn<RichResult>($"{nameof(appId)}:{appId};{nameof(edition)}:{edition}", timer: true);
 
         var dataModelGenerator = modelGenerator.Setup(appId, edition);
         dataModelGenerator.GenerateAndSaveFiles();
 
-        wrapLog.Done();
+        return l.Return(new RichResult
+            {
+                Ok = true,
+                Message = $"Data models generated in {edition}/AppCode/Data.",
+            }
+            .WithTime(l)
+        );
     }
 
     public EditionsDto GetEditions(int appId)
@@ -88,10 +94,11 @@ public class CodeControllerReal(DataModelGenerator modelGenerator, LazySvc<IJson
 
         l.A("editions are not specified, so using default edition data");
         // default data
-        var nothingSpecified = new EditionsDto()
+        var nothingSpecified = new EditionsDto
         {
+            Ok = true,
             IsConfigured = false,
-            Editions = [ new EditionDto { Name = "", Description = "Root edition" } ]
+            Editions = [ new() { Name = "", Description = "Root edition" } ]
         };
 
         return l.Return(nothingSpecified, "editions not specified in app.json");
