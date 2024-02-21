@@ -1,18 +1,17 @@
 ﻿using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class TypedCode16Helper(
-    ICodeApiService codeRoot,
+    ICodeApiService codeApiSvc,
     IBlockInstance data,
     IDictionary<string, object> myModelData,
     bool isRazor,
     string codeFileName)
-    : CodeHelperXxBase(codeRoot, isRazor, codeFileName, SxcLogging.SxcLogName + ".TCd16H")
+    : CodeHelperXxBase(codeApiSvc, isRazor, codeFileName, SxcLogName + ".TCd16H")
 {
     public bool DefaultStrict = true;
 

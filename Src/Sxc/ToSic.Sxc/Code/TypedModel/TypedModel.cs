@@ -7,6 +7,7 @@ using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code;
 
@@ -14,14 +15,13 @@ namespace ToSic.Sxc.Code;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class TypedModel(
     IDictionary<string, object> paramsDictionary,
-    ICodeApiService codeRoot,
+    ICodeApiService codeApiSvc,
     bool isRazor,
     string razorFileName)
     : ITypedModel
 {
-    private readonly bool _isRazor = isRazor;
     private readonly IDictionary<string, object> _paramsDictionary = paramsDictionary?.ToInvariant() ?? new Dictionary<string, object>();
-    private readonly TypedConverter _converter = new(codeRoot._Cdf);
+    private readonly TypedConverter _converter = new(codeApiSvc._Cdf);
 
     #region Check if parameters were supplied
 
@@ -174,6 +174,30 @@ Either change the calling Html.Partial(""{razorFileName}"", {{ {name} = ... }} )
 
     public IToolbarBuilder Toolbar(string name, NoParamOrder noParamOrder = default, IToolbarBuilder fallback = default, bool? required = default)
         => _converter.Toolbar(GetInternalObj(name, noParamOrder, required), fallback);
+
+    #endregion
+
+    #region As Conversion (new v17.02)
+
+    /// <summary>
+    /// EXPERIMENTAL
+    /// </summary>
+    /// <returns></returns>
+    public T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool nullIfNull = false)
+        where T : class, ITypedItemWrapper16, ITypedItem, new()
+        => codeApiSvc._Cdf.AsCustom<T>(source: source, kit: codeApiSvc.GetKit<ServiceKit16>(), protector: protector, nullIfNull: nullIfNull);
+
+    /// <summary>
+    /// EXPERIMENTAL
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="protector"></param>
+    /// <param name="nullIfNull"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
+        where T : class, ITypedItemWrapper16, ITypedItem, new()
+        => codeApiSvc._Cdf.AsCustomList<T>(source: source, kit: codeApiSvc.GetKit<ServiceKit16>(), protector: protector, nullIfNull: nullIfNull);
 
     #endregion
 }

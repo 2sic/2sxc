@@ -90,9 +90,6 @@ public interface ITypedModel: IHasKeys
 
     #endregion
 
-    // 2023-08-17 2dm removed again in 16.03 - don't think this should ever be used
-    //dynamic Dynamic(string name, NoParamOrder noParamOrder = default, object fallback = default, bool? required = default);
-
     #region Simple Values: String / Bool / Guid / DateTime
 
     /// <summary>
@@ -358,6 +355,39 @@ public interface ITypedModel: IHasKeys
     /// <returns>typed result if found, `null` if not found</returns>
     IEnumerable<IHtmlTag> HtmlTags(string name, NoParamOrder noParamOrder = default,
         IEnumerable<IHtmlTag> fallback = default, bool? required = default);
+
+    #endregion
+
+    
+    #region As Conversions (new 17.02)
+
+    /// <summary>
+    /// Convert an Entity or TypedItem into a strongly typed object.
+    /// Typically, the type will be from your `AppCode.Data`.
+    /// </summary>
+    /// <typeparam name="T">the target type</typeparam>
+    /// <param name="source">the source object - an `IEntity` or `ITypedItem`</param>
+    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="nullIfNull">if `true` will return null when `source` is `null` - otherwise a wrapper item with empty-contents</param>
+    /// <returns></returns>
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool nullIfNull = false)
+        where T : class, ITypedItemWrapper16, ITypedItem, new();
+
+    /// <summary>
+    /// Convert a list of Entities or TypedItems into a strongly typed list.
+    /// Typically, the type will be from your `AppCode.Data`.
+    /// </summary>
+    /// <typeparam name="T">the target type</typeparam>
+    /// <param name="source">the source object - a List/Enumerable of `IEntity` or `ITypedItem`</param>
+    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="nullIfNull">if `true` will return null when `source` is `null` - otherwise a wrapper item with empty-contents</param>
+    /// <returns></returns>
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
+        where T : class, ITypedItemWrapper16, ITypedItem, new();
 
     #endregion
 }
