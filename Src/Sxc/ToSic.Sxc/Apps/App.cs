@@ -28,7 +28,7 @@ public partial class App : Eav.Apps.Internal.EavApp, IApp
         ConnectServices(
             _globalPaths = globalPaths,
             _appPathsLazy = appPathsLazy,
-            _cdfLazy = cdf.SetInit(asc => asc.SetFallbacks(Site)),
+            _cdfLazy = cdf.SetInit(obj => obj.SetFallbacks(Site)),
             _codeChanges = codeChanges
         );
     }

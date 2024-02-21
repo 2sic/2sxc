@@ -95,7 +95,7 @@ internal class DataClassGenerator(DataModelGenerator dmg, IContentType type, str
     public string FileIntroComment(string userName) =>
         $$"""
           // DO NOT MODIFY THIS FILE - IT IS AUTO-GENERATED
-          // See also: https://go.2sxc.org/hotbuild-autogen
+          // See also: https://go.2sxc.org/copilot-data
           // To extend it, create a "{{className}}.cs" with this contents:
           /*
           namespace AppCode.Data

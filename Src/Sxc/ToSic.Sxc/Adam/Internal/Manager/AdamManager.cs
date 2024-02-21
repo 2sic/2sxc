@@ -44,7 +44,7 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
     protected AdamManager(MyServices services, string logName) : base(services, logName ?? "Adm.Managr")
     {
         // Note: Services are already connected in base class
-        Services.Cdf.SetInit(asc => asc.SetFallbacks(AppContext?.Site, CompatibilityLevel, this));
+        Services.Cdf.SetInit(obj => obj.SetFallbacks(AppContext?.Site, CompatibilityLevel, this));
     }
 
     #endregion
