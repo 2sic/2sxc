@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
@@ -22,7 +23,7 @@ namespace Custom.Data;
 [JsonConverter(typeof(DynamicJsonConverter))]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 // ReSharper disable once UnusedMember.Global
-public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource
+public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource, IHasPropLookup
 {
 
     void ITypedItemWrapper16.Setup(ITypedItem baseItem, ServiceKit16 addKit)
@@ -264,4 +265,8 @@ public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource
         => Kit.Json.To<GpsCoordinates>(String(name, required: required, fallback: "{}"));
 
     #endregion
+
+    IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= ((IHasPropLookup)((ICanBeItem)this).Item).PropertyLookup;
+    private IPropertyLookup _propLookup;
+
 }
