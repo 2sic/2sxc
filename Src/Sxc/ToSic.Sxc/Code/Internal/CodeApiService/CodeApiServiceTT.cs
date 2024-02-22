@@ -9,8 +9,14 @@ public abstract class CodeApiService<TModel, TServiceKit>(CodeApiService.MyServi
     where TModel : class
     where TServiceKit : ServiceKit
 {
+    // Model not in use ATM, may never be. 
     //public TModel Model => default;
 
-    public TServiceKit Kit => _kit.Get(GetService<TServiceKit>);
+    /// <summary>
+    /// The primary kit for this service.
+    /// Other kit versions can be accessed using `GetKit{TKit}`
+    /// </summary>
+    public TServiceKit Kit => _kit.Get(((ICodeApiServiceInternal)this).GetKit<TServiceKit>);
     private readonly GetOnce<TServiceKit> _kit = new();
+
 }
