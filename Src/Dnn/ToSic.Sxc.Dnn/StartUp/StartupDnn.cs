@@ -5,7 +5,6 @@ using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Internal.Loaders;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Images.Internal;
 
@@ -68,7 +67,7 @@ public class StartupDnn : IServiceRouteMapper
         Imageflow.Dnn.StartUp.RegisterQueryStringRewrite(ImageflowRewrite.QueryStringRewrite);
 
         // Clean the App_Data/2sxc.bin folder
-        ThisAppCode.CleanTempAssemblyFolder();
+        Compile.AppCode.CleanTempAssemblyFolder();
 
         _alreadyConfigured = true;
     }

@@ -33,16 +33,16 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         private const string FallbackBaseClass = "System.Web.WebPages.WebPageBase";
 
         private readonly AssemblyCacheManager _assemblyCacheManager;
-        private readonly LazySvc<ThisAppLoader> _thisAppCodeLoader;
+        private readonly LazySvc<AppCodeLoader> _appCodeLoader;
         private readonly LazySvc<DependenciesLoader> _dependenciesLoader;
         private readonly AssemblyResolver _assemblyResolver;
         private readonly IReferencedAssembliesProvider _referencedAssembliesProvider;
 
-        public RoslynBuildManager(AssemblyCacheManager assemblyCacheManager, LazySvc<ThisAppLoader> thisAppCodeLoader, LazySvc<DependenciesLoader> dependenciesLoader, AssemblyResolver assemblyResolver, IReferencedAssembliesProvider referencedAssembliesProvider) : base("Dnn.RoslynBuildManager")
+        public RoslynBuildManager(AssemblyCacheManager assemblyCacheManager, LazySvc<AppCodeLoader> appCodeLoader, LazySvc<DependenciesLoader> dependenciesLoader, AssemblyResolver assemblyResolver, IReferencedAssembliesProvider referencedAssembliesProvider) : base("Dnn.RoslynBuildManager")
         {
             ConnectServices(
                 _assemblyCacheManager = assemblyCacheManager,
-                _thisAppCodeLoader = thisAppCodeLoader,
+                _appCodeLoader = appCodeLoader,
                 _dependenciesLoader = dependenciesLoader,
                 _assemblyResolver = assemblyResolver,
                 _referencedAssembliesProvider = referencedAssembliesProvider
@@ -62,20 +62,34 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         {
             var l = Log.Fn<AssemblyResult>($"{codeFileInfo}; {spec};");
 
-            var lockObject = new object();
-            if (!CompileAssemblyLocks.TryAdd(codeFileInfo.FullPath, lockObject))
-                CompileAssemblyLocks.TryGetValue(codeFileInfo.FullPath, out lockObject);
+            var lockObject = CompileAssemblyLocks.GetOrAdd(codeFileInfo.FullPath, new object());
 
-            var result = new TryLockTryDo(lockObject).Call(
-                condition: () => AssemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath)?.MainType == null,
-                generator: () => OnCacheMiss(codeFileInfo, className, spec),
-                cacheOrDefault: AssemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath));
+            // 2024-02-19 Something is buggy here, so I must add logging to find out what's going on
+            // ATM it appears that sometimes it returns null, but I don't know why
+            // I believe it's mostly on first startup or something
+            var (result, generated, message) = new TryLockTryDo(lockObject).Call(
+                conditionToGenerate: () => AssemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath)?.MainType == null,
+                generator: () => CompileCodeFile(codeFileInfo, className, spec),
+                cacheOrFallback: () => AssemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath)
+            );
 
-            return l.ReturnAsOk(result);
+            // ReSharper disable once InvertIf
+            if (!generated)
+            {
+                l.E("Object was not generated - additional logs to better find root cause next time this happens");
+                l.A($"result: {result}");
+                l.A($"message: {message}");
+                var cache = AssemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath);
+                l.A($"{nameof(cache)}: {cache}");
+                l.A($"{nameof(cache.MainType)}: {cache?.MainType}");
+                l.A($"{nameof(cache.HasAssembly)}: {cache?.HasAssembly}");
+            }
+
+            return l.Return(result, message);
 
         }
 
-        private AssemblyResult OnCacheMiss(CodeFileInfo codeFileInfo, string className, HotBuildSpec spec)
+        private AssemblyResult CompileCodeFile(CodeFileInfo codeFileInfo, string className, HotBuildSpec spec)
         {
             var l = Log.Fn<AssemblyResult>($"{codeFileInfo}; {spec};", timer: true);
 
@@ -84,19 +98,19 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
             // Roslyn compiler need reference to location of dll, when dll is not in bin folder
             // get assembly - try to get from cache, otherwise compile
-            //var codeAssembly = ThisAppLoader.TryGetAssemblyOfThisAppFromCache(spec, Log)?.Assembly
-            //                   ?? _thisAppCodeLoader.Value.GetThisAppAssemblyOrThrow(spec);
-            var (codeAssembly, specOut) = _thisAppCodeLoader.Value.TryGetOrFallback(spec);
+            //var codeAssembly = AppCodeLoader.TryGetAssemblyOfAppCodeFromCache(spec, Log)?.Assembly
+            //                   ?? _appCodeLoader.Value.GetAppCodeAssemblyOrThrow(spec);
+            var (codeAssembly, specOut) = _appCodeLoader.Value.TryGetOrFallback(spec);
             _assemblyResolver.AddAssembly(codeAssembly);
 
-            var thisAppCode = AssemblyCacheManager.TryGetThisApp(specOut);
+            var appCode = AssemblyCacheManager.TryGetAppCode(specOut);
 
-            var thisAppCodeAssembly = thisAppCode.Result?.Assembly;
-            if (thisAppCodeAssembly != null)
+            var appCodeAssembly = appCode.Result?.Assembly;
+            if (appCodeAssembly != null)
             {
-                var assemblyLocation = thisAppCodeAssembly.Location;
+                var assemblyLocation = appCodeAssembly.Location;
                 referencedAssemblies.Add(assemblyLocation);
-                l.A($"Added reference to ThisApp.Code assembly: {assemblyLocation}");
+                l.A($"Added reference to AppCode assembly: {assemblyLocation}");
             }
 
             // Compile the template
@@ -119,8 +133,8 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             // TODO: must also watch for global shared code changes
 
             var fileChangeMon = new HostFileChangeMonitor(new[] { codeFileInfo.FullPath });
-            var sharedFolderChangeMon = thisAppCode.Result == null ? null : new FolderChangeMonitor(thisAppCode.Result.WatcherFolders);
-            var changeMonitors = thisAppCode.Result == null
+            var sharedFolderChangeMon = appCode.Result == null ? null : new FolderChangeMonitor(appCode.Result.WatcherFolders);
+            var changeMonitors = appCode.Result == null
                 ? new ChangeMonitor[] { fileChangeMon }
                 : [fileChangeMon, sharedFolderChangeMon];
 

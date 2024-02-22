@@ -20,15 +20,15 @@ internal class RazorRenderer : ServiceBase, IRazorRenderer
 
     private readonly ITempDataProvider _tempDataProvider;
     private readonly IRazorCompiler _razorCompiler;
-    private readonly IThisAppCodeRazorCompiler _thisAppCodeRazorCompiler;
+    private readonly IAppCodeRazorCompiler _appCodeRazorCompiler;
     private readonly SourceAnalyzer _sourceAnalyzer;
 
-    public RazorRenderer(ITempDataProvider tempDataProvider, IRazorCompiler razorCompiler, IThisAppCodeRazorCompiler thisAppCodeRazorCompiler, SourceAnalyzer sourceAnalyzer) : base($"{SxcLogging.SxcLogName}.RzrRdr")
+    public RazorRenderer(ITempDataProvider tempDataProvider, IRazorCompiler razorCompiler, IAppCodeRazorCompiler appCodeRazorCompiler, SourceAnalyzer sourceAnalyzer) : base($"{SxcLogging.SxcLogName}.RzrRdr")
     {
         ConnectServices(
             _tempDataProvider = tempDataProvider,
             _razorCompiler = razorCompiler,
-            _thisAppCodeRazorCompiler = thisAppCodeRazorCompiler,
+            _appCodeRazorCompiler = appCodeRazorCompiler,
             _sourceAnalyzer = sourceAnalyzer
         );
     }
@@ -43,7 +43,7 @@ internal class RazorRenderer : ServiceBase, IRazorRenderer
         var razorType = _sourceAnalyzer.TypeOfVirtualPath(templatePath);
 
         var (view, actionContext) = razorType.IsHotBuildSupported()
-            ? await _thisAppCodeRazorCompiler.CompileView(templatePath, configure, app, spec)
+            ? await _appCodeRazorCompiler.CompileView(templatePath, configure, app, spec)
             : await _razorCompiler.CompileView(templatePath, configure);
 
         // Prepare to render

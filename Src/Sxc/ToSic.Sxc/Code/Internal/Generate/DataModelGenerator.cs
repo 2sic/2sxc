@@ -1,117 +1,135 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Text;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Sxc.Data.Internal;
+using ToSic.Eav.Apps.Integration;
+using ToSic.Eav.Context;
+using ToSic.Eav.Plumbing;
+using ToSic.Lib.Services;
+using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Code.Internal.Generate;
 
 /// <summary>
 /// Experimental
 /// </summary>
-internal class DataModelGenerator
+public class DataModelGenerator(ISite site, IUser user, IAppStates appStates, IAppPathsMicroSvc appPaths) : ServiceBase(SxcLogging.SxcLogName + ".DMoGen")
 {
-    internal const int DepthNamespace = 0;
-    internal const int DepthClass = 1;
-    internal const int DepthProperty = 2;
-    internal const int Indent = 4;
-    internal const string NamespaceBody = "[NAMESPACE-BODY]";
-    internal const string ClassBody = "[CLASS-BODY]";
+    internal CodeGenSpecs Specs { get; } = new();
 
-    internal GenerateCodeHelper GenHelper = new();
+    internal IUser User = user;
+    internal CodeGenHelper CodeGenHelper = new(new());
 
-    public string Generate(IAppState state)
+    public DataModelGenerator Setup(int appId, string edition = default)
     {
-        // TODO:
-        // - add comment with date/time stamp
-        // - add comment with version of generator
-        // - add attribute to mention what data-type it's for, in case the name doesn't match to help with errors
-        // - consider modifying the ToString to better show what it's doing
-        // - check Equals of the new objects
-        var sb = new StringBuilder();
-        // Generate usings
-        sb.Append(GenerateUsings());
-        // Generate namespace
-        sb.Append(GenerateNamespace("ThisApp.Data"));
+        if (edition.HasValue())
+            Specs.Edition = edition;
 
+        // Prepare App State and add to Specs
+        var appCache = appStates.GetCacheState(appId);
+        AppState = appStates.ToReader(appCache);
+        Specs.AppState = AppState;
+        Specs.AppName = AppState.Name;
+
+        // Prepare Content Types and add to Specs, so the generators know what is available
         // Generate classes for all types in scope Default
-        var types = state.ContentTypes.OfScope(Scopes.Default);
-        var classesSb = new StringBuilder();
-        foreach (var type in types)
-        {
-            var classSb = GenerateClass(type.Name);
-            var propsSb = new StringBuilder();
-            foreach (var attribute in type.Attributes) 
-                propsSb.Append(GenerateProperty(attribute));
-            classSb.Replace(ClassBody, propsSb.ToString());
-            classesSb.Append(classSb);
-        }
+        var types = AppState.ContentTypes.OfScope(Scopes.Default).ToList();
+        var appResources = AppState.GetContentType(AppLoadConstants.TypeAppResources);
+        if (appResources != null) types.Add(appResources);
+        var appSettings = AppState.GetContentType(AppLoadConstants.TypeAppSettings);
+        if (appSettings != null) types.Add(appSettings);
 
-        sb.Replace(NamespaceBody, classesSb.ToString());
+        Specs.ExportedContentContentTypes = types;
+        return this;
+    }
+
+    public IAppState AppState { get; private set; }
+
+    public string Dump()
+    {
+        // TODO: @2dm
+        // - check Equals of the new objects
+        // - check serialization
+        var sb = new StringBuilder();
+
+        var classFiles = DataFiles();
+        foreach (var classSb in classFiles)
+        {
+            sb.AppendLine($"// ----------------------- file: {classSb.FileName} ----------------------- ");
+            sb.AppendLine(classSb.FileContents);
+            sb.AppendLine();
+            sb.AppendLine();
+        }
 
         return sb.ToString();
     }
 
-    public StringBuilder GenerateUsings()
+    public void GenerateAndSaveFiles()
     {
-        var sb = new StringBuilder();
-        sb.AppendLine("using System;");
-        sb.AppendLine("using System.Collections.Generic;");
-        sb.AppendLine("using System.Linq;");
-        sb.AppendLine("using ThisApp.Data;");
-        return sb;
+        var logCall = Log.Fn();
+
+        var physicalPath = GetAppCodeDataPhysicalPath();
+        logCall.A($"{nameof(physicalPath)}: '{physicalPath}'");
+
+        var classFiles = DataFiles();
+        foreach (var classSb in classFiles)
+        {
+            logCall.A($"Writing {classSb.FileName}; Content: {classSb.FileContents.Length}");
+            File.WriteAllText(Path.Combine(physicalPath, classSb.FileName), classSb.FileContents);
+        }
+
+        logCall.Done();
     }
 
-    public StringBuilder GenerateNamespace(string @namespace)
+    private string GetAppFullPath() => appPaths.Init(site, AppState).PhysicalPath;
+
+    private string GetAppCodeDataPhysicalPath()
     {
-        // TODO:
-        // - configure initial namespace
-        var sb = new StringBuilder();
-        sb.AppendLine($"namespace {@namespace}");
-        sb.AppendLine("{");
-        sb.AppendLine(NamespaceBody);
-        sb.AppendLine("}");
-        return sb;
+        var appFullPath = GetAppFullPath();
+        var appWithEdition = Specs.Edition.HasValue() ? Path.Combine(appFullPath, Specs.Edition) : appFullPath;
+
+        // TODO: sanitize path because 'edition' is user provided
+        var appWithEditionNormalized = new DirectoryInfo(appWithEdition).FullName;
+       
+        if (!Directory.Exists(appWithEditionNormalized)) throw new DirectoryNotFoundException(appWithEditionNormalized);
+
+        var physicalPath = Path.Combine(appWithEditionNormalized, AppCodeLoader.AppCodeBase, "Data");
+
+        // ensure the folder exists
+        Directory.CreateDirectory(physicalPath);
+
+        return physicalPath;
     }
 
-    public StringBuilder GenerateClass(string className)
+    internal string GetPathToDotAppJson() => Path.Combine(GetAppFullPath(), Constants.AppDataProtectedFolder, Constants.AppJson);
+
+
+    internal List<CodeFileRaw> DataFiles()
     {
-        // TODO:
-        // - base class
-        // - additional base class when a property has the same name as the class
-        var indent = GenHelper.Indentation(DepthClass);
-        var sb = new StringBuilder();
-        sb.AppendLine(indent + $"public partial class {className}");
-        sb.AppendLine(indent + "{");
-        // empty constructor with Xml Comment
-        sb.Append(GenHelper.XmlComment(indent, summary: $"todo - empty constructor so As...<{className}>() works."));
-        sb.AppendLine(GenHelper.Indentation(DepthProperty) + $"public {className}() {{ }}");
-
-        // body
-        sb.AppendLine(ClassBody);
-
-        // close class
-        sb.AppendLine(indent + "}");
-        return sb;
+        var classFiles = Specs.ExportedContentContentTypes
+            .Select(t => new DataClassGenerator(this, t, t.Name?.Replace("-", "")).PrepareFile())
+            .ToList();
+        return classFiles;
     }
 
-    public StringBuilder GenerateProperty(IContentTypeAttribute attribute)
+
+    internal CodeFragment NamespaceWrapper(string @namespace)
     {
-        // TODO:
-        // - figure out MethodName - eg. String(...)
-        // - figure out fallback value
-        // - possible multi-properties eg. Link, LinkUrl, Image / Images
-        // - add XML comment
+        return new("namespace", $"{CodeGenHelper.Indent(Specs.TabsNamespace)}namespace {@namespace}" + "\n{", closing: "}");
+    }
 
-        // String builder with empty line
-        var sb = new StringBuilder();
-        sb.AppendLine();
+    internal CodeFragment ClassWrapper(string className, bool isAbstract, bool isPartial, string inherits)
+    {
+        var indent = CodeGenHelper.Indent(Specs.TabsClass);
+        var specifiers = (isAbstract ? "abstract " : "") + (isPartial ? "partial " : "");
+        inherits = inherits.NullOrUse(i => $": {i}");
 
-        var indent = GenHelper.Indentation(DepthProperty);
-        var type = ValueTypeHelpers.GetType(attribute.Type);
-        if (type == null)
-            return sb.AppendLine(indent + $"// Nothing generated for {attribute.Name} as type-specs missing");
-
-        sb.Append(GenHelper.XmlComment(indent, summary: $"todo - {attribute.Name}"));
-        return sb.AppendLine($"{indent}public {type.Name} {attribute.Name} => {nameof(ICanBeItem.Item)}.{attribute.Type}();");
+        var start = $$"""
+                      {{indent}}public {{specifiers}}class {{className}}{{inherits}}
+                      {{indent}}{
+                      """;
+        return new("class", start, closing: $"{indent}}}\n");
     }
 
 }

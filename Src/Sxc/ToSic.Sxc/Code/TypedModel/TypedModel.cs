@@ -14,14 +14,13 @@ namespace ToSic.Sxc.Code;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class TypedModel(
     IDictionary<string, object> paramsDictionary,
-    ICodeApiService codeRoot,
+    ICodeApiService codeApiSvc,
     bool isRazor,
     string razorFileName)
     : ITypedModel
 {
-    private readonly bool _isRazor = isRazor;
     private readonly IDictionary<string, object> _paramsDictionary = paramsDictionary?.ToInvariant() ?? new Dictionary<string, object>();
-    private readonly TypedConverter _converter = new(codeRoot._Cdf);
+    private readonly TypedConverter _converter = new(codeApiSvc._Cdf);
 
     #region Check if parameters were supplied
 
@@ -176,4 +175,5 @@ Either change the calling Html.Partial(""{razorFileName}"", {{ {name} = ... }} )
         => _converter.Toolbar(GetInternalObj(name, noParamOrder, required), fallback);
 
     #endregion
+
 }

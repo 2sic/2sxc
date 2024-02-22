@@ -1,5 +1,6 @@
 ﻿using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.Internal;
 
@@ -19,4 +20,6 @@ internal interface ICodeApiServiceInternal
     /// <returns></returns>
     [PrivateApi("new v17.02")]
     TService GetKitService<TService>() where TService : class;
+
+    TKit GetKit<TKit>() where TKit : ServiceKit;
 }

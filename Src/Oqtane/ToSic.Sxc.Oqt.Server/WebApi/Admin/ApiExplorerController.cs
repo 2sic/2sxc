@@ -56,9 +56,9 @@ public class ApiExplorerController() : OqtStatefulControllerBase(RealController.
         var block = CtxHlp.BlockOptional;
         if (block != null)
             spec = new HotBuildSpec(spec.AppId,
-                edition: PolymorphConfigReader.UseViewEditionLazyGetEdition(block.View,() => GetService<PolymorphConfigReader>().Init(block.Context.AppState.List)));
+                edition: PolymorphConfigReader.UseViewEditionOrGetLazy(block.View,() => GetService<PolymorphConfigReader>().Init(block.Context.AppState.List)));
 
-        var thisAppCodeLoader = GetService<LazySvc<ThisAppLoader>>();
+        var appCodeLoader = GetService<LazySvc<AppCodeLoader>>();
         Log.A($"Controller path from root: {pathFromRoot}");
 
         // get full path

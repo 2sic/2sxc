@@ -16,8 +16,9 @@ public class DependenciesLoader : ServiceBase
 {
 
     public const string DependenciesFolder = "Dependencies";
+    private const string AppRoot = HotBuildSpec.AppRoot;
 
-    public DependenciesLoader(ILogStore logStore, ISite site, IAppStates appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, AssemblyCacheManager assemblyCacheManager, LazySvc<ThisAppCompiler> thisAppCompilerLazy) : base("Sys.AppCodeLoad")
+    public DependenciesLoader(ILogStore logStore, ISite site, IAppStates appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, AssemblyCacheManager assemblyCacheManager, LazySvc<AppCodeCompiler> appCodeCompilerLazy) : base("Sys.AppCodeLoad")
     {
         ConnectServices(
             _logStore = logStore,
@@ -25,7 +26,7 @@ public class DependenciesLoader : ServiceBase
             _appStates = appStates,
             _appPathsLazy = appPathsLazy,
             _assemblyCacheManager = assemblyCacheManager,
-            _thisAppCompilerLazy = thisAppCompilerLazy
+            _appCodeCompilerLazy = appCodeCompilerLazy
         );
     }
     private readonly ILogStore _logStore;
@@ -33,37 +34,43 @@ public class DependenciesLoader : ServiceBase
     private readonly IAppStates _appStates;
     private readonly LazySvc<IAppPathsMicroSvc> _appPathsLazy;
     private readonly AssemblyCacheManager _assemblyCacheManager;
-    private readonly LazySvc<ThisAppCompiler> _thisAppCompilerLazy;
+    private readonly LazySvc<AppCodeCompiler> _appCodeCompilerLazy;
 
 
     public (List<Assembly> Assemblies, HotBuildSpec Specs) TryGetOrFallback(HotBuildSpec spec)
     {
         var l = Log.Fn<(List<Assembly>, HotBuildSpec)>(spec.ToString());
-        var assemblies = TryGetAssemblyOfDependenciesFromCache(spec, Log)?.Select(r => r.Assembly).ToList();
-        if (assemblies != null) return l.Return((assemblies, spec), "cached");
+        var (assemblyResults, cacheKey) = TryGetAssemblyOfDependenciesFromCache(spec, Log);
+        if (assemblyResults != null) return l.Return((assemblyResults.Select(r => r.Assembly).ToList(), spec), "Dependencies where cached.");
 
-        assemblies = GetDependencyAssembliesOrNull(spec);
-        if (assemblies != null) return l.Return((assemblies, spec), "loaded");
+        var assemblies = LoadDependencyAssembliesOrNull(spec, cacheKey);
+        if (assemblies != null) return l.Return((assemblies, spec), $"Dependencies loaded from '{(spec.Edition.IsEmpty() ? AppRoot : spec.Edition)}'");
 
-        if (spec.Edition.IsEmpty()) return l.Return((null, spec), "assembly empty, no edition, done");
+        if (spec.Edition.IsEmpty()) return l.Return((null, spec), $"Dependencies not found in '{AppRoot}', done.");
 
         // try get root edition
         var rootSpec = spec.CloneWithoutEdition();
         var pairFromRoot = TryGetOrFallback(rootSpec);
-        return l.Return(pairFromRoot, pairFromRoot.Assemblies == null ? "assembly without edition null" : "assembly without edition found");
+        return l.Return(pairFromRoot, pairFromRoot.Assemblies == null ? $"Dependencies not found in '{AppRoot}', null." : $"Dependencies found in '{AppRoot}'.");
     }
 
-    private static List<AssemblyResult> TryGetAssemblyOfDependenciesFromCache(HotBuildSpec spec, ILog callerLog)
+    private static (List<AssemblyResult> assemblyResults, string cacheKey) TryGetAssemblyOfDependenciesFromCache(HotBuildSpec spec, ILog callerLog)
     {
-        var l = callerLog.Fn<List<AssemblyResult>>($"{spec}");
+        var l = callerLog.Fn<(List<AssemblyResult>, string)>($"{spec}");
+        var (assemblyResults, cacheKey) = AssemblyCacheManager.TryGetDependencies(spec);
+        if (assemblyResults == null) return l.Return((null, cacheKey),"no dependencies in cache");
 
-        var (result, _) = AssemblyCacheManager.TryGetDependencies(spec);
-        return result != null
-            ? l.ReturnAsOk(result)
-            : l.ReturnNull();
+        l.A($"dependencies from cache: {assemblyResults.Count}");
+
+        foreach (var assemblyResult in assemblyResults)
+            l.A(assemblyResult.HasAssembly
+                ? $"dependency from cache: {assemblyResult.Assembly.FullName} location: {assemblyResult.Assembly.Location}"
+                : $"error in dependency from cache: {assemblyResult.ErrorMessages} ");
+
+        return l.ReturnAsOk((assemblyResults, cacheKey));
     }
 
-    private List<Assembly> GetDependencyAssembliesOrNull(HotBuildSpec spec)
+    private List<Assembly> LoadDependencyAssembliesOrNull(HotBuildSpec spec, string cacheKey)
     {
         // Add to global history and add specs
         var logSummary = _logStore.Add(SxcLogging.SxcLogAppCodeLoader, Log);
@@ -72,64 +79,57 @@ public class DependenciesLoader : ServiceBase
         // Initial message for insights-overview
         var l = Log.Fn<List<Assembly>>($"{spec}", timer: true);
 
-        var assemblyResults = TryLoadDependencyAssemblies(spec, logSummary);
+        var assemblyResults = TryLoadDependencyAssemblies(spec, cacheKey, logSummary);
 
         return assemblyResults != null 
             ? l.ReturnAsOk(assemblyResults.Select(r => r.Assembly).ToList()) 
             : l.ReturnNull("no dependencies");
     }
 
-    private List<AssemblyResult> TryLoadDependencyAssemblies(HotBuildSpec spec, LogStoreEntry logSummary)
+    private List<AssemblyResult> TryLoadDependencyAssemblies(HotBuildSpec spec, string cacheKey, LogStoreEntry logSummary)
     {
         var l = Log.Fn<List<AssemblyResult>>($"{spec}");
 
-        var (assemblyResults, cacheKey) = AssemblyCacheManager.TryGetDependencies(spec);
-        logSummary.AddSpec("Cached", $"{assemblyResults != null} on {cacheKey}");
-
-        if (assemblyResults != null)
-            return l.ReturnAsOk(assemblyResults);
-
         // Get paths
-        var (physicalPath, relativePath) = GetAppPaths(DependenciesFolder, spec);
-        l.A($"{nameof(physicalPath)}: '{physicalPath}'; {nameof(relativePath)}: '{relativePath}'");
-        logSummary.AddSpec("PhysicalPath", physicalPath);
-        logSummary.AddSpec("RelativePath", relativePath);
+        var (physicalPath, relativePath) = GetDependenciesPaths(DependenciesFolder, spec);
+        logSummary.AddSpec("Dependencies PhysicalPath", physicalPath);
+        logSummary.AddSpec("Dependencies RelativePath", relativePath);
 
         // missing dependencies folder
         if (!Directory.Exists(physicalPath)) 
             return l.ReturnNull($"{DependenciesFolder} folder do not exists: {physicalPath}");
 
-        var results = new List<AssemblyResult>();
+        var assemblyResults = new List<AssemblyResult>();
         foreach (var dependency in Directory.GetFiles(physicalPath, "*.dll"))
         {
             try
             {
                 //var assembly = Assembly.Load(File.ReadAllBytes(dependency));
 
-                var location = _thisAppCompilerLazy.Value.GetDependencyAssemblyLocations(dependency, spec);
+                var location = _appCodeCompilerLazy.Value.GetDependencyAssemblyLocations(dependency, spec);
                 File.Copy(dependency, location, true);
                 var assembly = Assembly.LoadFrom(location);
-                results.Add(new AssemblyResult(assembly, assemblyLocations: [dependency]));
+                assemblyResults.Add(new AssemblyResult(assembly, assemblyLocations: [dependency]));
+                l.A($"dependency loaded: {assembly.FullName} location: {location}");
             }
-            catch
+            catch (Exception ex)
             {
                 // sink
+                l.Ex(ex);
             }
         }
 
-        //logSummary.UpdateSpecs(assemblyResult.Infos);
-
-        //if (assemblyResult.ErrorMessages.HasValue())
-        //    return l.ReturnAsError(assemblyResult, assemblyResult.ErrorMessages);
+        l.A($"dependencies loaded: {assemblyResults.Count}");
 
         // Add dependency assemblies to cache
         _assemblyCacheManager.Add(
             cacheKey,
-            results,
+            assemblyResults,
             changeMonitor: [new FolderChangeMonitor([physicalPath])]
         );
+        l.A($"{assemblyResults.Count} dependencies added to cache: {cacheKey}");
 
-        return l.ReturnAsOk(results);
+        return l.ReturnAsOk(assemblyResults);
     }
 
 
@@ -138,14 +138,14 @@ public class DependenciesLoader : ServiceBase
     //{
     //    var watcherFolders = new Dictionary<string, bool>();
 
-    //    // take ThisApp folder (eg. ...\edition\ThisApp)
-    //    var thisAppFolder = physicalPath;
-    //    IfExistsThenAdd(thisAppFolder, true);
+    //    // take AppCode folder (eg. ...\edition\AppCode)
+    //    var appCodeFolder = physicalPath;
+    //    IfExistsThenAdd(appCodeFolder, true);
 
     //    // take parent folder (eg. ...\edition)
-    //    var thisAppParentFolder = Path.GetDirectoryName(thisAppFolder);
-    //    if (thisAppParentFolder.IsEmpty()) return new Dictionary<string, bool>(watcherFolders);
-    //    IfExistsThenAdd(thisAppParentFolder, false);
+    //    var appCodeParentFolder = Path.GetDirectoryName(appCodeFolder);
+    //    if (appCodeParentFolder.IsEmpty()) return new Dictionary<string, bool>(watcherFolders);
+    //    IfExistsThenAdd(appCodeParentFolder, false);
 
     //    // if no edition was used, then we were already in the root, and should stop now.
     //    if (spec.Edition.IsEmpty()) return new Dictionary<string, bool>(watcherFolders);
@@ -157,15 +157,15 @@ public class DependenciesLoader : ServiceBase
     //    // we need to add more folders to watch for cache invalidation
 
     //    // App Root folder (eg. ...\)
-    //    var appRootFolder = Path.GetDirectoryName(thisAppParentFolder);
+    //    var appRootFolder = Path.GetDirectoryName(appCodeParentFolder);
     //    if (appRootFolder.IsEmpty()) return new Dictionary<string, bool>(watcherFolders);
     //    // Add to watcher list if it exists, otherwise exit, since we can't have subfolders
     //    if (!IfExistsThenAdd(appRootFolder, false)) return new Dictionary<string, bool>(watcherFolders);
 
     //    // 
-    //    var appRootThisApp = Path.Combine(appRootFolder, DependenciesFolder);
+    //    var appRootAppCode = Path.Combine(appRootFolder, DependenciesFolder);
     //    // Add to watcher list if it exists, otherwise exit, since we can't have subfolders
-    //    if (!IfExistsThenAdd(appRootThisApp, true)) return new Dictionary<string, bool>(watcherFolders);
+    //    if (!IfExistsThenAdd(appRootAppCode, true)) return new Dictionary<string, bool>(watcherFolders);
 
     //    // all done
     //    return new Dictionary<string, bool>(watcherFolders);
@@ -179,7 +179,7 @@ public class DependenciesLoader : ServiceBase
     //    }   
     //}
 
-    private (string physicalPath, string relativePath) GetAppPaths(string folder, HotBuildSpec spec)
+    private (string physicalPath, string relativePath) GetDependenciesPaths(string folder, HotBuildSpec spec)
     {
         var l = Log.Fn<(string physicalPath, string relativePath)>($"{spec}");
         var appPaths = _appPathsLazy.Value.Init(_site, _appStates.GetReader(spec.AppId));
@@ -187,9 +187,9 @@ public class DependenciesLoader : ServiceBase
             ? (spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder)
             : spec.Edition;
         var physicalPath = Path.Combine(appPaths.PhysicalPath, folderWithEdition);
-        l.A($"{nameof(physicalPath)}: '{physicalPath}'");
+        l.A($"dependencies {nameof(physicalPath)}: '{physicalPath}'");
         var relativePath = Path.Combine(appPaths.RelativePath, folderWithEdition);
-        l.A($"{nameof(relativePath)}: '{relativePath}'");
+        l.A($"dependencies {nameof(relativePath)}: '{relativePath}'");
         return l.ReturnAsOk((physicalPath, relativePath));
     }
 

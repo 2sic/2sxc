@@ -99,15 +99,6 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
         return newService;
     }
 
-    TService ICodeApiServiceInternal.GetKitService<TService>()
-    {
-        if (_kitServices.TryGetValue(typeof(TService), out var service))
-            return (TService)service;
-        var generated = _CodeApiSvc.GetService<TService>();
-        _kitServices[typeof(TService)] = generated;
-        return generated;
-    }
-    private readonly Dictionary<Type, object> _kitServices = new();
 
 
     [PrivateApi]

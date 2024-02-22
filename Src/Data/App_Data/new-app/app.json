@@ -1,5 +1,5 @@
 {
-  "$schema": "https://schemas.2sxc.org/app/v14/app.json",
+  "$schema": "https://schemas.2sxc.org/app/v17/app.json",
   /*
     This is a JSON file but it is treated like a JSONC (with comments).
 
@@ -29,5 +29,10 @@
       // "package-lock.json",
       // "nuget.config",
     ]
+  },
+  "editions": {
+    "": {
+      "description": "The default edition of the app",
+    }
   }
 }

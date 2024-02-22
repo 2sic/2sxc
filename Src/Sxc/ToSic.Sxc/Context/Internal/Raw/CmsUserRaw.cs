@@ -1,9 +1,12 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
+using ToSic.Eav.Metadata;
 using ToSic.Lib.Data;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Internal;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Context.Internal.Raw;
 
@@ -16,7 +19,7 @@ namespace ToSic.Sxc.Context.Internal.Raw;
 /// * TODO:
 /// * TODO:
 /// Important: this is an internal object.
-/// We're just including in in the docs to better understand where the properties come from.
+/// We're just including in the docs to better understand where the properties come from.
 /// We'll probably move it to another namespace some day.
 /// </summary>
 /// <remarks>
@@ -25,7 +28,7 @@ namespace ToSic.Sxc.Context.Internal.Raw;
 /// </remarks>
 [PrivateApi("this is only internal - public access is always through interface")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CmsUserRaw: RawEntityBase, IUser, IRawEntity, IHasIdentityNameId
+public class CmsUserRaw: RawEntityBase, IUser, ICmsUser, IRawEntity, IHasIdentityNameId
 {
     #region Types and Names for Raw Entities
 
@@ -36,14 +39,14 @@ public class CmsUserRaw: RawEntityBase, IUser, IRawEntity, IHasIdentityNameId
 
     #region Constant user objects for Unknown/Anonymous
 
-    public static readonly CmsUserRaw AnonymousUser = new() { Id = -1, Name = SxcUserConstants.Anonymous };
+    internal static readonly CmsUserRaw AnonymousUser = new() { Id = -1, Name = SxcUserConstants.Anonymous };
 
-    public static readonly CmsUserRaw UnknownUser = new() { Id = -2, Name = Eav.Constants.NullNameId };
-
+    internal static readonly CmsUserRaw UnknownUser = new() { Id = -2, Name = Eav.Constants.NullNameId };
 
     #endregion
 
     public string NameId { get; set; }
+
     /// <summary>
     /// Role ID List.
     /// Important: Internally we use a list to do checks etc.
@@ -55,7 +58,6 @@ public class CmsUserRaw: RawEntityBase, IUser, IRawEntity, IHasIdentityNameId
     public bool IsSiteAdmin { get; set; }
     public bool IsContentAdmin { get; set; }
     public bool IsSiteDeveloper => IsSystemAdmin;
-
 
     public bool IsAnonymous { get; set; }
 
@@ -86,11 +88,15 @@ public class CmsUserRaw: RawEntityBase, IUser, IRawEntity, IHasIdentityNameId
             { nameof(Email), Email },
         };
         if (options.ShouldAddKey(nameof(Roles)))
-            data.Add("Roles", new RawRelationship(keys: Roles?.Select(r => $"{RoleRelationshipPrefix}{r}" as object)
-                                                        ?? new List<object>())
+            data.Add("Roles",
+                new RawRelationship(keys: Roles?.Select(r => $"{RoleRelationshipPrefix}{r}" as object).ToList() ?? [])
             );
         return data;
     }
 
     internal const string RoleRelationshipPrefix = "Role:";
+
+    IMetadata ICmsUser.Metadata => throw new NotSupportedException($"Metadata currently not supported on CmsUser from {nameof(IUserService)}");
+
+    IMetadataOf IHasMetadata.Metadata => throw new NotSupportedException($"Metadata currently not supported on CmsUser from {nameof(IUserService)}");
 }

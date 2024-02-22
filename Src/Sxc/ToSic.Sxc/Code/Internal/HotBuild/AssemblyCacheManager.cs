@@ -12,17 +12,17 @@ public class AssemblyCacheManager() : ServiceBase(SxcLogging.SxcLogName + ".Asse
     private const string GlobalCacheRoot = "2sxc.AssemblyCache.Module.";
 
     
-    #region Static Calls for ThisApp - to use before requiring DI
-    public static (AssemblyResult Result, string cacheKey) TryGetThisApp(HotBuildSpec spec)
+    #region Static Calls for AppCode - to use before requiring DI
+    public static (AssemblyResult Result, string cacheKey) TryGetAppCode(HotBuildSpec spec)
     {
         var cacheKey = KeyAppCode(spec);
         return (Get(cacheKey), cacheKey);
     }
-    private static string KeyAppCode(HotBuildSpec spec) => $"{GlobalCacheRoot}a:{spec.AppId}.e:{spec.Edition}.ThisApp";
+    private static string KeyAppCode(HotBuildSpec spec) => $"{GlobalCacheRoot}a:{spec.AppId}.e:{spec.Edition}.AppCode";
     #endregion
 
     #region Static Calls for Dependecies - to use before requiring DI
-    public static (List<AssemblyResult> Results, string cacheKey) TryGetDependencies(HotBuildSpec spec)
+    public static (List<AssemblyResult> assemblyResults, string cacheKey) TryGetDependencies(HotBuildSpec spec)
     {
         var cacheKey = KeyDependency(spec);
         return (Cache[cacheKey] as List<AssemblyResult>, cacheKey);

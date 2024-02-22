@@ -8,9 +8,11 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Cms.Data;
 using ToSic.Sxc.Data.Internal.Convert;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Services.Tweaks;
 using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
@@ -27,11 +29,12 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     {
         Setup(preWrap);
         Wrapper = wrapper;
-        Cdf = cdf;
+        _cdf = cdf;
         return this;
     }
 
-    private ILazyLike<CodeDataFactory> Cdf { get; set; }
+    private CodeDataFactory Cdf => _cdf.Value;
+    private ILazyLike<CodeDataFactory> _cdf;
     private CodeDataWrapper Wrapper { get; set; }
 
 
@@ -43,14 +46,14 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     IHtmlTag ITypedItem.Html(string name, NoParamOrder noParamOrder, object container, bool? toolbar,
         object imageSettings, bool? required, bool debug, Func<ITweakInput<string>, ITweakInput<string>> tweak
-    ) => TypedItemHelpers.Html(Cdf.Value, this, name: name, noParamOrder: noParamOrder, container: container,
+    ) => TypedItemHelpers.Html(Cdf, this, name: name, noParamOrder: noParamOrder, container: container,
         toolbar: toolbar, imageSettings: imageSettings, required: required, debug: debug, tweak: tweak);
 
     IResponsivePicture ITypedItem.Picture(string name, NoParamOrder noParamOrder, object settings,
         object factor, object width, string imgAlt, string imgAltFallback,
         string imgClass, object imgAttributes, string pictureClass,
         object pictureAttributes, object toolbar, object recipe
-    ) => TypedItemHelpers.Picture(cdf: Cdf.Value, item: this, name: name, noParamOrder: noParamOrder,
+    ) => TypedItemHelpers.Picture(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder,
         settings: settings, factor: factor, width: width, imgAlt: imgAlt,
         imgAltFallback: imgAltFallback, imgClass: imgClass, imgAttributes: imgAttributes, pictureClass: pictureClass, pictureAttributes: pictureAttributes, toolbar: toolbar, recipe: recipe);
 
@@ -138,12 +141,14 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     #endregion
 
 
+
+
     public IFolder Folder(string name, NoParamOrder noParamOrder, bool? required)
     {
         //Protect(noParamOrder, nameof(required));
         return IsErrStrict(this, name, required, PreWrap.Settings.PropsRequired)
             ? throw ErrStrictForTyped(this, name)
-            : Cdf.Value.AdamManager.Folder(Guid, name, Field(name: name, noParamOrder: default, required: required));
+            : Cdf.AdamManager.Folder(Guid, name, Field(name: name, noParamOrder: default, required: required));
     }
 
     public IFile File(string name, NoParamOrder noParamOrder, bool? required)
@@ -158,8 +163,43 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
         // TODO: SEE if we can also provide optional metadata
 
         var fileId = AdamManager.CheckIdStringForId(idString);
-        return fileId == null ? null : Cdf.Value.AdamManager.File(fileId.Value);
+        return fileId == null ? null : Cdf.AdamManager.File(fileId.Value);
     }
+
+    #endregion
+
+    #region New Child<T> / Children<T> - disabled as ATM Kit is missing
+
+    private ServiceKit16 Kit => _kit ??= Cdf.GetServiceKitOrThrow();
+    private ServiceKit16 _kit;
+
+    /// <inheritdoc />
+    T ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required)
+        => Cdf.AsCustom<T>(
+            source: (this as ITypedItem).Child(name, required: required),
+            kit: Kit, protector: protector, nullIfNull: true
+        );
+
+    /// <inheritdoc />
+    IEnumerable<T> ITypedItem.Children<T>(string field, NoParamOrder protector, string type, bool? required)
+        => Cdf.AsCustomList<T>(
+            source: (this as ITypedItem).Children(field: field, noParamOrder: protector, type: type, required: required),
+            kit: Kit, protector: protector, nullIfNull: false
+        );
+
+    /// <inheritdoc />
+    T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string type, string field)
+        => Cdf.AsCustom<T>(
+            source: (this as ITypedItem).Parent(noParamOrder: protector, current: current, type: type, field: field),
+            kit: Kit, protector: protector, nullIfNull: true
+        );
+
+    /// <inheritdoc />
+    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string type, string field)
+        => Cdf.AsCustomList<T>(
+            source: (this as ITypedItem).Parents(noParamOrder: protector, field: field, type: type),
+            kit: Kit, protector: protector, nullIfNull: false
+        );
 
     #endregion
 
@@ -176,8 +216,8 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
                 : [raw]
             : [];
 
-        var df = Cdf.Value.Services.DataFactory.New(
-            options: new(appId: Cdf.Value.BlockOrNull?.AppId, autoId: false));
+        var df = Cdf.Services.DataFactory.New(
+            options: new(appId: Cdf.BlockOrNull?.AppId, autoId: false));
         var mdEntities = objList
             .Where(o => o != null)
             .Select(o =>
@@ -192,13 +232,13 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
         var mdOf = new MetadataOf<int>(0, 0, "virtual", mdEntities);
         // TODO: @2dm - this probably won't work yet, without an entity (null) #todoTyped
-        var metadata = Cdf.Value.Metadata(mdOf);
+        var metadata = Cdf.Metadata(mdOf);
         return metadata;
     }
 
 
     public IField Field(string name, NoParamOrder noParamOrder, bool? required) 
-        => new Field(this, name, Cdf.Value);
+        => new Field(this, name, Cdf);
 
     /// <summary>
     /// Override the URL, to also support checks for "file:72"
@@ -210,13 +250,21 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
         // ReSharper disable once ConvertTypeCheckPatternToNullCheck
         if (ValueConverterBase.CouldBeReference(url))
-            url = Cdf.Value.Services.ValueConverterOrNull?.ToValue(url, Guid.Empty) ?? url;
+            url = Cdf.Services.ValueConverterOrNull?.ToValue(url, Guid.Empty) ?? url;
 
         return Tags.SafeUrl(url).ToString();
     }
     #endregion
 
-    IBlock ICanBeItem.TryGetBlockContext() => Cdf?.Value.BlockOrNull;
+    #region GPS
+
+    GpsCoordinates ITypedItem.Gps(string name, NoParamOrder protector, bool? required)
+        => Kit.Json.To<GpsCoordinates>(((ITypedItem)this).String(name, required: required, fallback: "{}"));
+
+    #endregion
+
+
+    IBlock ICanBeItem.TryGetBlockContext() => Cdf?.BlockOrNull;
 
     public ITypedItem Item => this;
 

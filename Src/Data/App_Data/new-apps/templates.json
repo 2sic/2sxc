@@ -1,0 +1,20 @@
+[
+  {
+    "id": 0,
+    "name": "Completely Empty App",
+    "teaser": "Completely empty app, without any code or content",
+    "internalNotes": "should create an app using the previous mechanism",
+    "zip": null,
+    "appName": null,
+    "folder": null
+  },
+  {
+    "id": 1,
+    "name": "App Template Basic",
+    "teaser": "A basic app template with simple instructions and a first razor template",
+    "internalNotes": "should import the zip, reset the GUID, rename the App and folder",
+    "zip": "2sxcApp_AppTemplateBasic_0.17.0.zip",
+    "appName": "AppTemplateBasic",
+    "folder": "app-template-basic"
+  }
+]

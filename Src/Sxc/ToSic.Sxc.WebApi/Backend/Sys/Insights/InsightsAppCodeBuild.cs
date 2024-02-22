@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Backend.Sys;
 
 internal class InsightsAppCodeBuild(IAppStates appStates) : InsightsProvider(Link)
 {
-    public static string Link = "ThisAppCodeBuild";
+    public static string Link = "AppCodeBuild";
 
     public override string HtmlBody()
     {

@@ -12,9 +12,9 @@ using ToSic.Sxc.Code.Internal.HotBuild;
 namespace ToSic.Sxc.Oqt.Server.Code.Internal;
 
 [PrivateApi]
-internal class ThisAppCompilerNetCore : ThisAppCompiler
+internal class AppCodeCompilerNetCore : AppCodeCompiler
 {
-    public ThisAppCompilerNetCore(LazySvc<IServerPaths> serverPaths, Generator<Compiler> compiler)
+    public AppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, Generator<Compiler> compiler)
     {
         ConnectServices(
             _serverPaths = serverPaths,
@@ -29,7 +29,7 @@ internal class ThisAppCompilerNetCore : ThisAppCompiler
     private readonly Generator<Compiler> _compiler;
 
 
-    protected internal override AssemblyResult GetThisApp(string virtualPath, HotBuildSpec spec)
+    protected internal override AssemblyResult GetAppCode(string virtualPath, HotBuildSpec spec)
     {
         var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {spec}", timer: true);
 
@@ -65,7 +65,7 @@ internal class ThisAppCompilerNetCore : ThisAppCompiler
         catch (Exception ex)
         {
             l.Ex(ex);
-            var errorMessage = $"Error: Can't compile '{ThisAppDll}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. {ex.Message}";
+            var errorMessage = $"Error: Can't compile '{AppCodeDll}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. {ex.Message}";
             return l.ReturnAsError(new(errorMessages: errorMessage), "error");
         }
     }

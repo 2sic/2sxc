@@ -8,13 +8,13 @@ using ToSic.Sxc.Dnn.Compile;
 namespace ToSic.Sxc.Code;
 
 [PrivateApi]
-internal class ThisAppCompilerNetFull : ThisAppCompiler
+internal class AppCodeCompilerNetFull : AppCodeCompiler
 {
 
     private readonly IHostingEnvironmentWrapper _hostingEnvironment;
     private readonly IReferencedAssembliesProvider _referencedAssembliesProvider;
 
-    public ThisAppCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironment, IReferencedAssembliesProvider referencedAssembliesProvider)
+    public AppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironment, IReferencedAssembliesProvider referencedAssembliesProvider)
     {
         ConnectServices(
             _hostingEnvironment = hostingEnvironment,
@@ -26,7 +26,7 @@ internal class ThisAppCompilerNetFull : ThisAppCompiler
         Directory.CreateDirectory(TempAssemblyFolderPath);
     }
 
-    protected internal override AssemblyResult GetThisApp(string relativePath, HotBuildSpec spec)
+    protected internal override AssemblyResult GetAppCode(string relativePath, HotBuildSpec spec)
     {
         var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {spec}");
 
@@ -76,7 +76,7 @@ internal class ThisAppCompilerNetFull : ThisAppCompiler
         catch (Exception ex)
         {
             l.Ex(ex);
-            var errorMessage = $"Error: Can't compile '{ThisAppDll}' in {Path.GetFileName(relativePath)}. Details are logged into insights. {ex.Message}";
+            var errorMessage = $"Error: Can't compile '{AppCodeDll}' in {Path.GetFileName(relativePath)}. Details are logged into insights. {ex.Message}";
             return l.ReturnAsError(new(errorMessages: errorMessage));
         }
     }

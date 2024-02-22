@@ -41,10 +41,8 @@ public class PolymorphConfigReader(IServiceProvider serviceProvider) : ServiceBa
         if (parts.Length > 0) Parameters = parts[1];
     }
 
-    public static string UseViewEditionLazyGetEdition(IView view, Func<PolymorphConfigReader> lazyReader)
-    {
-        return view?.Edition.NullIfNoValue() ?? lazyReader().Edition();
-    }
+    public static string UseViewEditionOrGetLazy(IView view, Func<PolymorphConfigReader> lazyReader)
+        => view?.Edition.NullIfNoValue() ?? lazyReader().Edition();
 
     public string Edition() => Log.Func(() =>
     {

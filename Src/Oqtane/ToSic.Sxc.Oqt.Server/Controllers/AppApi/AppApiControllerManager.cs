@@ -88,7 +88,7 @@ internal class AppApiControllerManager: IHasLog
         var block = _ctxResolver.BlockOrNull();
         if (block != null)
             spec = new HotBuildSpec(spec.AppId,
-                edition: PolymorphConfigReader.UseViewEditionLazyGetEdition(block.View, () => _polymorphism.Init(block.Context.AppState.List)));
+                edition: PolymorphConfigReader.UseViewEditionOrGetLazy(block.View, () => _polymorphism.Init(block.Context.AppState.List)));
 
         // Build new AppApi Controller
         Log.A($"Compile assembly: {apiFile}; {nameof(dllName)}: '{dllName}'; {spec}");

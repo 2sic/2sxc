@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Oqt.Server.Services;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
 
@@ -14,7 +15,7 @@ partial class OqtRegisterServices
     {
         services.TryAddTransient<ISystemLogService, OqtSystemLogService>();
         services.TryAddTransient<IMailService, OqtMailService>();
-        services.TryAddTransient<IUserService, OqtUsersService>();
+        services.TryAddTransient<UserSourceProvider, OqtUsersServiceProvider>();
         return services;
     }
 }

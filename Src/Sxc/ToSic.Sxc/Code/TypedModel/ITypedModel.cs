@@ -90,9 +90,6 @@ public interface ITypedModel: IHasKeys
 
     #endregion
 
-    // 2023-08-17 2dm removed again in 16.03 - don't think this should ever be used
-    //dynamic Dynamic(string name, NoParamOrder noParamOrder = default, object fallback = default, bool? required = default);
-
     #region Simple Values: String / Bool / Guid / DateTime
 
     /// <summary>
@@ -360,4 +357,5 @@ public interface ITypedModel: IHasKeys
         IEnumerable<IHtmlTag> fallback = default, bool? required = default);
 
     #endregion
+
 }

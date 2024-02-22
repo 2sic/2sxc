@@ -15,6 +15,8 @@ using ToSic.Sxc.Services.Tweaks;
 using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 using static ToSic.Eav.Data.Shared.WrapperEquality;
 using System.Text.Json.Serialization;
+using ToSic.Sxc.Cms.Data;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Data.Internal.Typed;
 
@@ -33,7 +35,7 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
 
     public bool Debug { get; set; }
 
-    public override string ToString() => $"{GetType().Name}: '{(this as ITypedItem).Title}' ({Entity})";
+    public override string ToString() => $"{GetType().Name}: '{((ITypedItem)this).Title}' ({Entity})";
 
     object IHasJsonSource.JsonSource() => Entity;
 
@@ -209,13 +211,13 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     {
         return IsErrStrict(this, name, required, GetHelper.PropsRequired)
             ? throw ErrStrictForTyped(this, name)
-            : _adamCache.Get(name, () => Cdf.Folder(Entity, name, (this as ITypedItem).Field(name, required: false)));
+            : _adamCache.Get(name, () => Cdf.Folder(Entity, name, ((ITypedItem)this).Field(name, required: false)));
     }
     private readonly GetOnceNamed<IFolder> _adamCache = new();
 
     IFile ITypedItem.File(string name, NoParamOrder noParamOrder, bool? required)
     {
-        var typedThis = this as ITypedItem;
+        var typedThis = (ITypedItem)this;
         // Case 1: The field contains a direct reference to a file
         var field = typedThis.Field(name, required: required);
         var file = Cdf.GetServiceKitOrThrow().Adam.File(field);
@@ -238,7 +240,7 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     ITypedItem ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string type, string field)
     {
         if (current != true)
-            return (this as ITypedItem).Parents(type: type, field: field).FirstOrDefault();
+            return ((ITypedItem)this).Parents(type: type, field: field).FirstOrDefault();
             
         return (DynHelper.Parent as DynamicEntity)?.TypedItem
                ?? throw new(
@@ -269,7 +271,7 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
         if (IsErrStrict(this, field, required, GetHelper.PropsRequired))
             throw ErrStrictForTyped(this, field);
 
-        // new 16.08 ability to get child/children using path
+        // Ability to get child/children using path
         var dot = PropertyStack.PathSeparator.ToString();
         if (field.Contains(dot))
         {
@@ -278,23 +280,26 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
             if (first.IsEmptyOrWs() || rest.IsEmptyOrWs())
                 throw new($"Got path '{field}' but either first or rest are empty");
             // on the direct child, don't apply type filter, as the intermediate step could be anything
-            var child = (this as ITypedItem).Child(first, required: required);
-            if (child == null) return CreateEmptyChildList();
-            // On the next step, do forward the type filter, as the lowest node should check for that
-            return child.Children(rest, type: type, required: required);
+            var child = ((ITypedItem)this).Child(first, required: required);
+            
+            // if the child is null, we must return a fake list which knows about this parent
+            return child == null 
+                ? CreateEmptyChildList()
+                // On the next step, do forward the type filter, as the lowest node should check for that
+                : child.Children(rest, type: type, required: required);
         }
 
         // Standard case: just get the direct children
         var dynChildren = GetHelper.Children(entity: Entity, field: field, type: type);
         var list = dynChildren.Cast<DynamicEntity>().Select(d => d.TypedItem).ToList();
-        if (list.Any()) return list;
-
-        return CreateEmptyChildList();
+        
+        // Return list or special list if it's empty, as we need a special list which knows about this object being the parent
+        return list.Any() ? list : CreateEmptyChildList();
 
         IEnumerable<ITypedItem> CreateEmptyChildList()
         {
             // Generate a marker/placeholder to remember what field this is etc.
-            var fakeEntity = GetHelper.Cdf.PlaceHolderInBlock(Entity.AppId, Entity, field);
+            var fakeEntity = Cdf.PlaceHolderInBlock(Entity.AppId, Entity, field);
             return new ListTypedItems(new List<ITypedItem>(), fakeEntity);
         }
     }
@@ -305,7 +310,7 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     {
         return IsErrStrict(this, name, required, GetHelper.PropsRequired)
             ? throw ErrStrictForTyped(this, name)
-            : (this as ITypedItem).Children(name).FirstOrDefault();
+            : ((ITypedItem)this).Children(name).FirstOrDefault();
     }
 
     #endregion
@@ -354,48 +359,44 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
 
     #region New Child<T> / Children<T> - disabled as ATM Kit is missing
 
-    ///// <summary>
-    ///// EXPERIMENTAL
-    ///// </summary>
-    ///// <returns></returns>
-    //[PrivateApi("WIP, don't publish yet")]
-    //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    //public T Child<T>([CallerMemberName] string name = default, NoParamOrder protector = default, bool? required = default)
-    //    where T : class, ITypedItemWrapper16, ITypedItem, new()
-    //    => Kit._CodeApiSvc._Cdf.AsCustom<T>(
-    //        source: (this as ITypedItem).Child(name, required: required),
-    //        kit: Kit, protector: protector, nullIfNull: true
-    //    );
+    private ServiceKit16 Kit => _kit ??= Cdf.GetServiceKitOrThrow();
+    private ServiceKit16 _kit;
 
-    //[PrivateApi("WIP, don't publish yet")]
-    //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    //public IEnumerable<T> Children<T>([CallerMemberName] string field = default, NoParamOrder protector = default,
-    //    string type = default, bool? required = default)
-    //    where T : class, ITypedItemWrapper16, ITypedItem, new()
-    //    => Kit._CodeApiSvc._Cdf.AsCustomList<T>(
-    //        source: (this as ITypedItem).Children(field: field, noParamOrder: protector, type: type, required: required),
-    //        kit: Kit, protector: protector, nullIfNull: false
-    //    );
+    /// <inheritdoc />
+    T ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required)
+        => Cdf.AsCustom<T>(
+            source: ((ITypedItem)this).Child(name, required: required),
+            kit: Kit, protector: protector, nullIfNull: true
+        );
 
-    //[PrivateApi("WIP, don't publish yet")]
-    //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    //public T Parent<T>(NoParamOrder protector = default, bool? current = default, string type = default,
-    //    string field = default)
-    //    where T : class, ITypedItemWrapper16, ITypedItem, new()
-    //    => Kit._CodeApiSvc._Cdf.AsCustom<T>(
-    //        source: (this as ITypedItem).Parent(noParamOrder: protector, current: current, type: type, field: field),
-    //        kit: Kit, protector: protector, nullIfNull: true
-    //    );
+    /// <inheritdoc />
+    IEnumerable<T> ITypedItem.Children<T>(string field, NoParamOrder protector, string type, bool? required)
+        => Cdf.AsCustomList<T>(
+            source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required),
+            kit: Kit, protector: protector, nullIfNull: false
+        );
 
-    //[PrivateApi("WIP, don't publish yet")]
-    //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    //public IEnumerable<T> Parents<T>(NoParamOrder protector = default,
-    //    string type = default, string field = default)
-    //    where T : class, ITypedItemWrapper16, ITypedItem, new()
-    //    => Kit._CodeApiSvc._Cdf.AsCustomList<T>(
-    //        source: (this as ITypedItem).Parents(noParamOrder: protector, field: field, type: type),
-    //        kit: Kit, protector: protector, nullIfNull: false
-    //    );
+    /// <inheritdoc />
+    T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string type, string field)
+        => Cdf.AsCustom<T>(
+            source: ((ITypedItem)this).Parent(noParamOrder: protector, current: current, type: type, field: field),
+            kit: Kit, protector: protector, nullIfNull: true
+        );
+
+    /// <inheritdoc />
+    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string type, string field)
+        => Cdf.AsCustomList<T>(
+            source: ((ITypedItem)this).Parents(noParamOrder: protector, field: field, type: type),
+            kit: Kit, protector: protector, nullIfNull: false
+        );
+
+
+    #endregion
+
+    #region GPS
+
+    GpsCoordinates ITypedItem.Gps(string name, NoParamOrder protector, bool? required)
+        => Kit.Json.To<GpsCoordinates>(((ITypedItem)this).String(name, required: required, fallback: "{}"));
 
     #endregion
 }

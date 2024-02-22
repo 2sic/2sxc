@@ -5,7 +5,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.LookUp.Internal;
 
-public class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> lookUps, string logName, NoParamOrder protect = default, object[] connect = default)
+public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> lookUps, string logName, NoParamOrder protect = default, object[] connect = default)
     : ServiceBase(logName, protect, connect), ILookUpEngineResolver
 {
     /// <summary>

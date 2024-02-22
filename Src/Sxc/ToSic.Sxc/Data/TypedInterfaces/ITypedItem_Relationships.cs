@@ -20,6 +20,36 @@ partial interface ITypedItem
 
     #endregion
 
+    #region New Child<T> / Children<T> - disabled as ATM Kit is missing
+
+    /// <summary>
+    /// EXPERIMENTAL
+    /// </summary>
+    /// <returns></returns>
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public T Child<T>(string name = default, NoParamOrder protector = default, bool? required = default)
+        where T : class, ITypedItemWrapper16, ITypedItem, new();
+
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public IEnumerable<T> Children<T>(string field = default, NoParamOrder protector = default,
+        string type = default, bool? required = default)
+        where T : class, ITypedItemWrapper16, ITypedItem, new();
+
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public T Parent<T>(NoParamOrder protector = default, bool? current = default, string type = default,
+        string field = default)
+        where T : class, ITypedItemWrapper16, ITypedItem, new();
+
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public IEnumerable<T> Parents<T>(NoParamOrder protector = default,
+        string type = default, string field = default)
+        where T : class, ITypedItemWrapper16, ITypedItem, new();
+
+    #endregion
     /// <summary>
     /// True if this item version is published.
     /// This means that the item can exist as published, or published-with-draft, showing the published version.

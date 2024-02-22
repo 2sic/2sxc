@@ -20,7 +20,7 @@ public static class StartupRazor
 
         // Razor Parts
         services.TryAddTransient<IRazorCompiler, RazorCompiler>();
-        services.TryAddTransient<IThisAppCodeRazorCompiler, ThisAppCodeRazorCompiler>();
+        services.TryAddTransient<IAppCodeRazorCompiler, AppCodeRazorCompiler>();
         services.TryAddTransient<IRazorRenderer, RazorRenderer>();
         services.TryAddTransient<IRazorEngine, NetCoreRazorEngine>();
 

@@ -1,8 +1,6 @@
-﻿using ToSic.Sxc.Internal;
-
-namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
+﻿namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class CodeHelper14(ICodeApiService codeRoot, bool isRazor, string codeFileName)
-    : CodeHelperXxBase(codeRoot, isRazor, codeFileName,
-        $"{SxcLogging.SxcLogName}.C14Hlp");
+internal class CodeHelper14(ICodeApiService codeApiSvc, bool isRazor, string codeFileName)
+    : CodeHelperXxBase(codeApiSvc, isRazor, codeFileName,
+        $"{SxcLogName}.C14Hlp");

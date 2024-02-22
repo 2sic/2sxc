@@ -31,7 +31,7 @@ partial class CodeDataFactory
                              // This should cover the case where it's a list<ITypedItem> or similar
                              ?? (original is IEnumerable maybePlEnum
                                  ? GetPropertyLookupOrNull(maybePlEnum.Cast<object>()
-                                     .FirstOrDefault(mpl => mpl is IHasPropLookup || mpl is IPropertyLookup))
+                                     .FirstOrDefault(mpl => mpl is IHasPropLookup or IPropertyLookup))
                                  : null);
                 return new { index, original, lookup };
             })

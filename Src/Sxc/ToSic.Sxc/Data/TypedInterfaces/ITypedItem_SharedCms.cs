@@ -1,4 +1,5 @@
 ﻿using ToSic.Razor.Blade;
+using ToSic.Sxc.Cms.Data;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Tweaks;
@@ -123,4 +124,16 @@ partial interface ITypedItem
         object toolbar = default,
         object recipe = default
     );
+
+    /// <summary>
+    /// Get the GPS coordinates of a GPS field.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="protector"></param>
+    /// <param name="required"></param>
+    /// <returns></returns>
+    /// <remarks>New in v17.02</remarks>
+    [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    GpsCoordinates Gps(string name, NoParamOrder protector = default, bool? required = default);
 }

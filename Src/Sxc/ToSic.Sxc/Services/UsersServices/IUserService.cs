@@ -1,6 +1,5 @@
-﻿using ToSic.Eav.Context;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Internal;
+﻿using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Services;
 
@@ -9,8 +8,8 @@ namespace ToSic.Sxc.Services;
 public interface IUserService: INeedsCodeApiService
 {
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)] 
-    IUser Get(int id);
+    ICmsUser Get(int id);
 
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)] 
-    IUser Get(string identityToken);
+    ICmsUser Get(string identityToken);
 }

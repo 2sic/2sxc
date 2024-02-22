@@ -2,8 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Collections.Generic;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Routing;
+using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Admin.CodeControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
@@ -14,15 +17,21 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
 [ValidateAntiForgeryToken]
-//[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-[Authorize(Roles = RoleNames.Admin)]
-
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class CodeController() : OqtControllerBase(false, RealController.LogSuffix)
 {
     private RealController Real => GetService<RealController>();
 
+    [HttpGet]
+    [Authorize(Roles = RoleNames.Admin)]
+    public IEnumerable<RealController.HelpItem> InlineHelp(string language) => Real.InlineHelp(language);
 
     [HttpGet]
-    public IEnumerable<RealController.HelpItem> InlineHelp(string language) => Real.InlineHelp(language);
+    [Authorize(Roles = RoleNames.Host)]
+    public RichResult GenerateDataModels(int appId, string edition = default) => Real.GenerateDataModels(appId, edition);
+
+    [HttpGet]
+    [JsonFormatter]
+    [Authorize(Roles = RoleNames.Host)]
+    public EditionsDto GetEditions(int appId) => Real.GetEditions(appId);
 }
