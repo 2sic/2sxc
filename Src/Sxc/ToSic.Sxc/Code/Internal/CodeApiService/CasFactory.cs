@@ -54,7 +54,7 @@ public class CodeApiServiceFactory(IServiceProvider serviceProvider) : ServiceBa
             var kitType = typesArgs[typesArgs.Length - 1];
             if (!kitType.IsSubclassOf(typeof(ServiceKit))) return null;
 
-            // 2. If yes, generate a DnnDynamicCodeRoot<TModel, TServiceKit> using the same types
+            // 2. If yes, generate a CodeApiService<TModel, TServiceKit> using the same types
             var finalType = typeof(CodeApiService<,>).MakeGenericType(typeof(object), kitType);
 
             // 3. return that

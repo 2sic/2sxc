@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             // I believe it's mostly on first startup or something
             var (result, generated, message) = new TryLockTryDo(lockObject).Call(
                 conditionToGenerate: () => AssemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath)?.MainType == null,
-                generator: () => OnCacheMiss(codeFileInfo, className, spec),
+                generator: () => CompileCodeFile(codeFileInfo, className, spec),
                 cacheOrFallback: () => AssemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath)
             );
 
@@ -89,7 +89,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
         }
 
-        private AssemblyResult OnCacheMiss(CodeFileInfo codeFileInfo, string className, HotBuildSpec spec)
+        private AssemblyResult CompileCodeFile(CodeFileInfo codeFileInfo, string className, HotBuildSpec spec)
         {
             var l = Log.Fn<AssemblyResult>($"{codeFileInfo}; {spec};", timer: true);
 

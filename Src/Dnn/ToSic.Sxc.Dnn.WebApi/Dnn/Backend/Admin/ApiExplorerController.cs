@@ -54,7 +54,7 @@ public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSu
             var block = SysHlp.GetService<DnnGetBlock>().GetCmsBlock(Request).LoadBlock();
             if (block != null)
                 spec = new HotBuildSpec(block.AppId,
-                    edition: PolymorphConfigReader.UseViewEditionLazyGetEdition(block.View, () => SysHlp.GetService<PolymorphConfigReader>().Init(block.Context.AppState.List)));
+                    edition: PolymorphConfigReader.UseViewEditionOrGetLazy(block.View, () => SysHlp.GetService<PolymorphConfigReader>().Init(block.Context.AppState.List)));
             assembly = SysHlp.GetService<IRoslynBuildManager>().GetCompiledAssembly(codeFileInfo, className, spec)?.Assembly;
         }
         else
