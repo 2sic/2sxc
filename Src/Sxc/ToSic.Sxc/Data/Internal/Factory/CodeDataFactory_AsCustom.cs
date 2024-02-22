@@ -22,8 +22,6 @@ partial class CodeDataFactory
     /// <summary>
     /// EXPERIMENTAL
     /// </summary>
-    [PrivateApi("WIP, don't publish yet")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public IEnumerable<T> AsCustomList<T>(IEnumerable<ICanBeEntity> source, ServiceKit16 kit, NoParamOrder protector, bool nullIfNull)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
     {

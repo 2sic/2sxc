@@ -5,6 +5,7 @@ using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Tweaks;
 using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
@@ -22,11 +23,11 @@ internal partial class Metadata: ITypedItem
             (e, k) => e.Children(k)?.FirstOrDefault()
         );
 
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default)//, bool? blankIs = default)
-        => ItemHelper.IsEmpty(name, noParamOrder, default /*blankIs*/);
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default)
+        => ItemHelper.IsEmpty(name, noParamOrder, default);
 
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default)//, bool? blankIs = default)
-        => ItemHelper.IsFilled(name, noParamOrder, default /*blankIs*/);
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default)
+        => ItemHelper.IsFilled(name, noParamOrder, default);
 
     [PrivateApi]
     public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default)
@@ -187,6 +188,41 @@ internal partial class Metadata: ITypedItem
     [PrivateApi]
     ITypedItem ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required) 
         => (this as ITypedItem).Children(name, noParamOrder: noParamOrder, required:required).FirstOrDefault();
+
+    #endregion
+
+    #region New Child<T> / Children<T> - disabled as ATM Kit is missing
+
+    private ServiceKit16 Kit => _kit ??= Cdf.GetServiceKitOrThrow();
+    private ServiceKit16 _kit;
+
+    /// <inheritdoc />
+    T ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required)
+        => Cdf.AsCustom<T>(
+            source: (this as ITypedItem).Child(name, required: required),
+            kit: Kit, protector: protector, nullIfNull: true
+        );
+
+    /// <inheritdoc />
+    IEnumerable<T> ITypedItem.Children<T>(string field, NoParamOrder protector, string type, bool? required)
+        => Cdf.AsCustomList<T>(
+            source: (this as ITypedItem).Children(field: field, noParamOrder: protector, type: type, required: required),
+            kit: Kit, protector: protector, nullIfNull: false
+        );
+
+    /// <inheritdoc />
+    T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string type, string field)
+        => Cdf.AsCustom<T>(
+            source: (this as ITypedItem).Parent(noParamOrder: protector, current: current, type: type, field: field),
+            kit: Kit, protector: protector, nullIfNull: true
+        );
+
+    /// <inheritdoc />
+    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string type, string field)
+        => Cdf.AsCustomList<T>(
+            source: (this as ITypedItem).Parents(noParamOrder: protector, field: field, type: type),
+            kit: Kit, protector: protector, nullIfNull: false
+        );
 
     #endregion
 

@@ -34,13 +34,18 @@ public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource, I
 
     /// <summary>
     /// The actual item which is being wrapped, in rare cases where you must access it.
+    ///
+    /// It's only on the explicit interface, so it is not available from outside or inside, unless you cast to it.
+    /// Goal is that inheriting classes don't access it to keep API surface small.
     /// </summary>
     ITypedItem ICanBeItem.Item => _item;
     private ITypedItem _item;
 
     IBlock ICanBeItem.TryGetBlockContext() => _item.TryGetBlockContext();
 
-
+    /// <summary>
+    /// Kit - private, so not available to inheriting classes for now; keep API surface small. 
+    /// </summary>
     private ServiceKit16 Kit { get; set; }
 
     /// <summary>

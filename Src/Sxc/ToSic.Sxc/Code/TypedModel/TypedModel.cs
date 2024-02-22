@@ -7,7 +7,6 @@ using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Edit.Toolbar;
-using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code;
 
@@ -177,27 +176,47 @@ Either change the calling Html.Partial(""{razorFileName}"", {{ {name} = ... }} )
 
     #endregion
 
-    #region As Conversion (new v17.02)
+    #region As Conversion (new v17.02) - turn off for now, GET<T> should do the job
 
-    /// <summary>
-    /// EXPERIMENTAL
-    /// </summary>
-    /// <returns></returns>
-    public T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool nullIfNull = false)
-        where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => codeApiSvc._Cdf.AsCustom<T>(source: source, kit: codeApiSvc.GetKit<ServiceKit16>(), protector: protector, nullIfNull: nullIfNull);
+    ///// <summary>
+    ///// EXPERIMENTAL
+    ///// </summary>
+    ///// <returns></returns>
+    //public T As<T>(string name, NoParamOrder protector = default, T fallback = default, bool? required = default)
+    //    where T : class, ITypedItemWrapper16, ITypedItem, new()
+    //    => Get(name, required: required ?? fallback != null) switch
+    //    {
+    //        T already => already,
+    //        ICanBeEntity canBeEntity => codeApiSvc._Cdf.AsCustom<T>(canBeEntity, kit: codeApiSvc.GetKit<ServiceKit16>(),
+    //            protector: protector, nullIfNull: true) ?? fallback,
+    //        _ => fallback
+    //    };
 
-    /// <summary>
-    /// EXPERIMENTAL
-    /// </summary>
-    /// <param name="source"></param>
-    /// <param name="protector"></param>
-    /// <param name="nullIfNull"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
-        where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => codeApiSvc._Cdf.AsCustomList<T>(source: source, kit: codeApiSvc.GetKit<ServiceKit16>(), protector: protector, nullIfNull: nullIfNull);
+    ///// <summary>
+    ///// EXPERIMENTAL
+    ///// </summary>
+    ///// <param name="source"></param>
+    ///// <param name="protector"></param>
+    ///// <param name="nullIfNull"></param>
+    ///// <typeparam name="T"></typeparam>
+    ///// <returns></returns>
+    //public IEnumerable<T> AsList<T>(string name, NoParamOrder protector = default, IEnumerable<T> fallback = default, bool? required = default)
+    //    where T : class, ITypedItemWrapper16, ITypedItem, new()
+    //{
+    //    if (Get(name, required: required ?? fallback != null) is not IEnumerable<IEntity> maybe)
+    //        return fallback;
+
+    //    if (maybe is IEnumerable<T> already)
+    //        return already;
+
+    //    return codeApiSvc._Cdf.AsCustomList<T>(
+    //               maybe,
+    //               kit: codeApiSvc.GetKit<ServiceKit16>(),
+    //               protector: protector,
+    //               nullIfNull: true
+    //           )
+    //           ?? fallback;
+    //}
 
     #endregion
 }
