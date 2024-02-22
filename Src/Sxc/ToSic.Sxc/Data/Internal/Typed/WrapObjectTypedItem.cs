@@ -8,6 +8,7 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Cms.Data;
 using ToSic.Sxc.Data.Internal.Convert;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Images;
@@ -254,6 +255,14 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
         return Tags.SafeUrl(url).ToString();
     }
     #endregion
+
+    #region GPS
+
+    GpsCoordinates ITypedItem.Gps(string name, NoParamOrder protector, bool? required)
+        => Kit.Json.To<GpsCoordinates>(((ITypedItem)this).String(name, required: required, fallback: "{}"));
+
+    #endregion
+
 
     IBlock ICanBeItem.TryGetBlockContext() => Cdf?.BlockOrNull;
 

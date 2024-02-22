@@ -44,9 +44,10 @@ public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource, I
     IBlock ICanBeItem.TryGetBlockContext() => _item.TryGetBlockContext();
 
     /// <summary>
-    /// Kit - private, so not available to inheriting classes for now; keep API surface small. 
+    /// Kit - private, so not available to inheriting classes for now; keep API surface small.
+    /// 2024-02-22 2dm - ATM used in Content, so must consider how to proceed - either remove from Content, or make it available here
     /// </summary>
-    private ServiceKit16 Kit { get; set; }
+    protected ServiceKit16 Kit { get; set; }
 
     /// <summary>
     /// Override ToString to give more information about the current object
@@ -247,8 +248,8 @@ public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource, I
         where T : class, ITypedItemWrapper16, ITypedItem, new()
         => _item.Parents<T>(protector: protector, type: type, field: field);
 
-    protected GpsCoordinates Gps(string name, NoParamOrder protector = default, bool? required = default)
-        => Kit.Json.To<GpsCoordinates>(String(name, required: required, fallback: "{}"));
+    public GpsCoordinates Gps(string name, NoParamOrder protector = default, bool? required = default)
+        => _item.Gps(name: name, protector: protector, required: required);
 
     #endregion
 

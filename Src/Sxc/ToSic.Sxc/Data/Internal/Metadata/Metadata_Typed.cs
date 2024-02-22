@@ -3,6 +3,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Cms.Data;
 using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
@@ -261,6 +262,13 @@ internal partial class Metadata: ITypedItem
     ) => TypedItemHelpers.Picture(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder, settings: settings,
         factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback, 
         imgClass: imgClass, imgAttributes: imgAttributes, pictureClass: pictureClass, pictureAttributes: pictureAttributes, toolbar: toolbar, recipe: recipe);
+
+    #endregion
+
+    #region GPS
+
+    GpsCoordinates ITypedItem.Gps(string name, NoParamOrder protector, bool? required)
+        => Kit.Json.To<GpsCoordinates>(((ITypedItem)this).String(name, required: required, fallback: "{}"));
 
     #endregion
 
