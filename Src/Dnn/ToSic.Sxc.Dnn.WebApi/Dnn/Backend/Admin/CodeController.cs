@@ -16,9 +16,9 @@ public class CodeController() : DnnSxcControllerBase(RealController.LogSuffix)
     public IEnumerable<RealController.HelpItem> InlineHelp(string language) => Real.InlineHelp(language);
 
     [HttpGet]
-    //[ValidateAntiForgeryToken]
-    //[SupportedModules(DnnSupportedModuleNames)]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+    [ValidateAntiForgeryToken]
+    [SupportedModules(DnnSupportedModuleNames)]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
     public RichResult GenerateDataModels(int appId, string edition = default) => Real.GenerateDataModels(appId, edition);
 
     [HttpGet]
