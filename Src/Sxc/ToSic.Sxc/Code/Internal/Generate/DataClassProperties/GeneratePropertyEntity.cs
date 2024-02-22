@@ -48,7 +48,7 @@ internal class GeneratePropertyEntity: GeneratePropertyBase
 
         return
         [
-            GenPropSnip(tabs, string.Format(result, resultType), name, method, cache: true, usings: usings,
+            GenPropSnip(tabs, string.Format(result, resultType), name, "base." + method, cache: true, usings: usings,
                 summary: [$"{msgPrefix} {resultType}."],
                 remarks: [msgRemarks],
                 returns: [msgReturns]

@@ -9,7 +9,7 @@ internal class GeneratePropertyString: GeneratePropertyBase
         var name = attribute.Name;
         return
         [
-            GenPropSnip(tabs: tabs, returnType: "string", name: name, method: "String",
+            GenPropSnip(tabs: tabs, returnType: "string", name: name, method: "base.String",
                 parameters: "fallback: \"\"",
                 summary:
                 [

@@ -16,7 +16,7 @@ internal class GeneratePropertyCustom: GeneratePropertyBase
 
         return
         [
-            GenPropSnip(tabs, "GpsCoordinates", name, "Gps", usings: UsingCustomData, summary:
+            GenPropSnip(tabs, "GpsCoordinates", name, "base.Gps", usings: UsingCustomData, summary:
             [
                 $"{name} as GPS Coordinates object with {nameof(GpsCoordinates.Latitude)} and {nameof(GpsCoordinates.Longitude)}.",
             ]),
