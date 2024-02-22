@@ -68,7 +68,7 @@ public class AppCodeLoader : ServiceBase
     public Assembly GetAppCodeAssemblyOrThrow(HotBuildSpec spec)
     {
         // Add to global history and add specs
-        var logSummary = _logStore.Add(SxcLogging.SxcLogAppCodeLoader, Log);
+        var logSummary = _logStore.Add(SxcLogAppCodeLoader, Log);
         logSummary.UpdateSpecs(spec.ToDictionary());
 
         // Initial message for insights-overview

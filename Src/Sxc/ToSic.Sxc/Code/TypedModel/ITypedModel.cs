@@ -358,36 +358,4 @@ public interface ITypedModel: IHasKeys
 
     #endregion
 
-    
-    #region As Conversions (new 17.02) - turn off for now - GET should do the job
-
-    ///// <summary>
-    ///// Convert an Entity or TypedItem into a strongly typed object.
-    ///// Typically, the type will be from your `AppCode.Data`.
-    ///// </summary>
-    ///// <typeparam name="T">the target type</typeparam>
-    ///// <param name="source">the source object - an `IEntity` or `ITypedItem`</param>
-    ///// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    ///// <param name="nullIfNull">if `true` will return null when `source` is `null` - otherwise a wrapper item with empty-contents</param>
-    ///// <returns></returns>
-    //[PrivateApi("WIP, don't publish yet")]
-    //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    //T As<T>(string name, NoParamOrder protector = default, T fallback = default, bool? required = default)
-    //    where T : class, ITypedItemWrapper16, ITypedItem, new();
-
-    ///// <summary>
-    ///// Convert a list of Entities or TypedItems into a strongly typed list.
-    ///// Typically, the type will be from your `AppCode.Data`.
-    ///// </summary>
-    ///// <typeparam name="T">the target type</typeparam>
-    ///// <param name="source">the source object - a List/Enumerable of `IEntity` or `ITypedItem`</param>
-    ///// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    ///// <param name="nullIfNull">if `true` will return null when `source` is `null` - otherwise a wrapper item with empty-contents</param>
-    ///// <returns></returns>
-    //[PrivateApi("WIP, don't publish yet")]
-    //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    //IEnumerable<T> AsList<T>(string name, NoParamOrder protector = default, IEnumerable<T> fallback = default, bool? required = default)
-    //    where T : class, ITypedItemWrapper16, ITypedItem, new();
-
-    #endregion
 }
