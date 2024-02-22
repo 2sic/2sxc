@@ -223,48 +223,29 @@ public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource, I
 
     #region New Child<T> / Children<T>
 
-    /// <summary>
-    /// EXPERIMENTAL
-    /// </summary>
-    /// <returns></returns>
-    [PrivateApi("WIP, don't publish yet")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public T Child<T>([CallerMemberName] string name = default, NoParamOrder protector = default, bool? required = default)
+    /// <inheritdoc />
+    public T Child<T>([CallerMemberName] string name = default, NoParamOrder protector = default,
+        bool? required = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => Kit._CodeApiSvc._Cdf.AsCustom<T>(
-            source: Child(name, required: required),
-            kit: Kit, protector: protector, nullIfNull: true
-        );
+        => _item.Child<T>(name, protector: protector, required: required);
 
-    [PrivateApi("WIP, don't publish yet")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    /// <inheritdoc />
     public IEnumerable<T> Children<T>([CallerMemberName] string field = default, NoParamOrder protector = default,
         string type = default, bool? required = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => Kit._CodeApiSvc._Cdf.AsCustomList<T>(
-            source: Children(field: field, noParamOrder: protector, type: type, required: required),
-            kit: Kit, protector: protector, nullIfNull: false
-        );
+        => _item.Children<T>(field: field, protector: protector, type: type, required: required);
 
-    [PrivateApi("WIP, don't publish yet")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    /// <inheritdoc />
     public T Parent<T>(NoParamOrder protector = default, bool? current = default, string type = default,
         string field = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => Kit._CodeApiSvc._Cdf.AsCustom<T>(
-            source: Parent(noParamOrder: protector, current: current, type: type, field: field),
-            kit: Kit, protector: protector, nullIfNull: true
-        );
+        => _item.Parent<T>(protector: protector, current: current, type: type, field: field);
 
-    [PrivateApi("WIP, don't publish yet")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    /// <inheritdoc />
     public IEnumerable<T> Parents<T>(NoParamOrder protector = default,
         string type = default, string field = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => Kit._CodeApiSvc._Cdf.AsCustomList<T>(
-            source: Parents(noParamOrder: protector, field: field, type: type),
-            kit: Kit, protector: protector, nullIfNull: false
-        );
+        => _item.Parents<T>(protector: protector, type: type, field: field);
 
     protected GpsCoordinates Gps(string name, NoParamOrder protector = default, bool? required = default)
         => Kit.Json.To<GpsCoordinates>(String(name, required: required, fallback: "{}"));
