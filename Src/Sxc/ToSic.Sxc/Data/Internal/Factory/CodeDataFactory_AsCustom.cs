@@ -7,10 +7,10 @@ partial class CodeDataFactory
     /// <summary>
     /// EXPERIMENTAL
     /// </summary>
-    public T AsCustom<T>(ICanBeEntity source, ServiceKit16 kit, NoParamOrder protector, bool nullIfNull)
+    public T AsCustom<T>(ICanBeEntity source, ServiceKit16 kit, NoParamOrder protector, bool mock)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
     {
-        if (nullIfNull && source == null) return null;
+        if (!mock && source == null) return null;
         if (source is T alreadyT) return alreadyT;
 
         var item = source as ITypedItem ?? AsItem(source);

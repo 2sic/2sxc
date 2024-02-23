@@ -182,14 +182,14 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     /// </summary>
     /// <param name="source"></param>
     /// <param name="protector"></param>
-    /// <param name="nullIfNull"></param>
+    /// <param name="mock"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     [PrivateApi("WIP, don't publish yet")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool nullIfNull = false)
+    public T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool mock = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => _CodeApiSvc._Cdf.AsCustom<T>(source: source, kit: Kit, protector: protector, nullIfNull: nullIfNull);
+        => _CodeApiSvc._Cdf.AsCustom<T>(source: source, kit: Kit, protector: protector, mock: mock);
 
     /// <summary>
     /// EXPERIMENTAL

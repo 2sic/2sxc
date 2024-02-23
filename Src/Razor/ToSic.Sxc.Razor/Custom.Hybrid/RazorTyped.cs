@@ -176,9 +176,9 @@ public abstract class RazorTyped: OqtRazorBase<dynamic>, IHasCodeLog, IRazor, IS
     /// <returns></returns>
     [PrivateApi("WIP, don't publish yet")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool nullIfNull = false)
+    public T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool mock = false)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => _CodeApiSvc._Cdf.AsCustom<T>(source: source, kit: Kit, protector: protector, nullIfNull: nullIfNull);
+        => _CodeApiSvc._Cdf.AsCustom<T>(source: source, kit: Kit, protector: protector, mock: mock);
 
     /// <summary>
     /// EXPERIMENTAL

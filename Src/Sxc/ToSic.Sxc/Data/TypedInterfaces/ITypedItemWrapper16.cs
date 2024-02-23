@@ -6,5 +6,6 @@ namespace ToSic.Sxc.Data;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface ITypedItemWrapper16
 {
+    string ForContentType { get; }
     void Setup(ITypedItem baseItem, ServiceKit16 addKit);
 }

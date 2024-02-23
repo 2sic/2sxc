@@ -11,7 +11,7 @@ internal class AppDataTyped(
     LazySvc<IDataSourceCacheService> dsCacheSvc)
     : AppDataWithCrud(services, dataController, dsCacheSvc), IAppDataTyped
 {
-    #region Content Types
+    #region Content Types - explicit implementation to ensure it's only available in Typed APIs
 
     IEnumerable<IContentType> IAppDataTyped.GetContentTypes() => AppState.ContentTypes;
 

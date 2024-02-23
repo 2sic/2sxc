@@ -177,7 +177,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     T ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required)
         => Cdf.AsCustom<T>(
             source: (this as ITypedItem).Child(name, required: required),
-            kit: Kit, protector: protector, nullIfNull: true
+            kit: Kit, protector: protector, mock: true
         );
 
     /// <inheritdoc />
@@ -191,7 +191,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string type, string field)
         => Cdf.AsCustom<T>(
             source: (this as ITypedItem).Parent(noParamOrder: protector, current: current, type: type, field: field),
-            kit: Kit, protector: protector, nullIfNull: true
+            kit: Kit, protector: protector, mock: true
         );
 
     /// <inheritdoc />

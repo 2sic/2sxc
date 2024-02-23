@@ -27,7 +27,7 @@ internal class ConvertService16(
     [PrivateApi("WIP, don't publish yet")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     T IConvertService16.As<T>(ICanBeEntity source, NoParamOrder protector, bool nullIfNull)
-        => _CodeApiSvc._Cdf.AsCustom<T>(source: source, kit: Kit, protector: protector, nullIfNull: nullIfNull);
+        => _CodeApiSvc._Cdf.AsCustom<T>(source: source, kit: Kit, protector: protector, mock: nullIfNull);
 
     /// <summary>
     /// EXPERIMENTAL

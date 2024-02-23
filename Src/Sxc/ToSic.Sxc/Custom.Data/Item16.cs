@@ -33,6 +33,8 @@ public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource, I
         Kit = addKit;
     }
 
+    string ITypedItemWrapper16.ForContentType => GetType().Name;
+
     /// <summary>
     /// The actual item which is being wrapped, in rare cases where you must access it.
     ///

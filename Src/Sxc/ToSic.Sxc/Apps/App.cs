@@ -35,7 +35,7 @@ public partial class App : Eav.Apps.Internal.EavApp, IApp
 
     private readonly LazySvc<GlobalPaths> _globalPaths;
     private readonly LazySvc<IAppPathsMicroSvc> _appPathsLazy;
-    private readonly LazySvc<CodeInfoService> _codeChanges;
+    private readonly LazySvc<CodeInfoService> _codeChanges; // used in obsolete methods
     private readonly LazySvc<CodeDataFactory> _cdfLazy;
 
 

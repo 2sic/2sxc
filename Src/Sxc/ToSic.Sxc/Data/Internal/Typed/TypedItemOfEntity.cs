@@ -366,7 +366,7 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     T ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required)
         => Cdf.AsCustom<T>(
             source: ((ITypedItem)this).Child(name, required: required),
-            kit: Kit, protector: protector, nullIfNull: true
+            kit: Kit, protector: protector, mock: true
         );
 
     /// <inheritdoc />
@@ -380,7 +380,7 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string type, string field)
         => Cdf.AsCustom<T>(
             source: ((ITypedItem)this).Parent(noParamOrder: protector, current: current, type: type, field: field),
-            kit: Kit, protector: protector, nullIfNull: true
+            kit: Kit, protector: protector, mock: true
         );
 
     /// <inheritdoc />
