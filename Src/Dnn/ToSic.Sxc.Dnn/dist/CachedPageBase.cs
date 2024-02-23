@@ -4,7 +4,6 @@ using System.Web;
 using System.Web.Caching;
 using DotNetNuke.Common.Extensions;
 using DotNetNuke.Entities.Portals;
-using DotNetNuke.Entities.Urls;
 using DotNetNuke.Framework;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Helpers;
@@ -15,6 +14,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Web.Internal.EditUi;
 using ToSic.Sxc.Web.Internal.JsContext;
+using static System.StringComparison;
 
 namespace ToSic.Sxc.Dnn.dist;
 
@@ -100,11 +100,33 @@ public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to pre
 
             //var cultureCode = LocaleController.Instance.GetCurrentLocale(portalId).Code;
             var cultureCode = System.Threading.Thread.CurrentThread.CurrentCulture.ToString();
-            var primaryPortalAlias = PortalAliasController.Instance.GetPortalAliasesByPortalId(portalId)
-                                         .Where(a => HttpContext.Current.Request.Url.ToString().IndexOf(a.HTTPAlias, StringComparison.OrdinalIgnoreCase) >= 0) // case insensitive
-                                         .GetAliasByPortalIdAndSettings(portalId, result: null, cultureCode, settings: new FriendlyUrlSettings(portalId)) ?? 
-                                     PortalAliasController.Instance.GetPortalAliasesByPortalId(portalId).FirstOrDefault(); // fallback to first alias
-            var siteRoot = primaryPortalAlias != null ? CleanLeadingPartSiteRoot(primaryPortalAlias.HTTPAlias) : ServicesFramework.GetServiceFrameworkRoot();
+
+            // Get all aliases for the portal
+            var aliases = PortalAliasController.Instance
+                .GetPortalAliasesByPortalId(portalId)
+                .ToList();
+
+            // Figure out the correct alias based on the current URL and culture
+            // Should also fall back to correct primary if the current one is not found
+            var currentUrl = HttpContext.Current.Request.Url.ToString();
+            var primaryPortalAlias = aliases
+                                         .Where(
+                                             a => currentUrl.IndexOf(a.HTTPAlias, OrdinalIgnoreCase) >= 0
+                                         )
+                                         .GetAliasByPortalIdAndSettings(
+                                             portalId,
+                                             result: null,
+                                             cultureCode,
+                                             settings: new(portalId)
+                                         )
+                                     // TODO: @STV THIS LOOKS WRONG - see task
+                                     // IT SHOULD probably fallback to the first primary first
+                                     // And only if this doesn't exist for random reasons, fallback to the FirstOrDefault
+                                     ?? aliases.FirstOrDefault(); // fallback to first alias
+
+            var siteRoot = primaryPortalAlias != null
+                ? CleanLeadingPartSiteRoot(primaryPortalAlias.HTTPAlias)
+                : ServicesFramework.GetServiceFrameworkRoot();
             if (string.IsNullOrEmpty(siteRoot)) siteRoot = "/";
             return siteRoot;
         }
