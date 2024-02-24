@@ -47,7 +47,7 @@ public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource, I
     /// </summary>
     /// <remarks>
     /// This property is protected, not public, as it should only be used internally.
-    /// It uses an unusual name _myItem to avoid conflicts with inheriting classes.
+    /// It uses an unusual name _myItem to avoid naming conflicts with properties generated in inheriting classes.
     /// </remarks>
     // ReSharper disable once InconsistentNaming
 #pragma warning disable IDE1006
