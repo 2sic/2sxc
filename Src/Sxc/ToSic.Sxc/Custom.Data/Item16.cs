@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using ToSic.Eav.Data.PropertyLookup;
+﻿using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
@@ -29,8 +28,8 @@ public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource, I
 
     void ITypedItemWrapper16.Setup(ITypedItem baseItem, ServiceKit16 addKit)
     {
-        Item = baseItem;
-        Kit = addKit;
+        _myItem = baseItem;
+        //Kit = addKit;
     }
 
     string ITypedItemWrapper16.ForContentType => GetType().Name;
@@ -41,23 +40,35 @@ public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource, I
     /// It's only on the explicit interface, so it is not available from outside or inside, unless you cast to it.
     /// Goal is that inheriting classes don't access it to keep API surface small.
     /// </summary>
-    ITypedItem ICanBeItem.Item => Item;
+    ITypedItem ICanBeItem.Item => _myItem;
     
     /// <summary>
     /// The item - for inheriting classes to access.
     /// </summary>
     /// <remarks>
     /// This property is protected, not public, as it should only be used internally.
+    /// It uses an unusual name _myItem to avoid conflicts with inheriting classes.
     /// </remarks>
-    protected ITypedItem Item;
-
-    IBlock ICanBeItem.TryGetBlockContext() => Item.TryGetBlockContext();
+    // ReSharper disable once InconsistentNaming
+#pragma warning disable IDE1006
+    protected internal ITypedItem _myItem { get; private set; }
+#pragma warning restore IDE1006
 
     /// <summary>
-    /// Kit - private, so not available to inheriting classes for now; keep API surface small.
-    /// 2024-02-22 2dm - ATM used in Content, so must consider how to proceed - either remove from Content, or make it available here
+    /// The item - for inheriting classes to access.
     /// </summary>
-    protected ServiceKit16 Kit { get; set; }
+    /// <remarks>
+    /// This property is protected, not public, as it should only be used internally.
+    /// </remarks>
+    protected ITypedItem Item2 => _myItem;
+
+    IBlock ICanBeItem.TryGetBlockContext() => _myItem.TryGetBlockContext();
+
+    ///// <summary>
+    ///// Kit - private, so not available to inheriting classes for now; keep API surface small.
+    ///// 2024-02-22 2dm - ATM used in Content, so must consider how to proceed - either remove from Content, or make it available here
+    ///// </summary>
+    //protected ServiceKit16 Kit { get; set; }
 
     /// <summary>
     /// Override ToString to give more information about the current object
@@ -65,23 +76,23 @@ public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource, I
     public override string ToString()
     {
         var msg = $"Custom Data Model {GetType().FullName}";
-        return Item == null ? $"{msg} without backing data (null)" : msg + $" for id:{Id} ({Item})";
+        return _myItem == null ? $"{msg} without backing data (null)" : msg + $" for id:{Id} ({_myItem})";
     }
-
-    /// <summary>
-    /// Get a value from the current item, which has the same name as the calling property.
-    /// Usage:
-    ///
-    /// * `public string Something => GetThis&lt;string&gt;();` (without fallback you must specify the type)
-    /// * `public string Something => GetThis(fallback: "default value");` (with fallback the type is auto-detected)
-    /// </summary>
-    /// <typeparam name="TValue"></typeparam>
-    /// <param name="protector"></param>
-    /// <param name="fallback"></param>
-    /// <param name="name"></param>
-    /// <returns></returns>
-    protected TValue GetThis<TValue>(NoParamOrder protector = default, TValue fallback = default, [CallerMemberName] string name = default)
-        => Item.Get(name, protector, fallback: fallback);
+    // 2024-02-24 2dm - removing this
+    ///// <summary>
+    ///// Get a value from the current item, which has the same name as the calling property.
+    ///// Usage:
+    /////
+    ///// * `public string Something => GetThis&lt;string&gt;();` (without fallback you must specify the type)
+    ///// * `public string Something => GetThis(fallback: "default value");` (with fallback the type is auto-detected)
+    ///// </summary>
+    ///// <typeparam name="TValue"></typeparam>
+    ///// <param name="protector"></param>
+    ///// <param name="fallback"></param>
+    ///// <param name="name"></param>
+    ///// <returns></returns>
+    //protected TValue GetThis<TValue>(NoParamOrder protector = default, TValue fallback = default, [CallerMemberName] string name = default)
+    //    => Item.Get(name, protector, fallback: fallback);
 
     #region Auto-Replay Properties
 
@@ -94,110 +105,110 @@ public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource, I
     /// </summary>
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    IEntity ICanBeEntity.Entity => Item.Entity;
+    IEntity ICanBeEntity.Entity => _myItem.Entity;
 
     /// <inheritdoc />
-    public bool ContainsKey(string name) => ((IHasKeys)Item).ContainsKey(name);
+    public bool ContainsKey(string name) => ((IHasKeys)_myItem).ContainsKey(name);
 
     /// <inheritdoc />
-    public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default) => Item.Keys(noParamOrder, only);
+    public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default) => _myItem.Keys(noParamOrder, only);
 
     /// <inheritdoc />
-    public object Get([CallerMemberName] string name = default, NoParamOrder noParamOrder = default, bool? required = default) => Item.Get(name, noParamOrder, required);
+    public object Get(string name, NoParamOrder noParamOrder = default, bool? required = default) => _myItem.Get(name, noParamOrder, required);
 
     /// <inheritdoc />
-    public TValue Get<TValue>([CallerMemberName] string name = default, NoParamOrder noParamOrder = default, TValue fallback = default,
+    public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default,
         bool? required = default) =>
-        Item.Get(name, noParamOrder, fallback, required);
+        _myItem.Get(name, noParamOrder, fallback, required);
 
     /// <inheritdoc />
-    public bool Bool([CallerMemberName] string name = default, NoParamOrder noParamOrder = default, bool fallback = default, bool? required = default) => Item.Bool(name, noParamOrder, fallback, required);
+    public bool Bool(string name, NoParamOrder noParamOrder = default, bool fallback = default, bool? required = default) => _myItem.Bool(name, noParamOrder, fallback, required);
 
     /// <inheritdoc />
-    public DateTime DateTime([CallerMemberName] string name = default, NoParamOrder noParamOrder = default, DateTime fallback = default,
+    public DateTime DateTime(string name, NoParamOrder noParamOrder = default, DateTime fallback = default,
         bool? required = default) =>
-        Item.DateTime(name, noParamOrder, fallback, required);
+        _myItem.DateTime(name, noParamOrder, fallback, required);
 
     /// <inheritdoc />
-    public string String([CallerMemberName] string name = default, NoParamOrder noParamOrder = default, string fallback = default, bool? required = default,
+    public string String(string name, NoParamOrder noParamOrder = default, string fallback = default, bool? required = default,
         object scrubHtml = default) =>
-        Item.String(name, noParamOrder, fallback, required, scrubHtml);
+        _myItem.String(name, noParamOrder, fallback, required, scrubHtml);
 
     /// <inheritdoc />
-    public int Int([CallerMemberName] string name = default, NoParamOrder noParamOrder = default, int fallback = default, bool? required = default) => Item.Int(name, noParamOrder, fallback, required);
+    public int Int(string name, NoParamOrder noParamOrder = default, int fallback = default, bool? required = default) => _myItem.Int(name, noParamOrder, fallback, required);
 
     /// <inheritdoc />
-    public long Long([CallerMemberName] string name = default, NoParamOrder noParamOrder = default, long fallback = default, bool? required = default) => Item.Long(name, noParamOrder, fallback, required);
+    public long Long(string name, NoParamOrder noParamOrder = default, long fallback = default, bool? required = default) => _myItem.Long(name, noParamOrder, fallback, required);
 
     /// <inheritdoc />
-    public float Float([CallerMemberName] string name = default, NoParamOrder noParamOrder = default, float fallback = default, bool? required = default) => Item.Float(name, noParamOrder, fallback, required);
+    public float Float(string name, NoParamOrder noParamOrder = default, float fallback = default, bool? required = default) => _myItem.Float(name, noParamOrder, fallback, required);
 
     /// <inheritdoc />
-    public decimal Decimal([CallerMemberName] string name = default, NoParamOrder noParamOrder = default, decimal fallback = default, bool? required = default) => Item.Decimal(name, noParamOrder, fallback, required);
+    public decimal Decimal(string name, NoParamOrder noParamOrder = default, decimal fallback = default, bool? required = default) => _myItem.Decimal(name, noParamOrder, fallback, required);
 
     /// <inheritdoc />
-    public double Double([CallerMemberName] string name = default, NoParamOrder noParamOrder = default, double fallback = default, bool? required = default) => Item.Double(name, noParamOrder, fallback, required);
+    public double Double(string name, NoParamOrder noParamOrder = default, double fallback = default, bool? required = default) => _myItem.Double(name, noParamOrder, fallback, required);
 
     /// <inheritdoc />
-    public string Url([CallerMemberName] string name = default, NoParamOrder noParamOrder = default, string fallback = default, bool? required = default) => Item.Url(name, noParamOrder, fallback, required);
+    public string Url(string name, NoParamOrder noParamOrder = default, string fallback = default, bool? required = default) => _myItem.Url(name, noParamOrder, fallback, required);
 
     /// <inheritdoc />
-    public IRawHtmlString Attribute([CallerMemberName] string name = default, NoParamOrder noParamOrder = default, string fallback = default,
+    public IRawHtmlString Attribute(string name, NoParamOrder noParamOrder = default, string fallback = default,
         bool? required = default) =>
-        Item.Attribute(name, noParamOrder, fallback, required);
+        _myItem.Attribute(name, noParamOrder, fallback, required);
 
     /// <inheritdoc />
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default) => Item.IsEmpty(name, noParamOrder);
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default) => _myItem.IsEmpty(name, noParamOrder);
 
     /// <inheritdoc />
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default) => Item.IsNotEmpty(name, noParamOrder);
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default) => _myItem.IsNotEmpty(name, noParamOrder);
 
 
     /// <inheritdoc />
-    public bool Equals(ITypedItem other) => Item.Equals(other);
+    public bool Equals(ITypedItem other) => _myItem.Equals(other);
 
     /// <inheritdoc />
-    public bool IsDemoItem => Item.IsDemoItem;
+    public bool IsDemoItem => _myItem.IsDemoItem;
 
     /// <inheritdoc />
     public IHtmlTag Html(string name, NoParamOrder noParamOrder = default, object container = default, bool? toolbar = default,
         object imageSettings = default, bool? required = default, bool debug = default, Func<ITweakInput<string>, ITweakInput<string>> tweak = default) =>
-        Item.Html(name, noParamOrder, container, toolbar, imageSettings, required, debug, tweak);
+        _myItem.Html(name, noParamOrder, container, toolbar, imageSettings, required, debug, tweak);
 
     /// <inheritdoc />
     public IResponsivePicture Picture(string name, NoParamOrder noParamOrder = default, object settings = default,
         object factor = default, object width = default, string imgAlt = default, string imgAltFallback = default,
         string imgClass = default, object imgAttributes = default, string pictureClass = default,
         object pictureAttributes = default, object toolbar = default, object recipe = default) =>
-        Item.Picture(name, noParamOrder, settings, factor, width, imgAlt, imgAltFallback, imgClass, imgAttributes, pictureClass, pictureAttributes, toolbar, recipe);
+        _myItem.Picture(name, noParamOrder, settings, factor, width, imgAlt, imgAltFallback, imgClass, imgAttributes, pictureClass, pictureAttributes, toolbar, recipe);
 
     /// <inheritdoc />
-    public IFolder Folder([CallerMemberName] string name = default, NoParamOrder noParamOrder = default, bool? required = default) => Item.Folder(name, noParamOrder, required);
+    public IFolder Folder(string name, NoParamOrder noParamOrder = default, bool? required = default) => _myItem.Folder(name, noParamOrder, required);
 
     /// <inheritdoc />
-    public IFile File([CallerMemberName] string name = default, NoParamOrder noParamOrder = default, bool? required = default) => Item.File(name, noParamOrder, required);
+    public IFile File(string name, NoParamOrder noParamOrder = default, bool? required = default) => _myItem.File(name, noParamOrder, required);
 
     /// <inheritdoc />
-    public ITypedItem Child([CallerMemberName] string name = default, NoParamOrder noParamOrder = default, bool? required = default) => Item.Child(name, noParamOrder, required);
+    public ITypedItem Child(string name, NoParamOrder noParamOrder = default, bool? required = default) => _myItem.Child(name, noParamOrder, required);
 
     /// <inheritdoc />
-    public IEnumerable<ITypedItem> Children([CallerMemberName] string field = default, NoParamOrder noParamOrder = default, string type = default,
+    public IEnumerable<ITypedItem> Children(string field, NoParamOrder noParamOrder = default, string type = default,
         bool? required = default) =>
-        Item.Children(field, noParamOrder, type, required);
+        _myItem.Children(field, noParamOrder, type, required);
 
     /// <inheritdoc />
     public ITypedItem Parent(NoParamOrder noParamOrder = default, bool? current = default, string type = default,
         string field = default) =>
-        Item.Parent(noParamOrder, current, type, field);
+        _myItem.Parent(noParamOrder, current, type, field);
 
     /// <inheritdoc />
-    public IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder = default, string type = default, string field = default) => Item.Parents(noParamOrder, type, field);
+    public IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder = default, string type = default, string field = default) => _myItem.Parents(noParamOrder, type, field);
 
     /// <inheritdoc />
-    public bool IsPublished => Item.IsPublished;
+    public bool IsPublished => _myItem.IsPublished;
 
     /// <inheritdoc />
-    public IPublishing Publishing => Item.Publishing;
+    public IPublishing Publishing => _myItem.Publishing;
 
     /// <summary>
     /// Explicit, obsolete `Dyn` implementation, not to be used.
@@ -208,58 +219,58 @@ public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource, I
     dynamic ITypedItem.Dyn => throw new NotSupportedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(ITypedStack)} by design");
 
     /// <inheritdoc />
-    public ITypedItem Presentation => Item.Presentation;
+    public ITypedItem Presentation => _myItem.Presentation;
 
     /// <inheritdoc />
-    public IMetadata Metadata => Item.Metadata;
+    public IMetadata Metadata => _myItem.Metadata;
 
     /// <inheritdoc />
-    public IField Field(string name, NoParamOrder noParamOrder = default, bool? required = default) => Item.Field(name, noParamOrder, required);
+    public IField Field(string name, NoParamOrder noParamOrder = default, bool? required = default) => _myItem.Field(name, noParamOrder, required);
 
     /// <inheritdoc />
-    public int Id => Item.Id;
+    public int Id => _myItem.Id;
 
     /// <inheritdoc />
-    public Guid Guid => Item.Guid;
+    public Guid Guid => _myItem.Guid;
 
     /// <inheritdoc />
-    public string Title => Item.Title;
+    public string Title => _myItem.Title;
 
     /// <inheritdoc />
-    public IContentType Type => Item.Type;
+    public IContentType Type => _myItem.Type;
 
     #endregion
 
-    object IHasJsonSource.JsonSource() => Item?.JsonSource();
+    object IHasJsonSource.JsonSource() => _myItem?.JsonSource();
 
     #region New Child<T> / Children<T>
 
     /// <inheritdoc />
-    public T Child<T>([CallerMemberName] string name = default, NoParamOrder protector = default,
+    public T Child<T>(string name, NoParamOrder protector = default,
         bool? required = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => Item.Child<T>(name, protector: protector, required: required);
+        => _myItem.Child<T>(name, protector: protector, required: required);
 
     /// <inheritdoc />
-    public IEnumerable<T> Children<T>([CallerMemberName] string field = default, NoParamOrder protector = default,
+    public IEnumerable<T> Children<T>(string field, NoParamOrder protector = default,
         string type = default, bool? required = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => Item.Children<T>(field: field, protector: protector, type: type, required: required);
+        => _myItem.Children<T>(field: field, protector: protector, type: type, required: required);
 
     /// <inheritdoc />
     public T Parent<T>(NoParamOrder protector = default, bool? current = default, string type = default,
         string field = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => Item.Parent<T>(protector: protector, current: current, type: type, field: field);
+        => _myItem.Parent<T>(protector: protector, current: current, type: type, field: field);
 
     /// <inheritdoc />
     public IEnumerable<T> Parents<T>(NoParamOrder protector = default,
         string type = default, string field = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => Item.Parents<T>(protector: protector, type: type, field: field);
+        => _myItem.Parents<T>(protector: protector, type: type, field: field);
 
     public GpsCoordinates Gps(string name, NoParamOrder protector = default, bool? required = default)
-        => Item.Gps(name: name, protector: protector, required: required);
+        => _myItem.Gps(name: name, protector: protector, required: required);
 
     #endregion
 
