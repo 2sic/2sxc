@@ -74,20 +74,24 @@ internal class NetCoreRazorEngine : EngineBase, IRazorEngine
         {
             if (string.IsNullOrEmpty(TemplatePath)) return (null, null);
 
-            var result = await RazorRenderer.RenderToStringAsync(TemplatePath, new object(),
+            var result = await RazorRenderer.RenderToStringAsync(
+                TemplatePath,
+                new object(),
                 rzv =>
                 {
                     page = rzv; // keep for better errors
                     if (rzv.RazorPage is not IRazor asSxc) return;
 
                     var dynCode = _codeRootFactory.Value
-                        .BuildCodeRoot(asSxc, Block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel12);
+                        .BuildCodeRoot(asSxc, Block, Log,
+                            compatibilityFallback: CompatibilityLevels.CompatibilityLevel12);
 
                     asSxc.ConnectToRoot(dynCode);
                     // Note: Don't set the purpose here any more, it's a deprecated feature in 12+
-                }, 
-                App, 
-                new HotBuildSpec(App.AppId, Edition));
+                },
+                App,
+                new(App.AppId, Edition, App.Name)
+            );
             var writer = new StringWriter();
             await writer.WriteAsync(result);
             return (writer, null);

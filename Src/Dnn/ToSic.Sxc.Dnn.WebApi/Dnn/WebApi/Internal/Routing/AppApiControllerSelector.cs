@@ -155,7 +155,7 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
             l.A($"has block: {block != null}");
             if (block != null)
             {
-                spec = new(block.AppId, edition: edition);
+                spec = new(block.AppId, edition: edition, block.App?.Name);
                 l.A($"{nameof(spec)}: {spec}");
             }
             assembly = sp.Build<IRoslynBuildManager>().GetCompiledAssembly(codeFileInfo, typeName, spec)?.Assembly;

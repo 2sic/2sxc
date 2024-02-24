@@ -26,7 +26,7 @@ internal partial class DnnRazorEngine(EngineBase.MyServices helpers, DnnRazorCom
         var l = Log.Fn();
         base.Init(block);
         // after Base.init also init the compiler (requires objects which were set up in base.Init)
-        razorCompiler.SetupCompiler(new(App.AppId, Edition), Block);
+        razorCompiler.SetupCompiler(new(App.AppId, Edition, App.Name), Block);
         try
         {
             EntryRazorComponent = InitWebpageAndOldProperties(TemplatePath)?.Instance;
