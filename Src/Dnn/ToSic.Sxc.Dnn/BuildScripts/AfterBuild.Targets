@@ -125,9 +125,9 @@
     <Exec Command="robocopy /MIR &quot;$(ProjectDir)DnnWebForms/&quot; &quot;$(BuildTarget)/DnnWebForms/&quot;" IgnoreExitCode="true"/>
 
     <!--Copy 2sxc JS stuff (order of commands is important) -->
-    <!--<Exec Command="robocopy /MIR &quot;$(Source)/js/&quot; &quot;$(BuildTarget)/js/&quot;" IgnoreExitCode="true" Condition="Exists('$(Source)')"/>
+    <Exec Command="robocopy /MIR &quot;$(Source)/js/&quot; &quot;$(BuildTarget)/js/&quot;" IgnoreExitCode="true" Condition="Exists('$(Source)')"/>
     <Exec Command="robocopy /MIR &quot;$(Source)/system/&quot; &quot;$(BuildTarget)/system/&quot;" IgnoreExitCode="true" Condition="Exists('$(Source)')"/>
-    <Exec Command="robocopy /MIR &quot;$(Source)/dist/&quot; &quot;$(BuildTarget)/dist/&quot;" IgnoreExitCode="true" Condition="Exists('$(Source)')"/>-->
+    <Exec Command="robocopy /MIR &quot;$(Source)/dist/&quot; &quot;$(BuildTarget)/dist/&quot;" IgnoreExitCode="true" Condition="Exists('$(Source)')"/>
     <Exec Command="robocopy /S &quot;$(ProjectDir)dist/&quot; &quot;$(BuildTarget)/dist/&quot; &quot;Default.aspx&quot;" IgnoreExitCode="true"/>
     <Exec Command="robocopy /MIR &quot;$(ProjectDir)Extensions/&quot; &quot;$(BuildTarget)/Extensions/&quot;" IgnoreExitCode="true"/>
     <Exec Command="robocopy /MIR &quot;$(ProjectDir)ImportExport/&quot; &quot;$(BuildTarget)/ImportExport/&quot;" IgnoreExitCode="true"/>
