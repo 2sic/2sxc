@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.Metadata;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Apps;
 
@@ -41,6 +42,27 @@ public interface IAppDataTyped: IDataSource
     /// <param name="name">the name, either the normal name or the NameId which looks like a GUID</param>
     /// <remarks>Added v17</remarks>
     IContentType GetContentType(string name);
+
+    #endregion
+
+    #region GetAll, GetOne, GetMany WIP v17.02+
+
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    T GetOne<T>(int id, NoParamOrder protector = default, bool skipTypeCheck = false)
+        where T : class, ITypedItemWrapper16, ITypedItem, new();
+
+
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public T GetOne<T>(Guid id, NoParamOrder protector = default, bool skipTypeCheck = false)
+        where T : class, ITypedItemWrapper16, ITypedItem, new();
+
+    [PrivateApi("WIP, don't publish yet")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public IEnumerable<T> GetAll<T>(NoParamOrder protector = default, string typeName = default,
+        bool nullIfNotFound = default)
+        where T : class, ITypedItemWrapper16, ITypedItem, new();
 
     #endregion
 }

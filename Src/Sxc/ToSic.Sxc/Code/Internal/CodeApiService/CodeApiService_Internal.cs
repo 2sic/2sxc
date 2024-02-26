@@ -1,6 +1,7 @@
 ﻿using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Polymorphism.Internal;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.Internal;
 
@@ -9,12 +10,17 @@ public partial class CodeApiService : ICodeApiServiceInternal
     [PrivateApi]
     public void AttachApp(IApp app)
     {
-        if (app is App typedApp) typedApp.SetupAsConverter(_Cdf);
+        if (app is App typedApp)
+            typedApp.SetupAsConverter(_Cdf);
+
+        // WIP - enable app.Data to do GetOne<T>, GetMany<T> etc.
+        // Note that app.Data is only the typed one, if app is first cast to IAppTyped
+        if (app is IAppTyped { Data: AppDataTyped appDataTyped })
+            appDataTyped.Setup(((ICodeApiServiceInternal)this).GetKit<ServiceKit16>());
+
         App = app;
 
         _edition = PolymorphConfigReader.UseViewEditionOrGetLazy(_Block?.View, () => Services.Polymorphism.Init(App.AppState.List));
-        //_edition = _Block?.View?.Edition.NullIfNoValue() // if Block-View comes with a preset edition, it's an ajax-preview which should be respected
-        //          ?? Services.Polymorphism.Init(App.AppState.List).Edition(); // Figure out edition using data
     }
 
     private string _edition;
