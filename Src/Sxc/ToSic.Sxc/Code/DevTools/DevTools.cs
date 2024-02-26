@@ -1,24 +1,14 @@
 ﻿using ToSic.Lib.Services;
-using ToSic.Sxc.Internal;
+using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
 namespace ToSic.Sxc.Code;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class DevTools: ServiceBase, IDevTools
+internal class DevTools(CodeHelperSpecs specs, ILog parentLog) : HelperBase(parentLog, $"{SxcLogName}.DevTls"), IDevTools
 {
-    public bool IsRazor { get; }
-    public string RazorFileName { get; }
-
-    public DevTools(bool isRazor, string razorFileName, ILog parentLog): base($"{SxcLogging.SxcLogName}.DevTls")
-    {
-        IsRazor = isRazor;
-        RazorFileName = razorFileName;
-        this.LinkLog(parentLog);
-    }
-
     private string RequireMsg(string requires, string but, string[] names) =>
-        $"Partial Razor '{RazorFileName}' requires {requires} of the following parameters, but {but} were provided: " +
-        string.Join(", ", (names ?? Array.Empty<string>()).Select(s => $"'{s}'"));
+        $"Partial Razor '{specs.CodeFileName}' requires {requires} of the following parameters, but {but} were provided: " +
+        string.Join(", ", (names ?? []).Select(s => $"'{s}'"));
 
     public void Debug(object target, NoParamOrder noParamOrder = default, bool debug = true)
     {

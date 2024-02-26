@@ -47,7 +47,7 @@ public abstract class Code14 : CustomCodeBase, IHasCodeLog, IDynamicCode, IDynam
 
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
-    private CodeHelper14 CodeHelper => _codeHelper ??= new(_CodeApiSvc, false, "c# code file");
+    private CodeHelper14 CodeHelper => _codeHelper ??= new(new( _CodeApiSvc, false, "c# code file"));
     private CodeHelper14 _codeHelper;
 
     #endregion

@@ -44,7 +44,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     public TService GetService<TService>() where TService : class => CodeRootOrError().GetService<TService>();
 
     private TypedCode16Helper CodeHelper 
-        => _codeHelper ??= new(CodeRootOrError(), MyData, null, false, "c# code file");
+        => _codeHelper ??= new(helperSpecs: new(CodeRootOrError(), false, "c# code file"), myModelDic: null, razorModel: null);
     private TypedCode16Helper _codeHelper;
 
     [PrivateApi]

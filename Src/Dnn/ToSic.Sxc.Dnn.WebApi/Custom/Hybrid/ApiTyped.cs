@@ -164,7 +164,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     private TypedCode16Helper CreateCodeHelper()
     {
-        return new(_CodeApiSvc, MyData, null, false, "c# WebApiController");
+        return new(helperSpecs: new(_CodeApiSvc, false, ((IGetCodePath)this).CreateInstancePath), myModelDic: null, razorModel: null);
     }
 
     public ITypedItem MyItem => CodeHelper.MyItem;

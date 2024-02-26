@@ -45,7 +45,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     public ServiceKit16 Kit => _kit.Get(() => _CodeApiSvc.GetKit<ServiceKit16>());
     private readonly GetOnce<ServiceKit16> _kit = new();
 
-    private TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
+    internal TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
     private TypedCode16Helper _codeHelper;
 
     void ISetDynamicModel.SetDynamicModel(object data) => _overridePageData = data;
@@ -59,7 +59,12 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
                               .Where(pair => pair.Key is string)
                               .ToDictionary(pair => pair.Key.ToString(), pair => pair.Value, InvariantCultureIgnoreCase);
 
-        return new(_CodeApiSvc, _CodeApiSvc.Data, myModelData, false, Path);
+
+        var model = _overridePageData 
+                    // the default/only value would be on a 0 key
+                    ?? (PageData?.TryGetValue(0, out var zeroData) ?? false ? zeroData as object: null);
+
+        return new(new(_CodeApiSvc, true, Path), myModelDic: myModelData, razorModel: model);
     }
 
 

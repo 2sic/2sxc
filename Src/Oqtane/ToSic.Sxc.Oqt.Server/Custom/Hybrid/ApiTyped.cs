@@ -116,7 +116,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     private TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
     private TypedCode16Helper _codeHelper;
 
-    private TypedCode16Helper CreateCodeHelper() => new(_CodeApiSvc, MyData, null, false, "c# WebApiController");
+    private TypedCode16Helper CreateCodeHelper() => new(helperSpecs: new(_CodeApiSvc, false, ((IGetCodePath)this).CreateInstancePath), myModelDic: null, razorModel: null);
 
     public ITypedItem MyItem => CodeHelper.MyItem;
 

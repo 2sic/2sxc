@@ -56,13 +56,4 @@ public abstract class DnnSxcCustomControllerBase(string logSuffix, string insigh
 
     #endregion
 
-    #region Services / Properties to share
-
-    // 2024-01-10 moved to the own classes away from base class
-    ///// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
-    //public Sxc.Adam.IFile SaveInAdam(NoParamOrder noParamOrder = default, Stream stream = null, string fileName = null, string contentType = null,
-    //    Guid? guid = null, string field = null, string subFolder = "")
-    //    => DynHlp.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
-
-    #endregion
 }

@@ -69,8 +69,9 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
 
     private TypedCode16Helper CreateCodeHelper()
     {
-        var myModelData = (_overridePageData ?? owner.Model)?.ToDicInvariantInsensitive();
-        return new(_CodeApiSvc, _CodeApiSvc.Data, myModelData, true, owner.Path);
+        var model = _overridePageData ?? owner.Model;
+        var myModelData = model?.ToDicInvariantInsensitive();
+        return new(helperSpecs: new(_CodeApiSvc, true, owner.Path), myModelDic: myModelData, razorModel: model);
     }
 
 
