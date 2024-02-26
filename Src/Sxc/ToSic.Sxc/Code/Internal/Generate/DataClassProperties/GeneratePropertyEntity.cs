@@ -35,7 +35,7 @@ internal class GeneratePropertyEntity: GeneratePropertyBase
         if (entityType.HasValue())
             specs.ExportedContentContentTypes
                 .FirstOrDefault(t => entityType.EqualsInsensitive(t.Name))
-                .UseIfNotNull(ct =>
+                .DoIfNotNull(ct =>
                 {
                     // Switch the result type
                     resultType = ct.Name;

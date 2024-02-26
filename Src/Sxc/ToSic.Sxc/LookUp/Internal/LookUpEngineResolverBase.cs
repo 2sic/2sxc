@@ -36,7 +36,7 @@ public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> loo
     {
         var l = Log.Fn<LookUpEngine>($"{nameof(moduleId)}:{moduleId}");
         var luEngine = new LookUpEngine(Log);
-        AddHttpAndDiSources(luEngine).UseIfNotNull(luEngine.Add);
+        AddHttpAndDiSources(luEngine).DoIfNotNull(luEngine.Add);
         return l.Return(luEngine);
     }
 
@@ -90,7 +90,7 @@ public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> loo
         if (!existingList.HasSource(LookUpConstants.SourceQuery))
             additions
                 .FirstOrDefault(lu => lu.Name.EqualsInsensitive(LookUpConstants.SourceQueryString))
-                .UseIfNotNull(qsl => additions.Add(new LookUpInLookUps(LookUpConstants.SourceQuery, qsl)));
+                .DoIfNotNull(qsl => additions.Add(new LookUpInLookUps(LookUpConstants.SourceQuery, qsl)));
 
         return l.Return(additions, $"{additions.Count} additions");
     }

@@ -42,6 +42,8 @@ public class PolymorphConfigReader(IServiceProvider serviceProvider) : ServiceBa
     }
 
     public static string UseViewEditionOrGetLazy(IView view, Func<PolymorphConfigReader> lazyReader)
+        // if Block-View comes with a preset edition, it's an ajax-preview which should be respected
+        // else figure out edition using data provided by the function
         => view?.Edition.NullIfNoValue() ?? lazyReader().Edition();
 
     public string Edition() => Log.Func(() =>

@@ -53,7 +53,7 @@ public class ApiExplorerController() : OqtStatefulControllerBase(RealController.
 
         // Figure out the current edition
         var blockOrNull = CtxHlp.BlockOptional;
-        var edition = blockOrNull.NullOrUse(b =>
+        var edition = blockOrNull.NullOrGetWith(b =>
             PolymorphConfigReader.UseViewEditionOrGetLazy(b.View,
                 () => GetService<PolymorphConfigReader>().Init(b.Context.AppState.List)));
 
