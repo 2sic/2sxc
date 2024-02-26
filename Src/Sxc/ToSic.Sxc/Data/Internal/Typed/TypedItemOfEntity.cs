@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Data.PropertyLookup;
+﻿using System.Text.Json;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Data;
@@ -359,35 +360,28 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
 
     #region New Child<T> / Children<T> - disabled as ATM Kit is missing
 
-    private ServiceKit16 Kit => _kit ??= Cdf.GetServiceKitOrThrow();
-    private ServiceKit16 _kit;
-
     /// <inheritdoc />
     T ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required)
         => Cdf.AsCustom<T>(
-            source: ((ITypedItem)this).Child(name, required: required),
-            kit: Kit, protector: protector, mock: true
+            source: ((ITypedItem)this).Child(name, required: required), protector: protector, mock: false
         );
 
     /// <inheritdoc />
     IEnumerable<T> ITypedItem.Children<T>(string field, NoParamOrder protector, string type, bool? required)
         => Cdf.AsCustomList<T>(
-            source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required),
-            kit: Kit, protector: protector, nullIfNull: false
+            source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required), protector: protector, nullIfNull: false
         );
 
     /// <inheritdoc />
     T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string type, string field)
         => Cdf.AsCustom<T>(
-            source: ((ITypedItem)this).Parent(noParamOrder: protector, current: current, type: type, field: field),
-            kit: Kit, protector: protector, mock: true
+            source: ((ITypedItem)this).Parent(noParamOrder: protector, current: current, type: type, field: field), protector: protector, mock: false
         );
 
     /// <inheritdoc />
     IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string type, string field)
         => Cdf.AsCustomList<T>(
-            source: ((ITypedItem)this).Parents(noParamOrder: protector, field: field, type: type),
-            kit: Kit, protector: protector, nullIfNull: false
+            source: ((ITypedItem)this).Parents(noParamOrder: protector, field: field, type: type), protector: protector, nullIfNull: false
         );
 
 
@@ -396,7 +390,7 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     #region GPS
 
     GpsCoordinates ITypedItem.Gps(string name, NoParamOrder protector, bool? required)
-        => Kit.Json.To<GpsCoordinates>(((ITypedItem)this).String(name, required: required, fallback: "{}"));
+        => JsonSerializer.Deserialize<GpsCoordinates>(((ITypedItem)this).String(name, required: required, fallback: "{}"));
 
     #endregion
 }

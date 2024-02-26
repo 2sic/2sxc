@@ -38,7 +38,7 @@ internal class AppDataTyped(
         // Get the list - will be null if not found
         var list = GetStream(typeName, nullIfNotFound: nullIfNotFound);
 
-        return list.NullOrGetWith(l => Kit._CodeApiSvc._Cdf.AsCustomList<T>(source: l, Kit, protector, nullIfNull: nullIfNotFound));
+        return list.NullOrGetWith(l => Kit._CodeApiSvc._Cdf.AsCustomList<T>(source: l, protector: protector, nullIfNull: nullIfNotFound));
     }
 
     //public IEnumerable<T> GetMany<T>(NoParamOrder protector, string typeName, bool nullIfNotFound)
@@ -68,7 +68,7 @@ internal class AppDataTyped(
             if (!item.Type.Is(typeName)) throw new($"Item with ID {id} is not a {typeName}. This is probably a mistake, otherwise use {nameof(skipTypeCheck)}: true");
         }
 
-        return Kit._CodeApiSvc._Cdf.AsCustom<TResult>(item, Kit, default, mock: false);
+        return Kit._CodeApiSvc._Cdf.AsCustom<TResult>(item, default, mock: false);
     }
 
 

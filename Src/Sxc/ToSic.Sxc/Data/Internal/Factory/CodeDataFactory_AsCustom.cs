@@ -7,7 +7,7 @@ partial class CodeDataFactory
     /// <summary>
     /// EXPERIMENTAL
     /// </summary>
-    public T AsCustom<T>(ICanBeEntity source, ServiceKit16 kit, NoParamOrder protector, bool mock)
+    public T AsCustom<T>(ICanBeEntity source, NoParamOrder protector, bool mock)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
     {
         if (!mock && source == null) return null;
@@ -15,14 +15,14 @@ partial class CodeDataFactory
 
         var item = source as ITypedItem ?? AsItem(source);
         var wrapper = new T();
-        wrapper.Setup(item, kit);
+        wrapper.Setup(item);
         return wrapper;
     }
 
     /// <summary>
     /// EXPERIMENTAL
     /// </summary>
-    public IEnumerable<T> AsCustomList<T>(IEnumerable<ICanBeEntity> source, ServiceKit16 kit, NoParamOrder protector, bool nullIfNull)
+    public IEnumerable<T> AsCustomList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector, bool nullIfNull)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
     {
         if (nullIfNull && source == null) return null;
@@ -31,7 +31,7 @@ partial class CodeDataFactory
         var items = SafeItems().Select(i =>
         {
             var wrapper = new T();
-            wrapper.Setup(i, kit);
+            wrapper.Setup(i);
             return wrapper;
         });
         return items;

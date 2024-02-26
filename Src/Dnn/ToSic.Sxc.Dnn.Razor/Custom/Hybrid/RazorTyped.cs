@@ -191,7 +191,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool mock = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => _CodeApiSvc._Cdf.AsCustom<T>(source: source, kit: Kit, protector: protector, mock: mock);
+        => _CodeApiSvc._Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
 
     /// <summary>
     /// EXPERIMENTAL
@@ -205,46 +205,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => _CodeApiSvc._Cdf.AsCustomList<T>(source: source, kit: Kit, protector: protector, nullIfNull: nullIfNull);
-
-    [PrivateApi("WIP, don't publish yet")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public IEnumerable<T> GetAll<T>(string typeName = default, NoParamOrder protector = default, bool nullIfNotFound = default)
-        where T : class, ITypedItemWrapper16, ITypedItem, new()
-    {
-        typeName ??= new T().ForContentType;
-        var list = App.Data.GetStream(typeName, nullIfNotFound: nullIfNotFound);
-
-        return AsList<T>(source: list, protector, nullIfNull: nullIfNotFound);
-    }
-
-    [PrivateApi("WIP, don't publish yet")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public T GetOne<T>(int id, NoParamOrder protector = default, bool mock = true, bool skipTypeCheck = false)
-        where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => GetOne<T>(() => App.Data.List.One(id), id, mock, skipTypeCheck);
-
-    [PrivateApi("WIP, don't publish yet")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public T GetOne<T>(Guid id, NoParamOrder protector = default, bool mock = true, bool skipTypeCheck = false)
-        where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => GetOne<T>(() => App.Data.List.One(id), id, mock, skipTypeCheck);
-
-    private TResult GetOne<TResult>(Func<IEntity> getItem, object id, bool mock, bool skipTypeCheck)
-        where TResult : class, ITypedItemWrapper16, ITypedItem, new()
-    {
-        var item = getItem();
-        if (item == null && !mock) return null;
-
-        // Optional Type-Name check
-        if (item != null && !skipTypeCheck)
-        {
-            var typeName = new TResult().ForContentType;
-            if (!item.Type.Is(typeName)) throw new($"Item with ID {id} is not a {typeName}. This is probably a mistake, otherwise use {nameof(skipTypeCheck)}: true");
-        }
-
-        return As<TResult>(item, mock: mock);
-    }
+        => _CodeApiSvc._Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
 
     #endregion
 

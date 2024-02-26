@@ -8,7 +8,6 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Internal.Convert;
 using ToSic.Sxc.Images;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Tweaks;
 
 // ReSharper disable once CheckNamespace
@@ -26,11 +25,7 @@ namespace Custom.Data;
 public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource, IHasPropLookup
 {
 
-    void ITypedItemWrapper16.Setup(ITypedItem baseItem, ServiceKit16 addKit)
-    {
-        _myItem = baseItem;
-        //Kit = addKit;
-    }
+    void ITypedItemWrapper16.Setup(ITypedItem baseItem) => _myItem = baseItem;
 
     string ITypedItemWrapper16.ForContentType => GetType().Name;
 
@@ -246,8 +241,7 @@ public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource, I
     #region New Child<T> / Children<T>
 
     /// <inheritdoc />
-    public T Child<T>(string name, NoParamOrder protector = default,
-        bool? required = default)
+    public T Child<T>(string name, NoParamOrder protector = default, bool? required = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
         => _myItem.Child<T>(name, protector: protector, required: required);
 

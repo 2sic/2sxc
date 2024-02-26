@@ -27,7 +27,7 @@ internal class ConvertService16(
     [PrivateApi("WIP, don't publish yet")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     T IConvertService16.As<T>(ICanBeEntity source, NoParamOrder protector, bool nullIfNull)
-        => _CodeApiSvc._Cdf.AsCustom<T>(source: source, kit: Kit, protector: protector, mock: nullIfNull);
+        => _CodeApiSvc._Cdf.AsCustom<T>(source: source, protector: protector, mock: nullIfNull);
 
     /// <summary>
     /// EXPERIMENTAL
@@ -36,7 +36,7 @@ internal class ConvertService16(
     [PrivateApi("WIP, don't publish yet")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     IEnumerable<T> IConvertService16.AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector, bool nullIfNull)
-        => _CodeApiSvc._Cdf.AsCustomList<T>(source: source, kit: Kit, protector: protector, nullIfNull: nullIfNull);
+        => _CodeApiSvc._Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
 
     private ServiceKit16 Kit => _kit16 ??= _CodeApiSvc.GetKit<ServiceKit16>();
     private ServiceKit16 _kit16;
