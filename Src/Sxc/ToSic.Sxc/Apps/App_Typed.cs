@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps.Internal.MetadataDecorators;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
@@ -42,16 +43,20 @@ public partial class App: IAppTyped
     #endregion
 
     /// <inheritdoc cref="IAppTyped.Settings"/>
-    ITypedItem IAppTyped.Settings => AppSettings == null ? null : _typedSettings.Get(() => MakeTyped(AppSettings, propsRequired: true));
+    ITypedItem IAppTyped.Settings => TypedSettings;
+    private ITypedItem TypedSettings => _typedSettings.Get(() => AppSettings.NullOrGetWith(appS => MakeTyped(appS, propsRequired: true)));
     private readonly GetOnce<ITypedItem> _typedSettings = new();
 
+
     /// <inheritdoc cref="IAppTyped.Resources"/>
-    ITypedItem IAppTyped.Resources => _typedRes.Get(() => MakeTyped(AppResources, propsRequired: true));
+    ITypedItem IAppTyped.Resources => TypedResources;
+
+    private ITypedItem TypedResources => _typedRes.Get(() => AppResources.NullOrGetWith(appR => MakeTyped(appR, propsRequired: true)));
     private readonly GetOnce<ITypedItem> _typedRes = new();
 
-    private ITypedItem MakeTyped(IEntity contents, bool propsRequired)
+    private ITypedItem MakeTyped(IEntity entity, bool propsRequired)
     {
-        var wrapped = CmsEditDecorator.Wrap(contents, false);
+        var wrapped = CmsEditDecorator.Wrap(entity, false);
         return _cdfLazy.Value.AsItem(wrapped, propsRequired: propsRequired);
     }
 

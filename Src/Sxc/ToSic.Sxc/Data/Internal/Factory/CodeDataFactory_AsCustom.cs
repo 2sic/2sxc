@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Services;
-
-namespace ToSic.Sxc.Data.Internal;
+﻿namespace ToSic.Sxc.Data.Internal;
 
 partial class CodeDataFactory
 {
