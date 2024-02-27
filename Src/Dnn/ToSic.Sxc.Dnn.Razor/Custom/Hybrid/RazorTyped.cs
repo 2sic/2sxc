@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Code.Help;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code.Customizer;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Data;
@@ -40,18 +41,26 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
 
-    /// <inheritdoc cref="ICodeApiService.GetService{TService}(NoParamOrder, bool)"/>
-    [PrivateApi("Experiment v17.02+")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public TService GetService<TService>(NoParamOrder protector = default, bool reuse = false) where TService : class => _CodeApiSvc.GetService<TService>();
+    ///// <inheritdoc cref="ICodeApiService.GetService{TService}(NoParamOrder, bool)"/>
+    //[PrivateApi("Experiment v17.02+")]
+    //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    //public TService GetService<TService>(NoParamOrder protector = default, bool reuse = false) where TService : class => _CodeApiSvc.GetService<TService>();
 
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
-    public ServiceKit16 Kit => _kit.Get(() => _CodeApiSvc.GetKit<ServiceKit16>());
+    public ServiceKit16 Kit => _kit.Get(_CodeApiSvc.GetKit<ServiceKit16>);
     private readonly GetOnce<ServiceKit16> _kit = new();
 
     internal TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
     private TypedCode16Helper _codeHelper;
+
+    /// <summary>
+    /// WIP
+    /// </summary>
+    [PrivateApi("Experiment v17.02+")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    protected Customizer Customize => _customize ??= _CodeApiSvc.GetService<Customizer>(reuse: true);
+    private Customizer _customize;
 
     void ISetDynamicModel.SetDynamicModel(object data) => _overridePageData = data;
 
