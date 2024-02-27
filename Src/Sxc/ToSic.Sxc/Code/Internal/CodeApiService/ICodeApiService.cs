@@ -21,5 +21,14 @@ public interface ICodeApiService : IDynamicCode12, IHasPiggyBack
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     CodeDataFactory _Cdf { get; }
 
+    /// <summary>
+    /// Special GetService which will cache the found service so any other kit would use it as well.
+    /// This should ensure that an Edit service requested through Kit14 and Kit16 are both the same, etc.
+    /// </summary>
+    /// <typeparam name="TService"></typeparam>
+    /// <returns></returns>
+    [PrivateApi("new v17.02")]
+    TService GetService<TService>(NoParamOrder protector = default, bool reuse = false) where TService : class;
+
     #endregion
 }

@@ -40,6 +40,11 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
 
+    /// <inheritdoc cref="ICodeApiService.GetService{TService}(NoParamOrder, bool)"/>
+    [PrivateApi("Experiment v17.02+")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public TService GetService<TService>(NoParamOrder protector = default, bool reuse = false) where TService : class => _CodeApiSvc.GetService<TService>();
+
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
     public ServiceKit16 Kit => _kit.Get(() => _CodeApiSvc.GetKit<ServiceKit16>());

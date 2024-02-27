@@ -125,14 +125,14 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
     public IBlockInstance Data { get; private set; }
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => _link ??= (this as ICodeApiServiceInternal).GetKitService<ILinkService>();
+    public ILinkService Link => _link ??= GetService<ILinkService>(reuse: true);
     private ILinkService _link;
 
 
     #region Edit
 
     /// <inheritdoc />
-    public IEditService Edit => _edit ??= (this as ICodeApiServiceInternal).GetKitService<IEditService>();
+    public IEditService Edit => _edit ??= GetService<IEditService>(reuse: true);
     private IEditService _edit;
 
     #endregion

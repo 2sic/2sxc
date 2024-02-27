@@ -33,12 +33,14 @@ public partial class CodeApiService : ICodeApiServiceInternal
 
     #region Kit Handling
 
-    TService ICodeApiServiceInternal.GetKitService<TService>()
+    public TService GetService<TService>(NoParamOrder protector = default, bool reuse = false) where TService : class
     {
+        if (!reuse) return GetService<TService>();
+
         var type = typeof(TService);
         if (_reusableServices.TryGetValue(type, out var service))
             return (TService)service;
-        var generated = _CodeApiSvc.GetService<TService>();
+        var generated = GetService<TService>();
         _reusableServices[type] = generated;
         return generated;
     }
@@ -57,7 +59,7 @@ public partial class CodeApiService : ICodeApiServiceInternal
     /// </summary>
     /// <typeparam name="TKit"></typeparam>
     /// <returns></returns>
-    TKit ICodeApiServiceInternal.GetKit<TKit>() => ((ICodeApiServiceInternal)this).GetKitService<TKit>();
+    TKit ICodeApiServiceInternal.GetKit<TKit>() => GetService<TKit>(reuse: true);
 
     #endregion
 }
