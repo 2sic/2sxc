@@ -38,7 +38,7 @@ internal class AppTyped<TSettings, TResources>() : ServiceForDynamicCode(SxcLogN
 
     private T AsCustom<T>(ICanBeEntity original)
         where T : class, ITypedItem, ITypedItemWrapper16, new()
-        => CodeApiSvc._Cdf.AsCustom<T>(original, default, mock: false);
+        => CodeApiSvc.Cdf.AsCustom<T>(original, default, mock: false);
 
     IFolder IAppTyped<TSettings, TResources>.Folder => App.Folder;
 

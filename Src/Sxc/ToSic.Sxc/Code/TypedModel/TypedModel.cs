@@ -22,7 +22,7 @@ internal class TypedModel(
     : ITypedModel
 {
     private readonly IDictionary<string, object> _paramsDictionary = paramsDictionary?.ToInvariant() ?? new Dictionary<string, object>();
-    private readonly TypedConverter _converter = new(helperSpecs.CodeApiSvc._Cdf);
+    private readonly TypedConverter _converter = new(helperSpecs.CodeApiSvc.Cdf);
 
     #region Check if parameters were supplied
 

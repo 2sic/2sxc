@@ -11,7 +11,7 @@ public partial class CodeApiService : ICodeApiServiceInternal
     public void AttachApp(IApp app)
     {
         if (app is App typedApp)
-            typedApp.SetupAsConverter(_Cdf);
+            typedApp.SetupAsConverter(Cdf);
 
         // WIP - enable app.Data to do GetOne<T>, GetMany<T> etc.
         // Note that app.Data is only the typed one, if app is first cast to IAppTyped
@@ -27,7 +27,7 @@ public partial class CodeApiService : ICodeApiServiceInternal
 
     [PrivateApi]
     [Obsolete("Warning - avoid using this on the DynamicCode Root - always use the one on the AsC")]
-    public int CompatibilityLevel => _Cdf.CompatibilityLevel;
+    public int CompatibilityLevel => Cdf.CompatibilityLevel;
 
     [PrivateApi] public IBlock _Block { get; private set; }
 

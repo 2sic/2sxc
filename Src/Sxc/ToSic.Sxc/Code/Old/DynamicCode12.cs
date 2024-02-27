@@ -107,26 +107,26 @@ public class DynamicCode12: CustomCodeBase, IHasCodeLog, IDynamicCode, IDynamicC
     #region AsDynamic and AsEntity
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
-    public dynamic AsDynamic(string json, string fallback = default) => _CodeApiSvc?._Cdf.Json2Jacket(json, fallback);
+    public dynamic AsDynamic(string json, string fallback = default) => _CodeApiSvc?.Cdf.Json2Jacket(json, fallback);
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
-    public dynamic AsDynamic(IEntity entity) => _CodeApiSvc?._Cdf.CodeAsDyn(entity);
+    public dynamic AsDynamic(IEntity entity) => _CodeApiSvc?.Cdf.CodeAsDyn(entity);
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
-    public dynamic AsDynamic(object dynamicEntity) => _CodeApiSvc?._Cdf.AsDynamicFromObject(dynamicEntity);
+    public dynamic AsDynamic(object dynamicEntity) => _CodeApiSvc?.Cdf.AsDynamicFromObject(dynamicEntity);
 
     /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
-    public dynamic AsDynamic(params object[] entities) => _CodeApiSvc?._Cdf.MergeDynamic(entities);
+    public dynamic AsDynamic(params object[] entities) => _CodeApiSvc?.Cdf.MergeDynamic(entities);
 
     /// <inheritdoc cref="IDynamicCode.AsEntity" />
-    public IEntity AsEntity(object dynamicEntity) => _CodeApiSvc?._Cdf.AsEntity(dynamicEntity);
+    public IEntity AsEntity(object dynamicEntity) => _CodeApiSvc?.Cdf.AsEntity(dynamicEntity);
 
     #endregion
 
     #region AsList
 
     /// <inheritdoc cref="IDynamicCode.AsList" />
-    public IEnumerable<dynamic> AsList(object list) => _CodeApiSvc?._Cdf.CodeAsDynList(list);
+    public IEnumerable<dynamic> AsList(object list) => _CodeApiSvc?.Cdf.CodeAsDynList(list);
 
     #endregion
 

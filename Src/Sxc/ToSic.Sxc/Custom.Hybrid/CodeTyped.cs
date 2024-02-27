@@ -131,25 +131,25 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
 
     /// <inheritdoc cref="IDynamicCode16.AsItem" />
     public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
-        => CodeRootOrError()._Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
+        => CodeRootOrError().Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
 
     /// <inheritdoc cref="IDynamicCode16.AsItems" />
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => CodeRootOrError()._Cdf.AsItems(list, propsRequired: propsRequired ?? true);
+        => CodeRootOrError().Cdf.AsItems(list, propsRequired: propsRequired ?? true);
 
     /// <inheritdoc cref="IDynamicCode16.AsEntity" />
-    public IEntity AsEntity(ICanBeEntity thing) => CodeRootOrError()._Cdf.AsEntity(thing);
+    public IEntity AsEntity(ICanBeEntity thing) => CodeRootOrError().Cdf.AsEntity(thing);
 
     /// <inheritdoc cref="IDynamicCode16.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => CodeRootOrError()._Cdf.AsTyped(original, propsRequired: propsRequired);
+        => CodeRootOrError().Cdf.AsTyped(original, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => CodeRootOrError()._Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
+        => CodeRootOrError().Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsStack" />
-    public ITypedStack AsStack(params object[] items) => CodeRootOrError()._Cdf.AsStack(items);
+    public ITypedStack AsStack(params object[] items) => CodeRootOrError().Cdf.AsStack(items);
 
     #endregion
 
@@ -189,7 +189,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool mock = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => _CodeApiSvc._Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
+        => _CodeApiSvc.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
 
     /// <summary>
     /// EXPERIMENTAL
@@ -203,7 +203,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => _CodeApiSvc._Cdf.AsCustomList<T>(source, protector, nullIfNull);
+        => _CodeApiSvc.Cdf.AsCustomList<T>(source, protector, nullIfNull);
 
     #endregion
 

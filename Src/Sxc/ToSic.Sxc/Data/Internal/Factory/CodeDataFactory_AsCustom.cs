@@ -38,7 +38,7 @@ partial class CodeDataFactory
         {
             if (source == null || !source.Any()) return [];
             if (source is IEnumerable<ITypedItem> alreadyOk) return alreadyOk;
-            return _CodeApiSvc._Cdf.AsItems(source);
+            return _CodeApiSvc.Cdf.AsItems(source);
         }
     }
 

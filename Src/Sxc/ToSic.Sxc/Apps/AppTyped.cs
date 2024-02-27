@@ -49,7 +49,7 @@ internal class AppTyped() : ServiceForDynamicCode(SxcLogName + ".AppTyp"), IAppT
     private ITypedItem MakeTyped(ICanBeEntity contents, bool propsRequired)
     {
         var wrapped = CmsEditDecorator.Wrap(contents.Entity, false);
-        return CodeApiSvc._Cdf.AsItem(wrapped, propsRequired: propsRequired);
+        return CodeApiSvc.Cdf.AsItem(wrapped, propsRequired: propsRequired);
     }
 
     IFolder IAppTyped.Folder => App.Folder;

@@ -33,7 +33,7 @@ public partial class CodeApiService
         var list = Data[sourceStream].List.ToList();
         return !list.Any()
             ? l.ReturnNull("first is null") 
-            : l.Return(_Cdf.AsDynamicFromEntities(list, false), "found");
+            : l.Return(Cdf.AsDynamicFromEntities(list, false), "found");
     }
         
     #endregion

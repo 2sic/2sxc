@@ -153,25 +153,25 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
 
     /// <inheritdoc cref="IDynamicCode16.AsItem" />
     public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
-        => _CodeApiSvc._Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
+        => _CodeApiSvc.Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
 
     /// <inheritdoc cref="IDynamicCode16.AsItems" />
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default) 
-        => _CodeApiSvc._Cdf.AsItems(list, propsRequired: propsRequired ?? true);
+        => _CodeApiSvc.Cdf.AsItems(list, propsRequired: propsRequired ?? true);
 
     /// <inheritdoc cref="IDynamicCode16.AsEntity" />
-    public IEntity AsEntity(ICanBeEntity thing) => _CodeApiSvc._Cdf.AsEntity(thing);
+    public IEntity AsEntity(ICanBeEntity thing) => _CodeApiSvc.Cdf.AsEntity(thing);
 
     /// <inheritdoc cref="IDynamicCode16.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _CodeApiSvc._Cdf.AsTyped(original, propsRequired: propsRequired);
+        => _CodeApiSvc.Cdf.AsTyped(original, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _CodeApiSvc._Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
+        => _CodeApiSvc.Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsStack" />
-    public ITypedStack AsStack(params object[] items) => _CodeApiSvc._Cdf.AsStack(items);
+    public ITypedStack AsStack(params object[] items) => _CodeApiSvc.Cdf.AsStack(items);
 
     #endregion
 
@@ -201,7 +201,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool mock = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => _CodeApiSvc._Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
+        => _CodeApiSvc.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
 
     /// <summary>
     /// EXPERIMENTAL
@@ -215,7 +215,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => _CodeApiSvc._Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
+        => _CodeApiSvc.Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
 
     #endregion
 

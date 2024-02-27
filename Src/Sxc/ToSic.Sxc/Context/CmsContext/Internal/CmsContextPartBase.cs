@@ -23,7 +23,7 @@ internal abstract class CmsContextPartBase<T> : Wrapper<T>, IHasMetadata where T
     }
 
     public IMetadata Metadata =>
-        _dynMeta.Get(() => _parent._CodeApiSvc._Cdf.Metadata((this as IHasMetadata).Metadata)); // new Metadata((this as IHasMetadata).Metadata, null, _parent.DEDeps));
+        _dynMeta.Get(() => _parent._CodeApiSvc.Cdf.Metadata((this as IHasMetadata).Metadata)); // new Metadata((this as IHasMetadata).Metadata, null, _parent.DEDeps));
     private readonly GetOnce<IMetadata> _dynMeta = new();
 
     IMetadataOf IHasMetadata.Metadata => _md.Get(GetMetadataOf);
