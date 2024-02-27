@@ -28,7 +28,8 @@ public class EntityController() : DnnSxcControllerBase(RealController.LogSuffix)
     [HttpGet]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public IEnumerable<Dictionary<string, object>> List(int appId, string contentType) => Real.List(appId, contentType);
+    public IEnumerable<Dictionary<string, object>> List(int appId, string contentType)
+        => Real.List(appId, contentType);
 
 
     /// <inheritdoc/>
@@ -76,14 +77,16 @@ public class EntityController() : DnnSxcControllerBase(RealController.LogSuffix)
     [HttpPost]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public ContentImportResultDto XmlPreview(ContentImportArgsDto args) => Real.XmlPreview(args);
+    public ContentImportResultDto XmlPreview(ContentImportArgsDto args)
+        => Real.XmlPreview(args);
 
 
     /// <inheritdoc/>
     [HttpPost]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public ContentImportResultDto XmlUpload(ContentImportArgsDto args) => Real.XmlUpload(args);
+    public ContentImportResultDto XmlUpload(ContentImportArgsDto args)
+        => Real.XmlUpload(args);
 
 
     /// <inheritdoc/>
