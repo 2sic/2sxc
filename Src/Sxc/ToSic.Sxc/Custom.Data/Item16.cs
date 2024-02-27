@@ -54,11 +54,8 @@ public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource, I
     /// <summary>
     /// Override ToString to give more information about the current object
     /// </summary>
-    public override string ToString()
-    {
-        var msg = $"Custom Data Model {GetType().FullName}";
-        return msg + " " + (_myItem == null ? "without backing data (null)" : $"for id:{Id} ({_myItem})");
-    }
+    public override string ToString() 
+        => $"Custom Data Model {GetType().FullName} " + (_myItem == null ? "without backing data (null)" : $"for id:{Id} ({_myItem})");
 
     #region Auto-Replay Properties
 

@@ -60,7 +60,7 @@ public abstract class RazorTyped: OqtRazorBase<dynamic>, IHasCodeLog, IRazor, IS
     public ILinkService Link => _CodeApiSvc.Link;
 
     /// <inheritdoc />
-    public IAppTyped App => (IAppTyped)_CodeApiSvc.App;
+    public IAppTyped App => _CodeApiSvc.AppTyped;
 
     /// <inheritdoc cref="IDynamicCode16.AllResources" />
     public ITypedStack AllResources => CodeHelper.AllResources;

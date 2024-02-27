@@ -109,7 +109,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     #region New App, Settings, Resources
 
     /// <inheritdoc />
-    public new IAppTyped App => (IAppTyped)_CodeApiSvc.App;
+    public new IAppTyped App => _CodeApiSvc.AppTyped;
 
     /// <inheritdoc cref="IDynamicCode16.AllResources" />
     public ITypedStack AllResources => CodeHelper.AllResources;

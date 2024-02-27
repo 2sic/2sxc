@@ -101,7 +101,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     #region New App, Settings, Resources
 
     /// <inheritdoc />
-    public IAppTyped App => (IAppTyped)_CodeApiSvc?.App;
+    public IAppTyped App => _CodeApiSvc?.AppTyped;
 
     /// <inheritdoc cref="IDynamicCode16.AllResources" />
     public ITypedStack AllResources => CodeHelper.AllResources;

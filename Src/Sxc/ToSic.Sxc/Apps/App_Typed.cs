@@ -1,4 +1,6 @@
-﻿using ToSic.Eav.Apps.Internal.MetadataDecorators;
+﻿using ToSic.Eav.Apps.Integration;
+using ToSic.Eav.Apps.Internal.MetadataDecorators;
+using ToSic.Eav.Apps.State;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
@@ -16,6 +18,14 @@ public partial class App: IAppTyped
 
     IFolder IAppTyped.Folder => _folder ??= (this as IAppTyped).FolderAdvanced();
     private IFolder _folder;
+
+    internal IAppPaths AppPathsForTyped => AppPaths;
+    internal IAppStateInternal AppStateIntForTyped => AppStateInt;
+    internal IEntity AppSettingsForTyped => AppSettings;
+    internal IEntity AppResourcesForTyped => AppResources;
+
+    internal TResult BuildDataForTyped<TDataSource, TResult>() where TDataSource : TResult where TResult : class, IDataSource
+        => BuildData<TDataSource, TResult>();
 
     IFolder IAppTyped.FolderAdvanced(NoParamOrder noParamOrder, string location) 
         => new AppAssetFolderMain(AppPaths, Folder, DetermineShared(location) ?? AppStateInt.IsShared());
@@ -43,15 +53,12 @@ public partial class App: IAppTyped
     #endregion
 
     /// <inheritdoc cref="IAppTyped.Settings"/>
-    ITypedItem IAppTyped.Settings => TypedSettings;
-    private ITypedItem TypedSettings => _typedSettings.Get(() => AppSettings.NullOrGetWith(appS => MakeTyped(appS, propsRequired: true)));
+    ITypedItem IAppTyped.Settings => _typedSettings.Get(() => AppSettings.NullOrGetWith(appS => MakeTyped(appS, propsRequired: true)));
     private readonly GetOnce<ITypedItem> _typedSettings = new();
 
 
     /// <inheritdoc cref="IAppTyped.Resources"/>
-    ITypedItem IAppTyped.Resources => TypedResources;
-
-    private ITypedItem TypedResources => _typedRes.Get(() => AppResources.NullOrGetWith(appR => MakeTyped(appR, propsRequired: true)));
+    ITypedItem IAppTyped.Resources => _typedRes.Get(() => AppResources.NullOrGetWith(appR => MakeTyped(appR, propsRequired: true)));
     private readonly GetOnce<ITypedItem> _typedRes = new();
 
     private ITypedItem MakeTyped(IEntity entity, bool propsRequired)

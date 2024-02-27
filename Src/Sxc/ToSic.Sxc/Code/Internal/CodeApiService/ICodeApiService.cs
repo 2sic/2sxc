@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Data.PiggyBack;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Data;
 using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
@@ -14,6 +15,8 @@ public interface ICodeApiService : IDynamicCode12, IHasPiggyBack
 {
     new IDynamicStack Resources { get; }
     new IDynamicStack Settings { get; }
+
+    IAppTyped AppTyped { get; }
 
     #region AsConverter (internal)
 

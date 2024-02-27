@@ -1,12 +1,18 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Internal.MetadataDecorators;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.Internal.Query;
+using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Decorators;
+using ToSic.Sxc.Services.DataServices;
 using ToSic.Sxc.Services.Internal;
+using static ToSic.Sxc.Apps.AppAssetFolderMain;
 
 namespace ToSic.Sxc.Apps;
 
@@ -16,35 +22,45 @@ namespace ToSic.Sxc.Apps;
 
 // It's not complete, because ATM it assumes it's already receiving an AppTyped - which is what this should be for.
 // So to complete
-// - change so it uses the old IApp
-// - put the code / services here needed to create an IAppTyped
 // - provide an instance of this on the CodeApiService
 // - use that instead
 
-internal class AppTyped() : ServiceForDynamicCode(SxcLogName + ".AppTyp"), IAppTyped
+internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> queryManager) : ServiceForDynamicCode(SxcLogName + ".AppTyp", connect: [globalPaths, queryManager]), IAppTyped
 {
-    private ICodeApiService CodeApiSvc => _CodeApiSvc ?? throw new($"Can't access {nameof(CodeApiSvc)} - either null or can't convert");
+    protected ICodeApiService CodeApiSvc => _CodeApiSvc ?? throw new($"Can't access {nameof(CodeApiSvc)} - either null or can't convert");
 
-    private IAppTyped App => CodeApiSvc.App as IAppTyped ?? throw new($"Can't access {nameof(App)} - either null or can't convert");
+    protected App App => CodeApiSvc.App as App ?? throw new($"Can't access {nameof(App)} - either null or can't convert");
 
-    int IZoneIdentity.ZoneId => App.ZoneId;
+    /// <inheritdoc />
+    public int ZoneId => App.ZoneId;
 
-    int IAppIdentityLight.AppId => App.AppId;
+    /// <inheritdoc />
+    public int AppId => App.AppId;
 
-    string IAppTyped.Name => App.Name;
+    /// <inheritdoc />
+    public string Name => App.Name;
 
-    IAppDataTyped IAppTyped.Data => App.Data;
+    /// <inheritdoc />
+    public IAppDataTyped Data => _data ??= App.BuildDataForTyped<AppDataTyped, IAppDataTyped>();
+    private IAppDataTyped _data;
 
-    IDataSource IAppTyped.GetQuery(string name, NoParamOrder noParamOrder, IDataSourceLinkable attach, object parameters)
-        => App.GetQuery(name, noParamOrder, attach, parameters);
+    /// <inheritdoc />
+    public IDataSource GetQuery(string name = default, NoParamOrder noParamOrder = default, IDataSourceLinkable attach = default, object parameters = default)
+    {
+        var opts = new DataSourceOptionsMs(this, () => App.ConfigurationProvider);
+        return new GetQueryMs(queryManager, opts, Log).GetQuery(name, noParamOrder, attach, parameters);
+    }
 
-    IAppConfiguration IAppTyped.Configuration => App.Configuration;
+    /// <inheritdoc />
+    public IAppConfiguration Configuration => App.Configuration;
 
-    ITypedItem IAppTyped.Settings => _typedSettings.Get(() => (App.Settings as ICanBeEntity).NullOrGetWith(appS => MakeTyped(appS, propsRequired: true)));
-    private readonly GetOnce<ITypedItem> _typedSettings = new();
+    /// <inheritdoc />
+    public ITypedItem Settings => _settings.Get(() => App.AppSettingsForTyped.NullOrGetWith(appS => MakeTyped(appS, propsRequired: true)));
+    private readonly GetOnce<ITypedItem> _settings = new();
 
-    ITypedItem IAppTyped.Resources => _typedRes.Get(() => (App.Resources as ICanBeEntity).NullOrGetWith(appR => MakeTyped(appR, propsRequired: true)));
-    private readonly GetOnce<ITypedItem> _typedRes = new();
+    /// <inheritdoc />
+    public ITypedItem Resources => _resources.Get(() => App.AppResourcesForTyped.NullOrGetWith(appR => MakeTyped(appR, propsRequired: true)));
+    private readonly GetOnce<ITypedItem> _resources = new();
 
     private ITypedItem MakeTyped(ICanBeEntity contents, bool propsRequired)
     {
@@ -52,12 +68,17 @@ internal class AppTyped() : ServiceForDynamicCode(SxcLogName + ".AppTyp"), IAppT
         return CodeApiSvc.Cdf.AsItem(wrapped, propsRequired: propsRequired);
     }
 
-    IFolder IAppTyped.Folder => App.Folder;
+    /// <inheritdoc />
+    public IFolder Folder => _folder ??= (this as IAppTyped).FolderAdvanced();
+    private IFolder _folder;
 
-    IFolder IAppTyped.FolderAdvanced(NoParamOrder noParamOrder, string location)
-        => App.FolderAdvanced(noParamOrder, location);
+    /// <inheritdoc />
+    public IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string location = default)
+        => new AppAssetFolderMain(App.AppPathsForTyped, App.Folder, DetermineShared(location) ?? App.AppStateIntForTyped.IsShared());
 
-    IFile IAppTyped.Thumbnail => App.Thumbnail;
+    /// <inheritdoc />
+    public IFile Thumbnail => _thumbnailFile.Get(() => new AppAssetThumbnail(App.AppStateIntForTyped, App.AppPathsForTyped, globalPaths));
+    private readonly GetOnce<IFile> _thumbnailFile = new();
 
 
 }

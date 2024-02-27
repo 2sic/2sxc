@@ -103,7 +103,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     #region New App, Settings, Resources
 
     /// <inheritdoc />
-    public IAppTyped App => (IAppTyped)CodeRootOrError()?.App;
+    public IAppTyped App => CodeRootOrError()?.AppTyped;
 
     /// <inheritdoc cref="IDynamicCode16.AllResources" />
     public ITypedStack AllResources => CodeHelper.AllResources;
