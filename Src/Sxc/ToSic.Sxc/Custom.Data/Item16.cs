@@ -49,21 +49,7 @@ public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource, I
     protected internal ITypedItem _myItem { get; private set; }
 #pragma warning restore IDE1006
 
-    /// <summary>
-    /// The item - for inheriting classes to access.
-    /// </summary>
-    /// <remarks>
-    /// This property is protected, not public, as it should only be used internally.
-    /// </remarks>
-    protected ITypedItem Item2 => _myItem;
-
     IBlock ICanBeItem.TryGetBlockContext() => _myItem.TryGetBlockContext();
-
-    ///// <summary>
-    ///// Kit - private, so not available to inheriting classes for now; keep API surface small.
-    ///// 2024-02-22 2dm - ATM used in Content, so must consider how to proceed - either remove from Content, or make it available here
-    ///// </summary>
-    //protected ServiceKit16 Kit { get; set; }
 
     /// <summary>
     /// Override ToString to give more information about the current object
@@ -71,23 +57,8 @@ public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource, I
     public override string ToString()
     {
         var msg = $"Custom Data Model {GetType().FullName}";
-        return _myItem == null ? $"{msg} without backing data (null)" : msg + $" for id:{Id} ({_myItem})";
+        return msg + " " + (_myItem == null ? "without backing data (null)" : $"for id:{Id} ({_myItem})");
     }
-    // 2024-02-24 2dm - removing this
-    ///// <summary>
-    ///// Get a value from the current item, which has the same name as the calling property.
-    ///// Usage:
-    /////
-    ///// * `public string Something => GetThis&lt;string&gt;();` (without fallback you must specify the type)
-    ///// * `public string Something => GetThis(fallback: "default value");` (with fallback the type is auto-detected)
-    ///// </summary>
-    ///// <typeparam name="TValue"></typeparam>
-    ///// <param name="protector"></param>
-    ///// <param name="fallback"></param>
-    ///// <param name="name"></param>
-    ///// <returns></returns>
-    //protected TValue GetThis<TValue>(NoParamOrder protector = default, TValue fallback = default, [CallerMemberName] string name = default)
-    //    => Item.Get(name, protector, fallback: fallback);
 
     #region Auto-Replay Properties
 
