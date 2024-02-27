@@ -78,6 +78,7 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<IAppDataConfigProvider, SxcAppDataConfigProvider>(); // new v17
         services.TryAddTransient<App>();
         services.TryAddTransient<SxcImportExportEnvironmentBase.MyServices>();
+        services.TryAddTransient(typeof(IAppTyped<,>), typeof(AppTyped<,>));
 
         // Rendering
         services.TryAddTransient<IRenderingHelper, RenderingHelper>();
