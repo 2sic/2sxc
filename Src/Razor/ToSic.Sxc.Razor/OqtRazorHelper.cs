@@ -1,7 +1,7 @@
-﻿using System;
-using System.IO;
-using Custom.Hybrid;
+﻿using Custom.Hybrid;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using System;
+using System.IO;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
@@ -59,10 +59,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
     private dynamic _dynamicModel;
     private object _overridePageData;
 
-    public void SetDynamicModel(object data)
-    {
-        _overridePageData = data;
-    }
+    public void SetDynamicModel(object data) => _overridePageData = data;
 
     public TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
     private TypedCode16Helper _codeHelper;
@@ -73,7 +70,6 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
         var myModelData = model?.ToDicInvariantInsensitive();
         return new(helperSpecs: new(_CodeApiSvc, true, owner.Path), myModelDic: myModelData, razorModel: model);
     }
-
 
     #endregion
 

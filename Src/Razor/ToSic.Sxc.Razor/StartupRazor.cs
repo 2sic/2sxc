@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Razor.DbgWip;
-using ToSic.Sxc.Razor.Internal;
 using ToSic.Sxc.Web.Internal.DotNet;
 
 namespace ToSic.Sxc.Razor;
@@ -34,9 +33,6 @@ public static class StartupRazor
         services.TryAddSingleton<RazorReferenceManager, RazorReferenceManagerEnhanced>();
         services.TryAddSingleton<RuntimeCompilationFileProvider>();
         services.TryAddTransient<HotBuildReferenceManager>();
-
-        // Web
-        services.TryAddTransient<IRazorService, RazorService>();
 
         return services;
     }

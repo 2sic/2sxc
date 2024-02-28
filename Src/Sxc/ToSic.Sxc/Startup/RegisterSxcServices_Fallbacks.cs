@@ -64,10 +64,6 @@ static partial class RegisterSxcServices
         services.TryAddTransient<ILinkService, LinkServiceUnknown>();
 
         // v12.05
-        // 2024-01-09 2dm seems unused
-        services.TryAddTransient<IRazorService, RazorServiceUnknown>();
-
-        // v12.05
         services.TryAddTransient<ISystemLogService, SystemLogServiceUnknown>();
 
         // v12.05
