@@ -27,7 +27,12 @@ namespace Custom.Hybrid;
 
 [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
 // ReSharper disable once UnusedMember.Global
-public abstract class RazorTyped: OqtRazorBase<dynamic>, IHasCodeLog, IRazor, ISetDynamicModel, IDynamicCode16, IHasCodeHelp
+
+public abstract class RazorTyped : RazorTyped<dynamic> { }
+
+[PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
+// ReSharper disable once UnusedMember.Global
+public abstract class RazorTyped<TModel> : OqtRazorBase<TModel>, IHasCodeLog, IRazor, ISetDynamicModel, IDynamicCode16, IHasCodeHelp
 {
     #region Constructor / DI / SysHelp
 
@@ -189,6 +194,17 @@ public abstract class RazorTyped: OqtRazorBase<dynamic>, IHasCodeLog, IRazor, IS
     public IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
         => _CodeApiSvc.Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
+
+    #endregion
+
+    #region WIP v17
+
+    /// <summary>
+    /// EXPERIMENTAL support razor base class with typed model
+    /// </summary>
+    /// <returns></returns>
+    [PrivateApi("WIP, don't publish yet")]
+    public new TModel Model => CodeHelper.GetModel<TModel>();
 
     #endregion
 }

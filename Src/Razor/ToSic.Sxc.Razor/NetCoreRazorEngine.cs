@@ -10,7 +10,6 @@ using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
-using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Razor.Internal;
@@ -27,17 +26,17 @@ internal class NetCoreRazorEngine : EngineBase, IRazorEngine
     private readonly LazySvc<CodeErrorHelpService> _errorHelp;
     private readonly LazySvc<CodeApiServiceFactory> _codeRootFactory;
     private readonly LazySvc<IRenderingHelper> _renderingHelper;
-    public IRazorRenderer RazorRenderer { get; }
+    private readonly LazySvc<IRazorRenderer> _razorRenderer;
 
     #region Constructor / DI
 
-    public NetCoreRazorEngine(MyServices services, IRazorRenderer razorRenderer, LazySvc<CodeApiServiceFactory> codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<IRenderingHelper> renderingHelper) : base(services)
+    public NetCoreRazorEngine(MyServices services, LazySvc<IRazorRenderer> razorRenderer, LazySvc<CodeApiServiceFactory> codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<IRenderingHelper> renderingHelper) : base(services)
     {
         ConnectServices(
             _codeRootFactory = codeRootFactory,
-            RazorRenderer = razorRenderer,
             _errorHelp = errorHelp,
-            _renderingHelper = renderingHelper
+            _renderingHelper = renderingHelper,
+            _razorRenderer = razorRenderer
         );
     }
 
@@ -74,7 +73,7 @@ internal class NetCoreRazorEngine : EngineBase, IRazorEngine
         {
             if (string.IsNullOrEmpty(TemplatePath)) return (null, null);
 
-            var result = await RazorRenderer.RenderToStringAsync(
+            var result = await _razorRenderer.Value.RenderToStringAsync(
                 TemplatePath,
                 new object(),
                 rzv =>
