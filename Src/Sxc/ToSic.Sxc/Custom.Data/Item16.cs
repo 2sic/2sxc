@@ -24,9 +24,10 @@ namespace Custom.Data;
 
 public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource, IHasPropLookup
 {
-
+    /// <inheritdoc />
     void ITypedItemWrapper16.Setup(ITypedItem baseItem) => _myItem = baseItem;
 
+    /// <inheritdoc />
     string ITypedItemWrapper16.ForContentType => GetType().Name;
 
     /// <summary>

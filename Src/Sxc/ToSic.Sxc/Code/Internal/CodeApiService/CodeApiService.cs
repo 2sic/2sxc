@@ -127,6 +127,7 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
         get
         {
             if (_appTyped != null) return _appTyped;
+            // TODO: @2dm - continue here with getting App to be without #IAppTyped
             _appTyped = App as IAppTyped;
             return _appTyped;
         }
