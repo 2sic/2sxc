@@ -53,7 +53,7 @@ public partial class App : Eav.Apps.Internal.EavApp, IApp
     private readonly GetOnce<string> _path = new();
 
     /// <inheritdoc cref="IApp.Thumbnail" />
-    public string Thumbnail => (this as IAppTyped).Thumbnail.Url;
+    public string Thumbnail => ThumbnailTemp.Url;
 
     /// <inheritdoc cref="IApp.PathShared" />
     public string PathShared => _pathShared.Get(() => AppPaths.PathShared);

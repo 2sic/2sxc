@@ -122,7 +122,17 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
     /// <inheritdoc />
     public IApp App { get; private set; }
 
-    public IAppTyped AppTyped => App as IAppTyped;
+    public IAppTyped AppTyped
+    {
+        get
+        {
+            if (_appTyped != null) return _appTyped;
+            _appTyped = App as IAppTyped;
+            return _appTyped;
+        }
+    }
+
+    private IAppTyped _appTyped;
 
     /// <inheritdoc />
     public IBlockInstance Data { get; private set; }

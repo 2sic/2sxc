@@ -14,6 +14,8 @@ namespace ToSic.Sxc.Apps;
 
 public partial class App: IAppTyped
 {
+    // WIP removing this and migrating to AppTyped - see #IAppTyped
+
     #region IAppTyped Folder / Thumbnail (replaces Paths)
 
     IFolder IAppTyped.Folder => _folder ??= (this as IAppTyped).FolderAdvanced();
@@ -30,7 +32,8 @@ public partial class App: IAppTyped
     IFolder IAppTyped.FolderAdvanced(NoParamOrder noParamOrder, string location) 
         => new AppAssetFolderMain(AppPaths, Folder, DetermineShared(location) ?? AppStateInt.IsShared());
 
-    IFile IAppTyped.Thumbnail => _thumbnailFile.Get(() => new AppAssetThumbnail(AppStateInt, AppPaths, _globalPaths));
+    IFile IAppTyped.Thumbnail => ThumbnailTemp;
+    private IFile ThumbnailTemp => _thumbnailFile.Get(() => new AppAssetThumbnail(AppStateInt, AppPaths, _globalPaths));
     private readonly GetOnce<IFile> _thumbnailFile = new();
 
     #endregion

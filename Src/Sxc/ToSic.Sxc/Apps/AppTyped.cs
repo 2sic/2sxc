@@ -16,7 +16,7 @@ using static ToSic.Sxc.Apps.AppAssetFolderMain;
 
 namespace ToSic.Sxc.Apps;
 
-// Wip, NOT PRODUCTION READY
+// Wip, NOT PRODUCTION READY #IAppTyped
 // Goal is to use this instead of the App, to be a clean wrapper hiding the old App
 // and to ensure only this API works with the new typed data
 

@@ -15,6 +15,7 @@ public partial class CodeApiService : ICodeApiServiceInternal
 
         // WIP - enable app.Data to do GetOne<T>, GetMany<T> etc.
         // Note that app.Data is only the typed one, if app is first cast to IAppTyped
+        // Todo: should move to property AppTyped - #IAppTyped
         if (app is IAppTyped { Data: AppDataTyped appDataTyped })
             appDataTyped.Setup(((ICodeApiServiceInternal)this).GetKit<ServiceKit16>());
 
