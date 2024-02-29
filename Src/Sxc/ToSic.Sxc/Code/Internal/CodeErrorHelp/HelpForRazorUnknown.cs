@@ -27,7 +27,7 @@ Your code seems to have an invalid namespace - eg as a <code>@using xxx</code> o
     internal static CodeHelp ProbablySemicolonAfterInherits = new(name: "inherits-breaks-with-semicolon",
         // full message is like "error CS1003: Syntax error, ',' expected at System.Web.Compilation.AssemblyBuilder.Compile()"
         // but only a part of it is in the initial exception, so we only check for the part that is there
-        detect: "error CS1003: Syntax error, ',' expected",
+        detect: "Syntax error, ',' expected",
         uiMessage: @"
 Your Razor code probably has a semicolon ';' in the wrong place, which breaks the new Roslyn Razor Compiler. Check and fix your code.
 ",
@@ -40,10 +40,30 @@ should be <br>
 <code>@inherits Custom.Hybrid.RazorTyped</code>
 ");
 
+    /// <summary>
+    /// Help when the new Roslyn compiler runs into a conversion problem because of a comment at the end of the inherits-statement
+    /// </summary>
+    internal static CodeHelp ProbablyCommentAfterInherits = new(name: "inherits-breaks-with-comment",
+        // full message is like "Error: { expected ..., Error: } expected ..., Error: Type or namespace definition, or end-of-file expected"
+        // but only a part of it is in the initial exception, so we only check for the part that is there
+        detect: @"Error: { expected",
+        uiMessage: @"
+Your Razor code probably has a comments '//' in the wrong place, which breaks the new Roslyn Razor Compiler. Check and fix your code.
+",
+        detailsHtml: @"
+The new Roslyn compiler incorrectly handles <code>@inherits</code> with a trailing comments. Remove the comments and it should work. 
+<br>
+<strong>Example</strong>: <br>
+<code>@inherits Custom.Hybrid.RazorTyped // comment</code> <br>
+should be <br>
+<code>@inherits Custom.Hybrid.RazorTyped</code>
+");
+
     internal static List<CodeHelp> CompileUnknown =
     [
         UnknownNamespace,
         ProbablySemicolonAfterInherits,
+        ProbablyCommentAfterInherits
     ];
 
 }

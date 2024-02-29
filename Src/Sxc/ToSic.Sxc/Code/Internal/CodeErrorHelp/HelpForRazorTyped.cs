@@ -112,7 +112,12 @@ public class HelpForRazorTyped
         new GenChangeOn("ToSic.Sxc.Context.ICmsView", "PhysicalPath",
             alt: $"MyView.{nameof(ICmsView.Folder)}.{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}"),
         new GenChangeOn("ToSic.Sxc.Context.ICmsView", "PhysicalPathShared",
-            alt: $"MyView.{nameof(ICmsView.Folder)}.{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}")
+            alt: $"MyView.{nameof(ICmsView.Folder)}.{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}"),
+
+        // razor compile errors
+        HelpForRazorCompileErrors.UnknownNamespace,
+        HelpForRazorCompileErrors.ProbablySemicolonAfterInherits,
+        HelpForRazorCompileErrors.ProbablyCommentAfterInherits
     );
     private static List<CodeHelp> _help;
 }
