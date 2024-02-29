@@ -57,6 +57,10 @@ public class ConvertToEavLightWithCmsInfo(ConvertToEavLight.MyServices services)
     {
         if (!WithEdit) return;
 
+        // 2024-02-29 2dm - this is old, and I believe not used any more, commented out
+        // At least in the Edit-UI it shouldn't be used, 
+        // But the key was still found in the inpage, so we're not sure if we can get rid of it
+
         var title = entity.GetBestTitle(Languages);
         if (string.IsNullOrEmpty(title))
             title = "(no title)";
@@ -64,11 +68,13 @@ public class ConvertToEavLightWithCmsInfo(ConvertToEavLight.MyServices services)
         var editDecorator = entity.GetDecorator<EntityInBlockDecorator>();
 
         dictionary.Add(SxcUiConstants.JsonEntityEditNodeName, editDecorator != null // entity is IHasEditingData entWithEditing
-            ? (object) new {
+            ? (object)new
+            {
                 sortOrder = editDecorator.SortOrder,
                 isPublished = entity.IsPublished,
             }
-            : new {
+            : new
+            {
                 entityId = entity.EntityId,
                 title,
                 isPublished = entity.IsPublished,
