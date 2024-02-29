@@ -226,15 +226,13 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         /// Compiles the template into an assembly.
         /// </summary>
         /// <returns>The compiled assembly.</returns>
-        private (Assembly Assembly, List<CompilerError> Errors) CompileTemplate(string template, List<string> referencedAssemblies, string className, string defaultNamespace, string sourceFileName)
+        private (Assembly Assembly, List<CompilerError> Errors) CompileTemplate(string sourceCode, List<string> referencedAssemblies, string className, string defaultNamespace, string sourceFileName)
         {
-            var l = Log.Fn<(Assembly, List<CompilerError>)>(timer: true, parameters: $"Template content length: {template.Length}");
+            var l = Log.Fn<(Assembly, List<CompilerError>)>(timer: true, parameters: $"{nameof(sourceCode)}: {sourceCode.Length} chars");
 
-            // There is Razor syntax that is not supported by current Roslyn compiler, so we need to clean the template
-            // by removing semicolons and comments from the @inherits directive.
-            var sourceCode = CleanInheritsDirective(template);
-            if (template.Length != sourceCode.Length)
-                l.A($"Cleaned razor source code length: {sourceCode.Length}");
+            //var sourceCode = CleanInheritsDirective(template);
+            //if (template.Length != sourceCode.Length)
+            //    l.A($"Cleaned razor source code length: {sourceCode.Length}");
 
             // Find the base class for the template
             var baseClass = FindBaseClass(sourceCode);
@@ -276,31 +274,36 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             return l.ReturnAsError((null, errorList), "error");
         }
 
-        /// <summary>
-        /// Cleans the template by removing semicolons and comments from the @inherits directive.
-        /// </summary>
-        /// <param name="template">The Razor template as a string.</param>
-        /// <returns>A cleaned template.</returns>
-        private static string CleanInheritsDirective(string template)
-        {
-            var stringBuilder = new StringBuilder();
-            using (var reader = new StringReader(template))
-            {
-                while (reader.ReadLine() is { } line)
-                {
-                    // Check if the line contains the @inherits directive
-                    if (line.Contains("@inherits"))
-                    {
-                        // Remove semicolons and comments from the line
-                        var commentIndex = line.IndexOf("//", StringComparison.Ordinal);
-                        if (commentIndex != -1) line = line.Substring(0, commentIndex);
-                        line = line.Replace(";", "").Trim();
-                    }
-                    stringBuilder.AppendLine(line);
-                }
-            }
-            return stringBuilder.ToString();
-        }
+        ///// <summary>
+        ///// Cleans the template by removing semicolons and comments from the @inherits directive.
+        ///// There is Razor syntax that is not supported by current Roslyn compiler, so we need to clean the template
+        ///// by removing semicolons and comments from the @inherits directive.
+        ///// </summary>
+        ///// <param name="template">The Razor template as a string.</param>
+        ///// <returns>A cleaned template.</returns>
+        ///// <remarks>
+        ///// It opens up too many scenarios for maintenance and mistakes.
+        ///// </remarks>
+        //private static string CleanInheritsDirective(string template)
+        //{
+        //    var stringBuilder = new StringBuilder();
+        //    using (var reader = new StringReader(template))
+        //    {
+        //        while (reader.ReadLine() is { } line)
+        //        {
+        //            // Check if the line contains the @inherits directive
+        //            if (line.Contains("@inherits"))
+        //            {
+        //                // Remove semicolons and comments from the line
+        //                var commentIndex = line.IndexOf("//", StringComparison.Ordinal);
+        //                if (commentIndex != -1) line = line.Substring(0, commentIndex);
+        //                line = line.Replace(";", "").Trim();
+        //            }
+        //            stringBuilder.AppendLine(line);
+        //        }
+        //    }
+        //    return stringBuilder.ToString();
+        //}
 
         /// <summary>
         /// Compiles the C# code into an assembly.
