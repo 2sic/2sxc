@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Data.PropertyLookup;
+﻿using System.Text.Json.Serialization;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
@@ -21,9 +22,11 @@ namespace Custom.Data;
 
 // TODO: @2dm
 //[JsonConverter(typeof(DynamicJsonConverter))]
-
+[WorkInProgressApi("Still WIP v17.02")]
 public abstract class CustomItem: ITypedItem, ITypedItemWrapper16, IHasJsonSource, IHasPropLookup
 {
+    #region Explicit Interfaces for internal use - Setup, etc.
+
     /// <inheritdoc />
     void ITypedItemWrapper16.Setup(ITypedItem baseItem) => _item = baseItem;
 
@@ -37,7 +40,24 @@ public abstract class CustomItem: ITypedItem, ITypedItemWrapper16, IHasJsonSourc
     /// Goal is that inheriting classes don't access it to keep API surface small.
     /// </summary>
     ITypedItem ICanBeItem.Item => _item;
-    
+
+    /// <summary>
+    /// This is necessary so the object can be used in places where an IEntity is expected,
+    /// like toolbars.
+    ///
+    /// It's an explicit interface implementation, so that the object itself doesn't broadcast this.
+    /// </summary>
+    [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    IEntity ICanBeEntity.Entity => _item.Entity;
+
+    IBlock ICanBeItem.TryGetBlockContext() => _item.TryGetBlockContext();
+
+    IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= ((IHasPropLookup)((ICanBeItem)this).Item).PropertyLookup;
+    private IPropertyLookup _propLookup;
+
+    #endregion
+
     /// <summary>
     /// The item - for inheriting classes to access.
     /// </summary>
@@ -50,26 +70,14 @@ public abstract class CustomItem: ITypedItem, ITypedItemWrapper16, IHasJsonSourc
     protected internal ITypedItem _item { get; private set; }
 #pragma warning restore IDE1006
 
-    IBlock ICanBeItem.TryGetBlockContext() => _item.TryGetBlockContext();
-
     /// <summary>
     /// Override ToString to give more information about the current object
     /// </summary>
     public override string ToString() 
-        => $"Custom Data Model {GetType().FullName} " + (_item == null ? "without backing data (null)" : $"for id:{Id} ({_item})");
-
-    #region Auto-Replay Properties
+        => $"{nameof(CustomItem)} Data Model {GetType().FullName} " + (_item == null ? "without backing data (null)" : $"for id:{Id} ({_item})");
 
 
-    /// <summary>
-    /// This is necessary so the object can be used in places where an IEntity is expected,
-    /// like toolbars.
-    ///
-    /// It's an explicit interface implementation, so that the object itself doesn't broadcast this.
-    /// </summary>
-    [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    IEntity ICanBeEntity.Entity => _item.Entity;
+    #region Keys and Empty-Checks
 
     /// <inheritdoc />
     public bool ContainsKey(string name) => ((IHasKeys)_item).ContainsKey(name);
@@ -78,12 +86,27 @@ public abstract class CustomItem: ITypedItem, ITypedItemWrapper16, IHasJsonSourc
     public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default) => _item.Keys(noParamOrder, only);
 
     /// <inheritdoc />
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default) => _item.IsEmpty(name, noParamOrder);
+
+    /// <inheritdoc />
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default) => _item.IsNotEmpty(name, noParamOrder);
+
+    #endregion
+
+
+    #region Basic Get
+
+    /// <inheritdoc />
     public object Get(string name, NoParamOrder noParamOrder = default, bool? required = default) => _item.Get(name, noParamOrder, required);
 
     /// <inheritdoc />
     public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default,
         bool? required = default) =>
         _item.Get(name, noParamOrder, fallback, required);
+
+    #endregion
+
+    #region Typed Get
 
     /// <inheritdoc />
     public bool Bool(string name, NoParamOrder noParamOrder = default, bool fallback = default, bool? required = default) => _item.Bool(name, noParamOrder, fallback, required);
@@ -116,23 +139,23 @@ public abstract class CustomItem: ITypedItem, ITypedItemWrapper16, IHasJsonSourc
     /// <inheritdoc />
     public string Url(string name, NoParamOrder noParamOrder = default, string fallback = default, bool? required = default) => _item.Url(name, noParamOrder, fallback, required);
 
-    /// <inheritdoc />
-    public IRawHtmlString Attribute(string name, NoParamOrder noParamOrder = default, string fallback = default,
-        bool? required = default) =>
-        _item.Attribute(name, noParamOrder, fallback, required);
+    #endregion
 
-    /// <inheritdoc />
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default) => _item.IsEmpty(name, noParamOrder);
-
-    /// <inheritdoc />
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default) => _item.IsNotEmpty(name, noParamOrder);
 
 
     /// <inheritdoc />
     public bool Equals(ITypedItem other) => _item.Equals(other);
 
     /// <inheritdoc />
+    [JsonIgnore] // prevent serialization as it's not a normal property
     public bool IsDemoItem => _item.IsDemoItem;
+
+    #region Advanced Get Methods: Attribute, Html, File, Folder etc.
+
+    /// <inheritdoc />
+    public IRawHtmlString Attribute(string name, NoParamOrder noParamOrder = default, string fallback = default,
+        bool? required = default) =>
+        _item.Attribute(name, noParamOrder, fallback, required);
 
     /// <inheritdoc />
     public IHtmlTag Html(string name, NoParamOrder noParamOrder = default, object container = default, bool? toolbar = default,
@@ -152,6 +175,10 @@ public abstract class CustomItem: ITypedItem, ITypedItemWrapper16, IHasJsonSourc
     /// <inheritdoc />
     public IFile File(string name, NoParamOrder noParamOrder = default, bool? required = default) => _item.File(name, noParamOrder, required);
 
+    #endregion
+
+    #region Children and Parents
+
     /// <inheritdoc />
     public ITypedItem Child(string name, NoParamOrder noParamOrder = default, bool? required = default) => _item.Child(name, noParamOrder, required);
 
@@ -168,10 +195,14 @@ public abstract class CustomItem: ITypedItem, ITypedItemWrapper16, IHasJsonSourc
     /// <inheritdoc />
     public IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder = default, string type = default, string field = default) => _item.Parents(noParamOrder, type, field);
 
+    #endregion
+
     /// <inheritdoc />
+    [JsonIgnore] // prevent serialization as it's not a normal property
     public bool IsPublished => _item.IsPublished;
 
     /// <inheritdoc />
+    [JsonIgnore] // prevent serialization as it's not a normal property
     public IPublishing Publishing => _item.Publishing;
 
     /// <summary>
@@ -183,13 +214,18 @@ public abstract class CustomItem: ITypedItem, ITypedItemWrapper16, IHasJsonSourc
     dynamic ITypedItem.Dyn => throw new NotSupportedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(CustomItem)} by design");
 
     /// <inheritdoc />
+    [JsonIgnore] // prevent serialization as it's not a normal property
     public ITypedItem Presentation => _item.Presentation;
 
     /// <inheritdoc />
+    [JsonIgnore] // prevent serialization as it's not a normal property
     public IMetadata Metadata => _item.Metadata;
 
     /// <inheritdoc />
     public IField Field(string name, NoParamOrder noParamOrder = default, bool? required = default) => _item.Field(name, noParamOrder, required);
+
+
+    #region Core Data: Id, Guid, Title, Type
 
     /// <inheritdoc />
     public int Id => _item.Id;
@@ -198,12 +234,16 @@ public abstract class CustomItem: ITypedItem, ITypedItemWrapper16, IHasJsonSourc
     public Guid Guid => _item.Guid;
 
     /// <inheritdoc />
+    [JsonIgnore] // prevent serialization as it maps to a property which could be different; better let the inheriting class define it
     public string Title => _item.Title;
 
     /// <inheritdoc />
+    [JsonIgnore] // prevent serialization as it's not a normal property
     public IContentType Type => _item.Type;
 
     #endregion
+
+
 
     object IHasJsonSource.JsonSource() => _item?.JsonSource();
 
@@ -236,9 +276,6 @@ public abstract class CustomItem: ITypedItem, ITypedItemWrapper16, IHasJsonSourc
         => _item.Gps(name: name, protector: protector, required: required);
 
     #endregion
-
-    IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= ((IHasPropLookup)((ICanBeItem)this).Item).PropertyLookup;
-    private IPropertyLookup _propLookup;
 
     #region As...
 
