@@ -5,8 +5,6 @@ namespace ToSic.Sxc.Code.Internal.Generate;
 
 internal abstract class GeneratePropertyBase
 {
-    public const string ItemAccessor = nameof(Item16._item);
-
     public abstract ValueTypes ForDataType { get; }
 
     protected CodeGenHelper CodeGenHelper => _codeGenHelper ??= new(new());

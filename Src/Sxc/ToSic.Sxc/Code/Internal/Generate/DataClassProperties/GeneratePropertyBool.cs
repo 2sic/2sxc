@@ -8,7 +8,7 @@ internal class GeneratePropertyBool: GeneratePropertyBase
     {
         var name = attribute.Name;
 
-        return [GenPropSnip(tabs, "bool", name, $"{ItemAccessor}.Bool", summary:
+        return [GenPropSnip(tabs, "bool", name, $"{specs.ItemAccessor}.Bool", summary:
         [
             $"{name} as bool. <br/>",
             $"To get nullable use .Get(\"{name}\") as bool?;"

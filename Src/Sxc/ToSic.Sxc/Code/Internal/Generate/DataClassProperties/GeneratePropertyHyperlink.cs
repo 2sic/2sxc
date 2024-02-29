@@ -10,16 +10,16 @@ internal class GeneratePropertyHyperlink: GeneratePropertyBase
 
         return
         [
-            GenPropSnip(tabs, "string", name, $"{ItemAccessor}.Url", summary:
+            GenPropSnip(tabs, "string", name, $"{specs.ItemAccessor}.Url", summary:
             [
                 $"{name} as link (url). <br/>",
                 $"To get the underlying value like 'file:72' use String(\"{name}\")"
             ]),
-            GenPropSnip(tabs, "IFile", name + "File", $"{ItemAccessor}.File", priority: false, usings: UsingAdam, summary:
+            GenPropSnip(tabs, "IFile", name + "File", $"{specs.ItemAccessor}.File", priority: false, usings: UsingAdam, summary:
             [
                 $"Get the file object for {name} - or null if it's empty or not referencing a file."
             ]),
-            GenPropSnip(tabs, "IFolder", name + "Folder", $"{ItemAccessor}.Folder", priority: false, usings: UsingAdam, summary:
+            GenPropSnip(tabs, "IFolder", name + "Folder", $"{specs.ItemAccessor}.Folder", priority: false, usings: UsingAdam, summary:
             [
                 $"Get the folder object for {name}."
             ]),

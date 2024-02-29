@@ -22,7 +22,7 @@ namespace Custom.Data;
 // TODO: @2dm
 //[JsonConverter(typeof(DynamicJsonConverter))]
 
-public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource, IHasPropLookup
+public abstract class CustomItem: ITypedItem, ITypedItemWrapper16, IHasJsonSource, IHasPropLookup
 {
     /// <inheritdoc />
     void ITypedItemWrapper16.Setup(ITypedItem baseItem) => _item = baseItem;
@@ -180,7 +180,7 @@ public abstract class Item16: ITypedItem, ITypedItemWrapper16, IHasJsonSource, I
     [PrivateApi]
     [Obsolete("Not available on Custom objects, use Get(...) to access any property.")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    dynamic ITypedItem.Dyn => throw new NotSupportedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(Item16)} by design");
+    dynamic ITypedItem.Dyn => throw new NotSupportedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(CustomItem)} by design");
 
     /// <inheritdoc />
     public ITypedItem Presentation => _item.Presentation;
