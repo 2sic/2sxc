@@ -12,11 +12,17 @@ partial class CodeDataFactory
         if (source is T alreadyT) return alreadyT;
 
         var item = source as ITypedItem ?? AsItem(source);
-        var wrapper = new T();
-        wrapper.Setup(item);
-        return wrapper;
+        return AsCustomFromItem<T>(item);
     }
 
+    internal static T AsCustomFromItem<T>(ITypedItem item) where T : class, ITypedItemWrapper16, ITypedItem, new()
+    {
+        if (item == null) return null;
+        if (item is T t) return t;
+        var newT = new T();
+        newT.Setup(item);
+        return newT;
+    }
     /// <summary>
     /// WIP / experimental, would be for types which are not as T, but as a type-object.
     /// Not in use, so not fully tested.
@@ -49,13 +55,7 @@ partial class CodeDataFactory
         if (nullIfNull && source == null) return null;
         if (source is IEnumerable<T> alreadyListT) return alreadyListT;
 
-        var items = SafeItems().Select(i =>
-        {
-            var wrapper = new T();
-            wrapper.Setup(i);
-            return wrapper;
-        });
-        return items;
+        return SafeItems().Select(AsCustomFromItem<T>);
 
         IEnumerable<ITypedItem> SafeItems()
         {
