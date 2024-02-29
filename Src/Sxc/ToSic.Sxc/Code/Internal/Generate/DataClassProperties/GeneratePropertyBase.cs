@@ -1,5 +1,5 @@
-﻿using Custom.Data;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Code.Internal.Generate;
 
@@ -28,6 +28,20 @@ internal abstract class GeneratePropertyBase
         );
     }
 
+    private static readonly string[] OverridePropertyNames =
+    [
+        nameof(ITypedItem.Id),
+        nameof(ITypedItem.Guid),
+        nameof(ITypedItem.Title),
+        nameof(ITypedItem.Type),
+        nameof(ITypedItem.Metadata),
+        nameof(ITypedItem.Presentation),
+        nameof(ITypedItem.IsPublished),
+        nameof(ITypedItem.Publishing),
+        // nameof(ITypedItem.Dyn), - this one is explicitly implemented, so it's not available
+        nameof(ITypedItem.IsDemoItem)
+    ];
+
     private string GenProp(int tabs, string returnType, string name, string method, string parameters, bool cache = false)
     {
         if (parameters.HasValue())
@@ -37,7 +51,10 @@ internal abstract class GeneratePropertyBase
 
         var cacheVarName = $"_{char.ToLower(name[0])}{name.Substring(1)}";
         var cacheResult = cache ? $"{cacheVarName} ??= " : "";
-        var mainCode = $"{indent}public {returnType} {name} => {cacheResult}{method}(\"{name}\"{parameters});";
+
+        var newPrefix = OverridePropertyNames.Contains(name) ? "new " : "";
+
+        var mainCode = $"{indent}public {newPrefix}{returnType} {name} => {cacheResult}{method}(\"{name}\"{parameters});";
 
         var cacheCode = cache
             ? $"\n{indent}private {returnType} {cacheVarName};"
