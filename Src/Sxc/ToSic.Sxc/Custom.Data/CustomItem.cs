@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Data.PropertyLookup;
+using ToSic.Lib.Data;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
@@ -7,7 +8,6 @@ using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Cms.Data;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
-using ToSic.Sxc.Data.Internal.Convert;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
 
@@ -23,7 +23,7 @@ namespace Custom.Data;
 // TODO: @2dm
 //[JsonConverter(typeof(DynamicJsonConverter))]
 [WorkInProgressApi("Still WIP v17.02")]
-public abstract class CustomItem: ITypedItem, ITypedItemWrapper16, IHasJsonSource, IHasPropLookup
+public abstract partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasPropLookup
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
@@ -141,11 +141,6 @@ public abstract class CustomItem: ITypedItem, ITypedItemWrapper16, IHasJsonSourc
 
     #endregion
 
-
-
-    /// <inheritdoc />
-    public bool Equals(ITypedItem other) => _item.Equals(other);
-
     /// <inheritdoc />
     [JsonIgnore] // prevent serialization as it's not a normal property
     public bool IsDemoItem => _item.IsDemoItem;
@@ -243,9 +238,6 @@ public abstract class CustomItem: ITypedItem, ITypedItemWrapper16, IHasJsonSourc
 
     #endregion
 
-
-
-    object IHasJsonSource.JsonSource() => _item?.JsonSource();
 
     #region New Child<T> / Children<T>
 

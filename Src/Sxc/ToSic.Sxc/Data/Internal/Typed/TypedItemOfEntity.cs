@@ -17,7 +17,6 @@ using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 using static ToSic.Eav.Data.Shared.WrapperEquality;
 using System.Text.Json.Serialization;
 using ToSic.Sxc.Cms.Data;
-using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Data.Internal.Typed;
 
@@ -25,7 +24,7 @@ namespace ToSic.Sxc.Data.Internal.Typed;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFactory cdf, bool propsRequired)
     : ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName, IWrapper<IEntity>,
-        IEntityWrapper, IHasMetadata
+        IEntityWrapper, IHasMetadata, IHasJsonSource
 {
     #region Setup
 
@@ -84,13 +83,7 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     // ReSharper disable once NonReadonlyMemberInGetHashCode
     public override int GetHashCode() => GetWrappedHashCode(this);
 
-    public override bool Equals(object b)
-    {
-        if (b is null) return false;
-        if (ReferenceEquals(this, b)) return true;
-        if (b.GetType() != GetType()) return false;
-        return MultiWrapperEquality.EqualsWrapper(this, (IMultiWrapper<IEntity>)b);
-    }
+    public override bool Equals(object b) => MultiWrapperEquality.EqualsObj(this, b);
 
     bool IEquatable<ITypedItem>.Equals(ITypedItem other) => Equals(other);
 
