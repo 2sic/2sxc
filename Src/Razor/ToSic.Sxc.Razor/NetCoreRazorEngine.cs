@@ -46,7 +46,7 @@ internal class NetCoreRazorEngine : EngineBase, IRazorEngine
     protected override (string Contents, List<Exception> Exception) RenderEntryRazor(RenderSpecs specs)
     {
         var l = Log.Fn<(string, List<Exception>)>();
-        var task = RenderTask();
+        var task = RenderTask(specs);
         try
         {
             task.Wait();
@@ -65,7 +65,7 @@ internal class NetCoreRazorEngine : EngineBase, IRazorEngine
     }
 
     [PrivateApi]
-    private async Task<(TextWriter TextWriter, Exception Exception)> RenderTask()
+    private async Task<(TextWriter TextWriter, Exception Exception)> RenderTask(RenderSpecs specs)
     {
         Log.A("will render into TextWriter");
         RazorView page = null;
@@ -75,7 +75,7 @@ internal class NetCoreRazorEngine : EngineBase, IRazorEngine
 
             var result = await _razorRenderer.Value.RenderToStringAsync(
                 TemplatePath,
-                new object(),
+                specs.Data,
                 rzv =>
                 {
                     page = rzv; // keep for better errors
