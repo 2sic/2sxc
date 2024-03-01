@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using ToSic.Eav.Data.Shared;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
@@ -16,7 +17,6 @@ using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Services.Tweaks;
 using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
-using static ToSic.Eav.Data.Shared.WrapperEquality;
 
 namespace ToSic.Sxc.Data.Internal.Typed;
 
@@ -269,7 +269,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     /// </summary>
     [PrivateApi]
     // ReSharper disable once NonReadonlyMemberInGetHashCode
-    public override int GetHashCode() => GetWrappedHashCode(this.PreWrap);
+    public override int GetHashCode() => WrapperEquality.GetWrappedHashCode(this.PreWrap);
 
 
     public override bool Equals(object b)
@@ -282,7 +282,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
         // TODO: ATM not clear how to best do this
         // probably need to check what's inside the PreWrap...
-        return EqualsWrapper(this.PreWrap, bTyped.PreWrap);
+        return WrapperEquality.EqualsWrapper(this.PreWrap, bTyped.PreWrap);
     }
 
     bool IEquatable<ITypedItem>.Equals(ITypedItem other) => Equals(other);
