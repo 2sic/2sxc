@@ -222,9 +222,11 @@ public abstract partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasP
     #region Core Data: Id, Guid, Title, Type
 
     /// <inheritdoc />
+    [JsonPropertyOrder(-100)]
     public int Id => _item.Id;
 
     /// <inheritdoc />
+    [JsonPropertyOrder(-99)]
     public Guid Guid => _item.Guid;
 
     /// <inheritdoc />
