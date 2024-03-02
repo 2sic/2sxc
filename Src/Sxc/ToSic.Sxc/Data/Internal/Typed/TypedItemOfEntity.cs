@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using ToSic.Eav.Data.PropertyLookup;
+﻿using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Data;
@@ -382,8 +381,8 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
 
     #region GPS
 
-    GpsCoordinates ITypedItem.Gps(string name, NoParamOrder protector, bool? required)
-        => JsonSerializer.Deserialize<GpsCoordinates>(((ITypedItem)this).String(name, required: required, fallback: "{}"));
+    GpsCoordinates ITypedItem.Gps(string name, NoParamOrder protector, bool? required) 
+        => GpsCoordinates.FromJson(((ITypedItem)this).String(name, required: required));
 
     #endregion
 }

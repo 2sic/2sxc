@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Data.Shared;
 using ToSic.Eav.Metadata;
@@ -170,25 +169,21 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     #region New Child<T> / Children<T> - disabled as ATM Kit is missing
 
-    /// <inheritdoc />
     T ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required)
         => Cdf.AsCustom<T>(
             source: (this as ITypedItem).Child(name, required: required), protector: protector, mock: false
         );
 
-    /// <inheritdoc />
     IEnumerable<T> ITypedItem.Children<T>(string field, NoParamOrder protector, string type, bool? required)
         => Cdf.AsCustomList<T>(
             source: (this as ITypedItem).Children(field: field, noParamOrder: protector, type: type, required: required), protector: protector, nullIfNull: false
         );
 
-    /// <inheritdoc />
     T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string type, string field)
         => Cdf.AsCustom<T>(
             source: (this as ITypedItem).Parent(noParamOrder: protector, current: current, type: type, field: field), protector: protector, mock: false
         );
 
-    /// <inheritdoc />
     IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string type, string field)
         => Cdf.AsCustomList<T>(
             source: (this as ITypedItem).Parents(noParamOrder: protector, field: field, type: type), protector: protector, nullIfNull: false
@@ -252,7 +247,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     #region GPS
 
     GpsCoordinates ITypedItem.Gps(string name, NoParamOrder protector, bool? required)
-        => JsonSerializer.Deserialize<GpsCoordinates>(((ITypedItem)this).String(name, required: required, fallback: "{}"));
+        => GpsCoordinates.FromJson(((ITypedItem)this).String(name, required: required));
 
     #endregion
 

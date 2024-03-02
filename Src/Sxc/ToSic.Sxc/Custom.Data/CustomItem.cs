@@ -1,6 +1,5 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Lib.Data;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
@@ -264,6 +263,7 @@ public abstract partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasP
         where T : class, ITypedItemWrapper16, ITypedItem, new()
         => _item.Parents<T>(protector: protector, type: type, field: field);
 
+    /// <inheritdoc />
     public GpsCoordinates Gps(string name, NoParamOrder protector = default, bool? required = default)
         => _item.Gps(name: name, protector: protector, required: required);
 

@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
@@ -7,7 +6,6 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Data;
 using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Images;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Tweaks;
 using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
@@ -262,7 +260,7 @@ internal partial class Metadata: ITypedItem
     #region GPS
 
     GpsCoordinates ITypedItem.Gps(string name, NoParamOrder protector, bool? required)
-        => JsonSerializer.Deserialize<GpsCoordinates>(((ITypedItem)this).String(name, required: required, fallback: "{}"));
+        => GpsCoordinates.FromJson(((ITypedItem)this).String(name, required: required));
 
     #endregion
 
