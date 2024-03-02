@@ -18,25 +18,30 @@ internal class DataClassGenerator(DataModelGenerator dmg, IContentType type, str
             return l.ReturnNull("No content type provided");
 
         // Generate main partial class
-        var autoGenClassName = className + Specs.DataClassGeneratedSuffix;
-        var mainClass = dmg.ClassWrapper(className, false, true, autoGenClassName);
+        var autoGenClassName = $"{Specs.DataClassGeneratedPrefix}{className}{Specs.DataClassGeneratedSuffix}";
+        var mainClass = dmg.ClassWrapper(className, false, true, Specs.NamespaceAutoGen + "." + autoGenClassName);
 
         // Generate AutoGen class with properties
         var classAutoGen = dmg.ClassWrapper(autoGenClassName, true, false, Specs.DataInherits);
         var (_, propsSb, usings, firstProperty) = ClassProperties(type.Attributes.ToList());
         var classCode = classAutoGen.ToString(propsSb);
 
+        var autoGenClass =
+            AutoGenClassComment()
+            + classCode;
 
         var fullBody =
             MainClassComment(firstProperty)
-            + mainClass
-            + AutoGenClassComment()
-            + classCode;
+            + mainClass;
+            // + autoGenClass;
 
         var fileContents =
             dmg.CodeGenHelper.GenerateUsings(usings)
             + dmg.NamespaceWrapper(Specs.DataNamespace)
-                .ToString(fullBody);
+                .ToString(fullBody)
+            + "\n\n"
+            + dmg.NamespaceWrapper(Specs.DataNamespaceGenerated)
+                .ToString(autoGenClass);
 
         return new(className + Specs.FileGeneratedSuffix, fileContents, FileIntroComment(dmg.User.Name));
     }
@@ -132,7 +137,7 @@ internal class DataClassGenerator(DataModelGenerator dmg, IContentType type, str
              """);
 
     public string AutoGenClassComment() => 
-        dmg.CodeGenHelper.XmlComment(Specs.TabsClass, summary: $"Auto-Generated base class for {className}.");
+        dmg.CodeGenHelper.XmlComment(Specs.TabsClass, summary: $"Auto-Generated base class for {className} in separate namespace and special name to avoid accidental use.");
 
     #endregion
 
