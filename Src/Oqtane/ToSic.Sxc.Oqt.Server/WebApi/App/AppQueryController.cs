@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 // Release routes
 [Route(OqtWebApiConstants.AppRootNoLanguage)]
 [Route(OqtWebApiConstants.AppRootPathOrLang)]
-[Route(OqtWebApiConstants.AppRootPathNdLang)]
+[Route(OqtWebApiConstants.AppRootPathAndLang)]
 
 [AllowAnonymous] // All functions will check security internally, so assume no requirements
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

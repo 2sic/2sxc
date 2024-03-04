@@ -195,18 +195,18 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
     {
         var callLog = Log.Fn<List<Folder<int, int>>>();
         var fldObj = GetOqtFolder(folder.AsOqt().SysId);
-        if(fldObj == null) return new();
+        if(fldObj == null) return [];
 
         var firstList = GetSubFoldersRecursive(fldObj);
         var folders = firstList?.Select(OqtToAdam).ToList()
-                      ?? new List<Folder<int, int>>();
+                      ?? [];
         return callLog.Return(folders, $"{folders.Count}");
     }
 
     private List<Folder> GetSubFoldersRecursive(Folder parentFolder, List<Folder> allFolders = null, List<Folder> subFolders = null)
     {
         allFolders ??= OqtFolderRepository.GetFolders(parentFolder.SiteId).ToList();
-        subFolders ??= new();
+        subFolders ??= [];
         allFolders.Where(f => f.ParentId == parentFolder.FolderId).ToList().ForEach(f =>
         {
             subFolders.Add(f);
@@ -229,12 +229,12 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
         var callLog = Log.Fn<List<File<int, int>>>();
         var fldObj = OqtFolderRepository.GetFolder(folder.AsOqt().SysId);
         // sometimes the folder doesn't exist for whatever reason
-        if (fldObj == null) return  new();
+        if (fldObj == null) return [];
 
         // try to find the files
         var firstList = OqtFileRepository.GetFiles(fldObj.FolderId);
         var files = firstList?.Select(OqtToAdam).ToList()
-                    ?? new List<File<int, int>>();
+                    ?? [];
         return callLog.Return(files, $"{files.Count}");
     }
 

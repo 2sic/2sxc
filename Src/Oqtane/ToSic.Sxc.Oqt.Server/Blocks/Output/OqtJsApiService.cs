@@ -35,7 +35,7 @@ internal class OqtJsApiService : ServiceBase, IJsApiService
     public JsApi GetJsApi(int? pageId = null, string siteRoot = null, string rvt = null)
     {
         string SiteRootFn() => siteRoot.IsEmpty() ? OqtPageOutput.GetSiteRoot(_siteStateInitializer?.InitializedState) : siteRoot;
-        string ApiRootFn() => SiteRootFn() + OqtWebApiConstants.ApiRootWithNoLang + "/";
+        string ApiRootFn() => SiteRootFn() + OqtWebApiConstants.ApiRootNoLanguage + "/";
         string UiRootFn() => OqtConstants.UiRoot + "/";
         string RvtFn() => rvt.IsEmpty() && _http?.HttpContext != null ? _antiForgery.GetAndStoreTokens(_http.HttpContext).RequestToken : rvt;
 

@@ -21,10 +21,10 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam;
 // Release routes
 [Route(OqtWebApiConstants.AppRootNoLanguage + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
 [Route(OqtWebApiConstants.AppRootPathOrLang + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
-[Route(OqtWebApiConstants.AppRootPathNdLang + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
+[Route(OqtWebApiConstants.AppRootPathAndLang + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
 [Route(OqtWebApiConstants.AppRootNoLanguage + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
 [Route(OqtWebApiConstants.AppRootPathOrLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
-[Route(OqtWebApiConstants.AppRootPathNdLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
+[Route(OqtWebApiConstants.AppRootPathAndLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AdamController() : OqtStatefulControllerBase("Adam"), IAdamController<int>
 {

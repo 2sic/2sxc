@@ -18,9 +18,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Authorize(Roles = RoleNames.Admin)]
 
 // Release routes
-[Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+[Route(OqtWebApiConstants.ApiRootNoLanguage + $"/{AreaRoutes.Admin}")]
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
-[Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
+[Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AppFilesController() : OqtStatefulControllerBase(RealController.LogSuffix), IAppFilesController

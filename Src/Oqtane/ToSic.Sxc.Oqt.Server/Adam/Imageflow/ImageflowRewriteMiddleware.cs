@@ -46,7 +46,8 @@ internal class ImageflowRewriteMiddleware : IMiddleware
         return IsImagePath(path);
     }
 
-    private static readonly string[] Suffixes = {
+    private static readonly string[] Suffixes =
+    [
         ".png",
         ".jpg",
         ".jpeg",
@@ -56,7 +57,7 @@ internal class ImageflowRewriteMiddleware : IMiddleware
         ".jpe",
         ".gif",
         ".webp"
-    };
+    ];
 
     private static bool IsImagePath(string path)
     {

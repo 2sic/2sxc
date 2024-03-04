@@ -13,10 +13,10 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 // Release routes
 [Route(OqtWebApiConstants.AppRootNoLanguage+ "/{appPath}/content")]
 [Route(OqtWebApiConstants.AppRootPathOrLang+ "/{appPath}/content")]
-[Route(OqtWebApiConstants.AppRootPathNdLang + "/{appPath}/content")]
+[Route(OqtWebApiConstants.AppRootPathAndLang + "/{appPath}/content")]
 [Route(OqtWebApiConstants.AppRootNoLanguage + "/{appPath}/data")] // new, v13
 [Route(OqtWebApiConstants.AppRootPathOrLang + "/{appPath}/data")] // new, v13
-[Route(OqtWebApiConstants.AppRootPathNdLang + "/{appPath}/data")] // new, v13
+[Route(OqtWebApiConstants.AppRootPathAndLang + "/{appPath}/data")] // new, v13
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AppDataController() : OqtStatefulControllerBase(RealController.LogSuffix), IAppDataController
