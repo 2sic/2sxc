@@ -189,6 +189,9 @@ public abstract class RazorTyped<TModel> : OqtRazorBase<TModel>, IHasCodeLog, IR
     /// EXPERIMENTAL support razor base class with typed model
     /// </summary>
     /// <returns></returns>
+    /// <remarks>
+    /// Introduced (beta) in v17.03
+    /// </remarks>
     [PrivateApi("WIP, don't publish yet")]
     public new TModel Model => CodeHelper.GetModel<TModel>();
 

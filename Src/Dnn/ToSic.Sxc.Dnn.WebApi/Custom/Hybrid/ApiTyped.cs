@@ -97,7 +97,6 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     #endregion
 
 
-
     #region AsDynamic implementations + AsList - all killed in v16
 
     ///// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
@@ -121,9 +120,6 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     #endregion
 
     #region Adam
-
-    ///// <inheritdoc cref="IDynamicCode.AsAdam" />
-    //public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot.AsAdam(item, fieldName);
 
     /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
     public IFile SaveInAdam(NoParamOrder noParamOrder = default, Stream stream = null, string fileName = null, string contentType = null,
@@ -167,12 +163,16 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
         return new(helperSpecs: new(_CodeApiSvc, false, ((IGetCodePath)this).CreateInstancePath), myModelDic: null, razorModel: null);
     }
 
+    /// <inheritdoc />
     public ITypedItem MyItem => CodeHelper.MyItem;
 
+    /// <inheritdoc />
     public IEnumerable<ITypedItem> MyItems => CodeHelper.MyItems;
 
+    /// <inheritdoc />
     public ITypedItem MyHeader => CodeHelper.MyHeader;
 
+    /// <inheritdoc />
     public IBlockInstance MyData => _CodeApiSvc.Data;
 
     #endregion
@@ -204,6 +204,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     #endregion
 
+    /// <inheritdoc />
     public ITypedModel MyModel => CodeHelper.MyModel;
 
 
@@ -231,7 +232,8 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     [NonAction]
     public HttpResponseMessage NoContent() => Shim.NoContent();
 
-    // TODO: this Shim could now be implemented after 16.02 - since we don't have the Content property any more
+    // TODO: the Content Shim could now be implemented after 16.02 - since we don't have the Content property any more
+
     #region Content (ca. 5 overloads) can't be implemented, because it conflicts with our property "Content"
 
     #endregion
