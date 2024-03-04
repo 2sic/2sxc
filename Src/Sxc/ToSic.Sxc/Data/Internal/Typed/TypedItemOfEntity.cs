@@ -82,6 +82,10 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     // ReSharper disable once NonReadonlyMemberInGetHashCode
     public override int GetHashCode() => GetWrappedHashCode(this);
 
+    /// <summary>
+    /// Ensure that the equality check is done correctly.
+    /// If two objects wrap the same item, they will be considered equal.
+    /// </summary>
     public override bool Equals(object b) => MultiWrapperEquality.EqualsObj(this, b);
 
     bool IEquatable<ITypedItem>.Equals(ITypedItem other) => Equals(other);
