@@ -119,25 +119,32 @@ internal class DataClassGenerator(DataModelGenerator dmg, IContentType type, str
           
           """;
 
-    public string MainClassComment(string firstPropertyName) =>
-        dmg.CodeGenHelper.CodeComment(Specs.TabsClass,
-            $"""
-             This is a generated class for {className}
-             To extend/modify it, see instructions above.
-             """)
-        + dmg.CodeGenHelper.XmlComment(Specs.TabsClass, summary:
-            $"""
-             {className} data. <br/>
-             Generated {DateTime.Now:u}. Re-generate whenever you change the ContentType. <br/>
-             <br/>
-             Default properties such as `.Title` or `.Id` are provided in the base class. <br/>
-             Most properties have a simple access, such as `.{firstPropertyName}`. <br/>
-             For other properties or uses, use methods such as
-             .IsNotEmpty("FieldName"), .String("FieldName"), .Children(...), .Picture(...), .Html(...).
-             """);
+    public string MainClassComment(string firstPropertyName)
+    {
+        var scope = type.Scope;
+        return dmg.CodeGenHelper.CodeComment(Specs.TabsClass,
+                   $"""
+                    This is a generated class for {className} {(scope != Scopes.Default ? $"(scope: {scope})" : "")}
+                    To extend/modify it, see instructions above.
+                    """)
+               + dmg.CodeGenHelper.XmlComment(Specs.TabsClass, summary:
+                   $"""
+                    {className} data. <br/>
+                    Generated {DateTime.Now:u}. Re-generate whenever you change the ContentType. <br/>
+                    <br/>
+                    Default properties such as `.Title` or `.Id` are provided in the base class. <br/>
+                    Most properties have a simple access, such as `.{firstPropertyName}`. <br/>
+                    For other properties or uses, use methods such as
+                    .IsNotEmpty("FieldName"), .String("FieldName"), .Children(...), .Picture(...), .Html(...).
+                    """);
+    }
 
-    public string AutoGenClassComment() => 
-        dmg.CodeGenHelper.XmlComment(Specs.TabsClass, summary: $"Auto-Generated base class for {className} in separate namespace and special name to avoid accidental use.");
+    public string AutoGenClassComment()
+    {
+        return dmg.CodeGenHelper.XmlComment(Specs.TabsClass,
+            summary:
+            $"Auto-Generated base class for {type.Scope}.{className} in separate namespace and special name to avoid accidental use.");
+    }
 
     #endregion
 
