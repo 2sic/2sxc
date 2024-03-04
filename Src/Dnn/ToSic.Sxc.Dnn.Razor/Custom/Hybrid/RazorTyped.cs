@@ -41,11 +41,6 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
 
-    ///// <inheritdoc cref="ICodeApiService.GetService{TService}(NoParamOrder, bool)"/>
-    //[PrivateApi("Experiment v17.02+")]
-    //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    //public TService GetService<TService>(NoParamOrder protector = default, bool reuse = false) where TService : class => _CodeApiSvc.GetService<TService>();
-
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
     public ServiceKit16 Kit => _kit.Get(_CodeApiSvc.GetKit<ServiceKit16>);
@@ -202,26 +197,12 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
 
     #region As / AsList WIP v17
 
-    /// <summary>
-    /// EXPERIMENTAL
-    /// </summary>
-    /// <returns></returns>
-    [PrivateApi("WIP, don't publish yet")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    /// <inheritdoc />
     public T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool mock = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
         => _CodeApiSvc.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
 
-    /// <summary>
-    /// EXPERIMENTAL
-    /// </summary>
-    /// <param name="source"></param>
-    /// <param name="protector"></param>
-    /// <param name="nullIfNull"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    [PrivateApi("WIP, don't publish yet")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    /// <inheritdoc />
     public IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
         => _CodeApiSvc.Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);

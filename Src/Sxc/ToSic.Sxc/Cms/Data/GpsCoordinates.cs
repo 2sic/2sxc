@@ -8,6 +8,10 @@ namespace ToSic.Sxc.Cms.Data;
 /// <summary>
 /// Represents GPS coordinates.
 /// </summary>
+/// <remarks>
+/// Released in v17.03, still BETA.
+/// </remarks>
+[PublicApi]
 public class GpsCoordinates
 {
     /// <summary>

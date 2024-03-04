@@ -274,23 +274,31 @@ public abstract partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasP
     #region As...
 
     /// <summary>
-    /// WIP
+    /// Convert an Entity or TypedItem into a strongly typed object.
+    /// Typically, the type will be from your `AppCode.Data`.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="item"></param>
     /// <returns></returns>
+    /// <remarks>
+    /// BETA in v17.03
+    /// </remarks>
     protected T As<T>(ITypedItem item)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
         => CodeDataFactory.AsCustomFromItem<T>(item);
 
     /// <summary>
-    ///  WIP
+    /// Convert a list of Entities or TypedItems into a strongly typed list.
+    /// Typically, the type will be from your `AppCode.Data`.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="source"></param>
     /// <param name="protector"></param>
     /// <param name="nullIfNull"></param>
     /// <returns></returns>
+    /// <remarks>
+    /// BETA in v17.03
+    /// </remarks>
     protected IEnumerable<T> AsList<T>(IEnumerable<ITypedItem> source, NoParamOrder protector = default, bool nullIfNull = false)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
         => (source ?? (nullIfNull ? null : []))?.Select(CodeDataFactory.AsCustomFromItem<T>).ToList();

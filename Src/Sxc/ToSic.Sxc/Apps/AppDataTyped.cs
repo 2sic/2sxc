@@ -41,11 +41,6 @@ internal class AppDataTyped(
         return list.NullOrGetWith(l => Kit._CodeApiSvc.Cdf.AsCustomList<T>(source: l, protector: protector, nullIfNull: nullIfNotFound));
     }
 
-    //public IEnumerable<T> GetMany<T>(NoParamOrder protector, string typeName, bool nullIfNotFound)
-    //{
-        
-    //}
-
     /// <inheritdoc />
     T IAppDataTyped.GetOne<T>(int id, NoParamOrder protector, bool skipTypeCheck)
         => GetOne<T>(() => List.One(id), id, skipTypeCheck);
