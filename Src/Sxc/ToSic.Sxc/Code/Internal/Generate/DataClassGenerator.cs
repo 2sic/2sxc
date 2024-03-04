@@ -122,9 +122,11 @@ internal class DataClassGenerator(DataClassesGenerator dmg, IContentType type, s
     public string MainClassComment(string firstPropertyName)
     {
         var scope = type.Scope;
+        var scopeIsSpecial = scope != Scopes.Default;
+        var remarks = scopeIsSpecial ? $"This Content-Type is NOT in the default scope, so you may not see it in the Admin UI. It's in the scope {scope}." : null;
         return dmg.CodeGenHelper.CodeComment(Specs.TabsClass,
                    $"""
-                    This is a generated class for {className} {(scope != Scopes.Default ? $"(scope: {scope})" : "")}
+                    This is a generated class for {className} {(scopeIsSpecial ? $"(scope: {scope})" : "")}
                     To extend/modify it, see instructions above.
                     """)
                + dmg.CodeGenHelper.XmlComment(Specs.TabsClass, summary:
@@ -136,7 +138,8 @@ internal class DataClassGenerator(DataClassesGenerator dmg, IContentType type, s
                     Most properties have a simple access, such as `.{firstPropertyName}`. <br/>
                     For other properties or uses, use methods such as
                     .IsNotEmpty("FieldName"), .String("FieldName"), .Children(...), .Picture(...), .Html(...).
-                    """);
+                    """, 
+                   remarks: remarks);
     }
 
     public string AutoGenClassComment()
