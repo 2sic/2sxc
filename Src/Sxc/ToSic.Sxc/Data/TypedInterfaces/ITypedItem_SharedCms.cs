@@ -132,7 +132,7 @@ partial interface ITypedItem
     /// <param name="protector"></param>
     /// <param name="required"></param>
     /// <returns></returns>
-    /// <remarks>New in v17.02</remarks>
+    /// <remarks>New in v17.03</remarks>
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     GpsCoordinates Gps(string name, NoParamOrder protector = default, bool? required = default);

@@ -17,7 +17,7 @@ public partial class CodeApiService
 
         // Compile
         var compiler = Services.CodeCompilerLazy.Value;
-        var spec = new HotBuildSpec(App.AppId, _edition);
+        var spec = new HotBuildSpec(App.AppId, _edition, App.Name);
         var instance = compiler.InstantiateClass(virtualPath, spec, className: name, relativePath: relativePath, throwOnError: throwOnError);
 
         if (instance == null)

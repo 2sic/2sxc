@@ -4,6 +4,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Edit.Toolbar;
@@ -13,6 +14,7 @@ namespace ToSic.Sxc.Code;
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class TypedModel(
+    CodeHelperSpecs helperSpecs,
     IDictionary<string, object> paramsDictionary,
     ICodeApiService codeApiSvc,
     bool isRazor,
@@ -20,7 +22,7 @@ internal class TypedModel(
     : ITypedModel
 {
     private readonly IDictionary<string, object> _paramsDictionary = paramsDictionary?.ToInvariant() ?? new Dictionary<string, object>();
-    private readonly TypedConverter _converter = new(codeApiSvc._Cdf);
+    private readonly TypedConverter _converter = new(helperSpecs.CodeApiSvc.Cdf);
 
     #region Check if parameters were supplied
 

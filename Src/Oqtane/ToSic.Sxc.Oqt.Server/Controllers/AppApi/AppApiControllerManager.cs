@@ -82,13 +82,16 @@ internal class AppApiControllerManager: IHasLog
         if (string.IsNullOrWhiteSpace(apiCode))
             throw new IOException($"Error, missing AppApi code in file {Path.GetFileName(apiFile)}.");
 
-        var spec = new HotBuildSpec(_ctxResolver.SetAppOrGetBlock("")?.AppState?.AppId ?? Eav.Constants.AppIdEmpty);
+        // Prepare / Get App State, while possibly also initializing the App...
+        var appState = _ctxResolver.SetAppOrGetBlock("")?.AppState;
 
         // Figure out the current edition
         var block = _ctxResolver.BlockOrNull();
-        if (block != null)
-            spec = new HotBuildSpec(spec.AppId,
-                edition: PolymorphConfigReader.UseViewEditionOrGetLazy(block.View, () => _polymorphism.Init(block.Context.AppState.List)));
+        var edition = block == null 
+            ? null 
+            : PolymorphConfigReader.UseViewEditionOrGetLazy(block.View, () => _polymorphism.Init(block.Context.AppState.List));
+
+        var spec = new HotBuildSpec(appState?.AppId ?? Eav.Constants.AppIdEmpty, edition: edition, appState?.Name);
 
         // Build new AppApi Controller
         Log.A($"Compile assembly: {apiFile}; {nameof(dllName)}: '{dllName}'; {spec}");

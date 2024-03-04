@@ -3,6 +3,7 @@ using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Services;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
@@ -121,18 +122,31 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
     /// <inheritdoc />
     public IApp App { get; private set; }
 
+    public IAppTyped AppTyped
+    {
+        get
+        {
+            if (_appTyped != null) return _appTyped;
+            // TODO: @2dm - continue here with getting App to be without #IAppTyped
+            _appTyped = App as IAppTyped;
+            return _appTyped;
+        }
+    }
+
+    private IAppTyped _appTyped;
+
     /// <inheritdoc />
     public IBlockInstance Data { get; private set; }
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => _link ??= (this as ICodeApiServiceInternal).GetKitService<ILinkService>();
+    public ILinkService Link => _link ??= GetService<ILinkService>(reuse: true);
     private ILinkService _link;
 
 
     #region Edit
 
     /// <inheritdoc />
-    public IEditService Edit => _edit ??= (this as ICodeApiServiceInternal).GetKitService<IEditService>();
+    public IEditService Edit => _edit ??= GetService<IEditService>(reuse: true);
     private IEditService _edit;
 
     #endregion

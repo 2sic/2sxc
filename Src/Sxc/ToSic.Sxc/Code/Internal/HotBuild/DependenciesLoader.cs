@@ -14,9 +14,7 @@ namespace ToSic.Sxc.Code.Internal.HotBuild;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class DependenciesLoader : ServiceBase
 {
-
     public const string DependenciesFolder = "Dependencies";
-    private const string AppRoot = HotBuildSpec.AppRoot;
 
     public DependenciesLoader(ILogStore logStore, ISite site, IAppStates appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, AssemblyCacheManager assemblyCacheManager, LazySvc<AppCodeCompiler> appCodeCompilerLazy) : base("Sys.AppCodeLoad")
     {
@@ -44,14 +42,14 @@ public class DependenciesLoader : ServiceBase
         if (assemblyResults != null) return l.Return((assemblyResults.Select(r => r.Assembly).ToList(), spec), "Dependencies where cached.");
 
         var assemblies = LoadDependencyAssembliesOrNull(spec, cacheKey);
-        if (assemblies != null) return l.Return((assemblies, spec), $"Dependencies loaded from '{(spec.Edition.IsEmpty() ? AppRoot : spec.Edition)}'");
+        if (assemblies != null) return l.Return((assemblies, spec), $"Dependencies loaded from '/{spec.Edition}'");
 
-        if (spec.Edition.IsEmpty()) return l.Return((null, spec), $"Dependencies not found in '{AppRoot}', done.");
+        if (spec.Edition.IsEmpty()) return l.Return((null, spec), $"Dependencies not found in '/', done.");
 
         // try get root edition
         var rootSpec = spec.CloneWithoutEdition();
         var pairFromRoot = TryGetOrFallback(rootSpec);
-        return l.Return(pairFromRoot, pairFromRoot.Assemblies == null ? $"Dependencies not found in '{AppRoot}', null." : $"Dependencies found in '{AppRoot}'.");
+        return l.Return(pairFromRoot, "Dependencies found in '/'." + (pairFromRoot.Assemblies == null ? ", null." : ""));
     }
 
     private static (List<AssemblyResult> assemblyResults, string cacheKey) TryGetAssemblyOfDependenciesFromCache(HotBuildSpec spec, ILog callerLog)

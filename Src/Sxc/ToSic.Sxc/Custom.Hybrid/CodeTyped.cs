@@ -44,7 +44,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     public TService GetService<TService>() where TService : class => CodeRootOrError().GetService<TService>();
 
     private TypedCode16Helper CodeHelper 
-        => _codeHelper ??= new(CodeRootOrError(), MyData, null, false, "c# code file");
+        => _codeHelper ??= new(helperSpecs: new(CodeRootOrError(), false, "c# code file"), myModelDic: null, razorModel: null);
     private TypedCode16Helper _codeHelper;
 
     [PrivateApi]
@@ -103,7 +103,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     #region New App, Settings, Resources
 
     /// <inheritdoc />
-    public IAppTyped App => (IAppTyped)CodeRootOrError()?.App;
+    public IAppTyped App => CodeRootOrError()?.AppTyped;
 
     /// <inheritdoc cref="IDynamicCode16.AllResources" />
     public ITypedStack AllResources => CodeHelper.AllResources;
@@ -131,25 +131,25 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
 
     /// <inheritdoc cref="IDynamicCode16.AsItem" />
     public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
-        => CodeRootOrError()._Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
+        => CodeRootOrError().Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
 
     /// <inheritdoc cref="IDynamicCode16.AsItems" />
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => CodeRootOrError()._Cdf.AsItems(list, propsRequired: propsRequired ?? true);
+        => CodeRootOrError().Cdf.AsItems(list, propsRequired: propsRequired ?? true);
 
     /// <inheritdoc cref="IDynamicCode16.AsEntity" />
-    public IEntity AsEntity(ICanBeEntity thing) => CodeRootOrError()._Cdf.AsEntity(thing);
+    public IEntity AsEntity(ICanBeEntity thing) => CodeRootOrError().Cdf.AsEntity(thing);
 
     /// <inheritdoc cref="IDynamicCode16.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => CodeRootOrError()._Cdf.AsTyped(original, propsRequired: propsRequired);
+        => CodeRootOrError().Cdf.AsTyped(original, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => CodeRootOrError()._Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
+        => CodeRootOrError().Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsStack" />
-    public ITypedStack AsStack(params object[] items) => CodeRootOrError()._Cdf.AsStack(items);
+    public ITypedStack AsStack(params object[] items) => CodeRootOrError().Cdf.AsStack(items);
 
     #endregion
 
@@ -182,14 +182,14 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     /// </summary>
     /// <param name="source"></param>
     /// <param name="protector"></param>
-    /// <param name="nullIfNull"></param>
+    /// <param name="mock"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     [PrivateApi("WIP, don't publish yet")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool nullIfNull = false)
+    public T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool mock = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => _CodeApiSvc._Cdf.AsCustom<T>(source: source, kit: Kit, protector: protector, nullIfNull: nullIfNull);
+        => _CodeApiSvc.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
 
     /// <summary>
     /// EXPERIMENTAL
@@ -203,7 +203,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => _CodeApiSvc._Cdf.AsCustomList<T>(source, Kit, protector, nullIfNull);
+        => _CodeApiSvc.Cdf.AsCustomList<T>(source, protector, nullIfNull);
 
     #endregion
 

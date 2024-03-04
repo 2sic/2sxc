@@ -27,7 +27,12 @@ namespace Custom.Hybrid;
 
 [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
 // ReSharper disable once UnusedMember.Global
-public abstract class RazorTyped: OqtRazorBase<dynamic>, IHasCodeLog, IRazor, ISetDynamicModel, IDynamicCode16, IHasCodeHelp
+
+public abstract class RazorTyped : RazorTyped<dynamic> { }
+
+[PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
+// ReSharper disable once UnusedMember.Global
+public abstract class RazorTyped<TModel> : OqtRazorBase<TModel>, IHasCodeLog, IRazor, ISetDynamicModel, IDynamicCode16, IHasCodeHelp
 {
     #region Constructor / DI / SysHelp
 
@@ -60,7 +65,7 @@ public abstract class RazorTyped: OqtRazorBase<dynamic>, IHasCodeLog, IRazor, IS
     public ILinkService Link => _CodeApiSvc.Link;
 
     /// <inheritdoc />
-    public IAppTyped App => (IAppTyped)_CodeApiSvc.App;
+    public IAppTyped App => _CodeApiSvc.AppTyped;
 
     /// <inheritdoc cref="IDynamicCode16.AllResources" />
     public ITypedStack AllResources => CodeHelper.AllResources;
@@ -88,25 +93,25 @@ public abstract class RazorTyped: OqtRazorBase<dynamic>, IHasCodeLog, IRazor, IS
 
     /// <inheritdoc cref="IDynamicCode16.AsItem" />
     public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
-        => _CodeApiSvc._Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
+        => _CodeApiSvc.Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
 
     /// <inheritdoc cref="IDynamicCode16.AsItems" />
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _CodeApiSvc._Cdf.AsItems(list, propsRequired: propsRequired ?? true);
+        => _CodeApiSvc.Cdf.AsItems(list, propsRequired: propsRequired ?? true);
 
     /// <inheritdoc cref="IDynamicCode16.AsEntity" />
-    public IEntity AsEntity(ICanBeEntity thing) => _CodeApiSvc._Cdf.AsEntity(thing);
+    public IEntity AsEntity(ICanBeEntity thing) => _CodeApiSvc.Cdf.AsEntity(thing);
 
     /// <inheritdoc cref="IDynamicCode16.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _CodeApiSvc._Cdf.AsTyped(original, propsRequired: propsRequired);
+        => _CodeApiSvc.Cdf.AsTyped(original, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _CodeApiSvc._Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
+        => _CodeApiSvc.Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsStack" />
-    public ITypedStack AsStack(params object[] items) => _CodeApiSvc._Cdf.AsStack(items);
+    public ITypedStack AsStack(params object[] items) => _CodeApiSvc.Cdf.AsStack(items);
 
     #endregion
 
@@ -176,9 +181,9 @@ public abstract class RazorTyped: OqtRazorBase<dynamic>, IHasCodeLog, IRazor, IS
     /// <returns></returns>
     [PrivateApi("WIP, don't publish yet")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool nullIfNull = false)
+    public T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool mock = false)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => _CodeApiSvc._Cdf.AsCustom<T>(source: source, kit: Kit, protector: protector, nullIfNull: nullIfNull);
+        => _CodeApiSvc.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
 
     /// <summary>
     /// EXPERIMENTAL
@@ -188,7 +193,18 @@ public abstract class RazorTyped: OqtRazorBase<dynamic>, IHasCodeLog, IRazor, IS
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => _CodeApiSvc._Cdf.AsCustomList<T>(source: source, kit: Kit, protector: protector, nullIfNull: nullIfNull);
+        => _CodeApiSvc.Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
+
+    #endregion
+
+    #region WIP v17
+
+    /// <summary>
+    /// EXPERIMENTAL support razor base class with typed model
+    /// </summary>
+    /// <returns></returns>
+    [PrivateApi("WIP, don't publish yet")]
+    public new TModel Model => CodeHelper.GetModel<TModel>();
 
     #endregion
 }

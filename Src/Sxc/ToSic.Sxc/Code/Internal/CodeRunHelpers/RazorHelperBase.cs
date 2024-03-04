@@ -29,9 +29,9 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
 
         if (!path.EndsWith(CodeCompiler.CsFileExtension))
             throw l.Done(new ArgumentException("Only '.cs' file paths can start with a slash"));
-        var app = (overrideCodeRoot ?? _CodeApiSvc)?.App
+        var app = (overrideCodeRoot ?? _CodeApiSvc)?.AppTyped
                   ?? throw l.Done(new Exception("Absolute paths require an App, which was null"));
-        var appFolder = (app as IAppTyped)?.Folder?.Path
+        var appFolder = app.Folder?.Path
                         ?? throw l.Done(new Exception("Absolute paths require the App folder, which was null"));
         return l.ReturnAndLog(Path.Combine(appFolder, path.TrimPrefixSlash()));
     }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Reflection;
 using ToSic.Eav.Internal.Environment;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Lib.DI;
@@ -50,13 +51,17 @@ public class ApiExplorerController() : OqtStatefulControllerBase(RealController.
         var appFolder = GetService<AppFolder>().GetAppFolder();
         var pathFromRoot = OqtServerPaths.GetAppApiPath(siteId, appFolder, path);
 
-        var spec = new HotBuildSpec(CtxHlp.BlockOptional?.AppId ?? Eav.Constants.AppIdEmpty); 
-        
         // Figure out the current edition
-        var block = CtxHlp.BlockOptional;
-        if (block != null)
-            spec = new HotBuildSpec(spec.AppId,
-                edition: PolymorphConfigReader.UseViewEditionOrGetLazy(block.View,() => GetService<PolymorphConfigReader>().Init(block.Context.AppState.List)));
+        var blockOrNull = CtxHlp.BlockOptional;
+        var edition = blockOrNull.NullOrGetWith(b =>
+            PolymorphConfigReader.UseViewEditionOrGetLazy(b.View,
+                () => GetService<PolymorphConfigReader>().Init(b.Context.AppState.List)));
+
+        var spec = new HotBuildSpec(blockOrNull?.AppId ?? Eav.Constants.AppIdEmpty, edition: edition, appName: blockOrNull?.App?.Name); 
+        
+        //if (block != null)
+        //    spec = new HotBuildSpec(spec.AppId,
+        //        edition: PolymorphConfigReader.UseViewEditionOrGetLazy(block.View,() => GetService<PolymorphConfigReader>().Init(block.Context.AppState.List)));
 
         var appCodeLoader = GetService<LazySvc<AppCodeLoader>>();
         Log.A($"Controller path from root: {pathFromRoot}");

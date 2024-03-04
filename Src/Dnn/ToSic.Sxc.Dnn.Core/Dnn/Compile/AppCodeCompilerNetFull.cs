@@ -64,10 +64,16 @@ internal class AppCodeCompilerNetFull : AppCodeCompiler
 
             // Compile error case
             var errors = "";
-            foreach (CompilerError error in results.Errors)
+            foreach (var msg in results.Errors.Cast<CompilerError>().Where(error => !error.IsWarning).ToList()
+                .Select(error => $"Error ({error.ErrorNumber}): {error.ErrorText} in '{error.FileName}' (Line: {error.Line}, Column: {error.Column})."))
             {
-                var msg = $"{(error.IsWarning ? "Warning" : "Error")} ({error.ErrorNumber}): {error.ErrorText} in '{error.FileName}' (Line: {error.Line}, Column: {error.Column}).";
                 l.E(msg);
+                errors += $"{msg}\n";
+            }
+            foreach (var msg in results.Errors.Cast<CompilerError>().Where(error => error.IsWarning).ToList()
+                .Select(warning => $"Warning ({warning.ErrorNumber}): {warning.ErrorText} in '{warning.FileName}' (Line: {warning.Line}, Column: {warning.Column})."))
+            {
+                l.W(msg);
                 errors += $"{msg}\n";
             }
 

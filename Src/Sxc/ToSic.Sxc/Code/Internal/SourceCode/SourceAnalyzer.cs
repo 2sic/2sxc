@@ -45,8 +45,6 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
         return l.Return((relativePath, fullPath, sourceCode), $"found, {sourceCode.Length} bytes");
     }
 
-    // TODO: @STV - pls review my changes where I killed most functions and duplicate types, and if ok, remove the commented out code below
-
     private CodeFileInfo AnalyzeContent(string relativePath, string fullPath, string sourceCode)
     {
         var l = Log.Fn<CodeFileInfo>($"{nameof(relativePath)}:{relativePath}");
@@ -70,7 +68,6 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
             if (baseClass.IsEmptyOrWs())
                 return l.Return(
                     BuildCfi(CodeFileInfo.TemplateUnknown, csUseAppCode),
-                    //CodeFileInfo.CodeFileUnknown(sourceCode, relativePath: relativePath, fullPath: fullPath, useAppCode: csUseAppCode),
                     "Ok, cs file without base class");
 
             var csBaseClassMatch = CodeFileInfo.CodeFileInfoTemplates
@@ -80,7 +77,6 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
                 ? l.ReturnAndLog(new(csBaseClassMatch, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath, useAppCode: csUseAppCode))
                 : l.Return(
                     BuildCfi(CodeFileInfo.TemplateOther, csUseAppCode),
-                    //CodeFileInfo.CodeFileOther(sourceCode, relativePath: relativePath, fullPath: fullPath, useAppCode: csUseAppCode),
                     "Ok, cs file with other base class");
         }
 
@@ -90,14 +86,12 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
         if (!inheritsMatch.Success)
             return l.Return(
                 BuildCfi(CodeFileInfo.TemplateUnknown, false),
-                // CodeFileInfo.CodeFileUnknown(sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath),
                 "no @inherits found");
 
         var ns = inheritsMatch.Groups["BaseName"].Value;
         if (ns.IsEmptyOrWs())
             return l.Return(
                 BuildCfi(CodeFileInfo.TemplateUnknown, false),
-                //CodeFileInfo.CodeFileUnknown(sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath),
                 "@inherits empty string"
                 );
 
@@ -114,7 +108,6 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
             ? l.ReturnAndLog(BuildCfi(findMatch, razorUseAppCode))
             : l.Return(
                 BuildCfi(CodeFileInfo.TemplateOther, razorUseAppCode),
-                //CodeFileInfo.CodeFileOther(sourceCode, relativePath: relativePath, fullPath: fullPath), 
                 $"namespace '{ns}' can't be found");
 
         // Helper to build the CodeFileInfo based on a template and all the specs provided originally

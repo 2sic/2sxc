@@ -125,6 +125,15 @@
     <Exec Command="robocopy /MIR &quot;$(ProjectDir)DnnWebForms/&quot; &quot;$(BuildTarget)/DnnWebForms/&quot;" IgnoreExitCode="true"/>
 
     <!--Copy 2sxc JS stuff (order of commands is important) -->
+    <!--
+    The commented script was initially designed to automate the deployment of JavaScript assets for the 2sxc module in a DNN development environment as part of the 2sxc backend build. 
+    It has been commented out to prevent unexpected behavior for frontend (JavaScript) developers, particularly the issue of the latest JavaScript assets in the DNN development environment 
+    being overwritten with older JavaScript assets from'2sxc-sources\_latest'.
+    
+    Backend developers are advised to manually copy all JavaScript assets from '2sxc-sources\_latest' to the DNN development environment at '2sxc-dnn\Website\DesktopModules\ToSIC_SexyContent'. 
+    This ensures the latest version of JavaScript assets are used, as this step no longer occurs automatically with each update of the 2sxc version in DNN dev env. 
+    Another option is to run npm scripts in 'eav-ui', as is the practice among frontend (JavaScript) developers.
+    -->
     <!--<Exec Command="robocopy /MIR &quot;$(Source)/js/&quot; &quot;$(BuildTarget)/js/&quot;" IgnoreExitCode="true" Condition="Exists('$(Source)')"/>
     <Exec Command="robocopy /MIR &quot;$(Source)/system/&quot; &quot;$(BuildTarget)/system/&quot;" IgnoreExitCode="true" Condition="Exists('$(Source)')"/>
     <Exec Command="robocopy /MIR &quot;$(Source)/dist/&quot; &quot;$(BuildTarget)/dist/&quot;" IgnoreExitCode="true" Condition="Exists('$(Source)')"/>-->

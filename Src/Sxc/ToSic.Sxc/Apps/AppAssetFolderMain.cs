@@ -16,15 +16,13 @@ internal class AppAssetFolderMain(IAppPaths appPaths, string folder, bool shared
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
     internal static bool? DetermineShared(string location)
-    {
-        switch (location?.ToLowerInvariant() ?? LocationAuto)
+        => (location?.ToLowerInvariant() ?? LocationAuto) switch
         {
-            case LocationAuto: return null;
-            case LocationShared: return true;
-            case LocationSite: return false;
-            default: throw new ArgumentException($@"should be null, {LocationAuto}, {LocationSite} or {LocationShared}", nameof(location));
-        }
-    }
+            LocationAuto => null,
+            LocationShared => true,
+            LocationSite => false,
+            _ => throw new ArgumentException($@"should be null, {LocationAuto}, {LocationSite} or {LocationShared}", nameof(location))
+        };
 
 
     internal readonly IAppPaths AppPaths = appPaths;

@@ -6251,15 +6251,9 @@
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
-                        },
-                        "Separator": {
-                          "en-us": ","
                         }
                       },
                       "Boolean": {
-                        "AllowMultiValue": {
-                          "en-us": false
-                        },
                         "EnableTextEntry": {
                           "en-us": false
                         }
@@ -7501,12 +7495,123 @@
             ]
           },
           "Entities": []
+        },
+        {
+          "ContentType": {
+            "Id": "5efb0bc2-03c3-45e0-a20b-dabf71b8cfd1",
+            "Name": "IsTemplateDecorator",
+            "Scope": "System.Decorators",
+            "Metadata": [
+              {
+                "Id": 183772,
+                "Version": 1,
+                "Guid": "1b1c9808-6145-42d2-ab44-92389bba2db4",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": "Mark Apps as being templates, so when installing, you must set the name"
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": ""
+                    },
+                    "Label": {
+                      "en-us": "Is Template (Decorator)"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "5efb0bc2-03c3-45e0-a20b-dabf71b8cfd1"
+                }
+              },
+              {
+                "Id": 183773,
+                "Version": 1,
+                "Guid": "264cdcc6-6f95-4ba4-910b-1111bd41f5cd",
+                "Type": {
+                  "Id": "8c78dabf-e0ad-4c26-b750-48138ecb8a39",
+                  "Name": "SaveEmptyDecorator"
+                },
+                "Attributes": {},
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "5efb0bc2-03c3-45e0-a20b-dabf71b8cfd1"
+                }
+              },
+              {
+                "Id": 183775,
+                "Version": 1,
+                "Guid": "10fd7b99-8178-47b5-9307-317096877d4e",
+                "Type": {
+                  "Id": "4c88d78f-5f3e-4b66-95f2-6d63b7858847",
+                  "Name": "MetadataForDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "DeleteWarning": {
+                      "en-us": ""
+                    },
+                    "TargetName": {
+                      "en-us": ""
+                    },
+                    "Title": {
+                      "en-us": "Metadata for App"
+                    }
+                  },
+                  "Number": {
+                    "Amount": {
+                      "en-us": 1
+                    },
+                    "TargetType": {
+                      "en-us": 3
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "5efb0bc2-03c3-45e0-a20b-dabf71b8cfd1"
+                }
+              }
+            ],
+            "Attributes": []
+          },
+          "Entities": []
         }
       ],
       "Entities": [
         {
           "Id": 182559,
-          "Version": 3,
+          "Version": 5,
           "Guid": "5f49cf41-62b9-4d99-8642-59eece7ecdc2",
           "Type": {
             "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -7515,6 +7620,15 @@
           "Attributes": {
             "String": {
               "CreateTypes": {
+                "en-us": ""
+              },
+              "Description": {
+                "en-us": "<p>Get All System Capabilities - WIP, probably not used...</p>"
+              },
+              "ItemInformation": {
+                "en-us": ""
+              },
+              "ItemTooltip": {
                 "en-us": ""
               },
               "Label": {
@@ -7537,6 +7651,11 @@
               },
               "Value": {
                 "en-us": "NameId"
+              }
+            },
+            "Hyperlink": {
+              "ItemLink": {
+                "en-us": ""
               }
             }
           },

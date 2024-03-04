@@ -213,17 +213,17 @@ internal class CSharpCompiler(RazorReferenceManager manager, IWebHostEnvironment
 
         if (string.IsNullOrEmpty(dependencyContextOptions.LanguageVersion))
         {
-            // If the user does not specify a LanguageVersion, assume CSharp 8.0. This matches the language version Razor 3.0 targets by default.
-            parseOptions = parseOptions.WithLanguageVersion(LanguageVersion.CSharp8);
+            // If the user does not specify a LanguageVersion, assume latest CSharp.
+            parseOptions = parseOptions.WithLanguageVersion(LanguageVersion.Latest);
         }
         else if (LanguageVersionFacts.TryParse(dependencyContextOptions.LanguageVersion, out var languageVersion))
         {
             parseOptions = parseOptions.WithLanguageVersion(languageVersion);
         }
-        else
-        {
-            Debug.Fail($"LanguageVersion {languageVersion} specified in the deps file could not be parsed.");
-        }
+        //else
+        //{
+        //    Debug.Fail($"LanguageVersion {languageVersion} specified in the deps file could not be parsed.");
+        //}
 
         return parseOptions;
     }

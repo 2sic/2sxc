@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Data;
 /// </remarks>
 [PublicApi]
 [JsonConverter(typeof(DynamicJsonConverter))]
-public partial interface ITypedItem: ITyped, ICanBeEntity, ICanBeItem, IEquatable<ITypedItem>, IHasJsonSource
+public partial interface ITypedItem: ITyped, ICanBeEntity, ICanBeItem, IEquatable<ITypedItem>
 {
     /// <summary>
     /// A dynamic accessor for properties, to quickly get values when you don't care about type safety.

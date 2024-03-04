@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.Caching;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web.Razor;
 using System.Web.Razor.Generator;
 using ToSic.Eav.Caching.CachingMonitors;
@@ -225,12 +226,16 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         /// Compiles the template into an assembly.
         /// </summary>
         /// <returns>The compiled assembly.</returns>
-        private (Assembly Assembly, List<CompilerError> Errors) CompileTemplate(string template, List<string> referencedAssemblies, string className, string defaultNamespace, string sourceFileName)
+        private (Assembly Assembly, List<CompilerError> Errors) CompileTemplate(string sourceCode, List<string> referencedAssemblies, string className, string defaultNamespace, string sourceFileName)
         {
-            var l = Log.Fn<(Assembly, List<CompilerError>)>(timer: true, parameters: $"Template content length: {template.Length}");
+            var l = Log.Fn<(Assembly, List<CompilerError>)>(timer: true, parameters: $"{nameof(sourceCode)}: {sourceCode.Length} chars");
+
+            //var sourceCode = CleanInheritsDirective(template);
+            //if (template.Length != sourceCode.Length)
+            //    l.A($"Cleaned razor source code length: {sourceCode.Length}");
 
             // Find the base class for the template
-            var baseClass = FindBaseClass(template);
+            var baseClass = FindBaseClass(sourceCode);
             l.A($"Base class: {baseClass}");
 
             // Create the Razor template engine host
@@ -238,7 +243,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
             // Generate C# code from Razor template
             var lTimer = Log.Fn("Generate Code", timer: true);
-            using var reader = new StringReader(template);
+            using var reader = new StringReader(sourceCode);
             var razorResults = engine.GenerateCode(reader, className, defaultNamespace, sourceFileName);
             lTimer.Done();
 
@@ -255,7 +260,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
             // Compile the template into an assembly
             lTimer = Log.Fn("Compile", timer: true);
-            var codeProvider = new Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider();
+            var codeProvider = new Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider(); // TODO: @stv test with latest nuget package for @inherits ; issue
 
             var compilerResults = codeProvider.CompileAssemblyFromDom(compilerParameters, razorResults.GeneratedCode);
             lTimer.Done();
@@ -269,7 +274,36 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             return l.ReturnAsError((null, errorList), "error");
         }
 
-
+        ///// <summary>
+        ///// Cleans the template by removing semicolons and comments from the @inherits directive.
+        ///// There is Razor syntax that is not supported by current Roslyn compiler, so we need to clean the template
+        ///// by removing semicolons and comments from the @inherits directive.
+        ///// </summary>
+        ///// <param name="template">The Razor template as a string.</param>
+        ///// <returns>A cleaned template.</returns>
+        ///// <remarks>
+        ///// It opens up too many scenarios for maintenance and mistakes.
+        ///// </remarks>
+        //private static string CleanInheritsDirective(string template)
+        //{
+        //    var stringBuilder = new StringBuilder();
+        //    using (var reader = new StringReader(template))
+        //    {
+        //        while (reader.ReadLine() is { } line)
+        //        {
+        //            // Check if the line contains the @inherits directive
+        //            if (line.Contains("@inherits"))
+        //            {
+        //                // Remove semicolons and comments from the line
+        //                var commentIndex = line.IndexOf("//", StringComparison.Ordinal);
+        //                if (commentIndex != -1) line = line.Substring(0, commentIndex);
+        //                line = line.Replace(";", "").Trim();
+        //            }
+        //            stringBuilder.AppendLine(line);
+        //        }
+        //    }
+        //    return stringBuilder.ToString();
+        //}
 
         /// <summary>
         /// Compiles the C# code into an assembly.
@@ -291,7 +325,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
             // Compile the C# code into an assembly
             lTimer = Log.Fn("Compile", timer: true);
-            var codeProvider = new Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider(); // TODO: @stvtest with latest nuget package for @inherits ; issue
+            var codeProvider = new Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider();
 
             var compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, csharpCode);
             lTimer.Done();
@@ -321,31 +355,30 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         /// </summary>
         /// <param name="template">The template content.</param>
         /// <returns>The type of the template.</returns>
-        private static string FindBaseClass(string template)
+        private string FindBaseClass(string template)
         {
+            var l = Log.Fn<string>($"{nameof(template)}: {template.Length} chars");
+            var baseClass = FallbackBaseClass;
             try
             {
-                // TODO: stv, use existing 2sxc regex for extraction (from CodeType)
+                var inheritsMatch = Regex.Match(template, @"@inherits\s+(?<BaseName>[\w\.]+)", RegexOptions.Multiline);
 
-                if (!template.Contains("@inherits ")) return FallbackBaseClass;
+                if (!inheritsMatch.Success)
+                    return l.Return(FallbackBaseClass, $"no @inherits found, fallback to '{FallbackBaseClass}'");
 
-                // extract the type name from the template
-                var at = template.IndexOf("@inherits ", StringComparison.Ordinal);
-                var at2 = template.IndexOf("\n", at, StringComparison.Ordinal);
-                if (at2 == -1) at2 = template.Length;
-                var line = template.Substring(at, at2 - at);
-                line = line.Trim();
-                if (line.EndsWith(";")) line = line.Substring(0, line.Length - 1);
-                var typeName = line.Replace("@inherits ", "").Trim();
+                baseClass = inheritsMatch.Groups["BaseName"].Value;
+                if (baseClass.IsEmptyOrWs())
+                    return l.Return(FallbackBaseClass, $"@inherits empty string, fallback to '{FallbackBaseClass}'");
 
                 // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-                Type.GetType(typeName, true); // test for known type
+                //Type.GetType(baseClass, true); // test for known type
 
-                return typeName;
+                return l.ReturnAsOk(baseClass);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return FallbackBaseClass;
+                l.Ex(ex);
+                return l.ReturnAsError(baseClass, "error");
             }
         }
 

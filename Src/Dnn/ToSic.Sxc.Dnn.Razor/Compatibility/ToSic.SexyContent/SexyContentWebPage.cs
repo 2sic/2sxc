@@ -105,34 +105,34 @@ public abstract class SexyContentWebPage :
 
     /// <inheritdoc />
     [Obsolete]
-    public dynamic AsDynamic(IEntity entity) => _CodeApiSvc._Cdf.CodeAsDyn(entity);
+    public dynamic AsDynamic(IEntity entity) => _CodeApiSvc.Cdf.CodeAsDyn(entity);
 
 
     /// <inheritdoc />
-    public dynamic AsDynamic(object dynamicEntity) => _CodeApiSvc._Cdf.AsDynamicFromObject(dynamicEntity);
+    public dynamic AsDynamic(object dynamicEntity) => _CodeApiSvc.Cdf.AsDynamicFromObject(dynamicEntity);
 
     /// <inheritdoc />
     [PublicApi("Careful - still Experimental in 12.02")]
-    public dynamic AsDynamic(params object[] entities) => _CodeApiSvc._Cdf.MergeDynamic(entities);
+    public dynamic AsDynamic(params object[] entities) => _CodeApiSvc.Cdf.MergeDynamic(entities);
 
     // todo: only in "old" controller, not in new one
     /// <inheritdoc />
     [Obsolete]
-    public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => _CodeApiSvc._Cdf.CodeAsDyn(entityKeyValuePair.Value);
+    public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => _CodeApiSvc.Cdf.CodeAsDyn(entityKeyValuePair.Value);
 
 
 
     /// <inheritdoc />
     [Obsolete]
-    public IEnumerable<dynamic> AsDynamic(IDataStream stream) => _CodeApiSvc._Cdf.CodeAsDynList(stream.List);
+    public IEnumerable<dynamic> AsDynamic(IDataStream stream) => _CodeApiSvc.Cdf.CodeAsDynList(stream.List);
 
     /// <inheritdoc />
-    public IEntity AsEntity(object dynamicEntity) => _CodeApiSvc._Cdf.AsEntity(dynamicEntity);
+    public IEntity AsEntity(object dynamicEntity) => _CodeApiSvc.Cdf.AsEntity(dynamicEntity);
 
 
     /// <inheritdoc />
     [Obsolete]
-    public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => _CodeApiSvc._Cdf.CodeAsDynList(entities);
+    public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => _CodeApiSvc.Cdf.CodeAsDynList(entities);
 
     #endregion
 
@@ -161,16 +161,16 @@ public abstract class SexyContentWebPage :
     #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
     [PrivateApi]
     [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-    public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => _CodeApiSvc._Cdf.CodeAsDyn(entity as IEntity);
+    public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => _CodeApiSvc.Cdf.CodeAsDyn(entity as IEntity);
 
 
     [PrivateApi]
     [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-    public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => _CodeApiSvc._Cdf.CodeAsDyn(entityKeyValuePair.Value as IEntity);
+    public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => _CodeApiSvc.Cdf.CodeAsDyn(entityKeyValuePair.Value as IEntity);
 
     [PrivateApi]
     [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-    public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => _CodeApiSvc._Cdf.CodeAsDynList(entities.Cast<IEntity>());
+    public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => _CodeApiSvc.Cdf.CodeAsDynList(entities.Cast<IEntity>());
     #endregion
 
 

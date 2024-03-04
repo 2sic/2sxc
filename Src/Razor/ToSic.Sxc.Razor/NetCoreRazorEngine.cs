@@ -10,7 +10,6 @@ using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
-using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Razor.Internal;
@@ -27,17 +26,17 @@ internal class NetCoreRazorEngine : EngineBase, IRazorEngine
     private readonly LazySvc<CodeErrorHelpService> _errorHelp;
     private readonly LazySvc<CodeApiServiceFactory> _codeRootFactory;
     private readonly LazySvc<IRenderingHelper> _renderingHelper;
-    public IRazorRenderer RazorRenderer { get; }
+    private readonly LazySvc<IRazorRenderer> _razorRenderer;
 
     #region Constructor / DI
 
-    public NetCoreRazorEngine(MyServices services, IRazorRenderer razorRenderer, LazySvc<CodeApiServiceFactory> codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<IRenderingHelper> renderingHelper) : base(services)
+    public NetCoreRazorEngine(MyServices services, LazySvc<IRazorRenderer> razorRenderer, LazySvc<CodeApiServiceFactory> codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<IRenderingHelper> renderingHelper) : base(services)
     {
         ConnectServices(
             _codeRootFactory = codeRootFactory,
-            RazorRenderer = razorRenderer,
             _errorHelp = errorHelp,
-            _renderingHelper = renderingHelper
+            _renderingHelper = renderingHelper,
+            _razorRenderer = razorRenderer
         );
     }
 
@@ -47,7 +46,7 @@ internal class NetCoreRazorEngine : EngineBase, IRazorEngine
     protected override (string Contents, List<Exception> Exception) RenderEntryRazor(RenderSpecs specs)
     {
         var l = Log.Fn<(string, List<Exception>)>();
-        var task = RenderTask();
+        var task = RenderTask(specs);
         try
         {
             task.Wait();
@@ -66,7 +65,7 @@ internal class NetCoreRazorEngine : EngineBase, IRazorEngine
     }
 
     [PrivateApi]
-    private async Task<(TextWriter TextWriter, Exception Exception)> RenderTask()
+    private async Task<(TextWriter TextWriter, Exception Exception)> RenderTask(RenderSpecs specs)
     {
         Log.A("will render into TextWriter");
         RazorView page = null;
@@ -74,20 +73,24 @@ internal class NetCoreRazorEngine : EngineBase, IRazorEngine
         {
             if (string.IsNullOrEmpty(TemplatePath)) return (null, null);
 
-            var result = await RazorRenderer.RenderToStringAsync(TemplatePath, new object(),
+            var result = await _razorRenderer.Value.RenderToStringAsync(
+                TemplatePath,
+                specs.Data,
                 rzv =>
                 {
                     page = rzv; // keep for better errors
                     if (rzv.RazorPage is not IRazor asSxc) return;
 
                     var dynCode = _codeRootFactory.Value
-                        .BuildCodeRoot(asSxc, Block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel12);
+                        .BuildCodeRoot(asSxc, Block, Log,
+                            compatibilityFallback: CompatibilityLevels.CompatibilityLevel12);
 
                     asSxc.ConnectToRoot(dynCode);
                     // Note: Don't set the purpose here any more, it's a deprecated feature in 12+
-                }, 
-                App, 
-                new HotBuildSpec(App.AppId, Edition));
+                },
+                App,
+                new(App.AppId, Edition, App.Name)
+            );
             var writer = new StringWriter();
             await writer.WriteAsync(result);
             return (writer, null);

@@ -20,7 +20,7 @@ public static class IHasKitExtensions
 
     internal static ICodeApiService SetCompatibility(this ICodeApiService codeRoot, int compatibility)
     {
-        codeRoot._Cdf.SetCompatibilityLevel(compatibility);
+        codeRoot.Cdf.SetCompatibilityLevel(compatibility);
         return codeRoot;
     }
 }

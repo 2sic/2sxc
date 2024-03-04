@@ -36,21 +36,11 @@ public class CodeFileInfo
     public List<CodeHelp> Help { get; }
     public bool AppCode { get; }
 
-    // TODO: @STV - pls review my changes where I killed most functions and duplicate types, and if ok, remove the commented out code below
-
     // without base class
     public static CodeFileInfo TemplateUnknown = new("unknown", CodeFileTypes.Unknown, HelpForRazorCompileErrors.CompileUnknown);
-    //public static CodeFileInfo CodeFileUnknown(string sourceCode, string relativePath = default, string fullPath = default, bool useAppCode = default)
-    //    => new("unknown", CodeFileTypes.Unknown, HelpForRazorCompileErrors.CompileUnknown, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath, useAppCode: useAppCode);
-    //public static CodeFileInfo CodeFileUnknownWithAppCode(string sourceCode, string relativePath = default, string fullPath = default) 
-    //    => new ("unknown", CodeFileTypes.Unknown, HelpForRazorCompileErrors.CompileUnknown, true, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath);
 
     // with some other base class
     public static CodeFileInfo TemplateOther = new("other", CodeFileTypes.Other, HelpForRazorCompileErrors.CompileUnknown);
-    //public static CodeFileInfo CodeFileOther(string sourceCode, string relativePath = default, string fullPath = default, bool useAppCode = default) 
-    //    => new ("other", CodeFileTypes.Other, HelpForRazorCompileErrors.CompileUnknown, sourceCode: sourceCode, fullPath: fullPath, useAppCode: useAppCode);
-    //public static CodeFileInfo CodeFileOtherWithAppCode(string sourceCode, string relativePath = default, string fullPath = default) 
-    //    => new ("other", CodeFileTypes.Other, HelpForRazorCompileErrors.CompileUnknown, true, sourceCode: sourceCode, relativePath: relativePath, fullPath: fullPath);
 
     public static CodeFileInfo CodeFileNotFound = new("", CodeFileTypes.FileNotFound, []);
 
@@ -62,27 +52,16 @@ public class CodeFileInfo
     internal static List<CodeFileInfo> CodeFileInfoTemplates =
     [
         TemplateUnknown,
-        //CodeFileUnknown(null),
-        //CodeFileUnknownWithAppCode(null),
         TemplateOther,
-        //CodeFileOther(null),
-        //CodeFileOtherWithAppCode(null),
         // cshtml
         new("Custom.Hybrid.Razor12", CodeFileTypes.V12, HelpForRazor12.Compile12, sourceCode: null),
         new("Custom.Hybrid.Razor14", CodeFileTypes.V14, HelpForRazor14.Compile14, sourceCode: null),
         new("Custom.Hybrid.RazorTyped", CodeFileTypes.V16, HelpForRazorTyped.Compile16, sourceCode: null),
 
-        // 2024-01-22 2dm - disable this, doesn't make sense to duplicate just with different AppCode
-        //new("Custom.Hybrid.Razor12", CodeFileTypes.V12, HelpForRazor12.Compile12, true, sourceCode: null),
-        //new("Custom.Hybrid.Razor14", CodeFileTypes.V14, HelpForRazor14.Compile14, true, sourceCode: null),
-        //new("Custom.Hybrid.RazorTyped", CodeFileTypes.V16, HelpForRazorTyped.Compile16, true, sourceCode: null),
         // c#
         new("Custom.Hybrid.Code12", CodeFileTypes.V12, HelpForRazor12.Compile12, sourceCode: null),
         new("Custom.Hybrid.Code14", CodeFileTypes.V14, HelpForRazor14.Compile14, sourceCode: null),
         new("Custom.Hybrid.CodeTyped", CodeFileTypes.V16, HelpForRazorTyped.Compile16, sourceCode: null),
-        //new("Custom.Hybrid.Code12", CodeFileTypes.V12, HelpForRazor12.Compile12, true, sourceCode: null),
-        //new("Custom.Hybrid.Code14", CodeFileTypes.V14, HelpForRazor14.Compile14, true, sourceCode: null),
-        //new("Custom.Hybrid.CodeTyped", CodeFileTypes.V16, HelpForRazorTyped.Compile16, true, sourceCode: null)
     ];
 
     /// <summary>

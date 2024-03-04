@@ -13,7 +13,7 @@ internal class GeneratePropertyNumber: GeneratePropertyBase
         return decimals == 0
             ?
             [
-                GenPropSnip(tabs, "int", name, "base.Int", summary:
+                GenPropSnip(tabs, "int", name, $"{specs.ItemAccessor}.Int", summary:
                 [
                     $"{name} as int. <br/>",
                     $"To get other types use methods such as .Decimal(\"{name}\")"
@@ -21,7 +21,7 @@ internal class GeneratePropertyNumber: GeneratePropertyBase
             ]
             :
             [
-                GenPropSnip(tabs, "decimal", name, "base.Decimal", summary:
+                GenPropSnip(tabs, "decimal", name, $"{specs.ItemAccessor}.Decimal", summary:
                 [
                     $"{name} as decimal. <br/>",
                     $"To get other types use methods such as .Int(\"{name}\")"

@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Services.Internal;
+﻿using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Services;
 
@@ -20,13 +19,13 @@ public class ServiceKit(string logName) : ServiceForDynamicCode(logName)
     /// <summary>
     /// All the services provided by this kit must come from the code root, so they are properly initialized.
     ///
-    /// Will first try to use the GetKitService method to ensure that changes in the Kit (eg. 16/14) still return
+    /// Will first try to use the GetService method to ensure that changes in the Kit (eg. 16/14) still return
     /// the identical sub-services.
     /// </summary>
     /// <typeparam name="TService"></typeparam>
     /// <returns></returns>
     [PrivateApi]
     protected TService GetKitService<TService>() where TService : class
-        => (_CodeApiSvc as ICodeApiServiceInternal)?.GetKitService<TService>()
+        => _CodeApiSvc?.GetService<TService>(reuse: true)
            ?? _CodeApiSvc.GetService<TService>();
 }

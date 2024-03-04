@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Code.Help;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code.Customizer;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Data;
@@ -40,13 +41,26 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
 
+    ///// <inheritdoc cref="ICodeApiService.GetService{TService}(NoParamOrder, bool)"/>
+    //[PrivateApi("Experiment v17.02+")]
+    //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    //public TService GetService<TService>(NoParamOrder protector = default, bool reuse = false) where TService : class => _CodeApiSvc.GetService<TService>();
+
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
-    public ServiceKit16 Kit => _kit.Get(() => _CodeApiSvc.GetKit<ServiceKit16>());
+    public ServiceKit16 Kit => _kit.Get(_CodeApiSvc.GetKit<ServiceKit16>);
     private readonly GetOnce<ServiceKit16> _kit = new();
 
-    private TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
+    internal TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
     private TypedCode16Helper _codeHelper;
+
+    /// <summary>
+    /// WIP
+    /// </summary>
+    [PrivateApi("Experiment v17.02+")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    protected Customizer Customize => _customize ??= _CodeApiSvc.GetService<Customizer>(reuse: true);
+    private Customizer _customize;
 
     void ISetDynamicModel.SetDynamicModel(object data) => _overridePageData = data;
 
@@ -59,7 +73,12 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
                               .Where(pair => pair.Key is string)
                               .ToDictionary(pair => pair.Key.ToString(), pair => pair.Value, InvariantCultureIgnoreCase);
 
-        return new(_CodeApiSvc, _CodeApiSvc.Data, myModelData, false, Path);
+
+        var model = _overridePageData 
+                    // the default/only value would be on a 0 key
+                    ?? (PageData?.TryGetValue(0, out var zeroData) ?? false ? zeroData as object: null);
+
+        return new(new(_CodeApiSvc, true, Path), myModelDic: myModelData, razorModel: model);
     }
 
 
@@ -90,7 +109,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     #region New App, Settings, Resources
 
     /// <inheritdoc />
-    public new IAppTyped App => (IAppTyped)_CodeApiSvc.App;
+    public new IAppTyped App => _CodeApiSvc.AppTyped;
 
     /// <inheritdoc cref="IDynamicCode16.AllResources" />
     public ITypedStack AllResources => CodeHelper.AllResources;
@@ -143,25 +162,25 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
 
     /// <inheritdoc cref="IDynamicCode16.AsItem" />
     public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
-        => _CodeApiSvc._Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
+        => _CodeApiSvc.Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
 
     /// <inheritdoc cref="IDynamicCode16.AsItems" />
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default) 
-        => _CodeApiSvc._Cdf.AsItems(list, propsRequired: propsRequired ?? true);
+        => _CodeApiSvc.Cdf.AsItems(list, propsRequired: propsRequired ?? true);
 
     /// <inheritdoc cref="IDynamicCode16.AsEntity" />
-    public IEntity AsEntity(ICanBeEntity thing) => _CodeApiSvc._Cdf.AsEntity(thing);
+    public IEntity AsEntity(ICanBeEntity thing) => _CodeApiSvc.Cdf.AsEntity(thing);
 
     /// <inheritdoc cref="IDynamicCode16.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _CodeApiSvc._Cdf.AsTyped(original, propsRequired: propsRequired);
+        => _CodeApiSvc.Cdf.AsTyped(original, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _CodeApiSvc._Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
+        => _CodeApiSvc.Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsStack" />
-    public ITypedStack AsStack(params object[] items) => _CodeApiSvc._Cdf.AsStack(items);
+    public ITypedStack AsStack(params object[] items) => _CodeApiSvc.Cdf.AsStack(items);
 
     #endregion
 
@@ -189,9 +208,9 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     /// <returns></returns>
     [PrivateApi("WIP, don't publish yet")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool nullIfNull = false)
+    public T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool mock = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => _CodeApiSvc._Cdf.AsCustom<T>(source: source, kit: Kit, protector: protector, nullIfNull: nullIfNull);
+        => _CodeApiSvc.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
 
     /// <summary>
     /// EXPERIMENTAL
@@ -205,7 +224,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => _CodeApiSvc._Cdf.AsCustomList<T>(source: source, kit: Kit, protector: protector, nullIfNull: nullIfNull);
+        => _CodeApiSvc.Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
 
     #endregion
 

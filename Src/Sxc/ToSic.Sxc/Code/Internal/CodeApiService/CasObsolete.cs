@@ -84,14 +84,14 @@ public class CodeApiServiceObsolete(ICodeApiService dynCode)
             var el = new Element
             {
                 EntityId = e.EntityId,
-                Content = dynCode._Cdf.CodeAsDyn(e)
+                Content = dynCode.Cdf.CodeAsDyn(e)
             };
 
             var editDecorator = e.GetDecorator<EntityInBlockDecorator>();
 
             if (editDecorator != null)
             {
-                el.Presentation = editDecorator.Presentation == null ? null : dynCode._Cdf.CodeAsDyn(editDecorator.Presentation);
+                el.Presentation = editDecorator.Presentation == null ? null : dynCode.Cdf.CodeAsDyn(editDecorator.Presentation);
                 el.SortOrder = editDecorator.SortOrder;
             }
 

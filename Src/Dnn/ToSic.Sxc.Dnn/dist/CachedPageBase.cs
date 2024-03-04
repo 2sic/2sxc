@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Caching;
 using DotNetNuke.Common.Extensions;
 using DotNetNuke.Entities.Portals;
-using DotNetNuke.Entities.Urls;
 using DotNetNuke.Framework;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Helpers;
@@ -15,6 +15,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Web.Internal.EditUi;
 using ToSic.Sxc.Web.Internal.JsContext;
+using static System.StringComparison;
 
 namespace ToSic.Sxc.Dnn.dist;
 
@@ -44,43 +45,90 @@ public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to pre
 
     protected string PageOutputCached(string virtualPath, EditUiResourceSettings settings)
     {
-        var key = CacheKey(virtualPath);
-        if (!(Cache.Get(key) is string html))
-        {
-            var path = GetPath(virtualPath);
-            html = File.ReadAllText(path);
-            html = HtmlDialog.CleanImport(html);
-            Cache.Insert(key, html, new CacheDependency(path));
-        }
+        // add to insights-history for analytic
+        GetService<ILogStore>().Add("edit-dialog", Log);
 
-        // portalId should be provided in query string (because of DNN special handling of aspx pages in DesktopModules)
-        var portalIdString = Request.QueryString[DnnJsApiService.PortalIdParamName];
-        var siteId = portalIdString.HasValue() ? Convert.ToInt32(portalIdString) : UnknownSiteId;
+        var l = Log.Fn<string>($"{nameof(virtualPath)}: {virtualPath}");
+
+        var html = GetPageHtml(virtualPath);
+        l.A($"html: {html.Length} chars");
+
+        var siteId = GetSiteId();
         var addOn = $"&{DnnJsApiService.PortalIdParamName}={siteId}";
 
-        // pageId should be provided in query string
-        var pageIdString = Request.QueryString[HtmlDialog.PageIdInUrl];
-        var pageId = pageIdString.HasValue() ? Convert.ToInt32(pageIdString) : UnknownPageId;
+        var pageId = GetPageId();
         var siteRoot = GetSiteRoot(pageId, siteId);
 
         var sp = HttpContext.Current.GetScope().ServiceProvider;
         var editUiResources = sp.GetService<EditUiResources>();
         var assets = editUiResources.GetResources(true, siteId, settings);
+        l.A($"customHeaders: {assets.HtmlHead}");
 
         var dnnJsApi = sp.GetService<IJsApiService>();
         var content = dnnJsApi.GetJsApiJson(pageId, siteRoot);
+        l.A($"JsApiJson: {content}");
 
-        var customHeaders = assets.HtmlHead;
-        return HtmlDialog.UpdatePlaceholders(html, content, pageId, addOn, customHeaders, "");
+        return l.ReturnAsOk(HtmlDialog.UpdatePlaceholders(html, content, pageId, addOn, assets.HtmlHead, ""));
+    }
+
+    private string GetPageHtml(string virtualPath)
+    {
+        var l = Log.Fn<string>($"{nameof(virtualPath)}: {virtualPath}");
+
+        var key = CacheKey(virtualPath);
+        if (Cache.Get(key) is string html) return l.Return(html,"ok, from cache");
+
+        l.A($"not in cache (key:{key})");
+
+        var path = GetPath(virtualPath);
+        l.A($"path to file: {path}");
+
+        html = File.ReadAllText(path);
+        l.A($"read file: {html.Length} chars");
+
+        html = HtmlDialog.CleanImport(html);
+        l.A($"html adjusted: {html.Length} chars");
+
+        Cache.Insert(key, html, new CacheDependency(path));
+        return l.Return(html, "ok, added to cache with cache dependency on file");
     }
 
     private static string CacheKey(string virtualPath) => $"2sxc-edit-ui-page-{virtualPath}";
-        
-    internal string GetPath(string virtualPath)
+
+    private string GetPath(string virtualPath)
     {
+        var l = Log.Fn<string>($"{nameof(virtualPath)}: {virtualPath}");
         var path = Server.MapPath(virtualPath);
-        if (!File.Exists(path)) throw new Exception("File not found: " + path);
-        return path;
+        if (!File.Exists(path)) throw l.Ex(new Exception("File not found: " + path));
+        return l.ReturnAsOk(path);
+    }
+
+    private int GetSiteId()
+    {
+        var l = Log.Fn<int>();
+
+        // portalId should be provided in query string (because of DNN special handling of aspx pages in DesktopModules)
+        var portalIdString = Request.QueryString[DnnJsApiService.PortalIdParamName];
+        l.A($"{DnnJsApiService.PortalIdParamName} from query string: {portalIdString}");
+
+        var siteId = portalIdString.HasValue() ? Convert.ToInt32(portalIdString) : UnknownSiteId;
+        l.A($"{(siteId == UnknownSiteId ? "unknown" : "")} siteId: {siteId}");
+
+        return l.ReturnAsOk(siteId);
+    }
+
+    private int GetPageId()
+    {
+        var l = Log.Fn<int>();
+
+        // pageId should be provided in query string
+        var pageIdString = Request.QueryString[HtmlDialog.PageIdInUrl];
+        l.A($"{HtmlDialog.PageIdInUrl} from query string: {pageIdString}");
+
+        var pageId = pageIdString.HasValue() ? Convert.ToInt32(pageIdString) : UnknownPageId;
+        l.A($"{(pageId == UnknownPageId ? "unknown" : "")} pageId: {pageId}");
+
+        return l.ReturnAsOk(pageId);
     }
 
     /// <summary>
@@ -92,33 +140,111 @@ public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to pre
     /// <returns></returns>
     private string GetSiteRoot(int pageId, int portalId)
     {
+        var l = Log.Fn<string>($"{nameof(pageId)}: {pageId}, {nameof(portalId)}: {portalId}");
+        
         try
         {
             // this is fallback
-            if (pageId == UnknownPageId) return ServicesFramework.GetServiceFrameworkRoot();
-            if (portalId == UnknownSiteId) portalId = PortalController.GetPortalDictionary()[pageId];
+            if (pageId == UnknownPageId) 
+                return l.ReturnAsError(ServicesFramework.GetServiceFrameworkRoot(), $"fallback, because of unknown {nameof(pageId)}");
+            
+            if (portalId == UnknownSiteId)
+            {
+                l.A($"fallback, unknown portalId, trying to get it from {nameof(pageId)}");
+                portalId = PortalController.GetPortalDictionary()[pageId];
+                l.A($"{nameof(portalId)}: {portalId}");
+            }
 
-            //var cultureCode = LocaleController.Instance.GetCurrentLocale(portalId).Code;
-            var cultureCode = System.Threading.Thread.CurrentThread.CurrentCulture.ToString();
-            var primaryPortalAlias = PortalAliasController.Instance.GetPortalAliasesByPortalId(portalId)
-                                         .Where(a => HttpContext.Current.Request.Url.ToString().IndexOf(a.HTTPAlias, StringComparison.OrdinalIgnoreCase) >= 0) // case insensitive
-                                         .GetAliasByPortalIdAndSettings(portalId, result: null, cultureCode, settings: new FriendlyUrlSettings(portalId)) ?? 
-                                     PortalAliasController.Instance.GetPortalAliasesByPortalId(portalId).FirstOrDefault(); // fallback to first alias
-            var siteRoot = primaryPortalAlias != null ? CleanLeadingPartSiteRoot(primaryPortalAlias.HTTPAlias) : ServicesFramework.GetServiceFrameworkRoot();
-            if (string.IsNullOrEmpty(siteRoot)) siteRoot = "/";
-            return siteRoot;
+            var primaryPortalAlias = GetPrimaryPortalAliasBasedOnRequestUrlAndCulture(portalId);
+            l.A($"primaryPortalAlias: {primaryPortalAlias?.HTTPAlias}");
+
+            string siteRoot;
+            if (primaryPortalAlias != null)
+            {
+                siteRoot = CleanLeadingPartSiteRoot(primaryPortalAlias.HTTPAlias);
+            }
+            else
+            {
+                siteRoot = ServicesFramework.GetServiceFrameworkRoot();
+                l.A("portalAlias is null, falling back to ServicesFramework.GetServiceFrameworkRoot()");
+            }
+            l.A($"siteRoot: {siteRoot}");
+
+            if (string.IsNullOrEmpty(siteRoot))
+            {
+                siteRoot = "/";
+                l.A("siteRoot is empty, falling back to /");
+            }
+            return l.ReturnAsOk(siteRoot);
         }
         catch (Exception ex)
         {
+            l.Ex(ex);
             EnvLogger.LogException(ex);
             // if all breaks, falling back to a default value
-            return ServicesFramework.GetServiceFrameworkRoot();
+            return l.ReturnAsError(ServicesFramework.GetServiceFrameworkRoot(), "error, falling back to a default value");
         }
     }
 
-    private static string CleanLeadingPartSiteRoot(string path)
+    private PortalAliasInfo GetPrimaryPortalAliasBasedOnRequestUrlAndCulture(int portalId)
     {
+        var l = Log.Fn<PortalAliasInfo>($"{nameof(portalId)}: {portalId}");
+
+        //var cultureCode = LocaleController.Instance.GetCurrentLocale(portalId).Code;
+        var cultureCode = Thread.CurrentThread.CurrentCulture.ToString();
+        l.A($"cultureCode: {cultureCode}");
+
+        // Get all aliases for the portal
+        var aliases = PortalAliasController.Instance
+            .GetPortalAliasesByPortalId(portalId)
+            .ToList();
+        l.A($"aliases: {aliases.Count}");
+
+        // Figure out the correct alias based on the current URL and culture
+        // Should also fall back to correct primary if the current one is not found
+        var currentUrl = HttpContext.Current.Request.Url.ToString();
+        l.A($"figure out the correct alias based on the current URL:{currentUrl} and culture:{cultureCode}.");
+
+        // try to filter aliases on the current url
+        var aliases2 = aliases.Where(a => currentUrl.IndexOf(a.HTTPAlias, OrdinalIgnoreCase) >= 0).ToList();
+        if (!aliases2.Any())
+        {
+            l.A("list of aliases filtered by current url is empty, falling back to filter without current URL");
+            aliases2 = aliases; // falling back to filter without current URL
+        }
+        aliases2.ForEach(a => l.A($"alias: {a.HTTPAlias}, isPrimary: {a.IsPrimary}, culture: {a.CultureCode}"));
+
+        var primaryPortalAlias = aliases2
+            .Where(a => string.Compare(a.CultureCode, cultureCode, OrdinalIgnoreCase) == 0 || string.IsNullOrEmpty(a.CultureCode))
+            .OrderByDescending(a => a.IsPrimary)
+            .ThenByDescending(a => a.CultureCode)
+            .FirstOrDefault();
+        l.A($"primaryPortalAlias: {primaryPortalAlias?.HTTPAlias} based on culture:{cultureCode}");
+
+        if (primaryPortalAlias == null)
+        {
+            l.A("primaryPortalAlias based on culture is null, falling back to the first primary alias");
+            // fallback to the first primary first
+            primaryPortalAlias = aliases.FirstOrDefault(a => a.IsPrimary);
+            l.A($"primaryPortalAlias: {primaryPortalAlias?.HTTPAlias}");
+        }
+
+        if (primaryPortalAlias == null)
+        {
+            l.A("primaryPortalAlias is null, falling back to the first alias");
+            // and only if this doesn't exist for random reasons, fallback to first alias
+            primaryPortalAlias = aliases.FirstOrDefault();
+            l.A($"portalAlias: {primaryPortalAlias?.HTTPAlias}");
+        }
+
+        return l.ReturnAsOk(primaryPortalAlias);
+    }
+
+    private string CleanLeadingPartSiteRoot(string path)
+    {
+        var l = Log.Fn<string>($"{nameof(path)}:{path}");
         var index = path.IndexOf('/');
-        return index <= 0 ? "/" : path.Substring(index).SuffixSlash();
+        l.A($"position of /: {index}");
+        return l.ReturnAsOk(index <= 0 ? "/" : path.Substring(index).SuffixSlash());
     }
 }

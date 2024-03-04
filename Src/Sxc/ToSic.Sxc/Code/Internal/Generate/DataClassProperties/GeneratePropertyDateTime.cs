@@ -10,7 +10,7 @@ internal class GeneratePropertyDateTime: GeneratePropertyBase
 
         return
         [
-            GenPropSnip(tabs, "DateTime", name, "base.DateTime", usings: UsingDateTime, summary:
+            GenPropSnip(tabs, "DateTime", name, $"{specs.ItemAccessor}.DateTime", usings: UsingDateTime, summary:
             [
                 $"{name} as DateTime.",
             ]),

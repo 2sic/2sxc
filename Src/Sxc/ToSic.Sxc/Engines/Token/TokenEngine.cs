@@ -153,7 +153,7 @@ public class TokenEngine(
         {
             // Create property sources for the current data item (for the current data item and its list information)
             var propertySources = new Dictionary<string, ILookUp>();
-            propertySources.Add(sourceName, new LookUpForTokenTemplate(sourceName, _data._Cdf.AsDynamic(dataItems.ElementAt(i), propsRequired: false), i, itemsCount));
+            propertySources.Add(sourceName, new LookUpForTokenTemplate(sourceName, _data.Cdf.AsDynamic(dataItems.ElementAt(i), propsRequired: false), i, itemsCount));
             builder.Append(RenderSection(template, propertySources));
         }
 

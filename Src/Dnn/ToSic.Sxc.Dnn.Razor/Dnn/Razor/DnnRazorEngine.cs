@@ -26,7 +26,7 @@ internal partial class DnnRazorEngine(EngineBase.MyServices helpers, DnnRazorCom
         var l = Log.Fn();
         base.Init(block);
         // after Base.init also init the compiler (requires objects which were set up in base.Init)
-        razorCompiler.SetupCompiler(new(App.AppId, Edition), Block);
+        razorCompiler.SetupCompiler(new(App.AppId, Edition, App.Name), Block);
         try
         {
             EntryRazorComponent = InitWebpageAndOldProperties(TemplatePath)?.Instance;
@@ -94,6 +94,6 @@ internal partial class DnnRazorEngine(EngineBase.MyServices helpers, DnnRazorCom
     /// <summary>
     /// Special old mechanism to always request jQuery and Rvt
     /// </summary>
-    public bool OldAutoLoadJQueryAndRvt => EntryRazorComponent._CodeApiSvc._Cdf.CompatibilityLevel <= CompatibilityLevels.MaxLevelForAutoJQuery;
+    public bool OldAutoLoadJQueryAndRvt => EntryRazorComponent._CodeApiSvc.Cdf.CompatibilityLevel <= CompatibilityLevels.MaxLevelForAutoJQuery;
 
 }

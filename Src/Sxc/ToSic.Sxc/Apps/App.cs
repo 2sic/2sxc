@@ -35,7 +35,7 @@ public partial class App : Eav.Apps.Internal.EavApp, IApp
 
     private readonly LazySvc<GlobalPaths> _globalPaths;
     private readonly LazySvc<IAppPathsMicroSvc> _appPathsLazy;
-    private readonly LazySvc<CodeInfoService> _codeChanges;
+    private readonly LazySvc<CodeInfoService> _codeChanges; // used in obsolete methods
     private readonly LazySvc<CodeDataFactory> _cdfLazy;
 
 
@@ -53,7 +53,7 @@ public partial class App : Eav.Apps.Internal.EavApp, IApp
     private readonly GetOnce<string> _path = new();
 
     /// <inheritdoc cref="IApp.Thumbnail" />
-    public string Thumbnail => (this as IAppTyped).Thumbnail.Url;
+    public string Thumbnail => ThumbnailTemp.Url;
 
     /// <inheritdoc cref="IApp.PathShared" />
     public string PathShared => _pathShared.Get(() => AppPaths.PathShared);

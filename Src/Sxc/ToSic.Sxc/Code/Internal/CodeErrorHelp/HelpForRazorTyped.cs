@@ -17,6 +17,27 @@ public class HelpForRazorTyped
     private static CodeHelp NotExists(string property, params string[] replacement)
         => new GenNotExist(property, replacement) { MsgNotSupportedIn = IsNotSupportedIn16Plus }.Generate();
 
+
+    /// <summary>
+    /// Help when a generic expression like @Command<Type>(MyItem) in Razor is mistaken for an HTML tag by the compiler.
+    /// </summary>
+    internal static CodeHelp GenericExpressionMistakenForHtml = new(name: "generic-expression-as-html",
+        // Assuming the detectable error message might hint at an unexpected HTML element or similar parsing issue
+        detect: @"cannot convert from 'method group' to 'HelperResult'",
+        uiMessage: @"
+It looks like you're trying to use a generic method lke @Method<Type>(...) in Razor, but it's being mistaken for an HTML tag. Enclose the method call in parentheses to correct this issue.
+",
+        detailsHtml: @"
+When using generic methods in Razor syntax, such as <code>@Method&lt;Type&gt;(...)</code>, the Razor compiler can mistake the angle brackets for an HTML tag. 
+This results in a compilation error. To prevent this, the entire expression should be enclosed in parentheses, indicating to the compiler that it's a C# expression to be evaluated, not HTML.
+<br>
+<strong>Example</strong>: <br>
+Incorrect: <code>@Method&lt;Type&gt;(...)</code> <br>
+Correct: <code>@(Method&lt;Type&gt;(...))</code> <br>
+Wrap your generic method calls in parentheses to ensure they are correctly interpreted by the Razor compiler.
+");
+
+
     #endregion
 
     /// <summary>
@@ -112,7 +133,14 @@ public class HelpForRazorTyped
         new GenChangeOn("ToSic.Sxc.Context.ICmsView", "PhysicalPath",
             alt: $"MyView.{nameof(ICmsView.Folder)}.{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}"),
         new GenChangeOn("ToSic.Sxc.Context.ICmsView", "PhysicalPathShared",
-            alt: $"MyView.{nameof(ICmsView.Folder)}.{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}")
+            alt: $"MyView.{nameof(ICmsView.Folder)}.{nameof(Eav.Apps.Assets.IAsset.PhysicalPath)}"),
+
+        // razor compile errors
+        HelpForRazorCompileErrors.UnknownNamespace,
+        HelpForRazorCompileErrors.ProbablySemicolonAfterInherits,
+        HelpForRazorCompileErrors.ProbablyCommentAfterInherits,
+
+        GenericExpressionMistakenForHtml
     );
     private static List<CodeHelp> _help;
 }

@@ -123,7 +123,7 @@ public class DataModelGenerator(ISite site, IUser user, IAppStates appStates, IA
     {
         var indent = CodeGenHelper.Indent(Specs.TabsClass);
         var specifiers = (isAbstract ? "abstract " : "") + (isPartial ? "partial " : "");
-        inherits = inherits.NullOrUse(i => $": {i}");
+        inherits = inherits.NullOrGetWith(i => $": {i}");
 
         var start = $$"""
                       {{indent}}public {{specifiers}}class {{className}}{{inherits}}

@@ -1,7 +1,7 @@
-﻿using System;
-using System.IO;
-using Custom.Hybrid;
+﻿using Custom.Hybrid;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using System;
+using System.IO;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
@@ -19,7 +19,9 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
     public override void ConnectToRoot(ICodeApiService codeRoot)
     {
         base.ConnectToRoot(codeRoot);
-        DynCodeRootMain = codeRoot;
+        _dynCode = codeRoot;
+        owner.LinkLog(codeRoot.Log);
+        Log.A("OqtRazorHelper connect Log");
     }
 
     private const string DynCode = "_dynCode";
@@ -29,13 +31,12 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
         get
         {
             // Child razor page will have _dynCode == null, so it is provided via ViewData from parent razor page.
-            if (_dynCode == null && owner.ViewData?[DynCode] is ICodeApiService cdRt)
-                _dynCode = cdRt;
+            if (_dynCode != null || owner.ViewData?[DynCode] is not ICodeApiService cdRt) return _dynCode;
+            ConnectToRoot(cdRt);
+            Log.A( "DynCode attached from ViewData");
 
             return _dynCode;
         }
-
-        set => _dynCode = value;
     }
     private ICodeApiService _dynCode;
 
@@ -59,20 +60,17 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
     private dynamic _dynamicModel;
     private object _overridePageData;
 
-    public void SetDynamicModel(object data)
-    {
-        _overridePageData = data;
-    }
+    public void SetDynamicModel(object data) => _overridePageData = data;
 
     public TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
     private TypedCode16Helper _codeHelper;
 
     private TypedCode16Helper CreateCodeHelper()
     {
-        var myModelData = (_overridePageData ?? owner.Model)?.ToDicInvariantInsensitive();
-        return new(_CodeApiSvc, _CodeApiSvc.Data, myModelData, true, owner.Path);
+        var model = _overridePageData ?? owner.Model;
+        var myModelData = model?.ToDicInvariantInsensitive();
+        return new(helperSpecs: new(_CodeApiSvc, true, owner.Path), myModelDic: myModelData, razorModel: model);
     }
-
 
     #endregion
 

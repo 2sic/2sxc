@@ -1,15 +1,14 @@
 ﻿using System.Net;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Data.PropertyLookup;
+using ToSic.Eav.Data.Shared;
 using ToSic.Lib.Data;
 using ToSic.Lib.DI;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Data.Internal.Convert;
 using ToSic.Sxc.Data.Internal.Wrapper;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
-using static ToSic.Eav.Data.Shared.WrapperEquality;
 
 namespace ToSic.Sxc.Data.Internal.Typed;
 
@@ -132,14 +131,14 @@ public class WrapObjectTyped(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeSer
     /// </summary>
     [PrivateApi]
     // ReSharper disable once NonReadonlyMemberInGetHashCode
-    public override int GetHashCode() => GetWrappedHashCode(PreWrap);
+    public override int GetHashCode() => WrapperEquality.GetWrappedHashCode(PreWrap);
 
     public override bool Equals(object b)
     {
         if (b is null) return false;
         if (ReferenceEquals(this, b)) return true;
         if (b.GetType() != GetType()) return false;
-        return EqualsWrapper(PreWrap, ((WrapObjectTyped)b).PreWrap);
+        return WrapperEquality.EqualsWrapper(PreWrap, ((WrapObjectTyped)b).PreWrap);
     }
 
     #endregion

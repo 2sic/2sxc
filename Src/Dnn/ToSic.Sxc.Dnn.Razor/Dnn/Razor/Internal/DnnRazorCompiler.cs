@@ -51,7 +51,7 @@ internal class DnnRazorCompiler(
 
     [PrivateApi]
     private HttpContextBase HttpContextCurrent =>
-        _httpContext.Get(() => HttpContext.Current.NullOrUse(h => new HttpContextWrapper(h)));
+        _httpContext.Get(() => HttpContext.Current.NullOrGetWith(h => new HttpContextWrapper(h)));
     private readonly GetOnce<HttpContextBase> _httpContext = new();
 
     [PrivateApi]

@@ -35,7 +35,7 @@ internal class GeneratePropertyEntity: GeneratePropertyBase
         if (entityType.HasValue())
             specs.ExportedContentContentTypes
                 .FirstOrDefault(t => entityType.EqualsInsensitive(t.Name))
-                .UseIfNotNull(ct =>
+                .DoIfNotNull(ct =>
                 {
                     // Switch the result type
                     resultType = ct.Name;
@@ -48,7 +48,7 @@ internal class GeneratePropertyEntity: GeneratePropertyBase
 
         return
         [
-            GenPropSnip(tabs, string.Format(result, resultType), name, "base." + method, cache: true, usings: usings,
+            GenPropSnip(tabs, string.Format(result, resultType), name, $"{specs.ItemAccessor}." + method, cache: true, usings: usings,
                 summary: [$"{msgPrefix} {resultType}."],
                 remarks: [msgRemarks],
                 returns: [msgReturns]

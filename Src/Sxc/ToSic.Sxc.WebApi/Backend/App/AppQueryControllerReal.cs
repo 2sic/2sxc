@@ -125,7 +125,7 @@ public class AppQueryControllerReal(
         // New v17 experimental with special fields
         var extraParams = new QueryODataParams(query.Configuration);
         if (dataConverter is ConvertToEavLight serializerWithOData)
-            serializerWithOData.SelectFields = extraParams.SelectFields;
+            serializerWithOData.AddSelectFields(extraParams.SelectFields);
 
         var result = dataConverter.Convert(query, stream?.Split(','), more?.Guids);
         return l.Return(result);

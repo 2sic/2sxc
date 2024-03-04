@@ -56,7 +56,7 @@ internal class DnnLookUpEngineResolver(IZoneCultureResolver cultureResolver, Laz
         // must already add, as we'll later check if some specific ones exist
         var lookupEngine = new LookUpEngine(Log);
         lookupEngine.Add(lookUps);
-        AddHttpAndDiSources(lookupEngine).UseIfNotNull(lookupEngine.Add);
+        AddHttpAndDiSources(lookupEngine).DoIfNotNull(lookupEngine.Add);
 
         // Expand the Lookup for "module" to also have an "id" property
         var additions = new List<ILookUp>();

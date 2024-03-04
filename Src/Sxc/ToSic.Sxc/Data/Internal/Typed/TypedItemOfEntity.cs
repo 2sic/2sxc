@@ -16,7 +16,6 @@ using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 using static ToSic.Eav.Data.Shared.WrapperEquality;
 using System.Text.Json.Serialization;
 using ToSic.Sxc.Cms.Data;
-using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Data.Internal.Typed;
 
@@ -24,7 +23,7 @@ namespace ToSic.Sxc.Data.Internal.Typed;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFactory cdf, bool propsRequired)
     : ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName, IWrapper<IEntity>,
-        IEntityWrapper, IHasMetadata
+        IEntityWrapper, IHasMetadata, IHasJsonSource
 {
     #region Setup
 
@@ -83,13 +82,7 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     // ReSharper disable once NonReadonlyMemberInGetHashCode
     public override int GetHashCode() => GetWrappedHashCode(this);
 
-    public override bool Equals(object b)
-    {
-        if (b is null) return false;
-        if (ReferenceEquals(this, b)) return true;
-        if (b.GetType() != GetType()) return false;
-        return MultiWrapperEquality.EqualsWrapper(this, (IMultiWrapper<IEntity>)b);
-    }
+    public override bool Equals(object b) => MultiWrapperEquality.EqualsObj(this, b);
 
     bool IEquatable<ITypedItem>.Equals(ITypedItem other) => Equals(other);
 
@@ -359,35 +352,28 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
 
     #region New Child<T> / Children<T> - disabled as ATM Kit is missing
 
-    private ServiceKit16 Kit => _kit ??= Cdf.GetServiceKitOrThrow();
-    private ServiceKit16 _kit;
-
     /// <inheritdoc />
     T ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required)
         => Cdf.AsCustom<T>(
-            source: ((ITypedItem)this).Child(name, required: required),
-            kit: Kit, protector: protector, nullIfNull: true
+            source: ((ITypedItem)this).Child(name, required: required), protector: protector, mock: false
         );
 
     /// <inheritdoc />
     IEnumerable<T> ITypedItem.Children<T>(string field, NoParamOrder protector, string type, bool? required)
         => Cdf.AsCustomList<T>(
-            source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required),
-            kit: Kit, protector: protector, nullIfNull: false
+            source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required), protector: protector, nullIfNull: false
         );
 
     /// <inheritdoc />
     T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string type, string field)
         => Cdf.AsCustom<T>(
-            source: ((ITypedItem)this).Parent(noParamOrder: protector, current: current, type: type, field: field),
-            kit: Kit, protector: protector, nullIfNull: true
+            source: ((ITypedItem)this).Parent(noParamOrder: protector, current: current, type: type, field: field), protector: protector, mock: false
         );
 
     /// <inheritdoc />
     IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string type, string field)
         => Cdf.AsCustomList<T>(
-            source: ((ITypedItem)this).Parents(noParamOrder: protector, field: field, type: type),
-            kit: Kit, protector: protector, nullIfNull: false
+            source: ((ITypedItem)this).Parents(noParamOrder: protector, field: field, type: type), protector: protector, nullIfNull: false
         );
 
 
@@ -395,8 +381,8 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
 
     #region GPS
 
-    GpsCoordinates ITypedItem.Gps(string name, NoParamOrder protector, bool? required)
-        => Kit.Json.To<GpsCoordinates>(((ITypedItem)this).String(name, required: required, fallback: "{}"));
+    GpsCoordinates ITypedItem.Gps(string name, NoParamOrder protector, bool? required) 
+        => GpsCoordinates.FromJson(((ITypedItem)this).String(name, required: required));
 
     #endregion
 }

@@ -9,21 +9,19 @@ namespace ToSic.Sxc.Data.Internal.Convert;
 /// Convert various types of entities (standalone, dynamic, in streams, etc.) to Dictionaries <br/>
 /// Mainly used for serialization scenarios, like in WebApis.
 /// </summary>
+/// <remarks>
+/// Standard constructor, important for opening this class in dependency-injection
+/// </remarks>
 [PrivateApi("Hide implementation; this was never public; the DataToDictionary was with empty constructor, but that's already polyfilled")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ConvertToEavLightWithCmsInfo : ConvertToEavLight
+[method: PrivateApi]
+public class ConvertToEavLightWithCmsInfo(ConvertToEavLight.MyServices services) : ConvertToEavLight(services)
 {
     /// <summary>
     /// Determines if we should use edit-information
     /// </summary>
     [PrivateApi("Note: wasn't private till 2sxc 12.04, very low risk of it being published. Set was always internal")]
     public bool WithEdit { get; set; }
-
-    /// <summary>
-    /// Standard constructor, important for opening this class in dependency-injection
-    /// </summary>
-    [PrivateApi]
-    public ConvertToEavLightWithCmsInfo(MyServices services): base(services) { }
 
     [PrivateApi]
     protected override EavLightEntity GetDictionaryFromEntity(IEntity entity)
@@ -59,6 +57,10 @@ public class ConvertToEavLightWithCmsInfo : ConvertToEavLight
     {
         if (!WithEdit) return;
 
+        // 2024-02-29 2dm - this is old, and I believe not used any more, commented out
+        // At least in the Edit-UI it shouldn't be used, 
+        // But the key was still found in the inpage, so we're not sure if we can get rid of it
+
         var title = entity.GetBestTitle(Languages);
         if (string.IsNullOrEmpty(title))
             title = "(no title)";
@@ -66,11 +68,13 @@ public class ConvertToEavLightWithCmsInfo : ConvertToEavLight
         var editDecorator = entity.GetDecorator<EntityInBlockDecorator>();
 
         dictionary.Add(SxcUiConstants.JsonEntityEditNodeName, editDecorator != null // entity is IHasEditingData entWithEditing
-            ? (object) new {
+            ? (object)new
+            {
                 sortOrder = editDecorator.SortOrder,
                 isPublished = entity.IsPublished,
             }
-            : new {
+            : new
+            {
                 entityId = entity.EntityId,
                 title,
                 isPublished = entity.IsPublished,
