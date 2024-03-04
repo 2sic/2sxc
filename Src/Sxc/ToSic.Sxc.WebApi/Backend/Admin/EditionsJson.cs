@@ -12,6 +12,7 @@
     public class EditionInfo(string description)
     {
         public string Description { get; set; } = description;
+        public bool IsDefault { get; set; }
     }
 
     public static class EditionsJsonExtension
@@ -25,7 +26,8 @@
                     .Select(e => new EditionDto
                     {
                         Name = e.Key,
-                        Description = e.Value.Description
+                        Description = e.Value.Description,
+                        IsDefault = e.Value.IsDefault
                     })
                     .ToList()
             };

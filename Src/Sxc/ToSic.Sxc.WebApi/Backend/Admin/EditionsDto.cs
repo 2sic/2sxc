@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Backend.Admin;
+﻿using System.Text.Json.Serialization;
+
+namespace ToSic.Sxc.Backend.Admin;
 
 /// <summary>
 /// Used to serialize 'editions' to json for UI
@@ -13,4 +15,6 @@ public class EditionDto
 {
     public string Name { get; set; }
     public string Description { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public bool IsDefault { get; set; }
 }

@@ -32,9 +32,9 @@ public class CodeControllerReal(DataClassesGenerator classesGenerator, LazySvc<I
 
     public IEnumerable<HelpItem> InlineHelp(string language)
     {
-        var wrapLog = Log.Fn<IEnumerable<HelpItem>>($"InlineHelp:l:{language}", timer: true);
+        var l = Log.Fn<IEnumerable<HelpItem>>($"InlineHelp:l:{language}", timer: true);
 
-        if (_inlineHelp != null) return wrapLog.ReturnAsOk(_inlineHelp);
+        if (_inlineHelp != null) return l.ReturnAsOk(_inlineHelp);
 
         // TODO: stv# how to use languages?
 
@@ -50,11 +50,11 @@ public class CodeControllerReal(DataClassesGenerator classesGenerator, LazySvc<I
         }
         catch (Exception e)
         {
-            Log.A("Exception in inline help.");
-            Log.Ex(e);
+            l.A("Exception in inline help.");
+            l.Ex(e);
         }
 
-        return wrapLog.ReturnAsOk(_inlineHelp);
+        return l.ReturnAsOk(_inlineHelp);
     }
     private static IEnumerable<HelpItem> _inlineHelp;
 
@@ -98,7 +98,7 @@ public class CodeControllerReal(DataClassesGenerator classesGenerator, LazySvc<I
         {
             Ok = true,
             IsConfigured = false,
-            Editions = [ new() { Name = "", Description = "Root edition" } ]
+            Editions = [ new() { Name = "", Description = "Root edition", IsDefault = true } ]
         };
 
         return l.Return(nothingSpecified, "editions not specified in app.json");
