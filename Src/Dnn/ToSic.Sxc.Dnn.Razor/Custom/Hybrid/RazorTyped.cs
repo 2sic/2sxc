@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Code.Help;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Code.Customizer;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Data;
@@ -54,8 +53,8 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     /// </summary>
     [PrivateApi("Experiment v17.02+")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    protected Customizer Customize => _customize ??= _CodeApiSvc.GetService<Customizer>(reuse: true);
-    private Customizer _customize;
+    protected ICodeCustomizer Customize => _customize ??= _CodeApiSvc.GetService<ICodeCustomizer>(reuse: true);
+    private ICodeCustomizer _customize;
 
     void ISetDynamicModel.SetDynamicModel(object data) => _overridePageData = data;
 
