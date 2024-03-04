@@ -14,14 +14,14 @@ namespace ToSic.Sxc.Code.Internal.Generate;
 /// <summary>
 /// Experimental
 /// </summary>
-public class DataModelGenerator(ISite site, IUser user, IAppStates appStates, IAppPathsMicroSvc appPaths) : ServiceBase(SxcLogging.SxcLogName + ".DMoGen")
+public class DataClassesGenerator(ISite site, IUser user, IAppStates appStates, IAppPathsMicroSvc appPaths) : ServiceBase(SxcLogging.SxcLogName + ".DMoGen")
 {
     internal CodeGenSpecs Specs { get; } = new();
 
     internal IUser User = user;
     internal CodeGenHelper CodeGenHelper = new(new());
 
-    public DataModelGenerator Setup(int appId, string edition = default)
+    public DataClassesGenerator Setup(int appId, string edition = default)
     {
         if (edition.HasValue())
             Specs.Edition = edition;

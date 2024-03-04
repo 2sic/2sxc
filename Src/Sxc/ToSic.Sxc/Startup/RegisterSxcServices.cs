@@ -199,7 +199,7 @@ public static partial class RegisterSxcServices
         services.TryAddSingleton<AssemblyResolver>();
         services.TryAddTransient<DependenciesLoader>();
 
-        services.TryAddTransient<DataModelGenerator>();
+        services.TryAddTransient<DataClassesGenerator>();
 
         // Add possibly missing fallback services
         // This must always be at the end here so it doesn't accidentally replace something we actually need

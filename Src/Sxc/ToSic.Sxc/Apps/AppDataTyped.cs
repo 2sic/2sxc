@@ -56,14 +56,13 @@ internal class AppDataTyped(
         var item = getItem();
         if (item == null) return null;
 
-        // Optional Type-Name check
-        if (!skipTypeCheck)
-        {
-            var typeName = new TResult().ForContentType;
-            if (!item.Type.Is(typeName)) throw new($"Item with ID {id} is not a {typeName}. This is probably a mistake, otherwise use {nameof(skipTypeCheck)}: true");
-        }
+        // Skip Type-Name check
+        if (skipTypeCheck) return Kit._CodeApiSvc.Cdf.AsCustom<TResult>(item);
 
-        return Kit._CodeApiSvc.Cdf.AsCustom<TResult>(item, default, mock: false);
+        // Do Type-Name check
+        var typeName = new TResult().ForContentType;
+        if (!item.Type.Is(typeName)) throw new($"Item with ID {id} is not a {typeName}. This is probably a mistake, otherwise use {nameof(skipTypeCheck)}: true");
+        return Kit._CodeApiSvc.Cdf.AsCustom<TResult>(item);
     }
 
 

@@ -8,7 +8,7 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Backend.Admin;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeControllerReal(DataModelGenerator modelGenerator, LazySvc<IJsonService> json) : ServiceBase("Api.CodeRl")
+public class CodeControllerReal(DataClassesGenerator classesGenerator, LazySvc<IJsonService> json) : ServiceBase("Api.CodeRl")
 {
     public const string LogSuffix = "Code";
 
@@ -62,7 +62,7 @@ public class CodeControllerReal(DataModelGenerator modelGenerator, LazySvc<IJson
     {
         var l = Log.Fn<RichResult>($"{nameof(appId)}:{appId};{nameof(edition)}:{edition}", timer: true);
 
-        var dataModelGenerator = modelGenerator.Setup(appId, edition);
+        var dataModelGenerator = classesGenerator.Setup(appId, edition);
         dataModelGenerator.GenerateAndSaveFiles();
 
         return l.Return(new RichResult
@@ -78,7 +78,7 @@ public class CodeControllerReal(DataModelGenerator modelGenerator, LazySvc<IJson
     {
         var l = Log.Fn<EditionsDto>($"{nameof(appId)}:{appId}");
 
-        var pathToDotAppJson = modelGenerator.Setup(appId).GetPathToDotAppJson();
+        var pathToDotAppJson = classesGenerator.Setup(appId).GetPathToDotAppJson();
         l.A($"path to app.json: {pathToDotAppJson}");
         if (File.Exists(pathToDotAppJson))
         {

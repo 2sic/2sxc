@@ -4,7 +4,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Code.Internal.Generate;
 
-internal class DataClassGenerator(DataModelGenerator dmg, IContentType type, string className): HelperBase(dmg.Log, "Gen.DtaCls")
+internal class DataClassGenerator(DataClassesGenerator dmg, IContentType type, string className): HelperBase(dmg.Log, "Gen.DtaCls")
 {
     internal CodeGenSpecs Specs { get; } = dmg.Specs;
 
