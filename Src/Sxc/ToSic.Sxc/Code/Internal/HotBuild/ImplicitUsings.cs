@@ -1,9 +1,16 @@
 ﻿namespace ToSic.Sxc.Code.Internal.HotBuild;
 
+[PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-
 public static class ImplicitUsings
 {
+    /// <summary>
+    /// Usings which are implicitly added to all generated code files.
+    /// It's important that they are the same in Dnn and Oqtane, and that it's not too much,
+    /// because that ensures that the code created by others has to mention their usings explicitly.
+    ///
+    /// Otherwise, if we once shrink this list, then all code created by others could break.
+    /// </summary>
     public static readonly List<string> ForRazor =
     [
         // 1. based on 'obj/*/*.GlobalUsings.g.cs' for Microsoft.NET.Sdk
