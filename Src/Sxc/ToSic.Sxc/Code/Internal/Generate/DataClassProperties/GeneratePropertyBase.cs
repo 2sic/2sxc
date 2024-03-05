@@ -14,6 +14,7 @@ internal abstract class GeneratePropertyBase
 
     protected CodeFragment GenPropSnip(int tabs, string returnType, string name, string method,
         NoParamOrder protector = default,
+        string sourceName = default,
         string[] summary = default,
         string[] remarks = default,
         string[] returns = default,
@@ -22,7 +23,7 @@ internal abstract class GeneratePropertyBase
         var comment = CodeGenHelper.XmlComment(tabs, summary: summary, remarks: remarks, returns: returns);
         return new(
             name,
-            comment + GenProp(tabs, returnType, name, method, parameters: parameters, cache)
+            comment + GenProp(tabs, returnType, name, sourceName ?? name, method, parameters: parameters, cache)
             , priority: priority,
             usings: usings
         );
@@ -42,7 +43,7 @@ internal abstract class GeneratePropertyBase
         nameof(ITypedItem.IsDemoItem)
     ];
 
-    private string GenProp(int tabs, string returnType, string name, string method, string parameters, bool cache = false)
+    private string GenProp(int tabs, string returnType, string name, string sourceName, string method, string parameters, bool cache = false)
     {
         if (parameters.HasValue())
             parameters = ", " + parameters;
@@ -54,7 +55,7 @@ internal abstract class GeneratePropertyBase
 
         var newPrefix = OverridePropertyNames.Contains(name) ? "new " : "";
 
-        var mainCode = $"{indent}public {newPrefix}{returnType} {name} => {cacheResult}{method}(\"{name}\"{parameters});";
+        var mainCode = $"{indent}public {newPrefix}{returnType} {name} => {cacheResult}{method}(\"{sourceName}\"{parameters});";
 
         var cacheCode = cache
             ? $"\n{indent}private {returnType} {cacheVarName};"
