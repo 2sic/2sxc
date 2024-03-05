@@ -27,7 +27,7 @@ public interface ICodeCustomizer
     /// </summary>
     /// <typeparam name="TSettings">Type to use for Settings.</typeparam>
     /// <typeparam name="TResources">Type to use for Resources</typeparam>
-    ICmsView View<TSettings, TResources>()
+    ICmsView<TSettings, TResources> View<TSettings, TResources>()
         where TSettings : class, ITypedItem, ITypedItemWrapper16, new()
         where TResources : class, ITypedItem, ITypedItemWrapper16, new();
 }

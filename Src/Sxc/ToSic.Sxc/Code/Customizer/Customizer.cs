@@ -17,7 +17,7 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
     }
     private object _app;
 
-    public ICmsView View<TSettings, TResources>()
+    public ICmsView<TSettings, TResources> View<TSettings, TResources>()
         where TSettings : class, ITypedItem, ITypedItemWrapper16, new()
         where TResources : class, ITypedItem, ITypedItemWrapper16, new()
     {
