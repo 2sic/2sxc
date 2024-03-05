@@ -24,7 +24,13 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
     /// <summary>
     /// This class is responsible for managing the compilation of Razor templates using Roslyn.
     /// </summary>
-    public class RoslynBuildManager : ServiceBase, IRoslynBuildManager
+    public class RoslynBuildManager(
+        AssemblyCacheManager assemblyCacheManager,
+        LazySvc<AppCodeLoader> appCodeLoader,
+        AssemblyResolver assemblyResolver,
+        IReferencedAssembliesProvider referencedAssembliesProvider)
+        : ServiceBase("Dnn.RoslynBuildManager", connect: [assemblyCacheManager, appCodeLoader, assemblyResolver, referencedAssembliesProvider]),
+            IRoslynBuildManager
     {
         private static readonly ConcurrentDictionary<string, object> CompileAssemblyLocks = new(InvariantCultureIgnoreCase);
 
@@ -33,21 +39,6 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         // TODO: THIS IS PROBABLY Wrong, but not important for now
         // It's wrong, because the web.config gives the default to be a very old 2sxc base class
         private const string FallbackBaseClass = "System.Web.WebPages.WebPageBase";
-
-        private readonly AssemblyCacheManager _assemblyCacheManager;
-        private readonly LazySvc<AppCodeLoader> _appCodeLoader;
-        private readonly AssemblyResolver _assemblyResolver;
-        private readonly IReferencedAssembliesProvider _referencedAssembliesProvider;
-
-        public RoslynBuildManager(AssemblyCacheManager assemblyCacheManager, LazySvc<AppCodeLoader> appCodeLoader, AssemblyResolver assemblyResolver, IReferencedAssembliesProvider referencedAssembliesProvider) : base("Dnn.RoslynBuildManager")
-        {
-            ConnectServices(
-                _assemblyCacheManager = assemblyCacheManager,
-                _appCodeLoader = appCodeLoader,
-                _assemblyResolver = assemblyResolver,
-                _referencedAssembliesProvider = referencedAssembliesProvider
-            );
-        }
 
         /// <summary>
         /// Manage template compilations, cache the assembly and returns the generated type.
@@ -94,15 +85,15 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             var l = Log.Fn<AssemblyResult>($"{codeFileInfo}; {spec};", timer: true);
 
             // Initialize the list of referenced assemblies with the default ones
-            var referencedAssemblies = _referencedAssembliesProvider.Locations(codeFileInfo.RelativePath, spec);
+            var referencedAssemblies = referencedAssembliesProvider.Locations(codeFileInfo.RelativePath, spec);
 
             // Roslyn compiler need reference to location of dll, when dll is not in bin folder
             // get assembly - try to get from cache, otherwise compile
-            var lTimer = Log.Fn("timer for AppCodeLoader", timer: true);
-            //var codeAssembly = AppCodeLoader.TryGetAssemblyOfAppCodeFromCache(spec, Log)?.Assembly
-            //                   ?? _appCodeLoader.Value.GetAppCodeAssemblyOrThrow(spec);
-            var (codeAssembly, specOut) = _appCodeLoader.Value.TryGetOrFallback(spec);
-            _assemblyResolver.AddAssembly(codeAssembly);
+            var lTimer = Log.Fn("Timer AppCodeLoader", timer: true);
+            var (codeAssembly, specOut) = appCodeLoader.Value.TryGetOrFallback(spec);
+
+            // Add the latest assembly to the .net assembly resolver (singleton)
+            assemblyResolver.AddAssembly(codeAssembly);
 
             var appCode = AssemblyCacheManager.TryGetAppCode(specOut);
 
@@ -123,7 +114,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             l.A($"Compiling template. Class: {className}");
 
             var (generatedAssembly, errors) = isCshtml
-                ? CompileTemplate(codeFileInfo.SourceCode, referencedAssemblies, className, DefaultNamespace, codeFileInfo.FullPath)
+                ? CompileRazor(codeFileInfo.SourceCode, referencedAssemblies, className, DefaultNamespace, codeFileInfo.FullPath)
                 : CompileCSharpCode(codeFileInfo.SourceCode, referencedAssemblies);
             if (generatedAssembly == null)
                 throw l.Ex(new Exception(
@@ -152,7 +143,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
             var assemblyResult = new AssemblyResult(generatedAssembly, safeClassName: className, mainType: mainType);
 
-            _assemblyCacheManager.Add(
+            assemblyCacheManager.Add(
                 cacheKey: AssemblyCacheManager.KeyTemplate(codeFileInfo.FullPath),
                 data: assemblyResult,
                 duration: 3600,
@@ -197,7 +188,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             if (string.IsNullOrEmpty(relativePath) || !relativePath.StartsWith("/Portals/"))
                 throw new(message);
 
-            var startPos = relativePath.IndexOf("/2sxc/", 10); // start from 10 to skip '/' before 'site-id-or-name'
+            var startPos = relativePath.IndexOf("/2sxc/", 10, StringComparison.Ordinal); // start from 10 to skip '/' before 'site-id-or-name'
             if (startPos < 0) throw new(message);
 
             // find position of 5th slash in relativePath 
@@ -231,16 +222,12 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
 
         /// <summary>
-        /// Compiles the template into an assembly.
+        /// Compiles the Razor into an assembly.
         /// </summary>
         /// <returns>The compiled assembly.</returns>
-        private (Assembly Assembly, List<CompilerError> Errors) CompileTemplate(string sourceCode, List<string> referencedAssemblies, string className, string defaultNamespace, string sourceFileName)
+        private (Assembly Assembly, List<CompilerError> Errors) CompileRazor(string sourceCode, List<string> referencedAssemblies, string className, string defaultNamespace, string sourceFileName)
         {
             var l = Log.Fn<(Assembly, List<CompilerError>)>(timer: true, parameters: $"{nameof(sourceCode)}: {sourceCode.Length} chars");
-
-            //var sourceCode = CleanInheritsDirective(template);
-            //if (template.Length != sourceCode.Length)
-            //    l.A($"Cleaned razor source code length: {sourceCode.Length}");
 
             // Find the base class for the template
             var baseClass = FindBaseClass(sourceCode);
@@ -255,12 +242,9 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             var razorResults = engine.GenerateCode(reader, className, defaultNamespace, sourceFileName);
             lTimer.Done();
 
-            lTimer = Log.Fn("Compiler Params", timer: true);
-            var compilerParameters = RazorCompilerParameters(referencedAssemblies);
-            lTimer.Done();
-
             // Compile the template into an assembly
             lTimer = Log.Fn("Compile", timer: true);
+            var compilerParameters = RazorCompilerParameters(referencedAssemblies);
             var compilerResults = GetCSharpCodeProvider().CompileAssemblyFromDom(compilerParameters, razorResults.GeneratedCode);
             lTimer.Done();
 
@@ -279,6 +263,8 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         /// So I'm experimenting with temporary caching of the compiler provider.
         ///
         /// Current results: saves ca. 2 seconds when compiling Razor, not sure about the memory impact and other side effects though.
+        ///
+        /// But the performance benefit is not consistent...
         /// </summary>
         /// <returns></returns>
         private CSharpCodeProvider GetCSharpCodeProvider()
@@ -297,6 +283,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         private const string CSharpCodeProviderCacheKey = "2sxc-dnn-CSharpCodeProvider";
         private const int CSharpCodeProviderCacheMinutes = 5;   // basic idea is that at startup, there is usually more to compile, after a while it's not so important any more.
 
+
         private static CompilerParameters RazorCompilerParameters(List<string> referencedAssemblies)
         {
             var compilerParameters = new CompilerParameters([.. referencedAssemblies])
@@ -310,36 +297,6 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             return compilerParameters;
         }
 
-        ///// <summary>
-        ///// Cleans the template by removing semicolons and comments from the @inherits directive.
-        ///// There is Razor syntax that is not supported by current Roslyn compiler, so we need to clean the template
-        ///// by removing semicolons and comments from the @inherits directive.
-        ///// </summary>
-        ///// <param name="template">The Razor template as a string.</param>
-        ///// <returns>A cleaned template.</returns>
-        ///// <remarks>
-        ///// It opens up too many scenarios for maintenance and mistakes.
-        ///// </remarks>
-        //private static string CleanInheritsDirective(string template)
-        //{
-        //    var stringBuilder = new StringBuilder();
-        //    using (var reader = new StringReader(template))
-        //    {
-        //        while (reader.ReadLine() is { } line)
-        //        {
-        //            // Check if the line contains the @inherits directive
-        //            if (line.Contains("@inherits"))
-        //            {
-        //                // Remove semicolons and comments from the line
-        //                var commentIndex = line.IndexOf("//", StringComparison.Ordinal);
-        //                if (commentIndex != -1) line = line.Substring(0, commentIndex);
-        //                line = line.Replace(";", "").Trim();
-        //            }
-        //            stringBuilder.AppendLine(line);
-        //        }
-        //    }
-        //    return stringBuilder.ToString();
-        //}
 
         /// <summary>
         /// Compiles the C# code into an assembly.
@@ -350,7 +307,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             var l = Log.Fn<(Assembly, List<CompilerError>)>(timer: true, parameters: $"C# code content length: {csharpCode.Length}");
 
             var lTimer = Log.Fn("Compiler Params", timer: true);
-            var compilerParameters = new CompilerParameters(referencedAssemblies.ToArray())
+            var compilerParameters = new CompilerParameters([.. referencedAssemblies])
             {
                 GenerateInMemory = true,
                 IncludeDebugInformation = true,

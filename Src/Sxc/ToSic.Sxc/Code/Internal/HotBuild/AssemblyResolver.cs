@@ -3,6 +3,14 @@ using System.Reflection;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
+/// <summary>
+/// Special SINGLETON service to resolve assemblies.
+/// The purpose is to ensure .net can access assemblies which are compiled at runtime.
+/// </summary>
+/// <remarks>
+/// This is a singleton!
+/// </remarks>
+[PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AssemblyResolver
 {
@@ -13,13 +21,12 @@ public class AssemblyResolver
 
     public AssemblyResolver()
     {
-        if (!_isHandlerRegistered)
-        {
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-            AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomain_AssemblyResolve;
-            AppDomain.CurrentDomain.TypeResolve += CurrentDomain_AssemblyResolve;
-            _isHandlerRegistered = true;
-        }
+        if (_isHandlerRegistered) return;
+
+        AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+        AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomain_AssemblyResolve;
+        AppDomain.CurrentDomain.TypeResolve += CurrentDomain_AssemblyResolve;
+        _isHandlerRegistered = true;
     }
 
     private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
