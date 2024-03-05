@@ -30,7 +30,10 @@ public class ConvertToEavLightWithCmsInfo(ConvertToEavLight.MyServices services)
         var dictionary = base.GetDictionaryFromEntity(entity);
 
         AddPresentation(entity, dictionary);
-        AddEditInfo(entity, dictionary);
+
+        // The edit info is an old feature. To phase out, we'll disable it if the new $select is used
+        if (!PresetFilters.SerializeTitleForce == true)
+            AddEditInfo(entity, dictionary);
 
         return dictionary;
     }
