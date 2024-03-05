@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using ToSic.Eav.WebApi.App;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using static ToSic.Eav.WebApi.EavWebApiConstants;
 using RealController = ToSic.Sxc.Backend.App.AppDataControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.App;
@@ -29,8 +30,8 @@ public class AppDataController() : OqtStatefulControllerBase(RealController.LogS
     /// <inheritdoc />
     [HttpGet("{contentType}")]
     [AllowAnonymous]   // will check security internally, so assume no requirements
-    public IEnumerable<IDictionary<string, object>> GetEntities(string contentType, string appPath = null)
-        => Real.GetEntities(contentType, appPath);
+    public IEnumerable<IDictionary<string, object>> GetEntities(string contentType, string appPath = default, [FromQuery(Name = ODataSelect)] string oDataSelect = default)
+        => Real.GetEntities(contentType, appPath, oDataSelect: oDataSelect);
 
     #endregion
 
@@ -40,8 +41,8 @@ public class AppDataController() : OqtStatefulControllerBase(RealController.LogS
     /// <inheritdoc />
     [HttpGet("{contentType}/{id}")]
     [AllowAnonymous] // will check security internally, so assume no requirements
-    public IDictionary<string, object> GetOne(string contentType, string id, string appPath = null) 
-        => Real.GetOne(contentType, id, appPath);
+    public IDictionary<string, object> GetOne(string contentType, string id, string appPath = default, [FromQuery(Name = ODataSelect)] string oDataSelect = default) 
+        => Real.GetOne(contentType, id, appPath, oDataSelect: oDataSelect);
 
     #endregion
 

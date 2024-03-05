@@ -5,6 +5,7 @@ using ToSic.Eav.Apps.State;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Generics;
 using ToSic.Eav.Metadata;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Internal;
 using ToSic.Eav.WebApi;
@@ -66,7 +67,7 @@ public class AppContent : ServiceBase
 
     #region Get Items
 
-    public IEnumerable<IDictionary<string, object>> GetItems(string contentType, string appPath = null)
+    public IEnumerable<IDictionary<string, object>> GetItems(string contentType, string appPath = default, string oDataSelect = default)
     {
         var wrapLog = Log.Fn<IEnumerable<IDictionary<string, object>>>($"get entities type:{contentType}, path:{appPath}");
 
@@ -74,7 +75,7 @@ public class AppContent : ServiceBase
         var permCheck = ThrowIfNotAllowedInType(contentType, GrantSets.ReadSomething, AppState);
 
         var includeDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
-        var result = _entityApi.GetEntities(AppState, contentType, includeDrafts)
+        var result = _entityApi.GetEntities(AppState, contentType, includeDrafts, oDataSelect)
             ?.ToList();
         return wrapLog.Return(result, "found: " + result?.Count);
     }
@@ -89,7 +90,8 @@ public class AppContent : ServiceBase
     /// ...then process/finish
     /// </summary>
     /// <returns></returns>
-    public IDictionary<string, object> GetOne(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string appPath)
+    public IDictionary<string, object> GetOne(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, 
+        string appPath, string oDataSelect)
     {
         Log.A($"get and serialize after security check type:{contentType}, path:{appPath}");
 
@@ -101,7 +103,7 @@ public class AppContent : ServiceBase
         if (!permCheck.EnsureAny(GrantSets.ReadDraft))
             itm = getOne(AppState.ListPublished);
 
-        return InitEavAndSerializer(AppState.AppId, Context.UserMayEdit).Convert(itm);
+        return InitEavAndSerializer(AppState.AppId, Context.UserMayEdit, oDataSelect).Convert(itm);
     }
 
 
@@ -155,7 +157,7 @@ public class AppContent : ServiceBase
         else
             dataController.Update(id.Value, cleanedNewItem);
 
-        return InitEavAndSerializer(AppState.AppId, Context.UserMayEdit)
+        return InitEavAndSerializer(AppState.AppId, Context.UserMayEdit, null)
             .Convert(AppState.List.One(id.Value));
     }
 
@@ -234,14 +236,18 @@ public class AppContent : ServiceBase
 
     #region helpers / initializers to prep the EAV and Serializer
 
-    private IConvertToEavLight InitEavAndSerializer(int appId, bool userMayEdit)
+    private IConvertToEavLight InitEavAndSerializer(int appId, bool userMayEdit, string oDataSelect)
     {
-        Log.A($"init eav for a#{appId}");
+        var l = Log.Fn<IConvertToEavLight>($"init eav for a#{appId}");
         // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
         var ser = _entToDicLazy.Value;
         ser.WithGuid = true;
-        ((ConvertToEavLightWithCmsInfo)ser).WithEdit = userMayEdit;
-        return ser;
+        var converter = (ConvertToEavLightWithCmsInfo)ser;
+        converter.WithEdit = userMayEdit;
+        if (oDataSelect.HasValue())
+            converter.AddSelectFields([.. oDataSelect.CsvToArrayWithoutEmpty()]);
+
+        return l.Return(ser);
     }
     #endregion
 
