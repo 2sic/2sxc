@@ -43,25 +43,26 @@ public class EditController() : OqtStatefulControllerBase(RealController.LogSuff
     public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
         => Real.Save(package, appId, partOfPage);
 
-    [HttpGet]
-    [HttpPost]
-    [AllowAnonymous] // security check happens internally
-    public async Task<IEnumerable<EntityForPickerDto>> EntityPicker(
-        int appId, 
-        /*[FromBody] string[] items,*/ string contentTypeName = null  // [FromBody] is commented because it is sometimes null and options.AllowEmptyInputInBodyModelBinding = true is not working
-        // 2dm 2023-01-22 #maybeSupportIncludeParentApps
-        // bool? includeParentApps = null
-    )
-    {
-        // get body as json (using this complicated way to read body because it is sometimes null and
-        // options.AllowEmptyInputInBodyModelBinding = true or similar solutions are not working)
-        // it is expected to be fixed in .NET 7
-        // https://github.com/dotnet/aspnetcore/issues/29570
-        using var reader = new StreamReader(Request.Body);
-        var body = await reader.ReadToEndAsync();
-        var items = string.IsNullOrEmpty(body) ? null : JsonNode.Parse(body, JsonOptions.JsonNodeDefaultOptions, JsonOptions.JsonDocumentDefaultOptions)?.AsArray().Select(n => n.ToString()).ToArray();
-        return Real.EntityPicker(appId, items, contentTypeName/*, includeParentApps*/);
-    }
+    // #RemoveOldEntityPicker - commented out 2024-03-05, remove ca. 2024-06-01
+    //[HttpGet]
+    //[HttpPost]
+    //[AllowAnonymous] // security check happens internally
+    //public async Task<IEnumerable<EntityForPickerDto>> EntityPicker(
+    //    int appId, 
+    //    /*[FromBody] string[] items,*/ string contentTypeName = null  // [FromBody] is commented because it is sometimes null and options.AllowEmptyInputInBodyModelBinding = true is not working
+    //    // 2dm 2023-01-22 #maybeSupportIncludeParentApps
+    //    // bool? includeParentApps = null
+    //)
+    //{
+    //    // get body as json (using this complicated way to read body because it is sometimes null and
+    //    // options.AllowEmptyInputInBodyModelBinding = true or similar solutions are not working)
+    //    // it is expected to be fixed in .NET 7
+    //    // https://github.com/dotnet/aspnetcore/issues/29570
+    //    using var reader = new StreamReader(Request.Body);
+    //    var body = await reader.ReadToEndAsync();
+    //    var items = string.IsNullOrEmpty(body) ? null : JsonNode.Parse(body, JsonOptions.JsonNodeDefaultOptions, JsonOptions.JsonDocumentDefaultOptions)?.AsArray().Select(n => n.ToString()).ToArray();
+    //    return Real.EntityPicker(appId, items, contentTypeName/*, includeParentApps*/);
+    //}
 
     /// <inheritdoc />
     [HttpGet]

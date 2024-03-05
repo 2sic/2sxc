@@ -30,11 +30,12 @@ namespace IntegrationSamples.SxcEdit01.Controllers
         public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
             => Real.Save(package, appId, partOfPage);
 
-        [HttpGet]
-        [HttpPost]
-        [AllowAnonymous] // Anonymous is ok, security check happens internally
-        public IEnumerable<EntityForPickerDto> EntityPicker(int appId, [FromBody] string[] items, string contentTypeName = null)
-            => Real.EntityPicker(appId, items, contentTypeName);
+        // #RemoveOldEntityPicker - commented out 2024-03-05, remove ca. 2024-06-01
+        //[HttpGet]
+        //[HttpPost]
+        //[AllowAnonymous] // Anonymous is ok, security check happens internally
+        //public IEnumerable<EntityForPickerDto> EntityPicker(int appId, [FromBody] string[] items, string contentTypeName = null)
+        //    => Real.EntityPicker(appId, items, contentTypeName);
 
         /// <inheritdoc />
         [HttpGet]
