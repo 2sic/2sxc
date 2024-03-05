@@ -22,10 +22,8 @@ namespace Custom.Data;
 /// It's not abstract, even if the most common case is to inherit, as there are cases where you want to use it directly.
 /// </remarks>
 
-// TODO: @2dm
-//[JsonConverter(typeof(DynamicJsonConverter))]
 [WorkInProgressApi("Still WIP v17.02")]
-public /*abstract*/ partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasPropLookup
+public partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasPropLookup
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
