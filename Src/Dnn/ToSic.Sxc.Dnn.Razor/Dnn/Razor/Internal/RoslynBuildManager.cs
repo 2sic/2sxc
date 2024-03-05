@@ -90,7 +90,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             // Roslyn compiler need reference to location of dll, when dll is not in bin folder
             // get assembly - try to get from cache, otherwise compile
             var lTimer = Log.Fn("Timer AppCodeLoader", timer: true);
-            var (codeAssembly, specOut) = appCodeLoader.Value.TryGetOrFallback(spec);
+            var (codeAssembly, specOut) = appCodeLoader.Value.GetAppCode(spec);
 
             // Add the latest assembly to the .net assembly resolver (singleton)
             assemblyResolver.AddAssembly(codeAssembly);

@@ -49,10 +49,9 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     private TypedCode16Helper _codeHelper;
 
     /// <summary>
-    /// WIP
+    /// BETA! v17.03+
     /// </summary>
-    [PrivateApi("Experiment v17.02+")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [WorkInProgressApi("Experiment v17.03+")]
     protected ICodeCustomizer Customize => _customize ??= _CodeApiSvc.GetService<ICodeCustomizer>(reuse: true);
     private ICodeCustomizer _customize;
 
