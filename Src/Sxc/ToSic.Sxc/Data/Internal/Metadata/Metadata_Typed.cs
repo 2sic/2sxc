@@ -255,6 +255,24 @@ internal partial class Metadata: ITypedItem
         factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback, 
         imgClass: imgClass, imgAttributes: imgAttributes, pictureClass: pictureClass, pictureAttributes: pictureAttributes, toolbar: toolbar, recipe: recipe);
 
+    IResponsiveImage ITypedItem.Img(
+        string name,
+        NoParamOrder noParamOrder,
+        object settings,
+        object factor,
+        object width,
+        string imgAlt,
+        string imgAltFallback,
+        string imgClass,
+        object imgAttributes,
+        object toolbar,
+        object recipe
+    ) => TypedItemHelpers.Img(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder, settings: settings,
+        factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback,
+        imgClass: imgClass, imgAttributes: imgAttributes,
+        toolbar: toolbar, recipe: recipe);
+
+
     #endregion
 
     #region GPS
