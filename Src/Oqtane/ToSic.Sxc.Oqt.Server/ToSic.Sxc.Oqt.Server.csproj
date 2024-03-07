@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <AssemblyName>ToSic.Sxc.Oqtane.Server</AssemblyName>
@@ -98,16 +98,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.5" /><!-- from Oqtane.Server.csproj -->
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.5" /><!-- from Oqtane.Server.csproj -->
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.5" /><!-- from Oqtane.Server.csproj -->
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.2" /><!-- from Oqtane.Server.csproj -->
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.2" /><!-- from Oqtane.Server.csproj -->
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.2" /><!-- from Oqtane.Server.csproj -->
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" /><!-- from Oqtane.Server.csproj -->
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.5" /><!-- from Oqtane.Database.SqlServer.csproj -->
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.5" /><!-- from Oqtane.Server.csproj -->
-    <PackageReference Include="Oqtane.Server" Version="4.0.0" />
-    <PackageReference Include="Oqtane.Shared" Version="4.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" /><!-- from Oqtane.Server.csproj -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.2" /><!-- from Oqtane.Database.SqlServer.csproj -->
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.2" /><!-- from Oqtane.Server.csproj -->
+    <!--<PackageReference Include="Oqtane.Server" Version="4.0.0" />
+    <PackageReference Include="Oqtane.Shared" Version="4.0.0" />-->
     <PackageReference Include="ToSic.Imageflow.Oqtane" Version="1.2.0" />
   </ItemGroup>
 
@@ -115,8 +115,8 @@
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj" />
-    <!--<ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Server\Oqtane.Server.csproj" />
-    <ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Shared\Oqtane.Shared.csproj" />-->
+    <ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Server\Oqtane.Server.csproj" />
+    <ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Shared\Oqtane.Shared.csproj" />
     <ProjectReference Include="..\..\Razor\ToSic.Sxc.Razor\ToSic.Sxc.Razor.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />

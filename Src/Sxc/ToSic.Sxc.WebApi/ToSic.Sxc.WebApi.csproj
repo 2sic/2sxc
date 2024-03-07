@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!--<TargetFrameworks>net472;netstandard2.0;net7.0;</TargetFrameworks>-->
-    <TargetFrameworks>net472;net7.0;</TargetFrameworks>
+    <TargetFrameworks>net472;net8.0;</TargetFrameworks>
     <RootNamespace>ToSic.Sxc</RootNamespace>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
     <FileAlignment>512</FileAlignment>
@@ -56,7 +55,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
     <Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll</HintPath>
     </Reference>
@@ -66,7 +65,7 @@
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" PrivateAssets="All" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
