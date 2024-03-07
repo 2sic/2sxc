@@ -5,19 +5,17 @@ namespace ToSic.Sxc.Oqt.Shared.Helpers;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ErrorHelper
 {
-    public static string ErrorMessage(Exception ex, bool isSupreUser = false)
+    public static string ErrorMessage(Exception ex, bool isSuperUser = false)
     {
-        string errorMessage = ex.Message;
+        var errorMessage = ex.Message;
 
-        if (isSupreUser)
-        {
-            errorMessage += " - " + ex.StackTrace;
-            if (ex.InnerException != null)
-            {
-                errorMessage += " - " + ex.InnerException.Message;
-                errorMessage += " - " + ex.InnerException.StackTrace;
-            }
-        }
+        if (!isSuperUser) return errorMessage;
+
+        errorMessage += " - " + ex.StackTrace;
+        if (ex.InnerException == null) return errorMessage;
+
+        errorMessage += " - " + ex.InnerException.Message;
+        errorMessage += " - " + ex.InnerException.StackTrace;
 
         return errorMessage;
     }

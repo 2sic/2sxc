@@ -9,5 +9,5 @@ namespace ToSic.Sxc.Oqt.Server.Blocks;
 [PrivateApi]
 internal class OqtCodeApiService(
     CodeApiService.MyServices services,
-    LazySvc<SiteStateInitializer> siteStateInitializerLazy)
-    : OqtCodeApiService<object, ServiceKit>(services, siteStateInitializerLazy);
+    LazySvc<AliasResolver> aliasResolverLazy)
+    : OqtCodeApiService<object, ServiceKit>(services, aliasResolverLazy);

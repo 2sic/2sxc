@@ -224,7 +224,7 @@
             <!-- System.Text.Json transitive dependency -->
             <assembly>
               <name>Microsoft.Bcl.AsyncInterfaces.dll</name>
-              <version>7.0.0.0</version>
+              <version>8.0.0.0</version>
             </assembly>
             <!-- CsvHelper transitive dependency -->
             <assembly>
@@ -320,7 +320,7 @@
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
               <name>System.Collections.Immutable.dll</name>
-              <version>7.0.0.0</version>
+              <version>8.0.0.0</version>
             </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
@@ -368,11 +368,11 @@
             <!-- System.Text.Json transitive dependency -->
             <assembly>
               <name>System.Text.Encodings.Web.dll</name>
-              <version>7.0.0.0</version>
+              <version>8.0.0.0</version>
             </assembly>
             <assembly>
               <name>System.Text.Json.dll</name>
-              <version>7.0.0</version>
+              <version>8.0.0.3</version>
             </assembly>
             <!-- Microsoft.Bcl.AsyncInterfaces transitive dependency -->
             <!-- System.Text.Json transitive dependency -->

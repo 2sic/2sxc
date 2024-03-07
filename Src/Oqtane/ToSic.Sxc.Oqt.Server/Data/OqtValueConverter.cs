@@ -27,7 +27,7 @@ internal class OqtValueConverter : ValueConverterBase
     public LazySvc<ITenantResolver> TenantResolver { get; }
     public LazySvc<IPageRepository> PageRepository { get; }
     public LazySvc<IServerPaths> ServerPaths { get; }
-    public LazySvc<SiteStateInitializer> SiteStateInitializerLazy { get; }
+    public LazySvc<AliasResolver> AliasResolverLazy { get; }
 
     #region DI Constructor
 
@@ -37,7 +37,7 @@ internal class OqtValueConverter : ValueConverterBase
         LazySvc<ITenantResolver> tenantResolver,
         LazySvc<IPageRepository> pageRepository,
         LazySvc<IServerPaths> serverPaths,
-        LazySvc<SiteStateInitializer> siteStateInitializerLazy,
+        LazySvc<AliasResolver> aliasResolverLazy,
         LazySvc<IEavFeaturesService> featuresLazy) : base("Oqt.ValCn")
     {
         ConnectLogs([
@@ -47,7 +47,7 @@ internal class OqtValueConverter : ValueConverterBase
             TenantResolver = tenantResolver,
             PageRepository = pageRepository,
             ServerPaths = serverPaths,
-            SiteStateInitializerLazy = siteStateInitializerLazy
+            AliasResolverLazy = aliasResolverLazy
         ]);
     }
 
@@ -56,7 +56,7 @@ internal class OqtValueConverter : ValueConverterBase
         get
         {
             if (_alias != null) return _alias;
-            _alias = SiteStateInitializerLazy.Value.InitializedState.Alias;
+            _alias = AliasResolverLazy.Value.Alias;
             return _alias;
         }
     }

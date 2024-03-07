@@ -20,7 +20,7 @@ partial class OqtPageOutput
     {
         var l = Log.Fn<string>();
         var pageId = Parent?.Page.PageId ?? -1;
-        var siteRoot = GetSiteRoot(siteState);
+        var siteRoot = GetSiteRoot(siteState.Alias);
         var rvt = AntiForgeryToken();
         var result = jsApiService.GetJsApiJson(pageId, siteRoot, rvt);
         return l.ReturnAsOk(result);

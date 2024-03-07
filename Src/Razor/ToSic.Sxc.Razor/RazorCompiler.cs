@@ -1,20 +1,25 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
-using Microsoft.AspNetCore.Routing;
+using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Internal;
+using IView = Microsoft.AspNetCore.Mvc.ViewEngines.IView;
 
 namespace ToSic.Sxc.Razor;
 
@@ -23,25 +28,28 @@ internal class RazorCompiler(
     IRazorViewEngine viewEngine,
     IServiceProvider serviceProvider,
     IHttpContextAccessor httpContextAccessor,
-    IActionContextAccessor actionContextAccessor)
+    IActionContextAccessor actionContextAccessor,
+    LazySvc<AppCodeLoader> appCodeLoader,
+    AssemblyResolver assemblyResolver,
+    SourceAnalyzer sourceAnalyzer)
     : ServiceBase($"{SxcLogging.SxcLogName}.RzrCmp",
-        connect: [applicationPartManager, viewEngine, /* never! serviceProvider,*/ httpContextAccessor, actionContextAccessor]), IRazorCompiler
+        connect:
+        [
+            applicationPartManager, viewEngine, /* never! serviceProvider,*/ httpContextAccessor, actionContextAccessor, appCodeLoader, assemblyResolver, sourceAnalyzer
+        ]), IRazorCompiler
 {
-    public Task<(IView view, ActionContext context)> CompileView(string templatePath, Action<RazorView> configure = null, IApp app = null, HotBuildSpec spec = default)
-        => Task.FromResult(CompileView(templatePath, configure));
-
-    private (IView view, ActionContext context) CompileView(string partialName, Action<RazorView> configure = null)
+    public async Task<(IView view, ActionContext context)> CompileView(string partialName, Action<RazorView> configure = null, IApp app = null, HotBuildSpec spec = default)
     {
-        var l = Log.Fn<(IView view, ActionContext context)>($"partialName:{partialName}");
+        var l = Log.Fn<(IView view, ActionContext context)>($"partialName:{partialName},appCodePath:{app}");
         var actionContext = actionContextAccessor.ActionContext ?? NewActionContext();
-        var partial = FindView(actionContext, partialName);
+        var partial = await FindViewAsync(actionContext, partialName, app, spec);
         // do callback to configure the object we received
         if (partial is RazorView rzv) configure?.Invoke(rzv);
         return l.ReturnAsOk((partial, actionContext));
     }
 
     private static bool _executedAlready = false;
-    private IView FindView(ActionContext actionContext, string partialName)
+    private async Task<IView> FindViewAsync(ActionContext actionContext, string partialName, IApp app, HotBuildSpec spec)
     {
         var l = Log.Fn<IView>($"partialName:{partialName}");
         var searchedLocations = new List<string>();
@@ -64,6 +72,12 @@ internal class RazorCompiler(
                 l.A($"removed:{removeThis.Count}");
                 _executedAlready = true;
             }
+
+            // TODO: SHOULD OPTIMIZE so the file doesn't need to read multiple times
+            // 1. probably change so the CodeFileInfo contains the source code
+            var razorType = sourceAnalyzer.TypeOfVirtualPath(partialName);
+            if (razorType.IsHotBuildSupported())
+                AddAppCodeAssembly(partialName, app, spec);
 
             var firstAttempt = viewEngine.GetView(null, partialName, false);
             l.A($"firstAttempt: {firstAttempt}");
@@ -119,5 +133,25 @@ internal class RazorCompiler(
         var l = Log.Fn<ActionContext>();
         var httpContext = httpContextAccessor.HttpContext ?? new DefaultHttpContext { RequestServices = serviceProvider };
         return l.ReturnAsOk(new(httpContext, new(), new()));
+    }
+
+    private void AddAppCodeAssembly(string partialName, IApp app, HotBuildSpec spec)
+    {
+        var log = Log.Fn($"{nameof(partialName)}:{partialName}; {nameof(app.RelativePath)}:{app.RelativePath}; {spec}", timer: true);
+
+        // Get assembly - try to get from cache, otherwise compile
+        var (assemblyResult, _) = appCodeLoader.Value.GetAppCode(spec);
+        log.A($"has AppCode assembly: {assemblyResult != null}");
+
+        if (assemblyResult?.Assembly != null)
+        {
+            var appRelativePathWithEdition = spec.Edition.HasValue() ? Path.Combine(app.RelativePath, spec.Edition) : app.RelativePath;
+            log.A($"{nameof(appRelativePathWithEdition)}: {appRelativePathWithEdition}");
+
+            // Add assembly to resolver, so it will be provided to the compiler when used in cshtml
+            assemblyResolver.AddAssembly(assemblyResult.Assembly, appRelativePathWithEdition);
+        };
+
+        log.Done();
     }
 }

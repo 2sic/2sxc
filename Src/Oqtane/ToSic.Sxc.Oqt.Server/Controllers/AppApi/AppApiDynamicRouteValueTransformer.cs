@@ -70,8 +70,8 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
                 var serviceProvider = httpContext.RequestServices;
                 // this transient dependency is not provided as usual constructor provided lazy/generator dependency (from root service provider)
                 // but as a transient dependency from the request service provider
-                var siteStateInitializer = serviceProvider.Build<SiteStateInitializer>();
-                alias = siteStateInitializer.InitializedState.Alias
+                var aliasResolver = serviceProvider.Build<AliasResolver>();
+                alias = aliasResolver.Alias
                         ?? throw new HttpExceptionAbstraction(HttpStatusCode.NotFound,
                             $"Error: missing required 'alias' route value.", "Not Found");
             }

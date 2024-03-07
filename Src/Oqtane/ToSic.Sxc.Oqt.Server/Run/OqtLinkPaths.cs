@@ -7,7 +7,7 @@ using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
-internal class OqtLinkPaths(IHttpContextAccessor contextAccessor, SiteStateInitializer siteStateInitializer)
+internal class OqtLinkPaths(IHttpContextAccessor contextAccessor, AliasResolver aliasResolver)
     : ILinkPaths
 {
     public HttpContext Current => contextAccessor.HttpContext;
@@ -27,7 +27,7 @@ internal class OqtLinkPaths(IHttpContextAccessor contextAccessor, SiteStateIniti
 
     public string AppFromTheDomainRoot(string appFolder, string pagePath)
     {
-        var siteRoot = OqtPageOutput.GetSiteRoot(siteStateInitializer.InitializedState).TrimLastSlash();
+        var siteRoot = OqtPageOutput.GetSiteRoot(aliasResolver.Alias).TrimLastSlash();
         return AppFromTheDomainRoot(siteRoot, appFolder, pagePath);
     }
 
@@ -40,7 +40,7 @@ internal class OqtLinkPaths(IHttpContextAccessor contextAccessor, SiteStateIniti
     public string GetCurrentLinkRoot()
     {
         var scheme = contextAccessor?.HttpContext?.Request?.Scheme ?? "http";
-        var alias = siteStateInitializer.InitializedState.Alias;
+        var alias = aliasResolver.Alias;
         var domainName = string.IsNullOrEmpty(alias.Path)
             ? alias.Name
             : alias.Name.Substring(0, alias.Name.Length - alias.Path.Length - 1);

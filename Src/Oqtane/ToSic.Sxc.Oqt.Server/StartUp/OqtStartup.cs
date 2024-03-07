@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Oqtane.Components;
 using Oqtane.Extensions;
 using Oqtane.Infrastructure;
+using Oqtane.UI;
+using OqtaneSSR.Extensions;
 using System.IO;
 using ToSic.Eav.Integration;
 using ToSic.Eav.Internal.Configuration;
@@ -147,34 +150,48 @@ public static class ApplicationBuilderExtensions
         // to avoid having duplicate middleware in pipeline (like we had before).
         // Order of middleware configuration is important, because that is order of middleware execution in pipeline.
 
-        #region Oqtane copy from Startup.cs - L173
+        #region Oqtane copy from Startup.cs - L197
 
         // allow oqtane localization middleware
         app.UseOqtaneLocalization();
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
+        app.UseExceptionMiddleWare();
         //app.UseTenantResolution(); // commented, because it breaks alias resolving in 2sxc and it will resolve siteid=1 for all sites
         app.UseJwtAuthorization();
-        app.UseBlazorFrameworkFiles();
         app.UseRouting();
+        app.UseCors();
         app.UseAuthentication();
         app.UseAuthorization();
 
         //if (_useSwagger)
         //{
-        //    app.UseSwagger();
-        //    app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/" + Constants.Version + "/swagger.json", Constants.PackageId + " " + Constants.Version); });
+        //  app.UseSwagger();
+        //  app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/" + Constants.Version + "/swagger.json", Constants.PackageId + " " + Constants.Version); });
         //}
 
         app.UseEndpoints(endpoints =>
         {
-            endpoints.MapBlazorHub();
-            endpoints.MapControllers();
-            endpoints.MapFallbackToPage("/_Host");
+          endpoints.MapControllers();
+          endpoints.MapRazorPages();
         });
 
-        #endregion
-        return app;
+        app.UseEndpoints(endpoints =>
+        {
+          endpoints.MapRazorComponents<App>()
+            .AddInteractiveServerRenderMode()
+            .AddInteractiveWebAssemblyRenderMode()
+            .AddAdditionalAssemblies(typeof(SiteRouter).Assembly);
+        });
+
+        // simulate the fallback routing approach of traditional Blazor - allowing the custom SiteRouter to handle all routing concerns
+        app.UseEndpoints(endpoints =>
+        {
+          endpoints.MapFallback();
+        });
+
+    #endregion
+    return app;
     }
 }

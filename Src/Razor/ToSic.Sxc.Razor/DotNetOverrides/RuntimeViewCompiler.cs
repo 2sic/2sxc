@@ -1,6 +1,18 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+// based on: https://github.dev/dotnet/aspnetcore/tree/v8.0.5
+// src/Mvc/Mvc.Razor.RuntimeCompilation/src/RuntimeViewCompiler.cs
+
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
@@ -15,15 +27,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using ToSic.Eav;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
@@ -32,14 +35,13 @@ using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Polymorphism.Internal;
 
-namespace ToSic.Sxc.Razor.DbgWip;
+namespace ToSic.Sxc.Razor.DotNetOverrides;
 
-/// <summary>
-/// Singleton service that compiles Razor views in runtime and caches the compiled results.
-/// </summary>
-internal class RuntimeViewCompiler : IViewCompiler
+#pragma warning disable CA1852 // Seal internal types
+internal partial class RuntimeViewCompiler : IViewCompiler
+#pragma warning restore CA1852 // Seal internal types
 {
-    private readonly object _cacheLock = new();
+    private readonly object _cacheLock = new object();
     private readonly Dictionary<string, CompiledViewDescriptor> _precompiledViews;
     private readonly ConcurrentDictionary<string, string> _normalizedPathCache;
     private readonly IFileProvider _fileProvider;
@@ -63,21 +65,22 @@ internal class RuntimeViewCompiler : IViewCompiler
         SourceAnalyzer sourceAnalyzer,
         IWebHostEnvironment env)
     {
-        if (precompiledViews == null)
-        {
-            throw new ArgumentNullException(nameof(precompiledViews));
-        }
+        ArgumentNullException.ThrowIfNull(fileProvider);
+        ArgumentNullException.ThrowIfNull(projectEngine);
+        ArgumentNullException.ThrowIfNull(csharpCompiler);
+        ArgumentNullException.ThrowIfNull(precompiledViews);
+        ArgumentNullException.ThrowIfNull(logger);
 
-        _fileProvider = fileProvider ?? throw new ArgumentNullException(nameof(fileProvider));
-        _projectEngine = projectEngine ?? throw new ArgumentNullException(nameof(projectEngine));
-        _csharpCompiler = csharpCompiler ?? throw new ArgumentNullException(nameof(csharpCompiler));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _fileProvider = fileProvider;
+        _projectEngine = projectEngine;
+        _csharpCompiler = csharpCompiler;
+        _logger = logger;
         _assemblyResolver = assemblyResolver;
         _httpContextAccessor = httpContextAccessor;
         _sourceAnalyzer = sourceAnalyzer;
         _env = env;
 
-        _normalizedPathCache = new(StringComparer.Ordinal);
+        _normalizedPathCache = new ConcurrentDictionary<string, string>(StringComparer.Ordinal);
 
         // This is our L0 cache, and is a durable store. Views migrate into the cache as they are requested
         // from either the set of known precompiled views, or by being compiled.
@@ -87,13 +90,13 @@ internal class RuntimeViewCompiler : IViewCompiler
         // We do this because there's no good way to canonicalize paths on windows, and it will create
         // problems when deploying to linux. Rather than deal with these issues, we just don't support
         // views that differ only by case.
-        _precompiledViews = new(
+        _precompiledViews = new Dictionary<string, CompiledViewDescriptor>(
             precompiledViews.Count,
             StringComparer.OrdinalIgnoreCase);
 
         foreach (var precompiledView in precompiledViews)
         {
-            //logger.ViewCompilerLocatedCompiledView(precompiledView.RelativePath);
+            Log.ViewCompilerLocatedCompiledView(_logger, precompiledView.RelativePath);
 
             if (!_precompiledViews.ContainsKey(precompiledView.RelativePath))
             {
@@ -105,26 +108,23 @@ internal class RuntimeViewCompiler : IViewCompiler
 
         if (_precompiledViews.Count == 0)
         {
-            //logger.ViewCompilerNoCompiledViewsFound();
+            Log.ViewCompilerNoCompiledViewsFound(_logger);
         }
     }
 
     public Task<CompiledViewDescriptor> CompileAsync(string relativePath)
     {
-        if (relativePath == null)
-        {
-            throw new ArgumentNullException(nameof(relativePath));
-        }
+        ArgumentNullException.ThrowIfNull(relativePath);
 
         // Attempt to lookup the cache entry using the passed in path. This will succeed if the path is already
         // normalized and a cache entry exists.
-        if (_cache.TryGetValue(relativePath, out Task<CompiledViewDescriptor> cachedResult))
+        if (_cache.TryGetValue<Task<CompiledViewDescriptor>>(relativePath, out var cachedResult) && cachedResult is not null)
         {
             return cachedResult;
         }
 
         var normalizedPath = GetNormalizedPath(relativePath);
-        if (_cache.TryGetValue(normalizedPath, out cachedResult))
+        if (_cache.TryGetValue(normalizedPath, out cachedResult) && cachedResult is not null)
         {
             return cachedResult;
         }
@@ -146,14 +146,14 @@ internal class RuntimeViewCompiler : IViewCompiler
         lock (_cacheLock)
         {
             // Double-checked locking to handle a possible race.
-            if (_cache.TryGetValue(normalizedPath, out Task<CompiledViewDescriptor> result))
+            if (_cache.TryGetValue<Task<CompiledViewDescriptor>>(normalizedPath, out var result) && result is not null)
             {
                 return result;
             }
 
             if (_precompiledViews.TryGetValue(normalizedPath, out var precompiledView))
             {
-                //_logger.ViewCompilerLocatedCompiledViewForPath(normalizedPath);
+                Log.ViewCompilerLocatedCompiledViewForPath(_logger, normalizedPath);
                 item = CreatePrecompiledWorkItem(normalizedPath, precompiledView);
             }
             else
@@ -163,7 +163,7 @@ internal class RuntimeViewCompiler : IViewCompiler
 
             // At this point, we've decided what to do - but we should create the cache entry and
             // release the lock first.
-            cacheEntryOptions = new();
+            cacheEntryOptions = new MemoryCacheEntryOptions();
 
             Debug.Assert(item.ExpirationTokens != null);
             for (var i = 0; i < item.ExpirationTokens.Count; i++)
@@ -171,7 +171,7 @@ internal class RuntimeViewCompiler : IViewCompiler
                 cacheEntryOptions.ExpirationTokens.Add(item.ExpirationTokens[i]);
             }
 
-            taskSource = new(creationOptions: TaskCreationOptions.RunContinuationsAsynchronously);
+            taskSource = new TaskCompletionSource<CompiledViewDescriptor>(creationOptions: TaskCreationOptions.RunContinuationsAsynchronously);
             if (item.SupportsCompilation)
             {
                 // We'll compile in just a sec, be patient.
@@ -191,7 +191,8 @@ internal class RuntimeViewCompiler : IViewCompiler
         {
             Debug.Assert(taskSource != null);
 
-            if (item.Descriptor?.Item != null && ChecksumValidator.IsItemValid(_projectEngine.FileSystem, item.Descriptor.Item))
+            if (item.Descriptor?.Item != null &&
+                ChecksumValidator.IsItemValid(_projectEngine.FileSystem, item.Descriptor.Item))
             {
                 // If the item has checksums to validate, we should also have a precompiled view.
                 Debug.Assert(item.Descriptor != null);
@@ -200,7 +201,7 @@ internal class RuntimeViewCompiler : IViewCompiler
                 return taskSource.Task;
             }
 
-            //_logger.ViewCompilerInvalidingCompiledFile(item.NormalizedPath);
+            Log.ViewCompilerInvalidatingCompiledFile(_logger, item.NormalizedPath);
             try
             {
                 var descriptor = CompileAndEmit(normalizedPath);
@@ -227,7 +228,7 @@ internal class RuntimeViewCompiler : IViewCompiler
         // based on checksums.
         if (precompiledView.Item == null || !ChecksumValidator.IsRecompilationSupported(precompiledView.Item))
         {
-            return new()
+            return new ViewCompilerWorkItem()
             {
                 // If we don't have a checksum for the primary source file we can't recompile.
                 SupportsCompilation = false,
@@ -252,7 +253,7 @@ internal class RuntimeViewCompiler : IViewCompiler
         // We also need to create a new descriptor, because the original one doesn't have expiration tokens on
         // it. These will be used by the view location cache, which is like an L1 cache for views (this class is
         // the L2 cache).
-        item.Descriptor = new()
+        item.Descriptor = new CompiledViewDescriptor()
         {
             ExpirationTokens = item.ExpirationTokens,
             Item = precompiledView.Item,
@@ -265,24 +266,24 @@ internal class RuntimeViewCompiler : IViewCompiler
     private ViewCompilerWorkItem CreateRuntimeCompilationWorkItem(string normalizedPath)
     {
         IList<IChangeToken> expirationTokens = new List<IChangeToken>
-        {
-            _fileProvider.Watch(normalizedPath),
-        };
+            {
+                _fileProvider.Watch(normalizedPath),
+            };
 
         var projectItem = _projectEngine.FileSystem.GetItem(normalizedPath, fileKind: null);
         if (!projectItem.Exists)
         {
-            //_logger.ViewCompilerCouldNotFindFileAtPath(normalizedPath);
+            Log.ViewCompilerCouldNotFindFileAtPath(_logger, normalizedPath);
 
             // If the file doesn't exist, we can't do compilation right now - we still want to cache
             // the fact that we tried. This will allow us to re-trigger compilation if the view file
             // is added.
-            return new()
+            return new ViewCompilerWorkItem()
             {
                 // We don't have enough information to compile
                 SupportsCompilation = false,
 
-                Descriptor = new()
+                Descriptor = new CompiledViewDescriptor()
                 {
                     RelativePath = normalizedPath,
                     ExpirationTokens = expirationTokens,
@@ -293,13 +294,13 @@ internal class RuntimeViewCompiler : IViewCompiler
             };
         }
 
-        //_logger.ViewCompilerFoundFileToCompile(normalizedPath);
+        Log.ViewCompilerFoundFileToCompile(_logger, normalizedPath);
 
         GetChangeTokensFromImports(expirationTokens, projectItem);
 
         GetChangeTokenFromAppCode(expirationTokens, normalizedPath);
 
-        return new()
+        return new ViewCompilerWorkItem()
         {
             SupportsCompilation = true,
 
@@ -384,7 +385,7 @@ internal class RuntimeViewCompiler : IViewCompiler
         // Anything we compile from source will use Razor 2.1 and so should have the new metadata.
         var loader = new RazorCompiledItemLoader();
         var item = loader.LoadItems(assembly).Single();
-        return new(item);
+        return new CompiledViewDescriptor(item);
     }
 
     /// <summary>
@@ -453,7 +454,7 @@ internal class RuntimeViewCompiler : IViewCompiler
         }
         var appRelativePath = relativePath.Substring(1, posApp - 1).Backslash();
 
-        if (relativePath.Length <= posApp) 
+        if (relativePath.Length <= posApp)
             return (appRelativePath, edition: "");
 
         // find optional "edition" subfolder
@@ -471,7 +472,7 @@ internal class RuntimeViewCompiler : IViewCompiler
 
     internal Assembly CompileAndEmit(RazorCodeDocument codeDocument, string generatedCode, IEnumerable<MetadataReference> references)
     {
-        //_logger.GeneratedCodeToAssemblyCompilationStart(codeDocument.Source.FilePath);
+        Log.GeneratedCodeToAssemblyCompilationStart(_logger, codeDocument.Source.FilePath);
 
         var startTimestamp = _logger.IsEnabled(LogLevel.Debug) ? Stopwatch.GetTimestamp() : 0;
 
@@ -481,29 +482,31 @@ internal class RuntimeViewCompiler : IViewCompiler
         var emitOptions = _csharpCompiler.EmitOptions;
         var emitPdbFile = _csharpCompiler.EmitPdb && emitOptions.DebugInformationFormat != DebugInformationFormat.Embedded;
 
-        using var assemblyStream = new MemoryStream();
-        using var pdbStream = emitPdbFile ? new MemoryStream() : null;
-        var result = compilation.Emit(
-            assemblyStream,
-            pdbStream,
-            options: emitOptions);
-
-        if (!result.Success)
+        using (var assemblyStream = new MemoryStream())
+        using (var pdbStream = emitPdbFile ? new MemoryStream() : null)
         {
-            throw CompilationFailedExceptionFactory.Create(
-                codeDocument,
-                generatedCode,
-                assemblyName,
-                result.Diagnostics);
+            var result = compilation.Emit(
+                assemblyStream,
+                pdbStream,
+                options: emitOptions);
+
+            if (!result.Success)
+            {
+                throw CompilationFailedExceptionFactory.Create(
+                    codeDocument,
+                    generatedCode,
+                    assemblyName,
+                    result.Diagnostics);
+            }
+
+            assemblyStream.Seek(0, SeekOrigin.Begin);
+            pdbStream?.Seek(0, SeekOrigin.Begin);
+
+            var assembly = Assembly.Load(assemblyStream.ToArray(), pdbStream?.ToArray());
+            Log.GeneratedCodeToAssemblyCompilationEnd(_logger, codeDocument.Source.FilePath, startTimestamp);
+
+            return assembly;
         }
-
-        assemblyStream.Seek(0, SeekOrigin.Begin);
-        pdbStream?.Seek(0, SeekOrigin.Begin);
-
-        var assembly = Assembly.Load(assemblyStream.ToArray(), pdbStream?.ToArray());
-        //_logger.GeneratedCodeToAssemblyCompilationEnd(codeDocument.Source.FilePath, startTimestamp);
-
-        return assembly;
     }
 
     private CSharpCompilation CreateCompilation(string compilationContent, string assemblyName, IEnumerable<MetadataReference> references)
@@ -542,5 +545,46 @@ internal class RuntimeViewCompiler : IViewCompiler
         public IList<IChangeToken> ExpirationTokens { get; set; } = default!;
 
         public CompiledViewDescriptor Descriptor { get; set; } = default!;
+    }
+
+    private static partial class Log
+    {
+        [LoggerMessage(1, LogLevel.Debug, "Compilation of the generated code for the Razor file at '{FilePath}' started.")]
+        public static partial void GeneratedCodeToAssemblyCompilationStart(ILogger logger, string filePath);
+
+        [LoggerMessage(2, LogLevel.Debug, "Compilation of the generated code for the Razor file at '{FilePath}' completed in {ElapsedMilliseconds}ms.")]
+        private static partial void GeneratedCodeToAssemblyCompilationEnd(ILogger logger, string filePath, double elapsedMilliseconds);
+
+        public static void GeneratedCodeToAssemblyCompilationEnd(ILogger logger, string filePath, long startTimestamp)
+        {
+            // Don't log if logging wasn't enabled at start of request as time will be wildly wrong.
+            if (startTimestamp != 0)
+            {
+                var currentTimestamp = Stopwatch.GetTimestamp();
+                var elapsed = Stopwatch.GetElapsedTime(startTimestamp, currentTimestamp);
+                GeneratedCodeToAssemblyCompilationEnd(logger, filePath, elapsed.TotalMilliseconds);
+            }
+        }
+
+        [LoggerMessage(3, LogLevel.Debug, "Initializing Razor view compiler with compiled view: '{ViewName}'.")]
+        public static partial void ViewCompilerLocatedCompiledView(ILogger logger, string viewName);
+
+        [LoggerMessage(4, LogLevel.Debug, "Initializing Razor view compiler with no compiled views.")]
+        public static partial void ViewCompilerNoCompiledViewsFound(ILogger logger);
+
+        [LoggerMessage(5, LogLevel.Trace, "Located compiled view for view at path '{Path}'.")]
+        public static partial void ViewCompilerLocatedCompiledViewForPath(ILogger logger, string path);
+
+        [LoggerMessage(6, LogLevel.Trace, "Invalidating compiled view for view at path '{Path}'.")]
+        public static partial void ViewCompilerRecompilingCompiledView(ILogger logger, string path);
+
+        [LoggerMessage(7, LogLevel.Trace, "Could not find a file for view at path '{Path}'.")]
+        public static partial void ViewCompilerCouldNotFindFileAtPath(ILogger logger, string path);
+
+        [LoggerMessage(8, LogLevel.Trace, "Found file at path '{Path}'.")]
+        public static partial void ViewCompilerFoundFileToCompile(ILogger logger, string path);
+
+        [LoggerMessage(9, LogLevel.Trace, "Invalidating compiled view at path '{Path}' with a file since the checksum did not match.")]
+        public static partial void ViewCompilerInvalidatingCompiledFile(ILogger logger, string path);
     }
 }

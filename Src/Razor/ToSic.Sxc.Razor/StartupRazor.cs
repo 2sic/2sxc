@@ -2,8 +2,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Razor.DbgWip;
+using ToSic.Sxc.Razor.DotNetOverrides;
 using ToSic.Sxc.Web.Internal.DotNet;
+using RuntimeViewCompiler = ToSic.Sxc.Razor.DotNetOverrides.RuntimeViewCompiler;
 
 namespace ToSic.Sxc.Razor;
 
@@ -19,14 +20,10 @@ public static class StartupRazor
 
         // Razor Parts
         services.TryAddTransient<IRazorCompiler, RazorCompiler>();
-        services.TryAddTransient<IAppCodeRazorCompiler, AppCodeRazorCompiler>();
         services.TryAddTransient<IRazorRenderer, RazorRenderer>();
-        services.TryAddTransient<IRazorEngine, NetCoreRazorEngine>();
-
-
+        services.TryAddTransient<IRazorEngine, RazorEngine>();
 
         // debugging
-        //services.TryAddTransient<RazorReferenceManager>();
         services.Replace(ServiceDescriptor.Singleton<IViewCompilerProvider, RuntimeViewCompilerProvider>());
         services.TryAddSingleton<IViewCompiler, RuntimeViewCompiler>();
         services.TryAddSingleton<CSharpCompiler>();

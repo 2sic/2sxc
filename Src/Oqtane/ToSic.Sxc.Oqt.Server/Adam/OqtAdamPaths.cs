@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Internal.Environment;
-using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
@@ -11,7 +10,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam;
 /// <summary>
 /// Basic AdamPaths resolver, assumes that files are in Content/[tenant]/site/[site]/adam for now
 /// </summary>
-internal class OqtAdamPaths(IServerPaths serverPaths, SiteStateInitializer siteStateInitializer)
+internal class OqtAdamPaths(IServerPaths serverPaths, AliasResolver aliasResolver)
     : AdamPathsBase(serverPaths, OqtConstants.OqtLogPrefix)
 {
     public string Path(string path)
@@ -32,7 +31,7 @@ internal class OqtAdamPaths(IServerPaths serverPaths, SiteStateInitializer siteS
             parts[1] = "adam";
 
             // Insert alias path.
-            var alias = siteStateInitializer.InitializedState.Alias;
+            var alias = aliasResolver.Alias;
             var aliasPath = alias.Path;
             parts.Insert(0, $"{aliasPath}/app");
 

@@ -1,6 +1,9 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+// based on: https://github.dev/dotnet/aspnetcore/tree/v8.0.5
+// src/Mvc/Mvc.Razor.RuntimeCompilation/src/CSharpCompiler.cs
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,20 +18,27 @@ using Microsoft.CodeAnalysis.Text;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Hosting;
 using ToSic.Sxc.Code.Internal.HotBuild;
-//using ToSic.Sxc.Razor.Engine.DbgWip;
 using DependencyContextCompilationOptions = Microsoft.Extensions.DependencyModel.CompilationOptions;
 
-namespace ToSic.Sxc.Razor.DbgWip;
+namespace ToSic.Sxc.Razor.DotNetOverrides;
 
-internal class CSharpCompiler(RazorReferenceManager manager, IWebHostEnvironment hostingEnvironment)
+#pragma warning disable CA1852 // Seal internal types
+internal class CSharpCompiler
+#pragma warning restore CA1852 // Seal internal types
 {
-    private readonly RazorReferenceManager _referenceManager = manager ?? throw new ArgumentNullException(nameof(manager));
-    private readonly IWebHostEnvironment _hostingEnvironment = hostingEnvironment ?? throw new ArgumentNullException(nameof(hostingEnvironment));
+    private readonly RazorReferenceManager _referenceManager;
+    private readonly IWebHostEnvironment _hostingEnvironment;
     private bool _optionsInitialized;
     private CSharpParseOptions? _parseOptions;
     private CSharpCompilationOptions? _compilationOptions;
     private EmitOptions? _emitOptions;
     private bool _emitPdb;
+
+    public CSharpCompiler(RazorReferenceManager manager, IWebHostEnvironment hostingEnvironment)
+    {
+        _referenceManager = manager ?? throw new ArgumentNullException(nameof(manager));
+        _hostingEnvironment = hostingEnvironment ?? throw new ArgumentNullException(nameof(hostingEnvironment));
+    }
 
     public virtual CSharpParseOptions ParseOptions
     {
@@ -133,7 +143,7 @@ internal class CSharpCompiler(RazorReferenceManager manager, IWebHostEnvironment
                     // There isn't a way to represent none in DebugInformationFormat.
                     // We'll set EmitPdb to false and let callers handle it by setting a null pdb-stream.
                     _emitPdb = false;
-                    return new();
+                    return new EmitOptions();
                 case "portable":
                     debugInformationFormat = DebugInformationFormat.PortablePdb;
                     break;
@@ -165,9 +175,9 @@ internal class CSharpCompiler(RazorReferenceManager manager, IWebHostEnvironment
         csharpCompilationOptions = csharpCompilationOptions.WithSpecificDiagnosticOptions(
             new Dictionary<string, ReportDiagnostic>
             {
-                {"CS1701", ReportDiagnostic.Suppress}, // Binding redirects
-                {"CS1702", ReportDiagnostic.Suppress},
-                {"CS1705", ReportDiagnostic.Suppress}
+                    {"CS1701", ReportDiagnostic.Suppress}, // Binding redirects
+                    {"CS1702", ReportDiagnostic.Suppress},
+                    {"CS1705", ReportDiagnostic.Suppress}
             });
 
         if (dependencyContextOptions.AllowUnsafe.HasValue)
@@ -207,14 +217,14 @@ internal class CSharpCompiler(RazorReferenceManager manager, IWebHostEnvironment
         DependencyContextCompilationOptions dependencyContextOptions)
     {
         var configurationSymbol = hostingEnvironment.IsDevelopment() ? "DEBUG" : "RELEASE";
-        var defines = dependencyContextOptions.Defines.Concat(new[] { configurationSymbol });
+        var defines = dependencyContextOptions.Defines.Concat(new[] { configurationSymbol }).Where(define => define != null);
 
-        var parseOptions = new CSharpParseOptions(preprocessorSymbols: defines);
+        var parseOptions = new CSharpParseOptions(preprocessorSymbols: (IEnumerable<string>)defines);
 
         if (string.IsNullOrEmpty(dependencyContextOptions.LanguageVersion))
         {
-            // If the user does not specify a LanguageVersion, assume latest CSharp.
-            parseOptions = parseOptions.WithLanguageVersion(LanguageVersion.Latest);
+            // If the user does not specify a LanguageVersion, assume CSharp 8.0. This matches the language version Razor 3.0 targets by default.
+            parseOptions = parseOptions.WithLanguageVersion(LanguageVersion.CSharp8);
         }
         else if (LanguageVersionFacts.TryParse(dependencyContextOptions.LanguageVersion, out var languageVersion))
         {

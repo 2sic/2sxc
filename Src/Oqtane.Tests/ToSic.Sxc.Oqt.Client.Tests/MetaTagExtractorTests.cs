@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Oqt.Client.Tests
+﻿using ToSic.Sxc.Oqt.Shared.Helpers;
+
+namespace ToSic.Sxc.Oqt.Client.Tests
 {
 
     [TestClass]

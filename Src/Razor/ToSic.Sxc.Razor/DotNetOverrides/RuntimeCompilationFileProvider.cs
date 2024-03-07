@@ -1,24 +1,24 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+// based on: https://github.dev/dotnet/aspnetcore/tree/v8.0.5
+// src/Mvc/Mvc.Razor.RuntimeCompilation/src/RuntimeCompilationFileProvider.cs
+
 using System;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 
-namespace ToSic.Sxc.Razor.DbgWip;
+namespace ToSic.Sxc.Razor.DotNetOverrides;
 
-internal class RuntimeCompilationFileProvider
+internal sealed class RuntimeCompilationFileProvider
 {
     private readonly MvcRazorRuntimeCompilationOptions _options;
     private IFileProvider? _compositeFileProvider;
 
     public RuntimeCompilationFileProvider(IOptions<MvcRazorRuntimeCompilationOptions> options)
     {
-        if (options == null)
-        {
-            throw new ArgumentNullException(nameof(options));
-        }
+        ArgumentNullException.ThrowIfNull(options);
 
         _options = options.Value;
     }

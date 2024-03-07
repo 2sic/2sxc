@@ -1,82 +1,296 @@
 ﻿using Oqtane.Shared;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.App;
+using ToSic.Sxc.Oqt.Shared.Helpers;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Client.Services;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class OqtPageChangeService
+public class OqtPageChangeService(IOqtTurnOnService turnOnService)
 {
-    public async Task AttachScriptsAndStyles(OqtViewResultsDto viewResults, SxcInterop sxcInterop, IOqtHybridLog page)
+    /// <summary>
+    /// Ensure standard assets like java-scripts and styles.
+    /// </summary>
+    /// <param name="viewResults"></param>
+    /// <param name="siteState"></param>
+    /// <param name="content"></param>
+    /// <param name="themeName"></param>
+    /// <returns></returns>
+    /// <remarks>SSR only</remarks>
+    public string AttachScriptsAndStylesStaticallyInHtml(OqtViewResultsDto viewResults, SiteState siteState, string content, string themeName)
     {
-        var logPrefix = $"{nameof(AttachScriptsAndStyles)}(...) - ";
+        siteState.Properties.HeadContent = HtmlHelper.ManageStyleSheets(siteState.Properties.HeadContent, viewResults, siteState.Alias, themeName);
+        siteState.Properties.HeadContent = HtmlHelper.ManageScripts(siteState.Properties.HeadContent, viewResults, siteState.Alias);
+        return HtmlHelper.ManageInlineScripts(content, viewResults, siteState.Alias);
+    }
 
-        // External resources = independent files (so not inline JS in the template)
-        var externalResources = viewResults.TemplateResources.Where(r => r.IsExternal).ToArray();
+    public string AttachScriptsAndStylesDynamicallyWithTurnOn(OqtViewResultsDto viewResults, SiteState siteState, string content, string themeName)
+    {
+        if (viewResults == null) return content;
 
-        // 1. Style Sheets, ideally before JS
-        var css = externalResources
-            .Where(r => r.ResourceType == ResourceType.Stylesheet)
-            .Select(a => new
+        var scripts = new List<object>();
+        var links = new List<object>();
+        var inlineScripts = new List<object>();
+
+        #region 2sxc Standard Assets and Header
+
+        // Load all 2sxc js dependencies (js / styles)
+        // Not done the official Oqtane way, because that asks for the scripts before
+        // the razor component reported what it needs
+        if (viewResults.SxcScripts != null)
+        {
+            scripts.AddRange(viewResults.SxcScripts.Select(a => new
             {
-                id = string.IsNullOrWhiteSpace(a.UniqueId)
-                    ? ""
-                    : a.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
+                href = a,
+                bundle = "", // not working when bundleId is provided
+                id = "",
+                location = "body",
+                //htmlAttributes = null,
+                integrity = "", // bug in Oqtane, needs to be an empty string to not throw errors
+                crossorigin = "",
+            }));
+        }
+
+        if (viewResults.SxcStyles != null)
+        {
+            links.AddRange(viewResults.SxcStyles.Select(link => new
+            {
+                id = "",
+                rel= "stylesheet",
+                href = link,
+                type = "text/css",
+                integrity = "",
+                crossorigin = "",
+                insertbefore = ""
+            }));
+        }
+
+        #endregion
+
+        #region External resources requested by the razor template
+
+        if (viewResults.TemplateResources != null)
+        {
+            // External resources = independent files (so not inline JS in the template)
+            var externalResources = viewResults.TemplateResources.Where(r => r.IsExternal).ToArray();
+
+            links.AddRange(externalResources.Where(r => r.ResourceType == ResourceType.Stylesheet).Select(link => new
+            {
+                id = string.IsNullOrWhiteSpace(link.UniqueId) ? "" : link.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
                 rel = "stylesheet",
-                href = a.Url,
+                href = link.Url,
                 type = "text/css",
                 integrity = "",
                 crossorigin = "",
                 insertbefore = "" // bug in Oqtane, needs to be an empty string instead of null or undefined
-            })
-            .Cast<object>()
-            .ToArray();
+            }));
 
-        // Log CSS and then add to page
-        page?.Log($"{logPrefix}CSS: {css.Length}", css);
-        await sxcInterop.IncludeLinks(css);
+            // 2. Scripts - usually libraries etc.
+            // Important: the IncludeClientScripts (IncludeScripts) works very different from LoadScript
+            // it uses LoadJS and bundles
 
-        // 2. Scripts - usually libraries etc.
-        // Important: the IncludeClientScripts (IncludeScripts) works very different from LoadScript
-        // it uses LoadJS and bundles
-        var scripts = externalResources
-            .Where(r => r.ResourceType == ResourceType.Script)
-            .Select(a => new
+            scripts.AddRange(externalResources.Where(r => r.ResourceType == ResourceType.Script).Select(script => new
             {
-                href = a.Url,
+                id = string.IsNullOrWhiteSpace(script.UniqueId) ? "" : script.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
+                href = script.Url,
                 bundle = "", // not working when bundleId is provided
-                id = string.IsNullOrWhiteSpace(a.UniqueId) ? "" : a.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
-                location = a.Location,
-                htmlAttributes = a.HtmlAttributes,
-                integrity = a.Integrity ?? "", // bug in Oqtane, needs to be an empty string to not throw errors
-                crossorigin = a.CrossOrigin ?? "",
-            })
-            .Cast<object>()
-            .ToArray();
+                location = "body", // script.Location,
+                htmlAttributes = script.HtmlAttributes,
+                integrity = script.Integrity ?? "", // bug in Oqtane, needs to be an empty string to not throw errors
+                crossorigin = script.CrossOrigin ?? "",
+            }));
 
-        // Log scripts and then add to page
-        page?.Log($"{logPrefix}Scripts: {scripts.Length}", scripts);
-        if (scripts.Any())
-            await sxcInterop.IncludeScriptsWithAttributes(scripts);
+            // 3. Inline JS code which was extracted from the template
+            var inlineResources = viewResults.TemplateResources.Where(r => !r.IsExternal).ToArray();
+            inlineScripts.AddRange(inlineResources.Select(inline => new
+            {
+                id = string.IsNullOrWhiteSpace(inline.UniqueId) ? "" : inline.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
+                src = "",
+                integrity = "",
+                crossorigin = "",
+                type = "text/javascript",
+                content = inline.Content,
+                location = "body"
+            }));
+        }
+        #endregion
 
-        // 3. Inline JS code which was extracted from the template
-        var inlineResources = viewResults.TemplateResources.Where(r => !r.IsExternal).ToArray();
-        // Log inline
-        page?.Log($"{logPrefix}Inline: {inlineResources.Length}", inlineResources);
-        foreach (var inline in inlineResources)
-            await sxcInterop.IncludeScript(string.IsNullOrWhiteSpace(inline.UniqueId) ? "" : inline.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
-                "",
-                "",
-                "",
-                inline.Content,
-                "body");
+        //// ensure that tun-on is loaded
+        //var turnOnScript = $"<page-script src='./Modules/ToSic.Sxc.Oqtane/dist/turnOn/turn-on.js'></page-script>";
+
+        //content += turnOnScript + Environment.NewLine;
+
+        if (links.Any())
+            content += turnOnService.Run("window.Oqtane.Interop.includeLinks()", data: links.ToArray()) + Environment.NewLine;
+
+        if (scripts.Any()) 
+            content += turnOnService.Run("window.Oqtane.Interop.includeScripts()", data: scripts.ToArray()) + Environment.NewLine;
+
+        if (inlineScripts.Any())
+            content += turnOnService.Run("window.ToSic.Sxc.Oqtane.includeInlineScripts()", data: inlineScripts.ToArray()) + Environment.NewLine;
+
+        return content;
     }
 
-    public void UpdatePageProperties(SiteState siteState, OqtViewResultsDto viewResults, ModuleProBase page)
+    /// <summary>
+    /// Ensure standard assets like java-scripts and styles.
+    /// This is done with interop after the page is rendered.
+    /// </summary>
+    /// <returns></returns>
+    public async Task AttachScriptsAndStylesForInteractiveRendering(OqtViewResultsDto viewResults, SxcInterop sxcInterop, IOqtHybridLog page)
+    {
+        var logPrefix = $"{nameof(AttachScriptsAndStylesForInteractiveRendering)}(...) - ";
+
+        if (viewResults == null) return;
+
+        // Add Context-Meta first, because it should be available when $2sxc loads
+        if (viewResults?.SxcContextMetaName != null)
+        {
+            page?.Log($"2.2: Context-Meta");
+            await sxcInterop.IncludeMeta("", "name", viewResults.SxcContextMetaName, viewResults.SxcContextMetaContents);
+        }
+
+        #region 2sxc Standard Assets and Header
+
+        // Lets load all 2sxc js dependencies (js / styles)
+        // Not done the official Oqtane way, because that asks for the scripts before
+        // the razor component reported what it needs
+        if (viewResults.SxcScripts != null)
+            foreach (var resource in viewResults.SxcScripts)
+            {
+                page?.Log($"2.3: IncludeScript:{resource}");
+                await sxcInterop.IncludeScript("", resource, "", "", "", "head");
+            }
+
+        if (viewResults.SxcStyles != null)
+            foreach (var style in viewResults.SxcStyles)
+            {
+                page?.Log($"2.4: IncludeCss:{style}");
+                await sxcInterop.IncludeLink("", "stylesheet", style, "text/css", "", "", "");
+            }
+
+        #endregion
+
+        #region External resources requested by the razor template
+
+        if (viewResults.TemplateResources != null)
+        {
+            page?.Log($"2.5: AttachScriptsAndStylesForInteractiveRendering");
+            // External resources = independent files (so not inline JS in the template)
+            var externalResources = viewResults.TemplateResources.Where(r => r.IsExternal).ToArray();
+
+            // 1. Style Sheets, ideally before JS
+            var css = externalResources
+                .Where(r => r.ResourceType == ResourceType.Stylesheet)
+                .Select(a => new
+                {
+                    id = string.IsNullOrWhiteSpace(a.UniqueId)
+                        ? ""
+                        : a.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
+                    rel = "stylesheet",
+                    href = a.Url,
+                    type = "text/css",
+                    integrity = "",
+                    crossorigin = "",
+                    insertbefore = "" // bug in Oqtane, needs to be an empty string instead of null or undefined
+                })
+                .Cast<object>()
+                .ToArray();
+
+            // Log CSS and then add to page
+            page?.Log($"{logPrefix}CSS: {css.Length}", css);
+            if (css.Any())
+                await sxcInterop.IncludeLinks(css);
+
+            // 2. Scripts - usually libraries etc.
+            // Important: the IncludeClientScripts (IncludeScripts) works very different from LoadScript
+            // it uses LoadJS and bundles
+            var scripts = externalResources
+                .Where(r => r.ResourceType == ResourceType.Script)
+                .Select(a => new
+                {
+                    href = a.Url,
+                    bundle = "", // not working when bundleId is provided
+                    id = string.IsNullOrWhiteSpace(a.UniqueId) ? "" : a.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
+                    location = a.Location,
+                    htmlAttributes = a.HtmlAttributes,
+                    integrity = a.Integrity ?? "", // bug in Oqtane, needs to be an empty string to not throw errors
+                    crossorigin = a.CrossOrigin ?? "",
+                })
+                .Cast<object>()
+                .ToArray();
+
+            // Log scripts and then add to page
+            page?.Log($"{logPrefix}Scripts: {scripts.Length}", scripts);
+            if (scripts.Any())
+                await sxcInterop.IncludeScriptsWithAttributes(scripts);
+
+            // 3. Inline JS code which was extracted from the template
+            var inlineResources = viewResults.TemplateResources.Where(r => !r.IsExternal).ToArray();
+            // Log inline
+            page?.Log($"{logPrefix}Inline: {inlineResources.Length}", inlineResources);
+            foreach (var inline in inlineResources)
+                await sxcInterop.IncludeScript(string.IsNullOrWhiteSpace(inline.UniqueId) ? "" : inline.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
+                    "",
+                    "",
+                    "",
+                    inline.Content,
+                    "body");
+        }
+
+        #endregion
+    }
+
+
+    /// <summary>
+    /// Process page changes in html for title, keywords, descriptions and other meta or html tags.
+    /// Oqtane decide to directly render this changes in page html as part of first request, or later with interop.
+    /// </summary>
+    /// <param name="viewResults"></param>
+    /// <param name="siteState"></param>
+    /// <param name="page"></param>
+    public string ProcessPageChanges(OqtViewResultsDto viewResults, SiteState siteState, ModuleProBase page)
+    {
+        page?.Log($"1.3: ProcessPageChanges");
+
+        if (viewResults?.PageProperties?.Any() ?? false)
+        {
+            page?.Log($"1.3.2: UpdatePageProperties title, keywords, description");
+            UpdatePageProperties(siteState, viewResults, page);
+        }
+
+        if (viewResults?.HeadChanges?.Any() ?? false)
+        {
+            page?.Log($"1.3.3: AddHeadChanges:{viewResults.HeadChanges.Count()}");
+            siteState.Properties.HeadContent = HtmlHelper.AddHeadChanges(siteState.Properties.HeadContent, viewResults.HeadChanges);
+        }
+
+        // Add Context-Meta first, because it should be available when $2sxc loads
+        if (viewResults?.SxcContextMetaName != null)
+        {
+            page?.Log($"1.3.4: Context-Meta");
+            siteState.Properties.HeadContent = HtmlHelper.AddOrUpdateMetaTagContent(siteState.Properties.HeadContent, viewResults.SxcContextMetaName, viewResults.SxcContextMetaContents);
+        }
+
+        //// Lets load all 2sxc js dependencies (js / styles)
+        //var index = 0;
+        //if (ViewResults?.SxcScripts != null)
+        //    foreach (var resource in ViewResults.SxcScripts)
+        //    {
+        //        Log($"1.3.4.{++index}: IncludeScript:{resource}");
+        //        SiteState.Properties.HeadContent = HtmlHelper.AddScript(SiteState.Properties.HeadContent, resource, SiteState.Alias);
+        //    }
+
+        page?.Log($"1.3.1: module html content set on page");
+        return viewResults?.FinalHtml;
+    }
+
+    private void UpdatePageProperties(SiteState siteState, OqtViewResultsDto viewResults, ModuleProBase page)
     {
         var logPrefix = $"{nameof(UpdatePageProperties)}(...) - ";
 
@@ -114,7 +328,7 @@ public class OqtPageChangeService
         }
     }
 
-    public string UpdateProperty(string original, OqtPagePropertyChanges change, IOqtHybridLog page)
+    private string UpdateProperty(string original, OqtPagePropertyChanges change, IOqtHybridLog page)
     {
         var logPrefix = $"{nameof(UpdateProperty)}(original:{original}) - ";
 

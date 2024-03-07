@@ -8,7 +8,7 @@
 //using Microsoft.CodeAnalysis;
 //using Microsoft.Extensions.Options;
 
-//namespace ToSic.Sxc.Razor.Engine.DbgWip
+//namespace ToSic.Sxc.Razor.DotNetOverrides
 //{
 //    /// <summary>
 //    /// This is a copy of the .net core 3.1 internal RazorReferenceManager

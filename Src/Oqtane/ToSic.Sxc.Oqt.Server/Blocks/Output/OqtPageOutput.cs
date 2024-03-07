@@ -1,4 +1,5 @@
-﻿using Oqtane.Shared;
+﻿using Oqtane.Models;
+using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
 using ToSic.Eav.Helpers;
@@ -79,8 +80,8 @@ internal partial class OqtPageOutput(
     }
 
     [PrivateApi]
-    public static string GetSiteRoot(SiteState siteState)
-        => siteState?.Alias?.Name == null ? OqtConstants.SiteRoot : new Uri($"http://{siteState.Alias.Name}/").AbsolutePath.SuffixSlash();
+    public static string GetSiteRoot(Alias alias)
+        => alias?.Name == null ? OqtConstants.SiteRoot : new Uri($"http://{alias.Name}/").AbsolutePath.SuffixSlash();
 
     internal IList<IPageFeature> Features => _features ??= RenderResult.Features ?? new List<IPageFeature>();
     private IList<IPageFeature> _features;

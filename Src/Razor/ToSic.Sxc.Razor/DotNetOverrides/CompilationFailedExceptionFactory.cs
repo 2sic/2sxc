@@ -1,6 +1,9 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+// based on: https://github.dev/dotnet/aspnetcore/tree/v8.0.5
+// src/Mvc/Mvc.Razor.RuntimeCompilation/src/CompilationFailedExceptionFactory.cs
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -10,7 +13,7 @@ using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace ToSic.Sxc.Razor.DbgWip;
+namespace ToSic.Sxc.Razor.DotNetOverrides;
 
 internal static class CompilationFailedExceptionFactory
 {
@@ -43,7 +46,7 @@ internal static class CompilationFailedExceptionFactory
             failures.Add(compilationFailure);
         }
 
-        return new(failures);
+        return new CompilationFailedException(failures);
     }
 
     public static CompilationFailedException Create(
@@ -74,8 +77,8 @@ internal static class CompilationFailedExceptionFactory
 
             string? additionalMessage = null;
             if (group.Any(g =>
-                    string.Equals(CS0234, g.Id, StringComparison.OrdinalIgnoreCase) ||
-                    string.Equals(CS0246, g.Id, StringComparison.OrdinalIgnoreCase)))
+                string.Equals(CS0234, g.Id, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(CS0246, g.Id, StringComparison.OrdinalIgnoreCase)))
             {
                 additionalMessage = "CopyRefAssembliesToPublishDirectory";
             }
@@ -90,7 +93,7 @@ internal static class CompilationFailedExceptionFactory
             failures.Add(compilationFailure);
         }
 
-        return new(failures);
+        return new CompilationFailedException(failures);
     }
 
     private static string ReadContent(RazorCodeDocument codeDocument, string filePath)
@@ -109,7 +112,7 @@ internal static class CompilationFailedExceptionFactory
         {
             var contentChars = new char[sourceDocument.Length];
             sourceDocument.CopyTo(0, contentChars, 0, sourceDocument.Length);
-            return new(contentChars);
+            return new string(contentChars);
         }
 
         return string.Empty;
@@ -118,9 +121,9 @@ internal static class CompilationFailedExceptionFactory
     private static DiagnosticMessage GetDiagnosticMessage(Diagnostic diagnostic)
     {
         var mappedLineSpan = diagnostic.Location.GetMappedLineSpan();
-        return new(
-            diagnostic.GetMessage(),
-            CSharpDiagnosticFormatter.Instance.Format(diagnostic),
+        return new DiagnosticMessage(
+            diagnostic.GetMessage(CultureInfo.CurrentCulture),
+            CSharpDiagnosticFormatter.Instance.Format(diagnostic, CultureInfo.CurrentCulture),
             mappedLineSpan.Path,
             mappedLineSpan.StartLinePosition.Line + 1,
             mappedLineSpan.StartLinePosition.Character + 1,
@@ -134,7 +137,7 @@ internal static class CompilationFailedExceptionFactory
     {
         var sourceSpan = razorDiagnostic.Span;
         var message = razorDiagnostic.GetMessage(CultureInfo.CurrentCulture);
-        return new(
+        return new DiagnosticMessage(
             message: message,
             formattedMessage: razorDiagnostic.ToString(),
             filePath: filePath,

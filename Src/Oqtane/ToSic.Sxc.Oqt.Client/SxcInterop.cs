@@ -54,7 +54,7 @@ public class SxcInterop : Oqtane.UI.Interop
         // fix for https://github.com/2sic/2sxc/issues/2844
         // we use solution with javascript native module import "./Modules/ToSic.Sxc.Oqtane/NativeModule.js"
         // instead of default oqtane Module.js pattern (that is commented bellow)
-        // because our PageChangesHelper.AttachScriptsAndStyles in OnAfterRenderAsync in index.razor.cs
+        // because our PageChangesHelper.AttachScriptsAndStylesForInteractiveRendering in OnAfterRenderAsync in index.razor.cs
         // is sometimes executing interop call to 'ToSic.Sxc.Oqtane.includeScriptsWithAttributes'
         // earlier than "Modules/ToSic.Sxc.Oqtane/Module.js" is loaded in browser by oqtane ModuleBase.cs
         var module = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", $"./Modules/{OqtConstants.PackageName}/NativeModule.js");

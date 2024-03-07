@@ -1,6 +1,9 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+// based on: https://github.dev/dotnet/aspnetcore/tree/v8.0.5
+// src/Mvc/Mvc.Razor.RuntimeCompilation/src/RuntimeViewCompilerProvider.cs
+
 using System;
 using System.Threading;
 using Microsoft.AspNetCore.Hosting;
@@ -12,11 +15,8 @@ using Microsoft.Extensions.Logging;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
 
-namespace ToSic.Sxc.Razor.DbgWip;
+namespace ToSic.Sxc.Razor.DotNetOverrides;
 
-/// <summary>
-/// Singleton implementation of IViewCompilerProvider that provides a RuntimeViewCompiler.
-/// </summary>
 internal sealed class RuntimeViewCompilerProvider : IViewCompilerProvider
 {
     private readonly RazorProjectEngine _razorProjectEngine;
@@ -30,7 +30,7 @@ internal sealed class RuntimeViewCompilerProvider : IViewCompilerProvider
     private readonly ILogger<RuntimeViewCompiler> _logger;
     private readonly Func<IViewCompiler> _createCompiler;
 
-    private object _initializeLock = new();
+    private object _initializeLock = new object();
     private bool _initialized;
     private IViewCompiler? _compiler;
 

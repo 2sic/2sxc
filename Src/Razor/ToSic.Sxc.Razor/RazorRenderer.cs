@@ -11,31 +11,22 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Internal.HotBuild;
-using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Razor;
 
 internal class RazorRenderer(
     ITempDataProvider tempDataProvider,
-    IRazorCompiler razorCompiler,
-    IAppCodeRazorCompiler appCodeRazorCompiler,
-    SourceAnalyzer sourceAnalyzer)
+    IRazorCompiler appCodeRazorCompiler)
     : ServiceBase($"{SxcLogging.SxcLogName}.RzrRdr",
-        connect: [tempDataProvider, razorCompiler, appCodeRazorCompiler, sourceAnalyzer]), IRazorRenderer
+        connect: [tempDataProvider, appCodeRazorCompiler]), IRazorRenderer
 {
 
     public async Task<string> RenderToStringAsync<TModel>(string templatePath, TModel model, Action<RazorView> configure, IApp app = null, HotBuildSpec hotBuildSpec = default)
     {
         var l = Log.Fn<string>($"{nameof(templatePath)}: '{templatePath}'; {nameof(app.PhysicalPath)}: '{app?.PhysicalPath}'; {hotBuildSpec}");
 
-        // TODO: SHOULD OPTIMIZE so the file doesn't need to read multiple times
-        // 1. probably change so the CodeFileInfo contains the source code
-        var razorType = sourceAnalyzer.TypeOfVirtualPath(templatePath);
-
-        var (view, actionContext) = razorType.IsHotBuildSupported()
-            ? await appCodeRazorCompiler.CompileView(templatePath, configure, app, hotBuildSpec)
-            : await razorCompiler.CompileView(templatePath, configure);
+        var (view, actionContext) = await appCodeRazorCompiler.CompileView(templatePath, configure, app, hotBuildSpec);
 
         var viewDataDictionary = CreateViewDataDictionaryForRazorViewWithGenericBaseTypeOrNull(view, model) 
             ?? new ViewDataDictionary<TModel>(new EmptyModelMetadataProvider(), new()) { Model = model };

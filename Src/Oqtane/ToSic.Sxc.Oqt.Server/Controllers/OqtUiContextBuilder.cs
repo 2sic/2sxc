@@ -3,7 +3,6 @@ using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Backend.Context;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.Integration.Paths;
@@ -45,7 +44,7 @@ internal class OqtUiContextBuilder(
     protected override ContextAppDto GetApp(Ctx flags)
     {
         var appDto = base.GetApp(flags);
-        if (appDto != null) appDto.Api = OqtPageOutput.GetSiteRoot(siteState);
+        if (appDto != null) appDto.Api = OqtPageOutput.GetSiteRoot(siteState.Alias);
         return appDto;
     }
 

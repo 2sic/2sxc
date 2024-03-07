@@ -14,8 +14,8 @@ internal class OqtJsApiService(
     IAntiforgery antiForgery,
     IHttpContextAccessor http,
     JsApiCacheService jsApiCache,
-    SiteStateInitializer siteStateInitializer)
-    : ServiceBase("OqtJsApi", connect: [antiForgery, http, jsApiCache, siteStateInitializer]), IJsApiService
+    AliasResolver aliasResolver)
+    : ServiceBase("OqtJsApi", connect: [antiForgery, http, jsApiCache, aliasResolver]), IJsApiService
 {
     public string GetJsApiJson(int? pageId = null, string siteRoot = null, string rvt = null) 
         => JsApi.JsApiJson(GetJsApi(pageId, siteRoot, rvt));
@@ -33,7 +33,7 @@ internal class OqtJsApiService(
             rvt: RvtFn,
             dialogQuery: null);
 
-        string SiteRootFn() => siteRoot.IsEmpty() ? OqtPageOutput.GetSiteRoot(siteStateInitializer?.InitializedState) : siteRoot;
+        string SiteRootFn() => siteRoot.IsEmpty() ? OqtPageOutput.GetSiteRoot(aliasResolver.Alias) : siteRoot;
         string ApiRootFn() => SiteRootFn() + OqtWebApiConstants.ApiRootNoLanguage + "/";
         string UiRootFn() => OqtConstants.UiRoot + "/";
         string RvtFn() => rvt.IsEmpty() && http?.HttpContext != null ? antiForgery.GetAndStoreTokens(http.HttpContext).RequestToken : rvt;

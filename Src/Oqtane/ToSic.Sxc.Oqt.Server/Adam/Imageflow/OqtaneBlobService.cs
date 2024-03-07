@@ -47,8 +47,8 @@ internal class OqtaneBlobService(IServiceProvider serviceProvider) : IBlobProvid
             if (ExistUnderWebRootPath(webHostEnvironment, virtualPath, out var webRootFilePath)) BlobData(webRootFilePath);
 
             // Get alias.
-            var siteStateInitializer = scope.ServiceProvider.GetRequiredService<SiteStateInitializer>();
-            var alias = siteStateInitializer.InitializedState.Alias;
+            var aliasResolver = scope.ServiceProvider.GetRequiredService<AliasResolver>();
+            var alias = aliasResolver.Alias;
 
             // Build physicalPath.
             var fileHelper = scope.ServiceProvider.GetService<OqtAssetsFileHelper>(); // this service sometimes was not working when was lazy and not scoped

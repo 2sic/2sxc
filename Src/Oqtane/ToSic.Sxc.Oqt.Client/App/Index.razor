@@ -1,5 +1,16 @@
 @* ReSharper disable once CheckNamespace *@
 @namespace ToSic.Sxc.Oqt.App
 @inherits ModuleProBase
+@if (IsDev)
+{
+    <h3>Render Info</h3>
+    <ul>
+        <li>RenderMode: @RenderMode</li>
+        <li>PageState.RenderMode: @PageState?.RenderMode</li>
+        <li>PageState.Runtime: @PageState?.Runtime</li>
+        <li>Static SSR: @RenderInfoService.IsStaticSsr(RenderMode)</li>
+        <li>Blazor Enhanced Nav: @RenderInfoService.IsBlazorEnhancedNav(RenderMode)</li>
+        <li>SSR Framing: @RenderInfoService.IsSsrFraming(RenderMode)</li>
+    </ul>
+}
 @((MarkupString)Content)
-

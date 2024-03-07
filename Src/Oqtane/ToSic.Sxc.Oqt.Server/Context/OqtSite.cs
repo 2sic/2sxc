@@ -27,7 +27,7 @@ internal sealed class OqtSite: Site<Site>
     /// <summary>
     /// Constructor for DI
     /// </summary>
-    public OqtSite(SiteStateInitializer siteStateInitializer,
+    public OqtSite(AliasResolver aliasResolver,
         LazySvc<ISiteRepository> siteRepository,
         LazySvc<IServerPaths> serverPaths,
         LazySvc<IZoneMapper> zoneMapper,
@@ -35,7 +35,7 @@ internal sealed class OqtSite: Site<Site>
         LazySvc<ILinkPaths> linkPathsLazy): base(OqtConstants.OqtLogPrefix)
     {
         ConnectLogs([
-            _siteStateInitializer = siteStateInitializer,
+            _aliasResolver = aliasResolver,
             _siteRepository = siteRepository,
             _serverPaths = serverPaths,
             _zoneMapper = zoneMapper,
@@ -44,7 +44,7 @@ internal sealed class OqtSite: Site<Site>
         ]);
     }
 
-    private readonly SiteStateInitializer _siteStateInitializer;
+    private readonly AliasResolver _aliasResolver;
     private readonly LazySvc<ISiteRepository> _siteRepository;
     private readonly LazySvc<IServerPaths> _serverPaths;
     private readonly LazySvc<IZoneMapper> _zoneMapper;
@@ -67,7 +67,7 @@ internal sealed class OqtSite: Site<Site>
     }
 
     protected override Site UnwrappedSite => base.UnwrappedSite ??= _siteRepository.Value.GetSite(Alias.SiteId);
-    private Alias Alias => _siteStateInitializer.InitializedState.Alias;
+    private Alias Alias => _aliasResolver.Alias;
     public override Site GetContents() => UnwrappedSite;
 
     /// <inheritdoc />
@@ -107,7 +107,7 @@ internal sealed class OqtSite: Site<Site>
     public override string AppsRootPhysical => string.Format(OqtConstants.AppRootPublicBase, Id);
 
     [PrivateApi]
-    public override string AppAssetsLinkTemplate => OqtPageOutput.GetSiteRoot(_siteStateInitializer.InitializedState)
+    public override string AppAssetsLinkTemplate => OqtPageOutput.GetSiteRoot(_aliasResolver.Alias)
                                                     + OqtWebApiConstants.AppRootNoLanguage + "/" + AppConstants.AppFolderPlaceholder + "/assets";
 
     [PrivateApi] public override string AppsRootPhysicalFull => _serverPaths.Value.FullAppPath(AppsRootPhysical);

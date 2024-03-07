@@ -15,7 +15,9 @@ public class ClientStartup : IClientStartup
     {
         // Must register services here, because can not use IService for registration when service has DI interface in another assembly (eg. ToSic.Sxc.Oqtane.Shared.dll)
         services.TryAddScoped<OqtPageChangeService>();
-        services.TryAddScoped<OqtSxcRenderService>();
+        services.TryAddScoped<IOqtSxcRenderService, OqtSxcRenderService>();
+        services.TryAddScoped<IRenderInfoService, RenderInfoService>();
+        services.TryAddScoped<IOqtTurnOnService, OqtTurnOnService>();
         services.TryAddScoped<IOqtDebugStateService, OqtDebugStateService>();
 
         // No Operation Service

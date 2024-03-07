@@ -1,14 +1,17 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace ToSic.Sxc.Razor.DbgWip;
+// based on: https://github.dev/dotnet/aspnetcore/tree/v8.0.5
+// dotnet/aspnetcore/src/Mvc/Mvc.Razor/src/ViewPath.cs
+
+namespace ToSic.Sxc.Razor.DotNetOverrides;
 
 internal static class ViewPath
 {
     public static string NormalizePath(string path)
     {
         var addLeadingSlash = path[0] != '\\' && path[0] != '/';
-        var transformSlashes = path.IndexOf('\\') != -1;
+        var transformSlashes = path.Contains('\\');
 
         if (!addLeadingSlash && !transformSlashes)
         {
