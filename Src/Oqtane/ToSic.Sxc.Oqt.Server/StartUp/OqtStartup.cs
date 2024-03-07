@@ -3,13 +3,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Oqtane.Components;
 using Oqtane.Extensions;
 using Oqtane.Infrastructure;
+using Oqtane.UI;
+using OqtaneSSR.Extensions;
 using System.IO;
 using ToSic.Eav.Integration;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Internal.Loaders;
-using ToSic.Eav.StartUp;
 using ToSic.Eav.WebApi;
 using ToSic.Lib.DI;
 using ToSic.Razor.StartUp;
@@ -21,7 +23,6 @@ using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Razor;
 using ToSic.Sxc.Startup;
-using ToSic.Sxc.WebApi;
 using static ToSic.Sxc.Oqt.Server.StartUp.OqtStartupHelper;
 using static ToSic.Sxc.Oqt.Server.WebApi.OqtWebApiConstants;
 
@@ -158,6 +159,7 @@ public static class ApplicationBuilderExtensions
         app.UseJwtAuthorization();
         app.UseBlazorFrameworkFiles();
         app.UseRouting();
+        app.UseCors();
         app.UseAuthentication();
         app.UseAuthorization();
 
@@ -169,9 +171,22 @@ public static class ApplicationBuilderExtensions
 
         app.UseEndpoints(endpoints =>
         {
-            endpoints.MapBlazorHub();
             endpoints.MapControllers();
-            endpoints.MapFallbackToPage("/_Host");
+            endpoints.MapRazorPages();
+        });
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapRazorComponents<App>()
+                .AddInteractiveServerRenderMode()
+                .AddInteractiveWebAssemblyRenderMode()
+                .AddAdditionalAssemblies(typeof(SiteRouter).Assembly);
+        });
+
+        // simulate the fallback routing approach of traditional Blazor - allowing the custom SiteRouter to handle all routing concerns
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapFallback();
         });
 
         #endregion
