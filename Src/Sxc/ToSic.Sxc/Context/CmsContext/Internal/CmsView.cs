@@ -40,13 +40,13 @@ internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IVi
     /// <summary>
     /// Note: this is an explicit implementation, so in Dynamic Razor it won't work. This is by design.
     /// </summary>
-    ITypedItem ICmsView.Settings => _settings.Get(() => parent._CodeApiSvc.Cdf.AsItem(_view.Settings));
+    ITypedItem ICmsView.Settings => _settings.Get(() => Parent._CodeApiSvc.Cdf.AsItem(_view.Settings));
     private readonly GetOnce<ITypedItem> _settings = new();
 
     /// <summary>
     /// Note: this is an explicit implementation, so in Dynamic Razor it won't work. This is by design.
     /// </summary>
-    ITypedItem ICmsView.Resources => _resources.Get(() => parent._CodeApiSvc.Cdf.AsItem(_view.Resources));
+    ITypedItem ICmsView.Resources => _resources.Get(() => Parent._CodeApiSvc.Cdf.AsItem(_view.Resources));
     private readonly GetOnce<ITypedItem> _resources = new();
 
     /// <inheritdoc />

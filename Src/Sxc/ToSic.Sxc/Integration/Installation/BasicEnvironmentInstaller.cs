@@ -2,10 +2,10 @@
 using ToSic.Eav.Internal.Unknown;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
+#pragma warning disable CS9113 // Parameter is unread.
 
 namespace ToSic.Sxc.Integration.Installation;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class BasicEnvironmentInstaller(WarnUseOfUnknown<BasicEnvironmentInstaller> _) : ServiceBase($"{LogScopes.NotImplemented}.Instll"), IEnvironmentInstaller, IIsUnknown, IPlatformAppInstaller
 {
     // for now, always assume installation worked

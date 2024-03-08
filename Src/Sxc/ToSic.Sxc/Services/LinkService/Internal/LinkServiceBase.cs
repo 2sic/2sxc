@@ -3,10 +3,8 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Images;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Integration.Paths;
-using ToSic.Sxc.Internal;
 using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Services.Internal;
@@ -16,7 +14,7 @@ namespace ToSic.Sxc.Services.Internal;
 public abstract class LinkServiceBase : ServiceForDynamicCode, ILinkService
 {
     protected LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy) : base(
-        $"{SxcLogging.SxcLogName}.LnkHlp")
+        $"{SxcLogName}.LnkHlp")
         => ConnectServices(
             _linkPathsLazy = linkPathsLazy,
             ImgLinker = imgLinker
@@ -39,9 +37,6 @@ public abstract class LinkServiceBase : ServiceForDynamicCode, ILinkService
     )
     {
         var l = (Debug ? Log : null).Fn<string>($"pid:{pageId},api:{api},t:{type},l:{language}");
-
-        // prevent incorrect use without named parameters
-        //Protect(noParamOrder, $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
 
         // Check initial conflicting values.
         if (pageId != null && api != null)
@@ -92,16 +87,14 @@ public abstract class LinkServiceBase : ServiceForDynamicCode, ILinkService
 
     protected abstract string ToPage(int? pageId, string parameters = null, string language = null);
 
-    protected static string ParametersToString(object parameters)
-    {
-        if (parameters is null) return null;
-        if (parameters is string strParameters)
-            return strParameters.TrimStart('?').TrimStart('&');    // make sure leading ? and '&' are removed
-        if (parameters is IParameters paramDic) return paramDic.ToString();
-
-        // Fallback / default
-        return null;
-    }
+    protected static string ParametersToString(object parameters) =>
+        parameters switch
+        {
+            null => null,
+            string strParameters => strParameters.TrimStart('?').TrimStart('&'),
+            IParameters paramDic => paramDic.ToString(),
+            _ => null // Fallback / default
+        };
 
 
     /// <inheritdoc />
@@ -131,10 +124,6 @@ public abstract class LinkServiceBase : ServiceForDynamicCode, ILinkService
         object parameters = default
     )
     {
-        // prevent incorrect use without named parameters
-        //Protect(noParamOrder, $"{nameof(width)},{nameof(height)}," +
-        //                      $"{nameof(quality)},{nameof(resizeMode)},{nameof(scaleMode)},{nameof(format)},{nameof(aspectRatio)},{nameof(type)},{nameof(parameters)}");
-
         // If params were given, ensure it can be used as string, as it could also be a params-object
         var strParams = ParametersToString(parameters);
 
@@ -152,16 +141,15 @@ public abstract class LinkServiceBase : ServiceForDynamicCode, ILinkService
     }
 
     /// <inheritdoc />
-    public bool Debug
+    public override bool Debug
     {
-        get => _debug;
+        get => base.Debug;
         set
         {
-            _debug = value;
+            base.Debug = value;
             ImgLinker.Debug = value;
         }
     }
-    private bool _debug;
 
     /**
          * Combine api with query string.

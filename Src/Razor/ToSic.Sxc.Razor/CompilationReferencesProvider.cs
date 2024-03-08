@@ -22,7 +22,7 @@ public class CompilationReferencesProvider(Assembly assembly) : AssemblyPart(ass
 
         // 2022-11-09 2dm new code
         // 1. Ensure we don't run into null problems
-        var loadContext = AssemblyLoadContext.GetLoadContext(assembly);
+        var loadContext = AssemblyLoadContext.GetLoadContext(Assembly);
         if (loadContext == null) return Enumerable.Empty<string>();
 
         var nonDynamicAssemblies = loadContext.Assemblies

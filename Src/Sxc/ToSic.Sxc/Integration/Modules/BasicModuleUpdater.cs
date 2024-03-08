@@ -3,13 +3,13 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context;
+#pragma warning disable CS9113 // Parameter is unread.
 
 namespace ToSic.Sxc.Integration.Modules;
 
 /// <summary>
 /// Empty constructor for DI
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class BasicModuleUpdater(WarnUseOfUnknown<BasicModuleUpdater> _) : ServiceBase($"{LogScopes.NotImplemented}.MapA2I"), IPlatformModuleUpdater
 {
     public void SetAppId(IModule instance, int? appId)

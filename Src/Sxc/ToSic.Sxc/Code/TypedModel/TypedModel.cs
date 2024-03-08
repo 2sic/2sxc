@@ -3,7 +3,6 @@ using ToSic.Eav.Generics;
 using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Typed;
@@ -16,8 +15,9 @@ namespace ToSic.Sxc.Code;
 internal class TypedModel(
     CodeHelperSpecs helperSpecs,
     IDictionary<string, object> paramsDictionary,
-    ICodeApiService codeApiSvc,
+#pragma warning disable CS9113 // Parameter is unread.
     bool isRazor,
+#pragma warning restore CS9113 // Parameter is unread.
     string razorFileName)
     : ITypedModel
 {
@@ -67,13 +67,14 @@ internal class TypedModel(
             required = false;
 
         var found = GetInternalObj(name, noParamOrder, required, method: method);
-            
-        if (found == null) return fallback;
 
-        // Already matching type OR Interface (because ConvertOrFallback can't handle interface)
-        if (found is T typed) return typed;
-
-        return typeof(T).IsInterface ? fallback : found.ConvertOrFallback(fallback);
+        return found switch
+        {
+            null => fallback,
+            // Already matching type OR Interface (because ConvertOrFallback can't handle interface)
+            T typed => typed,
+            _ => typeof(T).IsInterface ? fallback : found.ConvertOrFallback(fallback)
+        };
     }
 
     private object GetInternalObj(string name, NoParamOrder noParamOrder, bool? required, [CallerMemberName] string method = default)

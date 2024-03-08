@@ -37,7 +37,7 @@ public class TypedCode16Helper(CodeHelperSpecs helperSpecs, IDictionary<string, 
     public ITypedItem MyHeader => _myHeader.Get(() => CodeRoot.Cdf.AsItem(Data.MyHeader, propsRequired: DefaultStrict));
     private readonly GetOnce<ITypedItem> _myHeader = new();
 
-    public ITypedModel MyModel => _myModel.Get(() => new TypedModel(Specs, myModelDic, CodeRoot, Specs.IsRazor, Specs.CodeFileName));
+    public ITypedModel MyModel => _myModel.Get(() => new TypedModel(Specs, myModelDic, Specs.IsRazor, Specs.CodeFileName));
     private readonly GetOnce<ITypedModel> _myModel = new();
 
 

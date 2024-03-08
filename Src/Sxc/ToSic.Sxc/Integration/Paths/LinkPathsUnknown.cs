@@ -1,9 +1,9 @@
 ﻿using ToSic.Eav.Internal.Unknown;
 using ToSic.Sxc.Services.Internal;
+#pragma warning disable CS9113 // Parameter is unread.
 
 namespace ToSic.Sxc.Integration.Paths;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class LinkPathsUnknown(WarnUseOfUnknown<LinkServiceUnknown> _) : ILinkPaths, IIsUnknown
 {
     public string AsSeenFromTheDomainRoot(string virtualPath) => throw new NotImplementedException();

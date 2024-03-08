@@ -141,7 +141,7 @@ public abstract class RazorTyped<TModel> : OqtRazorBase<TModel>, IHasCodeLog, IR
     #region Dev Tools & Dev Helpers
 
     [PrivateApi("Not yet ready")]
-    public IDevTools DevTools => CodeHelper.DevTools;
+    public new IDevTools DevTools => CodeHelper.DevTools;
 
     [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpForRazorTyped.Compile16;
 

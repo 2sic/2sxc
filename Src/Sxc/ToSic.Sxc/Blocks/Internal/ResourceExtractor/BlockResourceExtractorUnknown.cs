@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Internal.Unknown;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.PageService;
+#pragma warning disable CS9113 // Parameter is unread.
 
 namespace ToSic.Sxc.Blocks.Internal;
 

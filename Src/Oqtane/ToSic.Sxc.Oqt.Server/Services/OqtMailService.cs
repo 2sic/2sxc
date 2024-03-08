@@ -8,20 +8,17 @@ using System.Net;
 using System.Net.Mail;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Oqt.Server.Services;
 
 internal class OqtMailService : MailServiceBase
 {
-    private readonly LazySvc<ISiteRepository> _siteRepositoryLazy;
     private readonly LazySvc<ISettingRepository> _settingRepositoryLazy;
 
-    public OqtMailService(LazySvc<ISiteRepository> siteRepositoryLazy, LazySvc<ISettingRepository> settingRepositoryLazy, LazySvc<IUser> userLazy) : base(userLazy)
+    public OqtMailService(LazySvc<ISettingRepository> settingRepositoryLazy, LazySvc<IUser> userLazy) : base(userLazy)
     {
         ConnectServices(
-            _siteRepositoryLazy = siteRepositoryLazy,
             _settingRepositoryLazy = settingRepositoryLazy
         );
     }
@@ -38,7 +35,7 @@ internal class OqtMailService : MailServiceBase
         try
         {
             // construct SMTP Client
-            var client = new SmtpClient()
+            var client = new SmtpClient
             {
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
