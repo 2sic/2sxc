@@ -2,6 +2,7 @@
 using Oqtane.Repository;
 using Oqtane.Shared;
 using System.Linq;
+using ToSic.Eav.Helpers;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code.Internal;
@@ -107,8 +108,8 @@ internal class OqtLinkService : LinkServiceBase
 
         // for invalid page numbers just skip that part 
         var relativePath =
-            Utilities.NavigateUrl(alias.Path, page?.Path ?? string.Empty,
-                QueryParametersForOqtane(parameters)); // NavigateUrl do not works with absolute links
+            Utilities.NavigateUrl(alias.Path, page?.Path ?? string.Empty, QueryParametersForOqtane(parameters)) // NavigateUrl do not works with absolute links
+            .PrefixSlash(); // fix for Oqt v5.1.0+ NavigateUrl returns relative path without leading slash
 
         return absoluteUrl ? $"{LinkPaths.GetCurrentLinkRoot()}{relativePath}" : relativePath;
     }
