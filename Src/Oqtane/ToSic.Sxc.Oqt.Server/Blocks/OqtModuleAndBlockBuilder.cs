@@ -49,11 +49,12 @@ internal class OqtModuleAndBlockBuilder : ModuleAndBlockBuilder
         return module;
     }
 
-    protected override IContextOfBlock GetContextOfBlock(IModule module, int? pageId) => GetContextOfBlock((module as OqtModule)?.GetContents(), pageId);
+    protected override IContextOfBlock GetContextOfBlock(IModule module, int? pageId)
+        => GetContextOfBlock((module as OqtModule)?.GetContents(), pageId);
 
     protected override IContextOfBlock GetContextOfBlock<TPlatformModule>(TPlatformModule module, int? pageId)
     {
-        var wrapLog = Log.Fn<IContextOfBlock>();
+        var l = Log.Fn<IContextOfBlock>();
         if (module == null) throw new ArgumentNullException(nameof(module));
 
         var oqtModule = module switch
@@ -63,19 +64,19 @@ internal class OqtModuleAndBlockBuilder : ModuleAndBlockBuilder
             _ => throw new ArgumentException("Given data is not a module")
         };
 
-        Log.A($"Module: {oqtModule.ModuleId}");
+        l.A($"Module: {oqtModule.ModuleId}");
         var initializedCtx = InitOqtSiteModuleAndBlockContext(oqtModule, pageId);
-        return wrapLog.ReturnAsOk(initializedCtx);
+        return l.ReturnAsOk(initializedCtx);
     }
 
 
     private IContextOfBlock InitOqtSiteModuleAndBlockContext(Module oqtModule, int? pageId)
     {
-        var wrapLog = Log.Fn<IContextOfBlock>();
+        var l = Log.Fn<IContextOfBlock>();
         var context = _contextGenerator.New();
-        Log.A("Will init module");
+        l.A("Will init module");
         ((OqtModule) context.Module).Init(oqtModule);
-        return wrapLog.Return(InitPageOnly(context, pageId));
+        return l.Return(InitPageOnly(context, pageId));
     }
 
     private IContextOfBlock InitPageOnly(IContextOfBlock context, int? pageId)
