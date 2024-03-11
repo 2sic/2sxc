@@ -18,8 +18,8 @@ using IApp = ToSic.Sxc.Apps.IApp;
 namespace ToSic.Sxc.Blocks.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract partial class BlockBase(BlockBase.MyServices services, string logName)
-    : ServiceBase<BlockBase.MyServices>(services, logName), IBlock
+public abstract partial class BlockBase(BlockBase.MyServices services, string logName, object[] connect = default)
+    : ServiceBase<BlockBase.MyServices>(services, logName, connect: connect ?? []), IBlock
 {
     #region Constructor and DI
 
@@ -54,21 +54,21 @@ public abstract partial class BlockBase(BlockBase.MyServices services, string lo
 
         l.A($"parent#{ParentId}, content-block#{ContentBlockId}, z#{ZoneId}, a#{AppId}");
 
-        // 2020-09-04 2dm - new change, moved BlockBuilder up so it's never null - may solve various issues
+        // 2020-09-04 2dm - new change, moved BlockBuilder up, so it's never null - may solve various issues
         // but may introduce new ones
         BlockBuilder = Services.BlockBuilder.Value.Init(rootBuilderOrNull, this);
 
-        // If specifically no app found, end initialization here
-        // Means we have no data, and no BlockBuilder
-        if (AppId == AppConstants.AppIdNotFound || AppId == Eav.Constants.NullId)
+        switch (AppId)
         {
-            DataIsMissing = true;
-            return l.ReturnTrue("stop: app & data are missing");
+            // If specifically no app found, end initialization here
+            // Means we have no data, and no BlockBuilder
+            case AppConstants.AppIdNotFound or Eav.Constants.NullId:
+                DataIsMissing = true;
+                return l.ReturnTrue("stop: app & data are missing");
+            // If no app yet, stop now with BlockBuilder created
+            case Eav.Constants.AppIdEmpty:
+                return l.ReturnTrue($"stop a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
         }
-
-        // If no app yet, stop now with BlockBuilder created
-        if (AppId == Eav.Constants.AppIdEmpty)
-            return l.ReturnTrue($"stop a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
 
         l.A("Real app specified, will load App object with Data");
 

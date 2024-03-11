@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Internal;
+﻿using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Cms.Internal;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Context.Internal;
@@ -7,7 +6,8 @@ using ToSic.Sxc.Context.Internal;
 namespace ToSic.Sxc.Blocks.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public sealed class BlockFromEntity: BlockBase
+public sealed class BlockFromEntity(BlockBase.MyServices services, LazySvc<AppFinder> appFinderLazy)
+    : BlockBase(services, "CB.Ent", connect: [appFinderLazy])
 {
     internal const string CbPropertyApp = "App";
     internal const string CbPropertyTitle = Attributes.TitleNiceName;
@@ -19,19 +19,13 @@ public sealed class BlockFromEntity: BlockBase
     /// </summary>
     public IEntity Entity;
         
-    #region Constructor and DI
-
-    public BlockFromEntity(MyServices services, LazySvc<AppFinder> appFinderLazy) : base(services, "CB.Ent")
-    {
-        ConnectServices(_appFinderLazy = appFinderLazy);
-    }
-    private readonly LazySvc<AppFinder> _appFinderLazy;
+    #region Init
 
     public BlockFromEntity Init(IBlock parent, IEntity blockEntity, int contentBlockId = -1)
     {
-        var ctx = parent.Context.Clone(Log) as IContextOfBlock;
-        base.Init(ctx, parent);
         var l = Log.Fn<BlockFromEntity>($"{nameof(contentBlockId)}:{contentBlockId}; {nameof(blockEntity)}:{blockEntity?.EntityId}", timer: true);
+        var ctx = parent.Context.Clone(Log) as IContextOfBlock;
+        Init(ctx, parent);
         blockEntity ??= GetBlockEntity(parent, contentBlockId);
 
         Entity = blockEntity;
@@ -78,7 +72,7 @@ public sealed class BlockFromEntity: BlockBase
         temp = blockDefinition.Value<string>(ViewParts.TemplateContentType) ?? "";
         Guid.TryParse(temp, out var previewTemplateGuid);
 
-        var appId = _appFinderLazy.Value.FindAppId(zoneId, appNameId);
+        var appId = appFinderLazy.Value.FindAppId(zoneId, appNameId);
         return new BlockIdentifier(zoneId, appId, appNameId, contentGroupGuid, previewTemplateGuid);
     }
     #endregion

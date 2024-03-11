@@ -6,17 +6,12 @@ using ToSic.Sxc.Context.Internal;
 namespace ToSic.Sxc.Blocks.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class ModuleAndBlockBuilder: ServiceBase, IModuleAndBlockBuilder
+public abstract class ModuleAndBlockBuilder(Generator<BlockFromModule> blockGenerator, string logPrefix)
+    : ServiceBase($"{logPrefix}.BnMBld", connect: [blockGenerator]), IModuleAndBlockBuilder
 {
-    private readonly Generator<BlockFromModule> _blockGenerator;
-
-    protected ModuleAndBlockBuilder(Generator<BlockFromModule> blockGenerator, string logPrefix): base($"{logPrefix}.BnMBld")
-    {
-        ConnectServices(
-            _blockGenerator = blockGenerator
-        );
-    }
-
+    /// <summary>
+    /// Get the module specific to each platform.
+    /// </summary>
     protected abstract IModule GetModuleImplementation(int pageId, int moduleId);
 
     protected void ThrowIfModuleIsNull<TModule>(int pageId, int moduleId, TModule moduleInfo)
@@ -29,16 +24,18 @@ public abstract class ModuleAndBlockBuilder: ServiceBase, IModuleAndBlockBuilder
 
     public BlockWithContextProvider GetProvider(int pageId, int moduleId)
     {
-        var wrapLog = Log.Fn<BlockWithContextProvider>($"{pageId}, {moduleId}");
+        var l = Log.Fn<BlockWithContextProvider>($"{pageId}, {moduleId}");
         var module = GetModuleImplementation(pageId, moduleId);
         var ctx = GetContextOfBlock(module, pageId);
-        return wrapLog.ReturnAsOk(new(ctx, () => _blockGenerator.New().Init(ctx)));
+        // 2024-03-11 2dm WIP
+
+        return l.ReturnAsOk(new(ctx, blockGenerator.New().Init(ctx) /*, () => blockGenerator.New().Init(ctx)*/));
     }
 
     public BlockWithContextProvider GetProvider<TPlatformModule>(TPlatformModule module, int? page) where TPlatformModule : class
     {
         var ctx = GetContextOfBlock(module, page);
-        return new(ctx, () => _blockGenerator.New().Init(ctx));
+        return new(ctx, blockGenerator.New().Init(ctx) /*, () => blockGenerator.New().Init(ctx) */);
     }
 
     protected abstract IContextOfBlock GetContextOfBlock(IModule module, int? pageId);

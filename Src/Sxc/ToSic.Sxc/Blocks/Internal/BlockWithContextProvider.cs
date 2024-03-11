@@ -10,11 +10,14 @@ namespace ToSic.Sxc.Blocks.Internal;
 /// 2. because that again requires the Block first
 /// 3. which would cause a StackOverflow because it needs to be created first
 /// 4. which in turn requires the context - so it would loop and die
+///
+/// TODO: 2024-03-11 2DM - NOT SURE IF THIS IS STILL RELEVANT!
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class BlockWithContextProvider(IContextOfBlock contextOfBlock, Func<IBlock> delayedBlockGen)
+public class BlockWithContextProvider(IContextOfBlock contextOfBlock, IBlock blockMaybeNull)
 {
-    public IContextOfBlock ContextOfBlock { get; } = contextOfBlock;
-    public IBlock LoadBlock() => _block.Get(delayedBlockGen);
-    private readonly GetOnce<IBlock> _block = new();
+    public IContextOfBlock ContextOfBlock => contextOfBlock;
+    public IBlock LoadBlock() => _blockGetOnce.Get(() => blockMaybeNull);
+    private readonly GetOnce<IBlock> _blockGetOnce = new();
+
 }
