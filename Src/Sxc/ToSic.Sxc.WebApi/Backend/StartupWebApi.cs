@@ -54,7 +54,8 @@ public static class StartupWebApi
 
         // Backends
         services.TryAddTransient<AppsBackend>();
-        services.TryAddTransient<EntityPickerBackend>();
+        // #RemoveOldEntityPicker - commented out 2024-03-05, remove ca. 2024-06-01
+        //services.TryAddTransient<EntityPickerBackend>();
         services.TryAddTransient<EntityBackend>();
         services.TryAddTransient<EditLoadBackend>();
         services.TryAddTransient<EditLoadPrefetchHelper>();

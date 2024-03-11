@@ -12,9 +12,9 @@ using RealController = ToSic.Sxc.Backend.Cms.HistoryControllerReal;
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 
 // Release routes
-[Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Cms}")]
+[Route(OqtWebApiConstants.ApiRootNoLanguage + $"/{AreaRoutes.Cms}")]
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Cms}")]
-[Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Cms}")]
+[Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Cms}")]
 
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

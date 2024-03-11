@@ -36,16 +36,16 @@ public class EditController() : DnnSxcControllerBase(RealController.LogSuffix), 
         return l.ReturnAsOk(Real.Save(package, appId, partOfPage));
     }
 
-
-    /// <inheritdoc />
-    [HttpGet]
-    [HttpPost]
-    [AllowAnonymous] // security check happens internally
-    public IEnumerable<EntityForPickerDto> EntityPicker(
-        [FromUri] int appId,
-        [FromBody] string[] items,
-        [FromUri] string contentTypeName = null)
-        => Real.EntityPicker(appId, items, contentTypeName);
+    // #RemoveOldEntityPicker - commented out 2024-03-05, remove ca. 2024-06-01
+    ///// <inheritdoc />
+    //[HttpGet]
+    //[HttpPost]
+    //[AllowAnonymous] // security check happens internally
+    //public IEnumerable<EntityForPickerDto> EntityPicker(
+    //    [FromUri] int appId,
+    //    [FromBody] string[] items,
+    //    [FromUri] string contentTypeName = null)
+    //    => Real.EntityPicker(appId, items, contentTypeName);
 
     /// <inheritdoc />
     [HttpGet]

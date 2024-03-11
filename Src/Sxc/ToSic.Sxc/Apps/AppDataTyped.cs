@@ -41,11 +41,6 @@ internal class AppDataTyped(
         return list.NullOrGetWith(l => Kit._CodeApiSvc.Cdf.AsCustomList<T>(source: l, protector: protector, nullIfNull: nullIfNotFound));
     }
 
-    //public IEnumerable<T> GetMany<T>(NoParamOrder protector, string typeName, bool nullIfNotFound)
-    //{
-        
-    //}
-
     /// <inheritdoc />
     T IAppDataTyped.GetOne<T>(int id, NoParamOrder protector, bool skipTypeCheck)
         => GetOne<T>(() => List.One(id), id, skipTypeCheck);
@@ -61,14 +56,13 @@ internal class AppDataTyped(
         var item = getItem();
         if (item == null) return null;
 
-        // Optional Type-Name check
-        if (!skipTypeCheck)
-        {
-            var typeName = new TResult().ForContentType;
-            if (!item.Type.Is(typeName)) throw new($"Item with ID {id} is not a {typeName}. This is probably a mistake, otherwise use {nameof(skipTypeCheck)}: true");
-        }
+        // Skip Type-Name check
+        if (skipTypeCheck) return Kit._CodeApiSvc.Cdf.AsCustom<TResult>(item);
 
-        return Kit._CodeApiSvc.Cdf.AsCustom<TResult>(item, default, mock: false);
+        // Do Type-Name check
+        var typeName = new TResult().ForContentType;
+        if (!item.Type.Is(typeName)) throw new($"Item with ID {id} is not a {typeName}. This is probably a mistake, otherwise use {nameof(skipTypeCheck)}: true");
+        return Kit._CodeApiSvc.Cdf.AsCustom<TResult>(item);
     }
 
 

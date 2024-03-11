@@ -10,30 +10,24 @@ using static System.StringComparer;
 namespace ToSic.Sxc.Dnn.Compile
 {
     [PrivateApi]
-    public class ReferencedAssembliesProvider : ServiceBase, IReferencedAssembliesProvider
+    public class ReferencedAssembliesProvider(DependenciesLoader dependenciesLoader, AssemblyResolver assemblyResolver)
+        : ServiceBase("Sxc.RefAP", connect: [dependenciesLoader, assemblyResolver]), IReferencedAssembliesProvider
     {
-        private readonly DependenciesLoader _dependenciesLoader;
-        private readonly AssemblyResolver _assemblyResolver;
-
         // cache of referenced assemblies per virtual path
         private static readonly ConcurrentDictionary<string, List<string>> ReferencedAssembliesCache = new(InvariantCultureIgnoreCase);
 
-        public ReferencedAssembliesProvider(DependenciesLoader dependenciesLoader, AssemblyResolver assemblyResolver) : base("Sxc.RefAP")
-        {
-            ConnectServices(
-                _dependenciesLoader = dependenciesLoader,
-                _assemblyResolver = assemblyResolver
-                );
-        }
-
         public List<string> Locations(string virtualPath, HotBuildSpec spec)
         {
+            var l = Log.Fn<List<string>>($"for: '{virtualPath}'");
             if (ReferencedAssembliesCache.TryGetValue(virtualPath, out var cachedResult))
-                return [..cachedResult];
+                return l.Return(new(cachedResult), "cached, re-wrapped in new list");
 
+            var lTimer = Log.Fn("timer for AppRef", timer: true);
             var referencedAssemblies = new List<string>(AppReferencedAssemblies());
-
+            lTimer.Done();
+            
             // include assemblies from compilation section in web.config hierarchy
+            lTimer = Log.Fn("timer for Web Configuration Manager", timer: true);
             var compilationSection = (CompilationSection)WebConfigurationManager.GetSection("system.web/compilation", virtualPath);
             foreach (AssemblyInfo assembly in compilationSection.Assemblies)
             {
@@ -49,17 +43,20 @@ namespace ToSic.Sxc.Dnn.Compile
                     // sink
                 }
             }
+            lTimer.Done();
 
+            lTimer = Log.Fn("timer for Dependencies", timer: true);
             if (spec != null)
             {
                 // TODO: need to invalidate this cache (_referencedAssembliesCache, _assemblyResolver, ...) if there is change in Dependencies folder
-                var (dependencies, _) = _dependenciesLoader.TryGetOrFallback(spec);
-                _assemblyResolver.AddAssemblies(dependencies);
+                var (dependencies, _) = dependenciesLoader.TryGetOrFallback(spec);
+                assemblyResolver.AddAssemblies(dependencies);
 
                 if (dependencies != null)
                     foreach (var dependency in dependencies)
                         referencedAssemblies.Add(dependency.Location);
             }
+            lTimer.Done();
 
             // deduplicate referencedAssemblies by filename, keep last duplicate
             referencedAssemblies = referencedAssemblies
@@ -70,7 +67,7 @@ namespace ToSic.Sxc.Dnn.Compile
 
             ReferencedAssembliesCache.TryAdd(virtualPath, referencedAssemblies);
 
-            return [..referencedAssemblies];
+            return l.Return(new(referencedAssemblies), "created, re-wrapped in new list");
         }
 
         /// <summary>
@@ -92,7 +89,10 @@ namespace ToSic.Sxc.Dnn.Compile
         }
 
         // static cached, because in case of dll change app will restart itself
-        private static IEnumerable<string> AppReferencedAssemblies() =>
-            (from Assembly assembly in BuildManager.GetReferencedAssemblies() select assembly.Location);
+        private static IReadOnlyList<string> AppReferencedAssemblies() 
+            => _appReferenceAssemblies ??= BuildManager.GetReferencedAssemblies().Cast<Assembly>().Select(assembly => assembly.Location).ToList().AsReadOnly();
+        // TODO: @STV I changed this 2024-03-04 to really cache, before it wasn't cached but a new linq call every time
+        // is this ok, or am I missing something
+        private static IReadOnlyList<string> _appReferenceAssemblies;
     }
 }

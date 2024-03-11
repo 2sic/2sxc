@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
@@ -49,7 +48,6 @@ internal class CmsServiceStringWysiwyg: ServiceForDynamicCode
     protected IField Field;
     protected IContentType ContentType;
     protected IContentTypeAttribute Attribute;
-    protected bool Debug;
     protected object ImageSettings;
     protected IFolder Folder;
 

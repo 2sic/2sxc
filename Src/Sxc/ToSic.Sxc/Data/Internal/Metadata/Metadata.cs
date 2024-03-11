@@ -41,19 +41,7 @@ internal partial class Metadata: DynamicEntity, IMetadata, IHasPropLookup, IHasJ
 
     #endregion
 
-    #region Equals
-
-    public override bool Equals(object b)
-    {
-        if (b is null) return false;
-        if (ReferenceEquals(this, b)) return true;
-        if (b.GetType() != GetType()) return false;
-
-        // TODO: ATM not clear how to best do this
-        // probably need to check what's inside the PreWrap...
-        //return EqualsWrapper(this, (IWrapper<IEntity>)b);
-        return false;
-    }
+    #region Other interfaces: JsonSource, IEquatable<ITypedItem>
 
     object IHasJsonSource.JsonSource() => throw new NotImplementedException();
 

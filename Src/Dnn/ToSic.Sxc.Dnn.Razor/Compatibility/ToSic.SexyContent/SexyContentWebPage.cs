@@ -34,7 +34,9 @@ public abstract class SexyContentWebPage :
     RazorComponentBase,
     ICreateInstance,
     IHasDnn,
+#pragma warning disable CS0618 // Type or member is obsolete
     IDnnRazorCustomize, 
+#pragma warning restore CS0618 // Type or member is obsolete
     IDynamicCodeBeforeV10,
 #pragma warning disable 618
     IAppAndDataHelpers
@@ -241,9 +243,10 @@ public abstract class SexyContentWebPage :
     [PrivateApi("this is the old signature, should still be supported")]
     public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate) { }
 
+    [Obsolete("should not be used any more")]
     public Purpose Purpose { get; internal set; }
 
-    [Obsolete("left for compatibility, use Purpose instead")]
+    [Obsolete("should not be used any more")]
     public InstancePurposes InstancePurpose { get; internal set; }
 
     #endregion

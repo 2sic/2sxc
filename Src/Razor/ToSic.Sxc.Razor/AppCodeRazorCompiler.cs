@@ -161,9 +161,7 @@ internal class AppCodeRazorCompiler : ServiceBase, IAppCodeRazorCompiler
         var l = Log.Fn<ViewEngineResult>($"{nameof(templatePath)}:{templatePath}; {nameof(app.RelativePath)}:{app.RelativePath}; {spec}", timer: true);
 
         // get assembly - try to get from cache, otherwise compile
-        //var codeAssembly = AppCodeLoader.TryGetAssemblyOfAppCodeFromCache(spec, Log)?.Assembly
-        //                   ?? _appCodeLoader.Value.GetAppCodeAssemblyOrThrow(spec);
-        var (codeAssembly, _) = _appCodeLoader.Value.TryGetOrFallback(spec);
+        var (codeAssembly, _) = _appCodeLoader.Value.GetAppCode(spec);
         l.A($"has AppCode assembly: {codeAssembly != null}");
 
         if (codeAssembly != null)

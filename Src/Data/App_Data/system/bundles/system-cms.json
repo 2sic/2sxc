@@ -4763,12 +4763,35 @@
               {
                 "Name": "PublishData",
                 "Type": "Boolean",
-                "InputType": "boolean-default",
+                "InputType": "boolean-tristate",
                 "IsTitle": false,
                 "Metadata": [
                   {
-                    "Id": 45318,
+                    "Id": 45319,
                     "Version": 2,
+                    "Guid": "275066db-6f5c-43a4-b26b-4299fca22128",
+                    "Type": {
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "TitleFalse": {
+                          "en-us": ""
+                        },
+                        "TitleIndeterminate": {
+                          "en-us": ""
+                        },
+                        "TitleTrue": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=1"
+                  },
+                  {
+                    "Id": 45318,
+                    "Version": 3,
                     "Guid": "9a20e57f-04b8-4795-b3b8-b9de9341fa06",
                     "Type": {
                       "Id": "@All",
@@ -4783,7 +4806,7 @@
                           "en-us": ""
                         },
                         "InputType": {
-                          "en-us": "boolean-default"
+                          "*": "boolean-tristate"
                         },
                         "Name": {
                           "en-us": "Enable Data-Publishing"
@@ -4821,29 +4844,6 @@
                         },
                         "VisibleInEditUI": {
                           "en-us": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=1"
-                  },
-                  {
-                    "Id": 45319,
-                    "Version": 2,
-                    "Guid": "275066db-6f5c-43a4-b26b-4299fca22128",
-                    "Type": {
-                      "Id": "@Boolean",
-                      "Name": "@Boolean"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "TitleFalse": {
-                          "en-us": ""
-                        },
-                        "TitleIndeterminate": {
-                          "en-us": ""
-                        },
-                        "TitleTrue": {
-                          "en-us": ""
                         }
                       }
                     },

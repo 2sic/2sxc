@@ -8,7 +8,7 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Backend.Admin;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeControllerReal(DataModelGenerator modelGenerator, LazySvc<IJsonService> json) : ServiceBase("Api.CodeRl")
+public class CodeControllerReal(DataClassesGenerator classesGenerator, LazySvc<IJsonService> json) : ServiceBase("Api.CodeRl")
 {
     public const string LogSuffix = "Code";
 
@@ -32,9 +32,9 @@ public class CodeControllerReal(DataModelGenerator modelGenerator, LazySvc<IJson
 
     public IEnumerable<HelpItem> InlineHelp(string language)
     {
-        var wrapLog = Log.Fn<IEnumerable<HelpItem>>($"InlineHelp:l:{language}", timer: true);
+        var l = Log.Fn<IEnumerable<HelpItem>>($"InlineHelp:l:{language}", timer: true);
 
-        if (_inlineHelp != null) return wrapLog.ReturnAsOk(_inlineHelp);
+        if (_inlineHelp != null) return l.ReturnAsOk(_inlineHelp);
 
         // TODO: stv# how to use languages?
 
@@ -50,11 +50,11 @@ public class CodeControllerReal(DataModelGenerator modelGenerator, LazySvc<IJson
         }
         catch (Exception e)
         {
-            Log.A("Exception in inline help.");
-            Log.Ex(e);
+            l.A("Exception in inline help.");
+            l.Ex(e);
         }
 
-        return wrapLog.ReturnAsOk(_inlineHelp);
+        return l.ReturnAsOk(_inlineHelp);
     }
     private static IEnumerable<HelpItem> _inlineHelp;
 
@@ -62,7 +62,7 @@ public class CodeControllerReal(DataModelGenerator modelGenerator, LazySvc<IJson
     {
         var l = Log.Fn<RichResult>($"{nameof(appId)}:{appId};{nameof(edition)}:{edition}", timer: true);
 
-        var dataModelGenerator = modelGenerator.Setup(appId, edition);
+        var dataModelGenerator = classesGenerator.Setup(appId, edition);
         dataModelGenerator.GenerateAndSaveFiles();
 
         return l.Return(new RichResult
@@ -78,7 +78,7 @@ public class CodeControllerReal(DataModelGenerator modelGenerator, LazySvc<IJson
     {
         var l = Log.Fn<EditionsDto>($"{nameof(appId)}:{appId}");
 
-        var pathToDotAppJson = modelGenerator.Setup(appId).GetPathToDotAppJson();
+        var pathToDotAppJson = classesGenerator.Setup(appId).GetPathToDotAppJson();
         l.A($"path to app.json: {pathToDotAppJson}");
         if (File.Exists(pathToDotAppJson))
         {
@@ -98,7 +98,7 @@ public class CodeControllerReal(DataModelGenerator modelGenerator, LazySvc<IJson
         {
             Ok = true,
             IsConfigured = false,
-            Editions = [ new() { Name = "", Description = "Root edition" } ]
+            Editions = [ new() { Name = "", Description = "Root edition", IsDefault = true } ]
         };
 
         return l.Return(nothingSpecified, "editions not specified in app.json");

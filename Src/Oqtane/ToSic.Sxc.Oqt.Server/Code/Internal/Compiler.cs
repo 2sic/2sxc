@@ -40,9 +40,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
         {
             var l = Log.Fn<AssemblyResult>($"Starting compilation of: '{sourceFile}'; {nameof(dllName)}: '{dllName}'; {spec}'.");
 
-            //var codeAssembly = AppCodeLoader.TryGetAssemblyOfAppCodeFromCache(spec, Log)?.Assembly
-            //                   ?? _appCodeLoader.Value.GetAppCodeAssemblyOrThrow(spec);
-            var (codeAssembly, _) = _appCodeLoader.Value.TryGetOrFallback(spec);
+            var (codeAssembly, _) = _appCodeLoader.Value.GetAppCode(spec);
 
             var encoding = Encoding.UTF8;
 

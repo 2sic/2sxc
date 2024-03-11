@@ -10,7 +10,8 @@ public class EditControllerReal: ServiceBase, IEditController
     public const string LogSuffix = "Edit";
 
     public EditControllerReal(
-        LazySvc<EntityPickerBackend> entityBackend,
+        // #RemoveOldEntityPicker - commented out 2024-03-05, remove ca. 2024-06-01
+        //LazySvc<EntityPickerBackend> entityBackend,
         LazySvc<EditLoadBackend> loadBackend,
         LazySvc<EditSaveBackend> saveBackendLazy,
         LazySvc<HyperlinkBackend<int, int>> linkBackendLazy,
@@ -18,7 +19,7 @@ public class EditControllerReal: ServiceBase, IEditController
     ) : base("Api.EditRl")
     {
         ConnectServices(
-            _entityBackend = entityBackend,
+            //_entityBackend = entityBackend,
             _loadBackend = loadBackend,
             _saveBackendLazy = saveBackendLazy,
             _linkBackendLazy = linkBackendLazy,
@@ -26,7 +27,7 @@ public class EditControllerReal: ServiceBase, IEditController
         );
 
     }
-    private readonly LazySvc<EntityPickerBackend> _entityBackend;
+    //private readonly LazySvc<EntityPickerBackend> _entityBackend;
     private readonly LazySvc<EditLoadBackend> _loadBackend;
     private readonly LazySvc<EditSaveBackend> _saveBackendLazy;
     private readonly LazySvc<AppViewPickerBackend> _appViewPickerBackendLazy;
@@ -37,14 +38,15 @@ public class EditControllerReal: ServiceBase, IEditController
     public Dictionary<Guid, int> Save(EditDto package, int appId, bool partOfPage)
         => _saveBackendLazy.Value.Init(appId).Save(package, partOfPage);
 
-    public IEnumerable<EntityForPickerDto> EntityPicker(
-        int appId,
-        string[] items,
-        string contentTypeName = null
-        // 2dm 2023-01-22 #maybeSupportIncludeParentApps
-        //bool? includeParentApps = null
-    )
-        => _entityBackend.Value.GetForEntityPicker(appId, items, contentTypeName/*, includeParentApps == true*/);
+    // #RemoveOldEntityPicker - commented out 2024-03-05, remove ca. 2024-06-01
+    //public IEnumerable<EntityForPickerDto> EntityPicker(
+    //    int appId,
+    //    string[] items,
+    //    string contentTypeName = null
+    //    // 2dm 2023-01-22 #maybeSupportIncludeParentApps
+    //    //bool? includeParentApps = null
+    //)
+    //    => _entityBackend.Value.GetForEntityPicker(appId, items, contentTypeName/*, includeParentApps == true*/);
 
 
     public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)

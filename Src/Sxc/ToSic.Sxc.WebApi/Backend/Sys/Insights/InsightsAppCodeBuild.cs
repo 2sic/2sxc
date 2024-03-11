@@ -21,7 +21,7 @@ internal class InsightsAppCodeBuild(IAppStates appStates) : InsightsProvider(Lin
                           + "\n"
         );
 
-        if (Parameters.TryGetValue("toggle", out var strToggle) && strToggle == "true")
+        if (Parameters.TryGetValue("toggle", out var strToggle) && strToggle?.ToString() == "true")
         {
             msg += Tags.Nl2Br("Toggle: " + strToggle);
         }

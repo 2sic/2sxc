@@ -10,9 +10,9 @@ using RealController = ToSic.Eav.WebApi.Sys.LogControllerReal;
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 
 // Release routes
-[Route(OqtWebApiConstants.ApiRootWithNoLang + "/" + AreaRoutes.Sys)]
+[Route(OqtWebApiConstants.ApiRootNoLanguage + "/" + AreaRoutes.Sys)]
 [Route(OqtWebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
-[Route(OqtWebApiConstants.ApiRootPathNdLang + "/" + AreaRoutes.Sys)]
+[Route(OqtWebApiConstants.ApiRootPathAndLang + "/" + AreaRoutes.Sys)]
 
 // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [Authorize(Roles = RoleNames.Admin)]

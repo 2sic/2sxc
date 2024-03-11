@@ -4,6 +4,7 @@ using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Context;
+using ToSic.Eav.Data.Shared;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal.HotBuild;
@@ -14,14 +15,14 @@ namespace ToSic.Sxc.Code.Internal.Generate;
 /// <summary>
 /// Experimental
 /// </summary>
-public class DataModelGenerator(ISite site, IUser user, IAppStates appStates, IAppPathsMicroSvc appPaths) : ServiceBase(SxcLogging.SxcLogName + ".DMoGen")
+public class DataClassesGenerator(ISite site, IUser user, IAppStates appStates, IAppPathsMicroSvc appPaths) : ServiceBase(SxcLogging.SxcLogName + ".DMoGen")
 {
     internal CodeGenSpecs Specs { get; } = new();
 
     internal IUser User = user;
     internal CodeGenHelper CodeGenHelper = new(new());
 
-    public DataModelGenerator Setup(int appId, string edition = default)
+    public DataClassesGenerator Setup(int appId, string edition = default)
     {
         if (edition.HasValue())
             Specs.Edition = edition;
@@ -35,10 +36,15 @@ public class DataModelGenerator(ISite site, IUser user, IAppStates appStates, IA
         // Prepare Content Types and add to Specs, so the generators know what is available
         // Generate classes for all types in scope Default
         var types = AppState.ContentTypes.OfScope(Scopes.Default).ToList();
-        var appResources = AppState.GetContentType(AppLoadConstants.TypeAppResources);
-        if (appResources != null) types.Add(appResources);
-        var appSettings = AppState.GetContentType(AppLoadConstants.TypeAppSettings);
-        if (appSettings != null) types.Add(appSettings);
+        AppState.GetContentType(AppLoadConstants.TypeAppResources).DoIfNotNull(types.Add);
+        AppState.GetContentType(AppLoadConstants.TypeAppSettings).DoIfNotNull(types.Add);
+
+        var appConfigTypes = AppState.ContentTypes
+            .OfScope(Scopes.SystemConfiguration)
+            .Where(ct => !ct.HasAncestor())
+            .ToList();
+
+        types.AddRange(appConfigTypes);
 
         Specs.ExportedContentContentTypes = types;
         return this;

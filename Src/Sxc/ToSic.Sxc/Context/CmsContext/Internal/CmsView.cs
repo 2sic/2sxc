@@ -4,7 +4,6 @@ using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data;
 
@@ -36,33 +35,24 @@ internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IVi
 
     [PrivateApi]
     private IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string location = default)
-    {
-        return new CmsViewFolder(this, block.App, AppAssetFolderMain.DetermineShared(location) ?? block.View.IsShared);
-    }
+        => new CmsViewFolder(this, block.App, AppAssetFolderMain.DetermineShared(location) ?? block.View.IsShared);
 
     /// <summary>
-    /// Note: this is an explicit implementation, so in Dynamic Razor it won't work.
+    /// Note: this is an explicit implementation, so in Dynamic Razor it won't work. This is by design.
     /// </summary>
-    ITypedItem ICmsView.Settings => _settings.Get(() => parent._CodeApiSvc.Cdf.AsItem(_view.Settings));
+    ITypedItem ICmsView.Settings => _settings.Get(() => Parent._CodeApiSvc.Cdf.AsItem(_view.Settings));
     private readonly GetOnce<ITypedItem> _settings = new();
 
+    /// <summary>
+    /// Note: this is an explicit implementation, so in Dynamic Razor it won't work. This is by design.
+    /// </summary>
+    ITypedItem ICmsView.Resources => _resources.Get(() => Parent._CodeApiSvc.Cdf.AsItem(_view.Resources));
+    private readonly GetOnce<ITypedItem> _resources = new();
 
     /// <inheritdoc />
     [PrivateApi("Hidden in 16.04, because we want people to use the Folder. Can't remove it though, because there are many apps that already published this.")]
     public string Path => _path.Get(() => FigureOutPath(block?.App.Path));
     private readonly GetOnce<string> _path = new();
-
-    ///// <inheritdoc />
-    //public string PathShared => _pathShared.Get(() => FigureOutPath(_block?.App.PathShared));
-    //private readonly GetOnce<string> _pathShared = new GetOnce<string>();
-
-    ///// <inheritdoc />
-    //public string PhysicalPath => _physPath.Get(() => FigureOutPath(_block?.App.PhysicalPath));
-    //private readonly GetOnce<string> _physPath = new GetOnce<string>();
-
-    ///// <inheritdoc />
-    //public string PhysicalPathShared => _physPathShared.Get(() => FigureOutPath(_block?.App.PhysicalPathShared));
-    //private readonly GetOnce<string> _physPathShared = new GetOnce<string>();
 
     /// <summary>
     /// Figure out the path to the view based on a root path.

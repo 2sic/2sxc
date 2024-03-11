@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 // Release routes
 [Route(OqtWebApiConstants.AppRootNoLanguage + "/{appName}/assets")]
 [Route(OqtWebApiConstants.AppRootPathOrLang + "/{appName}/assets")]
-[Route(OqtWebApiConstants.AppRootPathNdLang + "/{appName}/assets")]
+[Route(OqtWebApiConstants.AppRootPathAndLang + "/{appName}/assets")]
 
 // Beta routes
 //[Route(WebApiConstants.WebApiStateRoot + "/assets/{appName}")]

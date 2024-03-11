@@ -98,8 +98,8 @@ public class CodeErrorHelpService: ServiceBase
 
     private static CodeHelp FindHelp(Exception ex, List<CodeHelp> errorList)
     {
-        var msg = ex?.Message;
-        return msg == null ? null : errorList.FirstOrDefault(help =>
+        var msg = $"{ex?.Message}{ex?.StackTrace}";
+        return msg.IsEmpty() ? null : errorList.FirstOrDefault(help =>
         {
             if (help.DetectRegex)
                 return Regex.IsMatch(msg, help.Detect);

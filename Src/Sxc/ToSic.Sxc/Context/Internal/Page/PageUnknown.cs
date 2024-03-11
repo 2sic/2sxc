@@ -1,9 +1,8 @@
 ﻿using ToSic.Eav.Internal.Unknown;
+#pragma warning disable CS9113 // Parameter is unread.
 
 namespace ToSic.Sxc.Context.Internal;
 
-[PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class PageUnknown(WarnUseOfUnknown<PageUnknown> _) : IPage, IIsUnknown
 {
     public IPage Init(int id)

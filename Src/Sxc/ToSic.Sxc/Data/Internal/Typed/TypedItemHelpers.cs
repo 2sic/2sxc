@@ -21,7 +21,6 @@ internal class TypedItemHelpers
         Func<ITweakInput<string>, ITweakInput<string>> tweak = default
     )
     {
-        // Protect(noParamOrder, $"{nameof(container)}, {nameof(imageSettings)}, {nameof(toolbar)}, {nameof(required)}, {nameof(debug)}...");
         var kit = cdf.GetServiceKitOrThrow();
         var field = item.Field(name, required: required);
         return kit.Cms.Html(field, container: container, classes: null, imageSettings: imageSettings, debug: debug, toolbar: toolbar, tweak: tweak);
@@ -45,7 +44,6 @@ internal class TypedItemHelpers
         object recipe
     )
     {
-        //Protect(noParamOrder, $"{nameof(settings)}, {nameof(factor)}, {nameof(width)}, {nameof(imgAlt)}...");
         var kit = cdf.GetServiceKitOrThrow();
         var field = item.Field(name, required: true);
         return field.Url.IsEmptyOrWs()
@@ -56,20 +54,42 @@ internal class TypedItemHelpers
                 toolbar: toolbar, recipe: recipe);
     }
 
+    public static IResponsiveImage Img(
+        CodeDataFactory cdf,
+        ITypedItem item,
+        string name,
+        NoParamOrder noParamOrder,
+        object settings,
+        object factor,
+        object width,
+        string imgAlt,
+        string imgAltFallback,
+        string imgClass,
+        object imgAttributes,
+        object toolbar,
+        object recipe
+    )
+    {
+        var kit = cdf.GetServiceKitOrThrow();
+        var field = item.Field(name, required: true);
+        return field.Url.IsEmptyOrWs()
+            ? null
+            : kit.Image.Img(field, settings: settings, noParamOrder: noParamOrder, factor: factor, width: width,
+                imgAlt: imgAlt, imgAltFallback: imgAltFallback,
+                imgClass: imgClass, imgAttributes: imgAttributes,
+                toolbar: toolbar, recipe: recipe);
+    }
+
+
     public static string MaybeScrub(string value, object scrubHtml, Func<IScrub> scrubSvc)
     {
         if (value == null) return null;
-        switch (scrubHtml)
+        return scrubHtml switch
         {
-            case string scrubStr:
-                return scrubStr.HasValue()
-                    ? scrubSvc().Only(value, scrubStr.CsvToArrayWithoutEmpty() /*.Split(',').Select(s => s.Trim()).ToArray()*/)
-                    : value;
-            case bool scrubBln:
-                return scrubBln ? scrubSvc().All(value) : value;
-            default:
-                return value;
-        }
+            string scrubStr => scrubStr.HasValue() ? scrubSvc().Only(value, scrubStr.CsvToArrayWithoutEmpty()) : value,
+            bool scrubBln => scrubBln ? scrubSvc().All(value) : value,
+            _ => value
+        };
     }
 
 }

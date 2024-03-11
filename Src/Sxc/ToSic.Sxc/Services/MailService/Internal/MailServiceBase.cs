@@ -6,9 +6,7 @@ using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Internal;
 using MailMessage = System.Net.Mail.MailMessage;
 
 namespace ToSic.Sxc.Services.Internal;
@@ -22,7 +20,7 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
 
     private readonly LazySvc<IUser> _userLazy;
 
-    protected MailServiceBase(LazySvc<IUser> userLazy) : base($"{SxcLogging.SxcLogName}.MailSrv")
+    protected MailServiceBase(LazySvc<IUser> userLazy) : base($"{SxcLogName}.MailSrv")
     {
         ConnectServices(
             _userLazy = userLazy

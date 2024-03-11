@@ -10,20 +10,19 @@ internal abstract class CmsContextPartBase<T> : Wrapper<T>, IHasMetadata where T
 {
     protected CmsContextPartBase(CmsContext parent, T contents) : base(contents)
     {
-        _parent = parent;
+        Parent = parent;
     }
-    private CmsContext _parent;
+    protected CmsContext Parent;
 
     protected CmsContextPartBase() : base(null) { }
 
     protected void Init(CmsContext parent, T contents)
     {
         Wrap(contents);
-        _parent = parent;
+        Parent = parent;
     }
 
-    public IMetadata Metadata =>
-        _dynMeta.Get(() => _parent._CodeApiSvc.Cdf.Metadata((this as IHasMetadata).Metadata)); // new Metadata((this as IHasMetadata).Metadata, null, _parent.DEDeps));
+    public IMetadata Metadata => _dynMeta.Get(() => Parent._CodeApiSvc.Cdf.Metadata((this as IHasMetadata).Metadata));
     private readonly GetOnce<IMetadata> _dynMeta = new();
 
     IMetadataOf IHasMetadata.Metadata => _md.Get(GetMetadataOf);

@@ -49,13 +49,11 @@ public interface IAppTyped<out TSettings, out TResources> : IAppIdentity
     /// All the app settings which are custom for each app.
     /// These are typed - typically to AppCode.Data.AppSettings
     /// </summary>
-    new TSettings Settings { get; }
+    TSettings Settings { get; }
 
     /// <summary>
     /// All the app resources (usually used for multi-language labels etc.).
     /// /// These are typed - typically to AppCode.Data.AppResources
     /// </summary>
-    new TResources Resources { get; }
-
-
+    TResources Resources { get; }
 }

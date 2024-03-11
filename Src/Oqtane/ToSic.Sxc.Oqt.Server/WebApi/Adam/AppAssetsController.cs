@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam;
 // Release routes
 [Route(OqtWebApiConstants.AppRootNoLanguage + "/{appName}/adam")]
 [Route(OqtWebApiConstants.AppRootPathOrLang + "/{appName}/adam")]
-[Route(OqtWebApiConstants.AppRootPathNdLang + "/{appName}/adam")]
+[Route(OqtWebApiConstants.AppRootPathAndLang + "/{appName}/adam")]
 
 // Beta routes
 //[Route(WebApiConstants.WebApiStateRoot + "/adam/{appName}")]

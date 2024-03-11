@@ -179,9 +179,9 @@ internal class SearchController : ServiceBase
                 var engine = _engineFactory.CreateEngine(Block.View);
                 if (engine is IEngineDnnOldCompatibility oldEngine)
                 {
+#pragma warning disable CS0618
                     oldEngine.Init(Block, Purpose.IndexingForSearch);
 
-#pragma warning disable CS0618
                     // Only run CustomizeData() if we're in the older, classic model of search-indexing
                     // The new model v12.02 won't need this
                     l.A("Will run CustomizeData() in the Razor Engine which will call it in the Razor if exists");

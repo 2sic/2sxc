@@ -53,8 +53,8 @@ internal class CmsContext: ServiceForDynamicCode, ICmsContext
     private IAppStateInternal SiteAppState => _siteAppState ??= _appStates.GetPrimaryReader(CtxSite.Site.ZoneId, Log);
     private IAppStateInternal _siteAppState;
 
-
-    private IBlock RealBlockOrNull => _realBlock.Get(() => ((ICodeApiServiceInternal)_CodeApiSvc)?._Block);
+    // Note: Internal so it can be used for View<T, T>
+    internal IBlock RealBlockOrNull => _realBlock.Get(() => ((ICodeApiServiceInternal)_CodeApiSvc)?._Block);
     private readonly GetOnce<IBlock> _realBlock = new();
 
     internal IContextOfBlock CtxBlockOrNull => _ctxBlock.Get(() => ((ICodeApiServiceInternal)_CodeApiSvc)?._Block?.Context);

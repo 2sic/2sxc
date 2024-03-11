@@ -243,8 +243,9 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="mock">if `true` will return a fake when `source` is `null` - otherwise a wrapper item with empty-contents</param>
     /// <returns></returns>
-    [PrivateApi("WIP, don't publish yet")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    /// <remarks>
+    /// BETA in v17.03
+    /// </remarks>
     T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool mock = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new();
 
@@ -257,8 +258,9 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="nullIfNull">if `true` will return null when `source` is `null` - otherwise a wrapper item with empty-contents</param>
     /// <returns></returns>
-    [PrivateApi("WIP, don't publish yet")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    /// <remarks>
+    /// BETA in v17.03
+    /// </remarks>
     IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new();
 

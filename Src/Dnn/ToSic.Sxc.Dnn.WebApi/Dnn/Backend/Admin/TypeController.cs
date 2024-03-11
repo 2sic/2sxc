@@ -2,6 +2,7 @@
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Sxc.Backend.Admin;
 using RealController = ToSic.Sxc.Backend.Admin.TypeControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
@@ -45,7 +46,7 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     [HttpGet]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public IDictionary<string, string> Scopes(int appId) => Real.Scopes(appId);
+    public ScopesDto Scopes(int appId) => Real.Scopes(appId);
 
 
     /// <summary>

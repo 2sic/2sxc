@@ -31,9 +31,9 @@ internal class CodeGenHelper(CodeGenSpecs specs)
         return sb.ToString();
     }
 
-    public string XmlComment(int tabs, string summary = default, string returns = default, int padBefore = 1, int padAfter = default,
+    public string XmlComment(int tabs, string summary = default, string remarks = default, string returns = default, int padBefore = 1, int padAfter = default,
         int altGap = 1)
-        => XmlComment(tabs, summary: summary.SplitNewLine(), returns: returns.SplitNewLine(), padBefore: padBefore, padAfter: padAfter, altGap: altGap);
+        => XmlComment(tabs, summary: summary.SplitNewLine(), remarks: remarks.SplitNewLine(), returns: returns.SplitNewLine(), padBefore: padBefore, padAfter: padAfter, altGap: altGap);
 
     public string XmlComment(int tabs, string[] summary = default, string[] remarks = default, string[] returns = default, int padBefore = 1, int padAfter = default, int altGap = 1)
     {

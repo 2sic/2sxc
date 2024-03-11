@@ -1,8 +1,6 @@
 ﻿using System.Xml.Linq;
-using ToSic.Eav.ImportExport;
 using ToSic.Eav.ImportExport.Internal.Xml;
 using ToSic.Eav.Persistence.Logging;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 
 // 2dm: must disable NullRef warnings, because there a lot of warnings when processing XML, 
@@ -68,9 +66,7 @@ public partial class XmlImportFull
                 var streamsToPublish = template.Attribute(ViewConstants.FieldPublishStreams) == null
                     ? ""
                     : template.Attribute(ViewConstants.FieldPublishStreams).Value;
-                var viewNameInUrl = template.Attribute(ViewConstants.FieldNameInUrl) == null
-                    ? null
-                    : template.Attribute(ViewConstants.FieldNameInUrl).Value;
+                var viewNameInUrl = template.Attribute(ViewConstants.FieldNameInUrl)?.Value;
 
                 var queryEntityGuid = template.Attribute(XmlConstants.TemplateQueryGuidField);
                 var queryEntityId = new int?();
@@ -126,10 +122,9 @@ public partial class XmlImportFull
                     return new TemplateDefault
                     {
                         ItemType = xmlItemType,
-                        ContentTypeStaticName =
-                            xmlContentTypeStaticName == "0" || xmlContentTypeStaticName == ""
-                                ? ""
-                                : xmlContentTypeStaticName,
+                        ContentTypeStaticName = xmlContentTypeStaticName is "0" or ""
+                            ? ""
+                            : xmlContentTypeStaticName,
                         DemoEntityId = xmlDemoEntityId
                     };
                 }).ToList();
@@ -165,12 +160,11 @@ public partial class XmlImportFull
                     listPresentationDemoEntityId = listPresentationDefault.DemoEntityId;
                 }
 
-                viewsMod
-                    /*viewsManager*/.CreateOrUpdate(
-                        null, name, path, contentTypeStaticName, demoEntityId, presentationTypeStaticName,
-                        presentationDemoEntityId, listContentTypeStaticName, listContentDemoEntityId,
-                        listPresentationTypeStaticName, listPresentationDemoEntityId, type, isHidden, location,
-                        useForList, publishData, streamsToPublish, queryEntityId, viewNameInUrl);
+                viewsMod.CreateOrUpdate(
+                    null, name, path, contentTypeStaticName, demoEntityId, presentationTypeStaticName,
+                    presentationDemoEntityId, listContentTypeStaticName, listContentDemoEntityId,
+                    listPresentationTypeStaticName, listPresentationDemoEntityId, type, isHidden, location,
+                    useForList, publishData, streamsToPublish, queryEntityId, viewNameInUrl);
 
                 Messages.Add(new($"Template \'{name}\' successfully imported.",
                     Message.MessageTypes.Information));

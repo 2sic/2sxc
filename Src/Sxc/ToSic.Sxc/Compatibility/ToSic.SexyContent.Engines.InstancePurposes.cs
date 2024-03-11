@@ -13,7 +13,6 @@ namespace ToSic.SexyContent.Engines
     {
         WebView = 0,
         IndexingForSearch = 1,
-        //PublishData = 2
     }
 }
 #endif

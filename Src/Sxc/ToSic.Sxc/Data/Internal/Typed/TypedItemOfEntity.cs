@@ -82,6 +82,10 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     // ReSharper disable once NonReadonlyMemberInGetHashCode
     public override int GetHashCode() => GetWrappedHashCode(this);
 
+    /// <summary>
+    /// Ensure that the equality check is done correctly.
+    /// If two objects wrap the same item, they will be considered equal.
+    /// </summary>
     public override bool Equals(object b) => MultiWrapperEquality.EqualsObj(this, b);
 
     bool IEquatable<ITypedItem>.Equals(ITypedItem other) => Equals(other);
@@ -344,6 +348,24 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
         factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback, 
         imgClass: imgClass, imgAttributes: imgAttributes, pictureClass: pictureClass, pictureAttributes: pictureAttributes, 
         toolbar: toolbar, recipe: recipe);
+
+    IResponsiveImage ITypedItem.Img(
+        string name,
+        NoParamOrder noParamOrder,
+        object settings,
+        object factor,
+        object width,
+        string imgAlt,
+        string imgAltFallback,
+        string imgClass,
+        object imgAttributes,
+        object toolbar,
+        object recipe
+    ) => TypedItemHelpers.Img(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder, settings: settings,
+        factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback,
+        imgClass: imgClass, imgAttributes: imgAttributes,
+        toolbar: toolbar, recipe: recipe);
+
 
     #endregion
 

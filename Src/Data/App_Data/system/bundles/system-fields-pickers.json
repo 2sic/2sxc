@@ -3377,54 +3377,6 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
-                "Id": 182380,
-                "Version": 4,
-                "Guid": "cf832332-5f70-40af-ad1f-4399f294ac42",
-                "Type": {
-                  "Id": "ContentType",
-                  "Name": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "AdditionalSettings": {
-                      "en-us": ""
-                    },
-                    "Description": {
-                      "en-us": ""
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": "<p>Configure a Item (Entity) Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
-                    },
-                    "Label": {
-                      "en-us": "Item (Entity) Picker (new)"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "6fa7f390-7612-40c6-baff-2bcf6140a85f"
-                }
-              },
-              {
                 "Id": 182665,
                 "Version": 7,
                 "Guid": "73bf2a9b-6d4c-4987-96d8-d421c586a888",
@@ -3456,6 +3408,54 @@
                     },
                     "UseAdam": {
                       "en-us": false
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "6fa7f390-7612-40c6-baff-2bcf6140a85f"
+                }
+              },
+              {
+                "Id": 182380,
+                "Version": 5,
+                "Guid": "cf832332-5f70-40af-ad1f-4399f294ac42",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p>Configure a Item (Entity) Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "en-us": "Item (Entity) Picker (BETA v17)"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
                     }
                   }
                 },
@@ -3896,7 +3896,7 @@
             },
             {
               "Id": 182681,
-              "Version": 24,
+              "Version": 25,
               "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -3920,7 +3920,7 @@
                     "en-us": "[Item:Title] ([Item:Id])"
                   },
                   "MoreFields": {
-                    "en-us": "Description,Title"
+                    "en-us": ""
                   },
                   "Query": {
                     "en-us": "System.UiPickers"
@@ -3940,7 +3940,7 @@
                 },
                 "Hyperlink": {
                   "ItemLink": {
-                    "en-us": "https://2sxc.org/"
+                    "en-us": ""
                   }
                 }
               },
@@ -3998,7 +3998,7 @@
               },
               {
                 "Id": 182381,
-                "Version": 2,
+                "Version": 3,
                 "Guid": "df9485fb-10f6-4c1e-a19e-84b47b68955b",
                 "Type": {
                   "Id": "ContentType",
@@ -4019,7 +4019,7 @@
                       "en-us": "<p>Configure a Number Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
                     },
                     "Label": {
-                      "en-us": "Number Picker (new)"
+                      "en-us": "Number Picker (BETA v17)"
                     },
                     "ListInstructions": {
                       "en-us": ""
@@ -4069,7 +4069,7 @@
           "Entities": [
             {
               "Id": 182681,
-              "Version": 24,
+              "Version": 25,
               "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -4093,7 +4093,7 @@
                     "en-us": "[Item:Title] ([Item:Id])"
                   },
                   "MoreFields": {
-                    "en-us": "Description,Title"
+                    "en-us": ""
                   },
                   "Query": {
                     "en-us": "System.UiPickers"
@@ -4113,7 +4113,7 @@
                 },
                 "Hyperlink": {
                   "ItemLink": {
-                    "en-us": "https://2sxc.org/"
+                    "en-us": ""
                   }
                 }
               },
@@ -4171,7 +4171,7 @@
               },
               {
                 "Id": 182382,
-                "Version": 2,
+                "Version": 3,
                 "Guid": "dba24477-2502-42c2-8437-4c16934b9f5e",
                 "Type": {
                   "Id": "ContentType",
@@ -4192,7 +4192,7 @@
                       "en-us": "<p>Configure a String Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
                     },
                     "Label": {
-                      "en-us": "String Picker (new)"
+                      "en-us": "String Picker (BETA v17)"
                     },
                     "ListInstructions": {
                       "en-us": ""
@@ -4544,7 +4544,7 @@
             },
             {
               "Id": 182681,
-              "Version": 24,
+              "Version": 25,
               "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -4568,7 +4568,7 @@
                     "en-us": "[Item:Title] ([Item:Id])"
                   },
                   "MoreFields": {
-                    "en-us": "Description,Title"
+                    "en-us": ""
                   },
                   "Query": {
                     "en-us": "System.UiPickers"
@@ -4588,7 +4588,7 @@
                 },
                 "Hyperlink": {
                   "ItemLink": {
-                    "en-us": "https://2sxc.org/"
+                    "en-us": ""
                   }
                 }
               },
@@ -8879,7 +8879,7 @@
           "Entities": [
             {
               "Id": 182681,
-              "Version": 24,
+              "Version": 25,
               "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -8903,7 +8903,7 @@
                     "en-us": "[Item:Title] ([Item:Id])"
                   },
                   "MoreFields": {
-                    "en-us": "Description,Title"
+                    "en-us": ""
                   },
                   "Query": {
                     "en-us": "System.UiPickers"
@@ -8923,7 +8923,7 @@
                 },
                 "Hyperlink": {
                   "ItemLink": {
-                    "en-us": "https://2sxc.org/"
+                    "en-us": ""
                   }
                 }
               },
@@ -8987,7 +8987,7 @@
             },
             {
               "Id": 182681,
-              "Version": 24,
+              "Version": 25,
               "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -9011,7 +9011,7 @@
                     "en-us": "[Item:Title] ([Item:Id])"
                   },
                   "MoreFields": {
-                    "en-us": "Description,Title"
+                    "en-us": ""
                   },
                   "Query": {
                     "en-us": "System.UiPickers"
@@ -9031,7 +9031,7 @@
                 },
                 "Hyperlink": {
                   "ItemLink": {
-                    "en-us": "https://2sxc.org/"
+                    "en-us": ""
                   }
                 }
               },
@@ -10709,7 +10709,7 @@
         },
         {
           "Id": 182681,
-          "Version": 24,
+          "Version": 25,
           "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
           "Type": {
             "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -10733,7 +10733,7 @@
                 "en-us": "[Item:Title] ([Item:Id])"
               },
               "MoreFields": {
-                "en-us": "Description,Title"
+                "en-us": ""
               },
               "Query": {
                 "en-us": "System.UiPickers"
@@ -10753,7 +10753,7 @@
             },
             "Hyperlink": {
               "ItemLink": {
-                "en-us": "https://2sxc.org/"
+                "en-us": ""
               }
             }
           },

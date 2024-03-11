@@ -9,12 +9,14 @@ public class HotBuildSpec(int appId, string edition, string appName)
 
     public string Edition { get; } = edition;
 
+    public string EditionToLog => $"/{Edition}"; // for logging
+
     public string AppName => appName;
 
     /// <summary>
     /// Override ToString for better debugging
     /// </summary>
-    public override string ToString() => _toString ??= $"{nameof(HotBuildSpec)} - {nameof(AppId)}: {AppId} {(appName.HasValue() ? $"({appName})" : "")}; {nameof(Edition)}: '/{Edition}'";
+    public override string ToString() => _toString ??= $"{nameof(HotBuildSpec)} - {nameof(AppId)}: {AppId} {(appName.HasValue() ? $"({appName})" : "")}; {nameof(Edition)}: '{EditionToLog}'";
     private string _toString;
 
     /// <summary>
@@ -24,7 +26,7 @@ public class HotBuildSpec(int appId, string edition, string appName)
     {
         { nameof(AppId), AppId.ToString() },
         { nameof(AppName), AppName ?? ""},
-        { nameof(Edition), $"/{Edition}" },
+        { nameof(Edition), EditionToLog },
     };
 
     public HotBuildSpec CloneWithoutEdition() => new(AppId, null, appName);

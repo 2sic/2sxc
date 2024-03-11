@@ -48,7 +48,7 @@ internal class HttpBlazor : HttpAbstractionBase, IHttp
                 var queryBits = QueryHelpers.ParseQuery(uri.Query);
                     
                 if (!queryBits.Any()) 
-                    return _queryStringValues = new();
+                    return _queryStringValues = [];
 
                 var paramList = new NameValueCollection();
                 queryBits.ToList().ForEach(i => paramList.Add(i.Key, i.Value));

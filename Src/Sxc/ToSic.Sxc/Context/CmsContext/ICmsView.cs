@@ -95,40 +95,12 @@ public interface ICmsView: IHasMetadata
     /// </summary>
     ITypedItem Settings { get; }
 
-    // 2023-08-23 2dm v16.04 PathShared, PhysicalPath, PhysicalPathShared removed, don't believe anybody was ever using it!
-
-    ///// <summary>
-    ///// The path to this view in the global/shared location.
-    ///// For URLs which should load js/css from a path beneath the view.
-    /////
-    ///// This is different from the `App.Path`, because it will also contain the edition (if there is an edition)
-    ///// </summary>
-    ///// <remarks>
-    ///// Added in v15.04
-    ///// </remarks>
-    //[PrivateApi("Hidden in 16.04 - don't think it was ever used before")]
-    //string PathShared { get; }
-
-
-    ///// <summary>
-    ///// The folder of view.
-    ///// For retrieving files on the server in the same path or below this. 
-    /////
-    ///// This is different from the `App.PhysicalPath`, because it will also contain the edition (if there is an edition)
-    ///// </summary>
-    ///// <remarks>
-    ///// Added in v15.04
-    ///// </remarks>
-    //string PhysicalPath { get; }
-
-    ///// <summary>
-    ///// The folder of view in the global shared location.
-    ///// For retrieving files on the server in the same path or below this. 
-    /////
-    ///// This is different from the `App.PhysicalPath`, because it will also contain the edition (if there is an edition)
-    ///// </summary>
-    ///// <remarks>
-    ///// Added in v15.04
-    ///// </remarks>
-    //string PhysicalPathShared { get; }
+    /// <summary>
+    /// Settings of this view.
+    /// This property only works in the new typed code.
+    ///
+    /// Note that many views don't have their own settings, so this would be empty = `null`.
+    /// </summary>
+    /// <remarks>Resources added to API in v17.04</remarks>
+    ITypedItem Resources { get; }
 }

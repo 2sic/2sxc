@@ -1,13 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Runtime.Caching;
+﻿using System.Runtime.Caching;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AssemblyCacheManager() : ServiceBase(SxcLogging.SxcLogName + ".AssemblyCacheManager")
+public class AssemblyCacheManager() : ServiceBase(SxcLogName + ".AssCMn")
 {
     private const string GlobalCacheRoot = "2sxc.AssemblyCache.Module.";
 

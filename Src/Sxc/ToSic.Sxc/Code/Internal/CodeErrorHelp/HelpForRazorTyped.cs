@@ -37,6 +37,25 @@ Correct: <code>@(Method&lt;Type&gt;(...))</code> <br>
 Wrap your generic method calls in parentheses to ensure they are correctly interpreted by the Razor compiler.
 ");
 
+    /// <summary>
+    /// Help when a developer accidentally casts an ITypedItem to dynamic, and tries to use methods not accessible through dynamic due to explicit interface implementation.
+    /// </summary>
+    internal static CodeHelp IncorrectDynamicUsage = new(name: "incorrect-dynamic-usage",
+        // Detection based on the specific runtime error message parts
+        detect: @"does not contain a definition for '(\S.*+)'\s+at CallSite.Target\(Closure , CallSite , Object , String \)",
+        detectRegex: true,
+        uiMessage: $@"
+It seems like you're trying to use methods such as .Get(...) or .String(...) on a dynamically casted object of type '{nameof(Data.Internal.Typed.WrapObjectTyped)}' or similar, which does not work due to explicit interface implementation. Use a strongly typed approach instead.
+",
+        detailsHtml: $@"
+When working with objects like <code>{nameof(Data.Internal.Typed.WrapObjectTyped)}</code> or <code>{nameof(Data.Internal.Typed.TypedItemOfEntity)}</code>, casting them to <code>dynamic</code> and attempting to use methods like <code>.Get(...)</code> or <code>.String(...)</code> will result in a <code>RuntimeBinderException</code>. This happens because these methods are explicitly implemented by the interface and are not accessible through a dynamic type reference.
+<br><br>
+<strong>Solution:</strong> Instead of casting to <code>dynamic</code>, keep the object's type as <code>ITypedItem</code> or cast it to the specific type that implements the interface. This way, you can access all methods as intended.
+<br><br>
+<strong>Example</strong>: <br>
+Incorrect: <code>dynamic testItem = MyItem;</code><br>
+Correct: <code>var testItem = MyItem;</code><br>
+");
 
     #endregion
 
@@ -140,7 +159,8 @@ Wrap your generic method calls in parentheses to ensure they are correctly inter
         HelpForRazorCompileErrors.ProbablySemicolonAfterInherits,
         HelpForRazorCompileErrors.ProbablyCommentAfterInherits,
 
-        GenericExpressionMistakenForHtml
+        GenericExpressionMistakenForHtml,
+        IncorrectDynamicUsage
     );
     private static List<CodeHelp> _help;
 }

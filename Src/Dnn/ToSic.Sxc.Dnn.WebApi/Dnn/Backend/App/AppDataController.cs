@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.WebApi.App;
+using static ToSic.Eav.WebApi.EavWebApiConstants;
 using RealController = ToSic.Sxc.Backend.App.AppDataControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.App;
@@ -15,8 +16,8 @@ public class AppDataController() : DnnSxcControllerBase(RealController.LogSuffix
     /// <inheritdoc />
     [HttpGet]
     [AllowAnonymous]   // will check security internally, so assume no requirements
-    public IEnumerable<IDictionary<string, object>> GetEntities(string contentType, string appPath = null) 
-        => Real.GetEntities(contentType, appPath);
+    public IEnumerable<IDictionary<string, object>> GetEntities(string contentType, string appPath = default, [FromUri(Name = ODataSelect)] string oDataSelect = default)
+        => Real.GetEntities(contentType, appPath, oDataSelect: oDataSelect);
 
     #endregion
 
@@ -25,13 +26,13 @@ public class AppDataController() : DnnSxcControllerBase(RealController.LogSuffix
     /// <inheritdoc />
     [HttpGet]
     [AllowAnonymous] // will check security internally, so assume no requirements
-    public IDictionary<string, object> GetOne(string contentType, string guid, string appPath = null) // this will handle Guid
-        => Real.GetOne(contentType, guid, appPath);
+    public IDictionary<string, object> GetOne(string contentType, string guid, string appPath = default, [FromUri(Name = ODataSelect)] string oDataSelect = default) // this will handle Guid
+        => Real.GetOne(contentType, guid, appPath, oDataSelect: oDataSelect);
 
     [HttpGet]
     [AllowAnonymous] // will check security internally, so assume no requirements
-    public IDictionary<string, object> GetOne(string contentType, int id, string appPath = null) // this will handle int id
-        => Real.GetOne(contentType, id.ToString(), appPath);
+    public IDictionary<string, object> GetOne(string contentType, int id, string appPath = default, [FromUri(Name = ODataSelect)] string oDataSelect = default) // this will handle int id
+        => Real.GetOne(contentType, id.ToString(), appPath, oDataSelect: oDataSelect);
 
     #endregion
 

@@ -12,68 +12,76 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppCodeLoader : ServiceBase
+public class AppCodeLoader(
+    ILogStore logStore,
+    ISite site,
+    IAppStates appStates,
+    LazySvc<IAppPathsMicroSvc> appPathsLazy,
+    LazySvc<AppCodeCompiler> appCompilerLazy,
+    AssemblyCacheManager assemblyCacheManager)
+    : ServiceBase("Sys.AppCodeLoad",
+        connect: [logStore, site, appStates, appPathsLazy, appCompilerLazy, assemblyCacheManager])
 {
     public const string AppCodeBase = "AppCode";
-    //public const string AppCodeBinFolder = "bin";
-    //private const string AppRoot = HotBuildSpec.AppRoot;
-
-    public AppCodeLoader(ILogStore logStore, ISite site, IAppStates appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, LazySvc<AppCodeCompiler> appCompilerLazy, AssemblyCacheManager assemblyCacheManager) : base("Sys.AppCodeLoad")
-    {
-        ConnectServices(
-            _logStore = logStore,
-            _site = site,
-            _appStates = appStates,
-            _appPathsLazy = appPathsLazy,
-            _appCompilerLazy = appCompilerLazy,
-            _assemblyCacheManager = assemblyCacheManager
-        );
-    }
-    private readonly ILogStore _logStore;
-    private readonly ISite _site;
-    private readonly IAppStates _appStates;
-    private readonly LazySvc<IAppPathsMicroSvc> _appPathsLazy;
-    private readonly LazySvc<AppCodeCompiler> _appCompilerLazy;
-    private readonly AssemblyCacheManager _assemblyCacheManager;
 
 
-    public (Assembly Assembly, HotBuildSpec Specs) TryGetOrFallback(HotBuildSpec spec)
+    /// <summary>
+    /// Try to get the app code - first of the edition, then of the root.
+    /// </summary>
+    /// <param name="spec"></param>
+    /// <returns></returns>
+    public (Assembly Assembly, HotBuildSpec Specs) GetAppCode(HotBuildSpec spec)
     {
         var l = Log.Fn<(Assembly, HotBuildSpec)>(spec.ToString());
-        var assembly = TryGetAssemblyOfAppCodeFromCache(spec, Log)?.Assembly;
-        if (assembly != null) return l.Return((assembly, spec), "AppCode assembly was cached.");
+        var firstRound = GetOrBuildAppCode(spec);
+        if (firstRound.Assembly != null)
+            return l.Return(firstRound, $"AppCode for '{spec.EditionToLog}'.");
 
-        assembly = GetAppCodeAssemblyOrThrow(spec);
-        if (assembly != null) return l.Return((assembly, spec), $"AppCode assembly compiled in '/{spec.Edition}'.");
-
-        if (spec.Edition.IsEmpty()) return l.Return((null, spec), $"AppCode not found in '/', done.");
+        if (spec.Edition.IsEmpty())
+            return l.Return(firstRound, $"No AppCode for '{spec.EditionToLog}', done.");
 
         // try get root edition
         var rootSpec = spec.CloneWithoutEdition();
-        var pairFromRoot = TryGetOrFallback(rootSpec);
-        return l.Return(pairFromRoot, "AppCode found in '/'." + (pairFromRoot.Assembly == null ? ", null." : ""));
+        var root = GetOrBuildAppCode(rootSpec);
+        return l.Return(root, $"AppCode in '{root.Specs.EditionToLog}'." + (root.Assembly == null ? ", null." : ""));
     }
 
-    public static AssemblyResult TryGetAssemblyOfAppCodeFromCache(HotBuildSpec spec, ILog callerLog)
+    /// <summary>
+    /// AppCode - get from cache or build - if there is any code to build.
+    /// Will throw exceptions if compile fails, but not if there is no code to compile.
+    /// </summary>
+    /// <param name="spec"></param>
+    /// <returns></returns>
+    public (Assembly Assembly, HotBuildSpec Specs) GetOrBuildAppCode(HotBuildSpec spec)
     {
-        var l = callerLog.Fn<AssemblyResult>($"{spec}");
+        var l = Log.Fn<(Assembly, HotBuildSpec)>(spec.ToString());
 
-        var (result, _) = AssemblyCacheManager.TryGetAppCode(spec);
-        return result != null
-            ? l.ReturnAsOk(result)
-            : l.ReturnNull();
+        // Check cache first
+        var assembly = AssemblyCacheManager.TryGetAppCode(spec).Result?.Assembly;
+        if (assembly != null)
+            return l.Return((assembly, spec), $"AppCode from cached for '{spec.EditionToLog}'.");
+
+        // Try to compile
+        assembly = TryBuildAppCodeAndLog(spec);
+        return l.Return((assembly, spec), "AppCode " + (assembly != null ? "compiled" : "not compiled") + $" for '{spec.EditionToLog}'.");
     }
 
-    public Assembly GetAppCodeAssemblyOrThrow(HotBuildSpec spec)
+    /// <summary>
+    /// Get the AppCode assembly, or throw an exception if it can't be found or compiled.
+    /// It can also return null, if there is no code to compile.
+    /// </summary>
+    /// <param name="spec"></param>
+    /// <returns></returns>
+    public Assembly TryBuildAppCodeAndLog(HotBuildSpec spec)
     {
         // Add to global history and add specs
-        var logSummary = _logStore.Add(SxcLogAppCodeLoader, Log);
+        var logSummary = logStore.Add(SxcLogAppCodeLoader, Log);
         logSummary.UpdateSpecs(spec.ToDictionary());
 
         // Initial message for insights-overview
         var l = Log.Fn<Assembly>($"{spec}", timer: true);
 
-        var assemblyResults = TryLoadAppAssembly(spec, logSummary);
+        var assemblyResults = TryBuildAppCode(spec, logSummary);
 
         // All OK (no errors) - return
         if (string.IsNullOrEmpty(assemblyResults?.ErrorMessages))
@@ -84,7 +92,7 @@ public class AppCodeLoader : ServiceBase
         throw new(assemblyResults.ErrorMessages);
     }
 
-    private AssemblyResult TryLoadAppAssembly(HotBuildSpec spec, LogStoreEntry logSummary)
+    private AssemblyResult TryBuildAppCode(HotBuildSpec spec, LogStoreEntry logSummary)
     {
         var l = Log.Fn<AssemblyResult>($"{spec}");
 
@@ -96,11 +104,10 @@ public class AppCodeLoader : ServiceBase
 
         // Get paths
         var (physicalPath, relativePath) = GetAppPaths(AppCodeBase, spec);
-        //l.A($"{nameof(physicalPath)}: '{physicalPath}'; {nameof(relativePath)}: '{relativePath}'");
         logSummary.AddSpec("PhysicalPath", physicalPath);
         logSummary.AddSpec("RelativePath", relativePath);
  
-        var assemblyResult = _appCompilerLazy.Value.GetAppCode(relativePath, spec);
+        var assemblyResult = appCompilerLazy.Value.GetAppCode(relativePath, spec);
 
         logSummary.UpdateSpecs(assemblyResult.Infos);
 
@@ -112,18 +119,11 @@ public class AppCodeLoader : ServiceBase
         foreach (var watcherFolder in assemblyResult.WatcherFolders)
             l.A($"- '{watcherFolder}'");
 
-        // Idea: put dll in the App/bin folder, for VS Intellisense - ATM not relevant
-        //var (refsAssemblyPath, _) = GetAppPaths(AppCodeBinFolder, spec);
-        //if (assemblyResult.HasAssembly)
-        //    CopyAssemblyForRefs(assemblyResult.AssemblyLocations[1], Path.Combine(refsAssemblyPath, AppCodeCompiler.AppCodeDll));
-
         // Add compiled assembly to cache
-        _assemblyCacheManager.Add(
+        assemblyCacheManager.Add(
             cacheKey,
             assemblyResult,
             changeMonitor: new ChangeMonitor[] { new FolderChangeMonitor(assemblyResult.WatcherFolders) }
-            // Idea: put dll in the App/bin folder, for VS Intellisense - ATM not relevant
-            // updateCallback: _ => AssembliesDelete(assemblyResult.AssemblyLocations.Append(refsAssemblyPath))
         );
 
         return l.ReturnAsOk(assemblyResult);
@@ -139,28 +139,31 @@ public class AppCodeLoader : ServiceBase
 
         // take parent folder (eg. ...\edition)
         var appCodeParentFolder = Path.GetDirectoryName(physicalPathAppCode);
-        if (appCodeParentFolder.IsEmpty()) return l.Return(folders, $"exit {nameof(appCodeParentFolder)}");
+        if (appCodeParentFolder.IsEmpty()) return l.Return(folders, $"{nameof(appCodeParentFolder)}.IsEmpty");
         IfExistsThenAdd(appCodeParentFolder, false);
 
         // if no edition was used, then we were already in the root, and should stop now.
-        if (spec.Edition.IsEmpty()) return l.Return(folders, $"exit {nameof(spec.Edition)}");
+        if (spec.Edition.IsEmpty()) return l.Return(folders, $"{nameof(spec.Edition)}.IsEmpty");
 
         // If we have an edition, and it has an assembly, we don't need to watch the root folder
-        if (assemblyResult.HasAssembly) return l.Return(folders, $"exit {nameof(assemblyResult.HasAssembly)}");
+        if (assemblyResult.HasAssembly) return l.Return(folders, $"{nameof(assemblyResult.HasAssembly)}");
 
         // If we had an edition and no assembly, then we need to watch the root folder
         // we need to add more folders to watch for cache invalidation
 
         // App Root folder (eg. ...\)
         var appRootFolder = Path.GetDirectoryName(appCodeParentFolder);
-        if (appRootFolder.IsEmpty()) return l.Return(folders, $"exit {nameof(appRootFolder)}.IsEmpty");
+        if (appRootFolder.IsEmpty()) return l.Return(folders, $"{nameof(appRootFolder)}.IsEmpty");
+
         // Add to watcher list if it exists, otherwise exit, since we can't have subfolders
-        if (!IfExistsThenAdd(appRootFolder, false)) return l.Return(folders, $"{nameof(appRootFolder)}");
+        if (!IfExistsThenAdd(appRootFolder, false))
+            return l.Return(folders, $"{nameof(appRootFolder)} doesn't exist");
 
         // 
         var appRootAppCode = Path.Combine(appRootFolder, AppCodeBase);
         // Add to watcher list if it exists, otherwise exit, since we can't have subfolders
-        if (!IfExistsThenAdd(appRootAppCode, true)) return l.Return(folders, $"{nameof(appRootAppCode)}");
+        if (!IfExistsThenAdd(appRootAppCode, true))
+            return l.Return(folders, $"{nameof(appRootAppCode)} doesn't exist");
 
         // all done
         return l.ReturnAsOk(folders);
@@ -178,8 +181,8 @@ public class AppCodeLoader : ServiceBase
     public (string physicalPath, string relativePath) GetAppPaths(string folder, HotBuildSpec spec)
     {
         var l = Log.Fn<(string physicalPath, string relativePath)>($"{nameof(folder)}: '{folder}'; {spec}");
-        l.A($"site id: {_site.Id}, ...: {_site.AppsRootPhysicalFull}");
-        var appPaths = _appPathsLazy.Value.Init(_site, _appStates.GetReader(spec.AppId));
+        l.A($"site id: {site.Id}, ...: {site.AppsRootPhysicalFull}");
+        var appPaths = appPathsLazy.Value.Init(site, appStates.GetReader(spec.AppId));
         var folderWithEdition = folder.HasValue() 
             ? (spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder)
             : spec.Edition;
@@ -190,29 +193,4 @@ public class AppCodeLoader : ServiceBase
         return l.ReturnAsOk((physicalPath, relativePath));
     }
 
-    // Idea: put dll in the App/bin folder, for VS Intellisense - ATM not relevant
-    //private static void AssembliesDelete(IEnumerable<string> list)
-    //{
-    //    if (list == null) return;
-    //    foreach (var assembly in list)
-    //    {
-    //        try
-    //        {
-    //            File.Delete(assembly);
-    //        }
-    //        catch
-    //        {
-    //            // ignore
-    //        }
-    //    }
-    //}
-
-    // Idea: put dll in the App/bin folder, for VS Intellisense - ATM not relevant
-    //private static void CopyAssemblyForRefs(string source, string destination)
-    //{
-    //    if (!File.Exists(source)) return;
-    //    var destinationFolder = Path.GetDirectoryName(destination);
-    //    if (destinationFolder != null) Directory.CreateDirectory(destinationFolder);
-    //    File.Copy(source, destination, true);
-    //}
 }

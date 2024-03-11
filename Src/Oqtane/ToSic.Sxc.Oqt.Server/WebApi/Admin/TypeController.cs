@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Routing;
+using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.Admin.TypeControllerReal;
 
@@ -20,9 +21,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [AutoValidateAntiforgeryToken]
 
 // Release routes
-[Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+[Route(OqtWebApiConstants.ApiRootNoLanguage + $"/{AreaRoutes.Admin}")]
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
-[Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
+[Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -40,7 +41,7 @@ public class TypeController() : OqtStatefulControllerBase(RealController.LogSuff
     [HttpGet]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public IDictionary<string, string> Scopes(int appId) => Real.Scopes(appId);
+    public ScopesDto Scopes(int appId) => Real.Scopes(appId);
 
 
     [HttpGet]

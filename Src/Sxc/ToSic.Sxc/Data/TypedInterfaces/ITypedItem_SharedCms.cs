@@ -106,7 +106,6 @@ partial interface ITypedItem
     /// </returns>
     /// <remarks>
     /// * Added to ITypedItem in v16.03
-    /// * We have this `Picture` method but no `Img` method, as we don't recommended that in responsive HTML5
     /// * `imgAttributes`, `picClass` and `picAttributes` added in 16.07
     /// </remarks>
     IResponsivePicture Picture(
@@ -123,6 +122,71 @@ partial interface ITypedItem
         object pictureAttributes = default,
         object toolbar = default,
         object recipe = default
+    );
+
+    /// <summary>
+    /// Get a Responsive Picture object which you can then either just show, or use to construct a more customized output as you need it.
+    /// 
+    /// The resulting object can just be added to the html, like `@pic` or you can work with sub-properties as specified in the <see cref="IResponsivePicture"/>.
+    /// 
+    /// **Important:** This call only allows you to set the most common parameters `factor` and `width`.
+    /// For other parameters like `height`, `aspectRatio`, `quality` etc. create typed Settings <see cref="IImageService.Settings"/> and pass them in.
+    ///
+    /// > [!NOTE]
+    /// > This is the similar as using the <see cref="IImageService.Picture"/> just a bit simpler.
+    /// >
+    /// > An important difference is that it returns `null` if the field does not exist or is empty, allowing you to just show nothing or use `...Picture(...) ?? someFallback;`
+    /// </summary>
+    /// <param name="name">Name of a field</param>
+    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="settings">
+    /// - The name of a settings configuration, like "Content", "Screen", "Square", etc.
+    /// - A standardized Image-Settings object like Settings.Child("Images.Content") - see https://go.2sxc.org/settings
+    /// - A dynamic object containing settings properties (this can also be a merged custom + standard settings)
+    /// - A strictly typed <see cref="IResizeSettings"/> object containing all settings created using <see cref="ToSic.Sxc.Services.IImageService.Settings">ResizeSettings</see> 
+    /// </param>
+    /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
+    /// <param name="width">An optional, fixed width of the image</param>
+    /// <param name="imgAlt">
+    /// Optional `alt` attribute on the created `img` tag for SEO etc.
+    /// If supplied, it takes precedence to the alt-description in the image metadata which the editor added themselves.
+    /// If you want to provide a fallback value (in case the metadata has no alt), use `imgAltFallback`
+    /// </param>
+    /// <param name="imgAltFallback">
+    /// Optional `alt` attribute which is only used if the `imgAlt` or the alt-text in the metadata are empty.
+    /// </param>
+    /// <param name="imgClass">Optional `class` attribute on the created `img` tag</param>
+    /// <param name="toolbar">Provide a custom toolbar or `false` to not show a toolbar</param>
+    /// <param name="imgAttributes">Optional additional attributes - as anonymous object eg `new { style = "padding: 10px" }` or Dictionary (new 16.07)</param>
+    /// <param name="recipe">
+    /// Optional recipe = instructions how to create the various variants of this link.
+    /// Can be any one of these:
+    /// 
+    /// - string containing variants
+    /// - Rule object
+    /// 
+    /// TODO: DOCS not quite ready
+    /// </param>
+    /// <returns>
+    /// * A <see cref="IResponsivePicture"/> object which can be rendered directly. See [](xref:NetCode.Images.Index)
+    /// * If the field does not exist, it will return `null`
+    /// * If the field exists, but is empty, it will return `null`
+    /// </returns>
+    /// <remarks>
+    /// * Added to ITypedItem in v17.04 (previously only Picture was available)
+    /// </remarks>
+    IResponsiveImage Img(
+        string name,
+        NoParamOrder noParamOrder,
+        object settings,
+        object factor,
+        object width,
+        string imgAlt,
+        string imgAltFallback,
+        string imgClass,
+        object imgAttributes,
+        object toolbar,
+        object recipe
     );
 
     /// <summary>
