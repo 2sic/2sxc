@@ -12,12 +12,13 @@ namespace ToSic.Sxc.Blocks.Internal;
 /// 4. which in turn requires the context - so it would loop and die
 ///
 /// TODO: 2024-03-11 2DM - NOT SURE IF THIS IS STILL RELEVANT!
+/// Refactored it to simplify, because of issue https://github.com/2sic/2sxc/issues/3299
+/// If all ok ca. 2024-06, should be fixed, so it doesn't need this helper, since the block always has the context
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class BlockWithContextProvider(IContextOfBlock contextOfBlock, IBlock blockMaybeNull)
 {
     public IContextOfBlock ContextOfBlock => contextOfBlock;
-    public IBlock LoadBlock() => _blockGetOnce.Get(() => blockMaybeNull);
-    private readonly GetOnce<IBlock> _blockGetOnce = new();
+    public IBlock LoadBlock() => blockMaybeNull;
 
 }
