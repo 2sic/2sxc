@@ -3,7 +3,6 @@ using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
@@ -16,10 +15,22 @@ public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBase
     public static string TypeNameId = "cb27a0f2-f921-48d0-a3bc-37c0e77b1d0c";
     public static string NiceTypeName = "ImageDecorator";
 
-    //public const string FieldDescription = "Description";
-    //public const string FieldCropBehavior = "CropBehavior";
-    //public const string FieldCompass = "CropTo";
     public const string NoCrop = "none";
+    public const string ToCrop = "to";
+    public const string DefaultCropCenter = "Middle Center";
+
+    private static readonly Dictionary<string, string> ToCropNiceNames = new()
+    {
+        { "tl", "Top Left" },
+        { "tc", "Top Center" },
+        { "tr", "Top Right" },
+        { "ml", "Middle Left" },
+        { "mc", "Middle Center" },
+        { "mr", "Middle Right" },
+        { "bl", "Bottom Left" },
+        { "bc", "Bottom Center" },
+        { "br", "Bottom Right" }
+    };
 
     /// <summary>
     /// Parameter to give the UI when it should show a warning for a global file
@@ -36,6 +47,8 @@ public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBase
 
     public string CropTo => GetThis("");
 
+    internal string CropToNiceName => ToCropNiceNames.TryGetValue(CropTo, out var name) ? name : DefaultCropCenter;
+
     public string Description => GetThis("");
 
     /// <summary>
@@ -51,7 +64,7 @@ public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBase
     public (string Param, string Value) GetAnchorOrNull()
     {
         var b = CropBehavior;
-        if (b != "to") return (null, null);
+        if (b != ToCrop) return (null, null);
         var direction = CropTo;
         if(string.IsNullOrWhiteSpace(direction)) return (null, null);
         var dirLong = ResolveCompass(direction);

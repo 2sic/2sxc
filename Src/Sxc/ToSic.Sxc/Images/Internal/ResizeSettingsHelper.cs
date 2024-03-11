@@ -22,7 +22,7 @@ internal static class ResizeSettingsExtensions
         var primaryTarget = srcSetType == SrcSetType.Img ? "img" : "source";
         var targetsToTest = new[] { primaryTarget, Recipe.RuleForDefault };
 
-        var factor = DNearZero(resizeSettings.Factor) ? 1 : resizeSettings.Factor;
+        var factor = resizeSettings.FactorToUse; // DNearZero(resizeSettings.Factor) ? 1 : resizeSettings.Factor;
         var factorsToTest = useFactors
             ? [(double?)factor, null]
             : new[] { (double?)null };

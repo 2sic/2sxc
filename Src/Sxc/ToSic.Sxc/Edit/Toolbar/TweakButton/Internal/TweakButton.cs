@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Internal;
 /// Example which would fail if it's internal:
 /// - `tweak: b => b.Tooltip(Resources.LabelRegistrations).Filter("EventDate", d.EntityId))`
 /// In this case `.Filter` would fail because the tooltip comes from a dynamic object,
-/// so then the compiler will eval the resulting object and it can't be internal.
+/// so then the compiler will eval the resulting object, and it can't be internal.
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class TweakButton: ITweakButton, ITweakButtonInternal

@@ -32,8 +32,8 @@ internal class ResizeDimensionGenerator() : ServiceBase("Img.ResDim")
 
     public OneResize ResizeDimensions(ResizeSettings settings, Recipe recipe, RecipeVariant partDef = null)
     {
-        var factor = settings.Factor;
-        if (DNearZero(factor)) factor = 1; // in this case we must still calculate, and should assume factor is exactly 1
+        var factor = settings.FactorToUse;
+        // if (DNearZero(factor)) factor = 1; // in this case we must still calculate, and should assume factor is exactly 1
 
         // First width - quite complicated
         var maybeWidth = FigureOutBestWidth(settings, recipe, partDef, factor);
