@@ -3,17 +3,11 @@ using ToSic.Eav.Apps.State;
 using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Internal.Features;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
-[PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class OutputCacheManager : ServiceBase
+internal class OutputCacheManager() : ServiceBase(SxcLogName + ".OutputCacheManager")
 {
-    internal OutputCacheManager() : base(SxcLogging.SxcLogName + ".OutputCacheManager")
-    { }
-
     internal const string GlobalCacheRoot = "2sxc.Lightspeed.Module.";
 
     internal string Id(int moduleId, int pageId, int? userId, string view, string suffix, string currentCulture)

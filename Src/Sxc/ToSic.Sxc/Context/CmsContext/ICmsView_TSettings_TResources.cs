@@ -2,7 +2,16 @@
 
 namespace ToSic.Sxc.Context;
 
-[PrivateApi("WIP v17")]
+/// <summary>
+/// Special Views for strongly typed code.
+/// It supplies the Settings and Resources as strongly typed objects.
+/// </summary>
+/// <typeparam name="TSettings">Custom class for Settings</typeparam>
+/// <typeparam name="TResources">Custom class for Resources</typeparam>
+/// <remarks>
+/// New v17.03
+/// </remarks>
+[PublicApi]
 public interface ICmsView<out TSettings, out TResources> : ICmsView
     where TSettings : class, ITypedItem, ITypedItemWrapper16, new()
     where TResources : class, ITypedItem, ITypedItemWrapper16, new()

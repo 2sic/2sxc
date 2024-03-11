@@ -12,7 +12,8 @@ namespace ToSic.Sxc.Services;
 /// * It's not abstract, so that you can use it as the placeholder in cases where you don't need a real kit (like in DynamicCodeRoot generic types)
 /// </remarks>
 [PrivateApi("Hidden in v17.02, previously public, but no good reason for it.")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+// #NoEditorBrowsableBecauseOfInheritance
+// [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ServiceKit(string logName) : ServiceForDynamicCode(logName)
 {
 
@@ -26,6 +27,5 @@ public class ServiceKit(string logName) : ServiceForDynamicCode(logName)
     /// <returns></returns>
     [PrivateApi]
     protected TService GetKitService<TService>() where TService : class
-        => _CodeApiSvc?.GetService<TService>(reuse: true)
-           ?? _CodeApiSvc.GetService<TService>();
+        => _CodeApiSvc.GetService<TService>(reuse: true);
 }

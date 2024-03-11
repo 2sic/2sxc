@@ -4,6 +4,8 @@ using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Code.Internal.Generate;
 
+[PrivateApi]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class CodeGenSpecs
 {
     private const string ItemAccessorDefault = nameof(CustomItem._item);

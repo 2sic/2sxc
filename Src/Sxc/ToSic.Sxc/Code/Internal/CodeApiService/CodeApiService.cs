@@ -24,6 +24,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
 /// </summary>
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServices>, ICodeApiService, IHasPiggyBack
 {
     #region Constructor

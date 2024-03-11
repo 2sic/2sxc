@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Backend.Cms;
 
@@ -7,7 +6,7 @@ namespace ToSic.Sxc.Backend.Cms;
 /// Load additional content-type definitions which are used by pickers.
 /// This is so the UI can determine the best names for the create-new buttons.
 /// </summary>
-internal class LoadSettingsForPickerSources() : LoadSettingsProviderBase($"{SxcLogging.SxcLogName}.LdPikS"), ILoadSettingsContentTypesProvider
+internal class LoadSettingsForPickerSources() : LoadSettingsProviderBase($"{SxcLogName}.LdPikS"), ILoadSettingsContentTypesProvider
 {
     public static string[] PickerNames = ["entity-picker", "string-picker"];
     

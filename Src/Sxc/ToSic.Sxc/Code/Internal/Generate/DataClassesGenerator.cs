@@ -8,14 +8,15 @@ using ToSic.Eav.Data.Shared;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal.HotBuild;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Code.Internal.Generate;
 
 /// <summary>
 /// Experimental
 /// </summary>
-public class DataClassesGenerator(ISite site, IUser user, IAppStates appStates, IAppPathsMicroSvc appPaths) : ServiceBase(SxcLogging.SxcLogName + ".DMoGen")
+[PrivateApi]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class DataClassesGenerator(ISite site, IUser user, IAppStates appStates, IAppPathsMicroSvc appPaths) : ServiceBase(SxcLogName + ".DMoGen")
 {
     internal CodeGenSpecs Specs { get; } = new();
 

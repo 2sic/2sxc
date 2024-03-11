@@ -3,13 +3,11 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
-using ToSic.Eav.ImportExport;
 using ToSic.Eav.ImportExport.Internal;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Internal;
 using static System.IO.Path;
 
 namespace ToSic.Sxc.DataSources.Internal;
@@ -21,7 +19,7 @@ namespace ToSic.Sxc.DataSources.Internal;
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AppFilesDataSourceProvider(AppFilesDataSourceProvider.MyServices services)
-    : ServiceBase<AppFilesDataSourceProvider.MyServices>(services, $"{SxcLogging.SxcLogName}.AppFls")
+    : ServiceBase<AppFilesDataSourceProvider.MyServices>(services, $"{SxcLogName}.AppFls")
 {
     public class MyServices : MyServicesBase
     {

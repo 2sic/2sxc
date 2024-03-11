@@ -3,11 +3,8 @@ using ToSic.Eav.Apps.State;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Context.Internal;
@@ -31,7 +28,7 @@ internal class CmsContext: ServiceForDynamicCode, ICmsContext
         LazySvc<IPage> pageLazy,
         IAppStates appStates,
         LazySvc<ICmsSite> cmsSiteLazy
-    ) : base(SxcLogging.SxcLogName + ".CmsCtx")
+    ) : base(SxcLogName + ".CmsCtx")
     {
         ConnectServices(
             _initialContext = initialContext,

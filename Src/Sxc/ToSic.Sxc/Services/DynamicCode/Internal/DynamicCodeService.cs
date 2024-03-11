@@ -58,7 +58,7 @@ public partial class DynamicCodeService: ServiceBase<DynamicCodeService.MyServic
         public LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder { get; } = modAndBlockBuilder;
     }
 
-    public DynamicCodeService(MyServices services): this(services, $"{SxcLogging.SxcLogName}.DCS") { }
+    public DynamicCodeService(MyServices services): this(services, $"{SxcLogName}.DCS") { }
     protected DynamicCodeService(MyServices services, string logName): base(services, logName)
     {
         ScopedServiceProvider = services.ServiceProvider.CreateScope().ServiceProvider;

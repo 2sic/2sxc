@@ -13,7 +13,10 @@ namespace ToSic.Sxc.Images;
 [PublicApi("Still WIP")]
 public interface IResizeSettings
 {
-    [PrivateApi("new v17, not public yet")]
+    /// <summary>
+    /// Name of the original settings it was based on - can be null/empty.
+    /// </summary>
+    /// <remarks>New v17.03</remarks>
     string BasedOn { get; }
 
     /// <summary>

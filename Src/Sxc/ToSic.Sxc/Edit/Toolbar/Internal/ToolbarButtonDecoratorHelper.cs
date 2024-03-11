@@ -1,12 +1,12 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Internal;
 
-namespace ToSic.Sxc.Edit.Toolbar;
+namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
+[PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ToolbarButtonDecoratorHelper(IAppStates appStates) : ServiceBase($"{SxcLogging.SxcLogName}.TbdHlp")
+public class ToolbarButtonDecoratorHelper(IAppStates appStates) : ServiceBase($"{SxcLogName}.TbdHlp")
 {
     public IAppIdentity MainAppIdentity { get; set; }
 

@@ -13,3 +13,4 @@ global using ToSic.Lib.DI;
 global using ToSic.Lib.Logging;
 global using ToSic.Lib.Services;
 global using ToSic.Sxc.Context.Internal;
+global using static ToSic.Sxc.Internal.SxcLogging;

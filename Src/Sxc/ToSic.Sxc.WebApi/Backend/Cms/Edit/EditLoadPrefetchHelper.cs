@@ -1,29 +1,15 @@
 ﻿using ToSic.Eav.WebApi;
 using ToSic.Sxc.Backend.Adam;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Backend.Cms;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public partial class EditLoadPrefetchHelper: ServiceBase
+public partial class EditLoadPrefetchHelper(
+    Generator<HyperlinkBackend<int, int>> hyperlinkBackend,
+    Generator<IAdamTransGetItems> adamTransGetItems,
+    EntityPickerApi entityPickerBackend)
+    : ServiceBase(SxcLogName + ".Prefetch", connect: [adamTransGetItems, hyperlinkBackend, entityPickerBackend])
 {
-    private readonly EntityPickerApi _entityPickerBackend;
-    private readonly Generator<HyperlinkBackend<int, int>> _hyperlinkBackendGenerator;
-    private readonly Generator<IAdamTransGetItems> _adamTransGetItems;
-
-    public EditLoadPrefetchHelper(
-        Generator<HyperlinkBackend<int, int>> hyperlinkBackend,
-        Generator<IAdamTransGetItems> adamTransGetItems,
-        EntityPickerApi entityPickerBackend
-    ) : base(SxcLogging.SxcLogName + ".Prefetch")
-    {
-        ConnectServices(
-            _adamTransGetItems = adamTransGetItems,
-            _hyperlinkBackendGenerator = hyperlinkBackend,
-            _entityPickerBackend = entityPickerBackend
-        );
-    }
-
     public EditPrefetchDto TryToPrefectAdditionalData(int appId, EditDto editData) => Log.Func(() =>
         new EditPrefetchDto
         {
@@ -60,7 +46,7 @@ public partial class EditLoadPrefetchHelper: ServiceBase
             // stop here if nothing found, otherwise the backend will return all entities
             if (!entities.Any()) return l.Return([], "none found");
 
-            var items = _entityPickerBackend.GetForEntityPicker(appId, entities, null, allowFromAllScopes: true);
+            var items = entityPickerBackend.GetForEntityPicker(appId, entities, null, allowFromAllScopes: true);
             return l.Return(items, $"{items.Count}");
         }
         catch

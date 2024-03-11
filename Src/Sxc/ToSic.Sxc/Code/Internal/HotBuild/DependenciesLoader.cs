@@ -7,10 +7,10 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
+[PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class DependenciesLoader : ServiceBase
 {
@@ -71,7 +71,7 @@ public class DependenciesLoader : ServiceBase
     private List<Assembly> LoadDependencyAssembliesOrNull(HotBuildSpec spec, string cacheKey)
     {
         // Add to global history and add specs
-        var logSummary = _logStore.Add(SxcLogging.SxcLogAppCodeLoader, Log);
+        var logSummary = _logStore.Add(SxcLogAppCodeLoader, Log);
         logSummary.UpdateSpecs(spec.ToDictionary());
 
         // Initial message for insights-overview

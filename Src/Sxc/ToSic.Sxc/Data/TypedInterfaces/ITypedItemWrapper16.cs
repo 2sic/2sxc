@@ -18,6 +18,8 @@ public interface ITypedItemWrapper16
     ///
     /// ATM it's only used in App.Data.GetOne{T} and App.Data.GetAll{T}
     /// </summary>
+    [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     string ForContentType { get; }
 
     /// <summary>

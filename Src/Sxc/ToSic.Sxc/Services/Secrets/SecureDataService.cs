@@ -2,7 +2,6 @@
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
-using ToSic.Sxc.Internal;
 using static System.StringComparison;
 
 namespace ToSic.Sxc.Services;
@@ -18,7 +17,7 @@ namespace ToSic.Sxc.Services;
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class SecureDataService(AesCryptographyService aes)
-    : ServiceBase($"{SxcLogging.SxcLogName}.SecDtS"), ISecureDataService
+    : ServiceBase($"{SxcLogName}.SecDtS"), ISecureDataService
 {
     public readonly AesCryptographyService Aes = aes;
 

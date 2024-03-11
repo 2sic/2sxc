@@ -5,7 +5,6 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
@@ -41,7 +40,7 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
         }
     }
 
-    protected AdamDataSourceProvider(MyServices services) : base(services, $"{SxcLogging.SxcLogName}.AdamDs")
+    protected AdamDataSourceProvider(MyServices services) : base(services, $"{SxcLogName}.AdamDs")
     {
         _services = services;
     }

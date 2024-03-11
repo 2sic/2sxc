@@ -11,6 +11,10 @@ namespace ToSic.Sxc.Code;
 ///
 /// It will usually be provided on a protected `Customize` property on RazorTyped etc.
 /// </summary>
+/// <remarks>
+/// New v17.03 (BETA!)
+/// </remarks>
+[PublicApi]
 public interface ICodeCustomizer
 {
     /// <summary>
@@ -31,12 +35,26 @@ public interface ICodeCustomizer
         where TSettings : class, ITypedItem, ITypedItemWrapper16, new()
         where TResources : class, ITypedItem, ITypedItemWrapper16, new();
 
+    /// <summary>
+    /// Create (and cache for reuse) a strongly typed Item instance for the MyItem object.
+    /// </summary>
+    /// <typeparam name="TCustomType">Type to use for MyItem.</typeparam>
+    /// <returns></returns>
     public TCustomType MyItem<TCustomType>()
         where TCustomType : class, ITypedItem, ITypedItemWrapper16, new();
 
+    /// <summary>
+    /// Create (and cache for reuse) a strongly typed Items instance for the MyItems object.
+    /// </summary>
+    /// <typeparam name="TCustomType">Type to use for MyItems.</typeparam>
+    /// <returns></returns>
     public IEnumerable<TCustomType> MyItems<TCustomType>()
         where TCustomType : class, ITypedItem, ITypedItemWrapper16, new();
 
+    /// <summary>
+    /// Create (and cache for reuse) a strongly typed Header instance for the MyHeader object.
+    /// </summary>
+    /// <typeparam name="TCustomType">Type to use for MyHeader.</typeparam>
     TCustomType MyHeader<TCustomType>()
         where TCustomType : class, ITypedItem, ITypedItemWrapper16, new();
 }

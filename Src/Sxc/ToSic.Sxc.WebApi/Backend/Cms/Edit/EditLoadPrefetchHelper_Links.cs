@@ -46,7 +46,7 @@ partial class EditLoadPrefetchHelper
     {
         try
         {
-            var hlnkBackend = _hyperlinkBackend.Get(() => _hyperlinkBackendGenerator.New());
+            var hlnkBackend = _hyperlinkBackend.Get(() => hyperlinkBackend.New());
             var result = hlnkBackend.LookupHyperlink(appId, value, contentType, entityGuid, field);
             return result;
         }

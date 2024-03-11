@@ -1,8 +1,6 @@
 ﻿using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Engines;
 
@@ -10,7 +8,7 @@ namespace ToSic.Sxc.Engines;
 public class EngineFactory: ServiceBase
 {
 
-    public EngineFactory(Generator<IRazorEngine> razorEngineGen, Generator<TokenEngine> tokenEngineGen): base($"{SxcLogging.SxcLogName}.EngFct")
+    public EngineFactory(Generator<IRazorEngine> razorEngineGen, Generator<TokenEngine> tokenEngineGen): base($"{SxcLogName}.EngFct")
     {
         ConnectServices(
             _razorEngineGen = razorEngineGen,

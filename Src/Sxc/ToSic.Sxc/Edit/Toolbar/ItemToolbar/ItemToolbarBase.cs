@@ -1,9 +1,8 @@
 ﻿using ToSic.Lib.Services;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-internal abstract class ItemToolbarBase(string logName) : ServiceBase($"{SxcLogging.SxcLogName}.{logName}")
+internal abstract class ItemToolbarBase(string logName) : ServiceBase($"{SxcLogName}.{logName}")
 {
     public const string ToolbarAttributeName = "sxc-toolbar";
     public const string JsonToolbarNodeName = "toolbar";

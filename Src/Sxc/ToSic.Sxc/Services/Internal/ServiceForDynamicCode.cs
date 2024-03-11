@@ -10,11 +10,9 @@ namespace ToSic.Sxc.Services.Internal;
 // #NoEditorBrowsableBecauseOfInheritance
 //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 [method: PrivateApi]
-public abstract class ServiceForDynamicCode(string logName)
-    : ServiceBase(logName), INeedsCodeApiService, IHasCodeApiService, ICanDebug
+public abstract class ServiceForDynamicCode(string logName, NoParamOrder protect = default, object[] connect = default)
+    : ServiceBase(logName, connect: connect), INeedsCodeApiService, IHasCodeApiService, ICanDebug
 {
-    protected ServiceForDynamicCode(string logName, NoParamOrder protect = default, object[] connect = default) : this(logName) { }
-
     /// <summary>
     /// Connect to CodeRoot and it's log
     /// </summary>

@@ -3,7 +3,6 @@ using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Serialization.Internal;
-using ToSic.Sxc.Internal;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.Backend.Cms;
@@ -14,7 +13,7 @@ public class EditLoadSettingsHelper(
     IEnumerable<ILoadSettingsProvider> loadSettingsProviders,
     IEnumerable<ILoadSettingsContentTypesProvider> loadSettingsTypesProviders,
     GenWorkPlus<WorkEntities> appEntities)
-    : ServiceBase(SxcLogging.SxcLogName + ".LodSet",
+    : ServiceBase(SxcLogName + ".LodSet",
         connect: [jsonSerializerGenerator, loadSettingsProviders, appEntities])
 {
     /// <summary>
