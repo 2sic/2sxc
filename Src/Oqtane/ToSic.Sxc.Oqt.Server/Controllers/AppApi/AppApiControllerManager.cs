@@ -56,10 +56,11 @@ internal class AppApiControllerManager: IHasLog
 
         var apiFile = (string)values["apiFile"];
         var dllName = (string)values["dllName"];
+        var appFolder = (string)values["appFolder"];
 
-        // If we have a key (that controller is compiled and registered, but not updated) controller was prepared before, so just return values.
-        // Alternatively remove older version of AppApi controller (if we got updated flag from file system watcher).
-        if (_compiledAppApiControllers.TryGetValue(apiFile, out var updated))
+    // If we have a key (that controller is compiled and registered, but not updated) controller was prepared before, so just return values.
+    // Alternatively remove older version of AppApi controller (if we got updated flag from file system watcher).
+    if (_compiledAppApiControllers.TryGetValue(apiFile, out var updated))
         {
             Log.A($"_compiledAppApiControllers have value: {updated} for: {apiFile}.");
             if (updated)
@@ -83,7 +84,7 @@ internal class AppApiControllerManager: IHasLog
             throw new IOException($"Error, missing AppApi code in file {Path.GetFileName(apiFile)}.");
 
         // Prepare / Get App State, while possibly also initializing the App...
-        var appState = _ctxResolver.SetAppOrGetBlock("")?.AppState;
+        var appState = _ctxResolver.SetAppOrGetBlock(appFolder)?.AppState;
 
         // Figure out the current edition
         var block = _ctxResolver.BlockOrNull();
