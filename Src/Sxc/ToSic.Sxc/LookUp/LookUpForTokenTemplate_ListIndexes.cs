@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.LookUp;
 
-public partial class LookUpForTokenTemplate
+partial class LookUpForTokenTemplate
 {
     public const string TokenRepeater = "Repeater";
 

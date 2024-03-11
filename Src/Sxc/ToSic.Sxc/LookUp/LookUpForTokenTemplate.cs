@@ -2,6 +2,9 @@
 using System.Text.RegularExpressions;
 using ToSic.Eav.Context;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.LookUp;
@@ -20,9 +23,10 @@ namespace ToSic.Sxc.LookUp;
 [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 [method: PrivateApi]
-public partial class LookUpForTokenTemplate(
+internal partial class LookUpForTokenTemplate(
     string name,
-    IDynamicEntity entity,
+    IDynamicEntity dynEntity,
+    ICodeApiService codeApiService,
     int repeaterIndex = -1,
     int repeaterTotal = -1)
     : ILookUp
@@ -32,79 +36,63 @@ public partial class LookUpForTokenTemplate(
     /// <summary>
     /// Get Property out of NameValueCollection
     /// </summary>
-    /// <param name="strPropertyName"></param>
+    /// <param name="key"></param>
     /// <param name="strFormat"></param>
     /// <returns></returns>
-    private string GetProperty(string strPropertyName, string strFormat)
+    private string GetProperty(string key, string strFormat)
     {
-        // Return empty string if Entity is null
-        if (entity == null)
-            return string.Empty;
+        // Create Toolbar if requested, even if dynEntity is null
+        if (key == ViewConstants.FieldToolbar)
+            return new Edit.Toolbar.ItemToolbar(dynEntity?.Entity).ToolbarAsTag;
 
-        var outputFormat = strFormat == string.Empty ? "g" : strFormat;
+        // Return empty string if Entity is null
+        if (dynEntity == null || key.IsEmptyOrWs())
+            return "";
+
+        // If we have a delimiter in the key, then we must check for sub-properties
+        if (key.Contains(':'))
+            return TryGetSubProperty(key);
 
         // If it's a repeater token for list index or something, get that first (or null)
         // Otherwise just get the normal value
-        var valueObject = ResolveRepeaterTokens(strPropertyName) 
-                          ?? entity.Get(strPropertyName);
+        var valueObject = ResolveRepeaterTokens(key) 
+                          ?? dynEntity.Get(key);
 
-        if (valueObject != null)
+        return valueObject switch
         {
-            switch (Type.GetTypeCode(valueObject.GetType()))
-            {
-                case TypeCode.String:
-                    return LookUpBase.FormatString((string)valueObject, strFormat);
-                case TypeCode.Boolean:
-                    // #BreakingChange v11.11 - possible breaking change
-                    // previously it converted true/false to language specific values
-                    // but only in token templates (and previously also app-settings) which causes
-                    // the use to have to be language aware - very complex
-                    // I'm pretty sure this won't affect anybody
-                    // old: ((bool)valueObject).ToString(formatProvider).ToLowerInvariant();
-                    return LookUpBase.Format((bool) valueObject) ;
-                case TypeCode.DateTime:
-                case TypeCode.Double:
-                case TypeCode.Single:
-                case TypeCode.Int16:
-                case TypeCode.Int32:
-                case TypeCode.Int64:
-                case TypeCode.Decimal:
-                    return ((IFormattable)valueObject).ToString(outputFormat, GetCultureInfo());
-                default:
-                    return LookUpBase.FormatString(valueObject.ToString(), strFormat);
-            }
-        }
+            null => string.Empty,
+            string str => LookUpBase.FormatString(str, strFormat),
+            bool b => LookUpBase.Format(b),
+            DateTime or double or float or short or int or long or decimal =>
+                ((IFormattable)valueObject).ToString(strFormat.NullIfNoValue() ?? "g", GetCultureInfo()),
+            _ => (string)LookUpBase.FormatString(valueObject.ToString(), strFormat),
+        };
+    }
 
-        #region Check for Navigation-Property (e.g. Manager:Name)
-
-        if (!strPropertyName.Contains(':')) return string.Empty;
-
+    private string TryGetSubProperty(string strPropertyName)
+    {
+        // dynamic valueObject;
         var propertyMatch = Regex.Match(strPropertyName, "([a-z]+):([a-z]+)", RegexOptions.IgnoreCase);
-        if (!propertyMatch.Success) return string.Empty;
+        if (!propertyMatch.Success) return "";
 
-        valueObject = entity.Get(propertyMatch.Groups[1].Value);
-        if (valueObject == null) return string.Empty;
+        var subSource = propertyMatch.Groups[1].Value;
+        var subProp = propertyMatch.Groups[2].Value;
 
-        #region Handle Entity-Field (List of DynamicEntity)
-        var list = valueObject as List<IDynamicEntity>;
+        // Find the sub-object on the Presentation item
+        var subEntity = subSource.EqualsInsensitive(ViewParts.Presentation)
+            ? dynEntity.Presentation as IDynamicEntity
+            : dynEntity.Get(subSource) as IDynamicEntity;
 
-        var entity1 = list?.FirstOrDefault() ?? valueObject as IDynamicEntity;
+        if (subEntity == null) return "";
 
-        if (entity1 != null)
-            return new LookUpForTokenTemplate(null, entity1).GetProperty(propertyMatch.Groups[2].Value, string.Empty);
+        var subLookup = new LookUpForTokenTemplate(null, subEntity, codeApiService);
 
-        #endregion
-
-        return string.Empty;
-        #endregion
-
+        return subLookup.GetProperty(subProp, "") ?? "";
     }
 
 
-    private CultureInfo GetCultureInfo() => IZoneCultureResolverExtensions.SafeCultureInfo(entity?.Cdf.Dimensions);
+    private CultureInfo GetCultureInfo() => IZoneCultureResolverExtensions.SafeCultureInfo(codeApiService.Cdf.Dimensions);
 
-    [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public string Get(string key, string strFormat) => GetProperty(key, strFormat);
 
     /// <inheritdoc/>
