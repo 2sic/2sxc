@@ -136,7 +136,7 @@ public class ContentGroupControllerReal: ServiceBase, IContentGroupController
         {
             var entity = Context.AppState.GetDraftOrPublished(guid);
             var sequence = list.Select(i => i.Index).ToArray();
-            var fields = part == ViewParts.ContentLower ? ViewParts.ContentPair : new[] {part};
+            var fields = part == ViewParts.ContentLower ? ViewParts.ContentPair : [part];
             _workFieldList.New(Context.AppState).FieldListReorder(entity, fields, sequence, Context.Publishing.ForceDraft);
         });
 

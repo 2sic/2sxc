@@ -102,7 +102,7 @@ public class InstallControllerReal : ServiceBase
         if (!_featureService.Value.IsEnabled(BuiltInFeatures.AppAutoInstallerConfigurable.NameId))
         {
             Log.A("will not add installer rules as the feature is not enabled");
-            rulesFinal = new();
+            rulesFinal = [];
         }
 
         return new()

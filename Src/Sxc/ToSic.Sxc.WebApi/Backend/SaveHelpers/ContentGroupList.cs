@@ -71,7 +71,7 @@ public class ContentGroupList: ServiceBase
             var primaryId = GetIdFromGuidOrError(postSaveIds, primaryItem.Entity.EntityGuid);
 
             var ids = targetIsContentBlock
-                ? new[] {primaryId, FindPresentationItem(postSaveIds, bundle)}
+                ? [primaryId, FindPresentationItem(postSaveIds, bundle)]
                 : new[] {primaryId as int?};
 
             var index = primaryItem.Header.IndexSafeOrFallback();
@@ -84,7 +84,7 @@ public class ContentGroupList: ServiceBase
 
             var fieldPair = targetIsContentBlock
                 ? ViewParts.PickFieldPair(primaryItem.Header.Field)
-                : new[] {primaryItem.Header.Field};
+                : [primaryItem.Header.Field];
 
             var fieldList = _workFieldList.New(AppCtx.AppState);
             if (willAdd) // this cannot be auto-detected, it must be specified

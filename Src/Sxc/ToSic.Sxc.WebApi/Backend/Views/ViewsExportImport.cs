@@ -84,7 +84,7 @@ public class ViewsExportImport : ServiceBase
         var appPaths = _appPathSvc.Init(_site, app);
 
         // Attach files
-        var view = new View(bundle.Entity, new[] { _site.CurrentCultureCode }, Log, _qDefBuilder);
+        var view = new View(bundle.Entity, [_site.CurrentCultureCode], Log, _qDefBuilder);
 
         if (!string.IsNullOrEmpty(view.Path))
         {

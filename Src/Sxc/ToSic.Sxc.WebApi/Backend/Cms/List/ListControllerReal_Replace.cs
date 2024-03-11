@@ -27,12 +27,12 @@ partial class ListControllerReal
             var forceDraft = Context.Publishing.ForceDraft;
             if (add)
             {
-                var fields = isContentPair ? ViewParts.ContentPair : new[] { part };
-                var values = isContentPair ? new int?[] { entityId, null } : new int?[] { entityId };
+                var fields = isContentPair ? ViewParts.ContentPair : [part];
+                var values = isContentPair ? [entityId, null] : new int?[] { entityId };
                 fList.FieldListAdd(entity, fields, index, values, forceDraft, false);
             }
             else
-                fList.FieldListReplaceIfModified(entity, new[] { part }, index, new int?[] { entityId },
+                fList.FieldListReplaceIfModified(entity, [part], index, [entityId],
                     forceDraft);
         }
 

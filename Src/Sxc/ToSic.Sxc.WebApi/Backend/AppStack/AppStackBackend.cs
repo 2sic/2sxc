@@ -47,7 +47,7 @@ public class AppStackBackend: ServiceBase
 
         results = SystemStackHelpers.ApplyKeysFilter(results, key);
         if (!results.Any())
-            return new();
+            return [];
 
         var final = SystemStackHelpers.ReducePropertiesToRelevantOnes(results);
 

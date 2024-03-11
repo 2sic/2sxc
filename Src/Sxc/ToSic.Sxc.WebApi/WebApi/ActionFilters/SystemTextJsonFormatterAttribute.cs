@@ -116,10 +116,10 @@ public class SystemTextJsonBodyModelBinder(
         ObjectPoolProvider objectPoolProvider,
         IOptions<MvcOptions> mvcOptions)
     {
-        return new IInputFormatter[]
-        {
+        return
+        [
             new SystemTextJsonInputFormatter(SxcJsonOptions, loggerFactory.CreateLogger<SystemTextJsonInputFormatter>())
-        };
+        ];
     }
 
     public static Microsoft.AspNetCore.Mvc.JsonOptions SxcJsonOptions
