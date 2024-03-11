@@ -22,7 +22,7 @@ partial class ListControllerReal
             // Make sure we have the correct casing for the field names
             part = entity.Type[part].Name;
 
-            var fList = _workFieldList.New(Context.AppState);
+            var fList = workFieldList.New(Context.AppState);
 
             var forceDraft = Context.Publishing.ForceDraft;
             if (add)
@@ -37,7 +37,7 @@ partial class ListControllerReal
         }
 
         // use dnn versioning - this is always part of page
-        _publishing.New().DoInsidePublishing(Context, InternalSave);
+        publishing.New().DoInsidePublishing(Context, InternalSave);
         l.Done();
     }
 
@@ -56,7 +56,7 @@ partial class ListControllerReal
 
         var ct = Context.AppState.GetContentType(typeName);
 
-        var listTemp = _workEntities.New(Context.AppState).Get(typeName).ToList();
+        var listTemp = workEntities.New(Context.AppState).Get(typeName).ToList();
 
         var results = listTemp.Select(Context.AppState.GetDraftOrKeep).ToDictionary(
             p => p.EntityId,
