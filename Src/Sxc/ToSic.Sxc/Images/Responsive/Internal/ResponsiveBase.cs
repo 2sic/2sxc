@@ -152,7 +152,7 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         imgTlb = imgTlb?.Metadata(Params.HasMetadataOrNull,
             tweak: btn =>
             {
-                // add label
+                // add label eg "Image Settings and Cropping" - i18n
                 btn = btn.Tooltip($"{ToolbarConstants.ToolbarLabelPrefix}MetadataImage");
 
                 // Try to add note
