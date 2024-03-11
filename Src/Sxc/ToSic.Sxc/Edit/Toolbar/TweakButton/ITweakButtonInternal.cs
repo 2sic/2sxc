@@ -14,4 +14,10 @@ internal interface ITweakButtonInternal
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     IImmutableList<object> ParamsMerge { get; }
+
+    /// <summary>
+    /// Named tweaks for situations where the tweak may be needed for multiple buttons,
+    /// each with a different tweak.
+    /// </summary>
+    public IImmutableDictionary<string, Func<ITweakButton, ITweakButton>> Named { get; }
 }

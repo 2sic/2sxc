@@ -14,8 +14,12 @@ partial class ToolbarBuilder
         public string Ui;
         public string Parameters;
     }
+    private class CleanedParamsWithParts: CleanedParams
+    {
+        public Dictionary<string, CleanedParams> Parts;
+    }
 
-    private CleanedParams PreCleanParams(
+    private CleanedParamsWithParts PreCleanParams(
         Func<ITweakButton, ITweakButton> tweak,
         ToolbarRuleOps defOp, 
         NoParamOrder noParamOrder = default,
@@ -37,11 +41,21 @@ partial class ToolbarBuilder
         var parsWithPrefill = Utils.Prefill2Url.SerializeWithChild(paramsString, prefill, PrefixPrefill);
         if (fields != default)
             parsWithPrefill = Utils.Filter2Url.SerializeWithChild(parsWithPrefill, new { fields });
+
+        var namedParts = tweaks is ITweakButtonInternal tweakInternal && tweakInternal.Named.Any()
+            ? tweakInternal.Named
+                .ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => PreCleanParams(tweak: kvp.Value, defOp: OprNone) as CleanedParams
+                )
+            : null;
+
         return new()
         {
             Operation = ToolbarRuleOperation.Pick(operation, defOp),
             Ui = PrepareUi(ui, uiMerge, uiMergePrefix, tweaks: (tweaks as ITweakButtonInternal)?.UiMerge),
-            Parameters = Utils.Filter2Url.SerializeWithChild(parsWithPrefill, filter, PrefixFilters)
+            Parameters = Utils.Filter2Url.SerializeWithChild(parsWithPrefill, filter, PrefixFilters),
+            Parts = namedParts
         };
 
     }
@@ -139,8 +153,9 @@ partial class ToolbarBuilder
         object parameters = null,
         object prefill = null,
         string operation = null,
-        string context = null) => Log.Func(() =>
+        string context = null)
     {
+        var l = Log.Fn<IToolbarBuilder>();
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
 
         // Note: DO NOT check the target, as here an IAsset is absolutely valid
@@ -148,19 +163,25 @@ partial class ToolbarBuilder
 
         var finalTypes = GetMetadataTypeNames(target, contentTypes);
         var realContext = GenerateContext(target, context);
-        var builder = this as IToolbarBuilder;
 
-
-        var mdsToAdd = finalTypes
-            .Select(type => new ToolbarRuleMetadata(target, type,
-                operation: pars.Operation,
-                ui: pars.Ui,
-                parameters: pars.Parameters,
+        var mdsToAdd = finalTypes.Select(type =>
+        {
+            var parsForThis = pars.Parts?.TryGetValue(type, out var p) == true ? p : pars;
+            
+            return new ToolbarRuleMetadata(
+                target,
+                type,
+                operation: parsForThis.Operation,
+                ui: parsForThis.Ui,
+                parameters: parsForThis.Parameters,
                 context: realContext,
-                decoHelper: Services.ToolbarButtonHelper.Value));
+                decoHelper: Services.ToolbarButtonHelper.Value
+            );
+        });
 
-        return (builder.AddInternal(mdsToAdd.Cast<object>().ToArray()));
-    });
+        var builder = this as IToolbarBuilder;
+        return l.ReturnAsOk(builder.AddInternal(mdsToAdd.Cast<object>().ToArray()));
+    }
 
     /// <inheritdoc />
     public IToolbarBuilder Copy(
