@@ -64,7 +64,7 @@ public class DataClassesGenerator(ISite site, IUser user, IAppStates appStates, 
         foreach (var classSb in classFiles)
         {
             sb.AppendLine($"// ----------------------- file: {classSb.FileName} ----------------------- ");
-            sb.AppendLine(classSb.FileContents);
+            sb.AppendLine(classSb.Body);
             sb.AppendLine();
             sb.AppendLine();
         }
@@ -74,19 +74,30 @@ public class DataClassesGenerator(ISite site, IUser user, IAppStates appStates, 
 
     public void GenerateAndSaveFiles()
     {
-        var logCall = Log.Fn();
+        var l = Log.Fn();
 
         var physicalPath = GetAppCodeDataPhysicalPath();
-        logCall.A($"{nameof(physicalPath)}: '{physicalPath}'");
+        l.A($"{nameof(physicalPath)}: '{physicalPath}'");
 
         var classFiles = DataFiles();
         foreach (var classSb in classFiles)
         {
-            logCall.A($"Writing {classSb.FileName}; Content: {classSb.FileContents.Length}");
-            File.WriteAllText(Path.Combine(physicalPath, classSb.FileName), classSb.FileContents);
+            l.A($"Writing {classSb.FileName}; Path: {classSb.Path}; Content: {classSb.Body.Length}");
+
+            var addPath = classSb.Path ?? "";
+            if (addPath.StartsWith("/") || addPath.StartsWith("\\") || addPath.EndsWith("/") || addPath.EndsWith("\\") || addPath.Contains(".."))
+                throw new($"Invalid path '{addPath}' in class '{classSb.FileName}' - contains invalid path like '..' or starts/ends with a slash.");
+
+            var basePath = Path.Combine(physicalPath, classSb.Path);
+            
+            // ensure the folder for the file exists - it could be different for each file
+            Directory.CreateDirectory(basePath);
+
+            var fullPath = Path.Combine(basePath, classSb.FileName);
+            File.WriteAllText(fullPath, classSb.Body);
         }
 
-        logCall.Done();
+        l.Done();
     }
 
     private string GetAppFullPath() => appPaths.Init(site, AppState).PhysicalPath;
@@ -99,13 +110,10 @@ public class DataClassesGenerator(ISite site, IUser user, IAppStates appStates, 
         // TODO: sanitize path because 'edition' is user provided
         var appWithEditionNormalized = new DirectoryInfo(appWithEdition).FullName;
        
-        if (!Directory.Exists(appWithEditionNormalized)) throw new DirectoryNotFoundException(appWithEditionNormalized);
+        if (!Directory.Exists(appWithEditionNormalized))
+            throw new DirectoryNotFoundException(appWithEditionNormalized);
 
-        var physicalPath = Path.Combine(appWithEditionNormalized, AppCodeLoader.AppCodeBase, "Data");
-
-        // ensure the folder exists
-        Directory.CreateDirectory(physicalPath);
-
+        var physicalPath = Path.Combine(appWithEditionNormalized, AppCodeLoader.AppCodeBase);
         return physicalPath;
     }
 

@@ -3,12 +3,13 @@
 /// <summary>
 /// Object which contains the info to generate the class code file.
 /// </summary>
-internal class CodeFileRaw(string typeName, string body, string introComment)
+internal class CodeFileRaw(string typeName, string body, string introComment): ICodeFile
 {
-    /// <summary>
-    /// The file name to store into.
-    /// </summary>
+    /// <inheritdoc />
     public string FileName { get; } = typeName + ".cs";
+
+    /// <inheritdoc />
+    public string Path { get; set; } = "Data";
 
     /// <summary>
     /// The main code body of the class.
@@ -22,5 +23,6 @@ internal class CodeFileRaw(string typeName, string body, string introComment)
     /// </summary>
     public string IntroComment { get; } = introComment;
 
-    public string FileContents => IntroComment + BodyWithoutIntro;
+    /// <inheritdoc />
+    public string Body => IntroComment + BodyWithoutIntro;
 }
