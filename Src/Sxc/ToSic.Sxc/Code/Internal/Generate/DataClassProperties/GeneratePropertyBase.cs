@@ -3,14 +3,15 @@ using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Code.Internal.Generate;
 
-internal abstract class GeneratePropertyBase
+internal abstract class GeneratePropertyBase(CodeGenHelper helper)
 {
+    protected CodeGenSpecs Specs = helper.Specs;
+
+    protected CodeGenHelper CodeGenHelper = helper;
+
     public abstract ValueTypes ForDataType { get; }
 
-    protected CodeGenHelper CodeGenHelper => _codeGenHelper ??= new(new());
-    private CodeGenHelper _codeGenHelper;
-
-    public abstract List<CodeFragment> Generate(CodeGenSpecs specs, IContentTypeAttribute attribute, int tabs);
+    public abstract List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs);
 
     protected CodeFragment GenPropSnip(int tabs, string returnType, string name, string method,
         NoParamOrder protector = default,
@@ -43,6 +44,28 @@ internal abstract class GeneratePropertyBase
             usings: usings
         );
     }
+
+    private string GenProp(int tabs, string returnType, string name, string sourceName, string method, string parameters, bool cache, bool isOverride)
+    {
+        if (parameters.HasValue())
+            parameters = ", " + parameters;
+
+        var indent = CodeGenHelper.Indent(tabs);
+
+        var cacheVarName = $"_{char.ToLower(name[0])}{name.Substring(1)}";
+        var cacheResult = cache ? $"{cacheVarName} ??= " : "";
+
+        var newPrefix = isOverride ? "new " : "";
+
+        var mainCode = $"{indent}public {newPrefix}{returnType} {name} => {cacheResult}{method}(\"{sourceName}\"{parameters});";
+
+        var cacheCode = cache
+            ? $"\n{indent}private {returnType} {cacheVarName};"
+            : null;
+
+        return mainCode + cacheCode;
+    }
+
 
     /// <summary>
     /// These names exist in the base class, so we need to override them with `new`.
@@ -100,24 +123,4 @@ internal abstract class GeneratePropertyBase
         nameof(ITypedItem.Keys),
     ];
 
-    private string GenProp(int tabs, string returnType, string name, string sourceName, string method, string parameters, bool cache, bool isOverride)
-    {
-        if (parameters.HasValue())
-            parameters = ", " + parameters;
-
-        var indent = CodeGenHelper.Indent(tabs);
-
-        var cacheVarName = $"_{char.ToLower(name[0])}{name.Substring(1)}";
-        var cacheResult = cache ? $"{cacheVarName} ??= " : "";
-
-        var newPrefix = isOverride ? "new " : "";
-
-        var mainCode = $"{indent}public {newPrefix}{returnType} {name} => {cacheResult}{method}(\"{sourceName}\"{parameters});";
-
-        var cacheCode = cache
-            ? $"\n{indent}private {returnType} {cacheVarName};"
-            : null;
-
-        return mainCode + cacheCode;
-    }
 }

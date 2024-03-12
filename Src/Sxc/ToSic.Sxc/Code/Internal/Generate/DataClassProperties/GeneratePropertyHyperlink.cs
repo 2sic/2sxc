@@ -1,25 +1,25 @@
 ﻿namespace ToSic.Sxc.Code.Internal.Generate;
 
-internal class GeneratePropertyHyperlink: GeneratePropertyBase
+internal class GeneratePropertyHyperlink(CodeGenHelper helper) : GeneratePropertyBase(helper)
 {
     public override ValueTypes ForDataType => ValueTypes.Hyperlink;
 
-    public override List<CodeFragment> Generate(CodeGenSpecs specs, IContentTypeAttribute attribute, int tabs)
+    public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
     {
         var name = attribute.Name;
 
         return
         [
-            GenPropSnip(tabs, "string", name, $"{specs.ItemAccessor}.Url", summary:
+            GenPropSnip(tabs, "string", name, $"{Specs.ItemAccessor}.Url", summary:
             [
                 $"{name} as link (url). <br/>",
                 $"To get the underlying value like 'file:72' use String(\"{name}\")"
             ]),
-            GenPropSnip(tabs, "IFile", name + "File", $"{specs.ItemAccessor}.File", sourceName: name, priority: false, usings: UsingAdam, summary:
+            GenPropSnip(tabs, "IFile", name + "File", $"{Specs.ItemAccessor}.File", sourceName: name, priority: false, usings: UsingAdam, summary:
             [
                 $"Get the file object for {name} - or null if it's empty or not referencing a file."
             ]),
-            GenPropSnip(tabs, "IFolder", name + "Folder", $"{specs.ItemAccessor}.Folder", sourceName: name, priority: false, usings: UsingAdam, summary:
+            GenPropSnip(tabs, "IFolder", name + "Folder", $"{Specs.ItemAccessor}.Folder", sourceName: name, priority: false, usings: UsingAdam, summary:
             [
                 $"Get the folder object for {name}."
             ]),

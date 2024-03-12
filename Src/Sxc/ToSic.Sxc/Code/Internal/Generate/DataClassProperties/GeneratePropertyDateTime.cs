@@ -1,16 +1,16 @@
 ﻿namespace ToSic.Sxc.Code.Internal.Generate;
 
-internal class GeneratePropertyDateTime: GeneratePropertyBase
+internal class GeneratePropertyDateTime(CodeGenHelper helper) : GeneratePropertyBase(helper)
 {
     public override ValueTypes ForDataType => ValueTypes.DateTime;
 
-    public override List<CodeFragment> Generate(CodeGenSpecs specs, IContentTypeAttribute attribute, int tabs)
+    public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
     {
         var name = attribute.Name;
 
         return
         [
-            GenPropSnip(tabs, "DateTime", name, $"{specs.ItemAccessor}.DateTime", usings: UsingDateTime, summary:
+            GenPropSnip(tabs, "DateTime", name, $"{Specs.ItemAccessor}.DateTime", usings: UsingDateTime, summary:
             [
                 $"{name} as DateTime.",
             ]),

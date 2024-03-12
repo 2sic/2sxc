@@ -1,8 +1,5 @@
-﻿using System.IO;
-using System.Text;
-using ToSic.Eav;
+﻿using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data.Shared;
 using ToSic.Eav.Plumbing;
@@ -16,20 +13,33 @@ namespace ToSic.Sxc.Code.Internal.Generate;
 /// </summary>
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class DataClassesGenerator(ISite site, IUser user, IAppStates appStates, IAppPathsMicroSvc appPaths) : ServiceBase(SxcLogName + ".DMoGen")
+public class DataClassesGenerator(IUser user, IAppStates appStates)
+    : ServiceBase(SxcLogName + ".DMoGen"), IFileGenerator
 {
     internal CodeGenSpecs Specs { get; } = new();
 
     internal IUser User = user;
-    internal CodeGenHelper CodeGenHelper = new(new());
+    internal CodeGenHelper CodeGenHelper { get; private set; }
 
-    public DataClassesGenerator Setup(int appId, string edition = default)
+    #region Information for the interface
+
+    public string NameId => GetType().FullName;
+
+    public string Name => nameof(DataClassGenerator);
+
+    public string Version => SharedAssemblyInfo.AssemblyVersion;
+
+    public string Description => "Generates C# Data Classes for the AppCode/Data folder";
+
+    #endregion
+
+    public DataClassesGenerator Setup(GenerateParameters parameters)
     {
-        if (edition.HasValue())
-            Specs.Edition = edition;
+        if (parameters.Edition.HasValue())
+            Specs.Edition = parameters.Edition;
 
         // Prepare App State and add to Specs
-        var appCache = appStates.GetCacheState(appId);
+        var appCache = appStates.GetCacheState(parameters.AppId);
         AppState = appStates.ToReader(appCache);
         Specs.AppState = AppState;
         Specs.AppName = AppState.Name;
@@ -48,103 +58,29 @@ public class DataClassesGenerator(ISite site, IUser user, IAppStates appStates, 
         types.AddRange(appConfigTypes);
 
         Specs.ExportedContentContentTypes = types;
+        CodeGenHelper = new(Specs);
         return this;
     }
 
     public IAppState AppState { get; private set; }
 
-    public string Dump()
+
+    public ICodeFileBundle[] Generate()
     {
-        // TODO: @2dm
-        // - check Equals of the new objects
-        // - check serialization
-        var sb = new StringBuilder();
 
-        var classFiles = DataFiles();
-        foreach (var classSb in classFiles)
-        {
-            sb.AppendLine($"// ----------------------- file: {classSb.FileName} ----------------------- ");
-            sb.AppendLine(classSb.Body);
-            sb.AppendLine();
-            sb.AppendLine();
-        }
-
-        return sb.ToString();
-    }
-
-    public void GenerateAndSaveFiles()
-    {
-        var l = Log.Fn();
-
-        var physicalPath = GetAppCodeDataPhysicalPath();
-        l.A($"{nameof(physicalPath)}: '{physicalPath}'");
-
-        var classFiles = DataFiles();
-        foreach (var classSb in classFiles)
-        {
-            l.A($"Writing {classSb.FileName}; Path: {classSb.Path}; Content: {classSb.Body.Length}");
-
-            var addPath = classSb.Path ?? "";
-            if (addPath.StartsWith("/") || addPath.StartsWith("\\") || addPath.EndsWith("/") || addPath.EndsWith("\\") || addPath.Contains(".."))
-                throw new($"Invalid path '{addPath}' in class '{classSb.FileName}' - contains invalid path like '..' or starts/ends with a slash.");
-
-            var basePath = Path.Combine(physicalPath, classSb.Path);
-            
-            // ensure the folder for the file exists - it could be different for each file
-            Directory.CreateDirectory(basePath);
-
-            var fullPath = Path.Combine(basePath, classSb.FileName);
-            File.WriteAllText(fullPath, classSb.Body);
-        }
-
-        l.Done();
-    }
-
-    private string GetAppFullPath() => appPaths.Init(site, AppState).PhysicalPath;
-
-    private string GetAppCodeDataPhysicalPath()
-    {
-        var appFullPath = GetAppFullPath();
-        var appWithEdition = Specs.Edition.HasValue() ? Path.Combine(appFullPath, Specs.Edition) : appFullPath;
-
-        // TODO: sanitize path because 'edition' is user provided
-        var appWithEditionNormalized = new DirectoryInfo(appWithEdition).FullName;
-       
-        if (!Directory.Exists(appWithEditionNormalized))
-            throw new DirectoryNotFoundException(appWithEditionNormalized);
-
-        var physicalPath = Path.Combine(appWithEditionNormalized, AppCodeLoader.AppCodeBase);
-        return physicalPath;
-    }
-
-    internal string GetPathToDotAppJson() => Path.Combine(GetAppFullPath(), Constants.AppDataProtectedFolder, Constants.AppJson);
-
-
-    internal List<CodeFileRaw> DataFiles()
-    {
         var classFiles = Specs.ExportedContentContentTypes
             .Select(t => new DataClassGenerator(this, t, t.Name?.Replace("-", "")).PrepareFile())
             .ToList();
-        return classFiles;
-    }
 
-
-    internal CodeFragment NamespaceWrapper(string @namespace)
-    {
-        return new("namespace", $"{CodeGenHelper.Indent(Specs.TabsNamespace)}namespace {@namespace}" + "\n{", closing: "}");
-    }
-
-    internal CodeFragment ClassWrapper(string className, bool isAbstract, bool isPartial, string inherits)
-    {
-        var indent = CodeGenHelper.Indent(Specs.TabsClass);
-        var specifiers = (isAbstract ? "abstract " : "") + (isPartial ? "partial " : "");
-        inherits = inherits.NullOrGetWith(i => $": {i}");
-
-        var start = $$"""
-                      {{indent}}public {{specifiers}}class {{className}}{{inherits}}
-                      {{indent}}{
-                      """;
-        return new("class", start, closing: $"{indent}}}\n");
+        var result = new CodeFileBundle
+        {
+            Name = "C# Data Classes",
+            Description = Description,
+            Generator = $"{Name} v{Version}",
+            Path = $"{FileGenerator.AppRootFolderPlaceholder}/{FileGenerator.EditionPlaceholder}/{AppCodeLoader.AppCodeBase}",
+            Files = classFiles.Cast<ICodeFile>().ToList()
+        };
+        return [result];
     }
 
 }

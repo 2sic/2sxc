@@ -1,10 +1,10 @@
 ﻿namespace ToSic.Sxc.Code.Internal.Generate;
 
-internal class GeneratePropertyNumber: GeneratePropertyBase
+internal class GeneratePropertyNumber(CodeGenHelper helper) : GeneratePropertyBase(helper)
 {
     public override ValueTypes ForDataType => ValueTypes.Number;
 
-    public override List<CodeFragment> Generate(CodeGenSpecs specs, IContentTypeAttribute attribute, int tabs)
+    public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
     {
         var name = attribute.Name;
 
@@ -13,7 +13,7 @@ internal class GeneratePropertyNumber: GeneratePropertyBase
         return decimals == 0
             ?
             [
-                GenPropSnip(tabs, "int", name, $"{specs.ItemAccessor}.Int", summary:
+                GenPropSnip(tabs, "int", name, $"{Specs.ItemAccessor}.Int", summary:
                 [
                     $"{name} as int. <br/>",
                     $"To get other types use methods such as .Decimal(\"{name}\")"
@@ -21,7 +21,7 @@ internal class GeneratePropertyNumber: GeneratePropertyBase
             ]
             :
             [
-                GenPropSnip(tabs, "decimal", name, $"{specs.ItemAccessor}.Decimal", summary:
+                GenPropSnip(tabs, "decimal", name, $"{Specs.ItemAccessor}.Decimal", summary:
                 [
                     $"{name} as decimal. <br/>",
                     $"To get other types use methods such as .Int(\"{name}\")"

@@ -19,10 +19,10 @@ internal class DataClassGenerator(DataClassesGenerator dmg, IContentType type, s
 
         // Generate main partial class
         var autoGenClassName = $"{Specs.DataClassGeneratedPrefix}{className}{Specs.DataClassGeneratedSuffix}";
-        var mainClass = dmg.ClassWrapper(className, false, true, Specs.NamespaceAutoGen + "." + autoGenClassName);
+        var mainClass = dmg.CodeGenHelper.ClassWrapper(className, false, true, Specs.NamespaceAutoGen + "." + autoGenClassName);
 
         // Generate AutoGen class with properties
-        var classAutoGen = dmg.ClassWrapper(autoGenClassName, true, false, Specs.DataInherits);
+        var classAutoGen = dmg.CodeGenHelper.ClassWrapper(autoGenClassName, true, false, Specs.DataInherits);
         var (_, propsSb, usings, firstProperty) = ClassProperties(type.Attributes.ToList());
         var classCode = classAutoGen.ToString(propsSb);
 
@@ -37,10 +37,10 @@ internal class DataClassGenerator(DataClassesGenerator dmg, IContentType type, s
 
         var fileContents =
             dmg.CodeGenHelper.GenerateUsings(usings)
-            + dmg.NamespaceWrapper(Specs.DataNamespace)
+            + dmg.CodeGenHelper.NamespaceWrapper(Specs.DataNamespace)
                 .ToString(fullBody)
             + "\n\n"
-            + dmg.NamespaceWrapper(Specs.DataNamespaceGenerated)
+            + dmg.CodeGenHelper.NamespaceWrapper(Specs.DataNamespaceGenerated)
                 .ToString(autoGenClass);
 
         return new(className + Specs.FileGeneratedSuffix, fileContents, FileIntroComment(dmg.User.Name));
@@ -59,13 +59,13 @@ internal class DataClassGenerator(DataClassesGenerator dmg, IContentType type, s
             .Select(a => new
             {
                 Attribute = a,
-                Generators = GenDataProperties.Generators(new()).Where(p => p.ForDataType == a.Type).ToList()
+                Generators = GenDataProperties.Generators(dmg.CodeGenHelper).Where(p => p.ForDataType == a.Type).ToList()
             })
             .Where(a => a.Generators.Any())
             .SelectMany(set =>
             {
                 return set.Generators
-                    .SelectMany(p => p.Generate(Specs, set.Attribute, Specs.TabsProperty));
+                    .SelectMany(p => p.Generate(set.Attribute, Specs.TabsProperty));
             })
             .ToList();
 

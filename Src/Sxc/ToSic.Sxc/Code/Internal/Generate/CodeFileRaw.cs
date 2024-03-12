@@ -25,4 +25,7 @@ internal class CodeFileRaw(string typeName, string body, string introComment): I
 
     /// <inheritdoc />
     public string Body => IntroComment + BodyWithoutIntro;
+
+    /// <inheritdoc />
+    public IList<ICodeFileInfo> Dependencies => [];
 }

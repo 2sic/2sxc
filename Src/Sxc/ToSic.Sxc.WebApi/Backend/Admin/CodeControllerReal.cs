@@ -8,7 +8,7 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Backend.Admin;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeControllerReal(DataClassesGenerator classesGenerator, LazySvc<IJsonService> json) : ServiceBase("Api.CodeRl")
+public class CodeControllerReal(FileGenerator fileGenerator, LazySvc<IJsonService> json) : ServiceBase("Api.CodeRl")
 {
     public const string LogSuffix = "Code";
 
@@ -62,23 +62,35 @@ public class CodeControllerReal(DataClassesGenerator classesGenerator, LazySvc<I
     {
         var l = Log.Fn<RichResult>($"{nameof(appId)}:{appId};{nameof(edition)}:{edition}", timer: true);
 
-        var dataModelGenerator = classesGenerator.Setup(appId, edition);
-        dataModelGenerator.GenerateAndSaveFiles();
+        try
+        {
+            fileGenerator.GenerateAndSaveFiles(new() { AppId = appId, Edition = edition });
 
-        return l.Return(new RichResult
-            {
-                Ok = true,
-                Message = $"Data models generated in {edition}/AppCode/Data.",
-            }
-            .WithTime(l)
-        );
+            return l.Return(new RichResult
+                {
+                    Ok = true,
+                    Message = $"Data models generated in {edition}/AppCode/Data.",
+                }
+                .WithTime(l)
+            );
+        }
+        catch (Exception e)
+        {
+            return l.Return(new RichResult
+                {
+                    Ok = false,
+                    Message = $"Error generating data models in {edition}/AppCode/Data. {e.GetType().FullName} - {e.Message}",
+                }
+                .WithTime(l)
+            );
+        }
     }
 
     public EditionsDto GetEditions(int appId)
     {
         var l = Log.Fn<EditionsDto>($"{nameof(appId)}:{appId}");
 
-        var pathToDotAppJson = classesGenerator.Setup(appId).GetPathToDotAppJson();
+        var pathToDotAppJson = fileGenerator.GetPathToDotAppJson(new() { AppId = appId });
         l.A($"path to app.json: {pathToDotAppJson}");
         if (File.Exists(pathToDotAppJson))
         {

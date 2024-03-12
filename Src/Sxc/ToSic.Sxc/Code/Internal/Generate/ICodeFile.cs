@@ -6,24 +6,21 @@
 ///
 /// This is WIP - goal is to make it more standard so others could create generators too.
 /// </summary>
-public interface ICodeFile
+[PrivateApi]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public interface ICodeFile: ICodeFileInfo
 {
-    /// <summary>
-    /// The file name of the final code file, with extension.
-    /// May not contain any slashes.
-    /// </summary>
-    string FileName { get; }
-
-    /// <summary>
-    /// The path to put the file in, relative to the root which is determined elsewhere.
-    /// May not begin or end with a slash.
-    ///
-    /// Example: if path is "Data" and the root is "AppCode", the file will be saved to "AppCode\Data\FileName.cs"
-    /// </summary>
-    string Path { get; }
-
     /// <summary>
     /// The body of the file, which will be written to the file.
     /// </summary>
     string Body { get; }
+
+    /// <summary>
+    /// List of dependencies which are required to create this file.
+    ///
+    /// For example, if we generate a PersonList.cshtml which will inherit the AppRazor, then the AppRazor should be in the list.
+    ///
+    /// Note: not implemented yet - this is for later when users may want to select which files to generate.
+    /// </summary>
+    IList<ICodeFileInfo> Dependencies { get; }
 }

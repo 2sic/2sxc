@@ -2,18 +2,18 @@
 
 internal class GenDataProperties
 {
-    internal static List<GeneratePropertyBase> Generators(CodeGenSpecs specs)
+    internal static List<GeneratePropertyBase> Generators(CodeGenHelper helper)
     {
         return
         [
-            new GeneratePropertyBool(),
-            new GeneratePropertyString(),
-            new GeneratePropertyEmpty(),
-            new GeneratePropertyHyperlink(),
-            new GeneratePropertyNumber(),
-            new GeneratePropertyDateTime(),
-            new GeneratePropertyCustom(),
-            new GeneratePropertyEntity(),
+            new GeneratePropertyBool(helper),
+            new GeneratePropertyString(helper),
+            new GeneratePropertyEmpty(helper),
+            new GeneratePropertyHyperlink(helper),
+            new GeneratePropertyNumber(helper),
+            new GeneratePropertyDateTime(helper),
+            new GeneratePropertyCustom(helper),
+            new GeneratePropertyEntity(helper),
         ];
     }
 }

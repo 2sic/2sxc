@@ -1,10 +1,10 @@
 ﻿namespace ToSic.Sxc.Code.Internal.Generate;
 
-internal class GeneratePropertyString: GeneratePropertyBase
+internal class GeneratePropertyString(CodeGenHelper helper) : GeneratePropertyBase(helper)
 {
     public override ValueTypes ForDataType => ValueTypes.String;
 
-    public override List<CodeFragment> Generate(CodeGenSpecs specs, IContentTypeAttribute attribute, int tabs)
+    public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
     {
         var name = attribute.Name;
 
@@ -14,7 +14,7 @@ internal class GeneratePropertyString: GeneratePropertyBase
 
         return
         [
-            GenPropSnip(tabs: tabs, returnType: "string", name: name, method: $"{specs.ItemAccessor}.String",
+            GenPropSnip(tabs: tabs, returnType: "string", name: name, method: $"{Specs.ItemAccessor}.String",
                 parameters: "fallback: \"\"",
                 summary:
                 [

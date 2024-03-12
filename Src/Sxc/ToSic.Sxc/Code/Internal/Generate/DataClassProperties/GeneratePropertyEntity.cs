@@ -3,11 +3,11 @@ using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Code.Internal.Generate;
 
-internal class GeneratePropertyEntity: GeneratePropertyBase
+internal class GeneratePropertyEntity(CodeGenHelper helper) : GeneratePropertyBase(helper)
 {
     public override ValueTypes ForDataType => ValueTypes.Entity;
 
-    public override List<CodeFragment> Generate(CodeGenSpecs specs, IContentTypeAttribute attribute, int tabs)
+    public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
     {
         var name = attribute.Name;
 
@@ -33,7 +33,7 @@ internal class GeneratePropertyEntity: GeneratePropertyBase
 
         // If we know the entity type, we can use the actual type instead of ITypedItem
         if (entityType.HasValue())
-            specs.ExportedContentContentTypes
+            Specs.ExportedContentContentTypes
                 .FirstOrDefault(t => entityType.EqualsInsensitive(t.Name))
                 .DoIfNotNull(ct =>
                 {
@@ -48,7 +48,7 @@ internal class GeneratePropertyEntity: GeneratePropertyBase
 
         return
         [
-            GenPropSnip(tabs, string.Format(result, resultType), name, $"{specs.ItemAccessor}." + method, cache: true, usings: usings,
+            GenPropSnip(tabs, string.Format(result, resultType), name, $"{Specs.ItemAccessor}." + method, cache: true, usings: usings,
                 summary: [$"{msgPrefix} {resultType}."],
                 remarks: [msgRemarks],
                 returns: [msgReturns]

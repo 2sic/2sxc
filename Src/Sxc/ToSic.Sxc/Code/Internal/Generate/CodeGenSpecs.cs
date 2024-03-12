@@ -27,7 +27,7 @@ public class CodeGenSpecs
     /// <summary>
     /// Namespace for the data classes
     /// </summary>
-    public string DataNamespaceGenerated => $"{DataNamespace}.{NamespaceAutoGen}"; // AppCodeLoader.AppCodeBase + ".Data.AutoGen";
+    public string DataNamespaceGenerated => $"{DataNamespace}.{NamespaceAutoGen}";
 
     /// <summary>
     /// This is added to the end of the class name to indicate that it was auto-generated.

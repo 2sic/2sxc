@@ -5,6 +5,8 @@ namespace ToSic.Sxc.Code.Internal.Generate;
 
 internal class CodeGenHelper(CodeGenSpecs specs)
 {
+    public CodeGenSpecs Specs => specs;
+
     public string Indent(int depth) => new(' ', specs.TabSize * depth);
 
     public void AddLines(StringBuilder sb, int lines)
@@ -63,6 +65,7 @@ internal class CodeGenHelper(CodeGenSpecs specs)
 
         return sb.ToString();
     }
+
     private static string XmlCommentOne(string indent, string tagName, string[] comments = default)
     {
         // If nothing, return empty lines as much as altGap
@@ -91,4 +94,23 @@ internal class CodeGenHelper(CodeGenSpecs specs)
         sb.AppendLine();
         return sb.ToString();
     }
+
+    internal CodeFragment NamespaceWrapper(string @namespace)
+    {
+        return new("namespace", $"{Indent(specs.TabsNamespace)}namespace {@namespace}" + "\n{", closing: "}");
+    }
+
+    internal CodeFragment ClassWrapper(string className, bool isAbstract, bool isPartial, string inherits)
+    {
+        var indent = Indent(specs.TabsClass);
+        var specifiers = (isAbstract ? "abstract " : "") + (isPartial ? "partial " : "");
+        inherits = inherits.NullOrGetWith(i => $": {i}");
+
+        var start = $$"""
+                      {{indent}}public {{specifiers}}class {{className}}{{inherits}}
+                      {{indent}}{
+                      """;
+        return new("class", start, closing: $"{indent}}}\n");
+    }
+
 }

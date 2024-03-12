@@ -1,13 +1,12 @@
-﻿using Custom.Data;
-using ToSic.Sxc.Cms.Data;
+﻿using ToSic.Sxc.Cms.Data;
 
 namespace ToSic.Sxc.Code.Internal.Generate;
 
-internal class GeneratePropertyCustom: GeneratePropertyBase
+internal class GeneratePropertyCustom(CodeGenHelper helper) : GeneratePropertyBase(helper)
 {
     public override ValueTypes ForDataType => ValueTypes.Custom;
 
-    public override List<CodeFragment> Generate(CodeGenSpecs specs, IContentTypeAttribute attribute, int tabs)
+    public override List<CodeFragment> Generate(IContentTypeAttribute attribute, int tabs)
     {
         if (attribute.InputType() != "custom-gps")
             return [];
@@ -16,7 +15,7 @@ internal class GeneratePropertyCustom: GeneratePropertyBase
 
         return
         [
-            GenPropSnip(tabs, "GpsCoordinates", name, $"{specs.ItemAccessor}.Gps", usings: UsingCustomData, summary:
+            GenPropSnip(tabs, "GpsCoordinates", name, $"{Specs.ItemAccessor}.Gps", usings: UsingCustomData, summary:
             [
                 $"{name} as GPS Coordinates object with {nameof(GpsCoordinates.Latitude)} and {nameof(GpsCoordinates.Longitude)}.",
             ]),

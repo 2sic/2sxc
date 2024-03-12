@@ -200,6 +200,7 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<DependenciesLoader>();
 
         services.TryAddTransient<DataClassesGenerator>();
+        services.TryAddTransient<FileGenerator>();
 
         // Add possibly missing fallback services
         // This must always be at the end here so it doesn't accidentally replace something we actually need
