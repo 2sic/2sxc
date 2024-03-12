@@ -3,7 +3,7 @@ using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Code.Internal.Generate;
 
-internal class GeneratePropertyEntity(CodeGenHelper helper) : GeneratePropertyBase(helper)
+internal class GeneratePropertyEntity(CSharpGeneratorHelper helper) : GeneratePropertyBase(helper)
 {
     public override ValueTypes ForDataType => ValueTypes.Entity;
 

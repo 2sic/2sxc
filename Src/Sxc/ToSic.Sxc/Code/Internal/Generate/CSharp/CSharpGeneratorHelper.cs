@@ -3,9 +3,9 @@ using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Code.Internal.Generate;
 
-internal class CodeGenHelper(CodeGenSpecs specs)
+internal class CSharpGeneratorHelper(CSharpCodeSpecs specs)
 {
-    public CodeGenSpecs Specs => specs;
+    public CSharpCodeSpecs Specs => specs;
 
     public string Indent(int depth) => new(' ', specs.TabSize * depth);
 

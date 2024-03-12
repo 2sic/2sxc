@@ -8,7 +8,7 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Backend.Admin;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeControllerReal(FileGenerator fileGenerator, LazySvc<IJsonService> json) : ServiceBase("Api.CodeRl")
+public class CodeControllerReal(FileSaver fileSaver, LazySvc<IJsonService> json, LazySvc<IEnumerable<IFileGenerator>> generators) : ServiceBase("Api.CodeRl")
 {
     public const string LogSuffix = "Code";
 
@@ -64,7 +64,7 @@ public class CodeControllerReal(FileGenerator fileGenerator, LazySvc<IJsonServic
 
         try
         {
-            fileGenerator.GenerateAndSaveFiles(new() { AppId = appId, Edition = edition });
+            fileSaver.GenerateAndSaveFiles(new() { AppId = appId, Edition = edition });
 
             return l.Return(new RichResult
                 {
@@ -90,7 +90,10 @@ public class CodeControllerReal(FileGenerator fileGenerator, LazySvc<IJsonServic
     {
         var l = Log.Fn<EditionsDto>($"{nameof(appId)}:{appId}");
 
-        var pathToDotAppJson = fileGenerator.GetPathToDotAppJson(new() { AppId = appId });
+        // get generators
+        var fileGenerators = generators.Value.Select(g => new GeneratorDto(g)).ToList();
+
+        var pathToDotAppJson = fileSaver.GetPathToDotAppJson(new() { AppId = appId });
         l.A($"path to app.json: {pathToDotAppJson}");
         if (File.Exists(pathToDotAppJson))
         {
@@ -100,7 +103,7 @@ public class CodeControllerReal(FileGenerator fileGenerator, LazySvc<IJsonServic
             if (editionsJson?.Editions?.Count > 0)
             {
                 l.A($"has editions in app.json: {editionsJson?.Editions?.Count}");
-                return l.ReturnAsOk(editionsJson.ToEditionsDto());
+                return l.ReturnAsOk(editionsJson.ToEditionsDto(fileGenerators));
             }
         }
 
@@ -110,7 +113,8 @@ public class CodeControllerReal(FileGenerator fileGenerator, LazySvc<IJsonServic
         {
             Ok = true,
             IsConfigured = false,
-            Editions = [ new() { Name = "", Description = "Root edition", IsDefault = true } ]
+            Editions = [ new() { Name = "", Description = "Root edition", IsDefault = true } ],
+            Generators = fileGenerators
         };
 
         return l.Return(nothingSpecified, "editions not specified in app.json");

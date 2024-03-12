@@ -10,17 +10,13 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Code.Internal.Generate;
 
 /// <summary>
-/// Experimental
+/// Service to take generated files and save them to the file system
 /// </summary>
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class FileGenerator(DataClassesGenerator generator, ISite site, IAppStates appStates, IAppPathsMicroSvc appPaths)
-    : ServiceBase(SxcLogName + ".DMoGen")
+public class FileSaver(CSharpDataModelsGenerator generator, ISite site, IAppStates appStates, IAppPathsMicroSvc appPaths)
+    : ServiceBase(SxcLogName + ".GenFSv")
 {
-    public const string AppRootFolderPlaceholder = "[app:root]";
-    public const string EditionPlaceholder = "[target:edition]";
-
-
     public IAppState AppState => _appState ??= new Func<IAppState>(() => appStates.ToReader(appStates.GetCacheState(_parameters.AppId)))();
     private IAppState _appState;
 
@@ -70,20 +66,20 @@ public class FileGenerator(DataClassesGenerator generator, ISite site, IAppState
         // Do basic mask tests
         if (mask.IsEmpty()) throw new("Mask must not be empty");
         if (mask.ContainsPathTraversal()) throw new($"Mask {PathFixer.PathTraversalMayNotContainMessage}");
-        if (!mask.StartsWith(AppRootFolderPlaceholder)) throw new($"Mask must start with '{AppRootFolderPlaceholder}'");
+        if (!mask.StartsWith(GenerateConstants.AppRootFolderPlaceholder)) throw new($"Mask must start with '{GenerateConstants.AppRootFolderPlaceholder}'");
 
 
         // Get the full path to the app
-        var path = mask.Replace(AppRootFolderPlaceholder, GetAppFullPath().TrimLastSlash());
+        var path = mask.Replace(GenerateConstants.AppRootFolderPlaceholder, GetAppFullPath().TrimLastSlash());
 
         // Optionally add / replace the edition
-        if (path.IndexOf(EditionPlaceholder, StringComparison.OrdinalIgnoreCase) > -1)
+        if (path.IndexOf(GenerateConstants.EditionPlaceholder, StringComparison.OrdinalIgnoreCase) > -1)
         {
             // sanitize path because 'edition' is user provided
             if (_parameters.Edition.ContainsPathTraversal())
                 throw new($"Invalid edition '{_parameters.Edition}' - {PathFixer.PathTraversalMayNotContainMessage}");
 
-            path = path.Replace(EditionPlaceholder, _parameters.Edition).TrimLastSlash();
+            path = path.Replace(GenerateConstants.EditionPlaceholder, _parameters.Edition).TrimLastSlash();
         }
 
         path = path.FlattenSlashes().Backslash();
@@ -96,6 +92,7 @@ public class FileGenerator(DataClassesGenerator generator, ISite site, IAppState
         return appWithEditionNormalized;
     }
 
+    // TODO: @STV - this should be moved to an AppJsonService in Eav.Apps
     internal string GetPathToDotAppJson(GenerateParameters parameters)
     {
         Setup(parameters);

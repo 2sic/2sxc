@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Code.Internal.Generate;
 
-internal class GeneratePropertyString(CodeGenHelper helper) : GeneratePropertyBase(helper)
+internal class GeneratePropertyString(CSharpGeneratorHelper helper) : GeneratePropertyBase(helper)
 {
     public override ValueTypes ForDataType => ValueTypes.String;
 

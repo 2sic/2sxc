@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Code.Internal.Generate;
 
-internal class GeneratePropertyDateTime(CodeGenHelper helper) : GeneratePropertyBase(helper)
+internal class GeneratePropertyDateTime(CSharpGeneratorHelper helper) : GeneratePropertyBase(helper)
 {
     public override ValueTypes ForDataType => ValueTypes.DateTime;
 

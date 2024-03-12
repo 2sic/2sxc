@@ -13,27 +13,30 @@ namespace ToSic.Sxc.Code.Internal.Generate;
 /// </summary>
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class DataClassesGenerator(IUser user, IAppStates appStates)
+public class CSharpDataModelsGenerator(IUser user, IAppStates appStates)
     : ServiceBase(SxcLogName + ".DMoGen"), IFileGenerator
 {
-    internal CodeGenSpecs Specs { get; } = new();
+    internal CSharpCodeSpecs Specs { get; } = new();
 
     internal IUser User = user;
-    internal CodeGenHelper CodeGenHelper { get; private set; }
+    internal CSharpGeneratorHelper CodeGenHelper { get; private set; }
 
     #region Information for the interface
 
     public string NameId => GetType().FullName;
 
-    public string Name => nameof(DataClassGenerator);
+    public string Name => nameof(CSharpDataModelGenerator);
 
     public string Version => SharedAssemblyInfo.AssemblyVersion;
 
     public string Description => "Generates C# Data Classes for the AppCode/Data folder";
 
+    public string OutputLanguage => "CSharp";
+    public string OutputType => "DataModel";
+
     #endregion
 
-    public DataClassesGenerator Setup(GenerateParameters parameters)
+    public CSharpDataModelsGenerator Setup(GenerateParameters parameters)
     {
         if (parameters.Edition.HasValue())
             Specs.Edition = parameters.Edition;
@@ -69,7 +72,7 @@ public class DataClassesGenerator(IUser user, IAppStates appStates)
     {
 
         var classFiles = Specs.ExportedContentContentTypes
-            .Select(t => new DataClassGenerator(this, t, t.Name?.Replace("-", "")).PrepareFile())
+            .Select(t => new CSharpDataModelGenerator(this, t, t.Name?.Replace("-", "")).PrepareFile())
             .ToList();
 
         var result = new CodeFileBundle
@@ -77,7 +80,7 @@ public class DataClassesGenerator(IUser user, IAppStates appStates)
             Name = "C# Data Classes",
             Description = Description,
             Generator = $"{Name} v{Version}",
-            Path = $"{FileGenerator.AppRootFolderPlaceholder}/{FileGenerator.EditionPlaceholder}/{AppCodeLoader.AppCodeBase}",
+            Path = $"{GenerateConstants.AppRootFolderPlaceholder}/{GenerateConstants.EditionPlaceholder}/{AppCodeLoader.AppCodeBase}",
             Files = classFiles.Cast<ICodeFile>().ToList()
         };
         return [result];

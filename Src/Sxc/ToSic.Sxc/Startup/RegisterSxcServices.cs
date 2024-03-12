@@ -199,8 +199,10 @@ public static partial class RegisterSxcServices
         services.TryAddSingleton<AssemblyResolver>();
         services.TryAddTransient<DependenciesLoader>();
 
-        services.TryAddTransient<DataClassesGenerator>();
-        services.TryAddTransient<FileGenerator>();
+        // v17 Code Generators
+        services.TryAddTransient<CSharpDataModelsGenerator>();  // direct registration
+        services.AddTransient<IFileGenerator, CSharpDataModelsGenerator>(); // with interface and no try, so all can be listed in DI
+        services.TryAddTransient<FileSaver>();
 
         // Add possibly missing fallback services
         // This must always be at the end here so it doesn't accidentally replace something we actually need

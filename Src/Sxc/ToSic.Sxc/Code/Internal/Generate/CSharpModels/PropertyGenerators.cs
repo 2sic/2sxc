@@ -2,7 +2,7 @@
 
 internal class GenDataProperties
 {
-    internal static List<GeneratePropertyBase> Generators(CodeGenHelper helper)
+    internal static List<GeneratePropertyBase> Generators(CSharpGeneratorHelper helper)
     {
         return
         [

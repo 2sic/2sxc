@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Code.Internal.Generate;
 
-internal class GeneratePropertyBool(CodeGenHelper helper) : GeneratePropertyBase(helper)
+internal class GeneratePropertyBool(CSharpGeneratorHelper helper) : GeneratePropertyBase(helper)
 {
     public override ValueTypes ForDataType => ValueTypes.Boolean;
 

@@ -3,11 +3,11 @@ using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Code.Internal.Generate;
 
-internal abstract class GeneratePropertyBase(CodeGenHelper helper)
+internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper)
 {
-    protected CodeGenSpecs Specs = helper.Specs;
+    protected CSharpCodeSpecs Specs = helper.Specs;
 
-    protected CodeGenHelper CodeGenHelper = helper;
+    protected CSharpGeneratorHelper CodeGenHelper = helper;
 
     public abstract ValueTypes ForDataType { get; }
 

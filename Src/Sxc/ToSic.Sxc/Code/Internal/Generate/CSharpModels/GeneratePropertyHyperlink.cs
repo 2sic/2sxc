@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Code.Internal.Generate;
 
-internal class GeneratePropertyHyperlink(CodeGenHelper helper) : GeneratePropertyBase(helper)
+internal class GeneratePropertyHyperlink(CSharpGeneratorHelper helper) : GeneratePropertyBase(helper)
 {
     public override ValueTypes ForDataType => ValueTypes.Hyperlink;
 
