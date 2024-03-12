@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Services.Internal;
 //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 [method: PrivateApi]
 public abstract class ServiceForDynamicCode(string logName, NoParamOrder protect = default, object[] connect = default)
-    : ServiceBase(logName, connect: connect), INeedsCodeApiService, IHasCodeApiService, ICanDebug
+    : ServiceBase(logName, protect: protect, connect: connect), INeedsCodeApiService, IHasCodeApiService, ICanDebug
 {
     /// <summary>
     /// Connect to CodeRoot and it's log
