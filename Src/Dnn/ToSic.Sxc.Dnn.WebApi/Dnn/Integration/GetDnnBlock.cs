@@ -14,19 +14,19 @@ public class DnnGetBlock(
     Generator<IModuleAndBlockBuilder> moduleAndBlockBuilder)
     : ServiceBase($"{LogName}.GetBlk", connect: [blockFromEntity, moduleAndBlockBuilder])
 {
-    internal BlockWithContextProvider GetCmsBlock(HttpRequestMessage request)
+    internal IBlock GetCmsBlock(HttpRequestMessage request)
     {
-        var l = Log.Fn<BlockWithContextProvider>(timer: true);
+        var l = Log.Fn<IBlock>(timer: true);
         var moduleInfo = request.FindModuleInfo();
 
         if (moduleInfo == null)
             return l.ReturnNull("request ModuleInfo not found");
 
-        var blockProvider = moduleAndBlockBuilder.New().GetProvider(moduleInfo, null);
+        var block = moduleAndBlockBuilder.New().BuildBlock(moduleInfo, null);
 
         // check if we need an inner block
         if (!request.Headers.Contains(HeaderContentBlockId))
-            return l.Return(blockProvider, "normal block, no inner-content");
+            return l.Return(block, "normal block, no inner-content");
 
         // only if it's negative, do we load the inner block
         var blockHeaderId = request.Headers.GetValues(HeaderContentBlockId).FirstOrDefault();
@@ -34,14 +34,10 @@ public class DnnGetBlock(
 
         // only if ID is negative, do we load the inner block
         if (contentBlockId >= 0)
-            return l.Return(blockProvider, "normal block");
-
-        var block = blockProvider.LoadBlock();
+            return l.Return(block, "normal block");
 
         var entBlock = GetBlockOrInnerContentBlock(request, block, contentBlockId);
-        var result = new BlockWithContextProvider(entBlock);
-
-        return l.Return(result, $"inner content-block {contentBlockId}");
+        return l.Return(entBlock, $"inner content-block {contentBlockId}");
     }
 
     private IBlock GetBlockOrInnerContentBlock(HttpRequestMessage request, IBlock block, int blockId)

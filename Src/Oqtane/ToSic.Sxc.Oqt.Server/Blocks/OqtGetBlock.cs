@@ -37,9 +37,9 @@ internal class OqtGetBlock(
     private bool _alreadyTriedToLoad;
 
 
-    private BlockWithContextProvider InitializeBlock()
+    private IBlock InitializeBlock()
     {
-        var l = Log.Fn<BlockWithContextProvider>();
+        var l = Log.Fn<IBlock>();
 
         // WebAPI calls can contain the original parameters that made the page, so that views can respect that
         var moduleId = TryGetId(ContextConstants.ModuleIdKey);
@@ -57,11 +57,11 @@ internal class OqtGetBlock(
         // only if it's negative, do we load the inner block
         var contentBlockId = requestHelper.GetTypedHeader(HeaderContentBlockId, 0); // this can be negative, so use 0
         if (contentBlockId >= 0)
-            return l.Return(new(block), "found block");
+            return l.Return(block, "found block");
 
         l.A($"Inner Content: {contentBlockId}");
         var entityBlock = blkFromEntGen.New().Init(block, null, contentBlockId);
-        return l.Return(new(entityBlock), $"inner block {contentBlockId}");
+        return l.Return(entityBlock, $"inner block {contentBlockId}");
     }
 
     private int TryGetId(string key)

@@ -36,7 +36,7 @@ public interface ISxcContextResolver: IContextResolver
 
     IContextOfApp AppNameRouteBlock(string nameOrPath);
 
-    void AttachBlock(BlockWithContextProvider blockWithContextProvider);
+    void AttachBlock(IBlock block);
 
     IBlock BlockOrNull();
 

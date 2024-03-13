@@ -55,7 +55,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
         InitializeBlockContext(request);
 
         // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
-        var block = SysHlp.GetBlockAndContext(request)?.LoadBlock();
+        var block = SysHlp.GetBlockAndContext(request);
         Log.A($"HasBlock: {block != null}");
 
         var services = SysHlp.GetService<ApiControllerMyServices>().ConnectServices(Log);

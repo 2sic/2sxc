@@ -101,7 +101,7 @@ internal class SearchController : ServiceBase
         // In case it's not loaded yet
         _appsCache.Value.Load(module.BlockIdentifier.PureIdentity(), DnnSite.DefaultCultureCode, _appsCache.AppLoaderTools);
 
-        Block = _moduleAndBlockBuilder.Value.GetProvider(DnnModule, null).LoadBlock();
+        Block = _moduleAndBlockBuilder.Value.BuildBlock(DnnModule, null);
 
         if (Block.View == null) return "no view";
         if (Block.View.SearchIndexingDisabled) return "search disabled"; // new in 12.02

@@ -151,7 +151,7 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
             l.A("AppCode - use Roslyn");
             // Figure edition
             HotBuildSpec spec = null;
-            var block = sp.Build<DnnGetBlock>().GetCmsBlock(request).LoadBlock();
+            var block = sp.Build<DnnGetBlock>().GetCmsBlock(request);
             l.A($"has block: {block != null}");
             if (block != null)
             {

@@ -22,22 +22,23 @@ public abstract class ModuleAndBlockBuilder(Generator<BlockFromModule> blockGene
         throw new(msg);
     }
 
-    public BlockWithContextProvider GetProvider(int pageId, int moduleId)
+    public IBlock BuildBlock(int pageId, int moduleId)
     {
-        var l = Log.Fn<BlockWithContextProvider>($"{pageId}, {moduleId}");
+        var l = Log.Fn<IBlock>($"{pageId}, {moduleId}");
         var module = GetModuleImplementation(pageId, moduleId);
         var ctx = GetContextOfBlock(module, pageId);
         
         // 2024-03-11 2dm WIP
         var block = blockGenerator.New().Init(ctx);
-        return l.ReturnAsOk(new(block /*, () => blockGenerator.New().Init(ctx)*/));
+        return l.ReturnAsOk(block);
     }
 
-    public BlockWithContextProvider GetProvider<TPlatformModule>(TPlatformModule module, int? page) where TPlatformModule : class
+    public IBlock BuildBlock<TPlatformModule>(TPlatformModule module, int? page) where TPlatformModule : class
     {
+        var l = Log.Fn<IBlock>($"{module}, {page}");
         var ctx = GetContextOfBlock(module, page);
         var block = blockGenerator.New().Init(ctx);
-        return new(block /*, () => blockGenerator.New().Init(ctx) */);
+        return l.Return(block);
     }
 
     protected abstract IContextOfBlock GetContextOfBlock(IModule module, int? pageId);

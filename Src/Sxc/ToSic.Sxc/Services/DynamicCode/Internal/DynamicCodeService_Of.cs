@@ -26,7 +26,7 @@ public partial class DynamicCodeService
         var wrapLog = Log.Fn<ICodeApiService>($"{pageId}, {moduleId}");
         MakeSureLogIsInHistory();
         ActivateEditUi();
-        var cmsBlock = _myScopedServices.ModAndBlockBuilder.Value.GetProvider(pageId, moduleId).LoadBlock();
+        var cmsBlock = _myScopedServices.ModAndBlockBuilder.Value.BuildBlock(pageId, moduleId);
         var codeRoot = _myScopedServices.CodeRootGenerator.New()
             .BuildCodeRoot(customCodeOrNull: null, cmsBlock, Log, CompatibilityLevels.CompatibilityLevel12);
 

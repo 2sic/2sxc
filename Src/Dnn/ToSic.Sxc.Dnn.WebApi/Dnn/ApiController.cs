@@ -43,8 +43,8 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
     /// We will only add it to ApiController but not to Api12, because no new code should ever use that.
     /// </remarks>
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)] 
-    public IBlock Block => SysHlp.GetBlockAndContext(Request).LoadBlock();
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public IBlock Block => SysHlp.GetBlockAndContext(Request);
 
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

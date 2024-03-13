@@ -66,7 +66,8 @@ public abstract partial class SxcApiController() :
     /// <summary>
     /// Old API - probably never used, but we shouldn't remove it as we could break some existing code out there
     /// </summary>
-    [PrivateApi] public IBlock Block => SysHlp.GetBlockAndContext(Request).LoadBlock();
+    [PrivateApi]
+    public IBlock Block => SysHlp.GetBlockAndContext(Request);
 
     [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel9Old;
 

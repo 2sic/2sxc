@@ -156,7 +156,7 @@ public class RenderService: ServiceForDynamicCode,
         var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
         //Protect(noParamOrder, $"{nameof(data)}");
         MakeSureLogIsInHistory();
-        var block = _Deps.Builder.Value.GetProvider(pageId, moduleId).LoadBlock().BlockBuilder;
+        var block = _Deps.Builder.Value.BuildBlock(pageId, moduleId).BlockBuilder;
         var result = block.Run(true, specs: new() { Data = data });
         return l.ReturnAsOk(result);
     }

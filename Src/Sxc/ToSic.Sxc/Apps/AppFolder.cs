@@ -13,7 +13,7 @@ public class AppFolder(ISxcContextResolver ctxResolver) : ServiceBase("AppFolder
     /// </summary>
     /// <param name="getBlock"></param>
     /// <returns></returns>
-    public AppFolder Init(BlockWithContextProvider getBlock)
+    public AppFolder Init(IBlock getBlock)
     {
         ctxResolver.AttachBlock(getBlock);
         return this;
