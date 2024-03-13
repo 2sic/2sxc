@@ -39,7 +39,7 @@ public class DnnGetBlock(
         var block = blockProvider.LoadBlock();
 
         var entBlock = GetBlockOrInnerContentBlock(request, block, contentBlockId);
-        var result = new BlockWithContextProvider(entBlock.Context, entBlock);
+        var result = new BlockWithContextProvider(entBlock);
 
         return l.Return(result, $"inner content-block {contentBlockId}");
     }

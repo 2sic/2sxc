@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.Helpers;
-using ToSic.Sxc.Context.Internal;
+﻿using ToSic.Sxc.Context.Internal;
 
 namespace ToSic.Sxc.Blocks.Internal;
 
@@ -16,9 +15,11 @@ namespace ToSic.Sxc.Blocks.Internal;
 /// If all ok ca. 2024-06, should be fixed, so it doesn't need this helper, since the block always has the context
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class BlockWithContextProvider(IContextOfBlock contextOfBlock, IBlock blockMaybeNull)
+public class BlockWithContextProvider(IContextOfBlock contextOfBlock, IBlock block)
 {
+    public BlockWithContextProvider(IBlock block): this (block.Context, block) { }
+
     public IContextOfBlock ContextOfBlock => contextOfBlock;
-    public IBlock LoadBlock() => blockMaybeNull;
+    public IBlock LoadBlock() => block;
 
 }

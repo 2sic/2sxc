@@ -11,10 +11,10 @@ namespace ToSic.Sxc.Context.Internal;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal partial class SxcContextResolver(
     LazySvc<AppIdResolver> appIdResolverLazy,
-    Generator<IContextOfSite> contextOfSite,
-    Generator<IContextOfApp> contextOfApp,
+    Generator<IContextOfSite> siteCtxGenerator,
+    Generator<IContextOfApp> appCtxGenerator,
     Lazy<IFeaturesService> featuresService)
-    : ContextResolver(contextOfSite, contextOfApp, "Sxc.CtxRes", connect: [appIdResolverLazy]), ISxcContextResolver
+    : ContextResolver(siteCtxGenerator, appCtxGenerator, "Sxc.CtxRes", connect: [appIdResolverLazy, siteCtxGenerator, appCtxGenerator, featuresService]), ISxcContextResolver
 {
 
     /// <summary>
@@ -23,15 +23,15 @@ internal partial class SxcContextResolver(
     /// TODO: WIP - requires that if an app is to be used, it was accessed before - not yet perfect...
     /// </summary>
     /// <returns></returns>
-    public IContextOfUserPermissions UserPermissions() => _ctxUserPerm.Get(() => BlockContextOrNull() ?? LatestAppContext ?? Site());
+    public IContextOfUserPermissions UserPermissions() => _ctxUserPerm.Get(() => BlockContextOrNull() ?? AppOrNull() ?? Site());
     private readonly GetOnce<IContextOfUserPermissions> _ctxUserPerm = new();
 
     public IContextOfApp SetAppOrNull(string nameOrPath)
     {
         if (string.IsNullOrWhiteSpace(nameOrPath)) return null;
         var zoneId = Site().Site.ZoneId;
-        var id = appIdResolverLazy.Value.GetAppIdFromPath(zoneId, nameOrPath, false);
-        return id <= Eav.Constants.AppIdEmpty ? null : SetApp(new AppIdentity(zoneId, id));
+        var appId = appIdResolverLazy.Value.GetAppIdFromPath(zoneId, nameOrPath, false);
+        return appId <= Eav.Constants.AppIdEmpty ? null : SetApp(new AppIdentity(zoneId, appId));
     }
 
     #region Blocks
@@ -41,7 +41,7 @@ internal partial class SxcContextResolver(
         _blcCtx = blockWithContextProvider;
         _block.Reset();
         _blockContext.Reset();
-        LatestAppContext = _blcCtx?.ContextOfBlock;
+        AppContextFromAppOrBlock = _blcCtx?.ContextOfBlock;
     }
     private BlockWithContextProvider _blcCtx;
 

@@ -130,7 +130,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     {
         var ctx = _contextOfBlockEmpty.Init(Page.PageId, Module);
         var block = _blockModuleEmpty.Init(ctx);
-        var blcWithCtx = new BlockWithContextProvider(ctx, block);
+        var blcWithCtx = new BlockWithContextProvider(block);
         // Special for Oqtane - normally the IContextResolver is only used in WebAPIs
         // But the ModuleLookUp and PageLookUp also rely on this, so the IContextResolver must know about this for now
         // In future, we should find a better way for this, so that IContextResolver is really only used on WebApis

@@ -10,7 +10,6 @@ using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DataSources.Internal;
-using ToSic.Sxc.LookUp;
 using ToSic.Sxc.LookUp.Internal;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -18,7 +17,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 namespace ToSic.Sxc.Blocks.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract partial class BlockBase(BlockBase.MyServices services, string logName, object[] connect = default)
+public abstract class BlockBase(BlockBase.MyServices services, string logName, object[] connect = default)
     : ServiceBase<BlockBase.MyServices>(services, logName, connect: connect ?? []), IBlock
 {
     #region Constructor and DI

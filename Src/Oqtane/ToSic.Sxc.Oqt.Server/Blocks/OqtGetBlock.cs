@@ -57,11 +57,11 @@ internal class OqtGetBlock(
         // only if it's negative, do we load the inner block
         var contentBlockId = requestHelper.GetTypedHeader(HeaderContentBlockId, 0); // this can be negative, so use 0
         if (contentBlockId >= 0)
-            return l.Return(new(ctx, block), "found block");
+            return l.Return(new(block), "found block");
 
         l.A($"Inner Content: {contentBlockId}");
         var entityBlock = blkFromEntGen.New().Init(block, null, contentBlockId);
-        return l.Return(new(entityBlock.Context, entityBlock), $"inner block {contentBlockId}");
+        return l.Return(new(entityBlock), $"inner block {contentBlockId}");
     }
 
     private int TryGetId(string key)

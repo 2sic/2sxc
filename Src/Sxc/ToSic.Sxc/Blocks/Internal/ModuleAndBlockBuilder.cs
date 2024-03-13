@@ -27,15 +27,17 @@ public abstract class ModuleAndBlockBuilder(Generator<BlockFromModule> blockGene
         var l = Log.Fn<BlockWithContextProvider>($"{pageId}, {moduleId}");
         var module = GetModuleImplementation(pageId, moduleId);
         var ctx = GetContextOfBlock(module, pageId);
+        
         // 2024-03-11 2dm WIP
-
-        return l.ReturnAsOk(new(ctx, blockGenerator.New().Init(ctx) /*, () => blockGenerator.New().Init(ctx)*/));
+        var block = blockGenerator.New().Init(ctx);
+        return l.ReturnAsOk(new(block /*, () => blockGenerator.New().Init(ctx)*/));
     }
 
     public BlockWithContextProvider GetProvider<TPlatformModule>(TPlatformModule module, int? page) where TPlatformModule : class
     {
         var ctx = GetContextOfBlock(module, page);
-        return new(ctx, blockGenerator.New().Init(ctx) /*, () => blockGenerator.New().Init(ctx) */);
+        var block = blockGenerator.New().Init(ctx);
+        return new(block /*, () => blockGenerator.New().Init(ctx) */);
     }
 
     protected abstract IContextOfBlock GetContextOfBlock(IModule module, int? pageId);
