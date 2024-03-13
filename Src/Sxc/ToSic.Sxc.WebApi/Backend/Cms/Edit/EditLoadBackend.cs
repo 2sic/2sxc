@@ -13,7 +13,7 @@ using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Backend.SaveHelpers;
 using JsonSerializer = ToSic.Eav.ImportExport.Json.JsonSerializer;
-using InputTypes = ToSic.Sxc.Compatibility.Internal.InputTypes;
+
 
 namespace ToSic.Sxc.Backend.Cms;
 
@@ -130,7 +130,7 @@ public partial class EditLoadBackend(
         // Fix not-supported input-type names; map to correct name
         result.ContentTypes
             .ForEach(jt => jt.Attributes
-                .ForEach(at => at.InputType = InputTypes.MapInputTypeV10(at.InputType)));
+                .ForEach(at => at.InputType = Compatibility.Internal.InputTypes.MapInputTypeV10(at.InputType)));
 
         // load input-field configurations
         result.InputTypes = GetNecessaryInputTypes(result.ContentTypes, appWorkCtx);
