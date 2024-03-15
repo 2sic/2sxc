@@ -115,7 +115,6 @@ public class WrapObjectTyped(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeSer
 
     IRawHtmlString ITyped.Attribute(string name, NoParamOrder noParamOrder, string fallback, bool? required)
     {
-        //Protect(noParamOrder, nameof(fallback));
         var value = PreWrap.TryGetWrap(name, false).Result;
         var strValue = forCodeConverter.Value.ForCode(value, fallback: fallback);
         return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));

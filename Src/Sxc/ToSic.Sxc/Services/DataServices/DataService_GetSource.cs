@@ -18,7 +18,6 @@ internal partial class DataService
         object options = default) where T : IDataSource
     {
         var l = Log.Fn<T>($"{nameof(attach)}: {attach}, {nameof(options)}: {options}");
-        //Protect(noParamOrder, $"{nameof(attach)}, {nameof(parameters)}, {nameof(options)}");
 
         // If no in-source was provided, make sure that we create one from the current app
         var fullOptions = OptionsMs.SafeOptions(parameters, options: options);
@@ -37,7 +36,6 @@ internal partial class DataService
     )
     {
         var l = Log.Fn<IDataSource>($"{nameof(name)}: {name}, {nameof(attach)}: {attach}, {nameof(options)}: {options}");
-        //Protect(noParamOrder, $"{nameof(attach)}, {nameof(parameters)}, {nameof(options)}");
 
         // Do this first, to ensure AppIdentity is really known/set
         var safeOptions = OptionsMs.SafeOptions(parameters, options: options);

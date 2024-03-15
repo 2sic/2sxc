@@ -29,7 +29,6 @@ internal class GetQueryMs: ServiceBase
     {
         var l = Log.Fn<IDataSource>($"{name}, {nameof(parameters)}: {(parameters == null ? "null" : "not null")}");
 
-        //Protect(noParamOrder, $"{nameof(attach)}, {nameof(parameters)}");
 
         // If no in-source was provided, make sure that we create one from the current app
         var fullOptions = _optionsMs.SafeOptions(parameters, null, true /*, options: options*/);

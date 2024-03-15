@@ -104,7 +104,6 @@ public class RenderService: ServiceForDynamicCode,
         string field = null,
         Guid? newGuid = null)
     {
-        //Protect(noParamOrder, $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
         item ??= parent.Item;
         MakeSureLogIsInHistory();
         var simpleRenderer = _Deps.SimpleRenderer.New();
@@ -135,7 +134,6 @@ public class RenderService: ServiceForDynamicCode,
         int max = 100,
         string merge = null)
     {
-        //Protect(noParamOrder, $"{nameof(field)},{nameof(merge)}");
         if (string.IsNullOrWhiteSpace(field)) throw new ArgumentNullException(nameof(field));
 
         MakeSureLogIsInHistory();
@@ -154,7 +152,6 @@ public class RenderService: ServiceForDynamicCode,
         object data = null)
     {
         var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
-        //Protect(noParamOrder, $"{nameof(data)}");
         MakeSureLogIsInHistory();
         var block = _Deps.Builder.Value.BuildBlock(pageId, moduleId).BlockBuilder;
         var result = block.Run(true, specs: new() { Data = data });

@@ -42,8 +42,6 @@ internal class GetAndConvertHelper(
 
     public object Get(string name, NoParamOrder noParamOrder = default, string language = null, bool convertLinks = true, bool? debug = null)
     {
-        //Protect(noParamOrder, $"{nameof(language)}, {nameof(convertLinks)}");
-
         _debug = debug;
         var result = GetInternal(name, language, convertLinks).Result;
         _debug = null;
@@ -55,7 +53,6 @@ internal class GetAndConvertHelper(
 
     public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default)
     {
-        //Protect(noParamOrder, nameof(fallback));
         return TryGet(name).Result.ConvertOrFallback(fallback);
     }
 

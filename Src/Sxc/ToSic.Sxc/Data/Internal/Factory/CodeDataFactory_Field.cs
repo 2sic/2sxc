@@ -7,7 +7,6 @@ partial class CodeDataFactory
 {
     public IField Field(ITypedItem parent, string name, bool propsRequired, NoParamOrder noParamOrder = default, bool? required = default)
     {
-        //Protect(noParamOrder, nameof(required));
         // TODO: make sure that if we use a path, the field is from the correct parent
         var dot = PropertyStack.PathSeparator.ToString();
         if (name.Contains(dot))

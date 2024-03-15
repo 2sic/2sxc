@@ -161,7 +161,6 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     public IFolder Folder(string name, NoParamOrder noParamOrder, bool? required)
     {
-        //Protect(noParamOrder, nameof(required));
         return IsErrStrict(this, name, required, PreWrap.Settings.PropsRequired)
             ? throw ErrStrictForTyped(this, name)
             : Cdf.AdamManager.Folder(Guid, name, Field(name: name, noParamOrder: default, required: required));
@@ -169,7 +168,6 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     public IFile File(string name, NoParamOrder noParamOrder, bool? required)
     {
-        //Protect(noParamOrder, nameof(required));
         if (IsErrStrict(this, name, required, PreWrap.Settings.PropsRequired))
             throw ErrStrictForTyped(this, name);
         var typed = this as ITypedItem;
