@@ -16,7 +16,6 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Customizer;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
-using ToSic.Sxc.Code.Internal.Generate;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Context;
@@ -198,11 +197,6 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<SourceAnalyzer>();
         services.TryAddSingleton<AssemblyResolver>();
         services.TryAddTransient<DependenciesLoader>();
-
-        // v17 Code Generators
-        services.TryAddTransient<CSharpDataModelsGenerator>();  // direct registration
-        services.AddTransient<IFileGenerator, CSharpDataModelsGenerator>(); // with interface and no try, so all can be listed in DI
-        services.TryAddTransient<FileSaver>();
 
         // Add possibly missing fallback services
         // This must always be at the end here so it doesn't accidentally replace something we actually need

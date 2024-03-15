@@ -1,13 +1,18 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using static ToSic.Sxc.Internal.SxcLogging;
 
-namespace ToSic.Sxc.Code.Internal.Generate;
+namespace ToSic.Sxc.Code.Gen.Internal.Generate;
 
 /// <summary>
 /// Service to take generated files and save them to the file system

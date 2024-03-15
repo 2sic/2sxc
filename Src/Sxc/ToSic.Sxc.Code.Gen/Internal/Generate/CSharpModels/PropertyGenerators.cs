@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Code.Internal.Generate;
+﻿using System.Collections.Generic;
+
+namespace ToSic.Sxc.Code.Gen.Internal.Generate;
 
 internal class GenDataProperties
 {

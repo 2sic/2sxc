@@ -1,8 +1,13 @@
-﻿using System.Text;
-using ToSic.Eav;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using ToSic.Eav.Data;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Internal;
 
-namespace ToSic.Sxc.Code.Internal.Generate;
+namespace ToSic.Sxc.Code.Gen.Internal.Generate;
 
 internal class CSharpDataModelGenerator(CSharpDataModelsGenerator dmg, IContentType type, string className): HelperBase(dmg.Log, "Gen.DtaCls")
 {

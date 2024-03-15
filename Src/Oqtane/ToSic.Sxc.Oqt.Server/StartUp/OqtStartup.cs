@@ -9,11 +9,11 @@ using System.IO;
 using ToSic.Eav.Integration;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Internal.Loaders;
-using ToSic.Eav.StartUp;
 using ToSic.Eav.WebApi;
 using ToSic.Lib.DI;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Backend;
+using ToSic.Sxc.Code.Gen.Startup;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -21,7 +21,6 @@ using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Razor;
 using ToSic.Sxc.Startup;
-using ToSic.Sxc.WebApi;
 using static ToSic.Sxc.Oqt.Server.StartUp.OqtStartupHelper;
 using static ToSic.Sxc.Oqt.Server.WebApi.OqtWebApiConstants;
 
@@ -62,7 +61,8 @@ public class OqtStartup : IServerStartup
             .AddAdamWebApi<int, int>()      // This is used to enable ADAM WebAPIs
             .AddSxcWebApi()                 // This adds all the standard backend services for WebAPIs to work
             .AddSxcCore()                   // Core 2sxc services
-            .AddEavEverything()                       // Core EAV services
+            .AddSxcCodeGen()                // Code generation services
+            .AddEavEverything()             // Core EAV services
             .AddEavWebApiTypedAfterEav()
             .AddOqtAppWebApi()              // Oqtane App WebAPI stuff
             .AddRazorBlade();               // RazorBlade helpers for Razor in the edition used by Oqtane

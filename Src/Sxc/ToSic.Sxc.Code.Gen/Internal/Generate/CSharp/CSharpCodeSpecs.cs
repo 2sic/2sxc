@@ -1,8 +1,11 @@
-﻿using Custom.Data;
+﻿using System.Collections.Generic;
+using Custom.Data;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code.Internal.HotBuild;
 
-namespace ToSic.Sxc.Code.Internal.Generate;
+namespace ToSic.Sxc.Code.Gen.Internal.Generate;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
