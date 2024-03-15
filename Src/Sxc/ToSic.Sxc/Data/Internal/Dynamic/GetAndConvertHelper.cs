@@ -52,10 +52,7 @@ internal class GetAndConvertHelper(
     public TValue Get<TValue>(string name) => TryGet(name).Result.ConvertOrDefault<TValue>();
 
     public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default)
-    {
-        return TryGet(name).Result.ConvertOrFallback(fallback);
-    }
-
+        => TryGet(name).Result.ConvertOrFallback(fallback);
 
     #endregion
 
@@ -105,23 +102,6 @@ internal class GetAndConvertHelper(
         return l.Return(final, "ok");
     }
     private readonly Dictionary<string, TryGetResult> _rawValCache = new(InvariantCultureIgnoreCase);
-
-    //public string StringAsPossibleLinkOrNull(PropReqResult original, ILog logOrNull)
-    //{
-    //    // If not string, then it can't be a link - otherwise continue, as in every case this is the only conversion
-    //    if (!(original.Result is string value)) 
-    //        return null;
-    //    var l = logOrNull.Fn<string>();
-    //    var parent = original.Source as IEntity;
-    //    // New mechanism to not use resolve-hyperlink
-    //    if (original.FieldType == DataTypes.Hyperlink && ValueConverterBase.CouldBeReference(value))
-    //    {
-    //        l.A($"Try to convert value - HasValueConverter: {Cdf.Services.ValueConverterOrNull != null}");
-    //        value = Cdf.Services.ValueConverterOrNull?.ToValue(value, parent?.EntityGuid ?? Guid.Empty) ?? value;
-    //        return l.Return(value, "link-conversion");
-    //    }
-    //    return l.Return(value, "no conversion");
-    //}
 
     private object ValueAutoConverted(PropReqResult original, bool lookupLink, string field, ILog logOrNull)
     {
