@@ -72,9 +72,9 @@ public abstract class BlockBase(BlockBase.MyServices services, string logName, o
         l.A("Real app specified, will load App object with Data");
 
         // Get App for this block
-        App = Services.AppLazy.Value
-            .PreInit(Context.Site)
-            .Init(this.PureIdentity(), new SxcAppDataConfigSpecs { BlockForLookupOrNull = this });
+        var app = Services.AppLazy.Value; //.PreInit(Context.Site);
+        app.Init(Context.Site, this.PureIdentity(), new SxcAppDataConfigSpecs { BlockForLookupOrNull = this });
+        App = app;
         l.A("App created");
 
         // note: requires EditAllowed, which isn't ready till App is created

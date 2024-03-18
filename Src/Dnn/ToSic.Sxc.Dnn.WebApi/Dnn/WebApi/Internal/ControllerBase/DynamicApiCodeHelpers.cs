@@ -106,9 +106,8 @@ internal class DynamicApiCodeHelpers: CodeHelper
                 var siteCtx = SharedContextResolver.Site();
                 // Look up if page publishing is enabled - if module context is not available, always false
                 l.A($"AppId: {appState.AppId}");
-                var app = services.AppOverrideLazy.Value
-                    .PreInit(siteCtx.Site)
-                    .Init(appState.PureIdentity(), new());
+                var app = services.AppOverrideLazy.Value;
+                app.Init(siteCtx.Site, appState.PureIdentity(), new());
                 return l.Return(app, $"found #{app.AppId}");
             }
         }

@@ -79,6 +79,7 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<IAppDataConfigProvider, SxcAppDataConfigProvider>(); // new v17
         services.TryAddTransient<App>();
         services.TryAddTransient<SxcImportExportEnvironmentBase.MyServices>();
+        services.TryAddTransient<IAppTyped, AppTyped>();
         services.TryAddTransient(typeof(IAppTyped<,>), typeof(AppTyped<,>));    // new v17
         services.TryAddTransient<ICodeCustomizer, Customizer>();
 

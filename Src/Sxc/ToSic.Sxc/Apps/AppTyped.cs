@@ -10,6 +10,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Decorators;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.DataServices;
 using ToSic.Sxc.Services.Internal;
 using static ToSic.Sxc.Apps.AppAssetFolderMain;
@@ -25,23 +26,28 @@ namespace ToSic.Sxc.Apps;
 // - provide an instance of this on the CodeApiService
 // - use that instead
 
-internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> queryManager) : ServiceForDynamicCode(SxcLogName + ".AppTyp", connect: [globalPaths, queryManager]), IAppTyped
+internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> queryManager)
+    : ServiceForDynamicCode(SxcLogName + ".AppTyp", errorIfNotConnected: true, connect: [globalPaths, queryManager]),
+        IAppTyped
 {
-    protected ICodeApiService CodeApiSvc => _CodeApiSvc ?? throw new($"Can't access {nameof(CodeApiSvc)} - either null or can't convert");
-
     protected App App => CodeApiSvc.App as App ?? throw new($"Can't access {nameof(App)} - either null or can't convert");
 
     /// <inheritdoc />
-    public int ZoneId => App.ZoneId;
+    int IZoneIdentity.ZoneId => App.ZoneId;
 
     /// <inheritdoc />
-    public int AppId => App.AppId;
+    int IAppIdentityLight.AppId => App.AppId;
 
     /// <inheritdoc />
     public string Name => App.Name;
 
     /// <inheritdoc />
-    public IAppDataTyped Data => _data ??= App.BuildDataForTyped<AppDataTyped, IAppDataTyped>();
+    public IAppDataTyped Data => _data ??= new Func<IAppDataTyped>(() =>
+    {
+        var data = App.BuildDataForTyped<AppDataTyped, AppDataTyped>();
+        data.Setup(((ICodeApiServiceInternal)CodeApiSvc).GetKit<ServiceKit16>());
+        return data;
+    })();
     private IAppDataTyped _data;
 
     /// <inheritdoc />
@@ -55,11 +61,11 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> 
     public IAppConfiguration Configuration => App.Configuration;
 
     /// <inheritdoc />
-    public ITypedItem Settings => _settings.Get(() => App.AppSettingsForTyped.NullOrGetWith(appS => MakeTyped(appS, propsRequired: true)));
+    ITypedItem IAppTyped.Settings => _settings.Get(() => App.AppSettingsForTyped.NullOrGetWith(appS => MakeTyped(appS, propsRequired: true)));
     private readonly GetOnce<ITypedItem> _settings = new();
 
     /// <inheritdoc />
-    public ITypedItem Resources => _resources.Get(() => App.AppResourcesForTyped.NullOrGetWith(appR => MakeTyped(appR, propsRequired: true)));
+    ITypedItem IAppTyped.Resources => _resources.Get(() => App.AppResourcesForTyped.NullOrGetWith(appR => MakeTyped(appR, propsRequired: true)));
     private readonly GetOnce<ITypedItem> _resources = new();
 
     private ITypedItem MakeTyped(ICanBeEntity contents, bool propsRequired)

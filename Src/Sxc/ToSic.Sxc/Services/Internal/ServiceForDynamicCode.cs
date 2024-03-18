@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Services.Internal;
 // #NoEditorBrowsableBecauseOfInheritance
 //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 [method: PrivateApi]
-public abstract class ServiceForDynamicCode(string logName, NoParamOrder protect = default, object[] connect = default)
+public abstract class ServiceForDynamicCode(string logName, NoParamOrder protect = default, bool errorIfNotConnected = false, object[] connect = default)
     : ServiceBase(logName, protect: protect, connect: connect), INeedsCodeApiService, IHasCodeApiService, ICanDebug
 {
     /// <summary>
@@ -46,6 +46,8 @@ public abstract class ServiceForDynamicCode(string logName, NoParamOrder protect
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public virtual ICodeApiService _CodeApiSvc { get; private set; }
+
+    protected ICodeApiService CodeApiSvc => _CodeApiSvc ?? (errorIfNotConnected ? throw new($"{nameof(CodeApiSvc)} is null") : null);
 
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

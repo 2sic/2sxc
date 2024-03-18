@@ -172,11 +172,10 @@ public static class Factory
         var log = new Log("Dnn.Factry", parentLog ?? NewLog());
         log.A($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
         var app = StaticBuild<App>(log);
-        if (site != null) app.PreInit(site);
         site ??= GetSite(log: log);
         var appIdentity = zoneId == AutoLookupZoneId ? new(site.ZoneId, appId) : new AppIdentityPure(zoneId, appId);
-        var appStuff = app.Init(appIdentity, new() { ShowDrafts = showDrafts });
-        return appStuff;
+        app.Init(site, appIdentity, new() { ShowDrafts = showDrafts });
+        return app;
     }
 
     private const int AutoLookupZoneId = -999;

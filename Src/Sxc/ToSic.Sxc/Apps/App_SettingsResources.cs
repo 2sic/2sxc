@@ -17,10 +17,10 @@ public partial class App
     private DynamicEntity MakeDynProperty(IEntity contents, bool propsRequired)
     {
         var wrapped = CmsEditDecorator.Wrap(contents, false);
-        return _cdfLazy.Value.AsDynamic(wrapped, propsRequired: propsRequired);
+        return Cdf.AsDynamic(wrapped, propsRequired: propsRequired);
     }
 
-    internal void SetupAsConverter(CodeDataFactory cdf) => _cdfLazy.Inject(cdf);
+    internal void SetupAsConverter(CodeDataFactory cdf) => cdfLazy.Inject(cdf);
 
     /// <inheritdoc cref="IDynamicCode12.Settings" />
     public dynamic Settings => AppSettings == null ? null : _settings.Get(() => MakeDynProperty(AppSettings, propsRequired: false));

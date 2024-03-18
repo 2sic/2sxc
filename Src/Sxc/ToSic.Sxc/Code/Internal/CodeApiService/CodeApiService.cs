@@ -3,7 +3,6 @@ using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Services;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
@@ -33,41 +32,26 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
     /// Helper class to ensure if dependencies change, inheriting objects don't need to change their signature
     /// </summary>
     [PrivateApi]
-    public class MyServices: MyServicesBase
+    public class MyServices(
+        IServiceProvider serviceProvider,
+        LazySvc<CodeCompiler> codeCompilerLazy,
+        AppDataStackService dataStackService,
+        LazySvc<IConvertService> convertService,
+        LazySvc<IDataSourcesService> dataSourceFactory,
+        LazySvc<CodeCreateDataSourceSvc> dataSources,
+        LazySvc<CodeDataFactory> cdf,
+        Polymorphism.Internal.PolymorphConfigReader polymorphism)
+        : MyServicesBase(connect:
+            [codeCompilerLazy, dataStackService, convertService, dataSourceFactory, dataSources, cdf, polymorphism])
     {
-        public CodeDataFactory Cdf => _cdf.Value;
-        private readonly LazySvc<CodeDataFactory> _cdf;
-        public LazySvc<CodeCreateDataSourceSvc> DataSources { get; }
-        public LazySvc<IDataSourcesService> DataSourceFactory { get; }
-        public LazySvc<IConvertService> ConvertService { get; }
-        internal IServiceProvider ServiceProvider { get; }
-        public LazySvc<CodeCompiler> CodeCompilerLazy { get; }
-        public AppDataStackService DataStackService { get; }
-        public Polymorphism.Internal.PolymorphConfigReader Polymorphism { get; }
-
-        public MyServices(
-            IServiceProvider serviceProvider,
-            LazySvc<CodeCompiler> codeCompilerLazy,
-            AppDataStackService dataStackService,
-            LazySvc<IConvertService> convertService,
-            LazySvc<IDataSourcesService> dataSourceFactory,
-            LazySvc<CodeCreateDataSourceSvc> dataSources,
-            LazySvc<CodeDataFactory> cdf,
-            Polymorphism.Internal.PolymorphConfigReader polymorphism)
-        {
-            ConnectServices(
-                ServiceProvider = serviceProvider,
-                CodeCompilerLazy = codeCompilerLazy,
-                DataStackService = dataStackService,
-                ConvertService = convertService,
-                DataSourceFactory = dataSourceFactory,
-                DataSources = dataSources,
-                _cdf = cdf,
-                Polymorphism = polymorphism
-            );
-        }
-
-
+        public CodeDataFactory Cdf => cdf.Value;
+        public LazySvc<CodeCreateDataSourceSvc> DataSources { get; } = dataSources;
+        public LazySvc<IDataSourcesService> DataSourceFactory { get; } = dataSourceFactory;
+        public LazySvc<IConvertService> ConvertService { get; } = convertService;
+        internal IServiceProvider ServiceProvider { get; } = serviceProvider;
+        public LazySvc<CodeCompiler> CodeCompilerLazy { get; } = codeCompilerLazy;
+        public AppDataStackService DataStackService { get; } = dataStackService;
+        public Polymorphism.Internal.PolymorphConfigReader Polymorphism { get; } = polymorphism;
     }
 
     [PrivateApi]
@@ -122,19 +106,6 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
 
     /// <inheritdoc />
     public IApp App { get; private set; }
-
-    public IAppTyped AppTyped
-    {
-        get
-        {
-            if (_appTyped != null) return _appTyped;
-            // TODO: @2dm - continue here with getting App to be without #IAppTyped
-            _appTyped = App as IAppTyped;
-            return _appTyped;
-        }
-    }
-
-    private IAppTyped _appTyped;
 
     /// <inheritdoc />
     public IBlockInstance Data { get; private set; }
