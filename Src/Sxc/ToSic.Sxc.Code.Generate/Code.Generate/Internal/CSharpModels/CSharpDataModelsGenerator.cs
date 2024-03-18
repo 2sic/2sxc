@@ -40,7 +40,7 @@ public class CSharpDataModelsGenerator(IUser user, IAppStates appStates)
 
     #endregion
 
-    public CSharpDataModelsGenerator Setup(IFileGeneratorSpecs parameters)
+    private CSharpDataModelsGenerator Setup(IFileGeneratorSpecs parameters)
     {
         if (parameters.Edition.HasValue())
             Specs.Edition = parameters.Edition;
@@ -72,8 +72,9 @@ public class CSharpDataModelsGenerator(IUser user, IAppStates appStates)
     public IAppState AppState { get; private set; }
 
 
-    public ICodeFileBundle[] Generate()
+    public ICodeFileBundle[] Generate(IFileGeneratorSpecs specs)
     {
+        Setup(specs);
 
         var classFiles = Specs.ExportedContentContentTypes
                 .Select(t => new CSharpDataModelGenerator(this, t, t.Name?.Replace("-", "")).PrepareFile())

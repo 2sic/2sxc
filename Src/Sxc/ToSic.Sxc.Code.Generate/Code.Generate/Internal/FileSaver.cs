@@ -25,21 +25,15 @@ public class FileSaver(CSharpDataModelsGenerator generator, ISite site, IAppStat
     public IAppState AppState => _appState ??= new Func<IAppState>(() => appStates.ToReader(appStates.GetCacheState(_specs.AppId)))();
     private IAppState _appState;
 
-    public void Setup(IFileGeneratorSpecs parameters)
-    {
-        _specs = parameters;
-    }
-
     private IFileGeneratorSpecs _specs;
 
 
-    public void GenerateAndSaveFiles(IFileGeneratorSpecs parameters)
+    public void GenerateAndSaveFiles(IFileGeneratorSpecs specs)
     {
         var l = Log.Fn();
-        Setup(parameters);
+        _specs = specs;
 
-        generator.Setup(parameters);
-        var bundle = generator.Generate().First();
+        var bundle = generator.Generate(specs).First();
         var physicalPath = GetAppCodeDataPhysicalPath(bundle.Path);
         l.A($"{nameof(physicalPath)}: '{physicalPath}'");
 
@@ -98,9 +92,9 @@ public class FileSaver(CSharpDataModelsGenerator generator, ISite site, IAppStat
     }
 
     // TODO: @STV - this should be moved to an AppJsonService in Eav.Apps
-    internal string GetPathToDotAppJson(FileGeneratorSpecs parameters)
+    internal string GetPathToDotAppJson(FileGeneratorSpecs specs)
     {
-        Setup(parameters);
+        _specs = specs;
         return Path.Combine(GetAppFullPath(), Constants.AppDataProtectedFolder, Constants.AppJson);
     }
 
