@@ -143,7 +143,6 @@ public abstract partial class Api14: DnnSxcCustomControllerBase, IDynamicCode14<
     public IFolder AsAdam(ICanBeEntity item, string fieldName) => _CodeApiSvc.AsAdam(item, fieldName);
 
     /// <inheritdoc cref="IDynamicWebApi.SaveInAdam" />
-    /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
     public IFile SaveInAdam(NoParamOrder noParamOrder = default, Stream stream = null, string fileName = null, string contentType = null,
         Guid? guid = null, string field = null, string subFolder = "")
         => DynHlp.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
