@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Code.Internal.Generate;
+﻿namespace ToSic.Sxc.Code.Gen.Internal.Generate;
 
 internal class GenerateConstants
 {

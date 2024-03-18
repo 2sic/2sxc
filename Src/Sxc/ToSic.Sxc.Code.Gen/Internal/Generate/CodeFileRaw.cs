@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Code.Internal.Generate;
+﻿using System.Collections.Generic;
+
+namespace ToSic.Sxc.Code.Gen.Internal.Generate;
 
 /// <summary>
 /// Object which contains the info to generate the class code file.

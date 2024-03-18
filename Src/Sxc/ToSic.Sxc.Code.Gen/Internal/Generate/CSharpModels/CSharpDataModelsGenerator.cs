@@ -1,12 +1,16 @@
-﻿using ToSic.Eav;
+﻿using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
+using ToSic.Eav.Data;
 using ToSic.Eav.Data.Shared;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Internal;
+using static ToSic.Sxc.Internal.SxcLogging;
 
-namespace ToSic.Sxc.Code.Internal.Generate;
+namespace ToSic.Sxc.Code.Gen.Internal.Generate;
 
 /// <summary>
 /// Experimental
@@ -72,8 +76,8 @@ public class CSharpDataModelsGenerator(IUser user, IAppStates appStates)
     {
 
         var classFiles = Specs.ExportedContentContentTypes
-            .Select(t => new CSharpDataModelGenerator(this, t, t.Name?.Replace("-", "")).PrepareFile())
-            .ToList();
+                .Select(t => new CSharpDataModelGenerator(this, t, t.Name?.Replace("-", "")).PrepareFile())
+                .ToList();
 
         var result = new CodeFileBundle
         {

@@ -4,12 +4,11 @@ using ToSic.Eav.Integration;
 using ToSic.Eav.WebApi;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Backend;
+using ToSic.Sxc.Code.Gen.Startup;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Integration;
-using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Startup;
-using ToSic.Sxc.Engines;
 using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sxc.Startup;
@@ -41,7 +40,8 @@ public static class DnnDi
             .AddDnnCompatibility()
             .AddAdamWebApi<int, int>()
             .AddSxcWebApi()
-            .AddSxcCore()
+            .AddSxcCore() 
+            .AddSxcCodeGen() // Code generation services
             .AddEavEverything()
             .AddEavWebApiTypedAfterEav()
             .AddRazorBlade();

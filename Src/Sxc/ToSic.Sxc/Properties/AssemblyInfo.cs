@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCulture("")]
 
 [assembly: InternalsVisibleTo("ToSic.Sxc.WebApi")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Code.Gen")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Dnn")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.WebApi")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.Core")]

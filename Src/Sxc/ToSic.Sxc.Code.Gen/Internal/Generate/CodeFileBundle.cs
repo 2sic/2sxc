@@ -1,4 +1,7 @@
-﻿namespace ToSic.Sxc.Code.Internal.Generate;
+﻿using System.Collections.Generic;
+using ToSic.Lib.Documentation;
+
+namespace ToSic.Sxc.Code.Gen.Internal.Generate;
 
 /// <summary>
 /// WIP - should contain a list of code-files and additional specs

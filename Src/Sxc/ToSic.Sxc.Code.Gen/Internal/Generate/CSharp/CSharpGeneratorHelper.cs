@@ -1,7 +1,9 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using ToSic.Eav.Plumbing;
 
-namespace ToSic.Sxc.Code.Internal.Generate;
+namespace ToSic.Sxc.Code.Gen.Internal.Generate;
 
 internal class CSharpGeneratorHelper(CSharpCodeSpecs specs)
 {

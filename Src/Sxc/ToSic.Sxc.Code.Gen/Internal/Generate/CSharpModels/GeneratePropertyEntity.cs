@@ -1,7 +1,10 @@
-﻿using ToSic.Eav.Plumbing;
+﻿using System.Collections.Generic;
+using System.Linq;
+using ToSic.Eav.Data;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
 
-namespace ToSic.Sxc.Code.Internal.Generate;
+namespace ToSic.Sxc.Code.Gen.Internal.Generate;
 
 internal class GeneratePropertyEntity(CSharpGeneratorHelper helper) : GeneratePropertyBase(helper)
 {

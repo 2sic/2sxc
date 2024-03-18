@@ -1,4 +1,7 @@
-﻿namespace ToSic.Sxc.Code.Internal.Generate;
+﻿using System.Collections.Generic;
+using ToSic.Eav.Data;
+
+namespace ToSic.Sxc.Code.Gen.Internal.Generate;
 
 internal class GeneratePropertyHyperlink(CSharpGeneratorHelper helper) : GeneratePropertyBase(helper)
 {
