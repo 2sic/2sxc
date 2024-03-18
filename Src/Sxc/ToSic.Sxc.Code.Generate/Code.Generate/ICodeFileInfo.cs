@@ -1,6 +1,6 @@
 ﻿using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Code.Generate.Internal;
+namespace ToSic.Sxc.Code.Generate;
 
 /// <summary>
 /// Data which describes a code file which will be created or may already exist.

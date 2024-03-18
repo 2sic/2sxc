@@ -2,10 +2,10 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Code.Generate.Internal;
 
-namespace ToSic.Sxc.Code.Generate.Startup;
+namespace ToSic.Sxc.Integration.Startup;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public static class RegisterSxcCodeGenServices
+public static class SxcCodeGenerateStartup
 {
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static IServiceCollection AddSxcCodeGen(this IServiceCollection services)

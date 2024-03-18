@@ -15,9 +15,9 @@ internal class CSharpDataModelGenerator(CSharpDataModelsGenerator dmg, IContentT
 
     #region Class
 
-    internal CodeFileRaw PrepareFile()
+    internal CodeFileDataModel PrepareFile()
     {
-        var l = Log.Fn<CodeFileRaw>($"{nameof(className)}: {className}; {nameof(type)}: {type?.Name} ({type?.NameId})");
+        var l = Log.Fn<CodeFileDataModel>($"{nameof(className)}: {className}; {nameof(type)}: {type?.Name} ({type?.NameId})");
 
         if (type == null)
             return l.ReturnNull("No content type provided");
