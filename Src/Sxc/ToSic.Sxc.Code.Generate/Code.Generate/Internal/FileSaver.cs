@@ -22,19 +22,12 @@ namespace ToSic.Sxc.Code.Generate.Internal;
 public class FileSaver(CSharpDataModelsGenerator generator, ISite site, IAppStates appStates, IAppPathsMicroSvc appPaths)
     : ServiceBase(SxcLogName + ".GenFSv")
 {
-    public IAppState AppState => _appState ??= new Func<IAppState>(() => appStates.ToReader(appStates.GetCacheState(_specs.AppId)))();
-    private IAppState _appState;
-
-    private IFileGeneratorSpecs _specs;
-
-
     public void GenerateAndSaveFiles(IFileGeneratorSpecs specs)
     {
         var l = Log.Fn();
-        _specs = specs;
 
         var bundle = generator.Generate(specs).First();
-        var physicalPath = GetAppCodeDataPhysicalPath(bundle.Path);
+        var physicalPath = GetAppCodeDataPhysicalPath(bundle.Path, specs);
         l.A($"{nameof(physicalPath)}: '{physicalPath}'");
 
         var classFiles = bundle.Files;
@@ -58,9 +51,13 @@ public class FileSaver(CSharpDataModelsGenerator generator, ISite site, IAppStat
         l.Done();
     }
 
-    private string GetAppFullPath() => appPaths.Init(site, AppState).PhysicalPath;
+    private string GetAppFullPath(int appId)
+    {
+        var appState = appStates.ToReader(appStates.GetCacheState(appId));
+        return appPaths.Init(site, appState).PhysicalPath;
+    }
 
-    private string GetAppCodeDataPhysicalPath(string mask)
+    private string GetAppCodeDataPhysicalPath(string mask, IFileGeneratorSpecs specs)
     {
         // Do basic mask tests
         if (mask.IsEmpty()) throw new("Mask must not be empty");
@@ -69,16 +66,16 @@ public class FileSaver(CSharpDataModelsGenerator generator, ISite site, IAppStat
 
 
         // Get the full path to the app
-        var path = mask.Replace(GenerateConstants.AppRootFolderPlaceholder, GetAppFullPath().TrimLastSlash());
+        var path = mask.Replace(GenerateConstants.AppRootFolderPlaceholder, GetAppFullPath(specs.AppId).TrimLastSlash());
 
         // Optionally add / replace the edition
         if (path.IndexOf(GenerateConstants.EditionPlaceholder, StringComparison.OrdinalIgnoreCase) > -1)
         {
             // sanitize path because 'edition' is user provided
-            if (_specs.Edition.ContainsPathTraversal())
-                throw new($"Invalid edition '{_specs.Edition}' - {PathFixer.PathTraversalMayNotContainMessage}");
+            if (specs.Edition.ContainsPathTraversal())
+                throw new($"Invalid edition '{specs.Edition}' - {PathFixer.PathTraversalMayNotContainMessage}");
 
-            path = path.Replace(GenerateConstants.EditionPlaceholder, _specs.Edition).TrimLastSlash();
+            path = path.Replace(GenerateConstants.EditionPlaceholder, specs.Edition).TrimLastSlash();
         }
 
         path = path.FlattenSlashes().Backslash();
@@ -94,8 +91,7 @@ public class FileSaver(CSharpDataModelsGenerator generator, ISite site, IAppStat
     // TODO: @STV - this should be moved to an AppJsonService in Eav.Apps
     internal string GetPathToDotAppJson(FileGeneratorSpecs specs)
     {
-        _specs = specs;
-        return Path.Combine(GetAppFullPath(), Constants.AppDataProtectedFolder, Constants.AppJson);
+        return Path.Combine(GetAppFullPath(specs.AppId), Constants.AppDataProtectedFolder, Constants.AppJson);
     }
 
 
