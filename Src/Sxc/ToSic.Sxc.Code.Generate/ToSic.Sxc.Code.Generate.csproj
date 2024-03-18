@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472;net7.0;</TargetFrameworks>
-    <RootNamespace>ToSic.Sxc.Code.Generate</RootNamespace>
+    <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>ToSic.Sxc.Code.Generate</AssemblyName>
     <Deterministic>true</Deterministic>
     <FileAlignment>512</FileAlignment>
