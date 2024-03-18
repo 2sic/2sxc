@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using ToSic.Sxc.Code.Gen.Internal.Generate;
+using ToSic.Sxc.Code.Generate.Internal;
 
 namespace ToSic.Sxc.Backend.Admin;
 

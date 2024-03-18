@@ -134,7 +134,7 @@
               <name>ToSic.Sxc.dll</name>
             </assembly>
             <assembly>
-              <name>ToSic.Sxc.Code.Gen.dll</name>
+              <name>ToSic.Sxc.Code.Generate.dll</name>
             </assembly>
             <assembly>
               <name>ToSic.Sxc.WebApi.dll</name>

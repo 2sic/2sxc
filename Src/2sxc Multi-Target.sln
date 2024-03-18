@@ -119,7 +119,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{B39F27D8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.BuildTasks", "Build\ToSic.Sxc.BuildTasks\ToSic.Sxc.BuildTasks.csproj", "{B8DC61F4-CA64-441E-8508-206F2432AADB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Code.Gen", "Sxc\ToSic.Sxc.Code.Gen\ToSic.Sxc.Code.Gen.csproj", "{FB557EF7-8120-4B05-B250-7FA49916BBB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Code.Generate", "Sxc\ToSic.Sxc.Code.Generate\ToSic.Sxc.Code.Generate.csproj", "{FB557EF7-8120-4B05-B250-7FA49916BBB4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1174,7 +1174,7 @@ Global
 		{FB557EF7-8120-4B05-B250-7FA49916BBB4} = {5CD8015A-76D8-4633-8469-53B62A6C1894}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 EndGlobal
