@@ -22,18 +22,18 @@ namespace ToSic.Sxc.Code.Generate.Internal;
 public class FileSaver(CSharpDataModelsGenerator generator, ISite site, IAppStates appStates, IAppPathsMicroSvc appPaths)
     : ServiceBase(SxcLogName + ".GenFSv")
 {
-    public IAppState AppState => _appState ??= new Func<IAppState>(() => appStates.ToReader(appStates.GetCacheState(_parameters.AppId)))();
+    public IAppState AppState => _appState ??= new Func<IAppState>(() => appStates.ToReader(appStates.GetCacheState(_specs.AppId)))();
     private IAppState _appState;
 
-    public void Setup(GenerateParameters parameters)
+    public void Setup(IFileGeneratorSpecs parameters)
     {
-        _parameters = parameters;
+        _specs = parameters;
     }
 
-    private GenerateParameters _parameters;
+    private IFileGeneratorSpecs _specs;
 
 
-    public void GenerateAndSaveFiles(GenerateParameters parameters)
+    public void GenerateAndSaveFiles(IFileGeneratorSpecs parameters)
     {
         var l = Log.Fn();
         Setup(parameters);
@@ -81,10 +81,10 @@ public class FileSaver(CSharpDataModelsGenerator generator, ISite site, IAppStat
         if (path.IndexOf(GenerateConstants.EditionPlaceholder, StringComparison.OrdinalIgnoreCase) > -1)
         {
             // sanitize path because 'edition' is user provided
-            if (_parameters.Edition.ContainsPathTraversal())
-                throw new($"Invalid edition '{_parameters.Edition}' - {PathFixer.PathTraversalMayNotContainMessage}");
+            if (_specs.Edition.ContainsPathTraversal())
+                throw new($"Invalid edition '{_specs.Edition}' - {PathFixer.PathTraversalMayNotContainMessage}");
 
-            path = path.Replace(GenerateConstants.EditionPlaceholder, _parameters.Edition).TrimLastSlash();
+            path = path.Replace(GenerateConstants.EditionPlaceholder, _specs.Edition).TrimLastSlash();
         }
 
         path = path.FlattenSlashes().Backslash();
@@ -98,7 +98,7 @@ public class FileSaver(CSharpDataModelsGenerator generator, ISite site, IAppStat
     }
 
     // TODO: @STV - this should be moved to an AppJsonService in Eav.Apps
-    internal string GetPathToDotAppJson(GenerateParameters parameters)
+    internal string GetPathToDotAppJson(FileGeneratorSpecs parameters)
     {
         Setup(parameters);
         return Path.Combine(GetAppFullPath(), Constants.AppDataProtectedFolder, Constants.AppJson);

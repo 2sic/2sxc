@@ -64,7 +64,7 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IJsonService> json,
 
         try
         {
-            fileSaver.GenerateAndSaveFiles(new() { AppId = appId, Edition = edition });
+            fileSaver.GenerateAndSaveFiles(new FileGeneratorSpecs { AppId = appId, Edition = edition });
 
             return l.Return(new RichResult
                 {

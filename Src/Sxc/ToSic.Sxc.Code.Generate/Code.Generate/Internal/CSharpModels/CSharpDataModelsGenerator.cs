@@ -40,7 +40,7 @@ public class CSharpDataModelsGenerator(IUser user, IAppStates appStates)
 
     #endregion
 
-    public CSharpDataModelsGenerator Setup(GenerateParameters parameters)
+    public CSharpDataModelsGenerator Setup(IFileGeneratorSpecs parameters)
     {
         if (parameters.Edition.HasValue())
             Specs.Edition = parameters.Edition;
