@@ -32,12 +32,14 @@ public class CSharpDataModelsGenerator(IUser user, IAppStates appStates)
 
     public string Description => "Generates C# Data Classes for the AppCode/Data folder";
 
+    public string DescriptionHtml => $"The {Name} will generate <code>[TypeName]Generated.cs</code> files in the <code>AppCode/Data</code> folder.";
+
     public string OutputLanguage => "CSharp";
     public string OutputType => "DataModel";
 
     #endregion
 
-    private CSharpDataModelsGenerator Setup(IFileGeneratorSpecs parameters)
+    private void Setup(IFileGeneratorSpecs parameters)
     {
         if (parameters.Edition.HasValue())
             Specs.Edition = parameters.Edition;
@@ -63,7 +65,6 @@ public class CSharpDataModelsGenerator(IUser user, IAppStates appStates)
 
         Specs.ExportedContentContentTypes = types;
         CodeGenHelper = new(Specs);
-        return this;
     }
 
     public IAppState AppState { get; private set; }

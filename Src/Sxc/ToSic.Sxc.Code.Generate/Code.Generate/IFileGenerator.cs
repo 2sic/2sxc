@@ -23,6 +23,8 @@ public interface IFileGenerator : IHasIdentityNameId
     /// </summary>
     public string Description { get; }
 
+    public string DescriptionHtml { get; }
+
     /// <summary>
     /// Language this generator creates, e.g. "CSharp", "TypeScript", "JavaScript"
     /// </summary>

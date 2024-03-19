@@ -28,6 +28,7 @@ public class GeneratorDto(IFileGenerator generator)
     public string Name => generator.Name;
     public string Version => generator.Version;
     public string Description => generator.Description;
+    public string DescriptionHtml => generator.DescriptionHtml;
     public string OutputLanguage => generator.OutputLanguage;
     public string OutputType => generator.OutputType;
 }
