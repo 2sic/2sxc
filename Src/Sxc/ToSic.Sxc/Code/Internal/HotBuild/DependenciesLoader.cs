@@ -2,7 +2,6 @@
 using System.Reflection;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
-using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
@@ -52,10 +51,10 @@ public class DependenciesLoader : ServiceBase
         return l.Return(pairFromRoot, "Dependencies found in '/'." + (pairFromRoot.Assemblies == null ? ", null." : ""));
     }
 
-    private static (List<AssemblyResult> assemblyResults, string cacheKey) TryGetAssemblyOfDependenciesFromCache(HotBuildSpec spec, ILog callerLog)
+    private (List<AssemblyResult> assemblyResults, string cacheKey) TryGetAssemblyOfDependenciesFromCache(HotBuildSpec spec, ILog callerLog)
     {
         var l = callerLog.Fn<(List<AssemblyResult>, string)>($"{spec}");
-        var (assemblyResults, cacheKey) = AssemblyCacheManager.TryGetDependencies(spec);
+        var (assemblyResults, cacheKey) = _assemblyCacheManager.TryGetDependencies(spec);
         if (assemblyResults == null) return l.Return((null, cacheKey),"no dependencies in cache");
 
         l.A($"dependencies from cache: {assemblyResults.Count}");
@@ -120,62 +119,11 @@ public class DependenciesLoader : ServiceBase
         l.A($"dependencies loaded: {assemblyResults.Count}");
 
         // Add dependency assemblies to cache
-        _assemblyCacheManager.Add(
-            cacheKey,
-            assemblyResults,
-            changeMonitor: [new FolderChangeMonitor([physicalPath])]
-        );
+        _assemblyCacheManager.Add(cacheKey, assemblyResults, [physicalPath]);
         l.A($"{assemblyResults.Count} dependencies added to cache: {cacheKey}");
 
         return l.ReturnAsOk(assemblyResults);
     }
-
-
-
-    //private static IDictionary<string, bool> GetWatcherFolders(AssemblyResult assemblyResult, HotBuildSpec spec, string physicalPath)
-    //{
-    //    var watcherFolders = new Dictionary<string, bool>();
-
-    //    // take AppCode folder (eg. ...\edition\AppCode)
-    //    var appCodeFolder = physicalPath;
-    //    IfExistsThenAdd(appCodeFolder, true);
-
-    //    // take parent folder (eg. ...\edition)
-    //    var appCodeParentFolder = Path.GetDirectoryName(appCodeFolder);
-    //    if (appCodeParentFolder.IsEmpty()) return new Dictionary<string, bool>(watcherFolders);
-    //    IfExistsThenAdd(appCodeParentFolder, false);
-
-    //    // if no edition was used, then we were already in the root, and should stop now.
-    //    if (spec.Edition.IsEmpty()) return new Dictionary<string, bool>(watcherFolders);
-
-    //    // If we have an edition, and it has an assembly, we don't need to watch the root folder
-    //    if (assemblyResult.HasAssembly) return new Dictionary<string, bool>(watcherFolders);
-
-    //    // If we had an edition and no assembly, then we need to watch the root folder
-    //    // we need to add more folders to watch for cache invalidation
-
-    //    // App Root folder (eg. ...\)
-    //    var appRootFolder = Path.GetDirectoryName(appCodeParentFolder);
-    //    if (appRootFolder.IsEmpty()) return new Dictionary<string, bool>(watcherFolders);
-    //    // Add to watcher list if it exists, otherwise exit, since we can't have subfolders
-    //    if (!IfExistsThenAdd(appRootFolder, false)) return new Dictionary<string, bool>(watcherFolders);
-
-    //    // 
-    //    var appRootAppCode = Path.Combine(appRootFolder, DependenciesFolder);
-    //    // Add to watcher list if it exists, otherwise exit, since we can't have subfolders
-    //    if (!IfExistsThenAdd(appRootAppCode, true)) return new Dictionary<string, bool>(watcherFolders);
-
-    //    // all done
-    //    return new Dictionary<string, bool>(watcherFolders);
-
-    //    // Helper to add and return info if it exists
-    //    bool IfExistsThenAdd(string folder, bool watchSubfolders)
-    //    {
-    //        if (!Directory.Exists(folder)) return false;
-    //        watcherFolders.Add(folder, watchSubfolders);
-    //        return true;
-    //    }   
-    //}
 
     private (string physicalPath, string relativePath) GetDependenciesPaths(string folder, HotBuildSpec spec)
     {
@@ -190,30 +138,4 @@ public class DependenciesLoader : ServiceBase
         l.A($"dependencies {nameof(relativePath)}: '{relativePath}'");
         return l.ReturnAsOk((physicalPath, relativePath));
     }
-
-    // Idea: put dll in the App/bin folder, for VS Intellisense - ATM not relevant
-    //private static void AssembliesDelete(IEnumerable<string> list)
-    //{
-    //    if (list == null) return;
-    //    foreach (var assembly in list)
-    //    {
-    //        try
-    //        {
-    //            File.Delete(assembly);
-    //        }
-    //        catch
-    //        {
-    //            // ignore
-    //        }
-    //    }
-    //}
-
-    // Idea: put dll in the App/bin folder, for VS Intellisense - ATM not relevant
-    //private static void CopyAssemblyForRefs(string source, string destination)
-    //{
-    //    if (!File.Exists(source)) return;
-    //    var destinationFolder = Path.GetDirectoryName(destination);
-    //    if (destinationFolder != null) Directory.CreateDirectory(destinationFolder);
-    //    File.Copy(source, destination, true);
-    //}
 }
