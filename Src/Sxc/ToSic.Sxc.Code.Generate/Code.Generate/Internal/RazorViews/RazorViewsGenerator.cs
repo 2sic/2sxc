@@ -1,8 +1,5 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Internal.HotBuild;
-using ToSic.Sxc.Internal;
 using static ToSic.Sxc.Internal.SxcLogging;
 
 namespace ToSic.Sxc.Code.Generate.Internal.RazorViews;
@@ -13,76 +10,73 @@ namespace ToSic.Sxc.Code.Generate.Internal.RazorViews;
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class RazorViewsGenerator(IUser user, IAppStates appStates)
-    : ServiceBase(SxcLogName + ".RzrVGn"), IFileGenerator
+    : CSharpGeneratorBase(user, appStates, SxcLogName + ".RzrVGn"), IFileGenerator
 {
     internal CSharpCodeSpecs Specs { get; } = new();
 
-    //internal IUser User = user;
-    //internal CSharpGeneratorHelper CodeGenHelper { get; private set; }
-
     #region Information for the interface
-
-    public string NameId => GetType().FullName;
-
-    public string Name => nameof(RazorViewsGenerator);
-
-    public string Version => SharedAssemblyInfo.AssemblyVersion;
 
     public string Description => "Generates Razor Views in the AppCode/Razor folder (dummy, not working yet!)";
 
-    public string DescriptionHtml => $"EXPERIMENTAL The {Name} will generate <code>AppRazorGenerated.cs</code> files in the <code>AppCode/Razor</code> folder.";
+    public string DescriptionHtml => $"EXPERIMENTAL The {Name} will generate <code>AppRazor.Generated.cs</code> files in the <code>AppCode/Razor</code> folder.";
 
-    public string OutputLanguage => "CSharp";
     public string OutputType => "RazorView";
 
     #endregion
 
-    //private void Setup(IFileGeneratorSpecs parameters)
-    //{
-    //    if (parameters.Edition.HasValue())
-    //        Specs.Edition = parameters.Edition;
-
-    //    // Prepare App State and add to Specs
-    //    var appCache = appStates.GetCacheState(parameters.AppId);
-    //    AppState = appStates.ToReader(appCache);
-    //    Specs.AppState = AppState;
-    //    Specs.AppName = AppState.Name;
-
-    //    // Prepare Content Types and add to Specs, so the generators know what is available
-    //    // Generate classes for all types in scope Default
-    //    var types = AppState.ContentTypes.OfScope(Scopes.Default).ToList();
-    //    AppState.GetContentType(AppLoadConstants.TypeAppResources).DoIfNotNull(types.Add);
-    //    AppState.GetContentType(AppLoadConstants.TypeAppSettings).DoIfNotNull(types.Add);
-
-    //    var appConfigTypes = AppState.ContentTypes
-    //        .OfScope(Scopes.SystemConfiguration)
-    //        .Where(ct => !ct.HasAncestor())
-    //        .ToList();
-
-    //    types.AddRange(appConfigTypes);
-
-    //    Specs.ExportedContentContentTypes = types;
-    //    CodeGenHelper = new(Specs);
-    //}
-
-    public IAppState AppState { get; private set; }
-
 
     public IGeneratedFileSet[] Generate(IFileGeneratorSpecs specs)
     {
-        //Setup(specs);
+        var cSharpSpecs = BuildSpecs(specs);
 
-        //var classFiles = Specs.ExportedContentContentTypes
-        //        .Select(t => new CSharpDataModelGenerator(this, t, t.Name?.Replace("-", "")).PrepareFile())
-        //        .ToList();
+        var file = new GeneratedFile
+        {
+            FileName = "AppRazor.Generated.cs",
+            Path = "Razor",
+            Body = $$"""
+                   // DO NOT MODIFY THIS FILE - IT IS AUTO-GENERATED
+                   // All the classes are partial, so you can extend them in a separate file.
+                   
+                   {{CSharpGeneratorHelper.GeneratorHeader(this, cSharpSpecs, User.Name)}}
+
+                   using AppCode.Data;
+                   using ToSic.Sxc.Apps;
+
+                   namespace AppCode.Razor
+                   {
+                     /// <summary>
+                     /// Base Class for Razor Views which have a typed App but don't use the Model or use the typed MyModel.
+                     /// </summary>
+                     public abstract partial class AppRazor: AppRazor<object>
+                     {
+                   
+                     }
+                   
+                     /// <summary>
+                     /// Base Class for Razor Views which have a typed App and a typed Model
+                     /// </summary>
+                     public abstract partial class AppRazor<TModel>: Custom.Hybrid.RazorTyped<TModel>
+                     {
+                       /// <summary>
+                       /// Typed App with typed Settings & Resources
+                       /// </summary>
+                       public new IAppTyped<AppSettings, AppResources> App => _app ??= Customize.App<AppSettings, AppResources>();
+                       private IAppTyped<AppSettings, AppResources> _app;
+                       
+                     }
+                   }
+
+                   """,
+            Dependencies = [],
+        };
 
         var result = new GeneratedFileSet
         {
             Name = "C# Razor Views",
             Description = Description,
             Generator = $"{Name} v{Version}",
-            Path = $"{GenerateConstants.PathPlaceholderAppRoot}/{GenerateConstants.PathPlaceholderEdition}/{AppCodeLoader.AppCodeBase}",
-            Files = [], // classFiles.Cast<IGeneratedFile>().ToList()
+            Path = GenerateConstants.PathToAppCode,
+            Files = [file],
         };
         return [result];
     }

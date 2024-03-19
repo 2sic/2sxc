@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Code.Generate;
+﻿using ToSic.Sxc.Code.Internal.HotBuild;
+
+namespace ToSic.Sxc.Code.Generate;
 
 /// <summary>
 /// Constants used in the code generation process.
@@ -22,4 +24,6 @@ public class GenerateConstants
     /// It's usually used in the path of the generated file, to create edition-specific files.
     /// </summary>
     public const string PathPlaceholderEdition = "[target:edition]";
+
+    public const string PathToAppCode = $"{PathPlaceholderAppRoot}/{PathPlaceholderEdition}/{AppCodeLoader.AppCodeBase}";
 }

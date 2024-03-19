@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Code.Generate.Internal;
+﻿using System;
+
+namespace ToSic.Sxc.Code.Generate.Internal;
 
 /// <summary>
 /// WIP Parameters to give the code generator
@@ -10,4 +12,6 @@ internal class FileGeneratorSpecs : IFileGeneratorSpecs
 
     /// <inheritdoc />
     public string Edition { get; init; }
+
+    public DateTime DateTime { get; init; } = DateTime.Now;
 }

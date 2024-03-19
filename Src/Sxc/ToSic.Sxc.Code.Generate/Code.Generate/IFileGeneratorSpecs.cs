@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Code.Generate;
+﻿using System;
+
+namespace ToSic.Sxc.Code.Generate;
 
 /// <summary>
 /// Specs for a file generator.
@@ -20,4 +22,6 @@ public interface IFileGeneratorSpecs
     /// The Edition for which we're generating the file.
     /// </summary>
     string Edition { get; }
+
+    DateTime DateTime { get; }
 }

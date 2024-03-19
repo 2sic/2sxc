@@ -2,9 +2,6 @@
 using ToSic.Eav.Context;
 using ToSic.Eav.Data.Shared;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Internal.HotBuild;
-using ToSic.Sxc.Internal;
 using static ToSic.Sxc.Internal.SxcLogging;
 
 namespace ToSic.Sxc.Code.Generate.Internal;
@@ -15,48 +12,35 @@ namespace ToSic.Sxc.Code.Generate.Internal;
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class CSharpDataModelsGenerator(IUser user, IAppStates appStates)
-    : ServiceBase(SxcLogName + ".DMoGen"), IFileGenerator
+    : CSharpGeneratorBase(user, appStates, SxcLogName + ".DMoGen"), IFileGenerator
 {
-    internal CSharpCodeSpecs Specs { get; } = new();
+    internal CSharpCodeSpecs Specs { get; private set; } = new();
 
-    internal IUser User = user;
     internal CSharpGeneratorHelper CodeGenHelper { get; private set; }
 
     #region Information for the interface
 
-    public string NameId => GetType().FullName;
-
-    public string Name => nameof(CSharpDataModelGenerator);
-
-    public string Version => SharedAssemblyInfo.AssemblyVersion;
 
     public string Description => "Generates C# Data Classes for the AppCode/Data folder";
 
-    public string DescriptionHtml => $"The {Name} will generate <code>[TypeName]Generated.cs</code> files in the <code>AppCode/Data</code> folder.";
+    public string DescriptionHtml => $"The {Name} will generate <code>[TypeName].Generated.cs</code> files in the <code>AppCode/Data</code> folder.";
 
-    public string OutputLanguage => "CSharp";
     public string OutputType => "DataModel";
 
     #endregion
 
     private void Setup(IFileGeneratorSpecs parameters)
     {
-        if (parameters.Edition.HasValue())
-            Specs.Edition = parameters.Edition;
-
-        // Prepare App State and add to Specs
-        var appCache = appStates.GetCacheState(parameters.AppId);
-        AppState = appStates.ToReader(appCache);
-        Specs.AppState = AppState;
-        Specs.AppName = AppState.Name;
+        Specs = BuildSpecs(parameters);
+        var appState = Specs.AppState;
 
         // Prepare Content Types and add to Specs, so the generators know what is available
         // Generate classes for all types in scope Default
-        var types = AppState.ContentTypes.OfScope(Scopes.Default).ToList();
-        AppState.GetContentType(AppLoadConstants.TypeAppResources).DoIfNotNull(types.Add);
-        AppState.GetContentType(AppLoadConstants.TypeAppSettings).DoIfNotNull(types.Add);
+        var types = appState.ContentTypes.OfScope(Scopes.Default).ToList();
+        appState.GetContentType(AppLoadConstants.TypeAppResources).DoIfNotNull(types.Add);
+        appState.GetContentType(AppLoadConstants.TypeAppSettings).DoIfNotNull(types.Add);
 
-        var appConfigTypes = AppState.ContentTypes
+        var appConfigTypes = appState.ContentTypes
             .OfScope(Scopes.SystemConfiguration)
             .Where(ct => !ct.HasAncestor())
             .ToList();
@@ -64,10 +48,10 @@ public class CSharpDataModelsGenerator(IUser user, IAppStates appStates)
         types.AddRange(appConfigTypes);
 
         Specs.ExportedContentContentTypes = types;
+
         CodeGenHelper = new(Specs);
     }
 
-    public IAppState AppState { get; private set; }
 
 
     public IGeneratedFileSet[] Generate(IFileGeneratorSpecs specs)
@@ -83,7 +67,7 @@ public class CSharpDataModelsGenerator(IUser user, IAppStates appStates)
             Name = "C# Data Classes",
             Description = Description,
             Generator = $"{Name} v{Version}",
-            Path = $"{GenerateConstants.PathPlaceholderAppRoot}/{GenerateConstants.PathPlaceholderEdition}/{AppCodeLoader.AppCodeBase}",
+            Path = GenerateConstants.PathToAppCode,
             Files = classFiles.Cast<IGeneratedFile>().ToList()
         };
         return [result];

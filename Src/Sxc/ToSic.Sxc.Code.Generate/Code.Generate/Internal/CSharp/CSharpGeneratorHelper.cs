@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Code.Generate.Internal;
@@ -112,5 +113,13 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs)
                       """;
         return new("class", start, closing: $"{indent}}}\n");
     }
+
+    public static string GeneratorHeader(IFileGenerator generator, CSharpCodeSpecs specs, string userName) =>
+        $"""
+         // Generator:   {generator.Name} v{generator.Version}
+         // App/Edition: {specs.AppName}/{specs.Edition}
+         // User:        {userName}
+         // When:        {specs.DateTime:u}
+         """;
 
 }

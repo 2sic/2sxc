@@ -114,12 +114,10 @@ internal class CSharpDataModelGenerator(CSharpDataModelsGenerator dmg, IContentT
           }
           */
 
-          // Generator:   {{dmg.GetType().Name}} v{{SharedAssemblyInfo.AssemblyVersion}}
-          // App/Edition: {{Specs.AppName}}/{{Specs.Edition}}
-          // User:        {{userName}}
-          // When:        {{DateTime.Now:u}}
+          {{CSharpGeneratorHelper.GeneratorHeader(dmg, Specs, userName)}}
           
           """;
+
 
     public string MainClassComment(string firstPropertyName)
     {
