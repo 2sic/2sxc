@@ -59,13 +59,26 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IJsonService> json,
     }
     private static IEnumerable<HelpItem> _inlineHelp;
 
-    public RichResult GenerateDataModels(int appId, string edition)
+    public RichResult GenerateDataModels(int appId, string edition, string generator)
     {
         var l = Log.Fn<RichResult>($"{nameof(appId)}:{appId};{nameof(edition)}:{edition}", timer: true);
 
         try
         {
-            fileSaver.GenerateAndSaveFiles(new FileGeneratorSpecs { AppId = appId, Edition = edition });
+            var specs = new FileGeneratorSpecs { AppId = appId, Edition = edition };
+
+            // find the generator
+            var gen = generators.Value.FirstOrDefault(g => g.Name == generator);
+            if (gen == null)
+                return l.Return(new RichResult
+                    {
+                        Ok = false,
+                        Message = $"Generator '{generator}' not found.",
+                    }
+                    .WithTime(l)
+                );
+
+            fileSaver.GenerateAndSaveFiles(gen, specs);
 
             return l.Return(new RichResult
                 {

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Code.Generate;
 using ToSic.Sxc.Code.Generate.Internal;
+using ToSic.Sxc.Code.Generate.Internal.RazorViews;
 
 namespace ToSic.Sxc.Integration.Startup;
 
@@ -14,6 +15,7 @@ public static class SxcCodeGenerateStartup
         // v17 Code Generators
         services.TryAddTransient<CSharpDataModelsGenerator>();  // direct registration
         services.AddTransient<IFileGenerator, CSharpDataModelsGenerator>(); // with interface and no try, so all can be listed in DI
+        services.AddTransient<IFileGenerator, RazorViewsGenerator>(); // with interface and no try, so all can be listed in DI
         services.TryAddTransient<FileSaver>();
 
         return services;

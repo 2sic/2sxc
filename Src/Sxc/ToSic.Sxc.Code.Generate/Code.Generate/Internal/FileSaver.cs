@@ -17,10 +17,10 @@ namespace ToSic.Sxc.Code.Generate.Internal;
 /// </summary>
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class FileSaver(CSharpDataModelsGenerator generator, ISite site, IAppStates appStates, IAppPathsMicroSvc appPaths)
-    : ServiceBase(SxcLogName + ".GenFSv")
+public class FileSaver(ISite site, IAppStates appStates, IAppPathsMicroSvc appPaths)
+    : ServiceBase(SxcLogName + ".GenFSv", connect: [site, appStates, appPaths])
 {
-    public void GenerateAndSaveFiles(IFileGeneratorSpecs specs)
+    public void GenerateAndSaveFiles(IFileGenerator generator, IFileGeneratorSpecs specs)
     {
         var l = Log.Fn();
 
