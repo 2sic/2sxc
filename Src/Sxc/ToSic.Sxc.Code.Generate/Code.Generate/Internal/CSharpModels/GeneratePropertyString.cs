@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.Data;
-
-namespace ToSic.Sxc.Code.Generate.Internal;
+﻿namespace ToSic.Sxc.Code.Generate.Internal;
 
 internal class GeneratePropertyString(CSharpGeneratorHelper helper) : GeneratePropertyBase(helper)
 {

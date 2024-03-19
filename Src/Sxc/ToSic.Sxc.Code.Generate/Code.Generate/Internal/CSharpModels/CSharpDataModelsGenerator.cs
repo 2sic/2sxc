@@ -1,10 +1,7 @@
-﻿using System.Linq;
-using ToSic.Eav.Apps;
+﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Eav.Data;
 using ToSic.Eav.Data.Shared;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Internal;
@@ -72,7 +69,7 @@ public class CSharpDataModelsGenerator(IUser user, IAppStates appStates)
     public IAppState AppState { get; private set; }
 
 
-    public ICodeFileBundle[] Generate(IFileGeneratorSpecs specs)
+    public IGeneratedFileSet[] Generate(IFileGeneratorSpecs specs)
     {
         Setup(specs);
 
@@ -80,13 +77,13 @@ public class CSharpDataModelsGenerator(IUser user, IAppStates appStates)
                 .Select(t => new CSharpDataModelGenerator(this, t, t.Name?.Replace("-", "")).PrepareFile())
                 .ToList();
 
-        var result = new CodeFileBundle
+        var result = new GeneratedFileSet
         {
             Name = "C# Data Classes",
             Description = Description,
             Generator = $"{Name} v{Version}",
-            Path = $"{GenerateConstants.AppRootFolderPlaceholder}/{GenerateConstants.EditionPlaceholder}/{AppCodeLoader.AppCodeBase}",
-            Files = classFiles.Cast<ICodeFile>().ToList()
+            Path = $"{GenerateConstants.PathPlaceholderAppRoot}/{GenerateConstants.PathPlaceholderEdition}/{AppCodeLoader.AppCodeBase}",
+            Files = classFiles.Cast<IGeneratedFile>().ToList()
         };
         return [result];
     }

@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using Custom.Data;
+﻿using Custom.Data;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Data;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Code.Generate.Internal;

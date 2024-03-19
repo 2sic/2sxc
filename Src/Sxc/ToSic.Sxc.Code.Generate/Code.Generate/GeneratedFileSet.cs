@@ -1,14 +1,10 @@
-﻿using System.Collections.Generic;
-using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Code.Generate;
+﻿namespace ToSic.Sxc.Code.Generate;
 
 /// <summary>
 /// WIP - should contain a list of code-files and additional specs
 /// </summary>
-[PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeFileBundle : ICodeFileBundle
+[WorkInProgressApi("still being standardized")]
+public class GeneratedFileSet : IGeneratedFileSet
 {
     /// <inheritdoc />
     public string Name { get; init; }
@@ -23,5 +19,5 @@ public class CodeFileBundle : ICodeFileBundle
     public string Path { get; init; }
 
     /// <inheritdoc />
-    public IReadOnlyCollection<ICodeFile> Files { get; init; }
+    public IReadOnlyCollection<IGeneratedFile> Files { get; init; }
 }

@@ -1,13 +1,11 @@
 ﻿using ToSic.Lib.Data;
-using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Code.Generate.Internal;
+namespace ToSic.Sxc.Code.Generate;
 
 /// <summary>
-/// Describes a file generator which can generate files - typically code.
+/// Describes a file generator which can generate (code) files.
 /// </summary>
-[PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[WorkInProgressApi("still being standardized")]
 public interface IFileGenerator : IHasIdentityNameId
 {
     /// <summary>
@@ -39,5 +37,5 @@ public interface IFileGenerator : IHasIdentityNameId
     /// <summary>
     /// Call to run the generator and get the files
     /// </summary>
-    public ICodeFileBundle[] Generate(IFileGeneratorSpecs specs);
+    public IGeneratedFileSet[] Generate(IFileGeneratorSpecs specs);
 }

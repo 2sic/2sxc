@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.Data;
-using ToSic.Sxc.Cms.Data;
+﻿using ToSic.Sxc.Cms.Data;
 
 namespace ToSic.Sxc.Code.Generate.Internal;
 

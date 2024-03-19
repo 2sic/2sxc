@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Internal;
@@ -15,9 +12,9 @@ internal class CSharpDataModelGenerator(CSharpDataModelsGenerator dmg, IContentT
 
     #region Class
 
-    internal CodeFileDataModel PrepareFile()
+    internal GeneratedDataModel PrepareFile()
     {
-        var l = Log.Fn<CodeFileDataModel>($"{nameof(className)}: {className}; {nameof(type)}: {type?.Name} ({type?.NameId})");
+        var l = Log.Fn<GeneratedDataModel>($"{nameof(className)}: {className}; {nameof(type)}: {type?.Name} ({type?.NameId})");
 
         if (type == null)
             return l.ReturnNull("No content type provided");

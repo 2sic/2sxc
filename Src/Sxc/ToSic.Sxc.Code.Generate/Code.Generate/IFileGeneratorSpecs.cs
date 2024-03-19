@@ -1,5 +1,14 @@
 ﻿namespace ToSic.Sxc.Code.Generate;
 
+/// <summary>
+/// Specs for a file generator.
+///
+/// An object containing these specs - and sometimes more - is passed to the file generator.
+/// </summary>
+/// <remarks>
+/// WIP v17.04
+/// </remarks>
+[WorkInProgressApi("still being standardized")]
 public interface IFileGeneratorSpecs
 {
     /// <summary>

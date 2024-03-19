@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Code.Generate;
 using ToSic.Sxc.Code.Generate.Internal;
 using ToSic.Sxc.Code.Internal.Documentation;
 using ToSic.Sxc.Services;

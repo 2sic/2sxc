@@ -1,13 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using static ToSic.Sxc.Internal.SxcLogging;
@@ -62,20 +60,20 @@ public class FileSaver(CSharpDataModelsGenerator generator, ISite site, IAppStat
         // Do basic mask tests
         if (mask.IsEmpty()) throw new("Mask must not be empty");
         if (mask.ContainsPathTraversal()) throw new($"Mask {PathFixer.PathTraversalMayNotContainMessage}");
-        if (!mask.StartsWith(GenerateConstants.AppRootFolderPlaceholder)) throw new($"Mask must start with '{GenerateConstants.AppRootFolderPlaceholder}'");
+        if (!mask.StartsWith(GenerateConstants.PathPlaceholderAppRoot)) throw new($"Mask must start with '{GenerateConstants.PathPlaceholderAppRoot}'");
 
 
         // Get the full path to the app
-        var path = mask.Replace(GenerateConstants.AppRootFolderPlaceholder, GetAppFullPath(specs.AppId).TrimLastSlash());
+        var path = mask.Replace(GenerateConstants.PathPlaceholderAppRoot, GetAppFullPath(specs.AppId).TrimLastSlash());
 
         // Optionally add / replace the edition
-        if (path.IndexOf(GenerateConstants.EditionPlaceholder, StringComparison.OrdinalIgnoreCase) > -1)
+        if (path.IndexOf(GenerateConstants.PathPlaceholderEdition, StringComparison.OrdinalIgnoreCase) > -1)
         {
             // sanitize path because 'edition' is user provided
             if (specs.Edition.ContainsPathTraversal())
                 throw new($"Invalid edition '{specs.Edition}' - {PathFixer.PathTraversalMayNotContainMessage}");
 
-            path = path.Replace(GenerateConstants.EditionPlaceholder, specs.Edition).TrimLastSlash();
+            path = path.Replace(GenerateConstants.PathPlaceholderEdition, specs.Edition).TrimLastSlash();
         }
 
         path = path.FlattenSlashes().Backslash();

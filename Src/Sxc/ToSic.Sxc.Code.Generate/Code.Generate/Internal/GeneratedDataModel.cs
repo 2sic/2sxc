@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace ToSic.Sxc.Code.Generate.Internal;
+﻿namespace ToSic.Sxc.Code.Generate.Internal;
 
 /// <summary>
 /// Object which contains the info to generate the class code file.
 /// </summary>
-internal class CodeFileDataModel(string typeName, string body, string introComment) : ICodeFile
+internal class GeneratedDataModel(string typeName, string body, string introComment) : IGeneratedFile
 {
     /// <inheritdoc />
     public string FileName => typeName + ".cs";
@@ -29,5 +27,5 @@ internal class CodeFileDataModel(string typeName, string body, string introComme
     public string Body => IntroComment + BodyWithoutIntro;
 
     /// <inheritdoc />
-    public IReadOnlyCollection<ICodeFileInfo> Dependencies => [];
+    public IReadOnlyCollection<IGeneratedFileInfo> Dependencies => [];
 }

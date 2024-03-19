@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Code.Generate;
+﻿namespace ToSic.Sxc.Code.Generate;
 
 /// <summary>
 /// Data which is meant to create a new file.
@@ -12,9 +9,8 @@ namespace ToSic.Sxc.Code.Generate;
 /// <remarks>
 /// Introduced in v17.05
 /// </remarks>
-[PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public interface ICodeFile : ICodeFileInfo
+[WorkInProgressApi("still being standardized")]
+public interface IGeneratedFile : IGeneratedFileInfo
 {
     /// <summary>
     /// The body of the file, which will be written to the file.
@@ -28,5 +24,5 @@ public interface ICodeFile : ICodeFileInfo
     ///
     /// Note: not implemented yet - this is for later when users may want to select which files to generate.
     /// </summary>
-    IReadOnlyCollection<ICodeFileInfo> Dependencies { get; }
+    IReadOnlyCollection<IGeneratedFileInfo> Dependencies { get; }
 }

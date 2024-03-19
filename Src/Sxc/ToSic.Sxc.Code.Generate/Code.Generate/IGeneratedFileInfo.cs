@@ -1,16 +1,13 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Code.Generate;
+﻿namespace ToSic.Sxc.Code.Generate;
 
 /// <summary>
 /// Data which describes a code file which will be created or may already exist.
 ///
-/// It's used as the foundation for <see cref="ICodeFile"/>
+/// It's used as the foundation for <see cref="IGeneratedFile"/>
 /// but also to reference dependencies to other files created or which should be created in tandem.
 /// </summary>
-[PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public interface ICodeFileInfo
+[WorkInProgressApi("still being standardized")]
+public interface IGeneratedFileInfo
 {
     /// <summary>
     /// The file name of the final code file, with extension.

@@ -1,14 +1,10 @@
-﻿using System.Collections.Generic;
-using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Code.Generate;
+﻿namespace ToSic.Sxc.Code.Generate;
 
 /// <summary>
-/// Bundle of code files to generate, including some information about the generator.
+/// Set of code files to generate, including some information about the generator.
 /// </summary>
-[PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public interface ICodeFileBundle
+[WorkInProgressApi("still being standardized")]
+public interface IGeneratedFileSet
 {
     /// <summary>
     /// Name for easy identification.
@@ -33,5 +29,5 @@ public interface ICodeFileBundle
     /// <summary>
     /// List of files to generate
     /// </summary>
-    IReadOnlyCollection<ICodeFile> Files { get; }
+    IReadOnlyCollection<IGeneratedFile> Files { get; }
 }

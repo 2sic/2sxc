@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Sxc.Code.Generate;
 using ToSic.Sxc.Code.Generate.Internal;
 
 namespace ToSic.Sxc.Integration.Startup;
