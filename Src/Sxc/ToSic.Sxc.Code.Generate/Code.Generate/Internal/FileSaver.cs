@@ -86,13 +86,6 @@ public class FileSaver(ISite site, IAppStates appStates, IAppPathsMicroSvc appPa
         return appWithEditionNormalized;
     }
 
-    // TODO: @STV - this should be moved to an AppJsonService in Eav.Apps
-    internal string GetPathToDotAppJson(FileGeneratorSpecs specs)
-    {
-        return Path.Combine(GetAppFullPath(specs.AppId), Constants.AppDataProtectedFolder, Constants.AppJson);
-    }
-
-
     //public string Dump()
     //{
     //    var sb = new StringBuilder();

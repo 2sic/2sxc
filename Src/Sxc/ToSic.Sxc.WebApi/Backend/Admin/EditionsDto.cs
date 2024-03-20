@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Sxc.Code.Generate;
-using ToSic.Sxc.Code.Generate.Internal;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -31,4 +31,23 @@ public class GeneratorDto(IFileGenerator generator)
     public string DescriptionHtml => generator.DescriptionHtml;
     public string OutputLanguage => generator.OutputLanguage;
     public string OutputType => generator.OutputType;
+}
+
+public static class EditionsJsonExtension
+{
+    public static EditionsDto ToEditionsDto(this EditionsJson editionsJson, List<GeneratorDto> generators)
+        => new()
+        {
+            Ok = true,
+            IsConfigured = true,
+            Editions = editionsJson.Editions
+                .Select(e => new EditionDto
+                {
+                    Name = e.Key,
+                    Description = e.Value.Description,
+                    IsDefault = e.Value.IsDefault
+                })
+                .ToList(),
+            Generators = generators
+        };
 }

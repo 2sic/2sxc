@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code.Generate;
 using ToSic.Sxc.Code.Generate.Internal;
@@ -9,7 +10,8 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Backend.Admin;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeControllerReal(FileSaver fileSaver, LazySvc<IJsonService> json, LazySvc<IEnumerable<IFileGenerator>> generators) : ServiceBase("Api.CodeRl")
+public class CodeControllerReal(FileSaver fileSaver, LazySvc<IJsonService> json, LazySvc<IEnumerable<IFileGenerator>> generators, LazySvc<IAppJsonService> appJsonService) 
+    : ServiceBase("Api.CodeRl", connect: [appJsonService])
 {
     public const string LogSuffix = "Code";
 
@@ -107,7 +109,7 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IJsonService> json,
         // get generators
         var fileGenerators = generators.Value.Select(g => new GeneratorDto(g)).ToList();
 
-        var pathToDotAppJson = fileSaver.GetPathToDotAppJson(new() { AppId = appId });
+        var pathToDotAppJson = appJsonService.Value.GetPathToDotAppJson(appId);
         l.A($"path to app.json: {pathToDotAppJson}");
         if (File.Exists(pathToDotAppJson))
         {
