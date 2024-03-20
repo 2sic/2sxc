@@ -94,12 +94,22 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
 
             var site = sp.Build<ISite>(log);
 
+            var block = sp.Build<DnnGetBlock>().GetCmsBlock(request);
+            l.A($"has block: {block != null}");
+
+            HotBuildSpec spec = null;
+            if (block != null)
+            {
+                spec = new(block.AppId, edition: edition, block.App?.Name);
+                l.A($"{nameof(spec)}: {spec}");
+            }
+
             // First check local app (in this site), then global
-            var descriptor = DescriptorIfExists(log, request, site, appFolder, edition, controllerTypeName, false, sp);
+            var descriptor = DescriptorIfExists(log, request, site, appFolder, edition, controllerTypeName, false, spec, sp);
             if (descriptor != null) return l.ReturnAsOk(descriptor);
 
             l.A("path not found, will check on shared location");
-            descriptor = DescriptorIfExists(log, request, site, appFolder, edition, controllerTypeName, true, sp);
+            descriptor = DescriptorIfExists(log, request, site, appFolder, edition, controllerTypeName, true, spec, sp);
             if (descriptor != null) return l.ReturnAsOk(descriptor);
         }
         catch (Exception e)
@@ -115,9 +125,28 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
 
     }
 
-    private HttpControllerDescriptor DescriptorIfExists(ILog log, HttpRequestMessage request, ISite site, string appFolder, string edition, string controllerTypeName, bool shared, IServiceProvider sp)
+
+    private HttpControllerDescriptor DescriptorIfExists(ILog log, HttpRequestMessage request, ISite site, string appFolder, string edition, string controllerTypeName, bool shared, HotBuildSpec spec, IServiceProvider sp)
     {
         var l = log.Fn<HttpControllerDescriptor>();
+
+        // 1. check AppCode
+        if (spec != null)
+        {
+            var (result, _) = sp.Build<AssemblyCacheManager>().TryGetAppCode(spec);
+            var appCodeAssembly = result?.Assembly;
+            if (appCodeAssembly == null)
+                (appCodeAssembly, var _) = sp.Build<AppCodeLoader>().GetAppCode(spec);
+
+            if (appCodeAssembly != null)
+            {
+                var type = appCodeAssembly.GetType(controllerTypeName, false, true);
+                if (type != null) 
+                    return l.Return(new HttpControllerDescriptor(configuration, type.Name, type), "Api controller from AppCode");
+            }
+        }
+
+        // 2. normal Api
         var controllerFolder = Path
             .Combine(shared ? site.SharedAppsRootRelative() : site.AppsRootPhysical, appFolder, edition + "api/")
             .ForwardSlash();
@@ -127,7 +156,7 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
         // note: this may look like something you could optimize/cache the result, but that's a bad idea
         // because when the file changes, the type-object will be different, so please don't optimize :)
         var exists = File.Exists(HostingEnvironment.MapPath(controllerPath));
-        var descriptor = exists ? BuildDescriptor(log,request, controllerFolder, controllerPath, controllerTypeName, edition.TrimLastSlash(), sp) : null;
+        var descriptor = exists ? BuildDescriptor(log,request, controllerFolder, controllerPath, controllerTypeName, spec, sp) : null;
         return l.Return(descriptor, $"{nameof(exists)}: {exists}");
     }
 
@@ -141,7 +170,8 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
         return edition;
     }
 
-    private HttpControllerDescriptor BuildDescriptor(ILog log, HttpRequestMessage request, string folder, string fullPath, string typeName, string edition, IServiceProvider sp)
+    private HttpControllerDescriptor BuildDescriptor(ILog log, HttpRequestMessage request, string folder,
+        string fullPath, string typeName, HotBuildSpec spec, IServiceProvider sp)
     {
         var l = log.Fn<HttpControllerDescriptor>();
         Assembly assembly;
@@ -149,15 +179,7 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
         if (codeFileInfo.AppCode)
         {
             l.A("AppCode - use Roslyn");
-            // Figure edition
-            HotBuildSpec spec = null;
-            var block = sp.Build<DnnGetBlock>().GetCmsBlock(request);
-            l.A($"has block: {block != null}");
-            if (block != null)
-            {
-                spec = new(block.AppId, edition: edition, block.App?.Name);
-                l.A($"{nameof(spec)}: {spec}");
-            }
+            l.A($"has {nameof(spec)}: {spec != null}");
             assembly = sp.Build<IRoslynBuildManager>().GetCompiledAssembly(codeFileInfo, typeName, spec)?.Assembly;
         }
         else
