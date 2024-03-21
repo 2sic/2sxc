@@ -29,29 +29,21 @@ public class RenderService: ServiceForDynamicCode,
 
     #region Constructor & ConnectToRoot
 
-    public class MyServices: MyServicesBase
+    public class MyServices(
+        Generator<IEditService> editGenerator,
+        LazySvc<IModuleAndBlockBuilder> builder,
+        Generator<SimpleRenderer> simpleRenderer,
+        Generator<InTextContentBlockRenderer> inTextRenderer,
+        LazySvc<IDynamicCodeService> dynCodeSvcToApplyPageChanges,
+        LazySvc<ILogStore> logStore)
+        : MyServicesBase(connect: [editGenerator, builder, simpleRenderer, inTextRenderer, dynCodeSvcToApplyPageChanges, logStore])
     {
-        public Generator<InTextContentBlockRenderer> InTextRenderer { get; }
-        public Generator<SimpleRenderer> SimpleRenderer { get; }
-        public Generator<IEditService> EditGenerator { get; }
-        public LazySvc<IModuleAndBlockBuilder> Builder { get; }
-        public LazySvc<ILogStore> LogStore { get; }
-
-        public MyServices(Generator<IEditService> editGenerator,
-            LazySvc<IModuleAndBlockBuilder> builder,
-            Generator<SimpleRenderer> simpleRenderer,
-            Generator<InTextContentBlockRenderer> inTextRenderer,
-            LazySvc<ILogStore> logStore
-        )
-        {
-            ConnectServices(
-                EditGenerator = editGenerator,
-                Builder = builder,
-                SimpleRenderer = simpleRenderer,
-                InTextRenderer = inTextRenderer,
-                LogStore = logStore
-            );
-        }
+        public Generator<InTextContentBlockRenderer> InTextRenderer { get; } = inTextRenderer;
+        public LazySvc<IDynamicCodeService> DynCodeSvcToApplyPageChanges { get; } = dynCodeSvcToApplyPageChanges;
+        public Generator<SimpleRenderer> SimpleRenderer { get; } = simpleRenderer;
+        public Generator<IEditService> EditGenerator { get; } = editGenerator;
+        public LazySvc<IModuleAndBlockBuilder> Builder { get; } = builder;
+        public LazySvc<ILogStore> LogStore { get; } = logStore;
     }
 
     public RenderService(MyServices services) : base("Sxc.RndSvc")
@@ -152,8 +144,9 @@ public class RenderService: ServiceForDynamicCode,
     {
         var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
         MakeSureLogIsInHistory();
-        var block = _Deps.Builder.Value.BuildBlock(pageId, moduleId).BlockBuilder;
-        var result = block.Run(true, specs: new() { Data = data });
+        var block = _Deps.Builder.Value.BuildBlock(pageId, moduleId);
+        var result = block.BlockBuilder.Run(true, specs: new() { Data = data });
+
         return l.ReturnAsOk(result);
     }
 

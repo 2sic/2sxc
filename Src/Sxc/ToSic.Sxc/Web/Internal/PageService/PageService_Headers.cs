@@ -21,5 +21,5 @@ partial class PageService
     }
 
     /// <inheritdoc />
-    public string AddMeta(string name, string content) => AddToHead(_htmlTagsLazy.Value.Meta().Name(name).Content(content));
+    public string AddMeta(string name, string content) => AddToHead(htmlTagsLazy.Value.Meta().Name(name).Content(content));
 }

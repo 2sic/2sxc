@@ -20,22 +20,12 @@ namespace ToSic.Sxc.Dnn.Services;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 [PrivateApi]
-public class DnnPageChanges : ServiceBase
+public class DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generator<CspOfPage> pageCspGenerator)
+    : ServiceBase($"{DnnConstants.LogName}.PgeCng", connect: [featuresService, pageCspGenerator])
 {
-    private readonly Generator<CspOfPage> _pageCspGenerator;
-    private readonly LazySvc<IFeaturesService> _featuresService;
-
-    public DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generator<CspOfPage> pageCspGenerator): base($"{DnnConstants.LogName}.PgeCng")
-    {
-        ConnectServices(
-            _featuresService = featuresService,
-            _pageCspGenerator = pageCspGenerator
-        );
-    }
-
     public int Apply(Page page, IRenderResult renderResult)
     {
-        Log.A("Will apply PageChanges");
+        var l = Log.Fn<int>("Will apply PageChanges");
 
         if (renderResult == null) return 0;
 
@@ -54,12 +44,11 @@ public class DnnPageChanges : ServiceBase
         }
         catch { /* ignore BETA feature */ }
 
-        Log.A("Will apply Header Status-Code changes if needed");
+        l.A("Will apply Header Status-Code changes if needed");
         ApplyHttpStatus(page, renderResult);
 
         count += headChanges + manualChanges;
-        Log.A($"Applied {count} changes");
-        return count;
+        return l.Return(count, $"Applied {count} changes");
     }
 
     private int Apply(DnnHtmlPage dnnPage, IList<PagePropertyChange> props)
@@ -116,7 +105,7 @@ public class DnnPageChanges : ServiceBase
 
         // Register CSP changes for applying once all modules have been prepared
         // Note that in cached scenarios, CspEnabled is true, but it may have been turned off since
-        if (result.CspEnabled && _featuresService.Value.IsEnabled(SxcFeatures.ContentSecurityPolicy.NameId))
+        if (result.CspEnabled && featuresService.Value.IsEnabled(SxcFeatures.ContentSecurityPolicy.NameId))
             PageCsp(result.CspEnforced).Add(result.CspParameters);
 
         if (page?.Response == null) return l.Return(0, "error, HttpResponse is null");
@@ -146,7 +135,7 @@ public class DnnPageChanges : ServiceBase
             return (CspOfPage)HttpContext.Current.Items[key];
 
         // Not yet registered. Create, and register for on-end of request
-        var pageLevelCsp = _pageCspGenerator.New();// new CspOfPage();
+        var pageLevelCsp = pageCspGenerator.New();// new CspOfPage();
         HttpContext.Current.Items[key] = pageLevelCsp;
 
         // Register event to attach headers once the request is done and all Apps have registered their Csp

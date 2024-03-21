@@ -6,7 +6,6 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Internal;
 using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Services.Internal;
@@ -20,31 +19,22 @@ public partial class DynamicCodeService: ServiceBase<DynamicCodeService.MyServic
 {
     #region Constructor and Init
 
-    public class MyServices: MyServicesBase
+    public class MyServices(
+        IServiceProvider serviceProvider,
+        LazySvc<ILogStore> logStore,
+        LazySvc<IUser> user,
+        // Dependencies to get primary app
+        LazySvc<ISite> site,
+        LazySvc<IZoneMapper> zoneMapper,
+        LazySvc<IAppStates> appStates)
+        : MyServicesBase(connect: [logStore, user, site, zoneMapper, appStates])
     {
-        public MyServices(
-            IServiceProvider serviceProvider,
-            LazySvc<ILogStore> logStore,
-            LazySvc<IUser> user,
-            // Dependencies to get primary app
-            LazySvc<ISite> site,
-            LazySvc<IZoneMapper> zoneMapper,
-            LazySvc<IAppStates> appStates
-        ) => ConnectServices(
-            ServiceProvider = serviceProvider,
-            LogStore = logStore,
-            User = user,
-            Site = site,
-            ZoneMapper = zoneMapper,
-            AppStates = appStates
-        );
-
-        internal IServiceProvider ServiceProvider { get; }
-        public LazySvc<ILogStore> LogStore { get; }
-        public LazySvc<IUser> User { get; }
-        public LazySvc<ISite> Site { get; }
-        public LazySvc<IZoneMapper> ZoneMapper { get; }
-        public LazySvc<IAppStates> AppStates { get; }
+        internal IServiceProvider ServiceProvider { get; } = serviceProvider;
+        public LazySvc<ILogStore> LogStore { get; } = logStore;
+        public LazySvc<IUser> User { get; } = user;
+        public LazySvc<ISite> Site { get; } = site;
+        public LazySvc<IZoneMapper> ZoneMapper { get; } = zoneMapper;
+        public LazySvc<IAppStates> AppStates { get; } = appStates;
     }
 
     public class MyScopedServices(

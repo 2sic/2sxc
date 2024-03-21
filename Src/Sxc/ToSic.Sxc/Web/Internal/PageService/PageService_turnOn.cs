@@ -22,8 +22,8 @@ partial class PageService
         Activate(SxcPageFeatures.TurnOn.NameId);
 
         // then generate the turn-on and add to module state
-        var tag = _turnOn.Value.Run(runOrSpecs, require: require, data: data);
-        _moduleService.Value.AddToMore(tag, noDuplicates: noDuplicates == true);
+        var tag = turnOn.Value.Run(runOrSpecs, require: require, data: data);
+        moduleService.Value.AddToMore(tag, noDuplicates: noDuplicates == true);
 
         // Then return empty string
         return l.ReturnAsOk(null);
