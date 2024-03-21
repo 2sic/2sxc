@@ -11,6 +11,9 @@ public class HotBuildSpec(int appId, string edition, string appName)
 
     public string EditionToLog => $"/{Edition}"; // for logging
 
+    /// <summary>
+    /// AppName for logging - ATM no other purpose, so it can be null
+    /// </summary>
     public string AppName => appName;
 
     /// <summary>
