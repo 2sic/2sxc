@@ -13,6 +13,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Integration;
@@ -32,8 +33,9 @@ internal class AppApiControllerSelectorService(
     LazySvc<SourceAnalyzer> analyzerLazy,
     LazySvc<CodeErrorHelpService> codeErrorSvc,
     LazySvc<AssemblyCacheManager> assemblyCacheManager,
-    LazySvc<AppCodeLoader> appCodeLoader)
-    : ServiceBase("Dnn.ApiSSv", connect: [folderUtilities, site, roslynLazy, getBlockLazy, analyzerLazy, codeErrorSvc, assemblyCacheManager, appCodeLoader])
+    LazySvc<AppCodeLoader> appCodeLoader,
+    LazySvc<ISxcContextResolver> sxcContextResolver)
+    : ServiceBase("Dnn.ApiSSv", connect: [folderUtilities, site, roslynLazy, getBlockLazy, analyzerLazy, codeErrorSvc, assemblyCacheManager, appCodeLoader, sxcContextResolver])
 {
     #region Setup / Init
 
@@ -64,10 +66,6 @@ internal class AppApiControllerSelectorService(
 
         // Now Handle the 2sxc app-api queries
 
-        // Figure out the Path, or show error for that
-        var appFolderUtilities = folderUtilities.Setup(request);
-        var appFolder = appFolderUtilities.GetAppFolder(true);
-
         try
         {
             // new for 2sxc 9.34 #1651
@@ -81,17 +79,22 @@ internal class AppApiControllerSelectorService(
             var block = getBlockLazy.Value.GetCmsBlock(request);
             l.A($"has block: {block != null}");
 
+            // Figure out the Path, or show error for that
+            var appFolderUtilities = folderUtilities.Setup(request);
+            var appFolder = appFolderUtilities.GetAppFolder(true, block);
+
             if (block != null)
             {
                 spec = new(block.AppId, edition: edition, block.App?.Name);
-                l.A($"{nameof(spec)}: {spec}");
+                l.A($"{nameof(spec)} from Block: {spec}");
             }
             else
             {
-                // TODO: @STV Otherwise try to find AppId based on path - otherwise we don't have a proper spec, and things fail
-                // Then also check Oqtane
+                // find AppId based on path - otherwise we don't have a proper spec, and things fail
+                var app = sxcContextResolver.Value.SetAppOrNull(appFolder)?.AppState ?? throw new("App not found");
+                spec = new(app.AppId, edition: edition, app.Name);
+                l.A($"{nameof(spec)} from App based on path: {spec}");
             }
-
 
             // First check local app (in this site), then global
             var descriptor = DescriptorIfExists(appFolder, edition, controllerTypeName, false, spec);

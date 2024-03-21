@@ -8,6 +8,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
 namespace ToSic.Sxc.Dnn.Integration;
@@ -37,7 +38,7 @@ public class DnnAppFolderUtilities(
         return l.Return(appFolderVirtualPath, $"Ok, AppFolder Virtual Path: {appFolderVirtualPath}");
     }
 
-    internal string GetAppFolder(bool errorIfNotFound)
+    internal string GetAppFolder(bool errorIfNotFound, IBlock block = null)
     {
         var l = Log.Fn<string>();
         const string errPrefix = "Api Controller Finder Error: ";
@@ -55,8 +56,8 @@ public class DnnAppFolderUtilities(
             if (appFolder == null)
             {
                 l.A("no folder found in url, will auto-detect");
-                appFolder = folder.New()?
-                    .Init(dnnGetBlock.New().GetCmsBlock(Request))
+                appFolder = folder.New()
+                    .Init(block ?? dnnGetBlock.New().GetCmsBlock(Request))
                     .GetAppFolder();
             }
 
