@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Services;
+﻿using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.Edit.EditService;
@@ -17,15 +16,13 @@ partial class EditService
 
     /// <inheritdoc/>
     public string Enable(NoParamOrder noParamOrder = default, bool? js = null, bool? api = null,
-        bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null
-    ) => Log.Func<string>(() =>
+        bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null)
     {
-        //Eav.Parameters.Protect(noParamOrder,
-        //    $"{nameof(js)},{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
+        var l = Log.Fn<string>();
 
-        var ps = _CodeApiSvc.GetKit<ServiceKit14>()?.Page;
+        var ps = _CodeApiSvc.GetService<IPageService>(reuse: true);
         if (ps == null)
-            return (null, "page service not found");
+            return l.ReturnNull("page service not found");
 
         if (js == true || api == true || forms == true) ps.Activate(SxcPageFeatures.JsCore.NameId);
 
@@ -39,8 +36,8 @@ partial class EditService
 
         if (autoToolbar == true) ps.Activate(SxcPageFeatures.ToolbarsAuto.NameId);
 
-        return (null, "ok");
-    });
+        return l.ReturnNull("ok");
+    }
 
     #endregion Scripts and CSS includes
 }
