@@ -2,44 +2,53 @@
 using ToSic.Eav.Code.InfoSystem;
 using ToSic.Eav.Data.Shared;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal.JsContextEdit;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.Web.Internal.JsContext;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class JsContextAll : ServiceBase
+public class JsContextAll(JsContextLanguage jsLangCtx, IJsApiService jsApiService, CodeInfosInScope codeWarnings)
+    : ServiceBase("Sxc.CliInf", connect: [jsLangCtx, jsApiService, codeWarnings])
 {
-    private readonly CodeInfosInScope _codeWarnings;
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public JsContextEnvironment Environment;
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public JsContextUser User;
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public JsContextLanguage Language;
         
     [JsonPropertyName("contentBlockReference")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public ContentBlockReferenceDto ContentBlockReference; // todo: still not sure if these should be separate...
         
     [JsonPropertyName("contentBlock")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public ContentBlockDto ContentBlock;
-    // ReSharper disable once InconsistentNaming
-    public ErrorDto error;
+
+    [JsonPropertyName("error")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public ErrorDto Error;
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public UiDto Ui;
+
+    [JsonPropertyName("jsApi")]
     public JsApi JsApi;
 
-    public JsContextAll(JsContextLanguage jsLangCtx, IJsApiService jsApiService, CodeInfosInScope codeWarnings) : base("Sxc.CliInf")
+    public JsContextAll GetJsApiOnly(IBlock block)
     {
-        ConnectServices(
-            _jsLangCtx = jsLangCtx,
-            _jsApiService = jsApiService,
-            _codeWarnings = codeWarnings
+        var l = Log.Fn<JsContextAll>();
+        JsApi = jsApiService.GetJsApi(pageId: block.Context.Page.Id,
+            siteRoot: null,
+            rvt: null
         );
+        return l.Return(this);
     }
-
-    private readonly JsContextLanguage _jsLangCtx;
-    private readonly IJsApiService _jsApiService;
 
     public JsContextAll GetJsContext(string systemRootUrl, IBlock block, string errorCode, List<Exception> exsOrNull,
         RenderStatistics statistics)
@@ -48,7 +57,7 @@ public class JsContextAll : ServiceBase
         var ctx = block.Context;
 
         Environment = new(systemRootUrl, ctx);
-        Language = _jsLangCtx.Init(ctx.Site);
+        Language = jsLangCtx.Init(ctx.Site);
 
         // New in v13 - if the view is from remote, don't allow design
         var blockCanDesign = block.View?.Entity.HasAncestor() ?? false ? (bool?)false : null;
@@ -67,13 +76,12 @@ public class JsContextAll : ServiceBase
         );
 
         l.A($"{nameof(autoToolbar)}: {autoToolbar}");
-        Ui = new(autoToolbar);
-        JsApi = _jsApiService.GetJsApi(pageId: Environment.PageId,
-            siteRoot: null,
-            rvt: null
-        );
 
-        error = new(block, errorCode, exsOrNull, _codeWarnings);
+        Ui = new(autoToolbar);
+
+        GetJsApiOnly(block);
+
+        Error = new(block, errorCode, exsOrNull, codeWarnings);
         return l.Return(this);
     }
 }

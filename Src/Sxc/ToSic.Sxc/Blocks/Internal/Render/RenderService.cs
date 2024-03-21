@@ -7,6 +7,7 @@ using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Edit.EditService;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.Blocks.Internal.Render;
 
@@ -34,12 +35,10 @@ public class RenderService: ServiceForDynamicCode,
         LazySvc<IModuleAndBlockBuilder> builder,
         Generator<SimpleRenderer> simpleRenderer,
         Generator<InTextContentBlockRenderer> inTextRenderer,
-        LazySvc<IDynamicCodeService> dynCodeSvcToApplyPageChanges,
         LazySvc<ILogStore> logStore)
-        : MyServicesBase(connect: [editGenerator, builder, simpleRenderer, inTextRenderer, dynCodeSvcToApplyPageChanges, logStore])
+        : MyServicesBase(connect: [editGenerator, builder, simpleRenderer, inTextRenderer, logStore])
     {
         public Generator<InTextContentBlockRenderer> InTextRenderer { get; } = inTextRenderer;
-        public LazySvc<IDynamicCodeService> DynCodeSvcToApplyPageChanges { get; } = dynCodeSvcToApplyPageChanges;
         public Generator<SimpleRenderer> SimpleRenderer { get; } = simpleRenderer;
         public Generator<IEditService> EditGenerator { get; } = editGenerator;
         public LazySvc<IModuleAndBlockBuilder> Builder { get; } = builder;
@@ -145,6 +144,9 @@ public class RenderService: ServiceForDynamicCode,
         var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
         MakeSureLogIsInHistory();
         var block = _Deps.Builder.Value.BuildBlock(pageId, moduleId);
+
+        block.BlockFeatureKeys?.Add(SxcPageFeatures.JsApiOnModule.NameId);
+
         var result = block.BlockBuilder.Run(true, specs: new() { Data = data });
 
         return l.ReturnAsOk(result);
