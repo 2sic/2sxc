@@ -89,7 +89,7 @@ internal class AppApiControllerSelectorService(
             else
             {
                 // TODO: @STV Otherwise try to find AppId based on path - otherwise we don't have a proper spec, and things fail
-
+                // Then also check Oqtane
             }
 
 
@@ -98,7 +98,7 @@ internal class AppApiControllerSelectorService(
             if (descriptor != null) return l.ReturnAsOk(descriptor);
 
             l.A("path not found, will check on shared location");
-            descriptor = DescriptorIfExists(site, appFolder, edition, controllerTypeName, true, spec);
+            descriptor = DescriptorIfExists(appFolder, edition, controllerTypeName, true, spec);
             if (descriptor != null) return l.ReturnAsOk(descriptor);
         }
         catch (Exception e)
