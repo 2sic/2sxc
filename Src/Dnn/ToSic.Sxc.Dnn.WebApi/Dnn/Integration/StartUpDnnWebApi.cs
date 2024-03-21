@@ -30,6 +30,9 @@ public static class StartUpDnnWebApi
         // new v15
         services.TryAddTransient<ApiControllerMyServices>();
 
+        // new v17
+        services.TryAddTransient<AppApiControllerSelectorService>();
+
         return services;
     }
 
