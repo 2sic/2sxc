@@ -6,7 +6,11 @@ using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 
-// TODO: @STV - PLS EXPLAIN what this does / what it's for
+
+/// <summary>
+/// The AppApiActionInvoker class is a custom action invoker for an ASP.NET Core application, for use within "AppApi". 
+/// An action invoker in ASP.NET Core is responsible for executing action methods within controllers based on incoming HTTP requests.
+/// </summary>
 internal class AppApiActionInvoker : IHasLog
 {
     public AppApiActionInvoker(ILogStore logStore)
