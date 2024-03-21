@@ -11,11 +11,11 @@ public class AppFolder(ISxcContextResolver ctxResolver) : ServiceBase("AppFolder
     /// This is necessary for special calls where the _ctxResolve may not yet be complete...
     /// Important: not sure if this is actually needed, I believe the ctxResolver is always initialized on all web-api requests...?
     /// </summary>
-    /// <param name="getBlock"></param>
+    /// <param name="block"></param>
     /// <returns></returns>
-    public AppFolder Init(IBlock getBlock)
+    public AppFolder Init(IBlock block)
     {
-        ctxResolver.AttachBlock(getBlock);
+        ctxResolver.AttachBlock(block);
         return this;
     }
 

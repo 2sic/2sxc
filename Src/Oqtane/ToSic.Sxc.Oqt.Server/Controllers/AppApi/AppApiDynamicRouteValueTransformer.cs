@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Backend;
@@ -18,7 +19,6 @@ using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.WebApi;
 using Log = ToSic.Lib.Logging.Log;
 using ToSic.Sxc.Code.Internal.HotBuild;
 
@@ -56,7 +56,7 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
     {
         return await Task.Run(() =>
         {
-            var wrapLog = Log.Fn<RouteValueDictionary>();
+            var l = Log.Fn<RouteValueDictionary>();
 
             #region Ensure required alias
 
@@ -105,41 +105,41 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
                     $"Error: missing required 'action' route value.", "Not Found");
             var action = (string) values["action"];
 
-            Log.A(
+            l.A(
                 $"TransformAsync route required values are present, alias:{alias.AliasId}, app:{appFolder}, ctrl:{controller}, act:{action}.");
 
             var controllerTypeName = $"{controller}Controller";
-            Log.A($"Controller TypeName: {controllerTypeName}");
+            l.A($"Controller TypeName: {controllerTypeName}");
             values.Add("controllerTypeName", controllerTypeName);
 
             var edition = GetEdition(values);
-            Log.A($"Edition: {edition}");
+            l.A($"Edition: {edition}");
 
 
             var controllerFolder = Path.Combine(aliasPart, appFolder, edition.Backslash(), "api");
-            Log.A($"Controller Folder: {controllerFolder}");
+            l.A($"Controller Folder: {controllerFolder}");
 
             var area = $"{alias.SiteId}/{OqtConstants.ApiAppLinkPart}/{appFolder}/{edition}api";
-            Log.A($"Area: {area}");
+            l.A($"Area: {area}");
             values.Add("area", area);
 
             var controllerPath = Path.Combine(controllerFolder, controllerTypeName + ".cs");
-            Log.A($"Controller Path: {controllerPath}");
+            l.A($"Controller Path: {controllerPath}");
 
             var apiFile = Path.Combine(_hostingEnvironment.ContentRootPath, controllerPath);
-            Log.A($"Absolute Path: {apiFile}");
+            l.A($"Absolute Path: {apiFile}");
             values.Add("apiFile", apiFile);
 
             var dllName = GetDllName(controllerFolder, apiFile);
-            Log.A($"Dll Name: {dllName}");
+            l.A($"Dll Name: {dllName}");
             values.Add("dllName", dllName);
 
             // help with path resolution for compilers running inside the created controller
-            httpContext.Request?.HttpContext.Items.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
+            httpContext./*Request?.HttpContext.*/Items.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
 
-            httpContext.Request?.HttpContext.Items.Add(SxcWebApiConstants.HttpContextKeyForAppFolder, appFolder);
+            httpContext./*Request?.HttpContext.*/Items.Add(SxcWebApiConstants.HttpContextKeyForAppFolder, appFolder);
 
-            return wrapLog.Return(values, $"ok, TransformAsync route required values are prepared");
+            return l.Return(values, $"ok, TransformAsync route required values are prepared");
         });
     }
 
@@ -151,10 +151,10 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
 
     private static string GetEdition(RouteValueDictionary values)
     {
-        // new for 2sxc 9.34 #1651
-        var edition = "";
-        if (values.ContainsKey("edition")) edition = values["edition"].ToString();
-        if (!string.IsNullOrEmpty(edition)) edition += "/";
-        return edition;
+        return VarNames.GetEdition(values);
+        //// new for 2sxc 9.34 #1651
+        //var edition = "";
+        //if (values.TryGetValue(VarNames.Edition, out var value)) edition = value?.ToString();
+        //return edition + (string.IsNullOrEmpty(edition) ? "" : "/");
     }
 }
