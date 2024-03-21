@@ -25,7 +25,7 @@ public class InsightsController() : DnnSxcControllerRoot(RealController.LogSuffi
     /// Enable/disable logging of access to insights
     /// Only enable this if you have trouble developing insights, otherwise it clutters our logs
     /// </summary>
-    internal const bool InsightsLoggingEnabled = false;
+    internal static bool InsightsLoggingEnabled = false;
 
     /// <summary>
     /// Special detection for the AppApiController to skip these requests?

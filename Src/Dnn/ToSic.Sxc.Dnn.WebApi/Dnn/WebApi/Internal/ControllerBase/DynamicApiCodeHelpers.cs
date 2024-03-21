@@ -98,7 +98,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
         var l = Log.Fn<IApp>();
         try
         {
-            var routeAppPath = services.AppFolderUtilities.GetAppFolder(request, false);
+            var routeAppPath = services.AppFolderUtilities.Setup(request).GetAppFolder(false);
             var appState = SharedContextResolver.SetAppOrNull(routeAppPath)?.AppState.StateCache;
 
             if (appState != default)

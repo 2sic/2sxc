@@ -30,17 +30,27 @@ internal class AppApiControllerSelectorService(
     LazySvc<IRoslynBuildManager> roslynLazy,
     LazySvc<DnnGetBlock> getBlockLazy,
     LazySvc<SourceAnalyzer> analyzerLazy,
-    LazySvc<CodeErrorHelpService> codeErrorSvc)
-    : ServiceBase("Dnn.ApiSSv", connect: [roslynLazy, getBlockLazy])
+    LazySvc<CodeErrorHelpService> codeErrorSvc,
+    LazySvc<AssemblyCacheManager> assemblyCacheManager,
+    LazySvc<AppCodeLoader> appCodeLoader)
+    : ServiceBase("Dnn.ApiSSv", connect: [folderUtilities, site, roslynLazy, getBlockLazy, analyzerLazy, codeErrorSvc, assemblyCacheManager, appCodeLoader])
 {
     #region Setup / Init
 
-    public AppApiControllerSelectorService Setup(HttpConfiguration configuration, HttpRequestMessage request)
+    private void Setup(HttpConfiguration configuration, HttpRequestMessage request)
     {
         _configuration = configuration;
         _request = request;
-        return this;
     }
+
+    private HttpRequestMessage Request => _request ?? throw new("Request not available - call Setup(...) first!");
+    private HttpRequestMessage _request;
+
+    private HttpConfiguration Configuration => _configuration ?? throw new("Configuration not available - call Setup(...) first!");
+    private HttpConfiguration _configuration;
+
+    #endregion
+
 
     public HttpControllerDescriptor SelectController(HttpConfiguration configuration, HttpRequestMessage request)
     {
@@ -64,12 +74,31 @@ internal class AppApiControllerSelectorService(
             var edition = VarNames.GetEdition(routeData.Values);
             l.A($"Edition: {edition}");
 
+            // Specs for HotBuild - may not be available, but should be retrieved from the block or App-Path
+            HotBuildSpec spec = null;
+
+            // Try to get block - will only work, if the request has all headers
+            var block = getBlockLazy.Value.GetCmsBlock(request);
+            l.A($"has block: {block != null}");
+
+            if (block != null)
+            {
+                spec = new(block.AppId, edition: edition, block.App?.Name);
+                l.A($"{nameof(spec)}: {spec}");
+            }
+            else
+            {
+                // TODO: @STV Otherwise try to find AppId based on path - otherwise we don't have a proper spec, and things fail
+
+            }
+
+
             // First check local app (in this site), then global
-            var descriptor = DescriptorIfExists(site, appFolder, edition, controllerTypeName, false);
+            var descriptor = DescriptorIfExists(appFolder, edition, controllerTypeName, false, spec);
             if (descriptor != null) return l.ReturnAsOk(descriptor);
 
             l.A("path not found, will check on shared location");
-            descriptor = DescriptorIfExists(site, appFolder, edition, controllerTypeName, true);
+            descriptor = DescriptorIfExists(site, appFolder, edition, controllerTypeName, true, spec);
             if (descriptor != null) return l.ReturnAsOk(descriptor);
         }
         catch (Exception e)
@@ -84,17 +113,27 @@ internal class AppApiControllerSelectorService(
         throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.NotFound, new(), msgFinal, codeErrorSvc.Value));
     }
 
-    private HttpRequestMessage Request  => _request ?? throw new("Request not available - call Setup(...) first!");
-    private HttpRequestMessage _request;
-
-    private HttpConfiguration Configuration => _configuration ?? throw new("Configuration not available - call Setup(...) first!");
-    private HttpConfiguration _configuration;
-
-    #endregion
-
-    private HttpControllerDescriptor DescriptorIfExists(ISite site, string appFolder, string edition, string controllerTypeName, bool shared)
+    private HttpControllerDescriptor DescriptorIfExists(string appFolder, string edition, string controllerTypeName, bool shared, HotBuildSpec spec)
     {
         var l = Log.Fn<HttpControllerDescriptor>();
+
+        // 1. Check AppCode Dll
+        if (spec != null)
+        {
+            // First try cache, then try to compile
+            var appCodeAssembly = assemblyCacheManager.Value.TryGetAppCode(spec).Result?.Assembly;
+            appCodeAssembly ??= appCodeLoader.Value.GetAppCode(spec).Assembly;
+
+            // If assembly found, check if this controller exists in that dll - if yes, return it
+            if (appCodeAssembly != null)
+            {
+                var type = appCodeAssembly.GetType(controllerTypeName, false, true);
+                if (type != null)
+                    return l.Return(new(Configuration, type.Name, type), "Api controller from AppCode");
+            }
+        }
+
+        // 2. Normal Api, compiled on the fly
         var controllerFolder = Path
             .Combine(shared ? site.SharedAppsRootRelative() : site.AppsRootPhysical, appFolder, edition + "api/")
             .ForwardSlash();
@@ -105,13 +144,13 @@ internal class AppApiControllerSelectorService(
         // because when the file changes, the type-object will be different, so please don't optimize :)
         var exists = File.Exists(HostingEnvironment.MapPath(controllerPath));
         var descriptor = exists
-            ? BuildDescriptor(controllerFolder, controllerPath, controllerTypeName, edition.TrimLastSlash())
+            ? BuildDescriptor(controllerFolder, controllerPath, controllerTypeName, spec)
             : null;
         return l.Return(descriptor, $"{nameof(exists)}: {exists}");
     }
 
 
-    private HttpControllerDescriptor BuildDescriptor(string folder, string fullPath, string typeName, string edition)
+    private HttpControllerDescriptor BuildDescriptor(string folder, string fullPath, string typeName, HotBuildSpec spec)
     {
         var l = Log.Fn<HttpControllerDescriptor>();
         Assembly assembly;
@@ -119,17 +158,6 @@ internal class AppApiControllerSelectorService(
         if (codeFileInfo.AppCode)
         {
             l.A("AppCode - use Roslyn");
-            // Figure edition
-            HotBuildSpec spec = null;
-            var block = getBlockLazy.Value.GetCmsBlock(Request);
-            l.A($"has block: {block != null}");
-            if (block != null)
-            {
-                spec = new(block.AppId, edition: edition, block.App?.Name);
-                l.A($"{nameof(spec)}: {spec}");
-            }
-            // TODO: Otherwise try to find AppId
-
             assembly = roslynLazy.Value.GetCompiledAssembly(codeFileInfo, typeName, spec)?.Assembly;
         }
         else

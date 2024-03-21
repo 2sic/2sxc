@@ -1,60 +1,62 @@
 ﻿using System.IO;
 using System.Net;
+using System.Web.Http.Routing;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
-using ToSic.Sxc.Dnn.WebApi;
 
 namespace ToSic.Sxc.Dnn.Integration;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class DnnAppFolderUtilities: ServiceBase
+public class DnnAppFolderUtilities(
+    Generator<AppFolder> folder,
+    Generator<DnnGetBlock> dnnGetBlock,
+    LazySvc<CodeErrorHelpService> errorHelp)
+    : ServiceBase($"{DnnConstants.LogName}.AppFld", connect: [errorHelp, folder, dnnGetBlock])
 {
-    private readonly LazySvc<CodeErrorHelpService> _errorHelp;
-    private readonly Generator<AppFolder> _appFolder;
-    private readonly Generator<DnnGetBlock> _dnnGetBlock;
+    private HttpRequestMessage _request;
 
-    public DnnAppFolderUtilities(Generator<AppFolder> appFolder, Generator<DnnGetBlock> dnnGetBlock, LazySvc<CodeErrorHelpService> errorHelp) : base($"{DnnConstants.LogName}.AppFld")
+    private HttpRequestMessage Request => _request ?? throw new Exception("Request not available - call Setup(...) first!");
+
+    public DnnAppFolderUtilities Setup(HttpRequestMessage request)
     {
-        _errorHelp = errorHelp;
-        ConnectServices(
-            _appFolder = appFolder,
-            _dnnGetBlock = dnnGetBlock
-        );
+        _request = request;
+        return this;
     }
 
-    internal string GetAppFolderVirtualPath(HttpRequestMessage request, ISite site)
+    internal string GetAppFolderVirtualPath(ISite site)
     {
         var l = Log.Fn<string>();
-        var appFolder = GetAppFolder(request, true);
+        var appFolder = GetAppFolder(true);
         var appFolderVirtualPath = Path.Combine(site.AppsRootPhysical, appFolder).ForwardSlash();
         return l.Return(appFolderVirtualPath, $"Ok, AppFolder Virtual Path: {appFolderVirtualPath}");
     }
 
-    internal string GetAppFolder(HttpRequestMessage request, bool errorIfNotFound)
+    internal string GetAppFolder(bool errorIfNotFound)
     {
         var l = Log.Fn<string>();
         const string errPrefix = "Api Controller Finder Error: ";
         const string errSuffix = "Check event-log, code and inner exception. ";
 
-        var routeData = request.GetRouteData();
+        var routeData = Request.GetRouteData();
 
         // Figure out the Path, or show error for that.
         string appFolder;
         try
         {
-            appFolder = Route.AppPathOrNull(routeData);
+            appFolder = AppPathOrNull(routeData);
 
             // only check for app folder if we don't have a context
             if (appFolder == null)
             {
                 l.A("no folder found in url, will auto-detect");
-                appFolder = _appFolder.New()?
-                    .Init(_dnnGetBlock.New().GetCmsBlock(request))
+                appFolder = folder.New()?
+                    .Init(dnnGetBlock.New().GetCmsBlock(Request))
                     .GetAppFolder();
             }
 
@@ -64,7 +66,7 @@ public class DnnAppFolderUtilities: ServiceBase
         {
             const string msg = errPrefix + "Trying to find app name, unexpected error - possibly bad/invalid headers. " + errSuffix;
             if (errorIfNotFound)
-                throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.BadRequest, getBlockException, msg, _errorHelp.Value));
+                throw l.Done(DnnHttpErrors.LogAndReturnException(Request, HttpStatusCode.BadRequest, getBlockException, msg, errorHelp.Value));
             return l.Return(null, "not found, maybe error");
         }
 
@@ -72,10 +74,12 @@ public class DnnAppFolderUtilities: ServiceBase
         {
             const string msg = errPrefix + "App name is unknown - tried to check name in url (.../app/[app-name]/...) " +
                                "and tried app-detection using url-params/headers pageid/moduleid. " + errSuffix;
-            throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.BadRequest, new(msg), msg, _errorHelp.Value));
+            throw l.Done(DnnHttpErrors.LogAndReturnException(Request, HttpStatusCode.BadRequest, new(msg), msg, errorHelp.Value));
         }
 
         return l.ReturnAsOk(appFolder);
     }
+
+    public static string AppPathOrNull(IHttpRouteData route) => route.Values[VarNames.AppPath]?.ToString();
 
 }

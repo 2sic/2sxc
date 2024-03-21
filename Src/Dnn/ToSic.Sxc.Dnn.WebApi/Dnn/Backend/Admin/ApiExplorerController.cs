@@ -36,7 +36,7 @@ public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSu
 
         var controllerVirtualPath =
             Path.Combine(
-                SysHlp.GetService<DnnAppFolderUtilities>().GetAppFolderVirtualPath(Request, SysHlp.GetService<ISite>()), 
+                SysHlp.GetService<DnnAppFolderUtilities>().Setup(Request).GetAppFolderVirtualPath(SysHlp.GetService<ISite>()), 
                 path);
 
         Log.A($"Controller Virtual Path: {controllerVirtualPath}");
