@@ -23,6 +23,7 @@ public class PageFeaturesCatalog: GlobalCatalogBase<IPageFeature>
             JQuery,
             ContextPage,
             ContextModule,
+            JsApiOnModule,
             JsCore,
             JsCms,
             JsCmsInternal,
