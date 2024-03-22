@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Web.Compilation;
@@ -132,7 +133,11 @@ internal class AppApiControllerSelectorService(
             // If assembly found, check if this controller exists in that dll - if yes, return it
             if (appCodeAssembly != null)
             {
-                var type = appCodeAssembly.GetType(controllerTypeName, false, true);
+                // TODO: @STV repeat in oqtane, and/or centralize code
+                var type = appCodeAssembly.GetType(controllerTypeName, false, true)
+                    // Find in case it's in a namespace
+                    ?? appCodeAssembly.GetTypes().FirstOrDefault(t => t.Name == controllerTypeName);
+             
                 if (type != null)
                     return l.Return(new(Configuration, type.Name, type), "Api controller from AppCode");
             }
