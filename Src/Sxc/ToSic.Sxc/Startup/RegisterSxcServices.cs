@@ -166,7 +166,7 @@ public static partial class RegisterSxcServices
 
         // v13 LightSpeed
         services.TryAddTransient<IOutputCache, LightSpeed>();
-        services.TryAddTransient<OutputCacheManager>();
+
         services.TryAddTransient<BlockEditorSelector>();
 
         // Sxc StartUp Routines - MUST be AddTransient, not TryAddTransient so many start-ups can be registered

@@ -1,7 +1,9 @@
 ﻿using System.IO;
 using System.Reflection;
+using System.Runtime.Caching;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
+using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
@@ -55,7 +57,7 @@ public class AppCodeLoader(
         var l = Log.Fn<(Assembly, HotBuildSpec)>(spec.ToString());
 
         // Check cache first
-        var assembly = assemblyCacheManager.TryGetAppCode(spec).Result?.Assembly;
+        var assembly = AssemblyCacheManager.TryGetAppCode(spec).Result?.Assembly;
         if (assembly != null)
             return l.Return((assembly, spec), $"AppCode from cached for '{spec.EditionToLog}'.");
 
@@ -94,7 +96,7 @@ public class AppCodeLoader(
     {
         var l = Log.Fn<AssemblyResult>($"{spec}");
 
-        var (result, cacheKey) = assemblyCacheManager.TryGetAppCode(spec);
+        var (result, cacheKey) = AssemblyCacheManager.TryGetAppCode(spec);
         logSummary.AddSpec("Cached", $"{result != null} on {cacheKey}");
 
         if (result != null)
@@ -118,7 +120,11 @@ public class AppCodeLoader(
             l.A($"- '{watcherFolder}'");
 
         // Add compiled assembly to cache
-        assemblyCacheManager.Add(cacheKey, assemblyResult, folderPaths: assemblyResult.WatcherFolders);
+        assemblyCacheManager.Add(
+            cacheKey,
+            assemblyResult,
+            changeMonitor: new ChangeMonitor[] { new FolderChangeMonitor(assemblyResult.WatcherFolders) }
+        );
 
         return l.ReturnAsOk(assemblyResult);
     }

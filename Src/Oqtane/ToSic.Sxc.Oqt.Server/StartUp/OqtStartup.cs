@@ -6,7 +6,6 @@ using Microsoft.Extensions.Hosting;
 using Oqtane.Extensions;
 using Oqtane.Infrastructure;
 using System.IO;
-using ToSic.Eav.Caching;
 using ToSic.Eav.Integration;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Internal.Loaders;
@@ -122,8 +121,6 @@ public class OqtStartup : IServerStartup
             // end of this middleware pipeline branch
         });
 
-        var memoryCacheService = serviceProvider.Build<MemoryCacheService>();
-
         app.MapWhen(context => IsSxcDialog(context.Request.Path.Value), appBuilder =>
         {
             appBuilder.UseOqtaneMiddlewareConfiguration();
@@ -131,7 +128,7 @@ public class OqtStartup : IServerStartup
             {
                 // Handle / Process URLs to Dialogs route for 2sxc UI
                 foreach (var (url, page, setting) in SxcDialogs)
-                    endpoints.MapFallback(url, context => EditUiMiddleware.PageOutputCached(context, env, page, setting, memoryCacheService));
+                    endpoints.MapFallback(url, context => EditUiMiddleware.PageOutputCached(context, env, page, setting));
             });
         });
     }

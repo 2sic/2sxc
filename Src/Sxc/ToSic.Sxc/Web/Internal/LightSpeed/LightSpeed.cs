@@ -19,9 +19,7 @@ namespace ToSic.Sxc.Web.Internal.LightSpeed;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class LightSpeed : ServiceBase, IOutputCache
 {
-    private readonly Lazy<OutputCacheManager> _outCacheMan;
-
-    public LightSpeed(IEavFeaturesService features, LazySvc<IAppStates> appStatesLazy, LazySvc<IAppPathsMicroSvc> appPathsLazy, LightSpeedStats lightSpeedStats, LazySvc<ICmsContext> cmsContext, Lazy<OutputCacheManager> outCacheMan) : base(SxcLogName + ".Lights")
+    public LightSpeed(IEavFeaturesService features, LazySvc<IAppStates> appStatesLazy, LazySvc<IAppPathsMicroSvc> appPathsLazy, LightSpeedStats lightSpeedStats, LazySvc<ICmsContext> cmsContext, LazySvc<OutputCacheManager> outputCacheManager) : base(SxcLogName + ".Lights")
     {
         ConnectServices(
             LightSpeedStats = lightSpeedStats,
@@ -29,7 +27,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
             _appStatesLazy = appStatesLazy,
             _appPathsLazy = appPathsLazy,
             _cmsContext = cmsContext,
-            _outCacheMan = outCacheMan
+            _outputCacheManager = outputCacheManager
         );
     }
     public LightSpeedStats LightSpeedStats { get; }
@@ -37,6 +35,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
     private readonly LazySvc<IAppStates> _appStatesLazy;
     private readonly LazySvc<IAppPathsMicroSvc> _appPathsLazy;
     private readonly LazySvc<ICmsContext> _cmsContext;
+    private readonly LazySvc<OutputCacheManager> _outputCacheManager;
 
     public IOutputCache Init(int moduleId, int pageId, IBlock block)
     {
@@ -93,7 +92,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
 
         string cacheKey = null;
         l.Do(message: "outputCacheManager add", timer: true, action: () =>
-            cacheKey = _outCacheMan.Value.Add(CacheKey, Fresh, duration, _features, dependentAppsStates.Cast<IAppStateChanges>().ToList(), appPathsToMonitor,
+            cacheKey = OutCacheMan.Add(CacheKey, Fresh, duration, _features, dependentAppsStates.Cast<IAppStateChanges>().ToList(), appPathsToMonitor,
                 _ => LightSpeedStats.Remove(appState.AppId, data.Size)));
 
         l.A($"LightSpeed Cache Key: {cacheKey}");
@@ -167,7 +166,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
     private readonly GetOnce<string> _currentCulture = new();
 
 
-    private string CacheKey => _key.Get(() => Log.Func(() => _outCacheMan.Value.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, Suffix, CurrentCulture)));
+    private string CacheKey => _key.Get(() => Log.Func(() => OutCacheMan.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, Suffix, CurrentCulture)));
     private readonly GetOnce<string> _key = new();
 
     private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? (int?)null : _block.Context.User.Id);
@@ -187,7 +186,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
         {
             if (AppState == null) return l.ReturnNull("no app");
 
-            var result = IsEnabled ? _outCacheMan.Value.Get(CacheKey) : null;
+            var result = IsEnabled ? OutCacheMan.Get(CacheKey) : null;
             if (result == null) return l.ReturnNull("not in cache");
 
             // compare cache time-stamps
@@ -228,4 +227,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
         var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(appState, Log);
         return l.Return(decoFromPiggyBack, $"has decorator: {decoFromPiggyBack.Entity != null}");
     }
+
+    private OutputCacheManager OutCacheMan => _outputCacheManager.Value;
+
 }

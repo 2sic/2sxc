@@ -1,15 +1,19 @@
-﻿using Microsoft.AspNetCore.Antiforgery;
+﻿using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Oqtane.Repository;
-using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Antiforgery;
+using Oqtane.Repository;
 using ToSic.Eav.Caching;
 using ToSic.Sxc.Oqt.Server.Blocks.Output;
 using ToSic.Sxc.Oqt.Server.Plumbing;
+using ToSic.Sxc.Services;
+using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal.EditUi;
 using ToSic.Sxc.Web.Internal.JsContext;
 
@@ -17,22 +21,33 @@ namespace ToSic.Sxc.Oqt.Server.Controllers;
 
 internal class EditUiMiddleware
 {
-    public static Task PageOutputCached(HttpContext context, IWebHostEnvironment env, string virtualPath, EditUiResourceSettings settings, MemoryCacheService cache)
+
+
+    public static Task PageOutputCached(HttpContext context, IWebHostEnvironment env, string virtualPath, EditUiResourceSettings settings)
     {
         context.Response.Headers.Add("test-dev", "2sxc");
 
-        var path = Path.Combine(env.WebRootPath, virtualPath);
-        var html = cache.GetOrBuildEditUiMiddlewareHtml(path, () =>
+        var sp = context.RequestServices;
+
+        var key = CacheKey(virtualPath);
+        if (MemoryCacheService.Get(key) is not string html)
         {
-            if (!File.Exists(path)) throw new FileNotFoundException($"File not found: {path}");
-            return HtmlDialog.CleanImport(Encoding.Default.GetString(File.ReadAllBytes(path)));
-        });
+            var path = Path.Combine(env.WebRootPath, virtualPath);
+            if (!File.Exists(path)) throw new FileNotFoundException("File not found: " + path);
+
+            var bytesInFile = File.ReadAllBytes(path);
+            html = Encoding.Default.GetString(bytesInFile);
+            html = HtmlDialog.CleanImport(html);
+            sp.GetService<MemoryCacheService>().Set(key, html, GetCacheItemPolicy(path));
+        }
+
+        //var html = Encoding.Default.GetString(bytes);
 
         // inject JsApi to html content
         var pageIdString = context.Request.Query[HtmlDialog.PageIdInUrl];
         var pageId = !string.IsNullOrEmpty(pageIdString) ? Convert.ToInt32(pageIdString) : -1;
 
-        var sp = context.RequestServices;
+
         var siteStateInitializer = sp.GetService<SiteStateInitializer>();
             
         // find siteId from pageId (if provided)
@@ -75,5 +90,14 @@ internal class EditUiMiddleware
         context.Response.Body.WriteAsync(bytes);
 
         return Task.CompletedTask;
+    }
+
+    private static string CacheKey(string virtualPath) => $"2sxc-edit-ui-page-{virtualPath}";
+
+    private static CacheItemPolicy GetCacheItemPolicy(string filePath)
+    {
+        var cacheItemPolicy = new CacheItemPolicy();
+        cacheItemPolicy.ChangeMonitors.Add(new HostFileChangeMonitor(new List<string> { filePath }));
+        return cacheItemPolicy;
     }
 }
