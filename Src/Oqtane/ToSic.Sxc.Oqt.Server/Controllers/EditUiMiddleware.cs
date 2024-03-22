@@ -1,19 +1,17 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Oqtane.Repository;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Antiforgery;
-using Oqtane.Repository;
 using ToSic.Eav.Caching;
 using ToSic.Sxc.Oqt.Server.Blocks.Output;
 using ToSic.Sxc.Oqt.Server.Plumbing;
-using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal.EditUi;
 using ToSic.Sxc.Web.Internal.JsContext;
 
@@ -30,7 +28,8 @@ internal class EditUiMiddleware
         var sp = context.RequestServices;
 
         var key = CacheKey(virtualPath);
-        if (MemoryCacheService.Get(key) is not string html)
+        var memoryCacheService = sp.GetService<MemoryCacheService>();
+        if (memoryCacheService.Get(key) is not string html)
         {
             var path = Path.Combine(env.WebRootPath, virtualPath);
             if (!File.Exists(path)) throw new FileNotFoundException("File not found: " + path);
@@ -38,7 +37,7 @@ internal class EditUiMiddleware
             var bytesInFile = File.ReadAllBytes(path);
             html = Encoding.Default.GetString(bytesInFile);
             html = HtmlDialog.CleanImport(html);
-            sp.GetService<MemoryCacheService>().Set(key, html, GetCacheItemPolicy(path));
+            memoryCacheService.Set(key, html, GetCacheItemPolicy(path));
         }
 
         //var html = Encoding.Default.GetString(bytes);

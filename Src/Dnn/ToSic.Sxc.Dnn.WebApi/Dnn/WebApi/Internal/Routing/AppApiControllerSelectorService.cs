@@ -127,7 +127,7 @@ internal class AppApiControllerSelectorService(
         if (spec != null)
         {
             // First try cache, then try to compile
-            var appCodeAssembly = AssemblyCacheManager.TryGetAppCode(spec).Result?.Assembly;
+            var appCodeAssembly = assemblyCacheManager.Value.TryGetAppCode(spec).Result?.Assembly;
             appCodeAssembly ??= appCodeLoader.Value.GetAppCode(spec).Assembly;
 
             // If assembly found, check if this controller exists in that dll - if yes, return it

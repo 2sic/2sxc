@@ -7,7 +7,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
-internal class OutputCacheManager(MemoryCacheService memoryCacheService) : ServiceBase(SxcLogName + ".OutputCacheManager")
+internal class OutputCacheManager(MemoryCacheService memoryCacheService) : ServiceBase(SxcLogName + ".OutputCacheManager", connect: [memoryCacheService])
 {
     internal const string GlobalCacheRoot = "2sxc.Lightspeed.Module.";
 
@@ -61,5 +61,5 @@ internal class OutputCacheManager(MemoryCacheService memoryCacheService) : Servi
         return l.ReturnAsError("error");
     }
 
-    public OutputCacheItem Get(string key) => MemoryCacheService.Get(key) as OutputCacheItem;
+    public OutputCacheItem Get(string key) => memoryCacheService.Get(key) as OutputCacheItem;
 }

@@ -17,25 +17,10 @@ using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class LightSpeed : ServiceBase, IOutputCache
+internal class LightSpeed(IEavFeaturesService features, LazySvc<IAppStates> appStatesLazy, LazySvc<IAppPathsMicroSvc> appPathsLazy, LightSpeedStats lightSpeedStats, LazySvc<ICmsContext> cmsContext, LazySvc<OutputCacheManager> outputCacheManager) 
+    : ServiceBase(SxcLogName + ".Lights", connect: [features, appStatesLazy, appPathsLazy, lightSpeedStats, cmsContext, outputCacheManager]), IOutputCache
 {
-    public LightSpeed(IEavFeaturesService features, LazySvc<IAppStates> appStatesLazy, LazySvc<IAppPathsMicroSvc> appPathsLazy, LightSpeedStats lightSpeedStats, LazySvc<ICmsContext> cmsContext, LazySvc<OutputCacheManager> outputCacheManager) : base(SxcLogName + ".Lights")
-    {
-        ConnectServices(
-            LightSpeedStats = lightSpeedStats,
-            _features = features,
-            _appStatesLazy = appStatesLazy,
-            _appPathsLazy = appPathsLazy,
-            _cmsContext = cmsContext,
-            _outputCacheManager = outputCacheManager
-        );
-    }
-    public LightSpeedStats LightSpeedStats { get; }
-    private readonly IEavFeaturesService _features;
-    private readonly LazySvc<IAppStates> _appStatesLazy;
-    private readonly LazySvc<IAppPathsMicroSvc> _appPathsLazy;
-    private readonly LazySvc<ICmsContext> _cmsContext;
-    private readonly LazySvc<OutputCacheManager> _outputCacheManager;
+    public LightSpeedStats LightSpeedStats => lightSpeedStats;
 
     public IOutputCache Init(int moduleId, int pageId, IBlock block)
     {
@@ -49,7 +34,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
     private int _pageId;
     private IBlock _block;
     private IAppStateInternal AppState => _block?.Context?.AppState;
-    private IAppStates AppStates => _appStatesLazy.Value;
+    private IAppStates AppStates => appStatesLazy.Value;
 
     public bool Save(IRenderResult data)
     {
@@ -86,13 +71,13 @@ internal class LightSpeed : ServiceBase, IOutputCache
             
         IList<string> appPathsToMonitor = null;
         l.Do(message: "appPathsToMonitor", timer: true, action: () => 
-            appPathsToMonitor = _features.IsEnabled(LightSpeedOutputCacheAppFileChanges.NameId)
+            appPathsToMonitor = features.IsEnabled(LightSpeedOutputCacheAppFileChanges.NameId)
                 ? _appPaths.Get(() => AppPaths(dependentAppsStates))
                 : null);
 
         string cacheKey = null;
         l.Do(message: "outputCacheManager add", timer: true, action: () =>
-            cacheKey = OutCacheMan.Add(CacheKey, Fresh, duration, _features, dependentAppsStates.Cast<IAppStateChanges>().ToList(), appPathsToMonitor,
+            cacheKey = OutCacheMan.Add(CacheKey, Fresh, duration, features, dependentAppsStates.Cast<IAppStateChanges>().ToList(), appPathsToMonitor,
                 _ => LightSpeedStats.Remove(appState.AppId, data.Size)));
 
         l.A($"LightSpeed Cache Key: {cacheKey}");
@@ -131,7 +116,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
         var paths = new List<string>();
         foreach (var appState in dependentApps)
         {
-            var appPaths = _appPathsLazy.Value.Init(app.Site, _appStatesLazy.Value.ToReader(appState, Log));
+            var appPaths = appPathsLazy.Value.Init(app.Site, appStatesLazy.Value.ToReader(appState, Log));
             if (Directory.Exists(appPaths.PhysicalPath)) paths.Add(appPaths.PhysicalPath);
             if (Directory.Exists(appPaths.PhysicalPathShared)) paths.Add(appPaths.PhysicalPathShared);
         }
@@ -162,7 +147,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
         return urlParams;
     }
 
-    private string CurrentCulture => _currentCulture.Get(() => _cmsContext.Value.Culture.CurrentCode);
+    private string CurrentCulture => _currentCulture.Get(() => cmsContext.Value.Culture.CurrentCode);
     private readonly GetOnce<string> _currentCulture = new();
 
 
@@ -212,7 +197,7 @@ internal class LightSpeed : ServiceBase, IOutputCache
     private bool IsEnabledGenerator()
     {
         var l = Log.Fn<bool>();
-        var feat = _features.IsEnabled(LightSpeedOutputCache.NameId);
+        var feat = features.IsEnabled(LightSpeedOutputCache.NameId);
         if (!feat) return l.ReturnFalse("feature disabled");
         var ok = AppConfig.IsEnabled;
         return l.Return(ok, $"app config: {ok}");
@@ -228,6 +213,6 @@ internal class LightSpeed : ServiceBase, IOutputCache
         return l.Return(decoFromPiggyBack, $"has decorator: {decoFromPiggyBack.Entity != null}");
     }
 
-    private OutputCacheManager OutCacheMan => _outputCacheManager.Value;
+    private OutputCacheManager OutCacheMan => outputCacheManager.Value;
 
 }

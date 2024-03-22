@@ -57,7 +57,7 @@ public class AppCodeLoader(
         var l = Log.Fn<(Assembly, HotBuildSpec)>(spec.ToString());
 
         // Check cache first
-        var assembly = AssemblyCacheManager.TryGetAppCode(spec).Result?.Assembly;
+        var assembly = assemblyCacheManager.TryGetAppCode(spec).Result?.Assembly;
         if (assembly != null)
             return l.Return((assembly, spec), $"AppCode from cached for '{spec.EditionToLog}'.");
 
@@ -96,7 +96,7 @@ public class AppCodeLoader(
     {
         var l = Log.Fn<AssemblyResult>($"{spec}");
 
-        var (result, cacheKey) = AssemblyCacheManager.TryGetAppCode(spec);
+        var (result, cacheKey) = assemblyCacheManager.TryGetAppCode(spec);
         logSummary.AddSpec("Cached", $"{result != null} on {cacheKey}");
 
         if (result != null)
