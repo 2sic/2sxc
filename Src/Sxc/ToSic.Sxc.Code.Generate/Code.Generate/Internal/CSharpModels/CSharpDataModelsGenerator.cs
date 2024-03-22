@@ -2,7 +2,6 @@
 using ToSic.Eav.Context;
 using ToSic.Eav.Data.Shared;
 using ToSic.Eav.Plumbing;
-using static ToSic.Sxc.Internal.SxcLogging;
 
 namespace ToSic.Sxc.Code.Generate.Internal;
 

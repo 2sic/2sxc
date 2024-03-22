@@ -2,7 +2,6 @@
 using ToSic.Eav.Context;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Internal;
-using static ToSic.Sxc.Internal.SxcLogging;
 
 namespace ToSic.Sxc.Code.Generate.Internal;
 

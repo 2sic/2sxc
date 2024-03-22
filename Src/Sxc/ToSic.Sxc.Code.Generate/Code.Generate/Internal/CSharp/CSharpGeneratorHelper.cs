@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Code.Generate.Internal;
@@ -122,4 +121,8 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs)
          // When:        {specs.DateTime:u}
          """;
 
+    public static string DoNotModifyMessage = """
+                                              // DO NOT MODIFY THIS FILE - IT IS AUTO-GENERATED
+                                              // All the classes are partial, so you can extend them in a separate file.
+                                              """;
 }

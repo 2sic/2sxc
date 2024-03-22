@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ToSic.Sxc.Code.Generate.Internal;
+﻿namespace ToSic.Sxc.Code.Generate.Internal;
 
 /// <summary>
 /// WIP Parameters to give the code generator

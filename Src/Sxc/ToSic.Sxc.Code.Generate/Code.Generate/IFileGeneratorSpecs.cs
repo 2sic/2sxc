@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ToSic.Sxc.Code.Generate;
+﻿namespace ToSic.Sxc.Code.Generate;
 
 /// <summary>
 /// Specs for a file generator.

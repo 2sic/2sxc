@@ -6,6 +6,7 @@
 /// </summary>
 /// <param name="code"></param>
 /// <param name="usings"></param>
+/// <param name="closing">special closing string if the code wraps something else</param>
 internal class CodeFragment(string nameId, string code, bool priority = true, List<string> usings = default, string closing = default)
 {
     /// <summary>
