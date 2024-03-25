@@ -6,7 +6,8 @@ using ToSic.Sxc.Data;
 namespace ToSic.Sxc.Apps;
 
 internal class AppTyped<TSettings, TResources>(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> queryManager)
-    : AppTyped(globalPaths, queryManager), IAppTyped<TSettings, TResources>
+    : AppTyped(globalPaths, queryManager), IAppTyped<TSettings, TResources>,
+        IAppTyped
     where TSettings : class, ITypedItem, ITypedItemWrapper16, new()
     where TResources : class, ITypedItem, ITypedItemWrapper16, new()
 {
