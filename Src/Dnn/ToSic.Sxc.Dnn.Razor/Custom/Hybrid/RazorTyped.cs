@@ -59,21 +59,17 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
 
     private object _overridePageData;
 
-    private TypedCode16Helper CreateCodeHelper()
-    {
-        var myModelData = _overridePageData?.ToDicInvariantInsensitive()
-                          ?? PageData?
-                              .Where(pair => pair.Key is string)
-                              .ToDictionary(pair => pair.Key.ToString(), pair => pair.Value, InvariantCultureIgnoreCase);
-
-
-        var model = _overridePageData 
-                    // the default/only value would be on a 0 key
-                    ?? (PageData?.TryGetValue(0, out var zeroData) ?? false ? zeroData as object: null);
-
-        return new(new(_CodeApiSvc, true, Path), myModelDic: myModelData, razorModel: model);
-    }
-
+    private TypedCode16Helper CreateCodeHelper() =>
+        new(
+            new(_CodeApiSvc, true, Path),
+            getRazorModel: () => _overridePageData
+                                 // the default/only value would be on a 0 key
+                                 ?? (PageData?.TryGetValue(0, out var zeroData) ?? false ? zeroData as object : null),
+            () => _overridePageData?.ToDicInvariantInsensitive()
+                  ?? PageData?
+                      .Where(pair => pair.Key is string)
+                      .ToDictionary(pair => pair.Key.ToString(), pair => pair.Value, InvariantCultureIgnoreCase)
+        );
 
     #endregion
 
