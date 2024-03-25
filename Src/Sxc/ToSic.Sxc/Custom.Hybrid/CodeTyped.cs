@@ -63,9 +63,8 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
 
         var message = $"Can't access properties such as {propName}, because the Code-Context is not known. " +
                       $"This is typical in code which is in the **AppCode** folder. " +
-                      $"Make sure the caller of the code uses 'this' in the constructor - " +
-                      $"eg. 'new {GetType().Name}(this)' and that the class {GetType().Name} has a constructor which passes it to the base class " +
-                      $"like public {GetType().Name}({nameof(IHasCodeContext)} parent) : base(parent) {{ }} ";
+                      $"Make sure the caller of the code uses GetService<{GetType().Name}>() to create the object - " +
+                      $"eg. 'var {GetType().Name}Svc = GetService<{GetType().Name}>()'.";
         throw new ExceptionWithHelp(new CodeHelp("get-kit-without-code-root", "todo", uiMessage: message),
             new ArgumentNullException(nameof(Kit)));
     }

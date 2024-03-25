@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.LookUp;
 
-public partial class LookUpForTokenTemplate
+partial class LookUpForTokenTemplate
 {
     public const string TokenRepeater = "Repeater";
 
@@ -21,19 +21,19 @@ public partial class LookUpForTokenTemplate
         if (repeaterIndex <= -1 || !strPropertyName.StartsWith(TokenRepeater + ":", OrdinalIgnoreCase))
             return null;
 
-        switch (strPropertyName.Substring(TokenRepeater.Length + 1).ToLowerInvariant())
+        return strPropertyName.Substring(TokenRepeater.Length + 1).ToLowerInvariant() switch
         {
-            case KeyIndex: return (repeaterIndex).ToString();
-            case KeyIndex1: return (repeaterIndex + 1).ToString();
-            case KeyAlternator2: return (repeaterIndex % 2).ToString();
-            case KeyAlternator3: return (repeaterIndex % 3).ToString();
-            case KeyAlternator4: return (repeaterIndex % 4).ToString();
-            case KeyAlternator5: return (repeaterIndex % 5).ToString();
-            case KeyIsFirst: return repeaterIndex == 0 ? "First" : "";
-            case KeyIsLast: return repeaterIndex == repeaterTotal - 1 ? "Last" : "";
-            case KeyCount: return repeaterTotal.ToString();
-            default: return null;
-        }
+            KeyIndex => (repeaterIndex).ToString(),
+            KeyIndex1 => (repeaterIndex + 1).ToString(),
+            KeyAlternator2 => (repeaterIndex % 2).ToString(),
+            KeyAlternator3 => (repeaterIndex % 3).ToString(),
+            KeyAlternator4 => (repeaterIndex % 4).ToString(),
+            KeyAlternator5 => (repeaterIndex % 5).ToString(),
+            KeyIsFirst => repeaterIndex == 0 ? "First" : "",
+            KeyIsLast => repeaterIndex == repeaterTotal - 1 ? "Last" : "",
+            KeyCount => repeaterTotal.ToString(),
+            _ => null
+        };
     }
 
 }

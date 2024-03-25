@@ -4,19 +4,12 @@ using ToSic.Sxc.Web.Parameters;
 
 namespace ToSic.Sxc.Context.Internal;
 
+/// <summary>
+/// Constructor for DI
+/// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class Page: IPage
+internal class Page(LazySvc<IHttp> httpLazy) : IPage
 {
-    #region Constructor / DI
-
-    /// <summary>
-    /// Constructor for DI
-    /// </summary>
-    public Page(LazySvc<IHttp> httpLazy) => _httpLazy = httpLazy;
-    private readonly LazySvc<IHttp> _httpLazy;
-
-    #endregion
-
     public IPage Init(int id)
     {
         Id = id;
@@ -26,7 +19,7 @@ internal class Page: IPage
     public int Id { get; private set; } = Eav.Constants.NullId;
 
 
-    public IParameters Parameters => _parameters ??= new Parameters(OriginalParameters.GetOverrideParams(_httpLazy.Value?.QueryStringParams));
+    public IParameters Parameters => _parameters ??= new Parameters(OriginalParameters.GetOverrideParams(httpLazy.Value?.QueryStringParams));
     private IParameters _parameters;
 
 

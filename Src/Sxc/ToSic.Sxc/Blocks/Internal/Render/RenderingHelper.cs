@@ -56,6 +56,7 @@ internal class RenderingHelper: ServiceBase, IRenderingHelper
         int instanceId = 0,
         int contentBlockId = 0,
         bool editContext = false,
+        bool jsApiContext = false,
         string tag = SxcUiConstants.DefaultContextTag,
         bool addLineBreaks = true,
         string errorCode = default,
@@ -63,7 +64,7 @@ internal class RenderingHelper: ServiceBase, IRenderingHelper
         RenderStatistics statistics = default
     )
     {
-        var contextAttribs = ContextAttributes(instanceId, contentBlockId, editContext, errorCode, exsOrNull, statistics);
+        var contextAttribs = ContextAttributes(instanceId, contentBlockId, editContext, jsApiContext, errorCode, exsOrNull, statistics);
 
         var lineBreaks = addLineBreaks ? "\n" : "";
 
@@ -72,7 +73,7 @@ internal class RenderingHelper: ServiceBase, IRenderingHelper
                $"{lineBreaks}</{tag}>";
     }
 
-    private string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos, string errorCode,
+    private string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos, bool includeJsApiContext, string errorCode,
         List<Exception> exsOrNull, RenderStatistics statistics)
     {
         var contextAttribs = "";
@@ -81,9 +82,16 @@ internal class RenderingHelper: ServiceBase, IRenderingHelper
         if (contentBlockId != 0) contextAttribs += $" data-cb-id='{contentBlockId}'";
 
         // optionally add editing infos
-        var context = _jsContextAllGen.New().GetJsContext(AppRootPath, Block, errorCode, exsOrNull, statistics);
-        var contextInfos = JsonSerializer.Serialize(context, JsonOptions.SafeJsonForHtmlAttributes);
-        if (includeEditInfos) contextAttribs += Build.Attribute("data-edit-context", contextInfos);
+        if (includeEditInfos || includeJsApiContext)
+        {
+            var ctxGen = _jsContextAllGen.New();
+            var context = includeEditInfos
+                ? ctxGen.GetJsContext(AppRootPath, Block, errorCode, exsOrNull, statistics)
+                : ctxGen.GetJsApiOnly(Block);
+
+            var contextInfos = JsonSerializer.Serialize(context, JsonOptions.SafeJsonForHtmlAttributes);
+            contextAttribs += Build.Attribute("data-edit-context", contextInfos);
+        }
         return contextAttribs;
     }
 

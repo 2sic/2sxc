@@ -34,7 +34,7 @@ internal class ItemToolbar: ItemToolbarBase
         }
 
         // Case 3 - we have multiple actions
-        var actList = actions.CsvToArrayWithoutEmpty();// .Split(',').Select(p => p.Trim()).ToList();
+        var actList = actions.CsvToArrayWithoutEmpty();
         foreach (var act in actList)
             Actions.Add(new(entity)
             {

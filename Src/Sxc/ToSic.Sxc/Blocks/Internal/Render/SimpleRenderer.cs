@@ -1,9 +1,7 @@
 ﻿using System.Text;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Blocks.Internal.Render;
@@ -15,7 +13,7 @@ public class SimpleRenderer: ServiceBase
     private readonly Generator<BlockFromEntity> _blkFrmEntGen;
     private static readonly string _emptyMessage = "<!-- auto-render of item {0} -->";
 
-    public SimpleRenderer(Generator<BlockFromEntity> blkFrmEntGen): base(SxcLogging.SxcLogName + "RndSmp")
+    public SimpleRenderer(Generator<BlockFromEntity> blkFrmEntGen): base(SxcLogName + "RndSmp")
     {
         ConnectServices(
             _blkFrmEntGen = blkFrmEntGen

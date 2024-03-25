@@ -44,9 +44,9 @@ public partial class DynamicCodeService
     {
         var wrapLog = Log.Fn<IApp>($"{appIdentity.Show()}, site:{site != null}, showDrafts: {showDrafts}");
         var app = _myScopedServices.AppGenerator.New();
-        if (site != null) app.PreInit(site);
-        var appStuff = app.Init(appIdentity, new() { ShowDrafts = showDrafts });
-        return wrapLog.Return(appStuff);
+        // if (site != null) app.PreInit(site);
+        app.Init(site, appIdentity, new() { ShowDrafts = showDrafts });
+        return wrapLog.Return(app);
     }
 
 }

@@ -7,7 +7,6 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Internal;
 using static ToSic.Sxc.Blocks.Internal.BlockBuildingConstants;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IDataSource = ToSic.Eav.DataSource.IDataSource;
@@ -64,7 +63,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
     /// <summary>
     /// Empty constructor, so it can be used in dependency injection
     /// </summary>
-    protected EngineBase(MyServices services, object[] connect = default) : base(services, $"{SxcLogging.SxcLogName}.EngBas", connect: connect) { }
+    protected EngineBase(MyServices services, object[] connect = default) : base(services, $"{SxcLogName}.EngBas", connect: connect) { }
 
     #endregion
 

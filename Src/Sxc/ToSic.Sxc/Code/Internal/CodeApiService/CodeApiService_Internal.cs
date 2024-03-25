@@ -1,7 +1,6 @@
 ﻿using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Polymorphism.Internal;
-using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.Internal;
 
@@ -12,12 +11,6 @@ public partial class CodeApiService : ICodeApiServiceInternal
     {
         if (app is App typedApp)
             typedApp.SetupAsConverter(Cdf);
-
-        // WIP - enable app.Data to do GetOne<T>, GetMany<T> etc.
-        // Note that app.Data is only the typed one, if app is first cast to IAppTyped
-        // Todo: should move to property AppTyped - #IAppTyped
-        if (app is IAppTyped { Data: AppDataTyped appDataTyped })
-            appDataTyped.Setup(((ICodeApiServiceInternal)this).GetKit<ServiceKit16>());
 
         App = app;
 
@@ -32,6 +25,10 @@ public partial class CodeApiService : ICodeApiServiceInternal
 
     [PrivateApi] public IBlock _Block { get; private set; }
 
+    [PrivateApi]
+    public IAppTyped AppTyped => _appTyped ??= new Func<IAppTyped>(() => GetService<IAppTyped>(reuse: true))();
+    private IAppTyped _appTyped;
+    
     #region Kit Handling
 
     public TService GetService<TService>(NoParamOrder protector = default, bool reuse = false) where TService : class

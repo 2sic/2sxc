@@ -34,7 +34,6 @@ internal class CodeItemHelper(GetAndConvertHelper helper, ITyped data)
 
     public object Get(string name, NoParamOrder noParamOrder, bool? required, [CallerMemberName] string cName = default)
     {
-        // Protect(noParamOrder, nameof(required), methodName: cName);
         var findResult = Helper.TryGet(name);
         return IsErrStrict(findResult.Found, required, Helper.PropsRequired)
             ? throw ErrStrictForTyped(Data, name, cName: cName)
@@ -43,7 +42,6 @@ internal class CodeItemHelper(GetAndConvertHelper helper, ITyped data)
 
     public TValue G4T<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required = default, [CallerMemberName] string cName = default)
     {
-        // Protect(noParamOrder, nameof(fallback), methodName: cName);
         var findResult = Helper.TryGet(name);
         return IsErrStrict(findResult.Found, required, Helper.PropsRequired)
             ? throw ErrStrictForTyped(Data, name, cName: cName)

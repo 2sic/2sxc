@@ -17,7 +17,6 @@ partial class ToolbarBuilder
         Func<ITweakButton, ITweakButton> tweak,
         [CallerMemberName] string methodName = default)
     {
-        // Protect(noParamOrder, "See docs", methodName);
         TargetCheck(target);
         var pars = PreCleanParams(tweak, defOp: OprAuto, operation: operation, ui: ui, parameters: parameters, methodName: methodName);
         var command = new ToolbarRuleForEntity(commandName, target, 

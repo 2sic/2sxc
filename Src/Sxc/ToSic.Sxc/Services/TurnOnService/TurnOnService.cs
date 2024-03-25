@@ -1,25 +1,17 @@
 ﻿using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services.Internal;
 using Attribute = ToSic.Razor.Markup.Attribute;
 
 namespace ToSic.Sxc.Services;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class TurnOnService: ServiceBase, ITurnOnService
+internal class TurnOnService(LazySvc<IHtmlTagsService> htmlTagsService)
+    : ServiceBase(SxcLogName + ".TrnOnS", connect: [htmlTagsService]), ITurnOnService
 {
     private const string TagName = "turnOn";
     private const string AttributeName = "turn-on";
-
-    public TurnOnService(LazySvc<IHtmlTagsService> htmlTagsService) : base(SxcLogging.SxcLogName + ".TrnOnS")
-    {
-        ConnectServices(
-            _htmlTagsService = htmlTagsService
-        );
-    }
-    private readonly LazySvc<IHtmlTagsService> _htmlTagsService;
 
     // TODO:
     // - TEST
@@ -34,7 +26,7 @@ internal class TurnOnService: ServiceBase, ITurnOnService
     {
         var l = Log.Fn<Attribute>();
         var specs = PickOrBuildSpecs(runOrSpecs, require, data);
-        var attr = _htmlTagsService.Value.Attr(AttributeName, specs);
+        var attr = htmlTagsService.Value.Attr(AttributeName, specs);
         return l.ReturnAsOk(attr);
     }
 
@@ -47,7 +39,7 @@ internal class TurnOnService: ServiceBase, ITurnOnService
     {
         var l = Log.Fn<IHtmlTag>();
         var specs = PickOrBuildSpecs(runOrSpecs, require, data);
-        var tag = _htmlTagsService.Value.Custom(TagName).Attr(AttributeName, specs);
+        var tag = htmlTagsService.Value.Custom(TagName).Attr(AttributeName, specs);
         return l.ReturnAsOk(tag);
     }
 

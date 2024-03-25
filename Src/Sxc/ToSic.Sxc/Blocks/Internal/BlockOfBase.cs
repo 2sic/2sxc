@@ -10,7 +10,6 @@ using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DataSources.Internal;
-using ToSic.Sxc.LookUp;
 using ToSic.Sxc.LookUp.Internal;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -18,8 +17,8 @@ using IApp = ToSic.Sxc.Apps.IApp;
 namespace ToSic.Sxc.Blocks.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract partial class BlockBase(BlockBase.MyServices services, string logName)
-    : ServiceBase<BlockBase.MyServices>(services, logName), IBlock
+public abstract class BlockBase(BlockBase.MyServices services, string logName, object[] connect = default)
+    : ServiceBase<BlockBase.MyServices>(services, logName, connect: connect ?? []), IBlock
 {
     #region Constructor and DI
 
@@ -54,28 +53,28 @@ public abstract partial class BlockBase(BlockBase.MyServices services, string lo
 
         l.A($"parent#{ParentId}, content-block#{ContentBlockId}, z#{ZoneId}, a#{AppId}");
 
-        // 2020-09-04 2dm - new change, moved BlockBuilder up so it's never null - may solve various issues
+        // 2020-09-04 2dm - new change, moved BlockBuilder up, so it's never null - may solve various issues
         // but may introduce new ones
         BlockBuilder = Services.BlockBuilder.Value.Init(rootBuilderOrNull, this);
 
-        // If specifically no app found, end initialization here
-        // Means we have no data, and no BlockBuilder
-        if (AppId == AppConstants.AppIdNotFound || AppId == Eav.Constants.NullId)
+        switch (AppId)
         {
-            DataIsMissing = true;
-            return l.ReturnTrue("stop: app & data are missing");
+            // If specifically no app found, end initialization here
+            // Means we have no data, and no BlockBuilder
+            case AppConstants.AppIdNotFound or Eav.Constants.NullId:
+                DataIsMissing = true;
+                return l.ReturnTrue("stop: app & data are missing");
+            // If no app yet, stop now with BlockBuilder created
+            case Eav.Constants.AppIdEmpty:
+                return l.ReturnTrue($"stop a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
         }
-
-        // If no app yet, stop now with BlockBuilder created
-        if (AppId == Eav.Constants.AppIdEmpty)
-            return l.ReturnTrue($"stop a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
 
         l.A("Real app specified, will load App object with Data");
 
         // Get App for this block
-        App = Services.AppLazy.Value
-            .PreInit(Context.Site)
-            .Init(this.PureIdentity(), new SxcAppDataConfigSpecs { BlockForLookupOrNull = this });
+        var app = Services.AppLazy.Value; //.PreInit(Context.Site);
+        app.Init(Context.Site, this.PureIdentity(), new SxcAppDataConfigSpecs { BlockForLookupOrNull = this });
+        App = app;
         l.A("App created");
 
         // note: requires EditAllowed, which isn't ready till App is created

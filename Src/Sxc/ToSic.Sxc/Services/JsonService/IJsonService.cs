@@ -58,8 +58,6 @@ public interface IJsonService
     /// <summary>
     /// Convert a json to an anonymous object.
     /// This is a very technical thing to do, so only use it if you know why you're doing this.
-    ///
-    /// It's usually better to use [](xref:ToSic.Sxc.Code.IDynamicCode.AsDynamic(System.String,System.String)) or  <see cref="To{T}"/>
     /// </summary>
     /// <param name="json"></param>
     /// <returns></returns>

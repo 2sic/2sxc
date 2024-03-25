@@ -1,13 +1,12 @@
 ﻿using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class GoogleMapsSettings(IJsonService jsonService)
-    : EntityBasedService<GoogleMapsSettings>($"{SxcLogging.SxcLogName}.GMapSt")
+    : EntityBasedService<GoogleMapsSettings>($"{SxcLogName}.GMapSt")
 {
     public static string TypeIdentifier = "f5764f60-2621-4a5d-9391-100fbe664640";
 

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Specialized;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Images.Internal;
 using static ToSic.Sxc.Images.Internal.ImageConstants;
+using static ToSic.Sxc.Internal.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images;
 
@@ -88,22 +90,63 @@ internal class ResizeSettings : IResizeSettings, IResizeSettingsInternal
         Advanced = advanced ?? (original as IResizeSettingsInternal)?.Advanced;
     }
 
-    public string ToHtmlInfo()
+    /// <summary>
+    /// Should the factor be used? only if it's clearly away from zero.
+    /// </summary>
+    public bool FactorUsed => !DNearZero(Factor) && !DNearZero(Factor - 1); // so ~0 and ~1 are not used
+
+    /// <summary>
+    /// The factor to use, which is either the factor, or 1 if it's not used
+    /// </summary>
+    public double FactorToUse => FactorUsed ? Factor : 1;
+
+    internal string ToHtmlInfo(ImageDecorator decoOrNull)
     {
         const string notSet = "default/not set";
         const double floatTolerance = 0.01;
-        var result = @"<strong>🖼️ Resize Specs</strong>
 
-Based On: " + (BasedOn.HasValue() ? $"<strong>Settings.Images.{BasedOn}</strong>" : "<em>no presets</em>") + @$"
+        // Special message for height, in case it has a decorator
+        // which overrules the default height
+        var height = $"{(Height != IntIgnore ? Height : notSet)}";
+        var resize = ResizeMode ?? notSet;
+        var scale = ScaleMode ?? notSet;
+        var cropCenter = ImageDecorator.DefaultCropCenter;
+        var aspectRatio = $"{(Math.Abs(AspectRatio - IntIgnore) > floatTolerance ? AspectRatio : notSet)}";
+        
+
+        var noCrop = decoOrNull?.CropBehavior == ImageDecorator.NoCrop;
+        if (noCrop)
+        {
+            height = $"<s>{height}</s> - no-crop = use image as is";
+            resize = $"<s>{resize}</s> - {ImageDecorator.NoCrop}";
+            aspectRatio = $"<s>{aspectRatio}</s> - no-crop";
+            cropCenter = $"<s>{cropCenter}</s> - no-crop";
+        }
+        else
+        {
+            if (!UseAspectRatio)
+                aspectRatio = $"<s>{aspectRatio}</s> - not used, height is set";
+            if (decoOrNull?.CropBehavior == ImageDecorator.ToCrop)
+                cropCenter = decoOrNull.CropToNiceName;
+        }
+
+        var basedOn = BasedOn.HasValue() ? $"<strong>Settings.Images.{BasedOn}</strong>" : "<em>no presets</em>";
+        var hasSpecialSettings = decoOrNull != null ? "✅" : "no";
+
+        var result = $@"<strong>🖼️ Resize Specs</strong>
+
+Based On: {basedOn}
+Custom Image Settings: {hasSpecialSettings}
 Width: {(Width != IntIgnore ? Width : notSet)}
-Height: {(Height != IntIgnore ? Height : notSet)}
+Height: {height}
 Quality: {(Quality != IntIgnore ? Quality : notSet)}
-ResizeMode: {ResizeMode ?? notSet}
-ScaleMode: {ScaleMode ?? notSet}
+ResizeMode: {resize}
+ScaleMode: {scale}
 Format: {Format ?? notSet}
-Factor: {(Math.Abs(Factor - IntIgnore) > floatTolerance ? Factor : notSet)}
-AspectRatio: {(Math.Abs(AspectRatio - IntIgnore) > floatTolerance ? AspectRatio : notSet)}
+Factor: {(FactorUsed ? Factor : notSet)}
+AspectRatio: {aspectRatio}
 Url Parameters: {Parameters}
+Crop Center: {cropCenter}
 
 <em>This is the primary size. Other responsive sizes derive from this.</em>";
         //result += $", Advanced: {Advanced}";

@@ -90,7 +90,6 @@ internal partial class DataService: ServiceForDynamicCode, IDataService
     public IDataSource GetAppSource(NoParamOrder noParamOrder = default, object parameters = default, object options = default)
     {
         var l = Log.Fn<IDataSource>($"{nameof(options)}: {options}");
-        //Protect(noParamOrder, $"{nameof(parameters)}, {nameof(options)}");
         var fullOptions = OptionsMs.SafeOptions(parameters, options: options, identityRequired: true);
         var appSource = _dataSources.Value.CreateDefault(fullOptions);
         return l.Return(appSource);

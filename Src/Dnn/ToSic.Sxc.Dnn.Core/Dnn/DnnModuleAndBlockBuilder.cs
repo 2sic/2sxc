@@ -35,13 +35,14 @@ internal class DnnModuleAndBlockBuilder: ModuleAndBlockBuilder
         return l.Return(module, $"Page Id on IModule: {module.BlockIdentifier} - should be {pageId}");
     }
 
-    protected override IContextOfBlock GetContextOfBlock(IModule module, int? pageId) => GetContextOfBlock((module as DnnModule)?.GetContents(), pageId);
+    protected override IContextOfBlock GetContextOfBlock(IModule module, int? pageId)
+        => GetContextOfBlock((module as DnnModule)?.GetContents(), pageId);
 
 
     protected override IContextOfBlock GetContextOfBlock<TPlatformModule>(TPlatformModule module, int? pageId)
     {
         if (module == null) throw new ArgumentNullException(nameof(module));
-        if (!(module is ModuleInfo dnnModule)) throw new ArgumentException("Given data is not a module");
+        if (module is not ModuleInfo dnnModule) throw new ArgumentException("Given data is not a module");
         Log.A($"Module: {dnnModule.ModuleID}");
 
         var initializedCtx = InitDnnSiteModuleAndBlockContext(dnnModule, pageId);
@@ -52,9 +53,9 @@ internal class DnnModuleAndBlockBuilder: ModuleAndBlockBuilder
     {
         var l = Log.Fn<IContextOfBlock>($"{nameof(pageId)}: {pageId}, {nameof(dnnModule.ModuleID)}: {dnnModule.ModuleID}");
         var context = _contextGenerator.New();
-        Log.A($"Will try-swap module info of {dnnModule.ModuleID} into site");
+        l.A($"Will try-swap module info of {dnnModule.ModuleID} into site");
         ((DnnSite)context.Site).TryInitModule(dnnModule, ParentLog);
-        Log.A("Will init module");
+        l.A("Will init module");
         ((DnnModule)context.Module).Init(dnnModule);
         return l.ReturnAsOk(InitPageOnly(context, pageId));
     }

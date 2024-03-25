@@ -15,7 +15,7 @@ partial class AdamTransUpload<TFolderId, TFileId>
         var hasNonAzChars = new Regex("[^a-z]", RegexOptions.IgnoreCase);
 
         l.A($"found additional file filter: {additionalFilter}");
-        var filters = additionalFilter.CsvToArrayWithoutEmpty(); //.Split(',').Select(f => f.Trim()).ToList();
+        var filters = additionalFilter.CsvToArrayWithoutEmpty();
         l.A($"found {filters.Length} filters in {additionalFilter}, will test on {fileName} with ext {extension}");
 
         foreach (var f in filters)

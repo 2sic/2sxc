@@ -36,7 +36,7 @@ public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSu
 
         var controllerVirtualPath =
             Path.Combine(
-                SysHlp.GetService<DnnAppFolderUtilities>().GetAppFolderVirtualPath(Request, SysHlp.GetService<ISite>()), 
+                SysHlp.GetService<DnnAppFolderUtilities>().Setup(Request).GetAppFolderVirtualPath(SysHlp.GetService<ISite>()), 
                 path);
 
         Log.A($"Controller Virtual Path: {controllerVirtualPath}");
@@ -51,7 +51,7 @@ public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSu
             Log.A("has AppCode");
             // Figure edition
             HotBuildSpec spec = null;
-            var block = SysHlp.GetService<DnnGetBlock>().GetCmsBlock(Request).LoadBlock();
+            var block = SysHlp.GetService<DnnGetBlock>().GetCmsBlock(Request);
             if (block != null)
             {
                 var edition = PolymorphConfigReader.UseViewEditionOrGetLazy(block.View,

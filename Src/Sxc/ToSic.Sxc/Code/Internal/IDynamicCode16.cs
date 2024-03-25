@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// </summary>
 [PrivateApi("Shouldn't be visible, as the real API is 100% visible on RazorPro, CodePro etc.")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IHasKit<ServiceKit16>, IHasCodeContext
+public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IHasKit<ServiceKit16>
 {
     #region Stuff basically inherited from v12/14
 

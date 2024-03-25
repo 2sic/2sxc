@@ -1,8 +1,6 @@
 ﻿using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.Internal;
@@ -12,7 +10,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// If the parent is generic supporting IDynamicModel[Model, Kit] it will create the generic root
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeApiServiceFactory(IServiceProvider serviceProvider) : ServiceBase($"{SxcLogging.SxcLogName}.CDRFac")
+public class CodeApiServiceFactory(IServiceProvider serviceProvider) : ServiceBase($"{SxcLogName}.CDRFac")
 {
     public CodeApiService BuildCodeRoot(object customCodeOrNull, IBlock blockOrNull, ILog parentLog, int compatibilityFallback)
     {

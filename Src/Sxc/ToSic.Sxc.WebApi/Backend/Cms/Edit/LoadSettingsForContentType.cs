@@ -1,11 +1,10 @@
 ﻿using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Internal;
 using static System.String;
 
 namespace ToSic.Sxc.Backend.Cms;
 
 internal class LoadSettingsForContentType()
-    : LoadSettingsProviderBase($"{SxcLogging.SxcLogName}.LdStCT"), ILoadSettingsProvider
+    : LoadSettingsProviderBase($"{SxcLogName}.LdStCT"), ILoadSettingsProvider
 {
     public Dictionary<string, object> GetSettings(LoadSettingsProviderParameters parameters)
     {

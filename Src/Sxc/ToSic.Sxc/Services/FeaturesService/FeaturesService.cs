@@ -1,12 +1,11 @@
 ﻿using ToSic.Eav.Internal.Features;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Services;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class FeaturesService(IEavFeaturesService root)
-    : ServiceBase($"{SxcLogging.SxcLogName}.FeatSv"), IFeaturesService, ICanDebug
+    : ServiceBase($"{SxcLogName}.FeatSv"), IFeaturesService, ICanDebug
 {
     public bool IsEnabled(params string[] nameIds)
     {

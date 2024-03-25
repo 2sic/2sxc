@@ -42,7 +42,7 @@ partial class EditLoadPrefetchHelper
 
     private IEnumerable</*AdamItemDto*/object> GetAdamListOfItems(int appId, BundleWithLinkField set, string key) => Log.Func(() =>
     {
-        var adamListMaker = _adamTransGetItems.New();
+        var adamListMaker = adamTransGetItems.New();
         adamListMaker.Init(appId, set.ContentTypeName, set.Guid, key, false);
         var list = adamListMaker.ItemsInField(string.Empty, false) as IEnumerable<AdamItemDto>;
         return list;

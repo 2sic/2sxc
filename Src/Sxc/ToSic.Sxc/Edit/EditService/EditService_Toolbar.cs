@@ -47,9 +47,6 @@ partial class EditService
         if (!Enabled) return l.ReturnNull("not enabled");
         if (!IsConditionOk(condition)) return l.ReturnNull("condition false");
 
-        //Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar",
-        //    $"{nameof(actions)},{nameof(contentType)},{nameof(condition)},{nameof(prefill)},{nameof(settings)},{nameof(toolbar)}");
-
         // New in v13: The first parameter can also be a ToolbarBuilder, in which case all other params are ignored
         ItemToolbarBase itmToolbar;
         if (target is IToolbarBuilder tlbBuilder)

@@ -61,7 +61,7 @@ public static class Factory
     {
         var l = parentLog.Fn<IBlockBuilder>($"{pageId}, {modId}");
         DnnStaticDi.CodeInfos.Warn(V13To17($"ToSic.Sxc.Dnn.Factory.{nameof(CmsBlock)}", "https://go.2sxc.org/brc-13-dnn-factory"));
-        return l.ReturnAsOk(StaticBuild<IModuleAndBlockBuilder>(parentLog).GetProvider(pageId, modId).LoadBlock().BlockBuilder);
+        return l.ReturnAsOk(StaticBuild<IModuleAndBlockBuilder>(parentLog).BuildBlock(pageId, modId).BlockBuilder);
     }
 
     /// <summary>
@@ -85,7 +85,7 @@ public static class Factory
         DnnStaticDi.CodeInfos.Warn(V13To17($"ToSic.Sxc.Dnn.Factory.{nameof(CmsBlock)}", "https://go.2sxc.org/brc-13-dnn-factory"));
         parentLog = parentLog ?? NewLog();
         var dnnModule = ((Module<ModuleInfo>)module)?.GetContents();
-        return StaticBuild<IModuleAndBlockBuilder>(parentLog).GetProvider(dnnModule, null).LoadBlock().BlockBuilder;
+        return StaticBuild<IModuleAndBlockBuilder>(parentLog).BuildBlock(dnnModule, null).BlockBuilder;
     }
 
     /// <summary>
@@ -172,11 +172,10 @@ public static class Factory
         var log = new Log("Dnn.Factry", parentLog ?? NewLog());
         log.A($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
         var app = StaticBuild<App>(log);
-        if (site != null) app.PreInit(site);
         site ??= GetSite(log: log);
         var appIdentity = zoneId == AutoLookupZoneId ? new(site.ZoneId, appId) : new AppIdentityPure(zoneId, appId);
-        var appStuff = app.Init(appIdentity, new() { ShowDrafts = showDrafts });
-        return appStuff;
+        app.Init(site, appIdentity, new() { ShowDrafts = showDrafts });
+        return app;
     }
 
     private const int AutoLookupZoneId = -999;

@@ -1,17 +1,18 @@
 ﻿using System.Runtime.Caching;
+using ToSic.Eav.Caching;
 using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AssemblyCacheManager() : ServiceBase(SxcLogName + ".AssCMn")
+public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : ServiceBase(SxcLogName + ".AssCMn", connect: [memoryCacheService])
 {
     private const string GlobalCacheRoot = "2sxc.AssemblyCache.Module.";
 
     
     #region Static Calls for AppCode - to use before requiring DI
-    public static (AssemblyResult Result, string cacheKey) TryGetAppCode(HotBuildSpec spec)
+    public (AssemblyResult Result, string cacheKey) TryGetAppCode(HotBuildSpec spec)
     {
         var cacheKey = KeyAppCode(spec);
         return (Get(cacheKey), cacheKey);
@@ -20,10 +21,10 @@ public class AssemblyCacheManager() : ServiceBase(SxcLogName + ".AssCMn")
     #endregion
 
     #region Static Calls for Dependecies - to use before requiring DI
-    public static (List<AssemblyResult> assemblyResults, string cacheKey) TryGetDependencies(HotBuildSpec spec)
+    public (List<AssemblyResult> assemblyResults, string cacheKey) TryGetDependencies(HotBuildSpec spec)
     {
         var cacheKey = KeyDependency(spec);
-        return (Cache[cacheKey] as List<AssemblyResult>, cacheKey);
+        return (memoryCacheService.Get(cacheKey) as List<AssemblyResult>, cacheKey);
     }
     private static string KeyDependency(HotBuildSpec spec) => $"{GlobalCacheRoot}a:{spec.AppId}.e:{spec.Edition}.d:{DependenciesLoader.DependenciesFolder}";
     #endregion
@@ -32,9 +33,9 @@ public class AssemblyCacheManager() : ServiceBase(SxcLogName + ".AssCMn")
 
     internal static string KeyTemplate(string templateFullPath) => $"{GlobalCacheRoot}v:{templateFullPath.ToLowerInvariant()}";
 
-    private static AssemblyResult Get(string key) => Cache[key] as AssemblyResult;
+    private AssemblyResult Get(string key) => memoryCacheService.Get(key) as AssemblyResult;
 
-    public static AssemblyResult TryGetTemplate(string templateFullPath) => Get(KeyTemplate(templateFullPath));
+    public AssemblyResult TryGetTemplate(string templateFullPath) => Get(KeyTemplate(templateFullPath));
 
     #endregion
 
@@ -73,7 +74,7 @@ public class AssemblyCacheManager() : ServiceBase(SxcLogName + ".AssCMn")
         try
         {
             l.Do(message: $"cache set cacheKey:{cacheKey}", timer: true,
-                action: () => Cache.Set(new(cacheKey, data), policy));
+                action: () => memoryCacheService.Set(new(cacheKey, data), policy));
 
             return l.ReturnAsOk(cacheKey);
         }
@@ -84,6 +85,4 @@ public class AssemblyCacheManager() : ServiceBase(SxcLogName + ".AssCMn")
             return l.ReturnAsError("error");
         }
     }
-
-    private static MemoryCache Cache => MemoryCache.Default;
 }

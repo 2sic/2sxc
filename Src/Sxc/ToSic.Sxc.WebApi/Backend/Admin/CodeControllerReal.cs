@@ -1,14 +1,17 @@
 ﻿using System.IO;
 using System.Reflection;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Code.Generate;
+using ToSic.Sxc.Code.Generate.Internal;
 using ToSic.Sxc.Code.Internal.Documentation;
-using ToSic.Sxc.Code.Internal.Generate;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Backend.Admin;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeControllerReal(DataClassesGenerator classesGenerator, LazySvc<IJsonService> json) : ServiceBase("Api.CodeRl")
+public class CodeControllerReal(FileSaver fileSaver, LazySvc<IJsonService> json, LazySvc<IEnumerable<IFileGenerator>> generators, LazySvc<IAppJsonService> appJsonService) 
+    : ServiceBase("Api.CodeRl", connect: [appJsonService])
 {
     public const string LogSuffix = "Code";
 
@@ -58,27 +61,55 @@ public class CodeControllerReal(DataClassesGenerator classesGenerator, LazySvc<I
     }
     private static IEnumerable<HelpItem> _inlineHelp;
 
-    public RichResult GenerateDataModels(int appId, string edition)
+    public RichResult GenerateDataModels(int appId, string edition, string generator)
     {
         var l = Log.Fn<RichResult>($"{nameof(appId)}:{appId};{nameof(edition)}:{edition}", timer: true);
 
-        var dataModelGenerator = classesGenerator.Setup(appId, edition);
-        dataModelGenerator.GenerateAndSaveFiles();
+        try
+        {
+            var specs = new FileGeneratorSpecs { AppId = appId, Edition = edition };
 
-        return l.Return(new RichResult
-            {
-                Ok = true,
-                Message = $"Data models generated in {edition}/AppCode/Data.",
-            }
-            .WithTime(l)
-        );
+            // find the generator
+            var gen = generators.Value.FirstOrDefault(g => g.Name == generator);
+            if (gen == null)
+                return l.Return(new RichResult
+                    {
+                        Ok = false,
+                        Message = $"Generator '{generator}' not found.",
+                    }
+                    .WithTime(l)
+                );
+
+            fileSaver.GenerateAndSaveFiles(gen, specs);
+
+            return l.Return(new RichResult
+                {
+                    Ok = true,
+                    Message = $"Data models generated in {edition}/AppCode/Data.",
+                }
+                .WithTime(l)
+            );
+        }
+        catch (Exception e)
+        {
+            return l.Return(new RichResult
+                {
+                    Ok = false,
+                    Message = $"Error generating data models in {edition}/AppCode/Data. {e.GetType().FullName} - {e.Message}",
+                }
+                .WithTime(l)
+            );
+        }
     }
 
     public EditionsDto GetEditions(int appId)
     {
         var l = Log.Fn<EditionsDto>($"{nameof(appId)}:{appId}");
 
-        var pathToDotAppJson = classesGenerator.Setup(appId).GetPathToDotAppJson();
+        // get generators
+        var fileGenerators = generators.Value.Select(g => new GeneratorDto(g)).ToList();
+
+        var pathToDotAppJson = appJsonService.Value.GetPathToDotAppJson(appId);
         l.A($"path to app.json: {pathToDotAppJson}");
         if (File.Exists(pathToDotAppJson))
         {
@@ -88,7 +119,7 @@ public class CodeControllerReal(DataClassesGenerator classesGenerator, LazySvc<I
             if (editionsJson?.Editions?.Count > 0)
             {
                 l.A($"has editions in app.json: {editionsJson?.Editions?.Count}");
-                return l.ReturnAsOk(editionsJson.ToEditionsDto());
+                return l.ReturnAsOk(editionsJson.ToEditionsDto(fileGenerators));
             }
         }
 
@@ -98,7 +129,8 @@ public class CodeControllerReal(DataClassesGenerator classesGenerator, LazySvc<I
         {
             Ok = true,
             IsConfigured = false,
-            Editions = [ new() { Name = "", Description = "Root edition", IsDefault = true } ]
+            Editions = [ new() { Name = "", Description = "Root edition", IsDefault = true } ],
+            Generators = fileGenerators
         };
 
         return l.Return(nothingSpecified, "editions not specified in app.json");

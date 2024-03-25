@@ -6,6 +6,8 @@ public class SxcWebApiConstants
     //public const string HeaderInstanceId = "moduleid";
     public const string HeaderContentBlockId = "ContentBlockId";
 
+    public const string HeaderContentBlockList = "BlockIds";
+
     // QueryStringKeys
     //public const string PageId = "pageid";
     //public const string ModuleId = "moduleid";

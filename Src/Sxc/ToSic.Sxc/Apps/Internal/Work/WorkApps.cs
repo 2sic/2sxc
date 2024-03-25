@@ -63,10 +63,6 @@ public class WorkApps : ServiceBase
 
         // New feature in 10.27 - if app-list is provided, only return these
         var appNames = filter.CsvToArrayWithoutEmpty();
-            //.Split(',')
-            //.Select(s => s.Trim())
-            //.Where(s => !string.IsNullOrWhiteSpace(s))
-            //.ToList();
         list = list.Where(ap => appNames
                 .Any(name => string.Equals(name, ap.Name, StringComparison.InvariantCultureIgnoreCase)))
             .ToList();

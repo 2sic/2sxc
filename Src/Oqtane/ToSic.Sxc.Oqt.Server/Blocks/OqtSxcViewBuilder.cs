@@ -110,7 +110,8 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         // HACK: in v14.03 this check was moved bellow LogTimer.DoInTimer because we got exception (probably timing issue)
         // "Object reference not set to an instance of an object. at ToSic.Eav.Apps.AppStates.Get(IAppIdentity app)"
         // TODO: STV find correct fix
-        if (_globalTypesCheck.WarnIfGlobalTypesAreNotLoaded(out var oqtViewResultsDtoWarning2)) return oqtViewResultsDtoWarning2;
+        if (_globalTypesCheck.WarnIfGlobalTypesAreNotLoaded(out var oqtViewResultsDtoWarning2))
+            return oqtViewResultsDtoWarning2;
 
         return ret;
     }
@@ -129,11 +130,11 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     {
         var ctx = _contextOfBlockEmpty.Init(Page.PageId, Module);
         var block = _blockModuleEmpty.Init(ctx);
-        var blcWithCtx = new BlockWithContextProvider(ctx, () => block);
+
         // Special for Oqtane - normally the IContextResolver is only used in WebAPIs
         // But the ModuleLookUp and PageLookUp also rely on this, so the IContextResolver must know about this for now
         // In future, we should find a better way for this, so that IContextResolver is really only used on WebApis
-        _contextResolverForLookUps.AttachBlock(blcWithCtx);
+        _contextResolverForLookUps.AttachBlock(block);
         return block;
     }));
     private readonly GetOnce<IBlock> _blockGetOnce = new();

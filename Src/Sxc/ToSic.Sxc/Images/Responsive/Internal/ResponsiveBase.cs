@@ -7,6 +7,7 @@ using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Edit.Toolbar.Internal;
 using ToSic.Sxc.Web.Internal;
 using static System.StringComparer;
 using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
@@ -150,18 +151,46 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
 
         // Try to add the metadata button (or just null if not available)
         imgTlb = imgTlb?.Metadata(Params.HasMetadataOrNull,
-            tweak: btn =>
+            tweak: t =>
             {
-                // add label
-                btn = btn.Tooltip($"{ToolbarConstants.ToolbarLabelPrefix}MetadataImage");
+                // Note: Using experimental feature which doesn't exist on the ITweakButton interface
 
-                // Try to add note
-                var note = (Params.Settings as ResizeSettings)?.ToHtmlInfo();
-                if (note.HasValue())
-                    btn = btn.Note(note, format: "html", background: "#DFC2F2", delay: 1000);
+                // Add note only for the ImageDecorator Metadata, not for other buttons
+                var modified = (t as TweakButton)?.AddNamed(ImageDecorator.TypeNameId, btn =>
+                {
+                    // add label eg "Image Settings and Cropping" - i18n
+                    btn = btn.Tooltip($"{ToolbarConstants.ToolbarLabelPrefix}MetadataImage");
 
-                // if image is from elsewhere, show warning
-                return isInSameEntity ? btn : btn.FormParameters(ShowWarningGlobalFile, true);
+                    // Check if we have special resize metadata
+                    var md = Params.HasMetadataOrNull?.Metadata
+                        .FirstOrDefaultOfType(ImageDecorator.NiceTypeName)
+                        .NullOrGetWith(imgDeco => new ImageDecorator(imgDeco, []));
+
+                    // Try to add note
+                    var note = (Params.Settings as ResizeSettings)?.ToHtmlInfo(md);
+                    if (note.HasValue())
+                        btn = btn.Note(note, format: "html", background: "#DFC2F2", delay: 1000);
+
+                    // if image is from elsewhere, show warning
+                    btn = isInSameEntity ? btn : btn.FormParameters(ShowWarningGlobalFile, true);
+                    return btn;
+                }); // fallback, in case conversion fails unexpectedly
+
+                // Add note for Copyright - if there is Metadata for that
+                Params.HasMetadataOrNull?.Metadata
+                    .OfType(CopyrightDecorator.NiceTypeName)
+                    .FirstOrDefault()
+                    .DoIfNotNull(cpEntity =>
+                    {
+                        var copyright = new CopyrightDecorator(cpEntity);
+                        modified = (modified as TweakButton)?.AddNamed(CopyrightDecorator.TypeNameId, btn => btn
+                            .Tooltip("Copyright")
+                            .Note(copyright.CopyrightMessage.NullIfNoValue() ??
+                                  copyright.Copyrights.FirstOrDefault()?.GetBestTitle() ?? ""));
+                    });
+
+
+                return modified ?? t;
             });
 
         return l.ReturnAsOk(imgTlb);

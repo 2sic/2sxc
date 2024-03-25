@@ -2,19 +2,13 @@
 
 namespace ToSic.Sxc.Blocks.Internal;
 
+/// <summary>
+/// Official constructor, must call Init afterward
+/// </summary>
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public sealed class BlockFromModule: BlockBase
+public sealed class BlockFromModule(BlockBase.MyServices services) : BlockBase(services, "CB.Mod")
 {
-    #region Constructor for DI
-
-    /// <summary>
-    /// Official constructor, must call Init afterwards
-    /// </summary>
-    public BlockFromModule(MyServices services) : base(services, "CB.Mod") { }
-
-    #endregion
-
     /// <summary>
     /// Create a module-content block
     /// </summary>
@@ -22,11 +16,11 @@ public sealed class BlockFromModule: BlockBase
     ///// <param name="overrideParams">optional override parameters</param>
     public BlockFromModule Init(IContextOfBlock ctx)
     {
+        var l = Log.Fn<BlockFromModule>(timer: true);
         Init(ctx, ctx.Module.BlockIdentifier);
-        var wrapLog = Log.Fn<BlockFromModule>(timer: true);
         IsContentApp = ctx.Module.IsContent;
         CompleteInit(null, ctx.Module.BlockIdentifier, ctx.Module.Id);
-        return wrapLog.ReturnAsOk(this);
+        return l.ReturnAsOk(this);
     }
 
 }

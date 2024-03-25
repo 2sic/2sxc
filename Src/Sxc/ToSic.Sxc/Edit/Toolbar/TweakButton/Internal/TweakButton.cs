@@ -10,24 +10,31 @@ namespace ToSic.Sxc.Edit.Toolbar.Internal;
 /// Example which would fail if it's internal:
 /// - `tweak: b => b.Tooltip(Resources.LabelRegistrations).Filter("EventDate", d.EntityId))`
 /// In this case `.Filter` would fail because the tooltip comes from a dynamic object,
-/// so then the compiler will eval the resulting object and it can't be internal.
+/// so then the compiler will eval the resulting object, and it can't be internal.
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class TweakButton: ITweakButton, ITweakButtonInternal
 {
-    public IImmutableList<object> UiMerge { get; }
-    public IImmutableList<object> ParamsMerge { get; }
+    IImmutableList<object> ITweakButtonInternal.UiMerge => _uiMerge;
+    IImmutableList<object> ITweakButtonInternal.ParamsMerge => _paramsMerge;
+    IImmutableDictionary<string, Func<ITweakButton, ITweakButton>> ITweakButtonInternal.Named => _named;
+    private readonly IImmutableDictionary<string, Func<ITweakButton, ITweakButton>> _named;
+    private readonly IImmutableList<object> _paramsMerge;
+    private readonly IImmutableList<object> _uiMerge;
 
     internal TweakButton()
     {
-        UiMerge = ImmutableList.Create<object>();
-        ParamsMerge = ImmutableList.Create<object>();
+        _uiMerge = ImmutableList.Create<object>();
+        _paramsMerge = ImmutableList.Create<object>();
+        _named = new Dictionary<string, Func<ITweakButton, ITweakButton>>().ToImmutableDictionary();
     }
 
-    private TweakButton(ITweakButton original, IImmutableList<object> uiMerge = default, IImmutableList<object> paramsMerge = default)
+    private TweakButton(ITweakButton original, IImmutableList<object> ui = default, IImmutableList<object> @params = default, IImmutableDictionary<string, Func<ITweakButton, ITweakButton>> named = default)
     {
-        UiMerge = uiMerge ?? (original as ITweakButtonInternal)?.UiMerge ?? ImmutableList.Create<object>();
-        ParamsMerge = paramsMerge ?? (original as ITweakButtonInternal)?.ParamsMerge ?? ImmutableList.Create<object>();
+        var origInternal = original as ITweakButtonInternal;
+        _uiMerge = ui ?? origInternal?.UiMerge ?? ImmutableList.Create<object>();
+        _paramsMerge = @params ?? origInternal?.ParamsMerge ?? ImmutableList.Create<object>();
+        _named = named ?? origInternal?.Named ?? new Dictionary<string, Func<ITweakButton, ITweakButton>>().ToImmutableDictionary();
     }
 
     /// <summary>
@@ -90,7 +97,7 @@ public class TweakButton: ITweakButton, ITweakButtonInternal
 
     public ITweakButton Position(int value) => Ui("pos", value);
 
-    public ITweakButton Ui(object value) => value == null ? this : new(this, UiMerge.Add(value));
+    public ITweakButton Ui(object value) => value == null ? this : new(this, _uiMerge.Add(value));
 
     public ITweakButton Ui(string name, object value) => (value ?? name) == null ? this : Ui($"{name}={value}");
 
@@ -102,7 +109,7 @@ public class TweakButton: ITweakButton, ITweakButtonInternal
 
     public ITweakButton FormParameters(string name, object value) => (value ?? name) == null ? this : FormParameters($"{name}={value}");
 
-    public ITweakButton Parameters(object value) => value == null ? this : new(this, paramsMerge: ParamsMerge.Add(value));
+    public ITweakButton Parameters(object value) => value == null ? this : new(this, @params: _paramsMerge.Add(value));
     public ITweakButton Parameters(string name, object value) => (value ?? name) == null ? this : Parameters($"{name}={value}");
 
     public ITweakButton Prefill(object value) => value == null ? this : Parameters(new ObjectToUrl().SerializeChild(value, PrefixPrefill));
@@ -111,6 +118,8 @@ public class TweakButton: ITweakButton, ITweakButtonInternal
 
     public ITweakButton Filter(object value) => value == null ? this : Parameters(new ObjectToUrl().SerializeChild(value, PrefixFilters));
     public ITweakButton Filter(string name, object value) => (value ?? name) == null ? this : Filter($"{name}={value}");
+
+    public ITweakButton AddNamed(string name, Func<ITweakButton, ITweakButton> value) => value == null ? this : new(this, named: _named.Add(name, value));
 
     #endregion
 }

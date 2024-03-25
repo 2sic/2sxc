@@ -6,30 +6,21 @@ using ToSic.Sxc.Blocks.Internal;
 namespace ToSic.Sxc.Backend;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class BlockWebApiBackendBase : ServiceBase
+public abstract class BlockWebApiBackendBase(
+    Generator<MultiPermissionsApp> multiPermissionsApp,
+    AppWorkContextService appWorkCtxService,
+    ISxcContextResolver ctxResolver,
+    string logName,
+    object[] connect = default)
+    : ServiceBase(logName, connect: [..connect ?? [], multiPermissionsApp, ctxResolver, appWorkCtxService])
 {
-    protected BlockWebApiBackendBase(
-        Generator<MultiPermissionsApp> multiPermissionsApp,
-        AppWorkContextService appWorkCtxService,
-        ISxcContextResolver ctxResolver,
-        string logName
-    ) : base(logName)
-    {
-        ConnectServices(
-            _multiPermissionsApp = multiPermissionsApp,
-            CtxResolver = ctxResolver,
-            AppWorkCtxService = appWorkCtxService
-        );
-    }
-
-
-    public AppWorkContextService AppWorkCtxService { get; }
-    private readonly Generator<MultiPermissionsApp> _multiPermissionsApp;
-    public ISxcContextResolver CtxResolver { get; }
+    public AppWorkContextService AppWorkCtxService { get; } = appWorkCtxService;
+    public ISxcContextResolver CtxResolver { get; } = ctxResolver;
 
     protected IContextOfApp ContextOfBlock =>
         _contextOfAppOrBlock ??= CtxResolver.BlockContextRequired();
     private IContextOfApp _contextOfAppOrBlock;
+
     #region Block-Context Requiring properties
 
     public IBlock Block => _block ??= CtxResolver.BlockRequired();
@@ -47,7 +38,7 @@ public abstract class BlockWebApiBackendBase : ServiceBase
 
     protected void ThrowIfNotAllowedInApp(List<Grants> requiredGrants, IAppIdentity alternateApp = null)
     {
-        var permCheck = _multiPermissionsApp.New().Init(ContextOfBlock, alternateApp ?? ContextOfBlock.AppState);
+        var permCheck = multiPermissionsApp.New().Init(ContextOfBlock, alternateApp ?? ContextOfBlock.AppState);
         if (!permCheck.EnsureAll(requiredGrants, out var error))
             throw HttpException.PermissionDenied(error);
     }

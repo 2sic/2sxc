@@ -2,22 +2,15 @@
 using ToSic.Lib.DI;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Edit.Toolbar.Internal;
-using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Services;
 
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class ToolbarService: ServiceForDynamicCode, IToolbarService
+internal class ToolbarService(Generator<IToolbarBuilder> toolbarGenerator)
+    : ServiceForDynamicCode($"{SxcLogName}.TlbSvc", connect: [toolbarGenerator]), IToolbarService
 {
-    #region Constructor & Init
-
-    public ToolbarService(Generator<IToolbarBuilder> toolbarGenerator) : base($"{SxcLogging.SxcLogName}.TlbSvc")
-        => ConnectServices(_toolbarGenerator = toolbarGenerator);
-    private readonly Generator<IToolbarBuilder> _toolbarGenerator;
-
-    #endregion
 
     /// <inheritdoc />
     public IToolbarBuilder Default(
@@ -71,7 +64,7 @@ internal class ToolbarService: ServiceForDynamicCode, IToolbarService
         var callLog = Log.Fn<IToolbarBuilder>($"{nameof(toolbarTemplate)}:{toolbarTemplate}");
         
         // The following lines must be just as this, because it's a functional object, where each call may return a new copy
-        var tlb = _toolbarGenerator.New();
+        var tlb = toolbarGenerator.New();
         tlb.ConnectToRoot(_CodeApiSvc);
 
         tlb = ((ToolbarBuilder)tlb).Toolbar(toolbarTemplate: toolbarTemplate, target: target, tweak: tweak, ui: ui, parameters: parameters, prefill: prefill);

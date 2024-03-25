@@ -23,7 +23,7 @@ partial class AppFilesControllerReal
 
         // if the directory doesn't exist, return empty list
         if (!Directory.Exists(fullPath))
-            return new();
+            return [];
 
         var opt = withSubfolders
             ? SearchOption.AllDirectories

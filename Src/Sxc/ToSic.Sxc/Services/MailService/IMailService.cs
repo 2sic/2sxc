@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Services;
 /// <summary>
 /// Service to send mail messages cross-platform.
 ///
-/// Get this service in Razor or WebApi using [](xref:ToSic.Sxc.Code.IDynamicCode.GetService*)
+/// Get this service in Razor or WebApi using e.g. [](xref:Custom.Hybrid.Razor12.GetService*)
 /// </summary>
 /// <remarks>
 /// New in 2sxc 12.05

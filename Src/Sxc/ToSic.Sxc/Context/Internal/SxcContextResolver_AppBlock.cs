@@ -14,7 +14,7 @@ partial class SxcContextResolver
         // If there is no block context, then just use a "blank" app context
         // This way security checks can only verify the App but not any module permissions
         if (moduleCtx == null)
-            return SetApp(new AppIdentity(Site().Site.ZoneId, appId));;
+            return SetApp(SiteAppIdentity());
 
         // if there is a block context, make sure it's of the requested app (or no app was specified)
         // then return that
@@ -30,10 +30,12 @@ partial class SxcContextResolver
         // still verify module permissions.
         // Only do this if the feature is enabled, as we are opening security when we do this
         if (!featuresService.Value.IsEnabled(SxcFeatures.PermissionPrioritizeModuleContext.NameId))
-            return SetApp(new AppIdentity(Site().Site.ZoneId, appId));
+            return SetApp(SiteAppIdentity());
 
-        moduleCtx.ResetApp(new AppIdentity(Site().Site.ZoneId, appId));
+        moduleCtx.ResetApp(SiteAppIdentity());
         return moduleCtx;
+
+        AppIdentity SiteAppIdentity() => new(Site().Site.ZoneId, appId);
     }
 
 

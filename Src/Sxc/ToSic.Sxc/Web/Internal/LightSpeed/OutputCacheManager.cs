@@ -1,19 +1,14 @@
 ﻿using System.Runtime.Caching;
 using ToSic.Eav.Apps.State;
+using ToSic.Eav.Caching;
 using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Internal.Features;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
-[PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class OutputCacheManager : ServiceBase
+internal class OutputCacheManager(MemoryCacheService memoryCacheService) : ServiceBase(SxcLogName + ".OutputCacheManager", connect: [memoryCacheService])
 {
-    internal OutputCacheManager() : base(SxcLogging.SxcLogName + ".OutputCacheManager")
-    { }
-
     internal const string GlobalCacheRoot = "2sxc.Lightspeed.Module.";
 
     internal string Id(int moduleId, int pageId, int? userId, string view, string suffix, string currentCulture)
@@ -54,8 +49,8 @@ internal class OutputCacheManager : ServiceBase
             if (updateCallback != null)
                 policy.UpdateCallback = updateCallback;
 
-            Log.Do(message: $"cache set cacheKey:{cacheKey}", timer: true, action: () => 
-                Cache.Set(new(cacheKey, data), policy));
+            Log.Do(message: $"cache set cacheKey:{cacheKey}", timer: true, action: () =>
+                memoryCacheService.Set(new(cacheKey, data), policy));
 
             return l.ReturnAsOk(cacheKey);
         }
@@ -66,7 +61,5 @@ internal class OutputCacheManager : ServiceBase
         return l.ReturnAsError("error");
     }
 
-    public OutputCacheItem Get(string key) => Cache[key] as OutputCacheItem;
-
-    private static MemoryCache Cache => MemoryCache.Default;
+    public OutputCacheItem Get(string key) => memoryCacheService.Get(key) as OutputCacheItem;
 }

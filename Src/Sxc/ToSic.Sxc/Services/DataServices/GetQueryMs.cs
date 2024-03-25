@@ -3,7 +3,6 @@ using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Services.DataServices;
 
@@ -16,7 +15,7 @@ internal class GetQueryMs: ServiceBase
     private readonly LazySvc<QueryManager> _queryManager;
     private readonly DataSourceOptionsMs _optionsMs;
 
-    internal GetQueryMs(LazySvc<QueryManager> queryManager, DataSourceOptionsMs optionsMs, ILog parentLog): base(SxcLogging.SxcLogName + ".DtGqMs")
+    internal GetQueryMs(LazySvc<QueryManager> queryManager, DataSourceOptionsMs optionsMs, ILog parentLog): base(SxcLogName + ".DtGqMs")
     {
         this._queryManager = queryManager;
         this._optionsMs = optionsMs;
@@ -30,7 +29,6 @@ internal class GetQueryMs: ServiceBase
     {
         var l = Log.Fn<IDataSource>($"{name}, {nameof(parameters)}: {(parameters == null ? "null" : "not null")}");
 
-        //Protect(noParamOrder, $"{nameof(attach)}, {nameof(parameters)}");
 
         // If no in-source was provided, make sure that we create one from the current app
         var fullOptions = _optionsMs.SafeOptions(parameters, null, true /*, options: options*/);

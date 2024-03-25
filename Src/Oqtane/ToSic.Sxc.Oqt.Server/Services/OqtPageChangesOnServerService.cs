@@ -14,21 +14,13 @@ using CspParameters = ToSic.Sxc.Web.Internal.ContentSecurityPolicy.CspParameters
 
 namespace ToSic.Sxc.Oqt.Server.Services;
 
-internal class OqtPageChangesOnServerService : ServiceBase, IOqtPageChangesOnServerService
+internal class OqtPageChangesOnServerService(
+    IHttpContextAccessor httpContextAccessor,
+    LazySvc<IFeaturesService> featuresService,
+    Generator<CspOfPage> cspOfPage)
+    : ServiceBase($"{SxcLogging.SxcLogName}.OqtPgChService",
+        connect: [httpContextAccessor, featuresService, cspOfPage]), IOqtPageChangesOnServerService
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly LazySvc<IFeaturesService> _featuresService;
-    private readonly Generator<CspOfPage> _cspOfPage;
-
-    public OqtPageChangesOnServerService(IHttpContextAccessor httpContextAccessor, LazySvc<IFeaturesService> featuresService, Generator<CspOfPage> cspOfPage) : base($"{SxcLogging.SxcLogName}.OqtPgChService")
-    {
-        ConnectServices(
-            _httpContextAccessor = httpContextAccessor,
-            _featuresService = featuresService,
-            _cspOfPage = cspOfPage
-        );
-    }
-
     public int ApplyHttpHeaders(OqtViewResultsDto result, IOqtHybridLog page)
     {
         var logPrefix = $"{nameof(ApplyHttpHeaders)}(...) - ";
@@ -36,19 +28,19 @@ internal class OqtPageChangesOnServerService : ServiceBase, IOqtPageChangesOnSer
         #region initial request and parameters validation
         page?.Log($"{logPrefix}validate parameters");
 
-        if (_httpContextAccessor?.HttpContext == null)
+        if (httpContextAccessor?.HttpContext == null)
         {
             page?.Log($"{logPrefix}missing http context");
             return -1;
         }
 
-        if (_httpContextAccessor.HttpContext.Request?.Path.HasValue != true)
+        if (httpContextAccessor.HttpContext.Request?.Path.HasValue != true)
         {
             page?.Log($"{logPrefix}not a page because no path, so no headers");
             return -1;
         }
 
-        if (_httpContextAccessor.HttpContext.Request.Path.Value!.Contains("/_blazor"))
+        if (httpContextAccessor.HttpContext.Request.Path.Value!.Contains("/_blazor"))
         {
             page?.Log($"{logPrefix}no headers for blazor");
             return -1;
@@ -63,14 +55,14 @@ internal class OqtPageChangesOnServerService : ServiceBase, IOqtPageChangesOnSer
 
         // Register CSP changes for applying once all modules have been prepared
         // Note that in cached scenarios, CspEnabled is true, but it may have been turned off since
-        if (result!.CspEnabled && _featuresService.Value.IsEnabled("ContentSecurityPolicy" /*BuiltInFeatures.ContentSecurityPolicy.NameId*/))
+        if (result!.CspEnabled && featuresService.Value.IsEnabled("ContentSecurityPolicy" /*BuiltInFeatures.ContentSecurityPolicy.NameId*/))
         {
             page?.Log($"{logPrefix}Register CSP changes");
             PageCsp(result.CspEnforced, page).Add(result.CspParameters.Select(p => new CspParameters(UrlHelpers.ParseQueryString(p))).ToList());
         }
 
         #region response and headers validation
-        if (_httpContextAccessor.HttpContext.Response.HasStarted)
+        if (httpContextAccessor.HttpContext.Response.HasStarted)
         {
             page?.Log($"{logPrefix}error, to late for adding http headers");
             return 0;
@@ -85,7 +77,7 @@ internal class OqtPageChangesOnServerService : ServiceBase, IOqtPageChangesOnSer
         #endregion
 
         // Register event to attach headers
-        _httpContextAccessor.HttpContext.Response.OnStarting(() =>
+        httpContextAccessor.HttpContext.Response.OnStarting(() =>
         {
             try
             {
@@ -96,7 +88,7 @@ internal class OqtPageChangesOnServerService : ServiceBase, IOqtPageChangesOnSer
                     // TODO: The CSP header can only exist once
                     // So to do this well, we'll need to merge them in future, 
                     // Ideally combining the existing one with any additional ones added here
-                    _httpContextAccessor.HttpContext.Response.Headers[httpHeader.Name] = httpHeader.Value;
+                    httpContextAccessor.HttpContext.Response.Headers[httpHeader.Name] = httpHeader.Value;
                     page?.Log($"{logPrefix}{httpHeader.Name}={httpHeader.Value}");
                 }
             }
@@ -120,20 +112,20 @@ internal class OqtPageChangesOnServerService : ServiceBase, IOqtPageChangesOnSer
 
         // If it's already registered, then the add-on-sending has already been added too
         // So we shouldn't repeat it, just return the cache which will be used later
-        if (_httpContextAccessor.HttpContext!.Items.ContainsKey(key))
+        if (httpContextAccessor.HttpContext!.Items.ContainsKey(key))
         {
-            var result = (CspOfPage)_httpContextAccessor.HttpContext.Items[key];
+            var result = (CspOfPage)httpContextAccessor.HttpContext.Items[key];
             page?.Log($"already registered {logPrefix}{key}={result}");
             return result;
         }
 
         // Not yet registered. Create, and register for on-end of request
-        var pageLevelCsp = _cspOfPage.New();
-        _httpContextAccessor.HttpContext.Items[key] = pageLevelCsp;
+        var pageLevelCsp = cspOfPage.New();
+        httpContextAccessor.HttpContext.Items[key] = pageLevelCsp;
 
         // Register event to attach headers once the request is done and all Apps have registered their Csp
-        if (!_httpContextAccessor.HttpContext.Response.HasStarted)
-            _httpContextAccessor.HttpContext.Response.OnStarting(() =>
+        if (!httpContextAccessor.HttpContext.Response.HasStarted)
+            httpContextAccessor.HttpContext.Response.OnStarting(() =>
             {
                 try
                 {
@@ -141,7 +133,7 @@ internal class OqtPageChangesOnServerService : ServiceBase, IOqtPageChangesOnSer
                     if (headers != null)
                     {
                         var key = pageLevelCsp.HeaderName(enforced);
-                        _httpContextAccessor.HttpContext.Response.Headers[key] = headers;
+                        httpContextAccessor.HttpContext.Response.Headers[key] = headers;
                         page?.Log($"{logPrefix}have headers {key}={headers}");
                     }
 

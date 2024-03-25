@@ -11,6 +11,7 @@ public interface IRenderingHelper: IHasLog
         int instanceId = 0,
         int contentBlockId = 0,
         bool editContext = false,
+        bool jsApiContext = false,
         string tag = "div",
         bool addLineBreaks = true,
         string errorCode = default,

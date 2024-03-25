@@ -15,14 +15,10 @@ public class ConvertValueService() : ServiceBase("Sxc.CnvSrv")
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
     public T To<T>(object value, NoParamOrder noParamOrder = default, T fallback = default)
-    {
-        //ProtectAgainstMissingParameterNames(noParamOrder, nameof(To), nameof(fallback));
-        return value.ConvertOrFallback(fallback, numeric: OptimizeNumbers, truthy: OptimizeBoolean, fallbackOnDefault: false);
-    }
+        => value.ConvertOrFallback(fallback, numeric: OptimizeNumbers, truthy: OptimizeBoolean, fallbackOnDefault: false);
 
     public string ToString(object value, NoParamOrder noParamOrder = default, string fallback = null, bool fallbackOnNull = true)
     {
-        //Protect(noParamOrder, $"{nameof(fallback)}, {nameof(fallbackOnNull)}");
         var result = To(value, fallback: fallback);
         return result is null && fallbackOnNull ? fallback: result;
     }

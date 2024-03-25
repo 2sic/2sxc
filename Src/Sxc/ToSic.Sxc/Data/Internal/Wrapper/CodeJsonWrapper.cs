@@ -5,25 +5,17 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data.Internal.Typed;
-using ToSic.Sxc.Internal;
 using static ToSic.Sxc.Data.Internal.Wrapper.JsonProcessingHelpers;
 
 namespace ToSic.Sxc.Data.Internal.Wrapper;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeJsonWrapper: ServiceBase
+public class CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator)
+    : ServiceBase($"{SxcLogName}.CdJsWr", connect: [wrapTypeGenerator])
 {
     #region Constructor / Setup
 
-    private readonly Generator<WrapObjectTyped> _wrapTypeGenerator;
     public WrapperSettings Settings { get; private set; }
-
-    public CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator) : base($"{SxcLogging.SxcLogName}.CdJsWr")
-    {
-        ConnectServices(
-            _wrapTypeGenerator = wrapTypeGenerator
-        );
-    }
 
     public CodeJsonWrapper Setup(WrapperSettings settings)
     {
@@ -36,13 +28,11 @@ public class CodeJsonWrapper: ServiceBase
 
     internal DynamicJacketBase Json2Jacket(string json, NoParamOrder noParamOrder = default, string fallback = default)
     {
-        //Protect(noParamOrder, nameof(fallback));
         return IfJsonTryConvertToJacket(AsJsonNode(json, fallback)).Final;
     }
 
     public ITyped JsonToTyped(string json, NoParamOrder noParamOrder = default, string fallback = default)
     {
-        //Protect(noParamOrder, nameof(fallback));
         if (!json.HasValue()) return null;
         ThrowIfNotExpected(json, false);
         var node = AsJsonNode(json, fallback);
@@ -52,7 +42,6 @@ public class CodeJsonWrapper: ServiceBase
 
     public IEnumerable<ITyped> JsonToTypedList(string json, NoParamOrder noParamOrder = default, string fallback = default)
     {
-        //Protect(noParamOrder, nameof(fallback));
         if (!json.HasValue()) return null;
         ThrowIfNotExpected(json, true);
         var node = AsJsonNode(json, fallback);
@@ -109,7 +98,7 @@ public class CodeJsonWrapper: ServiceBase
     //    _wrapTypeGenerator.New().Setup(new PreWrapJsonArray(this, jsonArray));
 
     private WrapObjectTyped CreateTypedObject(JsonObject jsonObject) => 
-        _wrapTypeGenerator.New().Setup(new PreWrapJsonObject(this, jsonObject));
+        wrapTypeGenerator.New().Setup(new PreWrapJsonObject(this, jsonObject));
 
     private (TResult Final, bool Ok, JsonValueKind ValueKind)
         IfJsonTryConvertTo<TResult>(object original, Func<JsonObject, TResult> toObj, Func<JsonArray, TResult> toArr) where TResult : class

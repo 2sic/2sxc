@@ -4,7 +4,7 @@
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface IModuleAndBlockBuilder: IHasLog
 {
-    BlockWithContextProvider GetProvider(int pageId, int moduleId);
+    IBlock BuildBlock(int pageId, int moduleId);
 
-    BlockWithContextProvider GetProvider<TPlatformModule>(TPlatformModule module, int? page) where TPlatformModule : class;
+    IBlock BuildBlock<TPlatformModule>(TPlatformModule module, int? page) where TPlatformModule : class;
 }

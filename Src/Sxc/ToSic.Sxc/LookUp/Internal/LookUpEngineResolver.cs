@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.LookUp;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.LookUp.Internal;
 
@@ -11,4 +10,4 @@ namespace ToSic.Sxc.LookUp.Internal;
 /// </summary>
 /// <param name="lookUps"></param>
 internal class LookUpEngineResolver(LazySvc<IEnumerable<ILookUp>> lookUps)
-    : LookUpEngineResolverBase(lookUps, $"{SxcLogging.SxcLogName}.LUpEnR");
+    : LookUpEngineResolverBase(lookUps, $"{SxcLogName}.LUpEnR");

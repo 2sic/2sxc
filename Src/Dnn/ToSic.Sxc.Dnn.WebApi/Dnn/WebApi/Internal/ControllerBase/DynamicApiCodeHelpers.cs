@@ -55,7 +55,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
         InitializeBlockContext(request);
 
         // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
-        var block = SysHlp.GetBlockAndContext(request)?.LoadBlock();
+        var block = SysHlp.GetBlockAndContext(request);
         Log.A($"HasBlock: {block != null}");
 
         var services = SysHlp.GetService<ApiControllerMyServices>().ConnectServices(Log);
@@ -98,7 +98,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
         var l = Log.Fn<IApp>();
         try
         {
-            var routeAppPath = services.AppFolderUtilities.GetAppFolder(request, false);
+            var routeAppPath = services.AppFolderUtilities.Setup(request).GetAppFolder(false);
             var appState = SharedContextResolver.SetAppOrNull(routeAppPath)?.AppState.StateCache;
 
             if (appState != default)
@@ -106,9 +106,8 @@ internal class DynamicApiCodeHelpers: CodeHelper
                 var siteCtx = SharedContextResolver.Site();
                 // Look up if page publishing is enabled - if module context is not available, always false
                 l.A($"AppId: {appState.AppId}");
-                var app = services.AppOverrideLazy.Value
-                    .PreInit(siteCtx.Site)
-                    .Init(appState.PureIdentity(), new());
+                var app = services.AppOverrideLazy.Value;
+                app.Init(siteCtx.Site, appState.PureIdentity(), new());
                 return l.Return(app, $"found #{app.AppId}");
             }
         }

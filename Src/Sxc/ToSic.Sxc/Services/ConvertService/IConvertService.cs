@@ -164,7 +164,7 @@ public interface IConvertService
     /// <summary>
     /// Convert any object safely to string - or if that fails, return the fallback value.
     /// 
-    /// This does **NOT** do the same as <see cref="To{T}(object, string, T)"/>.
+    /// This does **NOT** do the same as <see cref="To{T}(object, NoParamOrder, T)"/>.
     /// In the standard implementation would only give you the fallback, if conversion failed.
     /// But this ToString will also give you the fallback, if the result is null. 
     /// </summary>

@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Internal.Catalogs;
-using ToSic.Sxc.Internal;
 using static ToSic.Sxc.Web.Internal.PageFeatures.SxcPageFeatures;
 
 namespace ToSic.Sxc.Web.Internal.PageFeatures;
@@ -18,12 +17,13 @@ public class PageFeaturesCatalog: GlobalCatalogBase<IPageFeature>
     /// Important: if you want to add more services in a DI Startup, it must happen at Configure.
     /// If you do it earlier, the singleton retrieved then will not be the one at runtime.
     /// </remarks>
-    public PageFeaturesCatalog(ILogStore logStore): base(logStore, SxcLogging.SxcLogName + ".PftCat", new())
+    public PageFeaturesCatalog(ILogStore logStore): base(logStore, SxcLogName + ".PftCat", new())
     {
         Register(
             JQuery,
             ContextPage,
             ContextModule,
+            JsApiOnModule,
             JsCore,
             JsCms,
             JsCmsInternal,

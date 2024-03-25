@@ -26,7 +26,7 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
 
     #region Constructor / DI / Init
 
-    public OqtAdamFileSystem(IFileRepository oqtFileRepository, IFolderRepository oqtFolderRepository, IServerPaths serverPaths, IAdamPaths adamPaths) 
+    public OqtAdamFileSystem(IFileRepository oqtFileRepository, IFolderRepository oqtFolderRepository, IServerPaths serverPaths, IAdamPaths adamPaths)
         : base(adamPaths, OqtConstants.OqtLogPrefix)
     {
         ConnectServices(
@@ -191,11 +191,11 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
 
     public override Folder<int, int> Get(string path) => OqtToAdam(GetOqtFolderByName(path));
 
-    public override List<Folder<int, int>> GetFolders(IFolder folder) 
+    public override List<Folder<int, int>> GetFolders(IFolder folder)
     {
         var callLog = Log.Fn<List<Folder<int, int>>>();
         var fldObj = GetOqtFolder(folder.AsOqt().SysId);
-        if(fldObj == null) return [];
+        if (fldObj == null) return [];
 
         var firstList = GetSubFoldersRecursive(fldObj);
         var folders = firstList?.Select(OqtToAdam).ToList()
@@ -262,26 +262,24 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
 
 
     private File<int, int> OqtToAdam(File f)
-    {
-        var adamFile = new File<int, int>(AdamManager)
-        {
-            FullName = f.Name,
-            Extension = f.Extension,
-            Size = f.Size,
-            SysId = f.FileId,
-            Folder = f.Folder.Name,
-            ParentSysId = f.FolderId,
+         => new(AdamManager)
+         {
+             FullName = f.Name,
+             Extension = f.Extension,
+             Size = f.Size,
+             SysId = f.FileId,
+             Folder = f.Folder.Name,
+             ParentSysId = f.FolderId,
 
-            Path = ((OqtAdamPaths)_adamPaths).Path(f.Folder.Path),
+             Path = ((OqtAdamPaths)_adamPaths).Path(f.Folder.Path),
 
-            Created = f.CreatedOn,
-            Modified = f.ModifiedOn,
-            Name = Path.GetFileNameWithoutExtension(f.Name),
-            Url = _adamPaths.Url(Path.Combine(f.Folder.Path, f.Name).ForwardSlash()),
-            PhysicalPath = _adamPaths.PhysicalPath(Path.Combine(f.Folder.Path, f.Name)),
-        };
-        return adamFile;
-    }
+             Created = f.CreatedOn,
+             Modified = f.ModifiedOn,
+             Name = Path.GetFileNameWithoutExtension(f.Name),
+             Url = _adamPaths.Url(Path.Combine(f.Folder.Path, f.Name).ForwardSlash()),
+             PhysicalPath = _adamPaths.PhysicalPath(Path.Combine(f.Folder.Path, f.Name)),
+         };
+
 
     #endregion
 }

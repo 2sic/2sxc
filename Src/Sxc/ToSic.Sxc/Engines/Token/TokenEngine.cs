@@ -27,28 +27,24 @@ public class TokenEngine(
     : EngineBase(services, connect: [codeRootFactory, tokenEngineWithContext])
 {
     #region Replacement List to still support old Tokens
-    // Version 6 to 7
+
     /// <summary>
     /// Token translation table - to auto-convert tokens as they were written
     /// pre v7 to be treated as they should in the new convention
     /// </summary>
-    private readonly string[,] _upgrade6To7 = {
-        {"[Presentation:", "[Content:Presentation:"},           // replaces all old direct references to presentation
-        {"[ListPresentation:", "[ListContent:Presentation:"},   // Replaces all old references to ListPresentation
-        {"[AppSettings:", "[App:Settings:"},                    // Replaces all old Settings
-        {"[AppResources:", "[App:Resources:"},                  // Replaces all old Resources
-        {"<repeat>", "<repeat repeat=\"Content in Data:Default\">"},    // Replace all old repeat-tags
-        {"[List:", "[Content:Repeater:"},                       // Replaces all old List:Index, List:Index1, List:Alternator, IsFirst/Last etc.
+    private readonly Dictionary<string, string> _upgrade6To7Dict = new()
+    {
+        { "[Presentation:", "[Content:Presentation:" },
+        { "[ListPresentation:", "[ListContent:Presentation:" },
+        { "[AppSettings:", "[App:Settings:" },
+        { "[AppResources:", "[App:Resources:" },
+        { "<repeat>", "<repeat repeat=\"Content in Data:Default\">" },
+        { "[List:", "[Content:Repeater:" }
     };
+
     #endregion
 
     #region Regular Expressions / String Constants
-
-    private static readonly dynamic SourcePropertyName = new
-    {
-        Content = ViewParts.ContentLower,
-        ListContent = ViewParts.ListContentLower
-    };
 
     private static readonly dynamic RegexToken = new {
         SourceName = "sourceName",
@@ -56,9 +52,9 @@ public class TokenEngine(
         Template   = "template"
     };
 
-    private static string RepeatPlaceholder = "<repeat_placeholder>";
+    private static readonly string RepeatPlaceholder = "<repeat_placeholder>";
 
-    private static string RepeatPattern = @"
+    private static readonly string RepeatPattern = @"
                 # Begins with <repeat
                 <repeat\s
                     # Must contain the attribute repeat='...' according to the schema with 'in Data:...'
@@ -67,7 +63,7 @@ public class TokenEngine(
                     (?<template>.*?)
                 </repeat>";
 
-    private static Regex RepeatRegex = new(RepeatPattern, 
+    private static readonly Regex RepeatRegex = new(RepeatPattern, 
         RegexOptions.IgnoreCase 
         | RegexOptions.Multiline 
         | RegexOptions.Singleline 
@@ -75,7 +71,7 @@ public class TokenEngine(
         | RegexOptions.IgnorePatternWhitespace);
     #endregion
 
-    private ICodeApiService _data;
+    private ICodeApiService _codeApiSvc;
 
     private TokenReplace _tokenReplace;
 
@@ -87,19 +83,20 @@ public class TokenEngine(
         InitTokenReplace();
     }
 
-    private void InitDataHelper() => _data = codeRootFactory.Value
+    private void InitDataHelper() => _codeApiSvc = codeRootFactory.Value
         .BuildCodeRoot(null, Block, Log, CompatibilityLevels.CompatibilityLevel9Old);
 
     private void InitTokenReplace()
     {
         var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = Block };
         var appDataConfig = tokenEngineWithContext.New().GetDataConfiguration(Block.App as EavApp, specs);
-        var confProv = appDataConfig.Configuration;
-        _tokenReplace = new(confProv);
+        var lookUpEngine = appDataConfig.Configuration;
             
         // Add the Content and ListContent property sources used always
-        confProv.Add(new LookUpForTokenTemplate(SourcePropertyName.ListContent, _data.Header));
-        confProv.Add(new LookUpForTokenTemplate(SourcePropertyName.Content, _data.Content));
+        lookUpEngine.Add(new LookUpForTokenTemplate(ViewParts.ListContentLower, _codeApiSvc.Header, _codeApiSvc));
+        lookUpEngine.Add(new LookUpForTokenTemplate(ViewParts.ContentLower, _codeApiSvc.Content, _codeApiSvc));
+
+        _tokenReplace = new(lookUpEngine);
     }
 
     [PrivateApi]
@@ -107,8 +104,9 @@ public class TokenEngine(
     {
         var templateSource = File.ReadAllText(Services.ServerPaths.FullAppPath(TemplatePath));
         // Convert old <repeat> elements to the new ones
-        for (var upgrade = 0; upgrade < _upgrade6To7.Length/2; upgrade++)
-            templateSource = templateSource.Replace(_upgrade6To7[upgrade, 0], _upgrade6To7[upgrade, 1]);
+        templateSource = _upgrade6To7Dict.Aggregate(templateSource,
+            (current, var) => current.Replace(var.Key, var.Value)
+        );
 
         // Render all <repeat>s
         var repeatsMatches = RepeatRegex.Matches(templateSource);       
@@ -127,11 +125,12 @@ public class TokenEngine(
         // Insert <repeat>s rendered to the template target
         var repeatsIndexes = FindAllIndexesOfString(rendered, RepeatPlaceholder);
         var renderedBuilder = new StringBuilder(rendered);
-        for (var i = repeatsIndexes.Count - 1; i >= 0; i--) // Reversed
-        {
-            renderedBuilder.Remove(repeatsIndexes[i], RepeatPlaceholder.Length)
+
+        // Replace the parts in reversed order, so the indexes don't shift
+        for (var i = repeatsIndexes.Count - 1; i >= 0; i--)
+            renderedBuilder
+                .Remove(repeatsIndexes[i], RepeatPlaceholder.Length)
                 .Insert(repeatsIndexes[i], repeatsRendered[i]);
-        }
 
         return (renderedBuilder.ToString(), null);
     }
@@ -152,8 +151,11 @@ public class TokenEngine(
         for (var i = 0; i < itemsCount; i++)
         {
             // Create property sources for the current data item (for the current data item and its list information)
-            var propertySources = new Dictionary<string, ILookUp>();
-            propertySources.Add(sourceName, new LookUpForTokenTemplate(sourceName, _data.Cdf.AsDynamic(dataItems.ElementAt(i), propsRequired: false), i, itemsCount));
+            var dynEntity = _codeApiSvc.Cdf.AsDynamic(dataItems.ElementAt(i), propsRequired: false);
+            var propertySources = new Dictionary<string, ILookUp>
+            {
+                { sourceName, new LookUpForTokenTemplate(sourceName, dynEntity, _codeApiSvc, i, itemsCount) }
+            };
             builder.Append(RenderSection(template, propertySources));
         }
 
@@ -182,13 +184,13 @@ public class TokenEngine(
         }
 
         // Render
-        var sectionRendered = _tokenReplace.ReplaceTokens(template, 0);
+        var sectionRendered = _tokenReplace.ReplaceTokens(template);
 
         // Restore values list to original state
         foreach (var src in valuesForThisInstanceOnly)
         {
             _tokenReplace.LookupEngine.Sources.Remove(src.Key);
-            if(propertySourcesBackup.ContainsKey(src.Key))
+            if (propertySourcesBackup.ContainsKey(src.Key))
                 _tokenReplace.LookupEngine.Sources.Add(src.Key, src.Value);
         }
             
@@ -201,11 +203,9 @@ public class TokenEngine(
         var indexes = new List<int>();
         for (var index = 0; ; index += value.Length)
         {
-            index = source.IndexOf(value, index);
-            if (index == -1)
-            {   // No more found
+            index = source.IndexOf(value, index, StringComparison.Ordinal);
+            if (index == -1) // No more found
                 return indexes;
-            }
             indexes.Add(index);
         }
     }

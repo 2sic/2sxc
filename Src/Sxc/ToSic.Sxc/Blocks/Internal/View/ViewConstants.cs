@@ -30,6 +30,9 @@ internal class ViewConstants
     internal const string FieldPublishStreams = "StreamsToPublish";
 
 
-
+    /// <summary>
+    /// Old fake field name for adding a toolbar
+    /// </summary>
+    internal const string FieldToolbar = "Toolbar";
 
 }

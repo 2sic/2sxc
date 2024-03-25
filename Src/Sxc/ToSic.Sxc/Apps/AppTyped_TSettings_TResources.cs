@@ -5,15 +5,15 @@ using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Apps;
 
-internal class AppTyped<TSettings, TResources>(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> queryManager) : AppTyped(globalPaths, queryManager), IAppTyped<TSettings, TResources>
+internal class AppTyped<TSettings, TResources>(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> queryManager)
+    : AppTyped(globalPaths, queryManager), IAppTyped<TSettings, TResources>
     where TSettings : class, ITypedItem, ITypedItemWrapper16, new()
     where TResources : class, ITypedItem, ITypedItemWrapper16, new()
 {
-
-    public new TSettings Settings => _settings ??= AsCustom<TSettings>(base.Settings);
+    TSettings IAppTyped<TSettings, TResources>.Settings => _settings ??= AsCustom<TSettings>(((IAppTyped)this).Settings);
     private TSettings _settings;
 
-    public new TResources Resources => _resources ??= AsCustom<TResources>(base.Resources);
+    TResources IAppTyped<TSettings, TResources>.Resources => _resources ??= AsCustom<TResources>(((IAppTyped)this).Resources);
     private TResources _resources;
 
     private T AsCustom<T>(ICanBeEntity original) where T : class, ITypedItem, ITypedItemWrapper16, new()

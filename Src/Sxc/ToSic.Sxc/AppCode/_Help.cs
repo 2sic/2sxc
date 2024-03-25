@@ -1,6 +1,4 @@
 ﻿
-
-
 // ReSharper disable once CheckNamespace
 namespace AppCode;
 
@@ -18,4 +16,6 @@ namespace AppCode;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 // ReSharper disable once UnusedType.Global
 // ReSharper disable once InconsistentNaming
+#pragma warning disable IDE1006
 public class _Help;
+#pragma warning restore IDE1006

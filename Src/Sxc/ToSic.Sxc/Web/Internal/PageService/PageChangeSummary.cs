@@ -3,7 +3,6 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
-using ToSic.Sxc.Internal;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageFeatures;
@@ -17,23 +16,11 @@ namespace ToSic.Sxc.Web.Internal.PageService;
 /// Usually used at the top-level of render-result, and in future also on page-level dynamic code
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class PageChangeSummary: ServiceBase
+public class PageChangeSummary(
+    LazySvc<IBlockResourceExtractor> resourceExtractor,
+    LazySvc<RequirementsService> requirements)
+    : ServiceBase(SxcLogName + "PgChSm", connect: [requirements, resourceExtractor])
 {
-
-    public PageChangeSummary(
-        LazySvc<IBlockResourceExtractor> resourceExtractor,
-        LazySvc<RequirementsService> requirements
-    ) : base(SxcLogging.SxcLogName + "PgChSm")
-    {
-        ConnectServices(
-            _requirements = requirements,
-            _resourceExtractor = resourceExtractor
-        );
-    }
-
-    private readonly LazySvc<IBlockResourceExtractor> _resourceExtractor;
-    private readonly LazySvc<RequirementsService> _requirements;
-
     public IRenderResult FinalizeAndGetAllChanges(PageServiceShared pss, bool enableEdit) => Log.Func(timer: true, func: () =>
     {
         if (enableEdit)
@@ -51,7 +38,7 @@ public class PageChangeSummary: ServiceBase
         // Collect Warnings of page features which may require other features enabled
         var features = pss.PageFeatures.GetFeaturesWithDependentsAndFlush(Log);
 
-        var errors = _requirements.Value
+        var errors = requirements.Value
             .Check(features)
             .Select(f => f.Message)
             .ToList();
@@ -91,7 +78,7 @@ public class PageChangeSummary: ServiceBase
         foreach (var settingFeature in featuresFromSettings)
         {
             var autoOpt = settingFeature.AutoOptimize;
-            var extracted = _resourceExtractor.Value.Process(settingFeature.Html, new(
+            var extracted = resourceExtractor.Value.Process(settingFeature.Html, new(
                 css: new(autoOpt, AddToBottom, CssDefaultPriority, false, false),
                 js: new(autoOpt, AddToBottom, JsDefaultPriority, autoOpt, autoOpt)));
             l.A($"Feature: {settingFeature.Name} - assets extracted: {extracted.Assets.Count}");

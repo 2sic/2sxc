@@ -3,14 +3,13 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Services.DataServices;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class DataSourceOptionsMs: ServiceBase
 {
-    internal DataSourceOptionsMs(IAppIdentity appIdentity, Func<ILookUpEngine> getLookup): base(SxcLogging.SxcLogName + "DtOptH")
+    internal DataSourceOptionsMs(IAppIdentity appIdentity, Func<ILookUpEngine> getLookup): base(SxcLogName + "DtOptH")
     {
         _appIdentity = appIdentity;
         _getLookup = getLookup;

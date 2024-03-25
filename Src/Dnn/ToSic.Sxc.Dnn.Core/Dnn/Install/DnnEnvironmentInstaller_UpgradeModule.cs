@@ -70,12 +70,7 @@ partial class DnnEnvironmentInstaller
                     try
                     {
                         // move app.json template from old to new location
-                        var appDataProtectedFolder = new DirectoryInfo(Path.Combine(_globalConfiguration.Value.GlobalFolder, Eav.Constants.AppDataProtectedFolder));
-                        Directory.CreateDirectory(_globalConfiguration.Value.AppDataTemplateFolder);
-                        var oldAppJsonTemplateFilePath = Path.Combine(appDataProtectedFolder.FullName, Eav.Constants.AppJson);
-                        var appJsonTemplateFilePath = Path.Combine(_globalConfiguration.Value.AppDataTemplateFolder, Eav.Constants.AppJson);
-                        if (File.Exists(oldAppJsonTemplateFilePath) && !File.Exists(appJsonTemplateFilePath))
-                            File.Move(oldAppJsonTemplateFilePath, appJsonTemplateFilePath);
+                        _appJsonService.Value.MoveAppJsonTemplateFromOldToNewLocation();
 
                         // migrate old .data-custom folder
                         var oldDataCustomFolder = Path.Combine(Path.Combine(_globalConfiguration.Value.GlobalFolder, ".data-custom"));

@@ -2,12 +2,12 @@
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Edit.EditService;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.Blocks.Internal.Render;
 
@@ -30,29 +30,19 @@ public class RenderService: ServiceForDynamicCode,
 
     #region Constructor & ConnectToRoot
 
-    public class MyServices: MyServicesBase
+    public class MyServices(
+        Generator<IEditService> editGenerator,
+        LazySvc<IModuleAndBlockBuilder> builder,
+        Generator<SimpleRenderer> simpleRenderer,
+        Generator<InTextContentBlockRenderer> inTextRenderer,
+        LazySvc<ILogStore> logStore)
+        : MyServicesBase(connect: [editGenerator, builder, simpleRenderer, inTextRenderer, logStore])
     {
-        public Generator<InTextContentBlockRenderer> InTextRenderer { get; }
-        public Generator<SimpleRenderer> SimpleRenderer { get; }
-        public Generator<IEditService> EditGenerator { get; }
-        public LazySvc<IModuleAndBlockBuilder> Builder { get; }
-        public LazySvc<ILogStore> LogStore { get; }
-
-        public MyServices(Generator<IEditService> editGenerator,
-            LazySvc<IModuleAndBlockBuilder> builder,
-            Generator<SimpleRenderer> simpleRenderer,
-            Generator<InTextContentBlockRenderer> inTextRenderer,
-            LazySvc<ILogStore> logStore
-        )
-        {
-            ConnectServices(
-                EditGenerator = editGenerator,
-                Builder = builder,
-                SimpleRenderer = simpleRenderer,
-                InTextRenderer = inTextRenderer,
-                LogStore = logStore
-            );
-        }
+        public Generator<InTextContentBlockRenderer> InTextRenderer { get; } = inTextRenderer;
+        public Generator<SimpleRenderer> SimpleRenderer { get; } = simpleRenderer;
+        public Generator<IEditService> EditGenerator { get; } = editGenerator;
+        public LazySvc<IModuleAndBlockBuilder> Builder { get; } = builder;
+        public LazySvc<ILogStore> LogStore { get; } = logStore;
     }
 
     public RenderService(MyServices services) : base("Sxc.RndSvc")
@@ -104,7 +94,6 @@ public class RenderService: ServiceForDynamicCode,
         string field = null,
         Guid? newGuid = null)
     {
-        //Protect(noParamOrder, $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
         item ??= parent.Item;
         MakeSureLogIsInHistory();
         var simpleRenderer = _Deps.SimpleRenderer.New();
@@ -135,7 +124,6 @@ public class RenderService: ServiceForDynamicCode,
         int max = 100,
         string merge = null)
     {
-        //Protect(noParamOrder, $"{nameof(field)},{nameof(merge)}");
         if (string.IsNullOrWhiteSpace(field)) throw new ArgumentNullException(nameof(field));
 
         MakeSureLogIsInHistory();
@@ -154,10 +142,13 @@ public class RenderService: ServiceForDynamicCode,
         object data = null)
     {
         var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
-        //Protect(noParamOrder, $"{nameof(data)}");
         MakeSureLogIsInHistory();
-        var block = _Deps.Builder.Value.GetProvider(pageId, moduleId).LoadBlock().BlockBuilder;
-        var result = block.Run(true, specs: new() { Data = data });
+        var block = _Deps.Builder.Value.BuildBlock(pageId, moduleId);
+
+        block.BlockFeatureKeys?.Add(SxcPageFeatures.JsApiOnModule.NameId);
+
+        var result = block.BlockBuilder.Run(true, specs: new() { Data = data });
+
         return l.ReturnAsOk(result);
     }
 

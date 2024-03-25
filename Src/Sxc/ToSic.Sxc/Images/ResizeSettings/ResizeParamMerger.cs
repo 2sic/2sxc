@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Internal;
 using static ToSic.Sxc.Images.Internal.ImageConstants;
 using static ToSic.Sxc.Internal.Plumbing.ParseObject;
 
@@ -10,7 +9,7 @@ namespace ToSic.Sxc.Images;
 /// <summary>
 /// This merges predefined settings with custom specified parameters to create a stable resize-Parameters object for further use
 /// </summary>
-internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcLogging.SxcLogName}.ImgRPM")
+internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcLogName}.ImgRPM")
 {
     private const string ResizeModeField = "ResizeMode";
     private const string ScaleModeField = "ScaleMode";

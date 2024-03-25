@@ -6,17 +6,12 @@ using ToSic.Sxc.Context.Internal;
 namespace ToSic.Sxc.Blocks.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class ModuleAndBlockBuilder: ServiceBase, IModuleAndBlockBuilder
+public abstract class ModuleAndBlockBuilder(Generator<BlockFromModule> blockGenerator, string logPrefix)
+    : ServiceBase($"{logPrefix}.BnMBld", connect: [blockGenerator]), IModuleAndBlockBuilder
 {
-    private readonly Generator<BlockFromModule> _blockGenerator;
-
-    protected ModuleAndBlockBuilder(Generator<BlockFromModule> blockGenerator, string logPrefix): base($"{logPrefix}.BnMBld")
-    {
-        ConnectServices(
-            _blockGenerator = blockGenerator
-        );
-    }
-
+    /// <summary>
+    /// Get the module specific to each platform.
+    /// </summary>
     protected abstract IModule GetModuleImplementation(int pageId, int moduleId);
 
     protected void ThrowIfModuleIsNull<TModule>(int pageId, int moduleId, TModule moduleInfo)
@@ -27,18 +22,23 @@ public abstract class ModuleAndBlockBuilder: ServiceBase, IModuleAndBlockBuilder
         throw new(msg);
     }
 
-    public BlockWithContextProvider GetProvider(int pageId, int moduleId)
+    public IBlock BuildBlock(int pageId, int moduleId)
     {
-        var wrapLog = Log.Fn<BlockWithContextProvider>($"{pageId}, {moduleId}");
+        var l = Log.Fn<IBlock>($"{pageId}, {moduleId}");
         var module = GetModuleImplementation(pageId, moduleId);
         var ctx = GetContextOfBlock(module, pageId);
-        return wrapLog.ReturnAsOk(new(ctx, () => _blockGenerator.New().Init(ctx)));
+        
+        // 2024-03-11 2dm WIP
+        var block = blockGenerator.New().Init(ctx);
+        return l.ReturnAsOk(block);
     }
 
-    public BlockWithContextProvider GetProvider<TPlatformModule>(TPlatformModule module, int? page) where TPlatformModule : class
+    public IBlock BuildBlock<TPlatformModule>(TPlatformModule module, int? page) where TPlatformModule : class
     {
+        var l = Log.Fn<IBlock>($"{module}, {page}");
         var ctx = GetContextOfBlock(module, page);
-        return new(ctx, () => _blockGenerator.New().Init(ctx));
+        var block = blockGenerator.New().Init(ctx);
+        return l.Return(block);
     }
 
     protected abstract IContextOfBlock GetContextOfBlock(IModule module, int? pageId);

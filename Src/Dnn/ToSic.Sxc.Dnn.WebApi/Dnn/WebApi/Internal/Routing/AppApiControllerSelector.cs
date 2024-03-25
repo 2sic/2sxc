@@ -1,25 +1,10 @@
-﻿using System.IO;
-using System.Linq;
-using System.Net;
-using System.Reflection;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web.Compilation;
-using System.Web.Hosting;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
-using System.Web.Http.Routing;
-using ToSic.Eav.Context;
-using ToSic.Eav.Helpers;
-using ToSic.Eav.WebApi.Routing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code.Internal.CodeErrorHelp;
-using ToSic.Sxc.Code.Internal.HotBuild;
-using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Dnn.Backend.Sys;
-using ToSic.Sxc.Dnn.Compile;
-using ToSic.Sxc.Dnn.Context;
-using ToSic.Sxc.Dnn.Integration;
 
 namespace ToSic.Sxc.Dnn.WebApi;
 
@@ -35,30 +20,32 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
 
     public IDictionary<string, HttpControllerDescriptor> GetControllerMapping() => PreviousSelector.GetControllerMapping();
 
-    private static readonly string[] AllowedRoutes = ["desktopmodules/2sxc/api/app-api/", "api/2sxc/app-api/"]; // old routes, dnn 7/8 & dnn 9
-
+    private static readonly string[] AllowedRoutes = [
+        "desktopmodules/2sxc/api/app-api/", // old routes, dnn 7/8 & dnn 9
+        "api/2sxc/app-api/"
+    ]; 
 
     // new in 2sxc 9.34 #1651 - added "([^/]+\/)?" to allow an optional edition parameter
     private static readonly string[] RegExRoutes =
-    {
+    [
         @"desktopmodules\/2sxc\/api\/app\/[^/]+\/([^/]+\/)?api",
         @"api\/2sxc\/app\/[^/]+\/([^/]+\/)?api"
-    };
+    ];
 
     /// <summary>
     /// Verify if this request is one which should be handled by this system
     /// </summary>
     /// <param name="request"></param>
     /// <returns>true if we want to handle it</returns>
-    private bool HandleRequestWithThisController(HttpRequestMessage request)
+    private static bool IsSxcOrEavRequest(HttpRequestMessage request)
     {
         var routeData = request.GetRouteData();
-        var simpleMatch = AllowedRoutes.Any(a => routeData.Route.RouteTemplate.ToLowerInvariant().Contains(a));
+        var routeTemplateLower = routeData.Route.RouteTemplate.ToLowerInvariant();
+        var simpleMatch = AllowedRoutes.Any(routeTemplateLower.Contains);
         if (simpleMatch)
             return true;
 
-        var rexMatch = RegExRoutes.Any(
-            a => new Regex(a, RegexOptions.None).IsMatch(routeData.Route.RouteTemplate.ToLowerInvariant()) );
+        var rexMatch = RegExRoutes.Any(a => new Regex(a, RegexOptions.None).IsMatch(routeTemplateLower));
         return rexMatch;
 
     }
@@ -69,129 +56,33 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
         var sp = DnnStaticDi.GetPageScopedServiceProvider();
 
         // Log this lookup and add to history for insights
-        var log = new Log("Sxc.Http", null, request?.RequestUri?.AbsoluteUri);
-        AddToInsightsHistory(sp, request?.RequestUri?.AbsoluteUri, log);
+        var uriToLog = request?.RequestUri?.AbsoluteUri;
+        var log = new Log("Sxc.Http", null, uriToLog);
+        AddToInsightsHistory(sp, uriToLog, log);
 
         var l = log.Fn<HttpControllerDescriptor>();
 
-        if (!HandleRequestWithThisController(request))
+        if (!IsSxcOrEavRequest(request))
             return l.Return(PreviousSelector.SelectController(request), "upstream");
 
-        var routeData = request.GetRouteData();
+        // 2024-03-21 New: offload all the work to a separate class, to use more normal DI for most of the code
+        var newDescriptor = sp.Build<AppApiControllerSelectorService>(log)
+            .SelectController(configuration, request);
 
-        var controllerTypeName = routeData.Values[VarNames.Controller] + "Controller";
-
-        // Now Handle the 2sxc app-api queries
-            
-        // Figure out the Path, or show error for that
-        var appFolder = sp.Build<DnnAppFolderUtilities>(log).GetAppFolder(request, true);
-
-        try
-        {
-            // new for 2sxc 9.34 #1651
-            var edition = GetEdition(routeData);
-            l.A($"Edition: {edition}");
-
-            var site = sp.Build<ISite>(log);
-
-            // First check local app (in this site), then global
-            var descriptor = DescriptorIfExists(log, request, site, appFolder, edition, controllerTypeName, false, sp);
-            if (descriptor != null) return l.ReturnAsOk(descriptor);
-
-            l.A("path not found, will check on shared location");
-            descriptor = DescriptorIfExists(log, request, site, appFolder, edition, controllerTypeName, true, sp);
-            if (descriptor != null) return l.ReturnAsOk(descriptor);
-        }
-        catch (Exception e)
-        {
-            throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.InternalServerError, e, DnnHttpErrors.ApiErrMessage, sp.Build<CodeErrorHelpService>()));
-        }
-
-        // If we got to here we didn't find it.
-        // But we want to throw the exception here, otherwise it's re-wrapped.
-        l.A("Path / Controller not found in shared, error will be thrown in a moment");
-        var msgFinal = $"2sxc Api Controller Finder: Controller {controllerTypeName} not found in app and paths.";
-        throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.NotFound, new(), msgFinal, sp.Build<CodeErrorHelpService>()));
-
+        return l.ReturnAsOk(newDescriptor);
     }
 
-    private HttpControllerDescriptor DescriptorIfExists(ILog log, HttpRequestMessage request, ISite site, string appFolder, string edition, string controllerTypeName, bool shared, IServiceProvider sp)
+
+
+    private static void AddToInsightsHistory(IServiceProvider sp, string urlOrNull, ILog log)
     {
-        var l = log.Fn<HttpControllerDescriptor>();
-        var controllerFolder = Path
-            .Combine(shared ? site.SharedAppsRootRelative() : site.AppsRootPhysical, appFolder, edition + "api/")
-            .ForwardSlash();
-        var controllerPath = Path.Combine(controllerFolder, $"{controllerTypeName}.cs");
-        l.A($"Controller Folder: '{controllerFolder}' Path: '{controllerPath}'");
-
-        // note: this may look like something you could optimize/cache the result, but that's a bad idea
-        // because when the file changes, the type-object will be different, so please don't optimize :)
-        var exists = File.Exists(HostingEnvironment.MapPath(controllerPath));
-        var descriptor = exists ? BuildDescriptor(log,request, controllerFolder, controllerPath, controllerTypeName, edition.TrimLastSlash(), sp) : null;
-        return l.Return(descriptor, $"{nameof(exists)}: {exists}");
-    }
-
-    private static string GetEdition(IHttpRouteData routeData)
-    {
-        var edition = "";
-        if (routeData.Values.ContainsKey(VarNames.Edition))
-            edition = routeData.Values[VarNames.Edition].ToString();
-        if (!string.IsNullOrEmpty(edition))
-            edition += "/";
-        return edition;
-    }
-
-    private HttpControllerDescriptor BuildDescriptor(ILog log, HttpRequestMessage request, string folder, string fullPath, string typeName, string edition, IServiceProvider sp)
-    {
-        var l = log.Fn<HttpControllerDescriptor>();
-        Assembly assembly;
-        var codeFileInfo = sp.Build<SourceAnalyzer>(log).TypeOfVirtualPath(fullPath);
-        if (codeFileInfo.AppCode)
-        {
-            l.A("AppCode - use Roslyn");
-            // Figure edition
-            HotBuildSpec spec = null;
-            var block = sp.Build<DnnGetBlock>().GetCmsBlock(request).LoadBlock();
-            l.A($"has block: {block != null}");
-            if (block != null)
-            {
-                spec = new(block.AppId, edition: edition, block.App?.Name);
-                l.A($"{nameof(spec)}: {spec}");
-            }
-            assembly = sp.Build<IRoslynBuildManager>().GetCompiledAssembly(codeFileInfo, typeName, spec)?.Assembly;
-        }
-        else
-        {
-            l.A("no AppCode - use BuildManager");
-            assembly = BuildManager.GetCompiledAssembly(fullPath);
-        }
-
-        if (assembly == null) throw l.Ex(new Exception("Assembly not found or compiled to null (error)."));
-
-        // TODO: stv, implement more robust FindMainType
-        var type = assembly.GetType(typeName, true, true)
-                   ?? throw l.Ex(new Exception($"Type '{typeName}' not found in assembly. Could be a compile error or name mismatch."));
-
-        // help with path resolution for compilers running inside the created controller
-        request?.Properties.Add(CodeCompiler.SharedCodeRootPathKeyInCache, folder);
-        request?.Properties.Add(CodeCompiler.SharedCodeRootFullPathKeyInCache, fullPath);
-
-        var result = new HttpControllerDescriptor(configuration, type.Name, type);
-        return l.Return(result);
-    }
-
-    private static void AddToInsightsHistory(IServiceProvider sp, string url, ILog log)
-    {
-        // 2022-12-21 ATM we seem to have an error adding this - must review later
-        // TODO:
+        // Note: This should never error, but it's too important risk breaking just for logging
         try
         {
             var addToHistory = true;
-#pragma warning disable CS0162
             if (InsightsController.InsightsLoggingEnabled)
-                addToHistory = (url?.Contains(InsightsController.InsightsUrlFragment) ?? false);
-#pragma warning restore CS0162
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                addToHistory = urlOrNull?.Contains(InsightsController.InsightsUrlFragment) ?? true;
+            
             if (addToHistory) sp.Build<ILogStore>().Add("http-request", log);
         }
         catch { /* ignore */ }

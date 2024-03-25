@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Compatibility.Internal;
 
-public class InputTypes
+internal class InputTypes
 {
     public static string InputTypeWysiwyg = "string-wysiwyg";
 

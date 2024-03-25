@@ -167,10 +167,12 @@ public partial class BlockBuilder
             // by default the editors will get it
             // in special cases the razor requests it to added as well
             var addEditCtx = Block.Context.UserMayEdit;
+            var addJsApiOnly = false;
             if (!addEditCtx && Block.BlockFeatureKeys.Any())
             {
                 var features = Block.Context.PageServiceShared.PageFeatures.GetWithDependents(Block.BlockFeatureKeys, Log);
                 addEditCtx = features.Contains(SxcPageFeatures.ContextModule);
+                addJsApiOnly = features.Contains(SxcPageFeatures.JsApiOnModule);
             }
 
             #region Add Custom Tags to the end if provided by the ModuleService - like TurnOn - not ideal yet
@@ -192,7 +194,8 @@ public partial class BlockBuilder
                 ? RenderingHelper.WrapInContext(bodyWithAddOns,
                     instanceId: Block.ParentId,
                     contentBlockId: Block.ContentBlockId,
-                    editContext: addEditCtx, 
+                    editContext: addEditCtx,
+                    jsApiContext: addJsApiOnly,
                     errorCode: errorCode,
                     exsOrNull: exceptions,
                     statistics: stats)

@@ -1,6 +1,4 @@
 ﻿using ToSic.Lib.Services;
-using ToSic.Sxc.Internal;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
@@ -10,8 +8,7 @@ namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 /// </summary>
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ContentSecurityPolicyServiceBase()
-    : ServiceBase($"{SxcLogging.SxcLogName}.CspSvc"), IContentSecurityPolicyService
+public class ContentSecurityPolicyServiceBase() : ServiceBase($"{SxcLogName}.CspSvc"), IContentSecurityPolicyService
 {
     public CspParameters Policy = [];
 

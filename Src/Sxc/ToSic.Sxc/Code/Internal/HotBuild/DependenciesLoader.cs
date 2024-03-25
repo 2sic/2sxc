@@ -7,32 +7,16 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
+[PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class DependenciesLoader : ServiceBase
+public class DependenciesLoader(ILogStore logStore, ISite site, IAppStates appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, AssemblyCacheManager assemblyCacheManager, LazySvc<AppCodeCompiler> appCodeCompilerLazy)
+    : ServiceBase("Sys.AppCodeLoad", connect: [logStore, site, appStates, appPathsLazy, assemblyCacheManager, appCodeCompilerLazy])
 {
     public const string DependenciesFolder = "Dependencies";
 
-    public DependenciesLoader(ILogStore logStore, ISite site, IAppStates appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, AssemblyCacheManager assemblyCacheManager, LazySvc<AppCodeCompiler> appCodeCompilerLazy) : base("Sys.AppCodeLoad")
-    {
-        ConnectServices(
-            _logStore = logStore,
-            _site = site,
-            _appStates = appStates,
-            _appPathsLazy = appPathsLazy,
-            _assemblyCacheManager = assemblyCacheManager,
-            _appCodeCompilerLazy = appCodeCompilerLazy
-        );
-    }
-    private readonly ILogStore _logStore;
-    private readonly ISite _site;
-    private readonly IAppStates _appStates;
-    private readonly LazySvc<IAppPathsMicroSvc> _appPathsLazy;
-    private readonly AssemblyCacheManager _assemblyCacheManager;
-    private readonly LazySvc<AppCodeCompiler> _appCodeCompilerLazy;
 
 
     public (List<Assembly> Assemblies, HotBuildSpec Specs) TryGetOrFallback(HotBuildSpec spec)
@@ -52,11 +36,11 @@ public class DependenciesLoader : ServiceBase
         return l.Return(pairFromRoot, "Dependencies found in '/'." + (pairFromRoot.Assemblies == null ? ", null." : ""));
     }
 
-    private static (List<AssemblyResult> assemblyResults, string cacheKey) TryGetAssemblyOfDependenciesFromCache(HotBuildSpec spec, ILog callerLog)
+    private (List<AssemblyResult> assemblyResults, string cacheKey) TryGetAssemblyOfDependenciesFromCache(HotBuildSpec spec, ILog callerLog)
     {
         var l = callerLog.Fn<(List<AssemblyResult>, string)>($"{spec}");
-        var (assemblyResults, cacheKey) = AssemblyCacheManager.TryGetDependencies(spec);
-        if (assemblyResults == null) return l.Return((null, cacheKey),"no dependencies in cache");
+        var (assemblyResults, cacheKey) = assemblyCacheManager.TryGetDependencies(spec);
+        if (assemblyResults == null) return l.Return((null, cacheKey), "no dependencies in cache");
 
         l.A($"dependencies from cache: {assemblyResults.Count}");
 
@@ -71,7 +55,7 @@ public class DependenciesLoader : ServiceBase
     private List<Assembly> LoadDependencyAssembliesOrNull(HotBuildSpec spec, string cacheKey)
     {
         // Add to global history and add specs
-        var logSummary = _logStore.Add(SxcLogging.SxcLogAppCodeLoader, Log);
+        var logSummary = logStore.Add(SxcLogAppCodeLoader, Log);
         logSummary.UpdateSpecs(spec.ToDictionary());
 
         // Initial message for insights-overview
@@ -79,8 +63,8 @@ public class DependenciesLoader : ServiceBase
 
         var assemblyResults = TryLoadDependencyAssemblies(spec, cacheKey, logSummary);
 
-        return assemblyResults != null 
-            ? l.ReturnAsOk(assemblyResults.Select(r => r.Assembly).ToList()) 
+        return assemblyResults != null
+            ? l.ReturnAsOk(assemblyResults.Select(r => r.Assembly).ToList())
             : l.ReturnNull("no dependencies");
     }
 
@@ -94,7 +78,7 @@ public class DependenciesLoader : ServiceBase
         logSummary.AddSpec("Dependencies RelativePath", relativePath);
 
         // missing dependencies folder
-        if (!Directory.Exists(physicalPath)) 
+        if (!Directory.Exists(physicalPath))
             return l.ReturnNull($"{DependenciesFolder} folder do not exists: {physicalPath}");
 
         var assemblyResults = new List<AssemblyResult>();
@@ -104,7 +88,7 @@ public class DependenciesLoader : ServiceBase
             {
                 //var assembly = Assembly.Load(File.ReadAllBytes(dependency));
 
-                var location = _appCodeCompilerLazy.Value.GetDependencyAssemblyLocations(dependency, spec);
+                var location = appCodeCompilerLazy.Value.GetDependencyAssemblyLocations(dependency, spec);
                 File.Copy(dependency, location, true);
                 var assembly = Assembly.LoadFrom(location);
                 assemblyResults.Add(new AssemblyResult(assembly, assemblyLocations: [dependency]));
@@ -120,7 +104,7 @@ public class DependenciesLoader : ServiceBase
         l.A($"dependencies loaded: {assemblyResults.Count}");
 
         // Add dependency assemblies to cache
-        _assemblyCacheManager.Add(
+        assemblyCacheManager.Add(
             cacheKey,
             assemblyResults,
             changeMonitor: [new FolderChangeMonitor([physicalPath])]
@@ -180,8 +164,8 @@ public class DependenciesLoader : ServiceBase
     private (string physicalPath, string relativePath) GetDependenciesPaths(string folder, HotBuildSpec spec)
     {
         var l = Log.Fn<(string physicalPath, string relativePath)>($"{spec}");
-        var appPaths = _appPathsLazy.Value.Init(_site, _appStates.GetReader(spec.AppId));
-        var folderWithEdition = folder.HasValue() 
+        var appPaths = appPathsLazy.Value.Init(site, appStates.GetReader(spec.AppId));
+        var folderWithEdition = folder.HasValue()
             ? (spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder)
             : spec.Edition;
         var physicalPath = Path.Combine(appPaths.PhysicalPath, folderWithEdition);

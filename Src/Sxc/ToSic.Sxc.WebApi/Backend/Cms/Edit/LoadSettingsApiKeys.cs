@@ -1,10 +1,9 @@
-﻿using ToSic.Sxc.Internal;
-using ToSic.Sxc.Services;
+﻿using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Backend.Cms;
 
 internal class LoadSettingsApiKeys(LazySvc<ISecureDataService> secureDataService)
-    : LoadSettingsProviderBase($"{SxcLogging.SxcLogName}.StApiK"), ILoadSettingsProvider
+    : LoadSettingsProviderBase($"{SxcLogName}.StApiK"), ILoadSettingsProvider
 {
     public Dictionary<string, object> GetSettings(LoadSettingsProviderParameters parameters) 
     {

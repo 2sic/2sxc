@@ -1,16 +1,12 @@
 ﻿using ToSic.Eav.Internal.Unknown;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal.Raw;
-using ToSic.Sxc.Internal;
+#pragma warning disable CS9113 // Parameter is unread.
 
 namespace ToSic.Sxc.Services.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class UsersServiceProviderUnknown : UserSourceProvider, IIsUnknown
+internal class UsersServiceProviderUnknown(WarnUseOfUnknown<UsersServiceProviderUnknown> _) : UserSourceProvider($"{SxcLogName}.{LogConstants.NameUnknown}"), IIsUnknown
 {
-    public UsersServiceProviderUnknown(WarnUseOfUnknown<UsersServiceProviderUnknown> _) : base($"{SxcLogging.SxcLogName}.{LogConstants.NameUnknown}")
-    { }
-
     public override string PlatformIdentityTokenPrefix => $"{Eav.Constants.NullNameId}:";
 
     internal override ICmsUser PlatformUserInformationDto(int userId, int siteId) => new CmsUserRaw();

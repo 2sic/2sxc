@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Blocks.Internal.Render;
@@ -11,7 +10,7 @@ public class InTextContentBlockRenderer: ServiceBase
 {
     private readonly SimpleRenderer _simpleRenderer;
 
-    public InTextContentBlockRenderer(SimpleRenderer simpleRenderer):base(SxcLogging.SxcLogName + ".RndTxt")
+    public InTextContentBlockRenderer(SimpleRenderer simpleRenderer):base(SxcLogName + ".RndTxt")
     {
         ConnectServices(
             _simpleRenderer = simpleRenderer

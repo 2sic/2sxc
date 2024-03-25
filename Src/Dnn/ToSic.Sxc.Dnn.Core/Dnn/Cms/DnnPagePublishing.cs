@@ -92,7 +92,7 @@ internal partial class DnnPagePublishing : ServiceBase, IPagePublishing
             // publish all entities of this content block
             var dnnModule = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
             // must find tenant through module, as the Portal-Settings.Current is null in search mode
-            var cb = _moduleAndBlockBuilder.Value.GetProvider(dnnModule, null).LoadBlock();
+            var cb = _moduleAndBlockBuilder.Value.BuildBlock(dnnModule, null);
 
             l.A($"found dnn mod {cb.Context.Module.Id}, tenant {cb.Context.Site.Id}, cb exists: {cb.ContentGroupExists}");
             if (cb.ContentGroupExists)

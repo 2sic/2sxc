@@ -24,6 +24,8 @@ public class SxcPageFeatures
     /// </summary>
     public static PageFeature ContextModule = new("2sxc.ContextModule", "the $2sxc headers in the module tag");
 
+    public static PageFeature JsApiOnModule = new("2sxc.JsApiOnModule", "the $2sxc headers in the module tag");
+
     /// <summary>
     /// The core 2sxc JS libraries
     /// </summary>

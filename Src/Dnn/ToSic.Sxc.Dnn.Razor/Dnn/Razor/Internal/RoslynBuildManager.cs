@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Web.Razor;
 using System.Web.Razor.Generator;
 using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
+using ToSic.Eav.Caching;
 using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
@@ -28,8 +29,9 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         AssemblyCacheManager assemblyCacheManager,
         LazySvc<AppCodeLoader> appCodeLoader,
         AssemblyResolver assemblyResolver,
-        IReferencedAssembliesProvider referencedAssembliesProvider)
-        : ServiceBase("Dnn.RoslynBuildManager", connect: [assemblyCacheManager, appCodeLoader, assemblyResolver, referencedAssembliesProvider]),
+        IReferencedAssembliesProvider referencedAssembliesProvider,
+        MemoryCacheService memoryCacheService)
+        : ServiceBase("Dnn.RoslynBuildManager", connect: [assemblyCacheManager, appCodeLoader, assemblyResolver, referencedAssembliesProvider, memoryCacheService]),
             IRoslynBuildManager
     {
         private static readonly ConcurrentDictionary<string, object> CompileAssemblyLocks = new(InvariantCultureIgnoreCase);
@@ -59,9 +61,9 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             // ATM it appears that sometimes it returns null, but I don't know why
             // I believe it's mostly on first startup or something
             var (result, generated, message) = new TryLockTryDo(lockObject).Call(
-                conditionToGenerate: () => AssemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath)?.MainType == null,
+                conditionToGenerate: () => assemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath)?.MainType == null,
                 generator: () => CompileCodeFile(codeFileInfo, className, spec),
-                cacheOrFallback: () => AssemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath)
+                cacheOrFallback: () => assemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath)
             );
 
             // ReSharper disable once InvertIf
@@ -70,7 +72,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
                 l.E("Object was not generated - additional logs to better find root cause next time this happens");
                 l.A($"result: {result}");
                 l.A($"message: {message}");
-                var cache = AssemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath);
+                var cache = assemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath);
                 l.A($"{nameof(cache)}: {cache}");
                 l.A($"{nameof(cache.MainType)}: {cache?.MainType}");
                 l.A($"{nameof(cache.HasAssembly)}: {cache?.HasAssembly}");
@@ -95,7 +97,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             // Add the latest assembly to the .net assembly resolver (singleton)
             assemblyResolver.AddAssembly(codeAssembly);
 
-            var appCode = AssemblyCacheManager.TryGetAppCode(specOut);
+            var appCode = assemblyCacheManager.TryGetAppCode(specOut);
 
             var appCodeAssembly = appCode.Result?.Assembly;
             if (appCodeAssembly != null)
@@ -271,12 +273,12 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         {
             var l = Log.Fn<CSharpCodeProvider>();
             // See if in memory cache
-            if (MemoryCache.Default.Get(CSharpCodeProviderCacheKey) is CSharpCodeProvider fromCache)
+            if (memoryCacheService.Get(CSharpCodeProviderCacheKey) is CSharpCodeProvider fromCache)
                 return l.Return(fromCache, "from cached");
             
             var codeProvider = new CSharpCodeProvider(); // TODO: @stv test with latest nuget package for @inherits ; issue
             // add to memory cache for 1 minute floating expiry
-            MemoryCache.Default.Add(CSharpCodeProviderCacheKey, codeProvider, new CacheItemPolicy { SlidingExpiration = new(0, CSharpCodeProviderCacheMinutes, 0) });
+            memoryCacheService.Add(CSharpCodeProviderCacheKey, codeProvider, new CacheItemPolicy { SlidingExpiration = new(0, CSharpCodeProviderCacheMinutes, 0) });
 
             return l.Return(codeProvider, "created new and added to cache for 1 min");
         }

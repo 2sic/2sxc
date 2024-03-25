@@ -38,6 +38,8 @@
       <!-- Global / Shared 2sxc and EAV DLLs-->
       <DnnBinInclude Include="bin\ToSic.Sxc.dll" />
       <DnnBinInclude Include="bin\ToSic.Sxc.pdb" />
+      <DnnBinInclude Include="bin\ToSic.Sxc.Code.Generate.dll" />
+      <DnnBinInclude Include="bin\ToSic.Sxc.Code.Generate.pdb" />
       <DnnBinInclude Include="bin\ToSic.Sxc.WebApi.dll" />
       <DnnBinInclude Include="bin\ToSic.Sxc.WebApi.pdb" />
       <DnnBinInclude Include="bin\ToSic.Eav*.dll" />

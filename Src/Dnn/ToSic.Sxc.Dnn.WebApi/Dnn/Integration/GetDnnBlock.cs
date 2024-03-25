@@ -1,81 +1,78 @@
 ﻿using System.Linq;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Backend;
 using ToSic.Sxc.Blocks.Internal;
+using static ToSic.Sxc.Backend.SxcWebApiConstants;
 
 namespace ToSic.Sxc.Dnn.Integration;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class DnnGetBlock: ServiceBase
+public class DnnGetBlock(
+    Generator<BlockFromEntity> blockFromEntity,
+    Generator<IModuleAndBlockBuilder> moduleAndBlockBuilder)
+    : ServiceBase($"{LogName}.GetBlk", connect: [blockFromEntity, moduleAndBlockBuilder])
 {
- 
-    private readonly Generator<BlockFromEntity> _blockFromEntity;
-    private readonly Generator<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
-
-    public DnnGetBlock(Generator<BlockFromEntity> blockFromEntity, Generator<IModuleAndBlockBuilder> moduleAndBlockBuilder): base($"{DnnConstants.LogName}GetBlk")
+    internal IBlock GetCmsBlock(HttpRequestMessage request)
     {
-        ConnectServices(
-            _blockFromEntity = blockFromEntity,
-            _moduleAndBlockBuilder = moduleAndBlockBuilder
-        );
-    }
-
-    internal BlockWithContextProvider GetCmsBlock(HttpRequestMessage request)
-    {
-        var l = Log.Fn<BlockWithContextProvider>(timer: true);
+        var l = Log.Fn<IBlock>(timer: true);
         var moduleInfo = request.FindModuleInfo();
 
         if (moduleInfo == null)
             return l.ReturnNull("request ModuleInfo not found");
 
-        var blockProvider = _moduleAndBlockBuilder.New().GetProvider(moduleInfo, null);
+        var block = moduleAndBlockBuilder.New().BuildBlock(moduleInfo, null);
 
-        var result = new BlockWithContextProvider(blockProvider.ContextOfBlock,
-            () => GetBlockOrInnerContentBlock(request, blockProvider));
+        // check if we need an inner block
+        if (!request.Headers.Contains(HeaderContentBlockId))
+            return l.Return(block, "normal block, no inner-content");
 
-        return l.ReturnAsOk(result);
+        // only if it's negative, do we load the inner block
+        var blockHeaderId = request.Headers.GetValues(HeaderContentBlockId).FirstOrDefault();
+        int.TryParse(blockHeaderId, out var contentBlockId);
+
+        // only if ID is negative, do we load the inner block
+        if (contentBlockId >= 0)
+            return l.Return(block, "normal block");
+
+        var entBlock = GetBlockOrInnerContentBlock(request, block, contentBlockId);
+        return l.Return(entBlock, $"inner content-block {contentBlockId}");
     }
 
-    private IBlock GetBlockOrInnerContentBlock(HttpRequestMessage request, BlockWithContextProvider blockWithContextProvider)
+    private IBlock GetBlockOrInnerContentBlock(HttpRequestMessage request, IBlock block, int blockId)
     {
-        var block = blockWithContextProvider.LoadBlock();
-        // check if we need an inner block
-        if (request.Headers.Contains(SxcWebApiConstants.HeaderContentBlockId))
-        {
-            var blockHeaderId = request.Headers.GetValues(SxcWebApiConstants.HeaderContentBlockId).FirstOrDefault();
-            int.TryParse(blockHeaderId, out var blockId);
-            if (blockId < 0) // negative id, so it's an inner block
-            {
-                Log.A($"Inner Content: {blockId}");
-                if (request.Headers.Contains("BlockIds"))
-                {
-                    var blockIds = request.Headers.GetValues("BlockIds").FirstOrDefault()?.Split(',');
-                    block = FindInnerContentParentBlock(block, blockId, blockIds);
-                }
+        var l = Log.Fn<IBlock>($"{nameof(blockId)}: {blockId}");
 
-                block = _blockFromEntity.New().Init(block, null, blockId);
-            }
+        // If we have a list of inner-blocks (WIP, I believe not implemented) do we go down the list of blocks to find the inner-most one
+        if (request.Headers.Contains(HeaderContentBlockList))
+        {
+            var blockIds = request.Headers
+                .GetValues(HeaderContentBlockList)
+                .FirstOrDefault()?
+                .CsvToArrayWithoutEmpty();
+            if (blockIds.SafeAny())
+                return l.Return(FindInnerContentParentBlock(block, blockId, blockIds), $"from {HeaderContentBlockList}");
         }
 
-        return block;
+        var entBlock = blockFromEntity.New().Init(block, null, blockId);
+
+        return l.Return(entBlock);
     }
 
-    private IBlock FindInnerContentParentBlock(IBlock parent, int contentBlockId, string[] blockIds)
+    private IBlock FindInnerContentParentBlock(IBlock parent, int contentBlockId, IReadOnlyCollection<string> blockIds)
     {
-        if (blockIds != null && blockIds.Length >= 2)
+        if (blockIds == null || blockIds.Count < 2) return parent;
+
+        foreach (var ids in blockIds) // blockIds is ordered list, from first ancestor till last successor 
         {
-            foreach (var ids in blockIds) // blockIds is ordered list, from first ancestor till last successor 
-            {
-                var parentIds = ids.Split(':');
-                //var parentAppId = int.Parse(parentIds[0]);
-                //var parentContentBlocks = new Guid(parentIds[1]);
-                var id = int.Parse(parentIds[0]);
-                if (!int.TryParse(parentIds[1], out var cbid) || id == cbid || cbid >= 0) continue;
-                if (cbid == contentBlockId) break; // we are done, because block should be parent/ancestor of cbid
-                parent = _blockFromEntity.New().Init(parent, null, cbid);
-            }
+            var parentIds = ids.Split(':');
+            //var parentAppId = int.Parse(parentIds[0]);
+            //var parentContentBlocks = new Guid(parentIds[1]);
+            var id = int.Parse(parentIds[0]);
+            if (!int.TryParse(parentIds[1], out var cbid) || id == cbid || cbid >= 0) continue;
+            if (cbid == contentBlockId) break; // we are done, because block should be parent/ancestor of cbid
+            parent = blockFromEntity.New().Init(parent, null, cbid);
         }
 
         return parent;
