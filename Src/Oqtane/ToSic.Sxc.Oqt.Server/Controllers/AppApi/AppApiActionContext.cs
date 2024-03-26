@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using ToSic.Lib.Logging;
@@ -46,10 +47,14 @@ internal class AppApiActionContext : IHasLog
         var displayName = GetDisplayName(values);
         Log.A($"app-api: {displayName}");
 
+        List<ActionDescriptor> candidates;
         // our custom selector for app api methods
-        var candidates = actionDescriptorCollectionProvider.ActionDescriptors.Items.Where(
-            i => string.Equals(i.DisplayName, displayName, StringComparison.OrdinalIgnoreCase)
-                 // Ensure to have at least one HttpMethods attribute on the app api endpoint.
+
+        candidates = actionDescriptorCollectionProvider.ActionDescriptors.Items.Where(
+            i => i.DisplayName != null
+                 && (string.Equals(i.DisplayName, displayName, StringComparison.OrdinalIgnoreCase)
+                     || i.DisplayName.EndsWith($".{displayName}", StringComparison.OrdinalIgnoreCase)) // try to find match in case we have unknown namespaces on controller name for WepApi method 
+                                                                                                       // Ensure to have at least one HttpMethods attribute on the app api endpoint.
                  && i.ActionConstraints != null
                  && i.ActionConstraints.Any(c => (c.ToString() ?? "").Contains("HttpMethodActionConstraint"))
         ).ToList();
@@ -58,7 +63,7 @@ internal class AppApiActionContext : IHasLog
             ? $"ok, have candidates: {candidates.Count}"
             : $"error, missing candidates: {candidates.Count}, can't find right method for action: {values["action"]} on controller: {values["controller"]}.");
 
-        if (candidates.Count == 0) throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Can't find right method for action: {values["action"]} on controller: {values["controller"]}.", "Not Found");
+        if (candidates.Count == 0) throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Can't find right method for action: {values["action"]} on controller: {values["controllerTypeName"]}.", "Not Found");
 
         Log.A($"actionDescriptor SelectBestCandidate");
         var actionDescriptor = actionSelector.SelectBestCandidate(routeContext, candidates);
@@ -70,7 +75,7 @@ internal class AppApiActionContext : IHasLog
 
         return actionContext;
     }
-        
+
     private static void MapQueryStringValuesAsEndpointParameters(ActionContext actionContext, ActionDescriptor actionDescriptor, RouteData routeData)
     {
         foreach (var t in actionDescriptor.Parameters)
@@ -82,7 +87,13 @@ internal class AppApiActionContext : IHasLog
     }
 
     private static string GetDisplayName(RouteValueDictionary values)
+        => $"{values["controllerTypeName"]}.{values["action"]} ({GetDllName(values)})";
+
+    private static string GetDllName(RouteValueDictionary values)
     {
-        return $"{values["controllerTypeName"]}.{values["action"]} ({values["dllName"]}.dll)";
+        if (AppApiFileSystemWatcher.CompiledAppApiControllers.TryGetValue((string)values["apiFile"], out var appApiCacheItem))
+            if (appApiCacheItem.IsAppCode)
+                return appApiCacheItem.DllName;
+        return $"{values["dllName"]}.dll";
     }
 }

@@ -126,18 +126,12 @@ internal class AppApiControllerSelectorService(
         // 1. Check AppCode Dll
         if (spec != null)
         {
-            // First try cache, then try to compile
-            var appCodeAssembly = assemblyCacheManager.Value.TryGetAppCode(spec).Result?.Assembly;
-            appCodeAssembly ??= appCodeLoader.Value.GetAppCode(spec).Assembly;
+            var appCodeAssembly = appCodeLoader.Value.GetAppCode(spec).AssemblyResult?.Assembly;
 
             // If assembly found, check if this controller exists in that dll - if yes, return it
             if (appCodeAssembly != null)
             {
-                // TODO: @STV repeat in oqtane, and/or centralize code
-                var type = appCodeAssembly.GetType(controllerTypeName, false, true)
-                    // Find in case it's in a namespace
-                    ?? appCodeAssembly.GetTypes().FirstOrDefault(t => t.Name == controllerTypeName);
-             
+                var type = appCodeAssembly.FindControllerTypeByName(controllerTypeName);
                 if (type != null)
                     return l.Return(new(Configuration, type.Name, type), "Api controller from AppCode");
             }
@@ -158,7 +152,6 @@ internal class AppApiControllerSelectorService(
             : null;
         return l.Return(descriptor, $"{nameof(exists)}: {exists}");
     }
-
 
     private HttpControllerDescriptor BuildDescriptor(string folder, string fullPath, string typeName, HotBuildSpec spec)
     {
