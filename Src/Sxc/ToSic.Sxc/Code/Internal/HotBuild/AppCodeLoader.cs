@@ -119,6 +119,8 @@ public class AppCodeLoader(
         foreach (var watcherFolder in assemblyResult.WatcherFolders)
             l.A($"- '{watcherFolder}'");
 
+        assemblyResult.CacheKey = cacheKey; // used to create cache dependency with CacheEntryChangeMonitor 
+
         // Add compiled assembly to cache
         assemblyCacheManager.Add(
             cacheKey,

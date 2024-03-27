@@ -35,5 +35,14 @@ public class AssemblyResult(
     /// True if an assembly was created without compile errors.
     /// </summary>
     public bool HasAssembly => Assembly != null;
+
+    /// <summary>
+    /// Used to create cache dependency with CacheEntryChangeMonitor
+    /// </summary>
+    /// <remarks>
+    /// This cache item with Assembly usually has cache dependency on WatchFolders.
+    /// Other cache items can depend on this cache item, instead of creating additional file monitors on same WatchFolders.
+    /// </remarks>
+    public string CacheKey { get; set; }
     
 }

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using ToSic.Eav.Helpers;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code.Internal.HotBuild;
@@ -160,7 +161,7 @@ internal class AppApiControllerManager : IHasLog
         var appState = _ctxResolver.SetAppOrGetBlock(appFolder)?.AppState;
 
         // Figure out the current edition
-        var edition = FigureEdition();
+        var edition = FigureEdition().TrimLastSlash();
 
         var spec = new HotBuildSpec(appState?.AppId ?? Eav.Constants.AppIdEmpty, edition: edition, appState?.Name);
 
