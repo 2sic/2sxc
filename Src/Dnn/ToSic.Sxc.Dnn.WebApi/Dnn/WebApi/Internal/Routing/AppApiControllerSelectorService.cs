@@ -1,10 +1,11 @@
 ﻿using System.IO;
-using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Runtime.Caching;
 using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http.Controllers;
+using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.WebApi.Routing;
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Internal;
 ///
 /// It's in a separate class, so DI etc. works properly
 /// </summary>
-internal class AppApiControllerSelectorService(
+internal partial class AppApiControllerSelectorService(
     DnnAppFolderUtilities folderUtilities,
     ISite site,
     LazySvc<IRoslynBuildManager> roslynLazy,
@@ -35,8 +36,9 @@ internal class AppApiControllerSelectorService(
     LazySvc<CodeErrorHelpService> codeErrorSvc,
     LazySvc<AssemblyCacheManager> assemblyCacheManager,
     LazySvc<AppCodeLoader> appCodeLoader,
-    LazySvc<ISxcContextResolver> sxcContextResolver)
-    : ServiceBase("Dnn.ApiSSv", connect: [folderUtilities, site, roslynLazy, getBlockLazy, analyzerLazy, codeErrorSvc, assemblyCacheManager, appCodeLoader, sxcContextResolver])
+    LazySvc<ISxcContextResolver> sxcContextResolver,
+    MemoryCacheService memoryCacheService)
+    : ServiceBase("Dnn.ApiSSv", connect: [folderUtilities, site, roslynLazy, getBlockLazy, analyzerLazy, codeErrorSvc, assemblyCacheManager, appCodeLoader, sxcContextResolver, memoryCacheService])
 {
     #region Setup / Init
 
@@ -81,8 +83,8 @@ internal class AppApiControllerSelectorService(
             l.A($"has block: {block != null}");
 
             // Figure out the Path, or show error for that
-            var appFolderUtilities = folderUtilities.Setup(request);
-            var appFolder = appFolderUtilities.GetAppFolder(true, block);
+            var appFolder = folderUtilities.Setup(request).GetAppFolder(true, block);
+            l.A($"AppFolder: {appFolder}");
 
             if (block != null)
             {
@@ -100,11 +102,11 @@ internal class AppApiControllerSelectorService(
             }
 
             // First check local app (in this site), then global
-            var descriptor = DescriptorIfExists(appFolder, edition, controllerTypeName, false, spec);
+            var descriptor = Get(appFolder, edition, controllerTypeName, false, spec);
             if (descriptor != null) return l.ReturnAsOk(descriptor);
 
             l.A("path not found, will check on shared location");
-            descriptor = DescriptorIfExists(appFolder, edition, controllerTypeName, true, spec);
+            descriptor = Get(appFolder, edition, controllerTypeName, true, spec);
             if (descriptor != null) return l.ReturnAsOk(descriptor);
         }
         catch (Exception e)
@@ -119,44 +121,49 @@ internal class AppApiControllerSelectorService(
         throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.NotFound, new(), msgFinal, codeErrorSvc.Value));
     }
 
-    private HttpControllerDescriptor DescriptorIfExists(string appFolder, string edition, string controllerTypeName, bool shared, HotBuildSpec spec)
+    private (HttpControllerDescriptor, CacheItemPolicy) BuildDescriptorIfExists(string appFolder, string edition, string controllerTypeName, bool shared, HotBuildSpec spec)
     {
-        var l = Log.Fn<HttpControllerDescriptor>();
+        var l = Log.Fn<(HttpControllerDescriptor, CacheItemPolicy)>($"{nameof(appFolder)}:'{appFolder}'; {nameof(edition)}:'{edition}'; {nameof(controllerTypeName)}:'{controllerTypeName}'; {nameof(shared)}:{shared}; {spec}", timer: true);
+        var expiration = new TimeSpan(1, 0, 0);
+        var policy = new CacheItemPolicy { SlidingExpiration = expiration };
 
         // 1. Check AppCode Dll
         if (spec != null)
         {
-            var appCodeAssembly = appCodeLoader.Value.GetAppCode(spec).AssemblyResult?.Assembly;
+            var appCodeAssemblyResult = appCodeLoader.Value.GetAppCode(spec).AssemblyResult;
 
             // If assembly found, check if this controller exists in that dll - if yes, return it
-            if (appCodeAssembly != null)
+            var type = appCodeAssemblyResult?.Assembly?.FindControllerTypeByName(controllerTypeName);
+            if (type != null)
             {
-                var type = appCodeAssembly.FindControllerTypeByName(controllerTypeName);
-                if (type != null)
-                    return l.Return(new(Configuration, type.Name, type), "Api controller from AppCode");
+                policy.ChangeMonitors.Add(memoryCacheService.CreateCacheEntryChangeMonitor([appCodeAssemblyResult.CacheKey])); // cache dependency on existing cache item with AppCode assembly 
+                return l.Return((new(Configuration, type.Name, type), policy), "Api controller from AppCode");
             }
         }
 
         // 2. Normal Api, compiled on the fly
-        var controllerFolder = Path
-            .Combine(shared ? site.SharedAppsRootRelative() : site.AppsRootPhysical, appFolder, edition + "api/")
-            .ForwardSlash();
-        var controllerPath = Path.Combine(controllerFolder, $"{controllerTypeName}.cs");
+        var controllerFolder = GetControllerFolder(appFolder, edition, shared);
+        var controllerPath = GetControllerPath(appFolder, edition, shared, controllerTypeName);
         l.A($"Controller Folder: '{controllerFolder}' Path: '{controllerPath}'");
 
         // note: this may look like something you could optimize/cache the result, but that's a bad idea
         // because when the file changes, the type-object will be different, so please don't optimize :)
-        var exists = File.Exists(HostingEnvironment.MapPath(controllerPath));
-        var descriptor = exists
-            ? BuildDescriptor(controllerFolder, controllerPath, controllerTypeName, spec)
-            : null;
-        return l.Return(descriptor, $"{nameof(exists)}: {exists}");
+        var descriptor = BuildDescriptorOrThrow(controllerPath, controllerTypeName, spec);
+        policy.ChangeMonitors.Add(new HostFileChangeMonitor([HostingEnvironment.MapPath(controllerPath)])); // cache dependency on existing api file
+
+        return l.Return((descriptor, policy), $"normal Api controller from '{controllerPath}'");
     }
 
-    private HttpControllerDescriptor BuildDescriptor(string folder, string fullPath, string typeName, HotBuildSpec spec)
+    private string GetControllerFolder(string appFolder, string edition, bool shared)
+        => Path.Combine(shared ? site.SharedAppsRootRelative() : site.AppsRootPhysical, appFolder, edition + "api/").ForwardSlash();
+
+    private string GetControllerPath(string appFolder, string edition, bool shared, string controllerTypeName)
+        => Path.Combine(GetControllerFolder(appFolder, edition, shared), $"{controllerTypeName}.cs");
+
+    private HttpControllerDescriptor BuildDescriptorOrThrow(string fullPath, string typeName, HotBuildSpec spec)
     {
-        var l = Log.Fn<HttpControllerDescriptor>();
-        Assembly assembly;
+        var l = Log.Fn<HttpControllerDescriptor>($"{nameof(fullPath)}:'{fullPath}'; {nameof(typeName)}:'{typeName}'; {spec}", timer: true);
+        Assembly assembly = null;
         var codeFileInfo = analyzerLazy.Value.TypeOfVirtualPath(fullPath);
         if (codeFileInfo.AppCode)
         {
@@ -171,15 +178,24 @@ internal class AppApiControllerSelectorService(
 
         if (assembly == null) throw l.Ex(new Exception("Assembly not found or compiled to null (error)."));
 
-        // TODO: stv, implement more robust FindMainType
-        var type = assembly.GetType(typeName, true, true)
-                   ?? throw l.Ex(new Exception($"Type '{typeName}' not found in assembly. Could be a compile error or name mismatch."));
+        l.A($"FindControllerTypeByName: '{typeName}'");
+        var type = assembly.FindControllerTypeByName(typeName)
+            ?? throw l.Ex(new Exception($"Type '{typeName}' not found in assembly. Could be a compile error or name mismatch."));
 
-        // help with path resolution for compilers running inside the created controller
-        Request?.Properties.Add(CodeCompiler.SharedCodeRootPathKeyInCache, folder);
-        Request?.Properties.Add(CodeCompiler.SharedCodeRootFullPathKeyInCache, fullPath);
+        l.A($"Type found: '{type.Name}'");
 
-        var result = new HttpControllerDescriptor(Configuration, type.Name, type);
-        return l.Return(result);
+        return l.Return(new (Configuration, type.Name, type));
+    }
+
+    /// <summary>
+    /// help with path resolution for compilers running inside the created controller
+    /// </summary>
+    private void HelperWithPathResolutionForCompilersInsideController(string appFolder, string edition, string controllerTypeName, bool shared)
+    {
+        var controllerPath = GetControllerPath(appFolder, edition, shared, controllerTypeName);
+        if (!File.Exists(HostingEnvironment.MapPath(controllerPath))) return;
+
+        Request?.Properties.Add(CodeCompiler.SharedCodeRootPathKeyInCache, GetControllerFolder(appFolder, edition, shared));
+        Request?.Properties.Add(CodeCompiler.SharedCodeRootFullPathKeyInCache, controllerPath);
     }
 }
