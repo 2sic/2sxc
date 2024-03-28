@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections;
+using System.Collections.Immutable;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
@@ -110,4 +111,8 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.MyServices>
     #endregion
 
     void IAppIdentitySync.UpdateAppIdentity(IAppIdentity appIdentity) => ((IAppIdentitySync)_inner).UpdateAppIdentity(appIdentity);
+
+    //IEnumerator<IEntity> IEnumerable<IEntity>.GetEnumerator() => _inner.List.GetEnumerator();
+
+    //IEnumerator IEnumerable.GetEnumerator() => _inner.List.GetEnumerator();
 }

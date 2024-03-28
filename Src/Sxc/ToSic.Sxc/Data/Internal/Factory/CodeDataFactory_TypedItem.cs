@@ -59,8 +59,9 @@ partial class CodeDataFactory
                 return ConvertOrNullAndLog(canBeEntity.Entity, nameof(ICanBeEntity));
             case IDataSource ds:
                 return ConvertOrNullAndLog(ds.List.FirstOrDefault(), nameof(IDataSource));
-            case IDataStream ds:
-                return ConvertOrNullAndLog(ds.List.FirstOrDefault(), nameof(IDataStream));
+            // DataStream implement ICanBeEntity, so it will already return the first
+            //case IDataStream ds:
+            //    return ConvertOrNullAndLog(ds.List.FirstOrDefault(), nameof(IDataStream));
             case IEnumerable<IEntity> entList:
                 return ConvertOrNullAndLog(entList.FirstOrDefault(), nameof(IEnumerable<IEntity>));
             case IEnumerable enumerable:

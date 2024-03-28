@@ -35,7 +35,10 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
         => SysHlp.RenderPageNotSupported();
 
 
-    [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
+    /// <inheritdoc cref="ICompatibilityLevel.CompatibilityLevel"/>
+    [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();

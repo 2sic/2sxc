@@ -8,7 +8,8 @@
 public interface ICompatibilityLevel
 {
     /// <summary>
-    /// The compatibility level to use. 
+    /// The compatibility level to use.
+    /// Will affect what features Razor etc. will provide.
     /// </summary>
     int CompatibilityLevel { get; }
 }
