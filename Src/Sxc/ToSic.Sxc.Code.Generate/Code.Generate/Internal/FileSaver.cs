@@ -78,9 +78,6 @@ public class FileSaver(ISite site, IAppStates appStates, IAppPathsMicroSvc appPa
 
         var appWithEditionNormalized = new DirectoryInfo(path).FullName;
 
-        if (!Directory.Exists(appWithEditionNormalized))
-            throw new DirectoryNotFoundException(appWithEditionNormalized);
-
         return appWithEditionNormalized;
     }
 

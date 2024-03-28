@@ -269,7 +269,7 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasPropLookup
     public IEnumerable<T> Parents<T>(NoParamOrder protector = default,
         string type = default, string field = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
-        => _item.Parents<T>(protector: protector, type: type, field: field);
+        => _item.Parents<T>(protector: protector, type: type ?? typeof(T).Name, field: field);
 
     /// <inheritdoc />
     public GpsCoordinates Gps(string name, NoParamOrder protector = default, bool? required = default)

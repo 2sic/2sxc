@@ -32,5 +32,11 @@ public class HotBuildSpec(int appId, string edition, string appName)
         { nameof(Edition), EditionToLog },
     };
 
+    /// <summary>
+    /// CacheKey for this spec
+    /// </summary>
+    public string CacheKey() => _cacheKey ??= $"{nameof(HotBuildSpec)}.{nameof(AppId)}:{AppId}.{nameof(Edition)}:{Edition}";
+    private string _cacheKey;
+
     public HotBuildSpec CloneWithoutEdition() => new(AppId, null, appName);
 }

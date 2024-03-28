@@ -30,11 +30,11 @@ public class AppCodeLoader(
     /// </summary>
     /// <param name="spec"></param>
     /// <returns></returns>
-    public (Assembly Assembly, HotBuildSpec Specs) GetAppCode(HotBuildSpec spec)
+    public (AssemblyResult AssemblyResult, HotBuildSpec Specs) GetAppCode(HotBuildSpec spec)
     {
-        var l = Log.Fn<(Assembly, HotBuildSpec)>(spec.ToString());
+        var l = Log.Fn<(AssemblyResult, HotBuildSpec)>(spec.ToString());
         var firstRound = GetOrBuildAppCode(spec);
-        if (firstRound.Assembly != null)
+        if (firstRound.AssemblyResult?.Assembly != null)
             return l.Return(firstRound, $"AppCode for '{spec.EditionToLog}'.");
 
         if (spec.Edition.IsEmpty())
@@ -43,7 +43,7 @@ public class AppCodeLoader(
         // try get root edition
         var rootSpec = spec.CloneWithoutEdition();
         var root = GetOrBuildAppCode(rootSpec);
-        return l.Return(root, $"AppCode in '{root.Specs.EditionToLog}'." + (root.Assembly == null ? ", null." : ""));
+        return l.Return(root, $"AppCode in '{root.Specs.EditionToLog}'." + (root.AssemblyResult?.Assembly == null ? ", null." : ""));
     }
 
     /// <summary>
@@ -52,18 +52,18 @@ public class AppCodeLoader(
     /// </summary>
     /// <param name="spec"></param>
     /// <returns></returns>
-    public (Assembly Assembly, HotBuildSpec Specs) GetOrBuildAppCode(HotBuildSpec spec)
+    public (AssemblyResult AssemblyResult, HotBuildSpec Specs) GetOrBuildAppCode(HotBuildSpec spec)
     {
-        var l = Log.Fn<(Assembly, HotBuildSpec)>(spec.ToString());
+        var l = Log.Fn<(AssemblyResult, HotBuildSpec)>(spec.ToString());
 
         // Check cache first
-        var assembly = assemblyCacheManager.TryGetAppCode(spec).Result?.Assembly;
-        if (assembly != null)
-            return l.Return((assembly, spec), $"AppCode from cached for '{spec.EditionToLog}'.");
+        var assemblyResult = assemblyCacheManager.TryGetAppCode(spec).AssemblyResult;
+        if (assemblyResult?.Assembly != null)
+            return l.Return((assemblyResult, spec), $"AppCode from cached for '{spec.EditionToLog}'.");
 
         // Try to compile
-        assembly = TryBuildAppCodeAndLog(spec);
-        return l.Return((assembly, spec), "AppCode " + (assembly != null ? "compiled" : "not compiled") + $" for '{spec.EditionToLog}'.");
+        assemblyResult = TryBuildAppCodeAndLog(spec);
+        return l.Return((assembly: assemblyResult, spec), "AppCode " + (assemblyResult != null ? "compiled" : "not compiled") + $" for '{spec.EditionToLog}'.");
     }
 
     /// <summary>
@@ -72,20 +72,20 @@ public class AppCodeLoader(
     /// </summary>
     /// <param name="spec"></param>
     /// <returns></returns>
-    public Assembly TryBuildAppCodeAndLog(HotBuildSpec spec)
+    public AssemblyResult TryBuildAppCodeAndLog(HotBuildSpec spec)
     {
         // Add to global history and add specs
         var logSummary = logStore.Add(SxcLogAppCodeLoader, Log);
         logSummary.UpdateSpecs(spec.ToDictionary());
 
         // Initial message for insights-overview
-        var l = Log.Fn<Assembly>($"{spec}", timer: true);
+        var l = Log.Fn<AssemblyResult>($"{spec}", timer: true);
 
         var assemblyResults = TryBuildAppCode(spec, logSummary);
 
         // All OK (no errors) - return
         if (string.IsNullOrEmpty(assemblyResults?.ErrorMessages))
-            return l.ReturnAsOk(assemblyResults?.Assembly);
+            return l.ReturnAsOk(assemblyResults);
         
         // Problems - log and throw
         l.ReturnAsError(null, assemblyResults.ErrorMessages);
@@ -118,6 +118,8 @@ public class AppCodeLoader(
         l.A("Folders to watch:");
         foreach (var watcherFolder in assemblyResult.WatcherFolders)
             l.A($"- '{watcherFolder}'");
+
+        assemblyResult.CacheKey = cacheKey; // used to create cache dependency with CacheEntryChangeMonitor 
 
         // Add compiled assembly to cache
         assemblyCacheManager.Add(

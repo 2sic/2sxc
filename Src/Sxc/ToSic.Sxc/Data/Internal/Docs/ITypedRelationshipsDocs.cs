@@ -6,19 +6,18 @@ public interface ITypedRelationshipsDocs
 {
     /// <summary>
     /// A single item from a field.
-    /// If the field doesn't exist or is empty, will return null.
     /// </summary>
     /// <param name="name">Name of the field</param>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
-    /// <returns></returns>
+    /// <returns>The ITypedItem. If the field doesn't exist or is empty, will return null.</returns>
     ITypedItem Child(string name, NoParamOrder noParamOrder = default, bool? required = default);
 
     /// <summary>
     /// A **typed** list of sub-items. Important for LINQ style querying or just
     /// working with various lists. Note that for getting child items of this item you
     /// can just use the properties, like content.Authors. <br/>
-    /// But using Children("Authors", typeName) gives you the ability to restrict to a type.  <br/>
+    /// But using Children("Authors", type: typeName) gives you the ability to restrict to a type.  <br/>
     /// Please check the tutorials on 2sxc.org/dnn-tutorials/ for more info. 
     /// </summary>
     /// <param name="field">Optional field filter - would only return items that point to the current item in a specific field name.</param>

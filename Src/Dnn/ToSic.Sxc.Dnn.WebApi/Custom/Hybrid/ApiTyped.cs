@@ -160,7 +160,8 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     private TypedCode16Helper CreateCodeHelper()
     {
-        return new(helperSpecs: new(_CodeApiSvc, false, ((IGetCodePath)this).CreateInstancePath), myModelDic: null, razorModel: null);
+        // Create basic helper without any RazorModels, since that doesn't exist here
+        return new(helperSpecs: new(_CodeApiSvc, false, ((IGetCodePath)this).CreateInstancePath), getRazorModel: () => null, getModelDic: () => null);
     }
 
     /// <inheritdoc />

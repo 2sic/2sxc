@@ -1,6 +1,6 @@
 <img src="https://docs.2sxc.org/assets/logos/vcurrent/500.png" width="200px" align="right">
 
-# 2sxc 16
+# 2sxc 17 for Dnn and Oqtane
 
 ## Content Management, Dynamic Data, Dynamic Code & App Engine
 

@@ -5,22 +5,28 @@ using ToSic.Sxc.DataSources;
 namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class TypedCode16Helper(CodeHelperSpecs helperSpecs, IDictionary<string, object> myModelDic, object razorModel = default)
+public class TypedCode16Helper(CodeHelperSpecs helperSpecs, Func<object> getRazorModel, Func<IDictionary<string, object>> getModelDic)
     : CodeHelperXxBase(helperSpecs, SxcLogName + ".TCd16H")
 {
     public bool DefaultStrict = true;
 
-    public object RazorModel => razorModel;
+    // Note: we're passing in factory methods so they don't get processed unless needed
+    // Reason is that we have 2 scenarios, which can throw errors if processed in the wrong scenario
+    public object RazorModel => _razorModel.Get(getRazorModel);
+    private readonly GetOnce<object> _razorModel = new();
+
+    public IDictionary<string, object> MyModelDic => _myModelDic.Get(getModelDic);
+    private readonly GetOnce<IDictionary<string, object>> _myModelDic = new();
 
     public TModel GetModel<TModel>()
     {
         try
         {
-            return (TModel)razorModel;
+            return (TModel)RazorModel;
         }
         catch (Exception ex)
         {
-            var msg = $"Failed to cast Razor Model to '{typeof(TModel)}' from '{razorModel?.GetType().Name}' - value was '{razorModel}'";
+            var msg = $"Failed to cast Razor Model to '{typeof(TModel)}' from '{RazorModel?.GetType().Name}' - value was '{RazorModel}'";
             Log.E(msg);
             throw Log.Ex(new InvalidCastException(msg, ex));
         }
@@ -37,7 +43,7 @@ public class TypedCode16Helper(CodeHelperSpecs helperSpecs, IDictionary<string, 
     public ITypedItem MyHeader => _myHeader.Get(() => CodeRoot.Cdf.AsItem(Data.MyHeader, propsRequired: DefaultStrict));
     private readonly GetOnce<ITypedItem> _myHeader = new();
 
-    public ITypedModel MyModel => _myModel.Get(() => new TypedModel(Specs, myModelDic, Specs.IsRazor, Specs.CodeFileName));
+    public ITypedModel MyModel => _myModel.Get(() => new TypedModel(Specs, MyModelDic, Specs.IsRazor, Specs.CodeFileName));
     private readonly GetOnce<ITypedModel> _myModel = new();
 
 

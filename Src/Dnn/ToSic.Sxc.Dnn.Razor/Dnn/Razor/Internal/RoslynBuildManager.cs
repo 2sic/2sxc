@@ -92,14 +92,14 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             // Roslyn compiler need reference to location of dll, when dll is not in bin folder
             // get assembly - try to get from cache, otherwise compile
             var lTimer = Log.Fn("Timer AppCodeLoader", timer: true);
-            var (codeAssembly, specOut) = appCodeLoader.Value.GetAppCode(spec);
+            var (appCodeAssemblyResult, specOut) = appCodeLoader.Value.GetAppCode(spec);
 
             // Add the latest assembly to the .net assembly resolver (singleton)
-            assemblyResolver.AddAssembly(codeAssembly);
+            assemblyResolver.AddAssembly(appCodeAssemblyResult?.Assembly);
 
             var appCode = assemblyCacheManager.TryGetAppCode(specOut);
 
-            var appCodeAssembly = appCode.Result?.Assembly;
+            var appCodeAssembly = appCode.AssemblyResult?.Assembly;
             if (appCodeAssembly != null)
             {
                 var assemblyLocation = appCodeAssembly.Location;
@@ -134,8 +134,8 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             // TODO: must also watch for global shared code changes
             lTimer = Log.Fn("timer for ChangeMonitors", timer: true);
             var fileChangeMon = new HostFileChangeMonitor(new[] { codeFileInfo.FullPath });
-            var sharedFolderChangeMon = appCode.Result == null ? null : new FolderChangeMonitor(appCode.Result.WatcherFolders);
-            var changeMonitors = appCode.Result == null
+            var sharedFolderChangeMon = appCode.AssemblyResult == null ? null : new FolderChangeMonitor(appCode.AssemblyResult.WatcherFolders);
+            var changeMonitors = appCode.AssemblyResult == null
                 ? new ChangeMonitor[] { fileChangeMon }
                 : [fileChangeMon, sharedFolderChangeMon];
 

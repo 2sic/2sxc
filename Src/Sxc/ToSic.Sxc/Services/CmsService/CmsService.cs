@@ -39,7 +39,12 @@ internal class CmsService: ServiceForDynamicCode, ICmsService
         var cntHelper = new CmsServiceContainerHelper(_CodeApiSvc, field, container, classes, toolbar, Log);
 
         // New v17 - preprocess the tweaks if available
-        var value = field?.Raw?.ToString() ?? thing?.ToString();
+        // Note that we should use the field if one was found, only use the "thing" if there was no field
+        // Otherwise there is the risk that "Raw" is null (eg new wysiwyg field before adding text)
+        // and it would then revert to showing "ToSic.Sxc.Data.Internal.Field"
+        var value = field != null
+            ? field.Raw?.ToString()
+            : thing?.ToString();
         value = ProcessTweaks(tweak, value, l);
 
         // If it's not a field, we cannot find out more about the object

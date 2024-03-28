@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.IO;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
@@ -17,7 +18,7 @@ internal class AppApiFileSystemWatcher : IDisposable, IHasLog
 {
     private readonly FileSystemWatcher _watcher;
 
-    public readonly ConcurrentDictionary<string, bool> CompiledAppApiControllers = new(StringComparer.InvariantCultureIgnoreCase);
+    public static readonly ConcurrentDictionary<string, AppApiCacheItem> CompiledAppApiControllers = new(StringComparer.InvariantCultureIgnoreCase);
 
     public AppApiFileSystemWatcher(IHostEnvironment hostingEnvironment, ILogStore logStore)
     {
@@ -69,11 +70,32 @@ internal class AppApiFileSystemWatcher : IDisposable, IHasLog
 
     private void OnChanged(object source, FileSystemEventArgs e)
     {
-        Log.A($"Change type: {e.ChangeType}, file: {e.FullPath}, update: {CompiledAppApiControllers.TryUpdate(e.FullPath, true, false)}.");
+        var appApiCacheItem = FlagForRemove(e.FullPath) ?? CheckAppCode(e.FullPath);
+        Log.A($"Change type: {e.ChangeType}, file: {e.FullPath}, flag for remove: {appApiCacheItem.FlagForRemove}.");
     }
 
     private void OnRenamed(object source, RenamedEventArgs e)
     {
-        Log.A($"Renamed: {e.OldFullPath} to {e.FullPath}, update: {CompiledAppApiControllers.TryUpdate(e.OldFullPath, true, false)}.");
+        var appApiCacheItem = FlagForRemove(e.OldFullPath) ?? CheckAppCode(e.OldFullPath);
+        Log.A($"Renamed: {e.OldFullPath} to {e.FullPath}, flag for remove: {appApiCacheItem.FlagForRemove}.");
+    }
+
+    private AppApiCacheItem FlagForRemove(string path)
+    {
+        if (!CompiledAppApiControllers.TryGetValue(path, out var appApiCacheItem)) return null;
+        if (!appApiCacheItem.FlagForRemove) appApiCacheItem.FlagForRemove = true;
+        return appApiCacheItem;
+    }
+
+    private AppApiCacheItem CheckAppCode(string path)
+    {
+        if (!path.Contains(AppCodeLoader.AppCodeBase, StringComparison.InvariantCultureIgnoreCase)) return null;
+        AppApiCacheItem appApiCacheItem = null;
+        foreach (var controller in CompiledAppApiControllers)
+        {
+            if (!controller.Value.IsAppCode || !path.StartsWith(controller.Value.AppCodePath, StringComparison.InvariantCultureIgnoreCase)) continue;
+            appApiCacheItem = FlagForRemove(controller.Key);
+        }
+        return appApiCacheItem;
     }
 }

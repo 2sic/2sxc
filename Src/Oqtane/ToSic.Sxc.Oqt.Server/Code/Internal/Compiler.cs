@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
         {
             var l = Log.Fn<AssemblyResult>($"Starting compilation of: '{sourceFile}'; {nameof(dllName)}: '{dllName}'; {spec}'.");
 
-            var (codeAssembly, _) = _appCodeLoader.Value.GetAppCode(spec);
+            var (assemblyResult, _) = _appCodeLoader.Value.GetAppCode(spec);
 
             var encoding = Encoding.UTF8;
 
@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
             var compilation = CSharpCompilation.Create(
                 $"{assemblyName}.dll",
                 syntaxTrees,
-                references: _referenceManager.GetMetadataReferences(codeAssembly?.Location, spec),
+                references: _referenceManager.GetMetadataReferences(assemblyResult?.Assembly?.Location, spec),
                 options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
                     optimizationLevel: OptimizationLevel.Debug,
                     assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default));

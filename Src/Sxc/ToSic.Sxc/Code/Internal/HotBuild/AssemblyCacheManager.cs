@@ -12,7 +12,7 @@ public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : Servi
 
     
     #region Static Calls for AppCode - to use before requiring DI
-    public (AssemblyResult Result, string cacheKey) TryGetAppCode(HotBuildSpec spec)
+    public (AssemblyResult AssemblyResult, string cacheKey) TryGetAppCode(HotBuildSpec spec)
     {
         var cacheKey = KeyAppCode(spec);
         return (Get(cacheKey), cacheKey);

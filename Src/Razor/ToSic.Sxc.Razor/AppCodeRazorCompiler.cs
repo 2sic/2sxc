@@ -161,16 +161,16 @@ internal class AppCodeRazorCompiler : ServiceBase, IAppCodeRazorCompiler
         var l = Log.Fn<ViewEngineResult>($"{nameof(templatePath)}:{templatePath}; {nameof(app.RelativePath)}:{app.RelativePath}; {spec}", timer: true);
 
         // get assembly - try to get from cache, otherwise compile
-        var (codeAssembly, _) = _appCodeLoader.Value.GetAppCode(spec);
-        l.A($"has AppCode assembly: {codeAssembly != null}");
+        var (assemblyResult, _) = _appCodeLoader.Value.GetAppCode(spec);
+        l.A($"has AppCode assembly: {assemblyResult != null}");
 
-        if (codeAssembly != null)
+        if (assemblyResult?.Assembly != null)
         {
             var appRelativePathWithEdition = spec.Edition.HasValue() ? Path.Combine(app.RelativePath, spec.Edition) : app.RelativePath;
             l.A($"{nameof(appRelativePathWithEdition)}: {appRelativePathWithEdition}");
 
             // add assembly to resolver, so it will be provided to the compiler when used in cshtml
-            _assemblyResolver.AddAssembly(codeAssembly, appRelativePathWithEdition);
+            _assemblyResolver.AddAssembly(assemblyResult.Assembly, appRelativePathWithEdition);
         }
 
         // setup RazorProjectEngine
@@ -199,7 +199,7 @@ internal class AppCodeRazorCompiler : ServiceBase, IAppCodeRazorCompiler
         lParse.Done();
 
         var lRefs = Log.Fn("prepare metadata references", timer: true);
-        var refs = _referenceManager.GetMetadataReferences(codeAssembly?.Location, spec);
+        var refs = _referenceManager.GetMetadataReferences(assemblyResult?.Assembly?.Location, spec);
         lRefs.Done();
 
         var compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
