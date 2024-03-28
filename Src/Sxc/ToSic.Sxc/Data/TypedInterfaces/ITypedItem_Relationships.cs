@@ -66,7 +66,7 @@ partial interface ITypedItem
     /// <returns>_either_ the current parent _or_ the first parent returned by the same `.Parents(...)` call.</returns>
     /// <returns></returns>
     /// <remarks>
-    /// New v17.05.01
+    /// New v17.06
     /// </remarks>
     public T Parent<T>(NoParamOrder protector = default, bool? current = default, string type = default,
         string field = default)
@@ -86,7 +86,7 @@ partial interface ITypedItem
     /// <remarks>Note that the parameter-order is reversed to the Children()</remarks>
     /// <returns></returns>
     /// <remarks>
-    /// New v17.05.01
+    /// New v17.06
     /// </remarks>
     public IEnumerable<T> Parents<T>(NoParamOrder protector = default,
         string type = default, string field = default)
