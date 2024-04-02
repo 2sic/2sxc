@@ -92,6 +92,8 @@ public class AppCodeLoader(
         throw new(assemblyResults.ErrorMessages);
     }
 
+    private static readonly object LockObject = new();
+
     private AssemblyResult TryBuildAppCode(HotBuildSpec spec, LogStoreEntry logSummary)
     {
         var l = Log.Fn<AssemblyResult>($"{spec}");
@@ -102,33 +104,46 @@ public class AppCodeLoader(
         if (result != null)
             return l.ReturnAsOk(result);
 
-        // Get paths
-        var (physicalPath, relativePath) = GetAppPaths(AppCodeBase, spec);
-        logSummary.AddSpec("PhysicalPath", physicalPath);
-        logSummary.AddSpec("RelativePath", relativePath);
- 
-        var assemblyResult = appCompilerLazy.Value.GetAppCode(relativePath, spec);
+        lock (LockObject)
+        {
+            // Double check if another thread already built the app code
+            (result, cacheKey) = assemblyCacheManager.TryGetAppCode(spec);
+            if (result != null)
+                return l.ReturnAsOk(result);
 
-        logSummary.UpdateSpecs(assemblyResult.Infos);
+            // Get paths
+            var (physicalPath, relativePath) = GetAppPaths(AppCodeBase, spec);
+            logSummary.AddSpec("PhysicalPath", physicalPath);
+            logSummary.AddSpec("RelativePath", relativePath);
 
-        if (assemblyResult.ErrorMessages.HasValue())
-            return l.ReturnAsError(assemblyResult, assemblyResult.ErrorMessages);
+            var assemblyResult = appCompilerLazy.Value.GetAppCode(relativePath, spec);
 
-        assemblyResult.WatcherFolders = GetWatcherFolders(assemblyResult, spec, physicalPath, Log);
-        l.A("Folders to watch:");
-        foreach (var watcherFolder in assemblyResult.WatcherFolders)
-            l.A($"- '{watcherFolder}'");
+            logSummary.UpdateSpecs(assemblyResult.Infos);
 
-        assemblyResult.CacheKey = cacheKey; // used to create cache dependency with CacheEntryChangeMonitor 
+            if (assemblyResult.ErrorMessages.HasValue())
+                return l.ReturnAsError(assemblyResult, assemblyResult.ErrorMessages);
 
-        // Add compiled assembly to cache
-        assemblyCacheManager.Add(
-            cacheKey,
-            assemblyResult,
-            changeMonitor: new ChangeMonitor[] { new FolderChangeMonitor(assemblyResult.WatcherFolders) }
-        );
+            assemblyResult.WatcherFolders = GetWatcherFolders(assemblyResult, spec, physicalPath, Log);
+            l.A("Folders to watch:");
+            foreach (var watcherFolder in assemblyResult.WatcherFolders)
+                l.A($"- '{watcherFolder}'");
 
-        return l.ReturnAsOk(assemblyResult);
+            assemblyResult.CacheKey = cacheKey; // used to create cache dependency with CacheEntryChangeMonitor 
+
+            // Triple check if another thread already built the app code
+            (result, cacheKey) = assemblyCacheManager.TryGetAppCode(spec);
+            if (result != null)
+                return l.ReturnAsOk(result);
+
+            // Add compiled assembly to cache
+            assemblyCacheManager.Add(
+                cacheKey,
+                assemblyResult,
+                changeMonitor: new ChangeMonitor[] { new FolderChangeMonitor(assemblyResult.WatcherFolders) }
+            );
+
+            return l.ReturnAsOk(assemblyResult);
+        }
     }
 
     private static IDictionary<string, bool> GetWatcherFolders(AssemblyResult assemblyResult, HotBuildSpec spec, string physicalPathAppCode, ILog log)
