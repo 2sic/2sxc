@@ -52,7 +52,7 @@ internal class OutputCacheManager(MemoryCacheService memoryCacheService, Lazy<IE
                     action: () => policy.ChangeMonitors.Add(new FolderChangeMonitor(appPaths))
                 );
 
-            policy.UpdateCallback = _ => LightSpeedStats.RemoveStatic(appId, size);
+            policy.UpdateCallback = updateCallback; //  _ => LightSpeedStats.RemoveStatic(appId, size);
 
             l.Do(message: $"cache set cacheKey:{cacheKey}", timer: true,
                 action: () => memoryCacheService.Set(new(cacheKey, data), policy)

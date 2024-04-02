@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Runtime.Caching;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Internal;
@@ -107,7 +108,7 @@ internal class LightSpeed(
                 appPathsToMonitor,
                 appId,
                 size,
-                _ => LightSpeedStats.RemoveStatic(appId, size)
+                LightSpeedStats.CreateNonCapturingRemoveCall(appId, size)
             )
         );
 
