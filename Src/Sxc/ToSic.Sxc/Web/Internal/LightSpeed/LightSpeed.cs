@@ -17,11 +17,14 @@ using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class LightSpeed(IEavFeaturesService features, LazySvc<IAppStates> appStatesLazy, LazySvc<IAppPathsMicroSvc> appPathsLazy, LightSpeedStats lightSpeedStats, LazySvc<ICmsContext> cmsContext, LazySvc<OutputCacheManager> outputCacheManager) 
-    : ServiceBase(SxcLogName + ".Lights", connect: [features, appStatesLazy, appPathsLazy, lightSpeedStats, cmsContext, outputCacheManager]), IOutputCache
+internal class LightSpeed(
+    IEavFeaturesService features,
+    LazySvc<IAppStates> appStatesLazy,
+    LazySvc<IAppPathsMicroSvc> appPathsLazy,
+    LazySvc<ICmsContext> cmsContext,
+    LazySvc<OutputCacheManager> outputCacheManager
+) : ServiceBase(SxcLogName + ".Lights", connect: [features, appStatesLazy, appPathsLazy, cmsContext, outputCacheManager]), IOutputCache
 {
-    public LightSpeedStats LightSpeedStats => lightSpeedStats;
-
     public IOutputCache Init(int moduleId, int pageId, IBlock block)
     {
         var wrapLog = Log.Fn<IOutputCache>($"mod: {moduleId}");
@@ -34,9 +37,15 @@ internal class LightSpeed(IEavFeaturesService features, LazySvc<IAppStates> appS
     private int _pageId;
     private IBlock _block;
     private IAppStateInternal AppState => _block?.Context?.AppState;
-    private IAppStates AppStates => appStatesLazy.Value;
 
-    public bool Save(IRenderResult data)
+    public bool Save(IRenderResult data) => AddToLightSpeed(data);
+
+#if NETFRAMEWORK
+    public bool Save(IRenderResult data, bool enforcePre1025)
+        => AddToLightSpeed(data, cacheData => cacheData.EnforcePre1025 = enforcePre1025);
+#endif
+
+    public bool AddToLightSpeed(IRenderResult data, Action<OutputCacheItem> doOtherStuff = null)
     {
         var l = Log.Fn<bool>(timer: true);
         if (!IsEnabled) return l.ReturnFalse("disabled");
@@ -48,22 +57,30 @@ internal class LightSpeed(IEavFeaturesService features, LazySvc<IAppStates> appS
 
         // get dependent appStates
         List<IAppStateCache> dependentAppsStates = null;
-        l.Do(message: "dependentAppsStates", timer: true, 
-            action: () => dependentAppsStates = data.DependentApps.Select(da => AppStates.GetCacheState(da.AppId)).ToList());
+        l.Do(message: "dependentAppsStates", timer: true,
+            action: () => dependentAppsStates = data.DependentApps
+                .Select(da => appStatesLazy.Value.GetCacheState(da.AppId))
+                .ToList()
+        );
 
         // when dependent apps have disabled caching, parent app should not cache also 
-        if (!IsEnabledOnDependentApps(dependentAppsStates)) return l.ReturnFalse("disabled in dependent app");
+        if (!IsEnabledOnDependentApps(dependentAppsStates))
+            return l.ReturnFalse("disabled in dependent app");
 
         // respect primary app (of site) as dependent app to ensure cache invalidation when primary app is changed
         var appState = AppState;
-        if (appState == null) return l.ReturnFalse("no app");
+        if (appState == null)
+            return l.ReturnFalse("no app");
 
         if (appState.ZoneId >= 0)
             l.Do(message: "dependentAppsStates add", timer: true,
-                action: () => dependentAppsStates.Add(AppStates.GetPrimaryReader(appState.ZoneId, Log).StateCache));
+                action: () => dependentAppsStates.Add(appStatesLazy.Value.GetPrimaryReader(appState.ZoneId, Log).StateCache));
 
         l.A($"Found {data.DependentApps.Count} apps: " + string.Join(",", data.DependentApps.Select(da => da.AppId)));
-        Fresh.Data = data;
+
+        var cacheItem = new OutputCacheItem(data);
+        doOtherStuff?.Invoke(cacheItem);
+
         var duration = Duration;
         // only add if we really have a duration; -1 is disabled, 0 is not set...
         if (duration <= 0)
@@ -75,16 +92,31 @@ internal class LightSpeed(IEavFeaturesService features, LazySvc<IAppStates> appS
                 ? _appPaths.Get(() => AppPaths(dependentAppsStates))
                 : null);
 
+        // copy the value into a separate variable so the cache doesn't capture the AppState separately
+        var appId = appState.AppId;
+        var size = data.Size;
+
+        // add to cache and log
         string cacheKey = null;
-        l.Do(message: "outputCacheManager add", timer: true, action: () =>
-            cacheKey = OutCacheMan.Add(CacheKey, Fresh, duration, features, dependentAppsStates.Cast<IAppStateChanges>().ToList(), appPathsToMonitor,
-                _ => LightSpeedStats.Remove(appState.AppId, data.Size)));
+        l.Do(message: "outputCacheManager add", timer: true,
+            action: () => cacheKey = OutCacheMan.Add(
+                CacheKey,
+                cacheItem,
+                duration,
+                dependentAppsStates.Cast<IAppStateChanges>().ToList(),
+                appPathsToMonitor,
+                appId,
+                size,
+                _ => LightSpeedStats.RemoveStatic(appId, size)
+            )
+        );
 
         l.A($"LightSpeed Cache Key: {cacheKey}");
 
         if (cacheKey != "error")
             l.Do(message: "LightSpeedStats", timer: true,
-                action: () => LightSpeedStats.Add(appState.AppId, data.Size));
+                action: () => LightSpeedStats.AddStatic(appId, size)
+            );
 
         return l.ReturnTrue($"added for {duration}s");
     }
@@ -151,7 +183,7 @@ internal class LightSpeed(IEavFeaturesService features, LazySvc<IAppStates> appS
     private readonly GetOnce<string> _currentCulture = new();
 
 
-    private string CacheKey => _key.Get(() => Log.Func(() => OutCacheMan.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, Suffix, CurrentCulture)));
+    private string CacheKey => _key.Get(() => Log.Func(() => OutputCacheManager.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, Suffix, CurrentCulture)));
     private readonly GetOnce<string> _key = new();
 
     private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? (int?)null : _block.Context.User.Id);
@@ -186,9 +218,6 @@ internal class LightSpeed(IEavFeaturesService features, LazySvc<IAppStates> appS
             return l.ReturnNull("error");
         }
     }
-
-    public OutputCacheItem Fresh => _fresh ??= new();
-    private OutputCacheItem _fresh;
 
 
     public bool IsEnabled => _enabled.Get(IsEnabledGenerator);

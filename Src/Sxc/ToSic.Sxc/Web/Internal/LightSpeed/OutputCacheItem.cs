@@ -3,9 +3,9 @@
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class OutputCacheItem
+public class OutputCacheItem(IRenderResult data)
 {
-    public IRenderResult Data;
+    public IRenderResult Data => data;
 
 #if NETFRAMEWORK
     /// <summary>

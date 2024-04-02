@@ -161,6 +161,7 @@ public static class StartupWebApi
     {
         services.AddTransient<IInsightsProvider, InsightsAppCodeOverview>();
         services.AddTransient<IInsightsProvider, InsightsAppCodeBuild>();
+        services.AddTransient<IInsightsProvider, InsightsLightSpeed>();
         return services;
     }
 
