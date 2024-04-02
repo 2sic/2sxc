@@ -148,8 +148,12 @@ internal partial class AppApiControllerSelectorService(
 
         // note: this may look like something you could optimize/cache the result, but that's a bad idea
         // because when the file changes, the type-object will be different, so please don't optimize :)
-        var descriptor = BuildDescriptorOrThrow(controllerPath, controllerTypeName, spec);
-        policy.ChangeMonitors.Add(new HostFileChangeMonitor([HostingEnvironment.MapPath(controllerPath)])); // cache dependency on existing api file
+        var (descriptor, cacheKey) = BuildDescriptorOrThrow(controllerPath, controllerTypeName, spec);
+        
+        if (!string.IsNullOrEmpty(cacheKey)) 
+            policy.ChangeMonitors.Add(memoryCacheService.CreateCacheEntryChangeMonitor([cacheKey])); // cache dependency on existing cache item;
+        else
+            policy.ChangeMonitors.Add(new HostFileChangeMonitor([HostingEnvironment.MapPath(controllerPath)])); // cache dependency on existing api file
 
         return l.Return((descriptor, policy), $"normal Api controller from '{controllerPath}'");
     }
@@ -160,15 +164,18 @@ internal partial class AppApiControllerSelectorService(
     private string GetControllerPath(string appFolder, string edition, bool shared, string controllerTypeName)
         => Path.Combine(GetControllerFolder(appFolder, edition, shared), $"{controllerTypeName}.cs");
 
-    private HttpControllerDescriptor BuildDescriptorOrThrow(string fullPath, string typeName, HotBuildSpec spec)
+    private (HttpControllerDescriptor HttpControllerDescriptor, string CacheKey) BuildDescriptorOrThrow(string fullPath, string typeName, HotBuildSpec spec)
     {
-        var l = Log.Fn<HttpControllerDescriptor>($"{nameof(fullPath)}:'{fullPath}'; {nameof(typeName)}:'{typeName}'; {spec}", timer: true);
+        var l = Log.Fn<(HttpControllerDescriptor, string)>($"{nameof(fullPath)}:'{fullPath}'; {nameof(typeName)}:'{typeName}'; {spec}", timer: true);
+        AssemblyResult result = null;
         Assembly assembly = null;
         var codeFileInfo = analyzerLazy.Value.TypeOfVirtualPath(fullPath);
         if (codeFileInfo.AppCode)
         {
             l.A("AppCode - use Roslyn");
-            assembly = roslynLazy.Value.GetCompiledAssembly(codeFileInfo, typeName, spec)?.Assembly;
+            result = roslynLazy.Value.GetCompiledAssembly(codeFileInfo, typeName, spec);
+            assembly = result?.Assembly;
+            l.A($"CacheKey: '{result?.CacheKey}'");
         }
         else
         {
@@ -183,8 +190,7 @@ internal partial class AppApiControllerSelectorService(
             ?? throw l.Ex(new Exception($"Type '{typeName}' not found in assembly. Could be a compile error or name mismatch."));
 
         l.A($"Type found: '{type.Name}'");
-
-        return l.Return(new (Configuration, type.Name, type));
+        return l.Return((new (Configuration, type.Name, type), result?.CacheKey));
     }
 
     /// <summary>

@@ -1,4 +1,5 @@
-﻿using System.CodeDom.Compiler;
+﻿using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
+using System.CodeDom.Compiler;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Caching;
@@ -6,9 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Razor;
 using System.Web.Razor.Generator;
-using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using ToSic.Eav.Caching;
-using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
@@ -95,9 +94,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             // Add the latest assembly to the .net assembly resolver (singleton)
             assemblyResolver.AddAssembly(appCodeAssemblyResult?.Assembly);
 
-            var appCode = assemblyCacheManager.TryGetAppCode(specOut);
-
-            var appCodeAssembly = appCode.AssemblyResult?.Assembly;
+            var appCodeAssembly = appCodeAssemblyResult?.Assembly;
             if (appCodeAssembly != null)
             {
                 var assemblyLocation = appCodeAssembly.Location;
@@ -132,19 +129,19 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             // TODO: must also watch for global shared code changes
             lTimer = Log.Fn("timer for ChangeMonitors", timer: true);
             var fileChangeMon = new HostFileChangeMonitor(new[] { codeFileInfo.FullPath });
-            var sharedFolderChangeMon = appCode.AssemblyResult == null ? null : new FolderChangeMonitor(appCode.AssemblyResult.WatcherFolders);
-            var changeMonitors = appCode.AssemblyResult == null
+            var changeMonitors = appCodeAssembly == null
                 ? new ChangeMonitor[] { fileChangeMon }
-                : [fileChangeMon, sharedFolderChangeMon];
+                : [fileChangeMon, memoryCacheService.CreateCacheEntryChangeMonitor([appCodeAssemblyResult.CacheKey])];
 
             // directly attach a type to the cache
             var mainType = FindMainType(generatedAssembly, className, isCshtml);
             l.A($"Main type: {mainType}");
 
             var assemblyResult = new AssemblyResult(generatedAssembly, safeClassName: className, mainType: mainType);
+            assemblyResult.CacheKey = AssemblyCacheManager.KeyTemplate(codeFileInfo.FullPath);
 
             assemblyCacheManager.Add(
-                cacheKey: AssemblyCacheManager.KeyTemplate(codeFileInfo.FullPath),
+                cacheKey: assemblyResult.CacheKey,
                 data: assemblyResult,
                 slidingDuration: 3600,
                 changeMonitor: changeMonitors,
