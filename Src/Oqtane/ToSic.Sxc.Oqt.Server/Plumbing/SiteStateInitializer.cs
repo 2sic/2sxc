@@ -4,6 +4,7 @@ using Oqtane.Repository;
 using Oqtane.Shared;
 using System;
 using System.Linq;
+using Oqtane.Infrastructure;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Oqt.Shared;
@@ -11,18 +12,23 @@ using ToSic.Sxc.Oqt.Shared;
 namespace ToSic.Sxc.Oqt.Server.Plumbing;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class SiteStateInitializer(
-    LazySvc<SiteState> siteStateLazy,
-    LazySvc<Oqtane.Infrastructure.SiteState> siteState2Lazy,
-    IHttpContextAccessor httpContextAccessor,
-    LazySvc<IAliasRepository> aliasRepositoryLazy)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.SSInit",
-        connect: [siteStateLazy, siteState2Lazy, httpContextAccessor, aliasRepositoryLazy])
+public class SiteStateInitializer: ServiceBase
 {
-    public LazySvc<SiteState> SiteStateLazy { get; } = siteStateLazy;
-    public LazySvc<Oqtane.Infrastructure.SiteState> SiteState2Lazy { get; } = siteState2Lazy;
-    public IHttpContextAccessor HttpContextAccessor { get; } = httpContextAccessor;
-    public LazySvc<IAliasRepository> AliasRepositoryLazy { get; } = aliasRepositoryLazy;
+    public LazySvc<SiteState> SiteStateLazy { get; }
+    public LazySvc<AliasAccessor> SiteState2Lazy { get; }
+    public IHttpContextAccessor HttpContextAccessor { get; }
+    public LazySvc<IAliasRepository> AliasRepositoryLazy { get; }
+
+    public SiteStateInitializer(LazySvc<SiteState> siteStateLazy, LazySvc<AliasAccessor> siteState2Lazy, IHttpContextAccessor httpContextAccessor,
+        LazySvc<IAliasRepository> aliasRepositoryLazy): base($"{OqtConstants.OqtLogPrefix}.SSInit")
+    {
+        ConnectServices(
+            SiteStateLazy = siteStateLazy,
+            SiteState2Lazy = siteState2Lazy,
+            HttpContextAccessor = httpContextAccessor,
+            AliasRepositoryLazy = aliasRepositoryLazy
+        );
+    }
 
     /// <summary>
     /// Use this from inner code, which must always have an initialized state.
@@ -65,7 +71,7 @@ public class SiteStateInitializer(
         if ((HttpContextAccessor?.HttpContext?.Items.TryGetValue("AliasFor2sxc", out var alias2sxc) ?? false) && alias2sxc != null)
         {
             siteState.Alias ??= (Alias)alias2sxc;
-            siteState2.Alias ??= (Alias)alias2sxc;
+            //siteState2.Alias ??= (Alias)alias2sxc;  @STV check this <=======
             return false;
         }
 
@@ -73,7 +79,7 @@ public class SiteStateInitializer(
         if ((HttpContextAccessor?.HttpContext?.Items.TryGetValue(Oqtane.Shared.Constants.HttpContextAliasKey, out var alias) ?? false) && alias != null)
         {
             siteState.Alias ??= (Alias)alias;
-            siteState2.Alias ??= (Alias)alias;
+            //siteState2.Alias ??= (Alias)alias; @STV check this <=======
             return false;
         }
 
@@ -103,7 +109,7 @@ public class SiteStateInitializer(
                 .FirstOrDefault(a => url.StartsWith(a.Name, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        siteState2.Alias ??= siteState.Alias;
+        //siteState2.Alias ??= siteState.Alias;  @STV check this <=======
 
         return siteState.Alias != null;
     }

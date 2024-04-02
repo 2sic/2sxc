@@ -41,7 +41,7 @@
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" /><!-- from Oqtane.Shared.csproj -->
     <PackageReference Include="Microsoft.AspNetCore.Components" Version="8.0.3" />
-    <!--<PackageReference Include="Oqtane.Shared" Version="4.0.0" />-->
+    <PackageReference Include="Oqtane.Shared" Version="5.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,7 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Shared\Oqtane.Shared.csproj" />
+    <!--<ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Shared\Oqtane.Shared.csproj" />-->
   </ItemGroup>
 
 </Project>
