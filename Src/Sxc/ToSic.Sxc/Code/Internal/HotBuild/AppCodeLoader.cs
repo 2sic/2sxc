@@ -112,11 +112,7 @@ public class AppCodeLoader(
             // Double check if another thread already built the app code
             (result, cacheKey) = assemblyCacheManager.TryGetAppCode(spec);
             if (result != null)
-            {
-                // Clean up if no longer needed
-                CacheKeyLocks.TryRemove(cacheKey, out _);
                 return l.ReturnAsOk(result);
-            }
 
             // Get paths
             var (physicalPath, relativePath) = GetAppPaths(AppCodeBase, spec);
@@ -128,11 +124,7 @@ public class AppCodeLoader(
             logSummary.UpdateSpecs(assemblyResult.Infos);
 
             if (assemblyResult.ErrorMessages.HasValue())
-            {
-                // Clean up if no longer needed
-                CacheKeyLocks.TryRemove(cacheKey, out _);
                 return l.ReturnAsError(assemblyResult, assemblyResult.ErrorMessages);
-            }
 
             assemblyResult.WatcherFolders = GetWatcherFolders(assemblyResult, spec, physicalPath, Log);
             l.A("Folders to watch:");
@@ -144,21 +136,15 @@ public class AppCodeLoader(
             // Triple check if another thread already built the app code
             (result, cacheKey) = assemblyCacheManager.TryGetAppCode(spec);
             if (result != null)
-            {
-                // Clean up if no longer needed
-                CacheKeyLocks.TryRemove(cacheKey, out _);
                 return l.ReturnAsOk(result);
-            }
 
             // Add compiled assembly to cache
             assemblyCacheManager.Add(
                 cacheKey,
                 assemblyResult,
+                duration: 86400, // 1 day
                 changeMonitor: new ChangeMonitor[] { new FolderChangeMonitor(assemblyResult.WatcherFolders) }
             );
-
-            // Clean up if no longer needed
-            CacheKeyLocks.TryRemove(cacheKey, out _);
 
             return l.ReturnAsOk(assemblyResult);
         }

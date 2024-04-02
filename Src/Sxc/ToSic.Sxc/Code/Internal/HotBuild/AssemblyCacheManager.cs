@@ -39,7 +39,7 @@ public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : Servi
 
     #endregion
 
-    public string Add(string cacheKey, object data, int duration = 86400 /* 24h */, IList<ChangeMonitor> changeMonitor = null, CacheEntryUpdateCallback updateCallback = null)
+    public string Add(string cacheKey, object data, int duration = 3600, IList<ChangeMonitor> changeMonitor = null, CacheEntryUpdateCallback updateCallback = null)
     {
         var l = Log.Fn<string>($"{nameof(cacheKey)}: {cacheKey}; {nameof(duration)}: {duration}", timer: true);
 
