@@ -14,19 +14,19 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class SiteStateInitializer: ServiceBase
 {
-    public LazySvc<SiteState> SiteStateLazy { get; }
-    public LazySvc<AliasAccessor> SiteState2Lazy { get; }
-    public IHttpContextAccessor HttpContextAccessor { get; }
-    public LazySvc<IAliasRepository> AliasRepositoryLazy { get; }
+    private readonly LazySvc<SiteState> _siteStateLazy;
+    private readonly LazySvc<AliasAccessor> _aliasAccessorLazy;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly LazySvc<IAliasRepository> _aliasRepositoryLazy;
 
-    public SiteStateInitializer(LazySvc<SiteState> siteStateLazy, LazySvc<AliasAccessor> siteState2Lazy, IHttpContextAccessor httpContextAccessor,
+    public SiteStateInitializer(LazySvc<SiteState> siteStateLazy, LazySvc<AliasAccessor> aliasAccessorLazy, IHttpContextAccessor httpContextAccessor,
         LazySvc<IAliasRepository> aliasRepositoryLazy): base($"{OqtConstants.OqtLogPrefix}.SSInit")
     {
         ConnectServices(
-            SiteStateLazy = siteStateLazy,
-            SiteState2Lazy = siteState2Lazy,
-            HttpContextAccessor = httpContextAccessor,
-            AliasRepositoryLazy = aliasRepositoryLazy
+            _siteStateLazy = siteStateLazy,
+            _aliasAccessorLazy = aliasAccessorLazy,
+            _httpContextAccessor = httpContextAccessor,
+            _aliasRepositoryLazy = aliasRepositoryLazy
         );
     }
 
@@ -38,9 +38,9 @@ public class SiteStateInitializer: ServiceBase
     {
         get
         {
-            if (SiteStateLazy.Value?.Alias != null && SiteState2Lazy.Value?.Alias != null) return SiteStateLazy.Value;
+            if (_siteStateLazy.Value?.Alias != null && _aliasAccessorLazy.Value?.Alias != null) return _siteStateLazy.Value;
             InitIfEmpty();
-            return SiteStateLazy.Value;
+            return _siteStateLazy.Value;
         }
     }
 
@@ -50,45 +50,47 @@ public class SiteStateInitializer: ServiceBase
     /// <returns></returns>
     internal bool InitIfEmpty(int? siteId = null)
     {
-        var siteState = SiteStateLazy.Value;
-        var siteState2 = SiteState2Lazy.Value; // In Oqtane 3.1 SiteState is preserved in 2 places.
+        var siteState = _siteStateLazy.Value;
+        var aliasAccessor = _aliasAccessorLazy.Value; // In Oqtane 5.1 Alias is preserved in 2 places.
 
         // This would indicate it was called improperly, because we need the shared SiteState variable to work properly
         if (siteState == null) throw new ArgumentNullException(nameof(siteState));
 
-        // This would indicate it was called improperly, because we need the shared SiteState variable to work properly
-        if (siteState2 == null) throw new ArgumentNullException(nameof(siteState2));
+        // This would indicate it was called improperly, because we need the shared AliasAccessor variable to work properly
+        if (aliasAccessor == null) throw new ArgumentNullException(nameof(aliasAccessor));
 
         // Check if alias already set and if is for provided siteId (if provided), in which case we skip this
-        if (siteState.Alias != null && siteState2.Alias != null
-                                    && (!siteId.HasValue || siteId.Value == siteState?.Alias?.SiteId || siteId.Value == siteState2?.Alias?.SiteId)) return true;
+        if (siteState.Alias != null && aliasAccessor.Alias != null
+                                    && (!siteId.HasValue || siteId.Value == siteState?.Alias?.SiteId || siteId.Value == aliasAccessor?.Alias?.SiteId)) return true;
 
         // For anything else we need the httpContext, otherwise skip
-        var request = HttpContextAccessor?.HttpContext?.Request;
-        if (request == null) return false;
-
-        // Try HACK
-        if ((HttpContextAccessor?.HttpContext?.Items.TryGetValue("AliasFor2sxc", out var alias2sxc) ?? false) && alias2sxc != null)
-        {
-            siteState.Alias ??= (Alias)alias2sxc;
-            //siteState2.Alias ??= (Alias)alias2sxc;  @STV check this <=======
-            return false;
-        }
-
+        var context = _httpContextAccessor?.HttpContext;
+        
         // Oqtane cache on request
-        if ((HttpContextAccessor?.HttpContext?.Items.TryGetValue(Oqtane.Shared.Constants.HttpContextAliasKey, out var alias) ?? false) && alias != null)
+        var items = context?.Items;
+        if ((items?.TryGetValue(Constants.HttpContextAliasKey, out var alias) ?? false) && alias != null)
         {
             siteState.Alias ??= (Alias)alias;
-            //siteState2.Alias ??= (Alias)alias; @STV check this <=======
             return false;
         }
 
-        // Try get alias with info for HttpRequest and eventual SiteId.
-        if (siteId.HasValue || (request.Path.HasValue && request.Path.Value != null && request.Path.Value.Contains("/_blazor")))
+        // Try HACK
+        if ((items?.TryGetValue("AliasFor2sxc", out var alias2Sxc) ?? false) && alias2Sxc != null)
+        {
+            siteState.Alias ??= (Alias)alias2Sxc;
+            UpdateAliasAccessor((Alias)alias2Sxc);
+            return false;
+        }
+
+        var request = context?.Request;
+        if (request == null) return false;
+
+        // Try to get alias with info for HttpRequest and eventual SiteId.
+        if (siteId.HasValue || (request.Path is { HasValue: true, Value: not null } && request.Path.Value.Contains("/_blazor")))
         {
             var url = $"{request.Host}";
 
-            var aliases = AliasRepositoryLazy.Value.GetAliases().ToList(); // cached by Oqtane
+            var aliases = _aliasRepositoryLazy.Value.GetAliases().ToList(); // cached by Oqtane
 
             if (siteId.HasValue) // acceptable solution
                 siteState.Alias = aliases.OrderByDescending(a => /*a.IsDefault*/  a.Name.Length) // TODO: a.IsDefault DESC after upgrade to Oqt v3.0.3+
@@ -103,15 +105,20 @@ public class SiteStateInitializer: ServiceBase
         {
             var url = $"{request.Host}{request.Path}";
 
-            var aliases = AliasRepositoryLazy.Value.GetAliases().ToList(); // cached by Oqtane
+            var aliases = _aliasRepositoryLazy.Value.GetAliases().ToList(); // cached by Oqtane
             siteState.Alias = aliases.OrderByDescending(a => a.Name.Length)
                 .ThenBy(a => a.Name)
                 .FirstOrDefault(a => url.StartsWith(a.Name, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        //siteState2.Alias ??= siteState.Alias;  @STV check this <=======
+        UpdateAliasAccessor(siteState.Alias);
 
         return siteState.Alias != null;
     }
 
+    private void UpdateAliasAccessor(Alias alias)
+    {
+        if (_httpContextAccessor?.HttpContext != null && alias != null)
+            _httpContextAccessor.HttpContext.Items[Constants.HttpContextAliasKey] ??= alias;
+    }
 }
