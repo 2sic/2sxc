@@ -10,7 +10,7 @@ public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : Servi
 {
     private const string GlobalCacheRoot = "2sxc.AssemblyCache.Module.";
 
-    
+
     #region Static Calls for AppCode - to use before requiring DI
     public (AssemblyResult AssemblyResult, string cacheKey) TryGetAppCode(HotBuildSpec spec)
     {
@@ -39,13 +39,13 @@ public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : Servi
 
     #endregion
 
-    public string Add(string cacheKey, object data, int duration = 3600, IList<ChangeMonitor> changeMonitor = null, CacheEntryUpdateCallback updateCallback = null)
+    public string Add(string cacheKey, object data, int slidingDuration = CacheConstants.Duration1Hour, IList<ChangeMonitor> changeMonitor = null, CacheEntryUpdateCallback updateCallback = null)
     {
-        var l = Log.Fn<string>($"{nameof(cacheKey)}: {cacheKey}; {nameof(duration)}: {duration}", timer: true);
+        var l = Log.Fn<string>($"{nameof(cacheKey)}: {cacheKey}; {nameof(slidingDuration)}: {slidingDuration}", timer: true);
 
         // Never store 0, that's like never-expire
-        if (duration == 0) duration = 1;
-        var expiration = new TimeSpan(0, 0, duration);
+        if (slidingDuration == 0) slidingDuration = 1;
+        var expiration = new TimeSpan(0, 0, slidingDuration);
         var policy = new CacheItemPolicy { SlidingExpiration = expiration };
 
         // Try set app change folder monitor

@@ -1,14 +1,13 @@
-﻿using System.Collections.Concurrent;
-using System.IO;
-using System.Reflection;
+﻿using System.IO;
 using System.Runtime.Caching;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
+using ToSic.Eav.Caching;
 using ToSic.Eav.Caching.CachingMonitors;
-using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
+using ISite = ToSic.Eav.Context.ISite;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
@@ -53,7 +52,7 @@ public class AppCodeLoader(
     /// </summary>
     /// <param name="spec"></param>
     /// <returns></returns>
-    public (AssemblyResult AssemblyResult, HotBuildSpec Specs) GetOrBuildAppCode(HotBuildSpec spec)
+    private (AssemblyResult AssemblyResult, HotBuildSpec Specs) GetOrBuildAppCode(HotBuildSpec spec)
     {
         var l = Log.Fn<(AssemblyResult, HotBuildSpec)>(spec.ToString());
 
@@ -64,7 +63,7 @@ public class AppCodeLoader(
 
         // Try to compile
         assemblyResult = TryBuildAppCodeAndLog(spec);
-        return l.Return((assembly: assemblyResult, spec), "AppCode " + (assemblyResult != null ? "compiled" : "not compiled") + $" for '{spec.EditionToLog}'.");
+        return l.Return((assemblyResult, spec), "AppCode " + (assemblyResult != null ? "compiled" : "not compiled") + $" for '{spec.EditionToLog}'.");
     }
 
     /// <summary>
@@ -73,7 +72,7 @@ public class AppCodeLoader(
     /// </summary>
     /// <param name="spec"></param>
     /// <returns></returns>
-    public AssemblyResult TryBuildAppCodeAndLog(HotBuildSpec spec)
+    private AssemblyResult TryBuildAppCodeAndLog(HotBuildSpec spec)
     {
         // Add to global history and add specs
         var logSummary = logStore.Add(SxcLogAppCodeLoader, Log);
@@ -93,7 +92,7 @@ public class AppCodeLoader(
         throw new(assemblyResults.ErrorMessages);
     }
 
-    private static readonly ConcurrentDictionary<string, object> CacheKeyLocks = new();
+    private static readonly NamedLocks CompileLocks = new();
 
     private AssemblyResult TryBuildAppCode(HotBuildSpec spec, LogStoreEntry logSummary)
     {
@@ -105,14 +104,14 @@ public class AppCodeLoader(
         if (result != null)
             return l.ReturnAsOk(result);
 
-        var lockObject = CacheKeyLocks.GetOrAdd(cacheKey, _ => new object());
+        var lockObject = CompileLocks.Get(cacheKey);
 
         lock (lockObject)
         {
             // Double check if another thread already built the app code
             (result, cacheKey) = assemblyCacheManager.TryGetAppCode(spec);
             if (result != null)
-                return l.ReturnAsOk(result);
+                return l.Return(result, "inside lock, start");
 
             // Get paths
             var (physicalPath, relativePath) = GetAppPaths(AppCodeBase, spec);
@@ -136,13 +135,13 @@ public class AppCodeLoader(
             // Triple check if another thread already built the app code
             (result, cacheKey) = assemblyCacheManager.TryGetAppCode(spec);
             if (result != null)
-                return l.ReturnAsOk(result);
+                return l.Return(result, "inside lock, end");
 
             // Add compiled assembly to cache
             assemblyCacheManager.Add(
                 cacheKey,
                 assemblyResult,
-                duration: 86400, // 1 day
+                slidingDuration: 2 * CacheConstants.Duration1Hour, // must be longer than the default used for Razor DLLs
                 changeMonitor: new ChangeMonitor[] { new FolderChangeMonitor(assemblyResult.WatcherFolders) }
             );
 
@@ -199,13 +198,13 @@ public class AppCodeLoader(
         }   
     }
 
-    public (string physicalPath, string relativePath) GetAppPaths(string folder, HotBuildSpec spec)
+    private (string physicalPath, string relativePath) GetAppPaths(string folder, HotBuildSpec spec)
     {
         var l = Log.Fn<(string physicalPath, string relativePath)>($"{nameof(folder)}: '{folder}'; {spec}");
         l.A($"site id: {site.Id}, ...: {site.AppsRootPhysicalFull}");
         var appPaths = appPathsLazy.Value.Init(site, appStates.GetReader(spec.AppId));
         var folderWithEdition = folder.HasValue() 
-            ? (spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder)
+            ? spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder
             : spec.Edition;
         var physicalPath = Path.Combine(appPaths.PhysicalPath, folderWithEdition);
         //l.A($"{nameof(physicalPath)}: '{physicalPath}'");

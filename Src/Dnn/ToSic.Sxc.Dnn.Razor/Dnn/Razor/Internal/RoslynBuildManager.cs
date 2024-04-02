@@ -1,5 +1,4 @@
 ﻿using System.CodeDom.Compiler;
-using System.Collections.Concurrent;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Caching;
@@ -17,7 +16,6 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
-using static System.StringComparer;
 using CodeCompiler = ToSic.Sxc.Code.Internal.HotBuild.CodeCompiler;
 
 namespace ToSic.Sxc.Dnn.Razor.Internal
@@ -34,7 +32,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         : ServiceBase("Dnn.RoslynBuildManager", connect: [assemblyCacheManager, appCodeLoader, assemblyResolver, referencedAssembliesProvider, memoryCacheService]),
             IRoslynBuildManager
     {
-        private static readonly ConcurrentDictionary<string, object> CompileAssemblyLocks = new(InvariantCultureIgnoreCase);
+        private static readonly NamedLocks CompileAssemblyLocks = new();
 
         private const string DefaultNamespace = "RazorHost";
 
@@ -55,7 +53,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         {
             var l = Log.Fn<AssemblyResult>($"{codeFileInfo}; {spec};");
 
-            var lockObject = CompileAssemblyLocks.GetOrAdd(codeFileInfo.FullPath, new object());
+            var lockObject = CompileAssemblyLocks.Get(codeFileInfo.FullPath);
 
             // 2024-02-19 Something is buggy here, so I must add logging to find out what's going on
             // ATM it appears that sometimes it returns null, but I don't know why
@@ -148,7 +146,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             assemblyCacheManager.Add(
                 cacheKey: AssemblyCacheManager.KeyTemplate(codeFileInfo.FullPath),
                 data: assemblyResult,
-                duration: 3600,
+                slidingDuration: 3600,
                 changeMonitor: changeMonitors,
                 //appPaths: appPaths,
                 updateCallback: null);
