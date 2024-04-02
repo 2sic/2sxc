@@ -121,11 +121,17 @@ internal partial class AppApiControllerSelectorService(
         throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.NotFound, new(), msgFinal, codeErrorSvc.Value));
     }
 
-    private (HttpControllerDescriptor, CacheItemPolicy) BuildDescriptorIfExists(string appFolder, string edition, string controllerTypeName, bool shared, HotBuildSpec spec)
+    private (HttpControllerDescriptorWithPaths, CacheItemPolicy) BuildDescriptorIfExists(string appFolder, string edition, string controllerTypeName, bool shared, HotBuildSpec spec)
     {
-        var l = Log.Fn<(HttpControllerDescriptor, CacheItemPolicy)>($"{nameof(appFolder)}:'{appFolder}'; {nameof(edition)}:'{edition}'; {nameof(controllerTypeName)}:'{controllerTypeName}'; {nameof(shared)}:{shared}; {spec}", timer: true);
+        var l = Log.Fn<(HttpControllerDescriptorWithPaths, CacheItemPolicy)>(
+            $"{nameof(appFolder)}:'{appFolder}'; {nameof(edition)}:'{edition}'; {nameof(controllerTypeName)}:'{controllerTypeName}'; {nameof(shared)}:{shared}; {spec}",
+            timer: true
+        );
         var expiration = new TimeSpan(1, 0, 0);
         var policy = new CacheItemPolicy { SlidingExpiration = expiration };
+
+        // 0. Prepare folders which will be used
+        var controllerFolder = GetControllerFolder(appFolder, edition, shared);
 
         // 1. Check AppCode Dll
         if (spec != null)
@@ -137,12 +143,12 @@ internal partial class AppApiControllerSelectorService(
             if (type != null)
             {
                 policy.ChangeMonitors.Add(memoryCacheService.CreateCacheEntryChangeMonitor([appCodeAssemblyResult.CacheKey])); // cache dependency on existing cache item with AppCode assembly 
-                return l.Return((new(Configuration, type.Name, type), policy), "Api controller from AppCode");
+                var appCodeDescriptor = new HttpControllerDescriptor(Configuration, type.Name, type);
+                return l.Return((new(appCodeDescriptor, controllerFolder.Replace("/api/", "/AppCode/"), ""), policy), "Api controller from AppCode");
             }
         }
 
         // 2. Normal Api, compiled on the fly
-        var controllerFolder = GetControllerFolder(appFolder, edition, shared);
         var controllerPath = GetControllerPath(appFolder, edition, shared, controllerTypeName);
         l.A($"Controller Folder: '{controllerFolder}' Path: '{controllerPath}'");
 
@@ -155,7 +161,7 @@ internal partial class AppApiControllerSelectorService(
         else
             policy.ChangeMonitors.Add(new HostFileChangeMonitor([HostingEnvironment.MapPath(controllerPath)])); // cache dependency on existing api file
 
-        return l.Return((descriptor, policy), $"normal Api controller from '{controllerPath}'");
+        return l.Return((new(descriptor, controllerFolder, controllerPath), policy), $"normal Api controller from '{controllerPath}'");
     }
 
     private string GetControllerFolder(string appFolder, string edition, bool shared)
@@ -183,7 +189,8 @@ internal partial class AppApiControllerSelectorService(
             assembly = BuildManager.GetCompiledAssembly(fullPath);
         }
 
-        if (assembly == null) throw l.Ex(new Exception("Assembly not found or compiled to null (error)."));
+        if (assembly == null)
+            throw l.Ex(new Exception("Assembly not found or compiled to null (error)."));
 
         l.A($"FindControllerTypeByName: '{typeName}'");
         var type = assembly.FindControllerTypeByName(typeName)
@@ -193,15 +200,21 @@ internal partial class AppApiControllerSelectorService(
         return l.Return((new (Configuration, type.Name, type), result?.CacheKey));
     }
 
-    /// <summary>
-    /// help with path resolution for compilers running inside the created controller
-    /// </summary>
-    private void HelperWithPathResolutionForCompilersInsideController(string appFolder, string edition, string controllerTypeName, bool shared)
-    {
-        var controllerPath = GetControllerPath(appFolder, edition, shared, controllerTypeName);
-        if (!File.Exists(HostingEnvironment.MapPath(controllerPath))) return;
+    ///// <summary>
+    ///// help with path resolution for compilers running inside the created controller
+    ///// </summary>
+    //private void SetPathForCompilersInsideController(string appFolder, string edition, string controllerTypeName, bool shared)
+    //{
+    //    var controllerPath = GetControllerPath(appFolder, edition, shared, controllerTypeName);
+    //    if (!File.Exists(HostingEnvironment.MapPath(controllerPath))) return;
+    //    var controllerFolder = GetControllerFolder(appFolder, edition, shared);
+    //    PreservePathForGetCodeInController(controllerFolder, controllerPath);
+    //}
 
-        Request?.Properties.Add(CodeCompiler.SharedCodeRootPathKeyInCache, GetControllerFolder(appFolder, edition, shared));
-        Request?.Properties.Add(CodeCompiler.SharedCodeRootFullPathKeyInCache, controllerPath);
+    private void PreservePathForGetCodeInController(string controllerFolder, string controllerPath)
+    {
+        if (Request == null) return;
+        Request.Properties.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
+        Request.Properties.Add(CodeCompiler.SharedCodeRootFullPathKeyInCache, controllerPath);
     }
 }

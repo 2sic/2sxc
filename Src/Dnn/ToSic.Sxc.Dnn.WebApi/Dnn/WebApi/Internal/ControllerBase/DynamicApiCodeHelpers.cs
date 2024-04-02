@@ -49,7 +49,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
     private bool _blockContextInitialized;
 
 
-    public (ICodeApiService Root, string Path) Initialize(HttpControllerContext controllerContext)
+    public (ICodeApiService Root, string Folder) Initialize(HttpControllerContext controllerContext)
     {
         var request = controllerContext.Request;
         InitializeBlockContext(request);
