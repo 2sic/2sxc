@@ -6,12 +6,15 @@ namespace ToSic.Sxc.Blocks.Internal;
 
 public abstract partial class BlockResourceExtractor
 {
-    protected string ExtractStyles(string renderedTemplate, ClientAssetsExtractSettings settings) => Log.Func(() =>
+    protected string ExtractStyles(string renderedTemplate, ClientAssetsExtractSettings settings)
     {
+        var l = Log.Fn<string>();
         var styleMatches = RegexUtil.StyleDetection.Value.Matches(renderedTemplate);
         var styleMatchesToRemove = new List<Match>();
 
-        Log.A($"Found {styleMatches.Count} external styles");
+        if (styleMatches.Count == 0)
+            return l.Return(renderedTemplate, "no styles to extract");
+
         foreach (Match match in styleMatches)
         {
             // Also get the ID (new in v12)
@@ -45,11 +48,13 @@ public abstract partial class BlockResourceExtractor
             Assets.Add(new ClientAsset { Id = id, IsJs = false, PosInPage = posInPage, Priority = priority, Url = url, WhitelistInCsp = forCsp});
             styleMatchesToRemove.Add(match);
         }
-
+        
+        // Remove the styles in backward order, so the indexes don't shift as things are removed
+        var shrunkTemplate = renderedTemplate;
         styleMatchesToRemove.Reverse();
-        styleMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
-        return renderedTemplate;
-    });
+        styleMatchesToRemove.ForEach(p => shrunkTemplate = shrunkTemplate.Remove(p.Index, p.Length));
+        return l.Return(shrunkTemplate, $"extracted {styleMatches.Count} styles");
+    }
 
 
 }
