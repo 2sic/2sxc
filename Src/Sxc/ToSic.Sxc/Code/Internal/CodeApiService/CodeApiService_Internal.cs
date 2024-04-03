@@ -34,22 +34,26 @@ public partial class CodeApiService : ICodeApiServiceInternal
 
     public TService GetService<TService>(NoParamOrder protector = default, bool reuse = false, Type type = default) where TService : class
     {
-        if (!reuse) return type == null
-            ? Services.ServiceProvider.Build<TService>(Log)
-            : Services.ServiceProvider.Build<TService>(type, Log);
+        if (!reuse) return BuildWithOptionalType();
 
         var typeInCache = type ?? typeof(TService);
         if (_reusableServices.TryGetValue(typeInCache, out var service))
             return (TService)service;
         
-        var newService = type == null 
-            ? Services.ServiceProvider.Build<TService>(Log)
-            : Services.ServiceProvider.Build<TService>(type, Log);
+        var generated = BuildWithOptionalType();
+        _reusableServices[typeInCache] = generated;
+        return generated;
 
-        if (newService is INeedsCodeApiService newWithNeeds)
-            newWithNeeds.ConnectToRoot(this);
-        _reusableServices[typeInCache] = newService;
-        return newService;
+        TService BuildWithOptionalType()
+        {
+            var newService = type == null 
+                ? Services.ServiceProvider.Build<TService>(Log)
+                : Services.ServiceProvider.Build<TService>(type, Log);
+
+            if (newService is INeedsCodeApiService newWithNeeds)
+                newWithNeeds.ConnectToRoot(this);
+            return newService;
+        }
     }
     
     /// <summary>

@@ -68,6 +68,11 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
 
+    [PrivateApi("WIP 17.06,x")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
+        => CodeHelper.GetService<TService>(protector, typeName);
+
     /// <inheritdoc cref="IDynamicCode.Link" />
     public ILinkService Link => _CodeApiSvc?.Link;
 
@@ -161,7 +166,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     private TypedCode16Helper CreateCodeHelper()
     {
         // Create basic helper without any RazorModels, since that doesn't exist here
-        return new(helperSpecs: new(_CodeApiSvc, false, ((IGetCodePath)this).CreateInstancePath), getRazorModel: () => null, getModelDic: () => null);
+        return new(owner: this, helperSpecs: new(_CodeApiSvc, false, ((IGetCodePath)this).CreateInstancePath), getRazorModel: () => null, getModelDic: () => null);
     }
 
     /// <inheritdoc />

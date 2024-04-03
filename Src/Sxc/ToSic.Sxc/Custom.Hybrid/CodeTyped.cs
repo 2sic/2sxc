@@ -43,8 +43,13 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeRootOrError().GetService<TService>();
 
+    [PrivateApi("WIP 17.06,x")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
+        => CodeHelper.GetService<TService>(protector, typeName);
+
     private TypedCode16Helper CodeHelper 
-        => _codeHelper ??= new(helperSpecs: new(CodeRootOrError(), false, "c# code file"), getRazorModel: () => null, getModelDic: () => null);
+        => _codeHelper ??= new(owner: this, helperSpecs: new(CodeRootOrError(), false, "c# code file"), getRazorModel: () => null, getModelDic: () => null);
     private TypedCode16Helper _codeHelper;
 
     [PrivateApi]
