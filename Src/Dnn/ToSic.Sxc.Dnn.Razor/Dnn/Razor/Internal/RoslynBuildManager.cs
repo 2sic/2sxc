@@ -1,5 +1,5 @@
-﻿using System.CodeDom.Compiler;
-using System.Collections.Concurrent;
+﻿using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
+using System.CodeDom.Compiler;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Caching;
@@ -7,9 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Razor;
 using System.Web.Razor.Generator;
-using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using ToSic.Eav.Caching;
-using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
@@ -17,7 +15,6 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
-using static System.StringComparer;
 using CodeCompiler = ToSic.Sxc.Code.Internal.HotBuild.CodeCompiler;
 
 namespace ToSic.Sxc.Dnn.Razor.Internal
@@ -34,7 +31,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         : ServiceBase("Dnn.RoslynBuildManager", connect: [assemblyCacheManager, appCodeLoader, assemblyResolver, referencedAssembliesProvider, memoryCacheService]),
             IRoslynBuildManager
     {
-        private static readonly ConcurrentDictionary<string, object> CompileAssemblyLocks = new(InvariantCultureIgnoreCase);
+        private static readonly NamedLocks CompileAssemblyLocks = new();
 
         private const string DefaultNamespace = "RazorHost";
 
@@ -55,7 +52,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         {
             var l = Log.Fn<AssemblyResult>($"{codeFileInfo}; {spec};");
 
-            var lockObject = CompileAssemblyLocks.GetOrAdd(codeFileInfo.FullPath, new object());
+            var lockObject = CompileAssemblyLocks.Get(codeFileInfo.FullPath);
 
             // 2024-02-19 Something is buggy here, so I must add logging to find out what's going on
             // ATM it appears that sometimes it returns null, but I don't know why
@@ -97,9 +94,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             // Add the latest assembly to the .net assembly resolver (singleton)
             assemblyResolver.AddAssembly(appCodeAssemblyResult?.Assembly);
 
-            var appCode = assemblyCacheManager.TryGetAppCode(specOut);
-
-            var appCodeAssembly = appCode.AssemblyResult?.Assembly;
+            var appCodeAssembly = appCodeAssemblyResult?.Assembly;
             if (appCodeAssembly != null)
             {
                 var assemblyLocation = appCodeAssembly.Location;
@@ -134,21 +129,21 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             // TODO: must also watch for global shared code changes
             lTimer = Log.Fn("timer for ChangeMonitors", timer: true);
             var fileChangeMon = new HostFileChangeMonitor(new[] { codeFileInfo.FullPath });
-            var sharedFolderChangeMon = appCode.AssemblyResult == null ? null : new FolderChangeMonitor(appCode.AssemblyResult.WatcherFolders);
-            var changeMonitors = appCode.AssemblyResult == null
+            var changeMonitors = appCodeAssembly == null
                 ? new ChangeMonitor[] { fileChangeMon }
-                : [fileChangeMon, sharedFolderChangeMon];
+                : [fileChangeMon, memoryCacheService.CreateCacheEntryChangeMonitor([appCodeAssemblyResult.CacheKey])];
 
             // directly attach a type to the cache
             var mainType = FindMainType(generatedAssembly, className, isCshtml);
             l.A($"Main type: {mainType}");
 
             var assemblyResult = new AssemblyResult(generatedAssembly, safeClassName: className, mainType: mainType);
+            assemblyResult.CacheKey = AssemblyCacheManager.KeyTemplate(codeFileInfo.FullPath);
 
             assemblyCacheManager.Add(
-                cacheKey: AssemblyCacheManager.KeyTemplate(codeFileInfo.FullPath),
+                cacheKey: assemblyResult.CacheKey,
                 data: assemblyResult,
-                duration: 3600,
+                slidingDuration: 3600,
                 changeMonitor: changeMonitors,
                 //appPaths: appPaths,
                 updateCallback: null);

@@ -24,6 +24,16 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
 
     #endregion
 
+    /// <summary>
+    /// Advanced GetService which can do more than the standard GetService.
+    /// </summary>
+    /// <typeparam name="TService"></typeparam>
+    /// <param name="protector"></param>
+    /// <param name="typeName">Optional fully qualified type name to get the class based on a string identifier.</param>
+    /// <remarks>New in 17.06.01</remarks>
+    /// <returns></returns>
+    TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class;
+
     #region Kit
 
     ///// <inheritdoc cref="IDynamicCodeKit{TServiceKit}.Kit"/>

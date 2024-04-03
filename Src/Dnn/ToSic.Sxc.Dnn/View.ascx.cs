@@ -89,18 +89,16 @@ public partial class View : PortalModuleBase, IActionable
                         if (!DnnReadyCheckTurbo.QuickCheckSiteAndAppFoldersAreReady(this, Log))
                             GetService<DnnReadyCheckTurbo>().EnsureSiteAndAppFoldersAreReady(this, block);
                     DnnClientResources = GetService<DnnClientResources>().Init(Page, null, requiresPre1025Behavior == false ? null : block?.BlockBuilder);
-                    var needsPre1025Behavior = requiresPre1025Behavior ?? DnnClientResources.NeedsPre1025Behavior();
-                    if (needsPre1025Behavior) DnnClientResources.EnforcePre1025Behavior();
-                    // #lightspeed
-                    if (OutputCache?.Existing != null)
-                        OutputCache.Fresh.EnforcePre1025 = needsPre1025Behavior;
-                    return true; // dummy result
+                    _enforcePre1025JQueryLoading = requiresPre1025Behavior ?? DnnClientResources.NeedsPre1025Behavior();
+                    if (_enforcePre1025JQueryLoading) DnnClientResources.EnforcePre1025Behavior();
+                    return true;
                 });
             });
         });
     }
 
     protected DnnClientResources DnnClientResources;
+    private bool _enforcePre1025JQueryLoading;
 
 
     /// <summary>
@@ -162,7 +160,7 @@ public partial class View : PortalModuleBase, IActionable
                         phOutput.Controls.Add(new LiteralControl(data.Html));
 
                     // #Lightspeed
-                    Log.Do(message: "Lightspeed", timer: true, action: () => OutputCache?.Save(data));
+                    Log.Do(message: "Lightspeed", timer: true, action: () => OutputCache?.Save(data, _enforcePre1025JQueryLoading));
                         
                     return true; // dummy result
                 });

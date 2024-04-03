@@ -1,11 +1,13 @@
-﻿using ToSic.Lib.Helpers;
+﻿using ToSic.Eav.Plumbing;
+using ToSic.Lib.Helpers;
+using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 
 namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class TypedCode16Helper(CodeHelperSpecs helperSpecs, Func<object> getRazorModel, Func<IDictionary<string, object>> getModelDic)
+public class TypedCode16Helper(object owner, CodeHelperSpecs helperSpecs, Func<object> getRazorModel, Func<IDictionary<string, object>> getModelDic)
     : CodeHelperXxBase(helperSpecs, SxcLogName + ".TCd16H")
 {
     public bool DefaultStrict = true;
@@ -53,4 +55,23 @@ public class TypedCode16Helper(CodeHelperSpecs helperSpecs, Func<object> getRazo
 
     //public IDevTools DevTools => _devTools.Get(() => new DevTools(IsRazor, CodeFileName, Log));
     //private readonly GetOnce<IDevTools> _devTools = new GetOnce<IDevTools>();
+
+    public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
+    {
+        if (typeName.IsEmptyOrWs())
+            return CodeRoot.GetService<TService>();
+
+        var ownType = owner.GetType();
+        var assembly = ownType.Assembly;
+        // Note: don't check the Namespace property, as it may be empty
+        if (!(ownType.Namespace ?? "").StartsWith("AppCode") && !assembly.FullName.Contains("AppCode"))
+            throw Log.Ex(new Exception($"Type '{ownType.FullName}' is not in the 'AppCode' namespace / dll, so it can't be used to find other types."));
+
+        var type = assembly.FindControllerTypeByName(typeName);
+        
+        return type == null
+            ? throw Log.Ex(new Exception($"Type '{typeName}' not found in assembly '{assembly.FullName}'"))
+            : CodeRoot.GetService<TService>(type: type);
+    }
+
 }

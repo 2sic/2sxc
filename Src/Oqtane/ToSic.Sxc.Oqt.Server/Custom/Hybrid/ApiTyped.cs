@@ -65,6 +65,11 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public new TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
 
+    [PrivateApi("WIP 17.06,x")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
+        => CodeHelper.GetService<TService>(protector, typeName);
+
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
     public ServiceKit16 Kit => _kit.Get(() => _CodeApiSvc.GetKit<ServiceKit16>());
     private readonly GetOnce<ServiceKit16> _kit = new();
@@ -116,7 +121,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     private TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
     private TypedCode16Helper _codeHelper;
 
-    private TypedCode16Helper CreateCodeHelper() => new(helperSpecs: new(_CodeApiSvc, false, ((IGetCodePath)this).CreateInstancePath), getRazorModel: () => null, getModelDic: () => null);
+    private TypedCode16Helper CreateCodeHelper() => new(owner: this, helperSpecs: new(_CodeApiSvc, false, ((IGetCodePath)this).CreateInstancePath), getRazorModel: () => null, getModelDic: () => null);
 
     public ITypedItem MyItem => CodeHelper.MyItem;
 

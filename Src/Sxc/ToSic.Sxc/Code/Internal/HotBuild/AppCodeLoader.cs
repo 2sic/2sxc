@@ -1,13 +1,13 @@
 ﻿using System.IO;
-using System.Reflection;
 using System.Runtime.Caching;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
+using ToSic.Eav.Caching;
 using ToSic.Eav.Caching.CachingMonitors;
-using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
+using ISite = ToSic.Eav.Context.ISite;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
@@ -52,7 +52,7 @@ public class AppCodeLoader(
     /// </summary>
     /// <param name="spec"></param>
     /// <returns></returns>
-    public (AssemblyResult AssemblyResult, HotBuildSpec Specs) GetOrBuildAppCode(HotBuildSpec spec)
+    private (AssemblyResult AssemblyResult, HotBuildSpec Specs) GetOrBuildAppCode(HotBuildSpec spec)
     {
         var l = Log.Fn<(AssemblyResult, HotBuildSpec)>(spec.ToString());
 
@@ -63,7 +63,7 @@ public class AppCodeLoader(
 
         // Try to compile
         assemblyResult = TryBuildAppCodeAndLog(spec);
-        return l.Return((assembly: assemblyResult, spec), "AppCode " + (assemblyResult != null ? "compiled" : "not compiled") + $" for '{spec.EditionToLog}'.");
+        return l.Return((assemblyResult, spec), "AppCode " + (assemblyResult != null ? "compiled" : "not compiled") + $" for '{spec.EditionToLog}'.");
     }
 
     /// <summary>
@@ -72,7 +72,7 @@ public class AppCodeLoader(
     /// </summary>
     /// <param name="spec"></param>
     /// <returns></returns>
-    public AssemblyResult TryBuildAppCodeAndLog(HotBuildSpec spec)
+    private AssemblyResult TryBuildAppCodeAndLog(HotBuildSpec spec)
     {
         // Add to global history and add specs
         var logSummary = logStore.Add(SxcLogAppCodeLoader, Log);
@@ -92,6 +92,8 @@ public class AppCodeLoader(
         throw new(assemblyResults.ErrorMessages);
     }
 
+    private static readonly NamedLocks CompileLocks = new();
+
     private AssemblyResult TryBuildAppCode(HotBuildSpec spec, LogStoreEntry logSummary)
     {
         var l = Log.Fn<AssemblyResult>($"{spec}");
@@ -102,33 +104,49 @@ public class AppCodeLoader(
         if (result != null)
             return l.ReturnAsOk(result);
 
-        // Get paths
-        var (physicalPath, relativePath) = GetAppPaths(AppCodeBase, spec);
-        logSummary.AddSpec("PhysicalPath", physicalPath);
-        logSummary.AddSpec("RelativePath", relativePath);
- 
-        var assemblyResult = appCompilerLazy.Value.GetAppCode(relativePath, spec);
+        var lockObject = CompileLocks.Get(cacheKey);
 
-        logSummary.UpdateSpecs(assemblyResult.Infos);
+        lock (lockObject)
+        {
+            // Double check if another thread already built the app code
+            (result, cacheKey) = assemblyCacheManager.TryGetAppCode(spec);
+            if (result != null)
+                return l.Return(result, "inside lock, start");
 
-        if (assemblyResult.ErrorMessages.HasValue())
-            return l.ReturnAsError(assemblyResult, assemblyResult.ErrorMessages);
+            // Get paths
+            var (physicalPath, relativePath) = GetAppPaths(AppCodeBase, spec);
+            logSummary.AddSpec("PhysicalPath", physicalPath);
+            logSummary.AddSpec("RelativePath", relativePath);
 
-        assemblyResult.WatcherFolders = GetWatcherFolders(assemblyResult, spec, physicalPath, Log);
-        l.A("Folders to watch:");
-        foreach (var watcherFolder in assemblyResult.WatcherFolders)
-            l.A($"- '{watcherFolder}'");
+            var assemblyResult = appCompilerLazy.Value.GetAppCode(relativePath, spec);
 
-        assemblyResult.CacheKey = cacheKey; // used to create cache dependency with CacheEntryChangeMonitor 
+            logSummary.UpdateSpecs(assemblyResult.Infos);
 
-        // Add compiled assembly to cache
-        assemblyCacheManager.Add(
-            cacheKey,
-            assemblyResult,
-            changeMonitor: new ChangeMonitor[] { new FolderChangeMonitor(assemblyResult.WatcherFolders) }
-        );
+            if (assemblyResult.ErrorMessages.HasValue())
+                return l.ReturnAsError(assemblyResult, assemblyResult.ErrorMessages);
 
-        return l.ReturnAsOk(assemblyResult);
+            assemblyResult.WatcherFolders = GetWatcherFolders(assemblyResult, spec, physicalPath, Log);
+            l.A("Folders to watch:");
+            foreach (var watcherFolder in assemblyResult.WatcherFolders)
+                l.A($"- '{watcherFolder}'");
+
+            assemblyResult.CacheKey = cacheKey; // used to create cache dependency with CacheEntryChangeMonitor 
+
+            // Triple check if another thread already built the app code
+            (result, cacheKey) = assemblyCacheManager.TryGetAppCode(spec);
+            if (result != null)
+                return l.Return(result, "inside lock, end");
+
+            // Add compiled assembly to cache
+            assemblyCacheManager.Add(
+                cacheKey,
+                assemblyResult,
+                slidingDuration: 2 * CacheConstants.Duration1Hour, // must be longer than the default used for Razor DLLs
+                changeMonitor: new ChangeMonitor[] { new FolderChangeMonitor(assemblyResult.WatcherFolders) }
+            );
+
+            return l.ReturnAsOk(assemblyResult);
+        }
     }
 
     private static IDictionary<string, bool> GetWatcherFolders(AssemblyResult assemblyResult, HotBuildSpec spec, string physicalPathAppCode, ILog log)
@@ -180,13 +198,13 @@ public class AppCodeLoader(
         }   
     }
 
-    public (string physicalPath, string relativePath) GetAppPaths(string folder, HotBuildSpec spec)
+    private (string physicalPath, string relativePath) GetAppPaths(string folder, HotBuildSpec spec)
     {
         var l = Log.Fn<(string physicalPath, string relativePath)>($"{nameof(folder)}: '{folder}'; {spec}");
         l.A($"site id: {site.Id}, ...: {site.AppsRootPhysicalFull}");
         var appPaths = appPathsLazy.Value.Init(site, appStates.GetReader(spec.AppId));
         var folderWithEdition = folder.HasValue() 
-            ? (spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder)
+            ? spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder
             : spec.Edition;
         var physicalPath = Path.Combine(appPaths.PhysicalPath, folderWithEdition);
         //l.A($"{nameof(physicalPath)}: '{physicalPath}'");

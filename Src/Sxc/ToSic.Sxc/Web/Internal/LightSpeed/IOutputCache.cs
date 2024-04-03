@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Blocks.Internal;
+﻿using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
@@ -13,7 +12,9 @@ public interface IOutputCache: IHasLog
 
     OutputCacheItem Existing { get; }
 
-    OutputCacheItem Fresh { get; }
-
     bool Save(IRenderResult data);
+
+#if NETFRAMEWORK
+    bool Save(IRenderResult data, bool enforcePre1025);
+#endif
 }

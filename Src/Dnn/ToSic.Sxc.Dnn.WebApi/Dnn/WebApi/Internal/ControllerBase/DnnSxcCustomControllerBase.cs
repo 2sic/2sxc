@@ -32,7 +32,7 @@ public abstract class DnnSxcCustomControllerBase(string logSuffix, string insigh
         base.Initialize(controllerContext);
         var init = DynHlp.Initialize(controllerContext);
         if (this is IGetCodePath thisWithPath)
-            thisWithPath.CreateInstancePath = init.Path;
+            thisWithPath.CreateInstancePath = init.Folder;
         _CodeApiSvc = init.Root;
     }
 

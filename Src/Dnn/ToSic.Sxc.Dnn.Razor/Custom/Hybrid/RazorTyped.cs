@@ -35,11 +35,18 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
         => SysHlp.RenderPageNotSupported();
 
 
-    [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
+    /// <inheritdoc cref="ICompatibilityLevel.CompatibilityLevel"/>
+    [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
 
+    [PrivateApi("WIP 17.06,x")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
+        => CodeHelper.GetService<TService>(protector, typeName);
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
     public ServiceKit16 Kit => _kit.Get(_CodeApiSvc.GetKit<ServiceKit16>);
@@ -61,6 +68,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
 
     private TypedCode16Helper CreateCodeHelper() =>
         new(
+            owner: this,
             new(_CodeApiSvc, true, Path),
             getRazorModel: () => _overridePageData
                                  // the default/only value would be on a 0 key

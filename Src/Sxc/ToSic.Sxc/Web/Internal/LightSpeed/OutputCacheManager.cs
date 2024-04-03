@@ -7,11 +7,11 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
-internal class OutputCacheManager(MemoryCacheService memoryCacheService) : ServiceBase(SxcLogName + ".OutputCacheManager", connect: [memoryCacheService])
+internal class OutputCacheManager(MemoryCacheService memoryCacheService, Lazy<IEavFeaturesService> featuresDoNotConnect) : ServiceBase(SxcLogName + ".OutputCacheManager", connect: [memoryCacheService])
 {
     internal const string GlobalCacheRoot = "2sxc.Lightspeed.Module.";
 
-    internal string Id(int moduleId, int pageId, int? userId, string view, string suffix, string currentCulture)
+    internal static string Id(int moduleId, int pageId, int? userId, string view, string suffix, string currentCulture)
     {
         var id = $"{GlobalCacheRoot}p:{pageId}-m:{moduleId}";   
         if (userId.HasValue) id += $"-u:{userId.Value}";
@@ -21,8 +21,10 @@ internal class OutputCacheManager(MemoryCacheService memoryCacheService) : Servi
         return id;
     }
 
-    public string Add(string cacheKey, OutputCacheItem data, int duration, IEavFeaturesService features,
-        List<IAppStateChanges> appStates, IList<string> appPaths = null, CacheEntryUpdateCallback updateCallback = null)
+    public string Add(string cacheKey, OutputCacheItem data, int duration,
+        List<IAppStateChanges> appStates, IList<string> appPaths,
+        int appId, int size,
+        CacheEntryUpdateCallback updateCallback)
     {
         var l = Log.Fn<string>($"key: {cacheKey}", timer: true);
         try
@@ -33,24 +35,28 @@ internal class OutputCacheManager(MemoryCacheService memoryCacheService) : Servi
             var policy = new CacheItemPolicy { SlidingExpiration = expiration };
 
             // flush cache when any feature is changed
-            Log.Do(message: "changeMonitors add FeaturesResetMonitor", timer: true, action: () => 
-                policy.ChangeMonitors.Add(new FeaturesResetMonitor(features)));
+            // IMPORTANT: The featuresDoNotConnect service should NOT be connected to the log chain!
+            l.Do(message: "changeMonitors add FeaturesResetMonitor", timer: true,
+                action: () => policy.ChangeMonitors.Add(new FeaturesResetMonitor(featuresDoNotConnect.Value))
+            );
 
             // get new instance of ChangeMonitor and insert it to the cache item
             if (appStates.Any())
                 foreach (var appState in appStates)
-                    Log.Do(message: "changeMonitors add AppResetMonitor", timer: true, action: () => 
-                        policy.ChangeMonitors.Add(new AppResetMonitor(appState)));
+                    l.Do(message: "changeMonitors add AppResetMonitor", timer: true,
+                        action: () => policy.ChangeMonitors.Add(new AppResetMonitor(appState))
+                    );
 
             if (appPaths is { Count: > 0 })
-                Log.Do(message: "changeMonitors add FolderChangeMonitor", timer: true, action: () =>
-                    policy.ChangeMonitors.Add(new FolderChangeMonitor(appPaths)));
+                l.Do(message: "changeMonitors add FolderChangeMonitor", timer: true,
+                    action: () => policy.ChangeMonitors.Add(new FolderChangeMonitor(appPaths))
+                );
 
-            if (updateCallback != null)
-                policy.UpdateCallback = updateCallback;
+            policy.UpdateCallback = updateCallback; //  _ => LightSpeedStats.RemoveStatic(appId, size);
 
-            Log.Do(message: $"cache set cacheKey:{cacheKey}", timer: true, action: () =>
-                memoryCacheService.Set(new(cacheKey, data), policy));
+            l.Do(message: $"cache set cacheKey:{cacheKey}", timer: true,
+                action: () => memoryCacheService.Set(new(cacheKey, data), policy)
+            );
 
             return l.ReturnAsOk(cacheKey);
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
@@ -43,6 +44,12 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
+
+    [PrivateApi("WIP 17.06,x")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
+        => SysHlp.CodeHelper.GetService<TService>(protector, typeName);
+
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public ICodeLog Log => SysHlp.CodeLog;
