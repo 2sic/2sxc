@@ -1,19 +1,22 @@
-﻿namespace ToSic.Sxc.Data.Internal;
+﻿using System.Collections;
+
+namespace ToSic.Sxc.Data.Internal;
 
 partial class CodeDataFactory
 {
     /// <summary>
-    /// EXPERIMENTAL
+    /// Convert an object to a custom type, if possible.
+    /// If the object is an entity-like thing, that will be converted.
+    /// If it's a list of entity-like things, the first one will be converted.
     /// </summary>
-    public T AsCustom<T>(ICanBeEntity source, NoParamOrder protector = default, bool mock = false)
-        where T : class, ITypedItemWrapper16, ITypedItem, new()
-    {
-        if (!mock && source == null) return null;
-        if (source is T alreadyT) return alreadyT;
-
-        var item = source as ITypedItem ?? AsItem(source);
-        return AsCustomFromItem<T>(item);
-    }
+    public TCustom AsCustom<TCustom>(object source, NoParamOrder protector = default, bool mock = false)
+        where TCustom : class, ITypedItemWrapper16, ITypedItem, new()
+        => source switch
+        {
+            null when !mock => null,
+            TCustom alreadyT => alreadyT,
+            _ => AsCustomFromItem<TCustom>(source as ITypedItem ?? AsItem(source))
+        };
 
     internal static T AsCustomFromItem<T>(ITypedItem item) where T : class, ITypedItemWrapper16, ITypedItem, new()
     {
@@ -23,46 +26,51 @@ partial class CodeDataFactory
         newT.Setup(item);
         return newT;
     }
-    /// <summary>
-    /// WIP / experimental, would be for types which are not as T, but as a type-object.
-    /// Not in use, so not fully tested.
-    ///
-    /// Inspired by https://stackoverflow.com/questions/3702916/is-there-a-typeof-inverse-operation
-    /// </summary>
-    /// <param name="t"></param>
-    /// <param name="source"></param>
-    /// <param name="protector"></param>
-    /// <param name="mock"></param>
-    /// <returns></returns>
-    public object AsCustom(Type t, ICanBeEntity source, NoParamOrder protector = default, bool mock = false)
-    {
-        if (!mock && source == null) return null;
-        if (source.GetType() == t) return source;
 
-        var item = source as ITypedItem ?? AsItem(source);
-        var wrapperObj = Activator.CreateInstance(t);
-        if (wrapperObj is not ITypedItemWrapper16 wrapper) return null;
-        wrapper.Setup(item);
-        return wrapper;
-    }
+    ///// <summary>
+    ///// WIP / experimental, would be for types which are not as T, but as a type-object.
+    ///// Not in use, so not fully tested.
+    /////
+    ///// Inspired by https://stackoverflow.com/questions/3702916/is-there-a-typeof-inverse-operation
+    ///// </summary>
+    ///// <param name="t"></param>
+    ///// <param name="source"></param>
+    ///// <param name="protector"></param>
+    ///// <param name="mock"></param>
+    ///// <returns></returns>
+    //public object AsCustom(Type t, ICanBeEntity source, NoParamOrder protector = default, bool mock = false)
+    //{
+    //    if (!mock && source == null) return null;
+    //    if (source.GetType() == t) return source;
+
+    //    var item = source as ITypedItem ?? AsItem(source);
+    //    var wrapperObj = Activator.CreateInstance(t);
+    //    if (wrapperObj is not ITypedItemWrapper16 wrapper) return null;
+    //    wrapper.Setup(item);
+    //    return wrapper;
+    //}
 
     /// <summary>
     /// EXPERIMENTAL
     /// </summary>
-    public IEnumerable<T> AsCustomList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector, bool nullIfNull)
-        where T : class, ITypedItemWrapper16, ITypedItem, new()
+    public IEnumerable<TCustom> AsCustomList<TCustom>(object source, NoParamOrder protector, bool nullIfNull)
+        where TCustom : class, ITypedItemWrapper16, ITypedItem, new()
     {
-        if (nullIfNull && source == null) return null;
-        if (source is IEnumerable<T> alreadyListT) return alreadyListT;
-
-        return SafeItems().Select(AsCustomFromItem<T>);
+        return source switch
+        {
+            null when nullIfNull => null,
+            IEnumerable<TCustom> alreadyListT => alreadyListT,
+            _ => SafeItems().Select(AsCustomFromItem<TCustom>)
+        };
 
         IEnumerable<ITypedItem> SafeItems()
-        {
-            if (source == null || !source.Any()) return [];
-            if (source is IEnumerable<ITypedItem> alreadyOk) return alreadyOk;
-            return _CodeApiSvc.Cdf.AsItems(source);
-        }
+            => source switch
+            {
+                null => [],
+                IEnumerable enumerable when !enumerable.Cast<object>().Any() => [],
+                IEnumerable<ITypedItem> alreadyOk => alreadyOk,
+                _ => _CodeApiSvc.Cdf.AsItems(source)
+            };
     }
 
 }

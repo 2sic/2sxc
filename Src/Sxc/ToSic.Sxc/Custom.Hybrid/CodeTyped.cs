@@ -182,12 +182,12 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     #region As / AsList WIP v17
 
     /// <inheritdoc />
-    public T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool mock = default)
+    public T As<T>(object source, NoParamOrder protector = default, bool mock = false)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
         => _CodeApiSvc.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
 
     /// <inheritdoc />
-    public IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
+    public IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
         => _CodeApiSvc.Cdf.AsCustomList<T>(source, protector, nullIfNull);
 
