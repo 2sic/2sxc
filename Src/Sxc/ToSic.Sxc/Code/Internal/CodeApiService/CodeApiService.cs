@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Data.PiggyBack;
-using ToSic.Eav.Services;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
@@ -37,16 +36,14 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
         LazySvc<CodeCompiler> codeCompilerLazy,
         AppDataStackService dataStackService,
         LazySvc<IConvertService> convertService,
-        LazySvc<IDataSourcesService> dataSourceFactory,
         LazySvc<CodeCreateDataSourceSvc> dataSources,
         LazySvc<CodeDataFactory> cdf,
         Polymorphism.Internal.PolymorphConfigReader polymorphism)
         : MyServicesBase(connect:
-            [codeCompilerLazy, dataStackService, convertService, dataSourceFactory, dataSources, cdf, polymorphism])
+            [codeCompilerLazy, dataStackService, convertService, dataSources, cdf, polymorphism])
     {
         public CodeDataFactory Cdf => cdf.Value;
         public LazySvc<CodeCreateDataSourceSvc> DataSources { get; } = dataSources;
-        public LazySvc<IDataSourcesService> DataSourceFactory { get; } = dataSourceFactory;
         public LazySvc<IConvertService> ConvertService { get; } = convertService;
         internal IServiceProvider ServiceProvider { get; } = serviceProvider;
         public LazySvc<CodeCompiler> CodeCompilerLazy { get; } = codeCompilerLazy;
@@ -57,16 +54,12 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
     [PrivateApi]
     protected internal CodeApiService(MyServices services, string logPrefix) : base(services, logPrefix + ".DynCdR")
     {
-        _serviceProvider = services.ServiceProvider;
-
         // Prepare services which need to be attached to this dynamic code root
         CmsContext = GetService<ICmsContext>();
 
         // Make sure we get and initialize (auto-connect) the app-level CSP if that exists or is enabled
         GetService<CspOfApp>();
     }
-
-    private readonly IServiceProvider _serviceProvider;
 
     [PrivateApi] public ICmsContext CmsContext { get; }
 
@@ -79,7 +72,7 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class
     {
-        var newService = _serviceProvider.Build<TService>(Log);
+        var newService = Services.ServiceProvider.Build<TService>(Log);
         if (newService is INeedsCodeApiService newWithNeeds)
             newWithNeeds.ConnectToRoot(this);
         return newService;
