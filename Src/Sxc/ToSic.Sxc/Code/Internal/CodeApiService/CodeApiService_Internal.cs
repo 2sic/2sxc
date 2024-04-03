@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Apps;
+﻿using ToSic.Lib.DI;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Polymorphism.Internal;
 
@@ -31,16 +32,24 @@ public partial class CodeApiService : ICodeApiServiceInternal
     
     #region Kit Handling
 
-    public TService GetService<TService>(NoParamOrder protector = default, bool reuse = false) where TService : class
+    public TService GetService<TService>(NoParamOrder protector = default, bool reuse = false, Type type = default) where TService : class
     {
-        if (!reuse) return GetService<TService>();
+        if (!reuse) return type == null
+            ? Services.ServiceProvider.Build<TService>(Log)
+            : Services.ServiceProvider.Build<TService>(type, Log);
 
-        var type = typeof(TService);
-        if (_reusableServices.TryGetValue(type, out var service))
+        var typeInCache = type ?? typeof(TService);
+        if (_reusableServices.TryGetValue(typeInCache, out var service))
             return (TService)service;
-        var generated = GetService<TService>();
-        _reusableServices[type] = generated;
-        return generated;
+        
+        var newService = type == null 
+            ? Services.ServiceProvider.Build<TService>(Log)
+            : Services.ServiceProvider.Build<TService>(type, Log);
+
+        if (newService is INeedsCodeApiService newWithNeeds)
+            newWithNeeds.ConnectToRoot(this);
+        _reusableServices[typeInCache] = newService;
+        return newService;
     }
     
     /// <summary>
