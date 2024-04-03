@@ -144,7 +144,8 @@ internal partial class AppApiControllerSelectorService(
             {
                 policy.ChangeMonitors.Add(memoryCacheService.CreateCacheEntryChangeMonitor([appCodeAssemblyResult.CacheKey])); // cache dependency on existing cache item with AppCode assembly 
                 var appCodeDescriptor = new HttpControllerDescriptor(Configuration, type.Name, type);
-                return l.Return((new(appCodeDescriptor, controllerFolder.Replace("/api/", "/AppCode/"), ""), policy), "Api controller from AppCode");
+                var fakeFolder = controllerFolder.Replace("/api/", "/AppCode/");
+                return l.Return((new(appCodeDescriptor, fakeFolder, fakeFolder + "AppCode-auto-compiled.dll"), policy), "Api controller from AppCode");
             }
         }
 
