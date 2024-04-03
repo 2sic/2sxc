@@ -1,10 +1,8 @@
 ﻿using System.IO;
-using System.Runtime.Caching;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.State;
-using ToSic.Eav.Caching;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;

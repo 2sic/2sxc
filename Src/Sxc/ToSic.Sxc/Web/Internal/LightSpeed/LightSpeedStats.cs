@@ -21,7 +21,7 @@ public class LightSpeedStats
         Size.AddOrUpdate(appId, size, (id, before) => before + size);
     }
 
-    public static void RemoveStatic(int appId, int size)
+    private static void RemoveStatic(int appId, int size)
     {
         ItemsCount.AddOrUpdate(appId, /*1*/ 0 /* this is probably more correct*/, (id, count) => count - 1);
         Size.AddOrUpdate(appId, 0, (id, before) => before - size);
