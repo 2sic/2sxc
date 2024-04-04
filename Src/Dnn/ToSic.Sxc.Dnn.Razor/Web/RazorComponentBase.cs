@@ -21,8 +21,8 @@ public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHa
     /// For architecture of Composition over Inheritance.
     /// </summary>
     [PrivateApi]
-    internal DnnRazorHelper SysHlp => _sysHlp ??= new DnnRazorHelper().Init(this);
-    private DnnRazorHelper _sysHlp;
+    internal DnnRazorHelper RzrHlp => _rzrHlp ??= new DnnRazorHelper().Init(this);
+    private DnnRazorHelper _rzrHlp;
 
     /// <summary>
     /// Internal access to the underlying RenderPage.
@@ -46,7 +46,7 @@ public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHa
     [PrivateApi]
     public void ConnectToRoot(ICodeApiService codeRoot)
     {
-        SysHlp.ConnectToRoot(codeRoot);
+        RzrHlp.ConnectToRoot(codeRoot);
         _CodeApiSvc = codeRoot;
     }
 
@@ -58,7 +58,7 @@ public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHa
     protected override void ConfigurePage(WebPageBase parentPage)
     {
         base.ConfigurePage(parentPage);
-        SysHlp.ConfigurePage(parentPage, VirtualPath);
+        RzrHlp.ConfigurePage(parentPage, VirtualPath);
     }
 
     /// <summary>
@@ -74,7 +74,7 @@ public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHa
     /// <summary>
     /// EXPLICIT Log implementation (to ensure that new IHasLog.Log interface is implemented)
     /// </summary>
-    [PrivateApi] ILog IHasLog.Log => SysHlp.Log;
+    [PrivateApi] ILog IHasLog.Log => RzrHlp.Log;
 
     /// <inheritdoc />
     public string Path => VirtualPath;
@@ -85,10 +85,10 @@ public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHa
     #region Core Properties which should appear in docs
 
     /// <inheritdoc />
-    public virtual ICodeLog Log => SysHlp.CodeLog;
+    public virtual ICodeLog Log => RzrHlp.CodeLog;
 
     /// <inheritdoc />
-    public virtual IHtmlHelper Html => SysHlp.Html;
+    public virtual IHtmlHelper Html => RzrHlp.Html;
 
     #endregion
 }

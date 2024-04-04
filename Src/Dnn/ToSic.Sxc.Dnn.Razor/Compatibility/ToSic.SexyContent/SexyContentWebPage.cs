@@ -45,10 +45,10 @@ public abstract class SexyContentWebPage :
     #region Core Properties which should appear in docs
 
     /// <inheritdoc />
-    public override ICodeLog Log => SysHlp.CodeLog;
+    public override ICodeLog Log => RzrHlp.CodeLog;
 
     /// <inheritdoc />
-    public override IHtmlHelper Html => SysHlp.Html;
+    public override IHtmlHelper Html => RzrHlp.Html;
 
     #endregion
 
@@ -272,7 +272,7 @@ public abstract class SexyContentWebPage :
 
     /// <inheritdoc />
     public virtual dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError: throwOnError);
+        => RzrHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError: throwOnError);
 
     #endregion
 

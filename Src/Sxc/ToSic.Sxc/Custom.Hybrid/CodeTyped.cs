@@ -38,7 +38,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     protected CodeTyped() : base("Cst.CodeTy") { }
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
-    public new ICodeLog Log => SysHlp.CodeLog;
+    public new ICodeLog Log => CodeHlp.CodeLog;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeRootOrError().GetService<TService>();
@@ -98,7 +98,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
     public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
-        => SysHlp.GetCode(path, noParamOrder, className);
+        => CodeHlp.GetCode(path, noParamOrder, className);
 
 
     #endregion

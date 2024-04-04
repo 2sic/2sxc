@@ -159,8 +159,8 @@ public abstract partial class Api14: DnnSxcCustomControllerBase, IDynamicCode14<
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
     [PrivateApi("added in 16.05, but not sure if it should be public")]
-    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default) =>
-        CreateInstance(path, name: className);
+    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
+        => CreateInstance(path, name: className);
 
     #endregion
 

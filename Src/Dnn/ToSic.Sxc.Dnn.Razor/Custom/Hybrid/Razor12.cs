@@ -22,15 +22,15 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public override HelperResult RenderPage(string path, params object[] data) 
-        => SysHlp.RenderPageNotSupported();
+        => RzrHlp.RenderPageNotSupported();
 
     #region Core Properties which should appear in docs
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
-    public override ICodeLog Log => SysHlp.CodeLog;
+    public override ICodeLog Log => RzrHlp.CodeLog;
 
     /// <inheritdoc />
-    public override IHtmlHelper Html => SysHlp.Html;
+    public override IHtmlHelper Html => RzrHlp.Html;
 
     #endregion
 
@@ -157,7 +157,7 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
     public virtual dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError: throwOnError);
+        => RzrHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError: throwOnError);
 
     #endregion
 

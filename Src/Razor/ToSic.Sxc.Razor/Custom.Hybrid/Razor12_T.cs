@@ -33,7 +33,7 @@ public abstract class Razor12<TModel>: OqtRazorBase<TModel>, IHasCodeLog, IRazor
 
     #region Dynamic Model
 
-    public dynamic DynamicModel => SysHlp.DynamicModel;
+    public dynamic DynamicModel => RzrHlp.DynamicModel;
 
     #endregion
 
@@ -51,7 +51,7 @@ public abstract class Razor12<TModel>: OqtRazorBase<TModel>, IHasCodeLog, IRazor
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
     public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => SysHlp.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
+        => RzrHlp.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
 
     #endregion
 

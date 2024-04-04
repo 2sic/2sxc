@@ -72,7 +72,7 @@ public abstract class RazorTyped<TModel> : OqtRazorBase<TModel>, IHasCodeLog, IR
 
     #region My... Stuff
 
-    private TypedCode16Helper CodeHelper => SysHlp.CodeHelper;
+    private TypedCode16Helper CodeHelper => RzrHlp.CodeHelper;
 
     public ITypedItem MyItem => CodeHelper.MyItem;
 
@@ -112,7 +112,8 @@ public abstract class RazorTyped<TModel> : OqtRazorBase<TModel>, IHasCodeLog, IR
 
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
-    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default) => SysHlp.GetCode(path, noParamOrder, className);
+    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
+        => RzrHlp.GetCode(path, noParamOrder, className);
 
     #region MyContext & UniqueKey
 

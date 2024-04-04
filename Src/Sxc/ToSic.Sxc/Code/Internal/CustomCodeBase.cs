@@ -21,8 +21,8 @@ public abstract class CustomCodeBase : ServiceForDynamicCode, ICompatibilityLeve
     /// </summary>
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    protected internal CodeHelper SysHlp => _sysHlp ??= new CodeHelper().Init(this);
-    private CodeHelper _sysHlp;
+    protected internal CodeHelper CodeHlp => _codeHlp ??= new CodeHelper().Init(this);
+    private CodeHelper _codeHlp;
 
 
     [PrivateApi]
@@ -30,7 +30,7 @@ public abstract class CustomCodeBase : ServiceForDynamicCode, ICompatibilityLeve
     public override void ConnectToRoot(ICodeApiService codeRoot) => base.Log.Do(() =>
     {
         base.ConnectToRoot(codeRoot);
-        SysHlp.ConnectToRoot(codeRoot);
+        CodeHlp.ConnectToRoot(codeRoot);
     });
 
     [PrivateApi]

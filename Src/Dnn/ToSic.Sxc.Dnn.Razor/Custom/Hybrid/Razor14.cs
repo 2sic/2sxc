@@ -22,7 +22,7 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public override HelperResult RenderPage(string path, params object[] data)
-        => SysHlp.RenderPageNotSupported();
+        => RzrHlp.RenderPageNotSupported();
 
 
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
@@ -39,10 +39,10 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
     #region Core Properties which should appear in docs
 
     /// <inheritdoc />
-    public override ICodeLog Log => SysHlp.CodeLog;
+    public override ICodeLog Log => RzrHlp.CodeLog;
 
     /// <inheritdoc />
-    public override IHtmlHelper Html => SysHlp.Html;
+    public override IHtmlHelper Html => RzrHlp.Html;
 
     #endregion
 
@@ -108,11 +108,12 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
 
     /// <inheritdoc />
     public virtual dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError: throwOnError);
+        => RzrHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError: throwOnError);
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
     [PrivateApi("added in 16.05, but not sure if it should be public")]
-    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default) => SysHlp.GetCode(path, noParamOrder, className);
+    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
+        => RzrHlp.GetCode(path, noParamOrder, className);
 
     #endregion
 

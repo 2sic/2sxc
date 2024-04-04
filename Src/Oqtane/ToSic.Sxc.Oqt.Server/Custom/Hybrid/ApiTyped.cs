@@ -164,9 +164,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
     public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
-    {
-        return _CodeApiSvc.CreateInstance(path, relativePath: (this as IGetCodePath).CreateInstancePath, name: className);
-    }
+        => _CodeApiSvc.CreateInstance(path, relativePath: (this as IGetCodePath).CreateInstancePath, name: className);
 
     #region MyContext & UniqueKey
 

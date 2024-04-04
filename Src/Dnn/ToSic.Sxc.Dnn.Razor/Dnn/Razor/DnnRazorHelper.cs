@@ -79,7 +79,7 @@ internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
                 uiMessage: "CreateInstance(*.cshtml) is not supported in Hybrid Razor. Use .cs files instead."));
         var pageAsCode = WebPageBase.CreateInstanceFromVirtualPath(path);
         var pageAsRcb = pageAsCode as RazorComponentBase;
-        pageAsRcb?.SysHlp.ConfigurePage(Page, pageAsRcb.VirtualPath);
+        pageAsRcb?.RzrHlp.ConfigurePage(Page, pageAsRcb.VirtualPath);
         return pageAsCode;
     }
 
