@@ -11,8 +11,6 @@ using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Internal;
-using ToSic.Sxc.LookUp;
-using ToSic.Sxc.LookUp.Internal;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Backend.Context;

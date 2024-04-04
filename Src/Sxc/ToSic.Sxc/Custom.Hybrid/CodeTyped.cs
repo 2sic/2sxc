@@ -38,7 +38,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     protected CodeTyped() : base("Cst.CodeTy") { }
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
-    public new ICodeLog Log => SysHlp.CodeLog;
+    public new ICodeLog Log => CodeHlp.CodeLog;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeRootOrError().GetService<TService>();
@@ -98,7 +98,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
     public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
-        => SysHlp.GetCode(path, noParamOrder, className);
+        => CodeHlp.GetCode(path: path, className: className);
 
 
     #endregion
@@ -182,12 +182,12 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     #region As / AsList WIP v17
 
     /// <inheritdoc />
-    public T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool mock = default)
+    public T As<T>(object source, NoParamOrder protector = default, bool mock = false)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
         => _CodeApiSvc.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
 
     /// <inheritdoc />
-    public IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
+    public IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
         => _CodeApiSvc.Cdf.AsCustomList<T>(source, protector, nullIfNull);
 

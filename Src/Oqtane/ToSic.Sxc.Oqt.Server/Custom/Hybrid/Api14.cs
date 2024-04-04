@@ -21,7 +21,7 @@ public abstract class Api14 : Api12, IDynamicCode14<object, ServiceKit14>
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
     [PrivateApi("added in 16.05, but not sure if it should be public")]
-    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default) =>
-        CreateInstance(path, name: className);
+    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
+        => CodeHlp.GetCode(path: path, className: className);
 
 }

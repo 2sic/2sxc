@@ -89,7 +89,7 @@ internal class AppApiFileSystemWatcher : IDisposable, IHasLog
 
     private AppApiCacheItem CheckAppCode(string path)
     {
-        if (!path.Contains(AppCodeLoader.AppCodeBase, StringComparison.InvariantCultureIgnoreCase)) return null;
+        if (!path.Contains(HotBuildConstants.AppCodeBase, StringComparison.InvariantCultureIgnoreCase)) return null;
         AppApiCacheItem appApiCacheItem = null;
         foreach (var controller in CompiledAppApiControllers)
         {

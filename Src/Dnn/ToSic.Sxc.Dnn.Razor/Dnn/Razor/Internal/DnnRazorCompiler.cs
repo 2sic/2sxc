@@ -81,7 +81,7 @@ internal class DnnRazorCompiler(
             throw; // fake throw, just so the code shows what happens
         }
 
-        return l.Return((writer, page.SysHlp.ExceptionsOrNull));
+        return l.Return((writer, page.RzrHlp.ExceptionsOrNull));
     }
 
 

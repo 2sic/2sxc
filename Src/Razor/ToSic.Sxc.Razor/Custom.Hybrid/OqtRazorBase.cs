@@ -25,7 +25,7 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
     protected OqtRazorBase(int compatibilityLevel, string logName)
     {
         CompatibilityLevel = compatibilityLevel;
-        SysHlp = new(this);
+        RzrHlp = new(this);
         //Log.Rename(logName);
     }
 
@@ -36,7 +36,7 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
     /// For architecture of Composition over Inheritance.
     /// </summary>
     [PrivateApi]
-    internal OqtRazorHelper<TModel> SysHlp { get; }
+    internal OqtRazorHelper<TModel> RzrHlp { get; }
 
     #endregion
 
@@ -48,13 +48,13 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
     [PrivateApi("WIP 17.06,x")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
-        => SysHlp.CodeHelper.GetService<TService>(protector, typeName);
+        => RzrHlp.CodeHelper.GetService<TService>(protector, typeName);
 
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
-    public ICodeLog Log => SysHlp.CodeLog;
+    public ICodeLog Log => RzrHlp.CodeLog;
 
-    [PrivateApi] ILog IHasLog.Log => SysHlp.Log;
+    [PrivateApi] ILog IHasLog.Log => RzrHlp.Log;
 
     [PrivateApi("Not yet ready")]
     public IDevTools DevTools => _CodeApiSvc.DevTools;
@@ -64,24 +64,24 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
     #region DynCode Root
 
     [PrivateApi]
-    public ICodeApiService _CodeApiSvc => SysHlp.DynCodeRootMain;
+    public ICodeApiService _CodeApiSvc => RzrHlp.DynCodeRootMain;
 
     [PrivateApi]
-    public void ConnectToRoot(ICodeApiService parent) => SysHlp.ConnectToRoot(parent);
+    public void ConnectToRoot(ICodeApiService parent) => RzrHlp.ConnectToRoot(parent);
 
     [RazorInject]
     [PrivateApi]
     public new ViewDataDictionary<TModel> ViewData
     {
         get => base.ViewData;
-        set => base.ViewData = SysHlp.HandleViewDataInject(value);
+        set => base.ViewData = RzrHlp.HandleViewDataInject(value);
     }
 
     #endregion
 
     #region Dynamic Model
 
-    void ISetDynamicModel.SetDynamicModel(object data) => SysHlp.SetDynamicModel(data);
+    void ISetDynamicModel.SetDynamicModel(object data) => RzrHlp.SetDynamicModel(data);
 
     #endregion
 

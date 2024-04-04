@@ -254,9 +254,9 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
     /// <param name="mock">if `true` will return a fake when `source` is `null` - otherwise a wrapper item with empty-contents</param>
     /// <returns></returns>
     /// <remarks>
-    /// BETA in v17.03
+    /// Released v17.05
     /// </remarks>
-    T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool mock = default)
+    T As<T>(object source, NoParamOrder protector = default, bool mock = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new();
 
     /// <summary>
@@ -269,9 +269,9 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
     /// <param name="nullIfNull">if `true` will return null when `source` is `null` - otherwise a wrapper item with empty-contents</param>
     /// <returns></returns>
     /// <remarks>
-    /// BETA in v17.03
+    /// Release in v17.05
     /// </remarks>
-    IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
+    IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new();
 
     #endregion

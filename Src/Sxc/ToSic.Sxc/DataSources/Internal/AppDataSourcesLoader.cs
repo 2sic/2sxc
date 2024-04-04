@@ -64,7 +64,7 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
 
             // 1. Get Custom Dynamic DataSources from 'AppCode' assembly
             var data = CreateDataSourceInfos(appId, LoadAppCodeDataSources(spec, out var cacheKey));
-            l.A($"Custom Dynamic DataSources in {AppCodeLoader.AppCodeBase}:{data.Count}");
+            l.A($"Custom Dynamic DataSources in {HotBuildConstants.AppCodeBase}:{data.Count}");
             if (data.Any() && !string.IsNullOrEmpty(cacheKey))
                 policy.ChangeMonitors.Add(_memoryCacheService.CreateCacheEntryChangeMonitor([cacheKey])); // cache dependency on existing cache item with AppCode assembly 
 

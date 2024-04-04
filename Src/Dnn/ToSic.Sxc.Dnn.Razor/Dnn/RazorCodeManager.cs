@@ -62,7 +62,7 @@ internal class RazorCodeManager(RazorComponentBase parent, ILog parentLog) : Hel
         Log.A($"Will try to load code from '{codeFile}");
         try
         {
-            var compiled = Parent.SysHlp.CreateInstance(codeFile);
+            var compiled = Parent.RzrHlp.CreateInstance(codeFile);
             if (compiled != null && compiled is not RazorComponentCode)
             {
                 throw new(

@@ -24,3 +24,4 @@ Src/Integration/SxcEdit01/wwwroot/adam/*
 # Exclude 2sxc-build.config.json
 **/2sxc-build.config.json
 .vs/
+/Src/2sxc Multi-Target Oqt510.sln

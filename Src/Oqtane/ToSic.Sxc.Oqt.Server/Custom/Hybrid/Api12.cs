@@ -13,6 +13,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -184,10 +185,13 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
 
     string IGetCodePath.CreateInstancePath { get; set; }
 
+    protected CodeHelper CodeHlp => _codeHlp ??= GetService<CodeHelper>().Init(this);
+    private CodeHelper _codeHlp;
+
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
     [NonAction]
     public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => _CodeApiSvc.CreateInstance(virtualPath, noParamOrder, name, (this as IGetCodePath).CreateInstancePath, throwOnError);
+        => CodeHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
 
     #endregion
 

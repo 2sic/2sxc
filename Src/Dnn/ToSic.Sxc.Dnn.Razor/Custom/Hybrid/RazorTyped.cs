@@ -32,7 +32,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public override HelperResult RenderPage(string path, params object[] data)
-        => SysHlp.RenderPageNotSupported();
+        => RzrHlp.RenderPageNotSupported();
 
 
     /// <inheritdoc cref="ICompatibilityLevel.CompatibilityLevel"/>
@@ -85,13 +85,14 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     #region Core Properties which should appear in docs
 
     /// <inheritdoc />
-    public override ICodeLog Log => SysHlp.CodeLog;
+    public override ICodeLog Log => RzrHlp.CodeLog;
 
     /// <inheritdoc />
-    public override IHtmlHelper Html => SysHlp.Html;
+    public override IHtmlHelper Html => RzrHlp.Html;
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
-    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default) => SysHlp.GetCode(path, noParamOrder, className);
+    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
+        => RzrHlp.GetCode(path, noParamOrder, className);
 
     #endregion
 
@@ -200,12 +201,12 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     #region As / AsList WIP v17
 
     /// <inheritdoc />
-    public T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool mock = default)
+    public T As<T>(object source, NoParamOrder protector = default, bool mock = false)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
         => _CodeApiSvc.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
 
     /// <inheritdoc />
-    public IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
+    public IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
         => _CodeApiSvc.Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
 

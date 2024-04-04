@@ -31,7 +31,7 @@ public class DynamicCode12: CustomCodeBase, IHasCodeLog, IDynamicCode, IDynamicC
     protected DynamicCode12() : base("Sxc.DynCod") { }
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
-    public new ICodeLog Log => SysHlp.CodeLog;
+    public new ICodeLog Log => CodeHlp.CodeLog;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
@@ -91,7 +91,7 @@ public class DynamicCode12: CustomCodeBase, IHasCodeLog, IDynamicCode, IDynamicC
 
     /// <inheritdoc cref="IDynamicCode.CreateInstance(string, NoParamOrder, string, string, bool)" />
     public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true) =>
-        SysHlp.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
+        CodeHlp.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
 
     #endregion
 
