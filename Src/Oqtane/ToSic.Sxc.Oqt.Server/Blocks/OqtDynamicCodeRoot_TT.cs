@@ -2,6 +2,7 @@
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
@@ -12,17 +13,17 @@ namespace ToSic.Sxc.Oqt.Server.Blocks;
 [PrivateApi]
 internal class OqtCodeApiService<TModel, TServiceKit> : CodeApiService<TModel, TServiceKit> where TServiceKit : ServiceKit where TModel : class
 {
-    private readonly LazySvc<SiteStateInitializer> _siteStateInitializerLazy;
-    public OqtCodeApiService(MyServices services, LazySvc<SiteStateInitializer> siteStateInitializerLazy) : base(services, OqtConstants.OqtLogPrefix)
+    private readonly LazySvc<AliasResolver> _aliasResolverLazy;
+    public OqtCodeApiService(MyServices services, LazySvc<AliasResolver> aliasResolverLazy) : base(services, OqtConstants.OqtLogPrefix)
     {
-        ConnectLogs([
+        ConnectServices(
             _siteStateInitializerLazy = siteStateInitializerLazy
-        ]);
+        );
     }
 
     public override ICodeApiService InitDynCodeRoot(IBlock block, ILog parentLog)
     {
-        _siteStateInitializerLazy.Value.InitIfEmpty(block?.Context?.Site?.Id);
+        _aliasResolverLazy.Value.InitIfEmpty(block?.Context?.Site?.Id);
         return base.InitDynCodeRoot(block, parentLog);
     }
 }

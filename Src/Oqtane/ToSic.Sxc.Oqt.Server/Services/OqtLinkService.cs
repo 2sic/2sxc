@@ -25,13 +25,13 @@ internal class OqtLinkService : LinkServiceBase
 {
     public Razor12 RazorPage { get; set; }
     private readonly IPageRepository _pageRepository;
-    private readonly SiteStateInitializer _siteStateInitializer;
+    private readonly AliasResolver _aliasResolver;
     private readonly LazySvc<IAliasRepository> _aliasRepositoryLazy;
     private IContextOfBlock _context;
 
     public OqtLinkService(
         IPageRepository pageRepository,
-        SiteStateInitializer siteStateInitializer,
+        AliasResolver aliasResolver,
         ImgResizeLinker imgLinker,
         LazySvc<ILinkPaths> linkPathsLazy,
         LazySvc<IAliasRepository> aliasRepositoryLazy
@@ -39,7 +39,7 @@ internal class OqtLinkService : LinkServiceBase
     {
         ConnectLogs([
             _pageRepository = pageRepository,
-            _siteStateInitializer = siteStateInitializer,
+            _aliasResolver = aliasResolver,
             _aliasRepositoryLazy = aliasRepositoryLazy
         ]);
     }
@@ -60,7 +60,7 @@ internal class OqtLinkService : LinkServiceBase
     // Prepare Api link.
     private string ApiNavigateUrl(string api, string parameters)
     {
-        var alias = _siteStateInitializer.InitializedState.Alias;
+        var alias = _aliasResolver.Alias;
 
         var pathWithQueryString = CombineApiWithQueryString(
             LinkPaths.ApiFromSiteRoot(App.Folder, api),

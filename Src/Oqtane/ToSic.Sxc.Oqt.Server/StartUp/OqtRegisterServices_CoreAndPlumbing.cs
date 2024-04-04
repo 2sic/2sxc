@@ -50,7 +50,7 @@ partial class OqtRegisterServices
         services.TryAddTransient<OqtCulture>();
 
         // Site State Initializer for APIs etc. to ensure that the SiteState exists and is correctly preloaded
-        services.TryAddTransient<SiteStateInitializer>();
+        services.TryAddTransient<AliasResolver>();
 
         // Views / Templates / Razor: Get url params in the request
         services.TryAddTransient<IHttp, HttpBlazor>();
