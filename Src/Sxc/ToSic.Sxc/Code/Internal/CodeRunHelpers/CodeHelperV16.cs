@@ -6,9 +6,16 @@ using ToSic.Sxc.DataSources;
 
 namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
+/// <summary>
+/// Code Helper for typed code v16+
+/// </summary>
+/// <param name="owner"></param>
+/// <param name="helperSpecs"></param>
+/// <param name="getRazorModel"></param>
+/// <param name="getModelDic"></param>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class TypedCode16Helper(object owner, CodeHelperSpecs helperSpecs, Func<object> getRazorModel, Func<IDictionary<string, object>> getModelDic)
-    : CodeHelperXxBase(helperSpecs, SxcLogName + ".TCd16H")
+    : CodeHelperV00Base(helperSpecs, SxcLogName + ".TCd16H")
 {
     public bool DefaultStrict = true;
 
@@ -36,22 +43,22 @@ public class TypedCode16Helper(object owner, CodeHelperSpecs helperSpecs, Func<o
 
     internal ContextData Data { get; } = helperSpecs.CodeApiSvc.Data as ContextData;
 
-    public ITypedItem MyItem => _myItem.Get(() => CodeRoot.Cdf.AsItem(Data.MyItem, propsRequired: DefaultStrict));
+    public ITypedItem MyItem => _myItem.Get(() => CodeApiSvc.Cdf.AsItem(Data.MyItem, propsRequired: DefaultStrict));
     private readonly GetOnce<ITypedItem> _myItem = new();
 
-    public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => CodeRoot.Cdf.AsItems(Data.MyItem, propsRequired: DefaultStrict));
+    public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => CodeApiSvc.Cdf.AsItems(Data.MyItem, propsRequired: DefaultStrict));
     private readonly GetOnce<IEnumerable<ITypedItem>> _myItems = new();
 
-    public ITypedItem MyHeader => _myHeader.Get(() => CodeRoot.Cdf.AsItem(Data.MyHeader, propsRequired: DefaultStrict));
+    public ITypedItem MyHeader => _myHeader.Get(() => CodeApiSvc.Cdf.AsItem(Data.MyHeader, propsRequired: DefaultStrict));
     private readonly GetOnce<ITypedItem> _myHeader = new();
 
     public ITypedModel MyModel => _myModel.Get(() => new TypedModel(Specs, MyModelDic, Specs.IsRazor, Specs.CodeFileName));
     private readonly GetOnce<ITypedModel> _myModel = new();
 
 
-    public ITypedStack AllResources => (CodeRoot as CodeApiService)?.AllResources;
+    public ITypedStack AllResources => (CodeApiSvc as CodeApiService)?.AllResources;
 
-    public ITypedStack AllSettings => (CodeRoot as CodeApiService)?.AllSettings;
+    public ITypedStack AllSettings => (CodeApiSvc as CodeApiService)?.AllSettings;
 
     //public IDevTools DevTools => _devTools.Get(() => new DevTools(IsRazor, CodeFileName, Log));
     //private readonly GetOnce<IDevTools> _devTools = new GetOnce<IDevTools>();
@@ -59,19 +66,20 @@ public class TypedCode16Helper(object owner, CodeHelperSpecs helperSpecs, Func<o
     public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
     {
         if (typeName.IsEmptyOrWs())
-            return CodeRoot.GetService<TService>();
+            return CodeApiSvc.GetService<TService>();
 
         var ownType = owner.GetType();
         var assembly = ownType.Assembly;
         // Note: don't check the Namespace property, as it may be empty
-        if (!(ownType.Namespace ?? "").StartsWith(AppCodeLoader.AppCodeBase) && !assembly.FullName.Contains(AppCodeLoader.AppCodeBase))
+        if (!CodeHelper.ObjectIsFromAppCode(owner))
             throw Log.Ex(new Exception($"Type '{ownType.FullName}' is not in the 'AppCode' namespace / dll, so it can't be used to find other types."));
 
         var type = assembly.FindControllerTypeByName(typeName);
         
         return type == null
             ? throw Log.Ex(new Exception($"Type '{typeName}' not found in assembly '{assembly.FullName}'"))
-            : CodeRoot.GetService<TService>(type: type);
+            : CodeApiSvc.GetService<TService>(type: type);
     }
+
 
 }

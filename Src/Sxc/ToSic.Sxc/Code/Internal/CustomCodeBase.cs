@@ -21,17 +21,17 @@ public abstract class CustomCodeBase : ServiceForDynamicCode, ICompatibilityLeve
     /// </summary>
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    protected internal CodeHelper CodeHlp => _codeHlp ??= new CodeHelper().Init(this);
+    protected internal CodeHelper CodeHlp => _codeHlp ??= _CodeApiSvc.GetService<CodeHelper>().Init(this as IGetCodePath); // inheriting classes must implement IGetCodePath
     private CodeHelper _codeHlp;
 
 
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public override void ConnectToRoot(ICodeApiService codeRoot) => base.Log.Do(() =>
+    public override void ConnectToRoot(ICodeApiService codeRoot)
     {
         base.ConnectToRoot(codeRoot);
-        CodeHlp.ConnectToRoot(codeRoot);
-    });
+        //GetCodeHlp.ConnectToRoot(codeRoot);
+    }
 
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

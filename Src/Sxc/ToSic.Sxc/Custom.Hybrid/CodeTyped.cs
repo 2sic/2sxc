@@ -98,7 +98,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
     public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
-        => CodeHlp.GetCode(path, noParamOrder, className);
+        => CodeHlp.GetCode(path: path, className: className);
 
 
     #endregion

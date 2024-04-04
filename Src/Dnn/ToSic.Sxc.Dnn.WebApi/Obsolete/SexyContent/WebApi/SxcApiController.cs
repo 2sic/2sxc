@@ -9,6 +9,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Compatibility.Internal;
 using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Context;
@@ -181,9 +182,12 @@ public abstract partial class SxcApiController() :
 
     string IGetCodePath.CreateInstancePath { get; set; }
 
+    private CodeHelper CodeHlp => _codeHlp ??= GetService<CodeHelper>().Init(this);
+    private CodeHelper _codeHlp;
+
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
     public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => _CodeApiSvc.CreateInstance(virtualPath, noParamOrder, name, ((IGetCodePath)this).CreateInstancePath, throwOnError);
+        => CodeHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
 
     #endregion
 

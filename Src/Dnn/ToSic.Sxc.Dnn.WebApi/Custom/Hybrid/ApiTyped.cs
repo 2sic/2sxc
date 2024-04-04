@@ -149,12 +149,14 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     #region CreateInstance
 
+    private CodeHelper CodeHlp => _codeHlp ??= GetService<CodeHelper>().Init(this);
+    private CodeHelper _codeHlp;
+
     string IGetCodePath.CreateInstancePath { get; set; }
 
-
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
-    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default) 
-        => _CodeApiSvc.CreateInstance(path, relativePath: ((IGetCodePath)this).CreateInstancePath, name: className);
+    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
+        => CodeHlp.GetCode(path, className: className);
 
     #endregion
 

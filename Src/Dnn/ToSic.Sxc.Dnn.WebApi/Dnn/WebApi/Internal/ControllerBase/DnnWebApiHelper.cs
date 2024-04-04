@@ -20,6 +20,7 @@ internal class DnnWebApiHelper : CodeHelperBase
         WebApiLogging = new(apiController.Log, GetService<ILogStore>(), historyLogGroup, firstMessage: firstMessage);
     }
 
+
     #endregion
 
     #region Destruct

@@ -162,9 +162,12 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     public ITypedModel MyModel => CodeHelper.MyModel;
 
+    private CodeHelper CodeHlp => _codeHlp ??= GetService<CodeHelper>().Init(this);
+    private CodeHelper _codeHlp;
+
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
     public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
-        => _CodeApiSvc.CreateInstance(path, relativePath: (this as IGetCodePath).CreateInstancePath, name: className);
+        => CodeHlp.CreateInstance(path /*relativePath: (this as IGetCodePath).CreateInstancePath*/, name: className);
 
     #region MyContext & UniqueKey
 
