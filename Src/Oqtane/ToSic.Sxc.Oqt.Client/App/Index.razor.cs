@@ -50,6 +50,10 @@ public partial class Index : ModuleProBase
         new Resource { ResourceType = ResourceType.Script, Url = $"Modules/{OqtConstants.PackageName}/Module.js" }
     };
 
+    // Property introduced in Oqtane v5.1.0
+    // TODO: @STV update to work also with RenderModes.Static
+    public override string RenderMode => RenderModes.Interactive;
+
     #endregion
 
     /// <summary>
