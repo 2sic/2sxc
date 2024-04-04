@@ -45,25 +45,9 @@ public class CodeHelper() : CodeHelperBase("Sxc.CdHlp")
 
     public static void CodeRunThrowIfParentIsInsideAppCode(object parent)
     {
-        if (ObjectIsFromAppCode(parent))
+        if (HotBuildConstants.ObjectIsFromAppCode(parent))
             throw new("Can't use GetCode in objects from inside AppCode as it's a very dynamic operation.");
     }
-
-    /// <summary>
-    /// Check if an object is from the AppCode-xxx.dll
-    /// </summary>
-    /// <param name="obj"></param>
-    /// <returns></returns>
-    internal static bool ObjectIsFromAppCode(object obj)
-    {
-        if (obj == null) return false;
-        var ownType = obj.GetType();
-        return (ownType.Namespace ?? "").StartsWith(AppCodeLoader.AppCodeBase)
-               || ownType.Assembly.FullName.Contains(AppCodeLoader.AppCodeBase);
-    }
-
-
+    
     #endregion
-
-
 }

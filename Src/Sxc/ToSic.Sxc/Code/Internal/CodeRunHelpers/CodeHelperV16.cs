@@ -71,7 +71,7 @@ public class TypedCode16Helper(object owner, CodeHelperSpecs helperSpecs, Func<o
         var ownType = owner.GetType();
         var assembly = ownType.Assembly;
         // Note: don't check the Namespace property, as it may be empty
-        if (!CodeHelper.ObjectIsFromAppCode(owner))
+        if (!HotBuildConstants.ObjectIsFromAppCode(owner))
             throw Log.Ex(new Exception($"Type '{ownType.FullName}' is not in the 'AppCode' namespace / dll, so it can't be used to find other types."));
 
         var type = assembly.FindControllerTypeByName(typeName);

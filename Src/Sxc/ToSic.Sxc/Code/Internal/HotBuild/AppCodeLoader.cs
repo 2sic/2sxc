@@ -22,9 +22,6 @@ public class AppCodeLoader(
     : ServiceBase("Sys.AppCodeLoad",
         connect: [logStore, site, appStates, appPathsLazy, appCompilerLazy, assemblyCacheManager])
 {
-    public const string AppCodeBase = "AppCode";
-
-
     /// <summary>
     /// Try to get the app code - first of the edition, then of the root.
     /// </summary>
@@ -114,7 +111,7 @@ public class AppCodeLoader(
                 return l.Return(result, "inside lock, start");
 
             // Get paths
-            var (physicalPath, relativePath) = GetAppPaths(AppCodeBase, spec);
+            var (physicalPath, relativePath) = GetAppPaths(HotBuildConstants.AppCodeBase, spec);
             logSummary.AddSpec("PhysicalPath", physicalPath);
             logSummary.AddSpec("RelativePath", relativePath);
 
@@ -180,7 +177,7 @@ public class AppCodeLoader(
             return l.Return(folders, $"{nameof(appRootFolder)} doesn't exist");
 
         // 
-        var appRootAppCode = Path.Combine(appRootFolder, AppCodeBase);
+        var appRootAppCode = Path.Combine(appRootFolder, HotBuildConstants.AppCodeBase);
         // Add to watcher list if it exists, otherwise exit, since we can't have subfolders
         if (!IfExistsThenAdd(appRootAppCode, true))
             return l.Return(folders, $"{nameof(appRootAppCode)} doesn't exist");

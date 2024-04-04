@@ -5,7 +5,7 @@ using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Backend.Sys;
 
-internal class InsightsAppCodeOverview(IAppStates appStates) : InsightsProvider(Link, helpCategory: AppCodeLoader.AppCodeBase)
+internal class InsightsAppCodeOverview(IAppStates appStates) : InsightsProvider(Link, helpCategory: HotBuildConstants.AppCodeBase)
 {
     public static string Link => "AppCodeOverview";
 
