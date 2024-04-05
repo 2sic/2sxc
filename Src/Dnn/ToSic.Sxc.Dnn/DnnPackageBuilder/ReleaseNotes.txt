@@ -1,5 +1,5 @@
 <dl>
-    <dt>v17.06.02</dt>
+    <dt>v17.06.03</dt>
     <dd>Part of module installation is the deletion of unneeded data. In an infrequent case, You could get a 
     timeout exception. This is not a show-stopper. Simply reload the page so DNN can continue deletion 
     until all unnecessary data is deleted and the module is installed.</dd>

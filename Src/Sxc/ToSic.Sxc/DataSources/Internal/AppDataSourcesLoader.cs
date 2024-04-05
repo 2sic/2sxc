@@ -154,7 +154,7 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
 
         var appCodeAssembly = result?.Assembly;
         if (appCodeAssembly == null)
-            return l.ReturnNull("no AppApi controller found");
+            return l.Return([], "no AppCode assembly found");
 
         l.A($"AppCode:{appCodeAssembly.GetName().Name}");
 
@@ -194,7 +194,7 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
             $"{spec}; {nameof(physicalPath)}: '{physicalPath}'; {nameof(relativePath)}: '{relativePath}'");
 
         if (!Directory.Exists(physicalPath))
-            return l.ReturnNull($"no {DataSourcesFolder} folder {physicalPath}");
+            return l.Return([], $"no {DataSourcesFolder} folder {physicalPath}");
 
         var compiler = _codeCompilerLazy.Value;
 
@@ -236,7 +236,11 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
 
     private List<DataSourceInfo> CreateDataSourceInfos(int appId, IEnumerable<TempDsInfo> types)
     {
-        var l = Log.Fn<List<DataSourceInfo>>($"{nameof(appId)}: {appId}");
+        var l = Log.Fn<List<DataSourceInfo>>($"{nameof(appId)}: {appId}; has {nameof(types)}: {types != null}");
+
+        // null check
+        if (types == null) return l.Return([], "types are null");
+
         // App state for automatic lookup of configuration content-types
         var appState = _appStates.GetReader(appId);
         var data = types
