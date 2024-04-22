@@ -5,7 +5,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Compatibility;
 
-public static class StartUpCompatibility
+internal static class StartUpCompatibility
 {
     /// <summary>
     /// Add obsolete interfaces which had previously been supported

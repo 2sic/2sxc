@@ -52,6 +52,7 @@ public class DynamicCode12: CustomCodeBase, IHasCodeLog, IDynamicCode, IDynamicC
     public dynamic Settings => _CodeApiSvc?.Settings;
 
     [PrivateApi("Not yet ready")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public IDevTools DevTools => _CodeApiSvc.DevTools;
 
     #endregion

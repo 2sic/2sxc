@@ -7,7 +7,7 @@ using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// Obsolete, use <see cref="ToSic.Sxc.Services.ISystemLogService"/> instead
+/// Obsolete, use <see cref="ISystemLogService"/> instead
 /// </summary>
 internal class LogServiceUsingOldInterface: DnnSystemLogService
 {

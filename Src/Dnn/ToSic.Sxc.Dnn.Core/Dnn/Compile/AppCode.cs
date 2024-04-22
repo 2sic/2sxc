@@ -1,45 +1,43 @@
 ﻿using System.IO;
 using System.Web;
 
-namespace ToSic.Sxc.Dnn.Compile
-{
-    /// <summary>
-    /// DNN on start need to clean the "2sxc.bin", because it is used to temporary save shared temp AppCode assemblies.
-    /// </summary>
-    [PrivateApi]
-    public static class AppCode
-    {
-        private static bool Cleaned { get; set; }
-        private static readonly object CleaningLock = new();
-        private static string TempAssemblyFolderPath { get; } = Path.Combine(HttpContext.Current.Server.MapPath("~/App_Data"), "2sxc.bin");
+namespace ToSic.Sxc.Dnn.Compile;
 
-        public static void CleanTempAssemblyFolder()
+/// <summary>
+/// DNN on start need to clean the "2sxc.bin", because it is used to temporary save shared temp AppCode assemblies.
+/// </summary>
+internal static class AppCode
+{
+    private static bool Cleaned { get; set; }
+    private static readonly object CleaningLock = new();
+    private static string TempAssemblyFolderPath { get; } = Path.Combine(HttpContext.Current.Server.MapPath("~/App_Data"), "2sxc.bin");
+
+    public static void CleanTempAssemblyFolder()
+    {
+        // Ensure that cleaning is executed only once
+        if (Cleaned) return;
+
+        lock (CleaningLock)
         {
-            // Ensure that cleaning is executed only once
             if (Cleaned) return;
 
-            lock (CleaningLock)
+            if (Directory.Exists(TempAssemblyFolderPath))
             {
-                if (Cleaned) return;
-
-                if (Directory.Exists(TempAssemblyFolderPath))
+                var filesToClean = Directory.GetFiles(TempAssemblyFolderPath, "*.*", SearchOption.TopDirectoryOnly);
+                foreach (var file in filesToClean)
                 {
-                    var filesToClean = Directory.GetFiles(TempAssemblyFolderPath, "*.*", SearchOption.TopDirectoryOnly);
-                    foreach (var file in filesToClean)
+                    try
                     {
-                        try
-                        {
-                            File.Delete(file);
-                        }
-                        catch
-                        {
-                            // ignored
-                        }
+                        File.Delete(file);
                     }
-
+                    catch
+                    {
+                        // ignored
+                    }
                 }
-                Cleaned = true;
+
             }
+            Cleaned = true;
         }
     }
 }

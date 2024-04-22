@@ -9,25 +9,12 @@ using ToSic.Sxc.Integration.Installation;
 
 namespace ToSic.Sxc.Dnn.Install;
 
-internal class DnnPlatformAppInstaller: ServiceBase, IPlatformAppInstaller
+internal class DnnPlatformAppInstaller(
+    LazySvc<IAppStates> appStatesLazy,
+    GenWorkPlus<WorkViews> workViews,
+    LazySvc<RemoteRouterLink> remoteRouterLazy)
+    : ServiceBase("Dnn.AppIns", connect: [workViews, appStatesLazy, remoteRouterLazy]), IPlatformAppInstaller
 {
-    private readonly GenWorkPlus<WorkViews> _workViews;
-    private readonly LazySvc<IAppStates> _appStatesLazy;
-    private readonly LazySvc<RemoteRouterLink> _remoteRouterLazy;
-
-    public DnnPlatformAppInstaller(
-        LazySvc<IAppStates> appStatesLazy,
-        GenWorkPlus<WorkViews> workViews,
-        LazySvc<RemoteRouterLink> remoteRouterLazy
-    ) : base("Dnn.AppIns")
-    {
-        ConnectServices(
-            _workViews = workViews,
-            _appStatesLazy = appStatesLazy,
-            _remoteRouterLazy = remoteRouterLazy
-        );
-    }
-
     public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp)
     {
         var l = Log.Fn<string>();
@@ -43,9 +30,9 @@ internal class DnnPlatformAppInstaller: ServiceBase, IPlatformAppInstaller
         if (forContentApp)
             try
             {
-                var primaryAppId = _appStatesLazy.Value.IdentityOfDefault(site.ZoneId);
+                var primaryAppId = appStatesLazy.Value.IdentityOfDefault(site.ZoneId);
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
-                var contentViews = _workViews.New(primaryAppId).GetAll();
+                var contentViews = workViews.New(primaryAppId).GetAll();
                 if (contentViews.Any()) return null;
             }
             catch
@@ -53,7 +40,7 @@ internal class DnnPlatformAppInstaller: ServiceBase, IPlatformAppInstaller
                 /* ignore */
             }
 
-        var gettingStartedSrc = _remoteRouterLazy.Value.LinkToRemoteRouter(
+        var gettingStartedSrc = remoteRouterLazy.Value.LinkToRemoteRouter(
             RemoteDestinations.AutoConfigure,
             site,
             module.Id,

@@ -5,9 +5,7 @@ using ToSic.Sxc.Web.Internal.JsContext;
 
 namespace ToSic.Sxc.Dnn.Web;
 
-[PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class DnnJsApiHeader(IJsApiService dnnJsApiService, ILog parentLog = null) : HelperBase(parentLog, "Dnn.JsApiH")
+internal class DnnJsApiHeader(IJsApiService dnnJsApiService, ILog parentLog = null) : HelperBase(parentLog, "Dnn.JsApiH")
 {
     public bool AddHeaders()
     {

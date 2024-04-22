@@ -9,14 +9,12 @@ using ToSic.Sxc.Internal;
 namespace ToSic.Sxc.Dnn.Install;
 
 /// <summary>
-/// Helper class to ensure that the an app is ready.
+/// Helper class to ensure that an app is ready.
 /// It will have to do various file accesses - so once it knows a module is ready, it will cache the result.
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class DnnReadyCheckTurbo : ServiceBase
+internal class DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitializerLazy)
+    : ServiceBase("Dnn.PreChk", connect: [appFolderInitializerLazy])
 {
-    private readonly LazySvc<AppFolderInitializer> _appFolderInitializerLazy;
-
     /// <summary>
     /// Fast static check to see if the check had previously completed. 
     /// </summary>
@@ -28,15 +26,6 @@ public class DnnReadyCheckTurbo : ServiceBase
         return CachedModuleResults.TryGetValue(module.ModuleId, out var exists) && exists
             ? l.ReturnTrue("quick-check: ready")
             : l.ReturnFalse("deep-check: not ready, must do extensive check");
-    }
-
-    /// <summary>
-    /// Constructor for DI
-    /// </summary>
-    /// <param name="appFolderInitializerLazy"></param>
-    public DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitializerLazy) : base("Dnn.PreChk")
-    {
-        _appFolderInitializerLazy = appFolderInitializerLazy;
     }
 
     /// <summary>
@@ -84,7 +73,7 @@ public class DnnReadyCheckTurbo : ServiceBase
         if (!(sxcFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
         {
             // configure it
-            var tm = _appFolderInitializerLazy.Value;
+            var tm = appFolderInitializerLazy.Value;
             tm.EnsureTemplateFolderExists(block.Context.AppState.Folder, false);
         }
 

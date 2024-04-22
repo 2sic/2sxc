@@ -5,21 +5,14 @@ using ToSic.Sxc.Dnn.Features;
 
 namespace ToSic.Sxc.Dnn.StartUp;
 
-public class DnnStartUpRegistrations: ServiceBase, IStartUpRegistrations
+internal class DnnStartUpRegistrations(FeaturesCatalog featuresCatalog)
+    : ServiceBase($"{DnnConstants.LogName}.SUpReg", connect: [featuresCatalog]), IStartUpRegistrations
 {
     public string NameId => Log.NameId;
-
-    public DnnStartUpRegistrations(FeaturesCatalog featuresCatalog): base($"{DnnConstants.LogName}.SUpReg")
-    {
-        ConnectServices(
-            _featuresCatalog = featuresCatalog
-        );
-    }
-    private readonly FeaturesCatalog _featuresCatalog;
 
     /// <summary>
     /// Register Dnn features before loading
     /// </summary>
-    public void Register() => DnnBuiltInFeatures.Register(_featuresCatalog);
+    public void Register() => DnnBuiltInFeatures.Register(featuresCatalog);
 
 }

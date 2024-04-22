@@ -12,32 +12,21 @@ using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Dnn.Web;
 
-[PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class DnnClientResources: ServiceBase
+internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader)
+    : ServiceBase($"{DnnConstants.LogName}.JsCss", connect: [dnnJsApiHeader])
 {
-    /// <summary>
-    /// DI Constructor
-    /// </summary>
-    public DnnClientResources(DnnJsApiHeader dnnJsApiHeader) : base($"{DnnConstants.LogName}.JsCss")
-    {
-        ConnectServices(Header = dnnJsApiHeader);
-    }
-        
     public DnnClientResources Init(Page page, bool? forcePre1025Behavior, IBlockBuilder blockBuilder)
     {
         _forcePre1025Behavior = forcePre1025Behavior;
-        Page = page;
-        BlockBuilder = blockBuilder;
+        _page = page;
+        _blockBuilder = blockBuilder;
         return this;
     }
-    protected IBlockBuilder BlockBuilder;
-    protected Page Page;
-    protected DnnJsApiHeader Header;
+    private IBlockBuilder _blockBuilder;
+    private Page _page;
     private bool? _forcePre1025Behavior;
 
-
-    internal IList<IPageFeature> Features => _features ??= BlockBuilder?.Run(true, specs: new())?.Features ?? new List<IPageFeature>();
+    internal IList<IPageFeature> Features => _features ??= _blockBuilder?.Run(true, specs: new())?.Features ?? new List<IPageFeature>();
     private IList<IPageFeature> _features;
 
     public IList<IPageFeature> AddEverything(IList<IPageFeature> features = null)
@@ -45,7 +34,7 @@ public class DnnClientResources: ServiceBase
         var l = Log.Fn<IList<IPageFeature>>();
         // temporary solution, till the features are correctly activated in the block
         // auto-detect BlockBuilder params
-        features = features ?? Features;
+        features ??= Features;
 
         // normal scripts
         var editJs = features.Contains(SxcPageFeatures.JsCmsInternal);
@@ -58,13 +47,13 @@ public class DnnClientResources: ServiceBase
         l.A("user is editor, or template requested js/css, will add client material");
 
         // register scripts and css
-        RegisterClientDependencies(Page, readJs, editJs, editCss, features);
+        RegisterClientDependencies(_page, readJs, editJs, editCss, features);
 
         // New in 11.11.02 - DNN has a strange behavior where the current language isn't known till PreRender
         // so we have to move adding the header to here.
         // MustAddHeaders may have been set earlier by the engine, or now by the various js added
         l.A($"{nameof(MustAddHeaders)}={MustAddHeaders}");
-        if (MustAddHeaders) Header.AddHeaders();
+        if (MustAddHeaders) dnnJsApiHeader.AddHeaders();
 
         return l.ReturnAsOk(features);
     }
@@ -87,48 +76,51 @@ public class DnnClientResources: ServiceBase
     /// </summary>
     /// <returns></returns>
     public bool NeedsPre1025Behavior() => _forcePre1025Behavior
-                                          ?? (BlockBuilder?.GetEngine() as IEngineDnnOldCompatibility)?.OldAutoLoadJQueryAndRvt
+                                          ?? (_blockBuilder?.GetEngine() as IEngineDnnOldCompatibility)?.OldAutoLoadJQueryAndRvt
                                           ?? true;
 
 
-    public void RegisterClientDependencies(Page page, bool readJs, bool editJs, bool editCss, IList<IPageFeature> overrideFeatures = null) =>
-        Log.Do($"-, {nameof(readJs)}:{readJs}, {nameof(editJs)}:{editJs}, {nameof(editCss)}:{editCss}", l =>
+    public void RegisterClientDependencies(Page page, bool readJs, bool editJs, bool editCss, IList<IPageFeature> overrideFeatures = null)
+    {
+        var l = Log.Fn($"-, {nameof(readJs)}:{readJs}, {nameof(editJs)}:{editJs}, {nameof(editCss)}:{editCss}");
+        
+        var features = overrideFeatures ?? Features;
+
+        var root = DnnConstants.SysFolderRootVirtual;
+        root = page.ResolveUrl(root);
+        var ver = EavSystemInfo.VersionWithStartUpBuild;
+        const int priority = (int)FileOrder.Js.DefaultPriority - 2;
+
+        // add edit-mode CSS
+        if (editCss) RegisterCss(page, $"{root}{SxcPageFeatures.ToolbarsInternal.UrlWip}");
+
+        // add read-js
+        if (readJs || editJs)
         {
-            var features = overrideFeatures ?? Features;
+            l.A("add $2sxc api and headers");
+            RegisterJs(page, ver, $"{root}{SxcPageFeatures.JsCore.UrlWip}", true, priority);
+            MustAddHeaders = true;
+        }
 
-            var root = DnnConstants.SysFolderRootVirtual;
-            root = page.ResolveUrl(root);
-            var ver = EavSystemInfo.VersionWithStartUpBuild;
-            var priority = (int)FileOrder.Js.DefaultPriority - 2;
+        // add edit-js (commands, manage, etc.)
+        if (editJs)
+        {
+            l.A("add 2sxc edit api; also needs anti-forgery");
+            // note: the inpage only works if it's not in the head, so we're adding it below
+            RegisterJs(page, ver, $"{root}{SxcPageFeatures.JsCmsInternal.UrlWip}", false, priority + 1);
+        }
 
-            // add edit-mode CSS
-            if (editCss) RegisterCss(page, $"{root}{SxcPageFeatures.ToolbarsInternal.UrlWip}");
+        if (features.Contains(SxcPageFeatures.JQuery))
+            JavaScript.RequestRegistration(CommonJs.jQuery);
 
-            // add read-js
-            if (readJs || editJs)
-            {
-                l.A("add $2sxc api and headers");
-                RegisterJs(page, ver, $"{root}{SxcPageFeatures.JsCore.UrlWip}", true, priority);
-                MustAddHeaders = true;
-            }
+        if (features.Contains(SxcPageFeatures.TurnOn))
+            RegisterJs(page, ver, $"{root}{SxcPageFeatures.TurnOn.UrlWip}", true, priority + 10);
 
-            // add edit-js (commands, manage, etc.)
-            if (editJs)
-            {
-                l.A("add 2sxc edit api; also needs anti-forgery");
-                // note: the inpage only works if it's not in the head, so we're adding it below
-                RegisterJs(page, ver, $"{root}{SxcPageFeatures.JsCmsInternal.UrlWip}", false, priority + 1);
-            }
+        if (features.Contains(SxcPageFeatures.CmsWysiwyg))
+            RegisterCss(page, $"{root}{SxcPageFeatures.CmsWysiwyg.UrlWip}");
 
-            if (features.Contains(SxcPageFeatures.JQuery))
-                JavaScript.RequestRegistration(CommonJs.jQuery);
-
-            if (features.Contains(SxcPageFeatures.TurnOn))
-                RegisterJs(page, ver, $"{root}{SxcPageFeatures.TurnOn.UrlWip}", true, priority + 10);
-
-            if (features.Contains(SxcPageFeatures.CmsWysiwyg))
-                RegisterCss(page, $"{root}{SxcPageFeatures.CmsWysiwyg.UrlWip}");
-        });
+        l.Done();
+    }
 
 
     #region DNN Bug with Current Culture

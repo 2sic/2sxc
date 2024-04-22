@@ -3,15 +3,12 @@ using ToSic.Eav.SysData;
 
 namespace ToSic.Sxc.Dnn.Features;
 
-public class SysFeatureDnn: SysFeatureDetector
+// ReSharper disable once UnusedMember.Global - since it's used by reflection
+internal class SysFeatureDnn() : SysFeatureDetector(DefStatic, true)
 {
-
     private static readonly SysFeature DefStatic = new(
         "Dnn",
         new("00cb8d98-bfac-4a18-b7de-b1237498f183"),
         "Dnn"
     );
-
-    public SysFeatureDnn() : base(DefStatic, true) { }
-
 }

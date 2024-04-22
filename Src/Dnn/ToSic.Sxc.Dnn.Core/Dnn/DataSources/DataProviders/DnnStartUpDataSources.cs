@@ -7,7 +7,7 @@ using ToSic.Sxc.Dnn.DataSources;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources;
 
-public static class DnnStartUpDataSources
+internal static class DnnStartUpDataSources
 {
     public static IServiceCollection AddDnnSxcDataSources(this IServiceCollection services)
     {

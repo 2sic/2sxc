@@ -10,14 +10,9 @@ namespace ToSic.Sxc.Dnn.Pages;
 /// Goal is that this will be more standardized and work across all platforms.
 /// So when we do that, this should implement that interface and become internal.
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class DnnPages: HelperBase
+internal class DnnPages(ILog parentLog) : HelperBase(parentLog, "Dnn.Pages")
 {
-    public DnnPages(ILog parentLog) : base(parentLog, "Dnn.Pages")
-    {
-    }
-
-    public List<ModuleWithContent> AllModulesWithContent(int portalId)
+    internal List<ModuleWithContent> AllModulesWithContent(int portalId)
     {
         var l = Log.Fn<List<ModuleWithContent>>($"{portalId}");
         var mc = ModuleController.Instance;
