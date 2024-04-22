@@ -23,8 +23,8 @@ internal partial class SxcContextResolver(
     /// TODO: WIP - requires that if an app is to be used, it was accessed before - not yet perfect...
     /// </summary>
     /// <returns></returns>
-    public IContextOfUserPermissions UserPermissions() => _ctxUserPerm.Get(() => BlockContextOrNull() ?? AppOrNull() ?? Site());
-    private readonly GetOnce<IContextOfUserPermissions> _ctxUserPerm = new();
+    public AdminPermissions UserPermissions() => _ctxUserPerm.Get(() => (BlockContextOrNull() ?? AppOrNull() ?? Site())?.Permissions);
+    private readonly GetOnce<AdminPermissions> _ctxUserPerm = new();
 
     public IContextOfApp SetAppOrNull(string nameOrPath)
     {

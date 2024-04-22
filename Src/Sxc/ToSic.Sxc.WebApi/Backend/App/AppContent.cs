@@ -103,7 +103,7 @@ public class AppContent : ServiceBase
         if (!permCheck.EnsureAny(GrantSets.ReadDraft))
             itm = getOne(AppState.ListPublished);
 
-        return InitEavAndSerializer(AppState.AppId, Context.UserMayEdit, oDataSelect).Convert(itm);
+        return InitEavAndSerializer(AppState.AppId, Context.Permissions.IsContentAdmin, oDataSelect).Convert(itm);
     }
 
 
@@ -157,7 +157,7 @@ public class AppContent : ServiceBase
         else
             dataController.Update(id.Value, cleanedNewItem);
 
-        return InitEavAndSerializer(AppState.AppId, Context.UserMayEdit, null)
+        return InitEavAndSerializer(AppState.AppId, Context.Permissions.IsContentAdmin, null)
             .Convert(AppState.List.One(id.Value));
     }
 

@@ -69,7 +69,7 @@ public abstract class SexyContentWebPage :
     /// <inheritdoc />
     [PrivateApi("never public, shouldn't be in use elsewhere")]
     [Obsolete]
-    public SxcHelper Sxc => _sxc ??= new(((ICodeApiServiceInternal)_CodeApiSvc)._Block?.Context.UserMayEdit ?? false, GetService<IConvertToEavLight>());
+    public SxcHelper Sxc => _sxc ??= new(((ICodeApiServiceInternal)_CodeApiSvc)._Block?.Context.Permissions.IsContentAdmin ?? false, GetService<IConvertToEavLight>());
     [Obsolete]
     private SxcHelper _sxc;
 #pragma warning restore 612
@@ -101,7 +101,7 @@ public abstract class SexyContentWebPage :
     /// <inheritdoc />
     IBlockInstance IDynamicCode.Data => _CodeApiSvc.Data;
 
-    public RazorPermissions Permissions => new(((ICodeApiServiceInternal)_CodeApiSvc)._Block?.Context.UserMayEdit ?? false);
+    public RazorPermissions Permissions => new(((ICodeApiServiceInternal)_CodeApiSvc)._Block?.Context.Permissions.IsContentAdmin ?? false);
 
     #region AsDynamic in many variations
 

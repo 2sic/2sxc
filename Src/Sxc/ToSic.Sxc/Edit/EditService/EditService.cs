@@ -37,7 +37,7 @@ internal partial class EditService : ServiceForDynamicCode, IEditService
     {
         Block = block;
         var user = codeRoot?.CmsContext?.User;
-        Enabled = Block?.Context.UserMayEdit ?? (user?.IsSiteAdmin ?? false) || (user?.IsSystemAdmin ?? false);
+        Enabled = Block?.Context.Permissions.IsContentAdmin ?? (user?.IsSiteAdmin ?? false);
         return this;
     }
 

@@ -218,5 +218,5 @@ public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>,
         return userDto;
     }
 
-    protected virtual IList<FeatureDto> GetFeatures() => Services.UiDataLazy.Value.FeaturesDto(Services.SiteCtx.UserMayEdit);
+    protected virtual IList<FeatureDto> GetFeatures() => Services.UiDataLazy.Value.FeaturesDto(Services.SiteCtx.Permissions.IsContentAdmin);
 }

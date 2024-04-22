@@ -45,7 +45,7 @@ public partial class BlockBuilder
             if (topLevel)
             {
                 var allChanges = Services.PageChangeSummary.Value
-                    .FinalizeAndGetAllChanges(Block.Context.PageServiceShared, Block.Context.UserMayEdit);
+                    .FinalizeAndGetAllChanges(Block.Context.PageServiceShared, Block.Context.Permissions.IsContentAdmin);
 
                 // Head & Page Changes
                 result.HeadChanges = allChanges.HeadChanges;
@@ -166,7 +166,7 @@ public partial class BlockBuilder
             // Figure out some if we should add the edit context
             // by default the editors will get it
             // in special cases the razor requests it to added as well
-            var addEditCtx = Block.Context.UserMayEdit;
+            var addEditCtx = Block.Context.Permissions.IsContentAdmin;
             var addJsApiOnly = false;
             if (!addEditCtx && Block.BlockFeatureKeys.Any())
             {
