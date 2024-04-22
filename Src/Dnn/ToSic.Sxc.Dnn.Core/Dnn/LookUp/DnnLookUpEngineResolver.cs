@@ -89,7 +89,7 @@ internal class DnnLookUpEngineResolver(IZoneCultureResolver cultureResolver, Laz
         lookupEngine.Add(additions);
 
         if (!lookupEngine.HasSource("form"))
-            additions.Add(new LookUpInNameValueCollection("form", httpLazy.Value.Request.Form));
+            additions.Add(new LookUpInNameValueCollection("form", httpLazy.Value.Request?.Form)); // request is sometimes null (eg. in DNN scheduled task)
 
         // Note: Not implemented in Dnn: "Tenant" source
 
