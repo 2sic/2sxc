@@ -3,8 +3,7 @@
 /// <summary>
 /// This helps create sub-items for a specific context, obeying the rules of the context
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class SubDataFactory(Internal.CodeDataFactory cdf, bool propsRequired, ICanDebug canDebug)
+internal class SubDataFactory(CodeDataFactory cdf, bool propsRequired, ICanDebug canDebug)
 {
     public Internal.CodeDataFactory Cdf { get; } = cdf;
     public bool PropsRequired { get; } = propsRequired;
@@ -17,7 +16,7 @@ internal class SubDataFactory(Internal.CodeDataFactory cdf, bool propsRequired, 
     /// <returns></returns>
     public IDynamicEntity SubDynEntityOrNull(IEntity contents) => SubDynEntityOrNull(contents, Cdf, canDebug.Debug, propsRequired: PropsRequired);
 
-    internal static DynamicEntity SubDynEntityOrNull(IEntity contents, Internal.CodeDataFactory cdf, bool? debug, bool propsRequired)
+    internal static DynamicEntity SubDynEntityOrNull(IEntity contents, CodeDataFactory cdf, bool? debug, bool propsRequired)
     {
         if (contents == null) return null;
         var result = cdf.AsDynamic(contents, propsRequired);

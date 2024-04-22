@@ -32,11 +32,11 @@ partial class CodeDataFactory
         {
             if (_CodeApiSvc.App == null)
                 throw new("Can't create App Context for ADAM - no block, no App");
-            contextOfApp = _contextOfAppLazy.Value;
+            contextOfApp = contextOfAppLazy.Value;
             contextOfApp.ResetApp(_CodeApiSvc.App);
         }
 
-        return _adamManagerLazy.Value.Init(contextOfApp, this, CompatibilityLevel);
+        return adamManager.Value.Init(contextOfApp, this, CompatibilityLevel);
     }
     #region ADAM / Folder
 

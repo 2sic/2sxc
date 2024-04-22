@@ -4,7 +4,6 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Data.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal static class CodeDataFactoryExtensions
 {
     /// <summary>
