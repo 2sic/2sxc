@@ -10,7 +10,7 @@ internal class EngineMessages
     [PrivateApi]
     internal static string ToolbarForEmptyTemplate = ErrorBoxWithMenu(
         "This is a new module without demo data "
-        + "(see <a href='https://go.2sxc.org/no-demo-item' target='_blank'>help</a>). "
+        + "(see <a href='https://go.2sxc.org/no-demo-data' target='_blank'>help</a>). "
         + "Please add content. "
         + EmptyTemplateToolbar
     );
