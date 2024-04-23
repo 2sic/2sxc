@@ -65,27 +65,36 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
             ), $"Is {nameof(ResizeSettings)}, will clone/init");
 
         // Check if the settings is the expected type or null/other type
-        var getSettings = settings as ICanGetByName;
-        l.A($"Has Settings: {getSettings != null}; type: {settings?.GetType().FullName}");
+        var settingsOrNull = TryToCastSettings(settings);
+        l.A($"Has Settings: {settingsOrNull != null}; type: {settings?.GetType().FullName}");
 
         var formatValue = paramHelper.FormatOrNull(format);
 
-        var resizeParams = BuildCoreSettings(paramHelper, width, height, factor, aspectRatio, formatValue, getSettings);
+        var resizeParams = BuildCoreSettings(paramHelper, width, height, factor, aspectRatio, formatValue, settingsOrNull);
 
         // Add more URL parameters if known
         resizeParams.Parameters = paramHelper.ParametersOrNull(parameters);
 
         // Aspects which aren't affected by aspect ratio
         var qParamInt2 = paramHelper.QualityOrNull(quality);
-        resizeParams.Quality = qParamInt2 ?? IntOrZeroAsNull(getSettings?.Get(QualityField)) ?? IntIgnore;
+        resizeParams.Quality = qParamInt2 ?? IntOrZeroAsNull(settingsOrNull?.Get(QualityField)) ?? IntIgnore;
         resizeParams.ResizeMode =
-            paramHelper.ResizeModeOrNull(KeepBestString(resizeMode, getSettings?.Get(ResizeModeField)));
-        resizeParams.ScaleMode = paramHelper.ScaleModeOrNull(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
+            paramHelper.ResizeModeOrNull(KeepBestString(resizeMode, settingsOrNull?.Get(ResizeModeField)));
+        resizeParams.ScaleMode = paramHelper.ScaleModeOrNull(KeepBestString(scaleMode, settingsOrNull?.Get(ScaleModeField)));
 
-        resizeParams.Advanced = GetMultiResizeSettings(advanced, getSettings);
+        resizeParams.Advanced = GetMultiResizeSettings(advanced, settingsOrNull);
 
         return l.Return(resizeParams, "");
     }
+
+    private ICanGetByName TryToCastSettings(object settings) =>
+        settings switch
+        {
+            null => null,
+            ICanGetByName getSettings => getSettings,
+            IEnumerable<ICanGetByName> settingsList => settingsList.FirstOrDefault(),
+            _ => null
+        };
 
     private AdvancedSettings GetMultiResizeSettings(AdvancedSettings advanced, ICanGetByName getSettings)
     {

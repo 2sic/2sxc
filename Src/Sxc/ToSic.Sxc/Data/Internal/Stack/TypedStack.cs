@@ -33,7 +33,7 @@ internal class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPropLookup
 
     #region GetByName - to allow this to be used for image settings etc.
 
-    object ICanGetByName.Get(string name) => (this as ITyped).Get(name);
+    object ICanGetByName.Get(string name) => (this as ITyped).Get(name, required: false);
 
     #endregion
 
