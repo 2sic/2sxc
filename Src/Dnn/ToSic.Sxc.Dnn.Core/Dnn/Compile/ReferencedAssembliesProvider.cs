@@ -34,7 +34,8 @@ public class ReferencedAssembliesProvider(DependenciesLoader dependenciesLoader,
             // Process your assembly information here
             try
             {
-                referencedAssemblies.Add(assembly.WithPolicy().Location);
+                //referencedAssemblies.Add(assembly.WithPolicy().Location);
+                referencedAssemblies.Add(Assembly.ReflectionOnlyLoad(assembly.Assembly).Location);
             }
             catch
             {
@@ -88,7 +89,7 @@ public class ReferencedAssembliesProvider(DependenciesLoader dependenciesLoader,
 
     // static cached, because in case of dll change app will restart itself
     private static IReadOnlyList<string> AppReferencedAssemblies()
-        => _appReferenceAssemblies ??= BuildManager.GetReferencedAssemblies().Cast<Assembly>().Select(assembly => assembly.WithPolicy().Location).ToList().AsReadOnly();
+        => _appReferenceAssemblies ??= BuildManager.GetReferencedAssemblies().Cast<Assembly>().Select(assembly => assembly/*.WithPolicy()*/.Location).ToList().AsReadOnly();
 
     private static IReadOnlyList<string> _appReferenceAssemblies;
 }
