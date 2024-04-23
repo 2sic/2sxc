@@ -25,7 +25,7 @@ public class ReferencedAssembliesProvider(DependenciesLoader dependenciesLoader,
         var lTimer = Log.Fn("timer for AppRef", timer: true);
         var referencedAssemblies = new List<string>(AppReferencedAssemblies());
         lTimer.Done();
-            
+
         // include assemblies from compilation section in web.config hierarchy
         lTimer = Log.Fn("timer for Web Configuration Manager", timer: true);
         var compilationSection = (CompilationSection)WebConfigurationManager.GetSection("system.web/compilation", virtualPath);
@@ -34,9 +34,7 @@ public class ReferencedAssembliesProvider(DependenciesLoader dependenciesLoader,
             // Process your assembly information here
             try
             {
-                var assemblyName = assembly.Assembly;
-                var a = Assembly.ReflectionOnlyLoad(assemblyName);
-                referencedAssemblies.Add(a.Location);
+                referencedAssemblies.Add(assembly.WithPolicy().Location);
             }
             catch
             {
@@ -89,9 +87,8 @@ public class ReferencedAssembliesProvider(DependenciesLoader dependenciesLoader,
     }
 
     // static cached, because in case of dll change app will restart itself
-    private static IReadOnlyList<string> AppReferencedAssemblies() 
-        => _appReferenceAssemblies ??= BuildManager.GetReferencedAssemblies().Cast<Assembly>().Select(assembly => assembly.Location).ToList().AsReadOnly();
-    // TODO: @STV I changed this 2024-03-04 to really cache, before it wasn't cached but a new linq call every time
-    // is this ok, or am I missing something
+    private static IReadOnlyList<string> AppReferencedAssemblies()
+        => _appReferenceAssemblies ??= BuildManager.GetReferencedAssemblies().Cast<Assembly>().Select(assembly => assembly.WithPolicy().Location).ToList().AsReadOnly();
+
     private static IReadOnlyList<string> _appReferenceAssemblies;
 }
