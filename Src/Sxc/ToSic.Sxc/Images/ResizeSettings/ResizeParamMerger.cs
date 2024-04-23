@@ -66,7 +66,7 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
 
         // Check if the settings is the expected type or null/other type
         var getSettings = settings as ICanGetByName;
-        l.A($"Has Settings:{getSettings != null}");
+        l.A($"Has Settings: {getSettings != null}; type: {settings?.GetType().FullName}");
 
         var formatValue = paramHelper.FormatOrNull(format);
 

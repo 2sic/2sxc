@@ -58,13 +58,13 @@ public class ImgResizeLinker : ServiceBase, ICanDebug
         string parameters = default
     )
     {
-        var wrapLog = (Debug ? Log : null).Fn<string>($"{nameof(url)}:{url}");
+        var l = (Debug ? Log : null).Fn<string>($"{nameof(url)}:{url}");
 
         // Modern case - all settings have already been prepared, the other settings are ignored
         if (settings is ResizeSettings resizeSettings)
         {
             var basic = ImageOnly(url, resizeSettings, field).Url;
-            return wrapLog.Return(basic, "prepared:" + basic);
+            return l.Return(basic, "prepared:" + basic);
         }
 
         resizeSettings = ResizeParamMerger.BuildResizeSettings(
@@ -73,20 +73,20 @@ public class ImgResizeLinker : ServiceBase, ICanDebug
             parameters: parameters);
 
         var result = ImageOnly(url, resizeSettings, field).Url;
-        return wrapLog.Return(result, "built:" + result);
+        return l.Return(result, "built:" + result);
     }
         
     internal OneResize ImageOnly(string url, ResizeSettings settings, IHasMetadata field)
     {
-        var wrapLog = Log.Fn<OneResize>();
+        var l = Log.Fn<OneResize>();
         var srcSetSettings = settings.Find(SrcSetType.Img, _features.Value.IsEnabled(ImageServiceUseFactors), _koi.Value.Framework);
-        return wrapLog.Return(ConstructUrl(url, settings, srcSetSettings, field), "no srcset");
+        return l.Return(ConstructUrl(url, settings, srcSetSettings, field), "no srcset");
     }
         
 
     internal string SrcSet(string url, ResizeSettings settings, SrcSetType srcSetType, IHasMetadata field = null)
     {
-        var wrapLog = Log.Fn<string>();
+        var l = Log.Fn<string>();
 
         var srcSetSettings = settings.Find(srcSetType, _features.Value.IsEnabled(ImageServiceUseFactors), _koi.Value.Framework);
 
@@ -94,7 +94,7 @@ public class ImgResizeLinker : ServiceBase, ICanDebug
 
         // Basic case -no srcSet config. In this case the src-set can just contain the url.
         if ((srcSetParts?.Length ?? 0) == 0)
-            return wrapLog.Return(ConstructUrl(url, settings, srcSetSettings, field).Url, "no srcset");
+            return l.Return(ConstructUrl(url, settings, srcSetSettings, field).Url, "no srcset");
 
         var results = srcSetParts.Select(ssPart =>
         {
@@ -103,12 +103,12 @@ public class ImgResizeLinker : ServiceBase, ICanDebug
 
             var one = ConstructUrl(url, settings, srcSetSettings, field: field, partDef: ssPart);
             // this must happen at the end
-            one.Suffix = ssPart.SrcSetSuffix(one.Width); // SrcSetParser.SrcSetSuffix(ssPart, one.Width);
+            one.Suffix = ssPart.SrcSetSuffix(one.Width);
             return one;
         });
         var result = string.Join(",\n", results.Select(r => r.UrlWithSuffix));
 
-        return wrapLog.Return(result, "srcset");
+        return l.Return(result, "srcset");
     }
 
 
@@ -153,24 +153,24 @@ public class ImgResizeLinker : ServiceBase, ICanDebug
     }
 
     // cache buffer settings which had already been looked up
-    private ConcurrentDictionary<IHasMetadata, ImageDecorator> _imgDecCache = new();
+    private readonly ConcurrentDictionary<IHasMetadata, ImageDecorator> _imgDecCache = new();
 
 
     private bool ImgAddIfRelevant(NameValueCollection resizer, string key, object value, string irrelevant = "")
     {
-        var wrapLog = (Debug ? Log : null).Fn<bool>();
+        var l = (Debug ? Log : null).Fn<bool>();
         if (key == null || value == null)
-            return wrapLog.ReturnFalse($"Won't add '{key}', since key or value are null");
+            return l.ReturnFalse($"Won't add '{key}', since key or value are null");
 
         var strValue = value.ToString();
         if (string.IsNullOrEmpty(strValue))
-            return wrapLog.ReturnFalse($"Won't add '{key}' since value as string would be null");
+            return l.ReturnFalse($"Won't add '{key}' since value as string would be null");
 
         if (strValue.Equals(irrelevant, StringComparison.InvariantCultureIgnoreCase))
-            return wrapLog.ReturnFalse($"Won't add '{key}' since value would be irrelevant");
+            return l.ReturnFalse($"Won't add '{key}' since value would be irrelevant");
 
         resizer.Add(key, strValue);
-        return wrapLog.ReturnTrue($"Added key {key}");
+        return l.ReturnTrue($"Added key {key}");
     }
 
 
