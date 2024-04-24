@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using ToSic.Eav;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
@@ -185,7 +186,7 @@ internal class AppApiControllerManager : IHasLog
     }
 
     private string GetAppCodePathFromWatcherFolders(IDictionary<string, bool> watcherFolders)
-        => watcherFolders.FirstOrDefault(x => x.Key.EndsWith(HotBuildConstants.AppCodeBase)).Key;
+        => watcherFolders.FirstOrDefault(x => x.Key.EndsWith(Constants.AppCode)).Key;
 
     private bool AddController(Assembly assembly, string dllName = null)
     {

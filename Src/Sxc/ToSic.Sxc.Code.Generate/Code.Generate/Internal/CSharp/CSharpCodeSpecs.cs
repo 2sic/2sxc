@@ -1,6 +1,6 @@
 ﻿using Custom.Data;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Code.Generate.Internal;
 
@@ -20,7 +20,7 @@ internal class CSharpCodeSpecs: FileGeneratorSpecs
     /// <summary>
     /// Namespace for the data classes
     /// </summary>
-    public string DataNamespace { get; set; } = HotBuildConstants.AppCodeBase + ".Data";
+    public string DataNamespace { get; set; } = Constants.AppCode + ".Data";
 
     public string NamespaceAutoGen { get; set; } = DefAutoGenNamespace;
 

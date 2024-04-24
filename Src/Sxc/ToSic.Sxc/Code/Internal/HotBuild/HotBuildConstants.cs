@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Code.Internal.HotBuild;
+﻿using ToSic.Eav;
+
+namespace ToSic.Sxc.Code.Internal.HotBuild;
 
 public class HotBuildConstants
 {
@@ -11,9 +13,7 @@ public class HotBuildConstants
     {
         if (obj == null) return false;
         var ownType = obj.GetType();
-        return (ownType.Namespace ?? "").StartsWith(AppCodeBase)
-               || ownType.Assembly.FullName.Contains(AppCodeBase);
+        return (ownType.Namespace ?? "").StartsWith(Constants.AppCode)
+               || ownType.Assembly.FullName.Contains(Constants.AppCode);
     }
-
-    public const string AppCodeBase = "AppCode";
 }

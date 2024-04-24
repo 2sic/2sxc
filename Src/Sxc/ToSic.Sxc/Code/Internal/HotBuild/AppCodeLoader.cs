@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Runtime.Caching;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Caching;
@@ -111,7 +112,7 @@ public class AppCodeLoader(
                 return l.Return(result, "inside lock, start");
 
             // Get paths
-            var (physicalPath, relativePath) = GetAppPaths(HotBuildConstants.AppCodeBase, spec);
+            var (physicalPath, relativePath) = GetAppPaths(Constants.AppCode, spec);
             logSummary.AddSpec("PhysicalPath", physicalPath);
             logSummary.AddSpec("RelativePath", relativePath);
 
@@ -177,7 +178,7 @@ public class AppCodeLoader(
             return l.Return(folders, $"{nameof(appRootFolder)} doesn't exist");
 
         // 
-        var appRootAppCode = Path.Combine(appRootFolder, HotBuildConstants.AppCodeBase);
+        var appRootAppCode = Path.Combine(appRootFolder, Constants.AppCode);
         // Add to watcher list if it exists, otherwise exit, since we can't have subfolders
         if (!IfExistsThenAdd(appRootAppCode, true))
             return l.Return(folders, $"{nameof(appRootAppCode)} doesn't exist");
