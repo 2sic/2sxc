@@ -7,6 +7,7 @@ using ToSic.Eav.Metadata;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.Internal.Url;
 using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
@@ -18,26 +19,16 @@ namespace ToSic.Sxc.Images.Internal;
 
 [PrivateApi("Internal stuff")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ImgResizeLinker : ServiceBase, ICanDebug
+public class ImgResizeLinker(
+    LazySvc<IEavFeaturesService> features,
+    LazySvc<ICss> koi,
+    LazySvc<ISite> siteLazy,
+    ResizeDimensionGenerator dimGen)
+    : ServiceBase($"{SxcLogName}.ImgRes", connect: [features, koi, dimGen, siteLazy]), ICanDebug
 {
-
-    public ImgResizeLinker(LazySvc<IEavFeaturesService> features, LazySvc<ICss> koi, LazySvc<ISite> siteLazy)
-        : base($"{SxcLogName}.ImgRes")
-    {
-        ConnectServices(
-            _features = features,
-            _koi = koi,
-            DimGen = new()
-        );
-        _siteLazy = siteLazy;
-    }
-    private readonly LazySvc<IEavFeaturesService> _features;
-    private readonly LazySvc<ICss> _koi;
-    private readonly LazySvc<ISite> _siteLazy;
-
     public bool Debug { get; set; }
 
-    internal readonly ResizeDimensionGenerator DimGen;
+    internal readonly ResizeDimensionGenerator DimGen = dimGen;
 
     /// <summary>
     /// Make sure this is in sync with the Link.Image
@@ -55,7 +46,8 @@ public class ImgResizeLinker : ServiceBase, ICanDebug
         string scaleMode = default,
         string format = default,
         object aspectRatio = default,
-        string parameters = default
+        string parameters = default,
+        ICodeApiService codeApiSvc = default
     )
     {
         var l = (Debug ? Log : null).Fn<string>($"{nameof(url)}:{url}");
@@ -70,7 +62,7 @@ public class ImgResizeLinker : ServiceBase, ICanDebug
         resizeSettings = ResizeParamMerger.BuildResizeSettings(
             settings, factor: factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
             scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
-            parameters: parameters);
+            parameters: parameters, codeApiSvc: codeApiSvc);
 
         var result = ImageOnly(url, resizeSettings, field).Url;
         return l.Return(result, "built:" + result);
@@ -79,7 +71,7 @@ public class ImgResizeLinker : ServiceBase, ICanDebug
     internal OneResize ImageOnly(string url, ResizeSettings settings, IHasMetadata field)
     {
         var l = Log.Fn<OneResize>();
-        var srcSetSettings = settings.Find(SrcSetType.Img, _features.Value.IsEnabled(ImageServiceUseFactors), _koi.Value.Framework);
+        var srcSetSettings = settings.Find(SrcSetType.Img, features.Value.IsEnabled(ImageServiceUseFactors), koi.Value.Framework);
         return l.Return(ConstructUrl(url, settings, srcSetSettings, field), "no srcset");
     }
         
@@ -88,7 +80,7 @@ public class ImgResizeLinker : ServiceBase, ICanDebug
     {
         var l = Log.Fn<string>();
 
-        var srcSetSettings = settings.Find(srcSetType, _features.Value.IsEnabled(ImageServiceUseFactors), _koi.Value.Framework);
+        var srcSetSettings = settings.Find(srcSetType, features.Value.IsEnabled(ImageServiceUseFactors), koi.Value.Framework);
 
         var srcSetParts = srcSetSettings?.VariantsParsed;
 
@@ -119,7 +111,7 @@ public class ImgResizeLinker : ServiceBase, ICanDebug
         one.Recipe = srcSetSettings;
 
         var imgDecorator = field == null ? null 
-            : _imgDecCache.GetOrAdd(field, f => GetOrNull(f, _siteLazy.Value.SafeLanguagePriorityCodes()));
+            : _imgDecCache.GetOrAdd(field, f => GetOrNull(f, siteLazy.Value.SafeLanguagePriorityCodes()));
 
         var resizeMode = resizeSettings.ResizeMode;
         if (imgDecorator?.CropBehavior == NoCrop)

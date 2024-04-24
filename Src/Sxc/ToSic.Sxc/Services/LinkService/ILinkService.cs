@@ -1,7 +1,6 @@
-﻿using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Internal;
+﻿using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Web;
+
 #pragma warning disable CS0108, CS0114
 
 namespace ToSic.Sxc.Services;
@@ -90,6 +89,7 @@ public interface ILinkService: INeedsCodeApiService, ICanDebug
     /// </summary>
     /// <param name="url">The image url. Use an empty string if you want to just get the params for re-use.</param>
     /// <param name="settings">
+    /// - A settings name such as "Content", "Lightbox" etc. (new 17.06)
     /// - A standardized Image-Settings object like Settings.Images.Content - see https://go.2sxc.org/settings
     /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
     /// - Or a specially prepared <see cref="Images.IResizeSettings"/> object containing all settings.

@@ -9,20 +9,13 @@ using static System.StringComparer;
 namespace ToSic.Sxc.Images;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal partial class ImageService: ServiceForDynamicCode, IImageService
+internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService features)
+    : ServiceForDynamicCode(SxcLogName + ".ImgSvc", connect: [features, imgLinker]), IImageService
 {
     #region Constructor and Inits
 
-    public ImageService(ImgResizeLinker imgLinker, IFeaturesService features) : base(SxcLogName + ".ImgSvc")
-    {
-        ConnectServices(
-            Features = features,
-            ImgLinker = imgLinker
-        );
-    }
-
-    internal ImgResizeLinker ImgLinker { get; }
-    internal IFeaturesService Features { get; }
+    internal ImgResizeLinker ImgLinker { get; } = imgLinker;
+    internal IFeaturesService Features { get; } = features;
 
     internal IEditService EditOrNull => _CodeApiSvc?.Edit;
 
@@ -44,18 +37,14 @@ internal partial class ImageService: ServiceForDynamicCode, IImageService
 
         return settings switch
         {
-            null or true => l.Return(GetCodeRootSettingsByName("Content"), "null/default"),
-            string strName when strName.HasValue() => l.Return(GetCodeRootSettingsByName(strName), $"name: {strName}"),
+            null or true => l.Return(GetImageSettingsByName("Content"), "null/default"),
+            string strName when strName.HasValue() => l.Return(GetImageSettingsByName(strName), $"name: {strName}"),
             _ => l.Return(settings, "unchanged")
         };
     }
 
-    private object GetCodeRootSettingsByName(string strName)
-    {
-        var l = Debug ? Log.Fn<object>($"{strName}; code root: {_CodeApiSvc != null}") : null;
-        var result = _CodeApiSvc?.Settings?.Get($"Settings.Images.{strName}");
-        return l.Return((object)result, $"found: {result != null}");
-    }
+    
+    private object GetImageSettingsByName(string strName) => ResizeParamMerger.GetImageSettingsByName(_CodeApiSvc, strName, Debug, Log);
 
     /// <summary>
     /// Convert to Multi-Resize Settings

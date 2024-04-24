@@ -6,7 +6,9 @@ using static ToSic.Sxc.Internal.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images;
 
-internal class ResizeDimensionGenerator() : ServiceBase("Img.ResDim")
+[PrivateApi("Internal stuff")]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+public class ResizeDimensionGenerator() : ServiceBase("Img.ResDim")
 {
     public bool Debug = false;
         
@@ -30,7 +32,7 @@ internal class ResizeDimensionGenerator() : ServiceBase("Img.ResDim")
     }
 
 
-    public OneResize ResizeDimensions(ResizeSettings settings, Recipe recipe, RecipeVariant partDef = null)
+    internal OneResize ResizeDimensions(ResizeSettings settings, Recipe recipe, RecipeVariant partDef = null)
     {
         var factor = settings.FactorToUse;
         // if (DNearZero(factor)) factor = 1; // in this case we must still calculate, and should assume factor is exactly 1

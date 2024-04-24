@@ -60,6 +60,7 @@ static partial class RegisterSxcServices
         services.TryAddTransient<IFeaturesService, FeaturesService>();  // New 13.01
         services.TryAddTransient<IImageService, ImageService>();
         services.TryAddTransient<IEditService, EditService>();
+        services.TryAddTransient<ResizeDimensionGenerator>();
 
         // v14 Toolbar Builder
         services.TryAddTransient<IToolbarBuilder, ToolbarBuilder>();
