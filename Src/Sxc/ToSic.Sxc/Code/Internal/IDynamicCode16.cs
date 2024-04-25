@@ -168,13 +168,23 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
     /// Create a typed object which will provide all the properties of the things wrapped inside it.
     /// The priority is first-object first, so if multiple items have the property, the first in the list will be returned.
     /// </summary>
-    /// <param name="items"></param>
+    /// <param name="items">objects to stack together</param>
     /// <returns></returns>
     ITypedStack AsStack(params object[] items);
 
+    /// <summary>
+    /// Create a custom-typed object which will provide all the properties of the things wrapped inside it.
+    /// The priority is first-object first, so if multiple items have the property, the first in the list will be returned.
+    /// </summary>
+    /// <param name="items">objects to stack together</param>
+    /// <returns>Item of the custom type</returns>
+    /// <remarks>New in 17.07</remarks>
+    public T AsStack<T>(params object[] items)
+        where T : class, ITypedItemWrapper16, ITypedItem, new();
+
     #endregion
 
-    #region My... Stuff
+        #region My... Stuff
 
     /// <summary>
     /// The main Item belonging to this Template/Module.
