@@ -302,11 +302,9 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     /// <inheritdoc />
     [PrivateApi]
     ITypedItem ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required)
-    {
-        return IsErrStrict(this, name, required, GetHelper.PropsRequired)
+        => IsErrStrict(this, name, required, GetHelper.PropsRequired)
             ? throw ErrStrictForTyped(this, name)
             : ((ITypedItem)this).Children(name).FirstOrDefault();
-    }
 
     #endregion
 
