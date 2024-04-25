@@ -58,10 +58,9 @@ partial class AppFilesControllerReal : Eav.WebApi.Admin.IAppExplorerControllerDe
                     {
                         Path = f,
                         EndpointPath = ApiExplorerControllerReal.AppCodeEndpointPath(edition, Path.GetFileNameWithoutExtension(f)),
-                        IsCompiled = true
+                        IsCompiled = true,
+                        Edition = edition
                     }));
-
-
         }
 
         return l.Return(appCodeApiControllerFiles, $"ok, count:{appCodeApiControllerFiles.Count}");
@@ -127,5 +126,23 @@ partial class AppFilesControllerReal : Eav.WebApi.Admin.IAppExplorerControllerDe
             return l.ReturnTrue($"'{controllerTypeName}' is not controller type");
 
         return l.ReturnAndLog(appCodeAssembly.FindControllerTypeByName(controllerTypeName) != null);
+    }
+
+    public string GetEdition(int appId, string path)
+    {
+        var l = Log.Fn<string>($"{nameof(path)}:'{path}'");
+
+        // extract bottom folder from path
+        var edition = path.Split(['/'], StringSplitOptions.RemoveEmptyEntries)[0];
+        if (edition.Equals(Constants.Api, StringComparison.OrdinalIgnoreCase) 
+            || edition.Equals(path, StringComparison.OrdinalIgnoreCase))
+            return l.Return(string.Empty, "<root> edition, because no bottom folder found");
+
+        var editions = _codeController.Value.GetEditions(appId)?.Editions.Select(e => e.Name).ToList() ?? ["", "live", "staging"]; // fallback to hardcoded editions;
+        if (editions.Any(e => e.Equals(edition, StringComparison.OrdinalIgnoreCase)) == true)
+            return l.Return(edition, $"ok, '{edition}'");
+
+        // fallback to <root> edition
+        return l.Return("", $"ok, 'fallback to <root> edition'");
     }
 }
