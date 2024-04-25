@@ -5,6 +5,7 @@ using System.Runtime.Caching;
 using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http.Controllers;
+using ToSic.Eav;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
@@ -65,7 +66,7 @@ internal partial class AppApiControllerSelectorService(
 
         var routeData = request.GetRouteData();
 
-        var controllerTypeName = routeData.Values[VarNames.Controller] + "Controller";
+        var controllerTypeName = routeData.Values[VarNames.Controller] + Constants.ApiControllerSuffix;
 
         // Now Handle the 2sxc app-api queries
 

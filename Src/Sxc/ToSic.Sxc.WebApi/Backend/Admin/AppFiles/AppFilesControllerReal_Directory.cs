@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using ToSic.Eav;
 using ToSic.Eav.ImportExport.Internal;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
@@ -38,6 +39,13 @@ partial class AppFilesControllerReal
             {
                 // todo: possibly re-include subfolders with ".data"
                 if (Settings.ExcludeFolders.Contains(d.Name)) continue;
+
+                // in special case when searching for api controller files, we need to skip AppCode
+                // because it is handled differently in AllApiControllerFilesInAppCodeForAllEditions
+                if (Constants.AppCode.Equals(d.Name, StringComparison.OrdinalIgnoreCase)
+                    && searchPattern.Equals($"*{Constants.ApiControllerSuffix}.cs", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
                 folders.Add(d);
                 FullDirList(d, searchPattern, folders, files, opt);
             }

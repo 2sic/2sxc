@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Apps.Internal.Assets;
+﻿using ToSic.Eav;
+
+namespace ToSic.Sxc.Apps.Internal.Assets;
 
 public partial class AssetTemplates
 {
@@ -74,7 +76,7 @@ public class " + CsApiTemplateControllerName + @" : Custom.Hybrid.ApiTyped
 }
 ",
             Description = "c# WebApi controller typed template",
-            Suffix = "Controller",
+            Suffix = Constants.ApiControllerSuffix,
         };
 
     /*
