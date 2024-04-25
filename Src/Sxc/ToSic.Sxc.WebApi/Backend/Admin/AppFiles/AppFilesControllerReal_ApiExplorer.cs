@@ -133,7 +133,7 @@ partial class AppFilesControllerReal : Eav.WebApi.Admin.IAppExplorerControllerDe
         var l = Log.Fn<string>($"{nameof(path)}:'{path}'");
 
         // extract bottom folder from path
-        var edition = path.Split(['/'], StringSplitOptions.RemoveEmptyEntries)[0];
+        var edition = path.Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries)[0];
         if (edition.Equals(Constants.Api, StringComparison.OrdinalIgnoreCase) 
             || edition.Equals(path, StringComparison.OrdinalIgnoreCase))
             return l.Return(string.Empty, "<root> edition, because no bottom folder found");
