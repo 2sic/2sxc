@@ -177,16 +177,16 @@ partial interface ITypedItem
     /// </remarks>
     IResponsiveImage Img(
         string name,
-        NoParamOrder noParamOrder,
-        object settings,
-        object factor,
-        object width,
-        string imgAlt,
-        string imgAltFallback,
-        string imgClass,
-        object imgAttributes,
-        object toolbar,
-        object recipe
+        NoParamOrder noParamOrder = default,
+        object settings = default,
+        object factor = default,
+        object width = default,
+        string imgAlt = default,
+        string imgAltFallback = default,
+        string imgClass = default,
+        object imgAttributes = default,
+        object toolbar = default,
+        object recipe = default
     );
 
     /// <summary>

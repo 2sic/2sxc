@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Blocks.Internal;
+﻿using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Data.Internal;
 
