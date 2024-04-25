@@ -190,14 +190,12 @@ partial interface ITypedItem
     );
 
     /// <summary>
-    /// Get the GPS coordinates of a GPS field.
+    /// Get the GPS coordinates of a GPS field as a typed object.
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="protector"></param>
-    /// <param name="required"></param>
+    /// <param name="name">Name of a field</param>
+    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns></returns>
     /// <remarks>New in v17.03</remarks>
-    [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     GpsCoordinates Gps(string name, NoParamOrder protector = default, bool? required = default);
 }
