@@ -70,4 +70,8 @@ public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSu
         return assembly;
     }
 
+    [HttpGet]
+    [JsonFormatter(Casing = Casing.Camel)]
+    public AllApiFilesDto AppApiFiles(int appId) => Real.AppApiFiles(appId);
+
 }

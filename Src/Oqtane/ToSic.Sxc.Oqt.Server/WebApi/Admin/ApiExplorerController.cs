@@ -16,6 +16,7 @@ using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Polymorphism.Internal;
+using ToSic.Sxc.WebApi;
 using RealController = ToSic.Eav.WebApi.ApiExplorer.ApiExplorerControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
@@ -79,4 +80,8 @@ public class ApiExplorerController() : OqtStatefulControllerBase(RealController.
 
         return Compiler.New().Compile(apiFile, dllName, spec).Assembly;
     }
+
+    [HttpGet]
+    [JsonFormatter(Casing = Casing.Camel)]
+    public AllApiFilesDto AppApiFiles(int appId) => Real.AppApiFiles(appId);
 }
