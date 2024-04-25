@@ -14,14 +14,14 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
     {
         _stack = new PropertyStack().Init(name, sources);
         Cdf = cdf;
-        _propertyLookup = new PropLookupStack(_stack, () => Debug);
+        _stackPropLookup = new(_stack, () => Debug);
         _helper = new(this, cdf, propsRequired: false, childrenShouldBeDynamic: false, canDebug: this);
         _itemHelper = new(_helper, this);
     }
 
     private readonly IPropertyStack _stack;
-    IPropertyLookup IHasPropLookup.PropertyLookup => _propertyLookup;
-    private readonly IPropertyLookup _propertyLookup;
+    IPropertyLookup IHasPropLookup.PropertyLookup => _stackPropLookup;
+    private readonly PropLookupStack _stackPropLookup;
     private readonly GetAndConvertHelper _helper;
     private readonly CodeItemHelper _itemHelper;
 
@@ -119,7 +119,7 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
 
     #region Add-Ons for ITypedStack
 
-    ITypedItem ITypedStack.Child(string name, NoParamOrder noParamOrder, bool? required)
+    ITypedItem /*ITypedStack*/ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required)
     {
         var findResult = _helper.TryGet(name);
         return IsErrStrict(findResult.Found, required, _helper.PropsRequired)
@@ -127,7 +127,7 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
             : Cdf.AsItem(findResult.Result);
     }
 
-    IEnumerable<ITypedItem> ITypedStack.Children(string field, NoParamOrder noParamOrder, string type, bool? required)
+    IEnumerable<ITypedItem> /*ITypedStack*/ITypedItem.Children(string field, NoParamOrder noParamOrder, string type, bool? required)
     {
         var findResult = _helper.TryGet(field);
         return IsErrStrict(findResult.Found, required, _helper.PropsRequired)
