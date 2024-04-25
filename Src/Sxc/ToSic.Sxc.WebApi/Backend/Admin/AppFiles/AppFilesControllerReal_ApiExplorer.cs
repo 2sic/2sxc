@@ -34,11 +34,19 @@ partial class AppFilesControllerReal : Eav.WebApi.Admin.IAppExplorerControllerDe
             var edition = editionDto.Name;
             l.A($"collect ApiController files in AppCode for edition:'{edition}'");
 
-            // get AppCode assembly
-            var spec = new HotBuildSpec(appId, edition: edition, app.Folder);
-            l.A($"{spec}");
-            var (result, _) = _appCodeLoader.Value.GetAppCode(spec);
-            var appCodeAssembly = result?.Assembly;
+            Assembly appCodeAssembly = null;
+            try
+            {
+                // get AppCode assembly
+                var spec = new HotBuildSpec(appId, edition: edition, app.Folder);
+                l.A($"{spec}");
+                var (result, _) = _appCodeLoader.Value.GetAppCode(spec);
+                appCodeAssembly = result?.Assembly;
+            }
+            catch (Exception e)
+            {
+                l.Ex(e);
+            }
             l.A($"has appCode assembly:{appCodeAssembly != null}");
 
             var codeApiControllerFiles = ApiControllerFilesInAppCode(mask, appPath, edition, appCodeAssembly);
@@ -52,6 +60,8 @@ partial class AppFilesControllerReal : Eav.WebApi.Admin.IAppExplorerControllerDe
                         EndpointPath = ApiExplorerControllerReal.AppCodeEndpointPath(edition, Path.GetFileNameWithoutExtension(f)),
                         IsCompiled = true
                     }));
+
+
         }
 
         return l.Return(appCodeApiControllerFiles, $"ok, count:{appCodeApiControllerFiles.Count}");
