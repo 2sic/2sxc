@@ -109,18 +109,11 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IJsonService> json,
         // get generators
         var fileGenerators = generators.Value.Select(g => new GeneratorDto(g)).ToList();
 
-        var pathToDotAppJson = appJsonService.Value.GetPathToDotAppJson(appId);
-        l.A($"path to app.json: {pathToDotAppJson}");
-        if (File.Exists(pathToDotAppJson))
+        var editionsJson = json.Value.To<EditionsJson>(appJsonService.Value.GetDotAppJson(appId));
+        if (editionsJson?.Editions?.Count > 0)
         {
-            l.A($"has app.json");
-            var editionsJson = json.Value.To<EditionsJson>(File.ReadAllText(pathToDotAppJson));
-
-            if (editionsJson?.Editions?.Count > 0)
-            {
-                l.A($"has editions in app.json: {editionsJson?.Editions?.Count}");
-                return l.ReturnAsOk(editionsJson.ToEditionsDto(fileGenerators));
-            }
+            l.A($"has editions in app.json: {editionsJson?.Editions?.Count}");
+            return l.ReturnAsOk(editionsJson.ToEditionsDto(fileGenerators));
         }
 
         l.A("editions are not specified, so using default edition data");
