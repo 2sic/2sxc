@@ -133,8 +133,8 @@ Correct: <code>var testItem = MyItem;</code><br>
         NotExists("Data", "MyData"),
 
         // Renamed properties on ITypedItem
-        new GenChangeOn("ToSic.Sxc.Data.ITypedItem", "EntityId", alt: "Id"),
-        new GenChangeOn("ToSic.Sxc.Data.ITypedItem", "EntityGuid", alt: "Guid"),
+        new GenChangeOn("ToSic.Sxc.Data.ITypedItem", Attributes.EntityIdPascalCase, alt: "Id"),
+        new GenChangeOn("ToSic.Sxc.Data.ITypedItem", Attributes.EntityGuidPascalCase, alt: "Guid"),
         new GenChangeOn("ToSic.Sxc.Data.ITypedItem", "EntityTitle", alt: "Title"),
 
         // Renamed properties on IAppTyped: Path, Folder

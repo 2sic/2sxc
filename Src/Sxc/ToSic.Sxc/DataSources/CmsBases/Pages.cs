@@ -152,7 +152,7 @@ public class Pages: CustomDataSourceAdvanced
         // Try to add Navigation properties
         try
         {
-            var asTree = _treeMapper.AddParentChild(pages, "EntityId", "ParentId");
+            var asTree = _treeMapper.AddParentChild(pages, Attributes.EntityIdPascalCase, "ParentId");
             return (asTree, $"As Tree: {asTree.Count}");
         }
         catch (Exception ex)
