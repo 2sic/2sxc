@@ -1,39 +1,23 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Threading;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using AsyncKeyedLock;
 using Oqtane.Modules;
 
 namespace ToSic.Sxc.Oqt.Client.Services
 {
     public class RenderSpecificLockManager : IService
     {
-        private readonly ConcurrentDictionary<Guid, SemaphoreSlim> _locks = new();
-
-        public async Task<IDisposable> LockAsync(Guid renderId)
+        private readonly AsyncKeyedLocker<Guid> _locks = new(o =>
         {
-            var semaphore = _locks.GetOrAdd(renderId, _ => new SemaphoreSlim(1, 1));
-            await semaphore.WaitAsync();
-            return new ReleaseHandle(() => Release(renderId));
-        }
+            o.PoolSize = 20;
+            o.PoolInitialFill = 1;
+        });
 
-        private void Release(Guid requestId)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public async ValueTask<IDisposable> LockAsync(Guid renderId)
         {
-            if (_locks.TryGetValue(requestId, out var semaphore))
-            {
-                semaphore.Release();
-
-                // Consider removing the semaphore from the dictionary if no longer needed,
-                // but be cautious of race conditions and ensure proper synchronization.
-            }
-        }
-
-        private class ReleaseHandle(Action releaseAction) : IDisposable
-        {
-            public void Dispose()
-            {
-                releaseAction();
-            }
+            return await _locks.LockAsync(renderId).ConfigureAwait(false);
         }
     }
 

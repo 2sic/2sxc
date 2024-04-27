@@ -44,6 +44,7 @@
     <PackageReference Include="System.Net.Http.Json" Version="7.0.1" /><!-- from Oqtane.Client.csproj -->
     <PackageReference Include="Oqtane.Client" Version="4.0.0" />
     <PackageReference Include="Oqtane.Shared" Version="4.0.0" />
+    <PackageReference Include="AsyncKeyedLock" Version="6.4.2" />
   </ItemGroup>
 
   <ItemGroup>
