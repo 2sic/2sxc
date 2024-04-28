@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data;
+﻿using ToSic.Eav.Apps.Services;
+using ToSic.Sxc.Data;
 
 
 namespace ToSic.Sxc.Services;
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.Services;
 /// In future the internal engine may change (like for .net core), but we'll ensure that the result remains consistent. 
 /// </remarks>
 [PublicApi]
-public interface IJsonService
+public interface IJsonService : IJsonServiceInternal
 {
     /// <summary>
     /// Convert an object to JSON.
@@ -30,7 +31,7 @@ public interface IJsonService
     /// If you need to add the JSON to HTML of a page, make sure you also use `Html.Raw(...)`, otherwise it will be encoded and not usable in JavaScript.
     /// </summary>
     /// <param name="item">The object to serialize</param>
-    string ToJson(object item);
+    new string ToJson(object item);
 
     /// <summary>
     /// Convert an object to JSON - using nicer output / indentation.
@@ -45,7 +46,7 @@ public interface IJsonService
     /// But as of 2sxc 12.11 we're still using an old Newtonsoft, so we cannot really control the indentation depth.
     /// If you call this, it will always indent using 4 spaces. In a future release we'll probably use a newer Newtonsoft with which we can then use the indentation as needed.
     /// </remarks>
-    string ToJson(object item, int indentation);
+    new string ToJson(object item, int indentation);
 
     /// <summary>
     /// Convert a JSON to a typed object. 
@@ -53,7 +54,7 @@ public interface IJsonService
     /// <typeparam name="T"></typeparam>
     /// <param name="json"></param>
     /// <returns></returns>
-    T To<T>(string json);
+    new T To<T>(string json);
 
     /// <summary>
     /// Convert a json to an anonymous object.
@@ -61,7 +62,7 @@ public interface IJsonService
     /// </summary>
     /// <param name="json"></param>
     /// <returns></returns>
-    object ToObject(string json);
+    new object ToObject(string json);
 
     /// <summary>
     /// Creates a <see cref="ITyped"/> object from a json string.
