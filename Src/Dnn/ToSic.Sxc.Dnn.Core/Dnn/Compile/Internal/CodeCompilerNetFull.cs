@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Web.Compilation;
+using ToSic.Eav.Apps.Services;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
 
@@ -10,12 +11,15 @@ internal class CodeCompilerNetFull : CodeCompiler
 {
     private readonly IRoslynBuildManager _roslynBuildManager;
     private readonly LazySvc<SourceAnalyzer> _sourceAnalyzer;
+    private readonly LazySvc<IAppJsonService> _appJson;
 
-    public CodeCompilerNetFull(IServiceProvider serviceProvider, IRoslynBuildManager roslynBuildManager, LazySvc<SourceAnalyzer> sourceAnalyzer) : base(serviceProvider)
+    public CodeCompilerNetFull(IServiceProvider serviceProvider, IRoslynBuildManager roslynBuildManager, LazySvc<SourceAnalyzer> sourceAnalyzer, LazySvc<IAppJsonService> appJson) : base(serviceProvider)
     {
+
         ConnectServices(
             _roslynBuildManager = roslynBuildManager,
-            _sourceAnalyzer = sourceAnalyzer
+            _sourceAnalyzer = sourceAnalyzer,
+            _appJson = appJson
         );
     }
 
@@ -38,7 +42,7 @@ internal class CodeCompilerNetFull : CodeCompiler
 
             try
             {
-                if (codeFileInfo.IsHotBuildSupported())
+                if (_appJson.Value.RazorCompilerAlwaysUseRoslyn(spec.AppId) || codeFileInfo.IsHotBuildSupported())
                     return l.Return(_roslynBuildManager.GetCompiledAssembly(codeFileInfo, className, spec),
                         "Ok, RoslynBuildManager");
             }
