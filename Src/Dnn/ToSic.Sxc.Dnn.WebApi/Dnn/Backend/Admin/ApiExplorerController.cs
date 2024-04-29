@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Hosting;
+using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Lib.Logging;
@@ -45,13 +46,15 @@ public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSu
             throw new($"Error: can't find controller file: {controllerVirtualPath}");
 
         Assembly assembly;
+        var appJson = SysHlp.GetService<IAppJsonService>();
+        var block = SysHlp.GetService<DnnGetBlock>().GetCmsBlock(Request);
         var codeFileInfo = SysHlp.GetService<SourceAnalyzer>().TypeOfVirtualPath(controllerVirtualPath);
-        if (codeFileInfo.AppCode)
+        if (/*appJson.RazorCompilerAlwaysUseRoslyn(block?.AppId) || */codeFileInfo.AppCode)
         {
             Log.A("has AppCode");
             // Figure edition
             HotBuildSpec spec = null;
-            var block = SysHlp.GetService<DnnGetBlock>().GetCmsBlock(Request);
+            
             if (block != null)
             {
                 var edition = PolymorphConfigReader.UseViewEditionOrGetLazy(block.View,

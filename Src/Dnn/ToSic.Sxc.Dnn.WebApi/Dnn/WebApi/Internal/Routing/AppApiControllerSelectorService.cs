@@ -6,6 +6,7 @@ using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http.Controllers;
 using ToSic.Eav;
+using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
@@ -38,8 +39,9 @@ internal partial class AppApiControllerSelectorService(
     LazySvc<AssemblyCacheManager> assemblyCacheManager,
     LazySvc<AppCodeLoader> appCodeLoader,
     LazySvc<ISxcContextResolver> sxcContextResolver,
-    MemoryCacheService memoryCacheService)
-    : ServiceBase("Dnn.ApiSSv", connect: [folderUtilities, site, roslynLazy, getBlockLazy, analyzerLazy, codeErrorSvc, assemblyCacheManager, appCodeLoader, sxcContextResolver, memoryCacheService])
+    MemoryCacheService memoryCacheService,
+    LazySvc<IAppJsonService> appJson)
+    : ServiceBase("Dnn.ApiSSv", connect: [folderUtilities, site, roslynLazy, getBlockLazy, analyzerLazy, codeErrorSvc, assemblyCacheManager, appCodeLoader, sxcContextResolver, memoryCacheService, appJson])
 {
     #region Setup / Init
 
@@ -178,7 +180,7 @@ internal partial class AppApiControllerSelectorService(
         AssemblyResult result = null;
         Assembly assembly = null;
         var codeFileInfo = analyzerLazy.Value.TypeOfVirtualPath(fullPath);
-        if (codeFileInfo.AppCode)
+        if (/*appJson.Value.RazorCompilerAlwaysUseRoslyn(spec.AppId) || */codeFileInfo.AppCode)
         {
             l.A("AppCode - use Roslyn");
             result = roslynLazy.Value.GetCompiledAssembly(codeFileInfo, typeName, spec);
