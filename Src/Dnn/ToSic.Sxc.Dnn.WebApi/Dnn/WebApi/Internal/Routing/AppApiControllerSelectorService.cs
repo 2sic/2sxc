@@ -6,7 +6,7 @@ using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http.Controllers;
 using ToSic.Eav;
-using ToSic.Eav.Apps.Services;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
@@ -19,6 +19,7 @@ using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Dnn.Compile;
+using ToSic.Sxc.Dnn.Compile.Internal;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Integration;
 
@@ -180,7 +181,7 @@ internal partial class AppApiControllerSelectorService(
         AssemblyResult result = null;
         Assembly assembly = null;
         var codeFileInfo = analyzerLazy.Value.TypeOfVirtualPath(fullPath);
-        if (/*appJson.Value.RazorCompilerAlwaysUseRoslyn(spec.AppId) || */codeFileInfo.AppCode)
+        if (appJson.Value.DnnCompilerAlwaysUseRoslyn(spec.AppId) || codeFileInfo.AppCode)
         {
             l.A("AppCode - use Roslyn");
             result = roslynLazy.Value.GetCompiledAssembly(codeFileInfo, typeName, spec);

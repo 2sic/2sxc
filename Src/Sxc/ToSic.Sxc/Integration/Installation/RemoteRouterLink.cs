@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav;
-using ToSic.Eav.Apps.Specs;
+using ToSic.Eav.Apps.Internal.Specs;
 using ToSic.Eav.Context;
 using ToSic.Eav.Security.Fingerprint;
 

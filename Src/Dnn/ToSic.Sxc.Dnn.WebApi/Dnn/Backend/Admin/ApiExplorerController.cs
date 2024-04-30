@@ -2,13 +2,14 @@
 using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Hosting;
-using ToSic.Eav.Apps.Services;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
+using ToSic.Sxc.Dnn.Compile.Internal;
 using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Polymorphism.Internal;
 using RealController = ToSic.Eav.WebApi.ApiExplorer.ApiExplorerControllerReal;
@@ -49,7 +50,7 @@ public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSu
         var appJson = SysHlp.GetService<IAppJsonService>();
         var block = SysHlp.GetService<DnnGetBlock>().GetCmsBlock(Request);
         var codeFileInfo = SysHlp.GetService<SourceAnalyzer>().TypeOfVirtualPath(controllerVirtualPath);
-        if (/*appJson.RazorCompilerAlwaysUseRoslyn(block?.AppId) || */codeFileInfo.AppCode)
+        if ((block != null && appJson.DnnCompilerAlwaysUseRoslyn(block.AppId)) || codeFileInfo.AppCode)
         {
             Log.A("has AppCode");
             // Figure edition

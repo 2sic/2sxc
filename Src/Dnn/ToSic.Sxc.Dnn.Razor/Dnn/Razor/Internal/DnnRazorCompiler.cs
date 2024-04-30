@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Web;
 using System.Web.Compilation;
-using ToSic.Eav.Apps.Services;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
@@ -13,6 +13,7 @@ using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
+using ToSic.Sxc.Dnn.Compile.Internal;
 using ToSic.Sxc.Engines;
 
 namespace ToSic.Sxc.Dnn.Razor.Internal;

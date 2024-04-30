@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Services;
+﻿using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Integration.Installation;

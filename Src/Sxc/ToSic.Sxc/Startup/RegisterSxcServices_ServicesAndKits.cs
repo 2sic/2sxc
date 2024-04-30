@@ -1,7 +1,7 @@
 ﻿using Custom.DataSource;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Apps.Services;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Edit.EditService;

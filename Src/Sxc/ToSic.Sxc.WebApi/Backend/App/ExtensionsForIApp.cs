@@ -1,5 +1,5 @@
 ﻿using System.Text.RegularExpressions;
-using ToSic.Eav.Apps.Specs;
+using ToSic.Eav.Apps.Internal.Specs;
 
 namespace ToSic.Sxc.Backend.App;
 
