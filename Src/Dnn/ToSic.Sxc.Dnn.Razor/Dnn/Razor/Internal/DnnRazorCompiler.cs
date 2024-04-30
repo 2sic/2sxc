@@ -105,7 +105,7 @@ internal class DnnRazorCompiler(
         // TODO: @STV SHOULD OPTIMIZE so the file doesn't need to read multiple times
         var codeFileInfo = sourceAnalyzer.Value.TypeOfVirtualPath(templatePath);
         
-        var useHotBuild = appJson.Value.RazorCompilerAlwaysUseRoslyn(HotBuildSpecs.AppId) || codeFileInfo.IsHotBuildSupported();
+        var useHotBuild = appJson.Value.DnnCompilerAlwaysUseRoslyn(HotBuildSpecs.AppId) || codeFileInfo.IsHotBuildSupported();
         l.A($"{nameof(HotBuildSpecs)} prepare spec: {HotBuildSpecs}; {nameof(useHotBuild)}: {useHotBuild}");
         try
         {

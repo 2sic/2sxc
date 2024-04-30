@@ -42,7 +42,7 @@ internal class CodeCompilerNetFull : CodeCompiler
 
             try
             {
-                if (_appJson.Value.RazorCompilerAlwaysUseRoslyn(spec.AppId) || codeFileInfo.IsHotBuildSupported())
+                if (_appJson.Value.DnnCompilerAlwaysUseRoslyn(spec.AppId) || codeFileInfo.IsHotBuildSupported())
                     return l.Return(_roslynBuildManager.GetCompiledAssembly(codeFileInfo, className, spec),
                         "Ok, RoslynBuildManager");
             }
