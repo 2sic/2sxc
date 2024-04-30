@@ -20,7 +20,7 @@ internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper)
         string[] summary = default,
         string[] remarks = default,
         string[] returns = default,
-        string parameters = default, bool priority = true, List<string> usings = default, bool cache = false)
+        string parameters = default, bool priority = true, List<string> usings = default, bool cache = false, bool jsonIgnore = false)
     {
         var overrideProp = OverridePropertyNames.Contains(name);
         var overrideMeth = OverrideMethods.Contains(method);
@@ -40,11 +40,16 @@ internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper)
         var comment = CodeGenHelper.XmlComment(tabs, summary: summary, remarks: remarks, returns: returns);
         return new(
             name,
-            comment + GenProp(tabs, returnType, name, sourceName ?? name, method, parameters: parameters, cache, isOverride),
+            comment
+            + GenAttribute(jsonIgnore, tabs)
+            + GenProp(tabs, returnType, name, sourceName ?? name, method, parameters: parameters, cache, isOverride),
             priority: priority,
-            usings: usings
+            usings: GenUsings(usings, jsonIgnore)
         );
     }
+
+    private string GenAttribute(bool jsonIgnore, int tabs) 
+        => jsonIgnore ? $"\n{CodeGenHelper.Indent(tabs)}[JsonIgnore]\n" : "";
 
     private string GenProp(int tabs, string returnType, string name, string sourceName, string method, string parameters, bool cache, bool isOverride)
     {
@@ -67,6 +72,10 @@ internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper)
         return mainCode + cacheCode;
     }
 
+    private static List<string> GenUsings(List<string> usings, bool jsonIgnore) 
+        => jsonIgnore 
+            ? ["System.Text.Json.Serialization", .. usings] 
+            : usings;
 
     /// <summary>
     /// These names exist in the base class, so we need to override them with `new`.
