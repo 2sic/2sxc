@@ -271,6 +271,11 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     public ITypedItem Item => this;
 
+    /// <summary>
+    /// Get by name should never throw an error, as it's used to get null if not found.
+    /// </summary>
+    object ICanGetByName.Get(string name) => (this as ITypedItem).Get(name, required: false);
+
     #region Equals
 
     /// <summary>
@@ -280,7 +285,6 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     [PrivateApi]
     // ReSharper disable once NonReadonlyMemberInGetHashCode
     public override int GetHashCode() => WrapperEquality.GetWrappedHashCode(this.PreWrap);
-
 
     public override bool Equals(object b)
     {

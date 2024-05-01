@@ -245,14 +245,15 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             var compilerResults = GetCSharpCodeProvider().CompileAssemblyFromDom(compilerParameters, razorResults.GeneratedCode);
             lTimer.Done();
 
-
             if (compilerResults.Errors.Count <= 0)
                 return l.ReturnAsOk((compilerResults.CompiledAssembly, null));
 
-            // Handle compilation errors
-            var errorList = compilerResults.Errors.Cast<CompilerError>().ToList();
+            // compilation errors (but not warnings)
+            var errorList = compilerResults.Errors.Cast<CompilerError>().Where(e => !e.IsWarning).ToList();
 
-            return l.ReturnAsError((null, errorList), "error");
+            return (!errorList.Any())
+                ? l.ReturnAsOk((compilerResults.CompiledAssembly, null)) 
+                : l.ReturnAsError((null, errorList), "error");
         }
 
         /// <summary>
@@ -321,10 +322,12 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             if (compilerResults.Errors.Count <= 0)
                 return l.ReturnAsOk((compilerResults.CompiledAssembly, null));
 
-            // Handle compilation errors
-            var errorList = compilerResults.Errors.Cast<CompilerError>().ToList();
+            // compilation errors (but not warnings)
+            var errorList = compilerResults.Errors.Cast<CompilerError>().Where(e => !e.IsWarning).ToList();
 
-            return l.ReturnAsError((null, errorList), "error");
+            return (!errorList.Any())
+                ? l.ReturnAsOk((compilerResults.CompiledAssembly, null))
+                : l.ReturnAsError((null, errorList), "error");
         }
 
 

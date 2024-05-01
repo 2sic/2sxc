@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.IO;
+using ToSic.Eav;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
@@ -89,7 +89,7 @@ internal class AppApiFileSystemWatcher : IDisposable, IHasLog
 
     private AppApiCacheItem CheckAppCode(string path)
     {
-        if (!path.Contains(HotBuildConstants.AppCodeBase, StringComparison.InvariantCultureIgnoreCase)) return null;
+        if (!path.Contains(Constants.AppCode, StringComparison.InvariantCultureIgnoreCase)) return null;
         AppApiCacheItem appApiCacheItem = null;
         foreach (var controller in CompiledAppApiControllers)
         {

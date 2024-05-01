@@ -11,12 +11,11 @@ partial class CodeDataFactory
 
     #region AsTyped Implementations
 
-
     public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? required = default, ITypedItem fallback = default, bool? propsRequired = default, bool? mock = default)
     {
         // If we need mock data, return a fake object
         if (mock == true)
-            return _codeDataWrapper.Value.TypedItemFromObject(data,
+            return codeDataWrapper.Value.TypedItemFromObject(data,
                 WrapperSettings.Typed(true, true, propsRequired ?? true),
                 new LazyLike<CodeDataFactory>(this));
 
@@ -83,14 +82,6 @@ partial class CodeDataFactory
     {
         var l = Log.Fn<IEnumerable<ITypedItem>>($"{nameof(list)}: '{list}'; {nameof(required)}: {required}; {nameof(recursions)}: {recursions}");
 
-        // Inner call to complete scenarios where the data couldn't be created
-        IEnumerable<ITypedItem> FallbackOrErrorAndLog(string fallbackMsg, string exMsg) => fallback != null
-            ? l.Return(fallback, fallbackMsg + ", fallback")
-            : required
-                ? throw l.Done(new ArgumentException($@"Conversion with {nameof(AsItems)} failed, {nameof(required)}=true. {exMsg}", nameof(list)))
-                : l.Return(new List<ITypedItem>(), "no fallback, not required, empty list");
-
-
         if (recursions <= 0)
             return FallbackOrErrorAndLog("max recursions", $"Max recursions {MaxRecursions} reached.");
 
@@ -99,7 +90,7 @@ partial class CodeDataFactory
             case null:
                 return FallbackOrErrorAndLog("null", "Got null.");
             // String check must come early because strings are enumerable
-            case string str:
+            case string:
                 return FallbackOrErrorAndLog("string", "Got a string.");
             // List of ITypedItem
             case IEnumerable<ITypedItem> alreadyOk:
@@ -116,21 +107,29 @@ partial class CodeDataFactory
             case IEnumerable<dynamic> dynEntities:
                 return l.Return(dynEntities.Select(e => AsItemInternal(e as object, MaxRecursions, propsRequired: propsRequired)), nameof(IEnumerable<dynamic>));
             // Variations of single items - should be converted to list
-            case IEntity _:
-            case IDynamicEntity _:
-            case ITypedItem _:
-            case ICanBeEntity _:
+            case IEntity:
+            case IDynamicEntity:
+            case ITypedItem:
+            case ICanBeEntity:
                 var converted = AsItemInternal(list, MaxRecursions, propsRequired: propsRequired);
                 return converted != null
                     ? l.Return(new List<ITypedItem> { converted }, "single item to list")
                     : l.Return(new List<ITypedItem>(), "typed but converted to null; empty list");
-            // Check for IEnumerable but make sure it's not a string
+            // Check for IEnumerable but make sure it's not a string (so that should come before)
             // Should come fairly late, because some things like DynamicEntities can also be enumerated
-            case IEnumerable asEnumerable when asEnumerable is not string:
+            case IEnumerable asEnumerable:
                 return l.Return(asEnumerable.Cast<object>().Select(e => AsItemInternal(e, MaxRecursions, propsRequired: propsRequired)), "IEnumerable");
             default:
                 return FallbackOrErrorAndLog($"can't convert '{list.GetType()}'", $"Type '{list.GetType()}' cannot be converted.");
         }
+
+        // Inner call to complete scenarios where the data couldn't be created
+        IEnumerable<ITypedItem> FallbackOrErrorAndLog(string fallbackMsg, string exMsg)
+            => fallback != null
+                ? l.Return(fallback, fallbackMsg + ", fallback")
+                : required
+                    ? throw l.Done(new ArgumentException($@"Conversion with {nameof(AsItems)} failed, {nameof(required)}=true. {exMsg}", nameof(list)))
+                    : l.Return(new List<ITypedItem>(), "no fallback, not required, empty list");
     }
 
     #endregion

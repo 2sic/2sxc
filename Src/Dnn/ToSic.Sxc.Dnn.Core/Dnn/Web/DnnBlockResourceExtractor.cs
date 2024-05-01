@@ -6,10 +6,9 @@ using ToSic.Sxc.Web.Internal.PageService;
 
 namespace ToSic.Sxc.Dnn.Web;
 
-internal class DnnBlockResourceExtractor: BlockResourceExtractor
+internal class DnnBlockResourceExtractor(PageServiceShared pageServiceShared)
+    : BlockResourceExtractor(pageServiceShared)
 {
-    public DnnBlockResourceExtractor(PageServiceShared pageServiceShared): base(pageServiceShared) { }
-
     protected override ClientAssetsExtractSettings Settings => _settings.Get(() => new(
         extractAll: false,
         cssPriority: (int)FileOrder.Css.DefaultPriority,

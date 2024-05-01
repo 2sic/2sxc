@@ -82,7 +82,7 @@ partial class CodeDataFactory
                 if (dynObject.GetType().IsValueType) return l.Return(dynObject, "bad call - value type");
 
                 // 2021-09-14 new - just convert to a DynamicReadObject
-                var result = _codeDataWrapper.Value.ChildNonJsonWrapIfPossible(data: dynObject,
+                var result = codeDataWrapper.Value.ChildNonJsonWrapIfPossible(data: dynObject,
                     // 2023-08-08 2dm - changed `wrapNonAnon` to true, I'm not sure why it was false, but I'm certain that's wrong
                     wrapNonAnon: true /* false, */,
                     WrapperSettings.Dyn(children: true, realObjectsToo: false));

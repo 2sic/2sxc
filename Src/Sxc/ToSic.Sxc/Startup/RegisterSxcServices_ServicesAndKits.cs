@@ -1,8 +1,8 @@
 ﻿using Custom.DataSource;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Edit.EditService;
 using ToSic.Sxc.Edit.Toolbar;
@@ -42,6 +42,7 @@ static partial class RegisterSxcServices
 
         // WIP 12.05 - json converter
         services.TryAddTransient<IJsonService, JsonService>();
+        services.TryAddTransient<IJsonServiceInternal, JsonService>();
         services.TryAddTransient<ConvertValueService>();
         services.TryAddTransient<ConvertForCodeService>();
         services.TryAddTransient<IConvertService, ConvertService>();
@@ -60,6 +61,7 @@ static partial class RegisterSxcServices
         services.TryAddTransient<IFeaturesService, FeaturesService>();  // New 13.01
         services.TryAddTransient<IImageService, ImageService>();
         services.TryAddTransient<IEditService, EditService>();
+        services.TryAddTransient<ResizeDimensionGenerator>();
 
         // v14 Toolbar Builder
         services.TryAddTransient<IToolbarBuilder, ToolbarBuilder>();

@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.LookUp;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.LookUp;
@@ -16,10 +15,8 @@ namespace ToSic.Sxc.LookUp;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class LookUpCmsBlock(string name, IBlock block) : LookUpInDictionary(name, new Dictionary<string, string>
     {
-        { QueryConstants.ParamsShowDraftsKey, block.Context.UserMayEdit.ToString() }
+        { QueryConstants.ParamsShowDraftsKey, block.Context.Permissions.IsContentAdmin.ToString() }
     })
 {
     public IBlock Block = block;
-
-
 }

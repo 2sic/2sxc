@@ -15,11 +15,11 @@ internal class GeneratePropertyHyperlink(CSharpGeneratorHelper helper) : Generat
                 $"{name} as link (url). <br/>",
                 $"To get the underlying value like 'file:72' use String(\"{name}\")"
             ]),
-            GenPropSnip(tabs, "IFile", name + "File", $"{Specs.ItemAccessor}.File", sourceName: name, priority: false, usings: UsingAdam, summary:
+            GenPropSnip(tabs, "IFile", name + "File", $"{Specs.ItemAccessor}.File", sourceName: name, priority: false, usings: UsingAdam, jsonIgnore: true ,summary:
             [
                 $"Get the file object for {name} - or null if it's empty or not referencing a file."
             ]),
-            GenPropSnip(tabs, "IFolder", name + "Folder", $"{Specs.ItemAccessor}.Folder", sourceName: name, priority: false, usings: UsingAdam, summary:
+            GenPropSnip(tabs, "IFolder", name + "Folder", $"{Specs.ItemAccessor}.Folder", sourceName: name, priority: false, usings: UsingAdam, jsonIgnore: true ,summary:
             [
                 $"Get the folder object for {name}."
             ]),

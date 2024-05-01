@@ -8,7 +8,14 @@ internal class EngineMessages
     public const string Warning = "warning";
 
     [PrivateApi]
-    internal static string ToolbarForEmptyTemplate = ErrorBoxWithMenu("No demo item exists for the selected template. ");
+    internal static string ToolbarForEmptyTemplate = ErrorBoxWithMenu(
+        "This is a new module without demo data "
+        + "(see <a href='https://go.2sxc.org/no-demo-data' target='_blank'>help</a>). "
+        + "Please add content. "
+        + EmptyTemplateToolbar
+    );
+
+    private const string EmptyTemplateToolbar = "<ul class='sc-menu' data-toolbar='{\"sortOrder\":0,\"useModuleList\":true,\"action\":\"edit,layout\"}'></ul>";
 
     internal static string BasicToolbar
         = "<ul class='sc-menu' data-toolbar='" +

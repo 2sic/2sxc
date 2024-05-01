@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Web;
 using System.Web.Compilation;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
@@ -12,6 +13,7 @@ using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
+using ToSic.Sxc.Dnn.Compile.Internal;
 using ToSic.Sxc.Engines;
 
 namespace ToSic.Sxc.Dnn.Razor.Internal;
@@ -36,8 +38,9 @@ internal class DnnRazorCompiler(
     CodeApiServiceFactory codeApiServiceFactory,
     LazySvc<CodeErrorHelpService> errorHelp,
     LazySvc<SourceAnalyzer> sourceAnalyzer,
-    LazySvc<IRoslynBuildManager> roslynBuildManager)
-    : ServiceBase<EngineBase.MyServices>(helpers, "Dnn.RzComp", connect: [codeApiServiceFactory, errorHelp, sourceAnalyzer, roslynBuildManager])
+    LazySvc<IRoslynBuildManager> roslynBuildManager,
+    LazySvc<IAppJsonService> appJson)
+    : ServiceBase<EngineBase.MyServices>(helpers, "Dnn.RzComp", connect: [codeApiServiceFactory, errorHelp, sourceAnalyzer, roslynBuildManager, appJson])
 {
     protected HotBuildSpec HotBuildSpecs;
     [PrivateApi] protected IBlock Block;
@@ -103,7 +106,7 @@ internal class DnnRazorCompiler(
         // TODO: @STV SHOULD OPTIMIZE so the file doesn't need to read multiple times
         var codeFileInfo = sourceAnalyzer.Value.TypeOfVirtualPath(templatePath);
         
-        var useHotBuild = codeFileInfo.IsHotBuildSupported();
+        var useHotBuild = appJson.Value.DnnCompilerAlwaysUseRoslyn(HotBuildSpecs.AppId) || codeFileInfo.IsHotBuildSupported();
         l.A($"{nameof(HotBuildSpecs)} prepare spec: {HotBuildSpecs}; {nameof(useHotBuild)}: {useHotBuild}");
         try
         {

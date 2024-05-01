@@ -2,25 +2,17 @@
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Context;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Internal;
-using static ToSic.Sxc.Dnn.Run.DnnSecurity;
 
 namespace ToSic.Sxc.Dnn.Context;
 
-internal class DnnUser: ServiceBase, IUser<UserInfo>
+internal class DnnUser(LazySvc<DnnSecurity> dnnSecurity)
+    : ServiceBase("dnnUsr", connect: [dnnSecurity]), IUser<UserInfo>
 {
-    private readonly LazySvc<DnnSecurity> _dnnSecurity;
-
-    public DnnUser(LazySvc<DnnSecurity> dnnSecurity) : base("dnnUsr")
-    {
-        ConnectServices(
-            _dnnSecurity = dnnSecurity
-        );
-    }
-
     private string GetUserIdentityToken ()
     {
         var userId = Id;
@@ -35,33 +27,31 @@ internal class DnnUser: ServiceBase, IUser<UserInfo>
     public List<int> Roles => _roles.Get(BuildRoleList);
     private readonly GetOnce<List<int>> _roles = new();
 
-    public bool IsSystemAdmin => UnwrappedContents?.IsSuperUser ?? false;
+    public bool IsSystemAdmin => DnnUserInfo?.IsSuperUser ?? false;
 
-    public bool IsSiteAdmin => _getAdminPermissions().IsSiteAdmin;
-    public bool IsContentAdmin => _getAdminPermissions().IsContentAdmin;
+    public bool IsSiteAdmin => AdminPermissions.IsSiteAdmin;
+    public bool IsContentAdmin => AdminPermissions.IsContentAdmin;
     public bool IsSiteDeveloper => IsSystemAdmin;
 
-    private DnnSiteAdminPermissions _getAdminPermissions() => _adminPermissions.Get(
-        () => UnwrappedContents != null 
-            ? _dnnSecurity.Value.UserMayAdminThis(UnwrappedContents) 
-            : new(false)
+    private AdminPermissions AdminPermissions => _adminPermissions.Get(
+        () => DnnUserInfo.NullOrGetWith(userInfo => dnnSecurity.Value.UserMayAdminThis(userInfo)) ?? new(false)
     );
-    private readonly GetOnce<DnnSiteAdminPermissions> _adminPermissions = new();
+    private readonly GetOnce<AdminPermissions> _adminPermissions = new();
 
 
-    public UserInfo UnwrappedContents => _user.Get(() => PortalSettings.Current?.UserInfo);
+    private UserInfo DnnUserInfo => _user.Get(() => PortalSettings.Current?.UserInfo);
     private readonly GetOnce<UserInfo> _user = new();
 
-    public UserInfo GetContents() => UnwrappedContents;
+    public UserInfo GetContents() => DnnUserInfo;
 
     private static List<int> BuildRoleList()
     {
         var psCurrent = PortalSettings.Current;
-        if (psCurrent == null) return new();
+        if (psCurrent == null) return [];
 
         var portalId = psCurrent.PortalId;
         var user = psCurrent.UserInfo;
-        if (user == null) return new();
+        if (user == null) return [];
 
         var rc = new DotNetNuke.Security.Roles.RoleController();
         return user.Roles
@@ -71,23 +61,14 @@ internal class DnnUser: ServiceBase, IUser<UserInfo>
             .ToList();
     }
 
-    public int Id => UnwrappedContents?.UserID ?? -1;
+    public int Id => DnnUserInfo?.UserID ?? -1;
 
     public bool IsAnonymous => Id == -1;
 
-    public string Username => UnwrappedContents?.Username;
+    public string Username => DnnUserInfo?.Username;
 
-    public string Name => UnwrappedContents?.DisplayName;
+    public string Name => DnnUserInfo?.DisplayName;
 
-    public string Email => UnwrappedContents?.Email;
+    public string Email => DnnUserInfo?.Email;
 
-    #region Removed in v15.03 2023-02-20 - already deprecated in v14.09 and probably never used outside of core code
-
-    //[Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
-    //public bool IsSuperUser => IsSystemAdmin;
-
-    //[Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
-    //public bool IsAdmin => IsSiteAdmin;
-
-    #endregion
 }

@@ -36,7 +36,7 @@ partial class View
 
                 try
                 {
-                    if (Block.Context.UserMayEdit)
+                    if (Block.Context.Permissions.IsContentAdmin)
                         msg = renderingHelper.WrapInContext(msg,
                             instanceId: Block.ParentId,
                             contentBlockId: Block.ContentBlockId,

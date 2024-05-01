@@ -19,10 +19,10 @@ namespace Custom.Data;
 /// It is used by 2sxc Copilot when generating base classes for custom data objects.
 /// </summary>
 /// <remarks>
-/// It's not abstract, even if the most common case is to inherit, as there are cases where you want to use it directly.
+/// - Released in v17.06
+/// - It's not abstract, even if the most common case is to inherit, as there are cases where you want to use it directly.
 /// </remarks>
-
-[WorkInProgressApi("Still WIP v17.02")]
+[PublicApi]
 public partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasPropLookup
 {
     #region Explicit Interfaces for internal use - Setup, etc.
@@ -165,8 +165,8 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasPropLookup
         _item.Picture(name, noParamOrder, settings, factor, width, imgAlt, imgAltFallback, imgClass, imgAttributes, pictureClass, pictureAttributes, toolbar, recipe);
 
     /// <inheritdoc />
-    public IResponsiveImage Img(string name, NoParamOrder noParamOrder, object settings, object factor, object width,
-        string imgAlt, string imgAltFallback, string imgClass, object imgAttributes, object toolbar, object recipe) =>
+    public IResponsiveImage Img(string name, NoParamOrder noParamOrder = default, object settings = default, object factor = default, object width = default,
+        string imgAlt = default, string imgAltFallback = default, string imgClass = default, object imgAttributes = default, object toolbar = default, object recipe = default) =>
         _item.Img(name, noParamOrder, settings, factor, width, imgAlt, imgAltFallback, imgClass, imgAttributes, toolbar, recipe);
 
     /// <inheritdoc />
@@ -310,5 +310,10 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasPropLookup
         => (source ?? (nullIfNull ? null : []))?.Select(CodeDataFactory.AsCustomFromItem<T>).ToList();
 
     #endregion
+
+    /// <summary>
+    /// Get by name should never throw an error, as it's used to get null if not found.
+    /// </summary>
+    object ICanGetByName.Get(string name) => (this as ITypedItem).Get(name, required: false);
 
 }

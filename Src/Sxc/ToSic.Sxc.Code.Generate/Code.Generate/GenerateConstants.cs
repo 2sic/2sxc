@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Code.Internal.HotBuild;
+﻿using ToSic.Eav;
 
 namespace ToSic.Sxc.Code.Generate;
 
@@ -25,5 +25,5 @@ public class GenerateConstants
     /// </summary>
     public const string PathPlaceholderEdition = "[target:edition]";
 
-    public const string PathToAppCode = $"{PathPlaceholderAppRoot}/{PathPlaceholderEdition}/{HotBuildConstants.AppCodeBase}";
+    public const string PathToAppCode = $"{PathPlaceholderAppRoot}/{PathPlaceholderEdition}/{Constants.AppCode}";
 }

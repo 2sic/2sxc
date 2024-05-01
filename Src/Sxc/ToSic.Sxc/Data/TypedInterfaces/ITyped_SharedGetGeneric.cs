@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Data;
 
-public partial interface ITyped : IHasKeys
+public partial interface ITyped : IHasKeys, ICanGetByName
 {
     /// <inheritdoc cref="IHasKeys.ContainsKey"/>
     new bool ContainsKey(string name);

@@ -14,38 +14,20 @@ using ToSic.Sxc.Services.Internal;
 namespace ToSic.Sxc.Data.Internal;
 
 // todo: make internal once we have an interface
+[PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public partial class CodeDataFactory: ServiceForDynamicCode
+public partial class CodeDataFactory(
+    LazySvc<CodeDataServices> codeDataServices,
+    LazySvc<AdamManager> adamManager,
+    LazySvc<IContextOfApp> contextOfAppLazy,
+    LazySvc<DataBuilder> dataBuilderLazy,
+    LazySvc<CodeDataWrapper> codeDataWrapper,
+    Generator<CodeJsonWrapper> wrapJsonGenerator,
+    LazySvc<CodeInfoService> codeInfoSvc)
+    : ServiceForDynamicCode("Sxc.AsConv",
+        connect: [codeDataServices, adamManager, contextOfAppLazy, dataBuilderLazy, codeDataWrapper, wrapJsonGenerator, codeInfoSvc])
 {
-    private readonly LazySvc<CodeInfoService> _codeInfoSvc;
-    private readonly Generator<CodeJsonWrapper> _wrapJsonGenerator;
-    private readonly LazySvc<CodeDataServices> _codeDataServices;
-    private readonly LazySvc<CodeDataWrapper> _codeDataWrapper;
-    private readonly LazySvc<DataBuilder> _dataBuilderLazy;
-    private readonly LazySvc<AdamManager> _adamManagerLazy;
-    private readonly LazySvc<IContextOfApp> _contextOfAppLazy;
-
-    public CodeDataFactory(
-        LazySvc<CodeDataServices> codeDataServices,
-        LazySvc<AdamManager> adamManager,
-        LazySvc<IContextOfApp> contextOfApp,
-        LazySvc<DataBuilder> dataBuilderLazy,
-        LazySvc<CodeDataWrapper> codeDataWrapper,
-        Generator<CodeJsonWrapper> wrapJsonGenerator,
-        LazySvc<CodeInfoService> codeInfoSvc) : base("Sxc.AsConv")
-    {
-        ConnectServices(
-            _codeDataServices = codeDataServices,
-            _adamManagerLazy = adamManager,
-            _contextOfAppLazy = contextOfApp,
-            _dataBuilderLazy = dataBuilderLazy,
-            _codeDataWrapper = codeDataWrapper,
-            _wrapJsonGenerator = wrapJsonGenerator,
-            _codeInfoSvc = codeInfoSvc
-        );
-    }
-
-    internal CodeInfoService CodeInfo => _codeInfoSvc.Value;
+    internal CodeInfoService CodeInfo => codeInfoSvc.Value;
 
     public void SetCompatibilityLevel(int compatibilityLevel) => _priorityCompatibilityLevel = compatibilityLevel;
 
@@ -66,7 +48,7 @@ public partial class CodeDataFactory: ServiceForDynamicCode
 
     public CodeDataServices Services => _services.Get(() => 
     {
-        var cds = _codeDataServices.Value;
+        var cds = codeDataServices.Value;
         // if the render service is ever needed, it should be connected to the root
         cds.RenderServiceGenerator.SetInit(nowRs => (nowRs as INeedsCodeApiService)?.ConnectToRoot(_CodeApiSvc));
         return cds;
@@ -84,7 +66,7 @@ public partial class CodeDataFactory: ServiceForDynamicCode
     #endregion
 
     public object Json2Jacket(string json, string fallback = default)
-        => _wrapJsonGenerator.New().Setup(WrapperSettings.Dyn(true, true))
+        => wrapJsonGenerator.New().Setup(WrapperSettings.Dyn(true, true))
             .Json2Jacket(json, fallback: fallback);
 
 }

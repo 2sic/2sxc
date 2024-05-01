@@ -9,9 +9,7 @@ using ToSic.Sxc.Web.Internal.JsContext;
 
 namespace ToSic.Sxc.Dnn.Web;
 
-[PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class DnnJsApiService : ServiceBase, IJsApiService
+internal class DnnJsApiService : ServiceBase, IJsApiService
 {
     public const string PortalIdParamName = "portalId";
 

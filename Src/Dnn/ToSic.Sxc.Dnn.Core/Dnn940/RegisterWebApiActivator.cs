@@ -9,6 +9,7 @@ using System.Web.Http.Dispatcher;
 namespace ToSic.Sxc.Dnn940;
 
 // ReSharper disable once UnusedMember.Global
+[PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class RegisterWebApiActivator : IServiceRouteMapper
 {
@@ -16,6 +17,7 @@ public class RegisterWebApiActivator : IServiceRouteMapper
     /// Put our class activator in front of the standard DNN activator
     /// </summary>
     /// <param name="mapRouteManager"></param>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public void RegisterRoutes(IMapRoute mapRouteManager)
     {
         var config = System.Web.Http.GlobalConfiguration.Configuration;

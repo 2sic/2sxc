@@ -17,5 +17,6 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("a94de6d7-d1e6-4be2-b5b5-dc4a6a61cd80")]
 
+[assembly: InternalsVisibleTo("ToSic.Sxc.Dnn")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.WebApi")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.Razor")]

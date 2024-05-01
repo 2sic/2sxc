@@ -41,7 +41,7 @@ using ToSic.Sxc.Web.Internal.JsContext;
 
 namespace ToSic.Sxc.Dnn.Startup;
 
-public static class StartUpDnnCore
+internal static class StartUpDnnCore
 {
     public static IServiceCollection AddDnnCore(this IServiceCollection services)
     {

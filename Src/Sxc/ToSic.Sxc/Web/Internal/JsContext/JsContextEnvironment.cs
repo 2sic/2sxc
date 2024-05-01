@@ -23,5 +23,5 @@ public class JsContextEnvironment(string systemRootUrl, IContextOfBlock ctx)
 
     public string SxcRootUrl { get; } = systemRootUrl;
 
-    public bool IsEditable { get; } = ctx.UserMayEdit;
+    public bool IsEditable { get; } = ctx.Permissions.IsContentAdmin;
 }

@@ -8,32 +8,32 @@ namespace ToSic.Sxc.Data.Internal.Stack;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPropLookup, ICanDebug, ICanGetByName
+internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPropLookup, ICanDebug, ICanGetByName
 {
-    public TypedStack(string name, Internal.CodeDataFactory cdf, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources)
+    public TypedStack(string name, CodeDataFactory cdf, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources)
     {
         _stack = new PropertyStack().Init(name, sources);
         Cdf = cdf;
-        PropertyLookup = new PropLookupStack(_stack, () => Debug);
+        _stackPropLookup = new(_stack, () => Debug);
         _helper = new(this, cdf, propsRequired: false, childrenShouldBeDynamic: false, canDebug: this);
         _itemHelper = new(_helper, this);
     }
 
     private readonly IPropertyStack _stack;
-    [PrivateApi]
-    public IPropertyLookup PropertyLookup { get; }
+    IPropertyLookup IHasPropLookup.PropertyLookup => _stackPropLookup;
+    private readonly PropLookupStack _stackPropLookup;
     private readonly GetAndConvertHelper _helper;
     private readonly CodeItemHelper _itemHelper;
 
     public IPropertyStack GetContents() => _stack;
 
-    public Internal.CodeDataFactory Cdf { get; }
+    public CodeDataFactory Cdf { get; }
 
     public bool Debug { get; set; }
 
     #region GetByName - to allow this to be used for image settings etc.
 
-    object ICanGetByName.Get(string name) => (this as ITyped).Get(name);
+    object ICanGetByName.Get(string name) => (this as ITyped).Get(name, required: false);
 
     #endregion
 
@@ -41,7 +41,7 @@ internal class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPropLookup
     #region ITyped.Keys and Dyn - both not implemented
 
     [PrivateApi]
-    public bool ContainsKey(string name) 
+    public bool ContainsKey(string name)
         => throw new NotImplementedException($"Not yet implemented on {nameof(ITypedStack)}");
 
     public bool IsEmpty(string name, NoParamOrder noParamOrder = default)
@@ -119,7 +119,7 @@ internal class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPropLookup
 
     #region Add-Ons for ITypedStack
 
-    ITypedItem ITypedStack.Child(string name, NoParamOrder noParamOrder, bool? required)
+    ITypedItem /*ITypedStack*/ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required)
     {
         var findResult = _helper.TryGet(name);
         return IsErrStrict(findResult.Found, required, _helper.PropsRequired)
@@ -127,7 +127,7 @@ internal class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPropLookup
             : Cdf.AsItem(findResult.Result);
     }
 
-    IEnumerable<ITypedItem> ITypedStack.Children(string field, NoParamOrder noParamOrder, string type, bool? required)
+    IEnumerable<ITypedItem> /*ITypedStack*/ITypedItem.Children(string field, NoParamOrder noParamOrder, string type, bool? required)
     {
         var findResult = _helper.TryGet(field);
         return IsErrStrict(findResult.Found, required, _helper.PropsRequired)

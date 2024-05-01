@@ -132,9 +132,10 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
 
         if (Template.ContentType != "" && Template.ContentItem == null && Block.Configuration.Content.All(e => e == null))
         {
-            Exception ex = new ExceptionWithHelp(new CodeHelp(name: ErrorDataIsMissing, detect: "", linkCode: "err-block-data-missing"));
-            var result = new RenderEngineResult(EngineMessages.ToolbarForEmptyTemplate, false, null, ErrorDataIsMissing,
-                ex.ToListOfOne());
+            // Exception ex = new ExceptionWithHelp(new CodeHelp(name: ErrorDataIsMissing, detect: "", linkCode: "err-block-data-missing"));
+            var result = new RenderEngineResult(EngineMessages.ToolbarForEmptyTemplate, false, null, /*ErrorDataIsMissing*/null,
+                []);
+                //ex.ToListOfOne());
             return l.Return(result, "error");
         }
 

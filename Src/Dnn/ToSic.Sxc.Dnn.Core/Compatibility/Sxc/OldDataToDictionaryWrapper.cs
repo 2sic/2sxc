@@ -10,6 +10,8 @@ namespace ToSic.Sxc.Compatibility.Sxc;
 /// </summary>
 // Important: Changed Dictionary... to IDictionary in 12.04 2021-08-29 - may cause issues, but probably shouldn't
 [Obsolete]
+[PrivateApi]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class OldDataToDictionaryWrapper
 {
     public OldDataToDictionaryWrapper(bool userMayEdit, IConvertToEavLight innerConverter)

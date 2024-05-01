@@ -11,19 +11,14 @@ namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class LinkServiceBase : ServiceForDynamicCode, ILinkService
+public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy)
+    : ServiceForDynamicCode($"{SxcLogName}.LnkHlp", connect: [linkPathsLazy, imgLinker]), ILinkService
 {
-    protected LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy) : base(
-        $"{SxcLogName}.LnkHlp")
-        => ConnectServices(
-            _linkPathsLazy = linkPathsLazy,
-            ImgLinker = imgLinker
-        );
-    private ImgResizeLinker ImgLinker { get; }
-    private readonly LazySvc<ILinkPaths> _linkPathsLazy;
-    public ILinkPaths LinkPaths => _linkPathsLazy.Value;
+    [PrivateApi]
+    protected ILinkPaths LinkPaths => linkPathsLazy.Value;
 
-    [PrivateApi] protected IApp App => _CodeApiSvc.App;
+    [PrivateApi]
+    protected IApp App => _CodeApiSvc.App;
 
 
     /// <inheritdoc />
@@ -87,8 +82,8 @@ public abstract class LinkServiceBase : ServiceForDynamicCode, ILinkService
 
     protected abstract string ToPage(int? pageId, string parameters = null, string language = null);
 
-    protected static string ParametersToString(object parameters) =>
-        parameters switch
+    protected static string ParametersToString(object parameters)
+        => parameters switch
         {
             null => null,
             string strParameters => strParameters.TrimStart('?').TrimStart('&'),
@@ -134,8 +129,9 @@ public abstract class LinkServiceBase : ServiceForDynamicCode, ILinkService
         // Get the image-url(s) as needed
         // Note that srcset is false, so it won't generate a bunch of sources, just one - which is how the API works
         // Anybody that wants a srcset must use the new IImageService for that
-        var imageUrl = ImgLinker.Image(url: expandedUrl, settings: settings, field: field, factor: factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
-            scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: strParams);
+        var imageUrl = imgLinker.Image(url: expandedUrl, settings: settings, field: field, factor: factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
+            scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: strParams,
+            codeApiSvc: _CodeApiSvc);
 
         return imageUrl;
     }
@@ -147,13 +143,13 @@ public abstract class LinkServiceBase : ServiceForDynamicCode, ILinkService
         set
         {
             base.Debug = value;
-            ImgLinker.Debug = value;
+            imgLinker.Debug = value;
         }
     }
 
-    /**
-         * Combine api with query string.
-         */
+    /// <summary>
+    /// Combine api with query string.
+    /// </summary>
     public static string CombineApiWithQueryString(string api, string queryString)
     {
         queryString = queryString?.TrimStart('?').TrimStart('&');

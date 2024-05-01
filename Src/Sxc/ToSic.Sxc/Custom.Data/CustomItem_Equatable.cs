@@ -36,5 +36,4 @@ partial class CustomItem: IMultiWrapper<IEntity>
     /// <param name="item2">second item to compare</param>
     /// <returns>false, if both wrappers are the same type and wrap the same entity</returns>
     public static bool operator !=(CustomItem item1, CustomItem item2) => !MultiWrapperEquality.IsEqual(item1, item2);
-
 }

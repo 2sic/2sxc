@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Code.Internal;
 using static ToSic.Sxc.Images.Internal.ImageConstants;
 using static ToSic.Sxc.Internal.Plumbing.ParseObject;
 
@@ -33,7 +34,8 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
         string format = null,
         object aspectRatio = null,
         string parameters = null,
-        AdvancedSettings advanced = default
+        AdvancedSettings advanced = default,
+        ICodeApiService codeApiSvc = default
     )
     {
         var l = (Debug ? Log : null).Fn<ResizeSettings>();
@@ -65,27 +67,46 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
             ), $"Is {nameof(ResizeSettings)}, will clone/init");
 
         // Check if the settings is the expected type or null/other type
-        var getSettings = settings as ICanGetByName;
-        l.A($"Has Settings:{getSettings != null}");
+        var settingsOrNull = TryToCastSettings(settings, codeApiSvc);
+        l.A($"Has Settings: {settingsOrNull != null}; type: {settings?.GetType().FullName}");
 
         var formatValue = paramHelper.FormatOrNull(format);
 
-        var resizeParams = BuildCoreSettings(paramHelper, width, height, factor, aspectRatio, formatValue, getSettings);
+        var resizeParams = BuildCoreSettings(paramHelper, width, height, factor, aspectRatio, formatValue, settingsOrNull);
 
         // Add more URL parameters if known
         resizeParams.Parameters = paramHelper.ParametersOrNull(parameters);
 
         // Aspects which aren't affected by aspect ratio
         var qParamInt2 = paramHelper.QualityOrNull(quality);
-        resizeParams.Quality = qParamInt2 ?? IntOrZeroAsNull(getSettings?.Get(QualityField)) ?? IntIgnore;
+        resizeParams.Quality = qParamInt2 ?? IntOrZeroAsNull(settingsOrNull?.Get(QualityField)) ?? IntIgnore;
         resizeParams.ResizeMode =
-            paramHelper.ResizeModeOrNull(KeepBestString(resizeMode, getSettings?.Get(ResizeModeField)));
-        resizeParams.ScaleMode = paramHelper.ScaleModeOrNull(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
+            paramHelper.ResizeModeOrNull(KeepBestString(resizeMode, settingsOrNull?.Get(ResizeModeField)));
+        resizeParams.ScaleMode = paramHelper.ScaleModeOrNull(KeepBestString(scaleMode, settingsOrNull?.Get(ScaleModeField)));
 
-        resizeParams.Advanced = GetMultiResizeSettings(advanced, getSettings);
+        resizeParams.Advanced = GetMultiResizeSettings(advanced, settingsOrNull);
 
         return l.Return(resizeParams, "");
     }
+
+    private ICanGetByName TryToCastSettings(object settings, ICodeApiService codeApiServiceOrNull) =>
+        settings switch
+        {
+            null => null,
+            string name => GetImageSettingsByName(codeApiServiceOrNull, name, Debug, Log) as ICanGetByName,
+            ICanGetByName getSettings => getSettings,
+            IEnumerable<ICanGetByName> settingsList => settingsList.FirstOrDefault(),
+            _ => null
+        };
+
+    internal static object GetImageSettingsByName(ICodeApiService codeApiSvcOrNull, string strName, bool debug, ILog log)
+    {
+        var l = debug ? log.Fn<object>($"{strName}; code root: {codeApiSvcOrNull != null}") : null;
+        var result = codeApiSvcOrNull?.Settings?.Get($"Settings.Images.{strName}");
+        return l.Return((object)result, $"found: {result != null}");
+    }
+
+
 
     private AdvancedSettings GetMultiResizeSettings(AdvancedSettings advanced, ICanGetByName getSettings)
     {

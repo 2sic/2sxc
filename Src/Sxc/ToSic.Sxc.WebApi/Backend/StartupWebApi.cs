@@ -96,6 +96,7 @@ public static class StartupWebApi
         // New v13 - try to reduce Dnn/Oqtane code to the max, by creating ControllerReal objects which do everything
         services.TryAddTransient(typeof(AdamControllerReal<>));
         services.TryAddTransient<AppFilesControllerReal>();
+        services.TryAddTransient<Eav.WebApi.Admin.IAppExplorerControllerDependency, AppFilesControllerReal>();
         services.TryAddTransient<QueryControllerReal>();
         services.TryAddTransient<AppControllerReal>();
         services.TryAddTransient<AppPartsControllerReal>();

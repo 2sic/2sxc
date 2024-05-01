@@ -88,11 +88,13 @@ internal class DnnLookUpEngineResolver(IZoneCultureResolver cultureResolver, Laz
 
         lookupEngine.Add(additions);
 
-        if (!lookupEngine.HasSource("form"))
+        // Add "form" source if it's not already there, and we have a request.Form
+        // request is sometimes null (e.g. in DNN scheduled task)
+        // Note that "Form" is only available on Dnn, not on Oqtane
+        if (!lookupEngine.HasSource("form") && httpLazy.Value.Request?.Form != null)
             additions.Add(new LookUpInNameValueCollection("form", httpLazy.Value.Request.Form));
 
         // Note: Not implemented in Dnn: "Tenant" source
-
         return l.ReturnAsOk(lookupEngine);
     }
 }

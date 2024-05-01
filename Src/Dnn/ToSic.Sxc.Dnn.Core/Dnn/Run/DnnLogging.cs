@@ -4,8 +4,7 @@ using DotNetNuke.Services.Log.EventLog;
 
 namespace ToSic.Sxc.Dnn.Run;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public static class DnnLogging
+internal static class DnnLogging
 {
     public const int MaxDuration = 10;
 

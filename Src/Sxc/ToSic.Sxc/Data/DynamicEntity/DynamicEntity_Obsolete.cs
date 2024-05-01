@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Data
                     return new System.Web.HtmlString("");
 
                 // If we're not in a running context, of which we know the permissions, no toolbar
-                var userMayEdit = Cdf.BlockOrNull?.Context.UserMayEdit ?? false;
+                var userMayEdit = Cdf.BlockOrNull?.Context.Permissions.IsContentAdmin ?? false;
 
                 if (!userMayEdit)
                     return new System.Web.HtmlString("");

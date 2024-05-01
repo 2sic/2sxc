@@ -177,7 +177,10 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     [PrivateApi]
     string ITyped.ToString() => "test / debug: " + ToString();
 
-    dynamic ICanGetByName.Get(string name) => (this as ITyped).Get(name);
+    /// <summary>
+    /// Get by name should never throw an error, as it's used to get null if not found.
+    /// </summary>
+    object ICanGetByName.Get(string name) => (this as ITyped).Get(name, required: false);
 
     #endregion
 
@@ -299,11 +302,9 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     /// <inheritdoc />
     [PrivateApi]
     ITypedItem ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required)
-    {
-        return IsErrStrict(this, name, required, GetHelper.PropsRequired)
+        => IsErrStrict(this, name, required, GetHelper.PropsRequired)
             ? throw ErrStrictForTyped(this, name)
             : ((ITypedItem)this).Children(name).FirstOrDefault();
-    }
 
     #endregion
 

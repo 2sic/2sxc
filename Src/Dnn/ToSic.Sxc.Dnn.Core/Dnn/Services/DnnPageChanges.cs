@@ -18,9 +18,7 @@ using static ToSic.Sxc.Web.Internal.ClientAssets.ClientAssetConstants;
 
 namespace ToSic.Sxc.Dnn.Services;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-[PrivateApi]
-public class DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generator<CspOfPage> pageCspGenerator)
+internal class DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generator<CspOfPage> pageCspGenerator)
     : ServiceBase($"{DnnConstants.LogName}.PgeCng", connect: [featuresService, pageCspGenerator])
 {
     public int Apply(Page page, IRenderResult renderResult)

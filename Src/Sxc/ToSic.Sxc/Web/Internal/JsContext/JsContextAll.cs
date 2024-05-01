@@ -69,7 +69,7 @@ public class JsContextAll(JsContextLanguage jsLangCtx, IJsApiService jsApiServic
 
         // If auto toolbar is false / not certain, and we have features activated...
         // find out if the Toolbars-Auto is enabled, in which case we should activate them
-        var autoToolbar = ctx.UserMayEdit || (
+        var autoToolbar = ctx.Permissions.IsContentAdmin || (
             block.BlockFeatureKeys.Any() && block.Context.PageServiceShared.PageFeatures
                 .GetWithDependents(block.BlockFeatureKeys, Log)
                 .Contains(SxcPageFeatures.ToolbarsAutoInternal)

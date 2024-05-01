@@ -167,7 +167,8 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
         => _CodeApiSvc.Cdf.AsItems(list, propsRequired: propsRequired ?? true);
 
     /// <inheritdoc cref="IDynamicCode16.AsEntity" />
-    public IEntity AsEntity(ICanBeEntity thing) => _CodeApiSvc.Cdf.AsEntity(thing);
+    public IEntity AsEntity(ICanBeEntity thing)
+        => _CodeApiSvc.Cdf.AsEntity(thing);
 
     /// <inheritdoc cref="IDynamicCode16.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
@@ -178,7 +179,13 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
         => _CodeApiSvc.Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
 
     /// <inheritdoc cref="IDynamicCode16.AsStack" />
-    public ITypedStack AsStack(params object[] items) => _CodeApiSvc.Cdf.AsStack(items);
+    public ITypedStack AsStack(params object[] items)
+        => _CodeApiSvc.Cdf.AsStack(items);
+
+    /// <inheritdoc cref="IDynamicCode16.AsStack{T}" />
+    public T AsStack<T>(params object[] items)
+        where T : class, ITypedItemWrapper16, ITypedItem, new()
+        => _CodeApiSvc.Cdf.AsStack<T>(items);
 
     #endregion
 

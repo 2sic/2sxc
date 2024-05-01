@@ -54,13 +54,15 @@ internal class OqtUsersServiceProvider : UserSourceProvider
     /// </remarks>
     private string GetUserRoles(int userId, int siteId)
     {
+        const string adminRoleName = Oqtane.Shared.RoleNames.Admin; // "Administrators";
         var userRoles = "";
         var list = _userRoleRepository.Value.GetUserRoles(userId, siteId).ToList();
         foreach (var userRole in list)
         {
             userRoles = userRoles + userRole.Role.Name + ";";
-            if (userRole.Role.Name == "Host Users" && list.FirstOrDefault(item => item.Role.Name == "Administrators") == null)
-                userRoles += "Administrators;";
+            if (userRole.Role.Name == "Host Users" &&
+                list.FirstOrDefault(item => item.Role.Name == adminRoleName) == null)
+                userRoles += $"{adminRoleName};";
         }
         if (userRoles != "")
             userRoles = ";" + userRoles;

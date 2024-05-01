@@ -118,7 +118,7 @@ public class AppQueryControllerReal(
 
         dataConverter.WithGuid = includeGuid;
         if (dataConverter is ConvertToEavLightWithCmsInfo serializerWithEdit)
-            serializerWithEdit.WithEdit = context.UserMayEdit;
+            serializerWithEdit.WithEdit = context.Permissions.IsContentAdmin;
         if (stream == AllStreams) stream = null;
 
 

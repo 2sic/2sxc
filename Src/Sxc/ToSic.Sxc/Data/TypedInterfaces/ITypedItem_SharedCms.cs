@@ -177,27 +177,25 @@ partial interface ITypedItem
     /// </remarks>
     IResponsiveImage Img(
         string name,
-        NoParamOrder noParamOrder,
-        object settings,
-        object factor,
-        object width,
-        string imgAlt,
-        string imgAltFallback,
-        string imgClass,
-        object imgAttributes,
-        object toolbar,
-        object recipe
+        NoParamOrder noParamOrder = default,
+        object settings = default,
+        object factor = default,
+        object width = default,
+        string imgAlt = default,
+        string imgAltFallback = default,
+        string imgClass = default,
+        object imgAttributes = default,
+        object toolbar = default,
+        object recipe = default
     );
 
     /// <summary>
-    /// Get the GPS coordinates of a GPS field.
+    /// Get the GPS coordinates of a GPS field as a typed object.
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="protector"></param>
-    /// <param name="required"></param>
+    /// <param name="name">Name of a field</param>
+    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns></returns>
     /// <remarks>New in v17.03</remarks>
-    [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     GpsCoordinates Gps(string name, NoParamOrder protector = default, bool? required = default);
 }

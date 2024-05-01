@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Sxc.Apps.Internal.Assets;
+using ToSic.Sxc.Code.Internal.HotBuild;
 using static System.StringComparison;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
@@ -17,7 +18,9 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
         IUser user, 
         Generator<AssetEditor> assetEditorGenerator,
         IAppStates appStates,
-        IAppPathsMicroSvc appPaths
+        IAppPathsMicroSvc appPaths,
+        LazySvc<CodeControllerReal> codeController,
+        LazySvc<AppCodeLoader> appCodeLoader
     ) : base("Bck.Assets")
     {
             
@@ -27,7 +30,9 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
             _assetEditorGenerator = assetEditorGenerator,
             _assetTemplates = new(),
             _appStates = appStates,
-            _appPaths = appPaths
+            _appPaths = appPaths,
+            _codeController = codeController,
+            _appCodeLoader = appCodeLoader
         );
     }
 
@@ -37,6 +42,8 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
     private readonly IAppStates _appStates;
     private readonly IAppPathsMicroSvc _appPaths;
     private readonly IUser _user;
+    private readonly LazySvc<CodeControllerReal> _codeController;
+    private readonly LazySvc<AppCodeLoader> _appCodeLoader;
 
     #endregion
 

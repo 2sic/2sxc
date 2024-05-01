@@ -1,10 +1,9 @@
 ﻿using ToSic.Sxc.Code.Internal.HotBuild;
 
-namespace ToSic.Sxc.Dnn.Compile
+namespace ToSic.Sxc.Dnn.Compile;
+
+[PrivateApi]
+public interface IReferencedAssembliesProvider
 {
-    [PrivateApi]
-    public interface IReferencedAssembliesProvider
-    {
-        List<string> Locations(string virtualPath, HotBuildSpec spec);
-    }
+    List<string> Locations(string virtualPath, HotBuildSpec spec);
 }

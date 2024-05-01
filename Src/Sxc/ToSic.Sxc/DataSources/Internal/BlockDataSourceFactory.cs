@@ -3,38 +3,23 @@ using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Services;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class BlockDataSourceFactory: ServiceBase
+public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFactory, LazySvc<Query> queryLazy)
+    : ServiceBase("Sxc.BDsFct", connect: [dataSourceFactory, queryLazy])
 {
-    #region Constructor
 
-    public BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFactory, LazySvc<Query> queryLazy): base("Sxc.BDsFct")
-    {
-        ConnectServices(
-            _dataSourceFactory = dataSourceFactory,
-            _queryLazy = queryLazy
-        );
-    }
-    private readonly LazySvc<IDataSourcesService> _dataSourceFactory;
-    private readonly LazySvc<Query> _queryLazy;
-
-    #endregion
-
-
-    [PrivateApi]
     internal IBlockInstance GetContextDataSource(IBlock block, ILookUpEngine configLookUp)
     {
-        var wrapLog = Log.Fn<IBlockInstance>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.UserMayEdit}, view:{block.View?.Name}");
+        var l = Log.Fn<IBlockInstance>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.Permissions.IsContentAdmin}, view:{block.View?.Name}");
         var view = block.View;
 
         // Get ModuleDataSource
-        var dsFactory = _dataSourceFactory.Value;
+        var dsFactory = dataSourceFactory.Value;
         var initialSource = dsFactory.CreateDefault(new DataSourceOptions(appIdentity: block, lookUp: configLookUp));
         var blockDataSource = dsFactory.Create<CmsBlock>(attach: initialSource);
 
@@ -45,7 +30,7 @@ public class BlockDataSourceFactory: ServiceBase
         var viewDataSourceUpstream = view?.Query == null
             ? blockDataSource
             : null;
-        Log.A($"use query upstream:{viewDataSourceUpstream != null}");
+        l.A($"use query upstream:{viewDataSourceUpstream != null}");
 
         var contextDataSource = dsFactory.Create<ContextData>(attach: viewDataSourceUpstream, options: new DataSourceOptions(appIdentity: block, lookUp: configLookUp));
         contextDataSource.SetBlock(blockDataSource);
@@ -64,19 +49,19 @@ public class BlockDataSourceFactory: ServiceBase
 #pragma warning restore CS0618 // Type or member is obsolete
             }
 #endif
-            Log.A($"use template, & query#{view.Query?.Id}");
+            l.A($"use template, & query#{view.Query?.Id}");
             // Append Streams of the Data-Query (this doesn't require a change of the viewDataSource itself)
             if (view.Query != null)
             {
-                Log.A("Generate query");
-                var query = _queryLazy.Value.Init(block.App.ZoneId, block.App.AppId, view.Query.Entity, configLookUp, contextDataSource);
-                Log.A("attaching");
+                l.A("Generate query");
+                var query = queryLazy.Value.Init(block.App.ZoneId, block.App.AppId, view.Query.Entity, configLookUp, contextDataSource);
+                l.A("attaching");
                 contextDataSource.SetOut(query);
             }
         }
         else
-            Log.A("no template override");
+            l.A("no template override");
 
-        return wrapLog.ReturnAsOk(contextDataSource);
+        return l.ReturnAsOk(contextDataSource);
     }
 }

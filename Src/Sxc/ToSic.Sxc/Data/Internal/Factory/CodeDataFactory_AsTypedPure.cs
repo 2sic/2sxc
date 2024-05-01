@@ -18,7 +18,7 @@ partial class CodeDataFactory
         if (data is ITyped alreadyTyped)
             return l.Return(alreadyTyped, "already typed");
 
-        var result = _codeDataWrapper.Value.ChildNonJsonWrapIfPossible(data: data, wrapNonAnon: true,
+        var result = codeDataWrapper.Value.ChildNonJsonWrapIfPossible(data: data, wrapNonAnon: true,
             WrapperSettings.Typed(children: true, realObjectsToo: false, propsRequired: propsRequired ?? true));
         if (result is ITyped resTyped)
             return l.Return(resTyped, "converted to dyn-read");

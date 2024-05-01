@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data;
+﻿using ToSic.Eav.Apps.Internal;
+using ToSic.Sxc.Data;
 
 
 namespace ToSic.Sxc.Services;
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.Services;
 /// In future the internal engine may change (like for .net core), but we'll ensure that the result remains consistent. 
 /// </remarks>
 [PublicApi]
-public interface IJsonService
+public interface IJsonService : IJsonServiceInternal
 {
     /// <summary>
     /// Convert an object to JSON.
@@ -53,7 +54,7 @@ public interface IJsonService
     /// <typeparam name="T"></typeparam>
     /// <param name="json"></param>
     /// <returns></returns>
-    T To<T>(string json);
+    new T To<T>(string json);
 
     /// <summary>
     /// Convert a json to an anonymous object.

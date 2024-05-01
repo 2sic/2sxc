@@ -88,16 +88,16 @@ public partial class View : PortalModuleBase, IActionable
                     if (checkPortalIsReady)
                         if (!DnnReadyCheckTurbo.QuickCheckSiteAndAppFoldersAreReady(this, Log))
                             GetService<DnnReadyCheckTurbo>().EnsureSiteAndAppFoldersAreReady(this, block);
-                    DnnClientResources = GetService<DnnClientResources>().Init(Page, null, requiresPre1025Behavior == false ? null : block?.BlockBuilder);
-                    _enforcePre1025JQueryLoading = requiresPre1025Behavior ?? DnnClientResources.NeedsPre1025Behavior();
-                    if (_enforcePre1025JQueryLoading) DnnClientResources.EnforcePre1025Behavior();
+                    _dnnClientResources = GetService<DnnClientResources>().Init(Page, null, requiresPre1025Behavior == false ? null : block?.BlockBuilder);
+                    _enforcePre1025JQueryLoading = requiresPre1025Behavior ?? _dnnClientResources.NeedsPre1025Behavior();
+                    if (_enforcePre1025JQueryLoading) _dnnClientResources.EnforcePre1025Behavior();
                     return true;
                 });
             });
         });
     }
 
-    protected DnnClientResources DnnClientResources;
+    private DnnClientResources _dnnClientResources;
     private bool _enforcePre1025JQueryLoading;
 
 
@@ -151,7 +151,7 @@ public partial class View : PortalModuleBase, IActionable
                     }
 
                     // call this after rendering templates, because the template may change what resources are registered
-                    DnnClientResources.AddEverything(data.Features);
+                    _dnnClientResources.AddEverything(data.Features);
                     headersAndScriptsAdded = true; // will be true if we make it this far
                     // If standalone is specified, output just the template without anything else
                     if (RenderNaked)
@@ -167,7 +167,7 @@ public partial class View : PortalModuleBase, IActionable
 
             // if we had an error before, or have one now, re-check assets
             if (IsError && !headersAndScriptsAdded)
-                DnnClientResources?.AddEverything(data?.Features);
+                _dnnClientResources?.AddEverything(data?.Features);
         });
         LogTimer.Done(IsError ? "⚠️" : finalMessage);
         l.Done();

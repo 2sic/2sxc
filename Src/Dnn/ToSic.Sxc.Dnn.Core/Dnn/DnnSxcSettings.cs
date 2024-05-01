@@ -5,13 +5,16 @@ namespace ToSic.Sxc.Dnn;
 internal class DnnSxcSettings
 {
 
-    // Special user groups to determine if admins can really admin
+    /// <summary>
+    /// Special user groups to determine if admins can really admin
+    /// </summary>
+    public static readonly string[] DnnGroupsSxcAdmins =
+    [
+        "2sxc designers",       // Old, original name since ca. 2sxc 4+
+        "2sxcAdministrators",   // New in v13.03 - to replace the old name for clarity
+    ];
 
-    public static readonly string DnnGroupSxcDesigners = "2sxc designers";
-
-    //public const string DnnGroupSxcDesigners = "2sxcDesigners";
-    public static readonly string DnnGroupSxcAdmins = "2sxcAdministrators"; // New in v13.03 - to replace the old name
-
+    public const string DnnAdminRoleDefaultName = "Administrators";
 
     public static class Installation
     {
@@ -19,7 +22,7 @@ internal class DnnSxcSettings
         // So we only need the versions which do have code upgrades - which is very uncommon
         // todo: Maybe this list can somehow be extracted from the module manifest or placed there...
         internal static readonly string[] UpgradeVersionList =
-        {
+        [
             // new installer of 2sxc 9.20 doesn't upgrade versions before 8.12, so removed all those versions
             "08.11.00",
             "09.00.00",
@@ -31,7 +34,7 @@ internal class DnnSxcSettings
             "15.02.00",
             "16.00.00",
             EavSystemInfo.VersionString,
-        };
+        ];
 
         // this is the last version which must run server-side change-code
         // it's not sql-code, as the SqlDataProvider files are imported by DNN, not by our code

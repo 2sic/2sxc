@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Internal;
-using ToSic.Eav.Apps.Specs;
+using ToSic.Eav.Apps.Internal.Specs;
 using static ToSic.Eav.Apps.Internal.AdamConstants;
 
 namespace ToSic.Sxc.Adam.Internal;

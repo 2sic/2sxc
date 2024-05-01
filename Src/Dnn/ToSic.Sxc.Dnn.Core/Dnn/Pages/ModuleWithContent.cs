@@ -3,8 +3,7 @@ using DotNetNuke.Entities.Tabs;
 
 namespace ToSic.Sxc.Dnn.Pages;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ModuleWithContent
+internal class ModuleWithContent
 {
     public Guid ContentGroup;
     public ModuleInfo Module;

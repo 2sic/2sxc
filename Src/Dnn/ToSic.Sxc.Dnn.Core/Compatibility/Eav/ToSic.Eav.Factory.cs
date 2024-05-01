@@ -9,10 +9,11 @@ namespace ToSic.Eav;
 /// <summary>
 /// The Eav DI Factory, used to construct various objects through [Dependency Injection](xref:NetCode.DependencyInjection.Index).
 ///
-/// If possible avoid using this, as it's a workaround for code which is outside of the normal Dependency Injection and therefor a bad pattern.
+/// If possible avoid using this, as it's a workaround for code which is outside the normal Dependency Injection and therefor a bad pattern.
 /// </summary>
 [PublicApi("Careful - obsolete!")]
 [Obsolete("Deprecated, please use Dnn 9 DI instead https://go.2sxc.org/brc-13-eav-factory")]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class Factory
 {
     [Obsolete("Not used any more, but keep for API consistency in case something calls ActivateNetCoreDi")]
@@ -23,7 +24,9 @@ public class Factory
     /// Dependency Injection resolver with a known type as a parameter.
     /// </summary>
     /// <typeparam name="T">The type / interface we need.</typeparam>
+    [PrivateApi]
     [Obsolete("Please use standard Dnn 9.4+ Dnn DI instead https://go.2sxc.org/brc-13-eav-factory")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static T Resolve<T>()
     {
         DnnStaticDi.CodeInfos.Warn(WarnObsolete.UsedAs(specificId: typeof(T).FullName));

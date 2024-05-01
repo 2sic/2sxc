@@ -1,8 +1,7 @@
-﻿namespace ToSic.Sxc.Dnn.Compile
+﻿namespace ToSic.Sxc.Dnn.Compile;
+
+[PrivateApi]
+public interface IHostingEnvironmentWrapper
 {
-    [PrivateApi]
-    public interface IHostingEnvironmentWrapper
-    {
-        string MapPath(string virtualPath);
-    }
+    string MapPath(string virtualPath);
 }

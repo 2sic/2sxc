@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code.Generate;
@@ -109,18 +108,11 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IJsonService> json,
         // get generators
         var fileGenerators = generators.Value.Select(g => new GeneratorDto(g)).ToList();
 
-        var pathToDotAppJson = appJsonService.Value.GetPathToDotAppJson(appId);
-        l.A($"path to app.json: {pathToDotAppJson}");
-        if (File.Exists(pathToDotAppJson))
+        var appJson = appJsonService.Value.GetAppJson(appId);
+        if (appJson?.Editions?.Count > 0)
         {
-            l.A($"has app.json");
-            var editionsJson = json.Value.To<EditionsJson>(File.ReadAllText(pathToDotAppJson));
-
-            if (editionsJson?.Editions?.Count > 0)
-            {
-                l.A($"has editions in app.json: {editionsJson?.Editions?.Count}");
-                return l.ReturnAsOk(editionsJson.ToEditionsDto(fileGenerators));
-            }
+            l.A($"has editions in app.json: {appJson?.Editions?.Count}");
+            return l.ReturnAsOk(appJson.ToEditionsDto(fileGenerators));
         }
 
         l.A("editions are not specified, so using default edition data");
