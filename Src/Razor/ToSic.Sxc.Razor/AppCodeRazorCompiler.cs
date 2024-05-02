@@ -169,6 +169,8 @@ internal class AppCodeRazorCompiler : ServiceBase, IAppCodeRazorCompiler
             var appRelativePathWithEdition = spec.Edition.HasValue() ? Path.Combine(app.RelativePath, spec.Edition) : app.RelativePath;
             l.A($"{nameof(appRelativePathWithEdition)}: {appRelativePathWithEdition}");
 
+            SetToContext(appRelativePathWithEdition);
+
             // add assembly to resolver, so it will be provided to the compiler when used in cshtml
             _assemblyResolver.AddAssembly(assemblyResult.Assembly, appRelativePathWithEdition);
         }
@@ -262,6 +264,13 @@ internal class AppCodeRazorCompiler : ServiceBase, IAppCodeRazorCompiler
         // Create an IView instance from the compiled assembly
         var viewInstance = new RazorView(_viewEngine, _pageActivator, Array.Empty<IRazorPage>(), page, HtmlEncoder.Default, new(templatePath));
         return l.ReturnAsOk(ViewEngineResult.Found(templatePath, viewInstance));
+    }
+
+
+    public const string AppRelativePathWithEdition = "AppRelativePathWithEdition";
+    private void SetToContext(string appRelativePathWithEdition)
+    {
+        if (_httpContextAccessor.HttpContext != null) _httpContextAccessor.HttpContext.Items[AppRelativePathWithEdition] = appRelativePathWithEdition;
     }
 
     private string[] DefaultImports => _defaultImports.Get(GetDefaultImports);

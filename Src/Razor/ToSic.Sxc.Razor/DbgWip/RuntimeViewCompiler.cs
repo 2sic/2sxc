@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.AspNetCore.Razor.Hosting;
 using Microsoft.AspNetCore.Razor.Language;
@@ -18,11 +19,16 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Polymorphism.Internal;
 
 namespace ToSic.Sxc.Razor.DbgWip;
 
@@ -36,6 +42,7 @@ internal class RuntimeViewCompiler : IViewCompiler
     private readonly IMemoryCache _cache;
     private readonly ILogger _logger;
     private readonly AssemblyResolver _assemblyResolver;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly CSharpCompiler _csharpCompiler;
 
     public RuntimeViewCompiler(
@@ -44,7 +51,8 @@ internal class RuntimeViewCompiler : IViewCompiler
         CSharpCompiler csharpCompiler,
         IList<CompiledViewDescriptor> precompiledViews,
         ILogger logger,
-        AssemblyResolver assemblyResolver)
+        AssemblyResolver assemblyResolver,
+        IHttpContextAccessor httpContextAccessor)
     {
         if (precompiledViews == null)
         {
@@ -56,7 +64,7 @@ internal class RuntimeViewCompiler : IViewCompiler
         _csharpCompiler = csharpCompiler ?? throw new ArgumentNullException(nameof(csharpCompiler));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _assemblyResolver = assemblyResolver;
-
+        _httpContextAccessor = httpContextAccessor;
 
         _normalizedPathCache = new(StringComparer.Ordinal);
 
@@ -348,21 +356,54 @@ internal class RuntimeViewCompiler : IViewCompiler
     private IEnumerable<MetadataReference> GetMetadataReferences(string relativePath)
     {
         IEnumerable<MetadataReference> references = new List<MetadataReference>();
-        var appCodePath = _assemblyResolver.GetAssemblyLocation(GetAppRelativePath(relativePath));
+        var appCodePath = _assemblyResolver.GetAssemblyLocation(GetAppRelativePathWithEdition(relativePath));
         if (appCodePath != null)
             references = references.Append(MetadataReference.CreateFromFile(appCodePath));
         return references;
     }
 
+    private string GetAppRelativePathWithEdition(string relativePath)
+    {
+        //var relativePathFromContext = GetFromContext();
+        //if (!string.IsNullOrEmpty(relativePathFromContext)
+        //    && !string.IsNullOrEmpty(relativePath)
+        //    && relativePath.Backslash().TrimPrefixSlash().StartsWith(relativePathFromContext))
+        //    return relativePathFromContext;
+
+        if (_httpContextAccessor?.HttpContext == null) return GetAppRelativePath(relativePath);
+
+        var sp = _httpContextAccessor.HttpContext.RequestServices;
+        var ctxResolver = sp.GetService(typeof(ISxcContextResolver)) as ISxcContextResolver;
+
+        var block = ctxResolver?.BlockOrNull();
+        if (block == null) return GetAppRelativePath(relativePath);
+
+        var polymorphism = sp.GetService<PolymorphConfigReader>();
+
+        var edition = PolymorphConfigReader.UseViewEditionOrGetLazy(block.View, () => polymorphism.Init(block.Context.AppState.List));
+
+        return edition.HasValue()
+            ? Path.Combine(block.App.RelativePath, edition)
+            : block.App.RelativePath;
+
+    }
+
+    //private string GetFromContext()
+    //{
+    //    if (!string.IsNullOrEmpty(_httpContextAccessor?.HttpContext?.Items[AppCodeRazorCompiler.AppRelativePathWithEdition] as string))
+    //        return (string)_httpContextAccessor.HttpContext.Items[AppCodeRazorCompiler.AppRelativePathWithEdition];
+    //    return "";
+    //}
+
     /// <summary>
     /// extract appRelativePath from relativePath
+    /// fallback, when block is null
     /// </summary>
     /// <param name="relativePath">string "/2sxc/n/aaa-folder-name/etc..."</param>
     /// <returns>string "2sxc\\n\\aaa-folder-name" or null</returns>
-    private static string GetAppRelativePath(string relativePath)
+    private string GetAppRelativePath(string relativePath)
     {
-        // TODO: stv, this has to more generic because it is very 2sxc on Oqtane specific
-        // validations
+        // fallback
         if ((string.IsNullOrEmpty(relativePath))
             || (relativePath.Length < 8)
             || (relativePath[0] != '/')
