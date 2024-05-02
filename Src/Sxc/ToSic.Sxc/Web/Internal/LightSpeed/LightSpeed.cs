@@ -225,6 +225,11 @@ internal class LightSpeed(
     private bool IsEnabledGenerator()
     {
         var l = Log.Fn<bool>();
+        // special - Oqtane seems to call this much earlier than Dnn, even on non-existing modules.
+        // so on new modules this would fail and throw an error. So we'll just return false in this case.
+        if (AppState == null) return l.ReturnFalse("no app");
+
+        // Normal check.
         var feat = features.IsEnabled(LightSpeedOutputCache.NameId);
         if (!feat) return l.ReturnFalse("feature disabled");
         var ok = AppConfig.IsEnabled;
