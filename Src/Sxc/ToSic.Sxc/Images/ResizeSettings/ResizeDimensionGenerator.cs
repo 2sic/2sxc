@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Images;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ResizeDimensionGenerator() : ServiceBase("Img.ResDim")
 {
-    public bool Debug = false;
+    internal bool Debug = false;
         
 
     /// <summary>

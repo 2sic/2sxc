@@ -3,6 +3,8 @@ using System.Reflection;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
+[PrivateApi("Internal stuff")]
+[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public static class AppCodeExtensions
 {
     /// <summary>
@@ -21,12 +23,12 @@ public static class AppCodeExtensions
         return type;
     }
 
-
-    /// <summary>
-    /// Return list of types that are controllers
-    /// </summary>
-    /// <param name="appCodeAssembly"></param>
-    /// <returns>list of types that are controllers</returns>
-    public static List<Type> GetAllControllerTypes(this Assembly appCodeAssembly) 
-        => appCodeAssembly.GetTypes().Where(t => t.Name.EndsWith(Constants.ApiControllerSuffix, StringComparison.OrdinalIgnoreCase)).ToList();
+    // 2024-05-02 2dm seems unused, maybe old
+    ///// <summary>
+    ///// Return list of types that are controllers
+    ///// </summary>
+    ///// <param name="appCodeAssembly"></param>
+    ///// <returns>list of types that are controllers</returns>
+    //public static List<Type> GetAllControllerTypes(this Assembly appCodeAssembly) 
+    //    => appCodeAssembly.GetTypes().Where(t => t.Name.EndsWith(Constants.ApiControllerSuffix, StringComparison.OrdinalIgnoreCase)).ToList();
 }
