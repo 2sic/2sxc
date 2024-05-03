@@ -65,7 +65,7 @@ public class AppFilesDataSourceProvider(AppFilesDataSourceProvider.MyServices se
         var appState = Services.AppStates.GetReader(new AppIdentity(zoneId, appId));
         _appPaths = Services.AppPathMicroSvc.Init(Services.Site, appState);
         
-        _fileManager = Services.FileManagerGenerator.New().SetFolder(_appPaths.PhysicalPath, _root);
+        _fileManager = Services.FileManagerGenerator.New().SetFolder(appId, _appPaths.PhysicalPath, _root);
         return this;
     });
 
