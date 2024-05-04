@@ -15,11 +15,11 @@ public class Permissions(IUser oqtUser) : IResolver
 
     public string Edition(string parameters, ILog log)
     {
-        var wrapLog = log.Fn<string>();
+        var l = log.Fn<string>();
         if (!string.Equals(parameters, ModeIsSuperUser, InvariantCultureIgnoreCase))
-            return wrapLog.ReturnNull("unknown param");
+            return l.ReturnNull("unknown param");
         var isSuper = oqtUser.IsSystemAdmin;
         var result = isSuper ? "staging" : "live";
-        return wrapLog.ReturnAndLog(result);
+        return l.ReturnAndLog(result);
     }
 }

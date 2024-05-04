@@ -99,7 +99,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices s
 
     internal bool FileTypeIsOkForThisField(out HttpExceptionAbstraction preparedException)
     {
-        var wrapLog = Log.Fn<bool>();
+        var l = Log.Fn<bool>();
         var fieldDef = AdamContext.Attribute;
         bool result;
         // check if this field exists and is actually a file-field or a string (wysiwyg) field
@@ -116,7 +116,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices s
             preparedException = null;
             result = true;
         }
-        return wrapLog.ReturnAndLog(result);
+        return l.ReturnAndLog(result);
     }
 
 

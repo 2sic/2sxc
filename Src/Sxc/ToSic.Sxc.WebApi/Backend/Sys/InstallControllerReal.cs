@@ -121,7 +121,7 @@ public class InstallControllerReal : ServiceBase
     /// <returns></returns>
     public THttpResponseType RemotePackage(string packageUrl, IModule container)
     {
-        var wrapLog = Log.Fn<THttpResponseType>();
+        var l = Log.Fn<THttpResponseType>();
 
         var isApp = !container.IsContent;
 
@@ -134,8 +134,8 @@ public class InstallControllerReal : ServiceBase
         Log.A("install completed with success:" + success);
 
         return success 
-            ? wrapLog.ReturnAsOk(_responseMaker.Ok()) 
-            : wrapLog.Return(_responseMaker.InternalServerError(MessageBuilder(messages)), "error");
+            ? l.ReturnAsOk(_responseMaker.Ok()) 
+            : l.Return(_responseMaker.InternalServerError(MessageBuilder(messages)), "error");
     }
 
     private static string MessageBuilder(List<Message> messages)

@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal.DotNet;
 
 namespace ToSic.Sxc.Context.Internal;
@@ -33,13 +32,13 @@ internal class AppIdResolver: ServiceBase
     /// <returns></returns>
     internal int GetAppIdFromPath(int zoneId, string appPath, bool required)
     {
-        var wrapLog = Log.Fn<int>($"{zoneId}, {appPath}, {required}");
+        var l = Log.Fn<int>($"{zoneId}, {appPath}, {required}");
         // get app from AppName
         var aid = _appFinder/* _zoneRuntime.Init(zoneId, Log)*/.FindAppId(zoneId, appPath, true);
         if (aid <= Eav.Constants.AppIdEmpty && required)
             throw new($"App required but can't find App based on the name '{appPath}'");
 
-        return wrapLog.Return(aid, $"found app:{aid}");
+        return l.Return(aid, $"found app:{aid}");
     }
 
 

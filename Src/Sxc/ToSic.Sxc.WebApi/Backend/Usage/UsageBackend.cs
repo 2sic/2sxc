@@ -32,7 +32,7 @@ public class UsageBackend: ServiceBase
 
     public IEnumerable<ViewDto> ViewUsage(int appId, Guid guid, Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
     {
-        var wrapLog = Log.Fn<IEnumerable<ViewDto>>($"{appId}, {guid}");
+        var l = Log.Fn<IEnumerable<ViewDto>>($"{appId}, {guid}");
         var context = _ctxResolver.GetBlockOrSetApp(appId);
 
         // extra security to only allow zone change if host user
@@ -51,6 +51,6 @@ public class UsageBackend: ServiceBase
 
         var result = finalBuilder(views, blocks);
 
-        return wrapLog.ReturnAsOk(result);
+        return l.ReturnAsOk(result);
     }
 }

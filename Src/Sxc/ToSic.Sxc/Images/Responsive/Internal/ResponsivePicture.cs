@@ -37,10 +37,10 @@ public class ResponsivePicture: ResponsiveBase, IResponsivePicture
     private TagList SourceTagsInternal(string url, IResizeSettings resizeSettings)
     {
         var logOrNull = ImgService.Debug ? Log : null;
-        var wrapLog = logOrNull.Fn<TagList>();
+        var l = logOrNull.Fn<TagList>();
         // Check formats
         var defFormat = ImgService.GetFormat(url);
-        if (defFormat == null) return wrapLog.Return(ToSic.Razor.Blade.Tag.TagList(), "no format");
+        if (defFormat == null) return l.Return(ToSic.Razor.Blade.Tag.TagList(), "no format");
 
         // Determine if we have many formats, otherwise just use the current one
         var formats = defFormat.ResizeFormats.Any()
@@ -49,7 +49,7 @@ public class ResponsivePicture: ResponsiveBase, IResponsivePicture
             
         var useMultiSrcSet = ImgService.Features.IsEnabled(ImageServiceMultipleSizes.NameId);
 
-        wrapLog.A($"{nameof(formats)}: {formats.Count}, {nameof(useMultiSrcSet)}: {useMultiSrcSet}");
+        l.A($"{nameof(formats)}: {formats.Count}, {nameof(useMultiSrcSet)}: {useMultiSrcSet}");
 
         // Generate Meta Tags
         var sources = formats
@@ -65,7 +65,7 @@ public class ResponsivePicture: ResponsiveBase, IResponsivePicture
                 return source;
             });
         var result = ToSic.Razor.Blade.Tag.TagList(sources);
-        return wrapLog.Return(result, $"{result.Count()}");
+        return l.Return(result, $"{result.Count()}");
     }
 
 }

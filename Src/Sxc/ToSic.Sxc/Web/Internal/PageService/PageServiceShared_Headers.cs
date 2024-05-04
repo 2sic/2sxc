@@ -7,10 +7,10 @@ partial class PageServiceShared
     public IList<HeadChange> Headers { get; } = new List<HeadChange>();
     public IList<HeadChange> GetHeadChangesAndFlush(ILog log)
     {
-        var wrapLog = log.Fn<IList<HeadChange>>();
+        var l = log.Fn<IList<HeadChange>>();
         var changes = Headers.ToArray().ToList();
         Headers.Clear();
-        return wrapLog.Return(changes, $"{changes.Count}");
+        return l.Return(changes, $"{changes.Count}");
     }
 
 

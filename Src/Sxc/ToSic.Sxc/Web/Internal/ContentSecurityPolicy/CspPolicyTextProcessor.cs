@@ -8,7 +8,7 @@ public class CspPolicyTextProcessor(ILog parentLog) : HelperBase(parentLog, $"{C
 {
     public List<KeyValuePair<string,string>> Parse(string policyText)
     {
-        var wrapLog = Log.Fn<List<KeyValuePair<string, string>>>();
+        var l = Log.Fn<List<KeyValuePair<string, string>>>();
 
         var result = new List<KeyValuePair<string,string>>();
         if (string.IsNullOrEmpty(policyText)) return result;
@@ -30,7 +30,7 @@ public class CspPolicyTextProcessor(ILog parentLog) : HelperBase(parentLog, $"{C
             result.Add(new(key, value));
         }
 
-        return wrapLog.Return(result, result.Count.ToString());
+        return l.Return(result, result.Count.ToString());
     }
 
 }

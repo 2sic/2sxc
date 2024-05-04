@@ -38,7 +38,7 @@ public class TypeControllerReal(
     /// </summary>
     public ScopesDto Scopes(int appId)
     {
-        var wrapLog = Log.Fn<ScopesDto>($"{appId}");
+        var l = Log.Fn<ScopesDto>($"{appId}");
         var reader = appStates.GetReader(appId);
         var dic = reader.ContentTypes.GetAllScopesWithLabels();
         var infos = dic
@@ -57,7 +57,7 @@ public class TypeControllerReal(
                 };
             })
             .ToList();
-        return wrapLog.Return(new() { Old = dic, Scopes = infos });
+        return l.Return(new() { Old = dic, Scopes = infos });
     }
 
     /// <summary>

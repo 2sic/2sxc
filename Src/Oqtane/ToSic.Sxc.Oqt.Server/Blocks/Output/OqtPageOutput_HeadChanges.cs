@@ -9,7 +9,7 @@ partial class OqtPageOutput
 {
     public IEnumerable<OqtHeadChange> GetHeadChanges()
     {
-        var wrapLog = Log.Fn<IEnumerable<OqtHeadChange>>();
+        var l = Log.Fn<IEnumerable<OqtHeadChange>>();
 
         var changes = RenderResult.HeadChanges;
 
@@ -22,6 +22,6 @@ partial class OqtPageOutput
 
         var count = changes.Count;
 
-        return wrapLog.ReturnAndLog(result, $"Changes: {count}");
+        return l.ReturnAndLog(result, $"Changes: {count}");
     }
 }

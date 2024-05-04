@@ -26,11 +26,11 @@ internal class LightSpeed(
 {
     public IOutputCache Init(int moduleId, int pageId, IBlock block)
     {
-        var wrapLog = Log.Fn<IOutputCache>($"mod: {moduleId}");
+        var l = Log.Fn<IOutputCache>($"mod: {moduleId}");
         _moduleId = moduleId;
         _pageId = pageId;
         _block = block;
-        return wrapLog.Return(this, $"{IsEnabled}");
+        return l.Return(this, $"{IsEnabled}");
     }
     private int _moduleId;
     private int _pageId;

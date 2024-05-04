@@ -32,7 +32,7 @@ internal class OqtImportExportEnvironment(
     /// <param name="destinationFolder">The portal-relative path where the files should be copied to</param>
     public override List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder)
     {
-        var wrapLog = Log.Fn<List<Message>>($"{sourceFolder}, {destinationFolder}");
+        var l = Log.Fn<List<Message>>($"{sourceFolder}, {destinationFolder}");
         var messages = new List<Message>();
         var files = IO.Directory.GetFiles(sourceFolder, "*.*");
         var siteId = Site.Id;
@@ -93,7 +93,7 @@ internal class OqtImportExportEnvironment(
             TransferFilesToSite(sourceFolderPath, newDestinationFolder);
         }
 
-        return wrapLog.Return(messages);
+        return l.Return(messages);
     }
 
     public override Version TenantVersion => typeof(OqtImportExportEnvironment).Assembly.GetName().Version;

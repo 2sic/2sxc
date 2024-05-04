@@ -22,7 +22,7 @@ public class Pages(
 {
     public List<PageModule> AllModulesWithContent(int siteId)
     {
-        var wrapLog = Log.Fn<List<PageModule>>($"{siteId}");
+        var l = Log.Fn<List<PageModule>>($"{siteId}");
 
         // create an array with all modules
         var sxcContents = pageModuleRepository.GetPageModules(siteId)
@@ -47,7 +47,7 @@ public class Pages(
             .Where(m => m.Module.Settings.ContainsKey(ModuleSettingNames.ContentGroup) && m.Module.Settings[ModuleSettingNames.ContentGroup] != Guid.Empty.ToString())
             .ToList();
 
-        return wrapLog.Return(allMods, $"{allMods.Count}");
+        return l.Return(allMods, $"{allMods.Count}");
     }
 
 

@@ -73,10 +73,10 @@ public class ViewControllerReal : ServiceBase, IViewController
     /// <exception cref="ArgumentException"></exception>
     public ImportResultDto Import(HttpUploadedFile uploadInfo, int zoneId, int appId)
     {
-        var wrapLog = Log.Fn<ImportResultDto>();
+        var l = Log.Fn<ImportResultDto>();
             
         if (!uploadInfo.HasFiles())
-            return wrapLog.Return(new(false, "no file uploaded", Message.MessageTypes.Error), "no file uploaded");
+            return l.Return(new(false, "no file uploaded", Message.MessageTypes.Error), "no file uploaded");
 
         var streams = new List<FileUploadDto>();
         for (var i = 0; i < uploadInfo.Count; i++)
@@ -86,7 +86,7 @@ public class ViewControllerReal : ServiceBase, IViewController
         }
         var result = _viewExportImport.Value.ImportView(zoneId, appId, streams, _context.Value.Site.DefaultCultureCode);
 
-        return wrapLog.ReturnAsOk(result);
+        return l.ReturnAsOk(result);
     }
 
     /// <inheritdoc />

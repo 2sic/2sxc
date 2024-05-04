@@ -135,9 +135,9 @@ public class AppControllerReal : ServiceBase
 
     public bool FlushCache(int zoneId, int appId)
     {
-        var wrapLog = Log.Fn<bool>($"{zoneId}, {appId}");
+        var l = Log.Fn<bool>($"{zoneId}, {appId}");
         _systemManagerLazy.Value.Purge(zoneId, appId);
-        return wrapLog.ReturnTrue("ok");
+        return l.ReturnTrue("ok");
     }
 
     public THttpResponseType Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
@@ -161,16 +161,16 @@ public class AppControllerReal : ServiceBase
     /// <returns></returns>
     public ImportResultDto Import(HttpUploadedFile uploadInfo, int zoneId, string renameApp)
     {
-        var wrapLog = Log.Fn<ImportResultDto>();
+        var l = Log.Fn<ImportResultDto>();
 
         if (!uploadInfo.HasFiles())
-            return wrapLog.Return(new(false, "no file uploaded"), "no file uploaded");
+            return l.Return(new(false, "no file uploaded"), "no file uploaded");
 
         var (_, stream) = uploadInfo.GetStream(0);
 
         var result = _importAppLazy.Value.Import(stream, zoneId, renameApp);
 
-        return wrapLog.ReturnAsOk(result);
+        return l.ReturnAsOk(result);
     }
 
     /// <summary>
@@ -182,9 +182,9 @@ public class AppControllerReal : ServiceBase
     /// <returns></returns>
     public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
     {
-        var wrapLog = Log.Fn<IEnumerable<PendingAppDto>>();
+        var l = Log.Fn<IEnumerable<PendingAppDto>>();
         var result = _importAppLazy.Value.GetPendingApps(zoneId);
-        return wrapLog.ReturnAsOk(result);
+        return l.ReturnAsOk(result);
     }
 
     /// <summary>
@@ -195,8 +195,8 @@ public class AppControllerReal : ServiceBase
     /// <returns></returns>
     public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppDto> pendingApps)
     {
-        var wrapLog = Log.Fn<ImportResultDto>();
+        var l = Log.Fn<ImportResultDto>();
         var result = _importAppLazy.Value.InstallPendingApps(zoneId, pendingApps);
-        return wrapLog.ReturnAsOk(result);
+        return l.ReturnAsOk(result);
     }
 }

@@ -18,12 +18,12 @@ partial class OqtPageOutput
     /// <returns></returns>
     public string ContextMetaContents()
     {
-        var wrapLog = Log.Fn<string>();
+        var l = Log.Fn<string>();
         var pageId = Parent?.Page.PageId ?? -1;
         var siteRoot = GetSiteRoot(_siteState);
         var rvt = AntiForgeryToken();
         var result = _jsApiService.GetJsApiJson(pageId, siteRoot, rvt);
-        return wrapLog.ReturnAsOk(result);
+        return l.ReturnAsOk(result);
     }
 
     /// <summary>

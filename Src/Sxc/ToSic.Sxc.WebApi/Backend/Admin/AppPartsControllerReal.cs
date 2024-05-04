@@ -67,17 +67,17 @@ public class AppPartsControllerReal : ServiceBase, IAppPartsController
     /// <exception cref="ArgumentException"></exception>
     public ImportResultDto Import(HttpUploadedFile uploadInfo, int zoneId, int appId)
     {
-        var wrapLog = Log.Fn<ImportResultDto>();
+        var l = Log.Fn<ImportResultDto>();
 
         if (!uploadInfo.HasFiles()) 
-            return wrapLog.Return(new(false, "no file uploaded"), "no file uploaded");
+            return l.Return(new(false, "no file uploaded"), "no file uploaded");
 
         var (fileName, stream) = uploadInfo.GetStream(0);
 
         var result = _importContent.New()
             .Import(zoneId: zoneId, appId: appId, fileName: fileName, stream: stream, defaultLanguage: _context.Value.Site.DefaultCultureCode);
 
-        return wrapLog.ReturnAsOk(result);
+        return l.ReturnAsOk(result);
     }
 
     #endregion

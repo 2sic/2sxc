@@ -69,7 +69,7 @@ public class AppContent : ServiceBase
 
     public IEnumerable<IDictionary<string, object>> GetItems(string contentType, string appPath = default, string oDataSelect = default)
     {
-        var wrapLog = Log.Fn<IEnumerable<IDictionary<string, object>>>($"get entities type:{contentType}, path:{appPath}");
+        var l = Log.Fn<IEnumerable<IDictionary<string, object>>>($"get entities type:{contentType}, path:{appPath}");
 
         // verify that read-access to these content-types is permitted
         var permCheck = ThrowIfNotAllowedInType(contentType, GrantSets.ReadSomething, AppState);
@@ -77,7 +77,7 @@ public class AppContent : ServiceBase
         var includeDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
         var result = _entityApi.GetEntities(AppState, contentType, includeDrafts, oDataSelect)
             ?.ToList();
-        return wrapLog.Return(result, "found: " + result?.Count);
+        return l.Return(result, "found: " + result?.Count);
     }
 
 
@@ -163,25 +163,25 @@ public class AppContent : ServiceBase
 
     private bool AddParentRelationship(IDictionary<string, object> valuesCaseInsensitive, int addedEntityId)
     {
-        var wrapLog = Log.Fn<bool>($"item dictionary key count: {valuesCaseInsensitive.Count}");
+        var l = Log.Fn<bool>($"item dictionary key count: {valuesCaseInsensitive.Count}");
 
         if (!valuesCaseInsensitive.Keys.Contains(ParentRelationship))
-            return wrapLog.ReturnFalse($"'{ParentRelationship}' key is missing");
+            return l.ReturnFalse($"'{ParentRelationship}' key is missing");
 
         var objectOrNull = valuesCaseInsensitive[ParentRelationship];
         if (objectOrNull == null) 
-            return wrapLog.ReturnFalse($"'{ParentRelationship}' value is null");
+            return l.ReturnFalse($"'{ParentRelationship}' value is null");
 
         if (objectOrNull is not JsonObject parentRelationship)
-            return wrapLog.ReturnNull($"'{ParentRelationship}' value is not JsonObject");
+            return l.ReturnNull($"'{ParentRelationship}' value is not JsonObject");
 
         var parentGuid = (Guid?)parentRelationship[ParentRelParent];
         if (!parentGuid.HasValue) 
-            return wrapLog.ReturnFalse($"'{ParentRelParent}' guid is missing");
+            return l.ReturnFalse($"'{ParentRelParent}' guid is missing");
 
         var parentEntity = AppState.GetDraftOrPublished(parentGuid.Value);
         if (parentEntity == null) 
-            return wrapLog.ReturnFalse("Parent entity is missing");
+            return l.ReturnFalse("Parent entity is missing");
 
         var ids = new[] { addedEntityId as int? };
         var index = (int)parentRelationship[ParentRelIndex];
@@ -191,7 +191,7 @@ public class AppContent : ServiceBase
 
         _workFieldList.New(AppState).FieldListAdd(parentEntity, fields, index, ids, asDraft: false, forceAddToEnd: false);
 
-        return wrapLog.ReturnTrue($"new ParentRelationship p:{parentGuid},f:{field},i:{index}");
+        return l.ReturnTrue($"new ParentRelationship p:{parentGuid},f:{field},i:{index}");
     }
 
     private Target GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive) => Log.Func($"count: {newContentItemCaseInsensitive.Count}", () =>

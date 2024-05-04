@@ -67,7 +67,7 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
         Encoding encoding = null,
         object attachments = null)
     {
-        var wrapLog = Log.Fn<MailMessage>(
+        var l = Log.Fn<MailMessage>(
             parameters: $"{nameof(from)}: {from}, {nameof(to)}: {to}, {nameof(cc)}: {cc}, {nameof(bcc)}: {bcc}, {nameof(replyTo)}: {replyTo}, " +
                         $"{nameof(subject)}: {subject}, {nameof(body)}: {body}, {nameof(isHtml)}: {isHtml}, {nameof(encoding)}: {encoding}, " +
                         $"{nameof(attachments)}: {attachments}");
@@ -93,7 +93,7 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
 
         AddAttachments(mailMessage.Attachments, attachments);
 
-        return wrapLog.Return(mailMessage, "done");
+        return l.Return(mailMessage, "done");
     }
 
     [PrivateApi] 
@@ -154,33 +154,33 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
     // was probably an experiment from STV during dev, but we shouldn't keep it in the interface
     internal bool AddMailAddresses(string addressType, MailAddressCollection targetMails, object mailAddresses)
     {
-        var wrapLog = Log.Fn<bool>(); // return a bool just to make return-statements easier later on
+        var l = Log.Fn<bool>(); // return a bool just to make return-statements easier later on
 
         switch (mailAddresses)
         {
             case MailAddressCollection inputMailAddressCollection:
                 foreach (var mailAddress in inputMailAddressCollection) 
                     targetMails.Add(mailAddress);
-                return wrapLog.ReturnTrue(nameof(MailAddressCollection));
+                return l.ReturnTrue(nameof(MailAddressCollection));
 
             case IEnumerable<MailAddress> inputMailAddressesArray:
                 foreach (var mailAddress in inputMailAddressesArray) 
                     targetMails.Add(mailAddress);
-                return wrapLog.ReturnTrue(nameof(IEnumerable<MailAddress>));
+                return l.ReturnTrue(nameof(IEnumerable<MailAddress>));
 
             case IEnumerable<string> inputStringArray:
                 foreach (var emailAddress in inputStringArray)
                     if (!string.IsNullOrEmpty(emailAddress))
                         targetMails.Add(emailAddress);
-                return wrapLog.ReturnTrue(nameof(IEnumerable<string>));
+                return l.ReturnTrue(nameof(IEnumerable<string>));
 
             case string inputString: 
                 if (!string.IsNullOrEmpty(inputString)) 
                     targetMails.Add(NormalizeEmailSeparators(inputString));
-                return wrapLog.ReturnTrue("string");
+                return l.ReturnTrue("string");
 
             case null:
-                return wrapLog.ReturnTrue("null");
+                return l.ReturnTrue("null");
 
             default:
                 throw new ArgumentException($"Trying to parse e-mails for {addressType} but got unknown type for {nameof(mailAddresses)}");
@@ -195,35 +195,35 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
 
     public bool AddAttachments(AttachmentCollection targetAttachments, object attachments)
     {
-        var wrapLog = Log.Fn<bool>(); // return a bool just to make return-statements easier later on
+        var l = Log.Fn<bool>(); // return a bool just to make return-statements easier later on
         switch (attachments)
         {
             case Attachment inputAttachment:
                 targetAttachments.Add(inputAttachment);
-                return wrapLog.ReturnTrue(nameof(Attachment));
+                return l.ReturnTrue(nameof(Attachment));
 
             case AttachmentCollection attachmentCollection:
                 foreach (var attachment in attachmentCollection) 
                     targetAttachments.Add(attachment);
-                return wrapLog.ReturnTrue(nameof(AttachmentCollection));
+                return l.ReturnTrue(nameof(AttachmentCollection));
 
             case IEnumerable<Attachment> inputAttachmentsArray:
                 foreach (var attachment in inputAttachmentsArray) 
                     targetAttachments.Add(attachment);
-                return wrapLog.ReturnTrue(nameof(IEnumerable<Attachment>));
+                return l.ReturnTrue(nameof(IEnumerable<Attachment>));
 
             case IFile inputFile:
                 targetAttachments.Add(new(
                     new FileStream(inputFile.PhysicalPath, FileMode.Open, FileAccess.Read, FileShare.Read),
                     inputFile.FullName));
-                return wrapLog.ReturnTrue(nameof(IFile));
+                return l.ReturnTrue(nameof(IFile));
 
             case IEnumerable<IFile> inputFiles:
                 foreach (var file in inputFiles)
                     targetAttachments.Add(new(
                         new FileStream(file.PhysicalPath, FileMode.Open, FileAccess.Read, FileShare.Read),
                         file.FullName));
-                return wrapLog.ReturnTrue(nameof(IEnumerable<IFile>));
+                return l.ReturnTrue(nameof(IEnumerable<IFile>));
 
             default:
                 throw new ArgumentException($"Unknown type for {nameof(attachments)}");

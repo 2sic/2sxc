@@ -23,8 +23,8 @@ internal class BlockViewLoader(ILog parentLog) : HelperBase(parentLog, "Blk.View
 
     private IView TryGetViewBasedOnUrlParams(IContextOfBlock context, WorkViews views)
     {
-        var wrapLog = Log.Fn<IView>("template override - check");
-        if (context.Page.Parameters == null) return wrapLog.ReturnNull("no params");
+        var l = Log.Fn<IView>("template override - check");
+        if (context.Page.Parameters == null) return l.ReturnNull("no params");
 
         var urlParameterDict = context.Page.Parameters.ToDictionary(pair => pair.Key?.ToLowerInvariant() ?? "", pair =>
             $"{pair.Key}/{pair.Value}".ToLowerInvariant());
@@ -38,13 +38,13 @@ internal class BlockViewLoader(ILog parentLog) : HelperBase(parentLog, "Blk.View
             {
                 var keyName = desiredFullViewName.Substring(0, desiredFullViewName.Length - 3);
                 if (urlParameterDict.ContainsKey(keyName))
-                    return wrapLog.Return(template, "template override - found:" + template.Name);
+                    return l.Return(template, "template override - found:" + template.Name);
             }
             else if (urlParameterDict.ContainsValue(desiredFullViewName)) // match view/details
-                return wrapLog.Return(template, "template override - found:" + template.Name);
+                return l.Return(template, "template override - found:" + template.Name);
         }
 
-        return wrapLog.ReturnNull("template override - none");
+        return l.ReturnNull("template override - none");
     }
 
 }

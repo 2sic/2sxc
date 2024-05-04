@@ -72,10 +72,10 @@ public class DynamicStack: DynamicObject,
     [PrivateApi("Never published in docs")]
     public dynamic GetStack(params string[] names)
     {
-        var wrapLog = GetHelper.LogOrNull.Fn<object>();
+        var l = GetHelper.LogOrNull.Fn<object>();
         var newStack = _stack.GetStack(GetHelper.LogOrNull, names);
         var newDynStack = new DynamicStack("New", Cdf, newStack.Sources);
-        return wrapLog.Return(newDynStack);
+        return l.Return(newDynStack);
     }
 
     private IDynamicEntity SourceToDynamicEntity(IPropertyLookup source)

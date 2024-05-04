@@ -23,10 +23,10 @@ public abstract class AdamFileSystemBasic<TFolder, TFile>: ServiceBase, IAdamFil
 
     public void Init(AdamManager<TFolder, TFile> adamManager)
     {
-        var wrapLog = Log.Fn();
+        var l = Log.Fn();
         AdamManager = adamManager;
         _adamPaths.Init(adamManager);
-        wrapLog.Done();
+        l.Done();
     }
 
     protected AdamManager<TFolder, TFile> AdamManager;

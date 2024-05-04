@@ -79,27 +79,27 @@ public class ContentGroupControllerReal: ServiceBase, IContentGroupController
     /// </summary>
     public ReplacementListDto Replace(Guid guid, string part, int index)
     {
-        var wrapLog = Log.Fn<ReplacementListDto>($"target:{guid}, part:{part}, index:{index}");
+        var l = Log.Fn<ReplacementListDto>($"target:{guid}, part:{part}, index:{index}");
         var typeNameOfField = FindTypeNameOnContentGroup(guid, part);
         var result = _listController.Value.GetListToReorder(guid, part, index, typeNameOfField);
-        return wrapLog.Return(result);
+        return l.Return(result);
     }
 
 
     private string FindTypeNameOnContentGroup(Guid guid, string part)
     {
-        var wrapLog = Log.Fn<string>($"{guid}, {part}");
+        var l = Log.Fn<string>($"{guid}, {part}");
 
         //var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(guid);
         var contentGroup = _appBlocks.New(AppCtx).GetBlockConfig(guid);
         if (contentGroup?.Entity == null || contentGroup.View == null)
-            return wrapLog.ReturnNull("Doesn't seem to be a content-group. Cancel.");
+            return l.ReturnNull("Doesn't seem to be a content-group. Cancel.");
 
         var typeNameForField = string.Equals(part, ViewParts.ContentLower, OrdinalIgnoreCase)
             ? contentGroup.View.ContentType
             : contentGroup.View.HeaderType;
 
-        return wrapLog.Return(typeNameForField);
+        return l.Return(typeNameForField);
     }
 
 

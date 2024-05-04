@@ -52,10 +52,10 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
     /// </summary>
     public AssetEditInfo Asset(int appId, int templateId = 0, string path = null, bool global = false)
     {
-        var wrapLog = Log.Fn<AssetEditInfo>($"asset templ:{templateId}, path:{path}, global:{global}");
+        var l = Log.Fn<AssetEditInfo>($"asset templ:{templateId}, path:{path}, global:{global}");
         var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(appId, templateId, global, path);
         assetEditor.EnsureUserMayEditAssetOrThrow();
-        return wrapLog.Return(assetEditor.EditInfoWithSource);
+        return l.Return(assetEditor.EditInfoWithSource);
     }
 
     /// <summary>
@@ -63,10 +63,10 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
     /// </summary>
     public bool Asset(int appId, AssetEditInfo template, int templateId, string path, bool global)
     {
-        var wrapLog = Log.Fn<bool>($"templ:{templateId}, global:{global}, path:{path}");
+        var l = Log.Fn<bool>($"templ:{templateId}, global:{global}, path:{path}");
         var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(appId, templateId, global, path);
         assetEditor.Source = template.Code;
-        return wrapLog.ReturnTrue();
+        return l.ReturnTrue();
     }
 
     /// <summary>
@@ -86,7 +86,7 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
             Global = global,
             TemplateKey = templateKey,
         };
-        var wrapLog = Log.Fn<bool>($"create a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
+        var l = Log.Fn<bool>($"create a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
 
         EnsureRequiredFolder(assetFromTemplateDto);
 
@@ -95,7 +95,7 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
         // get and prepare template content
         var body = GetTemplateContent(assetFromTemplateDto);
 
-        return wrapLog.Return(assetEditor.Create(body), "Created");
+        return l.Return(assetEditor.Create(body), "Created");
     }
 
     private static void EnsureRequiredFolder(AppFileDto assetFromTemplateDto)
@@ -149,27 +149,27 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
 
     private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string path)
     {
-        var wrapLog = Log.Fn<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
+        var l = Log.Fn<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
         var app = _appStates.GetReader(appId);
         var assetEditor = _assetEditorGenerator.New();
 
         assetEditor.Init(app, path, global, templateId);
         assetEditor.EnsureUserMayEditAssetOrThrow();
-        return wrapLog.Return(assetEditor);
+        return l.Return(assetEditor);
     }
 
     private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(AppFileDto assetFromTemplateDto)
     {
-        var wrapLog = Log.Fn<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
+        var l = Log.Fn<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
         var app = _appStates.GetReader(assetFromTemplateDto.AppId);
         var assetEditor = _assetEditorGenerator.New().Init(app, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0);
         assetEditor.EnsureUserMayEditAssetOrThrow(assetEditor.InternalPath);
-        return wrapLog.Return(assetEditor);
+        return l.Return(assetEditor);
     }
 
     public TemplatePreviewDto Preview(int appId, string path, string templateKey, bool b)
     {
-        var wrapLog = Log.Fn<TemplatePreviewDto>($"create a#{appId}, path:{path}, global:{b}, key:{templateKey}");
+        var l = Log.Fn<TemplatePreviewDto>($"create a#{appId}, path:{path}, global:{b}, key:{templateKey}");
         var templatePreviewDto = new TemplatePreviewDto();
 
         try
@@ -204,6 +204,6 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
             templatePreviewDto.IsValid = string.IsNullOrEmpty(templatePreviewDto.Error);
         }
 
-        return wrapLog.Return(templatePreviewDto, "GetPreview");
+        return l.Return(templatePreviewDto, "GetPreview");
     }
 }
