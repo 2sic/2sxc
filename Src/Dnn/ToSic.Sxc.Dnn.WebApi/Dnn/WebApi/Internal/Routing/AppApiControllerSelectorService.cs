@@ -126,7 +126,7 @@ internal partial class AppApiControllerSelectorService(
 
     private (HttpControllerDescriptorWithPaths descriptor, IEnumerable<string> cacheKeys, IList<string> filePaths) BuildDescriptorIfExists(string appFolder, string edition, string controllerTypeName, bool shared, HotBuildSpec spec)
     {
-        ILogCall<(HttpControllerDescriptorWithPaths descriptor, IEnumerable<string> cacheKeys, IList<string> filePaths)> l = Log.Fn<(HttpControllerDescriptorWithPaths Descriptor, IEnumerable<string> CacheKeys, IList<string> FilePaths)>(
+        var l = Log.Fn<(HttpControllerDescriptorWithPaths descriptor, IEnumerable<string> cacheKeys, IList<string> filePaths)>(
             $"{nameof(appFolder)}:'{appFolder}'; {nameof(edition)}:'{edition}'; {nameof(controllerTypeName)}:'{controllerTypeName}'; {nameof(shared)}:{shared}; {spec}",
             timer: true
         );
