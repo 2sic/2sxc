@@ -32,7 +32,7 @@ public class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngineLa
 
         // Find the standard DNN property sources if PortalSettings object is available
         var envLookups = getEngineLazy.Value.GetLookUpEngine(modId);
-        var existSources = envLookups.Sources.Values.ToList();
+        var existSources = envLookups.Sources.ToList();
         l.A($"Environment provided {existSources.Count} sources");
 
         // Create a new lookup engine and add the standard sources as inner-sources
@@ -68,7 +68,7 @@ public class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngineLa
 
         var provider = new LookUpEngine(envLookups, Log, sources: newSources);
 
-        return l.Return(provider, $"{provider.Sources.Count}");
+        return l.Return(provider, $"{provider.Sources.Count()}");
     }
 
 }

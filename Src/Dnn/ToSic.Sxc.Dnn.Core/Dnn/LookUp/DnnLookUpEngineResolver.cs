@@ -30,7 +30,7 @@ internal class DnnLookUpEngineResolver(IZoneCultureResolver cultureResolver, Laz
         //// if we already have a list of shared sources, return that
         //// as the sources don't change per request, but per module
         if (TryReuseFromCache(moduleId, out var cached))
-            return l.Return(cached, $"reuse {cached.Sources.Count} sources");
+            return l.Return(cached, $"reuse {cached.Sources} sources");
 
         var lookupEngine = BuildDnnBasedLookupEngine(portalSettings, moduleId);
 

@@ -21,7 +21,7 @@ public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> bui
         // if we already have a list of shared sources, return that
         // as the sources don't change per request, but per module
         if (TryReuseFromCache(moduleId, out var cached))
-            return l.Return(cached, $"reuse {cached.Sources.Count} sources");
+            return l.Return(cached, $"reuse {cached.Sources.Count()} sources");
 
         var luEngine = BuildLookupEngine(moduleId);
         return l.Return(AddToCache(moduleId, luEngine), "created and cached for reuse");
@@ -49,7 +49,7 @@ public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> bui
 
     protected LookUpEngine AddToCache(int moduleId, LookUpEngine engine)
     {
-        SourcesByModuleId[moduleId] = [.. engine.Sources.Values];
+        SourcesByModuleId[moduleId] = [.. engine.Sources];
         return engine;
     }
 

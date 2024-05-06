@@ -90,18 +90,13 @@ public class TokenEngine(
     {
         var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = Block };
         var appDataConfig = tokenEngineWithContext.New().GetDataConfiguration(Block.App as EavApp, specs);
-        //var lookUpEngine = appDataConfig.Configuration;
-            
-        //// Add the Content and ListContent property sources used always
-        //lookUpEngine.Add(new LookUpForTokenTemplate(ViewParts.ListContentLower, _codeApiSvc.Header, _codeApiSvc));
-        //lookUpEngine.Add(new LookUpForTokenTemplate(ViewParts.ContentLower, _codeApiSvc.Content, _codeApiSvc));
 
-        var lookUpEngineFunctional = new LookUpEngine(appDataConfig.Configuration, Log, sources: [
+        var lookUpEngine = new LookUpEngine(appDataConfig.Configuration, Log, sources: [
             new LookUpForTokenTemplate(ViewParts.ListContentLower, _codeApiSvc.Header, _codeApiSvc),
             new LookUpForTokenTemplate(ViewParts.ContentLower, _codeApiSvc.Content, _codeApiSvc),
         ]);
 
-        _tokenReplace = new(/*lookUpEngine*/lookUpEngineFunctional);
+        _tokenReplace = new(lookUpEngine);
     }
 
     [PrivateApi]
@@ -169,37 +164,23 @@ public class TokenEngine(
 
     private string RenderSection(string template, IDictionary<string, ILookUp> valuesForThisInstanceOnly)
     {
+        var l = Log.Fn<string>($"{nameof(valuesForThisInstanceOnly)}: {valuesForThisInstanceOnly.Count}");
         if (string.IsNullOrEmpty(template))
-            return "";
+            return l.Return("", "empty");
 
-        var propertySourcesBackup = new Dictionary<string, ILookUp>();
-            
-        // Replace old property sources with the new ones, and backup the old ones so that 
-        // they can be restored after rendering the section
-        foreach(var src in valuesForThisInstanceOnly)
-        {
-            if (_tokenReplace.LookupEngine.Sources.ContainsKey(src.Key))
-            {
-                var oldSource = _tokenReplace.LookupEngine.Sources[src.Key];
-                propertySourcesBackup.Add(src.Key, oldSource);
-                if (oldSource != null)
-                    _tokenReplace.LookupEngine.Sources.Remove(src.Key);
-            }
-            _tokenReplace.LookupEngine.Sources[src.Key] = src.Value;
-        }
+        // Get the existing sources and remove the ones which would be duplicate
+        var sources = _tokenReplace.LookupEngine.Sources.ToList();
+        foreach (var src in valuesForThisInstanceOnly) 
+            sources.Remove(sources.GetSource(src.Key));
+
+        // Create a new lookup engine with the new sources; but skip the original sources; only use the downstream
+        var newEngine = new LookUpEngine(_tokenReplace.LookupEngine, Log, sources: [..valuesForThisInstanceOnly.Values, ..sources], skipOriginalSource: true);
+        var tokenReplace = new TokenReplace(newEngine);
 
         // Render
-        var sectionRendered = _tokenReplace.ReplaceTokens(template);
+        var section = tokenReplace.ReplaceTokens(template);
+        return l.Return(section, "new render");
 
-        // Restore values list to original state
-        foreach (var src in valuesForThisInstanceOnly)
-        {
-            _tokenReplace.LookupEngine.Sources.Remove(src.Key);
-            if (propertySourcesBackup.ContainsKey(src.Key))
-                _tokenReplace.LookupEngine.Sources.Add(src.Key, src.Value);
-        }
-            
-        return sectionRendered;
     }
 
     // Find all indexes of a string in a source string
