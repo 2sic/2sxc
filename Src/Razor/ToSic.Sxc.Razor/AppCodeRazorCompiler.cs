@@ -169,7 +169,7 @@ internal class AppCodeRazorCompiler : ServiceBase, IAppCodeRazorCompiler
             var appRelativePathWithEdition = spec.Edition.HasValue() ? Path.Combine(app.RelativePath, spec.Edition) : app.RelativePath;
             l.A($"{nameof(appRelativePathWithEdition)}: {appRelativePathWithEdition}");
 
-            SetToContext(appRelativePathWithEdition);
+            //SetToContext(appRelativePathWithEdition);
 
             // add assembly to resolver, so it will be provided to the compiler when used in cshtml
             _assemblyResolver.AddAssembly(assemblyResult.Assembly, appRelativePathWithEdition);
@@ -267,11 +267,11 @@ internal class AppCodeRazorCompiler : ServiceBase, IAppCodeRazorCompiler
     }
 
 
-    public const string AppRelativePathWithEdition = "AppRelativePathWithEdition";
-    private void SetToContext(string appRelativePathWithEdition)
-    {
-        if (_httpContextAccessor.HttpContext != null) _httpContextAccessor.HttpContext.Items[AppRelativePathWithEdition] = appRelativePathWithEdition;
-    }
+    //public const string AppRelativePathWithEdition = "AppRelativePathWithEdition";
+    //private void SetToContext(string appRelativePathWithEdition)
+    //{
+    //    if (_httpContextAccessor.HttpContext != null) _httpContextAccessor.HttpContext.Items[AppRelativePathWithEdition] = appRelativePathWithEdition;
+    //}
 
     private string[] DefaultImports => _defaultImports.Get(GetDefaultImports);
     private readonly GetOnce<string[]> _defaultImports = new();

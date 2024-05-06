@@ -1,15 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.AspNetCore.Razor.Hosting;
@@ -23,9 +14,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Polymorphism.Internal;
@@ -370,13 +369,13 @@ internal class RuntimeViewCompiler : IViewCompiler
         //    && relativePath.Backslash().TrimPrefixSlash().StartsWith(relativePathFromContext))
         //    return relativePathFromContext;
 
-        if (_httpContextAccessor?.HttpContext == null) return GetAppRelativePath(relativePath);
+        if (_httpContextAccessor?.HttpContext == null) return GetAppRelativePathWithEditionFallback(relativePath);
 
         var sp = _httpContextAccessor.HttpContext.RequestServices;
         var ctxResolver = sp.GetService(typeof(ISxcContextResolver)) as ISxcContextResolver;
 
         var block = ctxResolver?.BlockOrNull();
-        if (block == null) return GetAppRelativePath(relativePath);
+        if (block == null) return GetAppRelativePathWithEditionFallback(relativePath);
 
         var polymorphism = sp.GetService<PolymorphConfigReader>();
 
@@ -396,14 +395,13 @@ internal class RuntimeViewCompiler : IViewCompiler
     //}
 
     /// <summary>
-    /// extract appRelativePath from relativePath
+    /// extract appRelativePathWithEdition from relativePath
     /// fallback, when block is null
     /// </summary>
-    /// <param name="relativePath">string "/2sxc/n/aaa-folder-name/etc..."</param>
-    /// <returns>string "2sxc\\n\\aaa-folder-name" or null</returns>
-    private string GetAppRelativePath(string relativePath)
+    /// <param name="relativePath">string "/2sxc/n/aaa-folder-name/edition/etc..."</param>
+    /// <returns>string "2sxc\\n\\aaa-folder-name\\edition" or null</returns>
+    private string GetAppRelativePathWithEditionFallback(string relativePath)
     {
-        // fallback
         if ((string.IsNullOrEmpty(relativePath))
             || (relativePath.Length < 8)
             || (relativePath[0] != '/')
@@ -417,6 +415,18 @@ internal class RuntimeViewCompiler : IViewCompiler
             pos = relativePath.IndexOf('/', pos + 1);
             if (pos < 0) 
                 throw new($"relativePath:'{relativePath}' is not in format '/2sxc/n/app-folder-name/etc...'");
+        }
+
+        // include optional "editions" subfolder
+        if (relativePath.Length > pos)
+        {
+            var posApp = pos;
+
+            // next subfolder is probably optional "edition" subfolder
+            pos = relativePath.IndexOf('/', pos + 1);
+
+            // can't find "edition" subfolder, so return app folder without edition
+            if (pos < 0) pos = posApp;
         }
 
         return relativePath.Substring(1, pos - 1).Backslash();
