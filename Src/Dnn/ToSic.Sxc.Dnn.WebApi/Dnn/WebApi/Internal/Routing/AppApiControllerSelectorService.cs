@@ -159,11 +159,11 @@ internal partial class AppApiControllerSelectorService(
         // note: this may look like something you could optimize/cache the result, but that's a bad idea
         // because when the file changes, the type-object will be different, so please don't optimize :)
         var (descriptor, cacheDependencyKeys) = BuildDescriptorOrThrow(controllerPath, controllerTypeName, spec);
-
+        var hasCacheKeys = cacheDependencyKeys?.Count > 0;
         return l.Return((descriptor: new(descriptor, controllerFolder, controllerPath), 
-                        cacheKeys: (cacheDependencyKeys?.Count > 0) ? cacheDependencyKeys : null, // cache dependency on existing cache item;
-                        filePaths: (cacheDependencyKeys?.Count > 0) ? null: [HostingEnvironment.MapPath(controllerPath)]), // cache dependency on existing api file
-            $"normal Api controller from '{controllerPath}'"); ; 
+                        cacheKeys: hasCacheKeys ? cacheDependencyKeys : null, // cache dependency on existing cache item;
+                        filePaths: hasCacheKeys ? null: [HostingEnvironment.MapPath(controllerPath)]), // cache dependency on existing api file
+            $"normal Api controller from '{controllerPath}'"); 
     }
 
     private string GetControllerFolder(string appFolder, string edition, bool shared)
