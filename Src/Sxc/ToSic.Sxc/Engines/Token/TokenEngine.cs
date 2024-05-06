@@ -90,13 +90,18 @@ public class TokenEngine(
     {
         var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = Block };
         var appDataConfig = tokenEngineWithContext.New().GetDataConfiguration(Block.App as EavApp, specs);
-        var lookUpEngine = appDataConfig.Configuration;
+        //var lookUpEngine = appDataConfig.Configuration;
             
-        // Add the Content and ListContent property sources used always
-        lookUpEngine.Add(new LookUpForTokenTemplate(ViewParts.ListContentLower, _codeApiSvc.Header, _codeApiSvc));
-        lookUpEngine.Add(new LookUpForTokenTemplate(ViewParts.ContentLower, _codeApiSvc.Content, _codeApiSvc));
+        //// Add the Content and ListContent property sources used always
+        //lookUpEngine.Add(new LookUpForTokenTemplate(ViewParts.ListContentLower, _codeApiSvc.Header, _codeApiSvc));
+        //lookUpEngine.Add(new LookUpForTokenTemplate(ViewParts.ContentLower, _codeApiSvc.Content, _codeApiSvc));
 
-        _tokenReplace = new(lookUpEngine);
+        var lookUpEngineFunctional = new LookUpEngine(appDataConfig.Configuration, Log, sources: [
+            new LookUpForTokenTemplate(ViewParts.ListContentLower, _codeApiSvc.Header, _codeApiSvc),
+            new LookUpForTokenTemplate(ViewParts.ContentLower, _codeApiSvc.Content, _codeApiSvc),
+        ]);
+
+        _tokenReplace = new(/*lookUpEngine*/lookUpEngineFunctional);
     }
 
     [PrivateApi]
