@@ -1,10 +1,8 @@
 ﻿using System.IO;
-using System.Runtime.Caching;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Caching;
-using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
@@ -50,13 +48,12 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
     private readonly PolymorphConfigReader _polymorphism;
     private readonly MemoryCacheService _memoryCacheService;
 
-    public (List<DataSourceInfo> data, CacheItemPolicy policy) CompileDynamicDataSources(int appId)
+    public (List<DataSourceInfo> data, TimeSpan slidingExpiration, IList<string> folderPaths, IEnumerable<string> cacheKeys) CompileDynamicDataSources(int appId)
     {
         _logStore.Add(EavLogs.LogStoreAppDataSourcesLoader, Log);
         // Initial message for insights-overview
-        var l = Log.Fn<(List<DataSourceInfo> data, CacheItemPolicy policy)>($"{nameof(appId)}: {appId}", timer: true);
-        var expiration = new TimeSpan(1, 0, 0);
-        var policy = new CacheItemPolicy { SlidingExpiration = expiration };
+        var l = Log.Fn<(List<DataSourceInfo> data, TimeSpan slidingExpiration, IList<string> folderPaths, IEnumerable<string> cacheKeys)>($"{nameof(appId)}: {appId}", timer: true);
+        
         try
         {
             var spec = BuildHotBuildSpec(appId);
@@ -65,32 +62,43 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
             // 1. Get Custom Dynamic DataSources from 'AppCode' assembly
             var data = CreateDataSourceInfos(appId, LoadAppCodeDataSources(spec, out var cacheKey));
             l.A($"Custom Dynamic DataSources in {Constants.AppCode}:{data.Count}");
-            if (data.Any() && !string.IsNullOrEmpty(cacheKey))
-                policy.ChangeMonitors.Add(_memoryCacheService.CreateCacheEntryChangeMonitor([cacheKey])); // cache dependency on existing cache item with AppCode assembly 
 
             // 2. Get Custom Dynamic DataSources from 'DataSources' folder
             var (physicalPath, relativePath) = GetAppDataSourceFolderPaths(appId);
-            if (Directory.Exists(physicalPath))
+            var physicalPathExists = Directory.Exists(physicalPath);
+            if (physicalPathExists)
             {
                 var dsInDataSources = CreateDataSourceInfos(appId, LoadAppDataSources(spec, physicalPath, relativePath));
                 l.A($"Custom Dynamic DataSources in {DataSourcesFolder}:{dsInDataSources.Count}");
                 data = data.Concat(dsInDataSources).ToList();
-                policy.ChangeMonitors.Add(new FolderChangeMonitor(new List<string> { physicalPath }));
             }
 
             l.A($"Total Custom Dynamic DataSources:{data.Count}");
 
             // If the directory doesn't exist, return an empty list with a 3 minute policy
             // just so we don't keep trying to do this on every query
-            if (!data.Any() && !Directory.Exists(physicalPath))
-                return l.Return((new List<DataSourceInfo>(),
-                    new CacheItemPolicy { SlidingExpiration = new(0, 5, 0) }), "error");
+            if (!data.Any() && !physicalPathExists)
+                return l.Return((
+                            data: [],
+                            slidingExpiration: new(0, 5, 0),
+                            folderPaths: null,
+                            cacheKeys: null), 
+                            "error, directory do not exist");
 
-            return l.ReturnAsOk((data, policy));
+            return l.ReturnAsOk((
+                        data: data,
+                        slidingExpiration: new TimeSpan(1, 0, 0),
+                        folderPaths: physicalPathExists ? [physicalPath] : null,
+                        cacheKeys: (data.Any() && !string.IsNullOrEmpty(cacheKey)) ? [cacheKey] : null // cache dependency on existing cache item with AppCode assembly
+                        ));
         }
         catch
         {
-            return l.Return((new List<DataSourceInfo>(), policy), "error");
+            return l.ReturnAsError((
+                        data: [],
+                        slidingExpiration: new(0, 5, 0),
+                        folderPaths: null,
+                        cacheKeys: null));
         }
     }
 

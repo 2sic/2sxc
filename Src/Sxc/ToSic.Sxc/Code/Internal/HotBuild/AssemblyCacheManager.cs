@@ -1,5 +1,4 @@
-﻿using System.Runtime.Caching;
-using ToSic.Eav.Caching;
+﻿using ToSic.Eav.Caching;
 using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;
@@ -39,42 +38,19 @@ public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : Servi
 
     #endregion
 
-    public string Add(string cacheKey, object data, int slidingDuration = CacheConstants.Duration1Hour, IList<ChangeMonitor> changeMonitor = null, CacheEntryUpdateCallback updateCallback = null)
+    public string Add(string cacheKey, object data, int slidingDuration = CacheConstants.Duration1Hour, IList<string> filePaths = null, IDictionary<string, bool> folderPaths = null, IEnumerable<string> keys = null)
     {
         var l = Log.Fn<string>($"{nameof(cacheKey)}: {cacheKey}; {nameof(slidingDuration)}: {slidingDuration}", timer: true);
 
         // Never store 0, that's like never-expire
         if (slidingDuration == 0) slidingDuration = 1;
         var expiration = new TimeSpan(0, 0, slidingDuration);
-        var policy = new CacheItemPolicy { SlidingExpiration = expiration };
-
-        // Try set app change folder monitor
-        if (changeMonitor?.Any() == true)
-            try
-            {
-                l.Do(message: $"add {nameof(changeMonitor)}", timer: true, action: () =>
-                {
-                    foreach (var changeMon in changeMonitor)
-                        policy.ChangeMonitors.Add(changeMon);
-                });
-            }
-            catch (Exception ex)
-            {
-                l.E("Error during set app folder ChangeMonitor");
-                l.Ex(ex);
-                /* ignore for now */
-                return l.ReturnAsError("error");
-            }
-
-        // Register Callback - usually to remove something from another cache
-        if (updateCallback != null)
-            policy.UpdateCallback = updateCallback;
 
         // Try to add to cache
         try
         {
             l.Do(message: $"cache set cacheKey:{cacheKey}", timer: true,
-                action: () => memoryCacheService.Set(new(cacheKey, data), policy));
+                action: () => memoryCacheService.Set(cacheKey, data, slidingExpiration: expiration, filePaths: filePaths, folderPaths: folderPaths, cacheKeys: keys));
 
             return l.ReturnAsOk(cacheKey);
         }

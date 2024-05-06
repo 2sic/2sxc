@@ -124,14 +124,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
             // Add the compiled assembly to the cache
 
-            // Changed again: better to only monitor the current file
-            // otherwise all caches keep getting flushed when any file changes
-            // TODO: must also watch for global shared code changes
             lTimer = Log.Fn("timer for ChangeMonitors", timer: true);
-            var fileChangeMon = new HostFileChangeMonitor(new[] { codeFileInfo.FullPath });
-            var changeMonitors = appCodeAssembly == null
-                ? new ChangeMonitor[] { fileChangeMon }
-                : [fileChangeMon, memoryCacheService.CreateCacheEntryChangeMonitor([appCodeAssemblyResult.CacheKey])];
 
             // directly attach a type to the cache
             var mainType = FindMainType(generatedAssembly, className, isCshtml);
@@ -144,9 +137,10 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
                 cacheKey: assemblyResult.CacheKey,
                 data: assemblyResult,
                 slidingDuration: 3600,
-                changeMonitor: changeMonitors,
-                //appPaths: appPaths,
-                updateCallback: null);
+                filePaths: [codeFileInfo.FullPath], // better to only monitor the current file
+                                                    // otherwise all caches keep getting flushed when any file changes
+                                                    // TODO: must also watch for global shared code changes
+                keys: appCodeAssembly == null ? null : [appCodeAssemblyResult.CacheKey]);
             lTimer.Done();
 
             return l.ReturnAsOk(assemblyResult);

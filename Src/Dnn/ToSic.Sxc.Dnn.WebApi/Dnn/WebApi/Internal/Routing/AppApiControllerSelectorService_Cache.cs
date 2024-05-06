@@ -29,9 +29,15 @@ internal partial class AppApiControllerSelectorService
 
         Log.A($"Descriptor not found in cache, will try to build it ({nameof(descriptorCacheKey)}:'{descriptorCacheKey}')");
 
-        var (data, policy) = BuildDescriptorIfExists(appFolder, editionPath, controllerTypeName, shared, spec);
-        memoryCacheService.Set(new(descriptorCacheKey, data), policy);
+        var (data, cacheKeys, filePaths) = BuildDescriptorIfExists(appFolder, editionPath, controllerTypeName, shared, spec);
+        memoryCacheService.Set(key: descriptorCacheKey, 
+            value: data,
+            slidingExpiration: new TimeSpan(1, 0, 0),
+            cacheKeys: cacheKeys,
+            filePaths: filePaths);
+
         PreservePathForGetCodeInController(data.Folder, data.FullPath);
+
         return data.Descriptor;
     }
 }

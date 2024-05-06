@@ -104,8 +104,6 @@ internal class LightSpeed(
                 duration,
                 dependentAppsStates.Cast<IAppStateChanges>().ToList(),
                 appPathsToMonitor,
-                appId,
-                size,
                 LightSpeedStats.CreateNonCapturingRemoveCall(appId, size)
             )
         );
