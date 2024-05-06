@@ -36,10 +36,20 @@ public class WorkViews(
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public record ViewInfoForPathSelect(IView View, string Name, string UrlIdentifier, bool IsRegex, string MainKey);
 
-    private List<IEntity> ViewEntities => _viewDs.Get(() => appEntities.New(AppWorkCtx).Get(AppConstants.TemplateContentType).ToList());
+    private List<IEntity> ViewEntities => _viewDs.Get(() => AppWorkCtx.AppState.GetPiggyBackPropExpiring(
+        () => appEntities.New(AppWorkCtx)
+            .Get(AppConstants.TemplateContentType)
+            .ToList()
+    ).Value);
     private readonly GetOnce<List<IEntity>> _viewDs = new();
 
-    public IList<IView> GetAll() => _all ??= ViewEntities.Select(e => ViewOfEntity(e, "")).OrderBy(e => e.Name).ToList();
+    public IList<IView> GetAll() =>
+        _all ??= AppWorkCtx.AppState.GetPiggyBackPropExpiring(() => ViewEntities
+            .Select(e => ViewOfEntity(e, ""))
+            .OrderBy(e => e.Name)
+            .ToList()
+        ).Value;
+
     private IList<IView> _all;
 
     public IEnumerable<IView> GetRazor() => GetAll().Where(t => t.IsRazor);
@@ -53,30 +63,22 @@ public class WorkViews(
     {
         var l = Log.Fn<List<ViewInfoForPathSelect>>();
 
-        var wasCached = true;
-
         // get from cache if available or generate
-        var appState = AppWorkCtx.AppState;
-        var views = appState.PiggyBack.GetOrGenerate(appState, $"{nameof(WorkViews)}-{nameof(GetForViewSwitch)}", () =>
-        {
-            wasCached = false;
+        var views = AppWorkCtx.AppState.GetPiggyBackPropExpiring(() => GetAll()
+            .Where(t => !string.IsNullOrEmpty(t.UrlIdentifier))
+            .Select(v =>
+            {
+                var urlIdentifier = v.UrlIdentifier.ToLowerInvariant();
+                var isRegex = urlIdentifier.EndsWith("/.*");
+                var mainParam = isRegex
+                    ? urlIdentifier.Substring(0, urlIdentifier.Length - 3)
+                    : urlIdentifier;
+                return new ViewInfoForPathSelect(v, v.Name, urlIdentifier, isRegex, mainParam.ToLowerInvariant());
+            })
+            .ToList()
+        );
 
-            var templatesWithUrlIdentifier = GetAll()
-                .Where(t => !string.IsNullOrEmpty(t.UrlIdentifier))
-                .Select(v =>
-                {
-                    var urlIdentifier = v.UrlIdentifier.ToLowerInvariant();
-                    var isRegex = urlIdentifier.EndsWith("/.*");
-                    var mainParam = isRegex
-                        ? urlIdentifier.Substring(0, urlIdentifier.Length - 3)
-                        : urlIdentifier;
-                    return new ViewInfoForPathSelect(v, v.Name, urlIdentifier, isRegex, mainParam.ToLowerInvariant());
-                })
-                .ToList();
-            return templatesWithUrlIdentifier;
-        });
-
-        return l.Return(views, $"all: {GetAll().Count}; switchable: {views.Count}; wasCached: {wasCached}");
+        return l.Return(views.Value, $"all: {GetAll().Count}; switchable: {views.Value.Count}; wasCached: {views.IsCached}");
     }
 
 
