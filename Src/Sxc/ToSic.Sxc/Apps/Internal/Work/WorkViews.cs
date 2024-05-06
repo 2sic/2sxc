@@ -55,25 +55,28 @@ public class WorkViews(
 
         var wasCached = true;
 
-        var views = AppWorkCtx.AppState.GetPiggyBack($"{nameof(WorkViews)}{nameof(GetForViewSwitch)}", () =>
+        // get from cache if available or generate
+        var appState = AppWorkCtx.AppState;
+        var views = appState.PiggyBack.GetOrGenerate(appState, $"{nameof(WorkViews)}-{nameof(GetForViewSwitch)}", () =>
         {
             wasCached = false;
-            var allTemplates = GetAll();
 
-            var templatesWithUrlIdentifier = allTemplates
+            var templatesWithUrlIdentifier = GetAll()
                 .Where(t => !string.IsNullOrEmpty(t.UrlIdentifier))
                 .Select(v =>
                 {
                     var urlIdentifier = v.UrlIdentifier.ToLowerInvariant();
                     var isRegex = urlIdentifier.EndsWith("/.*");
-                    var mainParam = isRegex ? urlIdentifier.Substring(0, urlIdentifier.Length - 3) : urlIdentifier;
-                    return new WorkViews.ViewInfoForPathSelect(v, v.Name, urlIdentifier, isRegex, mainParam.ToLowerInvariant());
+                    var mainParam = isRegex
+                        ? urlIdentifier.Substring(0, urlIdentifier.Length - 3)
+                        : urlIdentifier;
+                    return new ViewInfoForPathSelect(v, v.Name, urlIdentifier, isRegex, mainParam.ToLowerInvariant());
                 })
                 .ToList();
             return templatesWithUrlIdentifier;
         });
 
-        return l.Return(views, $"all: {GetAll().Count}; view-switch: {views.Count}; wasCached: {wasCached}");
+        return l.Return(views, $"all: {GetAll().Count}; switchable: {views.Count}; wasCached: {wasCached}");
     }
 
 
