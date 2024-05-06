@@ -92,12 +92,14 @@ public abstract class SexyContentWebPage :
     /// <inheritdoc />
     public IBlockDataSource Data => (IBlockDataSource)_CodeApiSvc.Data;
 
-    // This is explicitly implemented so the interfaces don't complain
-    // but actually we're not showing this - in reality we're showing the Old (see above)
-    IBlockInstance IAppAndDataHelpers.Data => _CodeApiSvc.Data;
+    //// This is explicitly implemented so the interfaces don't complain
+    //// but actually we're not showing this - in reality we're showing the Old (see above)
+    //IBlockDataSource IAppAndDataHelpers.Data => (IBlockDataSource)_CodeApiSvc.Data;
         
     #endregion
 
+    // Explicit implementation of expected interface, but it should not work in the normal code
+    // as the old code sometimes expects Data.Cache.GetContentType
     /// <inheritdoc />
     IBlockInstance IDynamicCode.Data => _CodeApiSvc.Data;
 
