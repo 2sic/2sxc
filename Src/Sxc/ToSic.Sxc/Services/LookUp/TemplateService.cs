@@ -6,6 +6,8 @@ namespace ToSic.Sxc.Services.LookUp;
 
 internal class TemplateService(): ServiceForDynamicCode($"{SxcLogName}.LUpSvc"), ITemplateService
 {
+    #region Get Engine Default / Empty
+
     public ITemplateEngine Default(NoParamOrder protector = default, IEnumerable<ILookUp> sources = default)
     {
         var original = ((Apps.App)_CodeApiSvc.App).ConfigurationProvider;
@@ -20,6 +22,18 @@ internal class TemplateService(): ServiceForDynamicCode($"{SxcLogName}.LUpSvc"),
         var originalEngine = new LookUpEngine(Log, sources: sources) as ILookUpEngine;
         return new TemplateEngine(originalEngine);
     }
+
+    #endregion
+
+    #region Quick Parse
+
+    private ITemplateEngine Engine => _engine ??= Default();
+    private ITemplateEngine _engine;
+
+    public string Parse(string template, NoParamOrder protector = default, IEnumerable<ILookUp> sources = default)
+        => Engine.Parse(template, protector, sources: sources);
+
+    #endregion
 
     public ILookUp CreateSource(string name, IDictionary<string, string> values) 
         => new LookUpInDictionary(name, values);

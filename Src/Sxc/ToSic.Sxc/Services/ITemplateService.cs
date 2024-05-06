@@ -34,4 +34,6 @@ public interface ITemplateService
     ILookUp CreateSource(string name, ITypedItem item, NoParamOrder protector = default, string[] dimensions = default);
 
     ILookUp CreateSource(string name, Func<string, string> getter);
+
+    string Parse(string template, NoParamOrder protector = default, IEnumerable<ILookUp> sources = default);
 }
