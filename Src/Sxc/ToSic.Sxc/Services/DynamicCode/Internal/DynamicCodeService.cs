@@ -27,7 +27,7 @@ public partial class DynamicCodeService: ServiceBase<DynamicCodeService.MyServic
         LazySvc<ISite> site,
         LazySvc<IZoneMapper> zoneMapper,
         LazySvc<IAppStates> appStates)
-        : MyServicesBase(connect: [logStore, user, site, zoneMapper, appStates])
+        : MyServicesBase(connect: [/* never! serviceProvider */ logStore, user, site, zoneMapper, appStates])
     {
         internal IServiceProvider ServiceProvider { get; } = serviceProvider;
         public LazySvc<ILogStore> LogStore { get; } = logStore;

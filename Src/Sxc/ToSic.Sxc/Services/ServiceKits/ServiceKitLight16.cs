@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Services;
 /// * History: Added v15.06 - still WIP
 /// </remarks>
 [PublicApi]
-public class ServiceKitLight16(IServiceProvider serviceProvider) : ServiceBase("Sxc.Kit15")
+public class ServiceKitLight16(IServiceProvider serviceProvider) : ServiceBase("Sxc.Kit15", connect: [/* never! serviceProvider */ ])
 {
     private TService GetService<TService>() => serviceProvider.Build<TService>(Log);
 

@@ -18,41 +18,22 @@ using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Razor;
 
-internal class RazorCompiler : ServiceBase, IRazorCompiler
+internal class RazorCompiler(
+    ApplicationPartManager applicationPartManager,
+    IRazorViewEngine viewEngine,
+    IServiceProvider serviceProvider,
+    IHttpContextAccessor httpContextAccessor,
+    IActionContextAccessor actionContextAccessor)
+    : ServiceBase($"{SxcLogging.SxcLogName}.RzrCmp",
+        connect: [applicationPartManager, viewEngine, /* never! serviceProvider,*/ httpContextAccessor, actionContextAccessor]), IRazorCompiler
 {
-    #region Constructor and DI
-
-    private readonly ApplicationPartManager _applicationPartManager;
-    private readonly IRazorViewEngine _viewEngine;
-    private readonly IServiceProvider _serviceProvider;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IActionContextAccessor _actionContextAccessor;
-
-    public RazorCompiler(
-        ApplicationPartManager applicationPartManager,
-        IRazorViewEngine viewEngine,
-        IServiceProvider serviceProvider,
-        IHttpContextAccessor httpContextAccessor,
-        IActionContextAccessor actionContextAccessor) : base($"{SxcLogging.SxcLogName}.RzrCmp")
-    {
-        ConnectServices(
-            _applicationPartManager = applicationPartManager,
-            _viewEngine = viewEngine,
-            _serviceProvider = serviceProvider,
-            _httpContextAccessor = httpContextAccessor,
-            _actionContextAccessor = actionContextAccessor
-        );
-    }
-    #endregion
-
-
     public Task<(IView view, ActionContext context)> CompileView(string templatePath, Action<RazorView> configure = null, IApp app = null, HotBuildSpec spec = default)
         => Task.FromResult(CompileView(templatePath, configure));
 
     private (IView view, ActionContext context) CompileView(string partialName, Action<RazorView> configure = null)
     {
         var l = Log.Fn<(IView view, ActionContext context)>($"partialName:{partialName}");
-        var actionContext = _actionContextAccessor.ActionContext ?? NewActionContext();
+        var actionContext = actionContextAccessor.ActionContext ?? NewActionContext();
         var partial = FindView(actionContext, partialName);
         // do callback to configure the object we received
         if (partial is RazorView rzv) configure?.Invoke(rzv);
@@ -74,23 +55,23 @@ internal class RazorCompiler : ServiceBase, IRazorCompiler
                 // fix special case that happens with oqtane custom module server project assembly (eg. Name.Server.Oqtane.dll)
                 // that has empty reference paths (for unknown reason) and IRazorViewEngine.GetView breaks when there are empty
                 // reference paths in the ApplicationParts/AssemblyPart
-                removeThis = _applicationPartManager.ApplicationParts.Where(part =>
+                removeThis = applicationPartManager.ApplicationParts.Where(part =>
                     part is not ICompilationReferencesProvider
                     && part is AssemblyPart assemblyPart
                     && assemblyPart.GetReferencePaths().Any(string.IsNullOrEmpty)).ToList();
                 foreach (var part in removeThis)
-                    _applicationPartManager.ApplicationParts.Remove(part);
+                    applicationPartManager.ApplicationParts.Remove(part);
                 l.A($"removed:{removeThis.Count}");
                 _executedAlready = true;
             }
 
-            var firstAttempt = _viewEngine.GetView(null, partialName, false);
+            var firstAttempt = viewEngine.GetView(null, partialName, false);
             l.A($"firstAttempt: {firstAttempt}");
 
             if (removeThis != null)
             {
                 foreach (var part in removeThis)
-                    _applicationPartManager.ApplicationParts.Add(part);
+                    applicationPartManager.ApplicationParts.Add(part);
                 l.A($"restore removed ApplicationParts:{removeThis.Count}");
             }
 
@@ -108,7 +89,7 @@ internal class RazorCompiler : ServiceBase, IRazorCompiler
 
         try
         {
-            var secondAttempt = _viewEngine.FindView(actionContext, partialName, false);
+            var secondAttempt = viewEngine.FindView(actionContext, partialName, false);
             l.A($"secondAttempt: {secondAttempt}");
 
             if (secondAttempt.Success)
@@ -136,7 +117,7 @@ internal class RazorCompiler : ServiceBase, IRazorCompiler
     private ActionContext NewActionContext()
     {
         var l = Log.Fn<ActionContext>();
-        var httpContext = _httpContextAccessor.HttpContext ?? new DefaultHttpContext { RequestServices = _serviceProvider };
+        var httpContext = httpContextAccessor.HttpContext ?? new DefaultHttpContext { RequestServices = serviceProvider };
         return l.ReturnAsOk(new(httpContext, new(), new()));
     }
 }

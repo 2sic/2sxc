@@ -28,54 +28,30 @@ using IView = Microsoft.AspNetCore.Mvc.ViewEngines.IView;
 
 namespace ToSic.Sxc.Razor;
 
-internal class AppCodeRazorCompiler : ServiceBase, IAppCodeRazorCompiler
+internal class AppCodeRazorCompiler(
+    ApplicationPartManager applicationPartManager,
+    IRazorViewEngine viewEngine,
+    IServiceProvider serviceProvider,
+    IHttpContextAccessor httpContextAccessor,
+    IActionContextAccessor actionContextAccessor,
+    IRazorPageActivator pageActivator,
+    LazySvc<AppCodeLoader> appCodeLoader,
+    LazySvc<IServerPaths> serverPaths,
+    AssemblyResolver assemblyResolver,
+    HotBuildReferenceManager referenceManager)
+    : ServiceBase($"{SxcLogging.SxcLogName}.RzrCmp",
+        connect:
+        [
+            applicationPartManager, viewEngine, /* never! serviceProvider,*/ httpContextAccessor, actionContextAccessor,
+            pageActivator, appCodeLoader, serverPaths, assemblyResolver, referenceManager
+        ]), IAppCodeRazorCompiler
 {
     // TODO: Copy of code from RazorCompiler.cs - should be refactored to use the same code
-
-    #region Constructor and DI
-
-    private readonly ApplicationPartManager _applicationPartManager;
-    private readonly IRazorViewEngine _viewEngine;
-    private readonly IServiceProvider _serviceProvider;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IActionContextAccessor _actionContextAccessor;
-    private readonly IRazorPageActivator _pageActivator;
-    private readonly LazySvc<AppCodeLoader> _appCodeLoader;
-    private readonly LazySvc<IServerPaths> _serverPaths;
-    private readonly AssemblyResolver _assemblyResolver;
-    private readonly HotBuildReferenceManager _referenceManager;
-
-    public AppCodeRazorCompiler(
-        ApplicationPartManager applicationPartManager,
-        IRazorViewEngine viewEngine,
-        IServiceProvider serviceProvider,
-        IHttpContextAccessor httpContextAccessor,
-        IActionContextAccessor actionContextAccessor,
-        IRazorPageActivator pageActivator,
-        LazySvc<AppCodeLoader> appCodeLoader,
-        LazySvc<IServerPaths> serverPaths,
-        AssemblyResolver assemblyResolver,
-        HotBuildReferenceManager referenceManager) : base($"{SxcLogging.SxcLogName}.RzrCmp")
-    {
-        ConnectServices(
-            _applicationPartManager = applicationPartManager,
-            _viewEngine = viewEngine,
-            _serviceProvider = serviceProvider,
-            _httpContextAccessor = httpContextAccessor,
-            _actionContextAccessor = actionContextAccessor,
-            _pageActivator = pageActivator,
-            _appCodeLoader = appCodeLoader,
-            _serverPaths = serverPaths,
-            _assemblyResolver = assemblyResolver,
-            _referenceManager = referenceManager
-        );
-    }
-    #endregion
 
     public async Task<(IView view, ActionContext context)> CompileView(string templatePath, Action<RazorView> configure = null, IApp app = null, HotBuildSpec spec = default)
     {
         var l = Log.Fn<(IView view, ActionContext context)>($"partialName:{templatePath},appCodePath:{app}");
-        var actionContext = _actionContextAccessor.ActionContext ?? NewActionContext();
+        var actionContext = actionContextAccessor.ActionContext ?? NewActionContext();
         var partial = await FindViewAsync(actionContext, templatePath, app, spec);
         // do callback to configure the object we received
         if (partial is RazorView rzv) configure?.Invoke(rzv);
@@ -97,12 +73,12 @@ internal class AppCodeRazorCompiler : ServiceBase, IAppCodeRazorCompiler
                 // fix special case that happens with oqtane custom module server project assembly (eg. Name.Server.Oqtane.dll)
                 // that has empty reference paths (for unknown reason) and IRazorViewEngine.GetView breaks when there are empty
                 // reference paths in the ApplicationParts/AssemblyPart
-                removeThis = _applicationPartManager.ApplicationParts.Where(part =>
+                removeThis = applicationPartManager.ApplicationParts.Where(part =>
                     part is not ICompilationReferencesProvider
                     && part is AssemblyPart assemblyPart
                     && assemblyPart.GetReferencePaths().Any(string.IsNullOrEmpty)).ToList();
                 foreach (var part in removeThis)
-                    _applicationPartManager.ApplicationParts.Remove(part);
+                    applicationPartManager.ApplicationParts.Remove(part);
                 l.A($"removed:{removeThis.Count}");
                 _executedAlready = true;
             }
@@ -113,7 +89,7 @@ internal class AppCodeRazorCompiler : ServiceBase, IAppCodeRazorCompiler
             if (removeThis != null)
             {
                 foreach (var part in removeThis)
-                    _applicationPartManager.ApplicationParts.Add(part);
+                    applicationPartManager.ApplicationParts.Add(part);
                 l.A($"restore removed ApplicationParts:{removeThis.Count}");
             }
 
@@ -131,7 +107,7 @@ internal class AppCodeRazorCompiler : ServiceBase, IAppCodeRazorCompiler
 
         try
         {
-            var secondAttempt = _viewEngine.FindView(actionContext, templatePath, false);
+            var secondAttempt = viewEngine.FindView(actionContext, templatePath, false);
             l.A($"secondAttempt: {secondAttempt}");
 
             if (secondAttempt.Success)
@@ -161,7 +137,7 @@ internal class AppCodeRazorCompiler : ServiceBase, IAppCodeRazorCompiler
         var l = Log.Fn<ViewEngineResult>($"{nameof(templatePath)}:{templatePath}; {nameof(app.RelativePath)}:{app.RelativePath}; {spec}", timer: true);
 
         // get assembly - try to get from cache, otherwise compile
-        var (assemblyResult, _) = _appCodeLoader.Value.GetAppCode(spec);
+        var (assemblyResult, _) = appCodeLoader.Value.GetAppCode(spec);
         l.A($"has AppCode assembly: {assemblyResult != null}");
 
         if (assemblyResult?.Assembly != null)
@@ -172,7 +148,7 @@ internal class AppCodeRazorCompiler : ServiceBase, IAppCodeRazorCompiler
             //SetToContext(appRelativePathWithEdition);
 
             // add assembly to resolver, so it will be provided to the compiler when used in cshtml
-            _assemblyResolver.AddAssembly(assemblyResult.Assembly, appRelativePathWithEdition);
+            assemblyResolver.AddAssembly(assemblyResult.Assembly, appRelativePathWithEdition);
         }
 
         // setup RazorProjectEngine
@@ -181,7 +157,7 @@ internal class AppCodeRazorCompiler : ServiceBase, IAppCodeRazorCompiler
         {
             builder.AddDefaultImports(DefaultImports); // implicit usings
         });
-        var projectItem = fileSystem.GetItem(_serverPaths.Value.FullContentPath(templatePath));
+        var projectItem = fileSystem.GetItem(serverPaths.Value.FullContentPath(templatePath));
 
         var lProcess = Log.Fn($"generate codeDocument from razor", timer: true);
         var codeDocument = projectEngine.Process(projectItem);
@@ -201,7 +177,7 @@ internal class AppCodeRazorCompiler : ServiceBase, IAppCodeRazorCompiler
         lParse.Done();
 
         var lRefs = Log.Fn("prepare metadata references", timer: true);
-        var refs = _referenceManager.GetMetadataReferences(assemblyResult?.Assembly?.Location, spec);
+        var refs = referenceManager.GetMetadataReferences(assemblyResult?.Assembly?.Location, spec);
         lRefs.Done();
 
         var compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
@@ -262,7 +238,7 @@ internal class AppCodeRazorCompiler : ServiceBase, IAppCodeRazorCompiler
         page.Path = templatePath;
 
         // Create an IView instance from the compiled assembly
-        var viewInstance = new RazorView(_viewEngine, _pageActivator, Array.Empty<IRazorPage>(), page, HtmlEncoder.Default, new(templatePath));
+        var viewInstance = new RazorView(viewEngine, pageActivator, Array.Empty<IRazorPage>(), page, HtmlEncoder.Default, new(templatePath));
         return l.ReturnAsOk(ViewEngineResult.Found(templatePath, viewInstance));
     }
 
@@ -290,7 +266,7 @@ internal class AppCodeRazorCompiler : ServiceBase, IAppCodeRazorCompiler
     private ActionContext NewActionContext()
     {
         var l = Log.Fn<ActionContext>();
-        var httpContext = _httpContextAccessor.HttpContext ?? new DefaultHttpContext { RequestServices = _serviceProvider };
+        var httpContext = httpContextAccessor.HttpContext ?? new DefaultHttpContext { RequestServices = serviceProvider };
         return l.ReturnAsOk(new(httpContext, new(), new()));
     }
 }

@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Polymorphism.Internal;
 /// </summary>
 /// <param name="serviceProvider"></param>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class PolymorphConfigReader(IServiceProvider serviceProvider) : ServiceBase("Plm.Managr")
+public class PolymorphConfigReader(IServiceProvider serviceProvider) : ServiceBase("Plm.Managr", connect: [/* never! serviceProvider */ ])
 {
     public string Resolver;
     public string Parameters;
