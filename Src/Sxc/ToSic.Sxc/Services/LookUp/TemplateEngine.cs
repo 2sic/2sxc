@@ -14,7 +14,9 @@ internal class TemplateEngine(ILookUpEngine original): ITemplateEngine, IWrapper
         {
             [TemplateKey] = template
         };
-        var result = original.LookUp(dic, overrides: sources);
+        // it's important to use depth 0 to prevent things such as query-string parameters providing new tokens
+        // otherwise you could have a [QueryString:Id] but the url being ?id=[page:id] or of course worse
+        var result = original.LookUp(dic, overrides: sources, depth: 0);
         return result[TemplateKey];
     }
 
