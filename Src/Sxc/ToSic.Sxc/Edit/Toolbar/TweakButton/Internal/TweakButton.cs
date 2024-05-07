@@ -1,4 +1,6 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections;
+using System.Collections.Immutable;
+using System.Text.Json;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web.Internal.Url;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleForEntity;
@@ -117,7 +119,20 @@ public class TweakButton: ITweakButton, ITweakButtonInternal
     public ITweakButton Prefill(string name, object value) => (value ?? name) == null ? this : Prefill($"{name}={value}");
 
     public ITweakButton Filter(object value) => value == null ? this : Parameters(new ObjectToUrl().SerializeChild(value, PrefixFilters));
-    public ITweakButton Filter(string name, object value) => (value ?? name) == null ? this : Filter($"{name}={value}");
+    public ITweakButton Filter(string name, object value) => (value ?? name) == null ? this : Filter($"{name}={ValueToString(value)}");
+
+    /// <summary>
+    /// WIP trying to get Filter with a array of IDs to return [1,2,3] instead of Int32[]
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    private string ValueToString(object value) => value switch
+    {
+        null => null,
+        string str => str,
+        IEnumerable => JsonSerializer.Serialize(value),
+        _ => value.ToString()
+    };
 
     public ITweakButton AddNamed(string name, Func<ITweakButton, ITweakButton> value) => value == null ? this : new(this, named: _named.Add(name, value));
 
