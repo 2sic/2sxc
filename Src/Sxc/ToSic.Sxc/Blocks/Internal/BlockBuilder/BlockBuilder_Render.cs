@@ -87,6 +87,10 @@ public partial class BlockBuilder
     {
         var l = Log.Fn<(string, bool, List<Exception>)>(timer: true);
 
+        // any errors from dnn requirements check (eg. missing c# 8.0)
+        if (specs.RenderEngineResult?.ExceptionsOrNull != null)
+            return l.Return(new(specs.RenderEngineResult.Html, specs.RenderEngineResult.ExceptionsOrNull != null, specs.RenderEngineResult.ExceptionsOrNull), "dnn requirements (c# 8.0...) not met");
+
         var exceptions = new List<Exception>();
         try
         {
@@ -131,7 +135,7 @@ public partial class BlockBuilder
                         var renderEngineResult = engine.Render(specs);
                         body = renderEngineResult.Html;
                         if (renderEngineResult.ExceptionsOrNull != null)
-                            exceptions.AddRange(renderEngineResult.ExceptionsOrNull);;
+                            exceptions.AddRange(renderEngineResult.ExceptionsOrNull);
                         errorCode = renderEngineResult.ErrorCode ?? errorCode;
                         if (errorCode == null && body?.Contains(ErrorHtmlMarker) == true) 
                             errorCode = ErrorGeneral;
@@ -202,12 +206,12 @@ public partial class BlockBuilder
                 : bodyWithAddOns;
             #endregion
 
-            return l.Return((result, err, exceptions));
+            return l.ReturnAsOk((result, err, exceptions));
         }
         catch (Exception ex)
         {
             exceptions.Add(ex);
-            return l.Return((RenderingHelper.DesignErrorMessage(exceptions, true, addContextWrapper: true), true, exceptions), "error");
+            return l.ReturnAsError((RenderingHelper.DesignErrorMessage(exceptions, true, addContextWrapper: true), true, exceptions));
         }
     }
 

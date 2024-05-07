@@ -1,10 +1,11 @@
-﻿using System.Linq;
+﻿using DotNetNuke.Entities.Modules;
+using System.Linq;
 using System.Web.UI;
-using DotNetNuke.Entities.Modules;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sxc.Dnn.Features;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
@@ -113,7 +114,7 @@ public partial class View : PortalModuleBase, IActionable
         LogTimer.DoInTimer(() =>
         {
             // #lightspeed
-            if (OutputCache?.Existing != null) 
+            if (OutputCache?.Existing != null)
                 l.A("Lightspeed hit - will use cached");
 
             IRenderResult data = null;
@@ -161,7 +162,7 @@ public partial class View : PortalModuleBase, IActionable
 
                     // #Lightspeed
                     Log.Do(message: "Lightspeed", timer: true, action: () => OutputCache?.Save(data, _enforcePre1025JQueryLoading));
-                        
+
                     return true; // dummy result
                 });
 
@@ -182,7 +183,8 @@ public partial class View : PortalModuleBase, IActionable
         {
             var bb = Block.BlockBuilder;
             if (RenderNaked) bb.WrapInDiv = false;
-            result = (RenderResult)bb.Run(true, specs: new() { UseLightspeed = useLightspeed });
+            result = (RenderResult)bb.Run(true, specs: new() { UseLightspeed = useLightspeed, 
+                RenderEngineResult = GetService<DnnRequirements>().GetMessageForRequirements() });
 
             if (result.Errors?.Any() ?? false)
             {
