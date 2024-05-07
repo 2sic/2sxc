@@ -7,7 +7,6 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.Services;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Services.Internal;
 
@@ -46,7 +45,6 @@ internal partial class DataService: ServiceForDynamicCode, IDataService
         Setup(codeRoot.App, () => (codeRoot as CodeApiService)?.LookUpForDataSources);
     }
 
-    [PrivateApi]
     internal IDataService Setup(IAppIdentity appIdentity, Func<ILookUpEngine> getLookup)
     {
         _appIdentity = appIdentity ?? _appIdentity;

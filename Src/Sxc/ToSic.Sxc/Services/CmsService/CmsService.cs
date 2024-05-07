@@ -13,9 +13,7 @@ internal class CmsService: ServiceForDynamicCode, ICmsService
 {
     private readonly Generator<CmsServiceStringWysiwyg> _stringWysiwyg;
 
-    public CmsService(
-        Generator<CmsServiceStringWysiwyg> stringWysiwyg
-    ) : base(SxcLogName + ".CmsSrv")
+    public CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg) : base(SxcLogName + ".CmsSrv")
     {
         ConnectServices(
             _stringWysiwyg = stringWysiwyg.SetInit(s => s.ConnectToRoot(_CodeApiSvc))

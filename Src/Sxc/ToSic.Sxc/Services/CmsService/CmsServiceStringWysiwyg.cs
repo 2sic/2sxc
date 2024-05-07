@@ -11,25 +11,12 @@ using static ToSic.Sxc.Blocks.Internal.Render.RenderService;
 namespace ToSic.Sxc.Services.CmsService;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class CmsServiceStringWysiwyg: ServiceForDynamicCode
+internal class CmsServiceStringWysiwyg(CmsServiceImageExtractor imageExtractor)
+    : ServiceForDynamicCode("Cms.StrWys", connect: [imageExtractor])
 {
 
-    #region Constructor / DI
-
-    private readonly CmsServiceImageExtractor _imageExtractor;
-
-    public CmsServiceStringWysiwyg(
-        CmsServiceImageExtractor imageExtractor
-    ) : base("Cms.StrWys")
-    {
-        ConnectServices(
-            _imageExtractor = imageExtractor
-        );
-    }
-    private ServiceKit14 ServiceKit => _svcKit.Get(() => _CodeApiSvc.GetKit<ServiceKit14>());
+    private ServiceKit14 ServiceKit => _svcKit.Get(_CodeApiSvc.GetKit<ServiceKit14>);
     private readonly GetOnce<ServiceKit14> _svcKit = new();
-
-    #endregion
 
     #region Init
 
@@ -97,7 +84,7 @@ internal class CmsServiceStringWysiwyg: ServiceForDynamicCode
         {
             var originalImgTag = imgTag.ToString();
 
-            var imgProps = _imageExtractor.ExtractImageProperties(originalImgTag, Field.Parent.Guid, Folder);
+            var imgProps = imageExtractor.ExtractImageProperties(originalImgTag, Field.Parent.Guid, Folder);
 
             // use the IImageService to create Picture tags for it
             var picture = ServiceKit.Image.Picture(link: imgProps.Src, settings: imgSettings, factor: imgProps.Factor, width: imgProps.Width, imgAlt: imgProps.ImgAlt,

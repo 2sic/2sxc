@@ -17,8 +17,8 @@ internal class GetQueryMs: ServiceBase
 
     internal GetQueryMs(LazySvc<QueryManager> queryManager, DataSourceOptionsMs optionsMs, ILog parentLog): base(SxcLogName + ".DtGqMs")
     {
-        this._queryManager = queryManager;
-        this._optionsMs = optionsMs;
+        _queryManager = queryManager;
+        _optionsMs = optionsMs;
         this.LinkLog(parentLog);
     }
 

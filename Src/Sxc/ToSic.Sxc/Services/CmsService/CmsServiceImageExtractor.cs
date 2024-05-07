@@ -76,16 +76,16 @@ internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
         if (!widthMatch.Success) return null;
         var numString = widthMatch.Groups["percent"].Value;
         // We want to return a nice factor, in case the rules have optimized values
-        switch (numString)
+        return numString switch
         {
-            case "100": return "1";
-            case "50": return "1/2";
-            case "33": return "1/3";
-            case "66": return "2/3";
-            case "25": return "1/4";
-            case "75": return "3/4";
-            default: return numString;
-        }
+            "100" => "1",
+            "50" => "1/2",
+            "33" => "1/3",
+            "66" => "2/3",
+            "25" => "1/4",
+            "75" => "3/4",
+            _ => numString
+        };
     }
 
     internal class ImageProperties

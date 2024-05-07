@@ -1,10 +1,6 @@
 ﻿using ToSic.Razor.Markup;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Edit.Toolbar;
-using ToSic.Sxc.Internal;
-using ToSic.Sxc.Web;
 // ReSharper disable RedundantExtendsListEntry
 #pragma warning disable CS0108, CS0114
 
@@ -260,6 +256,4 @@ public interface IEditService: IHasLog, INeedsCodeApiService
     /// <returns>A string but as HtmlString, so it can be used with @Attribute(...)</returns>
     IRawHtmlString Attribute(string name, object value);
 
-    //[PrivateApi("internal use only")]
-    //IEditService SetBlock(IDynamicCodeRoot codeRoot, IBlock block);
 }

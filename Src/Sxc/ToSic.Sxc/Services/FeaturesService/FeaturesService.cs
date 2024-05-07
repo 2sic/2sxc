@@ -11,7 +11,7 @@ internal class FeaturesService(IEavFeaturesService root)
     {
         var result = root.IsEnabled(nameIds);
         if (!Debug) return result;
-        var l = Log.Fn<bool>(string.Join(",", nameIds ?? Array.Empty<string>()));
+        var l = Log.Fn<bool>(string.Join(",", nameIds ?? []));
         return l.Return(result, $"{result}");
     }
 
