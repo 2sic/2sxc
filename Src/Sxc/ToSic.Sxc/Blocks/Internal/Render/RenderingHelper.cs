@@ -14,30 +14,19 @@ using static ToSic.Sxc.Blocks.Internal.BlockBuildingConstants;
 namespace ToSic.Sxc.Blocks.Internal.Render;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class RenderingHelper: ServiceBase, IRenderingHelper
+internal class RenderingHelper(
+    ILinkPaths linkPaths,
+    LazySvc<IEnvironmentLogger> errorLogger,
+    Generator<JsContextAll> jsContextAllGen)
+    : ServiceBase("Sxc.RndHlp", connect: [linkPaths, errorLogger, jsContextAllGen]), IRenderingHelper
 {
     #region Constructors and DI
-
-    public RenderingHelper(
-        ILinkPaths linkPaths,
-        LazySvc<IEnvironmentLogger> errorLogger,
-        Generator<JsContextAll> jsContextAllGen) : base("Sxc.RndHlp")
-    {
-        ConnectServices(_linkPaths = linkPaths,
-            _errorLogger = errorLogger,
-            _jsContextAllGen = jsContextAllGen
-        );
-    }
-
-    private readonly ILinkPaths _linkPaths;
-    private readonly LazySvc<IEnvironmentLogger> _errorLogger;
-    private readonly Generator<JsContextAll> _jsContextAllGen;
 
     public IRenderingHelper Init(IBlock block)
     {
         Block = block;
         Context = block.Context;
-        AppRootPath = _linkPaths.AsSeenFromTheDomainRoot("~/");
+        AppRootPath = linkPaths.AsSeenFromTheDomainRoot("~/");
         return this;
     }
 
@@ -84,7 +73,7 @@ internal class RenderingHelper: ServiceBase, IRenderingHelper
         // optionally add editing infos
         if (includeEditInfos || includeJsApiContext)
         {
-            var ctxGen = _jsContextAllGen.New();
+            var ctxGen = jsContextAllGen.New();
             var context = includeEditInfos
                 ? ctxGen.GetJsContext(AppRootPath, Block, errorCode, exsOrNull, statistics)
                 : ctxGen.GetJsApiOnly(Block);
@@ -102,7 +91,7 @@ internal class RenderingHelper: ServiceBase, IRenderingHelper
         string additionalInfo = null, bool addContextWrapper = false, bool encodeMessage = true)
     {
         var ex = exs?.FirstOrDefault();
-        if (addToEventLog) _errorLogger.Value.LogException(ex);
+        if (addToEventLog) errorLogger.Value.LogException(ex);
         return DesignError($"{ex}{additionalInfo}", msgVisitors, addContextWrapper, encodeMessage, exsOrNull: exs);
     }
 

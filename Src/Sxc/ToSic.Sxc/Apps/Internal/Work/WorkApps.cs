@@ -12,27 +12,9 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Apps.Internal.Work;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class WorkApps : ServiceBase
+public class WorkApps(IAppStates appStates, Generator<IAppPathsMicroSvc> appPathsGen, LazySvc<GlobalPaths> globalPaths)
+    : ServiceBase("Cms.AppsRt", connect: [appStates, appPathsGen, globalPaths])
 {
-    private readonly Generator<IAppPathsMicroSvc> _appPathsGen;
-    private readonly LazySvc<GlobalPaths> _globalPaths;
-
-    #region Constructor / DI
-
-    public WorkApps(IAppStates appStates/*, Generator<App> appGenerator*/, Generator<IAppPathsMicroSvc> appPathsGen, LazySvc<GlobalPaths> globalPaths) : base("Cms.AppsRt")
-    {
-        ConnectServices(
-            _appStates = appStates,
-            _appPathsGen = appPathsGen,
-            _globalPaths = globalPaths
-            //_appGenerator = appGenerator
-        );
-    }
-
-    private readonly IAppStates _appStates;
-    //private readonly Generator<App> _appGenerator;
-
-    #endregion
 
     public IList<AppUiInfo> GetSelectableApps(ISite site, string filter)
     {
@@ -46,8 +28,8 @@ public class WorkApps : ServiceBase
                 .Where(a => !a.Configuration.IsHidden)
         .Select(a =>
         {
-                    var paths = _appPathsGen.New().Init(site, a);
-                    var thumbnail = AppAssetThumbnail.GetUrl(a, paths, _globalPaths);
+                    var paths = appPathsGen.New().Init(site, a);
+                    var thumbnail = AppAssetThumbnail.GetUrl(a, paths, globalPaths);
                     return new AppUiInfo
                     {
                         Name = a.Name,
@@ -77,13 +59,13 @@ public class WorkApps : ServiceBase
     {
         // todo: unclear if this is the right way to do this - probably the ZoneId should come from the site?
         var zId = site.ZoneId;
-        var appIds = _appStates.Apps(zId);
+        var appIds = appStates.Apps(zId);
 
         return appIds
             .Select(a =>
             {
                 var appIdentity = new AppIdentityPure(zId, a.Key);
-                return _appStates.GetReader(appIdentity);
+                return appStates.GetReader(appIdentity);
             })
             .OrderBy(a => a.Name)
             .ToList();
@@ -103,12 +85,12 @@ public class WorkApps : ServiceBase
     public List<IAppStateInternal> GetInheritableApps(ISite site)
     {
         // Get existing apps, as we should not list inheritable apps which are already inherited
-        var siteApps = _appStates.Apps(site.ZoneId)
-            .Select(a => _appStates.GetReader(a.Key).Folder)
+        var siteApps = appStates.Apps(site.ZoneId)
+            .Select(a => appStates.GetReader(a.Key).Folder)
             .ToList();
 
-        var zones = _appStates.Zones;
-        var appStateWithCacheInfo = _appStates;
+        var zones = appStates.Zones;
+        var appStateWithCacheInfo = appStates;
         var result = zones
             // Skip all global apps on the current site, as they shouldn't be inheritable
             .Where(z => z.Key != site.ZoneId)
@@ -116,14 +98,14 @@ public class WorkApps : ServiceBase
             {
                 // todo: probably the ZoneId should come from the site?
                 var zId = zSet.Key;
-                var appIds = _appStates.Apps(zId);
+                var appIds = appStates.Apps(zId);
 
                 return appIds
                     //.Select(a => new AppIdentityPure(zId, a.Key))
                     .Select(a =>
                     {
                         var appIdentity = new AppIdentityPure(zId, a.Key);
-                        return appStateWithCacheInfo.IsCached(appIdentity) ? _appStates.GetReader(appIdentity) : null;
+                        return appStateWithCacheInfo.IsCached(appIdentity) ? appStates.GetReader(appIdentity) : null;
                     })
                     .Where(state =>
                     {

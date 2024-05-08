@@ -11,10 +11,10 @@ public class BlockEditorForEntity : BlockEditorBase
     public BlockEditorForEntity(MyServices services, IAppStates appStates, GenWorkDb<WorkEntityUpdate> entityUpdate) 
         : base(services)
     {
-        ConnectServices(
+        ConnectLogs([
             _entityUpdate = entityUpdate,
             _appStates = appStates
-        );
+        ]);
     }
 
     #region methods which the entity-implementation must customize 

@@ -36,7 +36,7 @@ internal class OqtLinkService : LinkServiceBase
         LazySvc<IAliasRepository> aliasRepositoryLazy
     ) : base(imgLinker, linkPathsLazy)
     {
-        ConnectSvcs([
+        ConnectLogs([
             _pageRepository = pageRepository,
             _siteStateInitializer = siteStateInitializer,
             _aliasRepositoryLazy = aliasRepositoryLazy

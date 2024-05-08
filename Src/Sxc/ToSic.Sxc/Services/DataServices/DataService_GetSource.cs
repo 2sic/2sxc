@@ -21,7 +21,7 @@ internal partial class DataService
 
         // If no in-source was provided, make sure that we create one from the current app
         var fullOptions = OptionsMs.SafeOptions(parameters, options: options);
-        var ds = _dataSources.Value.Create<T>(attach: attach, options: fullOptions);
+        var ds = dataSources.Value.Create<T>(attach: attach, options: fullOptions);
 
         return l.Return(ds);
     }
@@ -41,7 +41,7 @@ internal partial class DataService
         var safeOptions = OptionsMs.SafeOptions(parameters, options: options);
         var appId = safeOptions.AppIdentity.AppId;
 
-        var dsInfo = _catalog.Value.FindDataSourceInfo(name, appId);
+        var dsInfo = catalog.Value.FindDataSourceInfo(name, appId);
         if (dsInfo == null)
             throw new ArgumentException($"Tried to create DataSource with name '{name}' but it was not found. " +
                                         "Either you a) mis-typed it, " +
@@ -50,7 +50,7 @@ internal partial class DataService
                                         $"d) the file name is not 'DataSources/{name}.cs'. ");
 
         // Decide if we should show errors or not
-        var showErrors = debug == true || (_user.IsSystemAdmin && debug != false);
+        var showErrors = debug == true || (user.IsSystemAdmin && debug != false);
         if (dsInfo.ErrorOrNull != null && showErrors)
             throw l.Done(DevException(name, "a compile error",
                 "It could also be that the file name and class names don't match. \n" +
@@ -58,7 +58,7 @@ internal partial class DataService
                 $"Message: {dsInfo.ErrorOrNull.Message}; \n" +
                 $"Debug Info: {ErrorDebugMessage}"));
 
-        var ds = _dataSources.Value.Create(dsInfo.Type, attach: attach, options: safeOptions);
+        var ds = dataSources.Value.Create(dsInfo.Type, attach: attach, options: safeOptions);
 
         // If it's the super user (often developing the DS) we should show errors instead of letting it just happen
         if (!showErrors || !ds.IsError())

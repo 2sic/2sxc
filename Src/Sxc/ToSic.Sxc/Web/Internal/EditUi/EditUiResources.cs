@@ -16,27 +16,13 @@ namespace ToSic.Sxc.Web.Internal.EditUi;
 /// Provide all resources (fonts, icons, etc.) needed for the edit-ui
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class EditUiResources: ServiceBase
+public class EditUiResources(
+    IAppStates appStates,
+    AppDataStackService stackServiceHelper,
+    IZoneMapper zoneMapper,
+    IFeaturesService features)
+    : ServiceBase("Sxc.EUiRes", connect: [appStates, stackServiceHelper, zoneMapper, features])
 {
-
-    #region Constructor
-
-    private readonly IAppStates _appStates;
-    private readonly AppDataStackService _stackServiceHelper;
-    private readonly IZoneMapper _zoneMapper;
-    private readonly IFeaturesService _features;
-
-    public EditUiResources(IAppStates appStates, AppDataStackService stackServiceHelper, IZoneMapper zoneMapper, IFeaturesService features) : base("Sxc.EUiRes")
-    {
-        ConnectServices(
-            _appStates = appStates,
-            _stackServiceHelper = stackServiceHelper,
-            _zoneMapper = zoneMapper,
-            _features = features
-        );
-    }
-
-    #endregion
 
     #region Resources / Constants
 
@@ -55,11 +41,11 @@ public class EditUiResources: ServiceBase
         var useAltCdn = false;
         var html = "";
 
-        if (_features.IsEnabled(SxcFeatures.CdnSourceEdit.NameId))
+        if (features.IsEnabled(SxcFeatures.CdnSourceEdit.NameId))
         {
-            var zoneId = _zoneMapper.GetZoneId(siteId);
-            var appPreset = _appStates.GetPrimaryReader(zoneId, Log);
-            var stack = _stackServiceHelper.Init(appPreset).GetStack(RootNameSettings);
+            var zoneId = zoneMapper.GetZoneId(siteId);
+            var appPreset = appStates.GetPrimaryReader(zoneId, Log);
+            var stack = stackServiceHelper.Init(appPreset).GetStack(RootNameSettings);
             var getResult = stack.InternalGetPath($"{WebResourcesNode}.{CdnSourceEditField}");
             cdnRoot = getResult.Result as string;
             useAltCdn = cdnRoot.HasValue() && cdnRoot != CdnDefault;

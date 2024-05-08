@@ -143,11 +143,11 @@ public partial class Users : CustomDataSourceAdvanced
         IDataFactory dataFactory,
         IDataSourceGenerator<Roles> rolesGenerator) : base(services, "SDS.Users")
     {
-        ConnectServices(
+        ConnectLogs([
             _provider = provider,
             _dataFactory = dataFactory,
             _rolesGenerator = rolesGenerator
-        );
+        ]);
         ProvideOut(() => GetUsersAndRoles().Users); // default out, if accessed, will deliver GetList
         ProvideOut(() => GetUsersAndRoles().UserRoles, "Roles");
     }

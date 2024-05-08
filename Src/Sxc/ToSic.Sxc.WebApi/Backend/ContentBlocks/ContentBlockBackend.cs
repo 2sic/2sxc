@@ -13,63 +13,39 @@ using ToSic.Sxc.Web.Internal.Url;
 namespace ToSic.Sxc.Backend.ContentBlocks;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ContentBlockBackend : BlockWebApiBackendBase
+public class ContentBlockBackend(
+    GenWorkPlus<WorkViews> workViews,
+    Generator<MultiPermissionsApp> multiPermissionsApp,
+    IPagePublishing publishing,
+    GenWorkDb<WorkBlocksMod> workBlocksMod,
+    ISxcContextResolver ctxResolver,
+    LazySvc<IBlockResourceExtractor> optimizerLazy,
+    LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
+    AppWorkContextService appWorkCtxService,
+    Generator<BlockFromEntity> entityBlockGenerator)
+    : BlockWebApiBackendBase(multiPermissionsApp, appWorkCtxService, ctxResolver, "Bck.FldLst",
+        connect: [optimizerLazy, workBlocksMod, workViews, publishing, entityBlockGenerator, blockEditorSelectorLazy])
 {
-    private readonly GenWorkPlus<WorkViews> _workViews;
-    private readonly GenWorkDb<WorkBlocksMod> _workBlocksMod;
-    private readonly LazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
-    private readonly Generator<BlockFromEntity> _entityBlockGenerator;
-
-    #region constructor / DI
-
-    public ContentBlockBackend(
-        GenWorkPlus<WorkViews> workViews,
-        Generator<MultiPermissionsApp> multiPermissionsApp, 
-        IPagePublishing publishing, 
-        GenWorkDb<WorkBlocksMod> workBlocksMod,
-        ISxcContextResolver ctxResolver, 
-        LazySvc<IBlockResourceExtractor> optimizerLazy,
-        LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
-        AppWorkContextService appWorkCtxService,
-        Generator<BlockFromEntity> entityBlockGenerator)
-        : base(multiPermissionsApp, appWorkCtxService, ctxResolver, "Bck.FldLst")
-    {
-        ConnectServices(
-            _optimizer = optimizerLazy,
-            _workBlocksMod = workBlocksMod,
-            _workViews = workViews,
-            _publishing = publishing,
-            _entityBlockGenerator = entityBlockGenerator,
-            _blockEditorSelectorLazy = blockEditorSelectorLazy
-        );
-    }
-
-    private readonly LazySvc<IBlockResourceExtractor> _optimizer;
-    private readonly IPagePublishing _publishing;
-
-
-    #endregion
-
 
     public IRenderResult NewBlockAndRender(int parentId, string field, int index, string app = "", Guid? guid = null) 
     {
         var entityId = NewBlock(parentId, field, index, app, guid);
 
         // now return a rendered instance
-        var newContentBlock = _entityBlockGenerator.New().Init(Block, null, entityId);
+        var newContentBlock = entityBlockGenerator.New().Init(Block, null, entityId);
         return newContentBlock.BlockBuilder.Run(true, specs: new());
     }
 
     // todo: probably move to CmsManager.Block
     public int NewBlock(int parentId, string field, int sortOrder, string app = "", Guid? guid = null) 
-        => _workBlocksMod.New(AppWorkCtxDb).NewBlockReference(parentId, field, sortOrder, app, guid);
+        => workBlocksMod.New(AppWorkCtxDb).NewBlockReference(parentId, field, sortOrder, app, guid);
 
     public void AddItem(int? index = null)
     {
         Log.A($"add order:{index}");
         // use dnn versioning - this is always part of page
-        _publishing.DoInsidePublishing(ContextOfBlock, _ 
-            => _workBlocksMod.New(AppWorkCtxDb).AddEmptyItem(Block.Configuration, index, Block.Context.Publishing.ForceDraft));
+        publishing.DoInsidePublishing(ContextOfBlock, _ 
+            => workBlocksMod.New(AppWorkCtxDb).AddEmptyItem(Block.Configuration, index, Block.Context.Publishing.ForceDraft));
     }
 
         
@@ -77,7 +53,7 @@ public class ContentBlockBackend : BlockWebApiBackendBase
     {
         Log.A($"try to publish #{index} on '{part}'");
         ThrowIfNotAllowedInApp(GrantSets.WritePublished);
-        return _blockEditorSelectorLazy.Value.GetEditor(Block).Publish(part, index);
+        return blockEditorSelectorLazy.Value.GetEditor(Block).Publish(part, index);
     }
 
     public AjaxRenderDto RenderForAjax(int templateId, string lang, string root, string edition)
@@ -107,7 +83,7 @@ public class ContentBlockBackend : BlockWebApiBackendBase
         var mergedFeatures  = string.Join("\n", result.FeaturesFromSettings.Select(mc => mc.Html));
 
         l.A("4.1. Process optimizers");
-        var renderResult = _optimizer.Value.Process(mergedFeatures, new(extractAll: true));
+        var renderResult = optimizerLazy.Value.Process(mergedFeatures, new(extractAll: true));
         var rest = renderResult.Html;
         if (!string.IsNullOrWhiteSpace(rest)) 
             l.A("Warning: Rest after extraction should be empty - not handled ATM");
@@ -134,7 +110,7 @@ public class ContentBlockBackend : BlockWebApiBackendBase
         // if a preview templateId was specified, swap to that
         if (templateId > 0)
         {
-            var template = _workViews.New(AppWorkCtxPlus).Get(templateId);
+            var template = workViews.New(AppWorkCtxPlus).Get(templateId);
             template.Edition = edition;
             Block.View = template;
         }

@@ -12,10 +12,10 @@ public abstract class AdamFileSystemBasic<TFolder, TFile>: ServiceBase, IAdamFil
 
     protected AdamFileSystemBasic(IAdamPaths adamPaths, string logPrefix) : base($"{logPrefix}.FilSys")
     {
-        ConnectServices(
+        ConnectLogs([
             _adamPaths = adamPaths,
             FsHelpers = new(adamPaths)
-        );
+        ]);
     }
 
     protected readonly AdamFileSystemHelpers FsHelpers;

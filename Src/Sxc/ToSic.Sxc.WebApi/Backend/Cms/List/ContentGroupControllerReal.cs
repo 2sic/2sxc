@@ -9,41 +9,27 @@ using static System.StringComparison;
 namespace ToSic.Sxc.Backend.Cms;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ContentGroupControllerReal: ServiceBase, IContentGroupController
+public class ContentGroupControllerReal(
+    GenWorkDb<WorkFieldList> workFieldList,
+    GenWorkPlus<WorkBlocks> appBlocks,
+    LazySvc<IPagePublishing> publishing,
+    ISxcContextResolver ctxResolver,
+    LazySvc<ListControllerReal> listController)
+    : ServiceBase("Api.CntGrpRl", connect: [workFieldList, appBlocks, ctxResolver, publishing, listController]),
+        IContentGroupController
 {
     #region Constructor / di
 
     public const string LogSuffix = "CntGrp";
 
-    public ContentGroupControllerReal(
-        GenWorkDb<WorkFieldList> workFieldList,
-        GenWorkPlus<WorkBlocks> appBlocks,
-        LazySvc<IPagePublishing> publishing, 
-        ISxcContextResolver ctxResolver,
-        LazySvc<ListControllerReal> listController) : base("Api.CntGrpRl")
-    {
-        ConnectServices(
-            _workFieldList = workFieldList,
-            _appBlocks = appBlocks,
-            CtxResolver = ctxResolver,
-            _publishing = publishing,
-            _listController = listController
-        );
-    }
 
-
-    public ISxcContextResolver CtxResolver { get; }
-
-    private readonly GenWorkDb<WorkFieldList> _workFieldList;
-    private readonly GenWorkPlus<WorkBlocks> _appBlocks;
-    private readonly LazySvc<ListControllerReal> _listController;
-    private readonly LazySvc<IPagePublishing> _publishing;
+    public ISxcContextResolver CtxResolver { get; } = ctxResolver;
 
 
     private IContextOfBlock Context => _context ??= CtxResolver.BlockContextRequired();
     private IContextOfBlock _context;
 
-    private IAppWorkCtxPlus AppCtx => _appCtx.Get(() => _appBlocks.CtxSvc.ContextPlus(Context.AppState));
+    private IAppWorkCtxPlus AppCtx => _appCtx.Get(() => appBlocks.CtxSvc.ContextPlus(Context.AppState));
     private readonly GetOnce<IAppWorkCtxPlus> _appCtx = new();
     #endregion
 
@@ -51,7 +37,7 @@ public class ContentGroupControllerReal: ServiceBase, IContentGroupController
     {
         Log.A($"header for:{guid}");
         //var cg = CmsManager.Read.Blocks.GetBlockConfig(guid);
-        var cg = _appBlocks.New(AppCtx).GetBlockConfig(guid);
+        var cg = appBlocks.New(AppCtx).GetBlockConfig(guid);
 
         // new in v11 - this call might be run on a non-content-block, in which case we return null
         if (cg.Entity == null) return null;
@@ -71,7 +57,7 @@ public class ContentGroupControllerReal: ServiceBase, IContentGroupController
         
 
     public void Replace(Guid guid, string part, int index, int entityId, bool add = false) 
-        => _listController.Value.Replace(guid, part, index, entityId, add);
+        => listController.Value.Replace(guid, part, index, entityId, add);
 
 
     /// <summary>
@@ -81,7 +67,7 @@ public class ContentGroupControllerReal: ServiceBase, IContentGroupController
     {
         var l = Log.Fn<ReplacementListDto>($"target:{guid}, part:{part}, index:{index}");
         var typeNameOfField = FindTypeNameOnContentGroup(guid, part);
-        var result = _listController.Value.GetListToReorder(guid, part, index, typeNameOfField);
+        var result = listController.Value.GetListToReorder(guid, part, index, typeNameOfField);
         return l.Return(result);
     }
 
@@ -91,7 +77,7 @@ public class ContentGroupControllerReal: ServiceBase, IContentGroupController
         var l = Log.Fn<string>($"{guid}, {part}");
 
         //var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(guid);
-        var contentGroup = _appBlocks.New(AppCtx).GetBlockConfig(guid);
+        var contentGroup = appBlocks.New(AppCtx).GetBlockConfig(guid);
         if (contentGroup?.Entity == null || contentGroup.View == null)
             return l.ReturnNull("Doesn't seem to be a content-group. Cancel.");
 
@@ -132,12 +118,12 @@ public class ContentGroupControllerReal: ServiceBase, IContentGroupController
         Log.A($"list for:{guid}, items:{list?.Count}");
         if (list == null) throw new ArgumentNullException(nameof(list));
 
-        _publishing.Value.DoInsidePublishing(Context, args =>
+        publishing.Value.DoInsidePublishing(Context, args =>
         {
             var entity = Context.AppState.GetDraftOrPublished(guid);
             var sequence = list.Select(i => i.Index).ToArray();
             var fields = part == ViewParts.ContentLower ? ViewParts.ContentPair : [part];
-            _workFieldList.New(Context.AppState).FieldListReorder(entity, fields, sequence, Context.Publishing.ForceDraft);
+            workFieldList.New(Context.AppState).FieldListReorder(entity, fields, sequence, Context.Publishing.ForceDraft);
         });
 
         return true;

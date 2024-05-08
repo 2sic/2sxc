@@ -6,17 +6,9 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Blocks.Internal.Render;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class InTextContentBlockRenderer: ServiceBase
+public class InTextContentBlockRenderer(SimpleRenderer simpleRenderer)
+    : ServiceBase(SxcLogName + ".RndTxt", connect: [simpleRenderer])
 {
-    private readonly SimpleRenderer _simpleRenderer;
-
-    public InTextContentBlockRenderer(SimpleRenderer simpleRenderer):base(SxcLogName + ".RndTxt")
-    {
-        ConnectServices(
-            _simpleRenderer = simpleRenderer
-        );
-    }
-
     // RegEx formulas
     static readonly Regex InlineCbDetector = new("<hr[^>]+sxc[^>]+>", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
     static readonly Regex  GuidExtractor = new("guid=\\\"([^\\\"]*)\\\"", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
@@ -63,7 +55,7 @@ public class InTextContentBlockRenderer: ServiceBase
 
                 var subItem = items.FirstOrDefault(i => i.EntityGuid == guid);
 
-                var contents = _simpleRenderer.RenderWithEditContext(block, parent, subItem, field, guid, edit);
+                var contents = simpleRenderer.RenderWithEditContext(block, parent, subItem, field, guid, edit);
 
                 result.Append(contents);
                 return "done";

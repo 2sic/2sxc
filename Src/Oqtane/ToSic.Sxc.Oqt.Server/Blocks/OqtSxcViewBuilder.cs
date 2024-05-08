@@ -33,7 +33,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         IOutputCache outputCache
     ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
     {
-        ConnectSvcs([
+        ConnectLogs([
             _contextOfBlockEmpty = contextOfBlockEmpty,
             _blockModuleEmpty = blockModuleEmpty,
             _contextResolverForLookUps = contextResolverForLookUps,

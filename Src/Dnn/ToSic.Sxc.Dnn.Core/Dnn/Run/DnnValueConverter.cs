@@ -26,12 +26,12 @@ internal class DnnValueConverter : ValueConverterBase
     public DnnValueConverter(ISite site, LazySvc<IEavFeaturesService> featuresLazy, LazySvc<PageScopedService<ISite>> siteFromPageLazy, LazySvc<INavigationManager> navigationManager) : base(
         $"{DnnConstants.LogName}.ValCnv")
     {
-        ConnectServices(
+        ConnectLogs([
             _site = site,
             _featuresLazy = featuresLazy,
             _siteFromPageLazy = siteFromPageLazy,
             _navigationManager = navigationManager
-        );
+        ]);
     }
 
     private readonly ISite _site;

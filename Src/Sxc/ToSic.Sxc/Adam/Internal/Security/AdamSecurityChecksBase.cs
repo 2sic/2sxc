@@ -21,7 +21,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices s
 
         public MyServices(Generator<AppPermissionCheck> appPermissionChecks)
         {
-            ConnectServices([
+            ConnectLogs([
                 AppPermissionChecks = appPermissionChecks
             ]);
         }

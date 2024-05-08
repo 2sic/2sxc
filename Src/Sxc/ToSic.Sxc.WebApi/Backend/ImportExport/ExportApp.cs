@@ -21,64 +21,37 @@ using Microsoft.AspNetCore.Mvc;
 namespace ToSic.Sxc.Backend.ImportExport;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ExportApp: ServiceBase
+public class ExportApp(
+    IZoneMapper zoneMapper,
+    ZipExport export,
+    AppWorkContextService appWorkCtxSvc,
+    GenWorkPlus<WorkViews> workViews,
+    GenWorkPlus<WorkEntities> workEntities,
+    ISite site,
+    IUser user,
+    Generator<ImpExpHelpers> impExpHelpers,
+    IEavFeaturesService features,
+    IAppPathsMicroSvc appPathSvc)
+    : ServiceBase("Bck.Export",
+        connect:
+        [
+            workEntities, appWorkCtxSvc, workViews, zoneMapper, export, site, user, features, impExpHelpers,
+            appPathSvc
+        ])
 {
-
-    #region Constructor / DI
-
-    private readonly GenWorkPlus<WorkEntities> _workEntities;
-    private readonly AppWorkContextService _appWorkCtxSvc;
-    private readonly GenWorkPlus<WorkViews> _workViews;
-    private readonly IZoneMapper _zoneMapper;
-    private readonly ZipExport _zipExport;
-    private readonly ISite _site;
-    private readonly IUser _user;
-    private readonly IEavFeaturesService _features;
-    private readonly Generator<ImpExpHelpers> _impExpHelpers;
-    private readonly IAppPathsMicroSvc _appPathSvc;
-
-    public ExportApp(
-        IZoneMapper zoneMapper, 
-        ZipExport zipExport,
-        AppWorkContextService appWorkCtxSvc,
-        GenWorkPlus<WorkViews> workViews,
-        GenWorkPlus<WorkEntities> workEntities,
-        ISite site, 
-        IUser user, 
-        Generator<ImpExpHelpers> impExpHelpers, 
-        IEavFeaturesService features,
-        IAppPathsMicroSvc appPathSvc
-    ) : base("Bck.Export")
-    {
-        ConnectServices(
-            _workEntities = workEntities,
-            _appWorkCtxSvc = appWorkCtxSvc,
-            _workViews = workViews,
-            _zoneMapper = zoneMapper,
-            _zipExport = zipExport,
-            _site = site,
-            _user = user,
-            _features = features,
-            _impExpHelpers = impExpHelpers,
-            _appPathSvc = appPathSvc
-        );
-    }
-
-    #endregion
-
     public AppExportInfoDto GetAppInfo(int zoneId, int appId)
     {
         var l = Log.Fn<AppExportInfoDto>($"get app info for app:{appId} and zone:{zoneId}");
-        var contextZoneId = _site.ZoneId;
-        var appRead = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
-        var appPaths = _appPathSvc.Init(_site, appRead);
+        var contextZoneId = site.ZoneId;
+        var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, contextZoneId);
+        var appPaths = appPathSvc.Init(site, appRead);
 
-        var zipExport = _zipExport.Init(zoneId, appId, appRead.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
-        var cultCount = _zoneMapper.CulturesWithState(_site).Count(c => c.IsEnabled);
+        var zipExport = export.Init(zoneId, appId, appRead.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
+        var cultCount = zoneMapper.CulturesWithState(site).Count(c => c.IsEnabled);
 
-        var appCtx = _appWorkCtxSvc.ContextPlus(appRead);
-        var appEntities = _workEntities.New(appCtx);
-        var appViews = _workViews.New(appCtx);
+        var appCtx = appWorkCtxSvc.ContextPlus(appRead);
+        var appEntities = workEntities.New(appCtx);
+        var appViews = workViews.New(appCtx);
 
         var appHasCustomParent = appRead.HasCustomParentApp();
 
@@ -102,16 +75,16 @@ public class ExportApp: ServiceBase
     internal bool SaveDataForVersionControl(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withSiteFiles)
     {
         var l = Log.Fn<bool>($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
-        SecurityHelpers.ThrowIfNotSiteAdmin(_user, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
+        SecurityHelpers.ThrowIfNotSiteAdmin(user, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
         // Ensure feature available...
-        SyncWithSiteFilesVerifyFeaturesOrThrow(_features, withSiteFiles);
+        SyncWithSiteFilesVerifyFeaturesOrThrow(features, withSiteFiles);
 
-        var contextZoneId = _site.ZoneId;
-        var appRead = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
-        var appPaths = _appPathSvc.Init(_site, appRead);
+        var contextZoneId = site.ZoneId;
+        var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, contextZoneId);
+        var appPaths = appPathSvc.Init(site, appRead);
 
-        var zipExport = _zipExport.Init(zoneId, appId, appRead.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
+        var zipExport = export.Init(zoneId, appId, appRead.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
         zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid, withSiteFiles);
 
         return l.ReturnTrue();
@@ -134,13 +107,13 @@ public class ExportApp: ServiceBase
         var l = Log.Fn<IActionResult>($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
 #endif
 
-        SecurityHelpers.ThrowIfNotSiteAdmin(_user, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
+        SecurityHelpers.ThrowIfNotSiteAdmin(user, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
-        var contextZoneId = _site.ZoneId;
-        var appRead = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
-        var appPaths = _appPathSvc.Init(_site, appRead);
+        var contextZoneId = site.ZoneId;
+        var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, contextZoneId);
+        var appPaths = appPathSvc.Init(site, appRead);
 
-        var zipExport = _zipExport.Init(zoneId, appId, appRead.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
+        var zipExport = export.Init(zoneId, appId, appRead.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
         var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";
 
         var fileName =

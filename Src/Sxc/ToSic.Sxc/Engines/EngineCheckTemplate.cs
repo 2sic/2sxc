@@ -5,21 +5,14 @@ using ToSic.Eav.Security.Internal;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Engines;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class EngineCheckTemplate: ServiceBase
+public class EngineCheckTemplate(LazySvc<AppPermissionCheck> appPermCheckLazy)
+    : ServiceBase("Sxc.EngChk", connect: [appPermCheckLazy])
 {
-    private readonly LazySvc<AppPermissionCheck> _appPermCheckLazy;
-
-    public EngineCheckTemplate(LazySvc<AppPermissionCheck> appPermCheckLazy) : base("Sxc.EngChk")
-    {
-        ConnectServices(_appPermCheckLazy = appPermCheckLazy);
-    }
-
     /// <summary>
     /// Template Exceptions like missing configuration or defined type not found
     /// </summary>
@@ -48,7 +41,7 @@ public class EngineCheckTemplate: ServiceBase
     {
         // do security check IF security exists
         // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
-        var templatePermissions = _appPermCheckLazy.Value
+        var templatePermissions = appPermCheckLazy.Value
             .ForItem(appContext, appContext.AppState, Template.Entity);
 
         // Views only use permissions to prevent access, so only check if there are any configured permissions

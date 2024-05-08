@@ -29,7 +29,7 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
     public OqtAdamFileSystem(IFileRepository oqtFileRepository, IFolderRepository oqtFolderRepository, IServerPaths serverPaths, IAdamPaths adamPaths)
         : base(adamPaths, OqtConstants.OqtLogPrefix)
     {
-        ConnectSvcs([
+        ConnectLogs([
             _serverPaths = serverPaths,
             OqtFileRepository = oqtFileRepository,
             OqtFolderRepository = oqtFolderRepository

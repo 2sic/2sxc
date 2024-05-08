@@ -20,10 +20,10 @@ public partial class XmlImportFull: XmlImportWithFiles
         IRepositoryLoader repositoryLoader
     ) : base(services, "Sxc.XmlImp")
     {
-        ConnectServices(
+        ConnectLogs([
             _workViewsMod = workViewsMod,
             _repositoryLoader = repositoryLoader
-        );
+        ]);
     }
 
     // ReSharper disable once UnusedMember.Global

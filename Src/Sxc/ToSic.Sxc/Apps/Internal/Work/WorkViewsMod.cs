@@ -1,33 +1,17 @@
 ﻿using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.Work;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Apps.Internal.Work;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class WorkViewsMod : WorkUnitBase<IAppWorkCtx>
+public class WorkViewsMod(
+    GenWorkPlus<WorkViews> appViews,
+    GenWorkDb<WorkEntityCreate> entityCreate,
+    GenWorkDb<WorkEntityUpdate> entityUpdate,
+    GenWorkDb<WorkEntityDelete> entityDelete)
+    : WorkUnitBase<IAppWorkCtx>("AWk.EntCre", connect: [appViews, entityCreate, entityUpdate, entityDelete])
 {
-    private readonly GenWorkPlus<WorkViews> _appViews;
-    private readonly GenWorkDb<WorkEntityCreate> _entityCreate;
-    private readonly GenWorkDb<WorkEntityUpdate> _entityUpdate;
-    private readonly GenWorkDb<WorkEntityDelete> _entityDelete;
-
-    public WorkViewsMod(
-        GenWorkPlus<WorkViews> appViews,
-        GenWorkDb<WorkEntityCreate> entityCreate,
-        GenWorkDb<WorkEntityUpdate> entityUpdate,
-        GenWorkDb<WorkEntityDelete> entityDelete) : base("AWk.EntCre")
-    {
-        ConnectServices(
-            _appViews = appViews,
-            _entityCreate = entityCreate,
-            _entityUpdate = entityUpdate,
-            _entityDelete = entityDelete
-        );
-    }
-
-
     /// <summary>
     /// Adds or updates a template - will create a new template if templateId is not specified
     /// </summary>
@@ -63,9 +47,9 @@ public class WorkViewsMod : WorkUnitBase<IAppWorkCtx>
 
         // #ExtractEntitySave - looks good
         if (templateId.HasValue)
-            _entityUpdate.New(AppWorkCtx).UpdateParts(templateId.Value, values);
+            entityUpdate.New(AppWorkCtx).UpdateParts(templateId.Value, values);
         else
-            _entityCreate.New(AppWorkCtx).Create(AppConstants.TemplateContentType, values);
+            entityCreate.New(AppWorkCtx).Create(AppConstants.TemplateContentType, values);
 
         l.Done();
     }
@@ -75,7 +59,7 @@ public class WorkViewsMod : WorkUnitBase<IAppWorkCtx>
     public bool DeleteView(int viewId)
     {
         // really get template first, to be sure it is a template
-        var template = _appViews.New(AppWorkCtx).Get(viewId);
-        return _entityDelete.New(AppWorkCtx).Delete(template.Id);
+        var template = appViews.New(AppWorkCtx).Get(viewId);
+        return entityDelete.New(AppWorkCtx).Delete(template.Id);
     }
 }

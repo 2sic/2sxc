@@ -20,10 +20,10 @@ internal class DnnLinkService : LinkServiceBase
     public DnnLinkService(ImgResizeLinker imgLinker, LazySvc<IValueConverter> dnnValueConverterLazy,
         LazySvc<ILinkPaths> linkPathsLazy, LazySvc<INavigationManager> navigationManager) : base(imgLinker, linkPathsLazy)
     {
-        ConnectServices(
+        ConnectLogs([
             _dnnValueConverterLazy = dnnValueConverterLazy,
             _navigationManager = navigationManager
-        );
+        ]);
     }
 
     private readonly LazySvc<IValueConverter> _dnnValueConverterLazy;

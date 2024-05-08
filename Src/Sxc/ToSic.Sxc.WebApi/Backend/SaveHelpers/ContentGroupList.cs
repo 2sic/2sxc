@@ -8,27 +8,18 @@ using static System.StringComparison;
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ContentGroupList: ServiceBase
+public class ContentGroupList(
+    GenWorkPlus<WorkBlocks> blocks,
+    LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
+    GenWorkDb<WorkFieldList> workFieldList)
+    : ServiceBase("Api.GrpPrc", connect: [blocks, workFieldList, blockEditorSelectorLazy])
 {
     #region Constructor / DI
-
-    private readonly GenWorkDb<WorkFieldList> _workFieldList;
-    private readonly GenWorkPlus<WorkBlocks> _appBlocks;
-    private readonly LazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
-
-    public ContentGroupList(GenWorkPlus<WorkBlocks> appBlocks, LazySvc<BlockEditorSelector> blockEditorSelectorLazy, GenWorkDb<WorkFieldList> workFieldList) : base("Api.GrpPrc")
-    {
-        ConnectServices(
-            _appBlocks = appBlocks,
-            _workFieldList = workFieldList,
-            _blockEditorSelectorLazy = blockEditorSelectorLazy
-        );
-    }
 
     public ContentGroupList Init(IAppIdentity appIdentity)
     {
         _appIdentity = appIdentity;
-        AppCtx = _appBlocks.CtxSvc.Context(appIdentity);
+        AppCtx = blocks.CtxSvc.Context(appIdentity);
         return this;
     }
     private IAppIdentity _appIdentity;
@@ -86,7 +77,7 @@ public class ContentGroupList: ServiceBase
                 ? ViewParts.PickFieldPair(primaryItem.Header.Field)
                 : [primaryItem.Header.Field];
 
-            var fieldList = _workFieldList.New(AppCtx.AppState);
+            var fieldList = workFieldList.New(AppCtx.AppState);
             if (willAdd) // this cannot be auto-detected, it must be specified
             {
 
@@ -104,7 +95,7 @@ public class ContentGroupList: ServiceBase
         }
 
         // update-module-title
-        _blockEditorSelectorLazy.Value.GetEditor(block).UpdateTitle();
+        blockEditorSelectorLazy.Value.GetEditor(block).UpdateTitle();
         return l.ReturnTrue("ok");
     }
 
@@ -160,7 +151,7 @@ public class ContentGroupList: ServiceBase
     internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers) => Log.Func(() =>
     {
         var newItems = new List<ItemIdentifier>();
-        var appBlocks = _appBlocks.New(AppCtx);
+        var appBlocks = blocks.New(AppCtx);
         foreach (var identifier in identifiers)
         {
             // Case one, it's a Content-Group - in this case the content-type name comes from View configuration

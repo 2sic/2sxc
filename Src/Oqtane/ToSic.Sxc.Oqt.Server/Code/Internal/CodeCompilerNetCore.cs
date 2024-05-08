@@ -17,7 +17,7 @@ internal class CodeCompilerNetCore : CodeCompiler
 
     public CodeCompilerNetCore(IServiceProvider serviceProvider, LazySvc<IServerPaths> serverPaths, Generator<Compiler> compiler) : base(serviceProvider)
     {
-        ConnectSvcs([
+        ConnectLogs([
             _serverPaths = serverPaths,
             _compiler = compiler
         ]);

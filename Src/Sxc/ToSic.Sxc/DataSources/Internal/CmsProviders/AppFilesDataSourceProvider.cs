@@ -38,7 +38,7 @@ public class AppFilesDataSourceProvider(AppFilesDataSourceProvider.MyServices se
             ISite site
         )
         {
-            ConnectServices([
+            ConnectLogs([
                 AppStates = appStates,
                 AppPathMicroSvc = appPathMicroSvc,
                 FileManagerGenerator = fileManagerGenerator,

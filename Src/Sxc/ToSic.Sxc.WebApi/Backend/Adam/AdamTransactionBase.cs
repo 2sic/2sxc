@@ -25,7 +25,7 @@ public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>(
             LazySvc<AdamContext<TFolderId, TFileId>> adamState,
             ISxcContextResolver ctxResolver)
         {
-            ConnectServices([
+            ConnectLogs([
                 AdamDtoMaker = adamDtoMaker,
                 AdamState = adamState,
                 CtxResolver = ctxResolver

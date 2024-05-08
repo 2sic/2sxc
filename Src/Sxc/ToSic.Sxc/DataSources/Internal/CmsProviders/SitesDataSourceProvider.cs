@@ -25,7 +25,7 @@ public abstract class SitesDataSourceProvider(SitesDataSourceProvider.MyServices
             IAppStates appStates
         )
         {
-            ConnectServices([
+            ConnectLogs([
                 ZoneMapperLazy = zoneMapperLazy,
                 AppStates = appStates
             ]);

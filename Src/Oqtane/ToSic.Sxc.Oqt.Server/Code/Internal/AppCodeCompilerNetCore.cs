@@ -16,7 +16,7 @@ internal class AppCodeCompilerNetCore : AppCodeCompiler
 {
     public AppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, Generator<Compiler> compiler)
     {
-        ConnectSvcs([
+        ConnectLogs([
             _serverPaths = serverPaths,
             _compiler = compiler
         ]);

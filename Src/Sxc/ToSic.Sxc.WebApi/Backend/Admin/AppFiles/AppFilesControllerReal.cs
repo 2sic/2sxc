@@ -26,14 +26,14 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
             
         _site = site;
         _user = user;
-        ConnectServices(
+        ConnectLogs([
             _assetEditorGenerator = assetEditorGenerator,
             _assetTemplates = new(),
             _appStates = appStates,
             _appPaths = appPaths,
             _codeController = codeController,
             _appCodeLoader = appCodeLoader
-        );
+        ]);
     }
 
     private readonly ISite _site;

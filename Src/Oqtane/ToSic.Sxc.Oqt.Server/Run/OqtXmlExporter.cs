@@ -37,7 +37,7 @@ internal class OqtXmlExporter : XmlExporter
         LazySvc<OqtAssetsFileHelper> fileHelper
     ) : base(xmlSerializer, appStates, ctxResolver, OqtConstants.OqtLogPrefix)
     {
-        ConnectSvcs([
+        ConnectLogs([
             _hostingEnvironment = hostingEnvironment,
             _fileRepositoryLazy = fileRepositoryLazy,
             _folderRepositoryLazy = folderRepositoryLazy,

@@ -20,23 +20,11 @@ using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.Dnn.Cms;
 
-internal partial class DnnPagePublishing : ServiceBase, IPagePublishing
+internal partial class DnnPagePublishing(
+    LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
+    GenWorkDb<WorkEntityPublish> entPublish)
+    : ServiceBase("Dnn.Publsh", connect: [moduleAndBlockBuilder, entPublish]), IPagePublishing
 {
-
-    #region DI Constructors and More
-
-    public DnnPagePublishing(LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder, GenWorkDb<WorkEntityPublish> entPublish) : base("Dnn.Publsh")
-    {
-        ConnectServices(
-            _moduleAndBlockBuilder = moduleAndBlockBuilder,
-            _entPublish = entPublish
-        );
-    }
-
-    private readonly GenWorkDb<WorkEntityPublish> _entPublish;
-    private readonly LazySvc<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
-        
-    #endregion
 
     public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
     {
@@ -92,7 +80,7 @@ internal partial class DnnPagePublishing : ServiceBase, IPagePublishing
             // publish all entities of this content block
             var dnnModule = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
             // must find tenant through module, as the Portal-Settings.Current is null in search mode
-            var cb = _moduleAndBlockBuilder.Value.BuildBlock(dnnModule, null);
+            var cb = moduleAndBlockBuilder.Value.BuildBlock(dnnModule, null);
 
             l.A($"found dnn mod {cb.Context.Module.Id}, tenant {cb.Context.Site.Id}, cb exists: {cb.ContentGroupExists}");
             if (cb.ContentGroupExists)
@@ -126,7 +114,7 @@ internal partial class DnnPagePublishing : ServiceBase, IPagePublishing
                 l.A(Log.Try(() => $"will publish id⋮{ids.Count} ids:[{ string.Join(",", ids.Select(i => i.ToString()).ToArray()) }]"));
 
                 if (ids.Any())
-                    _entPublish.New(cb.Context.AppState).Publish(ids.ToArray());
+                    entPublish.New(cb.Context.AppState).Publish(ids.ToArray());
                 else
                     l.A("no ids found, won\'t publish items");
             }

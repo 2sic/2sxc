@@ -24,11 +24,11 @@ public class QueryControllerReal: QueryControllerBase<QueryControllerReal>
         Generator<IAppDataConfigProvider> tokenEngineWithContext
     ) : base(services, "Api." + LogSuffix)
     {
-        ConnectServices(
+        ConnectLogs([
             _workViews = workViews,
             _contextResolver = contextResolver,
             _tokenEngineWithContext = tokenEngineWithContext
-        );
+        ]);
     }
     /// <summary>
     /// Delete a Pipeline with the Pipeline Entity, Pipeline Parts and their Configurations.

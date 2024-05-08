@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Data.Debug;
-using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.DataSources.Sys.Internal;
 using ToSic.Sxc.Blocks.Internal;
@@ -9,35 +8,20 @@ using static ToSic.Eav.Apps.AppStackConstants;
 namespace ToSic.Sxc.Backend.AppStack;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppStackBackend: ServiceBase
+public class AppStackBackend(
+    AppDataStackService dataStackService,
+    IZoneCultureResolver zoneCulture,
+    IAppStates appStates,
+    LazySvc<QueryDefinitionBuilder> qDefBuilder)
+    : ServiceBase("Sxc.ApiApQ", connect: [dataStackService, zoneCulture, appStates])
 {
-
-    #region Constructor / DI
-
-    public AppStackBackend(AppDataStackService dataStackService, IZoneCultureResolver zoneCulture, IAppStates appStates, LazySvc<QueryDefinitionBuilder> qDefBuilder) : base("Sxc.ApiApQ")
-    {
-        ConnectServices(
-            _dataStackService = dataStackService,
-            _zoneCulture = zoneCulture,
-            _appStates = appStates,
-            _qDefBuilder = qDefBuilder
-        );
-    }
-
-    private readonly IAppStates _appStates;
-    private readonly IZoneCultureResolver _zoneCulture;
-    private readonly AppDataStackService _dataStackService;
-    private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
-
-    #endregion
-
     public List<AppStackDataRaw> GetAll(int appId, string part, string key, Guid? viewGuid, string[] languages)
     {
         // Correct languages
         if (languages == null || !languages.Any())
-            languages = _zoneCulture.SafeLanguagePriorityCodes();
+            languages = zoneCulture.SafeLanguagePriorityCodes();
         // Get app 
-        var appState = _appStates.GetReader(appId);
+        var appState = appStates.GetReader(appId);
         // Ensure we have the correct stack name
         var partName = SystemStackHelpers.GetStackNameOrNull(part);
         if (partName == null)
@@ -62,7 +46,7 @@ public class AppStackBackend: ServiceBase
     public List<PropertyDumpItem> GetStackDump(IAppState appState, string partName, string[] languages, IEntity viewSettingsMixin)
     {
         // Build Sources List
-        var settings = _dataStackService.Init(appState).GetStack(partName, viewSettingsMixin);
+        var settings = dataStackService.Init(appState).GetStack(partName, viewSettingsMixin);
 
         // Dump results
         var results = settings._Dump(new(null, languages, Log), null);
@@ -77,7 +61,7 @@ public class AppStackBackend: ServiceBase
         {
             var viewEnt = appState.List.One(viewGuid.Value);
             if (viewEnt == null) throw new($"Tried to get view but not found. Guid was {viewGuid}");
-            var view = new View(viewEnt, languages, Log, _qDefBuilder);
+            var view = new View(viewEnt, languages, Log, qDefBuilder);
 
             viewStackPart = realName == RootNameSettings ? view.Settings : view.Resources;
         }

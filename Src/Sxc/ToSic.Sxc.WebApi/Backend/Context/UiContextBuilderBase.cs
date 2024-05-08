@@ -38,7 +38,7 @@ public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>,
             LazySvc<GlobalPaths> globalPaths
         )
         {
-            ConnectServices([
+            ConnectLogs([
                 SiteCtx = siteCtx,
                 AppStates = appStates,
                 Features = features,

@@ -35,7 +35,7 @@ public partial class BlockBuilder(BlockBuilder.MyServices services)
             CodeInfosInScope codeInfos
         )
         {
-            ConnectServices([
+            ConnectLogs([
                 EngineFactory = engineFactory,
                 EnvInstGen = envInstGen,
                 RenderHelpGen = renderHelpGen,

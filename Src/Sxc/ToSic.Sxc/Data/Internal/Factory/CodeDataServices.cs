@@ -18,7 +18,7 @@ public class CodeDataServices: MyServicesBase
         LazySvc<ConvertForCodeService> forCode,
         LazySvc<IDataFactory> dataFactory)
     {
-        ConnectServices([
+        ConnectLogs([
             _valueConverterLazy = valueConverterLazy,
             RenderServiceGenerator = renderServiceGenerator,
             _scrub = scrub,

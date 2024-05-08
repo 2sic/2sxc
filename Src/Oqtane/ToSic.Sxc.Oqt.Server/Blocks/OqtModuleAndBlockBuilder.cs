@@ -22,7 +22,7 @@ internal class OqtModuleAndBlockBuilder : ModuleAndBlockBuilder
         RequestHelper requestHelper
     ) : base(blockGenerator, OqtConstants.OqtLogPrefix)
     {
-        ConnectSvcs([
+        ConnectLogs([
             _moduleGenerator = moduleGenerator,
             _contextGenerator = contextGenerator,
             _moduleRepositoryGenerator = moduleRepositoryGenerator,

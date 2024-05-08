@@ -11,10 +11,12 @@ public class SaveSecurity: SaveHelperBase
 {
     private readonly Generator<MultiPermissionsTypes> _multiPermissionsTypesGen;
 
-    public SaveSecurity(Generator<MultiPermissionsTypes> multiPermissionsTypesGen) : base("Api.SavSec") =>
-        ConnectServices(
+    public SaveSecurity(Generator<MultiPermissionsTypes> multiPermissionsTypesGen) : base("Api.SavSec")
+    {
+        ConnectLogs([
             _multiPermissionsTypesGen = multiPermissionsTypesGen
-        );
+        ]);
+    }
 
     internal new SaveSecurity Init(IContextOfApp context)
     {

@@ -14,9 +14,9 @@ internal class DnnAppFileSystemLoader : AppFileSystemLoader
     /// </summary>
     public DnnAppFileSystemLoader(IZoneMapper zoneMapper, MyServices services): base(services, "Dnn.AppStf")
     {
-        ConnectServices(
+        ConnectLogs([
             ZoneMapper = zoneMapper
-        );
+        ]);
     }
 
     protected readonly IZoneMapper ZoneMapper;

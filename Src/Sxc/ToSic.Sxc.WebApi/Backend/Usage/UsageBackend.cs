@@ -8,44 +8,29 @@ using ToSic.Sxc.Blocks.Internal;
 namespace ToSic.Sxc.Backend.Usage;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class UsageBackend: ServiceBase
+public class UsageBackend(
+    GenWorkPlus<WorkBlocks> appBlocks,
+    GenWorkPlus<WorkViews> workViews,
+    Generator<MultiPermissionsApp> appPermissions,
+    ISxcContextResolver ctxResolver)
+    : ServiceBase("Bck.Usage", connect: [appPermissions, ctxResolver, workViews, appBlocks])
 {
-    private readonly GenWorkPlus<WorkViews> _workViews;
-    private readonly GenWorkPlus<WorkBlocks> _appBlocks;
-    private readonly Generator<MultiPermissionsApp> _appPermissions;
-    private readonly ISxcContextResolver _ctxResolver;
-
-    public UsageBackend(
-        GenWorkPlus<WorkBlocks> appBlocks,
-        GenWorkPlus<WorkViews> workViews,
-        Generator<MultiPermissionsApp> appPermissions,
-        ISxcContextResolver ctxResolver
-    ) : base("Bck.Usage")
-    {
-        ConnectServices(
-            _appPermissions = appPermissions,
-            _ctxResolver = ctxResolver,
-            _workViews = workViews,
-            _appBlocks = appBlocks
-        );
-    }
-
     public IEnumerable<ViewDto> ViewUsage(int appId, Guid guid, Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
     {
         var l = Log.Fn<IEnumerable<ViewDto>>($"{appId}, {guid}");
-        var context = _ctxResolver.GetBlockOrSetApp(appId);
+        var context = ctxResolver.GetBlockOrSetApp(appId);
 
         // extra security to only allow zone change if host user
-        var permCheck = _appPermissions.New().Init(context, context.AppState);
+        var permCheck = appPermissions.New().Init(context, context.AppState);
         if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
             throw HttpException.PermissionDenied(error);
 
-        var appWorkCtxPlus = _appBlocks.CtxSvc.ContextPlus(appId);
-        var appViews = _workViews.New(appWorkCtxPlus);
+        var appWorkCtxPlus = appBlocks.CtxSvc.ContextPlus(appId);
+        var appViews = workViews.New(appWorkCtxPlus);
         // treat view as a list - in case future code will want to analyze many views together
         var views = new List<IView> { appViews.Get(guid) };
 
-        var blocks = _appBlocks.New(appWorkCtxPlus).AllWithView();
+        var blocks = appBlocks.New(appWorkCtxPlus).AllWithView();
 
         Log.A($"Found {blocks.Count} content blocks");
 

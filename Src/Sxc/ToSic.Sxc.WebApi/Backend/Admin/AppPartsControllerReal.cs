@@ -11,37 +11,24 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 namespace ToSic.Sxc.Backend.Admin;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppPartsControllerReal : ServiceBase, IAppPartsController
+public class AppPartsControllerReal(
+    LazySvc<IContextOfSite> context,
+    LazySvc<ExportContent> exportContent,
+    Generator<ImportContent> importContent)
+    : ServiceBase("Api.APartsRl", connect: [context, exportContent, importContent]), IAppPartsController
 {
     public const string LogSuffix = "AParts";
-
-    public AppPartsControllerReal(
-        LazySvc<IContextOfSite> context,
-        LazySvc<ExportContent> exportContent,
-        Generator<ImportContent> importContent
-    ): base("Api.APartsRl")
-    {
-        ConnectServices(
-            _context = context,
-            _exportContent = exportContent,
-            _importContent = importContent
-        );
-            
-    }
-    private readonly LazySvc<IContextOfSite> _context;
-    private readonly LazySvc<ExportContent> _exportContent;
-    private readonly Generator<ImportContent> _importContent;
 
 
     #region Parts Export/Import
 
     /// <inheritdoc />
-    public ExportPartsOverviewDto Get(int zoneId, int appId, string scope) => _exportContent.Value.PreExportSummary(zoneId: zoneId, appId: appId, scope: scope);
+    public ExportPartsOverviewDto Get(int zoneId, int appId, string scope) => exportContent.Value.PreExportSummary(zoneId: zoneId, appId: appId, scope: scope);
 
 
     /// <inheritdoc />
     public THttpResponseType Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
-        => _exportContent.Value.Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString, entityIdsString: entityIdsString, templateIdsString: templateIdsString);
+        => exportContent.Value.Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString, entityIdsString: entityIdsString, templateIdsString: templateIdsString);
 
 
     /// <summary>
@@ -74,8 +61,8 @@ public class AppPartsControllerReal : ServiceBase, IAppPartsController
 
         var (fileName, stream) = uploadInfo.GetStream(0);
 
-        var result = _importContent.New()
-            .Import(zoneId: zoneId, appId: appId, fileName: fileName, stream: stream, defaultLanguage: _context.Value.Site.DefaultCultureCode);
+        var result = importContent.New()
+            .Import(zoneId: zoneId, appId: appId, fileName: fileName, stream: stream, defaultLanguage: context.Value.Site.DefaultCultureCode);
 
         return l.ReturnAsOk(result);
     }

@@ -26,7 +26,7 @@ internal class OqtSitesDsProvider : SitesDataSourceProvider
     public OqtSitesDsProvider(MyServices services, IAliasRepository aliases, ISiteRepository sites, LazySvc<OqtCulture> oqtCulture)
         :base(services, "Oqt.Sites")
     {
-        ConnectSvcs([
+        ConnectLogs([
             _aliases = aliases,
             _sites = sites,
             _oqtCulture = oqtCulture

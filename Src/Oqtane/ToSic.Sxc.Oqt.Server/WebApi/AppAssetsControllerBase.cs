@@ -32,7 +32,7 @@ public abstract class AppAssetsControllerBase : OqtControllerBase
             LazySvc<OqtAssetsFileHelper> fileHelper
         )
         {
-            ConnectServices([
+            ConnectLogs([
                 HostingEnvironment = hostingEnvironment,
                 AppFolder = appFolder,
                 SiteState = siteState,

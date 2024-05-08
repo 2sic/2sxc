@@ -1,31 +1,16 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Internal;
+﻿using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.Work;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Apps.Internal.Work;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class WorkBlocksMod : WorkUnitBase<IAppWorkCtxWithDb>
+public class WorkBlocksMod(
+    GenWorkDb<WorkFieldList> workFieldList,
+    GenWorkDb<WorkEntityCreate> workEntCreate,
+    GenWorkDb<WorkEntityUpdate> workEntUpdate)
+    : WorkUnitBase<IAppWorkCtxWithDb>("AWk.EntCre", connect: [workFieldList, workEntCreate, workEntUpdate])
 {
-    private readonly GenWorkDb<WorkEntityUpdate> _workEntUpdate;
-    private readonly GenWorkDb<WorkEntityCreate> _workEntCreate;
-    private readonly GenWorkDb<WorkFieldList> _workFieldList;
-
-    public WorkBlocksMod(
-        GenWorkDb<WorkFieldList> workFieldList, 
-        GenWorkDb<WorkEntityCreate> workEntCreate,
-        GenWorkDb<WorkEntityUpdate> workEntUpdate) : base("AWk.EntCre")
-    {
-        ConnectServices(
-            _workFieldList = workFieldList,
-            _workEntCreate = workEntCreate,
-            _workEntUpdate = workEntUpdate
-        );
-    }
-
-
     public Guid UpdateOrCreateContentGroup(BlockConfiguration blockConfiguration, int templateId)
     {
         var l = Log.Fn<Guid>();
@@ -36,7 +21,7 @@ public class WorkBlocksMod : WorkUnitBase<IAppWorkCtxWithDb>
         {
             l.A($"doesn't exist, will create new CG with template#{templateId}");
             // #ExtractEntitySave - verified
-            var guid = _workEntCreate.New(AppWorkCtx).Create(WorkBlocks.BlockTypeName, new()
+            var guid = workEntCreate.New(AppWorkCtx).Create(WorkBlocks.BlockTypeName, new()
             {
                 {ViewParts.TemplateContentType, new List<int> {templateId}},
                 {ViewParts.Content, new List<int>()},
@@ -49,7 +34,7 @@ public class WorkBlocksMod : WorkUnitBase<IAppWorkCtxWithDb>
 
         l.A($"exists, create for group#{blockConfiguration.Guid} with template#{templateId}");
         // #ExtractEntitySave - verified
-        _workEntUpdate.New(AppWorkCtx).UpdateParts(blockConfiguration.Entity.EntityId,
+        workEntUpdate.New(AppWorkCtx).UpdateParts(blockConfiguration.Entity.EntityId,
             new Dictionary<string, object> { { ViewParts.TemplateContentType, new List<int?> { templateId } } });
 
         return l.ReturnAndLog(blockConfiguration.Guid); // guid didn't change
@@ -57,7 +42,7 @@ public class WorkBlocksMod : WorkUnitBase<IAppWorkCtxWithDb>
 
     public void AddEmptyItem(BlockConfiguration block, int? index, bool forceDraft)
     {
-        _workFieldList.New(AppWorkCtx.AppState)
+        workFieldList.New(AppWorkCtx.AppState)
             .FieldListUpdate(block.Entity, ViewParts.ContentPair, forceDraft,
                 lists =>
                 {
@@ -90,7 +75,7 @@ public class WorkBlocksMod : WorkUnitBase<IAppWorkCtxWithDb>
 
         // create the new entity 
         // #ExtractEntitySave - should be ok
-        var entityId = _workEntCreate.New(AppWorkCtx.AppState).GetOrCreate(newGuid, typeName, values);
+        var entityId = workEntCreate.New(AppWorkCtx.AppState).GetOrCreate(newGuid, typeName, values);
 
         #region attach to the current list of items
 
@@ -106,7 +91,7 @@ public class WorkBlocksMod : WorkUnitBase<IAppWorkCtxWithDb>
         }
         var updateDic = new Dictionary<string, object> { { field, intList } };
         // #ExtractEntitySave - should be ok
-        _workEntUpdate.New(AppWorkCtx.AppState).UpdateParts(cbEnt.EntityId, updateDic);
+        workEntUpdate.New(AppWorkCtx.AppState).UpdateParts(cbEnt.EntityId, updateDic);
 
         #endregion
 

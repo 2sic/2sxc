@@ -20,7 +20,7 @@ internal class OqtUsersDsProvider : UsersDataSourceProvider
 
     public OqtUsersDsProvider(SiteState siteState, LazySvc<OqtSecurity> oqtSecurity, LazySvc<IUserRoleRepository> userRoles) : base("Oqt.Users")
     {
-        ConnectSvcs([
+        ConnectLogs([
             _siteState = siteState,
             _oqtSecurity = oqtSecurity,
             _userRoles = userRoles

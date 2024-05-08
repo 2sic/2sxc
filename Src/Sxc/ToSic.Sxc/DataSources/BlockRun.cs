@@ -25,10 +25,10 @@ internal partial class ContextData : PassThrough, IBlockInstance
 #if NETFRAMEWORK
     public ContextData(MyServices services, ToSic.Eav.Apps.IAppStates appStates, LazySvc<CodeInfoService> codeChanges) : base(services, "Sxc.BlckDs")
     {
-        ConnectServices(
+        ConnectLogs([
             _appStates = appStates,
             _codeChanges = codeChanges
-        );
+        ]);
     }
 #else
 

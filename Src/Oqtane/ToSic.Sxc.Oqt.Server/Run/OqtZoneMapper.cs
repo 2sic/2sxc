@@ -25,7 +25,7 @@ internal class OqtZoneMapper : ZoneMapperBase
         OqtCulture oqtCulture, 
         IAppStates appStates) : base(appStates, $"{OqtConstants.OqtLogPrefix}.ZoneMp")
     {
-        ConnectSvcs([
+        ConnectLogs([
             _siteRepository = siteRepository,
             _settingRepository = settingRepository,
             _site = site,

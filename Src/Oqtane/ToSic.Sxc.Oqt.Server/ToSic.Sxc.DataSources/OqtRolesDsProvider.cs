@@ -20,7 +20,7 @@ internal class OqtRolesDsProvider : RolesDataSourceProvider
 
     public OqtRolesDsProvider(IRoleRepository roles, SiteState siteState): base("Oqt.Roles")
     {
-        ConnectSvcs([
+        ConnectLogs([
             _roles = roles,
             _siteState = siteState
         ]);

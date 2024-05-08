@@ -20,11 +20,11 @@ internal class DnnRenderService : RenderService
         Generator<IContextOfBlock> context
     ) : base(services)
     {
-        ConnectServices(
+        ConnectLogs([
             _dnnPageChanges = dnnPageChanges,
             _dnnClientResources = dnnClientResources,
             _context = context
-        );
+        ]);
     }
 
     public override IRenderResult Module(int pageId, int moduleId,

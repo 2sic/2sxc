@@ -32,7 +32,7 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
             ISxcContextResolver ctxResolver
         )
         {
-            ConnectServices([
+            ConnectLogs([
                 AdamContext = adamContext,
                 CtxResolver = ctxResolver
             ]);

@@ -28,7 +28,7 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.MySe
             Generator<BlockEditorForModule> blkEdtForMod,
             Generator<BlockEditorForEntity> blkEdtForEnt)
         {
-            ConnectServices([
+            ConnectLogs([
                 WorkBlocksMod = workBlocksMod,
                 BlkEdtForMod = blkEdtForMod,
                 BlkEdtForEnt = blkEdtForEnt,

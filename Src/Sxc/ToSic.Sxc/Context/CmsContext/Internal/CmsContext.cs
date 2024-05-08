@@ -15,39 +15,21 @@ namespace ToSic.Sxc.Context.Internal;
 /// </summary>
 [PrivateApi("we only show the interface in the docs")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class CmsContext: ServiceForDynamicCode, ICmsContext
+internal class CmsContext(
+    IPlatform platform,
+    IContextOfSite initialContext,
+    LazySvc<IPage> pageLazy,
+    IAppStates appStates,
+    LazySvc<ICmsSite> cmsSiteLazy)
+    : ServiceForDynamicCode(SxcLogName + ".CmsCtx",
+        connect: [initialContext, pageLazy, appStates, cmsSiteLazy, platform]), ICmsContext
 {
     #region Constructor
 
-    /// <summary>
-    /// DI Constructor
-    /// </summary>
-    public CmsContext(
-        IPlatform platform, 
-        IContextOfSite initialContext, 
-        LazySvc<IPage> pageLazy,
-        IAppStates appStates,
-        LazySvc<ICmsSite> cmsSiteLazy
-    ) : base(SxcLogName + ".CmsCtx")
-    {
-        ConnectServices(
-            _initialContext = initialContext,
-            _pageLazy = pageLazy,
-            _appStates = appStates,
-            _cmsSiteLazy = cmsSiteLazy,
-            Platform = platform
-        );
-    }
-    private readonly IContextOfSite _initialContext;
-    private readonly LazySvc<IPage> _pageLazy;
-
-    internal IContextOfSite CtxSite => _ctxSite.Get(() => CtxBlockOrNull ?? _initialContext);
+    internal IContextOfSite CtxSite => _ctxSite.Get(() => CtxBlockOrNull ?? initialContext);
     private readonly GetOnce<IContextOfSite> _ctxSite = new();
 
-    private readonly IAppStates _appStates;
-    private readonly LazySvc<ICmsSite> _cmsSiteLazy;
-
-    private IAppStateInternal SiteAppState => _siteAppState ??= _appStates.GetPrimaryReader(CtxSite.Site.ZoneId, Log);
+    private IAppStateInternal SiteAppState => _siteAppState ??= appStates.GetPrimaryReader(CtxSite.Site.ZoneId, Log);
     private IAppStateInternal _siteAppState;
 
     // Note: Internal so it can be used for View<T, T>
@@ -59,12 +41,12 @@ internal class CmsContext: ServiceForDynamicCode, ICmsContext
 
     #endregion
 
-    public ICmsPlatform Platform { get; }
+    public ICmsPlatform Platform { get; } = platform;
 
-    public ICmsSite Site => _site.Get(() => ((CmsSite)_cmsSiteLazy.Value).Init(this, SiteAppState));
+    public ICmsSite Site => _site.Get(() => ((CmsSite)cmsSiteLazy.Value).Init(this, SiteAppState));
     private readonly GetOnce<ICmsSite> _site = new();
 
-    public ICmsPage Page => _page ??= new CmsPage(this, SiteAppState, _pageLazy);
+    public ICmsPage Page => _page ??= new CmsPage(this, SiteAppState, pageLazy);
     private ICmsPage _page;
 
     public ICmsCulture Culture => _culture ??= new CmsCulture(this);

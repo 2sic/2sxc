@@ -31,7 +31,7 @@ public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolba
             LazySvc<ToolbarButtonDecoratorHelper> toolbarButtonHelper
         )
         {
-            ConnectServices([
+            ConnectLogs([
                 ToolbarButtonHelper = toolbarButtonHelper,
                 AppStatesLazy = appStatesLazy
             ]);

@@ -21,10 +21,10 @@ public class DnnModule: Module<ModuleInfo>
         
     public DnnModule(IAppStates appStates, LazySvc<AppFinder> appFinderLazy, ISite site): base("Dnn.Contnr")
     {
-        ConnectServices(
+        ConnectLogs([
             _appStates = appStates,
             _appFinderLazy = appFinderLazy
-        );
+        ]);
         _site = site;
     }
 

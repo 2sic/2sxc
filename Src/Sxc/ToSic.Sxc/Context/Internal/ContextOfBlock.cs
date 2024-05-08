@@ -25,11 +25,11 @@ internal class ContextOfBlock: ContextOfApp, IContextOfBlock
     ) : base(appServices, "Sxc.CtxBlk")
     {
         Page = page;
-        ConnectServices(
+        ConnectLogs([
             Module = module,
             PageServiceShared = pageServiceShared,
             _publishingResolver = publishingResolver
-        );
+        ]);
     }
     private readonly LazySvc<ServiceSwitcher<IPagePublishingGetSettings>> _publishingResolver;
 

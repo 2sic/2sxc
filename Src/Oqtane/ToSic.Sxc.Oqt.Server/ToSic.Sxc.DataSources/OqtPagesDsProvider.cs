@@ -36,7 +36,7 @@ internal class OqtPagesDsProvider : PagesDataSourceProvider
     public OqtPagesDsProvider(IPageRepository pages, SiteState siteState, IUserPermissions userPermissions, IHttpContextAccessor httpContextAccessor, LazySvc<ILinkPaths> linkPathsLazy)
         :base("Oqt.Pages")
     {
-        ConnectSvcs([
+        ConnectLogs([
             _pages = pages,
             _siteState = siteState,
             _userPermissions = userPermissions,

@@ -33,7 +33,7 @@ internal class NetCoreRazorEngine : EngineBase, IRazorEngine
     public NetCoreRazorEngine(MyServices services, LazySvc<IRazorRenderer> razorRenderer, LazySvc<CodeApiServiceFactory> codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<IRenderingHelper> renderingHelper)
         : base(services)
     {
-        ConnectSvcs([
+        ConnectLogs([
             _codeRootFactory = codeRootFactory,
             _errorHelp = errorHelp,
             _renderingHelper = renderingHelper,

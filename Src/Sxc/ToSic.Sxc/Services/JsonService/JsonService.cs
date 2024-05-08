@@ -9,17 +9,9 @@ namespace ToSic.Sxc.Services;
 
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class JsonService: ServiceBase, IJsonService
+internal class JsonService(Generator<CodeJsonWrapper> wrapJsonGenerator)
+    : ServiceBase("Sxc.JsnSvc", connect: [wrapJsonGenerator]), IJsonService
 {
-    private readonly Generator<CodeJsonWrapper> _wrapJsonGenerator;
-
-    public JsonService(Generator<CodeJsonWrapper> wrapJsonGenerator) : base("Sxc.JsnSvc")
-    {
-        ConnectServices(
-            _wrapJsonGenerator = wrapJsonGenerator
-        );
-    }
-
     /// <inheritdoc />
     public T To<T>(string json) 
         => JsonSerializer.Deserialize<T>(json, SafeJsonForHtmlAttributes);
@@ -38,14 +30,14 @@ internal class JsonService: ServiceBase, IJsonService
 
     /// <inheritdoc />
     public ITyped ToTyped(string json, NoParamOrder noParamOrder = default, string fallback = default, bool? propsRequired = default)
-        => _wrapJsonGenerator.New()
+        => wrapJsonGenerator.New()
             .Setup(WrapperSettings.Typed(true, true, propsRequired: propsRequired ?? true))
             .JsonToTyped(json, noParamOrder, fallback);
 
 
     /// <inheritdoc />
     public IEnumerable<ITyped> ToTypedList(string json, NoParamOrder noParamOrder = default, string fallback = default, bool? propsRequired = default)
-        => _wrapJsonGenerator.New()
+        => wrapJsonGenerator.New()
             .Setup(WrapperSettings.Typed(true, true, propsRequired: propsRequired ?? true))
             .JsonToTypedList(json, noParamOrder, fallback);
 }

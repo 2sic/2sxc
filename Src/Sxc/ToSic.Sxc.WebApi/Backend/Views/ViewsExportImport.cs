@@ -27,69 +27,43 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 namespace ToSic.Sxc.Backend.Views;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ViewsExportImport : ServiceBase
+public class ViewsExportImport(
+    GenWorkDb<WorkEntitySave> workEntSave,
+    IServerPaths serverPaths,
+    IEnvironmentLogger envLogger,
+    LazySvc<JsonSerializer> jsonSerializerLazy,
+    IContextOfSite context,
+    AppIconHelpers appIconHelpers,
+    Generator<ImpExpHelpers> impExpHelpers,
+    IResponseMaker responseMaker,
+    LazySvc<QueryDefinitionBuilder> qDefBuilder,
+    IAppPathsMicroSvc appPathSvc)
+    : ServiceBase("Bck.Views",
+        connect:
+        [
+            workEntSave, serverPaths, envLogger, jsonSerializerLazy, appIconHelpers, impExpHelpers, responseMaker,
+            qDefBuilder, appPathSvc
+        ])
 {
-    private readonly IAppPathsMicroSvc _appPathSvc;
-    private readonly GenWorkDb<WorkEntitySave> _workEntSave;
-    private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
-    private readonly IServerPaths _serverPaths;
-    private readonly IEnvironmentLogger _envLogger;
-    private readonly LazySvc<JsonSerializer> _jsonSerializerLazy;
-    //private readonly IAppStates _appStates;
-    private readonly AppIconHelpers _appIconHelpers;
-    private readonly Generator<ImpExpHelpers> _impExpHelpers;
-    private readonly IResponseMaker _responseMaker;
-    private readonly ISite _site;
-    private readonly IUser _user;
-
-    public ViewsExportImport(
-        GenWorkDb<WorkEntitySave> workEntSave,
-        IServerPaths serverPaths,
-        IEnvironmentLogger envLogger,
-        LazySvc<JsonSerializer> jsonSerializerLazy, 
-        IContextOfSite context,
-        //IAppStates appStates,
-        AppIconHelpers appIconHelpers,
-        Generator<ImpExpHelpers> impExpHelpers,
-        IResponseMaker responseMaker,
-        LazySvc<QueryDefinitionBuilder> qDefBuilder,
-        IAppPathsMicroSvc appPathSvc) : base("Bck.Views")
-    {
-        ConnectServices(
-            _workEntSave = workEntSave,
-            _serverPaths = serverPaths,
-            _envLogger = envLogger,
-            _jsonSerializerLazy = jsonSerializerLazy,
-            //_appStates = appStates,
-            _appIconHelpers = appIconHelpers,
-            _impExpHelpers = impExpHelpers,
-            _responseMaker = responseMaker,
-            _qDefBuilder = qDefBuilder,
-            _appPathSvc = appPathSvc
-        );
-        _site = context.Site;
-        _user = context.User;
-    }
-
     public THttpResponseType DownloadViewAsJson(int appId, int viewId)
     {
         var logCall = Log.Fn<THttpResponseType>($"{appId}, {viewId}");
-        SecurityHelpers.ThrowIfNotSiteAdmin(_user, Log);
-        var app = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
+        SecurityHelpers.ThrowIfNotSiteAdmin(context.User, Log);
+        var app = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(context.Site.ZoneId, appId, context.User, context.Site.ZoneId);
         var bundle = new BundleEntityWithAssets
         {
             Entity = app.StateCache.List.One(viewId).IfOfType(Settings.TemplateContentType) // .Data[Eav.ImportExport.Settings.TemplateContentType].One(viewId)
         };
 
-        var appPaths = _appPathSvc.Init(_site, app);
+        var appPaths = appPathSvc.Init(context.Site, app);
 
         // Attach files
-        var view = new View(bundle.Entity, [_site.CurrentCultureCode], Log, _qDefBuilder);
+        var view = new View(bundle.Entity, [context.Site.CurrentCultureCode], Log, qDefBuilder);
 
         if (!string.IsNullOrEmpty(view.Path))
         {
             TryAddAsset(bundle, appPaths.ViewPath(view, PathTypes.PhysRelative), view.Path);
-            var webPath = _appIconHelpers.IconPathOrNull(appPaths, view, PathTypes.PhysRelative)?.ForwardSlash();
+            var webPath = appIconHelpers.IconPathOrNull(appPaths, view, PathTypes.PhysRelative)?.ForwardSlash();
             if(webPath != null)
             {
                 var relativePath = webPath.Replace(appPaths.RelativePath.ForwardSlash(), "").TrimPrefixSlash();
@@ -97,10 +71,10 @@ public class ViewsExportImport : ServiceBase
             }
         }
 
-        var serializer = _jsonSerializerLazy.Value.SetApp(app);
+        var serializer = jsonSerializerLazy.Value.SetApp(app);
         var serialized = serializer.Serialize(bundle, 0);
 
-        return logCall.ReturnAsOk(_responseMaker.File(serialized,
+        return logCall.ReturnAsOk(responseMaker.File(serialized,
             ("View" + "." + bundle.Entity.GetBestTitle() + ImpExpConstants.Extension(ImpExpConstants.Files.json))
             .RemoveNonFilenameCharacters()));
     }
@@ -108,7 +82,7 @@ public class ViewsExportImport : ServiceBase
     private void TryAddAsset(BundleEntityWithAssets bundle, string webPath, string relativePath)
     {
         if (string.IsNullOrEmpty(webPath)) return;
-        var realPath = _serverPaths.FullAppPath(webPath);
+        var realPath = serverPaths.FullAppPath(webPath);
         var jsonAssetMan = new JsonAssets();
         var asset1 = jsonAssetMan.Get(realPath, relativePath);
         bundle.Assets.Add(asset1);
@@ -123,15 +97,15 @@ public class ViewsExportImport : ServiceBase
         try
         {
             // 0.1 Check permissions, get the app, 
-            var appRead = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
-            var appPaths = _appPathSvc.Init(_site, appRead);
+            var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(context.Site.ZoneId, appId, context.User, context.Site.ZoneId);
+            var appPaths = appPathSvc.Init(context.Site, appRead);
 
             // 0.2 Verify it's json etc.
             if (files.Any(file => !Json.IsValidJson(file.Contents)))
                 throw new ArgumentException("a file is not json");
 
             // 1. create the views
-            var serializer = _jsonSerializerLazy.Value.SetApp(appRead);
+            var serializer = jsonSerializerLazy.Value.SetApp(appRead);
 
             var bundles = files.Select(f => serializer.DeserializeEntityWithAssets(f.Contents)).ToList();
 
@@ -146,7 +120,7 @@ public class ViewsExportImport : ServiceBase
             // 2. Import the views
             // todo: construction of this should go into init
             // #ExtractEntitySave - verified
-            _workEntSave.New(appRead).Import(bundles.Select(v => v.Entity).ToList());
+            workEntSave.New(appRead).Import(bundles.Select(v => v.Entity).ToList());
 
             // 3. Import the attachments
             var assets = bundles.SelectMany(b => b.Assets);
@@ -158,7 +132,7 @@ public class ViewsExportImport : ServiceBase
         }
         catch (Exception ex)
         {
-            _envLogger.LogException(ex);
+            envLogger.LogException(ex);
             return callLog.Return(new(false, ex.Message, Message.MessageTypes.Error), "error");
         }
     }

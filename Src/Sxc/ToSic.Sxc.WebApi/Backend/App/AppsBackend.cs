@@ -10,34 +10,23 @@ using ToSic.Sxc.Web.Internal.LightSpeed;
 namespace ToSic.Sxc.Backend.App;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppsBackend: ServiceBase
+public class AppsBackend(
+    WorkApps workApps,
+    IContextOfSite context,
+    CodeInfoStats codeStats,
+    Generator<IAppPathsMicroSvc> appPathsGen,
+    LazySvc<GlobalPaths> globalPaths)
+    : ServiceBase("Bck.Apps", connect: [workApps, codeStats, context, appPathsGen, globalPaths])
 {
-    private readonly Generator<IAppPathsMicroSvc> _appPathsGen;
-    private readonly LazySvc<GlobalPaths> _globalPaths;
-    private readonly WorkApps _workApps;
-    private readonly CodeInfoStats _codeStats;
-    private readonly IContextOfSite _context;
-
-    public AppsBackend(WorkApps workApps, IContextOfSite context, CodeInfoStats codeStats, Generator<IAppPathsMicroSvc> appPathsGen, LazySvc<GlobalPaths> globalPaths) : base("Bck.Apps")
-    {
-        ConnectServices(
-            _workApps = workApps,
-            _codeStats = codeStats,
-            _context = context,
-            _appPathsGen = appPathsGen,
-            _globalPaths = globalPaths
-        );
-    }
-        
     public List<AppDto> Apps()
     {
-        var list = _workApps.GetApps(_context.Site);
+        var list = workApps.GetApps(context.Site);
         return list.Select(CreateAppDto).ToList();
     }
 
     public List<AppDto> GetInheritableApps()
     {
-        var list = _workApps.GetInheritableApps(_context.Site);
+        var list = workApps.GetInheritableApps(context.Site);
         return list.Select(CreateAppDto).ToList();
     }
 
@@ -48,8 +37,8 @@ public class AppsBackend: ServiceBase
         if (lightSpeedDeco.Entity != null)
             lightspeed = new () { Id = lightSpeedDeco.Id, Title = lightSpeedDeco.Title, IsEnabled = lightSpeedDeco.IsEnabled };
 
-        var paths = _appPathsGen.New().Init(_context.Site, state);
-        var thumbnail = AppAssetThumbnail.GetUrl(state, paths, _globalPaths);
+        var paths = appPathsGen.New().Init(context.Site, state);
+        var thumbnail = AppAssetThumbnail.GetUrl(state, paths, globalPaths);
 
         return new ()
         {
@@ -68,7 +57,7 @@ public class AppsBackend: ServiceBase
             IsGlobal = state.IsShared(),
             IsInherited = state.IsInherited(),
             Lightspeed = lightspeed,
-            HasCodeWarnings = _codeStats.AppHasWarnings(state.AppId),
+            HasCodeWarnings = codeStats.AppHasWarnings(state.AppId),
         };
     }
 }

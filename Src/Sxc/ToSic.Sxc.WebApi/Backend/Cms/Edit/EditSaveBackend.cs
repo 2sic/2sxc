@@ -9,46 +9,29 @@ using ToSic.Sxc.Backend.SaveHelpers;
 namespace ToSic.Sxc.Backend.Cms;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class EditSaveBackend : ServiceBase
+public class EditSaveBackend(
+    SxcPagePublishing pagePublishing,
+    GenWorkPlus<WorkEntities> workEntities,
+    ISxcContextResolver ctxResolver,
+    JsonSerializer jsonSerializer,
+    SaveSecurity saveSecurity,
+    SaveEntities saveBackendHelper,
+    DataBuilder dataBuilder)
+    : ServiceBase("Cms.SaveBk",
+        connect:
+        [
+            pagePublishing, workEntities, ctxResolver, jsonSerializer, saveSecurity, saveBackendHelper, dataBuilder
+        ])
 {
-    private readonly GenWorkPlus<WorkEntities> _workEntities;
-    private readonly DataBuilder _dataBuilder;
-    private readonly SaveEntities _saveBackendHelper;
-    private readonly SaveSecurity _saveSecurity;
-    private readonly JsonSerializer _jsonSerializer;
-
     #region DI Constructor and Init
-
-    public EditSaveBackend(
-        SxcPagePublishing pagePublishing,
-        GenWorkPlus<WorkEntities> workEntities,
-        ISxcContextResolver ctxResolver,
-        JsonSerializer jsonSerializer,
-        SaveSecurity saveSecurity,
-        SaveEntities saveBackendHelper,
-        DataBuilder dataBuilder
-    ) : base("Cms.SaveBk")
-    {
-        ConnectServices(
-            _pagePublishing = pagePublishing,
-            _workEntities = workEntities,
-            _ctxResolver = ctxResolver,
-            _jsonSerializer = jsonSerializer,
-            _saveSecurity = saveSecurity,
-            _saveBackendHelper = saveBackendHelper,
-            _dataBuilder = dataBuilder
-        );
-    }
-    private readonly SxcPagePublishing _pagePublishing;
-    private readonly ISxcContextResolver _ctxResolver;
 
     public EditSaveBackend Init(int appId)
     {
         _appId = appId;
         // The context should be from the block if there is one, because it affects saving/publishing
         // Basically it can result in things being saved draft or titles being updated
-        _context = _ctxResolver.GetBlockOrSetApp(appId);
-        _pagePublishing.Init(_context);
+        _context = ctxResolver.GetBlockOrSetApp(appId);
+        pagePublishing.Init(_context);
         return this;
     }
 
@@ -76,17 +59,17 @@ public class EditSaveBackend : ServiceBase
         //}
 
         // new API WIP
-        var appEntities = _workEntities.New(_appId);
+        var appEntities = workEntities.New(_appId);
         var appCtx = appEntities.AppWorkCtx;
 
-        var ser = _jsonSerializer.SetApp(appCtx.AppState);
+        var ser = jsonSerializer.SetApp(appCtx.AppState);
         // Since we're importing directly into this app, we would prefer local content-types
         ser.PreferLocalAppTypes = true;
         validator.PrepareForEntityChecks(appEntities);
 
         #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
         // basic permission checks
-        var permCheck = _saveSecurity.Init(_context).DoPreSaveSecurityCheck(package.Items);
+        var permCheck = saveSecurity.Init(_context).DoPreSaveSecurityCheck(package.Items);
 
         var foundItems = package.Items.Where(i => i.Entity.Id != 0 || i.Entity.Guid != Guid.Empty)
             .Select(i => i.Entity.Guid != Guid.Empty
@@ -112,7 +95,7 @@ public class EditSaveBackend : ServiceBase
                 if (resultValidator.Exception != null)
                     throw resultValidator.Exception;
 
-                ent = _dataBuilder.Entity.CreateFrom(ent, id: resultValidator.ResetId, isPublished: package.IsPublished,
+                ent = dataBuilder.Entity.CreateFrom(ent, id: resultValidator.ResetId, isPublished: package.IsPublished,
                     placeDraftInBranch: package.DraftShouldBranch);
 
                 //ent.ResetEntityId(resultValidator.ResetId ?? 0); //AjaxPreviewHelperWIP!
@@ -140,7 +123,7 @@ public class EditSaveBackend : ServiceBase
 
         Log.A("items to save generated, all data tests passed");
 
-        return _pagePublishing.SaveInPagePublishing(_ctxResolver.BlockOrNull(), _appId, items, partOfPage,
+        return pagePublishing.SaveInPagePublishing(ctxResolver.BlockOrNull(), _appId, items, partOfPage,
             forceSaveAsDraft => DoSave(appEntities, items, forceSaveAsDraft),
             permCheck);
     }
@@ -155,7 +138,7 @@ public class EditSaveBackend : ServiceBase
             .Where(e => !e.Header.IsContentBlockMode || !e.Header.IsEmpty)
             .ToList();
 
-        _saveBackendHelper.UpdateGuidAndPublishedAndSaveMany(workEntities.AppWorkCtx, entitiesToSave, forceSaveAsDraft);
-        return _saveBackendHelper.GenerateIdList(workEntities, items);
+        saveBackendHelper.UpdateGuidAndPublishedAndSaveMany(workEntities.AppWorkCtx, entitiesToSave, forceSaveAsDraft);
+        return saveBackendHelper.GenerateIdList(workEntities, items);
     }
 }

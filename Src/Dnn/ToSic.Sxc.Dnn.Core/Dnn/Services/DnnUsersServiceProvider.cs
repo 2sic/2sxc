@@ -11,9 +11,9 @@ internal class DnnUsersServiceProvider : UserSourceProvider
 
     public DnnUsersServiceProvider(LazySvc<DnnSecurity> dnnSecurity) : base("Dnn.UsersSvc")
     {
-        ConnectServices(
+        ConnectLogs([
             _dnnSecurity = dnnSecurity
-        );
+        ]);
     }
 
     public override string PlatformIdentityTokenPrefix => DnnConstants.UserTokenPrefix;

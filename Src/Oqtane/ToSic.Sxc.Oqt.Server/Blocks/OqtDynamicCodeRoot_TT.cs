@@ -15,7 +15,7 @@ internal class OqtCodeApiService<TModel, TServiceKit> : CodeApiService<TModel, T
     private readonly LazySvc<SiteStateInitializer> _siteStateInitializerLazy;
     public OqtCodeApiService(MyServices services, LazySvc<SiteStateInitializer> siteStateInitializerLazy) : base(services, OqtConstants.OqtLogPrefix)
     {
-        ConnectSvcs([
+        ConnectLogs([
             _siteStateInitializerLazy = siteStateInitializerLazy
         ]);
     }

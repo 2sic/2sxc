@@ -11,11 +11,11 @@ public class SxcPagePublishing: SaveHelperBase
     #region Constructor / DI
     public SxcPagePublishing(ContentGroupList contentGroupList, IPagePublishing pagePublishing, IAppStates appStates) : base("Sxc.PgPubl")
     {
-        ConnectServices(
+        ConnectLogs([
             _contentGroupList = contentGroupList,
             _pagePublishing = pagePublishing,
             _appStates = appStates
-        );
+        ]);
     }
     private readonly ContentGroupList _contentGroupList;
     private readonly IPagePublishing _pagePublishing;

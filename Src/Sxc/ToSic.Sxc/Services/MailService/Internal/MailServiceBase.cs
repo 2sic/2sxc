@@ -12,20 +12,12 @@ using MailMessage = System.Net.Mail.MailMessage;
 namespace ToSic.Sxc.Services.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
+public abstract class MailServiceBase(LazySvc<IUser> userLazy)
+    : ServiceForDynamicCode($"{SxcLogName}.MailSrv", connect: [userLazy]), IMailService
 {
     private static readonly Regex HtmlDetectionRegex = new("<(.*\\s*)>", RegexOptions.Compiled);
 
     [PrivateApi] protected IApp App;
-
-    private readonly LazySvc<IUser> _userLazy;
-
-    protected MailServiceBase(LazySvc<IUser> userLazy) : base($"{SxcLogName}.MailSrv")
-    {
-        ConnectServices(
-            _userLazy = userLazy
-        );
-    }
 
     /// <inheritdoc />
     public override void ConnectToRoot(ICodeApiService codeRoot)
@@ -47,7 +39,7 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
         catch (Exception ex)
         {
             Log.Ex(ex);
-            if (_userLazy.Value.IsSystemAdmin)
+            if (userLazy.Value.IsSystemAdmin)
                 throw;
             throw new("SMTP configuration problem.");
         }
