@@ -18,9 +18,9 @@ internal class OqtMailService : MailServiceBase
 
     public OqtMailService(LazySvc<ISettingRepository> settingRepositoryLazy, LazySvc<IUser> userLazy) : base(userLazy)
     {
-        ConnectServices(
+        ConnectSvcs([
             _settingRepositoryLazy = settingRepositoryLazy
-        );
+        ]);
     }
 
     protected override SmtpClient SmtpClient()

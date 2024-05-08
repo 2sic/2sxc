@@ -16,25 +16,14 @@ using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Razor;
 
-internal class RazorRenderer : ServiceBase, IRazorRenderer
+internal class RazorRenderer(
+    ITempDataProvider tempDataProvider,
+    IRazorCompiler razorCompiler,
+    IAppCodeRazorCompiler appCodeRazorCompiler,
+    SourceAnalyzer sourceAnalyzer)
+    : ServiceBase($"{SxcLogging.SxcLogName}.RzrRdr",
+        connect: [tempDataProvider, razorCompiler, appCodeRazorCompiler, sourceAnalyzer]), IRazorRenderer
 {
-    #region Constructor and DI
-
-    private readonly ITempDataProvider _tempDataProvider;
-    private readonly IRazorCompiler _razorCompiler;
-    private readonly IAppCodeRazorCompiler _appCodeRazorCompiler;
-    private readonly SourceAnalyzer _sourceAnalyzer;
-
-    public RazorRenderer(ITempDataProvider tempDataProvider, IRazorCompiler razorCompiler, IAppCodeRazorCompiler appCodeRazorCompiler, SourceAnalyzer sourceAnalyzer) : base($"{SxcLogging.SxcLogName}.RzrRdr")
-    {
-        ConnectServices(
-            _tempDataProvider = tempDataProvider,
-            _razorCompiler = razorCompiler,
-            _appCodeRazorCompiler = appCodeRazorCompiler,
-            _sourceAnalyzer = sourceAnalyzer
-        );
-    }
-    #endregion
 
     public async Task<string> RenderToStringAsync<TModel>(string templatePath, TModel model, Action<RazorView> configure, IApp app = null, HotBuildSpec hotBuildSpec = default)
     {
@@ -42,11 +31,11 @@ internal class RazorRenderer : ServiceBase, IRazorRenderer
 
         // TODO: SHOULD OPTIMIZE so the file doesn't need to read multiple times
         // 1. probably change so the CodeFileInfo contains the source code
-        var razorType = _sourceAnalyzer.TypeOfVirtualPath(templatePath);
+        var razorType = sourceAnalyzer.TypeOfVirtualPath(templatePath);
 
         var (view, actionContext) = razorType.IsHotBuildSupported()
-            ? await _appCodeRazorCompiler.CompileView(templatePath, configure, app, hotBuildSpec)
-            : await _razorCompiler.CompileView(templatePath, configure);
+            ? await appCodeRazorCompiler.CompileView(templatePath, configure, app, hotBuildSpec)
+            : await razorCompiler.CompileView(templatePath, configure);
 
         var viewDataDictionary = CreateViewDataDictionaryForRazorViewWithGenericBaseTypeOrNull(view, model) 
             ?? new ViewDataDictionary<TModel>(new EmptyModelMetadataProvider(), new()) { Model = model };
@@ -60,7 +49,7 @@ internal class RazorRenderer : ServiceBase, IRazorRenderer
             viewDataDictionary,
             new TempDataDictionary(
                 actionContext.HttpContext,
-                _tempDataProvider),
+                tempDataProvider),
             output,
             new HtmlHelperOptions()
         );

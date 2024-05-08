@@ -7,30 +7,20 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal.JsContext;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output;
 
 [PrivateApi]
-internal partial class OqtPageOutput : ServiceBase
+internal partial class OqtPageOutput(
+    SiteState siteState,
+    IBlockResourceExtractor blockResourceExtractor,
+    IJsApiService jsApiService)
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.AssHdr", connect: [siteState, blockResourceExtractor, jsApiService])
 {
     #region Constructor and DI
 
-    public OqtPageOutput(SiteState siteState, IBlockResourceExtractor blockResourceExtractor, IJsApiService jsApiService) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
-    {
-        ConnectServices(
-            _siteState = siteState,
-            _blockResourceExtractor = blockResourceExtractor,
-            _jsApiService = jsApiService
-        );
-    }
-
-    private readonly SiteState _siteState;
-    private readonly IBlockResourceExtractor _blockResourceExtractor;
-    private readonly IJsApiService _jsApiService;
-        
     public void Init(IOqtSxcViewBuilder parent, IRenderResult renderResult)
     {
         Parent = parent;

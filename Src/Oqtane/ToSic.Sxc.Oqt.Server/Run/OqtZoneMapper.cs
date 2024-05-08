@@ -25,13 +25,13 @@ internal class OqtZoneMapper : ZoneMapperBase
         OqtCulture oqtCulture, 
         IAppStates appStates) : base(appStates, $"{OqtConstants.OqtLogPrefix}.ZoneMp")
     {
-        ConnectServices(
+        ConnectSvcs([
             _siteRepository = siteRepository,
             _settingRepository = settingRepository,
             _site = site,
             _zoneCreatorLazy = zoneCreatorLazy,
             _oqtCulture = oqtCulture
-        );
+        ]);
     }
     private readonly ISiteRepository _siteRepository;
     private readonly ISettingRepository _settingRepository;

@@ -20,35 +20,15 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
-internal class OqtModuleUpdater: ServiceBase, IPlatformModuleUpdater
+internal class OqtModuleUpdater(
+    SettingsHelper settingsHelper,
+    IPageModuleRepository pageModuleRepository,
+    GenWorkPlus<WorkViews> workViews,
+    LazySvc<IAppStates> appStates,
+    ISite site)
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.MapA2I",
+        connect: [settingsHelper, pageModuleRepository, appStates, workViews, site]), IPlatformModuleUpdater
 {
-    private readonly LazySvc<IAppStates> _appStates;
-    private readonly GenWorkPlus<WorkViews> _workViews;
-    private readonly SettingsHelper _settingsHelper;
-    private readonly IPageModuleRepository _pageModuleRepository;
-    private readonly ISite _site;
-
-    /// <summary>
-    /// Empty constructor for DI
-    /// </summary>
-    // ReSharper disable once UnusedMember.Global
-    public OqtModuleUpdater(
-        SettingsHelper settingsHelper,
-        IPageModuleRepository pageModuleRepository,
-        GenWorkPlus<WorkViews> workViews,
-        LazySvc<IAppStates> appStates,
-        ISite site
-    ) : base($"{OqtConstants.OqtLogPrefix}.MapA2I")
-    {
-        ConnectServices(
-            _settingsHelper = settingsHelper,
-            _pageModuleRepository = pageModuleRepository,
-            _appStates = appStates,
-            _workViews = workViews,
-            _site = site
-        );
-    }
-
     public void SetAppId(IModule instance, int? appId)
     {
         var l = Log.Fn($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
@@ -61,15 +41,15 @@ internal class OqtModuleUpdater: ServiceBase, IPlatformModuleUpdater
             UpdateInstanceSetting(instance.Id, ModuleSettingNames.AppName, null, Log);
         else
         {
-            var appName = _appStates.Value.AppIdentifier(_site.ZoneId, appId.Value);
+            var appName = appStates.Value.AppIdentifier(site.ZoneId, appId.Value);
             UpdateInstanceSetting(instance.Id, ModuleSettingNames.AppName, appName, Log);
         }
 
         // Change to 1. available template if app has been set
         if (appId.HasValue)
         {
-            var appIdentity = new AppIdentity(_site.ZoneId, appId.Value);
-            var templateGuid = _workViews.New(appIdentity).GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
+            var appIdentity = new AppIdentity(site.ZoneId, appId.Value);
+            var templateGuid = workViews.New(appIdentity).GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
             if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);
         }
 
@@ -90,9 +70,9 @@ internal class OqtModuleUpdater: ServiceBase, IPlatformModuleUpdater
         log.A($"UpdateInstanceSetting(iid: {instanceId}, key: {key}, val: {value})");
 
         if (value == null)
-            _settingsHelper.DeleteSetting(EntityNames.Module, instanceId, key);
+            settingsHelper.DeleteSetting(EntityNames.Module, instanceId, key);
         else
-            _settingsHelper.UpdateSetting(EntityNames.Module, instanceId, key, value);
+            settingsHelper.UpdateSetting(EntityNames.Module, instanceId, key, value);
     }
 
     /// <summary>
@@ -101,7 +81,7 @@ internal class OqtModuleUpdater: ServiceBase, IPlatformModuleUpdater
     /// </summary>
     public void SetPreview(int instanceId, Guid previewTemplateGuid)
     {
-        var settings = _settingsHelper.Init(EntityNames.Module, instanceId).Settings;
+        var settings = settingsHelper.Init(EntityNames.Module, instanceId).Settings;
 
         // Do not allow saving the temporary template id if a ContentGroup exists for this module
         if (settings.TryGetValue(ModuleSettingNames.ContentGroup, out var value) && !string.IsNullOrEmpty(value))
@@ -126,8 +106,8 @@ internal class OqtModuleUpdater: ServiceBase, IPlatformModuleUpdater
         // Module tile is stored in PageModule, so we need moduleId and pageId to update it.
         var pageId = block.Context.Page.Id;
         var moduleId = block.Context.Module.Id;
-        var pageModule = _pageModuleRepository.GetPageModule(pageId, moduleId);
+        var pageModule = pageModuleRepository.GetPageModule(pageId, moduleId);
         pageModule.Title = System.Net.WebUtility.HtmlEncode(titleItem.GetBestTitle());
-        _pageModuleRepository.UpdatePageModule(pageModule);
+        pageModuleRepository.UpdatePageModule(pageModule);
     }
 }

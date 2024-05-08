@@ -29,13 +29,13 @@ internal class OqtModule: Module<Module>
     public OqtModule(SettingsHelper settingsHelper, IModuleRepository moduleRepository, 
         IAppStates appStates, LazySvc<AppFinder> appFinderLazy, ISite site) : base ($"{OqtConstants.OqtLogPrefix}.Cont")
     {
-        ConnectServices(
+        ConnectSvcs([
             _settingsHelper = settingsHelper,
             _moduleRepository = moduleRepository,
             _appStates = appStates,
             _appFinderLazy = appFinderLazy,
             _site = site
-        );
+        ]);
     }
 
     public new OqtModule Init(Module module)

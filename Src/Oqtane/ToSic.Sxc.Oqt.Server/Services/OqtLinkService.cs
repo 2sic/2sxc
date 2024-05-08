@@ -36,11 +36,11 @@ internal class OqtLinkService : LinkServiceBase
         LazySvc<IAliasRepository> aliasRepositoryLazy
     ) : base(imgLinker, linkPathsLazy)
     {
-        ConnectServices(
+        ConnectSvcs([
             _pageRepository = pageRepository,
             _siteStateInitializer = siteStateInitializer,
             _aliasRepositoryLazy = aliasRepositoryLazy
-        );
+        ]);
     }
 
     private new OqtLinkPaths LinkPaths => (OqtLinkPaths) base.LinkPaths;

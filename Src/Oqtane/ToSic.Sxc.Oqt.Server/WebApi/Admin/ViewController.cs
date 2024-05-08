@@ -28,9 +28,9 @@ public class ViewController : OqtStatefulControllerBase, IViewController
 {
     public ViewController(LazySvc<Pages.Pages> pages) : base(RealController.LogSuffix)
     {
-        this.ConnectServices(
+        this.ConnectServices([
             _pages = pages
-        );
+        ]);
     }
     private readonly LazySvc<Pages.Pages> _pages;
 

@@ -20,10 +20,10 @@ internal class OqtRolesDsProvider : RolesDataSourceProvider
 
     public OqtRolesDsProvider(IRoleRepository roles, SiteState siteState): base("Oqt.Roles")
     {
-        ConnectServices(
+        ConnectSvcs([
             _roles = roles,
             _siteState = siteState
-        );
+        ]);
     }
 
     [PrivateApi]

@@ -40,7 +40,7 @@ internal class OqtValueConverter : ValueConverterBase
         LazySvc<SiteStateInitializer> siteStateInitializerLazy,
         LazySvc<IEavFeaturesService> featuresLazy) : base("Oqt.ValCn")
     {
-        ConnectServices(
+        ConnectSvcs([
             _featuresLazy = featuresLazy,
             FileRepository = fileRepository,
             FolderRepository = folderRepository,
@@ -48,7 +48,7 @@ internal class OqtValueConverter : ValueConverterBase
             PageRepository = pageRepository,
             ServerPaths = serverPaths,
             SiteStateInitializerLazy = siteStateInitializerLazy
-        );
+        ]);
     }
 
     protected Alias Alias

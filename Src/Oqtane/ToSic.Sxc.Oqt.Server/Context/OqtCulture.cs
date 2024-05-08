@@ -13,27 +13,20 @@ namespace ToSic.Sxc.Oqt.Server.Context;
 /// <summary>
 /// Manage oqtane site culture info
 /// </summary>
-internal class OqtCulture: ServiceBase
+internal class OqtCulture(
+    LazySvc<ILocalizationManager> localizationManager,
+    LazySvc<ILanguageRepository> languageRepository)
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.Cultur", connect: [localizationManager, languageRepository])
 {
-    public OqtCulture(LazySvc<ILocalizationManager> localizationManager, LazySvc<ILanguageRepository> languageRepository): base($"{OqtConstants.OqtLogPrefix}.Cultur")
-    {
-        ConnectServices(
-            _localizationManager = localizationManager,
-            _languageRepository = languageRepository
-        );
-    }
-    private readonly LazySvc<ILocalizationManager> _localizationManager;
-    private readonly LazySvc<ILanguageRepository> _languageRepository;
-
     const string FallbackLanguageCode = "en-us";
 
     /// <inheritdoc />
-    public string DefaultCultureCode => MapTwoLetterCulture(_localizationManager.Value.GetDefaultCulture().ToLowerInvariant()) ?? FallbackLanguageCode;
+    public string DefaultCultureCode => MapTwoLetterCulture(localizationManager.Value.GetDefaultCulture().ToLowerInvariant()) ?? FallbackLanguageCode;
 
     // When culture code is not provided for selected default language, use defaultLanguageCode.
     public string DefaultLanguageCode(int siteId)
     {
-        return (_languageRepository.Value.GetLanguages(siteId).FirstOrDefault(l => l.IsDefault)?.Code ?? FallbackLanguageCode).ToLowerInvariant();
+        return (languageRepository.Value.GetLanguages(siteId).FirstOrDefault(l => l.IsDefault)?.Code ?? FallbackLanguageCode).ToLowerInvariant();
     }
 
     public string CurrentCultureCode => MapTwoLetterCulture(CultureInfo.CurrentCulture.Name).ToLowerInvariant();
@@ -41,7 +34,7 @@ internal class OqtCulture: ServiceBase
     public List<ISiteLanguageState> GetSupportedCultures(int siteId, List<Eav.Data.DimensionDefinition>  availableEavLanguages)
     {
         var cultures = new List<string>(new[] { DefaultCultureCode });
-        cultures.AddRange(_languageRepository.Value.GetLanguages(siteId).Select(language => MapTwoLetterCulture(language.Code)));
+        cultures.AddRange(languageRepository.Value.GetLanguages(siteId).Select(language => MapTwoLetterCulture(language.Code)));
 
         // List of localizations enabled in Oqtane site.
         var siteCultures = cultures

@@ -10,22 +10,13 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
-internal class OqtEnvironmentInstaller: ServiceBase, IEnvironmentInstaller, IPlatformAppInstaller
+internal class OqtEnvironmentInstaller(
+    GenWorkPlus<WorkViews> workViews,
+    RemoteRouterLink remoteRouterLink,
+    IAppStates appStates)
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.Instll", connect: [remoteRouterLink, workViews, appStates]),
+        IEnvironmentInstaller, IPlatformAppInstaller
 {
-    private readonly GenWorkPlus<WorkViews> _workViews;
-    private readonly RemoteRouterLink _remoteRouterLink;
-    private readonly IAppStates _appStates;
-
-    public OqtEnvironmentInstaller(GenWorkPlus<WorkViews> workViews, RemoteRouterLink remoteRouterLink, IAppStates appStates) : base($"{OqtConstants.OqtLogPrefix}.Instll")
-    {
-        ConnectServices(
-            _remoteRouterLink = remoteRouterLink,
-            _workViews = workViews,
-            _appStates = appStates
-        );
-    }
-
-
     public string UpgradeMessages()
     {
         // for now, always assume installation worked
@@ -50,14 +41,14 @@ internal class OqtEnvironmentInstaller: ServiceBase, IEnvironmentInstaller, IPla
         if (forContentApp)
             try
             {
-                var contentAppId = _appStates.IdentityOfDefault(site.ZoneId);
+                var contentAppId = appStates.IdentityOfDefault(site.ZoneId);
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
-                var contentViews = _workViews.New(contentAppId).GetAll();
+                var contentViews = workViews.New(contentAppId).GetAll();
                 if (contentViews.Any()) return null;
             }
             catch { /* ignore */ }
 
-        var link = _remoteRouterLink.LinkToRemoteRouter(
+        var link = remoteRouterLink.LinkToRemoteRouter(
             RemoteDestinations.AutoConfigure,
             site,
             module.Id,

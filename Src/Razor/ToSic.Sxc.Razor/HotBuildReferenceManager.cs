@@ -10,20 +10,14 @@ using ToSic.Sxc.Razor.DbgWip;
 
 namespace ToSic.Sxc.Razor
 {
-    internal class HotBuildReferenceManager : ServiceBase
+    internal class HotBuildReferenceManager(
+        RazorReferenceManager referenceManager,
+        Lazy<DependenciesLoader> dependenciesLoader,
+        AssemblyResolver assemblyResolver)
+        : ServiceBase($"{SxcLogging.SxcLogName}.HbRefMgr",
+            connect: [referenceManager, dependenciesLoader, assemblyResolver])
     {
-        private readonly RazorReferenceManagerEnhanced _referenceManager;
-        private readonly Lazy<DependenciesLoader> _dependenciesLoader;
-        private readonly AssemblyResolver _assemblyResolver;
-
-        public HotBuildReferenceManager(RazorReferenceManager referenceManager, Lazy<DependenciesLoader> dependenciesLoader, AssemblyResolver assemblyResolver) : base($"{SxcLogging.SxcLogName}.HbRefMgr")
-        {
-            ConnectServices(
-                _referenceManager = (RazorReferenceManagerEnhanced)referenceManager,
-                _dependenciesLoader = dependenciesLoader,
-                _assemblyResolver = assemblyResolver
-            );
-        }
+        private readonly RazorReferenceManagerEnhanced _referenceManager = (RazorReferenceManagerEnhanced)referenceManager;
 
         internal IEnumerable<MetadataReference> GetMetadataReferences(string appCodeFullPath, HotBuildSpec spec)
         {
@@ -33,8 +27,8 @@ namespace ToSic.Sxc.Razor
                 if (spec != null)
                 {
                     // TODO: need to invalidate this cache (_referencedAssembliesCache, _assemblyResolver, ...) if there is change in Dependencies folder
-                    var (dependencies, _) = _dependenciesLoader.Value.TryGetOrFallback(spec);
-                    _assemblyResolver.AddAssemblies(dependencies);
+                    var (dependencies, _) = dependenciesLoader.Value.TryGetOrFallback(spec);
+                    assemblyResolver.AddAssemblies(dependencies);
 
                     if (dependencies != null) additionalReferencePaths.AddRange(dependencies.Select(dependency => dependency.Location));
                 }

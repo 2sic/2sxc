@@ -26,11 +26,11 @@ internal class OqtSitesDsProvider : SitesDataSourceProvider
     public OqtSitesDsProvider(MyServices services, IAliasRepository aliases, ISiteRepository sites, LazySvc<OqtCulture> oqtCulture)
         :base(services, "Oqt.Sites")
     {
-        ConnectServices(
+        ConnectSvcs([
             _aliases = aliases,
             _sites = sites,
             _oqtCulture = oqtCulture
-        );
+        ]);
     }
 
     #endregion

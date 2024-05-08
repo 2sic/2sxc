@@ -16,10 +16,10 @@ internal class AppCodeCompilerNetCore : AppCodeCompiler
 {
     public AppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, Generator<Compiler> compiler)
     {
-        ConnectServices(
+        ConnectSvcs([
             _serverPaths = serverPaths,
             _compiler = compiler
-        );
+        ]);
         TempAssemblyFolderPath = _serverPaths.Value.FullContentPath(@"App_Data\2sxc.bin");
         // Ensure "2sxc.bin" folder exists to preserve dlls
         Directory.CreateDirectory(TempAssemblyFolderPath);

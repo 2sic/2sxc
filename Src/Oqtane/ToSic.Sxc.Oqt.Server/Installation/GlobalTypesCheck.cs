@@ -11,18 +11,9 @@ namespace ToSic.Sxc.Oqt.Server.Installation;
 // because it has dependency on ToSic_Eav_* sql tables, before this tables are actually created by oqtane 2.3.x,
 // but after next restart of oqtane application all is ok, and all 2sxc global types are loaded as expected
 // this code will check if there is less than 50 global types and warn user to restart application to fix that
-internal class GlobalTypesCheck: ServiceBase
+internal class GlobalTypesCheck(LazySvc<IAppStates> appStates)
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.GlbTCh", connect: [appStates])
 {
-
-    public GlobalTypesCheck(LazySvc<IAppStates> appStates): base($"{OqtConstants.OqtLogPrefix}.GlbTCh")
-    {
-        ConnectServices(
-            _appStates = appStates
-        );
-    }
-
-    private readonly LazySvc<IAppStates> _appStates;
-
     private static bool? _globalTypesCheckedAndError;
 
     internal static OqtViewResultsDto InstallationErrorResult;
@@ -40,7 +31,7 @@ internal class GlobalTypesCheck: ServiceBase
         var errorMessage = string.Empty;
 
         // Check if there is less than 50 global types and warn user to restart application.
-        _globalTypesCheckedAndError = _appStates.Value.GetPresetReader().ContentTypes.Count() < 50;
+        _globalTypesCheckedAndError = appStates.Value.GetPresetReader().ContentTypes.Count() < 50;
         if (_globalTypesCheckedAndError.Value)
         {
             errorMessage = "<strong>Warning:</strong> The \"global types\" are not loaded. Please <a href=\"/admin/system\">Restart Application</a>.";
