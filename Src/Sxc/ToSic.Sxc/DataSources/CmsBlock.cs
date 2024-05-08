@@ -64,11 +64,11 @@ public sealed partial class CmsBlock : DataSourceBase
             GenWorkPlus<WorkBlocks> appBlocks
         ) : base(parentServices)
         {
-            ConnectServices(
+            ConnectServices([
                 ModuleLazy = moduleLazy,
                 DataSourceFactory = dataSourceFactory,
                 AppBlocks = appBlocks
-            );
+            ]);
         }
     }
 

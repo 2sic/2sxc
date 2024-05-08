@@ -28,13 +28,13 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.MySe
             Generator<BlockEditorForModule> blkEdtForMod,
             Generator<BlockEditorForEntity> blkEdtForEnt)
         {
-            ConnectServices(
+            ConnectServices([
                 WorkBlocksMod = workBlocksMod,
                 BlkEdtForMod = blkEdtForMod,
                 BlkEdtForEnt = blkEdtForEnt,
                 AppBlocks = appBlocks,
                 Publisher = publisher
-            );
+            ]);
         }
     }
 

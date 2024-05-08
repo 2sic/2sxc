@@ -38,12 +38,12 @@ public class AppFilesDataSourceProvider(AppFilesDataSourceProvider.MyServices se
             ISite site
         )
         {
-            ConnectServices(
+            ConnectServices([
                 AppStates = appStates,
                 AppPathMicroSvc = appPathMicroSvc,
                 FileManagerGenerator = fileManagerGenerator,
                 Site = site
-            );
+            ]);
         }
     }
 

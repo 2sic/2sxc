@@ -31,10 +31,10 @@ public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolba
             LazySvc<ToolbarButtonDecoratorHelper> toolbarButtonHelper
         )
         {
-            ConnectServices(
+            ConnectServices([
                 ToolbarButtonHelper = toolbarButtonHelper,
                 AppStatesLazy = appStatesLazy
-            );
+            ]);
         }
 
         internal readonly LazySvc<IAppStates> AppStatesLazy;

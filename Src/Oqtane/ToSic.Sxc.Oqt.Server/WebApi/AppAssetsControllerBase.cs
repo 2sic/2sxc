@@ -30,12 +30,15 @@ public abstract class AppAssetsControllerBase : OqtControllerBase
             LazySvc<AppFolder> appFolder,
             SiteState siteState,
             LazySvc<OqtAssetsFileHelper> fileHelper
-        ) => ConnectServices(
-            HostingEnvironment = hostingEnvironment,
-            AppFolder = appFolder,
-            SiteState = siteState,
-            FileHelper = fileHelper
-        );
+        )
+        {
+            ConnectServices([
+                HostingEnvironment = hostingEnvironment,
+                AppFolder = appFolder,
+                SiteState = siteState,
+                FileHelper = fileHelper
+            ]);
+        }
     }
 
     #endregion

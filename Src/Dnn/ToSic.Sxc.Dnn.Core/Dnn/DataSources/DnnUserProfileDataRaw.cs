@@ -98,11 +98,11 @@ public class DnnUserProfile : CustomDataSourceAdvanced
             LazySvc<DnnSecurity> dnnSecurity
         ) : base(parentServices)
         {
-            ConnectServices(
+            ConnectServices([
                 Site = site,
                 ZoneMapper = zoneMapper,
                 DnnSecurity = dnnSecurity
-            );
+            ]);
         }
     }
 

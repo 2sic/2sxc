@@ -25,11 +25,11 @@ public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>(
             LazySvc<AdamContext<TFolderId, TFileId>> adamState,
             ISxcContextResolver ctxResolver)
         {
-            ConnectServices(
+            ConnectServices([
                 AdamDtoMaker = adamDtoMaker,
                 AdamState = adamState,
                 CtxResolver = ctxResolver
-            );
+            ]);
         }
     }
 

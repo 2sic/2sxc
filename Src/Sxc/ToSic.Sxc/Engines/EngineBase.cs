@@ -31,13 +31,13 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
             EngineAppRequirements engineAppRequirements
         )
         {
-            ConnectServices(
+            ConnectServices([
                 ServerPaths = serverPaths,
                 BlockResourceExtractor = blockResourceExtractor,
                 EngineCheckTemplate = engineCheckTemplate,
                 EngineAppRequirements = engineAppRequirements,
                 EnginePolymorphism = enginePolymorphism
-            );
+            ]);
         }
 
         internal IServerPaths ServerPaths { get; }

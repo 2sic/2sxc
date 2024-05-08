@@ -38,14 +38,15 @@ public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>,
             LazySvc<GlobalPaths> globalPaths
         )
         {
-            ConnectServices(
-                SiteCtx = siteCtx, AppStates = appStates,
+            ConnectServices([
+                SiteCtx = siteCtx,
+                AppStates = appStates,
                 Features = features,
                 UiDataLazy = uiDataLazy,
                 AppPaths = appPaths,
                 LanguagesBackend = languagesBackend,
                 GlobalPaths = globalPaths
-            );
+            ]);
         }
     }
 

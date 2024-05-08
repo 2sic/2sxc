@@ -18,13 +18,13 @@ public class CodeDataServices: MyServicesBase
         LazySvc<ConvertForCodeService> forCode,
         LazySvc<IDataFactory> dataFactory)
     {
-        ConnectServices(
+        ConnectServices([
             _valueConverterLazy = valueConverterLazy,
             RenderServiceGenerator = renderServiceGenerator,
             _scrub = scrub,
             _forCode = forCode,
             _dataFactory = dataFactory
-        );
+        ]);
     }
     /// <summary>
     /// The ValueConverter is used to parse links in the format like "file:72"

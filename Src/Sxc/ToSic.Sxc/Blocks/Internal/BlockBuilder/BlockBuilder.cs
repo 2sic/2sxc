@@ -35,7 +35,7 @@ public partial class BlockBuilder(BlockBuilder.MyServices services)
             CodeInfosInScope codeInfos
         )
         {
-            ConnectServices(
+            ConnectServices([
                 EngineFactory = engineFactory,
                 EnvInstGen = envInstGen,
                 RenderHelpGen = renderHelpGen,
@@ -43,7 +43,7 @@ public partial class BlockBuilder(BlockBuilder.MyServices services)
                 LicenseService = licenseService,
                 ModuleService = moduleService,
                 CodeInfos = codeInfos
-            );
+            ]);
         }
 
         public CodeInfosInScope CodeInfos { get; }

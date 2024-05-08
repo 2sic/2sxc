@@ -25,10 +25,10 @@ public abstract class SitesDataSourceProvider(SitesDataSourceProvider.MyServices
             IAppStates appStates
         )
         {
-            ConnectServices(
+            ConnectServices([
                 ZoneMapperLazy = zoneMapperLazy,
                 AppStates = appStates
-            );
+            ]);
         }
 
     }
