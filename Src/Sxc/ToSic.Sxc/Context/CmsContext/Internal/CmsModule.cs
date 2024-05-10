@@ -1,11 +1,8 @@
 ﻿using ToSic.Eav.Metadata;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Context.Internal;
 
-[PrivateApi("WIP / hide implementation")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class CmsModule(CmsContext parent, IModule module, IBlock block)
     : CmsContextPartBase<IModule>(parent, module), ICmsModule
 {
