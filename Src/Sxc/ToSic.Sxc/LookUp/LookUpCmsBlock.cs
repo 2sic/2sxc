@@ -16,7 +16,7 @@ namespace ToSic.Sxc.LookUp;
 internal class LookUpCmsBlock(string name, IBlock block) : LookUpInDictionary(name, new Dictionary<string, string>
     {
         { QueryConstants.ParamsShowDraftsKey, block.Context.Permissions.IsContentAdmin.ToString() }
-    })
+    }, "LookUp in Cms Block - mainly to check if it should show drafts")
 {
     public IBlock Block = block;
 }

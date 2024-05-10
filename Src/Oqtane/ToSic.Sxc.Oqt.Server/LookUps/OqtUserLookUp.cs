@@ -5,7 +5,7 @@ using ToSic.Sxc.Oqt.Server.Context;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps;
 
-internal class OqtUserLookUp(IUser oqtUser) : LookUpBase(LookUpConstants.SourceUser)
+internal class OqtUserLookUp(IUser oqtUser) : LookUpBase(LookUpConstants.SourceUser, "LookUp in Oqtane User")
 {
     private readonly OqtUser _oqtUser = oqtUser as OqtUser;
 

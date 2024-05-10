@@ -33,6 +33,8 @@ internal partial class LookUpForTokenTemplate(
 {
     public string Name { get; } = name;
 
+    public string Description => "LookUp for creating token based templates. In addition to retrieving values, it also resolves special tokens like repeater:index, repeater:isfirst, etc.";
+
     /// <summary>
     /// Get Property out of NameValueCollection
     /// </summary>

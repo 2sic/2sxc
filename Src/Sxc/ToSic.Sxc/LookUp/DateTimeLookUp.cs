@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.LookUp;
 
-internal class DateTimeLookUp() : LookUpBase("DateTime")
+internal class DateTimeLookUp() : LookUpBase("DateTime", "LookUp in Date-Time")
 {
     public override string Get(string key, string format)
     {

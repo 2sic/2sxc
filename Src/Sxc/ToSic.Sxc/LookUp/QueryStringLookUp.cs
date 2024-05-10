@@ -11,7 +11,7 @@ namespace ToSic.Sxc.LookUp;
 /// It handles the normal `key=value` query string parameters and also the special `OriginalParameters` query string parameter.
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class QueryStringLookUp(LazySvc<IHttp> httpLazy) : LookUpBase(LookUpConstants.SourceQueryString)
+public class QueryStringLookUp(LazySvc<IHttp> httpLazy) : LookUpBase(LookUpConstants.SourceQueryString, "LookUp in QueryString")
 {
     private NameValueCollection _source;
     private NameValueCollection _originalParams;
