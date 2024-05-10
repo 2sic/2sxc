@@ -173,6 +173,7 @@
     <Compile Include="ServicesTests\SecureData\SecureDataTest.cs" />
     <Compile Include="Images\ImageflowRewriteTests.cs" />
     <Compile Include="ServicesTests\Templates\TemplatesDefaultTests.cs" />
+    <Compile Include="ServicesTests\Templates\TemplatesDefaultSourcesTests.cs" />
     <Compile Include="ServicesTests\Templates\TemplatesEmptySourcesTests.cs" />
     <Compile Include="ServicesTests\Templates\TemplatesTestsBase.cs" />
     <Compile Include="ServicesTests\Templates\TemplatesEmptyTests.cs" />

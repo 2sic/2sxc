@@ -10,7 +10,6 @@ namespace ToSic.Sxc.Tests.ServicesTests.Templates;
 public class TemplatesDefaultTests: TemplatesTestsBase
 {
     [TestMethod]
-    [ExpectedException(typeof(NullReferenceException), "should throw exception, because in test-mode there is no app etc.")]
     public void DefaultServiceIsReused()
     {
         var svc = GetTemplateServices();

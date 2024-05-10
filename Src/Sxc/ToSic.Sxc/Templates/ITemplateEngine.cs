@@ -2,8 +2,13 @@
 
 namespace ToSic.Sxc.Templates;
 
-[PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+/// <summary>
+/// Engine which parses a template containing placeholders and replaces them with values from sources.
+/// </summary>
+/// <remarks>
+/// New / beta in v17.08
+/// </remarks>
+[InternalApi_DoNotUse_MayChangeWithoutNotice("Still Beta in v17.08")]
 public interface ITemplateEngine
 {
     /// <summary>

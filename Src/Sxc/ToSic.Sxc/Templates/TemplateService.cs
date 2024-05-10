@@ -1,11 +1,12 @@
 ﻿using ToSic.Eav.LookUp;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Templates;
 
-internal class TemplateService(): ServiceForDynamicCode($"{SxcLogName}.LUpSvc"), ITemplateService
+internal class TemplateService(LazySvc<ILookUpEngineResolver> getEngineLazy) : ServiceForDynamicCode($"{SxcLogName}.LUpSvc"), ITemplateService
 {
     #region Get Engine Default / Empty
 
@@ -16,7 +17,10 @@ internal class TemplateService(): ServiceForDynamicCode($"{SxcLogName}.LUpSvc"),
         if (_default != null && noSources)
             return _default;
 
-        var original = ((Apps.App)_CodeApiSvc.App).ConfigurationProvider;
+        // in some cases, eg. when testing, the _CodeApiSvc is not available
+        // then it should still work, but of course not know about the app's sources
+        var original = ((Apps.App)_CodeApiSvc?.App)?.ConfigurationProvider
+            ?? getEngineLazy.Value.GetLookUpEngine(0);
         
         return noSources
             ? _default = new TemplateEngineTokens(original)

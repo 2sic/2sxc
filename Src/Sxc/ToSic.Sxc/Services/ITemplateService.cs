@@ -4,8 +4,13 @@ using ToSic.Sxc.Templates;
 
 namespace ToSic.Sxc.Services;
 
-[PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+/// <summary>
+/// Service to help parse token-based templates.
+/// </summary>
+/// <remarks>
+/// New in v17.08 - still beta
+/// </remarks>
+[InternalApi_DoNotUse_MayChangeWithoutNotice("Still Beta in v17.08")]
 public interface ITemplateService
 {
     /// <summary>
