@@ -33,7 +33,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
     /// <returns></returns>
     private object GetBestSettings(object settings)
     {
-        var l = Debug ? Log.Fn<object>() : null;
+        var l = Log.Fn<object>(enabled: Debug);
 
         return settings switch
         {
