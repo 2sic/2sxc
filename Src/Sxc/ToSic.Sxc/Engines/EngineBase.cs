@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Engines;
 /// <summary>
 /// The foundation for engines - must be inherited by other engines
 /// </summary>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
+[PrivateApi("used to be InternalApi_DoNotUse_MayChangeWithoutNotice, hidden in 17.08")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
 {

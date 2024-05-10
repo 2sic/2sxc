@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Blocks.Internal;
+﻿using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Engines;
 
@@ -9,7 +8,7 @@ namespace ToSic.Sxc.Engines;
 /// - a template
 /// and using all that to produce an html-string for the browser. 
 /// </summary>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
+[PrivateApi("used to be InternalApi_DoNotUse_MayChangeWithoutNotice, hidden in 17.08")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface IEngine: IHasLog
 {
