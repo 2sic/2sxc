@@ -3,15 +3,20 @@
 
 using System;
 using System.Threading;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.Extensions.Logging;
 using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Internal.SourceCode;
 
 namespace ToSic.Sxc.Razor.DbgWip;
 
+/// <summary>
+/// Singleton implementation of IViewCompilerProvider that provides a RuntimeViewCompiler.
+/// </summary>
 internal sealed class RuntimeViewCompilerProvider : IViewCompilerProvider
 {
     private readonly RazorProjectEngine _razorProjectEngine;
@@ -19,6 +24,8 @@ internal sealed class RuntimeViewCompilerProvider : IViewCompilerProvider
     private readonly CSharpCompiler _csharpCompiler;
     private readonly AssemblyResolver _assemblyResolver;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly SourceAnalyzer _sourceAnalyzer;
+    private readonly IWebHostEnvironment _env;
     private readonly RuntimeCompilationFileProvider _fileProvider;
     private readonly ILogger<RuntimeViewCompiler> _logger;
     private readonly Func<IViewCompiler> _createCompiler;
@@ -34,13 +41,17 @@ internal sealed class RuntimeViewCompilerProvider : IViewCompilerProvider
         CSharpCompiler csharpCompiler,
         ILoggerFactory loggerFactory,
         AssemblyResolver assemblyResolver,
-        IHttpContextAccessor httpContextAccessor)
+        IHttpContextAccessor httpContextAccessor,
+        SourceAnalyzer sourceAnalyzer,
+        IWebHostEnvironment env)
     {
         _applicationPartManager = applicationPartManager;
         _razorProjectEngine = razorProjectEngine;
         _csharpCompiler = csharpCompiler;
         _assemblyResolver = assemblyResolver;
         _httpContextAccessor = httpContextAccessor;
+        _sourceAnalyzer = sourceAnalyzer;
+        _env = env;
         _fileProvider = fileProvider;
 
         _logger = loggerFactory.CreateLogger<RuntimeViewCompiler>();
@@ -68,6 +79,8 @@ internal sealed class RuntimeViewCompilerProvider : IViewCompilerProvider
             feature.ViewDescriptors,
             _logger,
             _assemblyResolver,
-            _httpContextAccessor);
+            _httpContextAccessor,
+            _sourceAnalyzer,
+            _env);
     }
 }
