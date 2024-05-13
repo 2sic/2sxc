@@ -158,6 +158,8 @@ Correct: <code>var testItem = MyItem;</code><br>
         HelpForRazorCompileErrors.UnknownNamespace,
         HelpForRazorCompileErrors.ProbablySemicolonAfterInherits,
         HelpForRazorCompileErrors.ProbablyCommentAfterInherits,
+        HelpForRazorCompileErrors.ProbablyCommentAfterInherits,
+        HelpForRazorCompileErrors.RazorBaseClassDoesntInheritCorrectly,
 
         GenericExpressionMistakenForHtml,
         IncorrectDynamicUsage

@@ -43,7 +43,8 @@ should be <br>
     /// <summary>
     /// Help when the new Roslyn compiler runs into a conversion problem because of a comment at the end of the inherits-statement
     /// </summary>
-    internal static CodeHelp ProbablyCommentAfterInherits = new(name: "inherits-breaks-with-comment",
+    internal static CodeHelp 
+        ProbablyCommentAfterInherits = new(name: "inherits-breaks-with-comment",
         // full message is like "Error: { expected ..., Error: } expected ..., Error: Type or namespace definition, or end-of-file expected"
         // but only a part of it is in the initial exception, so we only check for the part that is there
         detect: @"Error: { expected",
@@ -59,11 +60,27 @@ should be <br>
 <code>@inherits Custom.Hybrid.RazorTyped</code>
 ");
 
+    internal static CodeHelp RazorBaseClassDoesntInheritCorrectly = new(name: "Razor Base Class doesn't inherit correctly",
+        detect: "no suitable method found to override",
+        uiMessage: @"
+Check for custom AppCode.Razor.SomeRazor that forgets to inherit 'Custom.Hybrid.RazorTyped' or similar.
+",
+        detailsHtml: @"
+Your razor template cshtml seems to inherit <code>AppCode.Razor.SomeRazor</code> from AppCode, while AppCode.Razor.SomeRazor doesn't inherit correctly. Check and fix your code.
+<br>
+<strong>Example</strong>: <br>
+<code>public abstract class SomeRazor</code> <br>
+should be <br>
+<code>public abstract class SomeRazor : Custom.Hybrid.RazorTyped</code> or similar.<br>
+");
+
+
     internal static List<CodeHelp> CompileUnknown =
     [
         UnknownNamespace,
         ProbablySemicolonAfterInherits,
-        ProbablyCommentAfterInherits
+        ProbablyCommentAfterInherits,
+        RazorBaseClassDoesntInheritCorrectly
     ];
 
 }
