@@ -55,46 +55,45 @@ public partial class View : PortalModuleBase, IActionable
             // add to insights-history for analytic
             _logInStore = GetService<ILogStore>().Add("module", Log);
 
-            Log.Do(timer: true, action: () =>
+            var l = Log.Fn(message: nameof(Page_Load), timer: true);
+            // todo: this should be dynamic at some future time, because normally once it's been checked, it wouldn't need checking again
+            var checkPortalIsReady = true;
+            bool? requiresPre1025Behavior = null; // null = auto-detect, true/false
+
+            // get the block early, to see any errors separately - before accessing cache (which also uses the block)
+            var block = TryCatchAndLogToDnn(() => Block);
+
+            #region Lightspeed
+
+            try
             {
-                // todo: this should be dynamic at some future time, because normally once it's been checked, it wouldn't need checking again
-                var checkPortalIsReady = true;
-                bool? requiresPre1025Behavior = null; // null = auto-detect, true/false
-
-                // get the block early, to see any errors separately - before accessing cache (which also uses the block)
-                var block = TryCatchAndLogToDnn(() => Block);
-
-                #region Lightspeed
-
-                try
+                if (OutputCache?.Existing != null)
                 {
-                    if (OutputCache?.Existing != null)
-                    {
-                        checkPortalIsReady = false;
-                        requiresPre1025Behavior = OutputCache.Existing.EnforcePre1025;
-                    }
+                    checkPortalIsReady = false;
+                    requiresPre1025Behavior = OutputCache.Existing.EnforcePre1025;
                 }
-                catch { /* ignore */ }
+            }
+            catch { /* ignore */ }
 
-                #endregion
+            #endregion
 
-                // Always do this, part of the guarantee that everything will work
-                // new mechanism in 10.25
-                // this must happen in Page-Load, so we know what supporting scripts to add
-                // at this stage of the lifecycle
-                // We moved this to Page_Load because RequestAjaxAntiForgerySupport didn't work in later events
-                // ensure everything is ready and that we know if we should activate the client-dependency
-                TryCatchAndLogToDnn(() =>
-                {
-                    if (checkPortalIsReady)
-                        if (!DnnReadyCheckTurbo.QuickCheckSiteAndAppFoldersAreReady(this, Log))
-                            GetService<DnnReadyCheckTurbo>().EnsureSiteAndAppFoldersAreReady(this, block);
-                    _dnnClientResources = GetService<DnnClientResources>().Init(Page, null, requiresPre1025Behavior == false ? null : block?.BlockBuilder);
-                    _enforcePre1025JQueryLoading = requiresPre1025Behavior ?? _dnnClientResources.NeedsPre1025Behavior();
-                    if (_enforcePre1025JQueryLoading) _dnnClientResources.EnforcePre1025Behavior();
-                    return true;
-                });
+            // Always do this, part of the guarantee that everything will work
+            // new mechanism in 10.25
+            // this must happen in Page-Load, so we know what supporting scripts to add
+            // at this stage of the lifecycle
+            // We moved this to Page_Load because RequestAjaxAntiForgerySupport didn't work in later events
+            // ensure everything is ready and that we know if we should activate the client-dependency
+            TryCatchAndLogToDnn(() =>
+            {
+                if (checkPortalIsReady)
+                    if (!DnnReadyCheckTurbo.QuickCheckSiteAndAppFoldersAreReady(this, Log))
+                        GetService<DnnReadyCheckTurbo>().EnsureSiteAndAppFoldersAreReady(this, block);
+                _dnnClientResources = GetService<DnnClientResources>().Init(Page, null, requiresPre1025Behavior == false ? null : block?.BlockBuilder);
+                _enforcePre1025JQueryLoading = requiresPre1025Behavior ?? _dnnClientResources.NeedsPre1025Behavior();
+                if (_enforcePre1025JQueryLoading) _dnnClientResources.EnforcePre1025Behavior();
+                return true;
             });
+            l.Done();
         });
     }
 
@@ -161,7 +160,9 @@ public partial class View : PortalModuleBase, IActionable
                         phOutput.Controls.Add(new LiteralControl(data.Html));
 
                     // #Lightspeed
-                    Log.Do(message: "Lightspeed", timer: true, action: () => OutputCache?.Save(data, _enforcePre1025JQueryLoading));
+                    var lLightSpeed = Log.Fn(message: "Lightspeed", timer: true);
+                    OutputCache?.Save(data, _enforcePre1025JQueryLoading);
+                    lLightSpeed.Done();
 
                     return true; // dummy result
                 });
