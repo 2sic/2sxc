@@ -17,5 +17,15 @@ public interface ITemplateEngine
     /// <returns></returns>
     public IEnumerable<ILookUp> GetSources(NoParamOrder protector = default, int depth = 0);
 
+    /// <summary>
+    /// Basic Parse functionality.
+    /// This is the variant without parameters, which should be used in basic cases and also
+    /// for passing into function calls, eg. into CMS HTML Tweaks.
+    /// </summary>
+    /// <param name="template"></param>
+    /// <returns></returns>
+    string Parse(string template);
+
+    // ReSharper disable once MethodOverloadWithOptionalParameter
     string Parse(string template, NoParamOrder protector = default, IEnumerable<ILookUp> sources = default);
 }

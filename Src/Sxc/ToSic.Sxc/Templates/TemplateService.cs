@@ -59,7 +59,8 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getEngineLazy) : S
     private ITemplateEngine Engine => _engine ??= Default();
     private ITemplateEngine _engine;
 
-    public string Parse(string template, NoParamOrder protector = default, IEnumerable<ILookUp> sources = default)
+
+    string ITemplateService.Parse(string template, NoParamOrder protector = default, IEnumerable<ILookUp> sources = default)
         => Engine.Parse(template, protector, sources: sources);
 
     #endregion

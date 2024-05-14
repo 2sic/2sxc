@@ -31,6 +31,9 @@ internal class TemplateEngineTokens(ILookUpEngine original): ITemplateEngine, IW
         return sources.ToList();
     }
 
+    string ITemplateEngine.Parse(string template)
+        => ((ITemplateEngine)this).Parse(template, protector: default, sources: null);
+
     string ITemplateEngine.Parse(string template, NoParamOrder protector, IEnumerable<ILookUp> sources)
     {
         var dic = new Dictionary<string, string>
