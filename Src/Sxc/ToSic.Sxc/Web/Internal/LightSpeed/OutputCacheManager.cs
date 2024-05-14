@@ -29,14 +29,12 @@ internal class OutputCacheManager(MemoryCacheService memoryCacheService, Lazy<IE
             if (duration == 0) duration = 1;
             var expiration = new TimeSpan(0, 0, duration);
 
-            l.Do(message: $"cache set cacheKey:{cacheKey}", timer: true,
-                action: () => memoryCacheService.Set(cacheKey, data,
-                                    slidingExpiration: expiration,
-                                    folderPaths: appPaths?.ToDictionary(p => p, p => true),
-                                    appStates: appStates,
-                                    featuresService: featuresDoNotConnect.Value,
-                                    updateCallback: updateCallback)
-            );
+            memoryCacheService.Set(cacheKey, data,
+                slidingExpiration: expiration,
+                folderPaths: appPaths?.ToDictionary(p => p, p => true),
+                appStates: appStates,
+                featuresService: featuresDoNotConnect.Value,
+                updateCallback: updateCallback);
 
             return l.ReturnAsOk(cacheKey);
         }

@@ -155,8 +155,9 @@ internal class SaveDataValidator(EditDto package, ILog parentLog = null) : Valid
                 Add($"entity GUID mismatch on {count} - {newEntity.EntityGuid}/{originalEntity.EntityGuid}");
         });
 
-    private void CompareAttributes(int count, IEntity original, IEntity ent) => Log.Do(() =>
+    private void CompareAttributes(int count, IEntity original, IEntity ent)
     {
+        var l = Log.Fn();
         if (original.Attributes.Count != ent.Attributes.Count)
             Add($"entity {count} has different amount " +
                 $"of attributes {ent.Attributes.Count} " +
@@ -171,5 +172,7 @@ internal class SaveDataValidator(EditDto package, ILog parentLog = null) : Valid
                     Add($"found different type on attribute {origAttr.Key} " +
                         $"- '{origAttr.Value.Type}'/'{newAttr.Value.Type}'");
             }
-    });
+
+        l.Done();
+    }
 }

@@ -14,11 +14,13 @@ namespace ToSic.Sxc.Dnn.Razor;
 partial class DnnRazorEngine
 {
     /// <inheritdoc />
-    public void Init(IBlock block, Purpose purpose) => Log.Do($"{nameof(purpose)}:{purpose}", () =>
+    public void Init(IBlock block, Purpose purpose)
     {
+        var l = Log.Fn($"{nameof(purpose)}:{purpose}");
         Purpose = purpose;
         Init(block);
-    });
+        l.Done();
+    }
 
     public override RenderEngineResult Render(RenderSpecs specs)
     {

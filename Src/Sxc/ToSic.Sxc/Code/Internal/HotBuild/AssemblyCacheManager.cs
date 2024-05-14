@@ -49,8 +49,8 @@ public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : Servi
         // Try to add to cache
         try
         {
-            l.Do(message: $"cache set cacheKey:{cacheKey}", timer: true,
-                action: () => memoryCacheService.Set(cacheKey, data, slidingExpiration: expiration, filePaths: filePaths, folderPaths: folderPaths, cacheKeys: keys));
+            l.A($"cache set cacheKey:{cacheKey}");
+            memoryCacheService.Set(cacheKey, data, slidingExpiration: expiration, filePaths: filePaths, folderPaths: folderPaths, cacheKeys: keys);
 
             return l.ReturnAsOk(cacheKey);
         }

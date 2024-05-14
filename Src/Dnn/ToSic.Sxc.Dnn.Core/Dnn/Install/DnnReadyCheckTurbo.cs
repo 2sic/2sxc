@@ -65,8 +65,9 @@ internal class DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitial
     /// <summary>
     /// Returns true if the Portal HomeDirectory Contains the 2sxc Folder and this folder contains the web.config and a Content folder
     /// </summary>
-    private void EnsureSiteIsConfiguredAndTemplateFolderExists(PortalModuleBase module, IBlock block) => Log.Do(() =>
+    private void EnsureSiteIsConfiguredAndTemplateFolderExists(PortalModuleBase module, IBlock block)
     {
+        var l = Log.Fn($"module {module.ModuleId} on page {module.TabId}");
         var sxcFolder = new DirectoryInfo(block.Context.Site.AppsRootPhysicalFull);
         var contentFolder = new DirectoryInfo(Path.Combine(sxcFolder.FullName, Eav.Constants.ContentAppFolder));
         var webConfigTemplate = new FileInfo(Path.Combine(sxcFolder.FullName, SpecialFiles.WebConfigFileName));
@@ -77,8 +78,8 @@ internal class DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitial
             tm.EnsureTemplateFolderExists(block.Context.AppState.Folder, false);
         }
 
-        return $"Completed init for module {module.ModuleId} showing {block.AppId}";
-    });
+        l.Done($"Completed init App {block.AppId}");
+    }
 
     internal static ConcurrentDictionary<int, bool> CachedModuleResults = new();
 }

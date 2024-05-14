@@ -55,12 +55,10 @@ internal class LightSpeed(
         if (data.DependentApps.SafeNone()) return l.ReturnFalse("app not initialized");
 
         // get dependent appStates
-        List<IAppStateCache> dependentAppsStates = null;
-        l.Do(message: "dependentAppsStates", timer: true,
-            action: () => dependentAppsStates = data.DependentApps
-                .Select(da => appStatesLazy.Value.GetCacheState(da.AppId))
-                .ToList()
-        );
+        var dependentAppsStates = data.DependentApps
+            .Select(da => appStatesLazy.Value.GetCacheState(da.AppId))
+            .ToList();
+        l.A($"{nameof(dependentAppsStates)} count {dependentAppsStates.Count}");
 
         // when dependent apps have disabled caching, parent app should not cache also 
         if (!IsEnabledOnDependentApps(dependentAppsStates))
@@ -72,8 +70,10 @@ internal class LightSpeed(
             return l.ReturnFalse("no app");
 
         if (appState.ZoneId >= 0)
-            l.Do(message: "dependentAppsStates add", timer: true,
-                action: () => dependentAppsStates.Add(appStatesLazy.Value.GetPrimaryReader(appState.ZoneId, Log).StateCache));
+        {
+            l.A("dependentAppsStates add");
+            dependentAppsStates.Add(appStatesLazy.Value.GetPrimaryReader(appState.ZoneId, Log).StateCache);
+        }
 
         l.A($"Found {data.DependentApps.Count} apps: " + string.Join(",", data.DependentApps.Select(da => da.AppId)));
 
@@ -84,12 +84,11 @@ internal class LightSpeed(
         // only add if we really have a duration; -1 is disabled, 0 is not set...
         if (duration <= 0)
             return l.ReturnFalse($"not added as duration is {duration}");
-            
-        IList<string> appPathsToMonitor = null;
-        l.Do(message: "appPathsToMonitor", timer: true, action: () => 
-            appPathsToMonitor = features.IsEnabled(LightSpeedOutputCacheAppFileChanges.NameId)
-                ? _appPaths.Get(() => AppPaths(dependentAppsStates))
-                : null);
+
+        var appPathsToMonitor = features.IsEnabled(LightSpeedOutputCacheAppFileChanges.NameId)
+            ? _appPaths.Get(() => AppPaths(dependentAppsStates))
+            : null;
+        l.A($"{nameof(appPathsToMonitor)} done");
 
         // copy the value into a separate variable so the cache doesn't capture the AppState separately
         var appId = appState.AppId;
@@ -111,9 +110,7 @@ internal class LightSpeed(
         l.A($"LightSpeed Cache Key: {cacheKey}");
 
         if (cacheKey != "error")
-            l.Do(message: "LightSpeedStats", timer: true,
-                action: () => LightSpeedStats.AddStatic(appId, size)
-            );
+            LightSpeedStats.AddStatic(appId, size);
 
         return l.ReturnTrue($"added for {duration}s");
     }

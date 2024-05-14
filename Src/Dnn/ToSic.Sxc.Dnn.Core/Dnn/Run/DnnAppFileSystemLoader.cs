@@ -49,13 +49,17 @@ internal class DnnAppFileSystemLoader : AppFileSystemLoader
     /// Special workaround for DNN because the site information is often incomplete (buggy)
     /// </summary>
     /// <returns></returns>
-    private void EnsureDnnSiteIsLoadedWhenDiFails() => Log.Do(() =>
+    private void EnsureDnnSiteIsLoadedWhenDiFails()
     {
-        if (Site.Id != Eav.Constants.NullId/* && Site.Id != 0*/) // 2021-12-09 2dm disabled zero check, because portal 0 is actually very common
-            return $"All ok since siteId isn't {Eav.Constants.NullId}";
+        var l = Log.Fn();
+        if (Site.Id != Eav.Constants.NullId)
+        {
+            l.Done($"All ok since siteId isn't {Eav.Constants.NullId}");
+            return;
+        }
         Log.A($"SiteId = {Site.Id} - not found. Must be in search mode or something else DI-style failed, will try to find correct PortalSettings");
         Site = ZoneMapper.SiteOfApp(AppIdentity.AppId);
-        return $"SiteId: {Site.Id}";
-    });
+        l.Done($"SiteId: {Site.Id}");
+    }
 
 }

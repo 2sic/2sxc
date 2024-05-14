@@ -96,88 +96,88 @@ internal class DnnImportExportEnvironment : SxcImportExportEnvironmentBase
 
     #region stuff we need for Import
 
-    public override void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths,
-        Dictionary<int, int> fileIdMap)
-        => Log.Do($"files: {filesAndPaths.Count}, map size: {fileIdMap.Count}", l =>
+    public override void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap)
+    {
+        var l = Log.Fn($"files: {filesAndPaths.Count}, map size: {fileIdMap.Count}");
+        var siteId = Site.Id;
+        var fileManager = FileManager.Instance;
+        var folderManager = FolderManager.Instance;
+
+        foreach (var file in filesAndPaths)
         {
-            var siteId = Site.Id;
-            var fileManager = FileManager.Instance;
-            var folderManager = FolderManager.Instance;
+            var fileId = file.Key;
+            var relativePath = file.Value;
 
-            foreach (var file in filesAndPaths)
+            var fileName = Path.GetFileName(relativePath);
+            var directory = Path.GetDirectoryName(relativePath)?.Replace('\\', '/');
+            if (directory == null)
             {
-                var fileId = file.Key;
-                var relativePath = file.Value;
+                l.A($"Warning: File '{relativePath}', folder doesn't exist on drive");
+                continue;
+            }
 
-                var fileName = Path.GetFileName(relativePath);
-                var directory = Path.GetDirectoryName(relativePath)?.Replace('\\', '/');
+            if (!folderManager.FolderExists(siteId, directory))
+            {
+                l.A($"Warning: File '{relativePath}', folder doesn't exist in DNN DB");
+                continue;
+            }
+
+            var folderInfo = folderManager.GetFolder(siteId, directory);
+
+            if (!fileManager.FileExists(folderInfo, fileName))
+            {
+                l.A($"Warning: File '{relativePath}', file doesn't exist in DNN DB");
+                continue;
+            }
+
+            var fileInfo = fileManager.GetFile(folderInfo, fileName);
+            fileIdMap.Add(fileId, fileInfo.FileId);
+            l.A($"Map: {fileId} will be {fileInfo.FileId} ({relativePath})");
+        }
+
+        l.Done();
+    }
+
+    public override void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog) 
+    {
+        var l = Log.Fn($"folders and paths: {foldersAndPath.Count}");
+        var siteId = Site.Id;
+        var folderManager = FolderManager.Instance;
+
+        foreach (var folder in foldersAndPath)
+            try
+            {
+                if (string.IsNullOrEmpty(folder.Value))
+                {
+                    l.A($"{folder.Key} / {folder.Value} is empty");
+                    continue;
+                }
+
+                var directory = Path.GetDirectoryName(folder.Value)?.Replace('\\', '/');
                 if (directory == null)
                 {
-                    l.A($"Warning: File '{relativePath}', folder doesn't exist on drive");
+                    l.A($"Parent folder of folder {folder.Value} doesn't exist");
                     continue;
                 }
 
-                if (!folderManager.FolderExists(siteId, directory))
-                {
-                    l.A($"Warning: File '{relativePath}', folder doesn't exist in DNN DB");
-                    continue;
-                }
+                // if not exist, create - important because we need for metadata assignment
+                var exists = folderManager.FolderExists(siteId, directory);
+                var folderInfo = !exists
+                    ? folderManager.AddFolder(siteId, directory)
+                    : folderManager.GetFolder(siteId, directory);
 
-                var folderInfo = folderManager.GetFolder(siteId, directory);
-
-                if (!fileManager.FileExists(folderInfo, fileName))
-                {
-                    l.A($"Warning: File '{relativePath}', file doesn't exist in DNN DB");
-                    continue;
-                }
-
-                var fileInfo = fileManager.GetFile(folderInfo, fileName);
-                fileIdMap.Add(fileId, fileInfo.FileId);
-                l.A($"Map: {fileId} will be {fileInfo.FileId} ({relativePath})");
+                folderIdCorrectionList.Add(folder.Key, folderInfo.FolderID);
+                l.A($"Folder original #{folder.Key}/{folder.Value} - exists:{exists} placed in folder #{folderInfo.FolderID}");
             }
-        });
+            catch (Exception)
+            {
+                var msg = $"Had problem with folder '{folder.Key}' path '{folder.Value}' - you'll have to figure out yourself if this is a problem";
+                l.A(msg);
+                importLog.Add(new(msg, Message.MessageTypes.Warning));
+            }
 
-    public override void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath,
-        Dictionary<int, int> folderIdCorrectionList, List<Message> importLog)
-        => Log.Do($"folders and paths: {foldersAndPath.Count}", l =>
-        {
-            var siteId = Site.Id;
-            var folderManager = FolderManager.Instance;
-
-            foreach (var folder in foldersAndPath)
-                try
-                {
-                    if (string.IsNullOrEmpty(folder.Value))
-                    {
-                        l.A($"{folder.Key} / {folder.Value} is empty");
-                        continue;
-                    }
-
-                    var directory = Path.GetDirectoryName(folder.Value)?.Replace('\\', '/');
-                    if (directory == null)
-                    {
-                        l.A($"Parent folder of folder {folder.Value} doesn't exist");
-                        continue;
-                    }
-
-                    // if not exist, create - important because we need for metadata assignment
-                    var exists = folderManager.FolderExists(siteId, directory);
-                    var folderInfo = !exists
-                        ? folderManager.AddFolder(siteId, directory)
-                        : folderManager.GetFolder(siteId, directory);
-
-                    folderIdCorrectionList.Add(folder.Key, folderInfo.FolderID);
-                    l.A($"Folder original #{folder.Key}/{folder.Value} - exists:{exists} placed in folder #{folderInfo.FolderID}");
-                }
-                catch (Exception)
-                {
-                    var msg = $"Had problem with folder '{folder.Key}' path '{folder.Value}' - you'll have to figure out yourself if this is a problem";
-                    l.A(msg);
-                    importLog.Add(new(msg, Message.MessageTypes.Warning));
-                }
-
-            return $"done - final count {folderIdCorrectionList.Count}";
-        });
+        l.Done($"done - final count {folderIdCorrectionList.Count}");
+    }
 
     #endregion
 

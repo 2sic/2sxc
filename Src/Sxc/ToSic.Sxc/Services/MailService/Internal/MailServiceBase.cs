@@ -29,8 +29,9 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy)
     protected abstract SmtpClient SmtpClient();
 
     /// <inheritdoc />
-    public void Send(MailMessage message) => Log.Do(() =>
+    public void Send(MailMessage message)
     {
+        var l = Log.Fn();
         try
         {
             using var client = SmtpClient();
@@ -38,12 +39,14 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy)
         }
         catch (Exception ex)
         {
-            Log.Ex(ex);
+            l.Ex(ex);
             if (userLazy.Value.IsSystemAdmin)
                 throw;
             throw new("SMTP configuration problem.");
         }
-    });
+
+        l.Done();
+    }
 
     /// <inheritdoc />
     public MailMessage Create(
@@ -103,8 +106,9 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy)
         string body = null,
         bool? isHtml = null,
         Encoding encoding = null,
-        object attachments = null) => Log.Do(() =>
+        object attachments = null)
     {
+        var l = Log.Fn();
         // Note: don't log all the parameters here, because we'll do it again on the Create-call
         var mailMessage = Create(
             from: from,
@@ -117,7 +121,8 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy)
             isHtml: isHtml, encoding: encoding, attachments: attachments);
 
         Send(mailMessage);
-    });
+        l.Done();
+    }
 
     // 2024-01-10 2dm internalized - doesn't seem in use, and also not clear why we would have this
     // was probably an experiment from STV during dev, but we shouldn't keep it in the interface
