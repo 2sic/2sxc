@@ -76,11 +76,13 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
         }
     });
 
-    public override void Delete(IFile file) => Log.Do(() =>
+    public override void Delete(IFile file)
     {
+        var l = Log.Fn();
         var oqtFile = OqtFileRepository.GetFile(file.AsOqt().SysId);
         OqtFileRepository.DeleteFile(oqtFile.FileId);
-    });
+        l.Done();
+    }
 
     public override File<int, int> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
     {

@@ -147,9 +147,9 @@ internal class OqtImportExportEnvironment(
 
     });
 
-    public override void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog
-    ) => Log.Do($"folders and paths: {foldersAndPath.Count}", action: l =>
+    public override void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog) 
     {
+        var l = Log.Fn($"folders and paths: {foldersAndPath.Count}");
         foreach (var folder in foldersAndPath)
             try
             {
@@ -182,8 +182,8 @@ internal class OqtImportExportEnvironment(
                 importLog.Add(new(msg, Message.MessageTypes.Warning));
             }
 
-        return $"done - final count {folderIdCorrectionList.Count}";
-    });
+        l.Done($"done - final count {folderIdCorrectionList.Count}");
+    }
 
     private File Add(Folder parent, IO.Stream body, string fileName, OqtSite oqtSite)
     {

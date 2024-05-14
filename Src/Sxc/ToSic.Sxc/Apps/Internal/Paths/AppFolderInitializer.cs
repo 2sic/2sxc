@@ -16,8 +16,9 @@ public class AppFolderInitializer(IServerPaths serverPaths, IGlobalConfiguration
     /// Creates a directory and copies the needed web.config for razor files
     /// if the directory does not exist.
     /// </summary>
-    public void EnsureTemplateFolderExists(string appStateFolder, bool isShared) => Log.Do($"{isShared}", () =>
+    public void EnsureTemplateFolderExists(string appStateFolder, bool isShared)
     {
+        var l = Log.Fn($"{isShared}");
         var portalPath = isShared
             ? serverPaths.FullAppPath(globalConfiguration.SharedAppsFolder)
             : site.AppsRootPhysicalFull ?? "";
@@ -37,7 +38,10 @@ public class AppFolderInitializer(IServerPaths serverPaths, IGlobalConfiguration
 
         // Create a Content folder (or App Folder)
         if (string.IsNullOrEmpty(appStateFolder))
-            return "Folder name not given, won't create";
+        {
+            l.Done("Folder name not given, won't create");
+            return;
+        }
 
         var contentFolder = new DirectoryInfo(Path.Combine(sxcFolder.FullName, appStateFolder));
         contentFolder.Create();
@@ -51,7 +55,7 @@ public class AppFolderInitializer(IServerPaths serverPaths, IGlobalConfiguration
         if (File.Exists(appJsonTemplateFilePath) && !appDataProtectedFolder.GetFiles(Eav.Constants.AppJson).Any())
             File.Copy(appJsonTemplateFilePath,
                 Path.Combine(appDataProtectedFolder.FullName, Eav.Constants.AppJson));
-        return "ok";
-    });
+        l.Done("ok");
+    }
 
 }
