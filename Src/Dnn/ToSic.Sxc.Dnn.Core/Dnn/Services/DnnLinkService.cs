@@ -55,9 +55,8 @@ internal class DnnLinkService : LinkServiceBase
 
     private string Api(NoParamOrder noParamOrder = default, string path = null)
     {
-        //Eav.Parameters.Protect(noParamOrder, $"{nameof(path)}");
-
-        if (string.IsNullOrEmpty(path)) return string.Empty;
+        if (string.IsNullOrEmpty(path))
+            return string.Empty;
 
         path = path.ForwardSlash();
         path = path.TrimPrefixSlash();

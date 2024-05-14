@@ -18,7 +18,6 @@ partial class ToolbarBuilder
         string demoMessage = default
     )
     {
-        //Eav.Parameters.Protect(noParamOrder, $"{nameof(mode)}, {nameof(target)}, {nameof(condition)}, {nameof(conditionFunc)}");
         // Create clone before starting to log so it's in there too
         var clone = target == null 
             ? new(this)
@@ -41,11 +40,8 @@ partial class ToolbarBuilder
     public IToolbarBuilder More(
         NoParamOrder noParamOrder = default,
         object ui = default
-    )
-    {
-        //Eav.Parameters.Protect(noParamOrder, nameof(ui));
-        return this.AddInternal(new ToolbarRuleCustom("more", ui: PrepareUi(ui)));
-    }
+    ) =>
+        this.AddInternal(new ToolbarRuleCustom("more", ui: PrepareUi(ui)));
 
     public IToolbarBuilder For(object target) => With(target: target);
 

@@ -23,7 +23,6 @@ partial class EditService
     {
         Log.A("ctx attribs - enabled:{Enabled}");
         if (!Enabled) return null;
-        //Parameters.Protect(noParamOrder, $"{nameof(field)},{nameof(contentType)},{nameof(newGuid)}");
 
         if (field == null) throw new("need parameter 'field'");
 
@@ -38,7 +37,7 @@ partial class EditService
             type = contentType ?? AppConstants.ContentGroupRefTypeName,
         }, JsonOptions.SafeJsonForHtmlAttributes);
 
-        return Build.Attribute(innerContentAttribute, serialized); // new HybridHtmlString(innerContentAttribute + "='" + serialized + "'");
+        return Build.Attribute(innerContentAttribute, serialized);
     }
 
     // 2024-01-10 2dm disabled #WrapInContext - was for internal only, seems not to be used? Was created 2018? https://github.com/2sic/2sxc/issues/1479
@@ -53,8 +52,6 @@ partial class EditService
     //    int contentBlockId = 0
     //)
     //{
-    //    //Parameters.Protect(noParamOrder, $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
-
     //    var renderingHelper = _renderHelper.Value;
 
     //    return new RawHtmlString(

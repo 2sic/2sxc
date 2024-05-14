@@ -65,9 +65,6 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy)
                         $"{nameof(attachments)}: {attachments}");
 
         // prevent incorrect use without named parameters
-        //Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Create)}", 
-        //    $"{nameof(from)}, {nameof(to)}, {nameof(cc)}, {nameof(bcc)}, {nameof(replyTo)}, " +
-        //    $"{nameof(subject)}, {nameof(body)}, {nameof(isHtml)}, {nameof(encoding)}, {nameof(attachments)}");
 
         var mailMessage = new MailMessage();
             
@@ -109,11 +106,6 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy)
         object attachments = null) => Log.Do(() =>
     {
         // Note: don't log all the parameters here, because we'll do it again on the Create-call
-        // prevent incorrect use without named parameters
-        //Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Send)}",
-        //    $"{nameof(from)}, {nameof(to)}, {nameof(cc)}, {nameof(bcc)}, {nameof(replyTo)}, " +
-        //    $"{nameof(subject)}, {nameof(body)}, {nameof(isHtml)}, {nameof(encoding)}, {nameof(attachments)}");
-
         var mailMessage = Create(
             from: from,
             to: to,

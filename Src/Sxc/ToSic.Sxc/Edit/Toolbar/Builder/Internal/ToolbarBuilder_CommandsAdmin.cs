@@ -16,7 +16,6 @@ partial class ToolbarBuilder
         [CallerMemberName] string methodName = default
     )
     {
-        // Eav.Parameters.Protect(noParamOrder, "See docs", methodName);
         var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, ui: ui, parameters: parameters, methodName: methodName);
         var uiTweaked = PrepareUi(ui, tweaks: (tweaks as ITweakButtonInternal)?.UiMerge);
         var paramsTweaked = Utils.PrepareParams(parameters, tweaks);
