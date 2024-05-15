@@ -745,7 +745,7 @@
             version="01.10.03.01" - ToSic.Imageflow.Dnn v01.02.01 is OK
             version="01.10.04.01" - ToSic.Imageflow.Dnn v01.02.02 is OK
     -->
-    <package name="ToSic.Imageflow.Dnn" type="Library" version="01.10.05.01">
+    <package name="ToSic.Imageflow.Dnn" type="Library" version="01.11.00.01">
       <friendlyName>Imageflow</friendlyName>
 
       <description>
