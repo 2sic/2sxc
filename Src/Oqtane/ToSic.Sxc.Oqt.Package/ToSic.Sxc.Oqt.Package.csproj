@@ -23,7 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ToSic.Imageflow.Oqtane" Version="1.2.0" />
+    <PackageReference Include="ToSic.Imageflow.Oqtane" Version="1.11.0" />
   </ItemGroup>
 
   <ItemGroup>
