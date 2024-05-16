@@ -72,7 +72,9 @@ internal class LightSpeed(
         if (appState.ZoneId >= 0)
         {
             l.A("dependentAppsStates add");
-            dependentAppsStates.Add(appStatesLazy.Value.GetPrimaryReader(appState.ZoneId, Log).StateCache);
+            dependentAppsStates.Add(appStatesLazy.Value.Get(appStatesLazy.Value.IdentityOfPrimary(appState.ZoneId)));
+            // 2024-05-16 2dm changing to not use a Reader, as it's not needed and may cause #IServiceProviderDisposedException
+            //dependentAppsStates.Add(appStatesLazy.Value.GetPrimaryReader(appState.ZoneId, Log).StateCache);
         }
 
         l.A($"Found {data.DependentApps.Count} apps: " + string.Join(",", data.DependentApps.Select(da => da.AppId)));

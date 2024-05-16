@@ -31,7 +31,11 @@ public class TypeControllerReal(
 
 
     public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
-        => ctApiLazy.Value.List(appId, scope, withStatistics);
+    {
+        var l = Log.Fn<IEnumerable<ContentTypeDto>>($"{appId}, scope:{scope}, stats:{withStatistics}");
+        var list = ctApiLazy.Value.List(appId, scope, withStatistics);
+        return l.Return(list);
+    }
 
     /// <summary>
     /// Used to be GET ContentTypes/Scopes
