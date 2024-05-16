@@ -7,7 +7,6 @@ using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Languages;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Web.Internal.JsContext;
 using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Backend.Context;
@@ -144,17 +143,17 @@ public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>,
     protected virtual ContextEnableDto GetEnable(CtxEnable ctx)
     {
         var isRealApp = AppStateOrNull != null && !AppStateOrNull.IsContentApp();// App.NameId != Eav.Constants.DefaultAppGuid; // #SiteApp v13 - Site-Apps should also have permissions
-        var tmp = new JsContextUser(Services.SiteCtx.User);
+        var user = Services.SiteCtx.User;
         var dto = new ContextEnableDto
         {
-            DebugMode = tmp.CanDevelop ||
+            DebugMode = user.IsSystemAdmin ||
                         Services.Features.Value.IsEnabled(EditUiAllowDebugModeForEditors)
         };
         if (ctx.HasFlag(CtxEnable.AppPermissions)) dto.AppPermissions = isRealApp;
-        if (ctx.HasFlag(CtxEnable.CodeEditor)) dto.CodeEditor = tmp.CanDevelop;
-        if (ctx.HasFlag(CtxEnable.Query)) dto.Query = isRealApp && tmp.CanDevelop;
-        if (ctx.HasFlag(CtxEnable.FormulaSave)) dto.FormulaSave = tmp.CanDevelop;
-        if (ctx.HasFlag(CtxEnable.OverrideEditRestrictions)) dto.OverrideEditRestrictions = tmp.CanDevelop;
+        if (ctx.HasFlag(CtxEnable.CodeEditor)) dto.CodeEditor = user.IsSystemAdmin;
+        if (ctx.HasFlag(CtxEnable.Query)) dto.Query = isRealApp && user.IsSystemAdmin;
+        if (ctx.HasFlag(CtxEnable.FormulaSave)) dto.FormulaSave = user.IsSystemAdmin;
+        if (ctx.HasFlag(CtxEnable.OverrideEditRestrictions)) dto.OverrideEditRestrictions = user.IsSystemAdmin;
         return dto;
     }
 
