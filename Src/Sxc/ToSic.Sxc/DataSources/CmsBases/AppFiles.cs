@@ -75,10 +75,10 @@ public class AppFiles: CustomDataSourceAdvanced
     [PrivateApi]
     public AppFiles(MyServices services, AppFilesDataSourceProvider provider, IDataFactory dataFactory) : base(services, "CDS.AppFiles")
     {
-        ConnectServices(
+        ConnectLogs([
             _provider = provider,
             _dataFactory = dataFactory
-        );
+        ]);
 
         ProvideOut(() => GetMultiAccess(StreamDefaultName));
         ProvideOut(() => GetMultiAccess(StreamFolders), StreamFolders);

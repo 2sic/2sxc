@@ -176,8 +176,8 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
 
     public List<CspParameters> CspParameters()
     {
-        var wrapLog = Log.Fn<List<CspParameters>>();
-        if (!IsEnabled) return wrapLog.Return([], "disabled");
+        var l = Log.Fn<List<CspParameters>>();
+        if (!IsEnabled) return l.Return([], "disabled");
 
         if (Policies.Any())
         {
@@ -189,9 +189,9 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
             AddCspService(policyCsp);
         }
 
-        if (!CspServices.Any()) return wrapLog.Return([], "no services to add");
+        if (!CspServices.Any()) return l.Return([], "no services to add");
         var result = CspServices.Select(c => c?.Policy).Where(c => c != null).ToList();
-        return wrapLog.ReturnAsOk(result);
+        return l.ReturnAsOk(result);
 
     }
         

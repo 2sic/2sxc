@@ -15,33 +15,13 @@ using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Dnn.Cms;
 
-internal class DnnModuleUpdater : ServiceBase, IPlatformModuleUpdater
+internal class DnnModuleUpdater(
+    GenWorkPlus<WorkViews> workViews,
+    IZoneMapper zoneMapper,
+    IAppStates appStates,
+    ISite site)
+    : ServiceBase("Dnn.MapA2I", connect: [workViews, appStates, site, zoneMapper]), IPlatformModuleUpdater
 {
-    #region Constructor and DI
-
-    /// <summary>
-    /// Empty constructor for DI
-    /// </summary>
-    // ReSharper disable once UnusedMember.Global
-    public DnnModuleUpdater(GenWorkPlus<WorkViews> workViews, IZoneMapper zoneMapper, IAppStates appStates, ISite site) : base("Dnn.MapA2I")
-    {
-        ConnectServices(
-            _workViews = workViews,
-            _appStates = appStates,
-            _site = site,
-            _zoneMapper = zoneMapper
-        );
-    }
-
-    private readonly GenWorkPlus<WorkViews> _workViews;
-    private readonly IAppStates _appStates;
-    private readonly ISite _site;
-    private readonly IZoneMapper _zoneMapper;
-
-
-    #endregion
-
-
     public void SetAppId(IModule instance, int? appId)
     {
         Log.A($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
@@ -50,13 +30,13 @@ internal class DnnModuleUpdater : ServiceBase, IPlatformModuleUpdater
 
         // ToDo: Should throw exception if a real BlockConfiguration exists
         // note: this is the correct zone, even if the module is shared from another portal, because the Site is prepared correctly
-        var zoneId = _site.ZoneId;
+        var zoneId = site.ZoneId;
 
         if (appId == Eav.Constants.AppIdEmpty || !appId.HasValue)
             UpdateInstanceSettingForAllLanguages(instance.Id, ModuleSettingNames.AppName, null, Log);
         else
         {
-            var appName = _appStates.AppIdentifier(zoneId, appId.Value);
+            var appName = appStates.AppIdentifier(zoneId, appId.Value);
             UpdateInstanceSettingForAllLanguages(instance.Id, ModuleSettingNames.AppName, appName, Log);
         }
 
@@ -65,7 +45,7 @@ internal class DnnModuleUpdater : ServiceBase, IPlatformModuleUpdater
         {
             var appIdentity = new AppIdentity(zoneId, appId.Value);
 
-            var templateGuid = _workViews.New(appIdentity).GetAll()
+            var templateGuid = workViews.New(appIdentity).GetAll()
                 .OrderByDescending(v => v.Metadata.HasType(Decorators.IsDefaultDecorator)) // first sort by IsDefaultDecorator DESC
                 .ThenBy(v => v.Name) // than by Name ASC
                 .FirstOrDefault(t => !t.IsHidden)?.Guid;
@@ -111,7 +91,7 @@ internal class DnnModuleUpdater : ServiceBase, IPlatformModuleUpdater
     {
         Log.A("update title");
 
-        var languages = _zoneMapper.CulturesWithState(block.Context.Site);
+        var languages = zoneMapper.CulturesWithState(block.Context.Site);
 
         // Find Module for default language
         var moduleController = new ModuleController();

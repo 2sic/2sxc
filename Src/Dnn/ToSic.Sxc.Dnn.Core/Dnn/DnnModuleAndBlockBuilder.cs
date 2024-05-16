@@ -12,10 +12,10 @@ internal class DnnModuleAndBlockBuilder: ModuleAndBlockBuilder
 {
     public DnnModuleAndBlockBuilder(Generator<IModule> moduleGenerator, Generator<IContextOfBlock> contextGenerator, Generator<BlockFromModule> blockGenerator) : base(blockGenerator, DnnConstants.LogName)
     {
-        ConnectServices(
+        ConnectLogs([
             _moduleGenerator = moduleGenerator,
             _contextGenerator = contextGenerator
-        );
+        ]);
     }
     private readonly Generator<IModule> _moduleGenerator;
     private readonly Generator<IContextOfBlock> _contextGenerator;

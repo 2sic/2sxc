@@ -25,11 +25,11 @@ internal class ContextOfBlock: ContextOfApp, IContextOfBlock
     ) : base(appServices, "Sxc.CtxBlk")
     {
         Page = page;
-        ConnectServices(
+        ConnectLogs([
             Module = module,
             PageServiceShared = pageServiceShared,
             _publishingResolver = publishingResolver
-        );
+        ]);
     }
     private readonly LazySvc<ServiceSwitcher<IPagePublishingGetSettings>> _publishingResolver;
 
@@ -42,11 +42,11 @@ internal class ContextOfBlock: ContextOfApp, IContextOfBlock
         get
         {
             if (base.AppIdentity != null) return base.AppIdentity;
-            var wrapLog = Log.Fn<IAppIdentity>();
+            var l = Log.Fn<IAppIdentity>();
             var identifier = Module?.BlockIdentifier;
-            if (identifier == null) return wrapLog.ReturnNull("no mod-block-id");
+            if (identifier == null) return l.ReturnNull("no mod-block-id");
             AppIdentity = identifier;
-            return wrapLog.Return(base.AppIdentity);
+            return l.Return(base.AppIdentity);
         }
     }
 

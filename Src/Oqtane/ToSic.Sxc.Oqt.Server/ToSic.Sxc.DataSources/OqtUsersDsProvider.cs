@@ -20,11 +20,11 @@ internal class OqtUsersDsProvider : UsersDataSourceProvider
 
     public OqtUsersDsProvider(SiteState siteState, LazySvc<OqtSecurity> oqtSecurity, LazySvc<IUserRoleRepository> userRoles) : base("Oqt.Users")
     {
-        ConnectServices(
+        ConnectLogs([
             _siteState = siteState,
             _oqtSecurity = oqtSecurity,
             _userRoles = userRoles
-        );
+        ]);
     }
 
     public override IEnumerable<CmsUserRaw> GetUsersInternal()

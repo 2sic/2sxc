@@ -2,7 +2,6 @@
 using System.Reflection;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
-using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
@@ -16,8 +15,6 @@ public class DependenciesLoader(ILogStore logStore, ISite site, IAppStates appSt
     : ServiceBase("Sys.AppCodeLoad", connect: [logStore, site, appStates, appPathsLazy, assemblyCacheManager, appCodeCompilerLazy])
 {
     public const string DependenciesFolder = "Dependencies";
-
-
 
     public (List<Assembly> Assemblies, HotBuildSpec Specs) TryGetOrFallback(HotBuildSpec spec)
     {
@@ -107,7 +104,7 @@ public class DependenciesLoader(ILogStore logStore, ISite site, IAppStates appSt
         assemblyCacheManager.Add(
             cacheKey,
             assemblyResults,
-            changeMonitor: [new FolderChangeMonitor([physicalPath])]
+            folderPaths: new Dictionary<string, bool> { [physicalPath] = true }
         );
         l.A($"{assemblyResults.Count} dependencies added to cache: {cacheKey}");
 

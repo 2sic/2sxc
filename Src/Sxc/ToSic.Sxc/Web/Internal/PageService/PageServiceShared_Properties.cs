@@ -6,10 +6,10 @@ partial class PageServiceShared
 
     public IList<PagePropertyChange> GetPropertyChangesAndFlush(ILog log)
     {
-        var wrapLog = log.Fn<IList<PagePropertyChange>>();
+        var l = log.Fn<IList<PagePropertyChange>>();
         var changes = PropertyChanges.ToArray().ToList();
         PropertyChanges.Clear();
-        return wrapLog.Return(changes, $"{changes.Count}");
+        return l.Return(changes, $"{changes.Count}");
     }
 
     /// <summary>

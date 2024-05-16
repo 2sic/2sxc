@@ -18,10 +18,10 @@ public class AdamManager<TFolderId, TFileId>: AdamManager
         Generator<AdamStorageOfField<TFolderId, TFileId>> fieldStorageGenerator)
         : base(services, "Adm.MngrTT")
     {
-        ConnectServices(
+        ConnectLogs([
             _adamFsLazy = adamFsLazy.SetInit(f => f.Init(this)),
             _fieldStorageGenerator = fieldStorageGenerator
-        );
+        ]);
     }
 
     public override AdamManager Init(IContextOfApp ctx, CodeDataFactory cdf, int compatibility)

@@ -3,6 +3,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Serialization;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 using static ToSic.Sxc.Edit.Toolbar.ItemToolbarBase;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleToolbar;
 using Attribute = ToSic.Razor.Markup.Attribute;
@@ -22,33 +23,36 @@ partial class ToolbarBuilder
     public override string ToString()
     {
         // Get edit, but don't exit if null, as the Render (later on) will add comments if Edit is null
-        var edit = _DynCodeRoot?.Edit;
+        var edit = _CodeApiSvc?.Edit;
 
         // TODO:
         // - force
+        var forceEnable = Configuration?.ForEveryone == true;
+        var enabled = edit?.Enabled == true || forceEnable;
 
-        // Only test conditions if the toolbar would show - otherwise ignore
-        if (edit?.Enabled == true && _configuration != null)
+        if (forceEnable) 
+            _CodeApiSvc?.GetService<IPageService>(reuse: true)
+                .Activate(SxcPageFeatures.ToolbarsInternal.NameId);
+
+        // Check if conditions don't allow. Only test conditions if the toolbar would show - otherwise ignore
+        if (enabled && Configuration != null)
         {
-            // ReSharper disable AssignNullToNotNullAttribute
-            if (_configuration.Condition == false) return null;
-            if (_configuration.ConditionFunc?.Invoke() == false) return null;
-            // ReSharper restore AssignNullToNotNullAttribute
+            if (Configuration.Condition == false) return "";
+            if (Configuration.ConditionFunc?.Invoke() == false) return "";
         }
 
-        // No auto-demo
-        return ShouldSwitchToItemDemoMode()
-            // Implement Demo-Mode with info-button only
-            ? ((ToolbarBuilder)CreateItemDemoToolbar()).Render(edit)
-            // Normal render of the current toolbar
-            : Render(edit);
+        // Show toolbar or a Demo-Informative-Toolbar
+        var finalToolbar = ShouldSwitchToItemDemoMode()
+            ? CreateItemDemoToolbar()       // Implement Demo-Mode with info-button only
+            : this;                         // Normal render of the current toolbar
+        return finalToolbar.Render(edit, enabled);
     }
 
     /// <summary>
     /// Create a fresh Toolbar which only shows infos about item being in demo-mode
     /// </summary>
     /// <returns></returns>
-    private IToolbarBuilder CreateItemDemoToolbar()
+    private ToolbarBuilder CreateItemDemoToolbar()
     {
         var rules = new List<ToolbarRuleBase>();
 
@@ -67,20 +71,20 @@ partial class ToolbarBuilder
         AddRuleIfFound<ToolbarRuleSettings>();
 
         var tlb = new ToolbarBuilder(this, rules) as IToolbarBuilder;
-        var keyOrMessage = _configuration?.DemoMessage;
+        var keyOrMessage = Configuration?.DemoMessage;
         var message = keyOrMessage == null
-            ? _DynCodeRoot.Resources.Get<string>($"{AppStackConstants.RootNameResources}.Toolbar.IsDemoSubItem")
+            ? _CodeApiSvc.Resources.Get<string>($"{AppStackConstants.RootNameResources}.Toolbar.IsDemoSubItem")
             : keyOrMessage.StartsWith($"{AppStackConstants.RootNameResources}.")
-                ? _DynCodeRoot.Resources.Get<string>(keyOrMessage)
+                ? _CodeApiSvc.Resources.Get<string>(keyOrMessage)
                 : keyOrMessage;
         tlb = tlb.Info(tweak: b => b.Note(message));
-        return tlb;
+        return (ToolbarBuilder)tlb;
     }
 
     private bool ShouldSwitchToItemDemoMode()
     {
         // If no root provided, we can't check demo mode as of now, so return
-        var root = _configuration?.Root?.Entity;
+        var root = Configuration?.Root?.Entity;
         if (root == null) return false;
 
         // If root is not demo, then don't use demo mode
@@ -98,9 +102,13 @@ partial class ToolbarBuilder
     }
 
 
-    private string Render(IEditService edit)
+    private string Render(IEditService edit, bool enabled)
     {
-        var mode = (_configuration?.Mode ?? ToolbarHtmlModes.OnTag).ToLowerInvariant();
+        // don't show toolbar if not enabled (or not for everyone)
+        if (!enabled)
+            return ""; 
+
+        var mode = (Configuration?.Mode ?? ToolbarHtmlModes.OnTag).ToLowerInvariant();
         switch (mode)
         {
             // ReSharper disable AssignNullToNotNullAttribute

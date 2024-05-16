@@ -39,43 +39,23 @@ namespace ToSic.Sxc.Dnn.Search;
 /// But the code is 99% clean, so it would be easy to split into dnn/Oqtane versions once ready.
 /// The only difference seems to be exception logging. 
 /// </remarks>
-internal class SearchController : ServiceBase
+internal class SearchController(
+    AppsCacheSwitch appsCache,
+    Generator<CodeCompiler> codeCompiler,
+    Generator<CodeApiServiceFactory> codeRootFactory,
+    Generator<ISite> siteGenerator,
+    LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
+    LazySvc<ILookUpEngineResolver> dnnLookUpEngineResolver,
+    EngineFactory engineFactory,
+    LazySvc<ILogStore> logStore,
+    PolymorphConfigReader polymorphism)
+    : ServiceBase("DNN.Search",
+        connect:
+        [
+            appsCache, codeCompiler, codeRootFactory, siteGenerator, engineFactory, dnnLookUpEngineResolver,
+            moduleAndBlockBuilder, logStore, polymorphism
+        ])
 {
-    public SearchController(
-        AppsCacheSwitch appsCache,
-        Generator<CodeCompiler> codeCompiler,
-        Generator<CodeApiServiceFactory> codeRootFactory,
-        Generator<ISite> siteGenerator,
-        LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
-        LazySvc<ILookUpEngineResolver> dnnLookUpEngineResolver,
-        EngineFactory engineFactory,
-        LazySvc<ILogStore> logStore,
-        PolymorphConfigReader polymorphism) : base("DNN.Search")
-    {
-        ConnectServices(
-            _appsCache = appsCache,
-            _codeCompiler = codeCompiler,
-            _codeRootFactory = codeRootFactory,
-            _siteGenerator = siteGenerator,
-            _engineFactory = engineFactory,
-            _dnnLookUpEngineResolver = dnnLookUpEngineResolver,
-            _moduleAndBlockBuilder = moduleAndBlockBuilder,
-            _logStore = logStore,
-            _polymorphism = polymorphism
-        );
-    }
-
-    private readonly AppsCacheSwitch _appsCache;
-    private readonly Generator<CodeCompiler> _codeCompiler;
-    private readonly Generator<CodeApiServiceFactory> _codeRootFactory;
-    private readonly Generator<ISite> _siteGenerator;
-    private readonly EngineFactory _engineFactory;
-    private readonly LazySvc<ILookUpEngineResolver> _dnnLookUpEngineResolver;
-    private readonly LazySvc<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
-    private readonly LazySvc<ILogStore> _logStore;
-    private readonly PolymorphConfigReader _polymorphism;
-
-
     /// <summary>
     /// Initialize all values which are needed - or return a text with the info why we must stop. 
     /// </summary>
@@ -90,7 +70,7 @@ internal class SearchController : ServiceBase
         if (DnnModule == null) return l.ReturnAsOk("no module");
 
         // This changes site in whole scope
-        DnnSite = ((DnnSite)_siteGenerator.New()).TryInitModule(DnnModule, Log);
+        DnnSite = ((DnnSite)siteGenerator.New()).TryInitModule(DnnModule, Log);
 
         // New Context because Portal-Settings.Current is null
         var appId = module.BlockIdentifier.AppId;
@@ -99,9 +79,9 @@ internal class SearchController : ServiceBase
 
         // Ensure cache builds up with correct primary language
         // In case it's not loaded yet
-        _appsCache.Value.Load(module.BlockIdentifier.PureIdentity(), DnnSite.DefaultCultureCode, _appsCache.AppLoaderTools);
+        appsCache.Value.Load(module.BlockIdentifier.PureIdentity(), DnnSite.DefaultCultureCode, appsCache.AppLoaderTools);
 
-        Block = _moduleAndBlockBuilder.Value.BuildBlock(DnnModule, null);
+        Block = moduleAndBlockBuilder.Value.BuildBlock(DnnModule, null);
 
         if (Block.View == null) return "no view";
         if (Block.View.SearchIndexingDisabled) return "search disabled"; // new in 12.02
@@ -119,7 +99,7 @@ internal class SearchController : ServiceBase
 
         // Figure out the current edition - if none, stop here
         // New 2023-03-20 - if the view comes with a preset edition, it's an ajax-preview which should be respected
-        _edition = PolymorphConfigReader.UseViewEditionOrGetLazy(Block.View, () => _polymorphism.Init(Block.Context.AppState.List));
+        _edition = polymorphism.UseViewEditionOrGet(Block);
         //Block.View.Edition.NullIfNoValue()
         //           ?? _polymorphism.Init(Block.Context.AppState.List).Edition();
 
@@ -176,7 +156,7 @@ internal class SearchController : ServiceBase
             {
                 /* Old mode v06.02 - 12.01 using the Engine or Razor which customizes */
                 // Build the engine, as that's responsible for calling inner search stuff
-                var engine = _engineFactory.CreateEngine(Block.View);
+                var engine = engineFactory.CreateEngine(Block.View);
                 if (engine is IEngineDnnOldCompatibility oldEngine)
                 {
 #pragma warning disable CS0618
@@ -205,7 +185,7 @@ internal class SearchController : ServiceBase
         // At the of the code, add it to insights / history. This must happen at the end.
         // It will only be preserved, if the inner code ran a Log.Preserve = true;
         if (logWithPreserve?.Preserve ?? false)
-            _logStore.Value.Add("dnn-search", Log);
+            logStore.Value.Add("dnn-search", Log);
 
         // reduce load by only keeping recently modified items
         var searchDocuments = KeepOnlyChangesSinceLastIndex(beginDate, SearchItems);
@@ -295,7 +275,7 @@ internal class SearchController : ServiceBase
             Log.A("Will try to attach dnn providers to DataSource LookUps");
             try
             {
-                var getLookups = _dnnLookUpEngineResolver.Value;
+                var getLookups = dnnLookUpEngineResolver.Value;
                 var dnnLookUps = (getLookups as DnnLookUpEngineResolver)?.LookUpEngineOfPortalSettings(site.GetContents(), dnnModule.ModuleID);
                 ((LookUpEngine) dataSource.Configuration.LookUpEngine).Link(dnnLookUps);
             }
@@ -343,7 +323,7 @@ internal class SearchController : ServiceBase
         l.A($"compile ViewController class on path: {path}/{Block.View.ViewController}");
         var spec = new HotBuildSpec(block.AppId, _edition, block.App?.Name);
         l.A($"prepare spec: {spec}");
-        var instance = _codeCompiler.New().InstantiateClass(virtualPath: block.View.ViewController, spec: spec, className: null, relativePath: path, throwOnError: true);
+        var instance = codeCompiler.New().InstantiateClass(virtualPath: block.View.ViewController, spec: spec, className: null, relativePath: path, throwOnError: true);
         l.A("got instance of compiled ViewController class");
 
         // 2. Check if it implements ToSic.Sxc.Search.ICustomizeSearch - otherwise just return the empty search results as shown above
@@ -353,7 +333,7 @@ internal class SearchController : ServiceBase
         if (instance is INeedsCodeApiService instanceWithContext)
         {
             l.A($"attach DynamicCode context to class instance");
-            var parentDynamicCodeRoot = _codeRootFactory.New()
+            var parentDynamicCodeRoot = codeRootFactory.New()
                 .BuildCodeRoot(null, block, Log, CompatibilityLevels.CompatibilityLevel10);
             instanceWithContext.ConnectToRoot(parentDynamicCodeRoot);
         }

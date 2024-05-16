@@ -17,43 +17,26 @@ using static ToSic.Eav.Apps.Internal.Api01.SaveApiAttributes;
 namespace ToSic.Sxc.Backend.App;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppContent : ServiceBase
+public class AppContent(
+    EntityApi api,
+    LazySvc<IConvertToEavLight> entToDicLazy,
+    ISxcContextResolver ctxResolver,
+    Generator<MultiPermissionsTypes> typesPermissions,
+    Generator<MultiPermissionsItems> itemsPermissions,
+    GenWorkDb<WorkFieldList> workFieldList,
+    LazySvc<SimpleDataEditService> dataControllerLazy)
+    : ServiceBase("Sxc.ApiApC",
+        connect:
+        [
+            workFieldList, api, entToDicLazy, ctxResolver, typesPermissions, itemsPermissions, dataControllerLazy
+        ])
 {
-    private readonly GenWorkDb<WorkFieldList> _workFieldList;
-    private readonly Generator<MultiPermissionsTypes> _typesPermissions;
-    private readonly Generator<MultiPermissionsItems> _itemsPermissions;
-
     #region Constructor / DI
-
-    public AppContent(
-        EntityApi entityApi,
-        LazySvc<IConvertToEavLight> entToDicLazy,
-        ISxcContextResolver ctxResolver,
-        Generator<MultiPermissionsTypes> typesPermissions,
-        Generator<MultiPermissionsItems> itemsPermissions,
-        GenWorkDb<WorkFieldList> workFieldList,
-        LazySvc<SimpleDataEditService> dataControllerLazy) : base("Sxc.ApiApC")
-    {
-        ConnectServices(
-            _workFieldList = workFieldList,
-            _entityApi = entityApi,
-            _entToDicLazy = entToDicLazy,
-            _ctxResolver = ctxResolver,
-            _typesPermissions = typesPermissions,
-            _itemsPermissions = itemsPermissions,
-            _dataControllerLazy = dataControllerLazy
-        );
-    }
-
-    private readonly EntityApi _entityApi;
-    private readonly LazySvc<IConvertToEavLight> _entToDicLazy;
-    private readonly ISxcContextResolver _ctxResolver;
-    private readonly LazySvc<SimpleDataEditService> _dataControllerLazy;
 
     public AppContent Init(string appName)
     {
         // if app-path specified, use that app, otherwise use from context
-        Context = _ctxResolver.AppNameRouteBlock(appName);
+        Context = ctxResolver.AppNameRouteBlock(appName);
         return this;
     }
     protected IContextOfApp Context;
@@ -69,15 +52,15 @@ public class AppContent : ServiceBase
 
     public IEnumerable<IDictionary<string, object>> GetItems(string contentType, string appPath = default, string oDataSelect = default)
     {
-        var wrapLog = Log.Fn<IEnumerable<IDictionary<string, object>>>($"get entities type:{contentType}, path:{appPath}");
+        var l = Log.Fn<IEnumerable<IDictionary<string, object>>>($"get entities type:{contentType}, path:{appPath}");
 
         // verify that read-access to these content-types is permitted
         var permCheck = ThrowIfNotAllowedInType(contentType, GrantSets.ReadSomething, AppState);
 
         var includeDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
-        var result = _entityApi.GetEntities(AppState, contentType, includeDrafts, oDataSelect)
+        var result = api.GetEntities(AppState, contentType, includeDrafts, oDataSelect)
             ?.ToList();
-        return wrapLog.Return(result, "found: " + result?.Count);
+        return l.Return(result, "found: " + result?.Count);
     }
 
 
@@ -163,25 +146,25 @@ public class AppContent : ServiceBase
 
     private bool AddParentRelationship(IDictionary<string, object> valuesCaseInsensitive, int addedEntityId)
     {
-        var wrapLog = Log.Fn<bool>($"item dictionary key count: {valuesCaseInsensitive.Count}");
+        var l = Log.Fn<bool>($"item dictionary key count: {valuesCaseInsensitive.Count}");
 
         if (!valuesCaseInsensitive.Keys.Contains(ParentRelationship))
-            return wrapLog.ReturnFalse($"'{ParentRelationship}' key is missing");
+            return l.ReturnFalse($"'{ParentRelationship}' key is missing");
 
         var objectOrNull = valuesCaseInsensitive[ParentRelationship];
         if (objectOrNull == null) 
-            return wrapLog.ReturnFalse($"'{ParentRelationship}' value is null");
+            return l.ReturnFalse($"'{ParentRelationship}' value is null");
 
         if (objectOrNull is not JsonObject parentRelationship)
-            return wrapLog.ReturnNull($"'{ParentRelationship}' value is not JsonObject");
+            return l.ReturnNull($"'{ParentRelationship}' value is not JsonObject");
 
         var parentGuid = (Guid?)parentRelationship[ParentRelParent];
         if (!parentGuid.HasValue) 
-            return wrapLog.ReturnFalse($"'{ParentRelParent}' guid is missing");
+            return l.ReturnFalse($"'{ParentRelParent}' guid is missing");
 
         var parentEntity = AppState.GetDraftOrPublished(parentGuid.Value);
         if (parentEntity == null) 
-            return wrapLog.ReturnFalse("Parent entity is missing");
+            return l.ReturnFalse("Parent entity is missing");
 
         var ids = new[] { addedEntityId as int? };
         var index = (int)parentRelationship[ParentRelIndex];
@@ -189,9 +172,9 @@ public class AppContent : ServiceBase
         var field = (string)parentRelationship[ParentRelField];
         var fields = new[] { field };
 
-        _workFieldList.New(AppState).FieldListAdd(parentEntity, fields, index, ids, asDraft: false, forceAddToEnd: false);
+        workFieldList.New(AppState).FieldListAdd(parentEntity, fields, index, ids, asDraft: false, forceAddToEnd: false);
 
-        return wrapLog.ReturnTrue($"new ParentRelationship p:{parentGuid},f:{field},i:{index}");
+        return l.ReturnTrue($"new ParentRelationship p:{parentGuid},f:{field},i:{index}");
     }
 
     private Target GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive) => Log.Func($"count: {newContentItemCaseInsensitive.Count}", () =>
@@ -229,7 +212,7 @@ public class AppContent : ServiceBase
         }
     }
 
-    private SimpleDataEditService DataController(IAppIdentity app) => _dataController ??= _dataControllerLazy.Value.Init(app.ZoneId, app.AppId);
+    private SimpleDataEditService DataController(IAppIdentity app) => _dataController ??= dataControllerLazy.Value.Init(app.ZoneId, app.AppId);
     private SimpleDataEditService _dataController;
 
     #endregion
@@ -240,7 +223,7 @@ public class AppContent : ServiceBase
     {
         var l = Log.Fn<IConvertToEavLight>($"init eav for a#{appId}");
         // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
-        var ser = _entToDicLazy.Value;
+        var ser = entToDicLazy.Value;
         ser.WithGuid = true;
         var converter = (ConvertToEavLightWithCmsInfo)ser;
         converter.WithEdit = userMayEdit;
@@ -263,7 +246,7 @@ public class AppContent : ServiceBase
         if (contentType == "any")
             throw l.Done(new Exception("type any not allowed with id-only, requires guid"));
 
-        var entityApi = _entityApi.Init(AppState.AppId);
+        var entityApi = api.Init(AppState.AppId);
         var itm = AppState.List.GetOrThrow(contentType, id);
         ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppState);
         entityApi.Delete(itm.Type.Name, id);
@@ -275,7 +258,7 @@ public class AppContent : ServiceBase
         var l = Log.Fn($"guid:{guid}, type:{contentType}, path:{appPath}");
         // Note: if app-path specified, use that app, otherwise use from context - probably automatic based on headers?
 
-        var entityApi = _entityApi.Init(AppState.AppId);
+        var entityApi = api.Init(AppState.AppId);
         var itm = AppState.List.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
         ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppState);
@@ -291,7 +274,7 @@ public class AppContent : ServiceBase
 
     protected MultiPermissionsTypes ThrowIfNotAllowedInType(string contentType, List<Grants> requiredGrants, IAppIdentity appIdentity)
     {
-        var permCheck = _typesPermissions.New().Init(Context, appIdentity, contentType);
+        var permCheck = typesPermissions.New().Init(Context, appIdentity, contentType);
         if (!permCheck.EnsureAll(requiredGrants, out var error))
             throw HttpException.PermissionDenied(error);
         return permCheck;
@@ -299,7 +282,7 @@ public class AppContent : ServiceBase
 
     protected MultiPermissionsItems ThrowIfNotAllowedInItem(IEntity itm, List<Grants> requiredGrants, IAppIdentity appIdentity)
     {
-        var permCheck = _itemsPermissions.New().Init(Context, appIdentity, itm);
+        var permCheck = itemsPermissions.New().Init(Context, appIdentity, itm);
         if (!permCheck.EnsureAll(requiredGrants, out var error))
             throw HttpException.PermissionDenied(error);
         return permCheck;

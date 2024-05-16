@@ -1,5 +1,4 @@
 ﻿using ToSic.Lib.DI;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Services.Internal;
 
 // 2024-01-22 2dm
@@ -37,9 +36,6 @@ internal class ConvertService16(
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     IEnumerable<T> IConvertService16.AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector, bool nullIfNull)
         => _CodeApiSvc.Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
-
-    private ServiceKit16 Kit => _kit16 ??= _CodeApiSvc.GetKit<ServiceKit16>();
-    private ServiceKit16 _kit16;
 
     #endregion
 

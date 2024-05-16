@@ -21,10 +21,10 @@ internal class DnnZoneMapper : ZoneMapperBase
     /// <inheritdoc />
     public DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCreatorLazy, IAppStates appStates) : base(appStates, "DNN.ZoneMp")
     {
-        ConnectServices(
+        ConnectLogs([
             _site = site,
             _zoneCreatorLazy = zoneCreatorLazy
-        );
+        ]);
     }
     private readonly LazySvc<ZoneCreator> _zoneCreatorLazy;
     private readonly Generator<ISite> _site;

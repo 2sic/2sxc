@@ -1,75 +1,106 @@
-﻿using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Web.Internal.DotNet;
 
 namespace ToSic.Sxc.Polymorphism.Internal;
 
 /// <summary>
 /// Mini service to read the polymorph config of the app
-/// and then resolve the edition based on an <see cref="IResolver"/>
+/// and then resolve the edition based on an <see cref="IPolymorphismResolver"/>
 /// </summary>
-/// <param name="serviceProvider"></param>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class PolymorphConfigReader(IServiceProvider serviceProvider) : ServiceBase("Plm.Managr")
+public class PolymorphConfigReader(LazySvc<ServiceSwitcher<IPolymorphismResolver>> resolvers, LazySvc<IHttp> http) : ServiceBase("Plm.Managr", connect: [resolvers ])
 {
-    public string Resolver;
+    //public string Resolver;
     public string Parameters;
-    public string Rule;
-    public IEntity Entity;
+    //public string Rule;
+    public PolymorphismConfiguration Configuration;
+    private int _appId;
+
+    /// <summary>
+    /// Helper to either use the edition set by the view (eg. in preview mode)
+    /// or to use this same PolymorphConfigReader to figure out the edition.
+    /// Since the reader should only be created if necessary, it's handed in as a function.
+    /// </summary>
+    public string UseViewEditionOrGet(IBlock block) => UseViewEditionOrGet(block?.View, block?.Context.AppState);
+
+    public string UseViewEditionOrGet(IView view, IAppState appState)
+    {
+        var viewEdition = view?.Edition.NullIfNoValue();
+        if (viewEdition != null) return viewEdition;
+
+        _appId = appState.AppId;
+        Init(appState.List);
+        return Edition();
+    }
 
     public PolymorphConfigReader Init(IEnumerable<IEntity> list)
     {
-        Entity = list?.FirstOrDefaultOfType(PolymorphismConstants.Name);
-        if (Entity == null) return this;
+        Configuration = new(list);
+        //var rule = Configuration.Mode;
 
-        var rule = Entity.Value<string>(PolymorphismConstants.ModeField);
-
-        SplitRule(rule);
+        //SplitRule(rule);
         return this;
     }
 
-    /// <summary>
-    /// Split the rule, which should have a "Resolver?parameters" syntax
-    /// </summary>
-    /// <param name="rule"></param>
-    private void SplitRule(string rule)
-    {
-        Rule = rule;
-        if (string.IsNullOrEmpty(rule)) return;
-        var parts = rule.Split('?');
-        Resolver = parts[0];
-        if (parts.Length > 0) Parameters = parts[1];
-    }
+    ///// <summary>
+    ///// Split the rule, which should have a "Resolver?parameters" syntax.
+    ///// Most common values are:
+    ///// - "Permissions?IsSuperUser" to determine if the user is a super user
+    ///// - "Koi?cssFramework" to determine the css framework
+    ///// </summary>
+    ///// <param name="rule"></param>
+    //private (string Resolver, string Parameters) SplitRule(string rule)
+    //{
+    //    Rule = rule;
+    //    if (string.IsNullOrEmpty(rule)) return (null, null);
+    //    var parts = rule.Split('?');
+    //    Resolver = parts[0];
+    //    if (parts.Length > 0) Parameters = parts[1];
+    //    return (Resolver, Parameters);
+    //}
 
-    public static string UseViewEditionOrGetLazy(IView view, Func<PolymorphConfigReader> lazyReader)
-        // if Block-View comes with a preset edition, it's an ajax-preview which should be respected
-        // else figure out edition using data provided by the function
-        => view?.Edition.NullIfNoValue() ?? lazyReader().Edition();
+    ///// <summary>
+    ///// Static helper to either use the edition set by the view (eg. in preview mode)
+    ///// or to use this same PolymorphConfigReader to figure out the edition.
+    ///// Since the reader should only be created if necessary, it's handed in as a function.
+    ///// </summary>
+    ///// <param name="view"></param>
+    ///// <param name="lazyReader"></param>
+    ///// <returns></returns>
+    //public static string UseViewEditionOrGetLazy(IView view, Func<PolymorphConfigReader> lazyReader)
+    //    // if Block-View comes with a preset edition, it's an ajax-preview which should be respected
+    //    // else figure out edition using data provided by the function
+    //    => view?.Edition.NullIfNoValue() ?? lazyReader().Edition();
 
-    public string Edition() => Log.Func(() =>
+    public string Edition()
     {
+        var l = Log.Fn<string>();
         try
         {
-            if (string.IsNullOrEmpty(Resolver)) return (null, "no resolver");
+            var resolver = Configuration.Resolver;
+            if (string.IsNullOrEmpty(resolver)) 
+                return l.ReturnNull("no resolver");
 
-            var rInfo = ResolversCache.FirstOrDefault(r => r.Name.EqualsInsensitive(Resolver));
+            var rInfo = resolvers.Value.ByNameId(resolver, true);
             if (rInfo == null)
-                return (null, "resolver not found");
-            Log.A($"resolver for {Resolver} found");
-            var editionResolver = (IResolver)serviceProvider.GetService(rInfo.Type);
-            var result = editionResolver.Edition(Parameters, Log);
+                return l.ReturnNull("resolver not found");
+            l.A($"resolver for {resolver} found");
+            var overrule = http.Value.GetCookie($"app-{_appId}-edition").NullIfNoValue();
+            l.A($"overrule: '{overrule}'");
+            var result = rInfo.Edition(Configuration, overrule, Log);
 
-            return (result, "ok");
+            return l.Return(result, "ok");
         }
         // We don't expect errors - but such a simple helper just shouldn't be able to throw errors
-        catch
+        catch (Exception ex)
         {
-            return (null, "error");
+            l.Ex(ex);
+            return l.ReturnNull("error");
         }
-    });
+    }
 
-    private static List<ResolverInfo> ResolversCache { get; } = AssemblyHandling
-        .FindInherited(typeof(IResolver))
-        .Select(t => new ResolverInfo(t))
-        .ToList();
 }

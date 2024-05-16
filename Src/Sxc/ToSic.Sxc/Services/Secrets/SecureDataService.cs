@@ -25,18 +25,17 @@ internal class SecureDataService(AesCryptographyService aes)
     public const string PrefixIv = "iv:";
     public const char ValueSeparator = ';';
 
-    public ISecureData<string> Parse(string value) => Log.Func(value, enabled: Debug, func: l =>
+    public ISecureData<string> Parse(string value)
     {
+        var l = Log.Fn<ISecureData<string>>(enabled: Debug);
         if (string.IsNullOrWhiteSpace(value))
-            return (new(value, false), $"{nameof(value)} null/empty");
-
-        var optimized = value;
+            return l.Return(new SecureData<string>(value, false), $"{nameof(value)} null/empty");
 
         // remove prefix which should be required, but ATM not enforced
-        if (!optimized.StartsWith(PrefixSecure, InvariantCultureIgnoreCase))
-            return (new(value, false), $"not secured, missing prefix {PrefixSecure}");
+        if (!value.StartsWith(PrefixSecure, InvariantCultureIgnoreCase))
+            return l.Return(new SecureData<string>(value, false), $"not secured, missing prefix {PrefixSecure}");
             
-        var probablySecure = optimized.Substring(PrefixSecure.Length);
+        var probablySecure = value.Substring(PrefixSecure.Length);
         var parts = probablySecure.Split(ValueSeparator);
         var toDecrypt = parts[0];
         var iv = parts.Length <= 1 
@@ -50,40 +49,51 @@ internal class SecureDataService(AesCryptographyService aes)
             // will return null if it fails
             var decrypted = Aes.DecryptFromBase64(toDecrypt, new(true) { InitializationVector64 = iv });
             return decrypted == null 
-                ? (new(value, false), $"{nameof(decrypted)} null/empty")
-                : (new SecureData<string>(decrypted, true), "decrypted");
+                ? l.Return(new SecureData<string>(value, false), $"{nameof(decrypted)} null/empty")
+                : l.Return(new SecureData<string>(decrypted, true), "decrypted");
         }
         catch (Exception ex)
         {
             l.Ex(ex);
             // if all fails, return the original
-            return (new(value, false), "error decrypting");
+            return l.Return(new SecureData<string>(value, false), "error decrypting");
         }
-    });
+    }
 
-    public string Create(string value) => Log.Func(enabled: Debug, func: l =>
+    public string Create(string value)
     {
+        var l = Log.Fn<string>(enabled: Debug);
         if (string.IsNullOrWhiteSpace(value))
-            return (null, "null/empty");
+            return l.Return(null, "null/empty");
 
         try
         {
             // will return null if it fails
             var encrypt64 = Aes.EncryptToBase64(value);
-            if (encrypt64.Value != null)
-            {
-                var final = PrefixSecure + encrypt64.Value + ValueSeparator + PrefixIv + encrypt64.Iv;
-                return (final, "encrypted");
-            }
+            if (encrypt64.Value == null)
+                return l.Return("", "empty encryption");
+            var final = PrefixSecure + encrypt64.Value + ValueSeparator + PrefixIv + encrypt64.Iv;
+            return l.Return(final, "encrypted");
 
-            return ("", "empty encryption");
         }
         catch (Exception ex)
         {
             l.Done(ex);
             throw;
         }
-    });
+    }
+
+    public string HashSha256(string value)
+    {
+        var l = Log.Fn<string>(enabled: Debug);
+        return l.Return(Sha256.Hash(value ?? ""));
+    }
+
+    public string HashSha512(string value)
+    {
+        var l = Log.Fn<string>(enabled: Debug);
+        return l.Return(Sha512.Hash(value ?? ""));
+    }
 
     public bool Debug { get; set; }
 }

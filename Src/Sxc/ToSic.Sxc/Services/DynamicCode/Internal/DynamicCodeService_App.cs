@@ -42,11 +42,11 @@ public partial class DynamicCodeService
 
     private IApp App(IAppIdentityPure appIdentity, ISite site, bool? showDrafts = null)
     {
-        var wrapLog = Log.Fn<IApp>($"{appIdentity.Show()}, site:{site != null}, showDrafts: {showDrafts}");
+        var l = Log.Fn<IApp>($"{appIdentity.Show()}, site:{site != null}, showDrafts: {showDrafts}");
         var app = _myScopedServices.AppGenerator.New();
         // if (site != null) app.PreInit(site);
         app.Init(site, appIdentity, new() { ShowDrafts = showDrafts });
-        return wrapLog.Return(app);
+        return l.Return(app);
     }
 
 }

@@ -1,13 +1,9 @@
 ﻿using System.IO;
-using ToSic.Eav;
-using ToSic.Eav.Code.Help;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Internal.Environment;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Blocks.Internal;
-using static ToSic.Sxc.Blocks.Internal.BlockBuildingConstants;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IDataSource = ToSic.Eav.DataSource.IDataSource;
 
@@ -16,7 +12,7 @@ namespace ToSic.Sxc.Engines;
 /// <summary>
 /// The foundation for engines - must be inherited by other engines
 /// </summary>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
+[PrivateApi("used to be InternalApi_DoNotUse_MayChangeWithoutNotice, hidden in 17.08")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
 {
@@ -35,13 +31,13 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
             EngineAppRequirements engineAppRequirements
         )
         {
-            ConnectServices(
+            ConnectLogs([
                 ServerPaths = serverPaths,
                 BlockResourceExtractor = blockResourceExtractor,
                 EngineCheckTemplate = engineCheckTemplate,
                 EngineAppRequirements = engineAppRequirements,
                 EnginePolymorphism = enginePolymorphism
-            );
+            ]);
         }
 
         internal IServerPaths ServerPaths { get; }
@@ -126,7 +122,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
         var l = Log.Fn<RenderEngineResult>();
 
         // Check App Requirements (new 16.08)
-        var appReqProblems = Services.EngineAppRequirements.GetMessageForAppRequirements(Block.Context.AppState);
+        var appReqProblems = Services.EngineAppRequirements.GetMessageForRequirements(Block.Context.AppState);
         if (appReqProblems != null) return l.Return(appReqProblems, "error");
 
 

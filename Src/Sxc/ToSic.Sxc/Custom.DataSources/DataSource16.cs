@@ -32,9 +32,9 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.MyServices>
 
         public MyServices(CustomDataSource.MyServices parentServices, ServiceKitLight16 kit) : base(parentServices)
         {
-            ConnectServices(
+            ConnectLogs([
                 Kit = kit
-            );
+            ]);
         }
     }
 

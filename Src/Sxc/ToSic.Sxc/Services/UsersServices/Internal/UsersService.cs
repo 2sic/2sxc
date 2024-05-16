@@ -9,24 +9,9 @@ using static System.StringComparison;
 namespace ToSic.Sxc.Services.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class UsersService : ServiceForDynamicCode, IUserService
+public class UsersService(LazySvc<IContextOfSite> context, UserSourceProvider provider)
+    : ServiceForDynamicCode($"{SxcLogName}.UsrInfoSrv", connect: [context, provider]), IUserService
 {
-    private readonly UserSourceProvider _provider;
-
-    public UsersService(LazySvc<IContextOfSite> context, UserSourceProvider provider) : base($"{SxcLogName}.UsrInfoSrv")
-    {
-        ConnectServices(
-            _context = context,
-            _provider = provider
-        );
-    }
-
-    private readonly LazySvc<IContextOfSite> _context;
-
-    //private string PlatformIdentityTokenPrefix => _provider.PlatformIdentityTokenPrefix;
-
-    //private ICmsUser PlatformUserInformationDto(int userId) => _provider.PlatformUserInformationDto(userId, SiteId);
-
     public ICmsUser Get(string identityToken)
     {
         var l = Log.Fn<ICmsUser>($"token:{identityToken}");
@@ -46,7 +31,7 @@ public class UsersService : ServiceForDynamicCode, IUserService
         if (userId == CmsUserRaw.UnknownUser.Id)
             return l.Return(CmsUserRaw.UnknownUser, "err");
 
-        var userDto = _provider.PlatformUserInformationDto(userId, SiteId);
+        var userDto = provider.PlatformUserInformationDto(userId, SiteId);
 
         return userDto != null
             ? l.ReturnAsOk(userDto)
@@ -56,7 +41,7 @@ public class UsersService : ServiceForDynamicCode, IUserService
     /// <summary>
     /// Helper method to get SiteId.
     /// </summary>
-    private int SiteId => _context.Value.Site.Id;
+    private int SiteId => context.Value.Site.Id;
 
     /// <summary>
     /// Helper method to parse UserID from user identity token.
@@ -73,7 +58,7 @@ public class UsersService : ServiceForDynamicCode, IUserService
         if (identityToken.EqualsInsensitive(SxcUserConstants.Anonymous))
             return l.Return(CmsUserRaw.AnonymousUser.Id, "ok (anonymous)");
 
-        var prefix = _provider.PlatformIdentityTokenPrefix;
+        var prefix = provider.PlatformIdentityTokenPrefix;
         if (identityToken.StartsWith(prefix, InvariantCultureIgnoreCase))
             identityToken = identityToken.Substring(prefix.Length);
 

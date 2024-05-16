@@ -17,10 +17,10 @@ internal class CodeCompilerNetCore : CodeCompiler
 
     public CodeCompilerNetCore(IServiceProvider serviceProvider, LazySvc<IServerPaths> serverPaths, Generator<Compiler> compiler) : base(serviceProvider)
     {
-        ConnectServices(
+        ConnectLogs([
             _serverPaths = serverPaths,
             _compiler = compiler
-        );
+        ]);
     }
 
     protected override (Type Type, string ErrorMessage) GetCsHtmlType(string virtualPath)

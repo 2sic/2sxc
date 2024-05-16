@@ -1,19 +1,20 @@
-﻿using System.Web.UI;
-using DotNetNuke.Framework;
+﻿using DotNetNuke.Framework;
 using DotNetNuke.Framework.JavaScriptLibraries;
 using DotNetNuke.Web.Client;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using DotNetNuke.Web.Client.Providers;
+using System.Web.UI;
 using ToSic.Eav;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Dnn.Features;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Dnn.Web;
 
-internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader)
-    : ServiceBase($"{DnnConstants.LogName}.JsCss", connect: [dnnJsApiHeader])
+internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader, DnnRequirements dnnRequirements)
+    : ServiceBase($"{DnnConstants.LogName}.JsCss", connect: [dnnJsApiHeader, dnnRequirements])
 {
     public DnnClientResources Init(Page page, bool? forcePre1025Behavior, IBlockBuilder blockBuilder)
     {
@@ -64,11 +65,13 @@ internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader)
     /// but older razor templates might still expect it
     /// and any other old behaviour, incl. no-view defined, etc. should activate compatibility
     /// </summary>
-    public void EnforcePre1025Behavior() => Log.Do(message: "Activate Anti-Forgery for compatibility with old behavior", action: () =>
+    public void EnforcePre1025Behavior()
     {
+        var l = Log.Fn("Activate Anti-Forgery for compatibility with old behavior");
         ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
         MustAddHeaders = true;
-    });
+        l.Done();
+    }
 
     /// <summary>
     /// new in 10.25 - by default now jQuery isn't loaded!
@@ -76,7 +79,7 @@ internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader)
     /// </summary>
     /// <returns></returns>
     public bool NeedsPre1025Behavior() => _forcePre1025Behavior
-                                          ?? (_blockBuilder?.GetEngine() as IEngineDnnOldCompatibility)?.OldAutoLoadJQueryAndRvt
+                                          ?? (dnnRequirements.RequirementsMet() ? (_blockBuilder?.GetEngine() as IEngineDnnOldCompatibility)?.OldAutoLoadJQueryAndRvt : null)
                                           ?? true;
 
 

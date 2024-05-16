@@ -5,7 +5,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.LookUp.Internal;
 
-public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> lookUps, string logName, NoParamOrder protect = default, object[] connect = default)
+public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> builtInSources, string logName, NoParamOrder protect = default, object[] connect = default)
     : ServiceBase(logName, protect, connect), ILookUpEngineResolver
 {
     /// <summary>
@@ -21,7 +21,7 @@ public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> loo
         // if we already have a list of shared sources, return that
         // as the sources don't change per request, but per module
         if (TryReuseFromCache(moduleId, out var cached))
-            return l.Return(cached, $"reuse {cached.Sources.Count} sources");
+            return l.Return(cached, $"reuse {cached.Sources.Count()} sources");
 
         var luEngine = BuildLookupEngine(moduleId);
         return l.Return(AddToCache(moduleId, luEngine), "created and cached for reuse");
@@ -35,8 +35,9 @@ public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> loo
     protected virtual LookUpEngine BuildLookupEngine(int moduleId)
     {
         var l = Log.Fn<LookUpEngine>($"{nameof(moduleId)}:{moduleId}");
-        var luEngine = new LookUpEngine(Log);
-        AddHttpAndDiSources(luEngine).DoIfNotNull(luEngine.Add);
+        var sources = AddHttpAndDiSources([]);
+        var luEngine = new LookUpEngine(Log, sources: sources);
+        //AddHttpAndDiSources(/*luEngine,*/ []).DoIfNotNull(luEngine.Add);
         return l.Return(luEngine);
     }
 
@@ -48,7 +49,7 @@ public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> loo
 
     protected LookUpEngine AddToCache(int moduleId, LookUpEngine engine)
     {
-        SourcesByModuleId[moduleId] = [.. engine.Sources.Values];
+        SourcesByModuleId[moduleId] = [.. engine.Sources];
         return engine;
     }
 
@@ -60,8 +61,7 @@ public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> loo
             return false;
         }
 
-        engine = new(Log);
-        engine.Add(sources);
+        engine = new(Log, sources: sources);
         return true;
     }
 
@@ -73,21 +73,23 @@ public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> loo
     /// - Query
     /// - Form (Dnn only)
     /// </summary>
-    /// <param name="existingList"></param>
     /// <returns></returns>
-    protected List<ILookUp> AddHttpAndDiSources(LookUpEngine existingList)
+    protected List<ILookUp> AddHttpAndDiSources(/*LookUpEngine existingList,*/ List<ILookUp> sources)
     {
-        var l = Log.Fn<List<ILookUp>>($"provider: {existingList.Sources.Count}");
+        sources ??= [];
+        var l = Log.Fn<List<ILookUp>>($"provider: {sources.Count}");
 
         l.A("Found Http-Context, will ty to add params for querystring, server etc.");
 
         // Prepare additions to return
-        var additions = lookUps.Value
-            .Where(lu => !existingList.HasSource(lu.Name))
+        var additions = builtInSources.Value
+            //.Where(lu => !existingList.HasSource(lu.Name))
+            .Where(lu => !sources.HasSource(lu.Name))
             .ToList();
 
         // add "query" if it was not already added previously (Oqt has it) based on "querystring"
-        if (!existingList.HasSource(LookUpConstants.SourceQuery))
+        //if (!existingList.HasSource(LookUpConstants.SourceQuery))
+        if (!sources.HasSource(LookUpConstants.SourceQuery))
             additions
                 .FirstOrDefault(lu => lu.Name.EqualsInsensitive(LookUpConstants.SourceQueryString))
                 .DoIfNotNull(qsl => additions.Add(new LookUpInLookUps(LookUpConstants.SourceQuery, qsl)));

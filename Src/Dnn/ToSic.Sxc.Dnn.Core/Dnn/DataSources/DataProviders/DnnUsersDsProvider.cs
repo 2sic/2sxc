@@ -13,9 +13,9 @@ internal class DnnUsersDsProvider : UsersDataSourceProvider
 
     public DnnUsersDsProvider(LazySvc<DnnSecurity> dnnSecurity) : base("Dnn.Users")
     {
-        ConnectServices(
+        ConnectLogs([
             _dnnSecurity = dnnSecurity
-        );
+        ]);
     }
 
     public override IEnumerable<CmsUserRaw> GetUsersInternal()

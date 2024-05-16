@@ -20,7 +20,7 @@ internal class DnnContext : IDnnContext, INeedsCodeApiService
         Module = (moduleContext as Module<ModuleInfo>)?.GetContents();
         // note: this may be a bug, I assume it should be Module.OwnerPortalId
         Portal = PortalSettings.Current ?? 
-                 (moduleContext != null ? new PortalSettings(Module.PortalID): null);
+                 (Module != null ? new PortalSettings(Module.PortalID): null);
     }
 
     public ModuleInfo Module { get; private set; }

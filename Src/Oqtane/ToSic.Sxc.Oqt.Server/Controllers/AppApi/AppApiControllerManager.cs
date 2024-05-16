@@ -7,8 +7,10 @@ using System.Reflection;
 using System.Threading.Tasks;
 using ToSic.Eav;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Oqt.Server.Code.Internal;
@@ -24,12 +26,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 /// </summary>
 internal class AppApiControllerManager : IHasLog
 {
-    public AppApiControllerManager(ApplicationPartManager partManager, ILogStore logStore, Generator<Compiler> compiler, ISxcContextResolver ctxResolver, PolymorphConfigReader polymorphism,
+    public AppApiControllerManager(ApplicationPartManager partManager, ILogStore logStore, Generator<Compiler> compiler, IWebApiContextBuilder webApiContextBuilder, PolymorphConfigReader polymorphism,
         AppCodeLoader appCodeLoader, AppApiFileSystemWatcher appApiFileSystemWatcher)
     {
         _partManager = partManager;
         _compiler = compiler;
-        _ctxResolver = ctxResolver;
+        _webApiContextBuilder = webApiContextBuilder;
         _polymorphism = polymorphism;
         _appCodeLoader = appCodeLoader;
         _appApiFileSystemWatcher = appApiFileSystemWatcher;
@@ -38,7 +40,7 @@ internal class AppApiControllerManager : IHasLog
     }
     private readonly ApplicationPartManager _partManager;
     private readonly Generator<Compiler> _compiler;
-    private readonly ISxcContextResolver _ctxResolver;
+    private readonly IWebApiContextBuilder _webApiContextBuilder;
     private readonly PolymorphConfigReader _polymorphism;
     private readonly AppCodeLoader _appCodeLoader;
     private readonly AppApiFileSystemWatcher _appApiFileSystemWatcher; // keep it here, because we need one instance in App
@@ -159,10 +161,11 @@ internal class AppApiControllerManager : IHasLog
         var l = Log.Fn<HotBuildSpec>($"{appFolder}:'{appFolder}'", timer: true);
 
         // Prepare / Get App State, while possibly also initializing the App...
-        var appState = _ctxResolver.SetAppOrGetBlock(appFolder)?.AppState;
+        var ctxResolver = _webApiContextBuilder.PrepareContextResolverForApiRequest();
+        var appState = ctxResolver.SetAppOrGetBlock(appFolder)?.AppState;
 
         // Figure out the current edition
-        var edition = FigureEdition().TrimLastSlash();
+        var edition = FigureEdition(ctxResolver).TrimLastSlash();
 
         var spec = new HotBuildSpec(appState?.AppId ?? Eav.Constants.AppIdEmpty, edition: edition, appState?.Name);
 
@@ -173,14 +176,12 @@ internal class AppApiControllerManager : IHasLog
     /// Figure out the current edition for HotBuildSpec.
     /// </summary>
     /// <returns></returns>
-    private string FigureEdition()
+    private string FigureEdition(ISxcContextResolver ctxResolver)
     {
         var l = Log.Fn<string>(timer: true);
 
-        var block = _ctxResolver.BlockOrNull();
-        var edition = block == null
-            ? null
-            : PolymorphConfigReader.UseViewEditionOrGetLazy(block.View, () => _polymorphism.Init(block.Context.AppState.List));
+        var block = ctxResolver.BlockOrNull();
+        var edition = block.NullOrGetWith(_polymorphism.UseViewEditionOrGet);
 
         return l.Return(edition);
     }

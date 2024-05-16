@@ -45,7 +45,7 @@ partial class OqtPageOutput
         foreach (var manualFeature in manualFeatures)
         {
             // process manual features to get assets
-            var result = _blockResourceExtractor.Process(manualFeature.Html);
+            var result = blockResourceExtractor.Process(manualFeature.Html);
             assets.AddRange(result.Assets);
         }
         return assets;

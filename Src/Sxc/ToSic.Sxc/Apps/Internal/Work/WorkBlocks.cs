@@ -4,30 +4,20 @@ using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Apps.Internal.Work;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class WorkBlocks: WorkUnitBase<IAppWorkCtxPlus>
+public class WorkBlocks(
+    IZoneCultureResolver cultureResolver,
+    LazySvc<QueryDefinitionBuilder> qDefBuilder,
+    GenWorkPlus<WorkEntities> workEntities)
+    : WorkUnitBase<IAppWorkCtxPlus>("SxS.Blocks", connect: [cultureResolver, qDefBuilder, workEntities])
 {
-    private readonly GenWorkPlus<WorkEntities> _workEntities;
     public const string BlockTypeName = "2SexyContent-ContentGroup";
 
-    private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
-    private readonly IZoneCultureResolver _cultureResolver;
-
-    public WorkBlocks(IZoneCultureResolver cultureResolver, LazySvc<QueryDefinitionBuilder> qDefBuilder, GenWorkPlus<WorkEntities> workEntities) : base("SxS.Blocks")
-    {
-        ConnectServices(
-            _cultureResolver = cultureResolver,
-            _qDefBuilder = qDefBuilder,
-            _workEntities = workEntities
-        );
-    }
-
-    private IImmutableList<IEntity> ContentGroups() => _workEntities.New(AppWorkCtx).Get(BlockTypeName).ToImmutableList();
+    private IImmutableList<IEntity> ContentGroups() => workEntities.New(AppWorkCtx).Get(BlockTypeName).ToImmutableList();
 
     public List<BlockConfiguration> AllWithView()
     {
@@ -42,7 +32,7 @@ public class WorkBlocks: WorkUnitBase<IAppWorkCtxPlus>
                     : null;
             })
             .Where(b => b != null)
-            .Select(e => new BlockConfiguration(e.Entity, AppWorkCtx, null, _qDefBuilder, _cultureResolver.CurrentCultureCode, Log))
+            .Select(e => new BlockConfiguration(e.Entity, AppWorkCtx, null, qDefBuilder, cultureResolver.CurrentCultureCode, Log))
             .ToList();
     }
 
@@ -56,9 +46,9 @@ public class WorkBlocks: WorkUnitBase<IAppWorkCtxPlus>
         var groupEntity = ContentGroups().One(contentGroupGuid);
         var found = groupEntity != null;
         return l.Return(found
-                ? new BlockConfiguration(groupEntity, AppWorkCtx, null, _qDefBuilder, _cultureResolver.CurrentCultureCode, Log)
+                ? new BlockConfiguration(groupEntity, AppWorkCtx, null, qDefBuilder, cultureResolver.CurrentCultureCode, Log)
                     .WarnIfMissingData()
-                : new(null, AppWorkCtx, null, _qDefBuilder, _cultureResolver.CurrentCultureCode, Log)
+                : new(null, AppWorkCtx, null, qDefBuilder, cultureResolver.CurrentCultureCode, Log)
                 {
                     DataIsMissing = true
                 },
@@ -73,7 +63,7 @@ public class WorkBlocks: WorkUnitBase<IAppWorkCtxPlus>
         var createTempBlockForPreview = blockId.Guid == Guid.Empty;
         l.A($"{nameof(createTempBlockForPreview)}:{createTempBlockForPreview}");
         var result = createTempBlockForPreview
-            ? new(null, AppWorkCtx, AppWorkCtx.Data.List.One(blockId.PreviewView), _qDefBuilder, _cultureResolver.CurrentCultureCode, Log)
+            ? new(null, AppWorkCtx, AppWorkCtx.Data.List.One(blockId.PreviewView), qDefBuilder, cultureResolver.CurrentCultureCode, Log)
             : GetBlockConfig(blockId.Guid);
         result.BlockIdentifierOrNull = blockId;
         return l.Return(result);

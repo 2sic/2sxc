@@ -140,7 +140,7 @@ public class AppCodeLoader(
                 cacheKey,
                 assemblyResult,
                 slidingDuration: CacheConstants.Duration1Day, // must be longer than the default used for Razor DLLs
-                changeMonitor: new ChangeMonitor[] { new FolderChangeMonitor(assemblyResult.WatcherFolders) }
+                folderPaths: assemblyResult.WatcherFolders
             );
 
             return l.ReturnAsOk(assemblyResult);

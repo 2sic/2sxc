@@ -24,21 +24,13 @@ public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolba
 
     #region Constructors and Init
 
-    public class MyServices: MyServicesBase
+    public class MyServices(
+        LazySvc<IAppStates> appStatesLazy,
+        LazySvc<ToolbarButtonDecoratorHelper> toolbarButtonHelper)
+        : MyServicesBase(connect: [toolbarButtonHelper, appStatesLazy])
     {
-        public MyServices(
-            LazySvc<IAppStates> appStatesLazy,
-            LazySvc<ToolbarButtonDecoratorHelper> toolbarButtonHelper
-        )
-        {
-            ConnectServices(
-                ToolbarButtonHelper = toolbarButtonHelper,
-                AppStatesLazy = appStatesLazy
-            );
-        }
-
-        internal readonly LazySvc<IAppStates> AppStatesLazy;
-        internal LazySvc<ToolbarButtonDecoratorHelper> ToolbarButtonHelper { get; }
+        internal readonly LazySvc<IAppStates> AppStatesLazy = appStatesLazy;
+        internal LazySvc<ToolbarButtonDecoratorHelper> ToolbarButtonHelper { get; } = toolbarButtonHelper;
     }
 
     /// <summary>
@@ -55,8 +47,8 @@ public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolba
     {
         this.LinkLog(parent.Log);
         _currentAppIdentity = parent._currentAppIdentity;
-        _DynCodeRoot = parent._DynCodeRoot;
-        _configuration = parent._configuration;
+        _CodeApiSvc = parent._CodeApiSvc;
+        Configuration = parent.Configuration;
         _utils = parent._utils;
         Rules.AddRange(replaceRules ?? parent.Rules);
     }
@@ -68,15 +60,15 @@ public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolba
     public void ConnectToRoot(ICodeApiService codeRoot)
     {
         if (codeRoot == null) return;
-        _DynCodeRoot = codeRoot;
+        _CodeApiSvc = codeRoot;
         _currentAppIdentity = codeRoot.App;
         Services.ToolbarButtonHelper.Value.MainAppIdentity = _currentAppIdentity;
     }
-    private ICodeApiService _DynCodeRoot;
+    private ICodeApiService _CodeApiSvc;
 
     #endregion
 
-    private ToolbarBuilderConfiguration _configuration;
+    internal ToolbarBuilderConfiguration Configuration;
 
     private ToolbarBuilderUtilities Utils => _utils ??= new();
     private ToolbarBuilderUtilities _utils;
@@ -91,16 +83,12 @@ public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolba
         object ui = default,
         object parameters = default,
         object prefill = default
-        //ICanBeEntity root = default,
-        //bool? autoDemoMode = default
     )
     {
         var updated = this.AddInternal(new ToolbarRuleToolbar(toolbarTemplate, ui: PrepareUi(ui)));
         if (new[] { target, parameters, prefill, tweak }.Any(x => x != null))
             updated = updated.Parameters(target, tweak: tweak, parameters: parameters, prefill: prefill);
 
-        //if (root != default || autoDemoMode != default)
-        //    updated = ((ToolbarBuilder)updated).With(root: root, autoDemoMode: autoDemoMode);
         return updated;
     }
 
@@ -123,10 +111,10 @@ public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolba
         // to not-hover by default. 
         // The rule must be added to the top of the list, so that any other settings will take precedence,
         // Including UI rules added to the toolbar itself
-        if (_configuration?.Mode == ToolbarHtmlModes.Standalone)
+        if (Configuration?.Mode == ToolbarHtmlModes.Standalone)
         {
             var standaloneSettings = new ToolbarRuleSettings(show: "always", hover: "none");
-            rulesToDeliver = new List<ToolbarRule> { standaloneSettings }.Concat(Rules).ToList();
+            rulesToDeliver = [standaloneSettings, .. Rules];
         }
 
         return rulesToDeliver.Select(r => r.ToString()).GetEnumerator();

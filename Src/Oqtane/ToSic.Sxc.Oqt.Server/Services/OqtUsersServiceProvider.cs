@@ -16,11 +16,11 @@ internal class OqtUsersServiceProvider : UserSourceProvider
 
     public OqtUsersServiceProvider(LazySvc<IUserRepository> userRepository, LazySvc<IUserRoleRepository> userRoleRepository, LazySvc<OqtSecurity> oqtSecurity) : base("Oqt.UsersSvc")
     {
-        ConnectServices(
+        ConnectLogs([
             _userRepository = userRepository,
             _userRoleRepository = userRoleRepository,
             _oqtSecurity = oqtSecurity
-        );
+        ]);
     }
 
     public override string PlatformIdentityTokenPrefix => OqtConstants.UserTokenPrefix;

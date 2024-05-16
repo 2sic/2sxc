@@ -10,7 +10,7 @@ public abstract partial class BlockResourceExtractor
 {
     protected string ExtractExternalScripts(string renderedTemplate, ref bool include2SxcJs, ClientAssetsExtractSettings settings)
     {
-        var wrapLog = Log.Fn<string>();
+        var l = Log.Fn<string>();
 
         var scriptMatches = RegexUtil.ScriptSrcDetection.Value.Matches(renderedTemplate);
         var scriptMatchesToRemove = new List<Match>();
@@ -55,7 +55,7 @@ public abstract partial class BlockResourceExtractor
         // remove in reverse order, so that the indexes don't change as we remove scripts in the HTML
         scriptMatchesToRemove.Reverse();
         scriptMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
-        return wrapLog.Return(renderedTemplate);
+        return l.Return(renderedTemplate);
     }
 
     private (bool Skip, string PosInPage, int Priority) CheckOptimizationSettings(string value, ClientAssetExtractSettings settings)

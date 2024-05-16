@@ -67,6 +67,21 @@ public partial interface IToolbarBuilder
     IToolbarBuilder Condition(Func<bool> condition);
 
     /// <summary>
+    /// Specify an audience for the toolbar.
+    /// Normally only people with admin permissions would see a toolbar.
+    /// Specifying the audience will make it appear even if you are not an admin.
+    ///
+    /// Reasons for this would be to have some special buttons for a certain group of users.
+    /// </summary>
+    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="everyone">default is `null`, set to true to make everybody see this.</param>
+    /// <returns></returns>
+    /// <remarks>
+    /// New in v17.08, for now should be regarded as experimental. Naming might still change.
+    /// </remarks>
+    IToolbarBuilder Audience(NoParamOrder protector = default, bool? everyone = default);
+
+    /// <summary>
     /// Adds a button group to the toolbar.
     /// All following buttons will be in this group automatically.
     ///

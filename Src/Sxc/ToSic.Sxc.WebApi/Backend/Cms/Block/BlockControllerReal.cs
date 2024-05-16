@@ -7,34 +7,20 @@ using ServiceBase = ToSic.Lib.Services.ServiceBase;
 namespace ToSic.Sxc.Backend.Cms;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class BlockControllerReal : ServiceBase, IBlockController
+public class BlockControllerReal(
+    LazySvc<IContextOfSite> context,
+    LazySvc<ContentBlockBackend> blockBackend,
+    LazySvc<AppViewPickerBackend> viewsBackend,
+    LazySvc<WorkApps> workApps)
+    : ServiceBase($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl", connect: [context, blockBackend, viewsBackend, workApps]),
+        IBlockController
 {
     public const string LogSuffix = "Block";
-
-    public BlockControllerReal(
-        LazySvc<IContextOfSite> context,
-        LazySvc<ContentBlockBackend> blockBackend,
-        LazySvc<AppViewPickerBackend> viewsBackend,
-        LazySvc<WorkApps> workApps
-    ): base($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl")
-    {
-        ConnectServices(
-            _context = context,
-            _blockBackendLazy = blockBackend,
-            _viewsBackendLazy = viewsBackend,
-            _workApps = workApps
-        );
-    }
-
-    private readonly LazySvc<WorkApps> _workApps;
-    private readonly LazySvc<IContextOfSite> _context;
-    private readonly LazySvc<ContentBlockBackend> _blockBackendLazy;
-    private readonly LazySvc<AppViewPickerBackend> _viewsBackendLazy;
 
 
     #region Block
 
-    private ContentBlockBackend Backend => _backend = _backend ?? _blockBackendLazy.Value;
+    private ContentBlockBackend Backend => _backend = _backend ?? blockBackend.Value;
     private ContentBlockBackend _backend;
 
     /// <inheritdoc />
@@ -61,7 +47,7 @@ public class BlockControllerReal : ServiceBase, IBlockController
     /// </summary>
     /// <param name="appId"></param>
 
-    public void App(int? appId) => _viewsBackendLazy.Value.SetAppId(appId);
+    public void App(int? appId) => viewsBackend.Value.SetAppId(appId);
 
     /// <summary>
     /// used to be GET Module/GetSelectableApps
@@ -71,8 +57,8 @@ public class BlockControllerReal : ServiceBase, IBlockController
     public IEnumerable<AppUiInfo> Apps(string apps = null)
     {
         // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
-        var site = _context.Value.Site;
-        return _workApps.Value.GetSelectableApps(site, apps).ToList();
+        var site = context.Value.Site;
+        return workApps.Value.GetSelectableApps(site, apps).ToList();
     }
 
     #endregion
@@ -80,7 +66,7 @@ public class BlockControllerReal : ServiceBase, IBlockController
     #region Types
 
     /// <inheritdoc />
-    public IEnumerable<ContentTypeUiInfo> ContentTypes() => _viewsBackendLazy.Value.ContentTypes();
+    public IEnumerable<ContentTypeUiInfo> ContentTypes() => viewsBackend.Value.ContentTypes();
 
     #endregion
 
@@ -90,7 +76,7 @@ public class BlockControllerReal : ServiceBase, IBlockController
     /// used to be GET Module/GetSelectableTemplates
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<TemplateUiInfo> Templates() => _viewsBackendLazy.Value.Templates();
+    public IEnumerable<TemplateUiInfo> Templates() => viewsBackend.Value.Templates();
 
     /// <summary>
     /// Used in InPage.js
@@ -100,7 +86,7 @@ public class BlockControllerReal : ServiceBase, IBlockController
     /// <param name="forceCreateContentGroup"></param>
     /// <returns></returns>
     public Guid? Template(int templateId, bool forceCreateContentGroup)
-        => _viewsBackendLazy.Value
+        => viewsBackend.Value
             .SaveTemplateId(templateId, forceCreateContentGroup);
 
     #endregion

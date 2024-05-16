@@ -51,11 +51,10 @@ public interface ICmsContext
 
 
     /// <summary>
-    /// Information about the current block
-    ///
-    /// Not published yet, as it's not clear if it will be the correct block on inner-content?
+    /// Information about the current block, similar to the module but a bit different.
     /// </summary>
-    [PrivateApi("WIP v13")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    /// <remarks>
+    /// Added ca. v13, but not documented/published till v17.
+    /// </remarks>
     ICmsBlock Block { get; }
 }

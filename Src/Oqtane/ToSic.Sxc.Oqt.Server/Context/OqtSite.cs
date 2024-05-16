@@ -34,14 +34,14 @@ internal sealed class OqtSite: Site<Site>
         LazySvc<OqtCulture> oqtCulture,
         LazySvc<ILinkPaths> linkPathsLazy): base(OqtConstants.OqtLogPrefix)
     {
-        this.ConnectServices(
+        ConnectLogs([
             _siteStateInitializer = siteStateInitializer,
             _siteRepository = siteRepository,
             _serverPaths = serverPaths,
             _zoneMapper = zoneMapper,
             _oqtCulture = oqtCulture,
             _linkPathsLazy = linkPathsLazy
-        );
+        ]);
     }
 
     private readonly SiteStateInitializer _siteStateInitializer;

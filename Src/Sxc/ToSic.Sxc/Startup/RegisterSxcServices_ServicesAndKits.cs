@@ -12,6 +12,7 @@ using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.CmsService;
 using ToSic.Sxc.Services.DataServices;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Templates;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageService;
 using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
@@ -86,11 +87,14 @@ static partial class RegisterSxcServices
         services.TryAddTransient<CodeDataFactory>(sp => ActivatorUtilities.CreateInstance<CodeDataFactory>(sp));
         services.TryAddTransient<CodeDataServices>();
 
-        // Kits v14+
+        // Kits v14 - v16
         services.TryAddTransient<ServiceKit>();
         services.TryAddTransient<ServiceKit14>();
         services.TryAddTransient<ServiceKit16>();
         services.TryAddTransient<ServiceKitLight16>();
+
+        // Lookup Service - WIP v17
+        services.TryAddTransient<ITemplateService, TemplateService>();
 
         return services;
     }

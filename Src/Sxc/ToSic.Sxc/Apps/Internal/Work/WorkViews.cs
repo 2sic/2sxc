@@ -1,62 +1,85 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Internal;
+﻿using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.Ui;
 using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.Context;
+using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 
 // note: not sure if the final namespace should be Sxc.Apps or Sxc.Views
 namespace ToSic.Sxc.Apps.Internal.Work;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class WorkViews: WorkUnitBase<IAppWorkCtxPlus>
+public class WorkViews(
+    GenWorkPlus<WorkEntities> appEntities,
+    LazySvc<IValueConverter> valConverterLazy,
+    IZoneCultureResolver cultureResolver,
+    IConvertToEavLight dataToFormatLight,
+    LazySvc<AppIconHelpers> appIconHelpers,
+    LazySvc<QueryDefinitionBuilder> qDefBuilder)
+    : WorkUnitBase<IAppWorkCtxPlus>("Cms.ViewRd",
+        connect: [appEntities, valConverterLazy, cultureResolver, dataToFormatLight, appIconHelpers, qDefBuilder])
 {
+    /// <summary>
+    /// Helper class to get information about views, especially for selecting them based on the url identifier
+    /// </summary>
+    /// <param name="View"></param>
+    /// <param name="Name"></param>
+    /// <param name="UrlIdentifier"></param>
+    /// <param name="IsRegex"></param>
+    /// <param name="MainKey"></param>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public record ViewInfoForPathSelect(IView View, string Name, string UrlIdentifier, bool IsRegex, string MainKey);
 
-    #region Constructor / DI
-
-    private readonly GenWorkPlus<WorkEntities> _appEntities;
-    private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
-    private readonly LazySvc<IValueConverter> _valConverterLazy;
-    private readonly IZoneCultureResolver _cultureResolver;
-    private readonly IConvertToEavLight _dataToFormatLight;
-    private readonly LazySvc<AppIconHelpers> _appIconHelpers;
-
-    public WorkViews(
-        GenWorkPlus<WorkEntities> appEntities,
-        LazySvc<IValueConverter> valConverterLazy,
-        IZoneCultureResolver cultureResolver,
-        IConvertToEavLight dataToFormatLight,
-        LazySvc<AppIconHelpers> appIconHelpers,
-        LazySvc<QueryDefinitionBuilder> qDefBuilder) : base("Cms.ViewRd")
-    {
-        ConnectServices(
-            _appEntities = appEntities,
-            _valConverterLazy = valConverterLazy,
-            _cultureResolver = cultureResolver,
-            _dataToFormatLight = dataToFormatLight,
-            _appIconHelpers = appIconHelpers,
-            _qDefBuilder = qDefBuilder
-        );
-    }
-
-    #endregion
-
-    private List<IEntity> ViewEntities => _viewDs.Get(() => _appEntities.New(AppWorkCtx).Get(AppConstants.TemplateContentType).ToList());
+    private List<IEntity> ViewEntities => _viewDs.Get(() => AppWorkCtx.AppState.GetPiggyBackPropExpiring(
+        () => appEntities.New(AppWorkCtx)
+            .Get(AppConstants.TemplateContentType)
+            .ToList()
+    ).Value);
     private readonly GetOnce<List<IEntity>> _viewDs = new();
 
-    public IList<IView> GetAll()
-        => _all ??= ViewEntities.Select(p => ViewOfEntity(p, "")).OrderBy(p => p.Name).ToList();
+    public IList<IView> GetAll() =>
+        _all ??= AppWorkCtx.AppState.GetPiggyBackPropExpiring(() => ViewEntities
+            .Select(e => ViewOfEntity(e, ""))
+            .OrderBy(e => e.Name)
+            .ToList()
+        ).Value;
+
     private IList<IView> _all;
 
     public IEnumerable<IView> GetRazor() => GetAll().Where(t => t.IsRazor);
     public IEnumerable<IView> GetToken() => GetAll().Where(t => !t.IsRazor);
+
+    /// <summary>
+    /// Get all views which have a url identifier, to be used for view-switching
+    /// </summary>
+    /// <returns></returns>
+    public List<ViewInfoForPathSelect> GetForViewSwitch()
+    {
+        var l = Log.Fn<List<ViewInfoForPathSelect>>();
+
+        // get from cache if available or generate
+        var views = AppWorkCtx.AppState.GetPiggyBackPropExpiring(() => GetAll()
+            .Where(t => !string.IsNullOrEmpty(t.UrlIdentifier))
+            .Select(v =>
+            {
+                var urlIdentifier = v.UrlIdentifier.ToLowerInvariant();
+                var isRegex = urlIdentifier.EndsWith("/.*");
+                var mainParam = isRegex
+                    ? urlIdentifier.Substring(0, urlIdentifier.Length - 3)
+                    : urlIdentifier;
+                return new ViewInfoForPathSelect(v, v.Name, urlIdentifier, isRegex, mainParam.ToLowerInvariant());
+            })
+            .ToList()
+        );
+
+        return l.Return(views.Value, $"all: {GetAll().Count}; switchable: {views.Value.Count}; wasCached: {views.IsCached}");
+    }
 
 
     public IView Get(int templateId) => ViewOfEntity(ViewEntities.One(templateId), templateId);
@@ -66,7 +89,7 @@ public class WorkViews: WorkUnitBase<IAppWorkCtxPlus>
     private IView ViewOfEntity(IEntity templateEntity, object templateId) =>
         templateEntity == null
             ? throw new("The template with id '" + templateId + "' does not exist.")
-            : new View(templateEntity, [_cultureResolver.CurrentCultureCode], Log, _qDefBuilder);
+            : new View(templateEntity, [cultureResolver.CurrentCultureCode], Log, qDefBuilder);
 
 
     internal IEnumerable<TemplateUiInfo> GetCompatibleViews(IApp app, BlockConfiguration blockConfiguration)
@@ -86,7 +109,7 @@ public class WorkViews: WorkUnitBase<IAppWorkCtxPlus>
         else
             availableTemplates = GetAll().Where(p => p.UseForList);
 
-        var thumbnailHelper = _appIconHelpers.Value;
+        var thumbnailHelper = appIconHelpers.Value;
 
         var result = availableTemplates.Select(t => new TemplateUiInfo
         {
@@ -127,7 +150,7 @@ public class WorkViews: WorkUnitBase<IAppWorkCtxPlus>
         var templates = GetAll().ToList();
         var visible = templates.Where(t => !t.IsHidden).ToList();
 
-        var valConverter = _valConverterLazy.Value;
+        var valConverter = valConverterLazy.Value;
 
         return AppWorkCtx.AppState.ContentTypes.OfScope(Scopes.Default) 
             .Where(ct => templates.Any(t => t.ContentType == ct.NameId)) // must exist in at least 1 template
@@ -143,12 +166,9 @@ public class WorkViews: WorkUnitBase<IAppWorkCtxPlus>
                     Name = ct.Name,
                     IsHidden = visible.All(t => t.ContentType != ct.NameId),   // must check if *any* template is visible, otherwise tell the UI that it's hidden
                     Thumbnail = thumbnail,
-                    Properties = _dataToFormatLight.Convert(details?.Entity),
+                    Properties = dataToFormatLight.Convert(details?.Entity),
                     IsDefault = ct.Metadata.HasType(Decorators.IsDefaultDecorator),
                 };
             });
     }
-
-
-
 }

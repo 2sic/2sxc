@@ -8,19 +8,19 @@ public class CspParameterFinalizer() : ServiceBase($"{CspConstants.LogPrefix}.Pa
 {
     public CspParameters Finalize(CspParameters original)
     {
-        var wrapLog = Log.Fn<CspParameters>();
+        var l = Log.Fn<CspParameters>();
         // Empty, skip
-        if (original == null || !original.HasKeys()) return wrapLog.Return(original, "none");
+        if (original == null || !original.HasKeys()) return l.Return(original, "none");
         var merged = MergedWithAll(original);
         var deduped = DeduplicateValues(merged);
-        return wrapLog.ReturnAsOk(deduped);
+        return l.ReturnAsOk(deduped);
     }
 
     public CspParameters MergedWithAll(CspParameters original)
     {
-        var wrapLog = Log.Fn<CspParameters>();
+        var l = Log.Fn<CspParameters>();
         // Empty, skip
-        if (original == null || !original.HasKeys()) return wrapLog.Return(original, "none");
+        if (original == null || !original.HasKeys()) return l.Return(original, "none");
             
         // Create copy and remove the All from it
         var copy = new CspParameters(original);
@@ -31,7 +31,7 @@ public class CspParameterFinalizer() : ServiceBase($"{CspConstants.LogPrefix}.Pa
             .GetValues(CspConstants.AllSrcName)
             ?.Where(v => !string.IsNullOrWhiteSpace(v))
             .ToArray();
-        if (values == null || values.Length == 0) return wrapLog.Return(copy, "no values");
+        if (values == null || values.Length == 0) return l.Return(copy, "no values");
 
         // Make sure the default exists, as it must get all values from the all
         copy.Add(CspConstants.DefaultSrcName, null);
@@ -43,14 +43,14 @@ public class CspParameterFinalizer() : ServiceBase($"{CspConstants.LogPrefix}.Pa
         foreach (var key in existingSrcKeys)
         foreach (var value in values)
             copy.Add(key, value);
-        return wrapLog.ReturnAsOk(copy);
+        return l.ReturnAsOk(copy);
     }
 
     public CspParameters DeduplicateValues(CspParameters original)
     {
-        var wrapLog = Log.Fn<CspParameters>();
+        var l = Log.Fn<CspParameters>();
         // Empty, skip
-        if (original == null || !original.HasKeys()) return wrapLog.Return(original, "none");
+        if (original == null || !original.HasKeys()) return l.Return(original, "none");
         var copy = new CspParameters(original);
         var keys = copy.AllKeys;
         var dedupeCount = 0;
@@ -72,7 +72,7 @@ public class CspParameterFinalizer() : ServiceBase($"{CspConstants.LogPrefix}.Pa
             dedupeCount++;
         }
 
-        return wrapLog.Return(copy, $"deduped {dedupeCount}");
+        return l.Return(copy, $"deduped {dedupeCount}");
     }
         
 }

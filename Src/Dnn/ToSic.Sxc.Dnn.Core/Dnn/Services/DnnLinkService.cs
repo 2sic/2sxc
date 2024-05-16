@@ -20,10 +20,10 @@ internal class DnnLinkService : LinkServiceBase
     public DnnLinkService(ImgResizeLinker imgLinker, LazySvc<IValueConverter> dnnValueConverterLazy,
         LazySvc<ILinkPaths> linkPathsLazy, LazySvc<INavigationManager> navigationManager) : base(imgLinker, linkPathsLazy)
     {
-        ConnectServices(
+        ConnectLogs([
             _dnnValueConverterLazy = dnnValueConverterLazy,
             _navigationManager = navigationManager
-        );
+        ]);
     }
 
     private readonly LazySvc<IValueConverter> _dnnValueConverterLazy;
@@ -55,9 +55,8 @@ internal class DnnLinkService : LinkServiceBase
 
     private string Api(NoParamOrder noParamOrder = default, string path = null)
     {
-        //Eav.Parameters.Protect(noParamOrder, $"{nameof(path)}");
-
-        if (string.IsNullOrEmpty(path)) return string.Empty;
+        if (string.IsNullOrEmpty(path))
+            return string.Empty;
 
         path = path.ForwardSlash();
         path = path.TrimPrefixSlash();

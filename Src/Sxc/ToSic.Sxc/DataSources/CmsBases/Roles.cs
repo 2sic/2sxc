@@ -73,10 +73,10 @@ public class Roles : CustomDataSourceAdvanced
     [PrivateApi]
     public Roles(MyServices services, RolesDataSourceProvider provider, IDataFactory rolesFactory) : base(services, $"SDS.Roles")
     {
-        ConnectServices(
+        ConnectLogs([
             _provider = provider,
             _rolesFactory = rolesFactory.New(options: RoleDataRaw.Options)
-        );
+        ]);
         ProvideOut(GetList);
     }
 

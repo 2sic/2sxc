@@ -70,25 +70,28 @@ internal class SaveDataValidator(EditDto package, ILog parentLog = null) : Valid
     /// ensure all want to save to the same assignment type - either in group or not!
     /// </summary>
     private void VerifyAllGroupAssignmentsValid(IReadOnlyCollection<BundleWithHeader<JsonEntity>> list)
-        => Log.Do($"{list.Count}", () =>
+    {
+        var l = Log.Fn($"{list.Count}");
+        var groupAssignments = list.Select(i => i.Header.ContentBlockAppId).Where(g => g != null).ToList();
+        if (groupAssignments.Count == 0)
         {
-            var groupAssignments = list.Select(i => i.Header.ContentBlockAppId).Where(g => g != null).ToList();
-            if (groupAssignments.Count == 0)
-                return "none of the items is part of a list/group";
+            l.Done("none of the items is part of a list/group");
+            return;
+        }
 
-            if (groupAssignments.Count != list.Count)
-                Add($"Items in package with group: {groupAssignments} " +
-                    $"- should be 0 or {list.Count} (items in list) " +
-                    "- must stop, never expect items to come from different sources");
-            else
-            {
-                var firstInnerContentAppId = groupAssignments.First();
-                if (list.Any(i => i.Header.ContentBlockAppId != firstInnerContentAppId))
-                    Add("not all items have the same Group.ContentBlockAppId - this is required when using groups");
-            }
+        if (groupAssignments.Count != list.Count)
+            Add($"Items in package with group: {groupAssignments} " +
+                $"- should be 0 or {list.Count} (items in list) " +
+                "- must stop, never expect items to come from different sources");
+        else
+        {
+            var firstInnerContentAppId = groupAssignments.First();
+            if (list.Any(i => i.Header.ContentBlockAppId != firstInnerContentAppId))
+                Add("not all items have the same Group.ContentBlockAppId - this is required when using groups");
+        }
 
-            return "done";
-        });
+        l.Done("done");
+    }
 
 
     internal HttpExceptionAbstraction EntityIsOk(int count, IEntity newEntity) => Log.Func(() =>
@@ -155,8 +158,9 @@ internal class SaveDataValidator(EditDto package, ILog parentLog = null) : Valid
                 Add($"entity GUID mismatch on {count} - {newEntity.EntityGuid}/{originalEntity.EntityGuid}");
         });
 
-    private void CompareAttributes(int count, IEntity original, IEntity ent) => Log.Do(() =>
+    private void CompareAttributes(int count, IEntity original, IEntity ent)
     {
+        var l = Log.Fn();
         if (original.Attributes.Count != ent.Attributes.Count)
             Add($"entity {count} has different amount " +
                 $"of attributes {ent.Attributes.Count} " +
@@ -171,5 +175,7 @@ internal class SaveDataValidator(EditDto package, ILog parentLog = null) : Valid
                     Add($"found different type on attribute {origAttr.Key} " +
                         $"- '{origAttr.Value.Type}'/'{newAttr.Value.Type}'");
             }
-    });
+
+        l.Done();
+    }
 }

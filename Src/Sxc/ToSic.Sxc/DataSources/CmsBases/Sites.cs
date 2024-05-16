@@ -31,7 +31,7 @@ public class Sites: CustomDataSource
     [PrivateApi]
     public Sites(MyServices services, SitesDataSourceProvider sitesProvider) : base(services, logName: "CDS.Sites")
     {
-        ConnectServices(sitesProvider);
+        ConnectLogs([sitesProvider]);
         ProvideOutRaw(sitesProvider.GetSitesInternal, options: () => SiteDataRaw.Options);
     }
 }

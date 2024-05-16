@@ -16,10 +16,10 @@ internal class AppCodeCompilerNetFull : AppCodeCompiler
 
     public AppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironment, IReferencedAssembliesProvider referencedAssembliesProvider)
     {
-        ConnectServices(
+        ConnectLogs([
             _hostingEnvironment = hostingEnvironment,
             _referencedAssembliesProvider = referencedAssembliesProvider
-        );
+        ]);
 
         TempAssemblyFolderPath = Path.Combine(_hostingEnvironment.MapPath("~/App_Data"), "2sxc.bin");
         // Ensure "2sxc.bin" folder exists to preserve dlls

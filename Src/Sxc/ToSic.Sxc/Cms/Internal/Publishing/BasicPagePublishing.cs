@@ -9,11 +9,13 @@ internal class BasicPagePublishing : ServiceBase, IPagePublishing
 {
     public BasicPagePublishing(WarnUseOfUnknown<BasicPagePublishing> _) : base($"{LogScopes.NotImplemented}.Publsh") { }
 
-    public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action) => Log.Do(() =>
+    public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
     {
+        var l = Log.Fn();
         var versioningActionInfo = new VersioningActionInfo();
         action.Invoke(versioningActionInfo);
-    });
+        l.Done();
+    }
 
 
 

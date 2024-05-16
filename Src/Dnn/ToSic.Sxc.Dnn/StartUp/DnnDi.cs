@@ -9,8 +9,6 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Dnn.Startup;
 using ToSic.Sxc.Integration.Startup;
-using ToSic.Sxc.Polymorphism;
-using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sxc.Startup;
 
 
@@ -59,11 +57,6 @@ public static class DnnDi
     {
         // Integrate KOI Dnn-Parts
         services.TryAddTransient<Connect.Koi.Detectors.ICssFrameworkDetector, Connect.Koi.Dnn.DetectAndCacheDnnThemeCssFramework>();
-
-        // temp polymorphism - later put into AddPolymorphism
-        services.TryAddTransient<Koi>();
-        services.TryAddTransient<Permissions>();
-
         return services;
     }
 }

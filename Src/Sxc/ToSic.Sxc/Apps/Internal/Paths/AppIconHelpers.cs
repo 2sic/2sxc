@@ -4,7 +4,6 @@ using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using static System.StringComparison;
 using static ToSic.Eav.Apps.Internal.AppConstants;
@@ -12,20 +11,9 @@ using static ToSic.Eav.Apps.Internal.AppConstants;
 namespace ToSic.Sxc.Apps.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppIconHelpers : ServiceBase
+public class AppIconHelpers(LazySvc<IValueConverter> iconConverterLazy)
+    : ServiceBase("Viw.Help", connect: [iconConverterLazy])
 {
-    #region Constructor / DI
-
-    public AppIconHelpers(LazySvc<IValueConverter> iconConverterLazy): base("Viw.Help")
-    {
-        ConnectServices(
-            _iconConverterLazy = iconConverterLazy
-        );
-    }
-    private readonly LazySvc<IValueConverter> _iconConverterLazy;
-
-    #endregion
-
 
     public string IconPathOrNull(IAppPaths appPaths, IView view, PathTypes type)
     {
@@ -50,7 +38,7 @@ public class AppIconHelpers : ServiceBase
 
             // If not, we must assume it's file:## placeholder
             // URLs (Links) we can provide...
-            if (type == PathTypes.Link) return _iconConverterLazy.Value.ToValue(view.Icon, view.Guid);
+            if (type == PathTypes.Link) return iconConverterLazy.Value.ToValue(view.Icon, view.Guid);
 
             // ...but file:## can't convert to PhysFull; return it so the caller can check if it's a reference
             return view.Icon;

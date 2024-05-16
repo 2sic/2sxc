@@ -23,11 +23,11 @@ internal class OqtEnvironmentPermission : EnvironmentPermission
         LazySvc<IUserPermissions> userPermissions,
         LazySvc<IUser> oqtUser) : base(OqtConstants.OqtLogPrefix)
     {
-        ConnectServices(
+        ConnectLogs([
             _httpContextAccessor = httpContextAccessor,
             _userPermissions = userPermissions,
             _oqtUser = oqtUser
-        );
+        ]);
     }
 
     /// <summary>

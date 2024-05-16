@@ -1,10 +1,8 @@
 ﻿using System.IO;
-using System.Runtime.Caching;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Caching;
-using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
@@ -22,41 +20,33 @@ using ToSic.Sxc.Polymorphism.Internal;
 namespace ToSic.Sxc.DataSources.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
+internal class AppDataSourcesLoader(
+    ILogStore logStore,
+    ISite site,
+    IAppStates appStates,
+    LazySvc<IAppPathsMicroSvc> appPathsLazy,
+    LazySvc<CodeCompiler> codeCompilerLazy,
+    LazySvc<AppCodeLoader> appCodeLoaderLazy,
+    ISxcContextResolver ctxResolver,
+    PolymorphConfigReader polymorphism,
+    MemoryCacheService memoryCacheService)
+    : ServiceBase("Eav.AppDtaSrcLoad",
+        connect:
+        [
+            logStore, site, appStates, appPathsLazy, codeCompilerLazy, appCodeLoaderLazy, ctxResolver, polymorphism,
+            memoryCacheService
+        ]), IAppDataSourcesLoader
 {
     private const string DataSourcesFolder = "DataSources";
 
-    public AppDataSourcesLoader(ILogStore logStore, ISite site, IAppStates appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, LazySvc<CodeCompiler> codeCompilerLazy, LazySvc<AppCodeLoader> appCodeLoaderLazy, ISxcContextResolver ctxResolver, PolymorphConfigReader polymorphism, MemoryCacheService memoryCacheService) : base("Eav.AppDtaSrcLoad")
-    {
-        ConnectServices(
-            _logStore = logStore,
-            _site = site,
-            _appStates = appStates,
-            _appPathsLazy = appPathsLazy,
-            _codeCompilerLazy = codeCompilerLazy,
-            _appCodeLoaderLazy = appCodeLoaderLazy,
-            _ctxResolver = ctxResolver,
-            _polymorphism = polymorphism,
-            _memoryCacheService = memoryCacheService
-        );
-    }
-    private readonly ILogStore _logStore;
-    private readonly ISite _site;
-    private readonly IAppStates _appStates;
-    private readonly LazySvc<IAppPathsMicroSvc> _appPathsLazy;
-    private readonly LazySvc<CodeCompiler> _codeCompilerLazy;
-    private readonly LazySvc<AppCodeLoader> _appCodeLoaderLazy;
-    private readonly ISxcContextResolver _ctxResolver;
-    private readonly PolymorphConfigReader _polymorphism;
-    private readonly MemoryCacheService _memoryCacheService;
+    private readonly MemoryCacheService _memoryCacheService = memoryCacheService;
 
-    public (List<DataSourceInfo> data, CacheItemPolicy policy) CompileDynamicDataSources(int appId)
+    public (List<DataSourceInfo> data, TimeSpan slidingExpiration, IList<string> folderPaths, IEnumerable<string> cacheKeys) CompileDynamicDataSources(int appId)
     {
-        _logStore.Add(EavLogs.LogStoreAppDataSourcesLoader, Log);
+        logStore.Add(EavLogs.LogStoreAppDataSourcesLoader, Log);
         // Initial message for insights-overview
-        var l = Log.Fn<(List<DataSourceInfo> data, CacheItemPolicy policy)>($"{nameof(appId)}: {appId}", timer: true);
-        var expiration = new TimeSpan(1, 0, 0);
-        var policy = new CacheItemPolicy { SlidingExpiration = expiration };
+        var l = Log.Fn<(List<DataSourceInfo> data, TimeSpan slidingExpiration, IList<string> folderPaths, IEnumerable<string> cacheKeys)>($"{nameof(appId)}: {appId}", timer: true);
+        
         try
         {
             var spec = BuildHotBuildSpec(appId);
@@ -65,32 +55,43 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
             // 1. Get Custom Dynamic DataSources from 'AppCode' assembly
             var data = CreateDataSourceInfos(appId, LoadAppCodeDataSources(spec, out var cacheKey));
             l.A($"Custom Dynamic DataSources in {Constants.AppCode}:{data.Count}");
-            if (data.Any() && !string.IsNullOrEmpty(cacheKey))
-                policy.ChangeMonitors.Add(_memoryCacheService.CreateCacheEntryChangeMonitor([cacheKey])); // cache dependency on existing cache item with AppCode assembly 
 
             // 2. Get Custom Dynamic DataSources from 'DataSources' folder
             var (physicalPath, relativePath) = GetAppDataSourceFolderPaths(appId);
-            if (Directory.Exists(physicalPath))
+            var physicalPathExists = Directory.Exists(physicalPath);
+            if (physicalPathExists)
             {
                 var dsInDataSources = CreateDataSourceInfos(appId, LoadAppDataSources(spec, physicalPath, relativePath));
                 l.A($"Custom Dynamic DataSources in {DataSourcesFolder}:{dsInDataSources.Count}");
                 data = data.Concat(dsInDataSources).ToList();
-                policy.ChangeMonitors.Add(new FolderChangeMonitor(new List<string> { physicalPath }));
             }
 
             l.A($"Total Custom Dynamic DataSources:{data.Count}");
 
             // If the directory doesn't exist, return an empty list with a 3 minute policy
             // just so we don't keep trying to do this on every query
-            if (!data.Any() && !Directory.Exists(physicalPath))
-                return l.Return((new List<DataSourceInfo>(),
-                    new CacheItemPolicy { SlidingExpiration = new(0, 5, 0) }), "error");
+            if (!data.Any() && !physicalPathExists)
+                return l.Return((
+                            data: [],
+                            slidingExpiration: new(0, 5, 0),
+                            folderPaths: null,
+                            cacheKeys: null), 
+                            "error, directory do not exist");
 
-            return l.ReturnAsOk((data, policy));
+            return l.ReturnAsOk((
+                        data: data,
+                        slidingExpiration: new TimeSpan(1, 0, 0),
+                        folderPaths: physicalPathExists ? [physicalPath] : null,
+                        cacheKeys: (data.Any() && !string.IsNullOrEmpty(cacheKey)) ? [cacheKey] : null // cache dependency on existing cache item with AppCode assembly
+                        ));
         }
         catch
         {
-            return l.Return((new List<DataSourceInfo>(), policy), "error");
+            return l.ReturnAsError((
+                        data: [],
+                        slidingExpiration: new(0, 5, 0),
+                        folderPaths: null,
+                        cacheKeys: null));
         }
     }
 
@@ -99,7 +100,7 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
         var l = Log.Fn<HotBuildSpec>($"{appId}:'{appId}'", timer: true);
 
         // Prepare / Get App State
-        var appState = _appStates.GetReader(appId);
+        var appState = appStates.GetReader(appId);
 
         // Figure out the current edition
         var edition = FigureEdition().TrimLastSlash();
@@ -113,18 +114,16 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
     {
         var l = Log.Fn<string>(timer: true);
 
-        var block = _ctxResolver.BlockOrNull();
-        var edition = block == null
-            ? null
-            : PolymorphConfigReader.UseViewEditionOrGetLazy(block.View, () => _polymorphism.Init(block.Context.AppState.List));
+        var block = ctxResolver.BlockOrNull();
+        var edition = block.NullOrGetWith(polymorphism.UseViewEditionOrGet);
 
         return l.Return(edition);
     }
 
     private (string physicalPath, string relativePath) GetAppDataSourceFolderPaths(int appId)
     {
-        var appState = _appStates.GetReader(appId);
-        var appPaths = _appPathsLazy.Value.Init(_site, appState);
+        var appState = appStates.GetReader(appId);
+        var appPaths = appPathsLazy.Value.Init(site, appState);
         var physicalPath = Path.Combine(appPaths.PhysicalPath, DataSourcesFolder);
         var relativePath = Path.Combine(appPaths.RelativePath, DataSourcesFolder);
         return (physicalPath, relativePath);
@@ -148,7 +147,7 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
         var l = Log.Fn<IEnumerable<TempDsInfo>>();
 
         l.A("Search for DataSources in AppCode");
-        var (result, _) = _appCodeLoaderLazy.Value.GetAppCode(spec);
+        var (result, _) = appCodeLoaderLazy.Value.GetAppCode(spec);
 
         cacheKey = result?.CacheKey; // return for CacheEntryChangeMonitor
 
@@ -196,7 +195,7 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
         if (!Directory.Exists(physicalPath))
             return l.Return([], $"no {DataSourcesFolder} folder {physicalPath}");
 
-        var compiler = _codeCompilerLazy.Value;
+        var compiler = codeCompilerLazy.Value;
 
         var types = Directory
             .GetFiles(physicalPath, "*.cs", SearchOption.TopDirectoryOnly)
@@ -242,7 +241,7 @@ internal class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
         if (types == null) return l.Return([], "types are null");
 
         // App state for automatic lookup of configuration content-types
-        var appState = _appStates.GetReader(appId);
+        var appState = appStates.GetReader(appId);
         var data = types
             .Select(pair =>
             {

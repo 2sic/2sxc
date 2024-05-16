@@ -12,20 +12,12 @@ using MailMessage = System.Net.Mail.MailMessage;
 namespace ToSic.Sxc.Services.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
+public abstract class MailServiceBase(LazySvc<IUser> userLazy)
+    : ServiceForDynamicCode($"{SxcLogName}.MailSrv", connect: [userLazy]), IMailService
 {
     private static readonly Regex HtmlDetectionRegex = new("<(.*\\s*)>", RegexOptions.Compiled);
 
     [PrivateApi] protected IApp App;
-
-    private readonly LazySvc<IUser> _userLazy;
-
-    protected MailServiceBase(LazySvc<IUser> userLazy) : base($"{SxcLogName}.MailSrv")
-    {
-        ConnectServices(
-            _userLazy = userLazy
-        );
-    }
 
     /// <inheritdoc />
     public override void ConnectToRoot(ICodeApiService codeRoot)
@@ -37,8 +29,9 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
     protected abstract SmtpClient SmtpClient();
 
     /// <inheritdoc />
-    public void Send(MailMessage message) => Log.Do(() =>
+    public void Send(MailMessage message)
     {
+        var l = Log.Fn();
         try
         {
             using var client = SmtpClient();
@@ -46,12 +39,14 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
         }
         catch (Exception ex)
         {
-            Log.Ex(ex);
-            if (_userLazy.Value.IsSystemAdmin)
+            l.Ex(ex);
+            if (userLazy.Value.IsSystemAdmin)
                 throw;
             throw new("SMTP configuration problem.");
         }
-    });
+
+        l.Done();
+    }
 
     /// <inheritdoc />
     public MailMessage Create(
@@ -67,15 +62,12 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
         Encoding encoding = null,
         object attachments = null)
     {
-        var wrapLog = Log.Fn<MailMessage>(
+        var l = Log.Fn<MailMessage>(
             parameters: $"{nameof(from)}: {from}, {nameof(to)}: {to}, {nameof(cc)}: {cc}, {nameof(bcc)}: {bcc}, {nameof(replyTo)}: {replyTo}, " +
                         $"{nameof(subject)}: {subject}, {nameof(body)}: {body}, {nameof(isHtml)}: {isHtml}, {nameof(encoding)}: {encoding}, " +
                         $"{nameof(attachments)}: {attachments}");
 
         // prevent incorrect use without named parameters
-        //Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Create)}", 
-        //    $"{nameof(from)}, {nameof(to)}, {nameof(cc)}, {nameof(bcc)}, {nameof(replyTo)}, " +
-        //    $"{nameof(subject)}, {nameof(body)}, {nameof(isHtml)}, {nameof(encoding)}, {nameof(attachments)}");
 
         var mailMessage = new MailMessage();
             
@@ -93,7 +85,7 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
 
         AddAttachments(mailMessage.Attachments, attachments);
 
-        return wrapLog.Return(mailMessage, "done");
+        return l.Return(mailMessage, "done");
     }
 
     [PrivateApi] 
@@ -114,14 +106,10 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
         string body = null,
         bool? isHtml = null,
         Encoding encoding = null,
-        object attachments = null) => Log.Do(() =>
+        object attachments = null)
     {
+        var l = Log.Fn();
         // Note: don't log all the parameters here, because we'll do it again on the Create-call
-        // prevent incorrect use without named parameters
-        //Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Send)}",
-        //    $"{nameof(from)}, {nameof(to)}, {nameof(cc)}, {nameof(bcc)}, {nameof(replyTo)}, " +
-        //    $"{nameof(subject)}, {nameof(body)}, {nameof(isHtml)}, {nameof(encoding)}, {nameof(attachments)}");
-
         var mailMessage = Create(
             from: from,
             to: to,
@@ -133,7 +121,8 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
             isHtml: isHtml, encoding: encoding, attachments: attachments);
 
         Send(mailMessage);
-    });
+        l.Done();
+    }
 
     // 2024-01-10 2dm internalized - doesn't seem in use, and also not clear why we would have this
     // was probably an experiment from STV during dev, but we shouldn't keep it in the interface
@@ -154,33 +143,33 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
     // was probably an experiment from STV during dev, but we shouldn't keep it in the interface
     internal bool AddMailAddresses(string addressType, MailAddressCollection targetMails, object mailAddresses)
     {
-        var wrapLog = Log.Fn<bool>(); // return a bool just to make return-statements easier later on
+        var l = Log.Fn<bool>(); // return a bool just to make return-statements easier later on
 
         switch (mailAddresses)
         {
             case MailAddressCollection inputMailAddressCollection:
                 foreach (var mailAddress in inputMailAddressCollection) 
                     targetMails.Add(mailAddress);
-                return wrapLog.ReturnTrue(nameof(MailAddressCollection));
+                return l.ReturnTrue(nameof(MailAddressCollection));
 
             case IEnumerable<MailAddress> inputMailAddressesArray:
                 foreach (var mailAddress in inputMailAddressesArray) 
                     targetMails.Add(mailAddress);
-                return wrapLog.ReturnTrue(nameof(IEnumerable<MailAddress>));
+                return l.ReturnTrue(nameof(IEnumerable<MailAddress>));
 
             case IEnumerable<string> inputStringArray:
                 foreach (var emailAddress in inputStringArray)
                     if (!string.IsNullOrEmpty(emailAddress))
                         targetMails.Add(emailAddress);
-                return wrapLog.ReturnTrue(nameof(IEnumerable<string>));
+                return l.ReturnTrue(nameof(IEnumerable<string>));
 
             case string inputString: 
                 if (!string.IsNullOrEmpty(inputString)) 
                     targetMails.Add(NormalizeEmailSeparators(inputString));
-                return wrapLog.ReturnTrue("string");
+                return l.ReturnTrue("string");
 
             case null:
-                return wrapLog.ReturnTrue("null");
+                return l.ReturnTrue("null");
 
             default:
                 throw new ArgumentException($"Trying to parse e-mails for {addressType} but got unknown type for {nameof(mailAddresses)}");
@@ -195,35 +184,35 @@ public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
 
     public bool AddAttachments(AttachmentCollection targetAttachments, object attachments)
     {
-        var wrapLog = Log.Fn<bool>(); // return a bool just to make return-statements easier later on
+        var l = Log.Fn<bool>(); // return a bool just to make return-statements easier later on
         switch (attachments)
         {
             case Attachment inputAttachment:
                 targetAttachments.Add(inputAttachment);
-                return wrapLog.ReturnTrue(nameof(Attachment));
+                return l.ReturnTrue(nameof(Attachment));
 
             case AttachmentCollection attachmentCollection:
                 foreach (var attachment in attachmentCollection) 
                     targetAttachments.Add(attachment);
-                return wrapLog.ReturnTrue(nameof(AttachmentCollection));
+                return l.ReturnTrue(nameof(AttachmentCollection));
 
             case IEnumerable<Attachment> inputAttachmentsArray:
                 foreach (var attachment in inputAttachmentsArray) 
                     targetAttachments.Add(attachment);
-                return wrapLog.ReturnTrue(nameof(IEnumerable<Attachment>));
+                return l.ReturnTrue(nameof(IEnumerable<Attachment>));
 
             case IFile inputFile:
                 targetAttachments.Add(new(
                     new FileStream(inputFile.PhysicalPath, FileMode.Open, FileAccess.Read, FileShare.Read),
                     inputFile.FullName));
-                return wrapLog.ReturnTrue(nameof(IFile));
+                return l.ReturnTrue(nameof(IFile));
 
             case IEnumerable<IFile> inputFiles:
                 foreach (var file in inputFiles)
                     targetAttachments.Add(new(
                         new FileStream(file.PhysicalPath, FileMode.Open, FileAccess.Read, FileShare.Read),
                         file.FullName));
-                return wrapLog.ReturnTrue(nameof(IEnumerable<IFile>));
+                return l.ReturnTrue(nameof(IEnumerable<IFile>));
 
             default:
                 throw new ArgumentException($"Unknown type for {nameof(attachments)}");

@@ -30,10 +30,10 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
 
         public MyServices(LazySvc<CodeDataFactory> cdf, AdamConfiguration adamConfiguration)
         {
-            ConnectServices(
+            ConnectLogs([
                 Cdf = cdf,
                 AdamConfiguration = adamConfiguration
-            );
+            ]);
         }
     }
 

@@ -11,23 +11,18 @@ using ToSic.Sxc.Oqt.Shared;
 namespace ToSic.Sxc.Oqt.Server.Plumbing;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class SiteStateInitializer: ServiceBase
+public class SiteStateInitializer(
+    LazySvc<SiteState> siteStateLazy,
+    LazySvc<Oqtane.Infrastructure.SiteState> siteState2Lazy,
+    IHttpContextAccessor httpContextAccessor,
+    LazySvc<IAliasRepository> aliasRepositoryLazy)
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.SSInit",
+        connect: [siteStateLazy, siteState2Lazy, httpContextAccessor, aliasRepositoryLazy])
 {
-    public LazySvc<SiteState> SiteStateLazy { get; }
-    public LazySvc<Oqtane.Infrastructure.SiteState> SiteState2Lazy { get; }
-    public IHttpContextAccessor HttpContextAccessor { get; }
-    public LazySvc<IAliasRepository> AliasRepositoryLazy { get; }
-
-    public SiteStateInitializer(LazySvc<SiteState> siteStateLazy, LazySvc<Oqtane.Infrastructure.SiteState> siteState2Lazy, IHttpContextAccessor httpContextAccessor,
-        LazySvc<IAliasRepository> aliasRepositoryLazy): base($"{OqtConstants.OqtLogPrefix}.SSInit")
-    {
-        ConnectServices(
-            SiteStateLazy = siteStateLazy,
-            SiteState2Lazy = siteState2Lazy,
-            HttpContextAccessor = httpContextAccessor,
-            AliasRepositoryLazy = aliasRepositoryLazy
-        );
-    }
+    public LazySvc<SiteState> SiteStateLazy { get; } = siteStateLazy;
+    public LazySvc<Oqtane.Infrastructure.SiteState> SiteState2Lazy { get; } = siteState2Lazy;
+    public IHttpContextAccessor HttpContextAccessor { get; } = httpContextAccessor;
+    public LazySvc<IAliasRepository> AliasRepositoryLazy { get; } = aliasRepositoryLazy;
 
     /// <summary>
     /// Use this from inner code, which must always have an initialized state.

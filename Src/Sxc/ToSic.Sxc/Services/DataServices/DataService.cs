@@ -7,7 +7,6 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.Services;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Services.Internal;
 
@@ -16,37 +15,20 @@ namespace ToSic.Sxc.Services.DataServices;
 
 [PrivateApi("hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal partial class DataService: ServiceForDynamicCode, IDataService
+internal partial class DataService(
+    LazySvc<IDataSourcesService> dataSources,
+    LazySvc<DataSourceCatalog> catalog,
+    LazySvc<IAppStates> appStates,
+    LazySvc<QueryManager> queryManager,
+    IUser user)
+    : ServiceForDynamicCode("Sxc.DatSvc", connect: [user, dataSources, catalog, appStates, queryManager]), IDataService
 {
-    private readonly LazySvc<IDataSourcesService> _dataSources;
-    private readonly LazySvc<DataSourceCatalog> _catalog;
-    private readonly LazySvc<IAppStates> _appStates;
-    private readonly LazySvc<QueryManager> _queryManager;
-    private readonly IUser _user;
-
-    public DataService(
-        LazySvc<IDataSourcesService> dataSources,
-        LazySvc<DataSourceCatalog> catalog,
-        LazySvc<IAppStates> appStates,
-        LazySvc<QueryManager> queryManager,
-        IUser user) : base("Sxc.DatSvc")
-    {
-        _user = user;
-        ConnectServices(
-            _dataSources = dataSources,
-            _catalog = catalog,
-            _appStates = appStates,
-            _queryManager = queryManager
-        );
-    }
-
     public override void ConnectToRoot(ICodeApiService codeRoot)
     {
         base.ConnectToRoot(codeRoot);
         Setup(codeRoot.App, () => (codeRoot as CodeApiService)?.LookUpForDataSources);
     }
 
-    [PrivateApi]
     internal IDataService Setup(IAppIdentity appIdentity, Func<ILookUpEngine> getLookup)
     {
         _appIdentity = appIdentity ?? _appIdentity;
@@ -62,13 +44,13 @@ internal partial class DataService: ServiceForDynamicCode, IDataService
         {
             if (appId != default)
                 appIdentity = zoneId == default
-                    ? _appStates.Value.IdentityOfApp(appId)
+                    ? appStates.Value.IdentityOfApp(appId)
                     : new AppIdentity(zoneId, appId);
             else
                 appIdentity = _appIdentity;
         }
 
-        var newDs = new DataService(_dataSources, _catalog, _appStates, _queryManager, _user);
+        var newDs = new DataService(dataSources, catalog, appStates, queryManager, user);
         if (_CodeApiSvc != null)
         {
             newDs.ConnectToRoot(_CodeApiSvc);
@@ -91,7 +73,7 @@ internal partial class DataService: ServiceForDynamicCode, IDataService
     {
         var l = Log.Fn<IDataSource>($"{nameof(options)}: {options}");
         var fullOptions = OptionsMs.SafeOptions(parameters, options: options, identityRequired: true);
-        var appSource = _dataSources.Value.CreateDefault(fullOptions);
+        var appSource = dataSources.Value.CreateDefault(fullOptions);
         return l.Return(appSource);
     }
 
@@ -103,7 +85,7 @@ internal partial class DataService: ServiceForDynamicCode, IDataService
         IDataSourceLinkable attach = default,
         object parameters = default)
     {
-        return new GetQueryMs(_queryManager, OptionsMs, Log).GetQuery(name, noParamOrder, attach, parameters);
+        return new GetQueryMs(queryManager, OptionsMs, Log).GetQuery(name, noParamOrder, attach, parameters);
     }
 
     #endregion

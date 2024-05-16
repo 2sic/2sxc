@@ -73,10 +73,10 @@ public class AdamFiles : DataSourceBase
     [PrivateApi]
     public AdamFiles(MyServices services, AdamDataSourceProvider<int, int> provider, IDataFactory dataDataFactory) : base(services, "CDS.Adam")
     {
-        ConnectServices(
+        ConnectLogs([
             _provider = provider,
             _dataFactory = dataDataFactory
-        );
+        ]);
 
         ProvideOut(GetInternal);
         ProvideOut(GetFolders, "Folders");

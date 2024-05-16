@@ -120,11 +120,11 @@ public class Pages: CustomDataSourceAdvanced
     [PrivateApi]
     public Pages(MyServices services, PagesDataSourceProvider provider, IDataFactory dataFactory, ITreeMapper treeMapper) : base(services, "CDS.Pages")
     {
-        ConnectServices(
+        ConnectLogs([
             _provider = provider,
             _pageFactory = dataFactory.New(options: PageDataRaw.Option),
             _treeMapper = treeMapper
-        );
+        ]);
         ProvideOut(GetPages);
     }
     #endregion

@@ -9,19 +9,8 @@ namespace ToSic.Sxc.Code.Internal.HotBuild;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class CodeCompiler : ServiceBase
+public abstract class CodeCompiler(IServiceProvider serviceProvider) : ServiceBase("Sys.CsCmpl", connect: [/* never! serviceProvider */ ])
 {
-    private readonly IServiceProvider _serviceProvider;
-
-    #region Constructor / DI
-
-    internal CodeCompiler(IServiceProvider serviceProvider) : base("Sys.CsCmpl")
-    {
-        _serviceProvider = serviceProvider;
-    }
-
-    #endregion
-
     public const string CsFileExtension = ".cs";
     public const string CsHtmlFileExtension = ".cshtml";
     public const string SharedCodeRootPathKeyInCache = "SharedCodeRootPath";
@@ -63,7 +52,7 @@ public abstract class CodeCompiler : ServiceBase
             return null;
         }
 
-        var instance = _serviceProvider.Build<object>(compiledType, Log);
+        var instance = serviceProvider.Build<object>(compiledType, Log);
         AttachRelativePath(virtualPath, instance);
 
         return l.Return(instance, $"found: {instance != null}");

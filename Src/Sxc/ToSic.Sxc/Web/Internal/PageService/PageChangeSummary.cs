@@ -21,8 +21,9 @@ public class PageChangeSummary(
     LazySvc<RequirementsService> requirements)
     : ServiceBase(SxcLogName + "PgChSm", connect: [requirements, resourceExtractor])
 {
-    public IRenderResult FinalizeAndGetAllChanges(PageServiceShared pss, bool enableEdit) => Log.Func(timer: true, func: () =>
+    public IRenderResult FinalizeAndGetAllChanges(PageServiceShared pss, bool enableEdit)
     {
+        var l = Log.Fn<IRenderResult>(timer: true);
         if (enableEdit)
         {
             pss.Activate(SxcPageFeatures.ToolbarsInternal.NameId);
@@ -63,17 +64,17 @@ public class PageChangeSummary(
 
         // Whitelist any assets which were officially ok, or which were from the settings
         var additionalCsp = GetCspListFromAssets(assets);
-        if (additionalCsp != null) result.CspParameters.Add(additionalCsp);
+        if (additionalCsp != null)
+            result.CspParameters.Add(additionalCsp);
 
-        return result;
-    });
+        return l.Return(result);
+    }
 
 
 
-    private (List<IClientAsset> newAssets, List<IPageFeature> rest) ConvertSettingsAssetsIntoReal(
-        List<PageFeatureFromSettings> featuresFromSettings
-    ) => Log.Func($"{featuresFromSettings.Count}", l =>
+    private (List<IClientAsset> newAssets, List<IPageFeature> rest) ConvertSettingsAssetsIntoReal(List<PageFeatureFromSettings> featuresFromSettings)
     {
+        var l = Log.Fn<(List<IClientAsset> newAssets, List<IPageFeature> rest)>($"{featuresFromSettings.Count}");
         var newAssets = new List<IClientAsset>();
         foreach (var settingFeature in featuresFromSettings)
         {
@@ -106,8 +107,8 @@ public class PageChangeSummary(
             .Cast<IPageFeature>()
             .ToList();
 
-        return ((newAssets, featsLeft), $"New: {newAssets.Count}; Rest: {featsLeft.Count}");
-    });
+        return l.Return((newAssets, featsLeft), $"New: {newAssets.Count}; Rest: {featsLeft.Count}");
+    }
 
     private CspParameters GetCspListFromAssets(List<IClientAsset> assets)
     {
@@ -123,6 +124,5 @@ public class PageChangeSummary(
 
         return whitelist;
     }
-
 
 }

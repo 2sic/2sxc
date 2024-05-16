@@ -20,52 +20,32 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 namespace ToSic.Sxc.Backend.Sys;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class InstallControllerReal : ServiceBase
+public class InstallControllerReal(
+    LazySvc<IContextOfSite> context,
+    LazySvc<IEnvironmentInstaller> envInstallerLazy,
+    LazySvc<IPlatformAppInstaller> platformAppInstaller,
+    LazySvc<ImportFromRemote> impFromRemoteLazy,
+    IResponseMaker responseMaker,
+    LazySvc<IFeaturesService> featureService,
+    LazySvc<AppsBackend> appsBackend,
+    LazySvc<IAppStates> appStates,
+    LazySvc<AppDataStackService> appSettingsStack)
+    : ServiceBase($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl",
+        connect:
+        [
+            context, envInstallerLazy, platformAppInstaller, impFromRemoteLazy, responseMaker, featureService,
+            appStates, appSettingsStack, appsBackend
+        ])
 {
-    private readonly LazySvc<IPlatformAppInstaller> _platformAppInstaller;
-    private readonly LazySvc<IFeaturesService> _featureService;
-    private readonly LazySvc<IContextOfSite> _context;
-    private readonly LazySvc<IEnvironmentInstaller> _envInstallerLazy;
-    private readonly LazySvc<ImportFromRemote> _impFromRemoteLazy;
-    private readonly IResponseMaker _responseMaker;
-    private readonly LazySvc<IAppStates> _appStates;
-    private readonly LazySvc<AppDataStackService> _appSettingsStack;
-    private readonly LazySvc<AppsBackend> _appsBackendLazy;
-
     public const string LogSuffix = "Install";
 
     #region System Installation
-
-    public InstallControllerReal(
-        LazySvc<IContextOfSite> context,
-        LazySvc<IEnvironmentInstaller> envInstallerLazy, 
-        LazySvc<IPlatformAppInstaller> platformAppInstaller,
-        LazySvc<ImportFromRemote> impFromRemoteLazy,
-        IResponseMaker responseMaker,
-        LazySvc<IFeaturesService> featureService,
-        LazySvc<AppsBackend> appsBackend,
-        LazySvc<IAppStates> appStates,
-        LazySvc<AppDataStackService> appSettingsStack) : base($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl")
-    {
-        ConnectServices(
-            _context = context,
-            _envInstallerLazy = envInstallerLazy,
-            _platformAppInstaller = platformAppInstaller,
-            _impFromRemoteLazy = impFromRemoteLazy,
-            _responseMaker = responseMaker,
-            _featureService = featureService,
-            _appStates = appStates,
-            _appSettingsStack = appSettingsStack,
-            _appsBackendLazy = appsBackend
-        );
-    }
-
 
     /// <summary>
     /// Finish system installation which had somehow been interrupted
     /// </summary>
     /// <returns></returns>
-    public bool Resume() => _envInstallerLazy.Value.ResumeAbortedUpgrade();
+    public bool Resume() => envInstallerLazy.Value.ResumeAbortedUpgrade();
 
     #endregion
 
@@ -74,12 +54,12 @@ public class InstallControllerReal : ServiceBase
     public InstallAppsDto InstallSettings(bool isContentApp, IModule module)
     {
         // Get Remote Install URL
-        var site = _context.Value.Site;
-        var url = _platformAppInstaller.Value
+        var site = context.Value.Site;
+        var url = platformAppInstaller.Value
             .GetAutoInstallPackagesUiUrl(site, module, isContentApp);
 
         // Get list of already installed Apps
-        var appsOfThisSite = _appsBackendLazy.Value.Apps()
+        var appsOfThisSite = appsBackend.Value.Apps()
             .Select(a => new AppDtoLight
             {
                 name = a.Name,
@@ -89,8 +69,8 @@ public class InstallControllerReal : ServiceBase
             .ToList();
 
         // Get list of allow/forbid rules for the App installer
-        var primaryApp = _appStates.Value.GetPrimaryReader(site.ZoneId, Log);
-        var settingsSources = _appSettingsStack.Value.Init(primaryApp).GetStack(AppStackConstants.Settings);
+        var primaryApp = appStates.Value.GetPrimaryReader(site.ZoneId, Log);
+        var settingsSources = appSettingsStack.Value.Init(primaryApp).GetStack(AppStackConstants.Settings);
         var stack = new PropertyStack().Init(AppStackConstants.RootNameSettings, settingsSources);
 
         var rules = stack.InternalGetPath(new PropReqSpecs("SiteSetup.AutoInstallApps", null, Log), null);
@@ -99,7 +79,7 @@ public class InstallControllerReal : ServiceBase
             .Select(e => new SiteSetupAutoInstallAppsRule(e).GetRuleDto())
             .ToList();
 
-        if (!_featureService.Value.IsEnabled(BuiltInFeatures.AppAutoInstallerConfigurable.NameId))
+        if (!featureService.Value.IsEnabled(BuiltInFeatures.AppAutoInstallerConfigurable.NameId))
         {
             Log.A("will not add installer rules as the feature is not enabled");
             rulesFinal = [];
@@ -121,21 +101,21 @@ public class InstallControllerReal : ServiceBase
     /// <returns></returns>
     public THttpResponseType RemotePackage(string packageUrl, IModule container)
     {
-        var wrapLog = Log.Fn<THttpResponseType>();
+        var l = Log.Fn<THttpResponseType>();
 
         var isApp = !container.IsContent;
 
         Log.A("install package:" + packageUrl);
 
         var block = container.BlockIdentifier;
-        var (success, messages) = _impFromRemoteLazy.Value
+        var (success, messages) = impFromRemoteLazy.Value
             .InstallPackage(block.ZoneId, block.AppId, isApp, packageUrl);
 
         Log.A("install completed with success:" + success);
 
         return success 
-            ? wrapLog.ReturnAsOk(_responseMaker.Ok()) 
-            : wrapLog.Return(_responseMaker.InternalServerError(MessageBuilder(messages)), "error");
+            ? l.ReturnAsOk(responseMaker.Ok()) 
+            : l.Return(responseMaker.InternalServerError(MessageBuilder(messages)), "error");
     }
 
     private static string MessageBuilder(List<Message> messages)

@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Oqtane.Repository;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
 using ToSic.Eav.Caching;
@@ -19,8 +17,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers;
 
 internal class EditUiMiddleware
 {
-
-
     public static Task PageOutputCached(HttpContext context, IWebHostEnvironment env, string virtualPath, EditUiResourceSettings settings)
     {
         context.Response.Headers.Add("test-dev", "2sxc");
@@ -37,7 +33,7 @@ internal class EditUiMiddleware
             var bytesInFile = File.ReadAllBytes(path);
             html = Encoding.Default.GetString(bytesInFile);
             html = HtmlDialog.CleanImport(html);
-            memoryCacheService.Set(key, html, GetCacheItemPolicy(path));
+            memoryCacheService.Set(key, html, filePaths: [path]);
         }
 
         //var html = Encoding.Default.GetString(bytes);
@@ -91,12 +87,5 @@ internal class EditUiMiddleware
         return Task.CompletedTask;
     }
 
-    private static string CacheKey(string virtualPath) => $"2sxc-edit-ui-page-{virtualPath}";
-
-    private static CacheItemPolicy GetCacheItemPolicy(string filePath)
-    {
-        var cacheItemPolicy = new CacheItemPolicy();
-        cacheItemPolicy.ChangeMonitors.Add(new HostFileChangeMonitor(new List<string> { filePath }));
-        return cacheItemPolicy;
-    }
+    private static string CacheKey(string virtualPath) => $"ToSic.Sxc.Oqt.Server.Controllers.{nameof(EditUiMiddleware)}:{virtualPath}";
 }

@@ -5,31 +5,16 @@ using ToSic.Sxc.Backend.Adam;
 namespace ToSic.Sxc.Backend.Cms;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class HyperlinkBackend<TFolderId, TFileId>: ServiceBase
+public class HyperlinkBackend<TFolderId, TFileId>(
+    LazySvc<AdamContext<TFolderId, TFileId>> adamState,
+    ISxcContextResolver ctxResolver,
+    Generator<MultiPermissionsApp> appPermissions,
+    Generator<AdamItemDtoMaker<TFolderId, TFileId>> adamDtoMaker,
+    IValueConverter valueConverter)
+    : ServiceBase("Bck.HypLnk", connect: [adamState, appPermissions, ctxResolver, valueConverter])
 {
-    private readonly Generator<AdamItemDtoMaker<TFolderId, TFileId>> _adamDtoMaker;
-    private readonly IValueConverter _valueConverter;
-    private readonly Generator<MultiPermissionsApp> _appPermissions;
-    private readonly LazySvc<AdamContext<TFolderId, TFileId>> _adamState;
-    private readonly ISxcContextResolver _ctxResolver;
-    private AdamContext<TFolderId, TFileId> AdamContext => _adamState.Value;
+    private AdamContext<TFolderId, TFileId> AdamContext => adamState.Value;
 
-    public HyperlinkBackend(
-        LazySvc<AdamContext<TFolderId, TFileId>> adamState,
-        ISxcContextResolver ctxResolver,
-        Generator<MultiPermissionsApp> appPermissions,
-        Generator<AdamItemDtoMaker<TFolderId, TFileId>> adamDtoMaker,
-        IValueConverter valueConverter) : base("Bck.HypLnk")
-    {
-        _adamDtoMaker = adamDtoMaker;
-        ConnectServices(
-            _adamState = adamState,
-            _appPermissions = appPermissions,
-            _ctxResolver = ctxResolver,
-            _valueConverter = valueConverter
-        );
-    }
-        
 
     public LinkInfoDto LookupHyperlink(int appId, string hyperlink, string contentType, Guid guid, string field)
     {
@@ -39,19 +24,19 @@ public class HyperlinkBackend<TFolderId, TFileId>: ServiceBase
             if (string.IsNullOrEmpty(hyperlink))
                 return new() { Value = hyperlink };
 
-            var context = _ctxResolver.GetBlockOrSetApp(appId);
+            var context = ctxResolver.GetBlockOrSetApp(appId);
             // different security checks depending on the link-type
             var lookupPage = hyperlink.Trim().StartsWith(ValueConverterBase.PrefixPage, StringComparison.OrdinalIgnoreCase);
 
             // look it up first, because we need to know if the result is in ADAM or not (different security scenario)
-            var conv = _valueConverter;
+            var conv = valueConverter;
             var resolved = conv.ToValue(hyperlink, guid);
 
             if (lookupPage)
             {
                 // page link - only resolve if the user has edit-permissions
                 // only people who have some full edit permissions may actually look up pages
-                var permCheckPage = _appPermissions.New().Init(context, context.AppState);
+                var permCheckPage = appPermissions.New().Init(context, context.AppState);
                 var userMay= permCheckPage.UserMayOnAll(GrantSets.WritePublished);
                 return new() {Value = userMay ? resolved : hyperlink};
             }
@@ -64,7 +49,7 @@ public class HyperlinkBackend<TFolderId, TFileId>: ServiceBase
 
             // file-check, more abilities to allow
             // this will already do a ensure-or-throw inside it if outside of adam
-            var adamContext = _adamState.Value;
+            var adamContext = adamState.Value;
             adamContext.Init(context, contentType, field, guid, isOutsideOfAdam, cdf: null);
             if (!adamContext.Security.SuperUserOrAccessingItemFolder(resolved, out var exp))
                 throw exp;
@@ -80,7 +65,7 @@ public class HyperlinkBackend<TFolderId, TFileId>: ServiceBase
 
             // Note: kind of temporary solution, will fail if TFileId isn't int!
             var file = ((IAdamFileSystem<int, int>)adamContext.AdamManager.AdamFs).GetFile(parts.Id);
-            var dtoMaker = _adamDtoMaker.New().Init(AdamContext);
+            var dtoMaker = adamDtoMaker.New().Init(AdamContext);
             // if everything worked till now, it's ok to return the result
             var adam = dtoMaker.Create(file as File<TFolderId, TFileId>);
             return new() {Adam = adam, Value = adam.Url};

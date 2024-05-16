@@ -30,11 +30,11 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     /// </summary>
     public DnnSite(LazySvc<IZoneMapper> zoneMapperLazy, LazySvc<ILinkPaths> linkPathsLazy, LazySvc<IEavFeaturesService> featuresSvc): base(DnnConstants.LogName)
     {
-        ConnectServices(
+        ConnectLogs([
             _featuresSvc = featuresSvc,
             _zoneMapperLazy = zoneMapperLazy,
             _linkPathsLazy = linkPathsLazy
-        );
+        ]);
         TryInitPortal(null);
     }
     private readonly LazySvc<IZoneMapper> _zoneMapperLazy;

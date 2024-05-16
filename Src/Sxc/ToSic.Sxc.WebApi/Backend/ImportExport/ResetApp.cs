@@ -15,62 +15,36 @@ namespace ToSic.Sxc.Backend.ImportExport;
 /// This object will ensure that an app is reset to the state it was in when the app.xml was last exported
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ResetApp: ServiceBase
+public class ResetApp(
+    LazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
+    ImpExpHelpers impExpHelpers,
+    WorkAppsRemove workAppsRemove,
+    ISite site,
+    IUser user,
+    IImportExportEnvironment env,
+    ZipImport zipImport,
+    IEavFeaturesService features,
+    IAppPathsMicroSvc appPathSvc)
+    : ServiceBase("Bck.Export",
+        connect:
+        [
+            xmlImportWithFilesLazy, impExpHelpers, workAppsRemove, site, user, env, zipImport, features, appPathSvc
+        ])
 {
-
-    #region Constructor / DI
-
-    public ResetApp(
-        LazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
-        ImpExpHelpers impExpHelpers,
-        WorkAppsRemove workAppsRemove,
-        ISite site,
-        IUser user,
-        IImportExportEnvironment env,
-        ZipImport zipImport,
-        IEavFeaturesService features,
-        IAppPathsMicroSvc appPathSvc
-    ) : base("Bck.Export")
-    {
-        ConnectServices(
-            _xmlImportWithFilesLazy = xmlImportWithFilesLazy,
-            _impExpHelpers = impExpHelpers,
-            _workAppsRemove = workAppsRemove,
-            _site = site,
-            _user = user,
-            _env = env,
-            _zipImport = zipImport,
-            _features = features,
-            _appPathSvc = appPathSvc
-        );
-    }
-
-    private readonly IAppPathsMicroSvc _appPathSvc;
-    private readonly WorkAppsRemove _workAppsRemove;
-
-    private readonly LazySvc<XmlImportWithFiles> _xmlImportWithFilesLazy;
-    private readonly ImpExpHelpers _impExpHelpers;
-    private readonly ISite _site;
-    private readonly IUser _user;
-    private readonly IImportExportEnvironment _env;
-    private readonly ZipImport _zipImport;
-    private readonly IEavFeaturesService _features;
-
-    #endregion
 
     internal ImportResultDto Reset(int zoneId, int appId, string defaultLanguage, bool withSiteFiles)
     {
         var l = Log.Fn<ImportResultDto>($"Reset App {zoneId}/{appId}");
         var result = new ImportResultDto();
 
-        SecurityHelpers.ThrowIfNotSiteAdmin(_user, Log);
+        SecurityHelpers.ThrowIfNotSiteAdmin(user, Log);
 
         // Ensure feature available...
-        ExportApp.SyncWithSiteFilesVerifyFeaturesOrThrow(_features, withSiteFiles);
+        ExportApp.SyncWithSiteFilesVerifyFeaturesOrThrow(features, withSiteFiles);
 
-        var contextZoneId = _site.ZoneId;
-        var appRead = _impExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
-        var appPaths = _appPathSvc.Init(_site, appRead);
+        var contextZoneId = site.ZoneId;
+        var appRead = impExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, contextZoneId);
+        var appPaths = appPathSvc.Init(site, appRead);
 
         // migrate old .data/app.xml to App_Data
         ZipImport.MigrateOldAppDataFile(appPaths.PhysicalPath);
@@ -94,7 +68,7 @@ public class ResetApp: ServiceBase
         }
 
         // 2. Now we can delete the app before we prepare the import
-        _workAppsRemove.RemoveAppInSiteAndEav(zoneId, appId, false);
+        workAppsRemove.RemoveAppInSiteAndEav(zoneId, appId, false);
 
         // 3. Optional reset SiteFiles
         if (withSiteFiles)
@@ -105,18 +79,18 @@ public class ResetApp: ServiceBase
             var globalTemplatesStateFolder = Path.Combine(appDataFolder, Eav.Constants.ZipFolderForGlobalAppStuff);
             if (Directory.Exists(globalTemplatesStateFolder))
             {
-                _zipImport.Init(zoneId, appId, allowCode: true);
+                zipImport.Init(zoneId, appId, allowCode: true);
                 var discard = new List<Message>();
-                _zipImport.CopyAppGlobalFiles(discard, appId, sourcePath, deleteGlobalTemplates: true, overwriteFiles: true);
+                zipImport.CopyAppGlobalFiles(discard, appId, sourcePath, deleteGlobalTemplates: true, overwriteFiles: true);
             }
 
             // Copy portal files persisted in /App_Data/SiteFiles/ back to site
-            _env.TransferFilesToSite(Path.Combine(sourcePath, Eav.Constants.ZipFolderForSiteFiles), string.Empty);
+            env.TransferFilesToSite(Path.Combine(sourcePath, Eav.Constants.ZipFolderForSiteFiles), string.Empty);
         }
 
         // 4. Now import the App.xml
-        var allowSystemChanges = _user.IsSystemAdmin;
-        var xmlImport = _xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges);
+        var allowSystemChanges = user.IsSystemAdmin;
+        var xmlImport = xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges);
         var imp = new ImportXmlReader(filePath, xmlImport, Log);
         result.Success = xmlImport.ImportXml(zoneId, appId, imp.XmlDoc);
         result.Messages.AddRange(xmlImport.Messages);

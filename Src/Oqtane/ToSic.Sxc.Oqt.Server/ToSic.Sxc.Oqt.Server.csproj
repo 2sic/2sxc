@@ -108,7 +108,7 @@
     <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.5" /><!-- from Oqtane.Server.csproj -->
     <PackageReference Include="Oqtane.Server" Version="4.0.0" />
     <PackageReference Include="Oqtane.Shared" Version="4.0.0" />
-    <PackageReference Include="ToSic.Imageflow.Oqtane" Version="1.2.0" />
+    <PackageReference Include="ToSic.Imageflow.Oqtane" Version="1.11.0" />
   </ItemGroup>
 
   <ItemGroup>

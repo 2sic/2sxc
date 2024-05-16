@@ -11,25 +11,24 @@ partial class ToolbarBuilder
         object target = default,
         bool? condition = default, 
         Func<bool> conditionFunc = default,
-        bool? force = default,
+        bool? forEveryone = default,
         string group = default,
         ICanBeEntity root = default,
         bool? autoDemoMode = default,
         string demoMessage = default
     )
     {
-        //Eav.Parameters.Protect(noParamOrder, $"{nameof(mode)}, {nameof(target)}, {nameof(condition)}, {nameof(conditionFunc)}");
         // Create clone before starting to log so it's in there too
         var clone = target == null 
             ? new(this)
             : (ToolbarBuilder)Parameters(target);   // Params will already copy/clone it
 
-        var p = clone._configuration = new(
-            _configuration,
+        clone.Configuration = new(
+            Configuration,
             mode: mode, 
             condition: condition, 
             conditionFunc: conditionFunc, 
-            force: force, 
+            forEveryone: forEveryone, 
             group: group,
             root: root,
             autoDemoMode: autoDemoMode,
@@ -41,11 +40,8 @@ partial class ToolbarBuilder
     public IToolbarBuilder More(
         NoParamOrder noParamOrder = default,
         object ui = default
-    )
-    {
-        //Eav.Parameters.Protect(noParamOrder, nameof(ui));
-        return this.AddInternal(new ToolbarRuleCustom("more", ui: PrepareUi(ui)));
-    }
+    ) =>
+        this.AddInternal(new ToolbarRuleCustom("more", ui: PrepareUi(ui)));
 
     public IToolbarBuilder For(object target) => With(target: target);
 
@@ -59,16 +55,19 @@ partial class ToolbarBuilder
 
     public IToolbarBuilder Condition(Func<bool> condition) => With(conditionFunc: condition);
 
+    public IToolbarBuilder Audience(NoParamOrder protector = default, bool? everyone = default) 
+        => everyone == null ? this : With(forEveryone: everyone);
+
     public IToolbarBuilder Group(string name = null)
     {
         // Auto-determine the group name if none was provided
         // Maybe? only on null, because "" would mean to reset it again?
         if (!name.HasValue())
-            name = _configuration?.Group.HasValue() == true
-                ? _configuration?.Group + "*" // add a uncommon character so each group has another name
+            name = Configuration?.Group.HasValue() == true
+                ? Configuration?.Group + "*" // add an uncommon character so each group has another name
                 : "custom";
 
-        // Note that we'll add the new buttons directly using AddInternal so it won't
+        // Note that we'll add the new buttons directly using AddInternal, so it won't
         // auto-add other UI params such as the previous group
         return name.StartsWith("-")
             // It's a remove-group rule

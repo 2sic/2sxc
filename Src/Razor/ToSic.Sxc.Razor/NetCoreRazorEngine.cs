@@ -30,14 +30,15 @@ internal class NetCoreRazorEngine : EngineBase, IRazorEngine
 
     #region Constructor / DI
 
-    public NetCoreRazorEngine(MyServices services, LazySvc<IRazorRenderer> razorRenderer, LazySvc<CodeApiServiceFactory> codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<IRenderingHelper> renderingHelper) : base(services)
+    public NetCoreRazorEngine(MyServices services, LazySvc<IRazorRenderer> razorRenderer, LazySvc<CodeApiServiceFactory> codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<IRenderingHelper> renderingHelper)
+        : base(services)
     {
-        ConnectServices(
+        ConnectLogs([
             _codeRootFactory = codeRootFactory,
             _errorHelp = errorHelp,
             _renderingHelper = renderingHelper,
             _razorRenderer = razorRenderer
-        );
+        ]);
     }
 
     #endregion

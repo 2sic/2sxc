@@ -16,11 +16,11 @@ internal class CodeCompilerNetFull : CodeCompiler
     public CodeCompilerNetFull(IServiceProvider serviceProvider, IRoslynBuildManager roslynBuildManager, LazySvc<SourceAnalyzer> sourceAnalyzer, LazySvc<IAppJsonService> appJson) : base(serviceProvider)
     {
 
-        ConnectServices(
+        ConnectLogs([
             _roslynBuildManager = roslynBuildManager,
             _sourceAnalyzer = sourceAnalyzer,
             _appJson = appJson
-        );
+        ]);
     }
 
     protected internal override AssemblyResult GetAssembly(string relativePath, string className, HotBuildSpec spec)

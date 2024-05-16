@@ -101,7 +101,7 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
 
     internal static object GetImageSettingsByName(ICodeApiService codeApiSvcOrNull, string strName, bool debug, ILog log)
     {
-        var l = debug ? log.Fn<object>($"{strName}; code root: {codeApiSvcOrNull != null}") : null;
+        var l = log.Fn<object>($"{strName}; code root: {codeApiSvcOrNull != null}", enabled: debug);
         var result = codeApiSvcOrNull?.Settings?.Get($"Settings.Images.{strName}");
         return l.Return((object)result, $"found: {result != null}");
     }

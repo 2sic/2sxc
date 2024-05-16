@@ -9,7 +9,7 @@ public class BlockEditorForModule : BlockEditorBase
     public BlockEditorForModule(MyServices services,
         LazySvc<IPlatformModuleUpdater> platformModuleUpdater) : base(services)
     {
-        ConnectServices(_platformModuleUpdater = platformModuleUpdater);
+        ConnectLogs([_platformModuleUpdater = platformModuleUpdater]);
     }
 
     private readonly LazySvc<IPlatformModuleUpdater> _platformModuleUpdater;

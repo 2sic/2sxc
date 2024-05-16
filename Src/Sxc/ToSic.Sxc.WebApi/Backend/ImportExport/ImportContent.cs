@@ -18,76 +18,53 @@ using ToSic.Eav.WebApi.Validation;
 namespace ToSic.Sxc.Backend.ImportExport;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ImportContent: ServiceBase
+public class ImportContent(
+    IEnvironmentLogger envLogger,
+    LazySvc<ImportService> importerLazy,
+    LazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
+    ZipImport zipImport,
+    Generator<JsonSerializer> jsonSerializerGenerator,
+    IGlobalConfiguration globalConfiguration,
+    IAppStates appStates,
+    LazySvc<IUser> userLazy,
+    AppCachePurger appCachePurger,
+    LazySvc<IEavFeaturesService> features)
+    : ServiceBase("Bck.Export",
+        connect:
+        [
+            envLogger, importerLazy, xmlImportWithFilesLazy, zipImport, jsonSerializerGenerator, globalConfiguration,
+            appStates, appCachePurger, userLazy, features
+        ])
 {
-    private readonly LazySvc<IEavFeaturesService> _features;
 
-    #region DI Constructor
-
-    public ImportContent(
-        IEnvironmentLogger envLogger,
-        LazySvc<ImportService> importerLazy,
-        LazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
-        ZipImport zipImport,
-        Generator<JsonSerializer> jsonSerializerGenerator, 
-        IGlobalConfiguration globalConfiguration,
-        IAppStates appStates,
-        LazySvc<IUser> userLazy,
-        AppCachePurger appCachePurger,
-        LazySvc<IEavFeaturesService> features) : base("Bck.Export")
-    {
-        ConnectServices(
-            _envLogger = envLogger,
-            _importerLazy = importerLazy,
-            _xmlImportWithFilesLazy = xmlImportWithFilesLazy,
-            _zipImport = zipImport,
-            _jsonSerializerGenerator = jsonSerializerGenerator,
-            _globalConfiguration = globalConfiguration,
-            _appStates = appStates,
-            AppCachePurger = appCachePurger,
-            _userLazy = userLazy,
-            _features = features
-        );
-    }
-
-    private readonly IEnvironmentLogger _envLogger;
-    private readonly LazySvc<ImportService> _importerLazy;
-    private readonly LazySvc<XmlImportWithFiles> _xmlImportWithFilesLazy;
-    private readonly ZipImport _zipImport;
-    private readonly Generator<JsonSerializer> _jsonSerializerGenerator;
-    private readonly IGlobalConfiguration _globalConfiguration;
-    private readonly IAppStates _appStates;
-    private readonly LazySvc<IUser> _userLazy;
-    protected readonly AppCachePurger AppCachePurger;
-
-    #endregion
+    protected readonly AppCachePurger AppCachePurger = appCachePurger;
 
     public ImportResultDto Import(int zoneId, int appId, string fileName, Stream stream, string defaultLanguage) => Log.Func(l =>
     {
         var result = new ImportResultDto();
 
-        var allowSystemChanges = _userLazy.Value.IsSystemAdmin;
+        var allowSystemChanges = userLazy.Value.IsSystemAdmin;
         if (fileName.EndsWith(".zip"))
         {   // ZIP
             try
             {
-                _zipImport.Init(zoneId, appId, _userLazy.Value.IsSystemAdmin);
-                var temporaryDirectory = Path.Combine(_globalConfiguration.TemporaryFolder, Mapper.GuidCompress(Guid.NewGuid()).Substring(0, 8));
+                zipImport.Init(zoneId, appId, userLazy.Value.IsSystemAdmin);
+                var temporaryDirectory = Path.Combine(globalConfiguration.TemporaryFolder, Mapper.GuidCompress(Guid.NewGuid()).Substring(0, 8));
 
-                result.Success = _zipImport.ImportZip(stream, temporaryDirectory);
-                result.Messages.AddRange(_zipImport.Messages);
+                result.Success = zipImport.ImportZip(stream, temporaryDirectory);
+                result.Messages.AddRange(zipImport.Messages);
             }
             catch (Exception ex)
             {
                 l.Ex(ex);
-                _envLogger.LogException(ex);
+                envLogger.LogException(ex);
             }
         }
         else
         {
             // XML
             using var fileStreamReader = new StreamReader(stream);
-            var xmlImport = _xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges);
+            var xmlImport = xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges);
             var xmlDocument = XDocument.Parse(fileStreamReader.ReadToEnd());
             result.Success = xmlImport.ImportXml(zoneId, appId, xmlDocument);
             result.Messages.AddRange(xmlImport.Messages);
@@ -107,7 +84,7 @@ public class ImportContent: ServiceBase
                 throw new ArgumentException("a file is not json");
 
             // 1. Create content types
-            var serializer = _jsonSerializerGenerator.New().SetApp(_appStates.GetReader(new AppIdentity(zoneId, appId)));
+            var serializer = jsonSerializerGenerator.New().SetApp(appStates.GetReader(new AppIdentity(zoneId, appId)));
 
             // 1.1 Deserialize json files
             var packages = files.ToDictionary(file => file.Name, file => serializer.UnpackAndTestGenericJsonV1(file.Contents));
@@ -116,7 +93,7 @@ public class ImportContent: ServiceBase
             // 1.2. Build content types
             var types = new List<IContentType>();
                 
-            var isEnabled = _features.Value.IsEnabled(BuiltInFeatures.DataExportImportBundles);
+            var isEnabled = features.Value.IsEnabled(BuiltInFeatures.DataExportImportBundles);
             l.A($"Is bundle packages import feature enabled: {isEnabled}");
 
             foreach (var package in packages)
@@ -136,7 +113,7 @@ public class ImportContent: ServiceBase
                 throw new NullReferenceException("One ContentType is null, something is wrong");
 
             // 1.3 Import the type
-            var import = _importerLazy.Value.Init(zoneId, appId, true, true);
+            var import = importerLazy.Value.Init(zoneId, appId, true, true);
             if (types.Any())
             {
                 import.ImportIntoDb(types, null);
@@ -152,8 +129,8 @@ public class ImportContent: ServiceBase
             // 2. Create Entities
 
             // 2.1 Reset serializer to use the new app
-            var appState = _appStates.GetReader(new AppIdentity(zoneId, appId));
-            serializer = _jsonSerializerGenerator.New().SetApp(appState);
+            var appState = appStates.GetReader(new AppIdentity(zoneId, appId));
+            serializer = jsonSerializerGenerator.New().SetApp(appState);
             l.A("Load items");
 
             // 2.2. Build content types
@@ -197,7 +174,7 @@ public class ImportContent: ServiceBase
         catch (Exception ex)
         {
             l.Ex(ex);
-            _envLogger.LogException(ex);
+            envLogger.LogException(ex);
             return (new ImportResultDto(false, ex.Message, Message.MessageTypes.Error), "error");
         }
     });

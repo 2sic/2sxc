@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal.DotNet;
 
 namespace ToSic.Sxc.Context.Internal;
@@ -11,35 +10,21 @@ namespace ToSic.Sxc.Context.Internal;
 /// It does not perform security checks ATM and maybe never will
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class AppIdResolver: ServiceBase
+internal class AppIdResolver(IHttp http, AppFinder appFinder) : ServiceBase("Api.FindAp", connect: [http, appFinder])
 {
-    #region Constructor & DI
-
-    public AppIdResolver(IHttp http, AppFinder appFinder): base("Api.FindAp")
-    {
-        ConnectServices(
-            _http = http,
-            _appFinder = appFinder
-        );
-    }
-    private readonly IHttp _http;
-    private readonly AppFinder _appFinder;
-
-    #endregion
-
     /// <summary>
     /// New implementation to replace previous
     /// </summary>
     /// <returns></returns>
     internal int GetAppIdFromPath(int zoneId, string appPath, bool required)
     {
-        var wrapLog = Log.Fn<int>($"{zoneId}, {appPath}, {required}");
+        var l = Log.Fn<int>($"{zoneId}, {appPath}, {required}");
         // get app from AppName
-        var aid = _appFinder/* _zoneRuntime.Init(zoneId, Log)*/.FindAppId(zoneId, appPath, true);
+        var aid = appFinder/* _zoneRuntime.Init(zoneId, Log)*/.FindAppId(zoneId, appPath, true);
         if (aid <= Eav.Constants.AppIdEmpty && required)
             throw new($"App required but can't find App based on the name '{appPath}'");
 
-        return wrapLog.Return(aid, $"found app:{aid}");
+        return l.Return(aid, $"found app:{aid}");
     }
 
 
@@ -50,7 +35,7 @@ internal class AppIdResolver: ServiceBase
     /// <returns></returns>
     internal IAppIdentity GetAppIdFromRoute()
     {
-        var allUrlKeyValues = _http.QueryStringKeyValuePairs();
+        var allUrlKeyValues = http.QueryStringKeyValuePairs();
         var ok1 = int.TryParse(allUrlKeyValues.FirstOrDefault(
                 x => x.Key.Equals(ContextConstants.ZoneIdKey, StringComparison.InvariantCultureIgnoreCase)).Value, 
             out var zoneId);

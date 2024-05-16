@@ -4,24 +4,17 @@ using ToSic.Eav.WebApi.Errors;
 namespace ToSic.Sxc.Backend.Usage;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class EntityBackend: ServiceBase
+public class EntityBackend(
+    ISxcContextResolver ctxResolver,
+    Generator<MultiPermissionsApp> appPermissions)
+    : ServiceBase("Bck.Entity", connect: [ctxResolver, appPermissions])
 {
-    private readonly Generator<MultiPermissionsApp> _appPermissions;
-    private readonly ISxcContextResolver _ctxResolver;
-
-    public EntityBackend(ISxcContextResolver ctxResolver,
-        Generator<MultiPermissionsApp> appPermissions) : base("Bck.Entity")
-        => ConnectServices(
-            _ctxResolver = ctxResolver,
-            _appPermissions = appPermissions
-        );
-
     // New feature in 11.03 - Usage Statistics
 
     public dynamic Usage(int appId, Guid guid)
     {
-        var context = _ctxResolver.GetBlockOrSetApp(appId);
-        var permCheck = _appPermissions.New().Init(context, context.AppState);
+        var context = ctxResolver.GetBlockOrSetApp(appId);
+        var permCheck = appPermissions.New().Init(context, context.AppState);
         if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
             throw HttpException.PermissionDenied(error);
 

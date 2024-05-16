@@ -21,30 +21,34 @@ internal class BlockViewLoader(ILog parentLog) : HelperBase(parentLog, "Blk.View
         return viewFromUrlParam ?? configView;
     }
 
+
     private IView TryGetViewBasedOnUrlParams(IContextOfBlock context, WorkViews views)
     {
-        var wrapLog = Log.Fn<IView>("template override - check");
-        if (context.Page.Parameters == null) return wrapLog.ReturnNull("no params");
+        var l = Log.Fn<IView>("template override - check");
+        if (context.Page.Parameters == null) return l.ReturnNull("no params");
+
+        var urlParameterString = string.Join(", ", context.Page.Parameters.Select(pair => $"'{pair.Key}'='{pair.Value}'"));
+        l.A($"url params: {context.Page.Parameters.Count} - {urlParameterString}");
 
         var urlParameterDict = context.Page.Parameters.ToDictionary(pair => pair.Key?.ToLowerInvariant() ?? "", pair =>
             $"{pair.Key}/{pair.Value}".ToLowerInvariant());
 
-        var allTemplates = views.GetAll();
+        // Get all views which can switch, and exit early if there are none
+        var templatesWithUrlIdentifier = views.GetForViewSwitch();
+        if (templatesWithUrlIdentifier.Count == 0)
+            return l.ReturnNull("no templates with view-switch");
 
-        foreach (var template in allTemplates.Where(t => !string.IsNullOrEmpty(t.UrlIdentifier)))
+        // check all views if they apply here
+        foreach (var set in templatesWithUrlIdentifier)
         {
-            var desiredFullViewName = template.UrlIdentifier.ToLowerInvariant();
-            if (desiredFullViewName.EndsWith("/.*"))   // match details/.* --> e.g. details/12
-            {
-                var keyName = desiredFullViewName.Substring(0, desiredFullViewName.Length - 3);
-                if (urlParameterDict.ContainsKey(keyName))
-                    return wrapLog.Return(template, "template override - found:" + template.Name);
-            }
-            else if (urlParameterDict.ContainsValue(desiredFullViewName)) // match view/details
-                return wrapLog.Return(template, "template override - found:" + template.Name);
+            l.A($"checking: '{set.UrlIdentifier}'; IsRegex: {set.IsRegex}; MainKey: '{set.MainKey}'");
+            var foundMatch = set.IsRegex
+                ? urlParameterDict.ContainsKey(set.MainKey)         // match details/.*
+                : urlParameterDict.ContainsValue(set.MainKey);      // match view/details
+            if (foundMatch)
+                return l.Return(set.View, "template override: " + set.Name);
         }
 
-        return wrapLog.ReturnNull("template override - none");
+        return l.ReturnNull("template override: none");
     }
-
 }

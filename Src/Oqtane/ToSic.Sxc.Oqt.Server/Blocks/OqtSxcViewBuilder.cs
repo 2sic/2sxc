@@ -33,14 +33,14 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         IOutputCache outputCache
     ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
     {
-        ConnectServices(
+        ConnectLogs([
             _contextOfBlockEmpty = contextOfBlockEmpty,
             _blockModuleEmpty = blockModuleEmpty,
             _contextResolverForLookUps = contextResolverForLookUps,
             _globalTypesCheck = globalTypesCheck,
             _outputCache = outputCache,
             PageOutput = pageOutput
-        );
+        ]);
         logStore.Add("oqt-view", Log);
     }
 

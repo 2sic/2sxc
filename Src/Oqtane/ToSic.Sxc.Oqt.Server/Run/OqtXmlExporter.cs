@@ -37,14 +37,14 @@ internal class OqtXmlExporter : XmlExporter
         LazySvc<OqtAssetsFileHelper> fileHelper
     ) : base(xmlSerializer, appStates, ctxResolver, OqtConstants.OqtLogPrefix)
     {
-        ConnectServices(
+        ConnectLogs([
             _hostingEnvironment = hostingEnvironment,
             _fileRepositoryLazy = fileRepositoryLazy,
             _folderRepositoryLazy = folderRepositoryLazy,
             _oqtTenantResolverLazy = oqtTenantResolverLazy,
             _fileHelper = fileHelper,
             AdamManager = adamManager
-        );
+        ]);
     }
 
     internal AdamManager<int, int> AdamManager { get; }

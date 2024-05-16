@@ -35,12 +35,14 @@ public class CspOfApp : ServiceForDynamicCode
     /// Important: page-parameters etc. are not available at this time, so don't try to get them until needed
     /// </summary>
     /// <param name="codeRoot"></param>
-    public override void ConnectToRoot(ICodeApiService codeRoot) => Log.Do(() =>
+    public override void ConnectToRoot(ICodeApiService codeRoot)
     {
+        var l = Log.Fn();
         base.ConnectToRoot(codeRoot);
         // Also connect upstream CspOfModule in case it's not yet connected
         _moduleCsp.ConnectToRoot(codeRoot);
-    });
+        l.Done();
+    }
 
     #endregion
 

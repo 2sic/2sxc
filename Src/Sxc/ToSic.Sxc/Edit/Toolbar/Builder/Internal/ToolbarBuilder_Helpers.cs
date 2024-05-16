@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Internal;
 partial class ToolbarBuilder
 {
     private string PrepareUi(object ui, object uiMerge = default, string uiMergePrefix = default, IEnumerable<object> tweaks = default) 
-        => Utils.PrepareUi(ui, uiMerge, uiMergePrefix, _configuration?.Group, tweaks: tweaks);
+        => Utils.PrepareUi(ui, uiMerge, uiMergePrefix, Configuration?.Group, tweaks: tweaks);
 
     private ITweakButton RunTweaksOrErrorIfCombined(
         NoParamOrder noParamOrder = default,

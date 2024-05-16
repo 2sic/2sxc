@@ -55,21 +55,20 @@ internal class RazorCodeManager(RazorComponentBase parent, ILog parentLog) : Hel
     /// <summary>
     /// Try to build the code. If something fails, remember the exception in case we need it later.
     /// </summary>
-    private void TryToBuildCode() => Log.Do(() =>
+    private bool TryToBuildCode()
     {
-        if (BuildComplete) return;
+        var l = Log.Fn<bool>();
+        if (BuildComplete) return l.Return(true);
         var codeFile = Parent.VirtualPath.Replace(".cshtml", ".code.cshtml").Backslash().AfterLast("\\");
-        Log.A($"Will try to load code from '{codeFile}");
+        l.A($"Will try to load code from '{codeFile}");
         try
         {
             var compiled = Parent.RzrHlp.CreateInstance(codeFile);
             if (compiled != null && compiled is not RazorComponentCode)
-            {
                 throw new(
                     $"Tried to compile the .Code file, but the type is '{compiled.GetType().Name}'. " +
                     $"Expected that it inherits from '{nameof(RazorComponentCode)}'. " +
                     "Please add '@inherits ToSic.Sxc.Dnn.RazorComponentCode' to the beginning of the 'xxx.code.cshtml' file. ");
-            }
 
             _code = compiled;
         }
@@ -79,7 +78,8 @@ internal class RazorCodeManager(RazorComponentBase parent, ILog parentLog) : Hel
         }
 
         BuildComplete = true;
-    });
+        return l.Return(true, "code completed" + (BuildException == null ? "" : " with BuildExceptions"));
+    }
 
     private static Exception ImproveExceptionMessage(Exception innerException)
     {

@@ -22,12 +22,12 @@ internal class OqtModuleAndBlockBuilder : ModuleAndBlockBuilder
         RequestHelper requestHelper
     ) : base(blockGenerator, OqtConstants.OqtLogPrefix)
     {
-        ConnectServices(
+        ConnectLogs([
             _moduleGenerator = moduleGenerator,
             _contextGenerator = contextGenerator,
             _moduleRepositoryGenerator = moduleRepositoryGenerator,
             _requestHelper = requestHelper
-        );
+        ]);
     }
 
     private readonly Generator<IModule> _moduleGenerator;

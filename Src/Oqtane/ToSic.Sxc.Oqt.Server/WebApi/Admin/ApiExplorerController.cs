@@ -54,9 +54,7 @@ public class ApiExplorerController() : OqtStatefulControllerBase(RealController.
 
         // Figure out the current edition
         var blockOrNull = CtxHlp.BlockOptional;
-        var edition = blockOrNull.NullOrGetWith(b =>
-            PolymorphConfigReader.UseViewEditionOrGetLazy(b.View,
-                () => GetService<PolymorphConfigReader>().Init(b.Context.AppState.List)));
+        var edition = blockOrNull.NullOrGetWith(b => GetService<PolymorphConfigReader>().UseViewEditionOrGet(b));
 
         var spec = new HotBuildSpec(blockOrNull?.AppId ?? Eav.Constants.AppIdEmpty, edition: edition, appName: blockOrNull?.App?.Name); 
         

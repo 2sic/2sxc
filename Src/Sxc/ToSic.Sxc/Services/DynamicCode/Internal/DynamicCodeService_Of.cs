@@ -23,14 +23,14 @@ public partial class DynamicCodeService
     /// <inheritdoc />
     public IDynamicCode12 OfModule(int pageId, int moduleId)
     {
-        var wrapLog = Log.Fn<ICodeApiService>($"{pageId}, {moduleId}");
+        var l = Log.Fn<ICodeApiService>($"{pageId}, {moduleId}");
         MakeSureLogIsInHistory();
         ActivateEditUi();
         var cmsBlock = _myScopedServices.ModAndBlockBuilder.Value.BuildBlock(pageId, moduleId);
         var codeRoot = _myScopedServices.CodeRootGenerator.New()
             .BuildCodeRoot(customCodeOrNull: null, cmsBlock, Log, CompatibilityLevels.CompatibilityLevel12);
 
-        return wrapLog.ReturnAsOk(codeRoot);
+        return l.ReturnAsOk(codeRoot);
     }
 
     /// <inheritdoc />
@@ -41,13 +41,13 @@ public partial class DynamicCodeService
 
     private IDynamicCode12 OfAppInternal(int? zoneId = null, int? appId = null)
     {
-        var wrapLog = Log.Fn<IDynamicCode12>();
+        var l = Log.Fn<IDynamicCode12>();
         MakeSureLogIsInHistory();
         ActivateEditUi();
         var codeRoot = _myScopedServices.CodeRootGenerator.New()
             .BuildCodeRoot(customCodeOrNull: null, null, Log, CompatibilityLevels.CompatibilityLevel12);
         var app = App(zoneId: zoneId, appId: appId);
         ((ICodeApiServiceInternal)codeRoot).AttachApp(app);
-        return wrapLog.ReturnAsOk(codeRoot);
+        return l.ReturnAsOk(codeRoot);
     }
 }

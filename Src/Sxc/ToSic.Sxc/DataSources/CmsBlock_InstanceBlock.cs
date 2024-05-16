@@ -7,9 +7,6 @@ namespace ToSic.Sxc.DataSources;
 
 public sealed partial class CmsBlock
 {
-    [PrivateApi]
-    internal bool HasInstanceContext => Configuration.LookUpEngine.HasSource(LookUpConstants.InstanceContext);
-
     /// <summary>
     /// The block for which this DataSource is needed - provides context and configuration
     /// </summary>
@@ -20,7 +17,7 @@ public sealed partial class CmsBlock
         {
             if (_block != null) return _block;
 
-            if (!HasInstanceContext)
+            if (!Configuration.LookUpEngine.HasSource(LookUpConstants.InstanceContext))
                 throw new("value provider didn't have sxc provider - can't use module data source");
 
             var instanceProvider = Configuration.LookUpEngine.FindSource(LookUpConstants.InstanceContext) as LookUpCmsBlock;

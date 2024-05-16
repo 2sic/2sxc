@@ -98,19 +98,19 @@ public class DnnUserProfile : CustomDataSourceAdvanced
             LazySvc<DnnSecurity> dnnSecurity
         ) : base(parentServices)
         {
-            ConnectServices(
+            ConnectLogs([
                 Site = site,
                 ZoneMapper = zoneMapper,
                 DnnSecurity = dnnSecurity
-            );
+            ]);
         }
     }
 
     public DnnUserProfile(MyServices services, IDataFactory dataFactory) : base(services, "Dnn.Profile")
     {
-        ConnectServices(
+        ConnectLogs([
             _dataFactory = dataFactory
-        );
+        ]);
         _services = services;
         ProvideOut(GetList);
     }

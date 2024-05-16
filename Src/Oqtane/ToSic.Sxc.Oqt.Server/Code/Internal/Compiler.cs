@@ -20,19 +20,9 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
     // Code is based on DynamicRun by Laurent Kempé
     // https://github.com/laurentkempe/DynamicRun
     // https://laurentkempe.com/2019/02/18/dynamically-compile-and-run-code-using-dotNET-Core-3.0/
-    internal class Compiler : ServiceBase
+    internal class Compiler(LazySvc<AppCodeLoader> appCodeLoader, HotBuildReferenceManager referenceManager)
+        : ServiceBase("Sys.CodCpl", connect: [appCodeLoader, referenceManager])
     {
-        private readonly LazySvc<AppCodeLoader> _appCodeLoader;
-        private readonly HotBuildReferenceManager _referenceManager;
-
-        public Compiler(LazySvc<AppCodeLoader> appCodeLoader, HotBuildReferenceManager referenceManager) : base("Sys.CodCpl")
-        {
-            ConnectServices(
-                _appCodeLoader = appCodeLoader,
-                _referenceManager = referenceManager
-                );
-        }
-
         // Ensure that can't be kept alive by stack slot references (real- or JIT-introduced locals).
         // That could keep the SimpleUnloadableAssemblyLoadContext alive and prevent the unload.
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -40,7 +30,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
         {
             var l = Log.Fn<AssemblyResult>($"Starting compilation of: '{sourceFile}'; {nameof(dllName)}: '{dllName}'; {spec}'.");
 
-            var (assemblyResult, _) = _appCodeLoader.Value.GetAppCode(spec);
+            var (assemblyResult, _) = appCodeLoader.Value.GetAppCode(spec);
 
             var encoding = Encoding.UTF8;
 
@@ -60,7 +50,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
             var compilation = CSharpCompilation.Create(
                 $"{assemblyName}.dll",
                 syntaxTrees,
-                references: _referenceManager.GetMetadataReferences(assemblyResult?.Assembly?.Location, spec),
+                references: referenceManager.GetMetadataReferences(assemblyResult?.Assembly?.Location, spec),
                 options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
                     optimizationLevel: OptimizationLevel.Debug,
                     assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default));
@@ -130,7 +120,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
             var compilation = CSharpCompilation.Create(
                 dllName,
                 syntaxTrees,
-                references: _referenceManager.GetMetadataReferences(assemblyFilePath, spec),
+                references: referenceManager.GetMetadataReferences(assemblyFilePath, spec),
                 options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
                     optimizationLevel: OptimizationLevel.Debug,
                     assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default));

@@ -1,6 +1,20 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Razor.Compilation;
+using Microsoft.AspNetCore.Razor.Hosting;
+using Microsoft.AspNetCore.Razor.Language;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Emit;
+using Microsoft.CodeAnalysis.Text;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -10,22 +24,19 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Razor.Compilation;
-using Microsoft.AspNetCore.Razor.Hosting;
-using Microsoft.AspNetCore.Razor.Language;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Emit;
-using Microsoft.CodeAnalysis.Text;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
+using ToSic.Eav;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Internal.SourceCode;
+using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Polymorphism.Internal;
 
 namespace ToSic.Sxc.Razor.DbgWip;
 
+/// <summary>
+/// Singleton service that compiles Razor views in runtime and caches the compiled results.
+/// </summary>
 internal class RuntimeViewCompiler : IViewCompiler
 {
     private readonly object _cacheLock = new();
@@ -36,6 +47,9 @@ internal class RuntimeViewCompiler : IViewCompiler
     private readonly IMemoryCache _cache;
     private readonly ILogger _logger;
     private readonly AssemblyResolver _assemblyResolver;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly SourceAnalyzer _sourceAnalyzer;
+    private readonly IWebHostEnvironment _env;
     private readonly CSharpCompiler _csharpCompiler;
 
     public RuntimeViewCompiler(
@@ -44,7 +58,10 @@ internal class RuntimeViewCompiler : IViewCompiler
         CSharpCompiler csharpCompiler,
         IList<CompiledViewDescriptor> precompiledViews,
         ILogger logger,
-        AssemblyResolver assemblyResolver)
+        AssemblyResolver assemblyResolver,
+        IHttpContextAccessor httpContextAccessor,
+        SourceAnalyzer sourceAnalyzer,
+        IWebHostEnvironment env)
     {
         if (precompiledViews == null)
         {
@@ -56,7 +73,9 @@ internal class RuntimeViewCompiler : IViewCompiler
         _csharpCompiler = csharpCompiler ?? throw new ArgumentNullException(nameof(csharpCompiler));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _assemblyResolver = assemblyResolver;
-
+        _httpContextAccessor = httpContextAccessor;
+        _sourceAnalyzer = sourceAnalyzer;
+        _env = env;
 
         _normalizedPathCache = new(StringComparer.Ordinal);
 
@@ -278,6 +297,8 @@ internal class RuntimeViewCompiler : IViewCompiler
 
         GetChangeTokensFromImports(expirationTokens, projectItem);
 
+        GetChangeTokenFromAppCode(expirationTokens, normalizedPath);
+
         return new()
         {
             SupportsCompilation = true,
@@ -319,6 +340,32 @@ internal class RuntimeViewCompiler : IViewCompiler
         }
     }
 
+    private void GetChangeTokenFromAppCode(IList<IChangeToken> expirationTokens, string relativePath)
+    {
+        // find do we require dependency on AppCode in razor view?
+        if (!_sourceAnalyzer.TypeOfVirtualPath(relativePath).IsHotBuildSupported()) return;
+
+        // if AppCode folder exists, related to relativePath, watch it
+        var appCodeRelativePath = AppCodeRelativePathIfExists(relativePath);
+        if (appCodeRelativePath != null)
+            expirationTokens.Add(_fileProvider.Watch($"{appCodeRelativePath.ForwardSlash().PrefixSlash().SuffixSlash()}**/*.cs"));
+    }
+
+    private string AppCodeRelativePathIfExists(string normalizedPath)
+    {
+        var (appRelativePath, edition) = GetSxcAppRelativePathWithEdition(normalizedPath);
+
+        if (!appRelativePath.HasValue())
+            return "";
+
+        if (edition.HasValue() && Directory.Exists(Path.Combine(_env.ContentRootPath, appRelativePath, edition, Constants.AppCode)))
+            return Path.Combine(appRelativePath, edition, Constants.AppCode);
+
+        return Directory.Exists(Path.Combine(_env.ContentRootPath, appRelativePath, Constants.AppCode))
+            ? Path.Combine(appRelativePath, Constants.AppCode)
+            : "";
+    }
+
     protected virtual CompiledViewDescriptor CompileAndEmit(string relativePath)
     {
         var projectItem = _projectEngine.FileSystem.GetItem(relativePath, fileKind: null);
@@ -348,37 +395,78 @@ internal class RuntimeViewCompiler : IViewCompiler
     private IEnumerable<MetadataReference> GetMetadataReferences(string relativePath)
     {
         IEnumerable<MetadataReference> references = new List<MetadataReference>();
-        var appCodePath = _assemblyResolver.GetAssemblyLocation(GetAppRelativePath(relativePath));
+        var appCodePath = GetAppCodeDllPath(relativePath);
         if (appCodePath != null)
             references = references.Append(MetadataReference.CreateFromFile(appCodePath));
         return references;
     }
 
-    /// <summary>
-    /// extract appRelativePath from relativePath
-    /// </summary>
-    /// <param name="relativePath">string "/2sxc/n/aaa-folder-name/etc..."</param>
-    /// <returns>string "2sxc\\n\\aaa-folder-name" or null</returns>
-    private static string GetAppRelativePath(string relativePath)
+    private string GetAppCodeDllPath(string relativePath)
     {
-        // TODO: stv, this has to more generic because it is very 2sxc on Oqtane specific
-        // validations
+        var (appRelativePath, edition) = GetSxcAppRelativePathWithEdition(relativePath);
+        if (appRelativePath == null) return null;
+        if (edition.HasValue()) appRelativePath = Path.Combine(appRelativePath, edition);
+        var appCodeDllPath = _assemblyResolver.GetAssemblyLocation(appRelativePath);
+        return appCodeDllPath;
+    }
+
+    private (string appRelativePath, string edition) GetSxcAppRelativePathWithEdition(string relativePath)
+    {
+        if (_httpContextAccessor?.HttpContext == null) return GetSxcAppRelativePathWithEditionFallback(relativePath);
+
+        var sp = _httpContextAccessor.HttpContext.RequestServices;
+        var ctxResolver = sp.GetService(typeof(ISxcContextResolver)) as ISxcContextResolver;
+
+        var block = ctxResolver?.BlockOrNull();
+        if (block == null) return GetSxcAppRelativePathWithEditionFallback(relativePath);
+
+        var polymorphism = sp.GetService<PolymorphConfigReader>();
+
+        var edition = polymorphism.UseViewEditionOrGet(block);
+
+        return (block.App.RelativePath, edition);
+    }
+
+    /// <summary>
+    /// extract appRelativePathWithEdition from relativePath
+    /// fallback, when block is null
+    /// </summary>
+    /// <param name="relativePath">string "/2sxc/n/aaa-folder-name/edition/etc..."</param>
+    /// <returns>string "2sxc\\n\\aaa-folder-name\\edition" or null</returns>
+    private (string appRelativePath, string edition) GetSxcAppRelativePathWithEditionFallback(string relativePath)
+    {
         if ((string.IsNullOrEmpty(relativePath))
             || (relativePath.Length < 8)
             || (relativePath[0] != '/')
             || (relativePath[5] != '/'))
-            throw new($"relativePath:'{relativePath}' is not in format '/2sxc/n/app-folder-name/etc...'");
+            //throw new($"relativePath:'{relativePath}' is not in format '/2sxc/n/app-folder-name/etc...'");
+            return (appRelativePath: null, edition: null);
 
         // find position of 4th slash in relativePath 
-        var pos = 6; // skipping first 2 slashes
+        var posApp = 6; // skipping first 2 slashes
         for (var i = 0; i < 2; i++)
         {
-            pos = relativePath.IndexOf('/', pos + 1);
-            if (pos < 0) 
-                throw new($"relativePath:'{relativePath}' is not in format '/2sxc/n/app-folder-name/etc...'");
+            posApp = relativePath.IndexOf('/', posApp + 1);
+            if (posApp < 0)
+                //throw new($"relativePath:'{relativePath}' is not in format '/2sxc/n/app-folder-name/etc...'");
+                return (appRelativePath: null, edition: null);
         }
+        var appRelativePath = relativePath.Substring(1, posApp - 1).Backslash();
 
-        return relativePath.Substring(1, pos - 1).Backslash();
+        if (relativePath.Length <= posApp) 
+            return (appRelativePath, edition: "");
+
+        // find optional "edition" subfolder
+        var edition = "";
+
+        // next subfolder is probably optional "edition" subfolder
+        var posEdition = relativePath.IndexOf('/', posApp + 1);
+
+        // can't find "edition" subfolder, so return app folder without edition
+        if (posEdition >= 0)
+            edition = relativePath.Substring(posApp + 1, posEdition - 1);
+
+        return (appRelativePath, edition);
     }
 
     internal Assembly CompileAndEmit(RazorCodeDocument codeDocument, string generatedCode, IEnumerable<MetadataReference> references)

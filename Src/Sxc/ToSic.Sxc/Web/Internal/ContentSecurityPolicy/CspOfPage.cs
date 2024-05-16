@@ -4,17 +4,9 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CspOfPage: ServiceBase
+public class CspOfPage(Generator<CspParameterFinalizer> cspParameterFinalizer)
+    : ServiceBase(CspConstants.LogPrefix + ".Page", connect: [cspParameterFinalizer])
 {
-    private readonly Generator<CspParameterFinalizer> _cspParameterFinalizer;
-
-    public CspOfPage(Generator<CspParameterFinalizer> cspParameterFinalizer) : base(CspConstants.LogPrefix + ".Page")
-    {
-        ConnectServices(
-            _cspParameterFinalizer = cspParameterFinalizer
-        );
-    }
-
     public List<CspParameters> CspParameters { get; } = [];
 
     public void Add(IList<CspParameters> additional) => CspParameters.AddRange(additional);
@@ -29,15 +21,15 @@ public class CspOfPage: ServiceBase
     {
         try
         {
-            var wrapLog = Log.Fn<string>();
+            var l = Log.Fn<string>();
             var relevant = CspParameters.Where(cs => cs != null).ToList();
-            if (!relevant.Any()) return wrapLog.ReturnNull("none relevant");
+            if (!relevant.Any()) return l.ReturnNull("none relevant");
             var mergedPolicy = relevant.First();
 
-            var finalizer = _cspParameterFinalizer.New();
+            var finalizer = cspParameterFinalizer.New();
 
             if (relevant.Count == 1)
-                return wrapLog.Return(finalizer.Finalize(mergedPolicy).ToString(), "found 1");
+                return l.Return(finalizer.Finalize(mergedPolicy).ToString(), "found 1");
 
             // Pre-copy, so we never change the original!
             mergedPolicy = new(mergedPolicy);
@@ -46,7 +38,7 @@ public class CspOfPage: ServiceBase
             foreach (var cspS in relevant.Skip(1))
                 mergedPolicy.Add(cspS);
 
-            return wrapLog.Return(finalizer.Finalize(mergedPolicy).ToString(), "merged");
+            return l.Return(finalizer.Finalize(mergedPolicy).ToString(), "merged");
         }
         catch (Exception e)
         {

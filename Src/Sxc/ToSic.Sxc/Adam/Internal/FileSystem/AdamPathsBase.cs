@@ -15,11 +15,9 @@ public class AdamPathsBase : ServiceBase, IAdamPaths
 
     }
 
-    protected AdamPathsBase(IServerPaths serverPaths, string logPrefix) : base($"{logPrefix}.AdmPth")
+    protected AdamPathsBase(IServerPaths serverPaths, string logPrefix) : base($"{logPrefix}.AdmPth", connect: [serverPaths])
     {
-        ConnectServices(
-            _serverPaths = serverPaths
-        );
+        _serverPaths = serverPaths;
     }
     private readonly IServerPaths _serverPaths;
 

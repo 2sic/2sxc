@@ -40,10 +40,10 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
     {
         Log = new Log(HistoryLogName, null, nameof(AppApiDynamicRouteValueTransformer));
         logStore.Add(HistoryLogGroup, Log);
-        this.ConnectServices(
+        this.ConnectLogs([
             _tenantResolver = tenantResolver,
             _hostingEnvironment = hostingEnvironment
-        );
+        ]);
     }
 
     public ILog Log { get; }

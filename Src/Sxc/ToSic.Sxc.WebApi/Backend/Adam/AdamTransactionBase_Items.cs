@@ -7,17 +7,17 @@ partial class AdamTransactionBase<T, TFolderId, TFileId>
     /// <inheritdoc />
     public IList<AdamItemDto> ItemsInField(string subFolderName, bool autoCreate = false)
     {
-        var wrapLog = Log.Fn<IList<AdamItemDto>>($"Subfolder: {subFolderName}");
+        var l = Log.Fn<IList<AdamItemDto>>($"Subfolder: {subFolderName}");
 
-        Log.A("starting permissions checks");
+        l.A("starting permissions checks");
         if (AdamContext.Security.UserIsRestricted && !AdamContext.Security.FieldPermissionOk(GrantSets.ReadSomething))
-            return wrapLog.ReturnNull("user is restricted, and doesn't have permissions on field - return null");
+            return l.ReturnNull("user is restricted, and doesn't have permissions on field - return null");
 
         // check that if the user should only see drafts, he doesn't see items of published data
         if (!AdamContext.Security.UserIsNotRestrictedOrItemIsDraft(AdamContext.ItemGuid, out _))
-            return wrapLog.ReturnNull("user is restricted (no read-published rights) and item is published - return null");
+            return l.ReturnNull("user is restricted (no read-published rights) and item is published - return null");
 
-        Log.A("first permission checks passed");
+        l.A("first permission checks passed");
             
         // This will contain the list of items
         var list = new List<AdamItemDto>();
@@ -27,7 +27,7 @@ partial class AdamTransactionBase<T, TFolderId, TFileId>
 
         // if no root exists then quit now
         if (!autoCreate && root == null) 
-            return wrapLog.Return(list, "no folder");
+            return l.Return(list, "no folder");
 
         // try to see if we can get into the subfolder - will throw error if missing
         var currentFolder = AdamContext.AdamRoot.Folder(subFolderName, false);
@@ -35,8 +35,8 @@ partial class AdamTransactionBase<T, TFolderId, TFileId>
         // ensure that it's super user, or the folder is really part of this item
         if (!AdamContext.Security.SuperUserOrAccessingItemFolder(currentFolder.Path, out var ex))
         {
-            Log.A("user is not super-user and folder doesn't seem to be an ADAM folder of this item - will throw");
-            Log.Ex(ex);
+            l.A("user is not super-user and folder doesn't seem to be an ADAM folder of this item - will throw");
+            l.Ex(ex);
             throw ex;
         }
 
@@ -62,7 +62,7 @@ partial class AdamTransactionBase<T, TFolderId, TFileId>
             .ToList();
         list.AddRange(adamFiles);
 
-        return wrapLog.Return(list.ToList(), $"ok - fld⋮{adamFolders.Count}, files⋮{adamFiles.Count} tot⋮{list.Count}");
+        return l.Return(list.ToList(), $"ok - fld⋮{adamFolders.Count}, files⋮{adamFiles.Count} tot⋮{list.Count}");
     }
 
 }

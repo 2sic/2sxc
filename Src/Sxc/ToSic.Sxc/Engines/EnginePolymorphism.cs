@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using ToSic.Eav.Apps.Services;
+using ToSic.Eav.Apps.State;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Plumbing;
@@ -11,20 +12,10 @@ using ToSic.Sxc.Polymorphism.Internal;
 namespace ToSic.Sxc.Engines;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class EnginePolymorphism: ServiceBase
+public class EnginePolymorphism(PolymorphConfigReader polymorphism, IServerPaths serverPaths)
+    : ServiceBase("Sxc.EngPly", connect: [polymorphism, serverPaths])
 {
-    private readonly PolymorphConfigReader _polymorphism;
-    private readonly IServerPaths _serverPaths;
-
-    public EnginePolymorphism(PolymorphConfigReader polymorphism, IServerPaths serverPaths) : base("Sxc.EngPly")
-    {
-        ConnectServices(
-            _polymorphism = polymorphism,
-            _serverPaths = serverPaths
-        );
-    }
-
-    internal (string, string) PolymorphTryToSwitchPath(string root, IView view, IAppEntityService appState)
+    internal (string, string) PolymorphTryToSwitchPath(string root, IView view, IAppStateInternal appState)
     {
         var subPath = view.Path;
         var l = Log.Fn<(string, string)>($"{root}, {subPath}");
@@ -34,7 +25,7 @@ public class EnginePolymorphism: ServiceBase
 
         // Figure out the current edition - if none, stop here
         // New 2023-03-20 - if the view comes with a preset edition, it's an ajax-preview which should be respected
-        var edition = PolymorphConfigReader.UseViewEditionOrGetLazy(view, () => _polymorphism.Init(appState.List));
+        var edition = polymorphism.UseViewEditionOrGet(view, appState);
         // view.Edition.NullIfNoValue() ?? _polymorphism.Init(appState.List).Edition();
         if (edition == null)
             return l.ReturnNull("no edition detected");
@@ -63,7 +54,7 @@ public class EnginePolymorphism: ServiceBase
     {
         var l = Log.Fn<string>($"root: {root}; edition: {edition}; subPath: {subPath}");
         var fullPathForTest = Path.Combine(root, edition, subPath).ToAbsolutePathForwardSlash();
-        if (!File.Exists(_serverPaths.FullAppPath(fullPathForTest)))
+        if (!File.Exists(serverPaths.FullAppPath(fullPathForTest)))
             return l.ReturnNull("not found");
         view.Edition = edition;
         view.EditionPath = Path.Combine(edition, subPath).ToAbsolutePathForwardSlash();

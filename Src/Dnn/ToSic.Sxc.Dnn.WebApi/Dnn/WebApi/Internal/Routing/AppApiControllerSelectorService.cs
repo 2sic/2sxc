@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Net;
 using System.Reflection;
-using System.Runtime.Caching;
 using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http.Controllers;
@@ -125,15 +124,12 @@ internal partial class AppApiControllerSelectorService(
         throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.NotFound, new(), msgFinal, codeErrorSvc.Value));
     }
 
-    private (HttpControllerDescriptorWithPaths, CacheItemPolicy) BuildDescriptorIfExists(string appFolder, string edition, string controllerTypeName, bool shared, HotBuildSpec spec)
+    private (HttpControllerDescriptorWithPaths descriptor, IEnumerable<string> cacheKeys, IList<string> filePaths) BuildDescriptorIfExists(string appFolder, string edition, string controllerTypeName, bool shared, HotBuildSpec spec)
     {
-        var l = Log.Fn<(HttpControllerDescriptorWithPaths, CacheItemPolicy)>(
+        var l = Log.Fn<(HttpControllerDescriptorWithPaths descriptor, IEnumerable<string> cacheKeys, IList<string> filePaths)>(
             $"{nameof(appFolder)}:'{appFolder}'; {nameof(edition)}:'{edition}'; {nameof(controllerTypeName)}:'{controllerTypeName}'; {nameof(shared)}:{shared}; {spec}",
             timer: true
         );
-        var expiration = new TimeSpan(1, 0, 0);
-        var policy = new CacheItemPolicy { SlidingExpiration = expiration };
-
         // 0. Prepare folders which will be used
         var controllerFolder = GetControllerFolder(appFolder, edition, shared);
 
@@ -146,10 +142,13 @@ internal partial class AppApiControllerSelectorService(
             var type = appCodeAssemblyResult?.Assembly?.FindControllerTypeByName(controllerTypeName);
             if (type != null)
             {
-                policy.ChangeMonitors.Add(memoryCacheService.CreateCacheEntryChangeMonitor([appCodeAssemblyResult.CacheKey])); // cache dependency on existing cache item with AppCode assembly 
+                // cache dependency on existing cache item with AppCode assembly 
                 var appCodeDescriptor = new HttpControllerDescriptor(Configuration, type.Name, type);
                 var fakeFolder = controllerFolder.Replace("/api/", "/AppCode/");
-                return l.Return((new(appCodeDescriptor, fakeFolder, fakeFolder + "AppCode-auto-compiled.dll"), policy), "Api controller from AppCode");
+                return l.Return((descriptor: new(appCodeDescriptor, fakeFolder, fakeFolder + "AppCode-auto-compiled.dll"),
+                                cacheKeys: [appCodeAssemblyResult.CacheKey],
+                                filePaths: null), 
+                        "Api controller from AppCode");
             }
         }
 
@@ -160,13 +159,11 @@ internal partial class AppApiControllerSelectorService(
         // note: this may look like something you could optimize/cache the result, but that's a bad idea
         // because when the file changes, the type-object will be different, so please don't optimize :)
         var (descriptor, cacheDependencyKeys) = BuildDescriptorOrThrow(controllerPath, controllerTypeName, spec);
-        
-        if (cacheDependencyKeys?.Count > 0) 
-            policy.ChangeMonitors.Add(memoryCacheService.CreateCacheEntryChangeMonitor(cacheDependencyKeys)); // cache dependency on existing cache item;
-        else
-            policy.ChangeMonitors.Add(new HostFileChangeMonitor([HostingEnvironment.MapPath(controllerPath)])); // cache dependency on existing api file
-
-        return l.Return((new(descriptor, controllerFolder, controllerPath), policy), $"normal Api controller from '{controllerPath}'");
+        var hasCacheKeys = cacheDependencyKeys?.Count > 0;
+        return l.Return((descriptor: new(descriptor, controllerFolder, controllerPath), 
+                        cacheKeys: hasCacheKeys ? cacheDependencyKeys : null, // cache dependency on existing cache item;
+                        filePaths: hasCacheKeys ? null: [HostingEnvironment.MapPath(controllerPath)]), // cache dependency on existing api file
+            $"normal Api controller from '{controllerPath}'"); 
     }
 
     private string GetControllerFolder(string appFolder, string edition, bool shared)

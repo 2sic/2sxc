@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Images;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ResizeDimensionGenerator() : ServiceBase("Img.ResDim")
 {
-    public bool Debug = false;
+    internal bool Debug = false;
         
 
     /// <summary>
@@ -86,7 +86,7 @@ public class ResizeDimensionGenerator() : ServiceBase("Img.ResDim")
     private int HeightFromAspectRatioOrFactor((int Width, int Height) dims, double factor, bool useAspectRatio, double aspectRatio)
     {
         var maybeLog = Debug ? Log : null;
-        var wrapLog = maybeLog.Fn<int>();
+        var l = maybeLog.Fn<int>();
 
         var hasAspectRatio = !DNearZero(aspectRatio);
 
@@ -95,25 +95,25 @@ public class ResizeDimensionGenerator() : ServiceBase("Img.ResDim")
             ? dims.Width / aspectRatio
             : dims.Height * factor;  // Note that often dims.H is 0, so this will still be 0
 
-        return wrapLog.Return((int)newH, $"H:{newH}");
+        return l.Return((int)newH, $"H:{newH}");
     }
 
 
     internal (int W, int H) KeepInRangeProportional((int W, int H) original)
     {
         var maybeLog = Debug ? Log : null;
-        var wrapLog = maybeLog.Fn<(int, int)>();
+        var l = maybeLog.Fn<(int, int)>();
 
         // Simple case - it fits into the max-range
         if (original.W <= MaxSize && original.H <= MaxSize)
-            return wrapLog.Return(original, "is already within bounds");
+            return l.Return(original, "is already within bounds");
 
         // Harder - at least one doesn't fit - must figure out multiplier and adjust
         var correctionFactor = (float)Math.Max(original.W, original.H) / MaxSize;
         var newW = (int)Math.Min(original.W / correctionFactor, MaxSize);   // use Math.Min to avoid rounding errors leading to > 3200
         var newH = (int)Math.Min(original.H / correctionFactor, MaxSize);
 
-        return wrapLog.Return((newW, newH), $"W:{newW}, H:{newH}");
+        return l.Return((newW, newH), $"W:{newW}, H:{newH}");
     }
 
 }

@@ -9,20 +9,9 @@ namespace ToSic.Sxc.Cms.Internal.Publishing;
 /// This is the fallback page publishing strategy, which basically says that page publishing isn't enabled
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class PagePublishingGetSettingsForbidden: ServiceBase, IPagePublishingGetSettings
+public class PagePublishingGetSettingsForbidden(IFeaturesService featuresService)
+    : ServiceBase("Cms.PubForb", connect: [featuresService]), IPagePublishingGetSettings
 {
-    #region Constructors
-
-    public PagePublishingGetSettingsForbidden(IFeaturesService featuresService) : base("Cms.PubForb")
-    {
-        ConnectServices(
-            _featuresService = featuresService
-        );
-    }
-    private readonly IFeaturesService _featuresService;
-
-    #endregion
-
     public BlockPublishingSettings SettingsOfModule(int moduleId) => new()
     {
         AllowDraft = false,
@@ -32,7 +21,7 @@ public class PagePublishingGetSettingsForbidden: ServiceBase, IPagePublishingGet
 
     public string NameId => "DraftForbidden";
 
-    public bool IsViable() => _featuresService.IsEnabled(BuiltInFeatures.EditUiDisableDraft.NameId);
+    public bool IsViable() => featuresService.IsEnabled(BuiltInFeatures.EditUiDisableDraft.NameId);
 
     public int Priority => (int)PagePublishingPriorities.DraftForbidden;
 }

@@ -9,16 +9,10 @@ using ToSic.Sxc.Web.Internal.JsContext;
 
 namespace ToSic.Sxc.Dnn.Web;
 
-internal class DnnJsApiService : ServiceBase, IJsApiService
+internal class DnnJsApiService(JsApiCacheService jsApiCache)
+    : ServiceBase("DnnJsAPi", connect: [jsApiCache]), IJsApiService
 {
     public const string PortalIdParamName = "portalId";
-
-    public DnnJsApiService(JsApiCacheService jsApiCache) : base("DnnJsAPi")
-    {
-        ConnectServices(_jsApiCache = jsApiCache);
-    }
-
-    private readonly JsApiCacheService _jsApiCache;
 
     public string GetJsApiJson(int? pageId = null, string siteRoot = null, string rvt = null) 
         => JsApi.JsApiJson(GetJsApi(pageId, siteRoot, rvt));
@@ -30,7 +24,7 @@ internal class DnnJsApiService : ServiceBase, IJsApiService
 
         string SiteRootFn() => siteRoot ?? ServicesFramework.GetServiceFrameworkRoot();
 
-        return _jsApiCache.JsApiJson(
+        return jsApiCache.JsApiJson(
             platform: PlatformType.Dnn.ToString(),
             pageId: pageId ?? PortalSettings.Current.ActiveTab.TabID,
             siteRoot: SiteRootFn,

@@ -60,7 +60,7 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
         if (string.IsNullOrEmpty(type)) return url;
 
         var parts = new UrlParts(url);
-        switch (type?.ToLowerInvariant())
+        switch (type.ToLowerInvariant())
         {
             case "full":
                 if (!parts.IsAbsolute)
@@ -86,7 +86,7 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
         => parameters switch
         {
             null => null,
-            string strParameters => strParameters.TrimStart('?').TrimStart('&'),
+            string strParameters => strParameters.TrimStart(['?', '&']),
             IParameters paramDic => paramDic.ToString(),
             _ => null // Fallback / default
         };
@@ -152,11 +152,14 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
     /// </summary>
     public static string CombineApiWithQueryString(string api, string queryString)
     {
-        queryString = queryString?.TrimStart('?').TrimStart('&');
+        queryString = queryString?.TrimStart(['?', '&']);
 
         // combine api with query string
-        return string.IsNullOrEmpty(queryString) ? api :
-            api?.IndexOf("?") > 0 ? $"{api}&{queryString}" : $"{api}?{queryString}";
+        return string.IsNullOrEmpty(queryString)
+            ? api
+            : api?.IndexOf("?") > 0
+                ? $"{api}&{queryString}"
+                : $"{api}?{queryString}";
     }
 
     internal static string CurrentPageUrlWithEventualHashError(int? pageId, string currentPageUrl) 

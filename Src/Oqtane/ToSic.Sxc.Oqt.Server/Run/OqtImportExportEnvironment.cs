@@ -32,7 +32,7 @@ internal class OqtImportExportEnvironment(
     /// <param name="destinationFolder">The portal-relative path where the files should be copied to</param>
     public override List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder)
     {
-        var wrapLog = Log.Fn<List<Message>>($"{sourceFolder}, {destinationFolder}");
+        var l = Log.Fn<List<Message>>($"{sourceFolder}, {destinationFolder}");
         var messages = new List<Message>();
         var files = IO.Directory.GetFiles(sourceFolder, "*.*");
         var siteId = Site.Id;
@@ -93,7 +93,7 @@ internal class OqtImportExportEnvironment(
             TransferFilesToSite(sourceFolderPath, newDestinationFolder);
         }
 
-        return wrapLog.Return(messages);
+        return l.Return(messages);
     }
 
     public override Version TenantVersion => typeof(OqtImportExportEnvironment).Assembly.GetName().Version;
@@ -147,9 +147,9 @@ internal class OqtImportExportEnvironment(
 
     });
 
-    public override void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog
-    ) => Log.Do($"folders and paths: {foldersAndPath.Count}", action: l =>
+    public override void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog) 
     {
+        var l = Log.Fn($"folders and paths: {foldersAndPath.Count}");
         foreach (var folder in foldersAndPath)
             try
             {
@@ -182,8 +182,8 @@ internal class OqtImportExportEnvironment(
                 importLog.Add(new(msg, Message.MessageTypes.Warning));
             }
 
-        return $"done - final count {folderIdCorrectionList.Count}";
-    });
+        l.Done($"done - final count {folderIdCorrectionList.Count}");
+    }
 
     private File Add(Folder parent, IO.Stream body, string fileName, OqtSite oqtSite)
     {

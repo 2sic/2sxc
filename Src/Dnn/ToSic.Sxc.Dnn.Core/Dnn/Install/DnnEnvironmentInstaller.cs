@@ -20,10 +20,10 @@ internal partial class DnnEnvironmentInstaller : ServiceBase, IEnvironmentInstal
     {
         _appJsonService = appJsonService;
         logStore.Add(LogNames.LogStoreInstallation, Log);
-        ConnectServices(
+        ConnectLogs([
             _installLogger = installLogger,
             _globalConfiguration = globalConfiguration
-        );
+        ]);
     }
 
 }

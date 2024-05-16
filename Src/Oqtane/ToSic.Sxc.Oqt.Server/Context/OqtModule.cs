@@ -29,19 +29,19 @@ internal class OqtModule: Module<Module>
     public OqtModule(SettingsHelper settingsHelper, IModuleRepository moduleRepository, 
         IAppStates appStates, LazySvc<AppFinder> appFinderLazy, ISite site) : base ($"{OqtConstants.OqtLogPrefix}.Cont")
     {
-        ConnectServices(
+        ConnectLogs([
             _settingsHelper = settingsHelper,
             _moduleRepository = moduleRepository,
             _appStates = appStates,
             _appFinderLazy = appFinderLazy,
             _site = site
-        );
+        ]);
     }
 
     public new OqtModule Init(Module module)
     {
         base.Init(module);
-        var wrapLog = Log.Fn<OqtModule>($"id:{module.ModuleId}", timer: true);
+        var l = Log.Fn<OqtModule>($"id:{module.ModuleId}", timer: true);
 
         InitializeIsPrimary(module);
 
@@ -49,7 +49,7 @@ internal class OqtModule: Module<Module>
 
         _id = module.ModuleId;
 
-        return wrapLog.ReturnAsOk(this);
+        return l.ReturnAsOk(this);
     }
 
     /// <summary>
@@ -107,17 +107,17 @@ internal class OqtModule: Module<Module>
 
     private (int AppId, string AppNameId) GetInstanceAppId(int zoneId)
     {
-        var wrapLog = Log.Fn<(int, string)>($"{zoneId}", timer: true);
+        var l = Log.Fn<(int, string)>($"{zoneId}", timer: true);
 
         if (IsContent) 
-            return wrapLog.Return((_appStates.DefaultAppId(zoneId), "Content"), "Content");
+            return l.Return((_appStates.DefaultAppId(zoneId), "Content"), "Content");
 
-        if (!_settings.ContainsKey(ModuleSettingNames.AppName)) 
-            return wrapLog.Return((Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty), Eav.Constants.AppNameIdEmpty);
+        if (!_settings.TryGetValue(ModuleSettingNames.AppName, out var setting)) 
+            return l.Return((Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty), Eav.Constants.AppNameIdEmpty);
 
-        var guid = _settings[ModuleSettingNames.AppName] ?? "";
+        var guid = setting ?? "";
         var appId = _appFinderLazy.Value.FindAppId(zoneId, guid);
-        return wrapLog.ReturnAsOk((appId, guid));
+        return l.ReturnAsOk((appId, guid));
 
     }
 }

@@ -58,8 +58,7 @@ public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSu
             
             if (block != null)
             {
-                var edition = PolymorphConfigReader.UseViewEditionOrGetLazy(block.View,
-                    () => SysHlp.GetService<PolymorphConfigReader>().Init(block.Context.AppState.List));
+                var edition = SysHlp.GetService<PolymorphConfigReader>().UseViewEditionOrGet(block);
                 spec = new(block.AppId, edition: edition, appName: block.App?.Name);
             }
             assembly = SysHlp.GetService<IRoslynBuildManager>().GetCompiledAssembly(codeFileInfo, className, spec)?.Assembly;

@@ -10,24 +10,12 @@ namespace ToSic.Sxc.Data.Internal.Wrapper;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeDataWrapper: ServiceBase
+public class CodeDataWrapper(
+    LazySvc<CodeDataFactory> cdf,
+    Generator<WrapObjectTyped> wrapTypeGenerator,
+    Generator<WrapObjectTypedItem> wrapItemGenerator)
+    : ServiceBase("Sxc.DWrpFk", connect: [wrapTypeGenerator, wrapItemGenerator, cdf])
 {
-    private readonly Generator<WrapObjectTyped> _wrapTypeGenerator;
-    private readonly Generator<WrapObjectTypedItem> _wrapItemGenerator;
-    private readonly LazySvc<CodeDataFactory> _cdf;
-
-    public CodeDataWrapper(LazySvc<CodeDataFactory> cdf,
-        Generator<WrapObjectTyped> wrapTypeGenerator,
-        Generator<WrapObjectTypedItem> wrapItemGenerator
-    ): base("Sxc.DWrpFk")
-    {
-        ConnectServices(
-            _wrapTypeGenerator = wrapTypeGenerator,
-            _wrapItemGenerator = wrapItemGenerator,
-            _cdf = cdf
-        );
-    }
-
     internal WrapDictionaryDynamic<TKey, TValue> FromDictionary<TKey, TValue>(IDictionary<TKey, TValue> original) =>
         new(original, this);
 
@@ -40,12 +28,12 @@ public class CodeDataWrapper: ServiceBase
     public ITyped TypedFromObject(object data, WrapperSettings settings)
     {
         var preWrap = new PreWrapObject(data, settings, this);
-        return _wrapTypeGenerator.New().Setup(preWrap);
+        return wrapTypeGenerator.New().Setup(preWrap);
     }
-    public ITypedItem TypedItemFromObject(object data, WrapperSettings settings, ILazyLike<CodeDataFactory> cdf = default)
+    public ITypedItem TypedItemFromObject(object data, WrapperSettings settings, ILazyLike<CodeDataFactory> cdf1 = default)
     {
         var preWrap = new PreWrapObject(data, settings, this);
-        return _wrapItemGenerator.New().Setup(cdf ?? _cdf, this, preWrap);
+        return wrapItemGenerator.New().Setup(cdf1 ?? cdf, this, preWrap);
     }
 
     /// <summary>

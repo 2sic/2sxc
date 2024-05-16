@@ -40,7 +40,7 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
         LazySvc<CodeDataFactory> cdf,
         Polymorphism.Internal.PolymorphConfigReader polymorphism)
         : MyServicesBase(connect:
-            [codeCompilerLazy, dataStackService, convertService, dataSources, cdf, polymorphism])
+            [/* never! serviceProvider */ codeCompilerLazy, dataStackService, convertService, dataSources, cdf, polymorphism])
     {
         public CodeDataFactory Cdf => cdf.Value;
         public LazySvc<CodeCreateDataSourceSvc> DataSources { get; } = dataSources;

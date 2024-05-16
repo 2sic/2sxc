@@ -32,26 +32,27 @@ public class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngineLa
 
         // Find the standard DNN property sources if PortalSettings object is available
         var envLookups = getEngineLazy.Value.GetLookUpEngine(modId);
-        l.A($"Environment provided {envLookups.Sources.Count} sources");
+        var existSources = envLookups.Sources.ToList();
+        l.A($"Environment provided {existSources.Count} sources");
 
         // Create a new lookup engine and add the standard sources as inner-sources
-        var provider = new LookUpEngine(envLookups, Log);
+        //var provider = new LookUpEngine(envLookups, Log);
 
-        provider.Add(new LookUpInAppProperty("app", appForLookup));
+        var newSources = new List<ILookUp> { new LookUpInAppProperty("app", appForLookup) };
 
         // add module if it was not already added previously
-        if (!provider.HasSource(CmsBlock.InstanceLookupName))
+        if (!existSources.HasSource(CmsBlock.InstanceLookupName))
         {
             var modulePropertyAccess = new LookUpInDictionary(CmsBlock.InstanceLookupName);
             modulePropertyAccess.Properties.Add(CmsBlock.ModuleIdKey, modId.ToString(CultureInfo.InvariantCulture));
-            provider.Add(modulePropertyAccess);
+            newSources.Add(modulePropertyAccess);
         }
 
         // provide the current SxcInstance to the children where necessary
-        if (!provider.HasSource(LookUpConstants.InstanceContext) && blockForLookupOrNull != null)
+        if (!existSources.HasSource(LookUpConstants.InstanceContext) && blockForLookupOrNull != null)
         {
             var blockBuilderLookUp = new LookUpCmsBlock(LookUpConstants.InstanceContext, blockForLookupOrNull);
-            provider.Add(blockBuilderLookUp);
+            newSources.Add(blockBuilderLookUp);
         }
 
         // Provide the settings & resources stack lookup
@@ -59,13 +60,15 @@ public class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngineLa
         {
             l.A("Inside an App-Context, will add stack sources for settings/resources");
             var dims = contextOfApp.Site.SafeLanguagePriorityCodes();
-            provider.Add(new LookUpInStack(contextOfApp.AppSettings, dims));
-            provider.Add(new LookUpInStack(contextOfApp.AppResources, dims));
+            newSources.Add(new LookUpInStack(contextOfApp.AppSettings, dims));
+            newSources.Add(new LookUpInStack(contextOfApp.AppResources, dims));
         }
         else
             l.A("Not in App context, will not add stack for settings/resources");
 
-        return l.Return(provider, $"{provider.Sources.Count}");
+        var provider = new LookUpEngine(envLookups, Log, sources: newSources);
+
+        return l.Return(provider, $"{provider.Sources.Count()}");
     }
 
 }

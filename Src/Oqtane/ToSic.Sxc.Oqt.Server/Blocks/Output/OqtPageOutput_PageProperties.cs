@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Oqt.Shared.Models;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal.PageService;
-using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output;
 
@@ -31,7 +29,7 @@ partial class OqtPageOutput
 
     public IEnumerable<OqtPagePropertyChanges> GetOqtPagePropertyChangesList(IList<PagePropertyChange> props)
     {
-        var wrapLog = Log.Fn<IEnumerable<OqtPagePropertyChanges>>();
+        var l = Log.Fn<IEnumerable<OqtPagePropertyChanges>>();
 
         var result = new List<OqtPagePropertyChanges>();
         foreach (var p in props)
@@ -67,7 +65,7 @@ partial class OqtPageOutput
 
         var count = props.Count;
 
-        return wrapLog.Return(result, $"Changes: {count}");
+        return l.Return(result, $"Changes: {count}");
     }
 
     private static OqtPagePropertyOperation GetOp(PageChangeModes changeMode)

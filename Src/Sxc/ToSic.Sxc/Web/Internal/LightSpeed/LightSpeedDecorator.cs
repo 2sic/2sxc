@@ -39,7 +39,7 @@ internal class LightSpeedDecorator: EntityBasedType
             log.A("Debug WIP - remove once this has proven to work; get LightSpeed PiggyBack - recreate");
             var decoEntityOrNullPb = appState?.Metadata?.FirstOrDefaultOfType(TypeNameId);
             return new LightSpeedDecorator(decoEntityOrNullPb);
-        });
+        }).Value;
         return decoFromPiggyBack ?? new LightSpeedDecorator(null);
     }
 }

@@ -37,8 +37,12 @@ public interface ICmsModule: IHasMetadata
     /// <returns>The ID, unless unknown, in which case it's a negative number</returns>
     int Id { get; }
 
-    [PrivateApi("WIP v13")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    /// <summary>
+    /// Information about the root block in the module.
+    /// </summary>
+    /// <remarks>
+    /// Added ca. v13, but not documented/published till 2sxc 17.
+    /// </remarks>
     ICmsBlock Block { get; }
 
     [PrivateApi("WIP")]

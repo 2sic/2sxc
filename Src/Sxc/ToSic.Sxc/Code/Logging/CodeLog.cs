@@ -29,7 +29,7 @@ internal class CodeLog(ILog log) : Wrapper<ILog>(log ?? new Log(LogConstants.Nam
         [CallerFilePath] string cPath = null, [CallerMemberName] string cName = null, [CallerLineNumber] int cLine = 0)
     {
         // must call the opener first, then return the closing function
-        var call = GetContents().Fn(parameters, message, timer: useTimer, cPath, cName, cLine);
+        var call = GetContents().Fn(parameters, message, timer: useTimer, cPath: cPath, cName: cName, cLine: cLine);
         return finalMsg => call.Done(finalMsg);
     }
 
@@ -38,7 +38,7 @@ internal class CodeLog(ILog log) : Wrapper<ILog>(log ?? new Log(LogConstants.Nam
         [CallerFilePath] string cPath = null, [CallerMemberName] string cName = null, [CallerLineNumber] int cLine = 0)
     {
         // must call the opener first, then return the closing function
-        var call = GetContents().Fn<T>(parameters, message, timer: useTimer, cPath, cName, cLine);
+        var call = GetContents().Fn<T>(parameters, message, timer: useTimer, cPath: cPath, cName: cName, cLine: cLine);
         return (data, finalMsg) => call.Return(data, finalMsg);
     }
 

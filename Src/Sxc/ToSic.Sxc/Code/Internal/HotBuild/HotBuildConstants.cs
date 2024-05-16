@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
-public class HotBuildConstants
+internal class HotBuildConstants
 {
     /// <summary>
     /// Check if an object is from the AppCode-xxx.dll

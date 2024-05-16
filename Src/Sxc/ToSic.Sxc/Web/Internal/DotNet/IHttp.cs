@@ -41,4 +41,6 @@ public interface IHttp
     ///// Items collection from HttpContext
     ///// </summary>
     //IDictionary<object, object> Items { get; }
+
+    string GetCookie(string cookieName);
 }

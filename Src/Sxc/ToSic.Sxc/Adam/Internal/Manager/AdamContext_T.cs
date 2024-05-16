@@ -22,11 +22,11 @@ public class AdamContext<TFolderId, TFileId>: AdamContext
         Generator<AdamStorageOfField<TFolderId, TFileId>> fieldStoreGenerator,
         MyServices services): base(services, "Adm.CtxTT")
     {
-        ConnectServices(
+        ConnectLogs([
             _adamManagerLazy = adamManagerLazy,
             _siteStoreGenerator = siteStoreGenerator,
             _fieldStoreGenerator = fieldStoreGenerator
-        );
+        ]);
     }
 
     internal AdamStorage<TFolderId, TFileId> AdamRoot;

@@ -169,8 +169,14 @@
     <Compile Include="ServicesTests\MailAddressInputTypeTests.cs" />
     <Compile Include="ServicesTests\MailServiceTestsBase.cs" />
     <Compile Include="ServicesTests\PageServiceSharedTest.cs" />
+    <Compile Include="ServicesTests\SecureData\SecureDataHashTests.cs" />
     <Compile Include="ServicesTests\SecureData\SecureDataTest.cs" />
     <Compile Include="Images\ImageflowRewriteTests.cs" />
+    <Compile Include="ServicesTests\Templates\TemplatesDefaultTests.cs" />
+    <Compile Include="ServicesTests\Templates\TemplatesDefaultSourcesTests.cs" />
+    <Compile Include="ServicesTests\Templates\TemplatesEmptySourcesTests.cs" />
+    <Compile Include="ServicesTests\Templates\TemplatesTestsBase.cs" />
+    <Compile Include="ServicesTests\Templates\TemplatesEmptyTests.cs" />
     <Compile Include="ServiceTweaks\TweakListTests.cs" />
     <Compile Include="ServiceTweaks\CmsHtmlTweakTests.cs" />
     <Compile Include="TestBaseSxcDb.cs" />

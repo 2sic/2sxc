@@ -20,12 +20,12 @@ public abstract class SxcImportExportEnvironmentBase: EavImportExportEnvironment
 
         public MyServices(ISite site, App newApp, IAppStates appStates, IAppPathsMicroSvc appPaths)
         {
-            ConnectServices(
+            ConnectLogs([
                 AppPaths = appPaths,
                 AppStates = appStates,
                 Site = site,
                 NewApp = newApp
-            );
+            ]);
         }
     }
 

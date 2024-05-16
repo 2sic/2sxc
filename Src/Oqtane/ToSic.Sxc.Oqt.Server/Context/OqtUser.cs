@@ -15,29 +15,14 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Context;
 
-internal class OqtUser: ServiceBase, IUser<User>
+internal class OqtUser(
+    LazySvc<IUserRepository> userRepository,
+    LazySvc<OqtSecurity> oqtSecurity,
+    IHttpContextAccessor httpContextAccessor,
+    SiteState siteState)
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.User",
+        connect: [userRepository, oqtSecurity, httpContextAccessor, siteState]), IUser<User>
 {
-    private readonly LazySvc<IUserRepository> _userRepository;
-    private readonly LazySvc<OqtSecurity> _oqtSecurity;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly SiteState _siteState;
-
-    /// <summary>
-    /// Constructor for DI
-    /// </summary>
-    public OqtUser(LazySvc<IUserRepository> userRepository,
-        LazySvc<OqtSecurity> oqtSecurity,
-        IHttpContextAccessor httpContextAccessor,
-        SiteState siteState): base($"{OqtConstants.OqtLogPrefix}.User")
-    {
-        ConnectServices(
-            _userRepository = userRepository,
-            _oqtSecurity = oqtSecurity,
-            _httpContextAccessor = httpContextAccessor,
-            _siteState = siteState
-        );
-    }
-
     protected User UnwrappedUser => _unwrappedUser.Get(GetUser);
     private readonly GetOnce<User> _unwrappedUser = new();
     public User GetContents() => UnwrappedUser;
@@ -46,32 +31,32 @@ internal class OqtUser: ServiceBase, IUser<User>
     {
         var identity = GetUserFromIdentity();
         if (identity.UserId == -1) return identity;
-        var user = _userRepository.Value.GetUser(identity.UserId);
+        var user = userRepository.Value.GetUser(identity.UserId);
         user.Roles = identity.Roles;
         // siteId is not user info, but comes from env
-        user.SiteId = _siteState?.Alias?.SiteId ?? identity.SiteId;
+        user.SiteId = siteState?.Alias?.SiteId ?? identity.SiteId;
         return user;
     }
 
-    public int Id => _oqtSecurity.Value.Id(UnwrappedUser);
+    public int Id => oqtSecurity.Value.Id(UnwrappedUser);
 
-    public string Username => _oqtSecurity.Value.Username(UnwrappedUser);
+    public string Username => oqtSecurity.Value.Username(UnwrappedUser);
 
-    public string Name => _oqtSecurity.Value.Name(UnwrappedUser);
+    public string Name => oqtSecurity.Value.Name(UnwrappedUser);
 
-    public string Email => _oqtSecurity.Value.Email(UnwrappedUser);
+    public string Email => oqtSecurity.Value.Email(UnwrappedUser);
 
-    public string IdentityToken => _oqtSecurity.Value.UserIdentityToken(UnwrappedUser);
+    public string IdentityToken => oqtSecurity.Value.UserIdentityToken(UnwrappedUser);
 
     public Guid Guid { get; private set; }
 
-    public List<int> Roles => _roles.Get(() => _oqtSecurity.Value.Roles(UnwrappedUser));
+    public List<int> Roles => _roles.Get(() => oqtSecurity.Value.Roles(UnwrappedUser));
     private readonly GetOnce<List<int>> _roles = new();
 
-    public bool IsSystemAdmin => _isSystemAdmin.Get(() => _oqtSecurity.Value.IsSystemAdmin(UnwrappedUser));
+    public bool IsSystemAdmin => _isSystemAdmin.Get(() => oqtSecurity.Value.IsSystemAdmin(UnwrappedUser));
     private readonly GetOnce<bool> _isSystemAdmin = new();
 
-    public bool IsSiteAdmin => _isSiteAdmin.Get(() => _oqtSecurity.Value.IsSiteAdmin(UnwrappedUser));
+    public bool IsSiteAdmin => _isSiteAdmin.Get(() => oqtSecurity.Value.IsSiteAdmin(UnwrappedUser));
     private readonly GetOnce<bool> _isSiteAdmin = new();
 
     public bool IsContentAdmin => IsSiteAdmin;
@@ -94,7 +79,7 @@ internal class OqtUser: ServiceBase, IUser<User>
 
     #endregion
 
-    public bool IsAnonymous => _oqtSecurity.Value.IsAnonymous(UnwrappedUser);
+    public bool IsAnonymous => oqtSecurity.Value.IsAnonymous(UnwrappedUser);
 
 
     #region Private methods
@@ -110,13 +95,13 @@ internal class OqtUser: ServiceBase, IUser<User>
         };
 
         // missing identity from http context
-        if (_httpContextAccessor?.HttpContext?.User?.Identity == null) return user;
+        if (httpContextAccessor?.HttpContext?.User?.Identity == null) return user;
 
         // user not auth
-        user.IsAuthenticated = _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
+        user.IsAuthenticated = httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
         if (user.IsAuthenticated == false) return user;
 
-        user.Username = _httpContextAccessor.HttpContext.User.Identity.Name;
+        user.Username = httpContextAccessor.HttpContext.User.Identity.Name;
         user.UserId = UserIdFromClaims();
         user.Roles = UserRolesFromClaims();
 
@@ -125,11 +110,11 @@ internal class OqtUser: ServiceBase, IUser<User>
     }
 
     private int UserIdFromClaims() 
-        => int.Parse(_httpContextAccessor.HttpContext!.User.Claims.First(item => item.Type is ClaimTypes.NameIdentifier or ClaimTypes.PrimarySid).Value);
+        => int.Parse(httpContextAccessor.HttpContext!.User.Claims.First(item => item.Type is ClaimTypes.NameIdentifier or ClaimTypes.PrimarySid).Value);
 
     private string UserRolesFromClaims()
     {
-        var roles = _httpContextAccessor.HttpContext!.User.Claims.Where(item => item.Type == ClaimTypes.Role)
+        var roles = httpContextAccessor.HttpContext!.User.Claims.Where(item => item.Type == ClaimTypes.Role)
             .Aggregate("", (current, claim) => current + (claim.Value + ";"));
         if (roles != "") roles = ";" + roles;
         return roles;
@@ -137,10 +122,10 @@ internal class OqtUser: ServiceBase, IUser<User>
 
     public Guid UserGuidFromIdentity()
     {
-        var username = _httpContextAccessor.HttpContext!.User.Identity!.Name;
+        var username = httpContextAccessor.HttpContext!.User.Identity!.Name;
         return string.IsNullOrEmpty(username)
             ? default
-            : _oqtSecurity.Value.UserGuid(username);
+            : oqtSecurity.Value.UserGuid(username);
     }
 
     #endregion

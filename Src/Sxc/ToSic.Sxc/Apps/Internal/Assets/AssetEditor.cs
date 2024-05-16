@@ -13,28 +13,19 @@ using ToSic.Sxc.Blocks.Internal;
 namespace ToSic.Sxc.Apps.Internal.Assets;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AssetEditor : ServiceBase
+public class AssetEditor(
+    GenWorkPlus<WorkViews> workViews,
+    IUser user,
+    LazySvc<AppFolderInitializer> appFolderInitializer,
+    ISite site,
+    IAppPathsMicroSvc appPaths)
+    : ServiceBase("Sxc.AstEdt", connect: [user, appFolderInitializer, workViews, site, appPaths])
 {
 
     #region Constructor / DI
 
-    private readonly GenWorkPlus<WorkViews> _workViews;
-    private readonly IUser _user;
-    private readonly LazySvc<AppFolderInitializer> _appFolderInitializer;
-    private readonly ISite _site;
-    private readonly IAppPathsMicroSvc _appPaths;
     private IAppStateInternal _appState;
 
-    public AssetEditor(GenWorkPlus<WorkViews> workViews, IUser user, LazySvc<AppFolderInitializer> appFolderInitializer, ISite site, IAppPathsMicroSvc appPaths) : base("Sxc.AstEdt")
-    {
-        ConnectServices(
-            _user = user,
-            _appFolderInitializer = appFolderInitializer,
-            _workViews = workViews,
-            _site = site,
-            _appPaths = appPaths
-        );
-    }
     private AssetEditInfo EditInfo { get; set; }
 
 
@@ -44,7 +35,7 @@ public class AssetEditor : ServiceBase
         EditInfo = new(_appState.AppId, _appState.Name, path, global);
         if (viewId == 0) return this;
 
-        var view = _workViews.New(appState).Get(viewId);
+        var view = workViews.New(appState).Get(viewId);
         AddViewDetailsAndTypes(EditInfo, view);
         return this;
     }
@@ -53,7 +44,7 @@ public class AssetEditor : ServiceBase
     private void InitShared(IAppStateInternal app)
     {
         _appState = app;
-        _appPaths.Init(_site, _appState);
+        appPaths.Init(site, _appState);
     }
 
     #endregion
@@ -73,10 +64,10 @@ public class AssetEditor : ServiceBase
     public void EnsureUserMayEditAssetOrThrow(string fullPath = null)
     {
         // check super user permissions - then all is allowed
-        if (_user.IsSystemAdmin) return;
+        if (user.IsSystemAdmin) return;
 
         // ensure current user is admin - this is the minimum of not super-user
-        if (!_user.IsSiteAdmin) throw new AccessViolationException("current user may not edit templates, requires admin rights");
+        if (!user.IsSiteAdmin) throw new AccessViolationException("current user may not edit templates, requires admin rights");
 
         // if not super user, check if razor (not allowed; super user only)
         if (!EditInfo.IsSafe)
@@ -94,7 +85,7 @@ public class AssetEditor : ServiceBase
         if (path.Directory == null)
             throw new AccessViolationException("path is null");
 
-        if (path.Directory.FullName.IndexOf(_appPaths.PhysicalPath, StringComparison.InvariantCultureIgnoreCase) != 0)
+        if (path.Directory.FullName.IndexOf(appPaths.PhysicalPath, StringComparison.InvariantCultureIgnoreCase) != 0)
             throw new AccessViolationException("current user may not edit files outside of the app-scope");
     }
 
@@ -112,7 +103,7 @@ public class AssetEditor : ServiceBase
     }
 
     public string InternalPath => _internalPath ??= NormalizePath(Path.Combine(
-        _appPaths.PhysicalPathSwitch(EditInfo.IsShared), EditInfo.FileName));
+        appPaths.PhysicalPathSwitch(EditInfo.IsShared), EditInfo.FileName));
     private string _internalPath;
 
     private static string NormalizePath(string path) => Path.GetFullPath(new Uri(path).LocalPath);
@@ -129,7 +120,7 @@ public class AssetEditor : ServiceBase
                 return File.ReadAllText(InternalPath);
 
             throw new FileNotFoundException("could not find file"
-                                            + (_user.IsSystemAdmin ? $" for superuser - file tried '{InternalPath}'" : ""));
+                                            + (user.IsSystemAdmin ? $" for superuser - file tried '{InternalPath}'" : ""));
         }
         set
         {
@@ -138,7 +129,7 @@ public class AssetEditor : ServiceBase
                 File.WriteAllText(InternalPath, value);
             else
                 throw new FileNotFoundException("could not find file"
-                                                + (_user.IsSystemAdmin ? $" for superuser - file tried '{InternalPath}'" : ""));
+                                                + (user.IsSystemAdmin ? $" for superuser - file tried '{InternalPath}'" : ""));
         }
     }
 
@@ -148,7 +139,7 @@ public class AssetEditor : ServiceBase
         if (SanitizeFileNameAndCheckIfAssetAlreadyExists()) return false;
 
         // ensure the web.config exists (usually missing in the global area)
-        _appFolderInitializer.Value.EnsureTemplateFolderExists(_appState.Folder, EditInfo.IsShared);
+        appFolderInitializer.Value.EnsureTemplateFolderExists(_appState.Folder, EditInfo.IsShared);
 
         var absolutePath = InternalPath;
 

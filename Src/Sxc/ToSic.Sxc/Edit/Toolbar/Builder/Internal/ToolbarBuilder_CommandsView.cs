@@ -79,4 +79,13 @@ partial class ToolbarBuilder
         string operation = null
     ) => AddAdminAction("view", noParamOrder, ui, parameters, operation, target, tweak);
 
+    public IToolbarBuilder Edition(
+        NoParamOrder noParamOrder = default,
+        string editions = default,
+        Func<ITweakButton, ITweakButton> tweak = default
+    )
+    {
+        var paramsMergeInTweak = editions == default ? null : new { editions };
+        return AddAdminAction("edition", noParamOrder, null, paramsMergeInTweak, null, null, tweak);
+    }
 }

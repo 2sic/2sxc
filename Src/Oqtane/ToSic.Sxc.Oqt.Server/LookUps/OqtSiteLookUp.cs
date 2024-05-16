@@ -7,7 +7,7 @@ using static ToSic.Sxc.LookUp.LookUpConstants;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps;
 
-internal class OqtSiteLookUp(LazySvc<SiteStateInitializer> siteStateInitializer, SiteState siteState, LazySvc<SiteRepository> siteRepository) : LookUpBase(SourceSite)
+internal class OqtSiteLookUp(LazySvc<SiteStateInitializer> siteStateInitializer, SiteState siteState, LazySvc<SiteRepository> siteRepository) : LookUpBase(SourceSite, "LookUp in Oqtane Site")
 {
     public SiteState SiteState { get; } = siteState;
     protected Oqtane.Models.Site Site { get; set; }

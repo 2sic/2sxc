@@ -36,11 +36,11 @@ public abstract class AdamContext(AdamContext.MyServices services, string logNam
             Generator<AdamSecurityChecksBase> adamSecurityGenerator,
             LazySvc<IEavFeaturesService> featuresSvc)
         {
-            ConnectServices(
+            ConnectLogs([
                 TypesPermissions = typesPermissions,
                 AdamSecurityGenerator = adamSecurityGenerator,
                 FeaturesSvc = featuresSvc
-            );
+            ]);
         }
     }
 

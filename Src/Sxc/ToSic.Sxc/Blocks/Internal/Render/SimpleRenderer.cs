@@ -8,17 +8,10 @@ namespace ToSic.Sxc.Blocks.Internal.Render;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class SimpleRenderer: ServiceBase
+public class SimpleRenderer(Generator<BlockFromEntity> blkFrmEntGen)
+    : ServiceBase(SxcLogName + "RndSmp", connect: [blkFrmEntGen])
 {
-    private readonly Generator<BlockFromEntity> _blkFrmEntGen;
     private static readonly string _emptyMessage = "<!-- auto-render of item {0} -->";
-
-    public SimpleRenderer(Generator<BlockFromEntity> blkFrmEntGen): base(SxcLogName + "RndSmp")
-    {
-        ConnectServices(
-            _blkFrmEntGen = blkFrmEntGen
-        );
-    }
 
     public string Render(IBlock parentBlock, IEntity entity, object data = default)
     {
@@ -33,7 +26,7 @@ public class SimpleRenderer: ServiceBase
 
         // render it
         l.A("found, will render");
-        var cb = _blkFrmEntGen.New().Init(parentBlock, entity);
+        var cb = blkFrmEntGen.New().Init(parentBlock, entity);
         var result = cb.BlockBuilder.Run(false, specs: new() { Data = data });
 
         // Special: during Run() various things are picked up like header changes, activations etc.

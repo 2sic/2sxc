@@ -42,17 +42,21 @@ internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem<
         return DnnToAdam(file);
     }
 
-    public void Rename(IFile file, string newName) => Log.Do($"{nameof(file)}:{file.Id}, {nameof(newName)}: {newName}", () =>
+    public void Rename(IFile file, string newName)
     {
+        var l = Log.Fn($"{nameof(file)}:{file.Id}, {nameof(newName)}: {newName}");
         var dnnFile = _dnnFiles.GetFile(file.AsDnn().SysId);
         _dnnFiles.RenameFile(dnnFile, newName);
-    });
+        l.Done();
+    }
 
-    public void Delete(IFile file) => Log.Do(() =>
+    public void Delete(IFile file)
     {
+        var l = Log.Fn($"file: {file.Id}");
         var dnnFile = _dnnFiles.GetFile(file.AsDnn().SysId);
         _dnnFiles.DeleteFile(dnnFile);
-    });
+        l.Done();
+    }
 
     public File<int, int> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
     {
