@@ -1,6 +1,5 @@
 ﻿#if NETFRAMEWORK
 using System.Web;
-using System.Web.Hosting;
 #else
 using Microsoft.AspNetCore.Http;
 #endif
@@ -35,6 +34,18 @@ public abstract class HttpAbstractionBase: IHttp
         return _queryStringKeyValuePairs;
     }
     private List<KeyValuePair<string, string>> _queryStringKeyValuePairs;
+
+
+    public string GetCookie(string cookieName)
+    {
+        if (Request == null) return null;
+
+#if NETFRAMEWORK
+        return Request.Cookies[cookieName]?.Value;
+#else
+        return Request.Cookies[cookieName];
+#endif
+    }
 
     #endregion Request
 

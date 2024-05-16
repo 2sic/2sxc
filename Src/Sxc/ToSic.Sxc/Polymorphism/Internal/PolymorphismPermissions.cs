@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Context;
+using ToSic.Eav.Plumbing;
 using static System.StringComparison;
 
 namespace ToSic.Sxc.Polymorphism.Internal;
@@ -14,12 +15,18 @@ public class PolymorphismPermissions(IUser user) : IPolymorphismResolver
     /// </summary>
     public const string ModeIsSuperUser = "IsSuperUser";
 
-    public string Edition(string parameters, ILog log)
+    public string Edition(PolymorphismConfiguration config, string parameters, string overrule, ILog log)
     {
         var l = log.Fn<string>();
         if (!string.Equals(parameters, ModeIsSuperUser, InvariantCultureIgnoreCase))
             return l.ReturnNull("unknown param");
         var isSuper = user.IsSystemAdmin;
+
+        // TEMP: for now, site admins can overrule this
+        // They won't see the button, but if the button is added on purpose using .Button("edition") it will work.
+        if (overrule.HasValue() && (isSuper || config.UsersWhoMaySwitch.Contains(user.Id))) 
+            return l.Return(overrule, $"overruled as: '{overrule}'");
+
         var result = isSuper ? "staging" : "live";
         return l.ReturnAndLog(result);
     }

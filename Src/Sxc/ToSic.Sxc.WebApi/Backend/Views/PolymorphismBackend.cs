@@ -13,9 +13,9 @@ public class PolymorphismBackend(PolymorphConfigReader polymorphism, IAppStates 
         var poly = polymorphism.Init(appState.List);
         var result = new PolymorphismDto
         {
-            Id = poly.Entity?.EntityId, 
+            Id = poly.Configuration.Id, 
             Resolver = poly.Resolver, 
-            TypeName = PolymorphismConstants.Name
+            TypeName = PolymorphismConfiguration.Name
         };
         return callLog.Return(result);
     }

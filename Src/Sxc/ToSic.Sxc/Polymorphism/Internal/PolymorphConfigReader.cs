@@ -17,7 +17,7 @@ public class PolymorphConfigReader(LazySvc<ServiceSwitcher<IPolymorphismResolver
     public string Resolver;
     public string Parameters;
     public string Rule;
-    public IEntity Entity;
+    public PolymorphismConfiguration Configuration;
     private int _appId;
 
     /// <summary>
@@ -39,10 +39,11 @@ public class PolymorphConfigReader(LazySvc<ServiceSwitcher<IPolymorphismResolver
 
     public PolymorphConfigReader Init(IEnumerable<IEntity> list)
     {
-        Entity = list?.FirstOrDefaultOfType(PolymorphismConstants.Name);
-        if (Entity == null) return this;
+        var entity = list?.FirstOrDefaultOfType(PolymorphismConfiguration.Name);
+        if (entity == null) return this;
 
-        var rule = Entity.Value<string>(PolymorphismConstants.ModeField);
+        Configuration = new(entity);
+        var rule = Configuration.Mode;
 
         SplitRule(rule);
         return this;
@@ -89,7 +90,9 @@ public class PolymorphConfigReader(LazySvc<ServiceSwitcher<IPolymorphismResolver
             if (rInfo == null)
                 return l.ReturnNull("resolver not found");
             l.A($"resolver for {Resolver} found");
-            var result = rInfo.Edition(Parameters, Log);
+            var overrule = http.Value.GetCookie($"app-{_appId}-edition").NullIfNoValue();
+            l.A($"overrule: '{overrule}'");
+            var result = rInfo.Edition(Configuration, Parameters, overrule, Log);
 
             return l.Return(result, "ok");
         }

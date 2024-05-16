@@ -11,7 +11,7 @@ public class PolymorphismKoi(ICss pageCss) : IPolymorphismResolver
 
     public const string ModeCssFramework= "cssFramework";
 
-    public string Edition(string parameters, ILog log)
+    public string Edition(PolymorphismConfiguration config, string parameters, string overrule, ILog log)
     {
         var l = log.Fn<string>();
         if (!string.Equals(parameters, ModeCssFramework, InvariantCultureIgnoreCase))
