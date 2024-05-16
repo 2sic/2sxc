@@ -2,7 +2,11 @@
 
 namespace ToSic.Sxc.Polymorphism.Internal;
 
+/// <summary>
+/// Type - mainly name - of a resolver
+/// </summary>
+/// <param name="dsType"></param>
 internal class ResolverInfo(Type dsType) : TypeWithMetadataBase<PolymorphResolverAttribute>(dsType)
 {
-    public override string Name => TypeMetadata?.Name;
+    public override string NameId => TypeMetadata?.Name;
 }

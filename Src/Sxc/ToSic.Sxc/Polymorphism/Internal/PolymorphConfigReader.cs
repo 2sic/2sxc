@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
 
@@ -6,11 +7,10 @@ namespace ToSic.Sxc.Polymorphism.Internal;
 
 /// <summary>
 /// Mini service to read the polymorph config of the app
-/// and then resolve the edition based on an <see cref="IResolver"/>
+/// and then resolve the edition based on an <see cref="IPolymorphismResolver"/>
 /// </summary>
-/// <param name="serviceProvider"></param>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class PolymorphConfigReader(IServiceProvider serviceProvider) : ServiceBase("Plm.Managr", connect: [/* never! serviceProvider */ ])
+public class PolymorphConfigReader(ServiceSwitcher<IPolymorphismResolver> resolvers) : ServiceBase("Plm.Managr", connect: [resolvers ])
 {
     public string Resolver;
     public string Parameters;
@@ -46,30 +46,28 @@ public class PolymorphConfigReader(IServiceProvider serviceProvider) : ServiceBa
         // else figure out edition using data provided by the function
         => view?.Edition.NullIfNoValue() ?? lazyReader().Edition();
 
-    public string Edition() => Log.Func(() =>
+    public string Edition()
     {
+        var l = Log.Fn<string>();
         try
         {
-            if (string.IsNullOrEmpty(Resolver)) return (null, "no resolver");
+            if (string.IsNullOrEmpty(Resolver)) 
+                return l.ReturnNull("no resolver");
 
-            var rInfo = ResolversCache.FirstOrDefault(r => r.Name.EqualsInsensitive(Resolver));
+            var rInfo = resolvers.ByNameId(Resolver, true);
             if (rInfo == null)
-                return (null, "resolver not found");
-            Log.A($"resolver for {Resolver} found");
-            var editionResolver = (IResolver)serviceProvider.GetService(rInfo.Type);
-            var result = editionResolver.Edition(Parameters, Log);
+                return l.ReturnNull("resolver not found");
+            l.A($"resolver for {Resolver} found");
+            var result = rInfo.Edition(Parameters, Log);
 
-            return (result, "ok");
+            return l.Return(result, "ok");
         }
         // We don't expect errors - but such a simple helper just shouldn't be able to throw errors
-        catch
+        catch (Exception ex)
         {
-            return (null, "error");
+            l.Ex(ex);
+            return l.ReturnNull("error");
         }
-    });
+    }
 
-    private static List<ResolverInfo> ResolversCache { get; } = AssemblyHandling
-        .FindInherited(typeof(IResolver))
-        .Select(t => new ResolverInfo(t))
-        .ToList();
 }

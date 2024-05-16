@@ -30,6 +30,8 @@ using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Internal.Plumbing;
 using ToSic.Sxc.LookUp.Internal;
+using ToSic.Sxc.Polymorphism;
+using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.DotNet;
@@ -198,6 +200,10 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<SourceAnalyzer>();
         services.TryAddSingleton<AssemblyResolver>();
         services.TryAddTransient<DependenciesLoader>();
+
+        // Polymorphism - moved here v17.08
+        services.AddTransient<IPolymorphismResolver, PolymorphismKoi>();
+        services.AddTransient<IPolymorphismResolver, PolymorphismPermissions>();
 
         // Add possibly missing fallback services
         // This must always be at the end here so it doesn't accidentally replace something we actually need

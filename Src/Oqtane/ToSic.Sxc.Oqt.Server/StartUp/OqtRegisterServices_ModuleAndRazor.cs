@@ -4,12 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Data;
 using ToSic.Eav.Integration;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Backend.Context;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Cms.Internal.Publishing;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Integration.Modules;
 using ToSic.Sxc.Oqt.Server.Blocks;
@@ -19,6 +16,7 @@ using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Server.Polymorphism;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.Services;
+using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sxc.Services;
 using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
@@ -71,8 +69,6 @@ partial class OqtRegisterServices
         services.TryAddTransient<IModuleAndBlockBuilder, OqtModuleAndBlockBuilder>();
 
         // Views / Templates / Razor: Polymorphism Resolvers
-        services.TryAddTransient<Sxc.Polymorphism.Internal.Koi>();
-        services.TryAddTransient<Permissions>();
         services.TryAddTransient<Connect.Koi.Detectors.ICssFrameworkDetector, OqtKoiCssFrameworkDetector>();
 
         return services;

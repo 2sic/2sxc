@@ -1,15 +1,13 @@
 ﻿using ToSic.Eav.Context;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Polymorphism;
 using static System.StringComparison;
 
-namespace ToSic.Sxc.Oqt.Server.Polymorphism;
+namespace ToSic.Sxc.Polymorphism.Internal;
 
 [PolymorphResolver("Permissions")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class Permissions(IUser oqtUser) : IResolver
+public class PolymorphismPermissions(IUser user) : IPolymorphismResolver
 {
-    public string Name => "Permissions";
+    public string NameId => "Permissions";
 
     public const string ModeIsSuperUser = "IsSuperUser";
 
@@ -18,8 +16,12 @@ public class Permissions(IUser oqtUser) : IResolver
         var l = log.Fn<string>();
         if (!string.Equals(parameters, ModeIsSuperUser, InvariantCultureIgnoreCase))
             return l.ReturnNull("unknown param");
-        var isSuper = oqtUser.IsSystemAdmin;
+        var isSuper = user.IsSystemAdmin;
         var result = isSuper ? "staging" : "live";
         return l.ReturnAndLog(result);
     }
+
+    public bool IsViable() => true;
+
+    public int Priority => 0;
 }
