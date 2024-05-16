@@ -422,7 +422,7 @@ internal class RuntimeViewCompiler : IViewCompiler
 
         var polymorphism = sp.GetService<PolymorphConfigReader>();
 
-        var edition = PolymorphConfigReader.UseViewEditionOrGetLazy(block.View, () => polymorphism.Init(block.Context.AppState.List));
+        var edition = polymorphism.UseViewEditionOrGet(block);
 
         return (block.App.RelativePath, edition);
     }

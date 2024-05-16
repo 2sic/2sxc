@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using ToSic.Eav;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Backend.Context;
@@ -180,9 +181,7 @@ internal class AppApiControllerManager : IHasLog
         var l = Log.Fn<string>(timer: true);
 
         var block = ctxResolver.BlockOrNull();
-        var edition = block == null
-            ? null
-            : PolymorphConfigReader.UseViewEditionOrGetLazy(block.View, () => _polymorphism.Init(block.Context.AppState.List));
+        var edition = block.NullOrGetWith(_polymorphism.UseViewEditionOrGet);
 
         return l.Return(edition);
     }

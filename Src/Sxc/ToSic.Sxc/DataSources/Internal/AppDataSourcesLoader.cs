@@ -115,9 +115,7 @@ internal class AppDataSourcesLoader(
         var l = Log.Fn<string>(timer: true);
 
         var block = ctxResolver.BlockOrNull();
-        var edition = block == null
-            ? null
-            : PolymorphConfigReader.UseViewEditionOrGetLazy(block.View, () => polymorphism.Init(block.Context.AppState.List));
+        var edition = block.NullOrGetWith(polymorphism.UseViewEditionOrGet);
 
         return l.Return(edition);
     }

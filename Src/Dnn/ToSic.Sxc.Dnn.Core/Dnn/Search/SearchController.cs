@@ -99,7 +99,7 @@ internal class SearchController(
 
         // Figure out the current edition - if none, stop here
         // New 2023-03-20 - if the view comes with a preset edition, it's an ajax-preview which should be respected
-        _edition = PolymorphConfigReader.UseViewEditionOrGetLazy(Block.View, () => polymorphism.Init(Block.Context.AppState.List));
+        _edition = polymorphism.UseViewEditionOrGet(Block);
         //Block.View.Edition.NullIfNoValue()
         //           ?? _polymorphism.Init(Block.Context.AppState.List).Edition();
 
