@@ -11,10 +11,10 @@ public class PolymorphismKoi(ICss pageCss) : IPolymorphismResolver
 
     public const string ModeCssFramework= "cssFramework";
 
-    public string Edition(PolymorphismConfiguration config, string parameters, string overrule, ILog log)
+    public string Edition(PolymorphismConfiguration config, string overrule, ILog log)
     {
         var l = log.Fn<string>();
-        if (!string.Equals(parameters, ModeCssFramework, InvariantCultureIgnoreCase))
+        if (!string.Equals(config.Parameters, ModeCssFramework, InvariantCultureIgnoreCase))
             return l.ReturnNull("unknown param");
         // Note: this is still using the global object which we want to get rid of
         // But to use DI, we must refactor Polymorphism

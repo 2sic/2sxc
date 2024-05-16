@@ -15,10 +15,10 @@ public class PolymorphismPermissions(IUser user) : IPolymorphismResolver
     /// </summary>
     public const string ModeIsSuperUser = "IsSuperUser";
 
-    public string Edition(PolymorphismConfiguration config, string parameters, string overrule, ILog log)
+    public string Edition(PolymorphismConfiguration config, string overrule, ILog log)
     {
         var l = log.Fn<string>();
-        if (!string.Equals(parameters, ModeIsSuperUser, InvariantCultureIgnoreCase))
+        if (!string.Equals(config.Parameters, ModeIsSuperUser, InvariantCultureIgnoreCase))
             return l.ReturnNull("unknown param");
         var isSuper = user.IsSystemAdmin;
 

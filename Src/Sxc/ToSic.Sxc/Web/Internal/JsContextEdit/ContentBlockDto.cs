@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Internal;
@@ -43,6 +44,10 @@ public class ContentBlockDto : EntityDto
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string Edition { get; }
 
+    [JsonPropertyName("editions")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string Editions { get; }
+
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string TemplatePath { get; }
 
@@ -73,7 +78,7 @@ public class ContentBlockDto : EntityDto
     [JsonPropertyName("renderLightspeed")]
     public bool RenderLightspeed { get; }
 
-    public ContentBlockDto(IBlock block, RenderStatistics statistics)
+    public ContentBlockDto(IBlock block, RenderStatistics statistics, IAppJsonService appJson)
     {
         IsCreated = block.ContentGroupExists;
         IsContent = block.IsContentApp;
@@ -106,7 +111,6 @@ public class ContentBlockDto : EntityDto
         {
             if (query != null)
             {
-                var queryData = block.Data.Out;
                 var streamInfo = block.Data?.Out
                     .Select(pair => new
                     {
@@ -135,5 +139,15 @@ public class ContentBlockDto : EntityDto
 
         RenderMs = statistics?.RenderMs ?? -1;
         RenderLightspeed = statistics?.UseLightSpeed ?? false;
+
+        try
+        {
+            if (app != null)
+                Editions = string.Join(",", appJson.GetAppJson(app.AppId).Editions.Keys);
+        }
+        catch
+        {
+            /* ignore */
+        }
     }
 }

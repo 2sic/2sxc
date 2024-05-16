@@ -9,5 +9,5 @@ namespace ToSic.Sxc.Polymorphism;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface IPolymorphismResolver: ISwitchableService
 {
-    string Edition(PolymorphismConfiguration config, string parameters, string overrule, ILog log);
+    string Edition(PolymorphismConfiguration config, string overrule, ILog log);
 }

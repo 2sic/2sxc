@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Code.InfoSystem;
 using ToSic.Eav.Data.Shared;
 using ToSic.Lib.Services;
@@ -10,7 +11,7 @@ using ToSic.Sxc.Web.Internal.PageFeatures;
 namespace ToSic.Sxc.Web.Internal.JsContext;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class JsContextAll(JsContextLanguage jsLangCtx, IJsApiService jsApiService, CodeInfosInScope codeWarnings)
+public class JsContextAll(JsContextLanguage jsLangCtx, IJsApiService jsApiService, CodeInfosInScope codeWarnings, IAppJsonService appJson)
     : ServiceBase("Sxc.CliInf", connect: [jsLangCtx, jsApiService, codeWarnings])
 {
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -62,10 +63,10 @@ public class JsContextAll(JsContextLanguage jsLangCtx, IJsApiService jsApiServic
         // New in v13 - if the view is from remote, don't allow design
         var blockCanDesign = block.View?.Entity.HasAncestor() ?? false ? (bool?)false : null;
 
-        User = new(ctx.User);
+        User = new(ctx.User, block.App?.Data?.List);
 
         ContentBlockReference = new(block, ctx.Publishing.Mode);
-        ContentBlock = new(block, statistics);
+        ContentBlock = new(block, statistics, appJson);
 
         // If auto toolbar is false / not certain, and we have features activated...
         // find out if the Toolbars-Auto is enabled, in which case we should activate them

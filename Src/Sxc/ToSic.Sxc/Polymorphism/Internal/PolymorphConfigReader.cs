@@ -14,9 +14,9 @@ namespace ToSic.Sxc.Polymorphism.Internal;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class PolymorphConfigReader(LazySvc<ServiceSwitcher<IPolymorphismResolver>> resolvers, LazySvc<IHttp> http) : ServiceBase("Plm.Managr", connect: [resolvers ])
 {
-    public string Resolver;
+    //public string Resolver;
     public string Parameters;
-    public string Rule;
+    //public string Rule;
     public PolymorphismConfiguration Configuration;
     private int _appId;
 
@@ -39,31 +39,29 @@ public class PolymorphConfigReader(LazySvc<ServiceSwitcher<IPolymorphismResolver
 
     public PolymorphConfigReader Init(IEnumerable<IEntity> list)
     {
-        var entity = list?.FirstOrDefaultOfType(PolymorphismConfiguration.Name);
-        if (entity == null) return this;
+        Configuration = new(list);
+        //var rule = Configuration.Mode;
 
-        Configuration = new(entity);
-        var rule = Configuration.Mode;
-
-        SplitRule(rule);
+        //SplitRule(rule);
         return this;
     }
 
-    /// <summary>
-    /// Split the rule, which should have a "Resolver?parameters" syntax.
-    /// Most common values are:
-    /// - "Permissions?IsSuperUser" to determine if the user is a super user
-    /// - "Koi?cssFramework" to determine the css framework
-    /// </summary>
-    /// <param name="rule"></param>
-    private void SplitRule(string rule)
-    {
-        Rule = rule;
-        if (string.IsNullOrEmpty(rule)) return;
-        var parts = rule.Split('?');
-        Resolver = parts[0];
-        if (parts.Length > 0) Parameters = parts[1];
-    }
+    ///// <summary>
+    ///// Split the rule, which should have a "Resolver?parameters" syntax.
+    ///// Most common values are:
+    ///// - "Permissions?IsSuperUser" to determine if the user is a super user
+    ///// - "Koi?cssFramework" to determine the css framework
+    ///// </summary>
+    ///// <param name="rule"></param>
+    //private (string Resolver, string Parameters) SplitRule(string rule)
+    //{
+    //    Rule = rule;
+    //    if (string.IsNullOrEmpty(rule)) return (null, null);
+    //    var parts = rule.Split('?');
+    //    Resolver = parts[0];
+    //    if (parts.Length > 0) Parameters = parts[1];
+    //    return (Resolver, Parameters);
+    //}
 
     ///// <summary>
     ///// Static helper to either use the edition set by the view (eg. in preview mode)
@@ -83,16 +81,17 @@ public class PolymorphConfigReader(LazySvc<ServiceSwitcher<IPolymorphismResolver
         var l = Log.Fn<string>();
         try
         {
-            if (string.IsNullOrEmpty(Resolver)) 
+            var resolver = Configuration.Resolver;
+            if (string.IsNullOrEmpty(resolver)) 
                 return l.ReturnNull("no resolver");
 
-            var rInfo = resolvers.Value.ByNameId(Resolver, true);
+            var rInfo = resolvers.Value.ByNameId(resolver, true);
             if (rInfo == null)
                 return l.ReturnNull("resolver not found");
-            l.A($"resolver for {Resolver} found");
+            l.A($"resolver for {resolver} found");
             var overrule = http.Value.GetCookie($"app-{_appId}-edition").NullIfNoValue();
             l.A($"overrule: '{overrule}'");
-            var result = rInfo.Edition(Configuration, Parameters, overrule, Log);
+            var result = rInfo.Edition(Configuration, overrule, Log);
 
             return l.Return(result, "ok");
         }
