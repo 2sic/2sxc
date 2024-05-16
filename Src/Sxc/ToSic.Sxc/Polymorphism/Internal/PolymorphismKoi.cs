@@ -3,7 +3,7 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.Polymorphism.Internal;
 
-[PolymorphResolver("Koi")]
+[PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class PolymorphismKoi(ICss pageCss) : IPolymorphismResolver
 {
@@ -18,8 +18,7 @@ public class PolymorphismKoi(ICss pageCss) : IPolymorphismResolver
             return l.ReturnNull("unknown param");
         // Note: this is still using the global object which we want to get rid of
         // But to use DI, we must refactor Polymorphism
-        var cssFramework = pageCss.Framework; // Connect.Koi.Koi.Css;
-        return l.Return(cssFramework, cssFramework);
+        return l.ReturnAndLog(pageCss.Framework);
     }
 
     public bool IsViable() => true;

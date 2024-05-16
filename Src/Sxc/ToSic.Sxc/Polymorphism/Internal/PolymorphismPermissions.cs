@@ -3,12 +3,15 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.Polymorphism.Internal;
 
-[PolymorphResolver("Permissions")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class PolymorphismPermissions(IUser user) : IPolymorphismResolver
 {
     public string NameId => "Permissions";
 
+    /// <summary>
+    /// BTW: when this is configured, the entire config string is "Permissions?IsSuperUser"
+    /// so the parameters are "IsSuperUser"
+    /// </summary>
     public const string ModeIsSuperUser = "IsSuperUser";
 
     public string Edition(string parameters, ILog log)
