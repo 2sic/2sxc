@@ -45,5 +45,5 @@ internal class OutputCacheManager(MemoryCacheService memoryCacheService, Lazy<IE
         return l.ReturnAsError("error");
     }
 
-    public OutputCacheItem Get(string key) => memoryCacheService.Get(key) as OutputCacheItem;
+    public OutputCacheItem Get(string key) => memoryCacheService.Get<OutputCacheItem>(key);
 }

@@ -263,7 +263,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         {
             var l = Log.Fn<CSharpCodeProvider>();
             // See if in memory cache
-            if (memoryCacheService.Get(CSharpCodeProviderCacheKey) is CSharpCodeProvider fromCache)
+            if (memoryCacheService.TryGet<CSharpCodeProvider>(CSharpCodeProviderCacheKey, out var fromCache))
                 return l.Return(fromCache, "from cached");
             
             var codeProvider = new CSharpCodeProvider(); // TODO: @stv test with latest nuget package for @inherits ; issue

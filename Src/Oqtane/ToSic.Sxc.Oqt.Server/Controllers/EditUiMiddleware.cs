@@ -25,7 +25,7 @@ internal class EditUiMiddleware
 
         var key = CacheKey(virtualPath);
         var memoryCacheService = sp.GetService<MemoryCacheService>();
-        if (memoryCacheService.Get(key) is not string html)
+        if (!memoryCacheService.TryGet<string>(key, out var html))
         {
             var path = Path.Combine(env.WebRootPath, virtualPath);
             if (!File.Exists(path)) throw new FileNotFoundException("File not found: " + path);

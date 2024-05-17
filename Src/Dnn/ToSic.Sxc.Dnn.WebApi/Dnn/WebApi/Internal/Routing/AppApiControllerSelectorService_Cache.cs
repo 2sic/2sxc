@@ -15,7 +15,7 @@ internal partial class AppApiControllerSelectorService
         //SetPathForCompilersInsideController(appFolder, editionPath, controllerTypeName, shared);
 
         var descriptorCacheKey = CacheKey(appFolder, controllerTypeName, shared, spec);
-        if (memoryCacheService.Get(descriptorCacheKey) is HttpControllerDescriptorWithPaths dataWithPaths)
+        if (memoryCacheService.TryGet<HttpControllerDescriptorWithPaths>(descriptorCacheKey, out var dataWithPaths))
         {
             PreservePathForGetCodeInController(dataWithPaths.Folder, dataWithPaths.FullPath);
             return dataWithPaths.Descriptor;
