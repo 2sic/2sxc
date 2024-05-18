@@ -125,4 +125,9 @@ public class ServiceKit16() : ServiceKit("Sxc.Kit16")
     [InternalApi_DoNotUse_MayChangeWithoutNotice("Still Beta in v17.08")]
     public ITemplateService Template => _templates ??= GetKitService<ITemplateService>();
     private ITemplateService _templates;
+
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("Still Beta in v17.09")]
+    public ICacheService Cache => _cache ??= GetKitService<ICacheService>();
+    private ICacheService _cache;
+
 }
