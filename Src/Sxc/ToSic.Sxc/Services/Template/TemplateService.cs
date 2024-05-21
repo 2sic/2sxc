@@ -1,10 +1,10 @@
 ﻿using ToSic.Eav.LookUp;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Template;
 
-namespace ToSic.Sxc.Templates;
+namespace ToSic.Sxc.Services.Templates;
 
 internal class TemplateService(LazySvc<ILookUpEngineResolver> getEngineLazy) : ServiceForDynamicCode($"{SxcLogName}.LUpSvc"), ITemplateService
 {

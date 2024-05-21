@@ -1,7 +1,9 @@
 ﻿using ToSic.Eav.LookUp;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Templates;
+using ToSic.Sxc.Services.Template;
+using ToSic.Sxc.Services.Templates;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Services;
 
 /// <summary>

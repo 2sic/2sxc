@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.LookUp;
 using ToSic.Eav.Plumbing;
 
-namespace ToSic.Sxc.Templates;
+namespace ToSic.Sxc.Services.Templates;
 
 internal class LookUpWithFunction(string name, Func<string,string> getter): LookUpBase(name, "LookUp using simple function")
 {

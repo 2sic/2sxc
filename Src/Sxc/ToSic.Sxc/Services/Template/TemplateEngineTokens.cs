@@ -1,7 +1,8 @@
 ﻿using ToSic.Eav.LookUp;
 using ToSic.Lib.Data;
+using ToSic.Sxc.Services.Template;
 
-namespace ToSic.Sxc.Templates;
+namespace ToSic.Sxc.Services.Templates;
 
 internal class TemplateEngineTokens(ILookUpEngine original): ITemplateEngine, IWrapper<ILookUpEngine>
 {

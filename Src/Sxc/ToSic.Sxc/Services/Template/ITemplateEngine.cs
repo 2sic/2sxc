@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.LookUp;
 
-namespace ToSic.Sxc.Templates;
+namespace ToSic.Sxc.Services.Template;
 
 /// <summary>
 /// Engine which parses a template containing placeholders and replaces them with values from sources.
