@@ -18,15 +18,17 @@ public static class UrlHelpers
         // Note that this NameValueCollection is different than the one from HttpUtility
         // but because that one is internal, we cannot create one directly
         var nvc = new NameValueCollection();
-        query = (query ?? "").Trim();
-        if (string.IsNullOrWhiteSpace(query)) return nvc;
+        query = query?.Trim() ?? "";
+        if (string.IsNullOrWhiteSpace(query))
+            return nvc;
 
         // remove anything other than query string from url
-        if (query.StartsWith("?")) query = query.Substring(1);
+        if (query.StartsWith("?"))
+            query = query.Substring(1);
 
         foreach (var vp in query.Split('&'))
         {
-            if(string.IsNullOrWhiteSpace(vp)) continue;
+            if (string.IsNullOrWhiteSpace(vp)) continue;
 
             var singlePair = vp.Split('=');
             nvc.Add(singlePair[0], singlePair.Length == 2 ? singlePair[1] : string.Empty);
@@ -49,7 +51,6 @@ public static class UrlHelpers
     {
         public string Key;
         public string Value;
-        //public string[] AllValues;
     }
 
     internal static string NvcToString(NameValueCollection nvc, string keyValueSeparator, string pairSeparator,
@@ -70,17 +71,17 @@ public static class UrlHelpers
                 // Key null; 2 options left, values or no values
                 if (key is null)
                     return noValues
-                        ? Array.Empty<KeyValuePairTemp>()
+                        ? []
                         // If no key, treat the values as standalone keys
                         : values.Select(v => new KeyValuePairTemp { Key = v, Value = null }).ToArray();
 
                 // Key not null, no values
-                if (noValues) return new[] { new KeyValuePairTemp { Key = key, Value = null } };
+                if (noValues) return [new() { Key = key, Value = null }];
 
                 // Key null, values - two options - give as array or single item
                 return repeatKeyForEachValue 
                     ? values.Select(v => new KeyValuePairTemp { Key = key, Value = v.ToString() }) 
-                    : new[] { new KeyValuePairTemp { Key = key, Value = string.Join(valueSeparator, values) } };
+                    : [new() { Key = key, Value = string.Join(valueSeparator, values) }];
             })
             .Select(set => set.Key + (string.IsNullOrEmpty(set.Value) ? "" : keyValueSeparator + set.Value))
             //.SelectMany(set =>
@@ -106,7 +107,10 @@ public static class UrlHelpers
             //    return new[] { key + (values.All(string.IsNullOrEmpty) ? "" : keyValueSeparator + string.Join(valueSeparator, values)) };
             //})
             .ToArray();
-        return allPairs.Any() ? string.Join(pairSeparator, allPairs) + terminator : empty;
+
+        return allPairs.Any()
+            ? string.Join(pairSeparator, allPairs) + terminator
+            : empty;
     }
 
 
@@ -140,7 +144,7 @@ public static class UrlHelpers
         => $"{url}{(url.IndexOf('?') > 0 ? '&' : '?')}{name}={value}";
 
 
-    public static string AddQueryString(string url, string newParams) => AddQueryString(url, UrlHelpers.ParseQueryString(newParams));
+    public static string AddQueryString(string url, string newParams) => AddQueryString(url, ParseQueryString(newParams));
 
     public static string AddQueryString(string url, NameValueCollection newParams)
     {
@@ -151,7 +155,7 @@ public static class UrlHelpers
         var parts = new UrlParts(url);
 
         // if the url already has some params we should take that and split it into it's pieces
-        var queryParams = UrlHelpers.ParseQueryString(parts.Query);
+        var queryParams = ParseQueryString(parts.Query);
 
         // new params would replace existing queryString params or append new param to queryString
         var finalParams = queryParams.Merge(newParams);
@@ -165,7 +169,7 @@ public static class UrlHelpers
     {
         var newUrl = parts.ToLink(suffix: false);
         if (queryString.Count > 0)
-            newUrl += UrlParts.QuerySeparator + UrlHelpers.NvcToString(queryString);
+            newUrl += UrlParts.QuerySeparator + NvcToString(queryString);
 
         if (!string.IsNullOrWhiteSpace(parts.Fragment))
             newUrl += UrlParts.FragmentSeparator + parts.Fragment;

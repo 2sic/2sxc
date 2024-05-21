@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Web.Internal.LightSpeed;
 internal class LightSpeed(
     IEavFeaturesService features,
     LazySvc<IAppStates> appStatesLazy,
-    LazySvc<IAppPathsMicroSvc> appPathsLazy,
+    Generator<IAppPathsMicroSvc> appPathsLazy,
     LazySvc<ICmsContext> cmsContext,
     LazySvc<OutputCacheManager> outputCacheManager
 ) : ServiceBase(SxcLogName + ".Lights", connect: [features, appStatesLazy, appPathsLazy, cmsContext, outputCacheManager]), IOutputCache
@@ -144,7 +144,7 @@ internal class LightSpeed(
         var paths = new List<string>();
         foreach (var appState in dependentApps)
         {
-            var appPaths = appPathsLazy.Value.Init(app.Site, appStatesLazy.Value.ToReader(appState, Log));
+            var appPaths = appPathsLazy.New().Init(app.Site, appStatesLazy.Value.ToReader(appState, Log));
             if (Directory.Exists(appPaths.PhysicalPath)) paths.Add(appPaths.PhysicalPath);
             if (Directory.Exists(appPaths.PhysicalPathShared)) paths.Add(appPaths.PhysicalPathShared);
         }
