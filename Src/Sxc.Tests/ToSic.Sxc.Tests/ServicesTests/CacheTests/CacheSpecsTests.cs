@@ -10,9 +10,18 @@ namespace ToSic.Sxc.Tests.ServicesTests.CacheTests;
 [TestClass]
 public class CacheSpecsTests: TestBaseSxcDb
 {
-    private const string MainPrefix = CacheKeyTests.FullDefaultPrefix + "Main" + Sep;
+    private static readonly string MainPrefix = $"{CacheKeyTests.FullDefaultPrefix.Replace("App:0", "App:-1")}Main{Sep}";
 
     private ICacheSpecs GetForMain(string name = "Main") => GetService<ICacheService>().CreateSpecs(name);
+
+    [TestMethod]
+    public void ShareKeyAcrossApps()
+    {
+        var expected = $"{CacheKeyTests.FullDefaultPrefix.Replace(Sep + "App:0", "")}Main";
+        var svc = GetService<ICacheService>();
+        var specs = svc.CreateSpecs("Main", shared: true);
+        AreEqual(expected, specs.Key);
+    }
 
     [TestMethod]
     public void VaryByCustom1CaseSensitive()

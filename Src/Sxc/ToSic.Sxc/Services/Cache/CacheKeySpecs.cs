@@ -4,10 +4,17 @@ using static ToSic.Sxc.Services.Cache.CacheServiceConstants;
 
 namespace ToSic.Sxc.Services.Cache;
 
-internal record CacheKeySpecs(string Main, string Segment = default, string VaryBy = default, Dictionary<string, string> VaryByDic = default)
+internal record CacheKeySpecs(int AppId, string Main, string RegionName = default, Dictionary<string, string> VaryByDic = default)
 {
+    /// <summary>
+    /// Special marker to say that the cache should not vary by appId
+    /// </summary>
+    internal const int NoApp = -9876;
+
     public string Key => _key ??= GetKey(this);
     private string _key;
+
+    public override string ToString() => Key;
 
     private static string GetKey(CacheKeySpecs keySpecs)
     {
@@ -17,19 +24,16 @@ internal record CacheKeySpecs(string Main, string Segment = default, string Vary
         // Prevent accidental adding of the prefix/segment multiple times
         var mainKey = keySpecs.Main.StartsWith(DefaultPrefix)
             ? keySpecs.Main
-            : $"{DefaultPrefix}{Sep}{SegmentPrefix}{keySpecs.Segment.NullIfNoValue() ?? DefaultSegment}{Sep}{keySpecs.Main}";
+            : $"{DefaultPrefix}{(keySpecs.AppId == NoApp ? "" : Sep + "App:" + keySpecs.AppId)}{Sep}{SegmentPrefix}{keySpecs.RegionName.NullIfNoValue() ?? DefaultSegment}{Sep}{keySpecs.Main}";
 
-        // Prevent accidental adding of the varyBy multiple times
-        var withVaryByString = mainKey;
-        //!string.IsNullOrWhiteSpace(keySpecs.VaryBy) && !mainKey.EndsWith(keySpecs.VaryBy)
-        //    ? $"{mainKey}{keySpecs.VaryBy}"
-        //    : mainKey;
+        if (keySpecs.VaryByDic == null || keySpecs.VaryByDic.Count == 0)
+            return mainKey;
 
-        var withVaryByDic = keySpecs.VaryByDic != null
-            ? $"{withVaryByString}{GetVaryByOfDic(keySpecs.VaryByDic)}"
-            : withVaryByString;
+        var varyBy = GetVaryByOfDic(keySpecs.VaryByDic);
+        if (string.IsNullOrWhiteSpace(varyBy) || mainKey.EndsWith(varyBy))
+            return mainKey;
 
-        return withVaryByDic;
+        return $"{mainKey}{varyBy}";
     }
 
     internal static string GetVaryByOfDic(Dictionary<string, string> dic)

@@ -149,27 +149,11 @@ internal class CacheSpecs(ILog parentLog, ICodeApiService codeApiSvc, LazySvc<IA
     public ICacheSpecs VaryByPage(NoParamOrder protector = default, ICmsPage page = default, int? id = default)
         => Next("Page", id ?? page?.Id ?? codeApiSvc?.CmsContext.Page.Id ?? -1);
 
-    //public ICacheSpecs VaryByPage(ICmsPage page = default)
-    //    => VaryByPage((page?.Id ?? codeApiSvc?.CmsContext.Page.Id) ?? -1);
-
-    //public ICacheSpecs VaryByPage(int id)
-    //    => Next("Page", id);
     public ICacheSpecs VaryByModule(NoParamOrder protector = default, ICmsModule module = default, int? id = default)
         => Next("Module", id ?? module?.Id ?? codeApiSvc?.CmsContext.Module.Id ?? -1);
 
-    //public ICacheSpecs VaryByModule(ICmsModule module = default)
-    //    => VaryByModule((module?.Id ?? codeApiSvc?.CmsContext.Module.Id) ?? -1);
-
-    //public ICacheSpecs VaryByModule(int id)
-    //    => Next("Module", id);
     public ICacheSpecs VaryByUser(NoParamOrder protector = default, ICmsUser user = default, int? id = default)
         => Next("User", id ?? user?.Id ?? codeApiSvc?.CmsContext?.User?.Id ?? -1);
-
-    //public ICacheSpecs VaryByUser(ICmsUser user = default)
-    //    => VaryByUser((user?.Id ?? codeApiSvc?.CmsContext?.User?.Id) ?? -1);
-
-    //public ICacheSpecs VaryByUser(int id)
-    //    => Next("User", id);
 
     #endregion
 
