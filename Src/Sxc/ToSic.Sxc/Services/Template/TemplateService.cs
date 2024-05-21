@@ -71,7 +71,7 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getEngineLazy) : S
         => new LookUpInDictionary(NameOrErrorIfBad(name), values);
 
     public ILookUp CreateSource(string name, ILookUp original)
-        => new LookUpInLookUps(NameOrErrorIfBad(name), original);
+        => new LookUpInLookUps(NameOrErrorIfBad(name), [original]);
 
     public ILookUp CreateSource(string name, Func<string, string> getter)
         => new LookUpWithFunction(NameOrErrorIfBad(name), getter);
@@ -81,6 +81,17 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getEngineLazy) : S
 
     public ILookUp CreateSource(string name, ICanBeEntity item, NoParamOrder protector = default, string[] dimensions = default) 
         => new LookUpInEntity(name, item.Entity, dimensions: dimensions ?? _CodeApiSvc.Cdf.Dimensions);
+
+    public ILookUp MergeSources(string name, IEnumerable<ILookUp> sources)
+    {
+        var sourceList = sources?.ToList()
+                         ?? throw new ArgumentNullException(nameof(sources), @"Sources must not be null"); ;
+
+        if (!sourceList.Any())
+            throw new ArgumentException(@"Sources must not be empty", nameof(sources));
+
+        return new LookUpInLookUps(name, sourceList);
+    }
 
     private string NameOrErrorIfBad(string name)
         => string.IsNullOrWhiteSpace(name)

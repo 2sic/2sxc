@@ -22,12 +22,12 @@ internal class TemplateEngineTokens(ILookUpEngine original): ITemplateEngine, IW
 
         // loop through depth to get all underlying sources
         var current = original;
-        var sources = current.Sources; //.ToList();
+        var sources = current.Sources;
         for (var i = 0; i < depth; i++)
         {
             if (current.Downstream == null) break;
             current = current.Downstream;
-            sources = sources.Concat(current.Sources); //.ToList();
+            sources = sources.Concat(current.Sources);
         }
         return sources.ToList();
     }

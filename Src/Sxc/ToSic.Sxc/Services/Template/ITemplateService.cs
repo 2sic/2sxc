@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.LookUp;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Template;
-using ToSic.Sxc.Services.Templates;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Services;
@@ -94,4 +93,16 @@ public interface ITemplateService
     /// <param name="sources"></param>
     /// <returns></returns>
     string Parse(string template, NoParamOrder protector = default, IEnumerable<ILookUp> sources = default);
+
+
+    /// <summary>
+    /// Merge multiple sources into one.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="sources"></param>
+    /// <returns></returns>
+    /// <remarks>
+    /// Added v17.09
+    /// </remarks>
+    ILookUp MergeSources(string name, IEnumerable<ILookUp> sources);
 }

@@ -92,7 +92,7 @@ public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> bui
         if (!sources.HasSource(LookUpConstants.SourceQuery))
             additions
                 .FirstOrDefault(lu => lu.Name.EqualsInsensitive(LookUpConstants.SourceQueryString))
-                .DoIfNotNull(qsl => additions.Add(new LookUpInLookUps(LookUpConstants.SourceQuery, qsl)));
+                .DoIfNotNull(qsl => additions.Add(new LookUpInLookUps(LookUpConstants.SourceQuery, [qsl])));
 
         return l.Return(additions, $"{additions.Count} additions");
     }
