@@ -12,7 +12,7 @@ public class AppStackBackend(
     AppDataStackService dataStackService,
     IZoneCultureResolver zoneCulture,
     IAppStates appStates,
-    LazySvc<QueryDefinitionBuilder> qDefBuilder)
+    Generator<QueryDefinitionBuilder> qDefBuilder)
     : ServiceBase("Sxc.ApiApQ", connect: [dataStackService, zoneCulture, appStates])
 {
     public List<AppStackDataRaw> GetAll(int appId, string part, string key, Guid? viewGuid, string[] languages)

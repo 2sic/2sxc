@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Apps.Internal.Work;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class WorkBlocks(
     IZoneCultureResolver cultureResolver,
-    LazySvc<QueryDefinitionBuilder> qDefBuilder,
+    Generator<QueryDefinitionBuilder> qDefBuilder,
     GenWorkPlus<WorkEntities> workEntities)
     : WorkUnitBase<IAppWorkCtxPlus>("SxS.Blocks", connect: [cultureResolver, qDefBuilder, workEntities])
 {

@@ -21,7 +21,7 @@ public class WorkViews(
     IZoneCultureResolver cultureResolver,
     IConvertToEavLight dataToFormatLight,
     LazySvc<AppIconHelpers> appIconHelpers,
-    LazySvc<QueryDefinitionBuilder> qDefBuilder)
+    Generator<QueryDefinitionBuilder> qDefBuilder)
     : WorkUnitBase<IAppWorkCtxPlus>("Cms.ViewRd",
         connect: [appEntities, valConverterLazy, cultureResolver, dataToFormatLight, appIconHelpers, qDefBuilder])
 {
@@ -45,7 +45,7 @@ public class WorkViews(
 
     public IList<IView> GetAll() =>
         _all ??= AppWorkCtx.AppState.GetPiggyBackPropExpiring(() => ViewEntities
-            .Select(e => ViewOfEntity(e, ""))
+            .Select(e => ViewOfEntity(e, e.EntityId, withServices: false))
             .OrderBy(e => e.Name)
             .ToList()
         ).Value;
@@ -82,14 +82,17 @@ public class WorkViews(
     }
 
 
-    public IView Get(int templateId) => ViewOfEntity(ViewEntities.One(templateId), templateId);
+    public IView Get(int templateId) => ViewOfEntity(ViewEntities.One(templateId), templateId, withServices: true);
 
-    public IView Get(Guid guid) => ViewOfEntity(ViewEntities.One(guid), guid);
+    public IView Get(Guid guid) => ViewOfEntity(ViewEntities.One(guid), guid, withServices: true);
 
-    private IView ViewOfEntity(IEntity templateEntity, object templateId) =>
+    public IView Recreate(IView originalWithoutServices) => 
+           ViewOfEntity(originalWithoutServices.Entity, originalWithoutServices.Id, withServices: true);
+
+    private IView ViewOfEntity(IEntity templateEntity, object templateId, bool withServices) =>
         templateEntity == null
             ? throw new("The template with id '" + templateId + "' does not exist.")
-            : new View(templateEntity, [cultureResolver.CurrentCultureCode], Log, qDefBuilder);
+            : new View(templateEntity, [cultureResolver.CurrentCultureCode], Log, withServices ? qDefBuilder : null);
 
 
     internal IEnumerable<TemplateUiInfo> GetCompatibleViews(IApp app, BlockConfiguration blockConfiguration)

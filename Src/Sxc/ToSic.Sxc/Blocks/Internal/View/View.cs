@@ -13,7 +13,7 @@ public class View(
     IEntity templateEntity,
     string[] languageCodes,
     ILog parentLog,
-    LazySvc<QueryDefinitionBuilder> qDefBuilder)
+    Generator<QueryDefinitionBuilder> qDefBuilder)
     : EntityBasedWithLog(templateEntity, languageCodes, parentLog, "Sxc.View"), IView
 {
     private IEntity GetBestRelationship(string key) => Entity.Children(key).FirstOrDefault();
@@ -75,7 +75,10 @@ public class View(
     {
         var queryRaw = GetBestRelationship(FieldPipeline);
         var query = queryRaw != null
-            ? qDefBuilder.Value.Create(queryRaw, Entity.AppId)
+            ? (qDefBuilder?.New().Create(queryRaw, Entity.AppId)
+               ?? throw new ArgumentException(
+                   @"Query Definition builder is null. View is probably from PiggyBack cache. To use it, you must first Recreate it with the WorkViews",
+                   nameof(qDefBuilder)))
             : null;
         return (queryRaw, query);
     });

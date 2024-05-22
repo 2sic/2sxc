@@ -36,7 +36,7 @@ public class ViewsExportImport(
     AppIconHelpers appIconHelpers,
     Generator<ImpExpHelpers> impExpHelpers,
     IResponseMaker responseMaker,
-    LazySvc<QueryDefinitionBuilder> qDefBuilder,
+    Generator<QueryDefinitionBuilder> qDefBuilder,
     IAppPathsMicroSvc appPathSvc)
     : ServiceBase("Bck.Views",
         connect:

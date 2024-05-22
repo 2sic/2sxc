@@ -46,7 +46,11 @@ internal class BlockViewLoader(ILog parentLog) : HelperBase(parentLog, "Blk.View
                 ? urlParameterDict.ContainsKey(set.MainKey)         // match details/.*
                 : urlParameterDict.ContainsValue(set.MainKey);      // match view/details
             if (foundMatch)
-                return l.Return(set.View, "template override: " + set.Name);
+            {
+                var originalWithoutServices = set.View;
+                var finalView = views.Recreate(originalWithoutServices);
+                return l.Return(finalView, "template override: " + set.Name);
+            }
         }
 
         return l.ReturnNull("template override: none");

@@ -17,9 +17,9 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
 
     internal IBlockIdentifier BlockIdentifierOrNull;
 
-    private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
+    private readonly Generator<QueryDefinitionBuilder> _qDefBuilder;
 
-    public BlockConfiguration(IEntity entity, IAppIdentity cmsRuntime, IEntity previewTemplate, LazySvc<QueryDefinitionBuilder> qDefBuilder, string languageCode, ILog parentLog): base(entity, languageCode, parentLog, "Blk.Config")
+    public BlockConfiguration(IEntity entity, IAppIdentity cmsRuntime, IEntity previewTemplate, Generator<QueryDefinitionBuilder> qDefBuilder, string languageCode, ILog parentLog): base(entity, languageCode, parentLog, "Blk.Config")
     {
         Log.A("Entity is " + (entity == null ? "" : "not") + " null");
         _qDefBuilder = qDefBuilder;
