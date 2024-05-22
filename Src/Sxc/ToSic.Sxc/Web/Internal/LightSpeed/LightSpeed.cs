@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Web.Internal.LightSpeed;
 internal class LightSpeed(
     IEavFeaturesService features,
     LazySvc<IAppStates> appStatesLazy,
-    LazySvc<IAppPathsMicroSvc> appPathsLazy,
+    Generator<IAppPathsMicroSvc> appPathsLazy,
     LazySvc<ICmsContext> cmsContext,
     LazySvc<OutputCacheManager> outputCacheManager
 ) : ServiceBase(SxcLogName + ".Lights", connect: [features, appStatesLazy, appPathsLazy, cmsContext, outputCacheManager]), IOutputCache
@@ -144,7 +144,7 @@ internal class LightSpeed(
         var paths = new List<string>();
         foreach (var appState in dependentApps)
         {
-            var appPaths = appPathsLazy.Value.Init(app.Site, appStatesLazy.Value.ToReader(appState, Log));
+            var appPaths = appPathsLazy.New().Init(app.Site, appStatesLazy.Value.ToReader(appState, Log));
             if (Directory.Exists(appPaths.PhysicalPath)) paths.Add(appPaths.PhysicalPath);
             if (Directory.Exists(appPaths.PhysicalPathShared)) paths.Add(appPaths.PhysicalPathShared);
         }
@@ -186,7 +186,7 @@ internal class LightSpeed(
     private readonly GetOnce<int?> _userId = new();
 
     // Note 2023-10-30 2dm changed the handling of the preview template and checks if it's set. In case caching is too aggressive this can be the problem. Remove early 2024
-    private string ViewKey => _viewKey.Get(() => _block.Configuration?.PreviewTemplate != null ? $"{_block.Configuration.AppId}:{_block.Configuration.View?.Id}" : null);
+    private string ViewKey => _viewKey.Get(() => _block.Configuration?.PreviewViewEntity != null ? $"{_block.Configuration.AppId}:{_block.Configuration.View?.Id}" : null);
     private readonly GetOnce<string> _viewKey = new();
 
     public OutputCacheItem Existing => _existing.Get(ExistingGenerator);

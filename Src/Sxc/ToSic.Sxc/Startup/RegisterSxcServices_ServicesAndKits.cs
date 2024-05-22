@@ -9,10 +9,11 @@ using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Edit.Toolbar.Internal;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.CmsService;
 using ToSic.Sxc.Services.DataServices;
 using ToSic.Sxc.Services.Internal;
-using ToSic.Sxc.Templates;
+using ToSic.Sxc.Services.Templates;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageService;
 using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
@@ -95,6 +96,9 @@ static partial class RegisterSxcServices
 
         // Lookup Service - WIP v17
         services.TryAddTransient<ITemplateService, TemplateService>();
+
+        // Cache Service - WIP v17
+        services.TryAddTransient<ICacheService, CacheService>();
 
         return services;
     }

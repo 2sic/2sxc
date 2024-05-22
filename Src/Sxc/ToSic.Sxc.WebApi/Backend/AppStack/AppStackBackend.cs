@@ -12,7 +12,7 @@ public class AppStackBackend(
     AppDataStackService dataStackService,
     IZoneCultureResolver zoneCulture,
     IAppStates appStates,
-    LazySvc<QueryDefinitionBuilder> qDefBuilder)
+    Generator<QueryDefinitionBuilder> qDefBuilder)
     : ServiceBase("Sxc.ApiApQ", connect: [dataStackService, zoneCulture, appStates])
 {
     public List<AppStackDataRaw> GetAll(int appId, string part, string key, Guid? viewGuid, string[] languages)
@@ -56,15 +56,16 @@ public class AppStackBackend(
 
     private IEntity GetViewSettingsForMixin(Guid? viewGuid, string[] languages, IAppEntityService appState, string realName)
     {
-        IEntity viewStackPart = null;
-        if (viewGuid != null)
-        {
-            var viewEnt = appState.List.One(viewGuid.Value);
-            if (viewEnt == null) throw new($"Tried to get view but not found. Guid was {viewGuid}");
-            var view = new View(viewEnt, languages, Log, qDefBuilder);
+        if (viewGuid == null)
+            return null;
 
-            viewStackPart = realName == RootNameSettings ? view.Settings : view.Resources;
-        }
+        var viewEnt = appState.List.One(viewGuid.Value)
+                      ?? throw new($"Tried to get view but not found. Guid was {viewGuid}");
+        
+        var view = new View(viewEnt, languages, Log, qDefBuilder);
+        var viewStackPart = realName == RootNameSettings
+            ? view.Settings
+            : view.Resources;
 
         return viewStackPart;
     }

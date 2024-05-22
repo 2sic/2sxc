@@ -68,7 +68,7 @@ internal class DnnLookUpEngineResolver(IZoneCultureResolver cultureResolver, Laz
             {
                 { KeyId, original.Get(OldDnnModuleId) }
             });
-            additions.Add(new LookUpInLookUps(SourceModule, modAdditional, original));
+            additions.Add(new LookUpInLookUps(SourceModule, [modAdditional, original]));
         }
 
         // Create the lookup for "site" based on the "portal" and only give it "id" & "guid"

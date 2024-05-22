@@ -21,7 +21,7 @@ public class WorkViews(
     IZoneCultureResolver cultureResolver,
     IConvertToEavLight dataToFormatLight,
     LazySvc<AppIconHelpers> appIconHelpers,
-    LazySvc<QueryDefinitionBuilder> qDefBuilder)
+    Generator<QueryDefinitionBuilder> qDefBuilder)
     : WorkUnitBase<IAppWorkCtxPlus>("Cms.ViewRd",
         connect: [appEntities, valConverterLazy, cultureResolver, dataToFormatLight, appIconHelpers, qDefBuilder])
 {
@@ -37,18 +37,24 @@ public class WorkViews(
     public record ViewInfoForPathSelect(IView View, string Name, string UrlIdentifier, bool IsRegex, string MainKey);
 
     private List<IEntity> ViewEntities => _viewDs.Get(() => AppWorkCtx.AppState.GetPiggyBackPropExpiring(
-        () => appEntities.New(AppWorkCtx)
-            .Get(AppConstants.TemplateContentType)
-            .ToList()
-    ).Value);
+            () => appEntities.New(AppWorkCtx)
+                .Get(AppConstants.TemplateContentType)
+                .ToList()
+        ).Value
+    );
     private readonly GetOnce<List<IEntity>> _viewDs = new();
 
+    /// <summary>
+    /// Get all the views.
+    /// </summary>
+    /// <returns></returns>
+    /// <remarks>
+    /// Never cache this result in PiggyBack, as it has a service which would expire later on.
+    /// </remarks>
     public IList<IView> GetAll() =>
-        _all ??= AppWorkCtx.AppState.GetPiggyBackPropExpiring(() => ViewEntities
-            .Select(e => ViewOfEntity(e, ""))
-            .OrderBy(e => e.Name)
-            .ToList()
-        ).Value;
+        _all ??= [.. ViewEntities
+            .Select(e => ViewOfEntity(e, e.EntityId))
+            .OrderBy(e => e.Name)];
 
     private IList<IView> _all;
 
@@ -73,23 +79,42 @@ public class WorkViews(
                 var mainParam = isRegex
                     ? urlIdentifier.Substring(0, urlIdentifier.Length - 3)
                     : urlIdentifier;
-                return new ViewInfoForPathSelect(v, v.Name, urlIdentifier, isRegex, mainParam.ToLowerInvariant());
+
+                // Only save the necessary information in the PiggyBack
+                // Never save the View or the ViewInfoForPathSelect, as that would also preserve an old Service used in the View
+                return new
+                {
+                    v.Entity,
+                    v.Name,
+                    urlIdentifier,
+                    isRegex,
+                    MainParam = mainParam.ToLowerInvariant()
+                };
             })
             .ToList()
         );
 
-        return l.Return(views.Value, $"all: {GetAll().Count}; switchable: {views.Value.Count}; wasCached: {views.IsCached}");
+        var final = views.Value
+            .Select(v => new ViewInfoForPathSelect(
+                ViewOfEntity(v.Entity, v.Entity.EntityId), v.Name, v.urlIdentifier, v.isRegex, v.MainParam)
+            )
+            .ToList();
+
+        return l.Return(final, $"all: {GetAll().Count}; switchable: {final.Count}; wasCached: {views.IsCached}");
     }
 
 
-    public IView Get(int templateId) => ViewOfEntity(ViewEntities.One(templateId), templateId);
+    public IView Get(int templateId) => ViewOfEntity(ViewEntities.One(templateId), templateId, withServices: true);
 
-    public IView Get(Guid guid) => ViewOfEntity(ViewEntities.One(guid), guid);
+    public IView Get(Guid guid) => ViewOfEntity(ViewEntities.One(guid), guid, withServices: true);
 
-    private IView ViewOfEntity(IEntity templateEntity, object templateId) =>
+    public IView Recreate(IView originalWithoutServices) => 
+           ViewOfEntity(originalWithoutServices.Entity, originalWithoutServices.Id, withServices: true);
+
+    private IView ViewOfEntity(IEntity templateEntity, object templateId, bool withServices = true) =>
         templateEntity == null
             ? throw new("The template with id '" + templateId + "' does not exist.")
-            : new View(templateEntity, [cultureResolver.CurrentCultureCode], Log, qDefBuilder);
+            : new View(templateEntity, [cultureResolver.CurrentCultureCode], Log, withServices ? qDefBuilder : null);
 
 
     internal IEnumerable<TemplateUiInfo> GetCompatibleViews(IApp app, BlockConfiguration blockConfiguration)
@@ -127,32 +152,36 @@ public class WorkViews(
     /// <summary>
     /// Get templates which match the signature of possible content-items, presentation etc. of the current template
     /// </summary>
-    /// <param name="blockConfiguration"></param>
+    /// <param name="blockConfig"></param>
     /// <returns></returns>
-    private IEnumerable<IView> GetFullyCompatibleViews(BlockConfiguration blockConfiguration)
+    private IEnumerable<IView> GetFullyCompatibleViews(BlockConfiguration blockConfig)
     {
-        var isList = blockConfiguration.Content.Count > 1;
+        var isList = blockConfig.Content.Count > 1;
 
-        var compatibleTemplates = GetAll().Where(t => t.UseForList || !isList);
+        var compatibleTemplates = GetAll()
+            .Where(t => t.UseForList || !isList);
+
+        // Compatibility check must verify each config on the view and compare with the current blockConfig
         compatibleTemplates = compatibleTemplates
-            .Where(t => blockConfiguration.Content.All(c => c == null) || blockConfiguration.Content.First(e => e != null).Type.NameId == t.ContentType)
-            .Where(t => blockConfiguration.Presentation.All(c => c == null) || blockConfiguration.Presentation.First(e => e != null).Type.NameId == t.PresentationType)
-            .Where(t => blockConfiguration.Header.All(c => c == null) || blockConfiguration.Header.First(e => e != null).Type.NameId == t.HeaderType)
-            .Where(t => blockConfiguration.HeaderPresentation.All(c => c == null) || blockConfiguration.HeaderPresentation.First(e => e != null).Type.NameId == t.HeaderPresentationType);
+            .Where(t => blockConfig.Content.All(c => c == null) || blockConfig.Content.First(e => e != null).Type.NameId == t.ContentType)
+            .Where(t => blockConfig.Presentation.All(c => c == null) || blockConfig.Presentation.First(e => e != null).Type.NameId == t.PresentationType)
+            .Where(t => blockConfig.Header.All(c => c == null) || blockConfig.Header.First(e => e != null).Type.NameId == t.HeaderType)
+            .Where(t => blockConfig.HeaderPresentation.All(c => c == null) || blockConfig.HeaderPresentation.First(e => e != null).Type.NameId == t.HeaderPresentationType);
 
         return compatibleTemplates;
     }
 
 
     // todo: check if this call could be replaced with the normal ContentTypeController.Get to prevent redundant code
-    public IEnumerable<ContentTypeUiInfo> GetContentTypesWithStatus(string appPath, string appPathShared)
+    public IList<ContentTypeUiInfo> GetContentTypesWithStatus(string appPath, string appPathShared)
     {
         var templates = GetAll().ToList();
         var visible = templates.Where(t => !t.IsHidden).ToList();
 
         var valConverter = valConverterLazy.Value;
 
-        return AppWorkCtx.AppState.ContentTypes.OfScope(Scopes.Default) 
+        var result = AppWorkCtx.AppState.ContentTypes
+            .OfScope(Scopes.Default) 
             .Where(ct => templates.Any(t => t.ContentType == ct.NameId)) // must exist in at least 1 template
             .OrderBy(ct => ct.Name)
             .Select(ct =>
@@ -169,6 +198,8 @@ public class WorkViews(
                     Properties = dataToFormatLight.Convert(details?.Entity),
                     IsDefault = ct.Metadata.HasType(Decorators.IsDefaultDecorator),
                 };
-            });
+            })
+            .ToList();
+        return result;
     }
 }

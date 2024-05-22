@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Context;
@@ -11,17 +12,19 @@ namespace ToSic.Sxc.Apps.Internal.Work;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class WorkBlocks(
     IZoneCultureResolver cultureResolver,
-    LazySvc<QueryDefinitionBuilder> qDefBuilder,
-    GenWorkPlus<WorkEntities> workEntities)
-    : WorkUnitBase<IAppWorkCtxPlus>("SxS.Blocks", connect: [cultureResolver, qDefBuilder, workEntities])
+    Generator<QueryDefinitionBuilder> qDefBuilder,
+    GenWorkPlus<WorkEntities> workEntities,
+    LazySvc<WorkViews> workViews)
+    : WorkUnitBase<IAppWorkCtxPlus>("SxS.Blocks", connect: [cultureResolver, qDefBuilder, workEntities, workViews])
 {
     public const string BlockTypeName = "2SexyContent-ContentGroup";
 
-    private IImmutableList<IEntity> ContentGroups() => workEntities.New(AppWorkCtx).Get(BlockTypeName).ToImmutableList();
+    private IImmutableList<IEntity> GetContentGroups() => workEntities.New(AppWorkCtx).Get(BlockTypeName).ToImmutableList();
 
     public List<BlockConfiguration> AllWithView()
     {
-        return ContentGroups()
+        var appIdentity = AppWorkCtx.PureIdentity();
+        return GetContentGroups()
             .Select(b =>
             {
                 var templateGuid = b.Children(ViewParts.ViewFieldInContentBlock)
@@ -32,7 +35,7 @@ public class WorkBlocks(
                     : null;
             })
             .Where(b => b != null)
-            .Select(e => new BlockConfiguration(e.Entity, AppWorkCtx, null, qDefBuilder, cultureResolver.CurrentCultureCode, Log))
+            .Select(s => new BlockConfiguration(s.Entity, appIdentity, null, qDefBuilder, cultureResolver.CurrentCultureCode, Log))
             .ToList();
     }
 
@@ -43,7 +46,7 @@ public class WorkBlocks(
     public BlockConfiguration GetBlockConfig(Guid contentGroupGuid)
     {
         var l = Log.Fn<BlockConfiguration>($"get CG#{contentGroupGuid}");
-        var groupEntity = ContentGroups().One(contentGroupGuid);
+        var groupEntity = GetContentGroups().One(contentGroupGuid);
         var found = groupEntity != null;
         return l.Return(found
                 ? new BlockConfiguration(groupEntity, AppWorkCtx, null, qDefBuilder, cultureResolver.CurrentCultureCode, Log)

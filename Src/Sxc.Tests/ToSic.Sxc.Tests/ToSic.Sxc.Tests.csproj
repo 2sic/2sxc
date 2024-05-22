@@ -135,6 +135,8 @@
     <Compile Include="DataTests\HasKeysTests.cs" />
     <Compile Include="DataTests\TypedItemTestAccessors.cs" />
     <Compile Include="LinksAndImages\ParametersTestExtensions.cs" />
+    <Compile Include="ServicesTests\CacheTests\CacheSpecsTests.cs" />
+    <Compile Include="ServicesTests\CacheTests\CacheKeyTests.cs" />
     <Compile Include="ServicesTests\CmsService\CmsServiceTest.cs" />
     <Compile Include="ServicesTests\CmsService\CmsServiceTestBase.cs" />
     <Compile Include="DataTests\DynWrappers\WrapObjDeep.cs" />

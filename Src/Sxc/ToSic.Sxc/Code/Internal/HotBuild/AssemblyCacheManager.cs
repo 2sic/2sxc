@@ -23,7 +23,7 @@ public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : Servi
     public (List<AssemblyResult> assemblyResults, string cacheKey) TryGetDependencies(HotBuildSpec spec)
     {
         var cacheKey = KeyDependency(spec);
-        return (memoryCacheService.Get(cacheKey) as List<AssemblyResult>, cacheKey);
+        return (memoryCacheService.Get<List<AssemblyResult>>(cacheKey), cacheKey);
     }
     private static string KeyDependency(HotBuildSpec spec) => $"{GlobalCacheRoot}a:{spec.AppId}.e:{spec.Edition}.d:{DependenciesLoader.DependenciesFolder}";
     #endregion
@@ -32,7 +32,7 @@ public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : Servi
 
     internal static string KeyTemplate(string templateFullPath) => $"{GlobalCacheRoot}v:{templateFullPath.ToLowerInvariant()}";
 
-    private AssemblyResult Get(string key) => memoryCacheService.Get(key) as AssemblyResult;
+    private AssemblyResult Get(string key) => memoryCacheService.Get<AssemblyResult>(key);
 
     public AssemblyResult TryGetTemplate(string templateFullPath) => Get(KeyTemplate(templateFullPath));
 
