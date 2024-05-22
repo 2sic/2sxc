@@ -186,7 +186,7 @@ internal class LightSpeed(
     private readonly GetOnce<int?> _userId = new();
 
     // Note 2023-10-30 2dm changed the handling of the preview template and checks if it's set. In case caching is too aggressive this can be the problem. Remove early 2024
-    private string ViewKey => _viewKey.Get(() => _block.Configuration?.PreviewTemplate != null ? $"{_block.Configuration.AppId}:{_block.Configuration.View?.Id}" : null);
+    private string ViewKey => _viewKey.Get(() => _block.Configuration?.PreviewViewEntity != null ? $"{_block.Configuration.AppId}:{_block.Configuration.View?.Id}" : null);
     private readonly GetOnce<string> _viewKey = new();
 
     public OutputCacheItem Existing => _existing.Get(ExistingGenerator);

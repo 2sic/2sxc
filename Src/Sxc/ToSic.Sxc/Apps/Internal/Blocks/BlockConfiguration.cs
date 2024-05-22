@@ -2,7 +2,6 @@
 using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Apps.Internal;
@@ -13,19 +12,20 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
     public  int ZoneId { get; }
     public  int AppId { get; }
 
-    internal IEntity PreviewTemplate { get; set; }
+    internal IEntity PreviewViewEntity { get; set; }
 
     internal IBlockIdentifier BlockIdentifierOrNull;
 
     private readonly Generator<QueryDefinitionBuilder> _qDefBuilder;
 
-    public BlockConfiguration(IEntity entity, IAppIdentity cmsRuntime, IEntity previewTemplate, Generator<QueryDefinitionBuilder> qDefBuilder, string languageCode, ILog parentLog): base(entity, languageCode, parentLog, "Blk.Config")
+    public BlockConfiguration(IEntity entity, IAppIdentity appIdentity, IEntity previewViewEntity, Generator<QueryDefinitionBuilder> qDefBuilder, string languageCode, ILog parentLog):
+        base(entity, languageCode, parentLog, "Blk.Config")
     {
         Log.A("Entity is " + (entity == null ? "" : "not") + " null");
         _qDefBuilder = qDefBuilder;
-        ZoneId = cmsRuntime.ZoneId;
-        AppId = cmsRuntime.AppId;
-        PreviewTemplate = previewTemplate;
+        ZoneId = appIdentity.ZoneId;
+        AppId = appIdentity.AppId;
+        PreviewViewEntity = previewViewEntity;
     }
         
     internal BlockConfiguration WarnIfMissingData()
@@ -54,8 +54,8 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
             if (_view != null) return _view;
 
             // if we're previewing another template, look that up
-            var templateEntity = PreviewTemplate ?? Entity?.Children(ViewParts.ViewFieldInContentBlock).FirstOrDefault();
-            return _view = templateEntity == null ? null : new View(templateEntity, LookupLanguages, Log, _qDefBuilder);
+            var viewEntity = PreviewViewEntity ?? Entity?.Children(ViewParts.ViewFieldInContentBlock).FirstOrDefault();
+            return _view = viewEntity == null ? null : new View(viewEntity, LookupLanguages, Log, _qDefBuilder);
         }
     }
     private IView _view;

@@ -32,7 +32,7 @@ public partial class BlockBuilder
                 ModuleId = Block.ParentId,
                 // Note 2023-10-30 2dm changed the handling of the preview template and checks if it's set. In case caching is too aggressive this can be the problem. Remove early 2024
                 //CanCache = !isErr && exsOrNull.SafeNone() && (Block.ContentGroupExists || Block.Configuration?.PreviewTemplateId.HasValue == true),
-                CanCache = !isErr && exsOrNull.SafeNone() && (Block.ContentGroupExists || Block.Configuration?.PreviewTemplate != null),
+                CanCache = !isErr && exsOrNull.SafeNone() && (Block.ContentGroupExists || Block.Configuration?.PreviewViewEntity != null),
             };
 
             // case when we do not have an app
