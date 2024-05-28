@@ -31,14 +31,6 @@ public interface IView: IEntityBasedType
     /// </summary>
     string Path { get; }
 
-    //[PrivateApi] bool? CachingEnabled { get; }
-
-    //[PrivateApi] string CachingUrlParameters { get; }
-
-    //[PrivateApi] public bool? CachingByUrlParameters { get; }
-
-    //[PrivateApi] public bool CachingUrlParametersCaseSensitive { get; }
-
 
     [PrivateApi] string ContentType { get; }
     [PrivateApi] IEntity ContentItem { get; }
