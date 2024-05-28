@@ -34,7 +34,7 @@ internal class DnnUser(LazySvc<DnnSecurity> dnnSecurity)
     public bool IsSiteDeveloper => IsSystemAdmin;
 
     private AdminPermissions AdminPermissions => _adminPermissions.Get(
-        () => DnnUserInfo.NullOrGetWith(userInfo => dnnSecurity.Value.UserMayAdminThis(userInfo)) ?? new(false)
+        () => DnnUserInfo.NullOrGetWith(userInfo => dnnSecurity.Value.UserMayAdminThis(userInfo))
     );
     private readonly GetOnce<AdminPermissions> _adminPermissions = new();
 
