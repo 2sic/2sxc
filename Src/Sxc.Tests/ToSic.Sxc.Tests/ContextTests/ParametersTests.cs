@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Specialized;
 using System.Linq;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Testing.Shared;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using static ToSic.Sxc.Tests.LinksAndImages.ParametersTestExtensions;
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Tests.ContextTests
         /// <summary>
         /// Get TestParameters with id=27 and sort=descending
         /// </summary>
-        private static IParameters ParametersId27SortDescending() => NewParameters(new NameValueCollection
+        private static IParameters ParametersId27SortDescending() => NewParameters(new()
         {
             { "id", "27" },
             { "sort", "descending" }
@@ -26,19 +26,6 @@ namespace ToSic.Sxc.Tests.ContextTests
 
         private const string Id27SortDescending = "id=27&sort=descending";
 
-        public class ParameterCountTest
-        {
-            public int Count;
-            public Func<IParameters, IParameters> Prepare = p => p;
-        }
-        //private class ParameterTest<TValue>: ParameterCountTest
-        //{
-        //    //public int Count;
-        //    public string Expected = Unmodified;
-        //    public string Key = "id";
-        //    public TValue Value = default;
-        //    //public Func<IParameters, IParameters> Func;
-        //}
 
         /// <summary>
         /// Take the default params, modify them in some way, and verify that the count / result matches expectations
@@ -51,6 +38,90 @@ namespace ToSic.Sxc.Tests.ContextTests
             var p = pFunc(ParametersId27SortDescending());
             AreEqual(count, p.Count);
             AreEqual(exp, p.ToString());
+        }
+
+        #endregion
+
+        #region Get Tests
+
+        [TestMethod]
+        [DataRow("27", "id")]
+        [DataRow("descending", "sort")]
+        [DataRow(null, "unknown")]
+        public void Get(string expected, string key)
+            => AreEqual(expected, ParametersId27SortDescending().Get(key));
+
+        [TestMethod]
+        [DataRow("27", "id")]
+        [DataRow("descending", "sort")]
+        [DataRow(null, "unknown")]
+        public void GetString(string expected, string key)
+            => AreEqual(expected, ParametersId27SortDescending().String(key));
+
+        [TestMethod]
+        [DataRow("27", "id")]
+        [DataRow("descending", "sort")]
+        [DataRow(null, "unknown")]
+        public void GetStringT(string expected, string key)
+            => AreEqual(expected, ParametersId27SortDescending().Get<string>(key));
+
+        [TestMethod]
+        [DataRow(27, "id")]
+        [DataRow(0, "sort")]
+        [DataRow(0, "unknown")]
+        public void GetInt(int expected, string key)
+            => AreEqual(expected, ParametersId27SortDescending().Int(key));
+
+        [TestMethod]
+        [DataRow(27, "id")]
+        [DataRow(0, "sort")]
+        [DataRow(0, "unknown")]
+        public void GetBool(int expected, string key)
+            => AreEqual(expected, ParametersId27SortDescending().Int(key));
+
+        #endregion
+
+        #region Get - with access tracking new v17.09+
+
+        [TestMethod]
+        public void AccessedKeysCountNone()
+            => AreEqual(0, ((Parameters)ParametersId27SortDescending()).UsedKeys.Count);
+
+        [TestMethod]
+        [DataRow(0, "")]
+        [DataRow(0, ",")]
+        [DataRow(0, "unknown")]
+        [DataRow(1, "id")]
+        [DataRow(1, "id,ID")]
+        [DataRow(1, "id,unknown")]
+        [DataRow(2, "id,sort")]
+        public void AccessedKeysCount(int count, string keysCsv)
+        {
+            var p = ParametersId27SortDescending();
+            var keys = keysCsv?.Split(',') ?? [];
+            foreach (var key in keys) p.Get(key);
+            AreEqual(count, ((Parameters)p).UsedKeys.Count);
+        }
+
+        [TestMethod]
+        [DataRow(null, "")]
+        [DataRow(null, ",")]
+        [DataRow(null, "unknown")]
+        [DataRow("id", "id")]
+        [DataRow("id", "ID")]
+        [DataRow("id", "id,ID")]
+        [DataRow("id", "ID,id")]
+        [DataRow("id", "id,unknown")]
+        [DataRow("id,sort", "id,sort")]
+        [DataRow("id,sort", "id,sort,ID,unknown")]
+        public void AccessedKeysList(string accessedCsv, string keysCsv)
+        {
+            var p = ParametersId27SortDescending();
+            var keys = keysCsv?.Split(',') ?? [];
+            var accessed = accessedCsv?.Split(',') ?? [];
+            foreach (var key in keys) p.Get(key);
+            AreEqual(accessed.Length, ((Parameters)p).UsedKeys.Count);
+            CollectionAssert.AreEqual(accessed, ((Parameters)p).UsedKeys.ToArray());
         }
 
         #endregion
@@ -224,6 +295,12 @@ namespace ToSic.Sxc.Tests.ContextTests
 
         #region Count Tests
 
+        public class ParameterCountTest
+        {
+            public int Count;
+            public Func<IParameters, IParameters> Prepare = p => p;
+        }
+
         private static IEnumerable<object[]> CountTests => new List<ParameterCountTest>
         {
             new() { Count = 2 },
@@ -270,7 +347,7 @@ namespace ToSic.Sxc.Tests.ContextTests
         [DataRow("id=hello", "id", "hello", "should replace")]
         public void ToggleFromExisting(string expected, string key, string value, string note)
         {
-            var pOriginal = NewParameters(new NameValueCollection { { "id", "999" } });
+            var pOriginal = NewParameters(new() { { "id", "999" } });
             var p = pOriginal.TestToggle(key, value);
             AreEqual(expected, p.ToString(), note);
         }
