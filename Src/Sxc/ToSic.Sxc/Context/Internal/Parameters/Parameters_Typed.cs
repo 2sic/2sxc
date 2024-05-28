@@ -31,9 +31,7 @@ partial class Parameters: ITyped
 
     [PrivateApi]
     object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required)
-    {
-        return OriginalsAsDic.TryGetValue(name, out var value) ? value : null;
-    }
+        => TryGetAndLog(name, out var value) ? value : null;
 
     [PrivateApi]
     bool ITyped.Bool(string name, NoParamOrder noParamOrder, bool fallback, bool? required)

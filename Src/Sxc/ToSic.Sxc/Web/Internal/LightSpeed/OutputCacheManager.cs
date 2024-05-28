@@ -23,18 +23,38 @@ internal class OutputCacheManager(MemoryCacheService memoryCacheService, Lazy<IE
     public string Add(string cacheKey, OutputCacheItem data, int duration, List<IAppStateChanges> appStates, IList<string> appPaths, CacheEntryUpdateCallback updateCallback)
     {
         var l = Log.Fn<string>($"key: {cacheKey}", timer: true);
+
+        // if we don't have a duration = 0 (which would be never expire), don't even add
+        if (duration == 0)
+            return l.ReturnAsError("duration 0, will not add");
+
         try
         {
             // Never store 0, that's like never-expire
-            if (duration == 0) duration = 1;
             var expiration = new TimeSpan(0, 0, duration);
 
-            memoryCacheService.Set(cacheKey, data,
-                slidingExpiration: expiration,
-                folderPaths: appPaths?.ToDictionary(p => p, p => true),
-                appStates: appStates,
-                featuresService: featuresDoNotConnect.Value,
-                updateCallback: updateCallback);
+            // experimental, maybe use as replacement... v17.09+
+            var policyMaker = memoryCacheService.NewPolicyMaker()
+                .SetSlidingExpiration(expiration)
+                .WatchApps(appStates)
+                .WatchFeaturesService(featuresDoNotConnect.Value)
+                .WatchCallback(updateCallback);
+
+            if (appPaths?.Any() == true)
+                policyMaker = policyMaker
+                    .WatchFolders(appPaths.ToDictionary(p => p, p => true));
+
+            memoryCacheService.SetNew(cacheKey, data, policyMaker);
+
+            //memoryCacheService.Set(
+            //    cacheKey,
+            //    data,
+            //    slidingExpiration: expiration,
+            //    folderPaths: appPaths?.ToDictionary(p => p, p => true),
+            //    appStates: appStates,
+            //    featuresService: featuresDoNotConnect.Value,
+            //    updateCallback: updateCallback
+            //);
 
             return l.ReturnAsOk(cacheKey);
         }

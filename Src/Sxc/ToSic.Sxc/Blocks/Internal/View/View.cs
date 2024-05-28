@@ -25,6 +25,18 @@ public class View(
         
     public string Icon => GetThis("");
 
+    //#region Cachning: Enabled and UrlParameters
+
+    //public bool? CachingEnabled => GetThis(null as bool?);
+
+    //public string CachingUrlParameters => GetThis("");
+
+    //public bool? CachingByUrlParameters => GetThis(null as bool?);
+
+    //public bool CachingUrlParametersCaseSensitive => GetThis(false);
+
+    //#endregion
+
     public string Path => GetThis("");
 
     public string ContentType => Get(FieldContentType, "");
