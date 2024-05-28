@@ -994,6 +994,42 @@
                   "TargetType": 5,
                   "String": "2SexyContent-Template"
                 }
+              },
+              {
+                "Id": 183807,
+                "Version": 1,
+                "Guid": "1406d8fe-e333-42c0-8284-59ca2e2cd652",
+                "Type": {
+                  "Id": "c490b369-9cd2-4298-af74-19c1e438cdfc",
+                  "Name": "MetadataExpectedDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "DeleteWarning": {
+                      "en-us": ""
+                    },
+                    "MetadataTypes": {
+                      "en-us": "be34f64b-7d1f-4ad0-b488-dabbbb01a186"
+                    },
+                    "Title": {
+                      "en-us": "Expects LightSpeedOutputDecorator"
+                    }
+                  },
+                  "Number": {
+                    "Amount": {
+                      "en-us": 1
+                    },
+                    "TargetType": {
+                      "en-us": 5
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "2SexyContent-Template"
+                }
               }
             ],
             "Attributes": [
@@ -7489,68 +7525,6 @@
                 "IsTitle": false,
                 "Metadata": [
                   {
-                    "Id": 183780,
-                    "Version": 3,
-                    "Guid": "e8e7c3d9-b590-4888-b101-161f26fa7592",
-                    "Type": {
-                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
-                      "Name": "@string-picker"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "CreateParameters": {
-                          "en-us": ""
-                        },
-                        "CreatePrefill": {
-                          "en-us": ""
-                        },
-                        "EditParameters": {
-                          "en-us": ""
-                        },
-                        "PickerDisplayMode": {
-                          "en-us": "list"
-                        },
-                        "Separator": {
-                          "en-us": ","
-                        }
-                      },
-                      "Entity": {
-                        "DataSources": {
-                          "*": [
-                            "4bd91a3d-ea09-4ae5-b984-42d934f072ae"
-                          ]
-                        },
-                        "PickerDisplayConfiguration": {
-                          "*": []
-                        }
-                      },
-                      "Boolean": {
-                        "AllowMultiValue": {
-                          "en-us": true
-                        },
-                        "EnableAddExisting": {
-                          "en-us": true
-                        },
-                        "EnableCreate": {
-                          "en-us": false
-                        },
-                        "EnableEdit": {
-                          "en-us": false
-                        },
-                        "EnableRemove": {
-                          "en-us": true
-                        },
-                        "EnableReselect": {
-                          "en-us": false
-                        },
-                        "EnableTextEntry": {
-                          "en-us": false
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
                     "Id": 183779,
                     "Version": 5,
                     "Guid": "61b2da59-8201-49ba-b33f-e5f14f580a5f",
@@ -7622,12 +7596,102 @@
                       }
                     },
                     "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183780,
+                    "Version": 3,
+                    "Guid": "e8e7c3d9-b590-4888-b101-161f26fa7592",
+                    "Type": {
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CreateParameters": {
+                          "en-us": ""
+                        },
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "list"
+                        },
+                        "Separator": {
+                          "en-us": ","
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "4bd91a3d-ea09-4ae5-b984-42d934f072ae"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": true
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": true
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
                   }
                 ]
               }
             ]
           },
           "Entities": [
+            {
+              "Id": 183783,
+              "Version": 1,
+              "Guid": "afa379c8-d1a2-4a7b-bfef-8217a3bde6bb",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  // if selection is Permissions, also show the who-may-switch\n  return data.Mode.includes('Permissions?');\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
             {
               "Id": 183781,
               "Version": 1,
@@ -7675,34 +7739,6 @@
                 "Hyperlink": {
                   "ItemLink": {
                     "en-us": ""
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 183783,
-              "Version": 1,
-              "Guid": "afa379c8-d1a2-4a7b-bfef-8217a3bde6bb",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v2((data, context) => {\n  // if selection is Permissions, also show the who-may-switch\n  return data.Mode.includes('Permissions?');\n});"
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Field.Settings.Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
                   }
                 }
               },
