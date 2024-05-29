@@ -8,6 +8,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Context;
@@ -53,6 +54,8 @@ internal class LightSpeed(
         if (!data.CanCache) return l.ReturnFalse("can't cache");
         if (data == Existing?.Data) return l.ReturnFalse("not new");
         if (data.DependentApps.SafeNone()) return l.ReturnFalse("app not initialized");
+        // if (_block.View.CachingEnabled == false) return l.ReturnFalse("view caching disabled");
+        if (!UrlParams.CachingAllowed) return l.ReturnFalse("url params not allowed");
 
         // get dependent appStates
         var dependentAppsStates = data.DependentApps
@@ -153,33 +156,25 @@ internal class LightSpeed(
     }
     private readonly GetOnce<IList<string>> _appPaths = new();
 
-    private int Duration => _duration.Get(() =>
+    private int Duration => _duration ??= _block.Context.User switch
     {
-        var user = _block.Context.User;
-        if (user.IsSystemAdmin) return AppConfig.DurationSystemAdmin;
-        if (user.IsSiteAdmin) return AppConfig.DurationEditor;
-        if (!user.IsAnonymous) return AppConfig.DurationUser;
-        return AppConfig.Duration;
-    });
-    private readonly GetOnce<int> _duration = new();
+        { IsSystemAdmin: true } => AppConfig.DurationSystemAdmin,
+        { IsSiteAdmin: true } => AppConfig.DurationEditors,
+        { IsAnonymous: false } => AppConfig.DurationUsers,
+        _ => AppConfig.Duration
+    };
+    private int? _duration;
 
-    private string Suffix => _suffix.Get(GetSuffix);
-    private readonly GetOnce<string> _suffix = new();
-
-    private string GetSuffix()
-    {
-        if (!AppConfig.ByUrlParam) return null;
-        var urlParams = _block.Context.Page.Parameters.ToString();
-        if (string.IsNullOrWhiteSpace(urlParams)) return null;
-        if (!AppConfig.UrlParamCaseSensitive) urlParams = urlParams.ToLowerInvariant();
-        return urlParams;
-    }
-
+    private (bool CachingAllowed, string Extension) UrlParams => _urlParams.Get(
+        () => LightSpeedUrlParams.GetUrlParams(LightSpeedConfig, _block.Context.Page.Parameters, Log)
+        );
+    private readonly GetOnce<(bool CachingAllowed, string Extension)> _urlParams = new();
+    
     private string CurrentCulture => _currentCulture.Get(() => cmsContext.Value.Culture.CurrentCode);
     private readonly GetOnce<string> _currentCulture = new();
 
 
-    private string CacheKey => _key.Get(() => Log.Func(() => OutputCacheManager.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, Suffix, CurrentCulture)));
+    private string CacheKey => _key.Get(() => Log.Func(() => OutputCacheManager.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, UrlParams.Extension, CurrentCulture)));
     private readonly GetOnce<string> _key = new();
 
     private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? (int?)null : _block.Context.User.Id);
@@ -233,7 +228,13 @@ internal class LightSpeed(
         return l.Return(ok, $"app config: {ok}");
     }
 
-    internal LightSpeedDecorator AppConfig => _lsd.Get(() => GetLightSpeedConfig(AppState.StateCache));
+
+    private LightSpeedDecorator LightSpeedConfig => _lightSpeedConfig ??=
+        _block.View.Metadata.OfType(LightSpeedDecorator.TypeNameId).FirstOrDefault()?.NullOrGetWith(viewLs => new LightSpeedDecorator(viewLs))
+        ?? AppConfig;
+    private LightSpeedDecorator _lightSpeedConfig;
+
+    private LightSpeedDecorator AppConfig => _lsd.Get(() => GetLightSpeedConfig(AppState.StateCache));
     private readonly GetOnce<LightSpeedDecorator> _lsd = new();
 
     private LightSpeedDecorator GetLightSpeedConfig(IAppStateCache appState)
