@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Code.Internal.HotBuild;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : ServiceBase(SxcLogName + ".AssCMn", connect: [memoryCacheService])
 {
-    private const string GlobalCacheRoot = "2sxc.AssemblyCache.Module.";
+    private const string GlobalCacheRoot = "Sxc-AssemblyCache.Module.";
 
 
     #region Static Calls for AppCode - to use before requiring DI

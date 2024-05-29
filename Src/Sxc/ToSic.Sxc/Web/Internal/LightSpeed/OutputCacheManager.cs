@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
 internal class OutputCacheManager(MemoryCacheService memoryCacheService, Lazy<IEavFeaturesService> featuresDoNotConnect) : ServiceBase(SxcLogName + ".OutputCacheManager", connect: [memoryCacheService])
 {
-    internal const string GlobalCacheRoot = "2sxc.Lightspeed.Module.";
+    internal const string GlobalCacheRoot = "Sxc-LightSpeed.Module.";
 
     internal static string Id(int moduleId, int pageId, int? userId, string view, string suffix, string currentCulture)
     {

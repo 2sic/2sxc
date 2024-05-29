@@ -272,8 +272,8 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
 
             return l.Return(codeProvider, "created new and added to cache for 1 min");
         }
-        private const string CSharpCodeProviderCacheKey = "2sxc-dnn-CSharpCodeProvider";
-        private const int CSharpCodeProviderCacheMinutes = 5;   // basic idea is that at startup, there is usually more to compile, after a while it's not so important any more.
+        private const string CSharpCodeProviderCacheKey = "Sxc-Dnn-CSharpCodeProvider";
+        private const int CSharpCodeProviderCacheMinutes = 1;   // basic idea is that at startup, there is usually more to compile, after a while it's not so important any more.
 
 
         private static CompilerParameters RazorCompilerParameters(List<string> referencedAssemblies)

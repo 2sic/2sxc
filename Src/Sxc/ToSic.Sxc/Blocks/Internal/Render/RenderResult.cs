@@ -1,4 +1,5 @@
-﻿using ToSic.Lib.Helpers;
+﻿using ToSic.Eav.Apps.Internal.Insights;
+using ToSic.Lib.Helpers;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.Blocks.Internal.Render;
 /// <inheritdoc />
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class RenderResult(string html) : TagText(null), IRenderResult
+public class RenderResult(string html) : TagText(null), IRenderResult, ICanEstimateSize
 {
     /// <inheritdoc />
     public string Html { get; set; } = html;
@@ -60,4 +61,24 @@ public class RenderResult(string html) : TagText(null), IRenderResult
     public IList<CspParameters> CspParameters { get; set; }
 
     public List<string> Errors { get; set; }
+
+    SizeEstimate ICanEstimateSize.EstimateSize(ILog log)
+    {
+        var l = log.Fn<SizeEstimate>();
+        var estimator = new MemorySizeEstimator(log);
+        try
+        {
+            var known = new SizeEstimate(Size, 300, Unknown: true);
+            if (Errors != null)
+                known += estimator.Estimate(Errors);
+            return l.Return(known);
+        }
+        catch
+        {
+            return l.ReturnAsError(new(0, 0, Error: true));
+        }
+    }
+
+
+
 }

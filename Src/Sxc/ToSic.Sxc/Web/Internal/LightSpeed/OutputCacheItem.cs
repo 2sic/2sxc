@@ -1,9 +1,10 @@
-﻿using ToSic.Sxc.Blocks.Internal.Render;
+﻿using ToSic.Eav.Apps.Internal.Insights;
+using ToSic.Sxc.Blocks.Internal.Render;
 
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class OutputCacheItem(IRenderResult data)
+public class OutputCacheItem(IRenderResult data): ICanEstimateSize
 {
     public IRenderResult Data => data;
 
@@ -13,4 +14,7 @@ public class OutputCacheItem(IRenderResult data)
     /// </summary>
     public bool EnforcePre1025 = true;
 #endif
+    public SizeEstimate EstimateSize(ILog log = default) 
+        => (data as ICanEstimateSize)?.EstimateSize(log)
+           ?? new SizeEstimate(0, 0, Unknown: true);
 }

@@ -8,7 +8,6 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
-using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Context;
@@ -54,7 +53,6 @@ internal class LightSpeed(
         if (!data.CanCache) return l.ReturnFalse("can't cache");
         if (data == Existing?.Data) return l.ReturnFalse("not new");
         if (data.DependentApps.SafeNone()) return l.ReturnFalse("app not initialized");
-        // if (_block.View.CachingEnabled == false) return l.ReturnFalse("view caching disabled");
         if (!UrlParams.CachingAllowed) return l.ReturnFalse("url params not allowed");
 
         // get dependent appStates
