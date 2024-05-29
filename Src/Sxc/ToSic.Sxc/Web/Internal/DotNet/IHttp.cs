@@ -21,7 +21,7 @@ public interface IHttp
     HttpContext Current { get; }
 
     /// <summary>
-    /// The standardized" HttpRequest object. It's type changes depending on the framework it's running in.
+    /// The standardized HttpRequest object. It's type changes depending on the framework it's running in.
     /// </summary>
     HttpRequest Request { get; }
 
