@@ -15,7 +15,7 @@ internal class TemplateEngineTokens(ILookUpEngine original): ITemplateEngine, IW
     /// </summary>
     private const int MaxDepth = 0;
 
-    IEnumerable<ILookUp> ITemplateEngine.GetSources(NoParamOrder protector = default, int depth = 0)
+    IEnumerable<ILookUp> ITemplateEngine.GetSources(NoParamOrder protector, int depth)
     {
         if (depth == 0)
             return original.Sources;
