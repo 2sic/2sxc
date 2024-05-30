@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Data.PiggyBack;
+using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Context;
 
@@ -6,23 +7,27 @@ namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
 internal class LightSpeedUrlParams
 {
-    internal static (bool CachingAllowed, string Extension) GetUrlParams(LightSpeedDecorator lsConfig, IParameters pageParameters, ILog log)
+    internal static (bool CachingAllowed, string Extension) GetUrlParams(LightSpeedDecorator lsConfig, IParameters pageParameters, ILog log, bool usePiggyBack = true)
     {
         var l = log.Fn<(bool, string)>();
 
+        // Preflight exit checks
         if (lsConfig == null) return l.Return((false, ""), "no config");
         if (lsConfig.IsEnabledNullable == false) return l.Return((false, ""), "Disabled at view level");
         if (!lsConfig.ByUrlParameters) return l.Return((true, ""), "Enabled without url parameters");
 
-        var paramNames = !string.IsNullOrWhiteSpace(lsConfig.UrlParameterNames)
-            ? lsConfig.UrlParameterNames
-                .SplitNewLine()
-                .Select(line => (line.Before("//") ?? line).TrimEnd())
-                .ToList()
-            : null;
+        // Get the parameter names from the config
+        var namesCsv = usePiggyBack && lsConfig.Entity is IHasPiggyBack withCache
+            ? withCache.GetPiggyBack(nameof(LightSpeedUrlParams), () => ExtractConfigCsv(lsConfig))
+            : ExtractConfigCsv(lsConfig);
 
-        // Get the params, filter them new v17.10 and return the string - or exit
-        var namesCsv = paramNames == null ? "" : string.Join(",", paramNames).Trim();
+        return Extract(lsConfig, namesCsv, pageParameters, log);
+    }
+
+    private static (bool CachingAllowed, string Extension) Extract(LightSpeedDecorator lsConfig, string namesCsv, IParameters pageParameters, ILog log)
+    {
+        var l = log.Fn<(bool, string)>();
+
         if (namesCsv.Length > 0)
         {
             l.A($"View UrlParams: '{namesCsv}'");
@@ -54,5 +59,19 @@ internal class LightSpeedUrlParams
         return lsConfig.UrlParametersCaseSensitive
             ? l.ReturnAndLog((true, urlParams), "case sensitive")
             : l.ReturnAndLog((true, urlParams.ToLowerInvariant()), "case insensitive");
+    }
+
+    private static string ExtractConfigCsv(LightSpeedDecorator lsConfig)
+    {
+        var paramNames = !string.IsNullOrWhiteSpace(lsConfig.UrlParameterNames)
+            ? lsConfig.UrlParameterNames
+                .SplitNewLine()
+                .Select(line => (line.Before("//") ?? line).TrimEnd())
+                .ToList()
+            : null;
+
+        // Get the params, filter them new v17.10 and return the string - or exit
+        var namesCsv = paramNames == null ? "" : string.Join(",", paramNames).Trim();
+        return namesCsv;
     }
 }

@@ -101,8 +101,11 @@
     <Compile Include="ContentSecurityPolicyTests\CspParametersTests.cs" />
     <Compile Include="ContentSecurityPolicyTests\CspParameterFinalizerTests.cs" />
     <Compile Include="ContentSecurityPolicyTests\CspPolicyTextProcessorTests.cs" />
+    <Compile Include="ContextTests\ParametersTestData.cs" />
     <Compile Include="ContextTests\ParametersTests.cs" />
     <Compile Include="ContextTests\UniqueKeyTests.cs" />
+    <Compile Include="ContextTests\ParametersAccessedTests.cs" />
+    <Compile Include="ContextTests\ParametersToStringTests.cs" />
     <Compile Include="DataForImageTests\ResizeRecipesData.cs" />
     <Compile Include="DataSources\MockRolesDataSource.cs" />
     <Compile Include="DataSources\MockUsersDataSource.cs" />

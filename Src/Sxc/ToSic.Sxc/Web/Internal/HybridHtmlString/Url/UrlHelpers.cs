@@ -44,6 +44,30 @@ public static class UrlHelpers
     /// </summary>
     /// <param name="nvc"></param>
     /// <returns></returns>
+    public static NameValueCollection Sort(this NameValueCollection nvc)
+    {
+        // create a new NVC but sorted
+        var sorted = new NameValueCollection();
+        foreach (var key in nvc.AllKeys.OrderBy(k => k))
+        {
+            var values = nvc.GetValues(key)?.OrderBy(v => v).ToArray();
+            if (values == null || values.Length == 0)
+                sorted.Add(key, null);
+            else
+                foreach (var value in values)
+                    sorted.Add(key, value);
+        }
+        return sorted;
+    }
+
+
+    /// <summary>
+    /// Converts a NameValueCollection to string.
+    /// Used in link generations and especially also the <see cref="Parameters"/>
+    /// so be very careful if you change anything!
+    /// </summary>
+    /// <param name="nvc"></param>
+    /// <returns></returns>
     public static string NvcToString(this NameValueCollection nvc) 
         => NvcToString(nvc, "=", "&", "", "", true, null);
 

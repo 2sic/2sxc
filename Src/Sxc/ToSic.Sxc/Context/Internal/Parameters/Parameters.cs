@@ -116,7 +116,19 @@ public partial class Parameters(NameValueCollection initialNvc = null) : IParame
     #endregion
 
 
-    public override string ToString() => NvcNotNull.NvcToString();
+    public override string ToString() => _toString ??= NvcNotNull.NvcToString();
+    private string _toString;
+
+    /// <summary>
+    /// Special sorted ToString - for the moment not public
+    /// </summary>
+    /// <param name="protector"></param>
+    /// <param name="sort"></param>
+    /// <returns></returns>
+    internal string ToString(NoParamOrder protector = default, bool sort = false)
+        => sort ? _sorted ??= NvcNotNull.Sort().NvcToString() : NvcNotNull.NvcToString();
+    private string _sorted;
+
 
     #region Toggle and Filter
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Eav.Data.Build;
 using ToSic.Sxc.Context.Internal;
@@ -97,16 +98,26 @@ namespace ToSic.Sxc.Tests.WebLightSpeed
         }
 
 
-
         [TestMethod]
-        public void TestMethod1()
+        public void LoadTestWithoutCaching()
         {
-            var lsDecorator = _testData.Decorator();
-            var pars = new Parameters(new()
-            {
-                { "A", "AVal" }
-            });
-            var result = LightSpeedUrlParams.GetUrlParams(lsDecorator, pars, null);
+            const int repeat = 10000;
+            var lsDecorator = _testData.Decorator(isEnabled: true, byUrlParameters: true, names: "a // nice idea\nb // ok too, but a bit nasty\n\ntest // another one to parse", othersDisableCache: true);
+            var parameters = new Parameters(Parse("ZETA=last&d=27&a=b&b=c"));
+
+            var stopwatch = Stopwatch.StartNew();
+            for (var i = 0; i < repeat; i++) 
+                LightSpeedUrlParams.GetUrlParams(lsDecorator, parameters, null, usePiggyBack: false);
+            stopwatch.Stop();
+
+            Trace.WriteLine($"Ran {repeat} iterations without cache, duration was {stopwatch.ElapsedMilliseconds}ms");
+
+            stopwatch = Stopwatch.StartNew();
+            for (var i = 0; i < repeat; i++) 
+                LightSpeedUrlParams.GetUrlParams(lsDecorator, parameters, null, usePiggyBack: true);
+            stopwatch.Stop();
+
+            Trace.WriteLine($"Ran {repeat} iterations with cache, duration was {stopwatch.ElapsedMilliseconds}ms");
         }
     }
 }
