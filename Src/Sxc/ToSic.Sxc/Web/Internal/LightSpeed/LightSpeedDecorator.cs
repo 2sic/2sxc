@@ -5,6 +5,9 @@ namespace ToSic.Sxc.Web.Internal.LightSpeed;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class LightSpeedDecorator(IEntity entity) : EntityBasedType(entity)
 {
+    /// <summary>
+    /// Nice name. If it ever changes, remember to also update UI as it has references to it.
+    /// </summary>
     public static string NiceName = "LightSpeedOutputDecorator";
     public static string TypeNameId = "be34f64b-7d1f-4ad0-b488-dabbbb01a186";
 
