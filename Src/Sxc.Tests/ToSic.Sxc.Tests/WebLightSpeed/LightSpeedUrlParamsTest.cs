@@ -38,7 +38,9 @@ namespace ToSic.Sxc.Tests.WebLightSpeed
         [DataRow(true, "", true, false, "")]
         [DataRow(true, "", true, false, "a=b")]
         [DataRow(true, "a=b", true, true, "a=b")]
-        [DataRow(true, "test=y&a=b", true, true, "test=y&a=b")]
+        [DataRow(true, "a=b&test=y", true, true, "test=y&a=b", DisplayName = "Ensure parameters are sorted")]
+        [DataRow(true, "a=b&test=y&zeta=beta", true, true, "zeta=beta&test=y&a=b", DisplayName = "Ensure parameters are sorted")]
+        [DataRow(true, "a=alpha&a=beta", true, true, "a=beta&a=alpha", DisplayName = "Ensure parameter values are sorted")]
         [DataRow(false, "", false, null, "")]
         [TestMethod]
         public void ByUrlParameters(bool expected, string expValue, bool? isEnabled, bool? byUrlParameters, string urlParameters, string message = default)

@@ -16,15 +16,15 @@ internal class LightSpeedUrlParams
         if (lsConfig.IsEnabledNullable == false) return l.Return((false, ""), "Disabled at view level");
         if (!lsConfig.ByUrlParameters) return l.Return((true, ""), "Enabled without url parameters");
 
-        // Get the parameter names from the config
+        // Get the parameter names from the config - use piggyback if possible
         var namesCsv = usePiggyBack && lsConfig.Entity is IHasPiggyBack withCache
             ? withCache.GetPiggyBack(nameof(LightSpeedUrlParams), () => ExtractConfigCsv(lsConfig))
             : ExtractConfigCsv(lsConfig);
 
-        return Extract(lsConfig, namesCsv, pageParameters, log);
+        return ParseParameters(lsConfig, namesCsv, pageParameters, log);
     }
 
-    private static (bool CachingAllowed, string Extension) Extract(LightSpeedDecorator lsConfig, string namesCsv, IParameters pageParameters, ILog log)
+    private static (bool CachingAllowed, string Extension) ParseParameters(LightSpeedDecorator lsConfig, string namesCsv, IParameters pageParameters, ILog log)
     {
         var l = log.Fn<(bool, string)>();
 
@@ -52,7 +52,7 @@ internal class LightSpeedUrlParams
         }
 
         // Finalize URL parameters
-        var urlParams = pageParameters.ToString();
+        var urlParams = (pageParameters as Context.Internal.Parameters)?.ToString(sort: true) ?? pageParameters.ToString();
         if (string.IsNullOrWhiteSpace(urlParams))
             return l.Return((true, ""), "no url params found");
 
