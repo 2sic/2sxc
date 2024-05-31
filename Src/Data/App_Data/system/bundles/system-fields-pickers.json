@@ -371,6 +371,37 @@
           },
           "Entities": [
             {
+              "Id": 183740,
+              "Version": 1,
+              "Guid": "294f8671-40aa-4af3-a111-c53d00cb53be",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data) => { return data.default + (!!data.Info ? '✅' : ''); });"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Name"
+                  },
+                  "Title": {
+                    "en-us": "Setting Name: Value"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
               "Id": 183718,
               "Version": 3,
               "Guid": "e457872b-90e7-4041-a8de-07bb88ddd43e",
@@ -413,37 +444,6 @@
                 "String": {
                   "Formula": {
                     "en-us": "v2((data, context) => {\n  const icons = [];\n  if (!!data.ItemTooltip) icons.push('\uD83D\uDCA1');\n  if (!!data.ItemInformation) icons.push('ℹ️');\n  if (!!data.ItemHelpLink) icons.push('\uD83D\uDD17');\n  const addOn = icons.length ? ' (' + icons.join(' ') + ')' : '';\n  return data.default + addOn;\n});"
-                  },
-                  "Notes": {
-                    "en-us": ""
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Name"
-                  },
-                  "Title": {
-                    "en-us": "Setting Name: Value"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 183740,
-              "Version": 1,
-              "Guid": "294f8671-40aa-4af3-a111-c53d00cb53be",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v2((data) => { return data.default + (!!data.Info ? '✅' : ''); });"
                   },
                   "Notes": {
                     "en-us": ""
@@ -1718,6 +1718,65 @@
               "Owner": "dnn:userid=41"
             },
             {
+              "Id": 183740,
+              "Version": 1,
+              "Guid": "294f8671-40aa-4af3-a111-c53d00cb53be",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data) => { return data.default + (!!data.Info ? '✅' : ''); });"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Name"
+                  },
+                  "Title": {
+                    "en-us": "Setting Name: Value"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183733,
+              "Version": 3,
+              "Guid": "111ec6b8-449d-4dcb-ba53-4ca19a3a71f2",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => { return !!data.Title; });"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
               "Id": 183749,
               "Version": 1,
               "Guid": "1734005c-1a57-4fa5-9113-73b5543bf6f6",
@@ -1844,65 +1903,6 @@
                 "Hyperlink": {
                   "ItemLink": {
                     "en-us": ""
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 183740,
-              "Version": 1,
-              "Guid": "294f8671-40aa-4af3-a111-c53d00cb53be",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v2((data) => { return data.default + (!!data.Info ? '✅' : ''); });"
-                  },
-                  "Notes": {
-                    "en-us": ""
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Name"
-                  },
-                  "Title": {
-                    "en-us": "Setting Name: Value"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 183733,
-              "Version": 3,
-              "Guid": "111ec6b8-449d-4dcb-ba53-4ca19a3a71f2",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v2((data, context) => { return !!data.Title; });"
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Field.Settings.Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
                   }
                 }
               },
@@ -3377,48 +3377,6 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
-                "Id": 182665,
-                "Version": 7,
-                "Guid": "73bf2a9b-6d4c-4987-96d8-d421c586a888",
-                "Type": {
-                  "Id": "ContentType-InputType",
-                  "Name": "ContentType-InputType"
-                },
-                "Attributes": {
-                  "String": {
-                    "AngularAssets": {
-                      "en-us": ""
-                    },
-                    "ConfigTypes": {
-                      "en-us": "@All,@entity-picker"
-                    },
-                    "Description": {
-                      "en-us": "Item (Entity) Picker (BETA)"
-                    },
-                    "Label": {
-                      "en-us": "Item (Entity) Picker (BETA v17)"
-                    },
-                    "Type": {
-                      "en-us": "@entity-picker"
-                    }
-                  },
-                  "Boolean": {
-                    "DisableI18n": {
-                      "en-us": false
-                    },
-                    "UseAdam": {
-                      "en-us": false
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "6fa7f390-7612-40c6-baff-2bcf6140a85f"
-                }
-              },
-              {
                 "Id": 182380,
                 "Version": 5,
                 "Guid": "cf832332-5f70-40af-ad1f-4399f294ac42",
@@ -3456,6 +3414,48 @@
                     },
                     "Link": {
                       "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "6fa7f390-7612-40c6-baff-2bcf6140a85f"
+                }
+              },
+              {
+                "Id": 182665,
+                "Version": 8,
+                "Guid": "73bf2a9b-6d4c-4987-96d8-d421c586a888",
+                "Type": {
+                  "Id": "ContentType-InputType",
+                  "Name": "ContentType-InputType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AngularAssets": {
+                      "en-us": ""
+                    },
+                    "ConfigTypes": {
+                      "en-us": "@All,@entity-picker"
+                    },
+                    "Description": {
+                      "en-us": "Item (Entity) Picker (BETA)"
+                    },
+                    "Label": {
+                      "en-us": "Item (Entity) Picker (BETA v17)"
+                    },
+                    "Type": {
+                      "en-us": "@entity-picker"
+                    }
+                  },
+                  "Boolean": {
+                    "DisableI18n": {
+                      "en-us": true
+                    },
+                    "UseAdam": {
+                      "en-us": false
                     }
                   }
                 },
@@ -3955,48 +3955,6 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
-                "Id": 183771,
-                "Version": 1,
-                "Guid": "65054dae-9f44-49cd-912f-4786bccabe04",
-                "Type": {
-                  "Id": "ContentType-InputType",
-                  "Name": "ContentType-InputType"
-                },
-                "Attributes": {
-                  "String": {
-                    "AngularAssets": {
-                      "en-us": ""
-                    },
-                    "ConfigTypes": {
-                      "en-us": "@All,@number-picker"
-                    },
-                    "Description": {
-                      "en-us": "Number Picker (BETA)"
-                    },
-                    "Label": {
-                      "en-us": "Number Picker (BETA v17)"
-                    },
-                    "Type": {
-                      "en-us": "@number-picker"
-                    }
-                  },
-                  "Boolean": {
-                    "DisableI18n": {
-                      "en-us": false
-                    },
-                    "UseAdam": {
-                      "en-us": false
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "2421dded-3aeb-47d2-ab9d-e2b72a2d821d"
-                }
-              },
-              {
                 "Id": 182381,
                 "Version": 3,
                 "Guid": "df9485fb-10f6-4c1e-a19e-84b47b68955b",
@@ -4034,6 +3992,48 @@
                     },
                     "Link": {
                       "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "2421dded-3aeb-47d2-ab9d-e2b72a2d821d"
+                }
+              },
+              {
+                "Id": 183771,
+                "Version": 1,
+                "Guid": "65054dae-9f44-49cd-912f-4786bccabe04",
+                "Type": {
+                  "Id": "ContentType-InputType",
+                  "Name": "ContentType-InputType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AngularAssets": {
+                      "en-us": ""
+                    },
+                    "ConfigTypes": {
+                      "en-us": "@All,@number-picker"
+                    },
+                    "Description": {
+                      "en-us": "Number Picker (BETA)"
+                    },
+                    "Label": {
+                      "en-us": "Number Picker (BETA v17)"
+                    },
+                    "Type": {
+                      "en-us": "@number-picker"
+                    }
+                  },
+                  "Boolean": {
+                    "DisableI18n": {
+                      "en-us": false
+                    },
+                    "UseAdam": {
+                      "en-us": false
                     }
                   }
                 },
@@ -4128,48 +4128,6 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
-                "Id": 182573,
-                "Version": 5,
-                "Guid": "ba6ce128-0a51-4047-8a40-bfff27658476",
-                "Type": {
-                  "Id": "ContentType-InputType",
-                  "Name": "ContentType-InputType"
-                },
-                "Attributes": {
-                  "String": {
-                    "AngularAssets": {
-                      "en-us": ""
-                    },
-                    "ConfigTypes": {
-                      "en-us": "@All,@string-picker"
-                    },
-                    "Description": {
-                      "en-us": "String Picker Field (BETA)"
-                    },
-                    "Label": {
-                      "en-us": "String Picker (BETA v17)"
-                    },
-                    "Type": {
-                      "en-us": "@string-picker"
-                    }
-                  },
-                  "Boolean": {
-                    "DisableI18n": {
-                      "en-us": false
-                    },
-                    "UseAdam": {
-                      "en-us": false
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "e64dd20e-0055-4410-87a1-1238fe44707f"
-                }
-              },
-              {
                 "Id": 182382,
                 "Version": 3,
                 "Guid": "dba24477-2502-42c2-8437-4c16934b9f5e",
@@ -4207,6 +4165,48 @@
                     },
                     "Link": {
                       "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "e64dd20e-0055-4410-87a1-1238fe44707f"
+                }
+              },
+              {
+                "Id": 182573,
+                "Version": 5,
+                "Guid": "ba6ce128-0a51-4047-8a40-bfff27658476",
+                "Type": {
+                  "Id": "ContentType-InputType",
+                  "Name": "ContentType-InputType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AngularAssets": {
+                      "en-us": ""
+                    },
+                    "ConfigTypes": {
+                      "en-us": "@All,@string-picker"
+                    },
+                    "Description": {
+                      "en-us": "String Picker Field (BETA)"
+                    },
+                    "Label": {
+                      "en-us": "String Picker (BETA v17)"
+                    },
+                    "Type": {
+                      "en-us": "@string-picker"
+                    }
+                  },
+                  "Boolean": {
+                    "DisableI18n": {
+                      "en-us": false
+                    },
+                    "UseAdam": {
+                      "en-us": false
                     }
                   }
                 },

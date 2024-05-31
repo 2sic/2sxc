@@ -113,8 +113,8 @@ partial class CodeDataFactory
             case ICanBeEntity:
                 var converted = AsItemInternal(list, MaxRecursions, propsRequired: propsRequired);
                 return converted != null
-                    ? l.Return(new List<ITypedItem> { converted }, "single item to list")
-                    : l.Return(new List<ITypedItem>(), "typed but converted to null; empty list");
+                    ? l.Return([converted], "single item to list")
+                    : l.Return([], "typed but converted to null; empty list");
             // Check for IEnumerable but make sure it's not a string (so that should come before)
             // Should come fairly late, because some things like DynamicEntities can also be enumerated
             case IEnumerable asEnumerable:
@@ -129,7 +129,7 @@ partial class CodeDataFactory
                 ? l.Return(fallback, fallbackMsg + ", fallback")
                 : required
                     ? throw l.Done(new ArgumentException($@"Conversion with {nameof(AsItems)} failed, {nameof(required)}=true. {exMsg}", nameof(list)))
-                    : l.Return(new List<ITypedItem>(), "no fallback, not required, empty list");
+                    : l.Return([], "no fallback, not required, empty list");
     }
 
     #endregion
