@@ -3708,6 +3708,148 @@
                 ]
               },
               {
+                "Name": "GroupDurationsEnd",
+                "Type": "Empty",
+                "InputType": "empty-end",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183816,
+                    "Version": 1,
+                    "Guid": "13feffb6-e9fe-49e1-b44a-c7c9c69cf143",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputType": {
+                          "*": "empty-end"
+                        },
+                        "Name": {
+                          "*": "GroupDurationsEnd"
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "VisibleInEditUI": {
+                          "*": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "ViewConfigurationMessage",
+                "Type": "Empty",
+                "InputType": "empty-message",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183815,
+                    "Version": 5,
+                    "Guid": "e596ea80-ac99-4da4-9967-00c7eaae0b9a",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-message"
+                        },
+                        "Name": {
+                          "en-us": "ViewConfigurationMessage"
+                        },
+                        "Notes": {
+                          "en-us": "<p><strong>The View-Configuration is only for configuring URL parameters.&nbsp;</strong></p>\n<p>As of now, it doesn't support configuring alternate durations.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "46b375ba-3a11-4f04-8faf-33ef4ef5b29a"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183818,
+                    "Version": 1,
+                    "Guid": "f302a03d-5982-4a84-a9b3-204ae77b83f6",
+                    "Type": {
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "GroupVaryByUrl",
                 "Type": "Empty",
                 "InputType": "empty-default",
@@ -4342,37 +4484,58 @@
                 ]
               },
               {
+                "Name": "GroupVaryByUrlEnd",
+                "Type": "Empty",
+                "InputType": "empty-end",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183817,
+                    "Version": 1,
+                    "Guid": "95634d5d-f5ef-4b17-93bf-ef42cbe88f1a",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputType": {
+                          "*": "empty-end"
+                        },
+                        "Name": {
+                          "*": "GroupVaryByUrlEnd"
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "VisibleInEditUI": {
+                          "*": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "VarShowDuration",
                 "Type": "Boolean",
                 "InputType": "boolean-default",
                 "IsTitle": false,
                 "Metadata": [
                   {
-                    "Id": 183803,
-                    "Version": 1,
-                    "Guid": "0d57e6d1-2f94-4df6-bad4-b59b502a8bc8",
-                    "Type": {
-                      "Id": "@Boolean",
-                      "Name": "@Boolean"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "TitleFalse": {
-                          "en-us": ""
-                        },
-                        "TitleIndeterminate": {
-                          "en-us": ""
-                        },
-                        "TitleTrue": {
-                          "en-us": ""
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
                     "Id": 183802,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "da781d7a-95c7-45e5-b9ac-9220065d38d8",
                     "Type": {
                       "Id": "@All",
@@ -4419,6 +4582,7 @@
                         },
                         "Formulas": {
                           "*": [
+                            "3d006350-3b3c-4294-8b1a-ad6e4f12857d",
                             "a247ff46-76f7-45d2-bbc2-a20e4a3a4a98"
                           ]
                         },
@@ -4441,6 +4605,29 @@
                         },
                         "VisibleInEditUI": {
                           "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183803,
+                    "Version": 1,
+                    "Guid": "0d57e6d1-2f94-4df6-bad4-b59b502a8bc8",
+                    "Type": {
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "TitleFalse": {
+                          "en-us": ""
+                        },
+                        "TitleIndeterminate": {
+                          "en-us": ""
+                        },
+                        "TitleTrue": {
+                          "en-us": ""
                         }
                       }
                     },
@@ -4595,6 +4782,34 @@
               "Owner": "dnn:userid=41"
             },
             {
+              "Id": 183814,
+              "Version": 2,
+              "Guid": "3d006350-3b3c-4294-8b1a-ad6e4f12857d",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "// if parameters has a showDuration then take that, otherwise default to true\nv2((data, context) => {\n  return { \n    value: data.parameters.showDuration != 'false', // defaults to true\n    stop: true,\n  }\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Value"
+                  },
+                  "Title": {
+                    "en-us": "Field.Value"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
               "Id": 183813,
               "Version": 1,
               "Guid": "a247ff46-76f7-45d2-bbc2-a20e4a3a4a98",
@@ -4606,6 +4821,34 @@
                 "String": {
                   "Formula": {
                     "en-us": "v2((data, context) => {\n  return context.debug;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183819,
+              "Version": 3,
+              "Guid": "46b375ba-3a11-4f04-8faf-33ef4ef5b29a",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "// if parameters has a forView then take that, otherwise default to false\nv2((data, context) => {\n  console.log('debug 2dm lightspeed', data.parameters, data);\n  return { \n    value: data.parameters.forView == 'true', // defaults to false\n    stop: true,\n  }\n});"
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
