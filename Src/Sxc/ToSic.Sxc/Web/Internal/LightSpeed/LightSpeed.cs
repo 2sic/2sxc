@@ -3,6 +3,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.State;
+using ToSic.Eav.Caching;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
@@ -104,7 +105,7 @@ internal class LightSpeed(
                 CacheKey,
                 cacheItem,
                 duration,
-                dependentAppsStates.Cast<IAppStateChanges>().ToList(),
+                dependentAppsStates.Cast<ICanBeCacheDependency>().ToList(),
                 appPathsToMonitor,
                 LightSpeedStats.CreateNonCapturingRemoveCall(appId, size)
             )
