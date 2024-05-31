@@ -37,7 +37,7 @@ internal class OutputCacheManager(MemoryCacheService memoryCacheService, Lazy<IE
             var policyMaker = memoryCacheService.NewPolicyMaker()
                 .SetSlidingExpiration(expiration)
                 .WatchApps(appStates)
-                .WatchFeaturesService(featuresDoNotConnect.Value)
+                .WatchNotifyKeys([featuresDoNotConnect.Value.CacheId])
                 .WatchCallback(updateCallback);
 
             if (appPaths?.Any() == true)
@@ -45,17 +45,7 @@ internal class OutputCacheManager(MemoryCacheService memoryCacheService, Lazy<IE
                     .WatchFolders(appPaths.ToDictionary(p => p, p => true));
 
             memoryCacheService.SetNew(cacheKey, data, policyMaker);
-
-            //memoryCacheService.Set(
-            //    cacheKey,
-            //    data,
-            //    slidingExpiration: expiration,
-            //    folderPaths: appPaths?.ToDictionary(p => p, p => true),
-            //    appStates: appStates,
-            //    featuresService: featuresDoNotConnect.Value,
-            //    updateCallback: updateCallback
-            //);
-
+            
             return l.ReturnAsOk(cacheKey);
         }
         catch
