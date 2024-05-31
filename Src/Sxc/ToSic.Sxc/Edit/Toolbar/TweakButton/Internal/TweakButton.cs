@@ -116,7 +116,7 @@ public class TweakButton: ITweakButton, ITweakButtonInternal
 
     public ITweakButton Prefill(object value) => value == null ? this : Parameters(new ObjectToUrl().SerializeChild(value, PrefixPrefill));
 
-    public ITweakButton Prefill(string name, object value) => (value ?? name) == null ? this : Prefill($"{name}={value}");
+    public ITweakButton Prefill(string name, object value) => (value ?? name) == null ? this : Prefill($"{name}={ValueToString(value)}");
 
     public ITweakButton Filter(object value) => value == null ? this : Parameters(new ObjectToUrl().SerializeChild(value, PrefixFilters));
     public ITweakButton Filter(string name, object value) => (value ?? name) == null ? this : Filter($"{name}={ValueToString(value)}");
