@@ -146,7 +146,7 @@ internal partial class AppApiControllerSelectorService(
                 var appCodeDescriptor = new HttpControllerDescriptor(Configuration, type.Name, type);
                 var fakeFolder = controllerFolder.Replace("/api/", "/AppCode/");
                 return l.Return((descriptor: new(appCodeDescriptor, fakeFolder, fakeFolder + "AppCode-auto-compiled.dll"),
-                                cacheKeys: [appCodeAssemblyResult.CacheKey],
+                                cacheKeys: [appCodeAssemblyResult.CacheDependencyId],
                                 filePaths: null), 
                         "Api controller from AppCode");
             }
@@ -187,9 +187,9 @@ internal partial class AppApiControllerSelectorService(
             assembly = result?.Assembly;
 
             // build list of cache dependencies keys
-            if (!string.IsNullOrEmpty(result?.CacheKey))
+            if (!string.IsNullOrEmpty(result?.CacheDependencyId))
             {
-                cacheDependencyKeys = [result.CacheKey];
+                cacheDependencyKeys = [result.CacheDependencyId];
                 if (alwaysUseRoslyn) 
                     cacheDependencyKeys.Add(appJson.Value.AppJsonCacheKey(spec.AppId));
             }

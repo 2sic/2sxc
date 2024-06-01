@@ -2,7 +2,6 @@
 using System.CodeDom.Compiler;
 using System.IO;
 using System.Reflection;
-using System.Runtime.Caching;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Razor;
@@ -89,7 +88,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             // Roslyn compiler need reference to location of dll, when dll is not in bin folder
             // get assembly - try to get from cache, otherwise compile
             var lTimer = Log.Fn("Timer AppCodeLoader", timer: true);
-            var (appCodeAssemblyResult, specOut) = appCodeLoader.Value.GetAppCode(spec);
+            var (appCodeAssemblyResult, _) = appCodeLoader.Value.GetAppCode(spec);
 
             // Add the latest assembly to the .net assembly resolver (singleton)
             assemblyResolver.AddAssembly(appCodeAssemblyResult?.Assembly);
@@ -113,6 +112,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             var (generatedAssembly, errors) = isCshtml
                 ? CompileRazor(codeFileInfo.SourceCode, referencedAssemblies, className, DefaultNamespace, codeFileInfo.FullPath)
                 : CompileCSharpCode(codeFileInfo.SourceCode, referencedAssemblies);
+
             if (generatedAssembly == null)
                 throw l.Ex(new Exception(
                     $"Found {errors.Count} errors compiling Razor '{codeFileInfo.FullPath}'" +
@@ -131,16 +131,21 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             l.A($"Main type: {mainType}");
 
             var assemblyResult = new AssemblyResult(generatedAssembly, safeClassName: className, mainType: mainType);
-            assemblyResult.CacheKey = AssemblyCacheManager.KeyTemplate(codeFileInfo.FullPath);
+            assemblyResult.CacheDependencyId = AssemblyCacheManager.KeyTemplate(codeFileInfo.FullPath);
+
+            
 
             assemblyCacheManager.Add(
-                cacheKey: assemblyResult.CacheKey,
+                cacheKey: assemblyResult.CacheDependencyId,
                 data: assemblyResult,
-                slidingDuration: 3600,
+                slidingDuration: CacheConstants.DurationRazor8Hours,
                 filePaths: [codeFileInfo.FullPath], // better to only monitor the current file
                                                     // otherwise all caches keep getting flushed when any file changes
                                                     // TODO: must also watch for global shared code changes
-                keys: appCodeAssembly == null ? null : [appCodeAssemblyResult.CacheKey]);
+                dependencies: appCodeAssembly == null 
+                    ? null 
+                    : [appCodeAssemblyResult]
+                );
             lTimer.Done();
 
             return l.ReturnAsOk(assemblyResult);
@@ -234,9 +239,10 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             lTimer.Done();
 
             // Compile the template into an assembly
+            var compiler = GetCSharpCodeProvider();
             lTimer = Log.Fn("Compile", timer: true);
             var compilerParameters = RazorCompilerParameters(referencedAssemblies);
-            var compilerResults = GetCSharpCodeProvider().CompileAssemblyFromDom(compilerParameters, razorResults.GeneratedCode);
+            var compilerResults = compiler.CompileAssemblyFromDom(compilerParameters, razorResults.GeneratedCode);
             lTimer.Done();
 
             if (compilerResults.Errors.Count <= 0)
@@ -261,19 +267,20 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
         /// <returns></returns>
         private CSharpCodeProvider GetCSharpCodeProvider()
         {
-            var l = Log.Fn<CSharpCodeProvider>();
+            var l = Log.Fn<CSharpCodeProvider>(timer: true);
             // See if in memory cache
             if (memoryCacheService.TryGet<CSharpCodeProvider>(CSharpCodeProviderCacheKey, out var fromCache))
                 return l.Return(fromCache, "from cached");
             
             var codeProvider = new CSharpCodeProvider(); // TODO: @stv test with latest nuget package for @inherits ; issue
-            // add to memory cache for 1 minute floating expiry
-            memoryCacheService.Add(CSharpCodeProviderCacheKey, codeProvider, new CacheItemPolicy { SlidingExpiration = new(0, CSharpCodeProviderCacheMinutes, 0) });
+            // add to memory cache for 5 minute floating expiry
+            memoryCacheService.SetNew(CSharpCodeProviderCacheKey, codeProvider, p=> p.SetSlidingExpiration(new(0, CSharpCodeProviderCacheMinutes, 0)));
+            // memoryCacheService.Add(CSharpCodeProviderCacheKey, codeProvider, new CacheItemPolicy { SlidingExpiration = new(0, CSharpCodeProviderCacheMinutes, 0) });
 
             return l.Return(codeProvider, "created new and added to cache for 1 min");
         }
         private const string CSharpCodeProviderCacheKey = "Sxc-Dnn-CSharpCodeProvider";
-        private const int CSharpCodeProviderCacheMinutes = 1;   // basic idea is that at startup, there is usually more to compile, after a while it's not so important any more.
+        private const int CSharpCodeProviderCacheMinutes = 5;   // basic idea is that at startup, there is usually more to compile, after a while it's not so important any more.
 
 
         private static CompilerParameters RazorCompilerParameters(List<string> referencedAssemblies)
@@ -309,8 +316,9 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             lTimer.Done();
 
             // Compile the C# code into an assembly
+            var compiler = GetCSharpCodeProvider();
             lTimer = Log.Fn("Compile", timer: true);
-            var compilerResults = GetCSharpCodeProvider().CompileAssemblyFromSource(compilerParameters, csharpCode);
+            var compilerResults = compiler.CompileAssemblyFromSource(compilerParameters, csharpCode);
             lTimer.Done();
 
             if (compilerResults.Errors.Count <= 0)

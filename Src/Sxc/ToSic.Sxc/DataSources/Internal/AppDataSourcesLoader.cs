@@ -149,7 +149,7 @@ internal class AppDataSourcesLoader(
         l.A("Search for DataSources in AppCode");
         var (result, _) = appCodeLoaderLazy.Value.GetAppCode(spec);
 
-        cacheKey = result?.CacheKey; // return for CacheEntryChangeMonitor
+        cacheKey = result?.CacheDependencyId; // return for CacheEntryChangeMonitor
 
         var appCodeAssembly = result?.Assembly;
         if (appCodeAssembly == null)

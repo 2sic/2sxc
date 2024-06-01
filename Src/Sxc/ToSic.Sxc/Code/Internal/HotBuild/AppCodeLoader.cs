@@ -1,10 +1,8 @@
 ﻿using System.IO;
-using System.Runtime.Caching;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Caching;
-using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
@@ -123,12 +121,12 @@ public class AppCodeLoader(
             if (assemblyResult.ErrorMessages.HasValue())
                 return l.ReturnAsError(assemblyResult, assemblyResult.ErrorMessages);
 
-            assemblyResult.WatcherFolders = GetWatcherFolders(assemblyResult, spec, physicalPath, Log);
+            assemblyResult.WatcherFolders = GetWatcherFolders(assemblyResult.HasAssembly, spec, physicalPath, Log);
             l.A("Folders to watch:");
             foreach (var watcherFolder in assemblyResult.WatcherFolders)
                 l.A($"- '{watcherFolder}'");
 
-            assemblyResult.CacheKey = cacheKey; // used to create cache dependency with CacheEntryChangeMonitor 
+            assemblyResult.CacheDependencyId = cacheKey; // used to create cache dependency with CacheEntryChangeMonitor 
 
             // Triple check if another thread already built the app code
             (result, cacheKey) = assemblyCacheManager.TryGetAppCode(spec);
@@ -139,7 +137,7 @@ public class AppCodeLoader(
             assemblyCacheManager.Add(
                 cacheKey,
                 assemblyResult,
-                slidingDuration: CacheConstants.Duration1Day, // must be longer than the default used for Razor DLLs
+                slidingDuration: CacheConstants.DurationAppCode1Day, // must be longer than the default used for Razor DLLs
                 folderPaths: assemblyResult.WatcherFolders
             );
 
@@ -147,7 +145,7 @@ public class AppCodeLoader(
         }
     }
 
-    private static IDictionary<string, bool> GetWatcherFolders(AssemblyResult assemblyResult, HotBuildSpec spec, string physicalPathAppCode, ILog log)
+    private static IDictionary<string, bool> GetWatcherFolders(bool editionHasAssembly, HotBuildSpec spec, string physicalPathAppCode, ILog log)
     {
         var l = log.Fn<IDictionary<string, bool>>($"{nameof(physicalPathAppCode)}: {physicalPathAppCode}");
         var folders = new Dictionary<string, bool>();
@@ -157,21 +155,25 @@ public class AppCodeLoader(
 
         // take parent folder (eg. ...\edition)
         var appCodeParentFolder = Path.GetDirectoryName(physicalPathAppCode);
-        if (appCodeParentFolder.IsEmpty()) return l.Return(folders, $"{nameof(appCodeParentFolder)}.IsEmpty");
+        if (appCodeParentFolder.IsEmpty())
+            return l.Return(folders, $"{nameof(appCodeParentFolder)}.IsEmpty");
         IfExistsThenAdd(appCodeParentFolder, false);
 
         // if no edition was used, then we were already in the root, and should stop now.
-        if (spec.Edition.IsEmpty()) return l.Return(folders, $"{nameof(spec.Edition)}.IsEmpty");
+        if (spec.Edition.IsEmpty())
+            return l.Return(folders, $"{nameof(spec.Edition)}.IsEmpty");
 
         // If we have an edition, and it has an assembly, we don't need to watch the root folder
-        if (assemblyResult.HasAssembly) return l.Return(folders, $"{nameof(assemblyResult.HasAssembly)}");
+        if (editionHasAssembly)
+            return l.Return(folders, $"{nameof(editionHasAssembly)}");
 
         // If we had an edition and no assembly, then we need to watch the root folder
         // we need to add more folders to watch for cache invalidation
 
         // App Root folder (eg. ...\)
         var appRootFolder = Path.GetDirectoryName(appCodeParentFolder);
-        if (appRootFolder.IsEmpty()) return l.Return(folders, $"{nameof(appRootFolder)}.IsEmpty");
+        if (appRootFolder.IsEmpty())
+            return l.Return(folders, $"{nameof(appRootFolder)}.IsEmpty");
 
         // Add to watcher list if it exists, otherwise exit, since we can't have subfolders
         if (!IfExistsThenAdd(appRootFolder, false))

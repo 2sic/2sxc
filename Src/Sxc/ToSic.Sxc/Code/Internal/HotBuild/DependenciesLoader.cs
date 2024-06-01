@@ -2,6 +2,7 @@
 using System.Reflection;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
+using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
@@ -88,7 +89,7 @@ public class DependenciesLoader(ILogStore logStore, ISite site, IAppStates appSt
                 var location = appCodeCompilerLazy.Value.GetDependencyAssemblyLocations(dependency, spec);
                 File.Copy(dependency, location, true);
                 var assembly = Assembly.LoadFrom(location);
-                assemblyResults.Add(new AssemblyResult(assembly, assemblyLocations: [dependency]));
+                assemblyResults.Add(new(assembly, assemblyLocations: [dependency]));
                 l.A($"dependency loaded: {assembly.FullName} location: {location}");
             }
             catch (Exception ex)
@@ -104,6 +105,7 @@ public class DependenciesLoader(ILogStore logStore, ISite site, IAppStates appSt
         assemblyCacheManager.Add(
             cacheKey,
             assemblyResults,
+            slidingDuration: CacheConstants.Duration1Hour,
             folderPaths: new Dictionary<string, bool> { [physicalPath] = true }
         );
         l.A($"{assemblyResults.Count} dependencies added to cache: {cacheKey}");
