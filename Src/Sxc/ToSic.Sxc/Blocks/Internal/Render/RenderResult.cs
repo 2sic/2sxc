@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps.Internal.Insights;
 using ToSic.Lib.Data;
 using ToSic.Lib.Helpers;
+using ToSic.Lib.Memory;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
