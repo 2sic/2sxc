@@ -29,14 +29,13 @@ internal class DnnUser(LazySvc<DnnSecurity> dnnSecurity)
 
     public bool IsSystemAdmin => DnnUserInfo?.IsSuperUser ?? false;
 
-    public bool IsSiteAdmin => AdminPermissions.IsSiteAdmin;
-    public bool IsContentAdmin => AdminPermissions.IsContentAdmin;
+    public bool IsSiteAdmin => EffectivePermissions.IsSiteAdmin;
+    public bool IsContentAdmin => EffectivePermissions.IsContentAdmin;
     public bool IsSiteDeveloper => IsSystemAdmin;
 
-    private AdminPermissions AdminPermissions => _adminPermissions.Get(
-        () => DnnUserInfo.NullOrGetWith(userInfo => dnnSecurity.Value.UserMayAdminThis(userInfo))
-    );
-    private readonly GetOnce<AdminPermissions> _adminPermissions = new();
+    private EffectivePermissions EffectivePermissions => _adminPermissions
+        ??= DnnUserInfo.NullOrGetWith(userInfo => dnnSecurity.Value.UserMayAdminThis(userInfo));
+    private EffectivePermissions _adminPermissions;
 
 
     private UserInfo DnnUserInfo => _user.Get(() => PortalSettings.Current?.UserInfo);

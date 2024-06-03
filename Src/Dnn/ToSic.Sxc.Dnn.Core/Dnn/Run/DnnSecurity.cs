@@ -1,6 +1,7 @@
 ﻿using System.Web.Security;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
+using DotNetNuke.Security.Permissions;
 using DotNetNuke.Security.Roles;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
@@ -35,7 +36,7 @@ public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("
         => user == null || user.UserID == -1;
 
 
-    internal AdminPermissions UserMayAdminThis(UserInfo user)
+    internal EffectivePermissions UserMayAdminThis(UserInfo user)
     {
         // Null-Check
         if (IsNullOrAnonymous(user))
@@ -51,6 +52,10 @@ public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("
         if (portal == null)
             return new(false);
 
+        // TODO: is there a way to get this with DI?
+        //bool displayTitle = ModulePermissionController.CanEditModuleContent(module)
+        //var dnnPermissionProvider = PermissionProvider.Instance();
+
         // Non-SuperUsers must be Admin AND in the group SxcAppAdmins
         if (!user.IsInRole(portal.AdministratorRoleName ?? DnnAdminRoleDefaultName))
             return new(false);
@@ -60,7 +65,7 @@ public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("
             return new(true);
 
         // If the special group doesn't exist, then the admin-state (which is true - since he got here) is valid
-        return new(true, !hasSpecialGroup);
+        return new(isSiteAdmin: !hasSpecialGroup, isContentAdmin: true);
     }
 
 
