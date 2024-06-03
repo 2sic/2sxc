@@ -34,16 +34,16 @@ public class EditUiResources(
 
     #endregion
 
-    public EditUiResourcesSpecs GetResources(bool enabled, int siteId, EditUiResourceSettings settings)
+    public EditUiResourcesSpecs GetResources(bool enabled, int? siteId, EditUiResourceSettings settings)
     {
         if (!enabled) return new();
         var cdnRoot = "";
         var useAltCdn = false;
         var html = "";
 
-        if (features.IsEnabled(SxcFeatures.CdnSourceEdit.NameId))
+        if (features.IsEnabled(SxcFeatures.CdnSourceEdit.NameId) && siteId.HasValue)
         {
-            var zoneId = zoneMapper.GetZoneId(siteId);
+            var zoneId = zoneMapper.GetZoneId(siteId.Value);
             var appPreset = appStates.GetPrimaryReader(zoneId, Log);
             var stack = stackServiceHelper.Init(appPreset).GetStack(RootNameSettings);
             var getResult = stack.InternalGetPath($"{WebResourcesNode}.{CdnSourceEditField}");

@@ -17,7 +17,7 @@ internal class OqtCodeApiService<TModel, TServiceKit> : CodeApiService<TModel, T
     public OqtCodeApiService(MyServices services, LazySvc<AliasResolver> aliasResolverLazy) : base(services, OqtConstants.OqtLogPrefix)
     {
         ConnectServices(
-            _siteStateInitializerLazy = siteStateInitializerLazy
+            _aliasResolverLazy = aliasResolverLazy
         );
     }
 
