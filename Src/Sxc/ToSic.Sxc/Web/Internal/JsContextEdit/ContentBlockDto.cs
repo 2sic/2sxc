@@ -158,8 +158,12 @@ public class ContentBlockDto : EntityDto
 
         try
         {
-            if (app != null)
-                Editions = string.Join(",", appJson.GetAppJson(app.AppId).Editions.Keys);
+            if (app == null) return;
+            var appJsonData = appJson.GetAppJson(app.AppId);
+            if (appJsonData?.Editions != null)
+            {
+                Editions = string.Join(",", appJsonData.Editions.Keys);
+            }
         }
         catch
         {
