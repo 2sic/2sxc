@@ -137,7 +137,7 @@ public class AppCodeLoader(
             assemblyCacheManager.Add(
                 cacheKey,
                 assemblyResult,
-                slidingDuration: CacheConstants.DurationAppCode1Day, // must be longer than the default used for Razor DLLs
+                slidingDuration: CacheConstants.DurationAppCode, // must be longer than the default used for Razor DLLs
                 folderPaths: assemblyResult.WatcherFolders
             );
 

@@ -105,7 +105,7 @@ public class DependenciesLoader(ILogStore logStore, ISite site, IAppStates appSt
         assemblyCacheManager.Add(
             cacheKey,
             assemblyResults,
-            slidingDuration: CacheConstants.Duration1Hour,
+            slidingDuration: CacheConstants.DurationAppDlls,
             folderPaths: new Dictionary<string, bool> { [physicalPath] = true }
         );
         l.A($"{assemblyResults.Count} dependencies added to cache: {cacheKey}");

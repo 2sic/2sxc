@@ -138,7 +138,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             assemblyCacheManager.Add(
                 cacheKey: assemblyResult.CacheDependencyId,
                 data: assemblyResult,
-                slidingDuration: CacheConstants.DurationRazor8Hours,
+                slidingDuration: CacheConstants.DurationRazorAndCode,
                 filePaths: [codeFileInfo.FullPath], // better to only monitor the current file
                                                     // otherwise all caches keep getting flushed when any file changes
                                                     // TODO: must also watch for global shared code changes
