@@ -137,6 +137,7 @@
     <Compile Include="DataTests\DynWrappers\WrapObjTypedItem.cs" />
     <Compile Include="DataTests\HasKeysTests.cs" />
     <Compile Include="DataTests\TypedItemTestAccessors.cs" />
+    <Compile Include="DataTests\GetAndConvertHelperTests.cs" />
     <Compile Include="LinksAndImages\ParametersTestExtensions.cs" />
     <Compile Include="ServicesTests\CacheTests\CacheSpecsTests.cs" />
     <Compile Include="ServicesTests\CacheTests\CacheKeyTests.cs" />

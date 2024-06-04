@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Data.Internal.Dynamic;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class GetAndConvertHelper(
     IHasPropLookup parent,
-    Internal.CodeDataFactory cdf,
+    CodeDataFactory cdf,
     bool propsRequired,
     bool childrenShouldBeDynamic,
     ICanDebug canDebug)
@@ -18,7 +18,7 @@ internal class GetAndConvertHelper(
     #region Setup and Log
 
 
-    public Internal.CodeDataFactory Cdf { get; } = cdf;
+    public CodeDataFactory Cdf { get; } = cdf;
 
     public bool PropsRequired { get; } = propsRequired;
 
@@ -38,7 +38,7 @@ internal class GetAndConvertHelper(
 
     #region Get Implementations 1:1 - names must be identical with caller, so the exceptions have the right names
 
-    public dynamic Get(string name) => GetInternal(name, lookupLink: true).Result;
+    public object Get(string name) => GetInternal(name, lookupLink: true).Result;
 
     public object Get(string name, NoParamOrder noParamOrder = default, string language = null, bool convertLinks = true, bool? debug = null)
     {
@@ -49,7 +49,8 @@ internal class GetAndConvertHelper(
         return result;
     }
 
-    public TValue Get<TValue>(string name) => TryGet(name).Result.ConvertOrDefault<TValue>();
+    public TValue Get<TValue>(string name)
+        => TryGet(name).Result.ConvertOrDefault<TValue>();
 
     public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default)
         => TryGet(name).Result.ConvertOrFallback(fallback);
@@ -58,7 +59,11 @@ internal class GetAndConvertHelper(
 
     #region Get Values
 
-    public TryGetResult TryGet(string field, string language = null) => GetInternal(field, language, lookupLink: false);
+    public TryGetResult TryGet(string field, string language)
+        => GetInternal(field, language, lookupLink: false);
+
+    public TryGetResult TryGet(string field)
+        => GetInternal(field, null, lookupLink: false);
 
     public TryGetResult GetInternal(string field, string language = null, bool lookupLink = true)
     {
@@ -75,12 +80,12 @@ internal class GetAndConvertHelper(
             return l.Return(cached, "cached");
 
         // use the standard dimensions or overload
-        var languages = language == null ? Cdf.Dimensions : [language];
+        var (skipFallbackToDefault, languages) = GetFinalLanguagesList(language);
         l.A($"cache-key: {cacheKey}, {nameof(languages)}:{languages}");
 
         // Get the field or the path if it has one
         // Classic field case
-        var specs = new PropReqSpecs(field, languages, logOrNull);
+        var specs = new PropReqSpecs(field, languages, logOrNull, skipAddingDefaultDimension: skipFallbackToDefault);
         var path = new PropertyLookupPath().Add("DynEntStart", field);
         var resultSet = Parent.PropertyLookup.FindPropertyInternal(specs, path);
 
@@ -101,6 +106,53 @@ internal class GetAndConvertHelper(
 
         return l.Return(final, "ok");
     }
+
+    /// <summary>
+    /// Logic to reliably get the final languages list - but a pre-step before accessing internal properties which may never be used.
+    /// </summary>
+    /// <param name="language"></param>
+    /// <returns></returns>
+    private (bool skipLanguageFallbackToDefault, string[] languages) GetFinalLanguagesList(string language)
+        => language == null
+            ? (false, Cdf.Dimensions)
+            : GetFinalLanguagesList(language, Cdf.SiteCultures, Cdf.Dimensions);
+
+    /// <summary>
+    /// Full logic, as static, testable method
+    /// </summary>
+    /// <param name="language"></param>
+    /// <param name="possibleDims"></param>
+    /// <param name="defaultDims"></param>
+    /// <returns></returns>
+    internal static (bool skipLanguageFallbackToDefault, string[] languages) GetFinalLanguagesList(string language, List<string> possibleDims, string[] defaultDims)
+    {
+        // if nothing specified, use default
+        if (language == null)
+            return (false, defaultDims);
+
+        var languages = language.ToLowerInvariant()
+            .Split(',')
+            .Select(s => s.Trim())
+            .ToArray();
+
+        // expand language codes, e.g.
+        // - "en" should become "en-us" if available
+        // - "" should become null to signal fallback to default
+        var final = languages
+            .Select(l =>
+            {
+                if (l == "") return null;
+                // note: availableDims usually has a null-entry at the end
+                // note: both l and availableDims are lowerInvariant
+                var found = possibleDims.FirstOrDefault(ad => ad?.StartsWith(l) == true);
+                return found ?? "not-found";
+            })
+            .Where(s => s != "not-found")
+            .ToArray();
+
+        return (true, final);
+    }
+
     private readonly Dictionary<string, TryGetResult> _rawValCache = new(InvariantCultureIgnoreCase);
 
     private object ValueAutoConverted(PropReqResult original, bool lookupLink, string field, ILog logOrNull)
@@ -143,7 +195,7 @@ internal class GetAndConvertHelper(
             try
             {
                     
-                var finalPath = string.Join(" > ", original.Path?.Parts?.ToArray() ?? Array.Empty<string>());
+                var finalPath = string.Join(" > ", original.Path?.Parts?.ToArray() ?? []);
                 l.A($"Debug path: {finalPath}");
             }
             catch {/* ignore */}
