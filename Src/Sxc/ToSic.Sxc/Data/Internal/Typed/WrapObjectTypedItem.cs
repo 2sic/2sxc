@@ -41,6 +41,10 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     dynamic ITypedItem.Dyn
         => throw new NotSupportedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(ITypedStack)} by design");
 
+    public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default,
+        bool? required = default, string language = default)
+        => PreWrap.TryGetTyped(name, noParamOrder, fallback, required: required);
+
     bool ITypedItem.IsDemoItem => PreWrap.TryGetTyped(nameof(ITypedItem.IsDemoItem), noParamOrder: default, fallback: false, required: false);
 
     IHtmlTag ITypedItem.Html(string name, NoParamOrder noParamOrder, object container, bool? toolbar,

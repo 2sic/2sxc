@@ -81,7 +81,11 @@ internal class GetAndConvertHelper(
 
         // use the standard dimensions or overload
         var (skipFallbackToDefault, languages) = GetFinalLanguagesList(language);
-        l.A($"cache-key: {cacheKey}, {nameof(languages)}:{languages}");
+        l.A($"cache-key: {cacheKey}, {nameof(languages)}:{languages.Length}");
+
+        // check if we have an explicitly set language resulting in an empty language list - then exit now
+        if (!languages.Any() && skipFallbackToDefault)
+            return l.Return(new(false, null), "no languages to look-up, exit");
 
         // Get the field or the path if it has one
         // Classic field case

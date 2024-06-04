@@ -97,12 +97,12 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasPropLookup
     #region Basic Get
 
     /// <inheritdoc />
-    public object Get(string name, NoParamOrder noParamOrder = default, bool? required = default) => _item.Get(name, noParamOrder, required);
+    public object Get(string name, NoParamOrder noParamOrder = default, bool? required = default, string language = default)
+        => _item.Get(name: name, noParamOrder: noParamOrder, required: required, language: language);
 
     /// <inheritdoc />
-    public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default,
-        bool? required = default) =>
-        _item.Get(name, noParamOrder, fallback, required);
+    public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default, bool? required = default, string language = default)
+        => _item.Get(name: name, noParamOrder: noParamOrder, fallback: fallback, required: required, language: language);
 
     #endregion
 
@@ -140,6 +140,7 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasPropLookup
     public string Url(string name, NoParamOrder noParamOrder = default, string fallback = default, bool? required = default) => _item.Url(name, noParamOrder, fallback, required);
 
     #endregion
+
 
     /// <inheritdoc />
     [JsonIgnore] // prevent serialization as it's not a normal property

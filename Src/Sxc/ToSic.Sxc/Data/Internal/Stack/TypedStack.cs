@@ -62,12 +62,13 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
     #region ITyped
 
     [PrivateApi]
-    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required)
-        => _itemHelper.Get(name, noParamOrder, required);
+    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string language)
+        => _itemHelper.Get(name: name, noParamOrder: noParamOrder, required: required, language: language);
 
     [PrivateApi]
-    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required)
-        => _itemHelper.G4T(name, noParamOrder, fallback: fallback, required: required);
+    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string language)
+        => _itemHelper.GetT(name, noParamOrder, fallback: fallback, required: required, language: language);
+
 
     [PrivateApi]
     IRawHtmlString ITyped.Attribute(string name, NoParamOrder noParamOrder, string fallback, bool? required)

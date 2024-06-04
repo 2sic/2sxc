@@ -120,12 +120,12 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     #region ITyped
 
     [PrivateApi]
-    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required)
-        => ItemHelper.Get(name, noParamOrder, required);
+    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string language)
+        => ItemHelper.Get(name, noParamOrder, required, language: language);
 
     [PrivateApi]
-    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required)
-        => ItemHelper.G4T(name, noParamOrder, fallback: fallback, required: required);
+    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string language)
+        => ItemHelper.GetT(name, noParamOrder, fallback: fallback, required: required, language: language);
 
     [PrivateApi]
     IRawHtmlString ITyped.Attribute(string name, NoParamOrder noParamOrder, string fallback, bool? required)

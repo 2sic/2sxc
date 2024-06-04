@@ -37,11 +37,11 @@ internal partial class Metadata: ITypedItem
 
     #region ITyped
 
-    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required)
-        => ItemHelper.Get(name, noParamOrder, required);
+    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string language)
+        => ItemHelper.Get(name: name, noParamOrder: noParamOrder, required: required, language: language);
 
-    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required)
-        => ItemHelper.G4T(name, noParamOrder, fallback: fallback, required: required);
+    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string language)
+        => ItemHelper.GetT(name, noParamOrder, fallback: fallback, required: required, language: language);
 
     IRawHtmlString ITyped.Attribute(string name, NoParamOrder noParamOrder, string fallback, bool? required)
         => ItemHelper.Attribute(name, noParamOrder, fallback, required);

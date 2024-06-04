@@ -47,15 +47,17 @@ public partial class Parameters(NameValueCollection initialNvc = null) : IParame
     /// </summary>
     internal HashSet<string> UsedKeys = [];
 
-    public string Get(string name) => TryGetAndLog(name, out var value) ? value : null;
+    public string Get(string name)
+        => TryGetAndLog(name, out var value) ? value : null;
 
-    public TValue Get<TValue>(string name) => GetV<TValue>(name, noParamOrder: default, fallback: default);
+    public TValue Get<TValue>(string name)
+        => GetV<TValue>(name, noParamOrder: default, fallback: default);
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
     public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default) 
         => GetV(name, noParamOrder, fallback);
 
-    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required) 
+    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string language) 
         => GetV(name, noParamOrder, fallback);
 
     private TValue GetV<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required = default, [CallerMemberName] string cName = default)
