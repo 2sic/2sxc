@@ -23,15 +23,15 @@ partial class ToolbarBuilder
         var l = Log.Fn<string[]>();
         // ReSharper disable once ConvertIfStatementToSwitchStatement
         if (target == null)
-            return l.Return(Array.Empty<string>(), "null");
+            return l.Return([], "null");
 
         if (target is IHasMetadata withMetadata)
             target = withMetadata.Metadata;
 
         if (target is not IMetadataOf mdOf)
-            return l.Return(Array.Empty<string>(), "not metadata");
+            return l.Return([], "not metadata");
 
-        var recommendations = mdOf?.Target?.Recommendations ?? Array.Empty<string>();
+        var recommendations = mdOf?.Target?.Recommendations ?? [];
 
         return l.Return(recommendations, "ok");
     }

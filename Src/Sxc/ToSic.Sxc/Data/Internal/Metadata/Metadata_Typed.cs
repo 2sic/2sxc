@@ -37,15 +37,12 @@ internal partial class Metadata: ITypedItem
 
     #region ITyped
 
-    [PrivateApi]
     object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required)
         => ItemHelper.Get(name, noParamOrder, required);
 
-    [PrivateApi]
     TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     IRawHtmlString ITyped.Attribute(string name, NoParamOrder noParamOrder, string fallback, bool? required)
         => ItemHelper.Attribute(name, noParamOrder, fallback, required);
 
@@ -53,43 +50,33 @@ internal partial class Metadata: ITypedItem
     dynamic ITypedItem.Dyn => this;
 
 
-    [PrivateApi]
     DateTime ITyped.DateTime(string name, NoParamOrder noParamOrder, DateTime fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     string ITyped.String(string name, NoParamOrder noParamOrder, string fallback, bool? required, object scrubHtml)
         => ItemHelper.String(name, noParamOrder, fallback, required, scrubHtml);
 
-    [PrivateApi]
     int ITyped.Int(string name, NoParamOrder noParamOrder, int fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     bool ITyped.Bool(string name, NoParamOrder noParamOrder, bool fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     long ITyped.Long(string name, NoParamOrder noParamOrder, long fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     float ITyped.Float(string name, NoParamOrder noParamOrder, float fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     decimal ITyped.Decimal(string name, NoParamOrder noParamOrder, decimal fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     double ITyped.Double(string name, NoParamOrder noParamOrder, double fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     string ITyped.Url(string name, NoParamOrder noParamOrder, string fallback, bool? required)
         => ItemHelper.Url(name, noParamOrder, fallback, required);
 
-    [PrivateApi]
     string ITyped.ToString() => "test / debug: " + ToString();
 
     #endregion
