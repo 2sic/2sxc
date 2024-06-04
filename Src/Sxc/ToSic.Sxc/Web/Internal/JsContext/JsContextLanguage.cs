@@ -17,8 +17,7 @@ public class JsContextLanguage(LazySvc<IZoneMapper> zoneMapperLazy)
         Current = site.CurrentCultureCode;
         Primary = site.DefaultCultureCode;
         All = zoneMapperLazy.Value
-            .CulturesWithState(site)
-            .Where(c => c.IsEnabled)
+            .CulturesEnabledWithState(site) // .Where(c => c.IsEnabled)
             .Select(c => new ClientInfoLanguage { key = c.Code.ToLowerInvariant(), name = c.Culture });
         return this;
     }

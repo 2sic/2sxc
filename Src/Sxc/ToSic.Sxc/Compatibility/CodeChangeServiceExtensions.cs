@@ -32,6 +32,6 @@ internal static class CodeChangeServiceExtensions
             $"App ({block.App?.AppId}) Name: {block.App?.Name}",
             $"View ({block.View?.Id}): {block.View?.Name}"
         ]
-        : Array.Empty<string>();
+        : [];
 
 }

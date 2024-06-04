@@ -23,7 +23,7 @@ partial class PageService
     /// <inheritdoc />
     public string Activate(params string[] keys)
     {
-        keys ??= Array.Empty<string>();
+        keys ??= [];
         var l = Log.Fn<string>($"{nameof(keys)}: '{string.Join(",", keys)}'");
 
         // 1. Try to add manual resources from WebResources

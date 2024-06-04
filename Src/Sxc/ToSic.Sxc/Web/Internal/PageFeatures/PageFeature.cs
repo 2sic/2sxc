@@ -40,7 +40,7 @@ public class PageFeature(
     /// <summary>
     /// List of other features required to run this feature.
     /// </summary>
-    public IEnumerable<string> Needs { get; } = needs ?? Array.Empty<string>();
+    public IEnumerable<string> Needs { get; } = needs ?? [];
 
     public Requirement Requirement { get; } = new(ConditionIsPageFeature, key);
 
