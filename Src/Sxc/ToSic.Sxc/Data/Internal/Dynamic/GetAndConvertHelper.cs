@@ -80,16 +80,19 @@ internal class GetAndConvertHelper(
             return l.Return(cached, "cached");
 
         // use the standard dimensions or overload
-        var (skipFallbackToDefault, languages) = GetFinalLanguagesList(language);
+        var languages = language == null
+            ? Cdf.Dimensions
+            : GetFinalLanguagesList(language, Cdf.SiteCultures, Cdf.Dimensions);
+
         l.A($"cache-key: {cacheKey}, {nameof(languages)}:{languages.Length}");
 
         // check if we have an explicitly set language resulting in an empty language list - then exit now
-        if (!languages.Any() && skipFallbackToDefault)
+        if (!languages.Any())
             return l.Return(new(false, null), "no languages to look-up, exit");
 
         // Get the field or the path if it has one
         // Classic field case
-        var specs = new PropReqSpecs(field, languages, logOrNull, skipAddingDefaultDimension: skipFallbackToDefault);
+        var specs = new PropReqSpecs(field, languages, true, logOrNull);
         var path = new PropertyLookupPath().Add("DynEntStart", field);
         var resultSet = Parent.PropertyLookup.FindPropertyInternal(specs, path);
 
@@ -112,27 +115,17 @@ internal class GetAndConvertHelper(
     }
 
     /// <summary>
-    /// Logic to reliably get the final languages list - but a pre-step before accessing internal properties which may never be used.
-    /// </summary>
-    /// <param name="language"></param>
-    /// <returns></returns>
-    private (bool skipLanguageFallbackToDefault, string[] languages) GetFinalLanguagesList(string language)
-        => language == null
-            ? (false, Cdf.Dimensions)
-            : GetFinalLanguagesList(language, Cdf.SiteCultures, Cdf.Dimensions);
-
-    /// <summary>
     /// Full logic, as static, testable method
     /// </summary>
     /// <param name="language"></param>
     /// <param name="possibleDims"></param>
     /// <param name="defaultDims"></param>
     /// <returns></returns>
-    internal static (bool skipLanguageFallbackToDefault, string[] languages) GetFinalLanguagesList(string language, List<string> possibleDims, string[] defaultDims)
+    internal static string[] GetFinalLanguagesList(string language, List<string> possibleDims, string[] defaultDims)
     {
         // if nothing specified, use default
         if (language == null)
-            return (false, defaultDims);
+            return defaultDims;
 
         var languages = language.ToLowerInvariant()
             .Split(',')
@@ -154,7 +147,7 @@ internal class GetAndConvertHelper(
             .Where(s => s != "not-found")
             .ToArray();
 
-        return (true, final);
+        return final;
     }
 
     private readonly Dictionary<string, TryGetResult> _rawValCache = new(InvariantCultureIgnoreCase);

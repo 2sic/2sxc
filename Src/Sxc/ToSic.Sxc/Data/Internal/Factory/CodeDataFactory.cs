@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Code.InfoSystem;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Integration;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
@@ -63,6 +64,10 @@ public partial class CodeDataFactory(
     });
     private readonly GetOnce<CodeDataServices> _services = new();
 
+    /// <summary>
+    /// List of dimensions for value lookup, incl. priorities etc. and null-trailing.
+    /// lower case safe guaranteed. 
+    /// </summary>
     // If we don't have a DynCodeRoot, try to generate the language codes and compatibility
     // There are cases where these were supplied using SetFallbacks, but in some cases none of this is known
     internal string[] Dimensions => _dimensions.Get(() => SiteFromContextOrFallback.SafeLanguagePriorityCodes()
@@ -70,6 +75,7 @@ public partial class CodeDataFactory(
         //?? _siteOrNull.SafeLanguagePriorityCodes()
     );
     private readonly GetOnce<string[]> _dimensions = new();
+
 
     internal IBlock BlockOrNull => ((ICodeApiServiceInternal)_CodeApiSvc)?._Block;
 
@@ -83,9 +89,12 @@ public partial class CodeDataFactory(
     /// WIP, we need this in the GetAndConvertHelper, and want to make sure it's not executed on every entity used,
     /// so for now we're doing this once only here.
     /// </summary>
+    /// <remarks>
+    /// IMPORTANT: LOWER-CASE guaranteed.
+    /// </remarks>
     public List<string> SiteCultures => _siteCultures ??= zoneMapper.Value
                                                               .CulturesEnabledWithState(SiteFromContextOrFallback)
-                                                              ?.Select(c => c.Code)
+                                                              ?.Select(c => c.Code.ToLowerInvariant())
                                                               .ToList()
                                                           ?? [];
     private List<string> _siteCultures;

@@ -73,8 +73,7 @@ internal partial class TypedStack: ITypedItem
     {
         // Try to find the object which has that field with a valid value etc.
         var logOrNull = _helper.LogOrNull.SubLogOrNull("Stk.Field", Debug);
-        var languages = Cdf.Dimensions;
-        var specs = new PropReqSpecs(name, languages, logOrNull);
+        var specs = new PropReqSpecs(name, Cdf.Dimensions, true, logOrNull);
         var path = new PropertyLookupPath().Add("DynEntStart", name);
 
         var findResult = _stackPropLookup.FindPropertyInternal(specs, path);
