@@ -45,10 +45,10 @@ namespace ToSic.Sxc.Tests.WebLightSpeed
         [TestMethod]
         public void ByUrlParameters(bool expected, string expValue, bool? isEnabled, bool? byUrlParameters, string urlParameters, string message = default)
         {
-            var lsDecorator = _testData.Decorator(isEnabled: isEnabled, byUrlParameters: byUrlParameters);
+            var lsDecorator = _testData.Decorator(isEnabled: isEnabled, byUrlParameters: byUrlParameters, othersDisableCache: false);
             var result = LightSpeedUrlParams.GetUrlParams(lsDecorator, new Parameters(Parse(urlParameters)), null);
-            AreEqual(expected, result.CachingAllowed, message);
-            AreEqual(expValue, result.Extension);
+            AreEqual(expected, result.CachingAllowed, message, "caching allowed");
+            AreEqual(expValue, result.Extension, "strings match");
         }
 
         [DataRow("", "", "")]

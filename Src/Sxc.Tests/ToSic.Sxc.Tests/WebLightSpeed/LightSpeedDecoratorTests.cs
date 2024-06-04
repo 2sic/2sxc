@@ -28,18 +28,15 @@ namespace ToSic.Sxc.Tests.WebLightSpeed
             var lsDecorator = _testData.Decorator();
             AreEqual(LightSpeedTestData.DefTitle, lsDecorator.Title);
             TestEmptyDecorator(lsDecorator);
-            // TODO: should also be true, as that's the default in the decorator
-            // but it appears the test setup isn't quite right
-            AreEqual(false, lsDecorator.UrlParametersOthersDisableCache);
         }
 
-        private void TestEmptyDecorator(LightSpeedDecorator lsDecorator)
+        private static void TestEmptyDecorator(LightSpeedDecorator lsDecorator)
         {
             AreEqual(false, lsDecorator.IsEnabled);
             AreEqual("", lsDecorator.UrlParameterNames);
             AreEqual(false, lsDecorator.ByUrlParameters);
             AreEqual(false, lsDecorator.UrlParametersCaseSensitive);
-            //AreEqual(true, lsDecorator.UrlParametersOthersDisableCache);
+            AreEqual(true, lsDecorator.UrlParametersOthersDisableCache);
         }
 
         [TestMethod]
