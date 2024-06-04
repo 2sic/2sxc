@@ -49,10 +49,10 @@ public class WrapObjectTyped(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeSer
         }
     );
 
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default)
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default /* ignore */)
         => HasKeysHelper.IsEmpty(this, name, noParamOrder, default);
 
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default)
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default /* ignore */)
         => HasKeysHelper.IsNotEmpty(this, name, noParamOrder, default);
 
 

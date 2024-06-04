@@ -14,11 +14,11 @@ partial class Parameters: ITyped
         => OriginalsAsDic.ContainsKey(name);
 
     [PrivateApi]
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default)
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
         => !OriginalsAsDic.TryGetValue(name, out var result) || HasKeysHelper.IsEmpty(result, default);
 
     [PrivateApi]
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default)
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
         => OriginalsAsDic.TryGetValue(name, out var result) && HasKeysHelper.IsNotEmpty(result, default);
 
     [PrivateApi]

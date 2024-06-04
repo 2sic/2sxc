@@ -42,21 +42,29 @@ public interface IHasKeys
     /// > It's behavior is super-useful but maybe not always expected.
     /// >
     /// > * If the value is a string, and is empty or only contains whitespace (even `&amp;nbsp;`) it is regarded as empty.
-    /// > * If the returned value is an empty _list_ (eg. a field containing relationships, without any items in it) it is regarded as empty.
+    /// > * If the returned value is an empty _list_ (e.g. a field containing relationships, without any items in it) it is regarded as empty.
     ///
     /// If you need a different kind of check, just `.Get(...)` the value and perform the checks in your code.
     /// </summary>
     /// <param name="name">the property name like `Image`; some objects also support path to sub-property like `Author.Name`</param>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    /// <returns>`true` if the property exists and has a real value. If it would return an empty list, it will also return `false`</returns>
-    /// <remarks>Adding in 16.03 (WIP)</remarks>
+    /// <param name="language">
+    /// Optional language like `de`, `de-ch` or `de,en` to determine which values to check.
+    /// Will ignore languages not in the data model.
+    /// On items that don't have ML data it will be ignored. new v17.10
+    /// </param>
+    /// <returns>`true` if the property exists and has a real value. If it returned an empty list, it will also return `false`</returns>
+    /// <remarks>
+    /// * Added in 16.03
+    /// * `language` parameter added in 17.10
+    /// </remarks>
     ///// >   You can change this behavior by changing the `blankIs` attribute.
     ///// <param name="blankIs">
     ///// Change how blank **strings** (empty, whitespace, html-whitespace like `&amp;nbsp;`) are treated.
     ///// `true` means that empty and whitespace strings return `true`,
     ///// `false` means every whitespace incl. empty strings return `false`.
     ///// </param>
-    bool IsEmpty(string name, NoParamOrder noParamOrder = default); //, bool? blankIs = default);
+    bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default);
 
     /// <summary>
     /// Check if this typed object has a property of this specified name, and has real data.
@@ -67,21 +75,29 @@ public interface IHasKeys
     /// > It's behavior is super-useful but maybe not always expected.
     /// >
     /// > * If the value is a string, and is empty or only contains whitespace (even `&amp;nbsp;`) it is regarded as empty.
-    /// > * If the returned value is an empty _list_ (eg. a field containing relationships, without any items in it) it is regarded as empty.
+    /// > * If the returned value is an empty _list_ (e.g. a field containing relationships, without any items in it) it is regarded as empty.
     ///
     /// If you need a different kind of check, just `.Get(...)` the value and perform the checks in your code.
     /// </summary>
     /// <param name="name">the property name like `Image`; some objects also support path to sub-property like `Author.Name`</param>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    /// <returns>`true` if the property exists and has a real value. If it would return an empty list, it will also return `false`</returns>
-    /// <remarks>Adding in 16.03 (WIP)</remarks>
+    /// <returns>`true` if the property exists and has a real value. If it returned an empty list, it will also return `false`</returns>
+    /// <param name="language">
+    /// Optional language like `de`, `de-ch` or `de,en` to determine which values to check.
+    /// Will ignore languages not in the data model.
+    /// On items that don't have ML data it will be ignored. new v17.10
+    /// </param>
+    /// <remarks>
+    /// * Added in 16.03
+    /// * `language` parameter added in 17.10
+    /// </remarks>
     ///// >   You can change this behavior by changing the `blankIs` attribute.
     ///// <param name="blankIs">
     ///// Change how blank **strings** (empty, whitespace, html-whitespace like `&amp;nbsp;`) are treated.
     ///// `true` means that empty and whitespace strings return `true`,
     ///// `false` means every whitespace incl. empty strings return `false`.
     ///// </param>
-    bool IsNotEmpty(string name, NoParamOrder noParamOrder = default);//, bool? blankIs = default);
+    bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default);
 
     #endregion
 }

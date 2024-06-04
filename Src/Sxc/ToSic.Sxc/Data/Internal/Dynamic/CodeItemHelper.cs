@@ -15,15 +15,15 @@ internal class CodeItemHelper(GetAndConvertHelper helper, ITyped data)
     public readonly GetAndConvertHelper Helper = helper;
 
     #region Keys
-    public bool IsEmpty(string name, NoParamOrder noParamOrder, bool? isBlank)
+    public bool IsEmpty(string name, NoParamOrder noParamOrder, bool? isBlank, string language)
     {
-        var result = Get(name, noParamOrder, required: false);
+        var result = Get(name, noParamOrder, required: false, language: language);
         return HasKeysHelper.IsEmpty(result, isBlank);
     }
 
-    public bool IsFilled(string name, NoParamOrder noParamOrder, bool? isBlank)
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder, bool? isBlank, string language)
     {
-        var result = Get(name, noParamOrder, required: false);
+        var result = Get(name, noParamOrder, required: false, language: language);
         return HasKeysHelper.IsNotEmpty(result, isBlank);
     }
 

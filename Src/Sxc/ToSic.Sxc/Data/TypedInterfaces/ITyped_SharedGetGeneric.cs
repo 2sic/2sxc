@@ -8,11 +8,11 @@ public partial interface ITyped : IHasKeys, ICanGetByName
     new bool ContainsKey(string name);
 
     /// <inheritdoc cref="IHasKeys.IsEmpty"/>
-    new bool IsEmpty(string name, NoParamOrder noParamOrder = default);
+    new bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default);
     // ^^^ new is just so it's in the docs
 
     /// <inheritdoc cref="IHasKeys.IsNotEmpty"/>
-    new bool IsNotEmpty(string name, NoParamOrder noParamOrder = default);
+    new bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default);
     // ^^^ new is just so it's in the docs
 
     /// <inheritdoc cref="IHasKeys.Keys"/>
@@ -26,7 +26,8 @@ public partial interface ITyped : IHasKeys, ICanGetByName
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <param name="language">
-    /// optional language like `de` or `de,en` to determine which values to check.
+    /// Optional language like `de`, `de-ch` or `de,en` to determine which values to check.
+    /// Will ignore languages not in the data model.
     /// On items that don't have ML data it will be ignored. new v17.10
     /// </param>
     /// <returns>The result if found or null; or error if the object is in strict mode</returns>
@@ -55,7 +56,8 @@ public partial interface ITyped : IHasKeys, ICanGetByName
     /// <param name="fallback">the fallback value to provide if not found</param>
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <param name="language">
-    /// optional language like `de` or `de,en` to determine which values to check.
+    /// Optional language like `de`, `de-ch` or `de,en` to determine which values to check.
+    /// Will ignore languages not in the data model.
     /// On items that don't have ML data it will be ignored. new v17.10
     /// </param>
     /// <returns>The typed value, or the `default` like `null` or `0` if casting isn't possible.</returns>

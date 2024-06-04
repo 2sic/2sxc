@@ -86,10 +86,12 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasPropLookup
     public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default) => _item.Keys(noParamOrder, only);
 
     /// <inheritdoc />
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default) => _item.IsEmpty(name, noParamOrder);
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+        => _item.IsEmpty(name, noParamOrder, language: language);
 
     /// <inheritdoc />
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default) => _item.IsNotEmpty(name, noParamOrder);
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+        => _item.IsNotEmpty(name, noParamOrder, language: language);
 
     #endregion
 

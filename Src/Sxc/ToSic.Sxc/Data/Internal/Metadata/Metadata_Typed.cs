@@ -23,11 +23,11 @@ internal partial class Metadata: ITypedItem
             (e, k) => e.Children(k)?.FirstOrDefault()
         );
 
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default)
-        => ItemHelper.IsEmpty(name, noParamOrder, default);
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+        => ItemHelper.IsEmpty(name, noParamOrder, isBlank: default, language: language);
 
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default)
-        => ItemHelper.IsFilled(name, noParamOrder, default);
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+        => ItemHelper.IsNotEmpty(name, noParamOrder, isBlank: default, language: language);
 
     [PrivateApi]
     public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default)

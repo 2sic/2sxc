@@ -44,11 +44,11 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
     public bool ContainsKey(string name)
         => throw new NotImplementedException($"Not yet implemented on {nameof(ITypedStack)}");
 
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default)
-        => _itemHelper.IsEmpty(name, noParamOrder, default);
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+        => _itemHelper.IsEmpty(name, noParamOrder, isBlank: default, language: language);
 
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default)
-        => _itemHelper.IsFilled(name, noParamOrder, default);
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+        => _itemHelper.IsNotEmpty(name, noParamOrder, isBlank: default, language: language);
 
     // TODO: Keys()
     public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default)
