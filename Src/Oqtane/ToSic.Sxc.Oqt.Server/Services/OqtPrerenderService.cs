@@ -9,6 +9,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
+using HtmlHelper = ToSic.Sxc.Oqt.Shared.Helpers.HtmlHelper;
 
 namespace ToSic.Sxc.Oqt.Server.Services;
 
@@ -22,8 +23,9 @@ internal class OqtPrerenderService(IHttpContextAccessor httpContextAccessor, ITh
             if (!isPrerendered || !UsePrerender) return string.Empty;
 
             var prerenderHtmlFragment = string.Empty;
-            prerenderHtmlFragment = ManageStyleSheets(prerenderHtmlFragment, viewResults, siteState.Alias, themeType);
-            prerenderHtmlFragment = ManageScripts(prerenderHtmlFragment, viewResults, siteState.Alias);
+            prerenderHtmlFragment = HtmlHelper.ManageStyleSheets(prerenderHtmlFragment, viewResults, siteState.Alias, Theme(themeType).Name, Html);
+            prerenderHtmlFragment = HtmlHelper.ManageScripts(prerenderHtmlFragment, viewResults, siteState.Alias, Html);
+            prerenderHtmlFragment = HtmlHelper.ManageInlineScripts(prerenderHtmlFragment, viewResults, siteState.Alias, Html);
             prerenderHtmlFragment = SystemHtml(prerenderHtmlFragment);
             Html += prerenderHtmlFragment;
             return prerenderHtmlFragment;
@@ -573,77 +575,9 @@ internal class OqtPrerenderService(IHttpContextAccessor httpContextAccessor, ITh
     }; 
     #endregion
 
-    #region StyleSheets
-    private string ManageStyleSheets(string html, OqtViewResultsDto viewResults, Alias alias, string themeType)
-    {
-        if (viewResults == null) return html;
-
-        var external = viewResults.TemplateResources
-            .Where(r => r.IsExternal && r.ResourceType == ResourceType.Stylesheet)
-            .Select(r => r.Url)
-            .ToList();
-
-        var count = 0;
-        foreach (var styleSheet in viewResults.SxcStyles.Union(external))
-        {
-            var url = styleSheet;
-
-            if (url.StartsWith("~"))
-                url = url.Replace("~", "/Themes/" + Theme(themeType).Name + "/").Replace("//", "/");
-
-            if (!url.Contains("://") && alias.BaseUrl != "" && !url.StartsWith(alias.BaseUrl))
-                url = alias.BaseUrl + url;
-
-            if (!html.Contains(url, StringComparison.OrdinalIgnoreCase) && !Html.Contains(url, StringComparison.OrdinalIgnoreCase))
-            {
-                count++;
-                var id = "id=\"app-stylesheet-" + ResourceLevel.Page.ToString().ToLower() + "-" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + "-" + count.ToString("00") + "\" ";
-                html += "<link " + id + "rel=\"stylesheet\" href=\"" + url + "\" type=\"text/css\"/>" + Environment.NewLine;
-            }
-        }
-
-        return html;
-    }
-
+    #region Theme
     private Theme Theme(string themeType) => _theme ??= themes.GetThemes().FirstOrDefault(item => item.Themes.Any(item => item.TypeName == themeType));
     private Theme _theme;
-    #endregion
-
-    #region Scripts
-    private string ManageScripts(string html, OqtViewResultsDto viewResults, Alias alias)
-    {
-        if (viewResults == null) return html;
-        if (string.IsNullOrEmpty(html)) html = string.Empty;
-
-        var externalScripts = viewResults.TemplateResources
-            .Where(r => r.IsExternal && r.ResourceType == ResourceType.Script)
-            .Select(r => r.Url)
-            .ToList();
-
-        foreach (var external in viewResults.SxcScripts.Union(externalScripts))
-            html = AddExternalScript(html, external, alias);
-
-        foreach (var inline in viewResults.TemplateResources.Where(r => !r.IsExternal))
-            html = AddInlineScript(html, inline.Content);
-
-        return html;
-    }
-
-    private string AddExternalScript(string html, string src, Alias alias)
-    {
-        if (string.IsNullOrEmpty(src)) return html;
-        var script = "<script src=\"" + ((src.Contains("://")) ? src : alias.BaseUrl + src) + "\"" + "></script>";
-        if (!html.Contains(script, StringComparison.OrdinalIgnoreCase) && !Html.Contains(script, StringComparison.OrdinalIgnoreCase)) html += script + Environment.NewLine;
-        return html;
-    }
-
-    private string AddInlineScript(string html, string content)
-    {
-        if (string.IsNullOrEmpty(content)) return html;
-        var script = $"<script>{content}</script>";
-        if (!html.Contains(script, StringComparison.OrdinalIgnoreCase) && !Html.Contains(script, StringComparison.OrdinalIgnoreCase)) html += script + Environment.NewLine;
-        return html;
-    }
 
     #endregion
 

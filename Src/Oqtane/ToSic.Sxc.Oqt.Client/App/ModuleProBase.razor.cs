@@ -93,7 +93,7 @@ public class ModuleProBase: ModuleBase, IOqtHybridLog
     public void Log(params object[] message)
     {
         // If the url has a debug=true and we are the super-user
-        if (message == null || !message.Any() || !OqtDebugStateService.IsDebugEnabled || !IsSuperUser) return;
+        if (message == null || !message.Any() || !(OqtDebugStateService?.IsDebugEnabled ?? false /* HACK @stv fix it*/) || !IsSuperUser) return;
 
         _logPrefix ??= $"2sxc:Page({PageState?.Page?.PageId}):Mod({ModuleState?.ModuleId}):";
         try

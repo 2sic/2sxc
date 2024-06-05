@@ -26,13 +26,13 @@ public class CompilationReferencesProvider(Assembly assembly) : AssemblyPart(ass
         if (loadContext == null) return Enumerable.Empty<string>();
 
         var nonDynamicAssemblies = loadContext.Assemblies
-            .Where(_ => !_.IsDynamic)
+            .Where(a => !a.IsDynamic)
             .ToList();
 
         // 2. use new code with location. has some duplicates and many "" empty strings
         // which seem to be merged dynamic libraries - usually the CodeBase called them "System.Private.CoreLib.dll"
         // But that one is already included
-        var newer = nonDynamicAssemblies.Select(_ => _.Location).ToList();
+        var newer = nonDynamicAssemblies.Select(a => a.Location).ToList();
         var newerDistinct = newer.Distinct().Where(path => !string.IsNullOrEmpty(path)).ToList();
 
         // Temporary tests to figure out why we had missmatches

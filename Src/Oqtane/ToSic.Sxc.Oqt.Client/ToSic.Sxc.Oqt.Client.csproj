@@ -50,7 +50,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj" />
     <ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Client\Oqtane.Client.csproj" />
-    <ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Server\Oqtane.Server.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Shared\ToSic.Sxc.Oqt.Shared.csproj" />
   </ItemGroup>
 

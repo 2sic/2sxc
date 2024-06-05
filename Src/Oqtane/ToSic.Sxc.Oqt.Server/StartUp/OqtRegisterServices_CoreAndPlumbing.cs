@@ -78,7 +78,10 @@ partial class OqtRegisterServices
         // following registrations in the server project will override the previous one in client project
         services.AddScoped<IOqtDebugStateService, OqtDebugStateService>();
         services.AddScoped<IOqtPageChangesOnServerService, OqtPageChangesOnServerService>();
-        services.AddScoped<IOqtPrerenderService, OqtPrerenderService>(); 
+        services.AddScoped<IOqtPrerenderService, OqtPrerenderService>();
+        services.AddScoped<IOqtSxcRenderService, OqtSxcRenderService>();
+        services.AddScoped<IRenderInfoService, RenderInfoService>();
+        services.AddScoped<IOqtTurnOnService, OqtTurnOnService>();
 
         return services;
     }
