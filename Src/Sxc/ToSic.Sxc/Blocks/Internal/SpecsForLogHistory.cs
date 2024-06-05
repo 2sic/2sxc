@@ -57,7 +57,7 @@ public class SpecsForLogHistory
                         var urlToShow = Text.After(Text.After(pageUrl, "//"), "/")
                                             .NullOrGetWith(v => "/" + v)
                                         ?? pageUrl;
-                        bestTitle = urlToShow + $";Pge:{page.Id}";
+                        bestTitle = urlToShow;
                     }
 
                     var module = ctx.Module;
@@ -65,7 +65,6 @@ public class SpecsForLogHistory
                     {
                         var mid = module.Id.ToString();
                         specs.Add("ModuleId", mid);
-                        bestTitle += $";Mod:{mid}";
                     }
 
                     var usr = ctx.User;
@@ -73,7 +72,6 @@ public class SpecsForLogHistory
                     {
                         var uid = usr.Id.ToString();
                         specs.Add("UserId", uid);
-                        bestTitle += $";Usr:{uid}";
                     }
                 }
 
@@ -85,7 +83,6 @@ public class SpecsForLogHistory
                 specs.Add(nameof(app.AppId), appId);
                 specs.Add("AppPath", app.Path);
                 specs.Add("AppName", app.Name);
-                bestTitle += $";App:{appId}/{app.Name}";
             }
 
             if (bestTitle != null)
