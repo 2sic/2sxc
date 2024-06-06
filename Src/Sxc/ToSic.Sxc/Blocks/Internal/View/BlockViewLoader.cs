@@ -12,8 +12,7 @@ internal class BlockViewLoader(ILog parentLog) : HelperBase(parentLog, "Blk.View
 {
     internal IView PickView(IBlock block, IView configView, IContextOfBlock context, WorkViews views)
     {
-        //View = configView;
-        // skip on ContentApp (not a feature there) or if not relevant or not yet initialized
+        // #1 skip on ContentApp (not a feature there) or if not relevant or not yet initialized
         if (block.IsContentApp || block.App == null) return configView;
 
         // #2 Change Template if URL contains the part in the metadata "ViewNameInUrl"
@@ -25,33 +24,40 @@ internal class BlockViewLoader(ILog parentLog) : HelperBase(parentLog, "Blk.View
     private IView TryGetViewBasedOnUrlParams(IContextOfBlock context, WorkViews views)
     {
         var l = Log.Fn<IView>("template override - check");
-        if (context.Page.Parameters == null) return l.ReturnNull("no params");
 
-        var urlParameterString = string.Join(", ", context.Page.Parameters.Select(pair => $"'{pair.Key}'='{pair.Value}'"));
-        l.A($"url params: {context.Page.Parameters.Count} - {urlParameterString}");
-
-        var urlParameterDict = context.Page.Parameters.ToDictionary(pair => pair.Key?.ToLowerInvariant() ?? "", pair =>
-            $"{pair.Key}/{pair.Value}".ToLowerInvariant());
+        // Get the parameters from the page, and exit early if there are none
+        var parameters = context.Page.Parameters;
+        if (parameters == null || parameters.Count == 0)
+            return l.ReturnNull("no params");
 
         // Get all views which can switch, and exit early if there are none
         var templatesWithUrlIdentifier = views.GetForViewSwitch();
         if (templatesWithUrlIdentifier.Count == 0)
             return l.ReturnNull("no templates with view-switch");
 
+        // Log url parameters and convert to dictionary for use below
+        var urlParameterString = string.Join(", ", parameters.Select(pair => $"'{pair.Key}'='{pair.Value}'"));
+        l.A($"url params: {parameters.Count} - {urlParameterString}");
+
+        var urlParameterDict = parameters
+            .ToDictionary(
+                pair => pair.Key?.ToLowerInvariant() ?? "",
+                pair => $"{pair.Key}/{pair.Value}".ToLowerInvariant()
+            );
+
         // check all views if they apply here
-        foreach (var set in templatesWithUrlIdentifier)
+        foreach (var (finalView, name, urlIdentifier, isRegex, mainKey) in templatesWithUrlIdentifier)
         {
-            l.A($"checking: '{set.UrlIdentifier}'; IsRegex: {set.IsRegex}; MainKey: '{set.MainKey}'");
-            var foundMatch = set.IsRegex
-                ? urlParameterDict.ContainsKey(set.MainKey)         // match details/.*
-                : urlParameterDict.ContainsValue(set.MainKey);      // match view/details
+            l.A($"checking: '{urlIdentifier}'; IsRegex: {isRegex}; MainKey: '{mainKey}'");
+            var foundMatch = isRegex
+                ? urlParameterDict.ContainsKey(mainKey)         // match details/.*
+                : urlParameterDict.ContainsValue(mainKey);      // match view/details
 
             if (!foundMatch) continue;
 
             //var originalWithoutServices = set.View;
             //var finalView = views.Recreate(originalWithoutServices);
-            var finalView = set.View;
-            return l.Return(finalView, "template override: " + set.Name);
+            return l.Return(finalView, "template override: " + name);
         }
 
         return l.ReturnNull("template override: none");
