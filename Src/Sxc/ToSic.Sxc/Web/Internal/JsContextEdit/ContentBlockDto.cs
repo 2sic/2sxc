@@ -61,6 +61,14 @@ public class ContentBlockDto : EntityDto
     public string ViewName { get; }
 
     /// <summary>
+    /// Will be true if the view was replaced based on URL parameters.
+    /// This is to prevent the user from accidentally saving the temporarily set view.
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [JsonPropertyName("viewSwitchDisabled")]
+    public bool? ViewSwitchDisabled { get; }
+
+    /// <summary>
     /// The app name to show on the layout button, new v17
     /// </summary>
     [JsonPropertyName("appName")]
@@ -82,11 +90,14 @@ public class ContentBlockDto : EntityDto
     {
         IsCreated = block.ContentGroupExists;
         IsContent = block.IsContentApp;
-        var app = block.App;
 
-        Id = block.Configuration?.Id ?? 0;
-        Guid = block.Configuration?.Guid ?? Guid.Empty;
+        var configuration = block.Configuration;
+        Id = configuration?.Id ?? 0;
+        Guid = configuration?.Guid ?? Guid.Empty;
         AppId = block.AppId;
+
+        // App properties
+        var app = block.App;
         AppName = app?.Name ?? "";
         AppUrl = app?.Path ?? "" + "/";
         AppSharedUrl = app?.PathShared ?? "" + "/";
@@ -95,15 +106,21 @@ public class ContentBlockDto : EntityDto
         AppResourcesId = app?.Resources?.Entity?.Attributes?.Count > 0
             ? app?.Resources?.EntityId : null;  // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)
 
-        HasContent = block.View != null && (block.Configuration?.Exists ?? false);
+        // View properties
+        var view = block.View;
+        HasContent = view != null && (configuration?.Exists ?? false);
 
         ZoneId = block.ZoneId;
-        TemplateId = block.View?.Id ?? 0;
-        Edition = block.View?.Edition;
-        ViewName = block.View?.Name;
-        TemplatePath = block.View?.EditionPath.PrefixSlash();
-        TemplateIsShared = block.View?.IsShared ?? false;
-        var query = block.View?.Query;
+        TemplateId = view?.Id ?? 0;
+        Edition = view?.Edition;
+        ViewName = view?.Name;
+        ViewSwitchDisabled = view?.IsReplaced;
+        TemplatePath = view?.EditionPath.PrefixSlash();
+        TemplateIsShared = view?.IsShared ?? false;
+        ContentTypeName = view?.ContentType ?? "";
+
+        // Query properties
+        var query = view?.Query;
         QueryId = query?.Id; // will be null if not defined
         QueryName = query?.Entity?.GetBestTitle();
 
@@ -133,8 +150,7 @@ public class ContentBlockDto : EntityDto
             /* ignore */
         }
 
-        ContentTypeName = block.View?.ContentType ?? "";
-        IsList = block.Configuration?.View?.UseForList ?? false;
+        IsList = configuration?.View?.UseForList ?? false;
         SupportsAjax = block.IsContentApp || (block.App?.Configuration?.EnableAjax ?? false);
 
         RenderMs = statistics?.RenderMs ?? -1;

@@ -46,7 +46,12 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
         
         
     #region View stuff
-        
+    
+    /// <summary>
+    /// The view as it is in the configuration.
+    /// This can be different from the view which is actually used,
+    /// as it could be replaced by a different view because of url-parameter.
+    /// </summary>
     public IView View
     {
         get
@@ -83,20 +88,15 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
 
     public List<IEntity> HeaderPresentation => Entity?.Children(ViewParts.ListPresentation) ?? [];
 
-    public List<IEntity> this[string type]
-    {
-        get
+    public List<IEntity> this[string type] =>
+        type.ToLowerInvariant() switch
         {
-            switch (type.ToLowerInvariant())
-            {
-                case ViewParts.ContentLower: return Content;
-                case ViewParts.PresentationLower: return Presentation;
-                case ViewParts.ListContentLower: return Header;
-                case ViewParts.ListPresentationLower: return HeaderPresentation;
-                default: throw new("Type " + type + " not allowed");
-            }
-        }
-    }
+            ViewParts.ContentLower => Content,
+            ViewParts.PresentationLower => Presentation,
+            ViewParts.ListContentLower => Header,
+            ViewParts.ListPresentationLower => HeaderPresentation,
+            _ => throw new("Type " + type + " not allowed")
+        };
 
     #endregion
 }
