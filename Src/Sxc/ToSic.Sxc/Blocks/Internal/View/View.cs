@@ -85,7 +85,7 @@ public class View(
 
     private readonly GetOnce<(IEntity Entity, QueryDefinition Definition)> _queryInfo = new();
 
-    public string UrlIdentifier => Entity.Value<string>(FieldNameInUrl);
+    public string UrlIdentifier => Get(FieldNameInUrl, ""); // Entity.Value<string>(FieldNameInUrl);
 
     /// <summary>
     /// Returns true if the current template uses Razor

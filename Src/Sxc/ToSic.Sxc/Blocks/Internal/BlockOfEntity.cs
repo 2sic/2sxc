@@ -64,12 +64,12 @@ public sealed class BlockFromEntity(BlockBase.MyServices services, LazySvc<AppFi
     /// <returns></returns>
     private IBlockIdentifier LoadBlockDefinition(int zoneId, IEntity blockDefinition, ILog log)
     {
-        var appNameId = blockDefinition.Value<string>(CbPropertyApp) ?? "";
+        var appNameId = blockDefinition.Get(CbPropertyApp, fallback: "");
         IsContentApp = appNameId == Eav.Constants.DefaultAppGuid;
-        var temp = blockDefinition.Value<string>(CbPropertyContentGroup) ?? "";
+        var temp = blockDefinition.Get(CbPropertyContentGroup, fallback: "");
         Guid.TryParse(temp, out var contentGroupGuid);
 
-        temp = blockDefinition.Value<string>(ViewParts.TemplateContentType) ?? "";
+        temp = blockDefinition.Get(ViewParts.TemplateContentType, fallback: "");
         Guid.TryParse(temp, out var previewTemplateGuid);
 
         var appId = appFinderLazy.Value.FindAppId(zoneId, appNameId);
