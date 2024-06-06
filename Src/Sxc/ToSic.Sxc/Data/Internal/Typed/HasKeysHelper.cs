@@ -25,25 +25,18 @@ public class HasKeysHelper
         return !IsNotEmpty(value, blankIsEmpty);
     }
 
-    public static bool IsNotEmpty(object value, bool? blankIsEmpty)
-    {
-        switch (value)
+    public static bool IsNotEmpty(object value, bool? blankIsEmpty) =>
+        value switch
         {
-            case null:
-                return false;
+            null => false,
             // It's a non-null string, let's check other things
             // null or true means blank strings (inkl. whitespace etc.) are seen as empty
             // So Text.Has returns true if it has non-blank content
-            case string strVal when blankIsEmpty == true:
-                return Text.Has(strVal);
+            // old: if (blankIs is null || blankIs == false) return Text.Has(strVal);
+            string strVal when blankIsEmpty != true => Text.Has(strVal),
             // blankIs == true, so even blank strings return true
-            case string:
-                return true;
-            case IEnumerable typedList:
-                return typedList.Cast<object>().Any();
-            default:
-                return true;
-        }
-    }
-
+            string => true,
+            IEnumerable typedList => typedList.Cast<object>().Any(),
+            _ => true
+        };
 }
