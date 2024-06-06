@@ -77,7 +77,7 @@ internal partial class TypedStack: ITypedItem
         var path = new PropertyLookupPath().Add("DynEntStart", name);
 
         var findResult = _stackPropLookup.FindPropertyInternal(specs, path);
-        if (findResult == null || findResult.FieldType == Attributes.FieldIsNotFound)
+        if (findResult == null || findResult.ValueType == ValueTypesWithState.NotFound)
             return null;
 
         var sourceItem = findResult.Source as ITypedItem

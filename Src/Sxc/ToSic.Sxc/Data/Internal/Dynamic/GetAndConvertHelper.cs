@@ -100,13 +100,13 @@ internal class GetAndConvertHelper(
         if (resultSet == null)
             return l.Return(new(false, null), "result null");
 
-        l.A($"Result... IsFinal: {resultSet.IsFinal}, Source Name: {resultSet.Name}, SourceIndex: {resultSet.SourceIndex}, FieldType: {resultSet.FieldType}");
+        l.A($"Result... IsFinal: {resultSet.IsFinal}, Source Name: {resultSet.Name}, SourceIndex: {resultSet.SourceIndex}, FieldType: {resultSet.ValueType}");
 
         var result = ValueAutoConverted(resultSet, lookupLink, field, logOrNull);
 
         // cache result, but only if using default languages
         l.A("add to cache");
-        var found = resultSet.FieldType != Attributes.FieldIsNotFound;
+        var found = resultSet.ValueType != ValueTypesWithState.NotFound;
         var final = new TryGetResult(found, result);
         if (found)
             _rawValCache.Add(cacheKey, final);
@@ -159,7 +159,7 @@ internal class GetAndConvertHelper(
         var parent = original.Source as IEntity;
         // New mechanism to not use resolve-hyperlink
         if (lookupLink && value is string strResult
-                       && original.FieldType == DataTypes.Hyperlink
+                       && original.ValueType == ValueTypesWithState.Hyperlink
                        && ValueConverterBase.CouldBeReference(strResult))
         {
             l.A($"Try to convert value - HasValueConverter: {Cdf.Services.ValueConverterOrNull != null}");
