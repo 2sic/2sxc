@@ -53,8 +53,8 @@ public interface ITweakButton
     /// </summary>
     /// <param name="color">The main color parameter. Can contain two values, comma separated.</param>
     /// <param name="noParamOrder"></param>
-    /// <param name="background">Background color - will only take affect if the `color` was not set.</param>
-    /// <param name="foreground">Foreground color - will only take affect if the `color` was not set.</param>
+    /// <param name="background">Background color - will only take effect if the `color` was not set.</param>
+    /// <param name="foreground">Foreground color - will only take effect if the `color` was not set.</param>
     /// <returns></returns>
     ITweakButton Color(
         string color = default,
@@ -192,4 +192,8 @@ public interface ITweakButton
     ITweakButton Filter(string name, object value);
 
     #endregion
+
+    [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    ITweakButton Condition(bool value);
 }

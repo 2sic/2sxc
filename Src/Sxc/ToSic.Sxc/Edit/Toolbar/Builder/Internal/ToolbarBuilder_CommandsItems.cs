@@ -10,10 +10,11 @@ partial class ToolbarBuilder
 {
     private class CleanedParams
     {
-        public char Operation;
-        public string Ui;
-        public string Parameters;
+        public char Operation { get; init; }
+        public string Ui { get; init; }
+        public string Parameters { get; init; }
     }
+
     private class CleanedParamsWithParts: CleanedParams
     {
         public Dictionary<string, CleanedParams> Parts;
@@ -38,12 +39,13 @@ partial class ToolbarBuilder
             ui: ui, parameters: parameters, prefill: prefill, filter: filter, methodName: methodName);
 
         var paramsString = Utils.PrepareParams(parameters, tweaks);
-        var parsWithPrefill = Utils.Prefill2Url.SerializeWithChild(paramsString, prefill, PrefixPrefill);
+        var parsWithPrefill = Utils.Prefill2Url.SerializeWithChild(paramsString, prefill, ToolbarConstants.RuleParamPrefixPrefill);
         if (fields != default)
             parsWithPrefill = Utils.Filter2Url.SerializeWithChild(parsWithPrefill, new { fields });
 
-        var namedParts = tweaks is ITweakButtonInternal tweakInternal && tweakInternal.Named.Any()
-            ? tweakInternal.Named
+        var tweaksInt = tweaks as ITweakButtonInternal;
+        var namedParts = tweaksInt?.Named.Any() == true
+            ? tweaksInt.Named
                 .ToDictionary(
                     kvp => kvp.Key,
                     kvp => PreCleanParams(tweak: kvp.Value, defOp: OprNone) as CleanedParams
@@ -52,9 +54,9 @@ partial class ToolbarBuilder
 
         return new()
         {
-            Operation = ToolbarRuleOperation.Pick(operation, defOp),
-            Ui = PrepareUi(ui, uiMerge, uiMergePrefix, tweaks: (tweaks as ITweakButtonInternal)?.UiMerge),
-            Parameters = Utils.Filter2Url.SerializeWithChild(parsWithPrefill, filter, PrefixFilters),
+            Operation = ToolbarRuleOperation.Pick(operation, defOp, tweaksInt?._condition),
+            Ui = PrepareUi(ui, uiMerge, uiMergePrefix, tweaks: tweaksInt?.UiMerge),
+            Parameters = Utils.Filter2Url.SerializeWithChild(parsWithPrefill, filter, ToolbarConstants.RuleParamPrefixFilter),
             Parts = namedParts
         };
 

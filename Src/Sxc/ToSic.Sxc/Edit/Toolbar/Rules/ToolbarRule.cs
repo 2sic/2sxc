@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal.Url;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
@@ -31,22 +30,32 @@ internal abstract class ToolbarRule: ToolbarRuleBase
             Operation = targetCouldBeOperation;
     }
 
-    public char? Operation { get; protected set; }
+    public char? Operation { get; protected init; }
 
-    public string Command { get; protected set; }
+    public string Command { get; protected init; }
 
-    public string CommandValue { get; protected set; }
+    public string CommandValue { get; protected init; }
 
     public string Parameters { get; }
 
     public string Ui { get; }
 
-    public virtual string GeneratedCommandParams() => UrlParts.ConnectParameters(Context.ToRuleString());
+    public virtual string GeneratedCommandParams()
+        => UrlParts.ConnectParameters(Context.ToRuleString());
 
     public virtual string GeneratedUiParams() => "";
 
     public override string ToString()
     {
+        switch (Operation)
+        {
+            case ToolbarRuleOperation.SkipInclude:
+                return "";
+            // If Operation is remove, don't add all the additional stuff. Enhanced in 17.10
+            case ToolbarRuleOperation.RemoveOperation:
+                return Operation + Command;
+        }
+
         var result = Operation + Command + (CommandValue.HasValue() ? "=" + CommandValue : "");
 
         var genUi = GeneratedUiParams();
@@ -58,7 +67,8 @@ internal abstract class ToolbarRule: ToolbarRuleBase
         var hasCmdParams = Parameters.HasValue();
 
         // Stop if nothing to add
-        if (!hasGeneratedCmdParams && !hasCmdParams) return result;
+        if (!hasGeneratedCmdParams && !hasCmdParams)
+            return result;
             
         result += "?" + UrlParts.ConnectParameters(genCmdParams, Parameters);
         return result;

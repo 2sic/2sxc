@@ -138,6 +138,11 @@
     <Compile Include="DataTests\HasKeysTests.cs" />
     <Compile Include="DataTests\TypedItemTestAccessors.cs" />
     <Compile Include="DataTests\GetAndConvertHelperTests.cs" />
+    <Compile Include="EditTests\ItemToolbarPickerTests\ItemToolbarPikerWithRulesTests.cs" />
+    <Compile Include="EditTests\ToolbarRuleTests\ToolbarRuleForTest.cs" />
+    <Compile Include="EditTests\ToolbarRuleTests\ToolbarRuleBasicTests.cs" />
+    <Compile Include="EditTests\ToolbarRuleTests\ToolbarRuleToolbarTests.cs" />
+    <Compile Include="EditTests\ToolbarRuleTests\ToolbarRuleOpPickTests.cs" />
     <Compile Include="LinksAndImages\ParametersTestExtensions.cs" />
     <Compile Include="ServicesTests\CacheTests\CacheSpecsTests.cs" />
     <Compile Include="ServicesTests\CacheTests\CacheKeyTests.cs" />
@@ -183,6 +188,12 @@
     <Compile Include="ServicesTests\Templates\TemplatesEmptySourcesTests.cs" />
     <Compile Include="ServicesTests\Templates\TemplatesTestsBase.cs" />
     <Compile Include="ServicesTests\Templates\TemplatesEmptyTests.cs" />
+    <Compile Include="ServicesTests\ToolbarService\TweakButtonParameters.cs" />
+    <Compile Include="ServicesTests\ToolbarService\TweakButtonOther.cs" />
+    <Compile Include="ServicesTests\ToolbarService\TweakButtonTestAccessors.cs" />
+    <Compile Include="ServicesTests\ToolbarService\TweakButtonShow.cs" />
+    <Compile Include="ServicesTests\ToolbarService\TweakButtonTestsBase.cs" />
+    <Compile Include="ServicesTests\ToolbarService\TweakButtonColor.cs" />
     <Compile Include="ServiceTweaks\TweakListTests.cs" />
     <Compile Include="ServiceTweaks\CmsHtmlTweakTests.cs" />
     <Compile Include="TestBaseSxcDb.cs" />

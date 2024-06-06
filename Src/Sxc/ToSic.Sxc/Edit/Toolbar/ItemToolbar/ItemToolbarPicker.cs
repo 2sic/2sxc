@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Plumbing;
-using ToSic.Razor.Markup;
+﻿using ToSic.Razor.Markup;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
@@ -13,7 +12,7 @@ internal class ItemToolbarPicker
             return new ItemToolbarV14(entity, toolbarBuilder);
 
         // Case 1 - use the simpler string format in V10.27
-        var (isV10, rules) = ItemToolbarPicker.CheckIfParamsMeanV10(toolbar, settings, prefill);
+        var (isV10, _) = CheckIfParamsMeanV10(toolbar, settings, prefill);
         if (isV10)
         {
             // check conflicting prefill format
@@ -38,7 +37,7 @@ internal class ItemToolbarPicker
     internal static (bool IsV10, List<string> Rules) CheckIfParamsMeanV10(object toolbar = null, object settings = null, object prefill = null)
     {
         // Case 1 - use the simpler string format in V10.27
-        var toolbarAsStringArray = ItemToolbarPicker.ToolbarV10OrNull(toolbar);
+        var toolbarAsStringArray = ToolbarV10OrNull(toolbar);
         if (settings is string || toolbar is string || prefill is string || toolbarAsStringArray != null)
         {
             return (true, toolbarAsStringArray);
@@ -62,11 +61,16 @@ internal class ItemToolbarPicker
         // But that failed, because sometimes razor made the new [] { "..." } be an object list instead
         // This is why it's more complex that you would intuitively do it - see https://github.com/2sic/2sxc/issues/2561
 
-        if (toolbar is not IEnumerable<object> objEnum) return null;
+        if (toolbar is not IEnumerable<object> objEnum)
+            return null;
+
         var asArray = objEnum.ToArray();
-        return !asArray.All(o => o is string || o is IRawHtmlString)
+        return !asArray.All(o => o is string or IRawHtmlString)
             ? null
-            : asArray.Select(o => o.ToString()).ToList();
+            : asArray
+                .Select(o => o.ToString())
+                .Where(s => s != "")
+                .ToList();
     }
 
 }

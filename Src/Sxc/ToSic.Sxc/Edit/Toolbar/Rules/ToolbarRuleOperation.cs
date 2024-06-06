@@ -10,9 +10,9 @@ internal enum ToolbarRuleOps
     OprModify = ToolbarRuleOperation.ModifyOperation,
     OprRemove = ToolbarRuleOperation.RemoveOperation,
     [PrivateApi]
-    OprUnknown = '¿',
+    OprUnknown = ToolbarRuleOperation.UnknownOperation,
     [PrivateApi]
-    OprNone = ' ',
+    OprNone = ToolbarRuleOperation.NoOperation,
 }
 
 /// <summary>
@@ -21,8 +21,6 @@ internal enum ToolbarRuleOps
 /// _WARNING_ Do not reference this object, it can change at any time.
 /// It's only here for documentation. 
 /// </summary>
-[PrivateApi("hide, documented in a better way")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class ToolbarRuleOperation
 {
     /// <summary>
@@ -45,6 +43,12 @@ internal class ToolbarRuleOperation
     /// Symbol to remove a button in a toolbar.
     /// </summary>
     protected internal const char RemoveOperation = '-';
+
+    protected internal const char UnknownOperation = '¿';
+
+    protected internal const char NoOperation = ' ';
+
+    protected internal const char SkipInclude = '^';
 
     /// <summary>
     /// Verb to make sure a button is explicitly added.
@@ -90,8 +94,23 @@ internal class ToolbarRuleOperation
     //    return (char)defOp;
     //}
 
-    [PrivateApi]
-    internal static char Pick(string op, ToolbarRuleOps defOp)
+    internal static char Pick(string op, ToolbarRuleOps defOp, bool? condition = default)
+    {
+        var result = PrePick(op, defOp);
+        if (condition != false) return result;
+        return result switch
+        {
+            AddOperation => RemoveOperation,
+            AutoOperation => RemoveOperation,
+            ModifyOperation => SkipInclude,
+            RemoveOperation => SkipInclude,
+            NoOperation => RemoveOperation,
+            UnknownOperation => SkipInclude,
+            _ => result
+        };
+    }
+
+    private static char PrePick(string op, ToolbarRuleOps defOp)
     {
         if (!op.HasValue()) return (char)defOp;
         op = op.Trim();

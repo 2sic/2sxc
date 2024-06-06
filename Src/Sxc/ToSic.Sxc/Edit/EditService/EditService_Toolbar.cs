@@ -52,7 +52,8 @@ partial class EditService
         if (!Enabled && !forceShow)
             return l.ReturnNull("not enabled");
 
-        if (!IsConditionOk(condition)) return l.ReturnNull("condition false");
+        if (!IsConditionOk(condition))
+            return l.ReturnNull("condition false");
 
         // New in v13: The first parameter can also be a ToolbarBuilder, in which case all other params are ignored
         ItemToolbarBase itmToolbar;
