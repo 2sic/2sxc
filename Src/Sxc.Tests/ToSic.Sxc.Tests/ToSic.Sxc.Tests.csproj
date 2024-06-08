@@ -147,6 +147,7 @@
     <Compile Include="ServicesTests\CacheTests\CacheSpecsTests.cs" />
     <Compile Include="ServicesTests\CacheTests\CacheKeyTests.cs" />
     <Compile Include="ServicesTests\CmsService\CmsServiceTest.cs" />
+    <Compile Include="ServicesTests\CmsService\CmsServiceTestAccessors.cs" />
     <Compile Include="ServicesTests\CmsService\CmsServiceTestBase.cs" />
     <Compile Include="DataTests\DynWrappers\WrapObjDeep.cs" />
     <Compile Include="LinksAndImages\LinkImageTests\MultiResizeTests.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="PageFeatures\SimpleFeatureManagement.cs" />
     <Compile Include="PageProperty\UpdatePropertyTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServicesTests\CmsService\CmsServiceImageExtractorTests.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceFormatsPatronPerfectionist.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceFormatsNoPatron.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceFormatsBase_Best.cs" />

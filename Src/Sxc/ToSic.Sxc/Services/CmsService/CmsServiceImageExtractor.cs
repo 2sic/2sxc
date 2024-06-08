@@ -70,10 +70,12 @@ internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
     public static string GetImgServiceResizeFactor(string value)
     {
         // check if we can find something like "wysiwyg-width#of#" - this is for resize ratios
-        //var widthMatch = RegexUtil.WysiwygWidthNumDetection.Match(value);
         var widthMatch = RegexUtil.WysiwygWidthLazy.Value.Match(value);
+
         // convert to a format like "#/#"
-        if (!widthMatch.Success) return null;
+        if (!widthMatch.Success)
+            return null;
+
         var numString = widthMatch.Groups["percent"].Value;
         // We want to return a nice factor, in case the rules have optimized values
         return numString switch
