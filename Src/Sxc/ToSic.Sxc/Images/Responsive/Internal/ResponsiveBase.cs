@@ -111,22 +111,9 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
 
         // 2. Turn on lightbox feature of 2sxc
         // ...make sure it will also load the activation JS
-        PageService.Activate(SxcPageFeatures.Lightbox.NameId, SxcPageFeatures.WebResourceFancybox4.NameId);
-        PageService.TurnOn(
-            LightboxHelpers.JsCall,
-            noDuplicates: true,
-            args:
-            [
-                hasGroup ? $"[{LightboxHelpers.AttributeGroup}=\"{imageGroup}\"]" : $"[{LightboxHelpers.Attribute}=\"\"]",
-                new
-                {
-                    groupAll = hasGroup,
-                    Thumbs = new
-                    {
-                        autoStart = false
-                    }
-                }
-            ]);
+        // Note: it would be better to just activate "lightbox", but ATM the features don't support finding dependent features from WebResources
+        PageService.Activate(SxcPageFeatures.TurnOn.NameId, /*SxcPageFeatures.Lightbox.NameId,*/ SxcPageFeatures.WebResourceFancybox4.NameId);
+        PageService.TurnOn(LightboxHelpers.JsCall, noDuplicates: true, args: LightboxHelpers.CreateArgs(hasGroup, imageGroup));
 
         return l.Return(img, "");
     }

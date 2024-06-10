@@ -1,9 +1,4 @@
-﻿using ToSic.Eav.Plumbing;
-using ToSic.Razor.Html5;
-using ToSic.Sxc.Services;
-using ToSic.Sxc.Web.Internal.PageFeatures;
-
-namespace ToSic.Sxc.Images.Internal;
+﻿namespace ToSic.Sxc.Images.Internal;
 
 internal class LightboxHelpers
 {
@@ -12,5 +7,22 @@ internal class LightboxHelpers
     internal const string SettingsName = "Lightbox";
     internal const string JsCall = "window.Fancybox.bind()";
 
-
+    /// <summary>
+    /// Create the args-list for the lightbox initialization
+    /// </summary>
+    /// <param name="hasGroup">Settings specify an image group</param>
+    /// <param name="imageGroup">Name of the image group</param>
+    /// <returns></returns>
+    internal static object[] CreateArgs(bool hasGroup, string imageGroup) =>
+    [
+        hasGroup ? $"[{AttributeGroup}=\"{imageGroup}\"]" : $"[{Attribute}=\"\"]",
+        new
+        {
+            groupAll = hasGroup,
+            Thumbs = new
+            {
+                autoStart = false
+            }
+        }
+    ];
 }
