@@ -23,4 +23,12 @@ public class CmsServiceImageExtractorTests
     public void ImagesWithDataCmsid(string html, int matches)
         => AreEqual(matches, RegexUtil.ImagesDetection.Value.Matches(html).Count);
 
+    [TestMethod]
+    [DataRow("wysiwyg-lightbox", true)]
+    [DataRow("wysiwyg-lightbox other-class", true)]
+    [DataRow("other-class wysiwyg-lightbox", true)]
+    [DataRow("other-class", false)]
+    [DataRow(null, false)]
+    public void UseLightbox(string classAttribute, bool expected)
+        => AreEqual(expected, CmsServiceTestAccessors.TacUseLightbox(classAttribute));
 }
