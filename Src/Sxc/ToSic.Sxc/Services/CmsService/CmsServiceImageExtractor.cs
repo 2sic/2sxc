@@ -9,15 +9,18 @@ namespace ToSic.Sxc.Services.CmsService;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
 {
-    internal ImageProperties ExtractImageProperties(string oldImgTag, Guid guid, IFolder folder)
+    internal const string WysiwygLightboxClass = "wysiwyg-lightbox";
+
+    internal ImagePropertiesExtracted ExtractImageProperties(string oldImgTag, Guid guid, IFolder folder)
     {
-        var l = Log.Fn<ImageProperties>($"old: '{oldImgTag}'");
+        var l = Log.Fn<ImagePropertiesExtracted>($"old: '{oldImgTag}'");
         string src = null;
         string factor = null;
         object width = default;
         string imgAlt = null;
         string imgClasses = null;
         string picClasses = null;
+        //var useLightbox = false;
         var otherAttributes = new Dictionary<string, string>();
 
         // get all attributes
@@ -42,9 +45,10 @@ internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
                     imgAlt = value;
                     break;
                 case "class": // specially look at the classes
-                    factor = GetImgServiceResizeFactor(value); // use the "#/#" as the `factor` parameter
                     imgClasses = value; // add it as class
+                    factor = GetImgServiceResizeFactor(value); // use the "#/#" as the `factor` parameter
                     picClasses = GetPictureClasses(value);
+                    //useLightbox = UseLightbox(value);
                     break;
                 default:
                     // store alt-attribute, class etc. from the original if it had it (to re-attach latter)
@@ -53,21 +57,35 @@ internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
             }
         }
 
-        var result = new ImageProperties
+        var result = new ImagePropertiesExtracted
         {
-            Src = src, Factor = factor, ImgAlt = imgAlt, ImgClasses = imgClasses, PicClasses = picClasses,
-            Width = width, OtherAttributes = otherAttributes
+            Src = src,
+            Factor = factor,
+            ImgAlt = imgAlt,
+            ImgClasses = imgClasses,
+            PicClasses = picClasses,
+            Width = width,
+            //UseLightbox = useLightbox,
+            OtherAttributes = otherAttributes
         };
         return l.Return(result, $"src:{src}");
     }
 
-    public static string GetPictureClasses(string classes)
+    /// <summary>
+    /// NOT DONE YET: the Picture tag should only preserve the wysiwyg-* classes
+    /// </summary>
+    /// <param name="classes"></param>
+    /// <returns></returns>
+    internal static string GetPictureClasses(string classes)
     {
         // TODO: filter to only return wysiwyg-* classes
         return classes;
     }
 
-    public static string GetImgServiceResizeFactor(string value)
+    internal static bool UseLightbox(string classes)
+        => classes.Contains(WysiwygLightboxClass);
+
+    internal static string GetImgServiceResizeFactor(string value)
     {
         // check if we can find something like "wysiwyg-width#of#" - this is for resize ratios
         var widthMatch = RegexUtil.WysiwygWidthLazy.Value.Match(value);
@@ -90,14 +108,15 @@ internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
         };
     }
 
-    internal class ImageProperties
+    internal class ImagePropertiesExtracted
     {
-        public string Src;
-        public string Factor;
-        public string ImgAlt;
-        public string ImgClasses;
-        public string PicClasses;
-        public object Width;
-        public Dictionary<string, string> OtherAttributes;
+        public string Src { get; init; }
+        public string Factor { get; init; }
+        public string ImgAlt { get; init; }
+        public string ImgClasses { get; init; }
+        public string PicClasses { get; init; }
+        public object Width { get; init; }
+        //public bool UseLightbox;
+        public Dictionary<string, string> OtherAttributes { get; init; }
     }
 }
