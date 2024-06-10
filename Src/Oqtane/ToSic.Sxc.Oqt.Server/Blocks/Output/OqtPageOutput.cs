@@ -50,13 +50,13 @@ internal partial class OqtPageOutput(
         if (Features.Contains(SxcPageFeatures.JQuery)) 
             list.Add("//code.jquery.com/jquery-3.5.1.min.js");
 
-        if (AddJsCore) list.Add($"{OqtConstants.UiRoot}/{SxcPageFeatures.JsCore.UrlWip}");
+        if (AddJsCore) list.Add($"{OqtConstants.UiRoot}/{SxcPageFeatures.JsCore.UrlInDist}");
 
-        if (AddJsEdit) list.Add($"{OqtConstants.UiRoot}/{SxcPageFeatures.JsCmsInternal.UrlWip}");
+        if (AddJsEdit) list.Add($"{OqtConstants.UiRoot}/{SxcPageFeatures.JsCmsInternal.UrlInDist}");
 
         // New in 12.02
         if (Features.Contains(SxcPageFeatures.TurnOn))
-            list.Add($"{OqtConstants.UiRoot}/{SxcPageFeatures.TurnOn.UrlWip}");
+            list.Add($"{OqtConstants.UiRoot}/{SxcPageFeatures.TurnOn.UrlInDist}");
 
             
         return list;
@@ -70,11 +70,11 @@ internal partial class OqtPageOutput(
     {
         var list = new List<string>();
         if (Features.Contains(SxcPageFeatures.ToolbarsInternal))
-            list.Add($"{OqtConstants.UiRoot}/{SxcPageFeatures.ToolbarsInternal.UrlWip}");
+            list.Add($"{OqtConstants.UiRoot}/{SxcPageFeatures.ToolbarsInternal.UrlInDist}");
 
         // New 15.01
         if (Features.Contains(SxcPageFeatures.CmsWysiwyg))
-            list.Add($"{OqtConstants.UiRoot}/{SxcPageFeatures.CmsWysiwyg.UrlWip}");
+            list.Add($"{OqtConstants.UiRoot}/{SxcPageFeatures.CmsWysiwyg.UrlInDist}");
         return list;
     }
 

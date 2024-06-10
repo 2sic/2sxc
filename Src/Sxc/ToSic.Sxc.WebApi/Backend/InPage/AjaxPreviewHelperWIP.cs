@@ -25,7 +25,7 @@ public class AjaxPreviewHelperWIP
 
         // 1. Check if the features includes turnOn
         if (renderResult.Features.Contains(SxcPageFeatures.TurnOn)) 
-            addOn += Js(ver, root + SxcPageFeatures.TurnOn.UrlWip);
+            addOn += Js(ver, root + SxcPageFeatures.TurnOn.UrlInDist);
 
         // 2. Add JS & CSS which was stripped before
         renderResult.Assets.ToList().ForEach(a => addOn += "\n" + (a.IsJs ? Js(ver, a.Url) : Css(a.Url)));

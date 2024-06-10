@@ -69,9 +69,15 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object toolbar = default,
         object recipe = null)
         => new ResponsiveImage(this,
-            new(link, noParamOrder,
-                Settings(settings, factor: factor, width: width, recipe: recipe),
-                imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass, imgAttributes: CreateAttribDic(imgAttributes), toolbar: toolbar),
+            new(link)
+            {
+                Settings = Settings(settings, factor: factor, width: width, recipe: recipe),
+                ImgAlt = imgAlt,
+                ImgAltFallback = imgAltFallback,
+                ImgClass = imgClass,
+                ImgAttributes = CreateAttribDic(imgAttributes),
+                Toolbar = toolbar,
+            },
             Log);
 
 
@@ -91,10 +97,17 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object toolbar = default,
         object recipe = default)
         => new ResponsivePicture(this,
-            new(link, noParamOrder,
-                Settings(settings, factor: factor, width: width, recipe: recipe),
-                imgAlt: imgAlt, imgAltFallback: imgAltFallback,
-                imgClass: imgClass, imgAttributes: CreateAttribDic(imgAttributes), pictureClass: pictureClass, pictureAttributes: CreateAttribDic(pictureAttributes), toolbar: toolbar),
+            new(link)
+            {
+                Settings = Settings(settings, factor: factor, width: width, recipe: recipe),
+                ImgAlt = imgAlt,
+                ImgAltFallback = imgAltFallback,
+                ImgClass = imgClass,
+                ImgAttributes = CreateAttribDic(imgAttributes),
+                PictureClass = pictureClass,
+                PictureAttributes = CreateAttribDic(pictureAttributes),
+                Toolbar = toolbar,
+            },
             Log);
 
     /// <inheritdoc />

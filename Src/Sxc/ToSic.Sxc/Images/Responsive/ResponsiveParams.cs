@@ -20,42 +20,22 @@ internal class ResponsiveParams
     /// </summary>
     public IField Field { get; }
     public IHasMetadata HasMetadataOrNull { get; }
-    public IResizeSettings Settings { get; }
-    public string ImgAlt { get; }
-    public string ImgAltFallback { get; }
-    public string ImgClass { get; }
-    public IDictionary<string, object> ImgAttributes { get; }
-    public IDictionary<string, object> PictureAttributes { get; }
+    public IResizeSettings Settings { get; init; }
+    public string ImgAlt { get; init; }
+    public string ImgAltFallback { get; init; }
+    public string ImgClass { get; init; }
+    public IDictionary<string, object> ImgAttributes { get; init; }
+    public IDictionary<string, object> PictureAttributes { get; init; }
 
-    public string PictureClass { get; }
+    public string PictureClass { get; init; }
 
-    public object Toolbar { get; }
+    public object Toolbar { get; init; }
 
     internal ResponsiveParams(
-        object target,
-#pragma warning disable IDE0060
-        NoParamOrder protector = default,
-#pragma warning restore IDE0060
-        IResizeSettings settings = default,
-        string imgAlt = default,
-        string imgAltFallback = default,
-        string imgClass = default,
-        IDictionary<string, object> imgAttributes = default,
-        string pictureClass = default,
-        IDictionary<string, object> pictureAttributes = default,
-        object toolbar = default
-    )
+        object target)
     {
         Field = target as IField ?? (target as IFromField)?.Field;
         HasMetadataOrNull = target as IHasMetadata ?? Field;
         Link = target as IHasLink ?? new HasLink(target as string);
-        Settings = settings;
-        ImgAlt = imgAlt;
-        ImgAltFallback = imgAltFallback;
-        ImgClass = imgClass;
-        ImgAttributes = imgAttributes;
-        PictureClass = pictureClass;
-        PictureAttributes = pictureAttributes;
-        Toolbar = toolbar;
     }
 }

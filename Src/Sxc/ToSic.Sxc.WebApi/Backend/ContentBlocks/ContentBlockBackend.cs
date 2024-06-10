@@ -63,13 +63,13 @@ public class ContentBlockBackend(
         var result = RenderToResult(templateId, lang, edition);
 
         l.A("2.1. Build Resources");
-        var resources = new List<AjaxResourceDtoWIP>();
+        var resources = new List<AjaxResourceDto>();
         var ver = EavSystemInfo.VersionWithStartUpBuild;
         if (result.Features.Contains(SxcPageFeatures.TurnOn))
-            resources.Add(new() { Url = UrlHelpers.QuickAddUrlParameter(root.SuffixSlash() + SxcPageFeatures.TurnOn.UrlWip, "v", ver) });
+            resources.Add(new() { Url = UrlHelpers.QuickAddUrlParameter(root.SuffixSlash() + SxcPageFeatures.TurnOn.UrlInDist, "v", ver) });
 
         l.A("2.2. Add JS & CSS which were stripped before");
-        resources.AddRange(result.Assets.Select(asset => new AjaxResourceDtoWIP
+        resources.AddRange(result.Assets.Select(asset => new AjaxResourceDto
         {
             // Note: Url can be empty if it has contents
             Url = string.IsNullOrWhiteSpace(asset.Url) ? null : UrlHelpers.QuickAddUrlParameter(asset.Url, "v", ver), 
@@ -89,7 +89,7 @@ public class ContentBlockBackend(
             l.A("Warning: Rest after extraction should be empty - not handled ATM");
 
         l.A("4.2. Add more resources based on processed");
-        resources.AddRange(renderResult.Assets.Select(asset => new AjaxResourceDtoWIP
+        resources.AddRange(renderResult.Assets.Select(asset => new AjaxResourceDto
         {
             Url = asset.Url,
             Type = asset.IsJs ? "js" : "css",

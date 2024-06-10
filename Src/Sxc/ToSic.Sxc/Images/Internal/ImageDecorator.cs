@@ -11,7 +11,8 @@ namespace ToSic.Sxc.Images.Internal;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBasedType(entity, languageCodes)
 {
-    // Marks Requirements Metadata 13.04
+    #region Constants and Type Names
+
     public static string TypeNameId = "cb27a0f2-f921-48d0-a3bc-37c0e77b1d0c";
     public static string NiceTypeName = "ImageDecorator";
 
@@ -37,17 +38,26 @@ public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBase
     /// </summary>
     public const string ShowWarningGlobalFile = "showWarningGlobalFile";
 
-    public static ImageDecorator GetOrNull(IHasMetadata source, string[] dimensions)
+    #endregion
+
+
+    internal static ImageDecorator GetOrNull(IHasMetadata source, string[] dimensions)
     {
         var decItem = source?.Metadata?.FirstOrDefaultOfType(TypeNameId);
         return decItem != null ? new ImageDecorator(decItem, dimensions) : null;
     }
+
+    #region Cropping
 
     public string CropBehavior => GetThis("");
 
     public string CropTo => GetThis("");
 
     internal string CropToNiceName => ToCropNiceNames.TryGetValue(CropTo, out var name) ? name : DefaultCropCenter;
+
+    #endregion
+
+    #region Descriptions / Titles
 
     public string Description => GetThis("");
 
@@ -61,7 +71,25 @@ public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBase
     /// </summary>
     public string DescriptionExtended => GetThis<string>(null);
 
-    public (string Param, string Value) GetAnchorOrNull()
+    #endregion
+
+    /// <summary>
+    /// EXPERIMENTAL V18 not implemented yet
+    /// </summary>
+    public string ResizeSettings => GetThis("");
+
+    #region Lightbox - new v18
+
+    public bool LightboxIsEnabled => GetThis(false);
+
+    public string LightboxGroup => GetThis("");
+
+    public bool LightboxUseGroup => LightboxIsEnabled && LightboxGroup.HasValue();
+
+    #endregion
+
+
+    internal (string Param, string Value) GetAnchorOrNull()
     {
         var b = CropBehavior;
         if (b != ToCrop) return (null, null);
@@ -109,7 +137,7 @@ public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBase
     /// <summary>
     /// Optionally add image-metadata recommendations
     /// </summary>
-    public static void AddRecommendations(IMetadataOf mdOf, string path, ICodeApiService codeRoot)
+    internal static void AddRecommendations(IMetadataOf mdOf, string path, ICodeApiService codeRoot)
     {
         if (mdOf?.Target == null || !path.HasValue()) return;
         var ext = Path.GetExtension(path);
@@ -119,7 +147,7 @@ public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBase
 
     // TODO: THIS IS ALL very temporary - it should be in a proper service, 
     // but because we'll need to merge the code with v17, we try do keep it this way.
-    public static string[] GetImageRecommendations(ICodeApiService codeRoot)
+    internal static string[] GetImageRecommendations(ICodeApiService codeRoot)
     {
         if (codeRoot is not CodeApiService codeRootTyped) return ImageRecommendationsBasic;
 

@@ -2,23 +2,23 @@
 
 public class AjaxRenderDto
 {
-    public string Html { get; set; }
+    public string Html { get; init; }
 
-    public IEnumerable<AjaxResourceDtoWIP> Resources { get; set; }
+    public IEnumerable<AjaxResourceDto> Resources { get; init; }
 }
 
-public class AjaxResourceDtoWIP
+public class AjaxResourceDto
 {
-    public string Id { get; set; }
+    public string Id { get; init; }
 
-    public string Url { get; set; }
+    public string Url { get; init; }
 
     /// <summary>
     /// "js" or "css"
     /// </summary>
-    public string Type { get; set; } = "js";
+    public string Type { get; init; } = "js";
 
-    public string Contents { get; set; }
+    public string Contents { get; init; }
 
-    public IDictionary<string, string> Attributes { get; set; }
+    public IDictionary<string, string> Attributes { get; init; }
 }
