@@ -1,5 +1,4 @@
 ﻿using ToSic.Lib.Helpers;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Stack;
@@ -30,10 +29,11 @@ partial class PageService
         // This must happen in the IPageService which is per-module
         // The PageServiceShared cannot do this, because it doesn't have the WebResources which vary by module
         if (WebResources is not null) // special problem: DynamicEntity null-compare isn't quite right, **do not** use `!=`
-            keys = AddManualResources(keys);
+            keys = AddResourcesFromSettings(keys);
 
         // 2. If any keys are left, they are probably preconfigured keys, so add them now
-        if (!keys.Any()) return l.ReturnAsOk("");
+        if (!keys.Any())
+            return l.ReturnAsOk("");
 
         l.A($"Remaining keys: {string.Join(",", keys)}");
         var added = PageServiceShared.Activate(keys);
@@ -50,6 +50,7 @@ partial class PageService
         params string[] features)
     {
         var l = Log.Fn<string>();
+
         // Check condition - default is true - so if it's false, this overload was called
         if (!condition)
             return l.ReturnNull("condition false");
@@ -62,7 +63,7 @@ partial class PageService
         return l.Return(Activate(features), "condition true, added");
     }
 
-    private string[] AddManualResources(string[] keys)
+    private string[] AddResourcesFromSettings(string[] keys)
     {
         var l = Log.Fn<string[]>();
         var keysToRemove = new List<string>();
@@ -70,13 +71,15 @@ partial class PageService
         foreach (var key in keys)
         {
             l.A($"Key: {key}");
-            if (WebResources.Get(key) is not DynamicEntity webRes) continue; // special problem: DynamicEntity null-compare isn't quite right, don't! use ==
+            if (WebResources.Get(key) is not DynamicEntity webRes) // special problem: DynamicEntity null-compare isn't quite right, don't! use ==
+                continue;
 
             // Found - make sure we remove the key, no matter what decisions are made below
             keysToRemove.Add(key);
 
             var pageFeature = processor.Process(key, webRes);
-            if (pageFeature == null) continue;
+            if (pageFeature == null)
+                continue;
 
             l.A("Found html and everything, will register");
             // all ok so far

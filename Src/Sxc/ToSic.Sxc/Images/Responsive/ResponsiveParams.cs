@@ -31,8 +31,7 @@ internal class ResponsiveParams
 
     public object Toolbar { get; init; }
 
-    internal ResponsiveParams(
-        object target)
+    internal ResponsiveParams(object target)
     {
         Field = target as IField ?? (target as IFromField)?.Field;
         HasMetadataOrNull = target as IHasMetadata ?? Field;

@@ -12,14 +12,14 @@ public partial interface IPageService
     /// </summary>
     /// <param name="runOrSpecs">
     /// * either a run `string` like `window.myObject.myJs()` (must always start with window)
-    /// * or a object containing all the parameters which turnOn requires
+    /// * or an object containing all the parameters which turnOn requires
     /// </param>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="require">
     /// _optional_ One or more requirements which must be met before the code starts.
     /// Can be one or many values and/or functions.
     /// * a `string` such as `window.myObject` or `window.myObject.readyToStart()`
-    /// * a array of such strings
+    /// * an array of such strings
     /// </param>
     /// <param name="data">_optional_ any value such as a string, or an object - to pass into the run-command</param>
     /// <param name="args">_optional_ array of values to pass to the run function (new v18.00)</param>

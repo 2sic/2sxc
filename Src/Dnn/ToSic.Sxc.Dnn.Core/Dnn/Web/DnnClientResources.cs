@@ -95,13 +95,13 @@ internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader, DnnRequirements
         const int priority = (int)FileOrder.Js.DefaultPriority - 2;
 
         // add edit-mode CSS
-        if (editCss) RegisterCss(page, $"{root}{SxcPageFeatures.ToolbarsInternal.UrlWip}");
+        if (editCss) RegisterCss(page, $"{root}{SxcPageFeatures.ToolbarsInternal.UrlInDist}");
 
         // add read-js
         if (readJs || editJs)
         {
             l.A("add $2sxc api and headers");
-            RegisterJs(page, ver, $"{root}{SxcPageFeatures.JsCore.UrlWip}", true, priority);
+            RegisterJs(page, ver, $"{root}{SxcPageFeatures.JsCore.UrlInDist}", true, priority);
             MustAddHeaders = true;
         }
 
@@ -110,17 +110,17 @@ internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader, DnnRequirements
         {
             l.A("add 2sxc edit api; also needs anti-forgery");
             // note: the inpage only works if it's not in the head, so we're adding it below
-            RegisterJs(page, ver, $"{root}{SxcPageFeatures.JsCmsInternal.UrlWip}", false, priority + 1);
+            RegisterJs(page, ver, $"{root}{SxcPageFeatures.JsCmsInternal.UrlInDist}", false, priority + 1);
         }
 
         if (features.Contains(SxcPageFeatures.JQuery))
             JavaScript.RequestRegistration(CommonJs.jQuery);
 
         if (features.Contains(SxcPageFeatures.TurnOn))
-            RegisterJs(page, ver, $"{root}{SxcPageFeatures.TurnOn.UrlWip}", true, priority + 10);
+            RegisterJs(page, ver, $"{root}{SxcPageFeatures.TurnOn.UrlInDist}", true, priority + 10);
 
         if (features.Contains(SxcPageFeatures.CmsWysiwyg))
-            RegisterCss(page, $"{root}{SxcPageFeatures.CmsWysiwyg.UrlWip}");
+            RegisterCss(page, $"{root}{SxcPageFeatures.CmsWysiwyg.UrlInDist}");
 
         l.Done();
     }
