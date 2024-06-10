@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Tests.DataForImageTests
         };
 
         public static AdvancedSettings TestRecipeSet() =>
-            new(new Recipe(recipes: new[]
+            new(new(recipes: new[]
             {
                 new Recipe(forFactor: "1", width: W100),
                 new Recipe(forFactor: "3/4", width: W75, attributes: Attributes75MixIn, recipes: new[]

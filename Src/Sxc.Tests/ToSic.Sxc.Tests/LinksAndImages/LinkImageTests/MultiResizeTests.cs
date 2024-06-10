@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
             // But to run the test, we must set it to true
             settings.UseFactorMap = true;
 
-            settings = new ResizeSettings(settings, factor: factor);
+            settings = new(settings, factor: factor);
             var srcSetSettings = settings.Find(SrcSetType.Img, true, cssFramework);
             var f1 = l.DimGen.ResizeDimensions(settings, srcSetSettings);
             Assert.AreEqual(expected, f1.Width, name);

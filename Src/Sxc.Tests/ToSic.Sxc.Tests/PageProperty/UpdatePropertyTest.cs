@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Tests.PageProperty
         public void PlaceholderSimple()
         {
             var result = UpdatePropertyTestAccessor("[placeholder]" + Suffix,
-                new PagePropertyChange { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
+                new() { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
             Assert.AreEqual("My Title" + Suffix, result);
         }
 
@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Tests.PageProperty
         public void PlaceholderEnd()
         {
             var result = UpdatePropertyTestAccessor(Suffix + "[placeholder]",
-                new PagePropertyChange { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
+                new() { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
             Assert.AreEqual(Suffix + "My Title", result);
         }
 
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Tests.PageProperty
         public void PlaceholderMiddle()
         {
             var result = UpdatePropertyTestAccessor("Before-[placeholder]-After",
-                new PagePropertyChange { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
+                new() { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
             Assert.AreEqual("Before-My Title-After", result);
         }
 
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Tests.PageProperty
         public void PlaceholderOtherCase()
         {
             var result = UpdatePropertyTestAccessor("[PlaceHolder]" + Suffix,
-                new PagePropertyChange { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
+                new() { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
             Assert.AreEqual("My Title" + Suffix, result);
         }
 
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Tests.PageProperty
         public void PlaceholderOnly()
         {
             var result = UpdatePropertyTestAccessor("[PlaceHolder]",
-                new PagePropertyChange { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
+                new() { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
             Assert.AreEqual("My Title", result);
         }
 
@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Tests.PageProperty
         public void PlaceholderNotFound()
         {
             var result = UpdatePropertyTestAccessor(Suffix,
-                new PagePropertyChange { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
+                new() { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
             Assert.AreEqual("My Title", result);
         }
 
@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Tests.PageProperty
         public void PlaceholderNotFoundReplace()
         {
             var result = UpdatePropertyTestAccessor(Suffix,
-                new PagePropertyChange { ReplacementIdentifier = "[placeholder]", Value = "My Title", ChangeMode = PageChangeModes.Replace });
+                new() { ReplacementIdentifier = "[placeholder]", Value = "My Title", ChangeMode = PageChangeModes.Replace });
             Assert.AreEqual("My Title", result);
         }
 
@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Tests.PageProperty
         public void PlaceholderNotFoundPrepend()
         {
             var result = UpdatePropertyTestAccessor(Suffix,
-                new PagePropertyChange { ReplacementIdentifier = "[placeholder]", Value = "My Title", ChangeMode = PageChangeModes.Prepend });
+                new() { ReplacementIdentifier = "[placeholder]", Value = "My Title", ChangeMode = PageChangeModes.Prepend });
             Assert.AreEqual("My Title" + Suffix, result);
         }
 
@@ -81,14 +81,14 @@ namespace ToSic.Sxc.Tests.PageProperty
         public void PlaceholderNotFoundAppend()
         {
             var result = UpdatePropertyTestAccessor(Suffix,
-                new PagePropertyChange { ReplacementIdentifier = "[placeholder]", Value = "My Title", ChangeMode = PageChangeModes.Append });
+                new() { ReplacementIdentifier = "[placeholder]", Value = "My Title", ChangeMode = PageChangeModes.Append });
             Assert.AreEqual(Suffix + "My Title", result);
         }
         [TestMethod]
         public void PlaceholderNotFoundAuto()
         {
             var result = UpdatePropertyTestAccessor(Suffix,
-                new PagePropertyChange { ReplacementIdentifier = "[placeholder]", Value = "My Title", ChangeMode = PageChangeModes.Auto });
+                new() { ReplacementIdentifier = "[placeholder]", Value = "My Title", ChangeMode = PageChangeModes.Auto });
             Assert.AreEqual("My Title", result);
         }
 
@@ -96,7 +96,7 @@ namespace ToSic.Sxc.Tests.PageProperty
         public void NullOriginal()
         {
             var result = UpdatePropertyTestAccessor(null,
-                new PagePropertyChange { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
+                new() { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
             Assert.AreEqual("My Title", result);
         }
 
@@ -104,7 +104,7 @@ namespace ToSic.Sxc.Tests.PageProperty
         public void ValueNull()
         {
             var result = UpdatePropertyTestAccessor("Some Title",
-                new PagePropertyChange { ReplacementIdentifier = "[placeholder]", Value = null });
+                new() { ReplacementIdentifier = "[placeholder]", Value = null });
             Assert.AreEqual("Some Title", result);
         }
 
@@ -112,7 +112,7 @@ namespace ToSic.Sxc.Tests.PageProperty
         public void AllNull()
         {
             var result = UpdatePropertyTestAccessor(null,
-                new PagePropertyChange { ReplacementIdentifier = "[placeholder]", Value = null });
+                new() { ReplacementIdentifier = "[placeholder]", Value = null });
             Assert.AreEqual(null, result);
         }
 
@@ -120,7 +120,7 @@ namespace ToSic.Sxc.Tests.PageProperty
         public void ValueEmpty()
         {
             var result = UpdatePropertyTestAccessor("Some Title",
-                new PagePropertyChange { ReplacementIdentifier = "[placeholder]", Value = "" });
+                new() { ReplacementIdentifier = "[placeholder]", Value = "" });
             Assert.AreEqual("", result);
         }
     }

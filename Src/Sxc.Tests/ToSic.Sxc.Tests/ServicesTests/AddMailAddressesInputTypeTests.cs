@@ -102,7 +102,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         {
             var mailAddresses = new { a = "test" }; // unknown type
             // Trying to parse e-mails for test but got unknown type for mailAddresses.
-            ((MailServiceBase)MailService()).AddMailAddresses("test", new MailAddressCollection(), mailAddresses);
+            ((MailServiceBase)MailService()).AddMailAddresses("test", new(), mailAddresses);
         }
     }
 }

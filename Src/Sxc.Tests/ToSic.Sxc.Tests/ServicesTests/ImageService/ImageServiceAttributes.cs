@@ -28,12 +28,12 @@ namespace ToSic.Sxc.Tests.ServicesTests
 
         private static List<TestCase> TestCasesClass = new()
         {
-            new TestCase("Call Only", "class='img-class'", "img-class"),
-            new TestCase("Call Only multiple", "class='img-class img-class2'", "img-class img-class2"),
-            new TestCase("Call only, recipe null", "class='img-class'", "img-class", useRecipe: true),
-            new TestCase("Call only, recipe empty", "class='img-class'", "img-class", useRecipe: true, onRecipe: ""),
-            new TestCase("recipe only", "class='rec-class'", null, onRecipe: "rec-class"),
-            new TestCase("Call and recipe", "class='img-class rec-class'", "img-class", useRecipe: true,
+            new("Call Only", "class='img-class'", "img-class"),
+            new("Call Only multiple", "class='img-class img-class2'", "img-class img-class2"),
+            new("Call only, recipe null", "class='img-class'", "img-class", useRecipe: true),
+            new("Call only, recipe empty", "class='img-class'", "img-class", useRecipe: true, onRecipe: ""),
+            new("recipe only", "class='rec-class'", null, onRecipe: "rec-class"),
+            new("Call and recipe", "class='img-class rec-class'", "img-class", useRecipe: true,
                 onRecipe: "rec-class"),
         };
 
@@ -64,12 +64,12 @@ namespace ToSic.Sxc.Tests.ServicesTests
 
         private static List<TestCase> TestCasesStyles = new()
         {
-            new TestCase("Call Only", "style='img-style: 50px'", "img-style: 50px"),
-            new TestCase("Call Only multiple", "style='img-style: 50px; width: 10px'", "img-style: 50px; width: 10px"),
-            new TestCase("Call only, recipe null", "style='img-style: 50px'", "img-style: 50px", useRecipe: true),
-            new TestCase("Call only, recipe empty", "style='img-style: 50px'", "img-style: 50px", useRecipe: true, onRecipe: ""),
-            new TestCase("recipe only", "style='rec-style: 20px'", null, onRecipe: "rec-style: 20px"),
-            new TestCase("Call and recipe", "style='img-style: 50px;rec-style: 20px'", "img-style: 50px",
+            new("Call Only", "style='img-style: 50px'", "img-style: 50px"),
+            new("Call Only multiple", "style='img-style: 50px; width: 10px'", "img-style: 50px; width: 10px"),
+            new("Call only, recipe null", "style='img-style: 50px'", "img-style: 50px", useRecipe: true),
+            new("Call only, recipe empty", "style='img-style: 50px'", "img-style: 50px", useRecipe: true, onRecipe: ""),
+            new("recipe only", "style='rec-style: 20px'", null, onRecipe: "rec-style: 20px"),
+            new("Call and recipe", "style='img-style: 50px;rec-style: 20px'", "img-style: 50px",
                 useRecipe: true,
                 onRecipe: "rec-style: 20px"),
         };

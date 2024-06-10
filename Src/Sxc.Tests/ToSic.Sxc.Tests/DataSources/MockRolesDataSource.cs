@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Tests.DataSources
             var roles = new List<RoleDataRaw>();
             for (var i = 1; i <= 10; i++)
             {
-                roles.Add(new RoleDataRaw
+                roles.Add(new()
                 {
                     Id = i,
                     Name = $"[role_name_{i}]",

@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Tests.PlumbingTests
         {
             // Expected Nulls
             AreEqual(null, ParseObject.DoubleOrNull(null), "null");
-            AreEqual(null, ParseObject.DoubleOrNull(new object()), "null");
+            AreEqual(null, ParseObject.DoubleOrNull(new()), "null");
 
             // Expected Floats from other number formats
             AreEqual(0f, ParseObject.DoubleOrNull(0d), "double zero");
@@ -101,7 +101,7 @@ namespace ToSic.Sxc.Tests.PlumbingTests
 
         [TestMethod]
         public void IntOrNullObject()
-            => AreEqual(null, ParseObject.IntOrNull(new object()), "null");
+            => AreEqual(null, ParseObject.IntOrNull(new()), "null");
 
 
 

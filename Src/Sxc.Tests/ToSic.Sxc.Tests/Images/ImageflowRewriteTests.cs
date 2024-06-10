@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Tests.Images
         [TestMethod()]
         public void QueryStringRewriteWhenQueryStringEmpty()
         {
-            var actual = QueryStringRewrite(new NameValueCollection());
+            var actual = QueryStringRewrite(new());
             var expected = new NameValueCollection ();
             AreEquivalentAlsoByValues(expected, actual);
         }
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Tests.Images
         [TestMethod()]
         public void QueryStringRewriteWhenQueryStringWithOneItem()
         {
-            var actual = QueryStringRewrite(new NameValueCollection { { "1", "1" } });
+            var actual = QueryStringRewrite(new() { { "1", "1" } });
             var expected = new NameValueCollection
             {
                 { "1", "1" }
@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Tests.Images
         public void QueryStringRewriteWhenQueryStringWithManyItems()
         {
             var actual = QueryStringRewrite(
-                new NameValueCollection
+                new()
                 {
                     { "1", "1" },
                     { "2", "2" }
@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Tests.Images
         [TestMethod()]
         public void QualityQueryStringRewrite()
         {
-            var actual = QueryStringRewrite(new NameValueCollection { { Quality, "value" } });
+            var actual = QueryStringRewrite(new() { { Quality, "value" } });
             var expected = new NameValueCollection
             {
                 { Quality, "value" },
@@ -95,7 +95,7 @@ namespace ToSic.Sxc.Tests.Images
         public void QualityQueryStringRewriteWhenManyItems()
         {
             var actual = QueryStringRewrite(
-                new NameValueCollection
+                new()
                 {
                     { "1", "1" },
                     { "2", "2" },
@@ -116,7 +116,7 @@ namespace ToSic.Sxc.Tests.Images
         [TestMethod()]
         public void QualityQueryStringRewriteWhenQueryStringWithManyQualityItems()
         {
-            var actual = QueryStringRewrite(new NameValueCollection
+            var actual = QueryStringRewrite(new()
             {
                 { Quality, "value" },
                 { PngQuality, "69" },
@@ -140,7 +140,7 @@ namespace ToSic.Sxc.Tests.Images
         [TestMethod()]
         public void AddKeyWhenMissingInQueryStringEmpty()
         {
-            var actual = AddKeyWhenMissing(new NameValueCollection(), "key", "value");
+            var actual = AddKeyWhenMissing(new(), "key", "value");
             var expected = new NameValueCollection { { "key", "value" } };
             AreEquivalentAlsoByValues(expected, actual);
         }
@@ -149,7 +149,7 @@ namespace ToSic.Sxc.Tests.Images
         public void AddKeyWhenNotMissingInQueryStringOneElement()
         {
             var actual = AddKeyWhenMissing(
-                new NameValueCollection { { "key", "value" } },
+                new() { { "key", "value" } },
                 "key", "value");
             var expected = new NameValueCollection { { "key", "value" } };
             AreEquivalentAlsoByValues(expected, actual);
@@ -159,7 +159,7 @@ namespace ToSic.Sxc.Tests.Images
         public void AddKeyWhenMissingInQueryStringOneElement()
         {
             var actual = AddKeyWhenMissing(
-                new NameValueCollection { { "1", "1" } },
+                new() { { "1", "1" } },
                 "key", "value");
             var expected = new NameValueCollection { { "1", "1" }, { "key", "value" } };
             AreEquivalentAlsoByValues(expected, actual);
@@ -169,7 +169,7 @@ namespace ToSic.Sxc.Tests.Images
         public void AddKeyWhenNotMissingInQueryStringManyElement()
         {
             var actual = AddKeyWhenMissing(
-                new NameValueCollection { { "1", "1" }, { "key", "value" } },
+                new() { { "1", "1" }, { "key", "value" } },
                 "key", "value");
             var expected = new NameValueCollection { { "1", "1" }, { "key", "value" } };
             AreEquivalentAlsoByValues(expected, actual);
@@ -179,7 +179,7 @@ namespace ToSic.Sxc.Tests.Images
         public void AddKeyWhenMissingInQueryStringManyElement()
         {
             var actual = AddKeyWhenMissing(
-                new NameValueCollection { { "1", "1" }, { "2", "2" } },
+                new() { { "1", "1" }, { "2", "2" } },
                 "key", "value");
             var expected = new NameValueCollection { { "1", "1" }, { "2", "2" } , { "key", "value" } };
             AreEquivalentAlsoByValues(expected, actual);

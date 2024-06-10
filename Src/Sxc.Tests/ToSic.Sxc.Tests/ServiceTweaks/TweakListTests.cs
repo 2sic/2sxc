@@ -20,8 +20,8 @@ namespace ToSic.Sxc.Tests.ServiceTweaks
         [TestMethod]
         public void CloneHasSameTweaks()
         {
-            var tw = new TweakConfigs(null, new TweakConfig("test"));
-            tw = new TweakConfigs(tw, new TweakConfig("test2"));
+            var tw = new TweakConfigs(null, new("test"));
+            tw = new(tw, new("test2"));
             var tw2 = new TweakConfigs(tw);
             AreNotSame(tw, tw2);
             AreEqual(tw.List.Count, tw2.List.Count);
