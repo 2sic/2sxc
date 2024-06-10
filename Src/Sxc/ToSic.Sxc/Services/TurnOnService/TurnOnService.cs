@@ -25,7 +25,7 @@ internal class TurnOnService(LazySvc<IHtmlTagsService> htmlTagsService)
     )
     {
         var l = Log.Fn<Attribute>();
-        var specs = PickOrBuildSpecs(runOrSpecs, require, data);
+        var specs = PickOrBuildSpecs(runOrSpecs: runOrSpecs, require: require, data: data, args: null, addContext: null);
         var attr = htmlTagsService.Value.Attr(AttributeName, specs);
         return l.ReturnAsOk(attr);
     }
@@ -34,23 +34,28 @@ internal class TurnOnService(LazySvc<IHtmlTagsService> htmlTagsService)
         object runOrSpecs,
         NoParamOrder noParamOrder = default,
         object require = default,
-        object data = default
+        object data = default,
+        IEnumerable<object> args = default,
+        string addContext = default
     )
     {
         var l = Log.Fn<IHtmlTag>();
-        var specs = PickOrBuildSpecs(runOrSpecs, require, data);
+        var specs = PickOrBuildSpecs(runOrSpecs: runOrSpecs, require: require, data: data, args: args, addContext: addContext);
         var tag = htmlTagsService.Value.Custom(TagName).Attr(AttributeName, specs);
         return l.ReturnAsOk(tag);
     }
 
-    private static object PickOrBuildSpecs(object runOrSpecs, object require, object data)
-    {
-        if (runOrSpecs is not string run) return runOrSpecs;
-
-        if (require is null && data is null) return new { run };
-        if (require is null) return new { run, data };
-        if (data is null) return new { run, require };
-
-        return new { run, require, data };
-    }
+    internal static object PickOrBuildSpecs(object runOrSpecs, object require, object data, IEnumerable<object> args, string addContext)
+        => runOrSpecs is not string run
+            // if we already have a full configuration, just return it
+            ? runOrSpecs
+            // otherwise build a new one
+            : new TurnOnSpecs
+            {
+                Args = args,
+                AddContext = addContext,
+                Data = data,
+                Require = require,
+                Run = run,
+            };
 }

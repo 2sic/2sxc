@@ -196,6 +196,8 @@
     <Compile Include="ServicesTests\ToolbarService\TweakButtonShow.cs" />
     <Compile Include="ServicesTests\ToolbarService\TweakButtonTestsBase.cs" />
     <Compile Include="ServicesTests\ToolbarService\TweakButtonColor.cs" />
+    <Compile Include="ServicesTests\TurnOnTests\TurnOnTestAccessors.cs" />
+    <Compile Include="ServicesTests\TurnOnTests\PickOrBuildSpecsTests.cs" />
     <Compile Include="ServiceTweaks\TweakListTests.cs" />
     <Compile Include="ServiceTweaks\CmsHtmlTweakTests.cs" />
     <Compile Include="TestBaseSxcDb.cs" />
