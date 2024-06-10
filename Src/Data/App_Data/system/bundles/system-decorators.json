@@ -1661,6 +1661,455 @@
                     "Owner": "dnn:userid=41"
                   }
                 ]
+              },
+              {
+                "Name": "GroupLightbox",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183822,
+                    "Version": 2,
+                    "Guid": "dcc4368d-49f3-4907-ab25-b1e245547365",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-default"
+                        },
+                        "Name": {
+                          "en-us": "Lightbox / PopUp Settings",
+                          "de-de": "Lightbox / PopUp Einstellungen"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183825,
+                    "Version": 1,
+                    "Guid": "4e3ec7ee-5211-41de-b921-6f520f1f8d2c",
+                    "Type": {
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "LightboxIsEnabled",
+                "Type": "Boolean",
+                "InputType": "boolean-tristate",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183823,
+                    "Version": 2,
+                    "Guid": "7c5e13b3-758d-4fa2-9285-b919a3d3497f",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "boolean-tristate"
+                        },
+                        "Name": {
+                          "en-us": "LightboxIsEnabled"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183826,
+                    "Version": 1,
+                    "Guid": "6387d26a-87d5-4c6e-93a7-ac1b894c68b8",
+                    "Type": {
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "TitleFalse": {
+                          "en-us": "No Lightbox / PopUp",
+                          "de-de": "Keine Lightbox / kein PopUp"
+                        },
+                        "TitleIndeterminate": {
+                          "en-us": "Lightbox / PopUp not configured",
+                          "de-de": "LightBox / PopUp nicht konfiguriert"
+                        },
+                        "TitleTrue": {
+                          "en-us": "Use Lightbox / PopUp",
+                          "de-de": "Lightbox / PopUp aktiviert"
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "LightboxGroup",
+                "Type": "String",
+                "InputType": "string-dropdown",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183824,
+                    "Version": 3,
+                    "Guid": "18d661da-a45c-4876-a898-9adb14f32050",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-dropdown"
+                        },
+                        "Name": {
+                          "en-us": "Lightbox Group",
+                          "de-de": "Lightbox Gruppe"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Images in the same lightbox group will work together like an album.</p>",
+                          "de-de": "<p>Bilder in der selben Lightbox-Gruppe funktionieren gemeinsam wie ein Album.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "8737cc85-67ee-457f-9221-7337ae006d4b"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183827,
+                    "Version": 1,
+                    "Guid": "2137373f-3bed-4f39-ac84-d96396990a8d",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183828,
+                    "Version": 1,
+                    "Guid": "c1e30ff2-5cbd-40a0-bdce-04bcaac1dd4c",
+                    "Type": {
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ":No Group - this image will open stand alone\ndefault:Default Group - all images in this group will be in an album together",
+                          "de-de": ":Keine Gruppe - dieses Bild öffnet alleine\ndefault:Standard Gruppe - alle Bilder in dieser Gruppe sind wie ein Album"
+                        },
+                        "DropdownValuesFormat": {
+                          "en-us": "value-label"
+                        }
+                      },
+                      "Boolean": {
+                        "EnableTextEntry": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "ResizeSettings",
+                "Type": "String",
+                "InputType": "string-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183832,
+                    "Version": 1,
+                    "Guid": "d44c8aa9-2ba7-4f8a-aa26-78308821ea5f",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183833,
+                    "Version": 1,
+                    "Guid": "5f0a75f7-90be-41c5-a543-0531becaaa79",
+                    "Type": {
+                      "Id": "@string-default",
+                      "Name": "@string-default"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183831,
+                    "Version": 3,
+                    "Guid": "67110684-0e52-4c18-9599-8c254dd684f3",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-default"
+                        },
+                        "Name": {
+                          "en-us": "ResizeSettings - experimental! v18 not implemented yet"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "c4185f6f-ef3e-4718-bdc9-2ca262fa4437"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
               }
             ]
           },
@@ -1820,6 +2269,62 @@
                 "String": {
                   "Formula": {
                     "en-us": "// new formula syntax - see https://go.2sxc.org/formulas\nv2((data, context) => {\n  return !!data.parameters?.showWarningGlobalFile;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183829,
+              "Version": 1,
+              "Guid": "8737cc85-67ee-457f-9221-7337ae006d4b",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  return !!data.LightboxIsEnabled;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183834,
+              "Version": 1,
+              "Guid": "c4185f6f-ef3e-4718-bdc9-2ca262fa4437",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  return context.debug;\n});"
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
@@ -4639,93 +5144,6 @@
           },
           "Entities": [
             {
-              "Id": 144523,
-              "Version": 1,
-              "Guid": "46e32523-21b2-4485-8e10-ae846009e305",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v1 (data, context) {\n  return context.debug;\n}"
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Field.Settings.Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 144445,
-              "Version": 3,
-              "Guid": "48dfbe23-bdad-4fd3-a216-3e28dd072d39",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v1 (data, context) {\n  var partMsg = function(target, value) {\n    if (value == -1) return target + ' \uD83D\uDEAB';\n    return target + ' ' + value + 's';\n  }\n  var msg = '';\n  if (!data.IsEnabled)\n    return '\uD83D\uDEAB';\n  msg = '✅ - ';\n  msg += partMsg('Users', data.Duration);\n  msg += ', ' + partMsg('Reg', data.DurationUsers);\n  msg += ', ' + partMsg('Editors', data.DurationEditors);\n  msg += ', ' + partMsg('SysAdmins', data.DurationSystemAdmin);\n  return msg;\n}"
-                  },
-                  "Target": {
-                    "en-us": "Field.Value"
-                  },
-                  "Title": {
-                    "en-us": "Field.Value"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 144458,
-              "Version": 4,
-              "Guid": "21f878f4-f822-45cf-a840-8d7d581e8f0d",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v1(data, context) {\n  if (context.cache.alreadyRun) return data.value;\n  context.cache.alreadyRun = true;\n  const enabled = context.features.isEnabled('LightSpeedOutputCache');\n  // console.log(\"enabled\", enabled);\n  return !enabled;\n}"
-                  },
-                  "Notes": {
-                    "en-us": ""
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Setting Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
               "Id": 183804,
               "Version": 2,
               "Guid": "3cdbdd23-27c8-4fbd-8b56-43501a9606bb",
@@ -4855,6 +5273,93 @@
                   },
                   "Title": {
                     "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 144523,
+              "Version": 1,
+              "Guid": "46e32523-21b2-4485-8e10-ae846009e305",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v1 (data, context) {\n  return context.debug;\n}"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 144445,
+              "Version": 3,
+              "Guid": "48dfbe23-bdad-4fd3-a216-3e28dd072d39",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v1 (data, context) {\n  var partMsg = function(target, value) {\n    if (value == -1) return target + ' \uD83D\uDEAB';\n    return target + ' ' + value + 's';\n  }\n  var msg = '';\n  if (!data.IsEnabled)\n    return '\uD83D\uDEAB';\n  msg = '✅ - ';\n  msg += partMsg('Users', data.Duration);\n  msg += ', ' + partMsg('Reg', data.DurationUsers);\n  msg += ', ' + partMsg('Editors', data.DurationEditors);\n  msg += ', ' + partMsg('SysAdmins', data.DurationSystemAdmin);\n  return msg;\n}"
+                  },
+                  "Target": {
+                    "en-us": "Field.Value"
+                  },
+                  "Title": {
+                    "en-us": "Field.Value"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 144458,
+              "Version": 4,
+              "Guid": "21f878f4-f822-45cf-a840-8d7d581e8f0d",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v1(data, context) {\n  if (context.cache.alreadyRun) return data.value;\n  context.cache.alreadyRun = true;\n  const enabled = context.features.isEnabled('LightSpeedOutputCache');\n  // console.log(\"enabled\", enabled);\n  return !enabled;\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {

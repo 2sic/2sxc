@@ -8,7 +8,9 @@ using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Edit.Toolbar.Internal;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 using static System.StringComparer;
 using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 using static ToSic.Sxc.Images.Internal.ImageDecorator;
@@ -22,16 +24,18 @@ namespace ToSic.Sxc.Images.Internal;
 public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
 {
 
-    internal ResponsiveBase(ImageService imgService, ResponsiveParams callParams, ILog parentLog, string logName)
+    internal ResponsiveBase(ImageService imgService, IPageService pageService, ResponsiveParams callParams, ILog parentLog, string logName)
         : base(parentLog, $"Img.{logName}")
     {
         Params = callParams;
+        PageService = pageService;
         ImgService = imgService;
         ImgLinker = imgService.ImgLinker;
     }
     internal ResponsiveParams Params { get; }
     protected readonly ImgResizeLinker ImgLinker;
     internal readonly ImageService ImgService;
+    protected readonly IPageService PageService;
 
     private OneResize ThisResize => _thisResize.Get(() => { 
         var t = ImgLinker.ImageOnly(Params.Link.Url, Settings as ResizeSettings, Params.HasMetadataOrNull);
@@ -51,7 +55,7 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     public override string ToString() => Tag.ToString();
 
     /// <inheritdoc />
-    public virtual Img Img => _imgTag.GetL(Log, l =>
+    public virtual Img Img => _imgTag.GetL(Log, _ =>
     {
         var imgTag = ToSic.Razor.Blade.Tag.Img().Src(Src);
 
@@ -69,19 +73,76 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         if (Width != null) imgTag = imgTag.Width(Width);
         if (Height != null) imgTag = imgTag.Height(Height);
 
+        // Add lightbox if enabled
+        if (Params.Field?.ImageDecoratorOrNull?.LightboxIsEnabled == true)
+            imgTag = AttachLightspeed(imgTag, Params.Field.ImageDecoratorOrNull);
+
         return imgTag;
     }, enabled: ImgService.Debug);
+
+
+
+    private Img AttachLightspeed(Img original, ImageDecorator decorator)
+    {
+        // TODO: IF ENABLE LIGHTBOX, START EVERYTHING
+        // 3. Mark the image for lightbox use, and possibly give it the attributes like
+        // - data-title="My caption"
+        // - data-alt="My alt text"
+        // - large image
+        // 4. ensure TurnOn
+
+        // TODO: use constants for most scenarios
+        var l = Log.Fn<Img>();
+        var imageGroup = decorator.LightboxGroup;
+        var hasGroup = imageGroup.HasValue();
+
+        // Mark image for lightbox use, different html for single image or group
+        var img = hasGroup
+            ? original.Attr(LightboxHelpers.AttributeGroup, imageGroup)
+            : original.Attr(LightboxHelpers.Attribute);
+
+        var lsSettings = (ResizeSettings)ImgService.Settings(LightboxHelpers.SettingsName);
+        var lsUrl = ImgLinker.ImageOnly(Params.Link.Url, settings: lsSettings, Params.HasMetadataOrNull).Url;
+        
+        // Add Lightbox caption and src
+        var caption = Alt + decorator.DescriptionExtended;
+        img = img.Attr("data-src", lsUrl)
+            .Attr("data-caption", caption);
+
+        // 2. Turn on lightbox feature of 2sxc
+        // ...make sure it will also load the activation JS
+        PageService.Activate(SxcPageFeatures.Lightbox.NameId, SxcPageFeatures.WebResourceFancybox4.NameId);
+        PageService.TurnOn(
+            LightboxHelpers.JsCall,
+            noDuplicates: true,
+            args:
+            [
+                hasGroup ? $"[{LightboxHelpers.AttributeGroup}=\"{imageGroup}\"]" : $"[{LightboxHelpers.Attribute}=\"\"]",
+                new
+                {
+                    groupAll = hasGroup,
+                    Thumbs = new
+                    {
+                        autoStart = false
+                    }
+                }
+            ]);
+
+        return l.Return(img, "");
+    }
 
     [PrivateApi]
     protected TImg AddAttributes<TImg>(TImg imgTag, IDictionary<string, object> addAttributes) where TImg : Tag<TImg>
     {
         var l = Log.Fn<TImg>();
-        if (addAttributes == null || !addAttributes.Any()) return l.Return(imgTag, "nothing to add");
+        if (addAttributes == null || addAttributes.Count == 0)
+            return l.Return(imgTag, "nothing to add");
 
         var dic = addAttributes
             .Where(pair => !Recipe.SpecialProperties.Contains(pair.Key, comparer: InvariantCultureIgnoreCase))
             .ToDictionary(p => p.Key, p => p.Value);
-        if (!dic.Any()) return l.Return(imgTag, "only special props");
+        if (dic.Count == 0)
+            return l.Return(imgTag, "only special props");
 
         l.A(ImgService.Debug, "will add properties from attributes");
         foreach (var a in dic)
@@ -125,7 +186,6 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     /// <inheritdoc />
     // note: it's a method but ATM always returns the cached toolbar
     // still implemented as a method, so we could add future parameters if necessary
-    // It's also marked as internal, because it's not yet final and may change
     public IToolbarBuilder Toolbar() => _toolbar.Get(() =>
     {
         var l = Log.Fn<IToolbarBuilder>();

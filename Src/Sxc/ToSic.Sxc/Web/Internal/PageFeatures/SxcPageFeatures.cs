@@ -138,14 +138,14 @@ public class SxcPageFeatures
     /// <summary>
     /// Fancybox4 - just for use in the lightbox feature
     /// </summary>
-    private static readonly PageFeature Fancybox4 = new(
+    internal static readonly PageFeature WebResourceFancybox4 = new(
         "fancybox4",
         "Fancybox 4 lightbox");
 
     public static PageFeature Lightbox = new(
         "lightbox",
         "The currently defined lightbox, whatever it is",
-        needs: [Fancybox4.NameId]);
+        needs: [WebResourceFancybox4.NameId]);
 
 
 

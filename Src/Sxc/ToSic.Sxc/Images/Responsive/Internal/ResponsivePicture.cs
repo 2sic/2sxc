@@ -3,6 +3,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
+using ToSic.Sxc.Services;
 using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 
 namespace ToSic.Sxc.Images.Internal;
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Images.Internal;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ResponsivePicture: ResponsiveBase, IResponsivePicture
 {
-    internal ResponsivePicture(ImageService imgService, ResponsiveParams callParams, ILog parentLog) : base(imgService, callParams, parentLog, "Picture")
+    internal ResponsivePicture(ImageService imgService, IPageService pageService, ResponsiveParams callParams, ILog parentLog) : base(imgService, pageService, callParams, parentLog, "Picture")
     {
     }
 
@@ -40,12 +41,13 @@ public class ResponsivePicture: ResponsiveBase, IResponsivePicture
         var l = logOrNull.Fn<TagList>();
         // Check formats
         var defFormat = ImgService.GetFormat(url);
-        if (defFormat == null) return l.Return(ToSic.Razor.Blade.Tag.TagList(), "no format");
+        if (defFormat == null)
+            return l.Return(ToSic.Razor.Blade.Tag.TagList(), "no format");
 
         // Determine if we have many formats, otherwise just use the current one
         var formats = defFormat.ResizeFormats.Any()
             ? defFormat.ResizeFormats
-            : new List<IImageFormat> { defFormat };
+            : [defFormat];
             
         var useMultiSrcSet = ImgService.Features.IsEnabled(ImageServiceMultipleSizes.NameId);
 

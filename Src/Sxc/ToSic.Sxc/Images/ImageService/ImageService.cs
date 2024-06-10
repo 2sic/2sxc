@@ -22,6 +22,9 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
     internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => _CodeApiSvc?.GetService<IToolbarService>());
     private readonly GetOnce<IToolbarService> _toolbarSvc = new();
 
+    private IPageService PageService => _pageService ??= _CodeApiSvc?.GetService<IPageService>(reuse: true);
+    private IPageService _pageService;
+
     #endregion
 
     #region Settings Handling
@@ -68,7 +71,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object imgAttributes = default,
         object toolbar = default,
         object recipe = null)
-        => new ResponsiveImage(this,
+        => new ResponsiveImage(this, PageService,
             new(link)
             {
                 Settings = Settings(settings, factor: factor, width: width, recipe: recipe),
@@ -96,7 +99,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object pictureAttributes = default,
         object toolbar = default,
         object recipe = default)
-        => new ResponsivePicture(this,
+        => new ResponsivePicture(this, PageService,
             new(link)
             {
                 Settings = Settings(settings, factor: factor, width: width, recipe: recipe),
