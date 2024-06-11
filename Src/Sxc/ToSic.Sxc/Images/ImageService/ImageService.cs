@@ -127,12 +127,14 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
     private bool _debug;
 
     private IDictionary<string, object> CreateAttribDic(object attributes)
-    {
-        if (attributes == null) return null;
-        if (attributes is IDictionary<string, object> ok) return ok.ToInvariant();
-        if (attributes is IDictionary<string, string> strDic)
-            return strDic.ToDictionary(pair => pair.Key, pair => pair.Value as object, InvariantCultureIgnoreCase);
-        if (attributes.IsAnonymous()) return attributes.ToDicInvariantInsensitive();
-        throw new ArgumentException("format unknown", nameof(attributes));
-    }
+        => attributes switch
+        {
+            null => null,
+            IDictionary<string, object> ok => ok.ToInvariant(),
+            IDictionary<string, string> strDic => strDic.ToDictionary(pair => pair.Key, pair => pair.Value as object,
+                InvariantCultureIgnoreCase),
+            _ => (attributes.IsAnonymous())
+                ? attributes.ToDicInvariantInsensitive()
+                : throw new ArgumentException("format unknown", nameof(attributes))
+        };
 }

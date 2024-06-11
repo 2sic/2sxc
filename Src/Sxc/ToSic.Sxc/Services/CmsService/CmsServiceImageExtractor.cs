@@ -22,6 +22,9 @@ internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
         string picClasses = null;
         //var useLightbox = false;
         var otherAttributes = new Dictionary<string, string>();
+        IFile file = null;
+
+        var files = folder.Files.ToList();
 
         // get all attributes
         var attributes = RegexUtil.AttributesDetection.Value.Matches(oldImgTag);
@@ -34,6 +37,14 @@ internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
                 case "data-cmsid":
                     var parts = new LinkParts(value, true);
                     src = parts.IsMatch ? $"{folder.Url}{parts.Name}" : value;
+                    try
+                    {
+                        file = files.FirstOrDefault(f => f.FullName.EqualsInsensitive(parts.Name));
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Ex(ex, "Error while trying to get file from Adam");
+                    }
                     break;
                 case "src":
                     src ??= value; // should not overwrite data-cmsid
@@ -59,6 +70,7 @@ internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
 
         var result = new ImagePropertiesExtracted
         {
+            File = file,
             Src = src,
             Factor = factor,
             ImgAlt = imgAlt,
@@ -110,6 +122,7 @@ internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
 
     internal class ImagePropertiesExtracted
     {
+        public IFile File { get; init; }
         public string Src { get; init; }
         public string Factor { get; init; }
         public string ImgAlt { get; init; }

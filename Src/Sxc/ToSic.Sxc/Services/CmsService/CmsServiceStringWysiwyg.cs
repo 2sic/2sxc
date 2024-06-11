@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Plumbing;
+﻿using System.Text.RegularExpressions;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Internal;
@@ -80,22 +81,19 @@ internal class CmsServiceStringWysiwyg(CmsServiceImageExtractor imageExtractor)
         var imgSettings = ImageSettings ?? "Wysiwyg";
         l.A($"Found {imgTags.Count} images to process with settings: {imgSettings}");
 
-        foreach (var imgTag in imgTags)
+        foreach (var imgTag in imgTags.Cast<Match>())
         {
             var originalImgTag = imgTag.ToString();
 
             var imgProps = imageExtractor.ExtractImageProperties(originalImgTag, Field.Parent.Guid, Folder);
 
             // use the IImageService to create Picture tags for it
-            var picture = ServiceKit.Image.Picture(link: imgProps.Src, settings: imgSettings, factor: imgProps.Factor, width: imgProps.Width, imgAlt: imgProps.ImgAlt,
-                imgClass: imgProps.ImgClasses);
-
-            // re-attach an alt-attribute, class etc. from the original if it had it
-            // TODO: @2DM - this could fail because of fluid API - picture.img isn't updated
-            var newImg = imgProps.OtherAttributes.Aggregate(picture.Img, (img, attr) => img.Attr(attr.Key, attr.Value));
+            var picture = ServiceKit.Image.Picture(link: imgProps.File as object ?? imgProps.Src, settings: imgSettings, factor: imgProps.Factor, width: imgProps.Width,
+                imgAlt: imgProps.ImgAlt, imgClass: imgProps.ImgClasses, imgAttributes: imgProps.OtherAttributes,
+                pictureClass: imgProps.PicClasses);
 
             // replace the old img tag with the new one
-            html = html.Replace(originalImgTag, picture.Picture.Class(imgProps.PicClasses).ToString());
+            html = html.Replace(originalImgTag, picture.ToString());
         }
 
         // reconstruct the original html and return wrapped in the realContainer

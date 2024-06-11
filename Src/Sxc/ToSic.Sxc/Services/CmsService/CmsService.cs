@@ -77,7 +77,7 @@ internal class CmsService: ServiceForDynamicCode, ICmsService
             return l.Return(cntHelper.Wrap(value, defaultToolbar: false), "string, default no toolbar");
 
         // WYSIWYG
-        var fieldAdam = _CodeApiSvc.AsAdam(field.Parent, field.Name);
+        var fieldAdam = _CodeApiSvc.Cdf.Folder(field.Parent, field.Name, field);
         var htmlResult = _stringWysiwyg.New()
             .Init(field, contentType, attribute, fieldAdam, debug, imageSettings)
             .HtmlForStringAndWysiwyg(value);
