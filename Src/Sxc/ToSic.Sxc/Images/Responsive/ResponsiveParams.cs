@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Metadata;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Images.Internal;
 
 namespace ToSic.Sxc.Images;
 
@@ -30,6 +31,9 @@ internal class ResponsiveParams
     public string PictureClass { get; init; }
 
     public object Toolbar { get; init; }
+
+    public ImageDecorator ImageDecoratorOrNull => Field?.ImageDecoratorOrNull
+                                                  ?? ImageDecorator.GetOrNull(HasMetadataOrNull, []);
 
     internal ResponsiveParams(object target)
     {

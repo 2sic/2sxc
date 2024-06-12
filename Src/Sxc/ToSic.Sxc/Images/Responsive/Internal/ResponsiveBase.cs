@@ -74,22 +74,27 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         if (Height != null) imgTag = imgTag.Height(Height);
 
         // Add lightbox if enabled
-        if (Params.Field?.ImageDecoratorOrNull?.LightboxIsEnabled == true)
-            imgTag = AttachLightspeed(imgTag, Params.Field.ImageDecoratorOrNull);
+        if (Params.ImageDecoratorOrNull?.LightboxIsEnabled == true)
+            imgTag = AttachLightbox(imgTag, Params.ImageDecoratorOrNull);
+
+        // #alwaysOnImg
+        //if (Params.Toolbar as string == "img")
+        {
+            var tlb = ToolbarOrNull(/*true*/);
+            if (tlb != null) imgTag.Attr(tlb);
+        }
 
         return imgTag;
     }, enabled: ImgService.Debug);
 
 
 
-    private Img AttachLightspeed(Img original, ImageDecorator decorator)
+    private Img AttachLightbox(Img original, ImageDecorator decorator)
     {
-        // TODO: IF ENABLE LIGHTBOX, START EVERYTHING
         // 3. Mark the image for lightbox use, and possibly give it the attributes like
         // - data-title="My caption"
         // - data-alt="My alt text"
         // - large image
-        // 4. ensure TurnOn
 
         // TODO: use constants for most scenarios
         var l = Log.Fn<Img>();
@@ -147,25 +152,38 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
 
     private IHtmlTag GetTagWithToolbar()
     {
+        // experimental #alwaysOnImg v18.0 - always put toolbar on img...
         var tag = GetOutermostTag();
-
-        // fairly experimental, don't want things to break
-        try
-        {
-            // attach edit if we are in edit-mode and the link was generated through a call
-            if (ImgService.EditOrNull?.Enabled != true) return tag;
-            if (Params.Field?.Parent == null) return tag;
-
-            // Check if it's not a demo-entity, in which case editing settings shouldn't happen
-            if (Params.Field.Parent.Entity.DisableInlineEditSafe()) return tag;
-
-            // Get toolbar - if it's null (basically when the ImageService fails) stop here
-            var toolbar = Toolbar();
-            if (toolbar != null) tag.Attr(toolbar);
-        }
-        catch { /* ignore */ }
-
         return tag;
+
+        
+        //// Get toolbar - if it's null (basically when the ImageService fails) stop here
+        //var toolbar = ToolbarOrNull(false);
+        //if (toolbar != null) tag = tag.Attr(toolbar);
+
+        //return tag;
+    }
+
+    /// <summary>
+    /// Get the toolbar - or null, based on
+    /// - various conditions if toolbars are available
+    /// - the question if it is being retrieved for the IMG tag or not.
+    /// </summary>
+    /// <param name="forImage">If this is exclusively for the img-tag.</param>
+    /// <returns></returns>
+    private IToolbarBuilder ToolbarOrNull(/*bool forImage*/)
+    {
+        // attach edit if we are in edit-mode and the link was generated through a call
+        if (ImgService.EditOrNull?.Enabled != true) return null;
+        if (Params.Field?.Parent == null) return null;
+
+        // Check if it's not a demo-entity, in which case editing settings shouldn't happen
+        if (Params.Field.Parent.Entity.DisableInlineEditSafe()) return null;
+
+        // Get toolbar - if it's null (basically when the ImageService fails) stop here
+        // #alwaysOnImg if (forImage == (Params.Toolbar as string == "img"))
+        return Toolbar();
+        // #alwaysOnImg return null;
     }
 
     #region Toolbar
@@ -249,11 +267,11 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
 
 
     /// <inheritdoc />
-    public string Description => _description.Get(() => Params.Field?.ImageDecoratorOrNull?.Description);
+    public string Description => _description.Get(() => Params.ImageDecoratorOrNull?.Description);
     private readonly GetOnce<string> _description = new();
 
     /// <inheritdoc />
-    public string DescriptionExtended => _descriptionDet.Get(() => Params.Field?.ImageDecoratorOrNull?.DescriptionExtended);
+    public string DescriptionExtended => _descriptionDet.Get(() => Params.ImageDecoratorOrNull?.DescriptionExtended);
     private readonly GetOnce<string> _descriptionDet = new();
 
     /// <inheritdoc />
@@ -263,7 +281,7 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         // If we take the image description, empty does NOT take precedence, it will be treated as not-set
         ?? Description.NullIfNoValue()
         // If all else fails, take the fallback specified in the call - IF it's allowed
-        ?? (Params.Field?.ImageDecoratorOrNull?.SkipFallbackTitle ?? false ? null : Params.ImgAltFallback)
+        ?? (Params.ImageDecoratorOrNull?.SkipFallbackTitle ?? false ? null : Params.ImgAltFallback)
     );
     private readonly GetOnce<string> _alt = new();
 
