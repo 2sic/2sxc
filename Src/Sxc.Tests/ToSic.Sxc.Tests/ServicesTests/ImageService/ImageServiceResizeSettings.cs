@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void EmptyOnlyWidth()
         {
-            var settings = this.SettingsTA(width: 100);
+            var settings = this.TacSettings(width: 100);
             Assert.AreEqual(100, settings.Width);
             AssertAllEmptyExceptSpecified(settings, nameof(settings.Width));
         }
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void EmptyOnlyHeight()
         {
-            var settings = this.SettingsTA(height: 100);
+            var settings = this.TacSettings(height: 100);
             Assert.AreEqual(100, settings.Height);
             AssertAllEmptyExceptSpecified(settings, nameof(settings.Height));
         }
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void EmptyOnlyFormat()
         {
-            var settings = this.SettingsTA(format: "jpg");
+            var settings = this.TacSettings(format: "jpg");
             Assert.AreEqual("jpg", settings.Format);
             AssertAllEmptyExceptSpecified(settings, nameof(settings.Format));
         }
@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void EmptyOnlyResizeMode()
         {
-            var settings = this.SettingsTA(resizeMode: ImageConstants.ModeCrop);
+            var settings = this.TacSettings(resizeMode: ImageConstants.ModeCrop);
             Assert.AreEqual(ImageConstants.ModeCrop, settings.ResizeMode);
             AssertAllEmptyExceptSpecified(settings, nameof(settings.ResizeMode));
         }
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public void EmptyOnlyScaleMode()
         {
             // todo: use constants for the final result
-            var settings = this.SettingsTA(scaleMode: "up");
+            var settings = this.TacSettings(scaleMode: "up");
             Assert.AreEqual("upscaleonly", settings.ScaleMode);
             AssertAllEmptyExceptSpecified(settings, nameof(settings.ScaleMode));
         }
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void EmptyOnlyParameters()
         {
-            var settings = this.SettingsTA(parameters: "count=17");
+            var settings = this.TacSettings(parameters: "count=17");
             Assert.AreEqual("count=17", settings.Parameters.NvcToString());
             AssertAllEmptyExceptSpecified(settings, nameof(settings.Parameters));
         }
@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void EmptyOnlyQuality75()
         {
-            var settings = this.SettingsTA(quality: 75);
+            var settings = this.TacSettings(quality: 75);
             Assert.AreEqual(75, settings.Quality);
             AssertAllEmptyExceptSpecified(settings, nameof(settings.Quality));
         }
@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void EmptyOnlyQualityDot75()
         {
-            var settings = this.SettingsTA(quality: .75f);
+            var settings = this.TacSettings(quality: .75f);
             Assert.AreEqual(75, settings.Quality);
             AssertAllEmptyExceptSpecified(settings, nameof(settings.Quality));
         }
@@ -89,7 +89,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void EmptyWidthAndHeight()
         {
-            var settings = this.SettingsTA(width: 100, height: 49);
+            var settings = this.TacSettings(width: 100, height: 49);
             Assert.AreEqual(100, settings.Width);
             Assert.AreEqual(49, settings.Height);
             AssertAllEmptyExceptSpecified(settings, new[] { nameof(settings.Width), nameof(settings.Height) });

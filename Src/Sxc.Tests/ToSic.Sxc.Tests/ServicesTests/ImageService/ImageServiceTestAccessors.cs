@@ -11,22 +11,7 @@ namespace ToSic.Sxc.Tests.ServicesTests.ImageService
         public static IImageService ImgSvc(this TestBaseSxc parent) => parent.GetService<IImageService>();
         public static IImageService ImgSvc(this TestBaseSxcDb parent) => parent.GetService<IImageService>();
 
-        //public static IResizeSettings SettingsTA(this IImageService parent,
-        //    object settings = default,
-        //    string noParamOrder = Parameters.Protector,
-        //    object factor = default,
-        //    object width = default,
-        //    object height = default,
-        //    object quality = default,
-        //    string resizeMode = default,
-        //    string scaleMode = default,
-        //    string format = default,
-        //    object aspectRatio = default,
-        //    string parameters = default,
-        //    object recipe = default
-        //    ) => parent.Settings(settings: settings, noParamOrder: noParamOrder, factor: factor, width: width, height: height, quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, recipe: recipe);
-
-        public static IResizeSettings SettingsTA(this TestBaseSxc parent,
+        public static IResizeSettings TacSettings(this IImageService parent,
             object settings = default,
             NoParamOrder noParamOrder = default,
             object factor = default,
@@ -39,7 +24,22 @@ namespace ToSic.Sxc.Tests.ServicesTests.ImageService
             object aspectRatio = default,
             string parameters = default,
             object recipe = default
-            ) => parent.ImgSvc().Settings(settings: settings, noParamOrder: noParamOrder, factor: factor, width: width, height: height, quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, recipe: recipe);
+            ) => parent.Settings(settings: settings, noParamOrder: noParamOrder, factor: factor, width: width, height: height, quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, recipe: recipe);
+
+        public static IResizeSettings TacSettings(this TestBaseSxc parent,
+            object settings = default,
+            NoParamOrder noParamOrder = default,
+            object factor = default,
+            object width = default,
+            object height = default,
+            object quality = default,
+            string resizeMode = default,
+            string scaleMode = default,
+            string format = default,
+            object aspectRatio = default,
+            string parameters = default,
+            object recipe = default
+            ) => parent.ImgSvc().TacSettings(settings: settings, noParamOrder: noParamOrder, factor: factor, width: width, height: height, quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, recipe: recipe);
 
         public static IImageFormat GetFormatTA(this TestBaseSxcDb parent, string path) =>
             parent.ImgSvc().GetFormat(path);

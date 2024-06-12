@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Tests.ServicesTests.ImageService;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.ServicesTests
@@ -70,7 +71,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         {
             var svc = GetService<IImageService>();
             var rule = new Recipe(variants: variants);
-            var settings = svc.Settings(width: 120, height: 24, recipe: inPicTag ? null : rule);
+            var settings = svc.TacSettings(width: 120, height: 24, recipe: inPicTag ? null : rule);
             var pic = svc.Picture(link: ImgUrl, settings: settings, recipe: inPicTag ? rule : null);
 
             var expected = $"<picture>{expectedParts}<img src='{Img120x24}'></picture>";
@@ -87,7 +88,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             TestManyButThrowOnceOnly(testSet.Select(ts => (ts.Name, ts)), test =>
             {
                 var svc = GetService<IImageService>();
-                var settings = svc.Settings(width: test.Set.Width, height: test.Set.Height,
+                var settings = svc.TacSettings(width: test.Set.Width, height: test.Set.Height,
                     recipe: test.Set.SrcSetRule);
                 var sources = svc.Picture(link: ImgUrl, settings: settings, recipe: test.Pic.SrcSetRule).Sources;
 
