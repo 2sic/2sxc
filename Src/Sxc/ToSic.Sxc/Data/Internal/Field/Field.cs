@@ -6,22 +6,12 @@ namespace ToSic.Sxc.Data.Internal;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class Field: IField
+public class Field(ITypedItem parent, string name, CodeDataFactory cdf) : IField
 {
-
-    internal Field(ITypedItem parent, string name, CodeDataFactory cdf)
-    {
-        Parent = parent;
-        _cdf = cdf;
-        Name = name;
-    }
-
-    private readonly CodeDataFactory _cdf;
-
     /// <inheritdoc />
-    public string Name { get; }
+    public string Name { get; } = name;
 
-    public ITypedItem Parent { get; }
+    public ITypedItem Parent { get; } = parent;
 
     /// <inheritdoc />
     [PrivateApi("Was public till 16.03, but don't think it should be surfaced...")]
@@ -57,7 +47,7 @@ public class Field: IField
 
 
     // 2023-08-14 v16.03 removed by 2dm as never used; KISS
-    public IMetadata Metadata => _dynMeta.Get(() => new Metadata.Metadata(MetadataOfValue, _cdf));
+    public IMetadata Metadata => _dynMeta.Get(() => new Metadata.Metadata(MetadataOfValue, cdf));
     private readonly GetOnce<IMetadata> _dynMeta = new();
 
 
@@ -65,16 +55,16 @@ public class Field: IField
     {
         if (Raw is not string rawString || string.IsNullOrWhiteSpace(rawString))
             return null;
-        var appState = _cdf?.BlockOrNull?.Context?.AppState;
+        var appState = cdf?.BlockOrNull?.Context?.AppState;
         var md = appState?.GetMetadataOf(TargetTypes.CmsItem, rawString, "");
-        ImageDecorator.AddRecommendations(md, Url, _cdf?._CodeApiSvc); // needs the url so it can check if we use image recommendations
+        ImageDecorator.AddRecommendations(md, Url, cdf?._CodeApiSvc); // needs the url so it can check if we use image recommendations
         return md;
     });
     private readonly GetOnce<IMetadataOf> _itemMd = new();
 
     [PrivateApi("Internal use only, may change at any time")]
     public ImageDecorator ImageDecoratorOrNull =>
-        _imgDec.Get(() => ImageDecorator.GetOrNull(this, _cdf.Dimensions));
+        _imgDec.Get(() => ImageDecorator.GetOrNull(this, cdf.Dimensions));
     private readonly GetOnce<ImageDecorator> _imgDec = new();
 
     IMetadataOf IHasMetadata.Metadata => MetadataOfValue;

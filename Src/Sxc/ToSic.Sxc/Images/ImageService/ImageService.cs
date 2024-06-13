@@ -73,16 +73,12 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object recipe = null)
     {
         var prefetch = ResponsiveParams.Prepare(link);
-        //var field = link as IField ?? (link as IFromField)?.Field;
-        //var mdProvider = link as IHasMetadata ?? field;
-        //var imageDecoratorOrNull = field?.ImageDecoratorOrNull ?? ImageDecorator.GetOrNull(mdProvider, []);
-
-        var settingsOrNameOrNull = settings ?? prefetch.ImageDecoratorOrNull?.ResizeSettings?.NullIfNoValue();
-
-        return new ResponsiveImage(this, PageService,
+        return new ResponsiveImage(
+            this,
+            PageService,
             new(prefetch)
             {
-                Settings = Settings(settingsOrNameOrNull, factor: factor, width: width, recipe: recipe),
+                Settings = Settings(settings ?? prefetch.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe),
                 ImgAlt = imgAlt,
                 ImgAltFallback = imgAltFallback,
                 ImgClass = imgClass,
@@ -110,12 +106,12 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object recipe = default)
     {
         var prefetch = ResponsiveParams.Prepare(link);
-        var settingsOrNameOrNull = settings ?? prefetch.ImageDecoratorOrNull?.ResizeSettings?.NullIfNoValue();
-
-        return new ResponsivePicture(this, PageService,
+        return new ResponsivePicture(
+            this,
+            PageService,
             new(prefetch)
             {
-                Settings = Settings(settingsOrNameOrNull, factor: factor, width: width, recipe: recipe),
+                Settings = Settings(settings ?? prefetch.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe),
                 ImgAlt = imgAlt,
                 ImgAltFallback = imgAltFallback,
                 ImgClass = imgClass,
