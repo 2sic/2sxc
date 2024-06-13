@@ -532,7 +532,7 @@
             "Metadata": [
               {
                 "Id": 144405,
-                "Version": 4,
+                "Version": 5,
                 "Guid": "0808ea36-2012-4c8e-9c81-9388ad6aaf91",
                 "Type": {
                   "Id": "ContentType",
@@ -540,6 +540,9 @@
                 },
                 "Attributes": {
                   "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
                     "Description": {
                       "en-us": ""
                     },
@@ -547,8 +550,8 @@
                       "en-us": ""
                     },
                     "EditInstructions": {
-                      "en-us": "<p>Give your image some alternate text for screen readers and configure how it should be resized.</p>",
-                      "de-de": "<p>Gib deinem Bild eine Alternativbeschreibung (f&uuml;r Google und f&uuml;r Menschen mit Behinderungen). Du kannst auch steuern, wie das Bild automatisch zugeschnitten wird.&nbsp;</p>"
+                      "en-us": "",
+                      "de-de": ""
                     },
                     "Label": {
                       "en-us": "Image Details and Configuration",
@@ -700,7 +703,7 @@
                 "Metadata": [
                   {
                     "Id": 177517,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "b309674f-e06c-4657-9b07-30a32df2e762",
                     "Type": {
                       "Id": "@All",
@@ -725,7 +728,8 @@
                           "de-de": "Titel & Beschreibung"
                         },
                         "Notes": {
-                          "en-us": ""
+                          "en-us": "<p>Describe your image for screen readers and SEO.</p>",
+                          "de-de": "<p>Beschreibe dein Bild f&uuml;r Menschen mit Behinderungen und Google / SEO.</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -772,7 +776,7 @@
                   },
                   {
                     "Id": 177518,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "7eaa2ece-4ce6-4307-8253-cc521404bbee",
                     "Type": {
                       "Id": "@empty-default",
@@ -1261,7 +1265,7 @@
                 "Metadata": [
                   {
                     "Id": 177515,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "32bf5ace-2134-46f3-bb9c-4cf841127bf4",
                     "Type": {
                       "Id": "@All",
@@ -1286,7 +1290,8 @@
                           "de-de": "Bild zuschneiden"
                         },
                         "Notes": {
-                          "en-us": ""
+                          "en-us": "<p>Specify how the image should be cropped if it is automatically resized.</p>",
+                          "de-de": "<p>Gib an wie das Bild zugeschnitten werden soll, wenn es automatisch angepasst wird.&nbsp;</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -1333,7 +1338,7 @@
                   },
                   {
                     "Id": 177516,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "7536e75b-9ffd-4ae6-b84c-f9f4603a4ae3",
                     "Type": {
                       "Id": "@empty-default",
@@ -1581,6 +1586,187 @@
                 ]
               },
               {
+                "Name": "ResizeSettings",
+                "Type": "String",
+                "InputType": "string-picker",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183832,
+                    "Version": 1,
+                    "Guid": "d44c8aa9-2ba7-4f8a-aa26-78308821ea5f",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183833,
+                    "Version": 1,
+                    "Guid": "5f0a75f7-90be-41c5-a543-0531becaaa79",
+                    "Type": {
+                      "Id": "@string-default",
+                      "Name": "@string-default"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183831,
+                    "Version": 8,
+                    "Guid": "67110684-0e52-4c18-9599-8c254dd684f3",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-picker"
+                        },
+                        "Name": {
+                          "en-us": "Resize Settings"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Override the resize settings on this image.</p>",
+                          "de-de": "<p>Verwende eigene Einstellungen f&uuml;r die Anzeigegr&ouml;sse dieses Bildes.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "c4185f6f-ef3e-4718-bdc9-2ca262fa4437"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183838,
+                    "Version": 4,
+                    "Guid": "4e6de09a-9ed0-4bff-8c49-0fc18065ab7e",
+                    "Type": {
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CreateParameters": {
+                          "en-us": ""
+                        },
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "list"
+                        },
+                        "Separator": {
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "29e24872-6359-4c9e-9c0c-c5a9e68a4a7d"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": true
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "MessageCropRequirements",
                 "Type": "Empty",
                 "InputType": "empty-message",
@@ -1767,7 +1953,7 @@
                 "Metadata": [
                   {
                     "Id": 183823,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "7c5e13b3-758d-4fa2-9285-b919a3d3497f",
                     "Type": {
                       "Id": "@All",
@@ -1838,7 +2024,7 @@
                   },
                   {
                     "Id": 183826,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "6387d26a-87d5-4c6e-93a7-ac1b894c68b8",
                     "Type": {
                       "Id": "@Boolean",
@@ -1851,8 +2037,8 @@
                           "de-de": "Keine Lightbox / kein PopUp"
                         },
                         "TitleIndeterminate": {
-                          "en-us": "Lightbox / PopUp not configured",
-                          "de-de": "LightBox / PopUp nicht konfiguriert"
+                          "en-us": "Lightbox / PopUp not configured (use defaults)",
+                          "de-de": "LightBox / PopUp nicht konfiguriert (nutze Standardeinstellungen)"
                         },
                         "TitleTrue": {
                           "en-us": "Use Lightbox / PopUp",
@@ -1985,124 +2171,6 @@
                       },
                       "Boolean": {
                         "EnableTextEntry": {
-                          "en-us": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  }
-                ]
-              },
-              {
-                "Name": "ResizeSettings",
-                "Type": "String",
-                "InputType": "string-default",
-                "IsTitle": false,
-                "Metadata": [
-                  {
-                    "Id": 183832,
-                    "Version": 1,
-                    "Guid": "d44c8aa9-2ba7-4f8a-aa26-78308821ea5f",
-                    "Type": {
-                      "Id": "@String",
-                      "Name": "@String"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "DropdownValues": {
-                          "en-us": ""
-                        },
-                        "InputType": {
-                          "en-us": ""
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 183833,
-                    "Version": 1,
-                    "Guid": "5f0a75f7-90be-41c5-a543-0531becaaa79",
-                    "Type": {
-                      "Id": "@string-default",
-                      "Name": "@string-default"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "InputFontFamily": {
-                          "en-us": ""
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 183831,
-                    "Version": 3,
-                    "Guid": "67110684-0e52-4c18-9599-8c254dd684f3",
-                    "Type": {
-                      "Id": "@All",
-                      "Name": "@All"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "CustomJavaScript": {
-                          "en-us": ""
-                        },
-                        "DefaultValue": {
-                          "en-us": ""
-                        },
-                        "Information": {
-                          "en-us": ""
-                        },
-                        "InputType": {
-                          "en-us": "string-default"
-                        },
-                        "Name": {
-                          "en-us": "ResizeSettings - experimental! v18 not implemented yet"
-                        },
-                        "Notes": {
-                          "en-us": ""
-                        },
-                        "Placeholder": {
-                          "en-us": ""
-                        },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
-                        "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
-                          "en-us": ""
-                        }
-                      },
-                      "Entity": {
-                        "Errors": {
-                          "*": []
-                        },
-                        "Formulas": {
-                          "*": [
-                            "c4185f6f-ef3e-4718-bdc9-2ca262fa4437"
-                          ]
-                        },
-                        "Warnings": {
-                          "*": []
-                        }
-                      },
-                      "Boolean": {
-                        "Disabled": {
-                          "en-us": false
-                        },
-                        "DisableTranslation": {
-                          "en-us": false
-                        },
-                        "Required": {
-                          "en-us": false
-                        },
-                        "VisibleInEditUI": {
                           "en-us": true
                         }
                       }
@@ -2315,7 +2383,7 @@
             },
             {
               "Id": 183834,
-              "Version": 1,
+              "Version": 2,
               "Guid": "c4185f6f-ef3e-4718-bdc9-2ca262fa4437",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -2324,7 +2392,7 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v2((data, context) => {\n  return context.debug;\n});"
+                    "en-us": "v2((data, context) => {\n  // show when crop-to is available, or if it's not empty\n  return data.CropBehavior == 'to' || !!data.ResizeSettings;\n});"
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
@@ -2336,6 +2404,58 @@
                 "Boolean": {
                   "Enabled": {
                     "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183837,
+              "Version": 6,
+              "Guid": "29e24872-6359-4c9e-9c0c-c5a9e68a4a7d",
+              "Type": {
+                "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
+                "Name": "UiPickerSourceQuery"
+              },
+              "Attributes": {
+                "String": {
+                  "CreateTypes": {
+                    "en-us": ""
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": "<p>[Item:Description]</p>"
+                  },
+                  "ItemTooltip": {
+                    "en-us": ""
+                  },
+                  "Label": {
+                    "en-us": "Title"
+                  },
+                  "MoreFields": {
+                    "en-us": ""
+                  },
+                  "Query": {
+                    "en-us": "Eav.Queries.Global.SettingsEntities"
+                  },
+                  "QueryParameters": {
+                    "en-us": "ContentType=⚙️Image"
+                  },
+                  "StreamName": {
+                    "en-us": "Default"
+                  },
+                  "Title": {
+                    "en-us": "Settings - Image Resizes"
+                  },
+                  "Value": {
+                    "en-us": "Title"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
                   }
                 }
               },
