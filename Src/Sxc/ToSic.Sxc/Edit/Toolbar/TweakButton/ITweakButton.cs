@@ -193,6 +193,16 @@ public interface ITweakButton
 
     #endregion
 
+    /// <summary>
+    /// Optional parameter to skip adding this button-rule.
+    /// If the condition is false, this rule will not be added.
+    /// This may sometimes be confusing:
+    ///
+    /// - most rules are add rules, so if this is false, it will not add the button
+    /// - but if you have a remove rule, it will _not_ remove the button
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     ITweakButton Condition(bool value);

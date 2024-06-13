@@ -3,7 +3,6 @@ using System.Collections.Immutable;
 using System.Text.Json;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web.Internal.Url;
-using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleForEntity;
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
 

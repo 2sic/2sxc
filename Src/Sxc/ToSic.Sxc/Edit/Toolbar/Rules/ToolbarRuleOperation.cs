@@ -95,20 +95,7 @@ internal class ToolbarRuleOperation
     //}
 
     internal static char Pick(string op, ToolbarRuleOps defOp, bool? condition = default)
-    {
-        var result = PrePick(op, defOp);
-        if (condition != false) return result;
-        return result switch
-        {
-            AddOperation => RemoveOperation,
-            AutoOperation => RemoveOperation,
-            ModifyOperation => SkipInclude,
-            RemoveOperation => SkipInclude,
-            NoOperation => RemoveOperation,
-            UnknownOperation => SkipInclude,
-            _ => result
-        };
-    }
+        => condition == false ? SkipInclude : PrePick(op, defOp);
 
     private static char PrePick(string op, ToolbarRuleOps defOp)
     {
