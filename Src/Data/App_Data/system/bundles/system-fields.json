@@ -6634,6 +6634,42 @@
                   "TargetType": 5,
                   "String": "@hyperlink-default"
                 }
+              },
+              {
+                "Id": 183847,
+                "Version": 1,
+                "Guid": "1b115da0-7fce-49a2-ad45-71ae62348765",
+                "Type": {
+                  "Id": "c490b369-9cd2-4298-af74-19c1e438cdfc",
+                  "Name": "MetadataExpectedDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "DeleteWarning": {
+                      "en-us": ""
+                    },
+                    "MetadataTypes": {
+                      "en-us": "ImageDecorator"
+                    },
+                    "Title": {
+                      "en-us": "Links / Images expect Image Decorator Metadata"
+                    }
+                  },
+                  "Number": {
+                    "Amount": {
+                      "en-us": 1
+                    },
+                    "TargetType": {
+                      "en-us": 2
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "@hyperlink-default"
+                }
               }
             ],
             "Attributes": []
@@ -6718,6 +6754,42 @@
                   }
                 },
                 "Owner": "dnn:userid=1",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "@hyperlink-library"
+                }
+              },
+              {
+                "Id": 183848,
+                "Version": 1,
+                "Guid": "576d2631-c274-4acb-b42b-c7dd40913be3",
+                "Type": {
+                  "Id": "c490b369-9cd2-4298-af74-19c1e438cdfc",
+                  "Name": "MetadataExpectedDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "DeleteWarning": {
+                      "en-us": ""
+                    },
+                    "MetadataTypes": {
+                      "en-us": "ImageDecorator"
+                    },
+                    "Title": {
+                      "en-us": "Link Libraries / Albums expect ImageDecorator Metadata"
+                    }
+                  },
+                  "Number": {
+                    "Amount": {
+                      "en-us": 1
+                    },
+                    "TargetType": {
+                      "en-us": 2
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
                 "For": {
                   "Target": "ContentType",
                   "TargetType": 5,
@@ -9126,7 +9198,7 @@
               },
               {
                 "Id": 183695,
-                "Version": 2,
+                "Version": 3,
                 "Guid": "3c274d21-241c-4700-ad1a-97485aa191db",
                 "Type": {
                   "Id": "ContentType-InputType",
@@ -9138,7 +9210,7 @@
                       "en-us": ""
                     },
                     "ConfigTypes": {
-                      "en-us": "@string-dropdown-query"
+                      "en-us": "@All,@string-dropdown-query"
                     },
                     "Description": {
                       "en-us": ""
@@ -14086,6 +14158,42 @@
                   "TargetType": 5,
                   "String": "@string-wysiwyg"
                 }
+              },
+              {
+                "Id": 183845,
+                "Version": 2,
+                "Guid": "746882b7-96af-4903-9ee7-da6fe2b3a42e",
+                "Type": {
+                  "Id": "c490b369-9cd2-4298-af74-19c1e438cdfc",
+                  "Name": "MetadataExpectedDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "DeleteWarning": {
+                      "en-us": ""
+                    },
+                    "MetadataTypes": {
+                      "en-us": "ImageDecorator"
+                    },
+                    "Title": {
+                      "en-us": "Wysiwyg expects Image Decorator Metadata"
+                    }
+                  },
+                  "Number": {
+                    "Amount": {
+                      "en-us": 1
+                    },
+                    "TargetType": {
+                      "en-us": 2
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "@string-wysiwyg"
+                }
               }
             ],
             "Attributes": [
@@ -14097,7 +14205,7 @@
                 "Metadata": [
                   {
                     "Id": 166491,
-                    "Version": 11,
+                    "Version": 12,
                     "Guid": "b6b90707-fe77-4806-b4ce-ba3a6274ae7a",
                     "Type": {
                       "Id": "@All",
@@ -14111,11 +14219,14 @@
                         "DefaultValue": {
                           "en-us": "d3dde02f-c1dc-43b8-a8b7-4be3c43eadd0"
                         },
+                        "Information": {
+                          "en-us": ""
+                        },
                         "InputType": {
                           "en-us": "string-dropdown-query"
                         },
                         "Name": {
-                          "en-us": "Configuration / Presets (new v15)"
+                          "en-us": "Configuration / Presets"
                         },
                         "Notes": {
                           "en-us": "<p>New v15.04 - see <a href=\"https://r.2sxc.org/string-wyswiyg\" target=\"_blank\" rel=\"noopener\">docs</a>.</p>"
@@ -14123,7 +14234,15 @@
                         "Placeholder": {
                           "en-us": "Default mode"
                         },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
                         "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -14177,7 +14296,7 @@
                   },
                   {
                     "Id": 166505,
-                    "Version": 10,
+                    "Version": 11,
                     "Guid": "81e6ae95-754e-42d6-9fcb-6deb20e52668",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -14190,6 +14309,9 @@
                         },
                         "Label": {
                           "en-us": "Title"
+                        },
+                        "MoreFields": {
+                          "en-us": ""
                         },
                         "Query": {
                           "en-us": "Eav.Queries.Global.SettingsEntities"
