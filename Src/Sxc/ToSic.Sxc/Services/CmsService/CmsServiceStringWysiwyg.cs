@@ -4,6 +4,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web.Internal.HtmlParsing;
 using ToSic.Sxc.Web.Internal.PageFeatures;
@@ -78,8 +79,9 @@ internal class CmsServiceStringWysiwyg(CmsServiceImageExtractor imageExtractor)
         var imgTags = RegexUtil.ImagesDetection.Value.Matches(html);
         if (imgTags.Count == 0)
             return l.Return(new(true, html, classes), "can't find img tags with data-cmsid, done");
-        var imgSettings = ImageSettings ?? "Wysiwyg";
-        l.A($"Found {imgTags.Count} images to process with settings: {imgSettings}");
+
+        var defaultImageSettings = ImageSettings ?? "Wysiwyg";
+        l.A($"Found {imgTags.Count} images to process with default {defaultImageSettings}");
 
         foreach (var imgTag in imgTags.Cast<Match>())
         {
@@ -87,8 +89,16 @@ internal class CmsServiceStringWysiwyg(CmsServiceImageExtractor imageExtractor)
 
             var imgProps = imageExtractor.ExtractImageProperties(originalImgTag, Field.Parent.Guid, Folder);
 
+            var preparedImgParams = imgProps.File != null ? ResponsiveParams.Prepare(imgProps.File) : null;
+
+            // if the file itself specifies a resize settings, use it, otherwise use the default settings
+            var imgSettings = preparedImgParams?.ImageDecoratorOrNull?.ResizeSettings ?? defaultImageSettings;
+
+            // In most cases use the preparedImgParams, but if it's null, use the src attribute
+            var target = (object)preparedImgParams ?? imgProps.Src;
+
             // use the IImageService to create Picture tags for it
-            var picture = ServiceKit.Image.Picture(link: imgProps.File as object ?? imgProps.Src, settings: imgSettings, factor: imgProps.Factor, width: imgProps.Width,
+            var picture = ServiceKit.Image.Picture(link: target, settings: imgSettings, factor: imgProps.Factor, width: imgProps.Width,
                 imgAlt: imgProps.ImgAlt, imgClass: imgProps.ImgClasses, imgAttributes: imgProps.OtherAttributes,
                 pictureClass: imgProps.PicClasses);
 

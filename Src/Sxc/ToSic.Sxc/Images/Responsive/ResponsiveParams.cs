@@ -9,18 +9,19 @@ namespace ToSic.Sxc.Images;
 /// Helper class to handle all kinds of parameters passed to a responsive tag
 /// </summary>
 [PrivateApi]
-internal class ResponsiveParams
+internal class ResponsiveParams(ResponsiveParams.PreparedResponsiveParams prepared)
 {
     /// <summary>
     /// The only reliable object which knows about the url - can never be null
     /// </summary>
-    public IHasLink Link { get; }
+    public IHasLink Link { get; } = prepared.HasLinkOrNull;
 
     /// <summary>
     /// The field used for this responsive output - can be null!
     /// </summary>
-    public IField Field { get; }
-    public IHasMetadata HasMetadataOrNull { get; }
+    public IField Field { get; } = prepared.FieldOrNull;
+
+    public IHasMetadata HasMetadataOrNull { get; } = prepared.HasMdOrNull;
     public IResizeSettings Settings { get; init; }
     public string ImgAlt { get; init; }
     public string ImgAltFallback { get; init; }
@@ -32,31 +33,28 @@ internal class ResponsiveParams
 
     public object Toolbar { get; init; }
 
-    public ImageDecorator ImageDecoratorOrNull => Field?.ImageDecoratorOrNull
-                                                  ?? ImageDecorator.GetOrNull(HasMetadataOrNull, []);
+    public ImageDecorator ImageDecoratorOrNull { get; init; } = prepared.ImageDecoratorOrNull;
 
-    internal ResponsiveParams(object target)
+    internal static PreparedResponsiveParams Prepare(object target)
     {
-        Field = target as IField ?? (target as IFromField)?.Field;
-        HasMetadataOrNull = target as IHasMetadata ?? Field;
-        Link = target as IHasLink ?? new HasLink(target as string);
-    }
+        switch (target)
+        {
+            case null: return new(null, null, null, null);
+            case PreparedResponsiveParams already: return already;
+        }
 
-    public ResponsiveParams((IField FieldOrNull, IHasMetadata HasMdOrNull, ImageDecorator ImageDecoratorOrNull, IHasLink HasLinkOrNull) inits)
-    {
-        Field = inits.FieldOrNull;
-        HasMetadataOrNull = inits.HasMdOrNull;
-        Link = inits.HasLinkOrNull;
-        //ImageDecoratorOrNull = inits.ImageDecoratorOrNull;
-    }
-
-    internal static (IField FieldOrNull, IHasMetadata HasMdOrNull, ImageDecorator ImageDecoratorOrNull, IHasLink HasLinkOrNull) Prepare(object target)
-    {
         var field = target as IField ?? (target as IFromField)?.Field;
         var link = target as IHasLink ?? new HasLink(target as string);
         var mdProvider = target as IHasMetadata ?? field;
         var imageDecoratorOrNull = field?.ImageDecoratorOrNull ?? ImageDecorator.GetOrNull(mdProvider, []);
 
-        return (field, mdProvider, imageDecoratorOrNull, link);
+        return new(field, mdProvider, imageDecoratorOrNull, link);
     }
+
+    internal record PreparedResponsiveParams(
+        IField FieldOrNull,
+        IHasMetadata HasMdOrNull,
+        ImageDecorator ImageDecoratorOrNull,
+        IHasLink HasLinkOrNull
+    );
 }
