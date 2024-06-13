@@ -80,11 +80,12 @@ public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBase
 
     #region Lightbox - new v18
 
-    public bool LightboxIsEnabled => GetThis(false);
+    /// <summary>
+    /// Important: Triple-State: can be null even if the entity exists, 
+    /// </summary>
+    public bool? LightboxIsEnabled => GetThis<bool?>(null);
 
     public string LightboxGroup => GetThis("");
-
-    public bool LightboxUseGroup => LightboxIsEnabled && LightboxGroup.HasValue();
 
     #endregion
 

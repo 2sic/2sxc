@@ -5,6 +5,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web.Internal.HtmlParsing;
 using ToSic.Sxc.Web.Internal.PageFeatures;
@@ -34,10 +35,15 @@ internal class CmsServiceStringWysiwyg(CmsServiceImageExtractor imageExtractor)
         return l.ReturnAsOk(this);
     }
 
+    /// <summary>FYI: is never allowed to be null.</summary>
     protected IField Field;
+    /// <summary>FYI: is never allowed to be null.</summary>
     protected IContentType ContentType;
+    /// <summary>FYI: is never allowed to be null.</summary>
     protected IContentTypeAttribute Attribute;
+    /// <summary>FYI: could be null.</summary>
     protected object ImageSettings;
+    /// <summary>FYI: is never allowed to be null.</summary>
     protected IFolder Folder;
 
     #endregion
@@ -80,7 +86,13 @@ internal class CmsServiceStringWysiwyg(CmsServiceImageExtractor imageExtractor)
         if (imgTags.Count == 0)
             return l.Return(new(true, html, classes), "can't find img tags with data-cmsid, done");
 
-        var defaultImageSettings = ImageSettings ?? "Wysiwyg";
+        // check if field metadata specifies alternate Lightbox or image resize settings
+
+        var fieldMd = ImageDecorator.GetOrNull(Attribute, [null]);
+
+        // Assume fallback-image settings to be the specified or "Wysiwyg"
+        var defaultImageSettings = fieldMd?.ResizeSettings ?? ImageSettings ?? "Wysiwyg";
+
         l.A($"Found {imgTags.Count} images to process with default {defaultImageSettings}");
 
         foreach (var imgTag in imgTags.Cast<Match>())
@@ -89,10 +101,11 @@ internal class CmsServiceStringWysiwyg(CmsServiceImageExtractor imageExtractor)
 
             var imgProps = imageExtractor.ExtractImageProperties(originalImgTag, Field.Parent.Guid, Folder);
 
-            var preparedImgParams = imgProps.File != null ? ResponsiveParams.Prepare(imgProps.File) : null;
+            // if we have a real file, pre-get the inner parameters as we would want to use it for resize-settings
+            var preparedImgParams = imgProps.File == null ? null : ResponsiveParams.Prepare(imgProps.File);
 
             // if the file itself specifies a resize settings, use it, otherwise use the default settings
-            var imgSettings = preparedImgParams?.ImageDecoratorOrNull?.ResizeSettings ?? defaultImageSettings;
+            var imgSettings = preparedImgParams?.ImgDecoratorOrNull?.ResizeSettings ?? defaultImageSettings;
 
             // In most cases use the preparedImgParams, but if it's null, use the src attribute
             var target = (object)preparedImgParams ?? imgProps.Src;
