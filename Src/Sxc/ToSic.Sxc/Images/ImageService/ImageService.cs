@@ -71,10 +71,18 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object imgAttributes = default,
         object toolbar = default,
         object recipe = null)
-        => new ResponsiveImage(this, PageService,
-            new(link)
+    {
+        var prefetch = ResponsiveParams.Prepare(link);
+        //var field = link as IField ?? (link as IFromField)?.Field;
+        //var mdProvider = link as IHasMetadata ?? field;
+        //var imageDecoratorOrNull = field?.ImageDecoratorOrNull ?? ImageDecorator.GetOrNull(mdProvider, []);
+
+        var settingsOrNameOrNull = settings ?? prefetch.ImageDecoratorOrNull?.ResizeSettings?.NullIfNoValue();
+
+        return new ResponsiveImage(this, PageService,
+            new(prefetch)
             {
-                Settings = Settings(settings, factor: factor, width: width, recipe: recipe),
+                Settings = Settings(settingsOrNameOrNull, factor: factor, width: width, recipe: recipe),
                 ImgAlt = imgAlt,
                 ImgAltFallback = imgAltFallback,
                 ImgClass = imgClass,
@@ -82,6 +90,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
                 Toolbar = toolbar,
             },
             Log);
+    }
 
 
     /// <inheritdoc />
@@ -99,10 +108,14 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object pictureAttributes = default,
         object toolbar = default,
         object recipe = default)
-        => new ResponsivePicture(this, PageService,
-            new(link)
+    {
+        var prefetch = ResponsiveParams.Prepare(link);
+        var settingsOrNameOrNull = settings ?? prefetch.ImageDecoratorOrNull?.ResizeSettings?.NullIfNoValue();
+
+        return new ResponsivePicture(this, PageService,
+            new(prefetch)
             {
-                Settings = Settings(settings, factor: factor, width: width, recipe: recipe),
+                Settings = Settings(settingsOrNameOrNull, factor: factor, width: width, recipe: recipe),
                 ImgAlt = imgAlt,
                 ImgAltFallback = imgAltFallback,
                 ImgClass = imgClass,
@@ -112,6 +125,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
                 Toolbar = toolbar,
             },
             Log);
+    }
 
     /// <inheritdoc />
     public override bool Debug

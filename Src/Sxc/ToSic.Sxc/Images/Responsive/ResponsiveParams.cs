@@ -41,4 +41,22 @@ internal class ResponsiveParams
         HasMetadataOrNull = target as IHasMetadata ?? Field;
         Link = target as IHasLink ?? new HasLink(target as string);
     }
+
+    public ResponsiveParams((IField FieldOrNull, IHasMetadata HasMdOrNull, ImageDecorator ImageDecoratorOrNull, IHasLink HasLinkOrNull) inits)
+    {
+        Field = inits.FieldOrNull;
+        HasMetadataOrNull = inits.HasMdOrNull;
+        Link = inits.HasLinkOrNull;
+        //ImageDecoratorOrNull = inits.ImageDecoratorOrNull;
+    }
+
+    internal static (IField FieldOrNull, IHasMetadata HasMdOrNull, ImageDecorator ImageDecoratorOrNull, IHasLink HasLinkOrNull) Prepare(object target)
+    {
+        var field = target as IField ?? (target as IFromField)?.Field;
+        var link = target as IHasLink ?? new HasLink(target as string);
+        var mdProvider = target as IHasMetadata ?? field;
+        var imageDecoratorOrNull = field?.ImageDecoratorOrNull ?? ImageDecorator.GetOrNull(mdProvider, []);
+
+        return (field, mdProvider, imageDecoratorOrNull, link);
+    }
 }
