@@ -175,15 +175,14 @@ internal partial class AppApiControllerSelectorService(
     private (HttpControllerDescriptor HttpControllerDescriptor, List<string> CacheDependecyKeys) BuildDescriptorOrThrow(string fullPath, string typeName, HotBuildSpec spec)
     {
         var l = Log.Fn<(HttpControllerDescriptor, List<string>)>($"{nameof(fullPath)}:'{fullPath}'; {nameof(typeName)}:'{typeName}'; {spec}", timer: true);
-        AssemblyResult result = null;
-        Assembly assembly = null;
+        Assembly assembly;
         List<string> cacheDependencyKeys = null;
         var codeFileInfo = analyzerLazy.Value.TypeOfVirtualPath(fullPath);
         var alwaysUseRoslyn = appJson.Value.DnnCompilerAlwaysUseRoslyn(spec.AppId);
         if (alwaysUseRoslyn || codeFileInfo.AppCode)
         {
             l.A("AppCode - use Roslyn");
-            result = roslynLazy.Value.GetCompiledAssembly(codeFileInfo, typeName, spec);
+            var result = roslynLazy.Value.GetCompiledAssembly(codeFileInfo, typeName, spec);
             assembly = result?.Assembly;
 
             // build list of cache dependencies keys
