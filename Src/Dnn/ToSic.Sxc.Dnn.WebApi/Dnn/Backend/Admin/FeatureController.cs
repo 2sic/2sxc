@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Internal.Features;
-using ToSic.Eav.SysData;
 using ToSic.Eav.WebApi.Admin.Features;
+using ToSic.Eav.WebApi.Sys.Licenses;
 using RealController = ToSic.Eav.WebApi.Admin.Features.FeatureControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
@@ -20,7 +20,7 @@ public class FeatureController() : DnnSxcControllerRoot(RealController.LogSuffix
 
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public FeatureState Details(string nameId) => Real.Details(nameId);
+    public FeatureStateDto Details(string nameId) => Real.Details(nameId);
 
     /// <summary>
     /// POST updated features JSON configuration.
