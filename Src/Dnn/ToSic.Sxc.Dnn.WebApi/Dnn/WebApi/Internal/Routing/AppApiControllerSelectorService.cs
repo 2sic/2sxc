@@ -69,6 +69,7 @@ internal partial class AppApiControllerSelectorService(
         var routeData = request.GetRouteData();
 
         var controllerTypeName = routeData.Values[VarNames.Controller] + Constants.ApiControllerSuffix;
+        l.A($"Controller: {controllerTypeName}");
 
         // Now Handle the 2sxc app-api queries
 
@@ -78,8 +79,6 @@ internal partial class AppApiControllerSelectorService(
             var edition = VarNames.GetEdition(routeData.Values);
             l.A($"Edition: {edition}");
 
-            // Specs for HotBuild - may not be available, but should be retrieved from the block or App-Path
-            HotBuildSpec spec = null;
 
             // Try to get block - will only work, if the request has all headers
             var block = getBlockLazy.Value.GetCmsBlock(request);
@@ -89,6 +88,8 @@ internal partial class AppApiControllerSelectorService(
             var appFolder = folderUtilities.Setup(request).GetAppFolder(true, block);
             l.A($"AppFolder: {appFolder}");
 
+            // Specs for HotBuild - may not be available, but should be retrieved from the block or App-Path
+            HotBuildSpec spec;
             if (block != null)
             {
                 // TODO: HAD TO trim last slash, because it was added in the get-call, but causes trouble here
@@ -106,11 +107,13 @@ internal partial class AppApiControllerSelectorService(
 
             // First check local app (in this site), then global
             var descriptor = Get(appFolder, edition, controllerTypeName, false, spec);
-            if (descriptor != null) return l.ReturnAsOk(descriptor);
+            if (descriptor != null)
+                return l.ReturnAsOk(descriptor);
 
             l.A("path not found, will check on shared location");
             descriptor = Get(appFolder, edition, controllerTypeName, true, spec);
-            if (descriptor != null) return l.ReturnAsOk(descriptor);
+            if (descriptor != null)
+                return l.ReturnAsOk(descriptor);
         }
         catch (Exception e)
         {

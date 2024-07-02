@@ -63,13 +63,20 @@ internal class AppApiControllerSelector(HttpConfiguration configuration) : IHttp
         var l = log.Fn<HttpControllerDescriptor>();
 
         if (!IsSxcOrEavRequest(request))
-            return l.Return(PreviousSelector.SelectController(request), "upstream");
+            return l.Return(PreviousSelector.SelectController(request), $"not 2sxc request, use upstream ${nameof(HttpControllerDescriptor)}");
 
         // 2024-03-21 New: offload all the work to a separate class, to use more normal DI for most of the code
-        var newDescriptor = sp.Build<AppApiControllerSelectorService>(log)
-            .SelectController(configuration, request);
-
-        return l.ReturnAsOk(newDescriptor);
+        var appControllerSelectorSvc = sp.Build<AppApiControllerSelectorService>(log);
+        try
+        {
+            var newDescriptor = appControllerSelectorSvc.SelectController(configuration, request);
+            return l.Return(newDescriptor, $"found descriptor for '{newDescriptor?.ControllerName}'. Will hand that over to .net");
+        }
+        catch (Exception ex)
+        {
+            l.Ex(ex);
+            throw;
+        }
     }
 
 
