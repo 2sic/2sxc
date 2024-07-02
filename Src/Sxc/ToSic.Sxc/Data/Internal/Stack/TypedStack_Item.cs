@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Data.PropertyLookup;
+﻿using System.Text.Json.Serialization;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
@@ -143,10 +144,13 @@ internal partial class TypedStack: ITypedItem
 
     IPublishing ITypedItem.Publishing => throw new NotImplementedException(NotImplementedError);
 
+    [JsonIgnore] // prevent serialization as it's not a normal property
     dynamic ITypedItem.Dyn => throw new NotImplementedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(TypedStack)} by design");
 
+    [JsonIgnore] // prevent serialization as it's not a normal property
     ITypedItem ITypedItem.Presentation => throw new NotImplementedException(NotImplementedError);
 
+    [JsonIgnore] // prevent serialization as it's not a normal property
     IMetadata ITypedItem.Metadata => throw new NotImplementedException(NotImplementedError);
 
     #endregion

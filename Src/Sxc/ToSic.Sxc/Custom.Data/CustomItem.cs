@@ -214,6 +214,7 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasPropLookup
     [PrivateApi]
     [Obsolete("Not available on Custom objects, use Get(...) to access any property.")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [JsonIgnore] // prevent serialization as it's not a normal property
     dynamic ITypedItem.Dyn => throw new NotSupportedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(CustomItem)} by design");
 
     /// <inheritdoc />

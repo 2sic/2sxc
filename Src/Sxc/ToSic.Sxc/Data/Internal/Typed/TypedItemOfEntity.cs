@@ -132,6 +132,7 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
         => ItemHelper.Attribute(name, noParamOrder, fallback, required);
 
     [PrivateApi]
+    [JsonIgnore]
     dynamic ITypedItem.Dyn => dyn;
 
 
@@ -231,9 +232,11 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
 
     /// <inheritdoc />
     [PrivateApi]
+    [JsonIgnore] // prevent serialization as it's not a normal property
     ITypedItem ITypedItem.Presentation => (DynHelper.Presentation as DynamicEntity)?.TypedItem;
 
     /// <inheritdoc />
+    [JsonIgnore] // prevent serialization as it's not a normal property
     IMetadata ITypedItem.Metadata => DynHelper.Metadata;
 
 

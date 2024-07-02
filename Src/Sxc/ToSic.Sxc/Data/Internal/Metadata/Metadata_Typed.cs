@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Plumbing;
+﻿using System.Text.Json.Serialization;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
@@ -47,6 +48,7 @@ internal partial class Metadata: ITypedItem
         => ItemHelper.Attribute(name, noParamOrder, fallback, required);
 
     [PrivateApi]
+    [JsonIgnore]
     dynamic ITypedItem.Dyn => this;
 
 
@@ -117,9 +119,11 @@ internal partial class Metadata: ITypedItem
 
     /// <inheritdoc />
     [PrivateApi]
+    [JsonIgnore]
     ITypedItem ITypedItem.Presentation => throw new NotSupportedException($"You can't access the {nameof(Presentation)} of Metadata");
 
     /// <inheritdoc />
+    [JsonIgnore] // prevent serialization as it's not a normal property
     IMetadata ITypedItem.Metadata => throw new NotSupportedException($"You can't access the Metadata of Metadata in ITypedItem");
 
     [PrivateApi]
