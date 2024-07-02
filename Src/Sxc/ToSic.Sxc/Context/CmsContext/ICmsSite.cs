@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Metadata;
+﻿using System.Text.Json.Serialization;
+using ToSic.Eav.Metadata;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Context;
@@ -55,6 +56,7 @@ public interface ICmsSite: IHasMetadata
     /// <remarks>
     /// Added in v13.12
     /// </remarks>
+    [JsonIgnore] // prevent serialization as it's not a normal property
     new IMetadata Metadata { get; }
 
     //[PrivateApi]
