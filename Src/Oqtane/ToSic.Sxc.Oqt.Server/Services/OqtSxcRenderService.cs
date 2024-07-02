@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Oqtane.Enums;
 using Oqtane.Infrastructure;
-using Oqtane.Modules;
 using Oqtane.Repository;
 using Oqtane.Security;
 using Oqtane.Shared;
@@ -9,8 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Oqt.Server.Blocks;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Shared.Helpers;
@@ -21,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.Services;
 
 public class OqtSxcRenderService(
     IHttpContextAccessor accessor,
-    IOqtSxcViewBuilder oqtSxcViewBuilder,
+    Generator<IOqtSxcViewBuilder> oqtSxcViewBuilder,
     IAliasRepository aliases,
     ISiteRepository sites,
     IPageRepository pages,
@@ -71,7 +70,7 @@ public class OqtSxcRenderService(
 
             module.Settings = settings.GetSettings(EntityNames.Module, moduleId).ToDictionary(setting => setting.SettingName, setting => setting.SettingValue);
 
-            return oqtSxcViewBuilder.Prepare(alias, site, page, module, preRender);
+            return oqtSxcViewBuilder.New().Prepare(alias, site, page, module, preRender);
         }
         catch (Exception ex)
         {
