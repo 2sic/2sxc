@@ -2,15 +2,6 @@
 var ToSic = ToSic || {};
 ToSic.Sxc = ToSic.Sxc || {};
 ToSic.Sxc.Oqtane = {
-    //onLoad: function () {
-    //    console.log("STV, onLoad");
-    //},
-    //onUpdate: function () {
-    //    console.log("STV, onUpdate");
-    //},
-    //onDispose: function () {
-    //    console.log("STV, onDispose");
-    //},
     registeredModules: new Map(),
     registerReloadModule: function (dotNetObjectReference, moduleId) {
         // console.log('stv: registerReloadModule', dotNetObjectReference, moduleId);
@@ -122,3 +113,17 @@ ToSic.Sxc.Oqtane = {
     //  }
     //},
 };
+
+//function onLoad() {
+//    console.log("ToSic.Sxc.Oqtane, onLoad");
+//};
+
+//function onUpdate() {
+//    console.log("ToSic.Sxc.Oqtane, onUpdate");
+//};
+
+//function onDispose() {
+//    console.log("ToSic.Sxc.Oqtane, onDispose");
+//};
+
+//export { ToSic, onLoad, onUpdate, onDispose };
