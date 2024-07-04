@@ -193,7 +193,9 @@ internal partial class Metadata: ITypedItem
     /// <inheritdoc />
     IEnumerable<T> ITypedItem.Children<T>(string field, NoParamOrder protector, string type, bool? required)
         => Cdf.AsCustomList<T>(
-            source: (this as ITypedItem).Children(field: field, noParamOrder: protector, type: type, required: required), protector: protector, nullIfNull: false
+            source: (this as ITypedItem).Children(field: field, noParamOrder: protector, type: type, required: required),
+            protector: protector,
+            nullIfNull: false
         );
 
     /// <inheritdoc />
@@ -205,7 +207,9 @@ internal partial class Metadata: ITypedItem
     /// <inheritdoc />
     IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string type, string field)
         => Cdf.AsCustomList<T>(
-            source: (this as ITypedItem).Parents(noParamOrder: protector, field: field, type: type ?? typeof(T).Name), protector: protector, nullIfNull: false
+            source: (this as ITypedItem).Parents(noParamOrder: protector, field: field, type: type ?? typeof(T).Name),
+            protector: protector,
+            nullIfNull: false
         );
 
     #endregion

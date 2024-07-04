@@ -1,7 +1,14 @@
 ﻿namespace ToSic.Sxc.Data.Internal.Typed;
 
+/// <summary>
+/// Special helper for marking lists which are empty, but must know about the parent entity and field they belong to,
+/// so that the toolbar can automatically create the correct sub-toolbar.
+/// </summary>
+/// <typeparam name="TTypedItem"></typeparam>
+/// <param name="original"></param>
+/// <param name="fieldInfo"></param>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class ListTypedItems(IList<ITypedItem> original, IEntity fieldInfo) : List<ITypedItem>(original), ICanBeEntity
+internal class ListTypedItems<TTypedItem>(IEnumerable<TTypedItem> original, IEntity fieldInfo) : List<TTypedItem>(original), ICanBeEntity
 {
     public IEntity Entity { get; } = fieldInfo;
 }

@@ -123,7 +123,9 @@ internal partial class TypedStack: ITypedItem
 
     IEnumerable<T> ITypedItem.Children<T>(string field, NoParamOrder protector, string type, bool? required)
         => Cdf.AsCustomList<T>(
-            source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required), protector: protector, nullIfNull: false
+            source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required),
+            protector: protector,
+            nullIfNull: false
         );
 
     #region Not implemented: Parents, Publishing, Dyn, Presentation, Metadata

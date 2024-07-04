@@ -196,7 +196,9 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     IEnumerable<T> ITypedItem.Children<T>(string field, NoParamOrder protector, string type, bool? required)
         => Cdf.AsCustomList<T>(
-            source: (this as ITypedItem).Children(field: field, noParamOrder: protector, type: type, required: required), protector: protector, nullIfNull: false
+            source: (this as ITypedItem).Children(field: field, noParamOrder: protector, type: type, required: required),
+            protector: protector,
+            nullIfNull: false
         );
 
     T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string type, string field)

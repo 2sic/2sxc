@@ -282,7 +282,7 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
             
             // if the child is null, we must return a fake list which knows about this parent
             return child == null 
-                ? CreateEmptyChildList()
+                ? cdf.CreateEmptyChildList<ITypedItem>(Entity, field)
                 // On the next step, do forward the type filter, as the lowest node should check for that
                 : child.Children(rest, type: type, required: required);
         }
@@ -292,14 +292,8 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
         var list = dynChildren.Cast<DynamicEntity>().Select(d => d.TypedItem).ToList();
         
         // Return list or special list if it's empty, as we need a special list which knows about this object being the parent
-        return list.Any() ? list : CreateEmptyChildList();
+        return list.Any() ? list : cdf.CreateEmptyChildList<ITypedItem>(Entity, field);
 
-        IEnumerable<ITypedItem> CreateEmptyChildList()
-        {
-            // Generate a marker/placeholder to remember what field this is etc.
-            var fakeEntity = Cdf.PlaceHolderInBlock(Entity.AppId, Entity, field);
-            return new ListTypedItems(new List<ITypedItem>(), fakeEntity);
-        }
     }
 
     /// <inheritdoc />
@@ -382,7 +376,9 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     /// <inheritdoc />
     IEnumerable<T> ITypedItem.Children<T>(string field, NoParamOrder protector, string type, bool? required)
         => Cdf.AsCustomList<T>(
-            source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required), protector: protector, nullIfNull: false
+            source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required),
+            protector: protector,
+            nullIfNull: false
         );
 
     /// <inheritdoc />
