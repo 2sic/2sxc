@@ -157,15 +157,14 @@ public partial class Index : ModuleProBase
                 #region HTML response, part 1.
                 Log($"2.1: NewDataArrived");
                 await OqtPageChangeService.AttachScriptsAndStylesForInteractiveRendering(ViewResults, SxcInterop, this);
-
-
-
+                #endregion
 
                 //StateHasChanged();
-                // Register ReloadModule
                 _dotNetObjectReference = DotNetObjectReference.Create(this);
+                // Register ReloadModule
+                //if (PageState.Runtime is Runtime.WebAssembly /*or Runtime.Auto*/) 
                 await JSRuntime.InvokeVoidAsync($"{OqtConstants.PackageName}.registerReloadModule", _dotNetObjectReference, ModuleState.ModuleId);
-                #endregion
+
             }
 
             Log($"2 end: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{NewDataArrived},ViewResults:{ViewResults != null})");
@@ -178,6 +177,12 @@ public partial class Index : ModuleProBase
     private DotNetObjectReference<Index> _dotNetObjectReference;
 
     // This is called from JS to reload module content from blazor (instead of ajax that breaks blazor)
+    // 2024-07-04 stv, looks that is not necessary anymore, we can probably remove it
+    // we had different strategy for Interactive and SSR to refresh module content on page after edit using 2sxc Edit UI
+    // Interactive use this 'ReloadModule' method to update DOM, but this breaks from Oqtane 5.1.2 because of blazor.web.js
+    // so initial fix was just to reload page with window.location.reload()
+    // but after more testing it looks that strategy we use for Static SSR is good enough for all cases
+    // if this is true we can remove this code in total
     [JSInvokable("ReloadModule")]
     public async Task ReloadModule()
     {
@@ -188,9 +193,9 @@ public partial class Index : ModuleProBase
 
             #region HTML response, part 1.
             Content = OqtPageChangeService.ProcessPageChanges(ViewResults, SiteState, this);
-            if (RenderMode == RenderModes.Static)
+            if (RenderMode == RenderModes.Static) // Static SSR (Server and Client) and 'Interactive Server'
                 Content = OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(ViewResults, SiteState, Content, Theme.Name);
-            else
+            else if (PageState.Runtime is Runtime.WebAssembly /*or Runtime.Auto*/) // 'Interactive Client' only
                 await OqtPageChangeService.AttachScriptsAndStylesForInteractiveRendering(ViewResults, SxcInterop, this);
             #endregion
 

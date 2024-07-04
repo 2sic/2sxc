@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Oqtane.Components;
 using Oqtane.Extensions;
 using Oqtane.Infrastructure;
+using Oqtane.Shared;
 using Oqtane.UI;
 using OqtaneSSR.Extensions;
 using System.IO;
@@ -16,6 +18,7 @@ using ToSic.Eav.WebApi;
 using ToSic.Lib.DI;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Backend;
+using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Integration.Startup;
 using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
@@ -101,6 +104,9 @@ public class OqtStartup : IServerStartup
         globalConfig.AssetsVirtualUrl = $"~/Modules/{OqtConstants.PackageName}/assets/";
         globalConfig.SharedAppsFolder = $"/{OqtConstants.AppRoot}/{OqtConstants.SharedAppFolder}/"; // "/2sxc/Shared"
 
+        // ensure we have an instance
+        var assemblyResolver = serviceProvider.Build<AssemblyResolver>();
+
         // Load features from configuration
         // NOTE: On first installation of 2sxc module in oqtane, this code can not load all 2sxc global types
         // because it has dependency on ToSic_Eav_* sql tables, before this tables are actually created by oqtane 2.3.x,
@@ -150,13 +156,26 @@ public static class ApplicationBuilderExtensions
         // to avoid having duplicate middleware in pipeline (like we had before).
         // Order of middleware configuration is important, because that is order of middleware execution in pipeline.
 
+        var serviceProvider = app.ApplicationServices;
+        var corsService = serviceProvider.Build<ICorsService>();
+        var corsPolicyProvider = serviceProvider.Build<ICorsPolicyProvider>();
+
         #region Oqtane copy from Startup.cs - L197
 
         // allow oqtane localization middleware
         app.UseOqtaneLocalization();
 
         app.UseHttpsRedirection();
-        app.UseStaticFiles();
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            ServeUnknownFileTypes = true,
+            OnPrepareResponse = (ctx) =>
+            {
+                var policy = corsPolicyProvider.GetPolicyAsync(ctx.Context, Constants.MauiCorsPolicy)
+                    .ConfigureAwait(false).GetAwaiter().GetResult();
+                corsService.ApplyResult(corsService.EvaluatePolicy(ctx.Context, policy), ctx.Context.Response);
+            }
+        });
         app.UseExceptionMiddleWare();
         //app.UseTenantResolution(); // commented, because it breaks alias resolving in 2sxc and it will resolve siteid=1 for all sites
         app.UseJwtAuthorization();
@@ -164,6 +183,7 @@ public static class ApplicationBuilderExtensions
         app.UseCors();
         app.UseAuthentication();
         app.UseAuthorization();
+        app.UseAntiforgery();
 
         //if (_useSwagger)
         //{
@@ -191,7 +211,7 @@ public static class ApplicationBuilderExtensions
           endpoints.MapFallback();
         });
 
-    #endregion
-    return app;
+        #endregion
+        return app;
     }
 }

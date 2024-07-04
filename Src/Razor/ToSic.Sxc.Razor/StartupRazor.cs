@@ -18,14 +18,14 @@ public static class StartupRazor
         // .net Core parts
         services.TryAddTransient<IHttp, HttpNetCore>();
 
-        // Razor Parts
+        // 2sxc Razor Parts
         services.TryAddTransient<IRazorCompiler, RazorCompiler>();
         services.TryAddTransient<IRazorRenderer, RazorRenderer>();
         services.TryAddTransient<IRazorEngine, RazorEngine>();
 
         // debugging
         services.Replace(ServiceDescriptor.Singleton<IViewCompilerProvider, RuntimeViewCompilerProvider>());
-        services.TryAddSingleton<IViewCompiler, RuntimeViewCompiler>();
+        //services.Replace(ServiceDescriptor.Singleton<IViewCompiler, RuntimeViewCompiler>());
         services.TryAddSingleton<CSharpCompiler>();
         services.TryAddSingleton<RazorReferenceManager, RazorReferenceManagerEnhanced>();
         services.TryAddSingleton<RuntimeCompilationFileProvider>();

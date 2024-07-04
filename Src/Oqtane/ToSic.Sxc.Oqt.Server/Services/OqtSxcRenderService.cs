@@ -58,11 +58,11 @@ public class OqtSxcRenderService(
                 return Forbidden("Unauthorized Site Get Attempt {SiteId}", alias.SiteId);
 
             var page = pages.GetPage(pageId);
-            if (page == null || page.SiteId != alias.SiteId /*|| !userPermissions.IsAuthorized(accessor?.HttpContext?.User, EntityNames.Page, pageId, PermissionNames.View)*/) // HACK: @STV, fix this
+            if (page == null || page.SiteId != alias.SiteId || !userPermissions.IsAuthorized(accessor?.HttpContext?.User, alias.SiteId, EntityNames.Page, pageId, PermissionNames.View))
                 return Forbidden("Unauthorized Page Get Attempt {pageId}", pageId);
 
             var module = modules.GetModule(moduleId);
-            if (module == null || module.SiteId != alias.SiteId /*|| !userPermissions.IsAuthorized(accessor?.HttpContext?.User, "View", module.Permissions)*/) // HACK: @STV, fix this
+            if (module == null || module.SiteId != alias.SiteId || !userPermissions.IsAuthorized(accessor?.HttpContext?.User, "View", module.Permissions)) 
                 return Forbidden("Unauthorized Module Get Attempt {ModuleId}", moduleId);
 
             var moduleDefinitions = definitions.GetModuleDefinitions(module.SiteId).ToList();

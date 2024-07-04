@@ -2,11 +2,14 @@
 var ToSic = ToSic || {};
 ToSic.Sxc = ToSic.Sxc || {};
 ToSic.Sxc.Oqtane = {
+    // 2024-07-04 stv, looks that is not necesary anymore, we can probably remove it
     registeredModules: new Map(),
+    // 2024-07-04 stv, looks that is not necesary anymore, we can probably remove it
     registerReloadModule: function (dotNetObjectReference, moduleId) {
         // console.log('stv: registerReloadModule', dotNetObjectReference, moduleId);
         this.registeredModules.set(moduleId, dotNetObjectReference);
     },
+    // 2024-07-04 stv, looks that is not necesary anymore, we can probably remove it
     unregisterReloadModule: function (moduleId) {
         // console.log('stv: unregisterReloadModule', moduleId)
         // todo: avoid memory leaks
@@ -15,11 +18,19 @@ ToSic.Sxc.Oqtane = {
             this.registeredModules.delete(moduleId);
         }
     },
+    // 2024-07-04 stv, looks that is not necesary anymore, we can probably remove it
     async reloadModule(moduleId) {
         console.log('oqt: reloadModule', moduleId);
+        // 2024-07-04 stv, looks that is not necessary anymore, we can probably remove it
+        // we had different strategy for Interactive and SSR to refresh module content on page after edit using 2sxc Edit UI
+        // Interactive use our blazor 'ReloadModule' method to update DOM, but this breaks from Oqtane 5.1.2 because of blazor.web.js
+        // so initial fix was just to reload page with window.location.reload()
+        // but after more testing it looks that strategy we use for Static SSR is good enough for all cases
+        // if this is true we can remove this code in total
         if (this.registeredModules.has(moduleId)) {
             console.log('oqt: interactive');
-            await this.registeredModules.get(moduleId).invokeMethodAsync('ReloadModule');
+            window.location.reload(); // quick fix for Oqtane 5.1.2
+            // await this.registeredModules.get(moduleId).invokeMethodAsync('ReloadModule'); // not working in Oqtane 5.1.2
             return Promise.resolve(true);
         } else {
             console.log('oqt: static SSR');

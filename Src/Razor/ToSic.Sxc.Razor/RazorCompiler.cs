@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
-using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
@@ -141,12 +139,12 @@ internal class RazorCompiler(
 
         // Get assembly - try to get from cache, otherwise compile
         var (assemblyResult, _) = appCodeLoader.Value.GetAppCode(spec);
-        log.A($"has AppCode assembly: {assemblyResult != null}");
+        log.A($"has AppCode assembly: {assemblyResult?.HasAssembly}");
 
         if (assemblyResult?.Assembly != null)
         {
             var appRelativePathWithEdition = spec.Edition.HasValue() ? Path.Combine(app.RelativePath, spec.Edition) : app.RelativePath;
-            log.A($"{nameof(appRelativePathWithEdition)}: {appRelativePathWithEdition}");
+            log.A($"{nameof(appRelativePathWithEdition)}: '{appRelativePathWithEdition}'");
 
             // Add assembly to resolver, so it will be provided to the compiler when used in cshtml
             assemblyResolver.AddAssembly(assemblyResult.Assembly, appRelativePathWithEdition);
