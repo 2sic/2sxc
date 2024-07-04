@@ -30,15 +30,18 @@ using Microsoft.Extensions.Primitives;
 using ToSic.Eav;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Internal;
 using ToSic.Sxc.Polymorphism.Internal;
 
 namespace ToSic.Sxc.Razor.DotNetOverrides;
 
 #pragma warning disable CA1852 // Seal internal types
-internal partial class RuntimeViewCompiler : IViewCompiler
+internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogShouldNeverConnect
 #pragma warning restore CA1852 // Seal internal types
 {
     private readonly object _cacheLock = new object();
@@ -54,6 +57,12 @@ internal partial class RuntimeViewCompiler : IViewCompiler
     private readonly IWebHostEnvironment _env;
     private readonly CSharpCompiler _csharpCompiler;
 
+#if DEBUG
+    private const bool Dbg = true;
+#else
+    private const bool Dbg = false;
+#endif
+
     public RuntimeViewCompiler(
         IFileProvider fileProvider,
         RazorProjectEngine projectEngine,
@@ -63,8 +72,15 @@ internal partial class RuntimeViewCompiler : IViewCompiler
         AssemblyResolver assemblyResolver,
         IHttpContextAccessor httpContextAccessor,
         SourceAnalyzer sourceAnalyzer,
-        IWebHostEnvironment env)
+        IWebHostEnvironment env,
+        ILogStore logStore) 
+        : base($"{SxcLogging.SxcLogName}.RzrViewCmp", connect: [assemblyResolver, sourceAnalyzer])
     {
+        var l = Dbg ? base.Log.Fn($"{nameof(precompiledViews)}:{precompiledViews?.Count}") : null;
+
+        if (Dbg)
+            logStore.Add(SxcLogging.SxcLogAppCodeLoader, base.Log);
+
         ArgumentNullException.ThrowIfNull(fileProvider);
         ArgumentNullException.ThrowIfNull(projectEngine);
         ArgumentNullException.ThrowIfNull(csharpCompiler);
@@ -97,41 +113,52 @@ internal partial class RuntimeViewCompiler : IViewCompiler
         foreach (var precompiledView in precompiledViews)
         {
             Log.ViewCompilerLocatedCompiledView(_logger, precompiledView.RelativePath);
+            l.A($"{precompiledView.RelativePath}:'{precompiledView.RelativePath}'");
 
             if (!_precompiledViews.ContainsKey(precompiledView.RelativePath))
             {
                 // View ordering has precedence semantics, a view with a higher precedence was
                 // already added to the list.
                 _precompiledViews.Add(precompiledView.RelativePath, precompiledView);
+                l.A($"add precompiledView:'{precompiledView.RelativePath}'");
             }
         }
 
         if (_precompiledViews.Count == 0)
         {
             Log.ViewCompilerNoCompiledViewsFound(_logger);
+            l.A($"no compiled views found");
         }
+
+        l.Done();
     }
 
     public Task<CompiledViewDescriptor> CompileAsync(string relativePath)
     {
+        var l = Dbg ? base.Log.Fn<Task<CompiledViewDescriptor>>($"{nameof(relativePath)}:'{relativePath}'") : null;
+        
         ArgumentNullException.ThrowIfNull(relativePath);
 
         // Attempt to lookup the cache entry using the passed in path. This will succeed if the path is already
         // normalized and a cache entry exists.
         if (_cache.TryGetValue<Task<CompiledViewDescriptor>>(relativePath, out var cachedResult) && cachedResult is not null)
         {
-            return cachedResult;
+            return l.Return(cachedResult, $"OK, got cache result for {nameof(relativePath)}:'{relativePath}'");
         }
+        l.A($"NO cache result for {nameof(relativePath)}:'{relativePath}'");
 
         var normalizedPath = GetNormalizedPath(relativePath);
+        l.A($"{nameof(normalizedPath)}:'{normalizedPath}'");
         if (_cache.TryGetValue(normalizedPath, out cachedResult) && cachedResult is not null)
         {
-            return cachedResult;
+            return l.Return(cachedResult, $"OK, got cache result for {nameof(normalizedPath)}:'{normalizedPath}'");
         }
+        l.A($"NO cache result for {nameof(normalizedPath)}:'{normalizedPath}'");
 
         // Entry does not exist. Attempt to create one.
+        l.A($"Entry does not exist. Attempt to create one for {nameof(normalizedPath)}:'{normalizedPath}'");
         cachedResult = OnCacheMiss(normalizedPath);
-        return cachedResult;
+        return l.ReturnAsOk(cachedResult);
     }
 
     private Task<CompiledViewDescriptor> OnCacheMiss(string normalizedPath)
@@ -347,24 +374,27 @@ internal partial class RuntimeViewCompiler : IViewCompiler
         if (!_sourceAnalyzer.TypeOfVirtualPath(relativePath).IsHotBuildSupported()) return;
 
         // if AppCode folder exists, related to relativePath, watch it
-        var appCodeRelativePath = AppCodeRelativePathIfExists(relativePath);
+        var appCodeRelativePath = AppCodeRelativePathIfExists(relativePath.Backslash());
         if (appCodeRelativePath != null)
             expirationTokens.Add(_fileProvider.Watch($"{appCodeRelativePath.ForwardSlash().PrefixSlash().SuffixSlash()}**/*.cs"));
     }
 
     private string AppCodeRelativePathIfExists(string normalizedPath)
     {
+        var l = Dbg ? base.Log.Fn<string>($"{nameof(normalizedPath)}:'{normalizedPath}'") : null;
+
         var (appRelativePath, edition) = GetSxcAppRelativePathWithEdition(normalizedPath);
+        l.A($"{nameof(appRelativePath)}:'{appRelativePath}'; {nameof(edition)}:'{edition}'");
 
         if (!appRelativePath.HasValue())
-            return "";
+            return l.ReturnEmpty($"{nameof(appRelativePath)} is empty");
 
-        if (edition.HasValue() && Directory.Exists(Path.Combine(_env.ContentRootPath, appRelativePath, edition, Constants.AppCode)))
-            return Path.Combine(appRelativePath, edition, Constants.AppCode);
+        if (edition.HasValue() && Directory.Exists(Path.Combine(_env.ContentRootPath, appRelativePath.Backslash(), edition, Constants.AppCode)))
+            return l.ReturnAndLog(Path.Combine(appRelativePath.Backslash(), edition, Constants.AppCode));
 
-        return Directory.Exists(Path.Combine(_env.ContentRootPath, appRelativePath, Constants.AppCode))
-            ? Path.Combine(appRelativePath, Constants.AppCode)
-            : "";
+        return l.ReturnAndLog((Directory.Exists(Path.Combine(_env.ContentRootPath, appRelativePath.Backslash(), Constants.AppCode))
+            ? Path.Combine(appRelativePath.Backslash(), Constants.AppCode)
+            : ""));
     }
 
     protected virtual CompiledViewDescriptor CompileAndEmit(string relativePath)
@@ -407,6 +437,7 @@ internal partial class RuntimeViewCompiler : IViewCompiler
         var (appRelativePath, edition) = GetSxcAppRelativePathWithEdition(relativePath);
         if (appRelativePath == null) return null;
         if (edition.HasValue()) appRelativePath = Path.Combine(appRelativePath, edition);
+        appRelativePath = appRelativePath.Backslash();
         var appCodeDllPath = _assemblyResolver.GetAssemblyLocation(appRelativePath);
         return appCodeDllPath;
     }
@@ -436,12 +467,16 @@ internal partial class RuntimeViewCompiler : IViewCompiler
     /// <returns>string "2sxc\\n\\aaa-folder-name\\edition" or null</returns>
     private (string appRelativePath, string edition) GetSxcAppRelativePathWithEditionFallback(string relativePath)
     {
+        var l = Dbg ? base.Log.Fn<(string appRelativePath, string edition)>($"{nameof(relativePath)}:'{relativePath}'") : null;
+
+        relativePath = relativePath?.ForwardSlash();
+
         if ((string.IsNullOrEmpty(relativePath))
             || (relativePath.Length < 8)
             || (relativePath[0] != '/')
             || (relativePath[5] != '/'))
             //throw new($"relativePath:'{relativePath}' is not in format '/2sxc/n/app-folder-name/etc...'");
-            return (appRelativePath: null, edition: null);
+            return l.ReturnAsError((appRelativePath: null, edition: null));
 
         // find position of 4th slash in relativePath 
         var posApp = 6; // skipping first 2 slashes
@@ -450,12 +485,12 @@ internal partial class RuntimeViewCompiler : IViewCompiler
             posApp = relativePath.IndexOf('/', posApp + 1);
             if (posApp < 0)
                 //throw new($"relativePath:'{relativePath}' is not in format '/2sxc/n/app-folder-name/etc...'");
-                return (appRelativePath: null, edition: null);
+                return l.ReturnAsError((appRelativePath: null, edition: null));
         }
-        var appRelativePath = relativePath.Substring(1, posApp - 1).Backslash();
+        var appRelativePath = relativePath.Substring(1, posApp - 1);
 
         if (relativePath.Length <= posApp)
-            return (appRelativePath, edition: "");
+            return l.ReturnAsOk((appRelativePath, edition: ""));
 
         // find optional "edition" subfolder
         var edition = "";
@@ -465,9 +500,9 @@ internal partial class RuntimeViewCompiler : IViewCompiler
 
         // can't find "edition" subfolder, so return app folder without edition
         if (posEdition >= 0)
-            edition = relativePath.Substring(posApp + 1, posEdition - 1);
+            edition = relativePath.Substring(posApp + 1, posEdition - posApp -1);
 
-        return (appRelativePath, edition);
+        return l.ReturnAsOk((appRelativePath, edition));
     }
 
     internal Assembly CompileAndEmit(RazorCodeDocument codeDocument, string generatedCode, IEnumerable<MetadataReference> references)
