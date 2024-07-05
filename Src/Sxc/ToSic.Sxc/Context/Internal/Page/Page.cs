@@ -18,9 +18,9 @@ internal class Page(LazySvc<IHttp> httpLazy) : IPage
 
     public int Id { get; private set; } = Eav.Constants.NullId;
 
-
-    public IParameters Parameters => _parameters ??= new Parameters(OriginalParameters.GetOverrideParams(httpLazy.Value?.QueryStringParams));
-    private IParameters _parameters;
+    // caching is disabled because in Blazor Interactive the query string parameters are changed after the page is created
+    public IParameters Parameters => /*_parameters ??=*/ new Parameters(OriginalParameters.GetOverrideParams(httpLazy.Value?.QueryStringParams));
+    //private IParameters _parameters;
 
 
     public string Url { get; set; } = Eav.Constants.UrlNotInitialized;
