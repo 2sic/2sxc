@@ -23,11 +23,10 @@ internal class OqtPrerenderService(IHttpContextAccessor httpContextAccessor, ITh
             if (!isPrerendered || !UsePrerender) return string.Empty;
 
             var prerenderHtmlFragment = string.Empty;
-            prerenderHtmlFragment = HtmlHelper.ManageStyleSheets(prerenderHtmlFragment, viewResults, siteState.Alias, Theme(themeType).Name, Html);
-            prerenderHtmlFragment = HtmlHelper.ManageScripts(prerenderHtmlFragment, viewResults, siteState.Alias, Html);
-            prerenderHtmlFragment = HtmlHelper.ManageInlineScripts(prerenderHtmlFragment, viewResults, siteState.Alias, Html);
-            prerenderHtmlFragment = SystemHtml(prerenderHtmlFragment);
-            Html += prerenderHtmlFragment;
+            prerenderHtmlFragment += HtmlHelper.ManageStyleSheets(viewResults, siteState.Alias, Theme(themeType).Name);
+            prerenderHtmlFragment += HtmlHelper.ManageScripts(viewResults, siteState.Alias);
+            prerenderHtmlFragment += HtmlHelper.ManageInlineScripts(viewResults, siteState.Alias);
+            prerenderHtmlFragment += SystemHtml(prerenderHtmlFragment);
             return prerenderHtmlFragment;
         }
         catch (Exception e)

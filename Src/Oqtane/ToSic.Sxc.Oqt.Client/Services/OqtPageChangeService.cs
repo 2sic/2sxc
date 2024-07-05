@@ -22,11 +22,10 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService)
     /// <param name="themeName"></param>
     /// <returns></returns>
     /// <remarks>SSR only</remarks>
-    public string AttachScriptsAndStylesStaticallyInHtml(OqtViewResultsDto viewResults, SiteState siteState, string content, string themeName)
+    public void AttachScriptsAndStylesStaticallyInHtml(OqtViewResultsDto viewResults, SiteState siteState, string content, string themeName)
     {
-        siteState.Properties.HeadContent = HtmlHelper.ManageStyleSheets(siteState.Properties.HeadContent, viewResults, siteState.Alias, themeName);
-        siteState.Properties.HeadContent = HtmlHelper.ManageScripts(siteState.Properties.HeadContent, viewResults, siteState.Alias);
-        return HtmlHelper.ManageInlineScripts(content, viewResults, siteState.Alias);
+        siteState.AppendHeadContent(HtmlHelper.ManageStyleSheets(viewResults, siteState.Alias, themeName));
+        siteState.AppendHeadContent(HtmlHelper.ManageScripts(viewResults, siteState.Alias));;
     }
 
     public string AttachScriptsAndStylesDynamicallyWithTurnOn(OqtViewResultsDto viewResults, SiteState siteState, string content, string themeName)
@@ -61,7 +60,7 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService)
             links.AddRange(viewResults.SxcStyles.Select(link => new
             {
                 id = "",
-                rel= "stylesheet",
+                rel = "stylesheet",
                 href = link,
                 type = "text/css",
                 integrity = "",
@@ -258,24 +257,26 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService)
     {
         page?.Log($"1.3: ProcessPageChanges");
 
-        if (viewResults?.PageProperties?.Any() ?? false)
-        {
-            page?.Log($"1.3.2: UpdatePageProperties title, keywords, description");
-            UpdatePageProperties(siteState, viewResults, page);
-        }
+        
+        //if (viewResults?.PageProperties?.Any() ?? false)
+        //{
+        //    page?.Log($"1.3.2: UpdatePageProperties title, keywords, description");
+        //    UpdatePageProperties(siteState, viewResults, page);
+        //}
 
         if (viewResults?.HeadChanges?.Any() ?? false)
         {
             page?.Log($"1.3.3: AddHeadChanges:{viewResults.HeadChanges.Count()}");
-            siteState.Properties.HeadContent = HtmlHelper.AddHeadChanges(siteState.Properties.HeadContent, viewResults.HeadChanges);
+            siteState.AppendHeadContent(HtmlHelper.AddHeadChanges(viewResults.HeadChanges));
         }
 
         // Add Context-Meta first, because it should be available when $2sxc loads
         if (viewResults?.SxcContextMetaName != null)
         {
             page?.Log($"1.3.4: Context-Meta");
-            siteState.Properties.HeadContent = HtmlHelper.AddOrUpdateMetaTagContent(siteState.Properties.HeadContent, viewResults.SxcContextMetaName, viewResults.SxcContextMetaContents);
+            siteState.AppendHeadContent(HtmlHelper.AddOrUpdateMetaTagContent(viewResults.SxcContextMetaName, viewResults.SxcContextMetaContents));
         }
+        
 
         //// Lets load all 2sxc js dependencies (js / styles)
         //var index = 0;
@@ -309,13 +310,13 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService)
                     var currentKeywords = HtmlHelper.GetMetaTagContent(siteState.Properties.HeadContent, "KEYWORDS");
                     var updatedKeywords = UpdateProperty(currentKeywords, p.InjectOriginalInValue(currentKeywords), page);
                     page?.Log($"{logPrefix}Keywords:", updatedKeywords);
-                    siteState.Properties.HeadContent = HtmlHelper.AddOrUpdateMetaTagContent(siteState.Properties.HeadContent, "KEYWORDS", updatedKeywords);
+                    //siteState.Properties.HeadContent = HtmlHelper.AddOrUpdateMetaTagContent(siteState.Properties.HeadContent, "KEYWORDS", updatedKeywords);
                     break;
                 case OqtPageProperties.Description:
                     var currentDescription = HtmlHelper.GetMetaTagContent(siteState.Properties.HeadContent, "DESCRIPTION");
                     var updatedDescription = UpdateProperty(currentDescription, p.InjectOriginalInValue(currentDescription), page);
                     page?.Log($"{logPrefix}Description:", updatedDescription);
-                    siteState.Properties.HeadContent = HtmlHelper.AddOrUpdateMetaTagContent(siteState.Properties.HeadContent, "DESCRIPTION", updatedDescription);
+                    //siteState.Properties.HeadContent = HtmlHelper.AddOrUpdateMetaTagContent(siteState.Properties.HeadContent, "DESCRIPTION", updatedDescription);
                     break;
                 case OqtPageProperties.Base:
                     // For base - ignore for now as we don't know what side-effects this could have

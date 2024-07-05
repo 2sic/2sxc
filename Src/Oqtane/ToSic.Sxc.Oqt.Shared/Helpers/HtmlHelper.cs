@@ -88,41 +88,42 @@ public class HtmlHelper
         return match.Success ? (decode ? WebUtility.HtmlDecode(match.Groups[1].Value) : match.Groups[1].Value) : null;
     }
 
-    public static string AddOrUpdateMetaTagContent(string html, string name, string content, bool encode = true)
+    public static string AddOrUpdateMetaTagContent(string name, string content, bool encode = true)
     {
-        if (html == null || string.IsNullOrEmpty(name)) return html;
+        if (string.IsNullOrEmpty(name)) return string.Empty;
 
         // Define a regex pattern to match the meta tag
         var pattern = $@"(<meta\s+name\s*=\s*[""']{WebUtility.HtmlEncode(name)}[""']\s+content\s*=\s*[""'])(.*?)([""']\s*/?>)";
 
-        // If the meta tag exists, replace its content
-        if (Regex.IsMatch(html, pattern, RegexOptions.IgnoreCase))
-            return Regex.Replace(html, pattern, $"$1{(encode ? WebUtility.HtmlEncode(content) : content)}$3", RegexOptions.IgnoreCase);
+        //// If the meta tag exists, replace its content
+        //if (Regex.IsMatch(html, pattern, RegexOptions.IgnoreCase))
+        //    return Regex.Replace(html, pattern, $"$1{(encode ? WebUtility.HtmlEncode(content) : content)}$3", RegexOptions.IgnoreCase);
 
         // If the meta tag doesn't exist, add it
-        return html + $"<meta name=\"{WebUtility.HtmlEncode(name)}\" content=\"{(encode ? WebUtility.HtmlEncode(content) : content)}\">{Environment.NewLine}";
+        return $"<meta name=\"{WebUtility.HtmlEncode(name)}\" content=\"{(encode ? WebUtility.HtmlEncode(content) : content)}\">{Environment.NewLine}";
     }
 
-    public static string AddHeadChanges(string html, IEnumerable<OqtHeadChange> headChanges)
+    public static string AddHeadChanges(IEnumerable<OqtHeadChange> headChanges)
     {
-        if (html == null || headChanges == null)
-            return html;
+        if (headChanges == null)
+            return string.Empty;
         var str = string.Empty;
         foreach (var headChange in headChanges)
         {
             if (!string.IsNullOrEmpty(headChange.Tag))
                 str += headChange.Tag + Environment.NewLine;
         }
-        return html + Environment.NewLine + str;
+        return str;
     }
 
-    public static string ManageStyleSheets(string html, OqtViewResultsDto viewResults, Alias alias, string themeName, string pageHtml = "")
+    public static string ManageStyleSheets(OqtViewResultsDto viewResults, Alias alias, string themeName)
     {
         if (viewResults == null)
-            return html;
+            return string.Empty;
         var list = viewResults.TemplateResources.Where(r => r.IsExternal && r.ResourceType == ResourceType.Stylesheet)
             .Select(r => r.Url).ToList();
         var count = 0;
+        var html = string.Empty;
         foreach (var url in viewResults.SxcStyles.Union(list))
         {
             var src = url;
@@ -130,7 +131,7 @@ public class HtmlHelper
                 src = src.Replace("~", "/Themes/" + themeName + "/").Replace("//", "/");
             if (!src.Contains("://") && !string.IsNullOrEmpty(alias.BaseUrl) && !src.StartsWith(alias.BaseUrl))
                 src = alias.BaseUrl + src;
-            if (!html.Contains(src, StringComparison.OrdinalIgnoreCase) && !pageHtml.Contains(src, StringComparison.OrdinalIgnoreCase))
+            if (!html.Contains(src, StringComparison.OrdinalIgnoreCase))
             {
                 ++count;
                 html += "<link"
@@ -141,26 +142,26 @@ public class HtmlHelper
         return html;
     }
 
-    public static string ManageScripts(string html, OqtViewResultsDto viewResults, Alias alias, string pageHtml = "")
+    public static string ManageScripts(OqtViewResultsDto viewResults, Alias alias)
     {
         if (viewResults == null)
-            return html;
-        if (string.IsNullOrEmpty(html))
-            html = string.Empty;
+            return string.Empty;
+
+        var html = string.Empty;
         foreach (var sxcResource in viewResults.TemplateResources.Where(r => r.IsExternal && r.ResourceType == ResourceType.Script))
-            html = AddScript(html, sxcResource, alias, pageHtml);
+            html = AddScript(html, sxcResource, alias);
         var count = 0;
         foreach (var sxcScript in viewResults.SxcScripts) 
-            html = AddScript(html, new Resource { Url = sxcScript, Reload = false }, alias, pageHtml, ++count);
+            html = AddScript(html, new Resource { Url = sxcScript, Reload = false }, alias, "", ++count);
         return html;
     }
 
-    public static string ManageInlineScripts(string html, OqtViewResultsDto viewResults, Alias alias, string pageHtml = "")
+    public static string ManageInlineScripts(OqtViewResultsDto viewResults, Alias alias, string pageHtml = "")
     {
         if (viewResults == null)
-            return html;
-        if (string.IsNullOrEmpty(html))
-            html = string.Empty;
+            return string.Empty;
+
+        var html = string.Empty;
         foreach (var sxcResource in viewResults.TemplateResources.Where(r => !r.IsExternal))
             html = AddScript(html, sxcResource, alias, pageHtml);
         return html;

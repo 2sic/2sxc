@@ -9,8 +9,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml;
 using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Oqt.Shared.Helpers;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
 using static System.StringComparison;
@@ -108,23 +110,25 @@ public partial class Index : ModuleProBase
 
                         #region HTML response
                         Content = OqtPageChangeService.ProcessPageChanges(ViewResults, SiteState, this);
+                        OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(ViewResults, SiteState, Content, Theme.Name);
+                        //Content += HtmlHelper.ManageInlineScripts(ViewResults, SiteState.Alias);
+                        Content = OqtPageChangeService.AttachScriptsAndStylesDynamicallyWithTurnOn(ViewResults, SiteState, Content, Theme.Name);
 
-                        if (RenderMode == RenderModes.Static)
-                            if (!RenderInfoService.IsSsrFraming(RenderMode)) // SSR First load on 2sxc page
-                                Content = OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(ViewResults, SiteState, Content, Theme.Name);
-                            else // SSR Partial load after starting on 2sxc page
-                                Content = OqtPageChangeService.AttachScriptsAndStylesDynamicallyWithTurnOn(ViewResults, SiteState, Content, Theme.Name);
+                        //if (RenderMode == RenderModes.Static)
+                        //    if (!RenderInfoService.IsSsrFraming(RenderMode)) // SSR First load on 2sxc page
+                        //        Content = OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(ViewResults, SiteState, Content, Theme.Name);
+                        //    else // SSR Partial load after starting on 2sxc page
+                        //        Content = OqtPageChangeService.AttachScriptsAndStylesDynamicallyWithTurnOn(ViewResults, SiteState, Content, Theme.Name);
                         //else
-                        //    if (_firstPageLoad)
-                        //    {
-                        //        _firstPageLoad = false;
-                        //        Content = OqtPageChangeService.AttachScriptsAndStyles(ViewResults, SiteState, Content, Theme.Name);
-                        //    }
+                        //    Content = OqtPageChangeService.AttachScriptsAndStylesDynamicallyWithTurnOn(ViewResults, SiteState, Content, Theme.Name);
+
 
                         // convenient place to apply Csp HttpHeaders to response
                         var count = OqtPageChangesOnServerService.ApplyHttpHeaders(ViewResults, this);
                         Log($"1.4: Csp:{count}");
                         #endregion
+
+                        StateHasChanged();
                     }
                 }
             }
@@ -156,10 +160,11 @@ public partial class Index : ModuleProBase
 
                 #region HTML response, part 1.
                 Log($"2.1: NewDataArrived");
-                await OqtPageChangeService.AttachScriptsAndStylesForInteractiveRendering(ViewResults, SxcInterop, this);
+                //await OqtPageChangeService.AttachScriptsAndStylesForInteractiveRendering(ViewResults, SxcInterop, this);
+                //StateHasChanged();
                 #endregion
 
-                //StateHasChanged();
+                
                 _dotNetObjectReference = DotNetObjectReference.Create(this);
                 // Register ReloadModule
                 //if (PageState.Runtime is Runtime.WebAssembly /*or Runtime.Auto*/) 
@@ -189,17 +194,14 @@ public partial class Index : ModuleProBase
         try
         {
             Log($"3: ReloadModule");
-            ViewResults = await Initialize2SxcContentBlock();
+            //ViewResults = await Initialize2SxcContentBlock();
 
             #region HTML response, part 1.
-            Content = OqtPageChangeService.ProcessPageChanges(ViewResults, SiteState, this);
-            if (RenderMode == RenderModes.Static) // Static SSR (Server and Client) and 'Interactive Server'
-                Content = OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(ViewResults, SiteState, Content, Theme.Name);
-            else if (PageState.Runtime is Runtime.WebAssembly /*or Runtime.Auto*/) // 'Interactive Client' only
-                await OqtPageChangeService.AttachScriptsAndStylesForInteractiveRendering(ViewResults, SxcInterop, this);
+            //Content = OqtPageChangeService.ProcessPageChanges(ViewResults, SiteState, this);
+            //await OqtPageChangeService.AttachScriptsAndStylesForInteractiveRendering(ViewResults, SxcInterop, this);
             #endregion
 
-            StateHasChanged();
+            //StateHasChanged();
         }
         catch (Exception ex)
         {
