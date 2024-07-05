@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Configuration;
 using Microsoft.JSInterop;
 using Oqtane.Models;
 using Oqtane.Shared;
@@ -29,16 +28,17 @@ public partial class Index : ModuleProBase
     [Inject] public IOqtPrerenderService OqtPrerenderService { get; set; }
     [Inject] public RenderSpecificLockManager RenderSpecificLockManager { get; set; }
     [Inject] public IRenderInfoService RenderInfoService { get; set; }
-    [Inject] public IConfiguration Configuration { get; set; }
     #endregion
 
     #region Shared Variables
-    public OqtViewResultsDto ViewResults { get; set; }
-    public string Content { get; set; }
 
-    private string RenderedUri { get; set; }
-    private string RenderedPage { get; set; }
-    private bool NewDataArrived { get; set; }
+    protected string Content { get; private set; }
+
+    private OqtViewResultsDto _viewResults;
+    private string _renderedUri;
+    private string _renderedPage;
+    private string _renderedQuery;
+    private bool _newDataArrived;
 
     #endregion
 
@@ -85,59 +85,56 @@ public partial class Index : ModuleProBase
 
         try
         {
-            Log($"1: OnParametersSetAsync(NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
+            Log($"1: OnParametersSetAsync(NewDataArrived:{_newDataArrived},RenderedUri:{_renderedUri})");
 
             // Call 2sxc engine only when is necessary to render control, because it is heavy operation and
             // OnParametersSetAsync is executed more than ounce for single page navigation change.
             // 2sxc module render state depends on AliasId, PageId, ModuleId, Culture, Query...
             // Optimally it should be executed ounce for single page navigation change, but with correct PageId and ModuleId.
             // Still during change of PageState and ModuleState sometimes we get old ModuleId from older page, before we get correct ModuleId from new page.
-            if (ShouldRender() && IsUriNewOrChanged())
+            if (SxcShouldRender())
             {
-                Log($"1.1: RenderUri:{RenderedUri}");
+                Log($"1.1: RenderUri:{_renderedUri}");
 
                 // Ensure that only one thread is rendering the module at a time.
                 // This prevents exception "Some Stream-Wirings were not created" #3291
                 using (await RenderSpecificLockManager.LockAsync(ModuleState.RenderId))
                 {
 
-                    ViewResults = await Initialize2SxcContentBlock();
-                    if (ViewResults != null)
+                    _viewResults = await Initialize2SxcContentBlock();
+                    if (_viewResults != null)
                     {
-                        NewDataArrived = true;
+                        _newDataArrived = true;
 
-                        #region HTML response
-                        Content = OqtPageChangeService.ProcessPageChanges(ViewResults, SiteState, this);
+                        #region HTML response, part 1
+                        if (Content != _viewResults.FinalHtml)
+                            Content = _viewResults.FinalHtml;
 
+                        OqtPageChangeService.ProcessPageChanges(_viewResults, SiteState, this);
+                        #endregion
+
+                        #region HTML response, part 2 (Static SSR)
                         if (RenderMode == RenderModes.Static)
                             if (!RenderInfoService.IsSsrFraming(RenderMode)) // SSR First load on 2sxc page
-                                Content = OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(ViewResults, SiteState, Content, Theme.Name);
+                                Content = OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(_viewResults, SiteState, Content, Theme.Name);
                             else // SSR Partial load after starting on 2sxc page
-                                Content = OqtPageChangeService.AttachScriptsAndStylesDynamicallyWithTurnOn(ViewResults, SiteState, Content, Theme.Name);
-                        //else
-                        //    if (_firstPageLoad)
-                        //    {
-                        //        _firstPageLoad = false;
-                        //        Content = OqtPageChangeService.AttachScriptsAndStyles(ViewResults, SiteState, Content, Theme.Name);
-                        //    }
+                                Content = OqtPageChangeService.AttachScriptsAndStylesDynamicallyWithTurnOn(_viewResults, SiteState, Content, Theme.Name);
+                        #endregion
 
                         // convenient place to apply Csp HttpHeaders to response
-                        var count = OqtPageChangesOnServerService.ApplyHttpHeaders(ViewResults, this);
+                        var count = OqtPageChangesOnServerService.ApplyHttpHeaders(_viewResults, this);
                         Log($"1.4: Csp:{count}");
-                        #endregion
                     }
                 }
             }
 
-            Log($"1 end: OnParametersSetAsync(NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
+            Log($"1 end: OnParametersSetAsync(NewDataArrived:{_newDataArrived},RenderedUri:{_renderedUri},RenderedPage:{_renderedPage})");
         }
         catch (Exception ex)
         {
             LogError(ex);
         }
     }
-    private bool _firstPageLoad = true;
-
 
     /// <inheritdoc/>
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -147,27 +144,27 @@ public partial class Index : ModuleProBase
 
         try
         {
-            Log($"2: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{NewDataArrived},ViewResults:{ViewResults != null})");
+            Log($"2: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{_newDataArrived},ViewResults:{_viewResults != null})");
 
             // 2sxc part should be executed only if new 2sxc data arrived from server (ounce per view)
-            if (IsSafeToRunJs && NewDataArrived && ViewResults != null)
+            if (IsSafeToRunJs && _newDataArrived && _viewResults != null)
             {
-                NewDataArrived = false;
+                _newDataArrived = false;
 
-                #region HTML response, part 1.
+                #region HTML response, part 2 (Interactive)
                 Log($"2.1: NewDataArrived");
-                await OqtPageChangeService.AttachScriptsAndStylesForInteractiveRendering(ViewResults, SxcInterop, this);
+                await OqtPageChangeService.AttachScriptsAndStylesForInteractiveRendering(_viewResults, SxcInterop, this);
                 #endregion
 
-                //StateHasChanged();
+                StateHasChanged();
+
                 _dotNetObjectReference = DotNetObjectReference.Create(this);
                 // Register ReloadModule
                 //if (PageState.Runtime is Runtime.WebAssembly /*or Runtime.Auto*/) 
                 await JSRuntime.InvokeVoidAsync($"{OqtConstants.PackageName}.registerReloadModule", _dotNetObjectReference, ModuleState.ModuleId);
-
             }
 
-            Log($"2 end: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{NewDataArrived},ViewResults:{ViewResults != null})");
+            Log($"2 end: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{_newDataArrived},ViewResults:{_viewResults != null})");
         }
         catch (Exception ex)
         {
@@ -189,17 +186,24 @@ public partial class Index : ModuleProBase
         try
         {
             Log($"3: ReloadModule");
-            ViewResults = await Initialize2SxcContentBlock();
+            _viewResults = await Initialize2SxcContentBlock();
 
-            #region HTML response, part 1.
-            Content = OqtPageChangeService.ProcessPageChanges(ViewResults, SiteState, this);
-            if (RenderMode == RenderModes.Static) // Static SSR (Server and Client) and 'Interactive Server'
-                Content = OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(ViewResults, SiteState, Content, Theme.Name);
-            else if (PageState.Runtime is Runtime.WebAssembly /*or Runtime.Auto*/) // 'Interactive Client' only
-                await OqtPageChangeService.AttachScriptsAndStylesForInteractiveRendering(ViewResults, SxcInterop, this);
-            #endregion
+            if (_viewResults != null)
+            {
+                #region HTML response, part 1.
+                if (Content != _viewResults.FinalHtml)
+                    Content = _viewResults.FinalHtml;
 
-            StateHasChanged();
+                OqtPageChangeService.ProcessPageChanges(_viewResults, SiteState, this);
+
+                if (RenderMode == RenderModes.Static) // Static SSR
+                    Content = OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(_viewResults, SiteState, Content, Theme.Name);
+                else // Interactive
+                    await OqtPageChangeService.AttachScriptsAndStylesForInteractiveRendering(_viewResults, SxcInterop, this);
+                #endregion
+
+                StateHasChanged();
+            }
         }
         catch (Exception ex)
         {
@@ -211,8 +215,6 @@ public partial class Index : ModuleProBase
     {
         _dotNetObjectReference?.Dispose();
     }
-
-    public bool IsDev => Configuration["Environment"] == "Development";
 
     /// <summary>
     /// Prepare the html / headers for later rendering
@@ -248,17 +250,31 @@ public partial class Index : ModuleProBase
     /// Filter to render the control only when is necessary.
     /// </summary>
     /// <returns></returns>
-    private bool IsUriNewOrChanged()
+    private bool SxcShouldRender()
     {
-        var isUriNewOrChanged = (string.IsNullOrEmpty(RenderedUri)
-                                 || (!NavigationManager.Uri.StartsWith(RenderedPage, InvariantCultureIgnoreCase))
-                                 || (!NavigationManager.Uri.Equals(RenderedUri, InvariantCultureIgnoreCase) && NavigationManager.Uri.StartsWith(RenderedPage, InvariantCultureIgnoreCase)));
+        // 1st criteria
+        if (!ShouldRender()) return false;
+
+        // 2nd criteria - detect if uri is new or changed
+        var currentUri = NavigationManager.Uri;
+        var currentPage = currentUri.RemoveQueryAndFragment();
+        var currentQuery = NavigationManager.ToAbsoluteUri(currentUri).Query;
+
+        //// Detect if uri is new or changed, but ignore changes with fragments, hash, etc...
+        var isUriNewOrChanged = string.IsNullOrEmpty(_renderedUri) // executed for first time
+                                || !currentPage.Equals(_renderedPage, InvariantCultureIgnoreCase) // new page
+                                || !currentQuery.Equals(_renderedQuery, InvariantCultureIgnoreCase); // same page but new query;
+
+        //var isUriNewOrChanged = !currentUri.Equals(_renderedUri, InvariantCultureIgnoreCase);
 
         if (isUriNewOrChanged)
         {
             // preserve values for subsequent detection of uri change
-            RenderedUri = NavigationManager.Uri;
-            RenderedPage = NavigationManager.Uri.RemoveQueryAndFragment();
+            _renderedUri = currentUri;
+            _renderedPage = currentPage;
+            _renderedQuery = currentQuery;
+
+            //NavigateUrl(currentUri);
         }
         return isUriNewOrChanged;
     }
