@@ -13,12 +13,11 @@ public class OqtSxcRenderService(HttpClient http, SiteState siteState) : Service
 {
     private string ApiUrl => CreateApiUrl("OqtSxcRender");
 
-    public async Task<OqtViewResultsDto> PrepareAsync(int aliasId, int pageId, int moduleId, string culture, bool preRender, string originalParameters)
+    public async Task<OqtViewResultsDto> RenderAsync(RenderParameters @params)
     {
-        var url = CreateAuthorizationPolicyUrl($"{ApiUrl}/{aliasId}/{pageId}/{moduleId}/{culture}/{preRender}/Prepare{originalParameters}", EntityNames.Module, moduleId);
+        var url = CreateAuthorizationPolicyUrl($"{ApiUrl}/{@params.AliasId}/{@params.PageId}/{@params.ModuleId}/{@params.Culture}/{@params.PreRender}/Render{@params.OriginalParameters}", EntityNames.Module, @params.ModuleId);
         return await GetJsonAsync<OqtViewResultsDto>(url);
     }
 
-    public OqtViewResultsDto Prepare(int aliasId, int pageId, int moduleId, string culture, bool preRender, string originalParameters)
-        => PrepareAsync(aliasId, pageId, moduleId, culture, preRender, originalParameters).GetAwaiter().GetResult();
+    public OqtViewResultsDto Render(RenderParameters @params) => RenderAsync(@params).GetAwaiter().GetResult();
 }

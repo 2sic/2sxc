@@ -12,7 +12,6 @@ using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
-using static System.StringComparison;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.App;
@@ -35,9 +34,7 @@ public partial class Index : ModuleProBase
     protected string Content { get; private set; }
 
     private OqtViewResultsDto _viewResults;
-    private string _renderedUri;
-    private string _renderedPage;
-    private string _renderedQuery;
+    private RenderParameters _renderedParameters;
     private bool _newDataArrived;
 
     #endregion
@@ -50,24 +47,6 @@ public partial class Index : ModuleProBase
         ];
 
     public override string RenderMode => PageState?.RenderMode ?? RenderModes.Static;
-
-    ///// <inheritdoc/>
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    try
-    //    {
-    //        //if (RenderMode != RenderModes.Static) return;
-
-    //        //Initialize2SxcContentBlock();
-    //        //ProcessPageChanges();
-    //        //_resources.AddRange(StaticSsrStandardAssets());
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        await logger.LogError(ex, "Error Loading Test512 {Error}", ex.Message);
-    //        //AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
-    //    }
-    //}
 
     #endregion
 
@@ -83,43 +62,49 @@ public partial class Index : ModuleProBase
     {
         await base.OnParametersSetAsync();
 
+        var @params = new RenderParameters()
+        {
+            AliasId = PageState.Alias.AliasId,
+            PageId = PageState.Page.PageId,
+            ModuleId = ModuleState.ModuleId,
+            Culture = CultureInfo.CurrentUICulture.Name,
+            PreRender = IsPrerendering(),
+            OriginalParameters = NavigationManager.ToAbsoluteUri(NavigationManager.Uri).Query
+        };
+
         try
         {
-            Log($"1: OnParametersSetAsync(NewDataArrived:{_newDataArrived},RenderedUri:{_renderedUri})");
+            Log($"OnParametersSetAsync(NewDataArrived:{_newDataArrived})");
 
             // Call 2sxc engine only when is necessary to render control, because it is heavy operation and
             // OnParametersSetAsync is executed more than ounce for single page navigation change.
             // 2sxc module render state depends on AliasId, PageId, ModuleId, Culture, Query...
             // Optimally it should be executed ounce for single page navigation change, but with correct PageId and ModuleId.
             // Still during change of PageState and ModuleState sometimes we get old ModuleId from older page, before we get correct ModuleId from new page.
-            if (SxcShouldRender())
+            if (ShouldRenderSxcView(@params))
             {
-                Log($"1.1: RenderUri:{_renderedUri}");
+                Log($"Need to render");
 
                 // Ensure that only one thread is rendering the module at a time.
                 // This prevents exception "Some Stream-Wirings were not created" #3291
                 using (await RenderSpecificLockManager.LockAsync(ModuleState.RenderId))
                 {
-
-                    _viewResults = await Initialize2SxcContentBlock();
+                    _viewResults = await RenderSxcView(@params);
                     if (_viewResults != null)
                     {
                         _newDataArrived = true;
 
-                        #region HTML response, part 1
-                        if (Content != _viewResults.FinalHtml)
-                            Content = _viewResults.FinalHtml;
+                        var newContent = OqtPageChangeService.ProcessPageChanges(_viewResults, SiteState, this);
 
-                        OqtPageChangeService.ProcessPageChanges(_viewResults, SiteState, this);
-                        #endregion
-
-                        #region HTML response, part 2 (Static SSR)
+                        #region Static SSR
                         if (RenderMode == RenderModes.Static)
                             if (!RenderInfoService.IsSsrFraming(RenderMode)) // SSR First load on 2sxc page
-                                Content = OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(_viewResults, SiteState, Content, Theme.Name);
+                                newContent = OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(_viewResults, SiteState, newContent, Theme.Name);
                             else // SSR Partial load after starting on 2sxc page
-                                Content = OqtPageChangeService.AttachScriptsAndStylesDynamicallyWithTurnOn(_viewResults, SiteState, Content, Theme.Name);
+                                newContent = OqtPageChangeService.AttachScriptsAndStylesDynamicallyWithTurnOn(_viewResults, SiteState, newContent, Theme.Name);
                         #endregion
+
+                        if (Content != newContent) Content = newContent;
 
                         // convenient place to apply Csp HttpHeaders to response
                         var count = OqtPageChangesOnServerService.ApplyHttpHeaders(_viewResults, this);
@@ -128,7 +113,7 @@ public partial class Index : ModuleProBase
                 }
             }
 
-            Log($"1 end: OnParametersSetAsync(NewDataArrived:{_newDataArrived},RenderedUri:{_renderedUri},RenderedPage:{_renderedPage})");
+            Log($"end: OnParametersSetAsync(NewDataArrived:{_newDataArrived})");
         }
         catch (Exception ex)
         {
@@ -144,7 +129,7 @@ public partial class Index : ModuleProBase
 
         try
         {
-            Log($"2: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{_newDataArrived},ViewResults:{_viewResults != null})");
+            Log($"OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{_newDataArrived},ViewResults:{_viewResults != null})");
 
             // 2sxc part should be executed only if new 2sxc data arrived from server (ounce per view)
             if (IsSafeToRunJs && _newDataArrived && _viewResults != null)
@@ -183,24 +168,33 @@ public partial class Index : ModuleProBase
     [JSInvokable("ReloadModule")]
     public async Task ReloadModule()
     {
+        var @params = new RenderParameters()
+        {
+            AliasId = PageState.Alias.AliasId,
+            PageId = PageState.Page.PageId,
+            ModuleId = ModuleState.ModuleId,
+            Culture = CultureInfo.CurrentUICulture.Name,
+            PreRender = IsPrerendering(),
+            OriginalParameters = NavigationManager.ToAbsoluteUri(NavigationManager.Uri).Query
+        };
+
         try
         {
             Log($"3: ReloadModule");
-            _viewResults = await Initialize2SxcContentBlock();
+            _viewResults = await RenderSxcView(@params);
 
             if (_viewResults != null)
             {
-                #region HTML response, part 1.
-                if (Content != _viewResults.FinalHtml)
-                    Content = _viewResults.FinalHtml;
+                var newContent = _viewResults.FinalHtml;
 
                 OqtPageChangeService.ProcessPageChanges(_viewResults, SiteState, this);
 
                 if (RenderMode == RenderModes.Static) // Static SSR
-                    Content = OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(_viewResults, SiteState, Content, Theme.Name);
+                    newContent = OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(_viewResults, SiteState, newContent, Theme.Name);
                 else // Interactive
                     await OqtPageChangeService.AttachScriptsAndStylesForInteractiveRendering(_viewResults, SxcInterop, this);
-                #endregion
+
+                if (Content != newContent) Content = newContent;
 
                 StateHasChanged();
             }
@@ -217,66 +211,47 @@ public partial class Index : ModuleProBase
     }
 
     /// <summary>
-    /// Prepare the html / headers for later rendering
-    /// </summary>
-    private async Task<OqtViewResultsDto> Initialize2SxcContentBlock()
-    {
-        Log($"1.2: Initialize2sxcContentBlock");
-
-        #region ViewResults prepare
-        var viewResults = await OqtSxcRenderService.PrepareAsync(
-            PageState.Alias.AliasId,
-            PageState.Page.PageId,
-            ModuleState.ModuleId,
-            CultureInfo.CurrentUICulture.Name,
-            IsPrerendering(), NavigationManager.ToAbsoluteUri(NavigationManager.Uri).Query);
-
-        if (!string.IsNullOrEmpty(viewResults?.ErrorMessage))
-            LogError(viewResults.ErrorMessage);
-
-        Log($"1.2.1: Html:{viewResults?.Html?.Length ?? -1}");
-        #endregion
-
-        #region ViewResults finalization
-        if (viewResults != null)
-            viewResults.PrerenderHtml = OqtPrerenderService.GetPrerenderHtml(IsPrerendering(), viewResults, SiteState, ThemeType);
-
-        #endregion
-
-        return viewResults;
-    }
-
-    /// <summary>
     /// Filter to render the control only when is necessary.
     /// </summary>
+    /// <remarks>
+    /// Call 2sxc engine only when is necessary to render control, because it is heavy operation and
+    /// OnParametersSetAsync is executed more than ounce for single page navigation change.
+    /// 2sxc module render state depends on AliasId, PageId, ModuleId, Culture, Query...
+    /// Optimally it should be executed ounce for single page navigation change, but with correct PageId and ModuleId.
+    /// Still during change of PageState and ModuleState sometimes we get old ModuleId from older page, before we get correct ModuleId from new page.
+    /// </remarks>
     /// <returns></returns>
-    private bool SxcShouldRender()
+    private bool ShouldRenderSxcView(RenderParameters @params)
     {
         // 1st criteria
         if (!ShouldRender()) return false;
 
-        // 2nd criteria - detect if uri is new or changed
-        var currentUri = NavigationManager.Uri;
-        var currentPage = currentUri.RemoveQueryAndFragment();
-        var currentQuery = NavigationManager.ToAbsoluteUri(currentUri).Query;
+        // 2nd criteria - render parameters are not changed from the last render
+        if (_renderedParameters != null && _renderedParameters.Equals(@params)) return false;
 
-        //// Detect if uri is new or changed, but ignore changes with fragments, hash, etc...
-        var isUriNewOrChanged = string.IsNullOrEmpty(_renderedUri) // executed for first time
-                                || !currentPage.Equals(_renderedPage, InvariantCultureIgnoreCase) // new page
-                                || !currentQuery.Equals(_renderedQuery, InvariantCultureIgnoreCase); // same page but new query;
+        // render parameters are changed, store them for the next render
+        _renderedParameters = @params.Clone();
+        return true;
+    }
 
-        //var isUriNewOrChanged = !currentUri.Equals(_renderedUri, InvariantCultureIgnoreCase);
+    /// <summary>
+    /// Prepare the html / headers for later rendering
+    /// </summary>
+    private async Task<OqtViewResultsDto> RenderSxcView(RenderParameters @params)
+    {
+        Log($"Get html and other view resources from server");
+        var viewResults = await OqtSxcRenderService.RenderAsync(@params);
 
-        if (isUriNewOrChanged)
-        {
-            // preserve values for subsequent detection of uri change
-            _renderedUri = currentUri;
-            _renderedPage = currentPage;
-            _renderedQuery = currentQuery;
+        if (!string.IsNullOrEmpty(viewResults?.ErrorMessage))
+            LogError(viewResults.ErrorMessage);
 
-            //NavigateUrl(currentUri);
-        }
-        return isUriNewOrChanged;
+        Log($"Html:{viewResults?.Html?.Length ?? -1}");
+
+        // finalize with prerendered html
+        if (viewResults != null)
+            viewResults.PrerenderHtml = OqtPrerenderService.GetPrerenderHtml(@params.PreRender, viewResults, SiteState, ThemeType);
+
+        return viewResults;
     }
 
     #region Theme
@@ -285,4 +260,5 @@ public partial class Index : ModuleProBase
     private string ThemeType => PageState.Page.ThemeType ?? PageState.Site.DefaultThemeType;
 
     #endregion
+
 }

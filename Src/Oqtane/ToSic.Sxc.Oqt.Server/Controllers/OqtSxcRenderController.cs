@@ -26,16 +26,26 @@ public class OqtSxcRenderController(
     private bool IsSuperUser => User.IsInRole(RoleNames.Host) || User.IsInRole(RoleNames.Admin);
 
 
-    [HttpGet("{aliasId:int}/{pageId:int}/{moduleId:int}/{culture}/{preRender:bool}/Prepare")]
+    [HttpGet("{aliasId:int}/{pageId:int}/{moduleId:int}/{culture}/{preRender:bool}/Render")]
     //[Authorize(Policy = PolicyNames.ViewModule)]
-    public OqtViewResultsDto Prepare([FromRoute] int aliasId, [FromRoute] int pageId, [FromRoute] int moduleId, [FromRoute] string culture, [FromRoute] bool preRender, [FromQuery] string originalParameters)
+    public OqtViewResultsDto Render([FromRoute] int aliasId, [FromRoute] int pageId, [FromRoute] int moduleId, [FromRoute] string culture, [FromRoute] bool preRender, [FromQuery] string originalParameters)
     {
+        var @params = new RenderParameters()
+        {
+            AliasId = aliasId,
+            PageId = pageId,
+            ModuleId = moduleId,
+            Culture = culture,
+            PreRender = preRender,
+            OriginalParameters = originalParameters
+        };
+
         try
         {
             if (moduleId != AuthEntityId(EntityNames.Module))
                 return Forbidden("Unauthorized OqtSxcRenderController Get Attempt {ModuleId}", moduleId);
 
-            return oqtSxcRenderService.Prepare(aliasId, pageId, moduleId, culture, preRender, originalParameters);
+            return oqtSxcRenderService.Render(@params);
         }
         catch (Exception ex)
         {
@@ -52,7 +62,7 @@ public class OqtSxcRenderController(
 
     private OqtViewResultsDto Error(Exception ex)
     {
-        logger.Log(LogLevel.Error, this, LogFunction.Read, ex, $"exception in {nameof(Prepare)}");
+        logger.Log(LogLevel.Error, this, LogFunction.Read, ex, $"exception in {nameof(Render)}");
         return new() { ErrorMessage = ErrorHelper.ErrorMessage(ex, IsSuperUser) };
     }
 }

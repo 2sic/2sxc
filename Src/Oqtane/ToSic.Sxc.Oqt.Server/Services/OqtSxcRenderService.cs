@@ -31,18 +31,15 @@ public class OqtSxcRenderService(
     ILogManager logger,
     SiteState siteState) : IOqtSxcRenderService/*, ITransientService*/
 {
-    public Task<OqtViewResultsDto> PrepareAsync(int aliasId, int pageId, int moduleId, string culture, bool preRender, string originalParameters)
-    {
-        return Task.FromResult(Prepare(aliasId, pageId, moduleId, culture, preRender, originalParameters));
-    }
+    public Task<OqtViewResultsDto> RenderAsync(RenderParameters @params) => Task.FromResult(Render(@params));
 
-    public OqtViewResultsDto Prepare(int aliasId, int pageId, int moduleId, string culture, bool preRender, string originalParameters)
+    public OqtViewResultsDto Render(RenderParameters @params)
     {
         try
         {
-            var alias = aliases.GetAlias(aliasId);
+            var alias = aliases.GetAlias(@params.AliasId);
             if (alias == null)
-                return Forbidden("Unauthorized Alias Get Attempt {AliasId}", aliasId);
+                return Forbidden("Unauthorized Alias Get Attempt {AliasId}", @params.AliasId);
 
             // HACKS: STV POC - indirectly share information
             accessor?.HttpContext?.Items.TryAdd("AliasFor2sxc", alias);
@@ -51,26 +48,26 @@ public class OqtSxcRenderService(
             if (siteState != null) siteState.Alias = alias;
 
             // Set User culture
-            if (culture != CultureInfo.CurrentUICulture.Name) OqtCulture.SetCulture(culture);
+            if (@params.Culture != CultureInfo.CurrentUICulture.Name) OqtCulture.SetCulture(@params.Culture);
 
             var site = sites.GetSite(alias.SiteId);
             if (site == null)
                 return Forbidden("Unauthorized Site Get Attempt {SiteId}", alias.SiteId);
 
-            var page = pages.GetPage(pageId);
-            if (page == null || page.SiteId != alias.SiteId || !userPermissions.IsAuthorized(accessor?.HttpContext?.User, alias.SiteId, EntityNames.Page, pageId, PermissionNames.View))
-                return Forbidden("Unauthorized Page Get Attempt {pageId}", pageId);
+            var page = pages.GetPage(@params.PageId);
+            if (page == null || page.SiteId != alias.SiteId || !userPermissions.IsAuthorized(accessor?.HttpContext?.User, alias.SiteId, EntityNames.Page, @params.PageId, PermissionNames.View))
+                return Forbidden("Unauthorized Page Get Attempt {pageId}", @params.PageId);
 
-            var module = modules.GetModule(moduleId);
+            var module = modules.GetModule(@params.ModuleId);
             if (module == null || module.SiteId != alias.SiteId || !userPermissions.IsAuthorized(accessor?.HttpContext?.User, "View", module.Permissions)) 
-                return Forbidden("Unauthorized Module Get Attempt {ModuleId}", moduleId);
+                return Forbidden("Unauthorized Module Get Attempt {ModuleId}", @params.ModuleId);
 
             var moduleDefinitions = definitions.GetModuleDefinitions(module.SiteId).ToList();
             module.ModuleDefinition = moduleDefinitions.Find(item => item.ModuleDefinitionName == module.ModuleDefinitionName);
 
-            module.Settings = settings.GetSettings(EntityNames.Module, moduleId).ToDictionary(setting => setting.SettingName, setting => setting.SettingValue);
+            module.Settings = settings.GetSettings(EntityNames.Module, @params.ModuleId).ToDictionary(setting => setting.SettingName, setting => setting.SettingValue);
 
-            return oqtSxcViewBuilder.New().Prepare(alias, site, page, module, preRender);
+            return oqtSxcViewBuilder.New().Render(alias, site, page, module, @params.PreRender);
         }
         catch (Exception ex)
         {
@@ -88,7 +85,7 @@ public class OqtSxcRenderService(
 
     private OqtViewResultsDto Error(Exception ex)
     {
-        logger.Log(LogLevel.Error, this, LogFunction.Read, ex, $"exception in {nameof(Prepare)}");
+        logger.Log(LogLevel.Error, this, LogFunction.Read, ex, $"exception in {nameof(Render)}");
         return new() { 
             ErrorMessage = ErrorHelper.ErrorMessage(ex, IsSuperUser)
         };

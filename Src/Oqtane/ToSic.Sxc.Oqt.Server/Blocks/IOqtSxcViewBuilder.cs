@@ -8,9 +8,9 @@ namespace ToSic.Sxc.Oqt.Server.Blocks;
 public interface IOqtSxcViewBuilder
 {
     /// <summary>
-    /// Prepare must always be the first thing to be called - to ensure that afterwards both headers and html are known.
+    /// Render must always be the first thing to be called - to ensure that afterward both headers and html are known.
     /// </summary>
-    OqtViewResultsDto Prepare(Alias alias, Site site, Page page, Module module, bool preRender);
+    OqtViewResultsDto Render(Alias alias, Site site, Page page, Module module, bool preRender);
 
     Page Page { get; }
 }

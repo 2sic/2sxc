@@ -56,9 +56,9 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     #region Prepare
 
     /// <summary>
-    /// Prepare must always be the first thing to be called - to ensure that afterwards both headers and html are known.
+    /// Render must always be the first thing to be called - to ensure that afterward both headers and html are known.
     /// </summary>
-    public OqtViewResultsDto Prepare(Alias alias, Site site, Page page, Module module, bool preRender)
+    public OqtViewResultsDto Render(Alias alias, Site site, Page page, Module module, bool preRender)
     {
         Alias = alias;
         Site = site;
