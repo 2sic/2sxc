@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynConverterTests
         [TestMethod]
         public void AsItemWithFakeOk()
         {
-            var item = Cdf.TacAsItem(Cdf.FakeEntity(0), propsRequired: true);
+            var item = Cdf.TacAsItem(Cdf.TacFakeEntity(0), propsRequired: true);
             Assert.IsNotNull(item);
         }
 
