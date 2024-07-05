@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Code.InfoSystem;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data.Build;
-using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Integration;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
@@ -46,8 +45,8 @@ public partial class CodeDataFactory(
         ??= (_CodeApiSvc?.CmsContext as CmsContext)?.CtxSite.Site
             ?? _siteOrNull
             ?? throw new("Tried getting site from context or fallback, neither returned anything useful. ");
-
     private ISite _siteFromContextOrFallback;
+
     public int CompatibilityLevel => _priorityCompatibilityLevel ?? _compatibilityLevel;
     private int? _priorityCompatibilityLevel;
     private int _compatibilityLevel = CompatibilityLevels.CompatibilityLevel10;
@@ -70,11 +69,11 @@ public partial class CodeDataFactory(
     /// </summary>
     // If we don't have a DynCodeRoot, try to generate the language codes and compatibility
     // There are cases where these were supplied using SetFallbacks, but in some cases none of this is known
-    internal string[] Dimensions => _dimensions.Get(() => SiteFromContextOrFallback.SafeLanguagePriorityCodes()
-        //_CodeApiSvc?.CmsContext.SafeLanguagePriorityCodes()
-        //?? _siteOrNull.SafeLanguagePriorityCodes()
-    );
-    private readonly GetOnce<string[]> _dimensions = new();
+    internal string[] Dimensions => _dimensions ??=
+        // note: can't use SiteFromContextOrFallback.SafeLanguagePriorityCodes() because it will error during testing
+        (_CodeApiSvc?.CmsContext as CmsContext)?.CtxSite.Site.SafeLanguagePriorityCodes()
+        ?? _siteOrNull.SafeLanguagePriorityCodes();
+    private string[] _dimensions;
 
 
     internal IBlock BlockOrNull => ((ICodeApiServiceInternal)_CodeApiSvc)?._Block;
@@ -92,10 +91,11 @@ public partial class CodeDataFactory(
     /// <remarks>
     /// IMPORTANT: LOWER-CASE guaranteed.
     /// </remarks>
-    public List<string> SiteCultures => _siteCultures ??= zoneMapper.Value
-                                                              .CulturesEnabledWithState(SiteFromContextOrFallback)
-                                                              ?.Select(c => c.Code.ToLowerInvariant())
-                                                              .ToList()
-                                                          ?? [];
+    public List<string> SiteCultures => _siteCultures
+        ??= zoneMapper.Value
+                .CulturesEnabledWithState(SiteFromContextOrFallback)?
+                .Select(c => c.Code.ToLowerInvariant())
+                .ToList()
+            ?? [];
     private List<string> _siteCultures;
 }
