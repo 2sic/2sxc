@@ -17,10 +17,11 @@ internal class GetAndConvertHelper(
 {
     #region Setup and Log
 
-
     public CodeDataFactory Cdf { get; } = cdf;
 
     public bool PropsRequired { get; } = propsRequired;
+
+    public IHasPropLookup Parent { get; } = parent;
 
     public bool Debug => _debug ?? canDebug.Debug;
     private bool? _debug;
@@ -28,10 +29,7 @@ internal class GetAndConvertHelper(
     internal SubDataFactory SubDataFactory => _subData ??= new(Cdf, PropsRequired, canDebug);
     private SubDataFactory _subData;
 
-
-    public IHasPropLookup Parent { get; } = parent;
-
-    public ILog LogOrNull => _logOrNull.Get(() => Cdf?.Log?.SubLogOrNull("DynEnt", Debug));
+    public ILog LogOrNull => _logOrNull.Get(() => Cdf?.Log?.SubLogOrNull("Sxc.GetCnv", Debug));
     private readonly GetOnce<ILog> _logOrNull = new();
 
     #endregion
@@ -67,7 +65,7 @@ internal class GetAndConvertHelper(
 
     public TryGetResult GetInternal(string field, string language = null, bool lookupLink = true)
     {
-        var logOrNull = LogOrNull.SubLogOrNull("Dyn.EntBas", Debug);
+        var logOrNull = LogOrNull.SubLogOrNull("GnC.GetInt", Debug);
         var l = logOrNull.Fn<TryGetResult>($"Type: {Parent.GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookupLink)}:{lookupLink}");
 
         if (!field.HasValue())
@@ -179,10 +177,8 @@ internal class GetAndConvertHelper(
                 return l.Return(dynEnt, "ent-list, now dyn");
             }
             l.A($"Convert entity list as {nameof(ITypedItem)}");
-            var converted = Entity2Children(entities: children, field: field, parentEntity: parent)
-                .Cast<DynamicEntity>()
-                .Select(de => de.TypedItem)
-                .ToList();
+            var converted = AsChildrenItems(entities: children, field: field, parentEntity: parent);
+
             // if (Debug) converted.ForEach(c => c.Debug = true);
             return l.Return(converted, "ent-list, now dyn");
         }
@@ -204,17 +200,33 @@ internal class GetAndConvertHelper(
 
     #region Parents / Children - ATM still dynamic
 
-    public List<IDynamicEntity> Parents(IEntity entity, string type = null, string field = null)
-        => entity.Parents(type, field).Select(e => SubDataFactory.SubDynEntityOrNull(e)).ToList();
+    public List<IDynamicEntity> ParentsDyn(IEntity entity, string type, string field)
+        => entity.Parents(type, field)
+            .Select(SubDataFactory.SubDynEntityOrNull)
+            .ToList();
+
+    public List<ITypedItem> ParentsItems(IEntity entity, string type, string field)
+        => entity.Parents(type, field)
+            .Select(e => new TypedItemOfEntity(null, e, Cdf, PropsRequired) as ITypedItem)
+            .ToList();
 
 
-    public List<IDynamicEntity> Children(IEntity entity, string field = null, string type = null)
-        => Entity2Children( entity.Children(field, type), field, parentEntity: entity);
+    public List<IDynamicEntity> ChildrenDyn(IEntity entity, string field, string type)
+        => AsChildrenDyn(entity.Children(field, type), field, parentEntity: entity);
 
-    private List<IDynamicEntity> Entity2Children(IEnumerable<IEntity> entities, string field = null, IEntity parentEntity = default)
+    public List<ITypedItem> ChildrenItems(IEntity entity, string field, string type)
+        => AsChildrenItems(entity.Children(field, type), field, parentEntity: entity);
+
+    private List<IDynamicEntity> AsChildrenDyn(IEnumerable<IEntity> entities, string field, IEntity parentEntity)
+        => AsChildrenOf(entities, field, parentEntity, SubDataFactory.SubDynEntityOrNull);
+
+    private List<ITypedItem> AsChildrenItems(IEnumerable<IEntity> entities, string field, IEntity parentEntity)
+        => AsChildrenOf(entities, field, parentEntity,e => new TypedItemOfEntity(null, e, Cdf, PropsRequired) as ITypedItem);
+
+    private static List<T> AsChildrenOf<T>(IEnumerable<IEntity> entities, string field, IEntity parentEntity, Func<IEntity, T> convert)
         => entities
-            .Select((e, i) => EntityInBlockDecorator.Wrap(entity: e, field: field, index: i, parent: parentEntity))
-            .Select(e => SubDataFactory.SubDynEntityOrNull(e))
+            .Select((e, i) => EntityInBlockDecorator.Wrap(entity: e, field: field, index: i, parent: parentEntity) as IEntity)
+            .Select(convert)
             .ToList();
 
     #endregion

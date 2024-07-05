@@ -16,6 +16,7 @@ partial class CodeDataFactory
         {
             null when !mock => null,
             TCustom alreadyT => alreadyT,
+            IEntity entity => AsCustomFromItem<TCustom>(AsItem(entity, propsRequired: true)),
             _ => AsCustomFromItem<TCustom>(source as ITypedItem ?? AsItem(source))
         };
 

@@ -21,11 +21,13 @@ namespace ToSic.Sxc.Data.Internal.Typed;
 
 [JsonConverter(typeof(DynamicJsonConverter))]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFactory cdf, bool propsRequired)
+internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, CodeDataFactory cdf, bool propsRequired)
     : ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName, IWrapper<IEntity>,
         IEntityWrapper, IHasMetadata, IHasJsonSource
 {
     #region Setup
+
+    // internal TypedItemOfEntity
 
     public IEntity Entity { get; } = entity;
     private CodeDataFactory Cdf { get; } = cdf;
@@ -133,8 +135,8 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
 
     [PrivateApi]
     [JsonIgnore]
-    dynamic ITypedItem.Dyn => dyn;
-
+    dynamic ITypedItem.Dyn => _dyn ??= dynOrNull ?? new DynamicEntity(Entity, cdf, propsRequired: propsRequired);
+    private object _dyn;
 
     [PrivateApi]
     DateTime ITyped.DateTime(string name, NoParamOrder noParamOrder, DateTime fallback, bool? required)
@@ -233,7 +235,7 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     /// <inheritdoc />
     [PrivateApi]
     [JsonIgnore] // prevent serialization as it's not a normal property
-    ITypedItem ITypedItem.Presentation => (DynHelper.Presentation as DynamicEntity)?.TypedItem;
+    ITypedItem ITypedItem.Presentation => (DynHelper.Presentation as ICanBeItem)?.Item;
 
     /// <inheritdoc />
     [JsonIgnore] // prevent serialization as it's not a normal property
@@ -245,7 +247,7 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
         if (current != true)
             return ((ITypedItem)this).Parents(type: type, field: field).FirstOrDefault();
             
-        return (DynHelper.Parent as DynamicEntity)?.TypedItem
+        return (DynHelper.Parent as ICanBeItem)?.Item
                ?? throw new(
                    $"You tried to access {nameof(ITypedItem.Parent)}({nameof(current)}: true). This should get the original Item which was used to find this one, but this item doesn't seem to have one. " +
                    $"It's only set if this Item was created from another Item using {nameof(ITypedItem.Child)}(...) or {nameof(ITypedItem.Children)}(...). " +
@@ -255,7 +257,7 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     /// <inheritdoc />
     [PrivateApi]
     IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string type, string field)
-        => Cdf.AsItems(GetHelper.Parents(entity: Entity, type: type, field: field));
+        => GetHelper.ParentsItems(entity: Entity, type: type, field: field);
 
     bool ITypedItem.IsPublished => Entity.IsPublished;
 
@@ -288,8 +290,8 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
         }
 
         // Standard case: just get the direct children
-        var dynChildren = GetHelper.Children(entity: Entity, field: field, type: type);
-        var list = dynChildren.Cast<DynamicEntity>().Select(d => d.TypedItem).ToList();
+        var list = GetHelper.ChildrenItems(entity: Entity, field: field, type: type);
+        //var list = dynChildren; // .Cast<DynamicEntity>().Select(d => d.TypedItem).ToList();
         
         // Return list or special list if it's empty, as we need a special list which knows about this object being the parent
         return list.Any() ? list : cdf.CreateEmptyChildList<ITypedItem>(Entity, field);

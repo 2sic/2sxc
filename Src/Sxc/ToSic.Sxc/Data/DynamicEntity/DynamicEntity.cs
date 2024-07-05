@@ -3,7 +3,6 @@ using ToSic.Eav.Metadata;
 using ToSic.Razor.Blade;
 using IEntity = ToSic.Eav.Data.IEntity;
 using System.Dynamic;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
@@ -161,11 +160,11 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
 
     /// <inheritdoc />
     public List<IDynamicEntity> Parents(string type = null, string field = null)
-        => GetHelper.Parents(entity: Entity, type: type, field: field);
+        => GetHelper.ParentsDyn(entity: Entity, type: type, field: field);
 
     /// <inheritdoc />
     public List<IDynamicEntity> Children(string field = null, string type = null)
-        => GetHelper.Children(Entity, field: field, type: type);
+        => GetHelper.ChildrenDyn(Entity, field: field, type: type);
 
     #endregion
 

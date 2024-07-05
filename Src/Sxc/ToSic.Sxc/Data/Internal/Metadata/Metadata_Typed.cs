@@ -146,7 +146,7 @@ internal partial class Metadata: ITypedItem
             .FirstOrDefault(l => l.SafeAny());
         if (parents == null) return new List<ITypedItem>(0);
 
-        var list = Cdf.AsItems(parents).ToList();
+        var list = Cdf.EntitiesToItems(parents).ToList();
         return list.Any() ? list : [];
     }
 
@@ -163,16 +163,15 @@ internal partial class Metadata: ITypedItem
 
         // Exit if no metadata items available to get children from
         var mdEntities = _metadata.ToList();
-        if (!mdEntities.Any()) return new List<ITypedItem>(0);
+        if (!mdEntities.Any()) return [];
 
         // Get children from first metadata item which matches the criteria
         var children = mdEntities
             .Select(e => e.Children(field: field, type: type)?.ToList())
             .FirstOrDefault(l => l.SafeAny());
-        if (children == null) return new List<ITypedItem>(0);
+        if (children == null) return [];
 
-        var list = Cdf.AsItems(children).ToList();
-        return list.Any() ? list : [];
+        return Cdf.EntitiesToItems(children).ToList();
     }
 
     /// <inheritdoc />
