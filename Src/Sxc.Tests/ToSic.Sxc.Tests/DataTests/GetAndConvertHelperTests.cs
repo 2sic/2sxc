@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using ToSic.Sxc.Data.Internal.Dynamic;
+using static ToSic.Sxc.Tests.DataTests.GetAndConvertHelperTestAccessors;
 
 namespace ToSic.Sxc.Tests.DataTests
 {
@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Tests.DataTests
         public void GetFinalLanguagesList_LangsNull()
         {
             var dims = new[] { "en", "de", null };
-            var languages = GetAndConvertHelper.GetFinalLanguagesList(null, MockSystemLanguages2, dims);
+            var languages = TacGetFinalLanguagesList(null, MockSystemLanguages2, dims);
             //Assert.IsTrue(skipAddDef);
             CollectionAssert.AreEqual(dims, languages);
         }
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Tests.DataTests
         public void GetFinalLanguagesList_LangsEmpty()
         {
             var dims = new[] { "en", "de", null };
-            var languages = GetAndConvertHelper.GetFinalLanguagesList("", MockSystemLanguages2, dims);
+            var languages = TacGetFinalLanguagesList("", MockSystemLanguages2, dims);
             //Assert.IsTrue(skipAddDefault);
             CollectionAssert.AreEqual(new string[] { null }, languages);
         }
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Tests.DataTests
         public void GetFinalLanguagesList_LangsFirst()
         {
             var dims = new[] { "en", "de", null };
-            var languages = GetAndConvertHelper.GetFinalLanguagesList("en", MockSystemLanguages2, dims);
+            var languages = TacGetFinalLanguagesList("en", MockSystemLanguages2, dims);
             //Assert.IsTrue(skipAddDefault);
             CollectionAssert.AreEqual(new[] { "en" }, languages);
         }
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Tests.DataTests
         public void GetFinalLanguagesList_LangsBoth()
         {
             var dims = new[] { "en", "de", null };
-            var languages = GetAndConvertHelper.GetFinalLanguagesList("en,de", MockSystemLanguages2, dims);
+            var languages = TacGetFinalLanguagesList("en,de", MockSystemLanguages2, dims);
             //Assert.IsTrue(skipAddDefault);
             CollectionAssert.AreEqual(new[] { "en", "de" }, languages);
         }
@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Tests.DataTests
         public void GetFinalLanguagesList_LangsFirstAndEmpty()
         {
             var dims = new[] { "en", "de", null };
-            var languages = GetAndConvertHelper.GetFinalLanguagesList("en,", MockSystemLanguages2, dims);
+            var languages = TacGetFinalLanguagesList("en,", MockSystemLanguages2, dims);
             //Assert.IsTrue(skipAddDefault);
             CollectionAssert.AreEqual(new[] { "en", null }, languages);
         }
@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Tests.DataTests
         public void GetFinalLanguagesList_LangsFirstShortened()
         {
             var dims = new[] { "en-us", "de-CH", null };
-            var languages = GetAndConvertHelper.GetFinalLanguagesList("en", MockSystemLanguages4, dims);
+            var languages = TacGetFinalLanguagesList("en", MockSystemLanguages4, dims);
             //Assert.IsTrue(skipAddDefault);
             CollectionAssert.AreEqual(new[] { "en-us" }, languages);
         }
@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Tests.DataTests
         public void GetFinalLanguagesList_LangsNotFound()
         {
             var dims = new[] { "en-us", "de-CH", null };
-            var languages = GetAndConvertHelper.GetFinalLanguagesList("qr", MockSystemLanguages4, dims);
+            var languages = TacGetFinalLanguagesList("qr", MockSystemLanguages4, dims);
             //Assert.IsTrue(skipAddDefault);
             CollectionAssert.AreEqual(Array.Empty<string>() , languages);
         }

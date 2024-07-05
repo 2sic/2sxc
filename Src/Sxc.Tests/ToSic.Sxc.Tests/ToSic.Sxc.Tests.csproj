@@ -117,6 +117,7 @@
     <Compile Include="DataTests\DynConverterTests\AsConverterTestsBase.cs" />
     <Compile Include="DataTests\DynConverterTests\AsConverterAsItem.cs" />
     <Compile Include="DataTests\DynWrappers\WrapObjTypedItemEquality.cs" />
+    <Compile Include="DataTests\GetAndConvertHelperTestAccessors.cs" />
     <Compile Include="DataTests\PropInfo.cs" />
     <Compile Include="DataTests\DynJson\WrapAllGps.cs" />
     <Compile Include="DataTests\DynJson\WrapAllKeys.cs" />
