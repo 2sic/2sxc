@@ -22,18 +22,13 @@ partial class CodeDataFactory
         return AsItemInternal(data, MaxRecursions, propsRequired: propsRequired ?? false) ?? fallback;
     }
 
-    private const int MaxLogAsItemInternal = 25;
-    private int _countAsItemInternal;
+    private LogFilter AsItemLogFilter => _asItemLogFilter ??= new(Log, logFirstMax: 25, reLogIteration: 100);
+    private LogFilter _asItemLogFilter;
 
     internal ITypedItem AsItemInternal(object data, int recursions, bool propsRequired)
     {
         // Only log the first 25 calls to this method, then stop logging
-        _countAsItemInternal++;
-        var shouldLog = _countAsItemInternal <= MaxLogAsItemInternal;
-        var finalMsg = _countAsItemInternal == MaxLogAsItemInternal
-            ? $"This method has been called {MaxLogAsItemInternal} times, so after this it will stop logging to insights."
-            : "";
-        var l = (shouldLog ? Log : null).Fn<ITypedItem>(finalMsg );
+        var l = AsItemLogFilter.FnOrNull<ITypedItem>();
 
         if (recursions <= 0)
             throw l.Done(new Exception($"Conversion with {nameof(AsItem)} failed, max recursions reached"));
