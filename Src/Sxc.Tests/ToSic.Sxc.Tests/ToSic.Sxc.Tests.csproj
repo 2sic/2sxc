@@ -111,6 +111,7 @@
     <Compile Include="DataSources\MockUsersDataSource.cs" />
     <Compile Include="DataSources\UsersDataSourceTests.cs" />
     <Compile Include="DataSources\RolesDataSourceTests.cs" />
+    <Compile Include="DataTests\CodeDataConverterTestAccessors.cs" />
     <Compile Include="DataTests\DynAndTypedTestsBase.cs" />
     <Compile Include="DataTests\DynConverterTests\AsConverterFakeTests.cs" />
     <Compile Include="DataTests\DynConverterTests\AsConverterTestsBase.cs" />
