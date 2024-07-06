@@ -21,28 +21,14 @@ namespace ToSic.Sxc.Razor;
 /// </summary>
 [PrivateApi("used to be marked as internal, but it doesn't make sense to show in docs")]
 [EngineDefinition(Name = "Razor")]
-internal class RazorEngine : EngineBase, IRazorEngine
+internal class RazorEngine(
+    EngineBase.MyServices services,
+    LazySvc<IRazorRenderer> razorRenderer,
+    LazySvc<CodeApiServiceFactory> codeRootFactory,
+    LazySvc<CodeErrorHelpService> errorHelp,
+    LazySvc<IRenderingHelper> renderingHelper)
+    : EngineBase(services, connect: [codeRootFactory, errorHelp, renderingHelper, razorRenderer]), IRazorEngine
 {
-    private readonly LazySvc<CodeErrorHelpService> _errorHelp;
-    private readonly LazySvc<CodeApiServiceFactory> _codeRootFactory;
-    private readonly LazySvc<IRenderingHelper> _renderingHelper;
-    private readonly LazySvc<IRazorRenderer> _razorRenderer;
-
-    #region Constructor / DI
-
-    public RazorEngine(MyServices services, LazySvc<IRazorRenderer> razorRenderer, LazySvc<CodeApiServiceFactory> codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<IRenderingHelper> renderingHelper)
-        : base(services)
-    {
-        ConnectLogs([
-            _codeRootFactory = codeRootFactory,
-            _errorHelp = errorHelp,
-            _renderingHelper = renderingHelper,
-            _razorRenderer = razorRenderer
-        ]);
-    }
-
-    #endregion
-
     /// <inheritdoc/>
     protected override (string Contents, List<Exception> Exception) RenderEntryRazor(RenderSpecs specs)
     {
@@ -55,7 +41,7 @@ internal class RazorEngine : EngineBase, IRazorEngine
 
             if (result.Exception == null) return l.ReturnAsOk((result.TextWriter.ToString(), null));
 
-            var errorMessage = _renderingHelper.Value.Init(Block).DesignErrorMessage([result.Exception], true);
+            var errorMessage = renderingHelper.Value.Init(Block).DesignErrorMessage([result.Exception], true);
             return l.Return((errorMessage, [result.Exception]));
         }
         catch (Exception ex)
@@ -74,7 +60,7 @@ internal class RazorEngine : EngineBase, IRazorEngine
         {
             if (string.IsNullOrEmpty(TemplatePath)) return (null, null);
 
-            var result = await _razorRenderer.Value.RenderToStringAsync(
+            var result = await razorRenderer.Value.RenderToStringAsync(
                 TemplatePath,
                 specs.Data,
                 rzv =>
@@ -82,7 +68,7 @@ internal class RazorEngine : EngineBase, IRazorEngine
                     page = rzv; // keep for better errors
                     if (rzv.RazorPage is not IRazor asSxc) return;
 
-                    var dynCode = _codeRootFactory.Value
+                    var dynCode = codeRootFactory.Value
                         .BuildCodeRoot(asSxc, Block, Log,
                             compatibilityFallback: CompatibilityLevels.CompatibilityLevel12);
 
@@ -98,7 +84,7 @@ internal class RazorEngine : EngineBase, IRazorEngine
         }
         catch (Exception maybeIEntityCast)
         {
-            return (null, _errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast, page));
+            return (null, errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast, page));
         }
 
         // WIP https://github.com/dotnet/aspnetcore/blob/master/src/Mvc/Mvc.Razor.RuntimeCompilation/src/RuntimeViewCompiler.cs#L397-L404

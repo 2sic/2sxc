@@ -26,19 +26,12 @@ using ToSic.Sxc.Services;
 namespace Custom.Hybrid;
 
 [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
+[method: PrivateApi]
 // ReSharper disable once UnusedMember.Global
-public abstract class RazorTyped<TModel> : OqtRazorBase<TModel>, IHasCodeLog, IRazor, ISetDynamicModel, IDynamicCode16, IHasCodeHelp
+public abstract class RazorTyped<TModel>()
+    : OqtRazorBase<TModel>(CompatibilityLevels.CompatibilityLevel16, "Oqt.Rzr16"), IHasCodeLog, IRazor,
+        ISetDynamicModel, IDynamicCode16, IHasCodeHelp
 {
-    #region Constructor / DI / SysHelp
-
-    /// <summary>
-    /// Constructor - only available for inheritance
-    /// </summary>
-    [PrivateApi]
-    protected RazorTyped() : base(CompatibilityLevels.CompatibilityLevel16, "Oqt.Rzr16") { }
-
-    #endregion
-
     #region ServiceKit
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
