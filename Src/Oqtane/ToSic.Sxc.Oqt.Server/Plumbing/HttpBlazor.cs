@@ -22,7 +22,7 @@ internal class HttpBlazor : HttpAbstractionBase, IHttp
     public HttpBlazor(IHttpContextAccessor contextAccessor, NavigationManager navigationManager)
     {
         _navigationManager = navigationManager;
-        Current = contextAccessor.HttpContext;
+        Current = contextAccessor?.HttpContext;
     }
 
     public override NameValueCollection QueryStringParams
@@ -34,7 +34,7 @@ internal class HttpBlazor : HttpAbstractionBase, IHttp
 
             // this must behave differently in an API call, as the navigation manager will not be initialized
             // but all the params will really be in the query
-            if (Current.Request.Path.Value?.Contains("_blazor") == false)
+            if (Current?.Request?.Path.Value?.Contains("_blazor") == false)
             {
                 var paramList = new NameValueCollection();
                 Current.Request.Query.ToList().ForEach(i => paramList.Add(i.Key, i.Value));
