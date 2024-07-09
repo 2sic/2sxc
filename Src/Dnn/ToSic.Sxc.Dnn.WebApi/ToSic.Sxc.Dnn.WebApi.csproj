@@ -105,7 +105,7 @@
       <Version>5.2.3</Version>
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Text.Json" Version="7.0.2">
+    <PackageReference Include="System.Text.Json" Version="8.0.4">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4">
