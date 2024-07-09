@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Services;
 internal class TurnOnService(LazySvc<IHtmlTagsService> htmlTagsService)
     : ServiceBase(SxcLogName + ".TrnOnS", connect: [htmlTagsService]), ITurnOnService
 {
-    private const string TagName = "turnOn";
+    protected virtual string TagName => "turnOn";
     private const string AttributeName = "turn-on";
 
     // TODO:
