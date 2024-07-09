@@ -100,7 +100,7 @@ public class HtmlHelper
             return Regex.Replace(html, pattern, $"$1{(encode ? WebUtility.HtmlEncode(content) : content)}$3", RegexOptions.IgnoreCase);
 
         // If the meta tag doesn't exist, add it
-        return html + $"<meta name=\"{WebUtility.HtmlEncode(name)}\" content=\"{(encode ? WebUtility.HtmlEncode(content) : content)}\">{Environment.NewLine}";
+        return html + $"<meta name=\"{WebUtility.HtmlEncode(name)}\" content='{(encode ? WebUtility.HtmlEncode(content) : content)}'>{Environment.NewLine}";
     }
 
     public static string AddHeadChanges(string html, IEnumerable<OqtHeadChange> headChanges)

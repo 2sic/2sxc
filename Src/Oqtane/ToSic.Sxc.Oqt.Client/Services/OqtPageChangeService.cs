@@ -274,7 +274,7 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService)
         if (viewResults?.SxcContextMetaName != null)
         {
             page?.Log($"1.3.4: Context-Meta");
-            siteState.Properties.HeadContent = HtmlHelper.AddOrUpdateMetaTagContent(siteState.Properties.HeadContent, viewResults.SxcContextMetaName, viewResults.SxcContextMetaContents);
+            siteState.Properties.HeadContent = HtmlHelper.AddOrUpdateMetaTagContent(siteState.Properties.HeadContent, viewResults.SxcContextMetaName, viewResults.SxcContextMetaContents, false);
         }
 
         //// Lets load all 2sxc js dependencies (js / styles)
