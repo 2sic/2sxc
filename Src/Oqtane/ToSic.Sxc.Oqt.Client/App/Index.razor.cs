@@ -259,14 +259,7 @@ public partial class Index : ModuleProBase
     private string NotificationForInteractiveServerMode()
     {
         if (IsSuperUser && RenderMode == RenderModes.Interactive && PageState.Runtime == Runtime.Server)
-            return "<h3>Warning: Functionality issue in Interactive Server mode</h3>\n" +
-                "<p>We have identified known issues with 2sxc in Interactive Server mode when using Oqtane 5.1.2. These issues are expected to be resolved in the next version of Oqtane.</p>\n" +
-                "<p><strong>Recommended Action:</strong></p>\n" +
-                "<ol>\n" +
-                "<li>Navigate to <strong>Admin Site Settings</strong>.</li>\n" +
-                "<li>Under <strong>UI Component Settings</strong>, select <strong>Render Mode</strong> and change it to <strong>Static</strong>, or select <strong>Interactivity</strong> and change it to <strong>Client</strong>.</li>\n" +
-                "</ol>\n" +
-                "<p>Thank you for your understanding and patience as we work to resolve this issue.</p>\n";
+            return "Issue with <strong>Interactive</strong> Render Mode in Oqtane 5.1.2. For info navigate to <a href=\"https://go.2sxc.org/oqt-512\" target=\"_blank\">https://go.2sxc.org/oqt-512</a>.\n";
         return string.Empty;
     }
 
