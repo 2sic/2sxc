@@ -13,14 +13,6 @@ namespace ToSic.Sxc.Context.Internal;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IView>(parent, block.View), ICmsView
 {
-    /// <summary>
-    /// Problem: in v16/17 we forgot to make propsRequired for Setting be true.
-    /// So they were `false` - and the Content App used such settings which didn't exist! :(
-    /// So for now we need to keep this as `true` - but we should change it back to `false` in
-    /// the next base class update, probably v18.
-    /// </summary>
-    private const bool SettingsPropsRequired = false;
-
     private readonly IView _view = block.View;
 
     /// <inheritdoc />
@@ -48,13 +40,13 @@ internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IVi
     /// <summary>
     /// Note: this is an explicit implementation, so in Dynamic Razor it won't work. This is by design.
     /// </summary>
-    ITypedItem ICmsView.Settings => _settings.Get(() => Parent._CodeApiSvc.Cdf.AsItem(_view.Settings, propsRequired: SettingsPropsRequired));
+    ITypedItem ICmsView.Settings => _settings.Get(() => Parent._CodeApiSvc.Cdf.AsItem(_view.Settings));
     private readonly GetOnce<ITypedItem> _settings = new();
 
     /// <summary>
     /// Note: this is an explicit implementation, so in Dynamic Razor it won't work. This is by design.
     /// </summary>
-    ITypedItem ICmsView.Resources => _resources.Get(() => Parent._CodeApiSvc.Cdf.AsItem(_view.Resources, propsRequired: SettingsPropsRequired));
+    ITypedItem ICmsView.Resources => _resources.Get(() => Parent._CodeApiSvc.Cdf.AsItem(_view.Resources));
     private readonly GetOnce<ITypedItem> _resources = new();
 
     /// <inheritdoc />
