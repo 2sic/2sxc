@@ -13,8 +13,8 @@ ToSic.Sxc.Oqtane = {
     },
 
     unregisterReloadModule: function (moduleId) {
-        // console.log('stv: unregisterReloadModule', moduleId)
-        // todo: avoid memory leaks
+        const debug = window?.$2sxc?.urlParams?.isDebug() ?? false;
+        if (debug) console.log('unregisterReloadModule', moduleId)
         if (this.registeredModules.has(moduleId)) {
             this.registeredModules.get(moduleId).dispose();
             this.registeredModules.delete(moduleId);
@@ -61,5 +61,3 @@ ToSic.Sxc.Oqtane = {
 };
 
 window.ToSic = ToSic;
-
-export { ToSic };
