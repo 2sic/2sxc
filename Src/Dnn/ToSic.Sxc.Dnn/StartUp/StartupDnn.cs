@@ -4,6 +4,7 @@ using System.Web.Hosting;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Internal.Loaders;
+using ToSic.Eav.StartUp;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Images.Internal;
@@ -32,10 +33,13 @@ public class StartupDnn : IServiceRouteMapper
     /// <summary>
     /// Configure IoC for 2sxc. If it's already configured, do nothing.
     /// </summary>
-    public void Configure()
+    public bool Configure()
     {
+        var l = BootLog.Log.Fn<bool>("Dnn: Configuring WebApi Routes", timer: true);
+
         // In some cases this may be called 2x - so we must avoid doing it again
-        if (_alreadyConfigured) return;
+        if (_alreadyConfigured)
+            return l.ReturnFalse();
 
         // Configure Newtonsoft Time zone handling etc. - part of WebApi
         StartUpDnnWebApi.Configure();
@@ -70,5 +74,6 @@ public class StartupDnn : IServiceRouteMapper
         Compile.AppCode.CleanTempAssemblyFolder();
 
         _alreadyConfigured = true;
+        return l.ReturnTrue();
     }
 }
