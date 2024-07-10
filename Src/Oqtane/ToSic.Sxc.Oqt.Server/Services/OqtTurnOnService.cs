@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Oqt.Server.Services;
 
 internal class OqtTurnOnService(LazySvc<IHtmlTagsService> htmlTagsService) : TurnOnService(htmlTagsService), IOqtTurnOnService
 {
-    protected override string TagName => GenerateRandomHtmlTag();
+    protected override string TagName => base.TagName + GenerateRandomHtmlTag();
 
     private static readonly char[] Characters = "abcdefghijklmnopqrstuvwxyz".ToCharArray();
     private static readonly Random Random = new();
