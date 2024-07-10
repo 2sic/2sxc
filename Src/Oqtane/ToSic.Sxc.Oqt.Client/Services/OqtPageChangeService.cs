@@ -94,10 +94,15 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService)
             // Important: the IncludeClientScripts (IncludeScripts) works very different from LoadScript
             // it uses LoadJS and bundles
 
+            // generate random integer
+            var random = new Random();
+            var randomInt = random.Next(0, 1000);
+
+
             scripts.AddRange(externalResources.Where(r => r.ResourceType == ResourceType.Script).Select(script => new
             {
                 id = string.IsNullOrWhiteSpace(script.UniqueId) ? "" : script.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
-                href = script.Url,
+                href = script.Url + "#" + randomInt,
                 bundle = "", // not working when bundleId is provided
                 location = "body", // script.Location,
                 htmlAttributes = script.HtmlAttributes,
