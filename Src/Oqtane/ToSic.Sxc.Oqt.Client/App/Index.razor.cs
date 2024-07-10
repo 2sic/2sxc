@@ -101,7 +101,7 @@ public partial class Index : ModuleProBase
                             if (!RenderInfoService.IsSsrFraming(RenderMode)) // SSR First load on 2sxc page
                                 newContent = OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(_viewResults, SiteState, newContent, Theme.Name);
                             else // SSR Partial load after starting on 2sxc page
-                                newContent = OqtPageChangeService.AttachScriptsAndStylesDynamicallyWithTurnOn(_viewResults, SiteState, newContent, Theme.Name);
+                                newContent = OqtPageChangeService.AttachScriptsAndStylesDynamicallyWithTurnOn(_viewResults, SiteState, newContent, Theme.Name, @params.PageId);
                         #endregion
 
                         if (Content != newContent) Content = newContent;

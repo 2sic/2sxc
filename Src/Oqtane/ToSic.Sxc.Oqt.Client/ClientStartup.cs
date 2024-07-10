@@ -19,6 +19,7 @@ public class ClientStartup : IClientStartup
         services.TryAddScoped<IRenderInfoService, RenderInfoService>();
         services.TryAddScoped<IOqtTurnOnService, OqtTurnOnService>();
         services.TryAddScoped<IOqtDebugStateService, OqtDebugStateService>();
+        services.TryAddScoped<CacheBustingService>();
 
         // No Operation Service
         services.AddScoped<IOqtPageChangesOnServerService, OqtPageChangesOnServerNoOpService>();

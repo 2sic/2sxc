@@ -11,7 +11,7 @@ using ToSic.Sxc.Oqt.Shared.Models;
 namespace ToSic.Sxc.Oqt.Client.Services;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class OqtPageChangeService(IOqtTurnOnService turnOnService)
+public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingService noCache)
 {
     /// <summary>
     /// Ensure standard assets like java-scripts and styles.
@@ -29,7 +29,7 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService)
         return HtmlHelper.ManageInlineScripts(content, viewResults, siteState.Alias);
     }
 
-    public string AttachScriptsAndStylesDynamicallyWithTurnOn(OqtViewResultsDto viewResults, SiteState siteState, string content, string themeName)
+    public string AttachScriptsAndStylesDynamicallyWithTurnOn(OqtViewResultsDto viewResults, SiteState siteState, string content, string themeName, int pageId)
     {
         if (viewResults == null) return content;
 
@@ -46,7 +46,7 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService)
         {
             scripts.AddRange(viewResults.SxcScripts.Select(a => new
             {
-                href = a,
+                href = noCache.CacheBusting(a, pageId),
                 bundle = "", // not working when bundleId is provided
                 id = "",
                 location = "body",
@@ -94,15 +94,10 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService)
             // Important: the IncludeClientScripts (IncludeScripts) works very different from LoadScript
             // it uses LoadJS and bundles
 
-            // generate random integer
-            var random = new Random();
-            var randomInt = random.Next(0, 1000);
-
-
             scripts.AddRange(externalResources.Where(r => r.ResourceType == ResourceType.Script).Select(script => new
             {
                 id = string.IsNullOrWhiteSpace(script.UniqueId) ? "" : script.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
-                href = script.Url + "#" + randomInt,
+                href = noCache.CacheBusting(script.Url, pageId),
                 bundle = "", // not working when bundleId is provided
                 location = "body", // script.Location,
                 htmlAttributes = script.HtmlAttributes,
