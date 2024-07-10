@@ -29,7 +29,7 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
         return HtmlHelper.ManageInlineScripts(content, viewResults, siteState.Alias);
     }
 
-    public string AttachScriptsAndStylesDynamicallyWithTurnOn(OqtViewResultsDto viewResults, SiteState siteState, string content, string themeName, int pageId)
+    public string AttachScriptsAndStylesDynamicallyWithTurnOn(OqtViewResultsDto viewResults, SiteState siteState, string content, string themeName, Guid renderId)
     {
         if (viewResults == null) return content;
 
@@ -46,7 +46,7 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
         {
             scripts.AddRange(viewResults.SxcScripts.Select(a => new
             {
-                href = noCache.CacheBusting(a, pageId),
+                href = noCache.CacheBusting(a, renderId),
                 bundle = "", // not working when bundleId is provided
                 id = "",
                 location = "body",
@@ -97,7 +97,7 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
             scripts.AddRange(externalResources.Where(r => r.ResourceType == ResourceType.Script).Select(script => new
             {
                 id = string.IsNullOrWhiteSpace(script.UniqueId) ? "" : script.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
-                href = noCache.CacheBusting(script.Url, pageId),
+                href = noCache.CacheBusting(script.Url, renderId),
                 bundle = "", // not working when bundleId is provided
                 location = "body", // script.Location,
                 htmlAttributes = script.HtmlAttributes,
