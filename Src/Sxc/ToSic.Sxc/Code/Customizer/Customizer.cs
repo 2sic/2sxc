@@ -32,7 +32,7 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
 
         // Get and cache for reuse
         var cmsContext = _CodeApiSvc.CmsContext as CmsContext;
-        var created = new CmsView<TSettings, TResources>(cmsContext, cmsContext?.RealBlockOrNull);
+        var created = new CmsView<TSettings, TResources>(cmsContext, cmsContext?.RealBlockOrNull, false);
         _view = created;
         return created;
     }
