@@ -372,7 +372,7 @@
             </assembly>
             <assembly>
               <name>System.Text.Json.dll</name>
-              <version>8.0.0.3</version>
+              <version>8.0.0.4</version>
             </assembly>
             <!-- Microsoft.Bcl.AsyncInterfaces transitive dependency -->
             <!-- System.Text.Json transitive dependency -->
