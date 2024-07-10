@@ -1,16 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ToSic.Sxc.Oqt.Client.Services
 {
     public class CacheBustingService
     {
-        public static int Get(Guid renderId)
+        private readonly Dictionary<Guid, int> _cache = [];
+        
+        public int Get(Guid renderId)
         {
+            if (_cache.TryGetValue(renderId, out var cache)) 
+                return cache;
+            
             var bytes = renderId.ToByteArray();
             var sum = bytes.Aggregate(0, (current, b) => current + b);
             // Ensure the result is within the 7-digit range
             var sevenDigitInt = 1000000 + (sum % 9000000);
+
+            _cache[renderId] = sevenDigitInt;
+
             return sevenDigitInt;
         }
 
