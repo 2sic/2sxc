@@ -1,8 +1,8 @@
-var ToSic = window.ToSic || {};
+var ToSic = window.ToSic = window.ToSic || {};
 
 ToSic.Sxc = ToSic.Sxc || {};
 
-ToSic.Sxc.Oqtane = {
+ToSic.Sxc.Oqtane = ToSic.Sxc.Oqtane || {
 
     registeredModules: new Map(),
 
@@ -60,4 +60,3 @@ ToSic.Sxc.Oqtane = {
     }
 };
 
-window.ToSic = ToSic;

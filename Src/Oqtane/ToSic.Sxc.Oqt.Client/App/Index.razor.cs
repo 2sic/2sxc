@@ -43,7 +43,6 @@ public partial class Index : ModuleProBase
 
     public override List<Resource> Resources => [
         new Resource { ResourceType = ResourceType.Script, Url = $"Modules/{OqtConstants.PackageName}/Module.js", Reload = true },
-        new Resource { ResourceType = ResourceType.Script, Url = $"Modules/{OqtConstants.PackageName}/PageScriptModule.js", Reload = true, ES6Module = true },
         new Resource { ResourceType = ResourceType.Script, Url = $"Modules/{OqtConstants.PackageName}/dist/turnOn/turn-on.js", Reload = true }
         ];
 
