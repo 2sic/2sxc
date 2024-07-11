@@ -43,10 +43,11 @@ public partial class Index : ModuleProBase
 
     public override List<Resource> Resources => [
         new Resource { ResourceType = ResourceType.Script, Url = $"Modules/{OqtConstants.PackageName}/Module.js", Reload = true },
+        new Resource { ResourceType = ResourceType.Script, Url = $"Modules/{OqtConstants.PackageName}/PageScriptModule.js", Reload = true, ES6Module = true },
         new Resource { ResourceType = ResourceType.Script, Url = $"Modules/{OqtConstants.PackageName}/dist/turnOn/turn-on.js", Reload = true }
         ];
 
-    public override string RenderMode => PageState?.RenderMode ?? RenderModes.Static;
+    public override string RenderMode => RenderModes.Static;
 
     #endregion
 
@@ -97,8 +98,8 @@ public partial class Index : ModuleProBase
                         var newContent = OqtPageChangeService.ProcessPageChanges(_viewResults, SiteState, this);
 
                         #region Static SSR
-                        if (RenderMode == RenderModes.Static)
-                            if (!RenderInfoService.IsSsrFraming(RenderMode)) // SSR First load on 2sxc page
+                        if (PageState.RenderMode == RenderModes.Static)
+                            if (!RenderInfoService.IsSsrFraming(PageState.RenderMode)) // SSR First load on 2sxc page
                                 newContent = OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(_viewResults, SiteState, newContent, Theme.Name);
                             else // SSR Partial load after starting on 2sxc page
                                 newContent = OqtPageChangeService.AttachScriptsAndStylesDynamicallyWithTurnOn(_viewResults, SiteState, newContent, Theme.Name, ModuleState.RenderId);
@@ -189,7 +190,7 @@ public partial class Index : ModuleProBase
 
                 OqtPageChangeService.ProcessPageChanges(_viewResults, SiteState, this);
 
-                if (RenderMode == RenderModes.Static) // Static SSR
+                if (PageState.RenderMode == RenderModes.Static) // Static SSR
                     newContent = OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(_viewResults, SiteState, newContent, Theme.Name);
                 else // Interactive
                     await OqtPageChangeService.AttachScriptsAndStylesForInteractiveRendering(_viewResults, SxcInterop, this);
@@ -258,7 +259,7 @@ public partial class Index : ModuleProBase
 
     private string NotificationForInteractiveServerMode()
     {
-        if (IsSuperUser && RenderMode == RenderModes.Interactive && PageState.Runtime == Runtime.Server)
+        if (IsSuperUser && PageState.RenderMode == RenderModes.Interactive && PageState.Runtime == Runtime.Server)
             return "Issue with <strong>Interactive</strong> Render Mode in Oqtane 5.1.2. For info navigate to <a href=\"https://go.2sxc.org/oqt-512\" target=\"_blank\">https://go.2sxc.org/oqt-512</a>.\n";
         return string.Empty;
     }

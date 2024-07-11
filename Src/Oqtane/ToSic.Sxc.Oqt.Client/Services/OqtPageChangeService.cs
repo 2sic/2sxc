@@ -25,7 +25,9 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
     public string AttachScriptsAndStylesStaticallyInHtml(OqtViewResultsDto viewResults, SiteState siteState, string content, string themeName)
     {
         siteState.Properties.HeadContent = HtmlHelper.ManageStyleSheets(siteState.Properties.HeadContent, viewResults, siteState.Alias, themeName);
-        siteState.Properties.HeadContent = HtmlHelper.ManageScripts(siteState.Properties.HeadContent, viewResults, siteState.Alias);
+        //content = HtmlHelper.ManageStyleSheets(content, viewResults, siteState.Alias, themeName);
+        //siteState.Properties.HeadContent = HtmlHelper.ManageScripts(siteState.Properties.HeadContent, viewResults, siteState.Alias);
+        content = HtmlHelper.ManageScripts(content, viewResults, siteState.Alias);
         return HtmlHelper.ManageInlineScripts(content, viewResults, siteState.Alias);
     }
 
@@ -66,7 +68,7 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
                 type = "text/css",
                 integrity = "",
                 crossorigin = "",
-                insertbefore = ""
+                insertbefore = "app-stylesheet-module"
             }));
         }
 
@@ -87,7 +89,7 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
                 type = "text/css",
                 integrity = "",
                 crossorigin = "",
-                insertbefore = "" // bug in Oqtane, needs to be an empty string instead of null or undefined
+                insertbefore = "app-stylesheet-module" // bug in Oqtane, needs to be an empty string instead of null or undefined
             }));
 
             // 2. Scripts - usually libraries etc.
@@ -133,6 +135,8 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
 
         if (inlineScripts.Any())
             content += turnOnService.Run("window.ToSic.Sxc.Oqtane.includeInlineScripts()", data: inlineScripts.ToArray()) + Environment.NewLine;
+
+        //content += turnOnService.Run("window.ToSic.Sxc.Oqtane.reExecuteScripts()") + Environment.NewLine;
 
         return content;
     }
