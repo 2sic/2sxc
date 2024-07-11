@@ -35,14 +35,21 @@ internal class TemplateEngineTokens(ILookUpEngine original): ITemplateEngine, IW
     string ITemplateEngine.Parse(string template)
         => ((ITemplateEngine)this).Parse(template, protector: default, sources: null);
 
-    string ITemplateEngine.Parse(string template, NoParamOrder protector, IEnumerable<ILookUp> sources)
+    string ITemplateEngine.Parse(string template, NoParamOrder protector, bool allowHtml, IEnumerable<ILookUp> sources)
     {
         var dic = new Dictionary<string, string>
         {
             [TemplateKey] = template
         };
         var result = original.LookUp(dic, overrides: sources, depth: MaxDepth);
-        return result[TemplateKey];
+        var raw = result[TemplateKey];
+
+        if (raw is null) return null;
+
+        var hasHtml = raw.Contains("<") || raw.Contains("&") || raw.Contains(">");
+        return allowHtml || !hasHtml
+            ? raw
+            : ToSic.Razor.Blade.Tags.Encode(raw);
     }
 
     /// <summary>

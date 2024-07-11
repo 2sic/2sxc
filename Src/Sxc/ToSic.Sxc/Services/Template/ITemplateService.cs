@@ -92,7 +92,7 @@ public interface ITemplateService
     /// <param name="protector"></param>
     /// <param name="sources"></param>
     /// <returns></returns>
-    string Parse(string template, NoParamOrder protector = default, IEnumerable<ILookUp> sources = default);
+    string Parse(string template, NoParamOrder protector = default, bool allowHtml = false, IEnumerable<ILookUp> sources = default);
 
 
     /// <summary>
