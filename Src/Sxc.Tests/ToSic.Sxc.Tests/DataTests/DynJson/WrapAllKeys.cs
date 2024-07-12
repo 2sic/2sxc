@@ -31,20 +31,20 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
         /// </summary>
         public static List<PropInfo> BoolKeys = new()
         {
-            new PropInfo("TrueBoolType", true, true, true),
-            new PropInfo("TrueBoolTYPE", true, true, true),
-            new PropInfo("FalseBoolType", true, true, false),
-            new PropInfo("TrueString", true, true, true),
-            new PropInfo("FalseString", true, true, false),
-            new PropInfo("TrueNumber", true, true, true),
-            new PropInfo("FalseNumber", true, true, false),
-            new PropInfo("TrueNumberBig", true, true, true),
-            new PropInfo("TrueNumberNegative", true, true, true),
-            new PropInfo("Something", false, note: "key which doesn't exist"),
-            new PropInfo("Dummy", false, note: "key which doesn't exist"),
-            new PropInfo("Part1", false, note: "key which doesn't exist"),
-            new PropInfo("Dummy.SubDummy", false, note: "key which doesn't exist"),
-            new PropInfo("TrueString.SubDummy", false, note: "key which doesn't exist"),
+            new("TrueBoolType", true, true, true),
+            new("TrueBoolTYPE", true, true, true),
+            new("FalseBoolType", true, true, false),
+            new("TrueString", true, true, true),
+            new("FalseString", true, true, false),
+            new("TrueNumber", true, true, true),
+            new("FalseNumber", true, true, false),
+            new("TrueNumberBig", true, true, true),
+            new("TrueNumberNegative", true, true, true),
+            new("Something", false, note: "key which doesn't exist"),
+            new("Dummy", false, note: "key which doesn't exist"),
+            new("Part1", false, note: "key which doesn't exist"),
+            new("Dummy.SubDummy", false, note: "key which doesn't exist"),
+            new("TrueString.SubDummy", false, note: "key which doesn't exist"),
         };
 
         public static IEnumerable<object[]> BoolKeysInfo => BoolKeys.ToTestEnum();
@@ -126,17 +126,17 @@ namespace ToSic.Sxc.Tests.DataTests.DynJson
         /// </summary>
         public static List<PropInfo> KeysDataDeepProps = new()
         {
-            new PropInfo("Key1", true, true, "hello"),
-            new PropInfo("Key2", true, true, "goodbye"),
-            new PropInfo("Dummy", false, note: "key which doesn't exist"),
-            new PropInfo("SubObject", true, true),
-            new PropInfo("SubObject.SubTitle", true, true, value: "hello"),
-            new PropInfo("SubObject.SubSub", true, true),
-            new PropInfo("SubObject.SubSub.SubSubTitle", true, true, "hello sub-sub title"),
-            new PropInfo("SubObject.SubTitle.Dummy", false),
-            new PropInfo("SubObject.Dummy", false),
-            new PropInfo("SubObject.Dummy.Dummy", false),
-            new PropInfo("SubEmpty", true, hasData: true),
+            new("Key1", true, true, "hello"),
+            new("Key2", true, true, "goodbye"),
+            new("Dummy", false, note: "key which doesn't exist"),
+            new("SubObject", true, true),
+            new("SubObject.SubTitle", true, true, value: "hello"),
+            new("SubObject.SubSub", true, true),
+            new("SubObject.SubSub.SubSubTitle", true, true, "hello sub-sub title"),
+            new("SubObject.SubTitle.Dummy", false),
+            new("SubObject.Dummy", false),
+            new("SubObject.Dummy.Dummy", false),
+            new("SubEmpty", true, hasData: true),
         };
         
         private ITyped KeysDataObjJsonTyped => _keysDataObjJsonTyped ??= Obj2Json2TypedStrict(KeysDataDeepAnon);

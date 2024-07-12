@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests
             AreEqual($"/app/api", Link.TestTo(api: "/app/api"));
             AreEqual($"/app/api", Link.TestTo(api: "/app/api", parameters: null));
             AreEqual($"/app/api?a=1&b=2#fragment", Link.TestTo(api: "/app/api", parameters: "a=1&b=2#fragment"));
-            AreEqual($"/app/api?a=1&b=2&c=3", Link.TestTo(api: "/app/api", parameters: NewParameters(new NameValueCollection
+            AreEqual($"/app/api?a=1&b=2&c=3", Link.TestTo(api: "/app/api", parameters: NewParameters(new()
             {
                 { "a", "1" },
                 { "b", "2" },

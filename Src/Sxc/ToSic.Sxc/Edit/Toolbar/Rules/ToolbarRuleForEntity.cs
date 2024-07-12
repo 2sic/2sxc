@@ -1,6 +1,5 @@
 ﻿using ToSic.Lib.Helpers;
 using ToSic.Sxc.Edit.Toolbar.Internal;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Edit.Toolbar;
@@ -8,10 +7,6 @@ namespace ToSic.Sxc.Edit.Toolbar;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class ToolbarRuleForEntity: ToolbarRuleTargeted
 {
-    public const string PrefixPrefill = "prefill:";
-    public const string PrefixForm = "form:";
-    public const string PrefixFilters = "filter:";
-
     internal ToolbarRuleForEntity(
         string commandName,
         object target = null,   // IEntity, DynEntity or int

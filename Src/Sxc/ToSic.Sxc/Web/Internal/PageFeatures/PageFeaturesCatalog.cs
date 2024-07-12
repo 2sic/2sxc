@@ -32,7 +32,8 @@ public class PageFeaturesCatalog: GlobalCatalogBase<IPageFeature>
             ToolbarsAuto,
             ToolbarsAutoInternal,
             TurnOn,
-            CmsWysiwyg
+            CmsWysiwyg,
+            Lightbox
         );
     }
 }

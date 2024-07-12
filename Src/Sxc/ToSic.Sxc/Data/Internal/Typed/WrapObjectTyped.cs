@@ -49,10 +49,10 @@ public class WrapObjectTyped(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeSer
         }
     );
 
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default)
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default /* ignore */)
         => HasKeysHelper.IsEmpty(this, name, noParamOrder, default);
 
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default)
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default /* ignore */)
         => HasKeysHelper.IsNotEmpty(this, name, noParamOrder, default);
 
 
@@ -64,12 +64,10 @@ public class WrapObjectTyped(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeSer
 
     #region ITyped Get
 
-    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required)
-    {
-        return PreWrap.TryGetObject(name, noParamOrder, required);
-    }
+    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string language /* ignore */)
+        => PreWrap.TryGetObject(name, noParamOrder, required);
 
-    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required)
+    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string language /* note ignored */)
         => PreWrap.TryGetTyped(name, noParamOrder, fallback, required: required);
 
     #endregion

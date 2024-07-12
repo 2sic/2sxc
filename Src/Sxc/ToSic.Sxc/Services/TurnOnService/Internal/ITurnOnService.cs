@@ -1,5 +1,4 @@
 ﻿using ToSic.Razor.Blade;
-using ToSic.Razor.Markup;
 using Attribute = ToSic.Razor.Markup.Attribute;
 
 namespace ToSic.Sxc.Services.Internal;
@@ -20,5 +19,8 @@ public interface ITurnOnService: IHasLog
     IHtmlTag Run(object runOrSpecs,
         NoParamOrder noParamOrder = default,
         object require = null,
-        object data = null);
+        object data = null,
+        IEnumerable<object> args = default,
+        string addContext = default
+    );
 }

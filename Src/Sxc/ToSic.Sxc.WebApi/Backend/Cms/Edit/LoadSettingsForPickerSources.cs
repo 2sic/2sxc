@@ -44,7 +44,7 @@ internal class LoadSettingsForPickerSources() : LoadSettingsProviderBase($"{SxcL
 
         // Find all the NameIds which the DataSource says it can create
         var createTypes = pickerSources
-            .Select(p => p.DataSource.GetBestValue<string>(nameof(IUiPickerSourceEntity.CreateTypes), []))
+            .Select(p => p.DataSource.Get<string>(nameof(IUiPickerSourceEntity.CreateTypes), languages: []))
             .Where(s => s.HasValue())
             // TODO: INFO @SDV - he probably has comma separated values
             .SelectMany(s => s

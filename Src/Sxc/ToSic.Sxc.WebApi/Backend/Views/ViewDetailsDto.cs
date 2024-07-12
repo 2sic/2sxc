@@ -1,30 +1,34 @@
-﻿using ToSic.Eav.DataFormats.EavLight;
+﻿using System.Text.Json.Serialization;
+using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.WebApi.Security;
 
 namespace ToSic.Sxc.Backend.Views;
 
 public class ViewDetailsDto
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public ViewContentTypeDto ContentType { get; set; }
-    public ViewContentTypeDto PresentationType { get; set; }
-    public ViewContentTypeDto ListContentType { get; set; }
-    public ViewContentTypeDto ListPresentationType { get; set; }
-    public string TemplatePath { get; set; }
-    public bool IsHidden { get; set; }
-    public string ViewNameInUrl { get; set; }
-    public Guid Guid { get; set; }
-    public bool List { get; set; }
-    public bool HasQuery { get; set; }
-    public int Used { get; set; }
+    public int Id { get; init; }
+    public string Name { get; init; }
+    public ViewContentTypeDto ContentType { get; init; }
+    public ViewContentTypeDto PresentationType { get; init; }
+    public ViewContentTypeDto ListContentType { get; init; }
+    public ViewContentTypeDto ListPresentationType { get; init; }
+    public string TemplatePath { get; init; }
+    public bool IsHidden { get; init; }
+    public string ViewNameInUrl { get; init; }
+    public Guid Guid { get; init; }
+    public bool List { get; init; }
+    public bool HasQuery { get; init; }
+    public int Used { get; init; }
 
-    public bool IsShared { get; set; }
+    public bool IsShared { get; init; }
 
-    public EditInfoDto EditInfo { get; set; }
+    public EditInfoDto EditInfo { get; init; }
 
 
-    public IEnumerable<EavLightEntityReference> Metadata { get; set; }
+    public IEnumerable<EavLightEntityReference> Metadata { get; init; }
 
-    public HasPermissionsDto Permissions { get; set; }
+    public HasPermissionsDto Permissions { get; init; }
+
+    [JsonPropertyName("lightSpeed")]
+    public AppMetadataDto Lightspeed { get; init; }
 }

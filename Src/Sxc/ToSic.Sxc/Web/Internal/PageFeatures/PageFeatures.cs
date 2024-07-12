@@ -14,10 +14,12 @@ internal class PageFeatures(IPageFeaturesManager pfm) : IPageFeatures
 
     private List<PageFeatureFromSettings> FeaturesFromSettings { get; } = [];
 
-    public void FeaturesFromSettingsAdd(PageFeatureFromSettings newFeature) => FeaturesFromSettings.Add(newFeature);
+    public void FeaturesFromSettingsAdd(PageFeatureFromSettings newFeature)
+        => FeaturesFromSettings.Add(newFeature);
 
-    public List<PageFeatureFromSettings> FeaturesFromSettingsGetNew(ILog log) => log.Func(() =>
+    public List<PageFeatureFromSettings> FeaturesFromSettingsGetNew(ILog log)
     {
+        var l = log.Fn<List<PageFeatureFromSettings>>();
         // Filter out the ones which were already added in a previous round
         var newFeatures = FeaturesFromSettings
             // Put duplicates together
@@ -30,27 +32,26 @@ internal class PageFeatures(IPageFeaturesManager pfm) : IPageFeatures
 
         // Mark the new ones as processed now, so they won't be processed in future
         newFeatures.ForEach(f => f.AlreadyProcessed = true);
-        var asIPageFeature = newFeatures;
-        return (asIPageFeature, $"{asIPageFeature.Count}");
-    });
-
-
+        return l.Return(newFeatures, $"{newFeatures.Count}");
+    }
 
     private List<string> FeatureKeys { get; } = [];
 
 
-    public List<IPageFeature> GetFeaturesWithDependentsAndFlush(ILog log) => log.Func(() =>
+    public List<IPageFeature> GetFeaturesWithDependentsAndFlush(ILog log)
     {
-        var unfolded = GetWithDependents(FeatureKeys.ToList(), log);
+        var l = log.Fn<List<IPageFeature>>();
+        var unfolded = GetWithDependents([.. FeatureKeys], log);
         FeatureKeys.Clear();
-        return unfolded;
-    });
+        return l.Return(unfolded);
+    }
 
     /// <inheritdoc />
-    public List<IPageFeature> GetWithDependents(List<string> features, ILog log) => log.Func($"Got {features.Count} items", () =>
+    public List<IPageFeature> GetWithDependents(List<string> features, ILog log)
     {
+        var l = log.Fn<List<IPageFeature>>($"Got {features.Count} items");
         var unfolded = pfm.GetWithDependents(features);
-        return (unfolded, $"Got unfolded features {unfolded.Count}");
-    });
+        return l.Return(unfolded, $"Got unfolded features {unfolded.Count}");
+    }
 
 }

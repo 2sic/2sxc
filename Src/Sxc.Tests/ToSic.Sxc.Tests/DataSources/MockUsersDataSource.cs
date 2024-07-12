@@ -23,12 +23,12 @@ namespace ToSic.Sxc.DataSources
             l.A($"mock 3 super users and admins with one role [1-3]");
             for (var i = 1; i <= 3; i++)
             {
-                users.Add(new CmsUserRaw
+                users.Add(new()
                 {
                     Id = i,
-                    Guid = new Guid($"00000000-0000-0000-0000-{i:d12}"),
+                    Guid = new($"00000000-0000-0000-0000-{i:d12}"),
                     NameId = $"mock:{i}",
-                    Roles = new List<int>() {i},
+                    Roles = new() {i},
                     IsSystemAdmin = true,
                     IsSiteAdmin = true,
                     //IsDesigner = false,
@@ -46,12 +46,12 @@ namespace ToSic.Sxc.DataSources
             l.A($"mock 7 normal users with 3 roles [ 2, 3, 4-10]");
             for (var i = 4; i <= 10; i++)
             {
-                users.Add(new CmsUserRaw
+                users.Add(new()
                 {
                     Id = i,
-                    Guid = new Guid($"00000000-0000-0000-0000-{i:d12}"),
+                    Guid = new($"00000000-0000-0000-0000-{i:d12}"),
                     NameId = $"mock:{i}",
-                    Roles = new List<int> {2, 3, i},
+                    Roles = new() {2, 3, i},
                     IsSystemAdmin = false,
                     IsSiteAdmin = false,
                     //IsDesigner = false,
@@ -68,12 +68,12 @@ namespace ToSic.Sxc.DataSources
             l.A($"mock 10 normal users with 2 roles [9, 10]");
             for (var i = 11; i <= 20; i++)
             {
-                users.Add(new CmsUserRaw
+                users.Add(new()
                 {
                     Id = i,
-                    Guid = new Guid($"00000000-0000-0000-0000-{i:d12}"),
+                    Guid = new($"00000000-0000-0000-0000-{i:d12}"),
                     NameId = $"mock:{i}",
-                    Roles = new List<int> {9, 10},
+                    Roles = new() {9, 10},
                     IsSystemAdmin = false,
                     IsSiteAdmin = false,
                     //IsDesigner = false,

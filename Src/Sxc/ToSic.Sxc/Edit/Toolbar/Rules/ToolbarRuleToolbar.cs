@@ -4,10 +4,11 @@ namespace ToSic.Sxc.Edit.Toolbar;
 
 internal class ToolbarRuleToolbar: ToolbarRule
 {
+    internal const string RuleToolbar = "toolbar";
     internal const string Empty = "empty";
     internal const string Default = "default";
 
-    public ToolbarRuleToolbar(string template = "", string ui = ""): base("toolbar", ui: ui)
+    public ToolbarRuleToolbar(string template = "", string ui = ""): base(RuleToolbar, ui: ui)
     {
         CommandValue = template;
     }

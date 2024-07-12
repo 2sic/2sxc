@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav;
 using ToSic.Eav.Apps.Internal.Insights;
-using ToSic.Eav.Caching;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Sys.Insights;
 using ToSic.Sxc.Web.Internal.LightSpeed;

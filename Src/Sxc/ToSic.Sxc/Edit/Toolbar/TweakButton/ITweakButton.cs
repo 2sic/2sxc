@@ -53,8 +53,8 @@ public interface ITweakButton
     /// </summary>
     /// <param name="color">The main color parameter. Can contain two values, comma separated.</param>
     /// <param name="noParamOrder"></param>
-    /// <param name="background">Background color - will only take affect if the `color` was not set.</param>
-    /// <param name="foreground">Foreground color - will only take affect if the `color` was not set.</param>
+    /// <param name="background">Background color - will only take effect if the `color` was not set.</param>
+    /// <param name="foreground">Foreground color - will only take effect if the `color` was not set.</param>
     /// <returns></returns>
     ITweakButton Color(
         string color = default,
@@ -192,4 +192,18 @@ public interface ITweakButton
     ITweakButton Filter(string name, object value);
 
     #endregion
+
+    /// <summary>
+    /// Optional parameter to skip adding this button-rule.
+    /// If the condition is false, this rule will not be added.
+    /// This may sometimes be confusing:
+    ///
+    /// - most rules are add rules, so if this is false, it will not add the button
+    /// - but if you have a remove rule, it will _not_ remove the button
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    [PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    ITweakButton Condition(bool value);
 }

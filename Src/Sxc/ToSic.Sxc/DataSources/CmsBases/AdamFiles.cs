@@ -85,11 +85,11 @@ public class AdamFiles : DataSourceBase
     #endregion
 
     private IImmutableList<IEntity> GetFolders() => GetInternal()
-        .Where(e => e.GetBestValue<bool>("IsFolder", null))
+        .Where(e => e.Get<bool>("IsFolder"))
         .ToImmutableList();
 
     private IImmutableList<IEntity> GetFiles() => GetInternal()
-        .Where(e => !e.GetBestValue<bool>("IsFolder", null))
+        .Where(e => !e.Get<bool>("IsFolder"))
         .ToImmutableList();
 
     private IImmutableList<IEntity> GetInternal() => _getInternal.Get(() => Log.Func(l =>

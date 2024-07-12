@@ -71,7 +71,7 @@ public abstract class OqtControllerBase : ControllerBase, IHasLog, IActionFilter
         _helper.OnActionExecuting(context, HistoryLogGroup);
 
         // background processes can pass in an alias using the SiteState service
-        GetService<SiteStateInitializer>().InitIfEmpty();
+        GetService<AliasResolver>().InitIfEmpty();
             
         if (_withBlockContext) CtxHlp.InitializeBlockContext(context);
         l.Done();

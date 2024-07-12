@@ -71,9 +71,11 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
         var view = block.View;
         var appState = block.Context.AppState;
         var appPathRootInInstallation = block.App.PathSwitch(view.IsShared, PathTypes.PhysRelative);
-        var (polymorphPathOrNull, edition) = Services.EnginePolymorphism.PolymorphTryToSwitchPath(appPathRootInInstallation, view, appState);
-        var templatePath = polymorphPathOrNull ??
-                           Path.Combine(appPathRootInInstallation, view.Path).ToAbsolutePathForwardSlash();
+        var (polymorphPathOrNull, edition) = Services.EnginePolymorphism
+            .PolymorphTryToSwitchPath(appPathRootInInstallation, view, appState);
+
+        var templatePath = polymorphPathOrNull
+                           ?? Path.Combine(appPathRootInInstallation, view.Path).ToAbsolutePathForwardSlash();
 
         // Throw Exception if Template does not exist
         if (!File.Exists(Services.ServerPaths.FullAppPath(templatePath)))
@@ -128,10 +130,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
 
         if (Template.ContentType != "" && Template.ContentItem == null && Block.Configuration.Content.All(e => e == null))
         {
-            // Exception ex = new ExceptionWithHelp(new CodeHelp(name: ErrorDataIsMissing, detect: "", linkCode: "err-block-data-missing"));
-            var result = new RenderEngineResult(EngineMessages.ToolbarForEmptyTemplate, false, null, /*ErrorDataIsMissing*/null,
-                []);
-                //ex.ToListOfOne());
+            var result = new RenderEngineResult(EngineMessages.ToolbarForEmptyTemplate, false, null, null, []);
             return l.Return(result, "error");
         }
 

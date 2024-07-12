@@ -15,15 +15,15 @@ internal class CodeItemHelper(GetAndConvertHelper helper, ITyped data)
     public readonly GetAndConvertHelper Helper = helper;
 
     #region Keys
-    public bool IsEmpty(string name, NoParamOrder noParamOrder, bool? isBlank)
+    public bool IsEmpty(string name, NoParamOrder noParamOrder, bool? isBlank, string language)
     {
-        var result = Get(name, noParamOrder, required: false);
+        var result = Get(name, noParamOrder, required: false, language: language);
         return HasKeysHelper.IsEmpty(result, isBlank);
     }
 
-    public bool IsFilled(string name, NoParamOrder noParamOrder, bool? isBlank)
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder, bool? isBlank, string language)
     {
-        var result = Get(name, noParamOrder, required: false);
+        var result = Get(name, noParamOrder, required: false, language: language);
         return HasKeysHelper.IsNotEmpty(result, isBlank);
     }
 
@@ -32,17 +32,25 @@ internal class CodeItemHelper(GetAndConvertHelper helper, ITyped data)
 
     #region Get
 
-    public object Get(string name, NoParamOrder noParamOrder, bool? required, [CallerMemberName] string cName = default)
+    public object Get(string name, NoParamOrder noParamOrder, bool? required, string language = default, [CallerMemberName] string cName = default)
     {
-        var findResult = Helper.TryGet(name);
+        var findResult = Helper.TryGet(name, language);
         return IsErrStrict(findResult.Found, required, Helper.PropsRequired)
             ? throw ErrStrictForTyped(Data, name, cName: cName)
             : findResult.Result;
     }
 
-    public TValue G4T<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required = default, [CallerMemberName] string cName = default)
+    public TValue G4T<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, [CallerMemberName] string cName = default)
     {
         var findResult = Helper.TryGet(name);
+        return IsErrStrict(findResult.Found, required, Helper.PropsRequired)
+            ? throw ErrStrictForTyped(Data, name, cName: cName)
+            : findResult.Result.ConvertOrFallback(fallback);
+    }
+
+    public TValue GetT<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string language = default, [CallerMemberName] string cName = default)
+    {
+        var findResult = Helper.TryGet(field: name, language: language);
         return IsErrStrict(findResult.Found, required, Helper.PropsRequired)
             ? throw ErrStrictForTyped(Data, name, cName: cName)
             : findResult.Result.ConvertOrFallback(fallback);

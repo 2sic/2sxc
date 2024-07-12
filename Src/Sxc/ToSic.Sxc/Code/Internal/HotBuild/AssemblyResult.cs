@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using ToSic.Eav.Caching;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
@@ -8,8 +9,8 @@ public class AssemblyResult(
     string errorMessages = null,
     string[] assemblyLocations = null,
     string safeClassName = null,
-    Type mainType = default, 
-    Dictionary<string, string> infos = default)
+    Type mainType = default,
+    Dictionary<string, string> infos = default): ICanBeCacheDependency, ITimestamped
 {
     public Assembly Assembly { get; } = assembly;
     public string ErrorMessages { get; } = errorMessages;
@@ -27,7 +28,7 @@ public class AssemblyResult(
     /// ATM just used for AppCode assemblies, should maybe be in an inheriting class...
     /// </summary>
     // WIP - should be more functional, this get/set is still hacky
-    public IDictionary<string, bool> WatcherFolders { get; set; }
+    public IDictionary<string, bool> WatcherFolders { get; internal set; }
 
     public Dictionary<string, string> Infos { get; } = infos ?? [];
 
@@ -36,13 +37,23 @@ public class AssemblyResult(
     /// </summary>
     public bool HasAssembly => Assembly != null;
 
+    #region CacheDependency
+
+    public bool CacheIsNotifyOnly => false;
+
     /// <summary>
     /// Used to create cache dependency with CacheEntryChangeMonitor
     /// </summary>
     /// <remarks>
     /// This cache item with Assembly usually has cache dependency on WatchFolders.
     /// Other cache items can depend on this cache item, instead of creating additional file monitors on same WatchFolders.
+    ///
+    /// WARNING: AS OF 2024-06-01 it uses the same name as the ICanBeCacheDependency, but ATM it's used without the prefix
     /// </remarks>
-    public string CacheKey { get; set; }
-    
+    public string CacheDependencyId { get; set; }
+
+    public long CacheTimestamp { get; } = DateTime.Now.Ticks;
+
+    #endregion
+
 }

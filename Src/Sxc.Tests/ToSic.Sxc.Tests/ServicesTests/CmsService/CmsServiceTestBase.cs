@@ -6,7 +6,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Core.Tests;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
-using ToSic.Eav.ImportExport;
 using ToSic.Eav.Integration;
 using ToSic.Eav.Internal.Loaders;
 using ToSic.Razor.Blade;
@@ -32,7 +31,7 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
             var appStates = GetService<IAppStates>();
             var app = appStates.GetPresetReader();
             TstDataContentType = app.GetContentType("TstData");
-            if (TstDataContentType == null) throw new Exception("TstData content type not found. Probably JSON is missing.");
+            if (TstDataContentType == null) throw new("TstData content type not found. Probably JSON is missing.");
             Cdf = GetService<CodeDataFactory>();
         }
         public readonly CodeDataFactory Cdf;

@@ -32,20 +32,25 @@ public class SxcPageFeatures
     /// <remarks>
     /// Published the key '2sxc.JsCore' in v13.00, do not change
     /// </remarks>
-    public static PageFeature JsCore = new("2sxc.JsCore", "2sxc core js APIs", needs:
-    [
-        ContextPage.NameId
-    ], urlWip: "js/2sxc.api.min.js");
+    public static PageFeature JsCore = new(
+        "2sxc.JsCore",
+        "2sxc core js APIs",
+        needs: [ContextPage.NameId],
+        urlInDist: "js/2sxc.api.min.js");
 
     /// <summary>
     /// The INTERNAL USE 2sxc JS libraries for cms / edit actions.
     /// This one doesn't check requirements, and is the one which is added automatically. 
     /// </summary>
-    public static PageFeature JsCmsInternal = new("Internal.JsCms", "2sxc inpage editing APIs - internal version without checks", needs:
-    [
-        JsCore.NameId,
-        ContextModule.NameId
-    ], urlWip: "dist/inpage/inpage.min.js");
+    public static PageFeature JsCmsInternal = new(
+        "Internal.JsCms",
+        "2sxc inpage editing APIs - internal version without checks",
+        needs:
+        [
+            JsCore.NameId,
+            ContextModule.NameId
+        ],
+        urlInDist: "dist/inpage/inpage.min.js");
 
     private static readonly List<Requirement> RequiresPublicEditForm = [PublicEditForm.Requirement];
 
@@ -55,7 +60,8 @@ public class SxcPageFeatures
     /// <remarks>
     /// Published the key '2sxc.JsCms' in v13.00, do not change
     /// </remarks>
-    public static PageFeature JsCms = new("2sxc.JsCms", 
+    public static PageFeature JsCms = new(
+        "2sxc.JsCms", 
         "2sxc inpage editing APIs", 
         needs: [JsCmsInternal.NameId],
         requirements: RequiresPublicEditForm);
@@ -66,13 +72,14 @@ public class SxcPageFeatures
     /// <remarks>
     /// Published the key '2sxc.Toolbars' in v13.00, do not change
     /// </remarks>
-    public static PageFeature ToolbarsInternal = new("Internal.Toolbars",
+    public static PageFeature ToolbarsInternal = new(
+        "Internal.Toolbars",
         "2sxc InPage editing UIs / Toolbar",
         needs:
         [
             JsCmsInternal.NameId,
             ContextPage.NameId,
-        ], urlWip: "dist/inpage/inpage.min.css");
+        ], urlInDist: "dist/inpage/inpage.min.css");
 
     /// <summary>
     /// The 2sxc JS libraries for cms / edit actions
@@ -80,7 +87,8 @@ public class SxcPageFeatures
     /// <remarks>
     /// Published the key '2sxc.Toolbars' in v13.00, do not change
     /// </remarks>
-    public static PageFeature Toolbars = new("2sxc.Toolbars",
+    public static PageFeature Toolbars = new(
+        "2sxc.Toolbars",
         "2sxc InPage editing UIs / Toolbar",
         needs: [ToolbarsInternal.NameId],
         requirements: RequiresPublicEditForm);
@@ -88,8 +96,10 @@ public class SxcPageFeatures
     /// <summary>
     /// WIP - this will probably be moved to local only in future, ATM it's global though
     /// </summary>
-    public static PageFeature ToolbarsAutoInternal = new("Internal.ToolbarsAuto",
-        "Ensure that the toolbars automatically appear", needs:
+    public static PageFeature ToolbarsAutoInternal = new(
+        "Internal.ToolbarsAuto",
+        "Ensure that the toolbars automatically appear",
+        needs:
         [
             ContextPage.NameId,
             ToolbarsInternal.NameId
@@ -109,7 +119,10 @@ public class SxcPageFeatures
     /// <remarks>
     /// Published the key 'turnOn' in v12.02, do not change
     /// </remarks>
-    public static PageFeature TurnOn = new("turnOn", "turnOn JS library", urlWip: "dist/turnOn/turn-on.js");
+    public static PageFeature TurnOn = new(
+        "turnOn",
+        "turnOn JS library",
+        urlInDist: "dist/turnOn/turn-on.js");
 
     /// <summary>
     /// turnOn feature
@@ -117,6 +130,23 @@ public class SxcPageFeatures
     /// <remarks>
     /// Added in v15.01
     /// </remarks>
-    public static PageFeature CmsWysiwyg = new("Cms.Wysiwyg", "Wysiwyg helpers / css for better rich content", urlWip: "dist/cms/wysiwyg.min.css");
+    public static PageFeature CmsWysiwyg = new(
+        "Cms.Wysiwyg",
+        "Wysiwyg helpers / css for better rich content",
+        urlInDist: "dist/cms/wysiwyg.min.css");
+
+    /// <summary>
+    /// Fancybox4 - just for use in the lightbox feature
+    /// </summary>
+    internal static readonly PageFeature WebResourceFancybox4 = new(
+        "fancybox4",
+        "Fancybox 4 lightbox");
+
+    public static PageFeature Lightbox = new(
+        "lightbox",
+        "The currently defined lightbox, whatever it is",
+        needs: [WebResourceFancybox4.NameId]);
+
+
 
 }

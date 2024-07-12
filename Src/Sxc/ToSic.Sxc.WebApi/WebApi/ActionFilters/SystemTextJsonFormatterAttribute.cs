@@ -1,21 +1,11 @@
 ﻿#if NETCOREAPP
-using System;
-using System.Buffers;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.ObjectPool;
-using Microsoft.Extensions.Options;
-using ToSic.Eav.Serialization;
 using ToSic.Eav.WebApi.Serialization;
-using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using JsonOptions = ToSic.Eav.Serialization.JsonOptions;
 
@@ -38,9 +28,7 @@ public class SystemTextJsonFormatterAttribute : ActionFilterAttribute, IControll
     public void Apply(ControllerModel controller)
     {
         foreach (var action in controller.Actions)
-        {
             Apply(action);
-        }
     }
 
     public void Apply(ActionModel action)
@@ -48,9 +36,7 @@ public class SystemTextJsonFormatterAttribute : ActionFilterAttribute, IControll
         // Set the model binder to NewtonsoftJsonBodyModelBinder for parameters that are bound to the request body.
         var parameters = action.Parameters.Where(p => p.BindingInfo?.BindingSource == BindingSource.Body);
         foreach (var p in parameters)
-        {
             p.BindingInfo.BinderType = typeof(SystemTextJsonBodyModelBinder);
-        }
     }
 
     public override void OnActionExecuted(ActionExecutedContext context)
@@ -102,39 +88,4 @@ public class SystemTextJsonFormatterAttribute : ActionFilterAttribute, IControll
     }
 }
 
-public class SystemTextJsonBodyModelBinder(
-    ILoggerFactory loggerFactory,
-    ArrayPool<char> charPool,
-    IHttpRequestStreamReaderFactory readerFactory,
-    ObjectPoolProvider objectPoolProvider,
-    IOptions<MvcOptions> mvcOptions)
-    : BodyModelBinder(GetInputFormatters(loggerFactory, charPool, objectPoolProvider, mvcOptions), readerFactory)
-{
-    private static IInputFormatter[] GetInputFormatters(
-        ILoggerFactory loggerFactory,
-        ArrayPool<char> charPool,
-        ObjectPoolProvider objectPoolProvider,
-        IOptions<MvcOptions> mvcOptions)
-    {
-        return
-        [
-            new SystemTextJsonInputFormatter(SxcJsonOptions, loggerFactory.CreateLogger<SystemTextJsonInputFormatter>())
-        ];
-    }
-
-    public static Microsoft.AspNetCore.Mvc.JsonOptions SxcJsonOptions
-    {
-        get
-        {
-            if (_sxcJsonOptions == null)
-            {
-                _sxcJsonOptions = new();
-                _sxcJsonOptions.JsonSerializerOptions.SetUnsafeJsonSerializerOptions();
-            }
-            return _sxcJsonOptions;
-        }
-    }
-    private static Microsoft.AspNetCore.Mvc.JsonOptions _sxcJsonOptions;
-
-}
 #endif

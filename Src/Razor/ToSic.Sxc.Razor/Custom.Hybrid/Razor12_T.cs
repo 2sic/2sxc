@@ -19,18 +19,10 @@ using ToSic.Sxc.Razor.Internal;
 namespace Custom.Hybrid;
 
 [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
-public abstract class Razor12<TModel>: OqtRazorBase<TModel>, IHasCodeLog, IRazor, IRazor12, ISetDynamicModel
+[method: PrivateApi]
+public abstract class Razor12<TModel>() : OqtRazorBase<TModel>(CompatibilityLevels.CompatibilityLevel12, "Oqt.Rzr12"),
+    IHasCodeLog, IRazor, IRazor12, ISetDynamicModel
 {
-    #region Constructor / DI / SysHelp
-
-    /// <summary>
-    /// Constructor - only available for inheritance
-    /// </summary>
-    [PrivateApi]
-    protected Razor12(): base(CompatibilityLevels.CompatibilityLevel12, "Oqt.Rzr12") { }
-
-    #endregion
-
     #region Dynamic Model
 
     public dynamic DynamicModel => RzrHlp.DynamicModel;

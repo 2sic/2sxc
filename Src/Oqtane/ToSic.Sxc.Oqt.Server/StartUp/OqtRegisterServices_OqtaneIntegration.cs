@@ -16,6 +16,7 @@ partial class OqtRegisterServices
         services.TryAddTransient<ISystemLogService, OqtSystemLogService>();
         services.TryAddTransient<IMailService, OqtMailService>();
         services.TryAddTransient<UserSourceProvider, OqtUsersServiceProvider>();
+        services.AddTransient<ITurnOnService, OqtTurnOnService>();
         return services;
     }
 }

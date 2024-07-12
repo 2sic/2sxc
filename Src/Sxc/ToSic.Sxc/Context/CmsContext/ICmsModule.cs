@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Metadata;
+﻿using System.Text.Json.Serialization;
+using ToSic.Eav.Metadata;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Context;
@@ -47,6 +48,7 @@ public interface ICmsModule: IHasMetadata
 
     [PrivateApi("WIP")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [JsonIgnore] // prevent serialization as it's not a normal property
 #pragma warning disable CS0108, CS0114
     IMetadata Metadata { get; }
 #pragma warning restore CS0108, CS0114

@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Metadata;
+﻿using System.Text.Json.Serialization;
+using ToSic.Eav.Metadata;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Context;
@@ -9,6 +10,9 @@ namespace ToSic.Sxc.Context;
 /// 🪒 In [Dynamic Razor](xref:Custom.Hybrid.Razor14) it's found on `CmsContext.User`  
 /// 🪒 In [Typed Razor](xref:Custom.Hybrid.RazorTyped) it's found on `MyUser`
 /// </summary>
+/// <remarks>
+/// * v18 enhanced to serialize - so it can be returned by a WebApi Controller
+/// </remarks>
 [PublicApi]
 public interface ICmsUser: IHasMetadata
 {
@@ -104,11 +108,12 @@ public interface ICmsUser: IHasMetadata
     bool IsSiteDeveloper { get; }
 
     /// <summary>
-    /// Metadata of the current view
+    /// Metadata of the current user
     /// </summary>
     /// <remarks>
     /// Added in v13.12
     /// </remarks>
+    [JsonIgnore] // prevent serialization as it's not a normal property
     new IMetadata Metadata { get; }
 
     /// <summary>

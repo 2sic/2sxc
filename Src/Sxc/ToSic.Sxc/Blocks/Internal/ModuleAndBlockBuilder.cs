@@ -28,7 +28,6 @@ public abstract class ModuleAndBlockBuilder(Generator<BlockFromModule> blockGene
         var module = GetModuleImplementation(pageId, moduleId);
         var ctx = GetContextOfBlock(module, pageId);
         
-        // 2024-03-11 2dm WIP
         var block = blockGenerator.New().Init(ctx);
         return l.ReturnAsOk(block);
     }

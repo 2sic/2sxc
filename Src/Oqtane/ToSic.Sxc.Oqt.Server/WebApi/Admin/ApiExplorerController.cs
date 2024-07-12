@@ -47,8 +47,7 @@ public class ApiExplorerController() : OqtStatefulControllerBase(RealController.
     private Assembly GetCompiledAssembly(string path)
     {
         // get path from root
-        var siteStateInitializer = GetService<SiteStateInitializer>();
-        var siteId = siteStateInitializer.InitializedState.Alias.SiteId;
+        var siteId = GetService<SiteState>()?.Alias?.SiteId ?? GetService<AliasResolver>().Alias.SiteId;
         var appFolder = GetService<AppFolder>().GetAppFolder();
         var pathFromRoot = OqtServerPaths.GetAppApiPath(siteId, appFolder, path);
 

@@ -38,8 +38,12 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
 
     [PrivateApi]
-    dynamic ITypedItem.Dyn
-        => throw new NotSupportedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(ITypedStack)} by design");
+    [JsonIgnore]
+    dynamic ITypedItem.Dyn => throw new NotSupportedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(ITypedStack)} by design");
+
+    public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default,
+        bool? required = default, string language = default)
+        => PreWrap.TryGetTyped(name, noParamOrder, fallback, required: required);
 
     bool ITypedItem.IsDemoItem => PreWrap.TryGetTyped(nameof(ITypedItem.IsDemoItem), noParamOrder: default, fallback: false, required: false);
 
@@ -140,6 +144,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     IPublishing ITypedItem.Publishing => _publishing.Get(() => new PublishingUnsupported(this));
     private readonly GetOnce<IPublishing> _publishing = new();
 
+    [JsonIgnore]
     public ITypedItem Presentation => _presentation.Get(() => CreateItemFromProperty(nameof(Presentation)));
     private readonly GetOnce<ITypedItem> _presentation = new();
 
@@ -191,7 +196,9 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     IEnumerable<T> ITypedItem.Children<T>(string field, NoParamOrder protector, string type, bool? required)
         => Cdf.AsCustomList<T>(
-            source: (this as ITypedItem).Children(field: field, noParamOrder: protector, type: type, required: required), protector: protector, nullIfNull: false
+            source: (this as ITypedItem).Children(field: field, noParamOrder: protector, type: type, required: required),
+            protector: protector,
+            nullIfNull: false
         );
 
     T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string type, string field)
@@ -208,6 +215,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     #region Not Supported Properties such as Entity, Type, Child, Folder, Presentation, Metadata
 
+    [JsonIgnore] // prevent serialization as it's not a normal property
     IMetadata ITypedItem.Metadata => _metadata ??= BuildMetadata(PreWrap.TryGetWrap(nameof(Metadata.Metadata)).Raw);
     private IMetadata _metadata;
 

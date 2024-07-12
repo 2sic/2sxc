@@ -17,6 +17,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers;
 
 internal class EditUiMiddleware
 {
+    private const int UnknownPageId = -1;
+
     public static Task PageOutputCached(HttpContext context, IWebHostEnvironment env, string virtualPath, EditUiResourceSettings settings)
     {
         context.Response.Headers.Add("test-dev", "2sxc");
@@ -36,44 +38,29 @@ internal class EditUiMiddleware
             memoryCacheService.Set(key, html, filePaths: [path]);
         }
 
-        //var html = Encoding.Default.GetString(bytes);
+        var pageId = GetPageId(context);
 
-        // inject JsApi to html content
-        var pageIdString = context.Request.Query[HtmlDialog.PageIdInUrl];
-        var pageId = !string.IsNullOrEmpty(pageIdString) ? Convert.ToInt32(pageIdString) : -1;
-
-
-        var siteStateInitializer = sp.GetService<SiteStateInitializer>();
-            
         // find siteId from pageId (if provided)
-        var siteId = 1; // TODO: @STV - why do we have the site with all the null checks?
-        if (pageId != -1)
-        {
-            // siteState need to be initialized for DB connection to get siteId from pageId
-            var _ = siteStateInitializer?.InitializedState;
-            var pages = sp.GetRequiredService<IPageRepository>();
-            var page = pages.GetPage(pageId, false);
-            siteStateInitializer?.InitIfEmpty(page?.SiteId);
-            siteId = page?.SiteId ?? siteId;
-        }
+        var aliasResolver = sp.GetService<AliasResolver>();
 
-        var siteRoot = OqtPageOutput.GetSiteRoot(siteStateInitializer?.InitializedState);
-        var antiForgery = sp.GetRequiredService<IAntiforgery>();
-        var tokenSet = antiForgery.GetAndStoreTokens(context);
-        var rvt = tokenSet.RequestToken;
-
-        var oqtJsApi = sp.GetRequiredService<IJsApiService>();
-        var content = oqtJsApi.GetJsApiJson(pageId, siteRoot, rvt);
+        // 1. (keep order of lines)
+        var siteId = EnsureCorrectAliasAndGetSiteIdFromPageId(pageId, aliasResolver, sp);
 
         // New feature to get resources
         var htmlHead = "";
         try
         {
-            var editUiResources = sp.GetRequiredService<EditUiResources>();
-            var assets = editUiResources.GetResources(true, siteId, settings);
-            htmlHead = assets.HtmlHead;
+            htmlHead = sp.GetRequiredService<EditUiResources>().GetResources(true, siteId, settings).HtmlHead;
         }
         catch { /* ignore */ }
+
+        // 2. (keep order of lines)
+        var siteRoot = OqtPageOutput.GetSiteRoot(aliasResolver.Alias);
+
+        var rvt = sp.GetRequiredService<IAntiforgery>().GetAndStoreTokens(context).RequestToken;
+
+        // inject JsApi to html content
+        var content = sp.GetRequiredService<IJsApiService>().GetJsApiJson(pageId, siteRoot, rvt);
 
         html = HtmlDialog.UpdatePlaceholders(html, content, pageId, "", htmlHead, $"<input name=\"__RequestVerificationToken\" type=\"hidden\" value=\"{rvt}\" >");
 
@@ -88,4 +75,37 @@ internal class EditUiMiddleware
     }
 
     private static string CacheKey(string virtualPath) => $"ToSic.Sxc.Oqt.Server.Controllers.{nameof(EditUiMiddleware)}:{virtualPath}";
+
+    private static int GetPageId(HttpContext context)
+    {
+        var pageIdString = context.Request.Query[HtmlDialog.PageIdInUrl];
+
+        return !string.IsNullOrEmpty(pageIdString) 
+            ? Convert.ToInt32(pageIdString) 
+            : UnknownPageId;
+    }
+
+    /// <summary>
+    /// find siteId from pageId (if provided)
+    /// initialize SiteState for DB connection
+    /// </summary>
+    /// <param name="pageId"></param>
+    /// <param name="aliasResolver"></param>
+    /// <param name="sp"></param>
+    /// <returns>siteId or NULL</returns>
+    /// <remarks>internally find correct alias and store it in SiteState.Alias for reuse</remarks>
+    private static int? EnsureCorrectAliasAndGetSiteIdFromPageId(int pageId, AliasResolver aliasResolver, IServiceProvider sp)
+    {
+        if (pageId == UnknownPageId) return null;
+
+        // FIX: No database provider has been configured for this DbContext. A provider can be configured by overriding the 'DbContext.OnConfiguring' method or by using 'AddDbContext' on the application service provider.
+        var _ = aliasResolver?.Alias; // do not remove or reorder this line (it will initialize SiteState for DB connection)
+
+        var pages = sp.GetRequiredService<IPageRepository>(); 
+        var page = pages.GetPage(pageId, false); // SiteState need to be initialized for DB connection
+
+        aliasResolver?.InitIfEmpty(page?.SiteId); // store correct alias in SiteState.Alias
+
+        return page?.SiteId;
+    }
 }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.WebApi.Admin.Features;
 using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.WebApi.Sys.Licenses;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Eav.WebApi.Admin.Features.FeatureControllerReal;
 
@@ -22,6 +23,9 @@ public class FeatureController() : OqtStatefulControllerBase(RealController.LogS
 {
     private RealController Real => GetService<RealController>();
 
+    [HttpGet]
+    [Authorize(Roles = RoleNames.Admin)]
+    public FeatureStateDto Details(string nameId) => Real.Details(nameId);
 
     /// <summary>
     /// POST updated features JSON configuration.

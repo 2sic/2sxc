@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Tests.ServicesTests.ImageService;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using static ToSic.Testing.Shared.TestHelpers;
 
@@ -16,14 +17,14 @@ namespace ToSic.Sxc.Tests.ServicesTests
             TestManyButThrowOnceOnly(testSet.Select(ts => (ts.Name, ts)), test =>
             {
                 // Factor set on the Img call
-                var settingsWithoutFactor = svc.Settings(width: test.Set.Width, height: test.Set.Height,
+                var settingsWithoutFactor = svc.TacSettings(width: test.Set.Width, height: test.Set.Height,
                     recipe: new Recipe(variants: test.Set.Variants));
                 var imgSetNoFactor = svc.Img(link: ImgUrl, settings: settingsWithoutFactor, factor: factor,
                     recipe: test.Pic.Variants);
                  Is(expected, imgSetNoFactor.ToString(), $"Failed (factor on Img): {test.Name}");
 
                 // Factor specified on settings
-                var settingsWithFactor = svc.Settings(factor: factor, width: test.Set.Width,
+                var settingsWithFactor = svc.TacSettings(factor: factor, width: test.Set.Width,
                     height: test.Set.Height,
                     recipe: new Recipe(variants: test.Set.Variants));
                 var imgSetFactor = svc.Img( link: ImgUrl, settings: settingsWithFactor, recipe: test.Pic.Variants);
@@ -43,7 +44,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             TestManyButThrowOnceOnly(testSet.Select(ts => (ts.Name, ts)), test =>
             {
                 var svc = GetService<IImageService>();
-                var settings = svc.Settings(width: test.Set.Width, height: test.Set.Height, recipe: test.Set.SrcSetRule);
+                var settings = svc.TacSettings(width: test.Set.Width, height: test.Set.Height, recipe: test.Set.SrcSetRule);
                 var img = svc.Img(link: ImgUrl, settings: settings, recipe: test.Pic.SrcSetRule);
                 AreEqual(expected?.Replace("&amp;", "&"), img.SrcSet, $"Failed: {test.Name}");
             });

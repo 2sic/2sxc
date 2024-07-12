@@ -96,7 +96,8 @@ public class WorkViews(
 
         var final = views.Value
             .Select(v => new ViewInfoForPathSelect(
-                ViewOfEntity(v.Entity, v.Entity.EntityId), v.Name, v.urlIdentifier, v.isRegex, v.MainParam)
+                ViewOfEntity(v.Entity, v.Entity.EntityId, withServices: true, isReplacement: true),
+                v.Name, v.urlIdentifier, v.isRegex, v.MainParam)
             )
             .ToList();
 
@@ -111,10 +112,10 @@ public class WorkViews(
     public IView Recreate(IView originalWithoutServices) => 
            ViewOfEntity(originalWithoutServices.Entity, originalWithoutServices.Id, withServices: true);
 
-    private IView ViewOfEntity(IEntity templateEntity, object templateId, bool withServices = true) =>
-        templateEntity == null
+    private IView ViewOfEntity(IEntity templateEntity, object templateId, bool withServices = true, bool isReplacement = false)
+        => templateEntity == null
             ? throw new("The template with id '" + templateId + "' does not exist.")
-            : new View(templateEntity, [cultureResolver.CurrentCultureCode], Log, withServices ? qDefBuilder : null);
+            : new View(templateEntity, [cultureResolver.CurrentCultureCode], Log, withServices ? qDefBuilder : null, isReplaced: isReplacement);
 
 
     internal IEnumerable<TemplateUiInfo> GetCompatibleViews(IApp app, BlockConfiguration blockConfiguration)

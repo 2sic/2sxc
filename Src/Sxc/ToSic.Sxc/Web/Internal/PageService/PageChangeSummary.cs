@@ -34,7 +34,7 @@ public class PageChangeSummary(
         var (newAssets, rest) = ConvertSettingsAssetsIntoReal(pss.PageFeatures.FeaturesFromSettingsGetNew(Log));
 
         assets.AddRange(newAssets);
-        assets = assets.OrderBy(a => a.PosInPage).ToList();
+        assets = [.. assets.OrderBy(a => a.PosInPage)];
 
         // Collect Warnings of page features which may require other features enabled
         var features = pss.PageFeatures.GetFeaturesWithDependentsAndFlush(Log);
@@ -110,7 +110,7 @@ public class PageChangeSummary(
         return l.Return((newAssets, featsLeft), $"New: {newAssets.Count}; Rest: {featsLeft.Count}");
     }
 
-    private CspParameters GetCspListFromAssets(List<IClientAsset> assets)
+    private static CspParameters GetCspListFromAssets(IReadOnlyCollection<IClientAsset> assets)
     {
         if (assets == null || assets.Count == 0) return null;
         var toWhitelist = assets

@@ -63,23 +63,23 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests
 
         [TestMethod]
         public void NoPageObjectParamsKeyOnly() =>
-            NoPageObjectParam(NewParameters(new NameValueCollection { { "active", null } }), "active");
+            NoPageObjectParam(NewParameters(new() { { "active", null } }), "active");
 
         [TestMethod]
         public void NoPageObjectParamsKeyValueEmpty() =>
-            NoPageObjectParam(NewParameters(new NameValueCollection { { "active", "" } }), "active");
+            NoPageObjectParam(NewParameters(new() { { "active", "" } }), "active");
 
         [TestMethod]
         public void NoPageObjectParamsKeyEmpty() =>
-            NoPageObjectParam(NewParameters(new NameValueCollection { { "", "" } }), "");
+            NoPageObjectParam(NewParameters(new() { { "", "" } }), "");
 
         [TestMethod]
         public void NoPageObjectParamDicKeyValue() =>
-            NoPageObjectParam(NewParameters(new NameValueCollection { { "active", "true" } }), "active=true");
+            NoPageObjectParam(NewParameters(new() { { "active", "true" } }), "active=true");
 
         [TestMethod]
         public void NoPageObjectParamDicObject() =>
-            NoPageObjectParam(NewParameters(new NameValueCollection { { "active", "true" }, {"passive", "false"} }), "active=true&passive=false");
+            NoPageObjectParam(NewParameters(new() { { "active", "true" }, {"passive", "false"} }), "active=true&passive=false");
 
 
         /// <summary>

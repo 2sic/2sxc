@@ -1,8 +1,11 @@
-﻿using ToSic.Eav.Plumbing;
+﻿using System.Text.RegularExpressions;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Images;
+using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web.Internal.HtmlParsing;
 using ToSic.Sxc.Web.Internal.PageFeatures;
@@ -32,10 +35,15 @@ internal class CmsServiceStringWysiwyg(CmsServiceImageExtractor imageExtractor)
         return l.ReturnAsOk(this);
     }
 
+    /// <summary>FYI: is never allowed to be null.</summary>
     protected IField Field;
+    /// <summary>FYI: is never allowed to be null.</summary>
     protected IContentType ContentType;
+    /// <summary>FYI: is never allowed to be null.</summary>
     protected IContentTypeAttribute Attribute;
+    /// <summary>FYI: could be null.</summary>
     protected object ImageSettings;
+    /// <summary>FYI: is never allowed to be null.</summary>
     protected IFolder Folder;
 
     #endregion
@@ -77,25 +85,38 @@ internal class CmsServiceStringWysiwyg(CmsServiceImageExtractor imageExtractor)
         var imgTags = RegexUtil.ImagesDetection.Value.Matches(html);
         if (imgTags.Count == 0)
             return l.Return(new(true, html, classes), "can't find img tags with data-cmsid, done");
-        var imgSettings = ImageSettings ?? "Wysiwyg";
-        l.A($"Found {imgTags.Count} images to process with settings: {imgSettings}");
 
-        foreach (var imgTag in imgTags)
+        // check if field metadata specifies alternate Lightbox or image resize settings
+
+        var fieldMd = ImageDecorator.GetOrNull(Attribute, [null]);
+
+        // Assume fallback-image settings to be the specified or "Wysiwyg"
+        var defaultImageSettings = fieldMd?.ResizeSettings ?? ImageSettings ?? "Wysiwyg";
+
+        l.A($"Found {imgTags.Count} images to process with default {defaultImageSettings}");
+
+        foreach (var imgTag in imgTags.Cast<Match>())
         {
             var originalImgTag = imgTag.ToString();
 
             var imgProps = imageExtractor.ExtractImageProperties(originalImgTag, Field.Parent.Guid, Folder);
 
-            // use the IImageService to create Picture tags for it
-            var picture = ServiceKit.Image.Picture(link: imgProps.Src, settings: imgSettings, factor: imgProps.Factor, width: imgProps.Width, imgAlt: imgProps.ImgAlt,
-                imgClass: imgProps.ImgClasses);
+            // if we have a real file, pre-get the inner parameters as we would want to use it for resize-settings
+            var preparedImgParams = imgProps.File == null ? null : ResponsiveParams.Prepare(imgProps.File);
 
-            // re-attach an alt-attribute, class etc. from the original if it had it
-            // TODO: @2DM - this could fail because of fluid API - picture.img isn't updated
-            var newImg = imgProps.OtherAttributes.Aggregate(picture.Img, (img, attr) => img.Attr(attr.Key, attr.Value));
+            // if the file itself specifies a resize settings, use it, otherwise use the default settings
+            var imgSettings = preparedImgParams?.ImgDecoratorOrNull?.ResizeSettings ?? defaultImageSettings;
+
+            // In most cases use the preparedImgParams, but if it's null, use the src attribute
+            var target = (object)preparedImgParams ?? imgProps.Src;
+
+            // use the IImageService to create Picture tags for it
+            var picture = ServiceKit.Image.Picture(link: target, settings: imgSettings, factor: imgProps.Factor, width: imgProps.Width,
+                imgAlt: imgProps.ImgAlt, imgClass: imgProps.ImgClasses, imgAttributes: imgProps.OtherAttributes,
+                pictureClass: imgProps.PicClasses);
 
             // replace the old img tag with the new one
-            html = html.Replace(originalImgTag, picture.Picture.Class(imgProps.PicClasses).ToString());
+            html = html.Replace(originalImgTag, picture.ToString());
         }
 
         // reconstruct the original html and return wrapped in the realContainer

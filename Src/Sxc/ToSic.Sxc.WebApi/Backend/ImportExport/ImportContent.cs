@@ -66,7 +66,7 @@ public class ImportContent(
             using var fileStreamReader = new StreamReader(stream);
             var xmlImport = xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges);
             var xmlDocument = XDocument.Parse(fileStreamReader.ReadToEnd());
-            result.Success = xmlImport.ImportXml(zoneId, appId, xmlDocument);
+            result.Success = xmlImport.ImportXml(zoneId, appId, parentAppId: null /* not sure if we never have a parent here */, xmlDocument);
             result.Messages.AddRange(xmlImport.Messages);
         }
         return result;

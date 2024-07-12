@@ -50,7 +50,7 @@ partial class OqtRegisterServices
         services.TryAddTransient<OqtCulture>();
 
         // Site State Initializer for APIs etc. to ensure that the SiteState exists and is correctly preloaded
-        services.TryAddTransient<SiteStateInitializer>();
+        services.TryAddTransient<AliasResolver>();
 
         // Views / Templates / Razor: Get url params in the request
         services.TryAddTransient<IHttp, HttpBlazor>();
@@ -78,7 +78,10 @@ partial class OqtRegisterServices
         // following registrations in the server project will override the previous one in client project
         services.AddScoped<IOqtDebugStateService, OqtDebugStateService>();
         services.AddScoped<IOqtPageChangesOnServerService, OqtPageChangesOnServerService>();
-        services.AddScoped<IOqtPrerenderService, OqtPrerenderService>(); 
+        services.AddScoped<IOqtPrerenderService, OqtPrerenderService>();
+        services.AddScoped<IOqtSxcRenderService, OqtSxcRenderService>();
+        services.AddScoped<IRenderInfoService, RenderInfoService>();
+        services.AddScoped<IOqtTurnOnService, OqtTurnOnService>();
 
         return services;
     }

@@ -73,7 +73,7 @@ public class InstallControllerReal(
         var settingsSources = appSettingsStack.Value.Init(primaryApp).GetStack(AppStackConstants.Settings);
         var stack = new PropertyStack().Init(AppStackConstants.RootNameSettings, settingsSources);
 
-        var rules = stack.InternalGetPath(new PropReqSpecs("SiteSetup.AutoInstallApps", null, Log), null);
+        var rules = stack.InternalGetPath(new PropReqSpecs("SiteSetup.AutoInstallApps", PropReqSpecs.EmptyDimensions, true, Log), null);
         var ruleEntities = rules.Result as IEnumerable<IEntity>;    // note: Result is null if nothing found...
         var rulesFinal = ruleEntities?
             .Select(e => new SiteSetupAutoInstallAppsRule(e).GetRuleDto())

@@ -60,8 +60,8 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getEngineLazy) : S
     private ITemplateEngine _engine;
 
 
-    string ITemplateService.Parse(string template, NoParamOrder protector = default, IEnumerable<ILookUp> sources = default)
-        => Engine.Parse(template, protector, sources: sources);
+    string ITemplateService.Parse(string template, NoParamOrder protector, bool allowHtml, IEnumerable<ILookUp> sources)
+        => Engine.Parse(template, protector, allowHtml: allowHtml, sources: sources);
 
     #endregion
 

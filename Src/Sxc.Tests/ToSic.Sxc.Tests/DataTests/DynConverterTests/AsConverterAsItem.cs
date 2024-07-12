@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynConverterTests
         [TestMethod]
         public void AsItemWithFakeOk()
         {
-            var item = Cdf.AsItem(Cdf.FakeEntity(0), propsRequired: true);
+            var item = Cdf.TacAsItem(Cdf.TacFakeEntity(0), propsRequired: true);
             Assert.IsNotNull(item);
         }
 
@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Tests.DataTests.DynConverterTests
                 Birthday = new DateTime(2012, 02, 07)
             };
 
-            var item = Cdf.AsItem(data, propsRequired: true);
+            var item = Cdf.TacAsItem(data, propsRequired: true);
         }
     }
 }

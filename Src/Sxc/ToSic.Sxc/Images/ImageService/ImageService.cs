@@ -22,6 +22,9 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
     internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => _CodeApiSvc?.GetService<IToolbarService>());
     private readonly GetOnce<IToolbarService> _toolbarSvc = new();
 
+    private IPageService PageService => _pageService ??= _CodeApiSvc?.GetService<IPageService>(reuse: true);
+    private IPageService _pageService;
+
     #endregion
 
     #region Settings Handling
@@ -68,11 +71,22 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object imgAttributes = default,
         object toolbar = default,
         object recipe = null)
-        => new ResponsiveImage(this,
-            new(link, noParamOrder,
-                Settings(settings, factor: factor, width: width, recipe: recipe),
-                imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass, imgAttributes: CreateAttribDic(imgAttributes), toolbar: toolbar),
+    {
+        var prefetch = ResponsiveParams.Prepare(link);
+        return new ResponsiveImage(
+            this,
+            PageService,
+            new(prefetch)
+            {
+                Settings = Settings(settings ?? prefetch.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe),
+                ImgAlt = imgAlt,
+                ImgAltFallback = imgAltFallback,
+                ImgClass = imgClass,
+                ImgAttributes = CreateAttribDic(imgAttributes),
+                Toolbar = toolbar,
+            },
             Log);
+    }
 
 
     /// <inheritdoc />
@@ -90,12 +104,24 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object pictureAttributes = default,
         object toolbar = default,
         object recipe = default)
-        => new ResponsivePicture(this,
-            new(link, noParamOrder,
-                Settings(settings, factor: factor, width: width, recipe: recipe),
-                imgAlt: imgAlt, imgAltFallback: imgAltFallback,
-                imgClass: imgClass, imgAttributes: CreateAttribDic(imgAttributes), pictureClass: pictureClass, pictureAttributes: CreateAttribDic(pictureAttributes), toolbar: toolbar),
+    {
+        var prefetch = ResponsiveParams.Prepare(link);
+        return new ResponsivePicture(
+            this,
+            PageService,
+            new(prefetch)
+            {
+                Settings = Settings(settings ?? prefetch.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe),
+                ImgAlt = imgAlt,
+                ImgAltFallback = imgAltFallback,
+                ImgClass = imgClass,
+                ImgAttributes = CreateAttribDic(imgAttributes),
+                PictureClass = pictureClass,
+                PictureAttributes = CreateAttribDic(pictureAttributes),
+                Toolbar = toolbar,
+            },
             Log);
+    }
 
     /// <inheritdoc />
     public override bool Debug
@@ -111,12 +137,14 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
     private bool _debug;
 
     private IDictionary<string, object> CreateAttribDic(object attributes)
-    {
-        if (attributes == null) return null;
-        if (attributes is IDictionary<string, object> ok) return ok.ToInvariant();
-        if (attributes is IDictionary<string, string> strDic)
-            return strDic.ToDictionary(pair => pair.Key, pair => pair.Value as object, InvariantCultureIgnoreCase);
-        if (attributes.IsAnonymous()) return attributes.ToDicInvariantInsensitive();
-        throw new ArgumentException("format unknown", nameof(attributes));
-    }
+        => attributes switch
+        {
+            null => null,
+            IDictionary<string, object> ok => ok.ToInvariant(),
+            IDictionary<string, string> strDic => strDic.ToDictionary(pair => pair.Key, pair => pair.Value as object,
+                InvariantCultureIgnoreCase),
+            _ => (attributes.IsAnonymous())
+                ? attributes.ToDicInvariantInsensitive()
+                : throw new ArgumentException("format unknown", nameof(attributes))
+        };
 }

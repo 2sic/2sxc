@@ -3,7 +3,7 @@ using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Backend.Sys;
 
-internal class InsightsAppCodeBuild(IAppStates appStates) : InsightsProvider(Link)
+internal class InsightsAppCodeBuild(IAppStates appStates) : InsightsProvider(Link, helpCategory: HiddenFromAutoDisplay)
 {
     public static string Link = "AppCodeBuild";
 

@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests
             AreEqual($"{LinkServiceUnknown.DefRoot}/page27", Link.TestTo(pageId: 27));
             AreEqual($"{LinkServiceUnknown.DefRoot}/page27", Link.TestTo(pageId: 27, parameters: null));
             AreEqual($"{LinkServiceUnknown.DefRoot}/page27?a=1&b=2#fragment", Link.TestTo(pageId: 27, parameters: "a=1&b=2#fragment"));
-            AreEqual($"{LinkServiceUnknown.DefRoot}/page27?a=1&b=2&c=3", Link.TestTo(pageId: 27, parameters: NewParameters(new NameValueCollection
+            AreEqual($"{LinkServiceUnknown.DefRoot}/page27?a=1&b=2&c=3", Link.TestTo(pageId: 27, parameters: NewParameters(new()
             {
                 { "a", "1" },
                 { "b", "2" },

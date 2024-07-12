@@ -9,8 +9,11 @@ partial class PageService
         NoParamOrder noParamOrder = default,
         object require = default,
         object data = default,
+        IEnumerable<object> args = default,
         bool condition = true,
-        bool? noDuplicates = default)
+        bool? noDuplicates = default,
+        string addContext = default
+    )
     {
         var l = Log.Fn<string>($"{runOrSpecs}: {runOrSpecs}; {require}; {data}");
 
@@ -22,7 +25,7 @@ partial class PageService
         Activate(SxcPageFeatures.TurnOn.NameId);
 
         // then generate the turn-on and add to module state
-        var tag = turnOn.Value.Run(runOrSpecs, require: require, data: data);
+        var tag = turnOn.Value.Run(runOrSpecs, require: require, data: data, args: args, addContext: addContext);
         moduleService.Value.AddToMore(tag, noDuplicates: noDuplicates == true);
 
         // Then return empty string

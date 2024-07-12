@@ -2,10 +2,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Eav.Context;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Tests.DataForImageTests;
+using ToSic.Sxc.Tests.ServicesTests.ImageService;
 using ToSic.Testing.Shared.Platforms;
 using static ToSic.Testing.Shared.TestHelpers;
 
@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
                     { "sizes", "100vw" }
                 });
             var svc = GetService<IImageService>();
-            var settings = svc.Settings(aspectRatio: 2 / 1);
+            var settings = svc.TacSettings(aspectRatio: 2 / 1);
             var img = svc.Img("test.jpg", settings: settings, factor: 0.5, imgClass: "manual", recipe: recipe);
             Is(expected, img.ToString(), name);
 

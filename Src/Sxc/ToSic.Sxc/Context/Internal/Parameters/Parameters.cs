@@ -15,64 +15,87 @@ namespace ToSic.Sxc.Context.Internal;
 /// If any parameter (eg 'something') is dynamic, the second Set(...) would fail, because it can't find the method on `object`.
 /// </remarks>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public partial class Parameters(NameValueCollection originals) : IParameters
+public partial class Parameters(NameValueCollection initialNvc = null) : IParameters
 {
-    #region Constructor
-
-    public Parameters() : this(null) { }
-
-    protected readonly NameValueCollection Nvc = originals ?? [];
-
-    #endregion
+    /// <summary>
+    /// Initial NVC, but null-corrected.
+    /// This is the only place where the initial NVC is stored.
+    /// </summary>
+    private NameValueCollection NvcNotNull { get; } = initialNvc ?? [];
 
     #region Get (new v15.04)
 
-    public string Get(string name) => OriginalsAsDic.TryGetValue(name, out var value) ? value : null;
+    /// <summary>
+    /// All access to parameters should run through this, so we can determine which keys are used
+    /// to determine how the cache should behave / vary.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    /// <remarks>
+    /// DO NOT use this method for checking if a key exists, as it will log the key as used.
+    /// </remarks>
+    private bool TryGetAndLog(string name, out string value)
+    {
+        if (!OriginalsAsDic.TryGetValue(name, out value)) return false;
+        UsedKeys.Add(name.ToLowerInvariant());
+        return true;
+    }
 
-    public TValue Get<TValue>(string name) => GetV<TValue>(name, noParamOrder: default, fallback: default);
+    /// <summary>
+    /// The used keys - only lower-cased keys may be added.
+    /// </summary>
+    internal HashSet<string> UsedKeys = [];
+
+    public string Get(string name)
+        => TryGetAndLog(name, out var value) ? value : null;
+
+    public TValue Get<TValue>(string name)
+        => GetV<TValue>(name, noParamOrder: default, fallback: default);
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
     public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default) 
         => GetV(name, noParamOrder, fallback);
 
-    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required) 
+    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string language) 
         => GetV(name, noParamOrder, fallback);
 
     private TValue GetV<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required = default, [CallerMemberName] string cName = default)
-    {
-        return OriginalsAsDic.TryGetValue(name, out var value)
+        => TryGetAndLog(name, out var value)
             ? value.ConvertOrFallback(fallback)
-            : (required ?? false)
+            : required ?? false
                 ? throw new ArgumentException($"Can't find {name} and {nameof(required)} is true; use {nameof(required)}: false if this is intended")
                 : fallback;
-    }
 
     #endregion
 
-    private IDictionary<string, string> OriginalsAsDic {
+    private IReadOnlyDictionary<string, string> OriginalsAsDic {
         get
         {
             if (_originalsAsDic != null) return _originalsAsDic;
-            _originalsAsDic = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-            foreach (var key in Nvc.Keys)
+
+            // var temp = initialNvc
+
+            var newDic = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+            foreach (var key in NvcNotNull.Keys)
             {
                 // key is usually as string, but sometimes it's null
                 // we're not sure if DNN is breaking this, or if it should really be like this
                 if (key is string stringKey)
-                    _originalsAsDic[stringKey] = Nvc[stringKey];
+                    newDic[stringKey] = NvcNotNull[stringKey];
                 else
                 {
-                    var nullValues = Nvc[null];
+                    var nullValues = NvcNotNull[null];
                     if (nullValues == null) continue;
                     foreach (var nullKey in nullValues.CsvToArrayWithoutEmpty())
-                        if (!_originalsAsDic.ContainsKey(nullKey))
-                            _originalsAsDic[nullKey] = null;
+                        if (!newDic.ContainsKey(nullKey))
+                            newDic[nullKey] = null;
                 }
             }
-            return _originalsAsDic;
+            return _originalsAsDic = newDic;
         }
     }
-    private IDictionary<string, string> _originalsAsDic;
+    private IReadOnlyDictionary<string, string> _originalsAsDic;
 
     #region Basic Dictionary Properties
 
@@ -84,7 +107,7 @@ public partial class Parameters(NameValueCollection originals) : IParameters
 
     public bool ContainsKey(string key) => OriginalsAsDic.ContainsKey(key);
 
-    public bool TryGetValue(string key, out string value) => OriginalsAsDic.TryGetValue(key, out value);
+    public bool TryGetValue(string key, out string value) => TryGetAndLog(key, out value);
 
     public string this[string name] => Get(name);
 
@@ -95,7 +118,19 @@ public partial class Parameters(NameValueCollection originals) : IParameters
     #endregion
 
 
-    public override string ToString() => Nvc.NvcToString();
+    public override string ToString() => _toString ??= NvcNotNull.NvcToString();
+    private string _toString;
+
+    /// <summary>
+    /// Special sorted ToString - for the moment not public
+    /// </summary>
+    /// <param name="protector"></param>
+    /// <param name="sort"></param>
+    /// <returns></returns>
+    internal string ToString(NoParamOrder protector = default, bool sort = false)
+        => sort ? _sorted ??= NvcNotNull.Sort().NvcToString() : NvcNotNull.NvcToString();
+    private string _sorted;
+
 
     #region Toggle and Filter
 
@@ -132,10 +167,12 @@ public partial class Parameters(NameValueCollection originals) : IParameters
         if (names == null || names.IsEmptyOrWs()) return this;
         var keysToKeep = names.CsvToArrayWithoutEmpty();
 
-        var oldKeys = Nvc.AllKeys;
-        var removeKeys = oldKeys.Where(k => !keysToKeep.Contains(k, StringComparer.InvariantCultureIgnoreCase)).ToList();
-        var copy = new NameValueCollection(Nvc);
-        foreach (var k in removeKeys) copy.Remove(k);
+        var removeKeys = NvcNotNull.AllKeys
+            .Where(k => !keysToKeep.Contains(k, StringComparer.InvariantCultureIgnoreCase))
+            .ToList();
+        var copy = new NameValueCollection(NvcNotNull);
+        foreach (var k in removeKeys)
+            copy.Remove(k);
         return new Parameters(copy);
     }
 
@@ -145,19 +182,19 @@ public partial class Parameters(NameValueCollection originals) : IParameters
 
     public IParameters Add(string key)
     {
-        var copy = new NameValueCollection(Nvc) { { key, null } };
+        var copy = new NameValueCollection(NvcNotNull) { { key, null } };
         return new Parameters(copy);
     }
 
     public IParameters Add(string key, string value)
     {
-        var copy = new NameValueCollection(Nvc) { { key, value } };
+        var copy = new NameValueCollection(NvcNotNull) { { key, value } };
         return new Parameters(copy);
     }
 
     public IParameters Set(string name, string value)
     {
-        var copy = new NameValueCollection(Nvc);
+        var copy = new NameValueCollection(NvcNotNull);
         copy.Set(name, value);
         return new Parameters(copy);
     }
@@ -166,17 +203,20 @@ public partial class Parameters(NameValueCollection originals) : IParameters
 
     public IParameters Remove(string name)
     {
-        var copy = new NameValueCollection(Nvc);
-        if (copy[name] != null) copy.Remove(name);
+        // Skip cloning if the key doesn't exist or is already null
+        if (NvcNotNull[name] == null) return this;
+
+        var copy = new NameValueCollection(NvcNotNull);
+        copy.Remove(name);
         return new Parameters(copy);
     }
 
     private IParameters Remove(string name, string value)
     {
-        var values = Nvc.GetValues(name);
+        var values = NvcNotNull.GetValues(name);
         if (values == null || values.Length == 0) return this;
 
-        var copy = new NameValueCollection(Nvc);
+        var copy = new NameValueCollection(NvcNotNull);
         copy.Remove(name);
         var rest = values.Where(v => !v.EqualsInsensitive(value)).ToList();
         if (rest.Count == 0) return new Parameters(copy);

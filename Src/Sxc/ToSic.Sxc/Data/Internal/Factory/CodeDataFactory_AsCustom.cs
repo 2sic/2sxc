@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using ToSic.Sxc.Data.Internal.Typed;
 
 namespace ToSic.Sxc.Data.Internal;
 
@@ -15,14 +16,15 @@ partial class CodeDataFactory
         {
             null when !mock => null,
             TCustom alreadyT => alreadyT,
+            IEntity entity => AsCustomFromItem<TCustom>(AsItem(entity, propsRequired: true)),
             _ => AsCustomFromItem<TCustom>(source as ITypedItem ?? AsItem(source))
         };
 
-    internal static T AsCustomFromItem<T>(ITypedItem item) where T : class, ITypedItemWrapper16, ITypedItem, new()
+    internal static TCustom AsCustomFromItem<TCustom>(ITypedItem item) where TCustom : class, ITypedItemWrapper16, ITypedItem, new()
     {
         if (item == null) return null;
-        if (item is T t) return t;
-        var newT = new T();
+        if (item is TCustom t) return t;
+        var newT = new TCustom();
         newT.Setup(item);
         return newT;
     }
@@ -51,7 +53,7 @@ partial class CodeDataFactory
     //}
 
     /// <summary>
-    /// EXPERIMENTAL
+    /// Create list of custom-typed ITypedItems
     /// </summary>
     public IEnumerable<TCustom> AsCustomList<TCustom>(object source, NoParamOrder protector, bool nullIfNull)
         where TCustom : class, ITypedItemWrapper16, ITypedItem, new()
@@ -60,9 +62,12 @@ partial class CodeDataFactory
         {
             null when nullIfNull => null,
             IEnumerable<TCustom> alreadyListT => alreadyListT,
+            // special case: empty list, with hidden info about where it's from so the toolbar can adjust and provide new-buttons
+            ListTypedItems<ITypedItem> { Count: 0, Entity: not null } list => new ListTypedItems<TCustom>(new List<TCustom>(), list.Entity),
             _ => SafeItems().Select(AsCustomFromItem<TCustom>)
         };
 
+        // Helper function to be called from above
         IEnumerable<ITypedItem> SafeItems()
             => source switch
             {

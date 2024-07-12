@@ -13,7 +13,8 @@ public class View(
     IEntity templateEntity,
     string[] languageCodes,
     ILog parentLog,
-    Generator<QueryDefinitionBuilder> qDefBuilder)
+    Generator<QueryDefinitionBuilder> qDefBuilder,
+    bool isReplaced = false)
     : EntityBasedWithLog(templateEntity, languageCodes, parentLog, "Sxc.View"), IView
 {
     private IEntity GetBestRelationship(string key) => Entity.Children(key).FirstOrDefault();
@@ -46,17 +47,15 @@ public class View(
     public string Type => GetThis("");
 
     [PrivateApi]
-    internal string GetTypeStaticName(string groupPart)
-    {
-        switch (groupPart.ToLowerInvariant())
+    internal string GetTypeStaticName(string groupPart) =>
+        groupPart.ToLowerInvariant() switch
         {
-            case ViewParts.ContentLower: return ContentType;
-            case ViewParts.PresentationLower: return PresentationType;
-            case ViewParts.ListContentLower: return HeaderType;
-            case ViewParts.ListPresentationLower: return HeaderPresentationType;
-            default: throw new NotSupportedException("Unknown group part: " + groupPart);
-        }
-    }
+            ViewParts.ContentLower => ContentType,
+            ViewParts.PresentationLower => PresentationType,
+            ViewParts.ListContentLower => HeaderType,
+            ViewParts.ListPresentationLower => HeaderPresentationType,
+            _ => throw new NotSupportedException("Unknown group part: " + groupPart)
+        };
 
     public bool IsHidden => GetThis(false);
 
@@ -85,7 +84,7 @@ public class View(
 
     private readonly GetOnce<(IEntity Entity, QueryDefinition Definition)> _queryInfo = new();
 
-    public string UrlIdentifier => Entity.Value<string>(FieldNameInUrl);
+    public string UrlIdentifier => Get(FieldNameInUrl, ""); // Entity.Value<string>(FieldNameInUrl);
 
     /// <summary>
     /// Returns true if the current template uses Razor
@@ -108,4 +107,6 @@ public class View(
 
     /// <inheritdoc />
     public string SearchIndexingStreams => Get(FieldSearchStreams, "");
+
+    public bool IsReplaced => isReplaced;
 }

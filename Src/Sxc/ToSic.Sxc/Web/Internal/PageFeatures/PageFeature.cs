@@ -15,7 +15,7 @@ public class PageFeature(
     string[] needs = default,
     string html = default,
     List<Requirement> requirements = default,
-    string urlWip = default)
+    string urlInDist = default)
     : IPageFeature
 {
     public const string ConditionIsPageFeature = "pagefeature";
@@ -40,7 +40,7 @@ public class PageFeature(
     /// <summary>
     /// List of other features required to run this feature.
     /// </summary>
-    public IEnumerable<string> Needs { get; } = needs ?? Array.Empty<string>();
+    public IEnumerable<string> Needs { get; } = needs ?? [];
 
     public Requirement Requirement { get; } = new(ConditionIsPageFeature, key);
 
@@ -51,10 +51,11 @@ public class PageFeature(
     /// This is not a final solution, in future it should probably
     /// be more sophisticated, like contain a list of configuration objects to construct the url.
     /// </summary>
-    public string UrlWip { get; } = urlWip;
+    public string UrlInDist { get; } = urlInDist;
 
     /// <summary>
     /// ToString for easier debugging
     /// </summary>
-    public override string ToString() => base.ToString() + "(" + NameId + ")";
+    public override string ToString()
+        => base.ToString() + "(" + NameId + ")";
 }

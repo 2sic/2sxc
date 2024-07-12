@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Integration;
+using ToSic.Eav.StartUp;
 using ToSic.Eav.WebApi;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Backend;
@@ -21,6 +22,8 @@ public static class DnnDi
 
     public static IServiceCollection RegisterServices(IServiceCollection services)
     {
+        var bl = BootLog.Log.Fn("Dnn: Registering Services", timer: true);
+
         if (_alreadyRegistered)
             return OriginalServiceCollection;
 
@@ -48,6 +51,7 @@ public static class DnnDi
         OriginalServiceCollection = services;
 
         _alreadyRegistered = true;
+        bl.Done();
         return services;
     }
 

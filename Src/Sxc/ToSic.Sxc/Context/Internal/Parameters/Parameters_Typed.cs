@@ -14,11 +14,11 @@ partial class Parameters: ITyped
         => OriginalsAsDic.ContainsKey(name);
 
     [PrivateApi]
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default)
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
         => !OriginalsAsDic.TryGetValue(name, out var result) || HasKeysHelper.IsEmpty(result, default);
 
     [PrivateApi]
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default)
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
         => OriginalsAsDic.TryGetValue(name, out var result) && HasKeysHelper.IsNotEmpty(result, default);
 
     [PrivateApi]
@@ -30,10 +30,8 @@ partial class Parameters: ITyped
 
 
     [PrivateApi]
-    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required)
-    {
-        return OriginalsAsDic.TryGetValue(name, out var value) ? value : null;
-    }
+    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string language /* ignore */)
+        => TryGetAndLog(name, out var value) ? value : null;
 
     [PrivateApi]
     bool ITyped.Bool(string name, NoParamOrder noParamOrder, bool fallback, bool? required)

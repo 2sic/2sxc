@@ -1200,7 +1200,7 @@
                 "Metadata": [
                   {
                     "Id": 41574,
-                    "Version": 4,
+                    "Version": 5,
                     "Guid": "57004e54-c530-4777-ba86-f0eb0eafe729",
                     "Type": {
                       "Id": "@All",
@@ -1209,22 +1209,36 @@
                     "Attributes": {
                       "String": {
                         "CustomJavaScript": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "DefaultValue": {
-                          "*": ""
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": "string-wysiwyg"
+                          "en-us": "string-wysiwyg"
                         },
                         "Name": {
-                          "*": "Notes"
+                          "en-us": "Notes"
                         },
                         "Notes": {
-                          "*": "<p>Add notes / helpfull comments to aid the editor in adding his information. Note that you have a WYSIWYG for this field, but be really carefull to not add too much nonsense or similar because it might break the tool-tip in DotNetNuke. </p>\r\n<p>You can also add helpfull links if necessary, like <a href=\"http://www.2sexycontent.org\" target=\"_blank\">www.2sexycontent.org</a>, just remember to set the link target to \"_blank\" (new window). </p>\r\n<p>Also note that the current version of DNN has a bug, so links in tool-tips cannot be clicked on. </p>"
+                          "en-us": "<p>Add notes / helpfull comments to aid the editor in adding his information. Note that you have a WYSIWYG for this field, but be carefull to KISS.</p>\n<p>You can also add helpfull links like <a href=\"https://www.2sxc.org\" target=\"_blank\" rel=\"noopener\">www.2sxc.org</a>.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
                         },
                         "ValidationRegExJavaScript": {
-                          "*": ""
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
                         }
                       },
                       "Entity": {
@@ -1240,13 +1254,16 @@
                       },
                       "Boolean": {
                         "Disabled": {
-                          "*": false
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
                         },
                         "Required": {
-                          "*": false
+                          "en-us": false
                         },
                         "VisibleInEditUI": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -1254,7 +1271,7 @@
                   },
                   {
                     "Id": 56935,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "22b951f5-4029-4f21-990c-99e809baaffd",
                     "Type": {
                       "Id": "@String",
@@ -1263,10 +1280,10 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": ""
+                          "en-us": ""
                         }
                       }
                     },
@@ -1274,7 +1291,7 @@
                   },
                   {
                     "Id": 56936,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "c1885242-dc2a-4fb5-8793-5c4ed776e85e",
                     "Type": {
                       "Id": "@string-wysiwyg",
@@ -1283,13 +1300,24 @@
                     "Attributes": {
                       "String": {
                         "ButtonAdvanced": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "ButtonSource": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "Dialog": {
-                          "*": "inline"
+                          "en-us": "inline"
+                        },
+                        "InlineInitialHeight": {
+                          "en-us": ""
+                        },
+                        "WysiwygConfiguration": {
+                          "en-us": "d3dde02f-c1dc-43b8-a8b7-4be3c43eadd0"
+                        }
+                      },
+                      "Hyperlink": {
+                        "ContentCss": {
+                          "en-us": ""
                         }
                       }
                     },
@@ -6634,6 +6662,42 @@
                   "TargetType": 5,
                   "String": "@hyperlink-default"
                 }
+              },
+              {
+                "Id": 183847,
+                "Version": 1,
+                "Guid": "1b115da0-7fce-49a2-ad45-71ae62348765",
+                "Type": {
+                  "Id": "c490b369-9cd2-4298-af74-19c1e438cdfc",
+                  "Name": "MetadataExpectedDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "DeleteWarning": {
+                      "en-us": ""
+                    },
+                    "MetadataTypes": {
+                      "en-us": "ImageDecorator"
+                    },
+                    "Title": {
+                      "en-us": "Links / Images expect Image Decorator Metadata"
+                    }
+                  },
+                  "Number": {
+                    "Amount": {
+                      "en-us": 1
+                    },
+                    "TargetType": {
+                      "en-us": 2
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "@hyperlink-default"
+                }
               }
             ],
             "Attributes": []
@@ -6718,6 +6782,42 @@
                   }
                 },
                 "Owner": "dnn:userid=1",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "@hyperlink-library"
+                }
+              },
+              {
+                "Id": 183848,
+                "Version": 1,
+                "Guid": "576d2631-c274-4acb-b42b-c7dd40913be3",
+                "Type": {
+                  "Id": "c490b369-9cd2-4298-af74-19c1e438cdfc",
+                  "Name": "MetadataExpectedDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "DeleteWarning": {
+                      "en-us": ""
+                    },
+                    "MetadataTypes": {
+                      "en-us": "ImageDecorator"
+                    },
+                    "Title": {
+                      "en-us": "Link Libraries / Albums expect ImageDecorator Metadata"
+                    }
+                  },
+                  "Number": {
+                    "Amount": {
+                      "en-us": 1
+                    },
+                    "TargetType": {
+                      "en-us": 2
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
                 "For": {
                   "Target": "ContentType",
                   "TargetType": 5,
@@ -9126,7 +9226,7 @@
               },
               {
                 "Id": 183695,
-                "Version": 2,
+                "Version": 3,
                 "Guid": "3c274d21-241c-4700-ad1a-97485aa191db",
                 "Type": {
                   "Id": "ContentType-InputType",
@@ -9138,7 +9238,7 @@
                       "en-us": ""
                     },
                     "ConfigTypes": {
-                      "en-us": "@string-dropdown-query"
+                      "en-us": "@All,@string-dropdown-query"
                     },
                     "Description": {
                       "en-us": ""
@@ -14086,6 +14186,42 @@
                   "TargetType": 5,
                   "String": "@string-wysiwyg"
                 }
+              },
+              {
+                "Id": 183845,
+                "Version": 2,
+                "Guid": "746882b7-96af-4903-9ee7-da6fe2b3a42e",
+                "Type": {
+                  "Id": "c490b369-9cd2-4298-af74-19c1e438cdfc",
+                  "Name": "MetadataExpectedDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "DeleteWarning": {
+                      "en-us": ""
+                    },
+                    "MetadataTypes": {
+                      "en-us": "ImageDecorator"
+                    },
+                    "Title": {
+                      "en-us": "Wysiwyg expects Image Decorator Metadata"
+                    }
+                  },
+                  "Number": {
+                    "Amount": {
+                      "en-us": 1
+                    },
+                    "TargetType": {
+                      "en-us": 2
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "@string-wysiwyg"
+                }
               }
             ],
             "Attributes": [
@@ -14097,7 +14233,7 @@
                 "Metadata": [
                   {
                     "Id": 166491,
-                    "Version": 11,
+                    "Version": 12,
                     "Guid": "b6b90707-fe77-4806-b4ce-ba3a6274ae7a",
                     "Type": {
                       "Id": "@All",
@@ -14111,11 +14247,14 @@
                         "DefaultValue": {
                           "en-us": "d3dde02f-c1dc-43b8-a8b7-4be3c43eadd0"
                         },
+                        "Information": {
+                          "en-us": ""
+                        },
                         "InputType": {
                           "en-us": "string-dropdown-query"
                         },
                         "Name": {
-                          "en-us": "Configuration / Presets (new v15)"
+                          "en-us": "Configuration / Presets"
                         },
                         "Notes": {
                           "en-us": "<p>New v15.04 - see <a href=\"https://r.2sxc.org/string-wyswiyg\" target=\"_blank\" rel=\"noopener\">docs</a>.</p>"
@@ -14123,7 +14262,15 @@
                         "Placeholder": {
                           "en-us": "Default mode"
                         },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
                         "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -14177,7 +14324,7 @@
                   },
                   {
                     "Id": 166505,
-                    "Version": 10,
+                    "Version": 11,
                     "Guid": "81e6ae95-754e-42d6-9fcb-6deb20e52668",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -14190,6 +14337,9 @@
                         },
                         "Label": {
                           "en-us": "Title"
+                        },
+                        "MoreFields": {
+                          "en-us": ""
                         },
                         "Query": {
                           "en-us": "Eav.Queries.Global.SettingsEntities"

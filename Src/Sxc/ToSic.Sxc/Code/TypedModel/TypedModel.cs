@@ -30,12 +30,12 @@ internal class TypedModel(
     public bool ContainsKey(string name) => !name.IsEmptyOrWs() && _paramsDictionary.ContainsKey(name);
 
     [PrivateApi]
-    public bool IsEmpty(string name, NoParamOrder protector = default) //, bool? blankIs = default)
-        => HasKeysHelper.IsEmpty(Get(name, required: false), default /*blankIs*/);
+    public bool IsEmpty(string name, NoParamOrder protector = default, string language = default /* ignore */)
+        => HasKeysHelper.IsEmpty(Get(name, required: false), blankIsEmpty: default);
 
     [PrivateApi]
-    public bool IsNotEmpty(string name, NoParamOrder protector = default) //, bool? blankIs = default)
-        => HasKeysHelper.IsNotEmpty(Get(name, required: false), default /*blankIs*/);
+    public bool IsNotEmpty(string name, NoParamOrder protector = default, string language = default /* ignore */)
+        => HasKeysHelper.IsNotEmpty(Get(name, required: false), blankIsEmpty: default);
 
     public IEnumerable<string> Keys(NoParamOrder protector = default, IEnumerable<string> only = default) 
         => TypedHelpers.FilterKeysIfPossible(protector, only, _paramsDictionary?.Keys);

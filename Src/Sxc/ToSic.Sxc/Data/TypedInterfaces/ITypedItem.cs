@@ -22,11 +22,15 @@ public partial interface ITypedItem: ITyped, ICanBeEntity, ICanBeItem, IEquatabl
     ///
     /// Example: `Dyn.FirstName` might just work - and return the first name or `null` if not found.
     /// </summary>
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("This should be avoided")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [JsonIgnore] // prevent serialization as it's not a normal property
     dynamic Dyn { get; }
 
     /// <summary>
     /// The presentation item or `null` if it doesn't exist.
     /// </summary>
+    [JsonIgnore] // prevent serialization as it's not a normal property
     ITypedItem Presentation { get; }
 
     /// <summary>
@@ -35,6 +39,7 @@ public partial interface ITypedItem: ITyped, ICanBeEntity, ICanBeItem, IEquatabl
     /// <remarks>
     /// Added in 16.02
     /// </remarks>
+    [JsonIgnore] // prevent serialization as it's not a normal property
     IMetadata Metadata { get; }
 
     /// <summary>

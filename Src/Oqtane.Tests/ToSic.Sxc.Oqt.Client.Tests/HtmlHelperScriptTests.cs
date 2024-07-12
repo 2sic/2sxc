@@ -1,11 +1,12 @@
 ﻿using Oqtane.Models;
+using ToSic.Sxc.Oqt.Shared.Helpers;
 
 namespace ToSic.Sxc.Oqt.Client.Tests
 {
     [TestClass]
     public class HtmlHelperScriptTests
     {
-        private static string AddScript(string html, string src, Alias alias) => HtmlHelper.AddScript(html, src, alias);
+        private static string AddScript(string html, string src, Alias alias) => HtmlHelper.ManageScripts(html, new() { SxcScripts = [ src ] }, alias);
 
         [TestMethod]
         public void AddScript_WithValidHtmlAndSrc_AddsScript()

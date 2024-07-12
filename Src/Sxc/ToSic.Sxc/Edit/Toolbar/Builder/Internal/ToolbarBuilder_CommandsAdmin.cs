@@ -17,12 +17,13 @@ partial class ToolbarBuilder
     )
     {
         var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, ui: ui, parameters: parameters, methodName: methodName);
-        var uiTweaked = PrepareUi(ui, tweaks: (tweaks as ITweakButtonInternal)?.UiMerge);
+        var tweaksInt = tweaks as ITweakButtonInternal;
+        var uiTweaked = PrepareUi(ui, tweaks: tweaksInt?.UiMerge);
         var paramsTweaked = Utils.PrepareParams(parameters, tweaks);
         TargetCheck(target);
         return this.AddInternal(new ToolbarRuleCustom(
             verb,
-            operation: ToolbarRuleOperation.Pick(operation, ToolbarRuleOps.OprAuto),
+            operation: ToolbarRuleOperation.Pick(operation, ToolbarRuleOps.OprAuto, tweaksInt?._condition),
             ui: uiTweaked,
             parameters: paramsTweaked,
             operationCode: operation.HasValue() ? null : target as string));

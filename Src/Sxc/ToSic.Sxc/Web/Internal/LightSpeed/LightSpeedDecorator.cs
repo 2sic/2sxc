@@ -3,32 +3,33 @@
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class LightSpeedDecorator: EntityBasedType
+internal class LightSpeedDecorator(IEntity entity) : EntityBasedType(entity)
 {
+    /// <summary>
+    /// Nice name. If it ever changes, remember to also update UI as it has references to it.
+    /// </summary>
+    public static string NiceName = "LightSpeedOutputDecorator";
     public static string TypeNameId = "be34f64b-7d1f-4ad0-b488-dabbbb01a186";
-    public const string FieldDurationUser = "DurationUsers";
-    public const string FieldDurationEditor = "DurationEditors";
-    public const string FieldDurationSysAdmin = "DurationSystemAdmin";
-    public const string FieldByUrlParameters = "ByUrlParameters";
-    public const string FieldUrlCaseSensitive = "UrlParametersCaseSensitive";
-
-    internal LightSpeedDecorator(IEntity entity) : base(entity)
-    {
-    }
 
     public bool IsEnabled => GetThis(false);
 
+    public bool? IsEnabledNullable => Get(nameof(IsEnabled), fallback: null as bool?);
+
     public int Duration => GetThis(0);
 
-    public int DurationUser => Get(FieldDurationUser, 0);
+    public int DurationUsers => GetThis(0);
 
-    public int DurationEditor => Get(FieldDurationEditor, 0);
+    public int DurationEditors => GetThis(0);
 
-    public int DurationSystemAdmin => Get(FieldDurationSysAdmin, 0);
+    public int DurationSystemAdmin => GetThis(0);
 
-    public bool ByUrlParam => Get(FieldByUrlParameters, false);
+    public bool ByUrlParameters => GetThis(false);
 
-    public bool UrlParamCaseSensitive => Get(FieldUrlCaseSensitive, false);
+    public bool UrlParametersCaseSensitive => GetThis(false);
+
+    public string UrlParameterNames => GetThis("");
+
+    public bool UrlParametersOthersDisableCache => GetThis(true);
 
     public string Advanced => GetThis("");
 
@@ -37,7 +38,7 @@ internal class LightSpeedDecorator: EntityBasedType
         var decoFromPiggyBack = appState?.PiggyBack.GetOrGenerate(appState, $"decorator-{TypeNameId}", () =>
         {
             log.A("Debug WIP - remove once this has proven to work; get LightSpeed PiggyBack - recreate");
-            var decoEntityOrNullPb = appState?.Metadata?.FirstOrDefaultOfType(TypeNameId);
+            var decoEntityOrNullPb = appState.Metadata?.FirstOrDefaultOfType(TypeNameId);
             return new LightSpeedDecorator(decoEntityOrNullPb);
         }).Value;
         return decoFromPiggyBack ?? new LightSpeedDecorator(null);

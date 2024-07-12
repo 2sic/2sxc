@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Tests.WebUrlTests
         public void NoFilterKeepAll()
         {
             var filter = TestFilter(true, new List<string>());
-            var result = filter.Process(new NameObjectSet("something", "value"));
+            var result = filter.Process(new("something", "value"));
             IsTrue(result.Keep);
         }
 
@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Tests.WebUrlTests
         public void NoFilterKeepNone()
         {
             var filter = TestFilter(false, new List<string>());
-            var result = filter.Process(new NameObjectSet("something", "value"));
+            var result = filter.Process(new("something", "value"));
             IsFalse(result.Keep);
         }
 
@@ -31,22 +31,22 @@ namespace ToSic.Sxc.Tests.WebUrlTests
         public void FilterSomeKeepRest()
         {
             var filter = TestFilter(true, new[] { "drop" });
-            IsTrue(filter.Process(new NameObjectSet("something", "value")).Keep);
-            IsTrue(filter.Process(new NameObjectSet("something2", "value")).Keep);
-            IsTrue(filter.Process(new NameObjectSet("drop2", "value")).Keep);
-            IsFalse(filter.Process(new NameObjectSet("drop", "value")).Keep, "this is the only one it should drop");
-            IsFalse(filter.Process(new NameObjectSet("Drop", "value")).Keep, "this should also fail, case insensitive");
+            IsTrue(filter.Process(new("something", "value")).Keep);
+            IsTrue(filter.Process(new("something2", "value")).Keep);
+            IsTrue(filter.Process(new("drop2", "value")).Keep);
+            IsFalse(filter.Process(new("drop", "value")).Keep, "this is the only one it should drop");
+            IsFalse(filter.Process(new("Drop", "value")).Keep, "this should also fail, case insensitive");
         }
 
         [TestMethod]
         public void FilterSomeDropRest()
         {
             var filter = TestFilter(false, new[] { "keep" });
-            IsFalse(filter.Process(new NameObjectSet("something", "value")).Keep);
-            IsFalse(filter.Process(new NameObjectSet("something2", "value")).Keep);
-            IsFalse(filter.Process(new NameObjectSet("Drop", "value")).Keep);
-            IsFalse(filter.Process(new NameObjectSet("drop2", "value")).Keep);
-            IsTrue(filter.Process(new NameObjectSet("keep", "value")).Keep, "this is th only one it should keep");
+            IsFalse(filter.Process(new("something", "value")).Keep);
+            IsFalse(filter.Process(new("something2", "value")).Keep);
+            IsFalse(filter.Process(new("Drop", "value")).Keep);
+            IsFalse(filter.Process(new("drop2", "value")).Keep);
+            IsTrue(filter.Process(new("keep", "value")).Keep, "this is th only one it should keep");
         }
     }
 }

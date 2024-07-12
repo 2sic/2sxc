@@ -5,10 +5,13 @@ using Oqtane.Shared;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Data;
 using ToSic.Lib.DI;
+using ToSic.Sxc.Context;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal.DotNet;
 using ToSic.Sxc.Web.Internal.Url;
+using ToSic.Sxc.Web.Parameters;
 using Page = ToSic.Sxc.Context.Internal.Page;
 
 namespace ToSic.Sxc.Oqt.Server.Context;
@@ -52,4 +55,8 @@ internal class OqtPage(
         Alias = aliasRepository.Value.GetAliases().OrderBy(a => a.Name).FirstOrDefault(a => a.SiteId == siteId); // best guess
         return Alias;
     }
+
+    // caching is disabled because in Blazor Interactive the query string parameters are changed after the page is created
+    public override IParameters Parameters => new Parameters(OriginalParameters.GetOverrideParams(httpBlazor.Value?.QueryStringParams));
+
 }

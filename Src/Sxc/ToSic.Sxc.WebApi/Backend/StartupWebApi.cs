@@ -5,6 +5,7 @@ using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.ImportExport.Internal;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.ImportExport;
+using ToSic.Eav.WebApi.Sys.Insights;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Internal.ImportExport;
@@ -54,8 +55,6 @@ public static class StartupWebApi
 
         // Backends
         services.TryAddTransient<AppsBackend>();
-        // #RemoveOldEntityPicker - commented out 2024-03-05, remove ca. 2024-06-01
-        //services.TryAddTransient<EntityPickerBackend>();
         services.TryAddTransient<EntityBackend>();
         services.TryAddTransient<EditLoadBackend>();
         services.TryAddTransient<EditLoadPrefetchHelper>();

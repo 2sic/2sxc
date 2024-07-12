@@ -86,10 +86,12 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasPropLookup
     public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default) => _item.Keys(noParamOrder, only);
 
     /// <inheritdoc />
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default) => _item.IsEmpty(name, noParamOrder);
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+        => _item.IsEmpty(name, noParamOrder, language: language);
 
     /// <inheritdoc />
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default) => _item.IsNotEmpty(name, noParamOrder);
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+        => _item.IsNotEmpty(name, noParamOrder, language: language);
 
     #endregion
 
@@ -97,12 +99,12 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasPropLookup
     #region Basic Get
 
     /// <inheritdoc />
-    public object Get(string name, NoParamOrder noParamOrder = default, bool? required = default) => _item.Get(name, noParamOrder, required);
+    public object Get(string name, NoParamOrder noParamOrder = default, bool? required = default, string language = default)
+        => _item.Get(name: name, noParamOrder: noParamOrder, required: required, language: language);
 
     /// <inheritdoc />
-    public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default,
-        bool? required = default) =>
-        _item.Get(name, noParamOrder, fallback, required);
+    public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default, bool? required = default, string language = default)
+        => _item.Get(name: name, noParamOrder: noParamOrder, fallback: fallback, required: required, language: language);
 
     #endregion
 
@@ -140,6 +142,7 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasPropLookup
     public string Url(string name, NoParamOrder noParamOrder = default, string fallback = default, bool? required = default) => _item.Url(name, noParamOrder, fallback, required);
 
     #endregion
+
 
     /// <inheritdoc />
     [JsonIgnore] // prevent serialization as it's not a normal property
@@ -211,6 +214,7 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasPropLookup
     [PrivateApi]
     [Obsolete("Not available on Custom objects, use Get(...) to access any property.")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [JsonIgnore] // prevent serialization as it's not a normal property
     dynamic ITypedItem.Dyn => throw new NotSupportedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(CustomItem)} by design");
 
     /// <inheritdoc />

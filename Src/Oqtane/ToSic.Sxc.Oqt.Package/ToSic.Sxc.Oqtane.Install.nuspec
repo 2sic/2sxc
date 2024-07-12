@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>ToSic.Sxc.Oqtane.Install</id>
-    <version>17.09.00</version>
+    <version>18.00.00</version>
     <authors>2sic internet solutions GmbH, Switzerland</authors>
     <owners>2sic internet solutions GmbH, Switzerland</owners>
     <title>2sxc CMS and Meta-Module for Oqtane</title>
@@ -19,52 +19,52 @@
     <releaseNotes>https://github.com/2sic/2sxc/releases</releaseNotes>
     <summary>2sxc - CMS &amp; App-Engine for Oqtane</summary>
     <dependencies>
-      <dependency id="Oqtane.Framework" version="4.0.0" />
+      <dependency id="Oqtane.Framework" version="5.1.0" />
       <dependency id="ToSic.Imageflow.Oqtane" version="1.11.0" />
     </dependencies>
   </metadata>
   <files>
     <file src="images\1000.png" target="images\" />
     <file src="README.md" target="docs\" />
-    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net7.0\ToSic.*.dll" exclude="**\ToSic.Sxc.Oqtane.Package.dll" target="lib\net7.0" />
-    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net7.0\ToSic.*.pdb" exclude="**\ToSic.Sxc.Oqtane.Package.pdb" target="lib\net7.0" />
+    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net8.0\ToSic.*.dll" exclude="**\ToSic.Sxc.Oqtane.Package.dll" target="lib\net8.0" />
+    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net8.0\ToSic.*.pdb" exclude="**\ToSic.Sxc.Oqtane.Package.pdb" target="lib\net8.0" />
     <file src="..\..\Data\App_Data\new-app\**\*.*" target="content\2sxc\system\App_Data\new-app" />
     <file src="..\..\Data\App_Data\new-apps\**\*.*" target="content\2sxc\system\App_Data\new-apps" />
     <file src="..\..\Data\App_Data\system\**\*.*" target="content\2sxc\system\App_Data\system" />
     <file src="..\..\Dnn\ToSic.Sxc.Dnn\ImportExport\**\*.*" target="content\2sxc\system\ImportExport" />
     <file src="..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc.Oqtane\**\*.*" exclude="**\*.map;" target="wwwroot\Modules\ToSic.Sxc.Oqtane" />
     <!-- XML documentation -->
-    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net7.0\ToSic.Sxc.xml" target="lib\net7.0" />
-    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net7.0\ToSic.Sxc.Oqtane.*.xml" exclude="**\ToSic.Sxc.Oqtane.Package.xml" target="lib\net7.0" />
-    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net7.0\ToSic.Sxc.Razor.xml" target="lib\net7.0" />
+    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net8.0\ToSic.Sxc.xml" target="lib\net8.0" />
+    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net8.0\ToSic.Sxc.Oqtane.*.xml" exclude="**\ToSic.Sxc.Oqtane.Package.xml" target="lib\net8.0" />
+    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net8.0\ToSic.Sxc.Razor.xml" target="lib\net8.0" />
     <!-- 3rd party dependencies -->
 
     <!-- ToSic.Sxc.Dnn.Main PackageReference -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net7.0\Connect.Koi.dll" target="lib\net7.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net8.0\Connect.Koi.dll" target="lib\net8.0" />
     <!-- ToSic.Eav.DataSources PackageReference -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net7.0\CsvHelper.dll" target="lib\net7.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net8.0\CsvHelper.dll" target="lib\net8.0" />
     <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net7.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll" target="lib\net7.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net8.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll" target="lib\net8.0" />
     <!-- ToSic.Sxc.Razor PackageReference -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net7.0\Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll" target="lib\net7.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net8.0\Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll" target="lib\net8.0" />
     <!-- Microsoft.CodeAnalysis.Razor transitive dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net7.0\Microsoft.AspNetCore.Razor.Language.dll" target="lib\net7.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net8.0\Microsoft.AspNetCore.Razor.Language.dll" target="lib\net8.0" />
     <!-- Microsoft.CodeAnalysis.Razor transitive dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net7.0\Microsoft.CodeAnalysis.CSharp.dll" target="lib\net7.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net8.0\Microsoft.CodeAnalysis.CSharp.dll" target="lib\net8.0" />
     <!-- Microsoft.CodeAnalysis.Razor transitive dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net7.0\Microsoft.CodeAnalysis.dll" target="lib\net7.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net8.0\Microsoft.CodeAnalysis.dll" target="lib\net8.0" />
     <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net7.0\Microsoft.CodeAnalysis.Razor.dll" target="lib\net7.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net8.0\Microsoft.CodeAnalysis.Razor.dll" target="lib\net8.0" />
     <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net7.0\Microsoft.Extensions.DependencyModel.dll" target="lib\net7.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net8.0\Microsoft.Extensions.DependencyModel.dll" target="lib\net8.0" />
  
     <!-- ToSic.Imageflow.Oqtane v1.11.0 -->
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.11.0\lib\net7.0\ToSic.Imageflow.Oqt.Server.Oqtane.dll" target="lib\net7.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.11.0\lib\net7.0\ToSic.Imageflow.Oqt.Server.Oqtane.pdb" target="lib\net7.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.11.0\lib\net7.0\Imageflow.*" target="lib\net7.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.11.0\lib\net7.0\Imazen.*" target="lib\net7.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.11.0\lib\net7.0\Microsoft.IO.*" target="lib\net7.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.11.0\lib\net7.0\Newtonsoft.Json.dll" target="lib\net7.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.11.0\lib\net7.0\ToSic.Imageflow.Oqt.Server.Oqtane.dll" target="lib\net8.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.11.0\lib\net7.0\ToSic.Imageflow.Oqt.Server.Oqtane.pdb" target="lib\net8.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.11.0\lib\net7.0\Imageflow.*" target="lib\net8.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.11.0\lib\net7.0\Imazen.*" target="lib\net8.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.11.0\lib\net7.0\Microsoft.IO.*" target="lib\net8.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.11.0\lib\net7.0\Newtonsoft.Json.dll" target="lib\net8.0" />
     <file src="..\..\packages\tosic.imageflow.oqtane\1.11.0\runtimes\win*\**\*imageflow.*" target="runtimes" />
   </files>
 </package>

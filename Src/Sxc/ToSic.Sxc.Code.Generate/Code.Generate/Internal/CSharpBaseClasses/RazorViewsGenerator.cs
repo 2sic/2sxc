@@ -15,7 +15,7 @@ public class RazorViewsGenerator(IUser user, IAppStates appStates)
 
     public string Description => "Generates Razor Views in the AppCode/Razor folder";
 
-    public string DescriptionHtml => $"EXPERIMENTAL The {Name} will generate <code>AppRazor.Generated.cs</code> files in the <code>AppCode/Razor</code> folder. <br> IMPORTANT: Requires that Content-Types were generated.";
+    public string DescriptionHtml => $"The {Name} will generate <code>AppRazor.Generated.cs</code> files in the <code>AppCode/Razor</code> folder. <br> IMPORTANT: Requires that Content-Types were generated.";
 
     public string OutputType => "RazorView";
 

@@ -92,7 +92,7 @@ public class ResetApp(
         var allowSystemChanges = user.IsSystemAdmin;
         var xmlImport = xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges);
         var imp = new ImportXmlReader(filePath, xmlImport, Log);
-        result.Success = xmlImport.ImportXml(zoneId, appId, imp.XmlDoc);
+        result.Success = xmlImport.ImportXml(zoneId, appId, parentAppId: null /* not sure if we never have a parent here */, imp.XmlDoc);
         result.Messages.AddRange(xmlImport.Messages);
         return l.Return(result);
     }

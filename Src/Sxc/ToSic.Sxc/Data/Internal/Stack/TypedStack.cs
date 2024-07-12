@@ -44,11 +44,11 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
     public bool ContainsKey(string name)
         => throw new NotImplementedException($"Not yet implemented on {nameof(ITypedStack)}");
 
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default)
-        => _itemHelper.IsEmpty(name, noParamOrder, default);
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+        => _itemHelper.IsEmpty(name, noParamOrder, isBlank: default, language: language);
 
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default)
-        => _itemHelper.IsFilled(name, noParamOrder, default);
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+        => _itemHelper.IsNotEmpty(name, noParamOrder, isBlank: default, language: language);
 
     // TODO: Keys()
     public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default)
@@ -62,12 +62,13 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
     #region ITyped
 
     [PrivateApi]
-    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required)
-        => _itemHelper.Get(name, noParamOrder, required);
+    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string language)
+        => _itemHelper.Get(name: name, noParamOrder: noParamOrder, required: required, language: language);
 
     [PrivateApi]
-    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required)
-        => _itemHelper.G4T(name, noParamOrder, fallback: fallback, required: required);
+    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string language)
+        => _itemHelper.GetT(name, noParamOrder, fallback: fallback, required: required, language: language);
+
 
     [PrivateApi]
     IRawHtmlString ITyped.Attribute(string name, NoParamOrder noParamOrder, string fallback, bool? required)

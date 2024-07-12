@@ -21,11 +21,13 @@ namespace ToSic.Sxc.Data.Internal.Typed;
 
 [JsonConverter(typeof(DynamicJsonConverter))]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFactory cdf, bool propsRequired)
+internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, CodeDataFactory cdf, bool propsRequired)
     : ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName, IWrapper<IEntity>,
         IEntityWrapper, IHasMetadata, IHasJsonSource
 {
     #region Setup
+
+    // internal TypedItemOfEntity
 
     public IEntity Entity { get; } = entity;
     private CodeDataFactory Cdf { get; } = cdf;
@@ -105,11 +107,11 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
             (e, k) => e.Children(k)?.FirstOrDefault()
         );
 
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default)
-        => ItemHelper.IsEmpty(name, noParamOrder, default);
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+        => ItemHelper.IsEmpty(name, noParamOrder, isBlank: default, language: language);
 
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default)
-        => ItemHelper.IsFilled(name, noParamOrder, default);
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+        => ItemHelper.IsNotEmpty(name, noParamOrder, isBlank: default, language: language);
 
     [PrivateApi]
     public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default)
@@ -120,20 +122,21 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     #region ITyped
 
     [PrivateApi]
-    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required)
-        => ItemHelper.Get(name, noParamOrder, required);
+    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string language)
+        => ItemHelper.Get(name, noParamOrder, required, language: language);
 
     [PrivateApi]
-    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required)
-        => ItemHelper.G4T(name, noParamOrder, fallback: fallback, required: required);
+    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string language)
+        => ItemHelper.GetT(name, noParamOrder, fallback: fallback, required: required, language: language);
 
     [PrivateApi]
     IRawHtmlString ITyped.Attribute(string name, NoParamOrder noParamOrder, string fallback, bool? required)
         => ItemHelper.Attribute(name, noParamOrder, fallback, required);
 
     [PrivateApi]
-    dynamic ITypedItem.Dyn => dyn;
-
+    [JsonIgnore]
+    dynamic ITypedItem.Dyn => _dyn ??= dynOrNull ?? new DynamicEntity(Entity, cdf, propsRequired: propsRequired);
+    private object _dyn;
 
     [PrivateApi]
     DateTime ITyped.DateTime(string name, NoParamOrder noParamOrder, DateTime fallback, bool? required)
@@ -231,9 +234,11 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
 
     /// <inheritdoc />
     [PrivateApi]
-    ITypedItem ITypedItem.Presentation => (DynHelper.Presentation as DynamicEntity)?.TypedItem;
+    [JsonIgnore] // prevent serialization as it's not a normal property
+    ITypedItem ITypedItem.Presentation => (DynHelper.Presentation as ICanBeItem)?.Item;
 
     /// <inheritdoc />
+    [JsonIgnore] // prevent serialization as it's not a normal property
     IMetadata ITypedItem.Metadata => DynHelper.Metadata;
 
 
@@ -242,7 +247,7 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
         if (current != true)
             return ((ITypedItem)this).Parents(type: type, field: field).FirstOrDefault();
             
-        return (DynHelper.Parent as DynamicEntity)?.TypedItem
+        return (DynHelper.Parent as ICanBeItem)?.Item
                ?? throw new(
                    $"You tried to access {nameof(ITypedItem.Parent)}({nameof(current)}: true). This should get the original Item which was used to find this one, but this item doesn't seem to have one. " +
                    $"It's only set if this Item was created from another Item using {nameof(ITypedItem.Child)}(...) or {nameof(ITypedItem.Children)}(...). " +
@@ -252,7 +257,7 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     /// <inheritdoc />
     [PrivateApi]
     IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string type, string field)
-        => Cdf.AsItems(GetHelper.Parents(entity: Entity, type: type, field: field));
+        => GetHelper.ParentsItems(entity: Entity, type: type, field: field);
 
     bool ITypedItem.IsPublished => Entity.IsPublished;
 
@@ -279,24 +284,18 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
             
             // if the child is null, we must return a fake list which knows about this parent
             return child == null 
-                ? CreateEmptyChildList()
+                ? cdf.CreateEmptyChildList<ITypedItem>(Entity, field)
                 // On the next step, do forward the type filter, as the lowest node should check for that
                 : child.Children(rest, type: type, required: required);
         }
 
         // Standard case: just get the direct children
-        var dynChildren = GetHelper.Children(entity: Entity, field: field, type: type);
-        var list = dynChildren.Cast<DynamicEntity>().Select(d => d.TypedItem).ToList();
+        var list = GetHelper.ChildrenItems(entity: Entity, field: field, type: type);
+        //var list = dynChildren; // .Cast<DynamicEntity>().Select(d => d.TypedItem).ToList();
         
         // Return list or special list if it's empty, as we need a special list which knows about this object being the parent
-        return list.Any() ? list : CreateEmptyChildList();
+        return list.Any() ? list : cdf.CreateEmptyChildList<ITypedItem>(Entity, field);
 
-        IEnumerable<ITypedItem> CreateEmptyChildList()
-        {
-            // Generate a marker/placeholder to remember what field this is etc.
-            var fakeEntity = Cdf.PlaceHolderInBlock(Entity.AppId, Entity, field);
-            return new ListTypedItems(new List<ITypedItem>(), fakeEntity);
-        }
     }
 
     /// <inheritdoc />
@@ -379,7 +378,9 @@ internal class TypedItemOfEntity(DynamicEntity dyn, IEntity entity, CodeDataFact
     /// <inheritdoc />
     IEnumerable<T> ITypedItem.Children<T>(string field, NoParamOrder protector, string type, bool? required)
         => Cdf.AsCustomList<T>(
-            source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required), protector: protector, nullIfNull: false
+            source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required),
+            protector: protector,
+            nullIfNull: false
         );
 
     /// <inheritdoc />

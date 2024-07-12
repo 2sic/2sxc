@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Data.PropertyLookup;
+﻿using System.Text.Json.Serialization;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
@@ -73,12 +74,11 @@ internal partial class TypedStack: ITypedItem
     {
         // Try to find the object which has that field with a valid value etc.
         var logOrNull = _helper.LogOrNull.SubLogOrNull("Stk.Field", Debug);
-        var languages = Cdf.Dimensions;
-        var specs = new PropReqSpecs(name, languages, logOrNull);
+        var specs = new PropReqSpecs(name, Cdf.Dimensions, true, logOrNull);
         var path = new PropertyLookupPath().Add("DynEntStart", name);
 
         var findResult = _stackPropLookup.FindPropertyInternal(specs, path);
-        if (findResult == null || findResult.FieldType == Attributes.FieldIsNotFound)
+        if (findResult == null || findResult.ValueType == ValueTypesWithState.NotFound)
             return null;
 
         var sourceItem = findResult.Source as ITypedItem
@@ -123,7 +123,9 @@ internal partial class TypedStack: ITypedItem
 
     IEnumerable<T> ITypedItem.Children<T>(string field, NoParamOrder protector, string type, bool? required)
         => Cdf.AsCustomList<T>(
-            source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required), protector: protector, nullIfNull: false
+            source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required),
+            protector: protector,
+            nullIfNull: false
         );
 
     #region Not implemented: Parents, Publishing, Dyn, Presentation, Metadata
@@ -144,10 +146,13 @@ internal partial class TypedStack: ITypedItem
 
     IPublishing ITypedItem.Publishing => throw new NotImplementedException(NotImplementedError);
 
+    [JsonIgnore] // prevent serialization as it's not a normal property
     dynamic ITypedItem.Dyn => throw new NotImplementedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(TypedStack)} by design");
 
+    [JsonIgnore] // prevent serialization as it's not a normal property
     ITypedItem ITypedItem.Presentation => throw new NotImplementedException(NotImplementedError);
 
+    [JsonIgnore] // prevent serialization as it's not a normal property
     IMetadata ITypedItem.Metadata => throw new NotImplementedException(NotImplementedError);
 
     #endregion

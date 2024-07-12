@@ -122,7 +122,10 @@ partial class ToolbarBuilder
                     : edit.Toolbar(this)?.ToString();       // Show toolbar
             // ReSharper restore AssignNullToNotNullAttribute
             case ToolbarHtmlModes.Json:
-                var rules = Rules.Select(r => r.ToString()).ToArray();
+                var rules = Rules
+                    .Select(r => r.ToString())
+                    .Where(r => r != "")
+                    .ToArray();
                 return JsonSerializer.Serialize(rules, JsonOptions.SafeJsonForHtmlAttributes);
             default:
                 return $"error: toolbar ToString mode '{mode}' is not known";

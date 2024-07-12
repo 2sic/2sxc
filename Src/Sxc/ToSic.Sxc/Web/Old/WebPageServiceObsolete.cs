@@ -1,10 +1,27 @@
 ﻿using ToSic.Razor.Blade;
+using ToSic.Sxc.Code.Internal;
 
-namespace ToSic.Sxc.Web.PageService;
+namespace ToSic.Sxc.Web;
 
+/// <summary>
+/// This is the obsolete version of the PageService, which is needed to keep old Apps working which used this.
+/// The apps will get it using `var page = GetService{ToSic.Sxc.Web.IPageService}()` or similar.
+/// </summary>
+/// <param name="pageServiceImplementation"></param>
 [Obsolete]
-internal class WebPageServiceObsolete(Services.IPageService pageServiceImplementation) : ToSic.Sxc.Web.IPageService
+internal class WebPageServiceObsolete(Services.IPageService pageServiceImplementation) : IPageService, INeedsCodeApiService
 {
+    /// <summary>
+    /// Forward execution context to the actual implementation.
+    ///
+    /// Fixes bug https://github.com/2sic/2sxc/issues/3424
+    /// </summary>
+    /// <param name="codeRoot"></param>
+    public void ConnectToRoot(ICodeApiService codeRoot)
+    {
+        (pageServiceImplementation as INeedsCodeApiService)?.ConnectToRoot(codeRoot);
+    }
+
     public string SetBase(string url = null)
     {
         return pageServiceImplementation.SetBase(url);
@@ -77,4 +94,5 @@ internal class WebPageServiceObsolete(Services.IPageService pageServiceImplement
     {
         return pageServiceImplementation.Activate(keys);
     }
+
 }

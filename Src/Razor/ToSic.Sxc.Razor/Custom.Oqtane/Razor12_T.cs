@@ -10,7 +10,4 @@ namespace Custom.Oqtane;
 /// </summary>
 /// <typeparam name="TModel"></typeparam>
 [PrivateApi("This probably doesn't make sense to surface, as the model is always object from 2sxc by default")]
-public abstract class Razor12<TModel>: Hybrid.Razor12<TModel>
-{
-
-}
+public abstract class Razor12<TModel>: Hybrid.Razor12<TModel>;

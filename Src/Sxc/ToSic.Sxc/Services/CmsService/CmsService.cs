@@ -60,27 +60,31 @@ internal class CmsService: ServiceForDynamicCode, ICmsService
         // Now we handle all kinds of known special treatments
         // Start with strings...
         if (attribute.Type == ValueTypes.String)
-        {
-            var inputType = attribute.InputType();
-            if (debug) l.A($"Field type is: {ValueTypes.String}:{inputType}");
-            // ...wysiwyg
-            if (inputType == InputTypes.InputTypeWysiwyg)
-            {
-                var fieldAdam = _CodeApiSvc.AsAdam(field.Parent, field.Name);
-                var htmlResult = _stringWysiwyg.New()
-                    .Init(field, contentType, attribute, fieldAdam, debug, imageSettings)
-                    .HtmlForStringAndWysiwyg(value);
-                return htmlResult.IsProcessed
-                    ? l.Return(cntHelper.Wrap(htmlResult, defaultToolbar: true), "wysiwyg, default w/toolbar")
-                    : l.Return(cntHelper.Wrap(value, defaultToolbar: true), "wysiwyg, not converted, w/toolbar");
-            }
-
-            // normal string, no toolbar by default
-            return l.Return(cntHelper.Wrap(value, defaultToolbar: false), "string, default no toolbar");
-        }
+            return l.Return(HtmlString(contentType, attribute, field, value, imageSettings, cntHelper, debug), "string");
 
         // Fallback...
         return l.Return(cntHelper.Wrap(value, defaultToolbar: false), "nothing else hit, will treat as value");
+    }
+
+    private IHtmlTag HtmlString(IContentType contentType, IContentTypeAttribute attribute, IField field, string value, object imageSettings, CmsServiceContainerHelper cntHelper, bool debug)
+    {
+        var l = Log.Fn<IHtmlTag>($"Attribute: {attribute?.Name}");
+        var inputType = attribute.InputType();
+        if (debug) l.A($"Field type is: {ValueTypes.String}:{inputType}");
+
+        // Not WYSIWYG = normal string, no toolbar by default
+        if (inputType != InputTypes.InputTypeWysiwyg)
+            return l.Return(cntHelper.Wrap(value, defaultToolbar: false), "string, default no toolbar");
+
+        // WYSIWYG
+        var fieldAdam = _CodeApiSvc.Cdf.Folder(field.Parent, field.Name, field);
+        var htmlResult = _stringWysiwyg.New()
+            .Init(field, contentType, attribute, fieldAdam, debug, imageSettings)
+            .HtmlForStringAndWysiwyg(value);
+
+        return htmlResult.IsProcessed
+            ? l.Return(cntHelper.Wrap(htmlResult, defaultToolbar: true), "wysiwyg, default w/toolbar")
+            : l.Return(cntHelper.Wrap(value, defaultToolbar: true), "wysiwyg, not converted, w/toolbar");
     }
 
     private static string ProcessTweaks(Func<ITweakInput<string>, ITweakInput<string>> tweak, string value, ILog log)

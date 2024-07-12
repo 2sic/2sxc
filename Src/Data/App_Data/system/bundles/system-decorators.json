@@ -532,7 +532,7 @@
             "Metadata": [
               {
                 "Id": 144405,
-                "Version": 4,
+                "Version": 5,
                 "Guid": "0808ea36-2012-4c8e-9c81-9388ad6aaf91",
                 "Type": {
                   "Id": "ContentType",
@@ -540,6 +540,9 @@
                 },
                 "Attributes": {
                   "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
                     "Description": {
                       "en-us": ""
                     },
@@ -547,8 +550,8 @@
                       "en-us": ""
                     },
                     "EditInstructions": {
-                      "en-us": "<p>Give your image some alternate text for screen readers and configure how it should be resized.</p>",
-                      "de-de": "<p>Gib deinem Bild eine Alternativbeschreibung (f&uuml;r Google und f&uuml;r Menschen mit Behinderungen). Du kannst auch steuern, wie das Bild automatisch zugeschnitten wird.&nbsp;</p>"
+                      "en-us": "",
+                      "de-de": ""
                     },
                     "Label": {
                       "en-us": "Image Details and Configuration",
@@ -693,14 +696,112 @@
                 ]
               },
               {
+                "Name": "InfoPresets",
+                "Type": "Empty",
+                "InputType": "empty-message",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183849,
+                    "Version": 3,
+                    "Guid": "4d01de7e-b3bc-4b38-a894-03029196f693",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-message"
+                        },
+                        "Name": {
+                          "en-us": "InfoPresets"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Configure Presets on a Field, like the default Resize and Lightbox behavior on</p>\n<ul>\n<li>WYSIWYG fields</li>\n<li>Image fields</li>\n<li>Image Library fields</li>\n</ul>\n<p>These presets will be picked up automatically by the API such as ImageService.Img(...) and ImageService.Picture(...) as well as the .Html(...) method.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "f350e7cb-829a-407a-b442-bd481ddc02bb"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "GroupDescription",
                 "Type": "Empty",
                 "InputType": "empty-default",
                 "IsTitle": false,
                 "Metadata": [
                   {
-                    "Id": 177517,
+                    "Id": 177518,
                     "Version": 2,
+                    "Guid": "7eaa2ece-4ce6-4307-8253-cc521404bbee",
+                    "Type": {
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 177517,
+                    "Version": 4,
                     "Guid": "b309674f-e06c-4657-9b07-30a32df2e762",
                     "Type": {
                       "Id": "@All",
@@ -725,7 +826,8 @@
                           "de-de": "Titel & Beschreibung"
                         },
                         "Notes": {
-                          "en-us": ""
+                          "en-us": "<p>Describe your image for screen readers and SEO.</p>",
+                          "de-de": "<p>Beschreibe dein Bild f&uuml;r Menschen mit Behinderungen und Google / SEO.</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -747,7 +849,9 @@
                           "*": []
                         },
                         "Formulas": {
-                          "*": []
+                          "*": [
+                            "b0948915-0f4a-4843-9b4f-eb1604321457"
+                          ]
                         },
                         "Warnings": {
                           "*": []
@@ -769,23 +873,6 @@
                       }
                     },
                     "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 177518,
-                    "Version": 1,
-                    "Guid": "7eaa2ece-4ce6-4307-8253-cc521404bbee",
-                    "Type": {
-                      "Id": "@empty-default",
-                      "Name": "@empty-default"
-                    },
-                    "Attributes": {
-                      "Boolean": {
-                        "DefaultCollapsed": {
-                          "en-us": false
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
                   }
                 ]
               },
@@ -796,8 +883,45 @@
                 "IsTitle": true,
                 "Metadata": [
                   {
+                    "Id": 144403,
+                    "Version": 1,
+                    "Guid": "50d521e5-5071-415d-917b-8b02b3cbd4e4",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 144404,
+                    "Version": 1,
+                    "Guid": "e74260b4-d2d3-45f9-b0a6-8776cfe01dd1",
+                    "Type": {
+                      "Id": "@string-default",
+                      "Name": "@string-default"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
                     "Id": 144396,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "91e1a644-6a08-4eea-8b5f-69befa7e38f7",
                     "Type": {
                       "Id": "@All",
@@ -833,7 +957,9 @@
                           "*": []
                         },
                         "Formulas": {
-                          "*": []
+                          "*": [
+                            "f8e9b585-f00f-4f25-9679-500024209d98"
+                          ]
                         },
                         "Warnings": {
                           "*": []
@@ -851,43 +977,6 @@
                         },
                         "VisibleInEditUI": {
                           "en-us": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 144403,
-                    "Version": 1,
-                    "Guid": "50d521e5-5071-415d-917b-8b02b3cbd4e4",
-                    "Type": {
-                      "Id": "@String",
-                      "Name": "@String"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "DropdownValues": {
-                          "en-us": ""
-                        },
-                        "InputType": {
-                          "en-us": ""
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 144404,
-                    "Version": 1,
-                    "Guid": "e74260b4-d2d3-45f9-b0a6-8776cfe01dd1",
-                    "Type": {
-                      "Id": "@string-default",
-                      "Name": "@string-default"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "InputFontFamily": {
-                          "en-us": ""
                         }
                       }
                     },
@@ -1261,7 +1350,7 @@
                 "Metadata": [
                   {
                     "Id": 177515,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "32bf5ace-2134-46f3-bb9c-4cf841127bf4",
                     "Type": {
                       "Id": "@All",
@@ -1286,7 +1375,8 @@
                           "de-de": "Bild zuschneiden"
                         },
                         "Notes": {
-                          "en-us": ""
+                          "en-us": "<p>Specify how the image should be cropped if it is automatically resized.</p>",
+                          "de-de": "<p>Gib an wie das Bild zugeschnitten werden soll, wenn es automatisch angepasst wird.&nbsp;</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -1333,7 +1423,7 @@
                   },
                   {
                     "Id": 177516,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "7536e75b-9ffd-4ae6-b84c-f9f4603a4ae3",
                     "Type": {
                       "Id": "@empty-default",
@@ -1581,6 +1671,187 @@
                 ]
               },
               {
+                "Name": "ResizeSettings",
+                "Type": "String",
+                "InputType": "string-picker",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183831,
+                    "Version": 8,
+                    "Guid": "67110684-0e52-4c18-9599-8c254dd684f3",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-picker"
+                        },
+                        "Name": {
+                          "en-us": "Resize Settings"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Override the resize settings on this image.</p>",
+                          "de-de": "<p>Verwende eigene Einstellungen f&uuml;r die Anzeigegr&ouml;sse dieses Bildes.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "c4185f6f-ef3e-4718-bdc9-2ca262fa4437"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183832,
+                    "Version": 1,
+                    "Guid": "d44c8aa9-2ba7-4f8a-aa26-78308821ea5f",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183833,
+                    "Version": 1,
+                    "Guid": "5f0a75f7-90be-41c5-a543-0531becaaa79",
+                    "Type": {
+                      "Id": "@string-default",
+                      "Name": "@string-default"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183838,
+                    "Version": 4,
+                    "Guid": "4e6de09a-9ed0-4bff-8c49-0fc18065ab7e",
+                    "Type": {
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CreateParameters": {
+                          "en-us": ""
+                        },
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "list"
+                        },
+                        "Separator": {
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "29e24872-6359-4c9e-9c0c-c5a9e68a4a7d"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": true
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "MessageCropRequirements",
                 "Type": "Empty",
                 "InputType": "empty-message",
@@ -1661,10 +1932,369 @@
                     "Owner": "dnn:userid=41"
                   }
                 ]
+              },
+              {
+                "Name": "GroupLightbox",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183822,
+                    "Version": 2,
+                    "Guid": "dcc4368d-49f3-4907-ab25-b1e245547365",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-default"
+                        },
+                        "Name": {
+                          "en-us": "Lightbox / PopUp Settings",
+                          "de-de": "Lightbox / PopUp Einstellungen"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183825,
+                    "Version": 1,
+                    "Guid": "4e3ec7ee-5211-41de-b921-6f520f1f8d2c",
+                    "Type": {
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "LightboxIsEnabled",
+                "Type": "Boolean",
+                "InputType": "boolean-tristate",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183823,
+                    "Version": 3,
+                    "Guid": "7c5e13b3-758d-4fa2-9285-b919a3d3497f",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "boolean-tristate"
+                        },
+                        "Name": {
+                          "en-us": "LightboxIsEnabled"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183826,
+                    "Version": 2,
+                    "Guid": "6387d26a-87d5-4c6e-93a7-ac1b894c68b8",
+                    "Type": {
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "TitleFalse": {
+                          "en-us": "No Lightbox / PopUp",
+                          "de-de": "Keine Lightbox / kein PopUp"
+                        },
+                        "TitleIndeterminate": {
+                          "en-us": "Lightbox / PopUp not configured (use defaults)",
+                          "de-de": "LightBox / PopUp nicht konfiguriert (nutze Standardeinstellungen)"
+                        },
+                        "TitleTrue": {
+                          "en-us": "Use Lightbox / PopUp",
+                          "de-de": "Lightbox / PopUp aktiviert"
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "LightboxGroup",
+                "Type": "String",
+                "InputType": "string-dropdown",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183824,
+                    "Version": 3,
+                    "Guid": "18d661da-a45c-4876-a898-9adb14f32050",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-dropdown"
+                        },
+                        "Name": {
+                          "en-us": "Lightbox Group",
+                          "de-de": "Lightbox Gruppe"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Images in the same lightbox group will work together like an album.</p>",
+                          "de-de": "<p>Bilder in der selben Lightbox-Gruppe funktionieren gemeinsam wie ein Album.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "8737cc85-67ee-457f-9221-7337ae006d4b"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183827,
+                    "Version": 1,
+                    "Guid": "2137373f-3bed-4f39-ac84-d96396990a8d",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183828,
+                    "Version": 1,
+                    "Guid": "c1e30ff2-5cbd-40a0-bdce-04bcaac1dd4c",
+                    "Type": {
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ":No Group - this image will open stand alone\ndefault:Default Group - all images in this group will be in an album together",
+                          "de-de": ":Keine Gruppe - dieses Bild öffnet alleine\ndefault:Standard Gruppe - alle Bilder in dieser Gruppe sind wie ein Album"
+                        },
+                        "DropdownValuesFormat": {
+                          "en-us": "value-label"
+                        }
+                      },
+                      "Boolean": {
+                        "EnableTextEntry": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
               }
             ]
           },
           "Entities": [
+            {
+              "Id": 183851,
+              "Version": 1,
+              "Guid": "f8e9b585-f00f-4f25-9679-500024209d98",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  const forAttribute = context.target.entity.for.targetType == 2;\n  return forAttribute\n    ? { value: 'Image Render Presets', stop: true }\n    : { value: data.value, stop: true };\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Value"
+                  },
+                  "Title": {
+                    "en-us": "Field.Value"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
             {
               "Id": 144400,
               "Version": 3,
@@ -1820,6 +2450,170 @@
                 "String": {
                   "Formula": {
                     "en-us": "// new formula syntax - see https://go.2sxc.org/formulas\nv2((data, context) => {\n  return !!data.parameters?.showWarningGlobalFile;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183850,
+              "Version": 1,
+              "Guid": "b0948915-0f4a-4843-9b4f-eb1604321457",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  const forAttribute = context.target.entity.for.targetType == 2;\n  return { value: !forAttribute, stop: true };\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183829,
+              "Version": 1,
+              "Guid": "8737cc85-67ee-457f-9221-7337ae006d4b",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  return !!data.LightboxIsEnabled;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183834,
+              "Version": 2,
+              "Guid": "c4185f6f-ef3e-4718-bdc9-2ca262fa4437",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  // show when crop-to is available, or if it's not empty\n  return data.CropBehavior == 'to' || !!data.ResizeSettings;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183837,
+              "Version": 6,
+              "Guid": "29e24872-6359-4c9e-9c0c-c5a9e68a4a7d",
+              "Type": {
+                "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
+                "Name": "UiPickerSourceQuery"
+              },
+              "Attributes": {
+                "String": {
+                  "CreateTypes": {
+                    "en-us": ""
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": "<p>[Item:Description]</p>"
+                  },
+                  "ItemTooltip": {
+                    "en-us": ""
+                  },
+                  "Label": {
+                    "en-us": "Title"
+                  },
+                  "MoreFields": {
+                    "en-us": ""
+                  },
+                  "Query": {
+                    "en-us": "Eav.Queries.Global.SettingsEntities"
+                  },
+                  "QueryParameters": {
+                    "en-us": "ContentType=⚙️Image"
+                  },
+                  "StreamName": {
+                    "en-us": "Default"
+                  },
+                  "Title": {
+                    "en-us": "Settings - Image Resizes"
+                  },
+                  "Value": {
+                    "en-us": "Title"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183852,
+              "Version": 1,
+              "Guid": "f350e7cb-829a-407a-b442-bd481ddc02bb",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  const forAttribute = context.target.entity.for.targetType == 2;\n  return { value: forAttribute, stop: true };\n});"
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
@@ -3170,6 +3964,104 @@
                 ]
               },
               {
+                "Name": "GroupDurations",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183798,
+                    "Version": 3,
+                    "Guid": "45d8cb18-ff0c-4b6b-8bc7-b8bb26836cbd",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-default"
+                        },
+                        "Name": {
+                          "en-us": "Caching Durations"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "3cdbdd23-27c8-4fbd-8b56-43501a9606bb"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183800,
+                    "Version": 1,
+                    "Guid": "3e4a521b-dd33-4bc2-a869-81d98cdd8bdd",
+                    "Type": {
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "Duration",
                 "Type": "Number",
                 "InputType": "number-dropdown",
@@ -3610,6 +4502,246 @@
                 ]
               },
               {
+                "Name": "GroupDurationsEnd",
+                "Type": "Empty",
+                "InputType": "empty-end",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183816,
+                    "Version": 1,
+                    "Guid": "13feffb6-e9fe-49e1-b44a-c7c9c69cf143",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputType": {
+                          "*": "empty-end"
+                        },
+                        "Name": {
+                          "*": "GroupDurationsEnd"
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "VisibleInEditUI": {
+                          "*": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "ViewConfigurationMessage",
+                "Type": "Empty",
+                "InputType": "empty-message",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183815,
+                    "Version": 5,
+                    "Guid": "e596ea80-ac99-4da4-9967-00c7eaae0b9a",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-message"
+                        },
+                        "Name": {
+                          "en-us": "ViewConfigurationMessage"
+                        },
+                        "Notes": {
+                          "en-us": "<p><strong>The View-Configuration is only for configuring URL parameters.&nbsp;</strong></p>\n<p>As of now, it doesn't support configuring alternate durations.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "46b375ba-3a11-4f04-8faf-33ef4ef5b29a"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183818,
+                    "Version": 1,
+                    "Guid": "f302a03d-5982-4a84-a9b3-204ae77b83f6",
+                    "Type": {
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "GroupVaryByUrl",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183799,
+                    "Version": 4,
+                    "Guid": "f9ae6ce9-32c1-4fc2-bba6-12172fd23a7f",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-default"
+                        },
+                        "Name": {
+                          "en-us": "Vary Cache by URL Parameters"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Your code may return different results based on URL parameters. If this is the case, then you want to vary by URL parameters.&nbsp;</p>\n<p>⚠️ Warning:&nbsp;Be careful with this configuration. If you don't specify which url parameters are allowed, you can easily build up tens of thousands of cache entries which may slow down your system.&nbsp;</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "11e753a0-2e69-46dc-b67e-c5b0bec47ac0"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183801,
+                    "Version": 2,
+                    "Guid": "ac85e0c8-1078-4281-b115-bb8764d6fb7e",
+                    "Type": {
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "ByUrlParameters",
                 "Type": "Boolean",
                 "InputType": "boolean-default",
@@ -3792,6 +4924,229 @@
                 ]
               },
               {
+                "Name": "UrlParameterNames",
+                "Type": "String",
+                "InputType": "string-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183808,
+                    "Version": 5,
+                    "Guid": "9b6c8a4a-9070-490c-8f89-3f7058d6133b",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-default"
+                        },
+                        "Name": {
+                          "en-us": "URL Parameter Names (one on each line)"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Put each url parameter on an own line. Optionally with <code>// comment</code> behind it. <code>*</code> means all url parameters - not recommended ⚠️.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": "example     // vary the cache by the url parameter example=abcd"
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183810,
+                    "Version": 4,
+                    "Guid": "1399c3ca-ba76-4bfc-ab4c-092dbf91895c",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183811,
+                    "Version": 4,
+                    "Guid": "f12a5eee-4758-4ee4-bc62-acadca65ff50",
+                    "Type": {
+                      "Id": "@string-default",
+                      "Name": "@string-default"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": "monospace"
+                        }
+                      },
+                      "Number": {
+                        "RowCount": {
+                          "en-us": 5
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "UrlParametersOthersDisableCache",
+                "Type": "Boolean",
+                "InputType": "boolean-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183809,
+                    "Version": 3,
+                    "Guid": "6fbc03a7-8e66-4cfa-a537-54f2db77adf3",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "true"
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "boolean-default"
+                        },
+                        "Name": {
+                          "en-us": "UrlParametersOthersDisableCache"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183812,
+                    "Version": 2,
+                    "Guid": "2935f7d2-ab1b-4a9c-81d5-ea30193a9780",
+                    "Type": {
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "TitleFalse": {
+                          "en-us": "If other url parameters are used, cache as if they don't matter"
+                        },
+                        "TitleIndeterminate": {
+                          "en-us": ""
+                        },
+                        "TitleTrue": {
+                          "en-us": "If other url parameters are used, don't cache"
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "Advanced",
                 "Type": "String",
                 "InputType": "string-json",
@@ -3921,10 +5276,302 @@
                     "Owner": "dnn:userid=41"
                   }
                 ]
+              },
+              {
+                "Name": "GroupVaryByUrlEnd",
+                "Type": "Empty",
+                "InputType": "empty-end",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183817,
+                    "Version": 1,
+                    "Guid": "95634d5d-f5ef-4b17-93bf-ef42cbe88f1a",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputType": {
+                          "*": "empty-end"
+                        },
+                        "Name": {
+                          "*": "GroupVaryByUrlEnd"
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "VisibleInEditUI": {
+                          "*": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "VarShowDuration",
+                "Type": "Boolean",
+                "InputType": "boolean-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183802,
+                    "Version": 4,
+                    "Guid": "da781d7a-95c7-45e5-b9ac-9220065d38d8",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "true"
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "boolean-default"
+                        },
+                        "Name": {
+                          "en-us": "VarShowDuration"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "3d006350-3b3c-4294-8b1a-ad6e4f12857d",
+                            "a247ff46-76f7-45d2-bbc2-a20e4a3a4a98"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "IsEphemeral": {
+                          "en-us": true
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183803,
+                    "Version": 1,
+                    "Guid": "0d57e6d1-2f94-4df6-bad4-b59b502a8bc8",
+                    "Type": {
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "TitleFalse": {
+                          "en-us": ""
+                        },
+                        "TitleIndeterminate": {
+                          "en-us": ""
+                        },
+                        "TitleTrue": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
               }
             ]
           },
           "Entities": [
+            {
+              "Id": 183804,
+              "Version": 2,
+              "Guid": "3cdbdd23-27c8-4fbd-8b56-43501a9606bb",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  return data.VarShowDuration && data.IsEnabled != false;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183805,
+              "Version": 1,
+              "Guid": "11e753a0-2e69-46dc-b67e-c5b0bec47ac0",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  return data.IsEnabled != false;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183814,
+              "Version": 2,
+              "Guid": "3d006350-3b3c-4294-8b1a-ad6e4f12857d",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "// if parameters has a showDuration then take that, otherwise default to true\nv2((data, context) => {\n  return { \n    value: data.parameters.showDuration != 'false', // defaults to true\n    stop: true,\n  }\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Value"
+                  },
+                  "Title": {
+                    "en-us": "Field.Value"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183813,
+              "Version": 1,
+              "Guid": "a247ff46-76f7-45d2-bbc2-a20e4a3a4a98",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  return context.debug;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183819,
+              "Version": 3,
+              "Guid": "46b375ba-3a11-4f04-8faf-33ef4ef5b29a",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "// if parameters has a forView then take that, otherwise default to false\nv2((data, context) => {\n  console.log('debug 2dm lightspeed', data.parameters, data);\n  return { \n    value: data.parameters.forView == 'true', // defaults to false\n    stop: true,\n  }\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
             {
               "Id": 144523,
               "Version": 1,
@@ -4216,7 +5863,7 @@
                 "Metadata": [
                   {
                     "Id": 142967,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "90881082-be21-4807-b6f3-4d7ccc20c37d",
                     "Type": {
                       "Id": "@All",
@@ -4228,6 +5875,9 @@
                           "en-us": ""
                         },
                         "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
                           "en-us": ""
                         },
                         "InputType": {
@@ -4242,7 +5892,15 @@
                         "Placeholder": {
                           "en-us": ""
                         },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
                         "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -4276,7 +5934,7 @@
                   },
                   {
                     "Id": 142968,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "d6c17084-1b87-4b84-83b3-128374e279b1",
                     "Type": {
                       "Id": "@Number",
@@ -4293,7 +5951,7 @@
                   },
                   {
                     "Id": 142969,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "669a22d2-28ce-4983-bb2d-1c5f5ec0bbc9",
                     "Type": {
                       "Id": "@number-dropdown",
@@ -4302,7 +5960,7 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "en-us": "0:Not set\n4:Entity (Item)\n5:Content Type"
+                          "en-us": "0:Not set\n4:Entity (Item)\n5:Content Type\n2:Content Type Attribute (Field / Property)"
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"

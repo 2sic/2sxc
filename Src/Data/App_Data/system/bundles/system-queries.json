@@ -1649,7 +1649,7 @@
         },
         {
           "Id": 166484,
-          "Version": 31,
+          "Version": 36,
           "Guid": "05ab1404-55f3-45f4-8252-a3c9bd59d6f6",
           "Type": {
             "Id": "DataPipeline",
@@ -1670,10 +1670,10 @@
                 "en-us": "Default,Header"
               },
               "StreamWiring": {
-                "en-us": "706d272f-9cd5-4c10-80a7-cfa4128a8e7b:Default>Out:Default\r\n2a723149-7dee-407d-8831-14180e294705:StringWysiwygConfiguration>706d272f-9cd5-4c10-80a7-cfa4128a8e7b:Default"
+                "en-us": "706d272f-9cd5-4c10-80a7-cfa4128a8e7b:Default>Out:Default\r\n2a723149-7dee-407d-8831-14180e294705:Default>425988c7-0851-47f5-8955-9949b52cfa3e:Default\r\n425988c7-0851-47f5-8955-9949b52cfa3e:Default>706d272f-9cd5-4c10-80a7-cfa4128a8e7b:Default"
               },
               "TestParameters": {
-                "en-us": "[QueryString:ContentType]=StringWysiwygConfiguration"
+                "en-us": "[QueryString:ContentType]=⚙️Image"
               },
               "VisualDesignerData": {
                 "en-us": "{\"ShowDataSourceDetails\":true}"
@@ -1716,7 +1716,7 @@
             },
             {
               "Id": 166533,
-              "Version": 8,
+              "Version": 12,
               "Guid": "706d272f-9cd5-4c10-80a7-cfa4128a8e7b",
               "Type": {
                 "Id": "DataPipelinePart",
@@ -1734,7 +1734,7 @@
                     "*": "2952e680-4aaa-4a12-adf7-325cb2854358"
                   },
                   "VisualDesignerData": {
-                    "*": "{\r\n  \"Top\": 200,\r\n  \"Left\": 300\r\n}"
+                    "*": "{\r\n  \"Top\": 180,\r\n  \"Left\": 320\r\n}"
                   }
                 }
               },
@@ -1837,7 +1837,7 @@
             },
             {
               "Id": 169174,
-              "Version": 6,
+              "Version": 10,
               "Guid": "2a723149-7dee-407d-8831-14180e294705",
               "Type": {
                 "Id": "DataPipelinePart",
@@ -1855,7 +1855,7 @@
                     "*": "ToSic.Eav.DataSources.App, ToSic.Eav.DataSources"
                   },
                   "VisualDesignerData": {
-                    "*": "{\r\n  \"Top\": 420,\r\n  \"Left\": 300\r\n}"
+                    "*": "{\r\n  \"Top\": 600,\r\n  \"Left\": 320\r\n}"
                   }
                 }
               },
@@ -1892,6 +1892,61 @@
                     "Target": "Entity",
                     "TargetType": 4,
                     "Guid": "2a723149-7dee-407d-8831-14180e294705"
+                  }
+                }
+              ]
+            },
+            {
+              "Id": 183840,
+              "Version": 4,
+              "Guid": "425988c7-0851-47f5-8955-9949b52cfa3e",
+              "Type": {
+                "Id": "DataPipelinePart",
+                "Name": "DataPipelinePart"
+              },
+              "Attributes": {
+                "String": {
+                  "Description": {
+                    "*": ""
+                  },
+                  "Name": {
+                    "*": "Type-Filter"
+                  },
+                  "PartAssemblyAndType": {
+                    "*": "ToSic.Eav.DataSources.EntityTypeFilter, ToSic.Eav.DataSources"
+                  },
+                  "VisualDesignerData": {
+                    "*": "{\r\n  \"Top\": 380,\r\n  \"Left\": 300\r\n}"
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "05ab1404-55f3-45f4-8252-a3c9bd59d6f6"
+              },
+              "Metadata": [
+                {
+                  "Id": 183841,
+                  "Version": 1,
+                  "Guid": "b3b9d389-d9a9-4bbc-9d58-23fc43ac16d4",
+                  "Type": {
+                    "Id": "|Config ToSic.Eav.DataSources.EntityTypeFilter",
+                    "Name": "ToSic.Eav.DataSources.EntityTypeFilter"
+                  },
+                  "Attributes": {
+                    "String": {
+                      "TypeName": {
+                        "en-us": "[Params:ContentType||error-no-type-should-be-used]"
+                      }
+                    }
+                  },
+                  "Owner": "dnn:userid=41",
+                  "For": {
+                    "Target": "Entity",
+                    "TargetType": 4,
+                    "Guid": "425988c7-0851-47f5-8955-9949b52cfa3e"
                   }
                 }
               ]

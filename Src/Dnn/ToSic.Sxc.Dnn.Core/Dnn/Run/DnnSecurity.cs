@@ -1,6 +1,7 @@
 ﻿using System.Web.Security;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
+using DotNetNuke.Security.Permissions;
 using DotNetNuke.Security.Roles;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
@@ -21,46 +22,55 @@ public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("
     /// </summary>
     /// <param name="portalId"></param>
     /// <returns></returns>
-    internal bool PortalHasExplicitAdminGroups(int portalId)
+    private bool PortalHasExplicitAdminGroups(int portalId)
         => DnnGroupsSxcAdmins.Any(grpName => PortalHasGroup(portalId, grpName));
 
-    internal bool IsExplicitAdmin(UserInfo user)
-        => !IsAnonymous(user) && DnnGroupsSxcAdmins.Any(user.IsInRole);
+    private bool IsExplicitAdmin(UserInfo user)
+        => !IsNullOrAnonymous(user) && DnnGroupsSxcAdmins.Any(user.IsInRole);
 
 
-    internal bool PortalHasGroup(int portalId, string groupName)
+    private bool PortalHasGroup(int portalId, string groupName)
         => roleController.Value.GetRoleByName(portalId, groupName) != null;
 
-    internal bool IsAnonymous(UserInfo user)
+    private bool IsNullOrAnonymous(UserInfo user)
         => user == null || user.UserID == -1;
 
 
-    internal AdminPermissions UserMayAdminThis(UserInfo user)
+    internal EffectivePermissions UserMayAdminThis(UserInfo user)
     {
         // Null-Check
-        if (IsAnonymous(user)) return new(false);
+        if (IsNullOrAnonymous(user))
+            return new(false);
 
         // Super always AppAdmin
-        if (user.IsSuperUser) return new(true);
+        if (user.IsSuperUser)
+            return new(true);
 
         var portal = PortalSettings.Current;
 
         // Skip the remaining tests if the portal isn't known
-        if (portal == null) return new(false);
+        if (portal == null)
+            return new(false);
+
+        // TODO: is there a way to get this with DI?
+        //bool displayTitle = ModulePermissionController.CanEditModuleContent(module)
+        //var dnnPermissionProvider = PermissionProvider.Instance();
 
         // Non-SuperUsers must be Admin AND in the group SxcAppAdmins
-        if (!user.IsInRole(portal.AdministratorRoleName ?? DnnAdminRoleDefaultName)) return new(false);
+        if (!user.IsInRole(portal.AdministratorRoleName ?? DnnAdminRoleDefaultName))
+            return new(false);
 
         var hasSpecialGroup = PortalHasExplicitAdminGroups(portal.PortalId);
-        if (hasSpecialGroup && IsExplicitAdmin(user)) return new(true);
+        if (hasSpecialGroup && IsExplicitAdmin(user))
+            return new(true);
 
         // If the special group doesn't exist, then the admin-state (which is true - since he got here) is valid
-        return new(true, !hasSpecialGroup);
+        return new(isSiteAdmin: !hasSpecialGroup, isContentAdmin: true);
     }
 
 
-    internal List<int> RoleList(UserInfo user, int? portalId = null)
-        => IsAnonymous(user)
+    private List<int> RoleList(UserInfo user, int? portalId = null)
+        => IsNullOrAnonymous(user)
             ? []
             : user.Roles
                 .Select(r => RoleController.Instance.GetRoleByName(portalId ?? user.PortalID, r))
@@ -72,7 +82,7 @@ public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("
         => Membership.GetUser(user.Username)?.ProviderUserKey as Guid? ?? Guid.Empty;
 
     internal string UserIdentityToken(UserInfo user)
-        => IsAnonymous(user) ? SxcUserConstants.Anonymous : DnnConstants.UserTokenPrefix + user.UserID;
+        => IsNullOrAnonymous(user) ? SxcUserConstants.Anonymous : DnnConstants.UserTokenPrefix + user.UserID;
 
     internal CmsUserRaw CmsUserBuilder(UserInfo user, int siteId)
         => UserMayAdminThis(user).Map(adminInfo => new CmsUserRaw
@@ -84,7 +94,7 @@ public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("
                 IsSystemAdmin = user.IsSuperUser,
                 IsSiteAdmin = adminInfo.IsSiteAdmin,
                 IsContentAdmin = adminInfo.IsContentAdmin,
-                IsAnonymous = IsAnonymous(user),
+                IsAnonymous = IsNullOrAnonymous(user),
                 Created = user.CreatedOnDate,
                 Modified = user.LastModifiedOnDate,
                 //

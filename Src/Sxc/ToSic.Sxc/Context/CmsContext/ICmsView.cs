@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Metadata;
+﻿using System.Text.Json.Serialization;
+using ToSic.Eav.Metadata;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 
@@ -58,6 +59,7 @@ public interface ICmsView: IHasMetadata
     /// Added in v13.12
     /// </remarks>
     // actually Added in v12.10; changed from IMetadataOf to IDynamicMetadata in 13.12
+    [JsonIgnore] // prevent serialization as it's not a normal property
     new IMetadata Metadata { get; }
 
     /// <summary>
@@ -72,6 +74,7 @@ public interface ICmsView: IHasMetadata
     [Obsolete("Obsolete in v16, pls use Folder.Url instead")]
     [PrivateApi("Hidden in 16.04, because we want people to use the Folder. Can't remove it though, because there are many apps that already published this.")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [JsonIgnore] // old property
     string Path { get; }
 
     /// <summary>

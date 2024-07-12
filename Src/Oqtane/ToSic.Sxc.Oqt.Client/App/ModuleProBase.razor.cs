@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Configuration;
 using Microsoft.JSInterop;
 using Oqtane.Modules;
 using Oqtane.Security;
@@ -24,6 +25,7 @@ public class ModuleProBase: ModuleBase, IOqtHybridLog
 
     [Inject] public NavigationManager NavigationManager { get; set; }
     [Inject] public IOqtDebugStateService OqtDebugStateService { get; set; }
+    [Inject] public IConfiguration Configuration { get; set; }
 
     #endregion
 
@@ -80,7 +82,7 @@ public class ModuleProBase: ModuleBase, IOqtHybridLog
     /// </remarks>
     /// <returns>True if the page is in the prerendering phase; otherwise, false.</returns>
     public bool IsPrerendering() =>
-        (PageState.Site.RenderMode is "ServerPrerendered" or "WebAssemblyPrerendered") // Checks the site's render mode.
+        (PageState.Site.Prerender) // Checks the site's render mode.
         && FirstRender // Ensures this is the first render.
         && SiteState.IsPrerendering; // Validates the prerendering state of the current page.
 
@@ -93,7 +95,7 @@ public class ModuleProBase: ModuleBase, IOqtHybridLog
     public void Log(params object[] message)
     {
         // If the url has a debug=true and we are the super-user
-        if (message == null || !message.Any() || !OqtDebugStateService.IsDebugEnabled || !IsSuperUser) return;
+        if (message == null || !message.Any() || !(OqtDebugStateService?.IsDebugEnabled ?? false /* HACK @stv fix it*/) || !IsSuperUser) return;
 
         _logPrefix ??= $"2sxc:Page({PageState?.Page?.PageId}):Mod({ModuleState?.ModuleId}):";
         try
@@ -186,4 +188,6 @@ public class ModuleProBase: ModuleBase, IOqtHybridLog
     private string _logPrefix;
     private const string ConsoleLogJs = "console.log";
     #endregion
+
+    public bool IsDev => Configuration["Environment"] == "Development";
 }

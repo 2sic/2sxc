@@ -118,7 +118,7 @@ public class AppControllerReal(
         => exportAppLazy.Value.SaveDataForVersionControl(zoneId, appId, includeContentGroups, resetAppGuid, withPortalFiles);
 
     public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
-        => appStackBackendLazy.Value.GetAll(appId, part ?? AppStackConstants.RootNameSettings, key, view, null);
+        => appStackBackendLazy.Value.GetAll(appId, part ?? AppStackConstants.RootNameSettings, key, view); //, null);
 
     public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage, bool withPortalFiles)
         => resetAppLazy.Value.Reset(zoneId, appId, defaultLanguage, withPortalFiles);

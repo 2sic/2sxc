@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public static List<TestParamSet> GenerateTestParams(string name, string variants)
         {
             var i = 1;
-            return new List<TestParamSet>
+            return new()
             {
                 new($"Test #{i++} {name}-both", true, true, true, variants),
                 new($"Test #{i++} {name}-both", true, true, false, variants),
@@ -39,8 +39,8 @@ namespace ToSic.Sxc.Tests.ServicesTests
         {
             public TestParamSet(string name, bool useSet, bool usePic, bool putSrcOnSet, string variants)
             {
-                Set = new TestParams(useSet, useSet, putSrcOnSet ? variants : null);
-                Pic = new TestParams(usePic, usePic, putSrcOnSet ? null : variants);
+                Set = new(useSet, useSet, putSrcOnSet ? variants : null);
+                Pic = new(usePic, usePic, putSrcOnSet ? null : variants);
                 Name = name + $" (Settings on Pic: {usePic}, On Set: {useSet}, srcset: '{variants}' - on "
                             + (putSrcOnSet ? "set" : "pic");
             }

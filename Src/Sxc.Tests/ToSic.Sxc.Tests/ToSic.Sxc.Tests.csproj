@@ -101,18 +101,23 @@
     <Compile Include="ContentSecurityPolicyTests\CspParametersTests.cs" />
     <Compile Include="ContentSecurityPolicyTests\CspParameterFinalizerTests.cs" />
     <Compile Include="ContentSecurityPolicyTests\CspPolicyTextProcessorTests.cs" />
+    <Compile Include="ContextTests\ParametersTestData.cs" />
     <Compile Include="ContextTests\ParametersTests.cs" />
     <Compile Include="ContextTests\UniqueKeyTests.cs" />
+    <Compile Include="ContextTests\ParametersAccessedTests.cs" />
+    <Compile Include="ContextTests\ParametersToStringTests.cs" />
     <Compile Include="DataForImageTests\ResizeRecipesData.cs" />
     <Compile Include="DataSources\MockRolesDataSource.cs" />
     <Compile Include="DataSources\MockUsersDataSource.cs" />
     <Compile Include="DataSources\UsersDataSourceTests.cs" />
     <Compile Include="DataSources\RolesDataSourceTests.cs" />
+    <Compile Include="DataTests\CodeDataConverterTestAccessors.cs" />
     <Compile Include="DataTests\DynAndTypedTestsBase.cs" />
     <Compile Include="DataTests\DynConverterTests\AsConverterFakeTests.cs" />
     <Compile Include="DataTests\DynConverterTests\AsConverterTestsBase.cs" />
     <Compile Include="DataTests\DynConverterTests\AsConverterAsItem.cs" />
     <Compile Include="DataTests\DynWrappers\WrapObjTypedItemEquality.cs" />
+    <Compile Include="DataTests\GetAndConvertHelperTestAccessors.cs" />
     <Compile Include="DataTests\PropInfo.cs" />
     <Compile Include="DataTests\DynJson\WrapAllGps.cs" />
     <Compile Include="DataTests\DynJson\WrapAllKeys.cs" />
@@ -134,10 +139,17 @@
     <Compile Include="DataTests\DynWrappers\WrapObjTypedItem.cs" />
     <Compile Include="DataTests\HasKeysTests.cs" />
     <Compile Include="DataTests\TypedItemTestAccessors.cs" />
+    <Compile Include="DataTests\GetAndConvertHelperTests.cs" />
+    <Compile Include="EditTests\ItemToolbarPickerTests\ItemToolbarPikerWithRulesTests.cs" />
+    <Compile Include="EditTests\ToolbarRuleTests\ToolbarRuleForTest.cs" />
+    <Compile Include="EditTests\ToolbarRuleTests\ToolbarRuleBasicTests.cs" />
+    <Compile Include="EditTests\ToolbarRuleTests\ToolbarRuleToolbarTests.cs" />
+    <Compile Include="EditTests\ToolbarRuleTests\ToolbarRuleOpPickTests.cs" />
     <Compile Include="LinksAndImages\ParametersTestExtensions.cs" />
     <Compile Include="ServicesTests\CacheTests\CacheSpecsTests.cs" />
     <Compile Include="ServicesTests\CacheTests\CacheKeyTests.cs" />
     <Compile Include="ServicesTests\CmsService\CmsServiceTest.cs" />
+    <Compile Include="ServicesTests\CmsService\CmsServiceTestAccessors.cs" />
     <Compile Include="ServicesTests\CmsService\CmsServiceTestBase.cs" />
     <Compile Include="DataTests\DynWrappers\WrapObjDeep.cs" />
     <Compile Include="LinksAndImages\LinkImageTests\MultiResizeTests.cs" />
@@ -149,6 +161,7 @@
     <Compile Include="PageFeatures\SimpleFeatureManagement.cs" />
     <Compile Include="PageProperty\UpdatePropertyTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServicesTests\CmsService\CmsServiceImageExtractorTests.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceFormatsPatronPerfectionist.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceFormatsNoPatron.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceFormatsBase_Best.cs" />
@@ -179,6 +192,14 @@
     <Compile Include="ServicesTests\Templates\TemplatesEmptySourcesTests.cs" />
     <Compile Include="ServicesTests\Templates\TemplatesTestsBase.cs" />
     <Compile Include="ServicesTests\Templates\TemplatesEmptyTests.cs" />
+    <Compile Include="ServicesTests\ToolbarService\TweakButtonParameters.cs" />
+    <Compile Include="ServicesTests\ToolbarService\TweakButtonOther.cs" />
+    <Compile Include="ServicesTests\ToolbarService\TweakButtonTestAccessors.cs" />
+    <Compile Include="ServicesTests\ToolbarService\TweakButtonShow.cs" />
+    <Compile Include="ServicesTests\ToolbarService\TweakButtonTestsBase.cs" />
+    <Compile Include="ServicesTests\ToolbarService\TweakButtonColor.cs" />
+    <Compile Include="ServicesTests\TurnOnTests\TurnOnTestAccessors.cs" />
+    <Compile Include="ServicesTests\TurnOnTests\PickOrBuildSpecsTests.cs" />
     <Compile Include="ServiceTweaks\TweakListTests.cs" />
     <Compile Include="ServiceTweaks\CmsHtmlTweakTests.cs" />
     <Compile Include="TestBaseSxcDb.cs" />
@@ -208,6 +229,9 @@
     <Compile Include="LinksAndImages\UrlParts\UrlPartsProtocolAndDomain.cs" />
     <Compile Include="LinksAndImages\UrlParts\UrlPartsTrivial.cs" />
     <Compile Include="LinksAndImages\UrlParts\UrlPartsTestBase.cs" />
+    <Compile Include="WebLightSpeed\LightSpeedTestData.cs" />
+    <Compile Include="WebLightSpeed\LightSpeedDecoratorTests.cs" />
+    <Compile Include="WebLightSpeed\LightSpeedUrlParamsTest.cs" />
     <Compile Include="WebUrlTests\UrlValueCamelCaseTest.cs" />
     <Compile Include="WebUrlTests\UrlValueFilterTests.cs" />
   </ItemGroup>
@@ -269,10 +293,10 @@
       <Version>2.1.1</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestAdapter">
-      <Version>2.2.9</Version>
+      <Version>3.4.3</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestFramework">
-      <Version>2.2.9</Version>
+      <Version>3.4.3</Version>
     </PackageReference>
     <PackageReference Include="NETStandard.Library">
       <Version>2.0.3</Version>

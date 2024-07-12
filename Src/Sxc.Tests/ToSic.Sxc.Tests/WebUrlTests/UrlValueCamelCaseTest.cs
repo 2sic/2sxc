@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Tests.WebUrlTests
         [DataRow("originalThing", "OriginalThing", "Pascal to camel case")]
         [DataRow("oRIGINAL", "ORIGINAL", "Caps to weird case")]
         public void BasicTests(string expected, string name, string message) 
-            => Assert.AreEqual(expected, TestProcess().Process(new NameObjectSet(name, null)).Name, message);
+            => Assert.AreEqual(expected, TestProcess().Process(new(name, null)).Name, message);
 
     }
 }

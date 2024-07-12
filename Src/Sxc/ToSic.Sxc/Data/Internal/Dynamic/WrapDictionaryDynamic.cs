@@ -61,11 +61,11 @@ internal class WrapDictionaryDynamic<TKey, TVal>: DynamicObject, IWrapper<IDicti
     [PrivateApi]
     bool IHasKeys.ContainsKey(string name) => _ignoreCaseLookup.ContainsKey(name);
 
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default)//, bool? blankIs = default)
-        => !_ignoreCaseLookup.TryGetValue(name, out var result) || HasKeysHelper.IsEmpty(result, default /*blankIs*/);
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default /* ignore */)
+        => !_ignoreCaseLookup.TryGetValue(name, out var result) || HasKeysHelper.IsEmpty(result, blankIsEmpty: default);
 
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default)//, bool? blankIs = default)
-        => _ignoreCaseLookup.TryGetValue(name, out var result) && HasKeysHelper.IsNotEmpty(result, default /*blankIs*/);
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default /* ignore */)
+        => _ignoreCaseLookup.TryGetValue(name, out var result) && HasKeysHelper.IsNotEmpty(result, blankIsEmpty: default);
 
 
     IEnumerable<string> IHasKeys.Keys(NoParamOrder noParamOrder, IEnumerable<string> only) 

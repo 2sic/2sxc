@@ -31,7 +31,7 @@ public partial class XmlImportFull: XmlImportWithFiles
     public new bool ImportXml(int zoneId, int appId, XDocument doc, bool leaveExistingValuesUntouched = true)
     {
         var l = Log.Fn<bool>($"{zoneId}, {appId}, ..., {leaveExistingValuesUntouched}");
-        var ok = base.ImportXml(zoneId, appId, doc, leaveExistingValuesUntouched);
+        var ok = base.ImportXml(zoneId, appId, parentAppId: null /* not sure if we never have a parent here */, doc, leaveExistingValuesUntouched);
         if (!ok)
             return l.ReturnFalse("error");
 

@@ -1,5 +1,4 @@
 ﻿using System.Runtime.Caching;
-using ToSic.Eav.Apps.State;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Internal.Features;
 using ToSic.Lib.Services;
@@ -8,7 +7,7 @@ namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
 internal class OutputCacheManager(MemoryCacheService memoryCacheService, Lazy<IEavFeaturesService> featuresDoNotConnect) : ServiceBase(SxcLogName + ".OutputCacheManager", connect: [memoryCacheService])
 {
-    internal const string GlobalCacheRoot = "2sxc.Lightspeed.Module.";
+    internal const string GlobalCacheRoot = "Sxc-LightSpeed.Module.";
 
     internal static string Id(int moduleId, int pageId, int? userId, string view, string suffix, string currentCulture)
     {
@@ -20,22 +19,31 @@ internal class OutputCacheManager(MemoryCacheService memoryCacheService, Lazy<IE
         return id;
     }
 
-    public string Add(string cacheKey, OutputCacheItem data, int duration, List<IAppStateChanges> appStates, IList<string> appPaths, CacheEntryUpdateCallback updateCallback)
+    public string Add(string cacheKey, OutputCacheItem data, int duration, List<ICanBeCacheDependency> apps, IList<string> appPaths, CacheEntryUpdateCallback updateCallback)
     {
         var l = Log.Fn<string>($"key: {cacheKey}", timer: true);
+
+        // if we don't have a duration = 0 (which would be never expire), don't even add
+        if (duration == 0)
+            return l.ReturnAsError("duration 0, will not add");
+
         try
         {
             // Never store 0, that's like never-expire
-            if (duration == 0) duration = 1;
             var expiration = new TimeSpan(0, 0, duration);
 
-            memoryCacheService.Set(cacheKey, data,
-                slidingExpiration: expiration,
-                folderPaths: appPaths?.ToDictionary(p => p, p => true),
-                appStates: appStates,
-                featuresService: featuresDoNotConnect.Value,
-                updateCallback: updateCallback);
+            // experimental, maybe use as replacement... v17.09+
+            var policyMaker = memoryCacheService.NewPolicyMaker()
+                .SetSlidingExpiration(expiration)
+                .WatchNotifyKeys([..apps, featuresDoNotConnect.Value])
+                .WatchCallback(updateCallback);
 
+            if (appPaths?.Any() == true)
+                policyMaker = policyMaker
+                    .WatchFolders(appPaths.ToDictionary(p => p, p => true));
+
+            memoryCacheService.SetNew(cacheKey, data, policyMaker);
+            
             return l.ReturnAsOk(cacheKey);
         }
         catch

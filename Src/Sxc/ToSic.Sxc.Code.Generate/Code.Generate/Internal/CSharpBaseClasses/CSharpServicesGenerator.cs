@@ -13,9 +13,9 @@ public class CSharpServicesGenerator(IUser user, IAppStates appStates)
 {
     #region Information for the interface
 
-    public string Description => "Generates CSharp Service Base Classes in the AppCode/Services folder (WIP)";
+    public string Description => "Generates CSharp Service Base Classes in the AppCode/Services folder";
 
-    public string DescriptionHtml => $"EXPERIMENTAL The {Name} will generate <code>ServiceBase.Generated.cs</code> files in the <code>AppCode/Services</code> folder. <br> IMPORTANT: Requires that Content-Types were generated.";
+    public string DescriptionHtml => $"The {Name} will generate <code>ServiceBase.Generated.cs</code> files in the <code>AppCode/Services</code> folder. <br> IMPORTANT: Requires that Content-Types were generated.";
 
     public string OutputType => "RazorView";// "CSharpService";
 

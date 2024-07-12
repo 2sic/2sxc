@@ -12,7 +12,7 @@ internal class RecipeVariantsParser
 
     public static RecipeVariant[] ParseSet(string srcSet)
     {
-        if (string.IsNullOrWhiteSpace(srcSet)) return Array.Empty<RecipeVariant>();
+        if (string.IsNullOrWhiteSpace(srcSet)) return [];
 
         var partStrings = srcSet.Split(PartSeparator)
             .Select(s => s.Trim())

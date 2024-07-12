@@ -31,6 +31,7 @@ public interface IView: IEntityBasedType
     /// </summary>
     string Path { get; }
 
+
     [PrivateApi] string ContentType { get; }
     [PrivateApi] IEntity ContentItem { get; }
     [PrivateApi] string PresentationType { get; }
@@ -118,5 +119,11 @@ public interface IView: IEntityBasedType
     /// If empty will use all streams.
     /// CSV
     /// </summary>
-    string SearchIndexingStreams {get;}
+    string SearchIndexingStreams { get; }
+
+    /// <summary>
+    /// Inform the system that this view was replaced, e.g. because of the url-parameter
+    /// </summary>
+    [PrivateApi]
+    bool IsReplaced { get; }
 }

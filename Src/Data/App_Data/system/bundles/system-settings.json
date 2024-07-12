@@ -5822,17 +5822,132 @@
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
-                        },
-                        "Separator": {
-                          "en-us": ","
                         }
                       },
                       "Boolean": {
-                        "AllowMultiValue": {
-                          "en-us": false
-                        },
                         "EnableTextEntry": {
                           "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "Description",
+                "Type": "String",
+                "InputType": "string-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183842,
+                    "Version": 2,
+                    "Guid": "2d77478d-7f3a-4ae7-9b1b-4979b453ba50",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-default"
+                        },
+                        "Name": {
+                          "en-us": "Description"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Used to help select the right option in dropdowns.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183843,
+                    "Version": 1,
+                    "Guid": "9d0208c3-aff5-4de2-a268-68c017990a89",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183844,
+                    "Version": 1,
+                    "Guid": "515cffe6-4730-4a76-884d-0d1f5c9eae9b",
+                    "Type": {
+                      "Id": "@string-default",
+                      "Name": "@string-default"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": "monospace"
+                        }
+                      },
+                      "Number": {
+                        "RowCount": {
+                          "en-us": 1
                         }
                       }
                     },
@@ -9447,15 +9562,9 @@
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
-                        },
-                        "Separator": {
-                          "en-us": ","
                         }
                       },
                       "Boolean": {
-                        "AllowMultiValue": {
-                          "en-us": false
-                        },
                         "EnableTextEntry": {
                           "en-us": false
                         }
@@ -9887,7 +9996,7 @@
         },
         {
           "Id": 130678,
-          "Version": 25,
+          "Version": 26,
           "Guid": "358ce0df-52bf-4877-bf32-19c3fb723c73",
           "Type": {
             "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f",
@@ -9897,6 +10006,9 @@
             "String": {
               "Advanced": {
                 "en-us": "{\r\n  \"recipe\": {\r\n    \"name\": \"default\",\r\n    \"variants\": \"2*, 1*, 3/4*, 1/2*\",\r\n    \"setWidth\": false,\r\n    \"attributes\": {\r\n      \"loading\": \"lazy\"\r\n    },\r\n    \"recipes\": [\r\n      {\r\n        \"name\": \"Bootstrap3\",\r\n        \"forCss\": \"bs3\",\r\n        \"attributes\": { \"class\": \"img-responsive\" },\r\n        \"setWidth\": false\r\n      },\r\n      {\r\n        \"name\": \"Bootstrap4\",\r\n        \"forCss\": \"bs4\",\r\n        \"attributes\": { \"class\": \"img-fluid\" },\r\n        \"setWidth\": true\r\n      },\r\n      {\r\n        \"name\": \"Bootstrap5\",\r\n        \"forCss\": \"bs5\",\r\n        \"attributes\": { \"class\": \"img-fluid\" },\r\n        \"setWidth\": true,\r\n        \"setHeight\" : true,\r\n        \"recipes\": [\r\n          { \r\n            \"forFactor\": \"12/12\", \r\n            \"width\": 1230,\r\n            \"attributes\":{\r\n              \"sizes\": \"(max-width: 1400px) 100vw, 1230px\"\r\n            }\r\n          },\r\n          { \"forFactor\": \"11/12\", \"width\": 1100 },\r\n          { \"forFactor\": \"10/12\", \"width\": 1000 },\r\n          { \"forFactor\": \"9/12\", \"width\": 900 },\r\n          { \"forFactor\": \"8/12\", \"width\": 800 },\r\n          { \"forFactor\": \"7/12\", \"width\": 700 },\r\n          { \r\n            \"forFactor\": \"6/12\", \r\n            \"width\": 600, \r\n            \"attributes\": {\r\n              \"sizes\": \"(max-width: 1400px) 50vw, (max-width: 576px) 100vw, 600px\" \r\n              }\r\n          },\r\n          { \"forFactor\": \"5/12\", \"width\": 500 },\r\n          { \r\n            \"forFactor\": \"4/12\", \r\n            \"width\": 390,\r\n            \"attributes\":{\r\n              \"sizes\": \"(max-width: 1400px) 34vw, (max-width: 991px) 50vw, (max-width: 575px) 100vw, 390px\"\r\n            }\r\n           },\r\n          { \r\n            \"forFactor\": \"3/12\", \r\n            \"width\": 285,\r\n            \"attributes\": {\r\n              \"sizes\": \"(max-width: 1400px) 25vw, (max-width: 991px) 50vw, (max-width: 575px) 100vw, 285px\"\r\n              }\r\n          },\r\n          { \"forFactor\": \"2/12\", \"width\": 170 },\r\n          { \"forFactor\": \"1/12\", \"width\":  75 }\r\n        ]\r\n      }\r\n    ]\r\n  }\r\n}"
+              },
+              "Description": {
+                "en-us": "Standard image sizes / aspect-ratios, usually the default for most pictures."
               },
               "Format": {
                 "en-us": ""
@@ -9959,7 +10071,7 @@
         },
         {
           "Id": 130679,
-          "Version": 14,
+          "Version": 15,
           "Guid": "35d4e680-2f92-455a-90b7-4a5a936c287f",
           "Type": {
             "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f",
@@ -9969,6 +10081,9 @@
             "String": {
               "Advanced": {
                 "en-us": "{\r\n  \"recipe\": {\r\n    \"name\": \"default\",\r\n    \"variants\": \"2*, 1/1*, 3/4*, 1/2*\",\r\n    \"setWidth\": false\r\n  }\r\n}"
+              },
+              "Description": {
+                "en-us": "Large images in lightbox popups."
               },
               "Format": {
                 "en-us": ""
@@ -10031,7 +10146,7 @@
         },
         {
           "Id": 130680,
-          "Version": 15,
+          "Version": 16,
           "Guid": "bdbff289-219d-46d6-b697-5d17050eebe9",
           "Type": {
             "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f",
@@ -10041,6 +10156,9 @@
             "String": {
               "Advanced": {
                 "en-us": "{\r\n  \"recipe\": {\r\n    \"name\": \"default\",\r\n    \"variants\": \"3000, 2400, 1600, 1200, 800\",\r\n    \"setWidth\": false\r\n  }\r\n}"
+              },
+              "Description": {
+                "en-us": "Typically used for the background behind content, e.g. for parallax effects. "
               },
               "Format": {
                 "en-us": ""
@@ -10103,7 +10221,7 @@
         },
         {
           "Id": 130681,
-          "Version": 18,
+          "Version": 19,
           "Guid": "8affa267-ec04-408f-af93-48c0ae693e5c",
           "Type": {
             "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f",
@@ -10113,6 +10231,9 @@
             "String": {
               "Advanced": {
                 "en-us": "{\r\n  \"recipe\": {\r\n    \"name\": \"default\",\r\n    \"variants\": \"3000, 2400, 1600, 1200, 800\",\r\n    \"setWidth\": false\r\n  }\r\n}"
+              },
+              "Description": {
+                "en-us": "Full-screen images."
               },
               "Format": {
                 "en-us": ""
@@ -10595,7 +10716,7 @@
         },
         {
           "Id": 169969,
-          "Version": 1,
+          "Version": 2,
           "Guid": "8c454005-9a76-48b2-a63d-7e92a731bb80",
           "Type": {
             "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f",
@@ -10605,6 +10726,9 @@
             "String": {
               "Advanced": {
                 "en-us": "{\r\n  \"recipe\": {\r\n    \"name\": \"default\",\r\n    \"variants\": \"2*, 1*, 3/4*, 1/2*\",\r\n    \"setWidth\": false,\r\n    \"attributes\": {\r\n      \"loading\": \"lazy\"\r\n    },\r\n    \"recipes\": [\r\n      {\r\n        \"name\": \"Bootstrap3\",\r\n        \"forCss\": \"bs3\",\r\n        \"attributes\": { \"class\": \"img-responsive\" },\r\n        \"setWidth\": false\r\n      },\r\n      {\r\n        \"name\": \"Bootstrap4\",\r\n        \"forCss\": \"bs4\",\r\n        \"attributes\": { \"class\": \"img-fluid\" },\r\n        \"setWidth\": true\r\n      },\r\n      {\r\n        \"name\": \"Bootstrap5\",\r\n        \"forCss\": \"bs5\",\r\n        \"attributes\": { \"class\": \"img-fluid\" },\r\n        \"setWidth\": true,\r\n        \"setHeight\" : true,\r\n        \"recipes\": [\r\n          { \r\n            \"forFactor\": \"12/12\", \r\n            \"width\": 1230,\r\n            \"attributes\":{\r\n              \"sizes\": \"(max-width: 1400px) 100vw, 1230px\"\r\n            }\r\n          },\r\n          { \"forFactor\": \"11/12\", \"width\": 1100 },\r\n          { \"forFactor\": \"10/12\", \"width\": 1000 },\r\n          { \"forFactor\": \"9/12\", \"width\": 900 },\r\n          { \"forFactor\": \"8/12\", \"width\": 800 },\r\n          { \"forFactor\": \"7/12\", \"width\": 700 },\r\n          { \r\n            \"forFactor\": \"6/12\", \r\n            \"width\": 600, \r\n            \"attributes\": {\r\n              \"sizes\": \"(max-width: 1400px) 50vw, (max-width: 576px) 100vw, 600px\" \r\n              }\r\n          },\r\n          { \"forFactor\": \"5/12\", \"width\": 500 },\r\n          { \r\n            \"forFactor\": \"4/12\", \r\n            \"width\": 390,\r\n            \"attributes\":{\r\n              \"sizes\": \"(max-width: 1400px) 34vw, (max-width: 991px) 50vw, (max-width: 575px) 100vw, 390px\"\r\n            }\r\n           },\r\n          { \r\n            \"forFactor\": \"3/12\", \r\n            \"width\": 285,\r\n            \"attributes\": {\r\n              \"sizes\": \"(max-width: 1400px) 25vw, (max-width: 991px) 50vw, (max-width: 575px) 100vw, 285px\"\r\n              }\r\n          },\r\n          { \"forFactor\": \"2/12\", \"width\": 170 },\r\n          { \"forFactor\": \"1/12\", \"width\":  75 }\r\n        ]\r\n      }\r\n    ]\r\n  }\r\n}"
+              },
+              "Description": {
+                "en-us": "Recommended for auto-resizing images shown in wysiwyg content - eg. in blogs."
               },
               "Format": {
                 "en-us": ""
@@ -10664,7 +10788,7 @@
         },
         {
           "Id": 175300,
-          "Version": 1,
+          "Version": 2,
           "Guid": "6c155e30-43a4-4564-bf3f-0d80c925c4d7",
           "Type": {
             "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f",
@@ -10674,6 +10798,9 @@
             "String": {
               "Advanced": {
                 "en-us": "{\r\n  \"recipe\": {\r\n    \"name\": \"default\",\r\n    \"variants\": \"2*, 1*, 3/4*, 1/2*\",\r\n    \"setWidth\": false,\r\n    \"attributes\": {\r\n      \"loading\": \"lazy\"\r\n    },\r\n    \"recipes\": [\r\n      {\r\n        \"name\": \"Bootstrap3\",\r\n        \"forCss\": \"bs3\",\r\n        \"attributes\": { \"class\": \"img-responsive\" },\r\n        \"setWidth\": false\r\n      },\r\n      {\r\n        \"name\": \"Bootstrap4\",\r\n        \"forCss\": \"bs4\",\r\n        \"attributes\": { \"class\": \"img-fluid\" },\r\n        \"setWidth\": true\r\n      },\r\n      {\r\n        \"name\": \"Bootstrap5\",\r\n        \"forCss\": \"bs5\",\r\n        \"attributes\": { \"class\": \"img-fluid\" },\r\n        \"setWidth\": true,\r\n        \"setHeight\" : true,\r\n        \"recipes\": [\r\n          { \r\n            \"forFactor\": \"12/12\", \r\n            \"width\": 1230,\r\n            \"attributes\":{\r\n              \"sizes\": \"(max-width: 1400px) 100vw, 1230px\"\r\n            }\r\n          },\r\n          { \"forFactor\": \"11/12\", \"width\": 1100 },\r\n          { \"forFactor\": \"10/12\", \"width\": 1000 },\r\n          { \"forFactor\": \"9/12\", \"width\": 900 },\r\n          { \"forFactor\": \"8/12\", \"width\": 800 },\r\n          { \"forFactor\": \"7/12\", \"width\": 700 },\r\n          { \r\n            \"forFactor\": \"6/12\", \r\n            \"width\": 600, \r\n            \"attributes\": {\r\n              \"sizes\": \"(max-width: 1400px) 50vw, (max-width: 576px) 100vw, 600px\" \r\n              }\r\n          },\r\n          { \"forFactor\": \"5/12\", \"width\": 500 },\r\n          { \r\n            \"forFactor\": \"4/12\", \r\n            \"width\": 390,\r\n            \"attributes\":{\r\n              \"sizes\": \"(max-width: 1400px) 34vw, (max-width: 991px) 50vw, (max-width: 575px) 100vw, 390px\"\r\n            }\r\n           },\r\n          { \r\n            \"forFactor\": \"3/12\", \r\n            \"width\": 285,\r\n            \"attributes\": {\r\n              \"sizes\": \"(max-width: 1400px) 25vw, (max-width: 991px) 50vw, (max-width: 575px) 100vw, 285px\"\r\n              }\r\n          },\r\n          { \"forFactor\": \"2/12\", \"width\": 170 },\r\n          { \"forFactor\": \"1/12\", \"width\":  75 }\r\n        ]\r\n      }\r\n    ]\r\n  }\r\n}"
+              },
+              "Description": {
+                "en-us": "Square images such as profile pictures."
               },
               "Format": {
                 "en-us": ""

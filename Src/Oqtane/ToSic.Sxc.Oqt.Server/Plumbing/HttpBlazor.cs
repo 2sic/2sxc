@@ -22,22 +22,23 @@ internal class HttpBlazor : HttpAbstractionBase, IHttp
     public HttpBlazor(IHttpContextAccessor contextAccessor, NavigationManager navigationManager)
     {
         _navigationManager = navigationManager;
-        Current = contextAccessor.HttpContext;
+        Current = contextAccessor?.HttpContext;
     }
 
     public override NameValueCollection QueryStringParams
     {
         get
         {
-            if (_queryStringValues != null) return _queryStringValues;
+            // caching is disabled because in Blazor Interactive the query string parameters are changed after the page is created
+            //if (_queryStringValues != null) return _queryStringValues;
 
             // this must behave differently in an API call, as the navigation manager will not be initialized
             // but all the params will really be in the query
-            if (Current.Request.Path.Value?.Contains("_blazor") == false)
+            if (Current?.Request?.Path.Value?.Contains("_blazor") == false)
             {
                 var paramList = new NameValueCollection();
                 Current.Request.Query.ToList().ForEach(i => paramList.Add(i.Key, i.Value));
-                return _queryStringValues = FilterOutOqtaneParams(paramList);
+                return /*_queryStringValues = */FilterOutOqtaneParams(paramList);
             }
             else
             {
@@ -47,16 +48,16 @@ internal class HttpBlazor : HttpAbstractionBase, IHttp
                 var queryBits = QueryHelpers.ParseQuery(uri.Query);
                     
                 if (!queryBits.Any()) 
-                    return _queryStringValues = [];
+                    return /*_queryStringValues = */[];
 
                 var paramList = new NameValueCollection();
                 queryBits.ToList().ForEach(i => paramList.Add(i.Key, i.Value));
-                return _queryStringValues = FilterOutOqtaneParams(paramList);
+                return /*_queryStringValues = */FilterOutOqtaneParams(paramList);
             }
         }
     }
 
-    private NameValueCollection _queryStringValues;
+    //private NameValueCollection _queryStringValues;
 
     private NameValueCollection FilterOutOqtaneParams(NameValueCollection original)
     {

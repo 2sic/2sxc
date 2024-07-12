@@ -1,6 +1,7 @@
 ﻿using DotNetNuke.Entities.Modules;
 using System.Linq;
 using System.Web.UI;
+using ToSic.Eav.StartUp;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks.Internal;
@@ -16,6 +17,15 @@ namespace ToSic.Sxc.Dnn;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public partial class View : PortalModuleBase, IActionable
 {
+    private static bool _loggedToBootLog;
+
+    public View()
+    {
+        if (_loggedToBootLog) return;
+        _loggedToBootLog = true;
+        BootLog.Log.A("Dnn: First moment where View was used.");
+    }
+
     #region GetService and Service Provider
 
     /// <summary>
@@ -37,7 +47,8 @@ public partial class View : PortalModuleBase, IActionable
 
     #region Logging
 
-    private ILog Log { get; } = new Log("Sxc.View");
+    private ILog Log => _log ??= new Log("Sxc.View"); // delay creating until first use to really just track our time
+    private ILog _log;
     private LogStoreEntry _logInStore;
 
     protected ILogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"Module: '{ModuleConfiguration.ModuleTitle}'"));

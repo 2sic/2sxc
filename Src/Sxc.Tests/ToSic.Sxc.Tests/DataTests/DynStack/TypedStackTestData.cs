@@ -16,10 +16,10 @@ namespace ToSic.Sxc.Tests.DataTests.DynStack
         };
         public static List<PropInfo> Anon1PropInfo => new()
         {
-            new PropInfo("Key1", true, true, "hello"),
-            new PropInfo("Key2", true, true, "goodbye"),
-            new PropInfo("Deep1", true, true),
-            new PropInfo("Deep1.Sub1", true, true, "hello"),
+            new("Key1", true, true, "hello"),
+            new("Key2", true, true, "goodbye"),
+            new("Deep1", true, true),
+            new("Deep1.Sub1", true, true, "hello"),
         };
 
         public static object Anon2 => new
@@ -41,17 +41,17 @@ namespace ToSic.Sxc.Tests.DataTests.DynStack
 
         public static List<PropInfo> StackOrder12PropInfo => new()
         {
-            new PropInfo("Key1", true, true, "hello"),
-            new PropInfo("dummy", false),
-            new PropInfo("Part1", true, hasData: true, value: "part1-text"),
-            new PropInfo("Deep1", true, hasData: true, value: ValueNotTestable),
-            new PropInfo("Deep1.Sub1", true, true, "hello deep1.sub"),
-            new PropInfo("Deep", true, hasData : true, value: ValueNotTestable),
-            new PropInfo("Deep.Deeper", true, hasData : true, value: ValueNotTestable),
-            new PropInfo("Deep.NotDeeper", false),
-            new PropInfo("Deep.NotDeeper.ReallyNot", false),
-            new PropInfo("Deep.Deeper.Value", true, hasData : true, value: "hello deep.deeper.value"),
-            new PropInfo("Deep.Deeper.NotValue", false)
+            new("Key1", true, true, "hello"),
+            new("dummy", false),
+            new("Part1", true, hasData: true, value: "part1-text"),
+            new("Deep1", true, hasData: true, value: ValueNotTestable),
+            new("Deep1.Sub1", true, true, "hello deep1.sub"),
+            new("Deep", true, hasData : true, value: ValueNotTestable),
+            new("Deep.Deeper", true, hasData : true, value: ValueNotTestable),
+            new("Deep.NotDeeper", false),
+            new("Deep.NotDeeper.ReallyNot", false),
+            new("Deep.Deeper.Value", true, hasData : true, value: "hello deep.deeper.value"),
+            new("Deep.Deeper.NotValue", false)
         };
 
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.Web.PageService;
+using ToSic.Sxc.Web;
+
 #pragma warning disable CS0618
 #pragma warning disable CS0612
 

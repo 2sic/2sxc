@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Plumbing;
+﻿using System.Text.Json.Serialization;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
@@ -23,11 +24,11 @@ internal partial class Metadata: ITypedItem
             (e, k) => e.Children(k)?.FirstOrDefault()
         );
 
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default)
-        => ItemHelper.IsEmpty(name, noParamOrder, default);
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+        => ItemHelper.IsEmpty(name, noParamOrder, isBlank: default, language: language);
 
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default)
-        => ItemHelper.IsFilled(name, noParamOrder, default);
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+        => ItemHelper.IsNotEmpty(name, noParamOrder, isBlank: default, language: language);
 
     [PrivateApi]
     public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default)
@@ -37,59 +38,47 @@ internal partial class Metadata: ITypedItem
 
     #region ITyped
 
-    [PrivateApi]
-    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required)
-        => ItemHelper.Get(name, noParamOrder, required);
+    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string language)
+        => ItemHelper.Get(name: name, noParamOrder: noParamOrder, required: required, language: language);
 
-    [PrivateApi]
-    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required)
-        => ItemHelper.G4T(name, noParamOrder, fallback: fallback, required: required);
+    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string language)
+        => ItemHelper.GetT(name, noParamOrder, fallback: fallback, required: required, language: language);
 
-    [PrivateApi]
     IRawHtmlString ITyped.Attribute(string name, NoParamOrder noParamOrder, string fallback, bool? required)
         => ItemHelper.Attribute(name, noParamOrder, fallback, required);
 
     [PrivateApi]
+    [JsonIgnore]
     dynamic ITypedItem.Dyn => this;
 
 
-    [PrivateApi]
     DateTime ITyped.DateTime(string name, NoParamOrder noParamOrder, DateTime fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     string ITyped.String(string name, NoParamOrder noParamOrder, string fallback, bool? required, object scrubHtml)
         => ItemHelper.String(name, noParamOrder, fallback, required, scrubHtml);
 
-    [PrivateApi]
     int ITyped.Int(string name, NoParamOrder noParamOrder, int fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     bool ITyped.Bool(string name, NoParamOrder noParamOrder, bool fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     long ITyped.Long(string name, NoParamOrder noParamOrder, long fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     float ITyped.Float(string name, NoParamOrder noParamOrder, float fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     decimal ITyped.Decimal(string name, NoParamOrder noParamOrder, decimal fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     double ITyped.Double(string name, NoParamOrder noParamOrder, double fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     string ITyped.Url(string name, NoParamOrder noParamOrder, string fallback, bool? required)
         => ItemHelper.Url(name, noParamOrder, fallback, required);
 
-    [PrivateApi]
     string ITyped.ToString() => "test / debug: " + ToString();
 
     #endregion
@@ -130,9 +119,11 @@ internal partial class Metadata: ITypedItem
 
     /// <inheritdoc />
     [PrivateApi]
+    [JsonIgnore]
     ITypedItem ITypedItem.Presentation => throw new NotSupportedException($"You can't access the {nameof(Presentation)} of Metadata");
 
     /// <inheritdoc />
+    [JsonIgnore] // prevent serialization as it's not a normal property
     IMetadata ITypedItem.Metadata => throw new NotSupportedException($"You can't access the Metadata of Metadata in ITypedItem");
 
     [PrivateApi]
@@ -155,7 +146,7 @@ internal partial class Metadata: ITypedItem
             .FirstOrDefault(l => l.SafeAny());
         if (parents == null) return new List<ITypedItem>(0);
 
-        var list = Cdf.AsItems(parents).ToList();
+        var list = Cdf.EntitiesToItems(parents).ToList();
         return list.Any() ? list : [];
     }
 
@@ -172,16 +163,15 @@ internal partial class Metadata: ITypedItem
 
         // Exit if no metadata items available to get children from
         var mdEntities = _metadata.ToList();
-        if (!mdEntities.Any()) return new List<ITypedItem>(0);
+        if (!mdEntities.Any()) return [];
 
         // Get children from first metadata item which matches the criteria
         var children = mdEntities
             .Select(e => e.Children(field: field, type: type)?.ToList())
             .FirstOrDefault(l => l.SafeAny());
-        if (children == null) return new List<ITypedItem>(0);
+        if (children == null) return [];
 
-        var list = Cdf.AsItems(children).ToList();
-        return list.Any() ? list : [];
+        return Cdf.EntitiesToItems(children).ToList();
     }
 
     /// <inheritdoc />
@@ -202,7 +192,9 @@ internal partial class Metadata: ITypedItem
     /// <inheritdoc />
     IEnumerable<T> ITypedItem.Children<T>(string field, NoParamOrder protector, string type, bool? required)
         => Cdf.AsCustomList<T>(
-            source: (this as ITypedItem).Children(field: field, noParamOrder: protector, type: type, required: required), protector: protector, nullIfNull: false
+            source: (this as ITypedItem).Children(field: field, noParamOrder: protector, type: type, required: required),
+            protector: protector,
+            nullIfNull: false
         );
 
     /// <inheritdoc />
@@ -214,7 +206,9 @@ internal partial class Metadata: ITypedItem
     /// <inheritdoc />
     IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string type, string field)
         => Cdf.AsCustomList<T>(
-            source: (this as ITypedItem).Parents(noParamOrder: protector, field: field, type: type ?? typeof(T).Name), protector: protector, nullIfNull: false
+            source: (this as ITypedItem).Parents(noParamOrder: protector, field: field, type: type ?? typeof(T).Name),
+            protector: protector,
+            nullIfNull: false
         );
 
     #endregion

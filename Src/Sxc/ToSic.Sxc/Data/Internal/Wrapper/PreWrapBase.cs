@@ -62,7 +62,7 @@ internal abstract class PreWrapBase(object data) : IWrapper<object>, IHasJsonSou
     {
         path = path.KeepOrNew().Add($"PreWrap.{GetType()}", specs.Field);
         var result = TryGetWrap(specs.Field, true).Result;
-        return new(result: result, fieldType: Attributes.FieldIsDynamic, path: path) { Source = this, Name = "dynamic" };
+        return new(result: result, valueType: ValueTypesWithState.Dynamic, path: path) { Source = this, Name = "dynamic" };
     }
 
     #endregion
