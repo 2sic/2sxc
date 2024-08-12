@@ -242,8 +242,6 @@ public partial class Index : ModuleProBase
         Log($"Get html and other view resources from server");
         var viewResults = await OqtSxcRenderService.RenderAsync(@params);
 
-        viewResults.ErrorMessage += NotificationForInteractiveServerMode();
-
         if (!string.IsNullOrEmpty(viewResults?.ErrorMessage))
             LogError(viewResults.ErrorMessage);
 
@@ -254,13 +252,6 @@ public partial class Index : ModuleProBase
             viewResults.PrerenderHtml = OqtPrerenderService.GetPrerenderHtml(@params.PreRender, viewResults, SiteState, ThemeType);
 
         return viewResults;
-    }
-
-    private string NotificationForInteractiveServerMode()
-    {
-        if (IsSuperUser && PageState.RenderMode == RenderModes.Interactive && PageState.Runtime == Runtime.Server)
-            return "Issue with <strong>Interactive</strong> Render Mode in Oqtane 5.1.2. For info navigate to <a href=\"https://go.2sxc.org/oqt-512\" target=\"_blank\">https://go.2sxc.org/oqt-512</a>.\n";
-        return string.Empty;
     }
 
     #region Theme

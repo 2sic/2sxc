@@ -26,21 +26,18 @@ internal class OqtLinkService : LinkServiceBase
     public Razor12 RazorPage { get; set; }
     private readonly IPageRepository _pageRepository;
     private readonly AliasResolver _aliasResolver;
-    private readonly LazySvc<IAliasRepository> _aliasRepositoryLazy;
     private IContextOfBlock _context;
 
     public OqtLinkService(
         IPageRepository pageRepository,
         AliasResolver aliasResolver,
         ImgResizeLinker imgLinker,
-        LazySvc<ILinkPaths> linkPathsLazy,
-        LazySvc<IAliasRepository> aliasRepositoryLazy
+        LazySvc<ILinkPaths> linkPathsLazy
     ) : base(imgLinker, linkPathsLazy)
     {
         ConnectLogs([
             _pageRepository = pageRepository,
-            _aliasResolver = aliasResolver,
-            _aliasRepositoryLazy = aliasRepositoryLazy
+            _aliasResolver = aliasResolver
         ]);
     }
 
@@ -96,15 +93,9 @@ internal class OqtLinkService : LinkServiceBase
 
     private string PageUrlBuilder(Page page, string parameters, bool absoluteUrl)
     {
-        var alias = _aliasRepositoryLazy.Value.GetAliases()
-            .OrderByDescending(a => /*a.IsDefault*/
-                a.Name.Length) // TODO: a.IsDefault DESC after upgrade to Oqt v3.0.3+
-            //.ThenByDescending(a => a.Name.Length)
-            .ThenBy(a => a.Name)
-            .FirstOrDefault(a => a.SiteId == page.SiteId);
-
-        if (alias == null)
-            throw new($"Error, Alias is unknown, pageId: {page.PageId}, siteId: {page.SiteId}.");
+        _aliasResolver.InitIfEmpty(page.SiteId);
+        var alias = _aliasResolver.Alias 
+            ?? throw new($"Error, Alias is unknown, pageId: {page.PageId}, siteId: {page.SiteId}."); 
 
         // for invalid page numbers just skip that part 
         var relativePath =
