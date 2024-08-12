@@ -95,9 +95,11 @@ public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBase
         var b = CropBehavior;
         if (b != ToCrop) return (null, null);
         var direction = CropTo;
-        if(string.IsNullOrWhiteSpace(direction)) return (null, null);
+        if (string.IsNullOrWhiteSpace(direction)) return (null, null);
+
         var dirLong = ResolveCompass(direction);
         if (string.IsNullOrWhiteSpace(dirLong)) return (null, null);
+
         return ("anchor", dirLong);
     }
 

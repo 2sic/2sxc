@@ -59,7 +59,7 @@ public interface IField: IHasLink, IHasMetadata
     new IMetadata Metadata { get; }
 
 
-    [PrivateApi("Internal use only, may change at any time")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    ImageDecorator ImageDecoratorOrNull { get; }
+    //[PrivateApi("Internal use only, may change at any time")]
+    //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    //ImageDecorator ImageDecoratorOrNull { get; }
 }

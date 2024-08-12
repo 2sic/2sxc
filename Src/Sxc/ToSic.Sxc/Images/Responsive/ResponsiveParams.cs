@@ -41,18 +41,28 @@ internal class ResponsiveParams(ResponsiveParams.PreparedResponsiveParams prepar
 
     internal static PreparedResponsiveParams Prepare(object target)
     {
+        // Handle null and already-typed scenarios
         switch (target)
         {
             case null: return new(null, null, null, null, null);
             case PreparedResponsiveParams already: return already;
         }
 
+        // Figure out what field it's from - either because it's a hyperlink - or an image inside a WYSIWYG field
         var field = target as IField ?? (target as IFromField)?.Field;
-        var link = target as IHasLink ?? new HasLink(target as string);
-        var mdProvider = target as IHasMetadata ?? field;
-        var imgDecorator = field?.ImageDecoratorOrNull ?? ImageDecorator.GetOrNull(mdProvider, []);
 
+        // The main Metadata provider is either the target itself, or the field holding it (can be null)
+        var mdProvider = target as IHasMetadata ?? field;
+
+        // The primary decorator - either of the field (e.g. Hyperlink-field with recommendations etc.)
+        // or using the metadata-provider of the target
+        var imgDecorator = (field as Field)?.ImageDecoratorOrNull ?? ImageDecorator.GetOrNull(mdProvider, []);
+
+        // get the image decorator of the field of the content-type - e.g. the WYSIWYG field or Hyperlink field
         var inputImgDecorator = ImageDecorator.GetOrNull(field?.Parent.Type[field.Name], []);
+
+        // figure out the link - either because it's already an IHasLink object, or it's possibly a string (or null-link)
+        var link = target as IHasLink ?? new HasLink(target as string);
 
         return new(field, mdProvider, imgDecorator, link, inputImgDecorator);
     }

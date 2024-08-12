@@ -45,20 +45,30 @@ public class Field(ITypedItem parent, string name, CodeDataFactory cdf) : IField
     }
     private readonly GetOnce<string> _url = new();
 
-
-    // 2023-08-14 v16.03 removed by 2dm as never used; KISS
+    /// <summary>
+    /// The Dynamic metadata - probably used somewhere...?
+    /// 2023-08-14 v16.03 removed by 2dm as never used; KISS
+    /// ...but reactivated for some reason I don't know...
+    /// </summary>
     public IMetadata Metadata => _dynMeta.Get(() => new Metadata.Metadata(MetadataOfValue, cdf));
     private readonly GetOnce<IMetadata> _dynMeta = new();
 
 
     private IMetadataOf MetadataOfValue => _itemMd.Get(() =>
     {
-        if (Raw is not string rawString || string.IsNullOrWhiteSpace(rawString))
+        // Check if string is valid, and also a valid reference like file:742
+        if (Raw is not string rawString
+            || string.IsNullOrWhiteSpace(rawString)
+            || !ValueConverterBase.CouldBeReference(rawString))
             return null;
+
+        // Get AppState to retrieve metadata - but exit early if we don't have it
         var appState = cdf?.BlockOrNull?.Context?.AppState;
-        var md = appState?.GetMetadataOf(TargetTypes.CmsItem, rawString, "");
-        ImageDecorator.AddRecommendations(md, Url, cdf?._CodeApiSvc); // needs the url so it can check if we use image recommendations
-        return md;
+        if (appState == null) return null;
+
+        var mdOf = appState.GetMetadataOf(TargetTypes.CmsItem, rawString, "");
+        ImageDecorator.AddRecommendations(mdOf, Url, cdf?._CodeApiSvc); // needs the url so it can check if we use image recommendations
+        return mdOf;
     });
     private readonly GetOnce<IMetadataOf> _itemMd = new();
 
