@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!--<TargetFrameworks>net472;netstandard2.0;net8.0;</TargetFrameworks>-->
-    <TargetFrameworks>net472;net8.0;</TargetFrameworks>
+    <!--<TargetFrameworks>net481;netstandard2.0;net8.0;</TargetFrameworks>-->
+    <TargetFrameworks>net481;net8.0;</TargetFrameworks>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <RootNamespace>ToSic.Sxc</RootNamespace>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
     <FileAlignment>512</FileAlignment>
@@ -45,7 +46,7 @@
     <ProjectReference Include="..\ToSic.Sxc\ToSic.Sxc.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Web" />
     <Reference Include="ToSic.Razor">

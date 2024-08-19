@@ -13,8 +13,8 @@
     <RootNamespace>ToSic.Sxc.Dnn</RootNamespace>
     <AssemblyName>ToSic.Sxc.Dnn</AssemblyName>
     <OldToolsVersion>4.0</OldToolsVersion>
-    <TargetFramework>net472</TargetFramework>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFramework>net481</TargetFramework>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <!-- 2024-02-16 2dm - seem to be very old Source Control tags, disabled. if all is ok, remove 2024-04+ https://stackoverflow.com/questions/56859076/do-csproj-files-in-git-need-xml-tags-sccprojectname-scclocalpath-sccauxpath-s -->
     <!--<SccProjectName>SAK</SccProjectName>
@@ -150,12 +150,12 @@
     </Reference>
     <Reference Include="ToSic.Razor">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net40\ToSic.Razor.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net472\ToSic.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="ToSic.Razor.Dnn">
+    <!--<Reference Include="ToSic.Razor.Dnn">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net40\ToSic.Razor.Dnn.dll</HintPath>
-    </Reference>
+      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net472\ToSic.Razor.Dnn.dll</HintPath>
+    </Reference>-->
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">
@@ -178,6 +178,7 @@
       <Project>{bc93efb1-d740-4617-9c90-d9167f9e4545}</Project>
       <Name>ToSic.Lib.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Dnn.WebApi\ToSic.Sxc.Dnn.WebApi.csproj">
       <Project>{8398fe44-7164-48cb-96cf-74ba9c270bd2}</Project>
       <Name>ToSic.Sxc.Dnn.WebApi</Name>
@@ -189,11 +190,6 @@
     <ProjectReference Include="..\ToSic.Sxc.Dnn.Razor\ToSic.Sxc.Dnn.Razor.csproj">
       <Project>{78a558af-f274-4e3c-95fe-8de9226e0ebc}</Project>
       <Name>ToSic.Sxc.Dnn.Razor</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj">
-      <Project>{5d87eb0c-bf67-4814-a0ff-d96256c9b852}</Project>
-      <Name>ToSic.Sxc</Name>
-      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj">
       <Project>{80d15f35-334b-4c7c-af94-b0ff1e6cc354}</Project>

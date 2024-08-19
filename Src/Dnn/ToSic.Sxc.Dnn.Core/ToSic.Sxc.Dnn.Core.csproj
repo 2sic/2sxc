@@ -7,8 +7,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>ToSic.Sxc.Dnn.Core</AssemblyName>
-    <TargetFramework>net472</TargetFramework>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFramework>net481</TargetFramework>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <Deterministic>true</Deterministic>
@@ -157,9 +157,6 @@
       <Project>{80d15f35-334b-4c7c-af94-b0ff1e6cc354}</Project>
       <Name>ToSic.Sxc.WebApi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj">
-      <Project>{5D87EB0C-BF67-4814-A0FF-D96256C9B852}</Project>
-      <Name>ToSic.Sxc</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
   </ItemGroup>
 </Project>

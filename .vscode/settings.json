@@ -4,5 +4,6 @@
   },
   "cSpell.words": [
     "Oqtane"
-  ]
+  ],
+  "dotnet.defaultSolution": "Src/2sxc Multi-Target.sln"
 }
