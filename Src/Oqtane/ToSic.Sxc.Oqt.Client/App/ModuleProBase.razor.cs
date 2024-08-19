@@ -19,7 +19,7 @@ using ToSic.Sxc.Oqt.Shared.Interfaces;
 namespace ToSic.Sxc.Oqt.App;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ModuleProBase: ModuleBase, IOqtHybridLog
+public abstract class ModuleProBase: ModuleBase, IOqtHybridLog
 {
     #region Injected Services
 
