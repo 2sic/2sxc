@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using System.CodeDom.Compiler;
 using System.IO;
+using ToSic.Eav.Internal.Configuration;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Dnn.Compile;
 
@@ -8,23 +9,9 @@ using ToSic.Sxc.Dnn.Compile;
 namespace ToSic.Sxc.Code;
 
 [PrivateApi]
-internal class AppCodeCompilerNetFull : AppCodeCompiler
+internal class AppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironment, IReferencedAssembliesProvider referencedAssembliesProvider, IGlobalConfiguration globalConfiguration)
+    : AppCodeCompiler(globalConfiguration, connect: [hostingEnvironment, referencedAssembliesProvider])
 {
-
-    private readonly IHostingEnvironmentWrapper _hostingEnvironment;
-    private readonly IReferencedAssembliesProvider _referencedAssembliesProvider;
-
-    public AppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironment, IReferencedAssembliesProvider referencedAssembliesProvider)
-    {
-        ConnectLogs([
-            _hostingEnvironment = hostingEnvironment,
-            _referencedAssembliesProvider = referencedAssembliesProvider
-        ]);
-
-        TempAssemblyFolderPath = Path.Combine(_hostingEnvironment.MapPath("~/App_Data"), "2sxc.bin");
-        // Ensure "2sxc.bin" folder exists to preserve dlls
-        Directory.CreateDirectory(TempAssemblyFolderPath);
-    }
 
     protected internal override AssemblyResult GetAppCode(string relativePath, HotBuildSpec spec)
     {
@@ -37,7 +24,7 @@ internal class AppCodeCompilerNetFull : AppCodeCompiler
             _spec = spec;
 
             // Get all C# files in the folder
-            var sourceFiles = GetSourceFiles(NormalizeFullPath(_hostingEnvironment.MapPath(relativePath)));
+            var sourceFiles = GetSourceFiles(NormalizeFullPath(hostingEnvironment.MapPath(relativePath)));
             if (sourceFiles.Length == 0)
                 return l.ReturnAsOk(new());
 
@@ -103,7 +90,7 @@ internal class AppCodeCompilerNetFull : AppCodeCompiler
             };
 
         // Add all referenced assemblies
-        parameters.ReferencedAssemblies.AddRange(_referencedAssembliesProvider.Locations(_relativePath, _spec).ToArray());
+        parameters.ReferencedAssemblies.AddRange(referencedAssembliesProvider.Locations(_relativePath, _spec).ToArray());
 
         var codeProvider = new CSharpCodeProvider();
         var compilerResults = codeProvider.CompileAssemblyFromFile(parameters, sourceFiles);

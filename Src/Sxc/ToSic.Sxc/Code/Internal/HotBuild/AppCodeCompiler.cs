@@ -1,18 +1,17 @@
 ﻿using System.IO;
 using System.Reflection;
+using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class AppCodeCompiler() : ServiceBase("Sxc.MyApCd")
+public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, object[] connect = default) : ServiceBase("Sxc.MyApCd", connect: connect)
 {
     public const string CsFiles = ".cs";
     public const bool UseSubfolders = true;
     public const string AppCodeDll = "AppCode.dll";
-
-    protected string TempAssemblyFolderPath;
 
     protected internal abstract AssemblyResult GetAppCode(string relativePath, HotBuildSpec spec);
 
@@ -96,14 +95,14 @@ public abstract class AppCodeCompiler() : ServiceBase("Sxc.MyApCd")
     protected (string SymbolsPath, string AssemblyPath) GetAssemblyLocations(HotBuildSpec spec)
     {
         var l = Log.Fn<(string, string)>($"{spec}");
-        l.A($"TempAssemblyFolderPath: '{TempAssemblyFolderPath}'");
+        l.A($"TempAssemblyFolderPath: '{globalConfiguration.TempAssemblyFolder}'");
 
         // need name 
-        var assemblyName = GetAppCodeDllName(TempAssemblyFolderPath, spec);
+        var assemblyName = GetAppCodeDllName(globalConfiguration.TempAssemblyFolder, spec);
         l.A($"AssemblyName: '{assemblyName}'");
-        var assemblyFilePath = Path.Combine(TempAssemblyFolderPath, $"{assemblyName}.dll");
+        var assemblyFilePath = Path.Combine(globalConfiguration.TempAssemblyFolder, $"{assemblyName}.dll");
         l.A($"AssemblyFilePath: '{assemblyFilePath}'");
-        var symbolsFilePath = Path.Combine(TempAssemblyFolderPath, $"{assemblyName}.pdb");
+        var symbolsFilePath = Path.Combine(globalConfiguration.TempAssemblyFolder, $"{assemblyName}.pdb");
         l.A($"SymbolsFilePath: '{symbolsFilePath}'");
         var assemblyLocations = (symbolsFilePath, assemblyFilePath);
         return l.ReturnAsOk(assemblyLocations);
@@ -112,12 +111,12 @@ public abstract class AppCodeCompiler() : ServiceBase("Sxc.MyApCd")
     protected internal string GetDependencyAssemblyLocations(string dependency, HotBuildSpec spec)
     {
         var l = Log.Fn<string>($"{spec}");
-        l.A($"TempAssemblyFolderPath: '{TempAssemblyFolderPath}'");
+        l.A($"TempAssemblyFolderPath: '{globalConfiguration.TempAssemblyFolder}'");
 
         // need random name, because assemblies has to be preserved on disk, and we can not replace them until AppDomain is unloaded 
-        var assemblyName = GetDependencyDllName(dependency, TempAssemblyFolderPath, spec);
+        var assemblyName = GetDependencyDllName(dependency, globalConfiguration.TempAssemblyFolder, spec);
         l.A($"AssemblyName: '{assemblyName}'");
-        var assemblyFilePath = Path.Combine(TempAssemblyFolderPath, $"{assemblyName}.dll");
+        var assemblyFilePath = Path.Combine(globalConfiguration.TempAssemblyFolder, $"{assemblyName}.dll");
         l.A($"AssemblyFilePath: '{assemblyFilePath}'");
 
         return l.ReturnAsOk(assemblyFilePath);
