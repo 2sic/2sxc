@@ -29,6 +29,17 @@ public partial class Index : ModuleProBase
     [Inject] public IRenderInfoService RenderInfoService { get; set; }
     #endregion
 
+    #region Oqtane Properties
+
+    public override string RenderMode => RenderModes.Static;
+
+    public override List<Resource> Resources => [
+        new Resource { ResourceType = ResourceType.Script, Url = $"Modules/{OqtConstants.PackageName}/Module.js", Reload = true },
+        new Resource { ResourceType = ResourceType.Script, Url = $"Modules/{OqtConstants.PackageName}/dist/turnOn/turn-on.js", Reload = true }
+        ];
+
+    #endregion
+
     #region Shared Variables
 
     protected string Content { get; private set; }
@@ -39,16 +50,22 @@ public partial class Index : ModuleProBase
 
     #endregion
 
-    #region Oqtane Properties
+    protected override void OnInitialized()
+    {
+        Log($"2sxc Blazor Logging Enabled on {OqtDebugStateService.Platform}");  // will only show if it's enabled
+        Log($"- ModuleState.RenderMode: {RenderMode}");
+        Log($"- PageState.RenderMode: {PageState?.RenderMode}");
+        Log($"- PageState.Runtime: {PageState?.Runtime}");
+        Log($"- Static SSR: {RenderInfoService.IsStaticSsr(RenderMode)}");
+        Log($"- Blazor Enhanced Nav: {RenderInfoService.IsBlazorEnhancedNav(RenderMode)}");
+        Log($"- SSR Framing: {RenderInfoService.IsSsrFraming(RenderMode)}");
+    }
 
-    public override List<Resource> Resources => [
-        new Resource { ResourceType = ResourceType.Script, Url = $"Modules/{OqtConstants.PackageName}/Module.js", Reload = true },
-        new Resource { ResourceType = ResourceType.Script, Url = $"Modules/{OqtConstants.PackageName}/dist/turnOn/turn-on.js", Reload = true }
-        ];
-
-    public override string RenderMode => RenderModes.Static;
-
-    #endregion
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    await base.OnInitializedAsync();
+    //    Log($"2sxc Blazor Logging Enabled on {OqtDebugStateService.Platform}");  // will only show if it's enabled
+    //}
 
     /// <summary>
     /// Lifecycle method is executed for every component parameters change
@@ -93,27 +110,36 @@ public partial class Index : ModuleProBase
                     if (_viewResults != null)
                     {
                         _newDataArrived = true;
+                        Log($"NewDataArrived:{_newDataArrived}");
 
                         var newContent = OqtPageChangeService.ProcessPageChanges(_viewResults, SiteState, this);
 
                         #region Static SSR
                         if (PageState.RenderMode == RenderModes.Static)
                             if (!RenderInfoService.IsSsrFraming(PageState.RenderMode)) // SSR First load on 2sxc page
+                            {
+                                Log($"SSR First load on 2sxc page - {nameof(OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml)}");
                                 newContent = OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(_viewResults, SiteState, newContent, Theme.Name);
+                            }
                             else // SSR Partial load after starting on 2sxc page
+                            {
+                                Log($"SSR Partial load after starting on 2sxc page - {nameof(OqtPageChangeService.AttachScriptsAndStylesDynamicallyWithTurnOn)}");
                                 newContent = OqtPageChangeService.AttachScriptsAndStylesDynamicallyWithTurnOn(_viewResults, SiteState, newContent, Theme.Name, ModuleState.RenderId);
+                            }
                         #endregion
 
-                        if (Content != newContent) Content = newContent;
+                        if (Content != newContent)
+                        {
+                            Log($"Set Content (old:{Content.Length}; new:{newContent.Length})");
+                            Content = newContent;
+                        }
 
                         // convenient place to apply Csp HttpHeaders to response
                         var count = OqtPageChangesOnServerService.ApplyHttpHeaders(_viewResults, this);
-                        Log($"1.4: Csp:{count}");
+                        Log($"Csp:{count}");
                     }
                 }
             }
-
-            Log($"end: OnParametersSetAsync(NewDataArrived:{_newDataArrived})");
         }
         catch (Exception ex)
         {
