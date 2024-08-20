@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Integration;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Services;
@@ -29,7 +28,13 @@ public class EditUiResources(
     public const string LinkTagTemplate = "<link rel=\"stylesheet\" href=\"{0}\">";
     public const string RobotoFromGoogle = "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap";
     public const string RobotoFromAltCdn = "/google-fonts/roboto/fonts.css";
-    public const string MaterialIconsGoogle = "https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined";
+
+    // 2024-08-20 2dm: switching to Material Symbols
+    // not quite done, must finish by ensuring the CDN solution works too...
+    //<link rel = "stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    public const string
+        MaterialIconsGoogle = // "https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined";
+            "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200";
     public const string MaterialIconsAltCdn = "/google-fonts/material-icons/fonts.css";
 
     #endregion
