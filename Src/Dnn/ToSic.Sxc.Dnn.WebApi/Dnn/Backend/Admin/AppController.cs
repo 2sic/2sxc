@@ -67,8 +67,8 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
 
     /// <inheritdoc />
     [HttpGet]
-    public HttpResponseMessage Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
-        => Real.Export(zoneId, appId, includeContentGroups, resetAppGuid);
+    public HttpResponseMessage Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite)
+        => Real.Export(zoneId, appId, includeContentGroups, resetAppGuid, assetsAdam, assetsSite);
 
     /// <inheritdoc />
     [HttpGet]
