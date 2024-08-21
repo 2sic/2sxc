@@ -88,7 +88,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices s
         if (!UserIsRestricted || FieldPermissionOk(GrantSets.ReadPublished)) return true;
 
         // check if the data is public
-        var itm = AdamContext.AppWorkCtx.AppState.List.One(guid);
+        var itm = AdamContext.AppWorkCtx.AppReader.List.One(guid);
         if (!(itm?.IsPublished ?? false)) return true;
 
         const string msg = "User is restricted and may not see published, but item exists and is published - not allowed";

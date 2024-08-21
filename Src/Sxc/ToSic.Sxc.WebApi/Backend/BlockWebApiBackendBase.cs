@@ -30,7 +30,7 @@ public abstract class BlockWebApiBackendBase(
     private IAppWorkCtx _appWorkCtx;
     protected IAppWorkCtxPlus AppWorkCtxPlus => _appWorkCtxPlus ??= AppWorkCtxService.ToCtxPlus(AppWorkCtx);
     private IAppWorkCtxPlus _appWorkCtxPlus;
-    protected IAppWorkCtxWithDb AppWorkCtxDb => _appWorkCtxDb ??= AppWorkCtxService.CtxWithDb(AppWorkCtx.AppState);
+    protected IAppWorkCtxWithDb AppWorkCtxDb => _appWorkCtxDb ??= AppWorkCtxService.CtxWithDb(AppWorkCtx.AppReader);
     private IAppWorkCtxWithDb _appWorkCtxDb;
 
     #endregion

@@ -127,7 +127,7 @@ public class EditLoadSettingsHelper(
                 .GetWithParentAppsExperimental("StringWysiwygConfiguration")
                 .ToList();
 
-            var jsonSerializer = jsonSerializerGenerator.New().SetApp(appWorkCtx.AppState);
+            var jsonSerializer = jsonSerializerGenerator.New().SetApp(appWorkCtx.AppReader);
             var result = entities.Select(e => jsonSerializer.ToJson(e)).ToList();
 
             return l.Return(result, $"{result.Count}");

@@ -99,7 +99,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
         try
         {
             var routeAppPath = services.AppFolderUtilities.Setup(request).GetAppFolder(false);
-            var appState = SharedContextResolver.SetAppOrNull(routeAppPath)?.AppState.StateCache;
+            var appState = SharedContextResolver.SetAppOrNull(routeAppPath)?.AppState;
 
             if (appState == default)
                 return l.ReturnNull("no app detected");

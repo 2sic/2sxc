@@ -33,7 +33,7 @@ internal class GetQueryMs: ServiceBase
         // If no in-source was provided, make sure that we create one from the current app
         var fullOptions = _optionsMs.SafeOptions(parameters, null, true /*, options: options*/);
 
-        var query = _queryManager.Value.GetQuery(fullOptions.AppIdentity, name, fullOptions.LookUp, 3);
+        var query = _queryManager.Value.GetQuery(fullOptions.AppIdentityOrReader, name, fullOptions.LookUp, 3);
 
         if (query == null) return l.ReturnNull("query was null");
 

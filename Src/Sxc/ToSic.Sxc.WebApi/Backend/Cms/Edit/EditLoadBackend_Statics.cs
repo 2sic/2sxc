@@ -56,7 +56,7 @@ partial class EditLoadBackend
         => list.Select(i
                 // try to get the entity type, but if there is none (new), look it up according to the header
                 => i.Entity?.Type
-                   ?? appSysCtx.AppState.GetContentType(i.Header.ContentTypeName))
+                   ?? appSysCtx.AppReader.GetContentType(i.Header.ContentTypeName))
             .ToList();
 
     private List<InputTypeInfo> GetNecessaryInputTypes(List<JsonContentType> contentTypes, IAppWorkCtxPlus appCtx)
@@ -99,7 +99,7 @@ partial class EditLoadBackend
     private IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, IAppWorkCtx appSysCtx)
     {
         var l = Log.Fn<IEntity>();
-        var type = appSysCtx.AppState.GetContentType(header.ContentTypeName);
+        var type = appSysCtx.AppReader.GetContentType(header.ContentTypeName);
         var ent = entityBuilder.EmptyOfType(appId, header.Guid, header.EntityId, type);
         return l.Return(ent);
     }

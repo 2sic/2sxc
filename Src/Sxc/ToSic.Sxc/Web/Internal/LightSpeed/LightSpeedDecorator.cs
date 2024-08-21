@@ -35,12 +35,14 @@ internal class LightSpeedDecorator(IEntity entity) : EntityBasedType(entity)
 
     public static LightSpeedDecorator GetFromAppStatePiggyBack(IAppStateCache appState, ILog log)
     {
-        var decoFromPiggyBack = appState?.PiggyBack.GetOrGenerate(appState, $"decorator-{TypeNameId}", () =>
-        {
-            log.A("Debug WIP - remove once this has proven to work; get LightSpeed PiggyBack - recreate");
-            var decoEntityOrNullPb = appState.Metadata?.FirstOrDefaultOfType(TypeNameId);
-            return new LightSpeedDecorator(decoEntityOrNullPb);
-        }).Value;
+        var decoFromPiggyBack = appState?.PiggyBack
+            .GetOrGenerate(appState, $"decorator-{TypeNameId}", () =>
+            {
+                log.A("Debug WIP - remove once this has proven to work; get LightSpeed PiggyBack - recreate");
+                var decoEntityOrNullPb = appState.Metadata?.FirstOrDefaultOfType(TypeNameId);
+                return new LightSpeedDecorator(decoEntityOrNullPb);
+            })
+            .Value;
         return decoFromPiggyBack ?? new LightSpeedDecorator(null);
     }
 }

@@ -55,7 +55,7 @@ public class ContentGroupList(
 
             if (bundle.First().Header.Parent == null) continue;
 
-            var parent = AppCtx.AppState.GetDraftOrPublished(bundle.First().Header.GetParentEntityOrError());
+            var parent = AppCtx.AppReader.GetDraftOrPublished(bundle.First().Header.GetParentEntityOrError());
             var targetIsContentBlock = parent.Type.Name == WorkBlocks.BlockTypeName;
                 
             var primaryItem = targetIsContentBlock ? FindContentItem(bundle) : bundle.First();
@@ -77,7 +77,7 @@ public class ContentGroupList(
                 ? ViewParts.PickFieldPair(primaryItem.Header.Field)
                 : [primaryItem.Header.Field];
 
-            var fieldList = workFieldList.New(AppCtx.AppState);
+            var fieldList = workFieldList.New(AppCtx.AppReader);
             if (willAdd) // this cannot be auto-detected, it must be specified
             {
 
@@ -178,7 +178,7 @@ public class ContentGroupList(
             if (identifier.Parent != null && identifier.Field != null)
             {
                 // look up type
-                var target = AppCtx.AppState.List.One(identifier.Parent.Value);
+                var target = AppCtx.AppReader.List.One(identifier.Parent.Value);
                 var field = target.Type[identifier.Field];
                 identifier.ContentTypeName = field.EntityFieldItemTypePrimary();
                 newItems.Add(identifier);
@@ -203,7 +203,7 @@ public class ContentGroupList(
         if (!identifier.Parent.HasValue) return (false, "no parent");
 
         // get the entity and determine if it's a content-block. If yes, that should affect the differences in load/save
-        var entity = AppCtx.AppState.List.One(identifier.Parent.Value);
+        var entity = AppCtx.AppReader.List.One(identifier.Parent.Value);
         return (entity.Type.Name == WorkBlocks.BlockTypeName, "type name should match");
     });
 

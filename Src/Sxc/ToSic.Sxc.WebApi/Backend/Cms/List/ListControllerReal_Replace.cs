@@ -16,7 +16,7 @@ partial class ListControllerReal
 
         void InternalSave(VersioningActionInfo _)
         {
-            var entity = AppWorkCtx.AppState.GetDraftOrPublished(guid)
+            var entity = AppWorkCtx.AppReader.GetDraftOrPublished(guid)
                          ?? throw l.Done( new Exception($"Can't find item '{guid}'"));
 
             // Make sure we have the correct casing for the field names
