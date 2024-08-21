@@ -75,7 +75,7 @@ internal class DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitial
         {
             // configure it
             var tm = appFolderInitializerLazy.Value;
-            tm.EnsureTemplateFolderExists(block.Context.AppState.Folder, false);
+            tm.EnsureTemplateFolderExists(block.Context.AppReader.Folder, false);
         }
 
         l.Done($"Completed init App {block.AppId}");

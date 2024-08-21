@@ -43,23 +43,23 @@ public class ExportApp(
     {
         var l = Log.Fn<AppExportInfoDto>($"get app info for app:{appId} and zone:{zoneId}");
         var contextZoneId = site.ZoneId;
-        var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, contextZoneId);
-        var appPaths = appPathSvc.Init(site, appRead);
+        var appReader = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, contextZoneId);
+        var appPaths = appPathSvc.Init(site, appReader);
 
-        var zipExport = export.Init(zoneId, appId, appRead.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
+        var zipExport = export.Init(zoneId, appId, appReader.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
         var cultCount = zoneMapper.CulturesEnabledWithState(site).Count;
 
-        var appCtx = appWorkCtxSvc.ContextPlus(appRead);
+        var appCtx = appWorkCtxSvc.ContextPlus(appReader);
         var appEntities = workEntities.New(appCtx);
         var appViews = workViews.New(appCtx);
 
-        var appHasCustomParent = appRead.HasCustomParentApp();
+        var appHasCustomParent = appReader.HasCustomParentApp();
 
         return l.Return(new()
         {
-            Name = appRead.Name,
-            Guid = appRead.NameId,
-            Version = appRead.VersionSafe(),
+            Name = appReader.Name,
+            Guid = appReader.NameId,
+            Version = appReader.VersionSafe(),
             EntitiesCount = appEntities.All().Count(e => !e.HasAncestor()),
             LanguagesCount = cultCount,
             TemplatesCount = appViews.GetAll().Count(),

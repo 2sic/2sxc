@@ -56,14 +56,14 @@ public partial class EditLoadBackend(
         items = contentGroupList.Init(appIdentity)
             .ConvertGroup(items)
             .ConvertListIndexToId(items);
-        TryToAutoFindMetadataSingleton(items, context.AppState);
+        TryToAutoFindMetadataSingleton(items, context.AppReader);
 
         // Special Edge Case
         // If the user is Module-Admin then we can skip the remaining checks
         // This is important because the main context may not contain the module
 
         // Look up the types, and repeat security check with type-names
-        var permCheck = typesPermissions.New().Init(context, context.AppState, items);
+        var permCheck = typesPermissions.New().Init(context, context.AppReader, items);
         if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
             throw HttpException.PermissionDenied(error);
 
@@ -142,7 +142,7 @@ public partial class EditLoadBackend(
         result.Features = uiData.Features(permCheck);
 
         // Attach context, but only the minimum needed for the UI
-        result.Context = contextBuilder.InitApp(context.AppState)
+        result.Context = contextBuilder.InitApp(context.AppReader)
             .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features, CtxEnable.EditUi);
 
         result.Settings = loadSettings.GetSettings(context, usedTypes, result.ContentTypes, appWorkCtx);

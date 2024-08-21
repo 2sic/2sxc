@@ -100,7 +100,7 @@ internal partial class AppApiControllerSelectorService(
             else
             {
                 // find AppId based on path - otherwise we don't have a proper spec, and things fail
-                var app = sxcContextResolver.Value.SetAppOrNull(appFolder)?.AppState ?? throw new("App not found");
+                var app = sxcContextResolver.Value.SetAppOrNull(appFolder)?.AppReader ?? throw new("App not found");
                 spec = new(app.AppId, edition: edition.TrimLastSlash(), app.Name);
                 l.A($"{nameof(spec)} from App based on path: {spec}");
             }

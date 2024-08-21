@@ -162,7 +162,7 @@ internal class AppApiControllerManager : IHasLog
 
         // Prepare / Get App State, while possibly also initializing the App...
         var ctxResolver = _webApiContextBuilder.PrepareContextResolverForApiRequest();
-        var appState = ctxResolver.SetAppOrGetBlock(appFolder)?.AppState;
+        var appState = ctxResolver.SetAppOrGetBlock(appFolder)?.AppReader;
 
         // Figure out the current edition
         var edition = FigureEdition(ctxResolver).TrimLastSlash();

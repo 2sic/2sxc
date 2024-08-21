@@ -25,19 +25,19 @@ public class AssetEditor(
 
     #region Constructor / DI
 
-    private IAppSpecsWithState _appState;
+    private IAppSpecsWithState _appSpecs;
 
     private AssetEditInfo EditInfo { get; set; }
 
 
-    public AssetEditor Init(IAppReader appState, string path, bool global, int viewId)
+    public AssetEditor Init(IAppReader appReader, string path, bool global, int viewId)
     {
-        _appState = appState;
-        appPaths.Init(site, _appState);
-        EditInfo = new(_appState.AppId, _appState.Name, path, global);
+        _appSpecs = appReader;
+        appPaths.Init(site, _appSpecs);
+        EditInfo = new(_appSpecs.AppId, _appSpecs.Name, path, global);
         if (viewId == 0) return this;
 
-        var view = workViews.New(appState).Get(viewId);
+        var view = workViews.New(appReader).Get(viewId);
         AddViewDetailsAndTypes(EditInfo, view);
         return this;
     }
@@ -134,7 +134,7 @@ public class AssetEditor(
         if (SanitizeFileNameAndCheckIfAssetAlreadyExists()) return false;
 
         // ensure the web.config exists (usually missing in the global area)
-        appFolderInitializer.Value.EnsureTemplateFolderExists(_appState.Folder, EditInfo.IsShared);
+        appFolderInitializer.Value.EnsureTemplateFolderExists(_appSpecs.Folder, EditInfo.IsShared);
 
         var absolutePath = InternalPath;
 

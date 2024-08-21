@@ -63,7 +63,7 @@ public class Field(ITypedItem parent, string name, CodeDataFactory cdf) : IField
             return null;
 
         // Get AppState to retrieve metadata - but exit early if we don't have it
-        var appState = cdf?.BlockOrNull?.Context?.AppState;
+        var appState = cdf?.BlockOrNull?.Context?.AppReader;
         if (appState == null) return null;
 
         var mdOf = appState.GetMetadataOf(TargetTypes.CmsItem, rawString, "");

@@ -29,7 +29,7 @@ public class ContentGroupControllerReal(
     private IContextOfBlock Context => _context ??= CtxResolver.BlockContextRequired();
     private IContextOfBlock _context;
 
-    private IAppWorkCtxPlus AppCtx => _appCtx.Get(() => appBlocks.CtxSvc.ContextPlus(Context.AppState));
+    private IAppWorkCtxPlus AppCtx => _appCtx.Get(() => appBlocks.CtxSvc.ContextPlus(Context.AppReader));
     private readonly GetOnce<IAppWorkCtxPlus> _appCtx = new();
     #endregion
 
@@ -94,10 +94,10 @@ public class ContentGroupControllerReal(
     public List<EntityInListDto> ItemList(Guid guid, string part)
     {
         Log.A($"item list for:{guid}");
-        var cg = Context.AppState.GetDraftOrPublished(guid);
+        var cg = Context.AppReader.GetDraftOrPublished(guid);
         var itemList = cg.Children(part);
         var list = itemList
-            .Select(Context.AppState.GetDraftOrKeep)
+            .Select(Context.AppReader.GetDraftOrKeep)
             .Select((c, index) => new EntityInListDto
             {
                 Index = index,
@@ -120,10 +120,10 @@ public class ContentGroupControllerReal(
 
         publishing.Value.DoInsidePublishing(Context, args =>
         {
-            var entity = Context.AppState.GetDraftOrPublished(guid);
+            var entity = Context.AppReader.GetDraftOrPublished(guid);
             var sequence = list.Select(i => i.Index).ToArray();
             var fields = part == ViewParts.ContentLower ? ViewParts.ContentPair : [part];
-            workFieldList.New(Context.AppState).FieldListReorder(entity, fields, sequence, Context.Publishing.ForceDraft);
+            workFieldList.New(Context.AppReader).FieldListReorder(entity, fields, sequence, Context.Publishing.ForceDraft);
         });
 
         return true;
