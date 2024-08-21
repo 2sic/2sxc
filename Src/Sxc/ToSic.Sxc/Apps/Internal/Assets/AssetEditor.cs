@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text.RegularExpressions;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Internal.Specs;
 using ToSic.Eav.Apps.Internal.Work;
@@ -29,7 +30,7 @@ public class AssetEditor(
     private AssetEditInfo EditInfo { get; set; }
 
 
-    public AssetEditor Init(IAppStateInternal appState, string path, bool global, int viewId)
+    public AssetEditor Init(IAppReader appState, string path, bool global, int viewId)
     {
         _appState = appState;
         appPaths.Init(site, _appState);

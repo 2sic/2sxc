@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.Helpers;
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Engines;
 public class EnginePolymorphism(PolymorphConfigReader polymorphism, IServerPaths serverPaths)
     : ServiceBase("Sxc.EngPly", connect: [polymorphism, serverPaths])
 {
-    internal (string, string) PolymorphTryToSwitchPath(string root, IView view, IAppStateInternal appState)
+    internal (string, string) PolymorphTryToSwitchPath(string root, IView view, IAppReader appState)
     {
         var subPath = view.Path;
         var l = Log.Fn<(string, string)>($"{root}, {subPath}");

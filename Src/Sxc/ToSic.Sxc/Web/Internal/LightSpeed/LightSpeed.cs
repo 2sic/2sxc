@@ -36,7 +36,7 @@ internal class LightSpeed(
     private int _moduleId;
     private int _pageId;
     private IBlock _block;
-    private IAppStateInternal AppState => _block?.Context?.AppState;
+    private IAppReader AppState => _block?.Context?.AppState;
 
     public bool Save(IRenderResult data) => AddToLightSpeed(data);
 

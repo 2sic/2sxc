@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Integration;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.DataSource;
@@ -71,7 +72,7 @@ public partial class App(
     #region Special internal properties for the IAppTyped wrapper. It will need these properties, but they are protected
 
     internal IAppPaths AppPathsForTyped => AppPaths;
-    internal IAppStateInternal AppStateIntForTyped => AppStateInt;
+    internal IAppReader AppStateIntForTyped => AppStateInt;
     internal IEntity AppSettingsForTyped => AppSettings;
     internal IEntity AppResourcesForTyped => AppResources;
 

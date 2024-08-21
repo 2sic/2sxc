@@ -29,8 +29,8 @@ internal class CmsContext(
     internal IContextOfSite CtxSite => _ctxSite.Get(() => CtxBlockOrNull ?? initialContext);
     private readonly GetOnce<IContextOfSite> _ctxSite = new();
 
-    private IAppStateInternal SiteAppState => _siteAppState ??= appReaders.GetPrimaryReader(CtxSite.Site.ZoneId, Log);
-    private IAppStateInternal _siteAppState;
+    private IAppReader SiteAppState => _siteAppState ??= appReaders.GetPrimaryReader(CtxSite.Site.ZoneId, Log);
+    private IAppReader _siteAppState;
 
     // Note: Internal so it can be used for View<T, T>
     internal IBlock RealBlockOrNull => _realBlock.Get(() => ((ICodeApiServiceInternal)_CodeApiSvc)?._Block);

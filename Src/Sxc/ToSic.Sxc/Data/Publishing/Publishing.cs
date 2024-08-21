@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.State;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.State;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 
@@ -8,7 +9,7 @@ namespace ToSic.Sxc.Data;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class Publishing(ITypedItem currentItem, Internal.CodeDataFactory cdf) : HelperBase(cdf.Log, "Pub"), IPublishing
 {
-    private readonly IAppStateInternal _appState = cdf._CodeApiSvc.App.AppState.Internal();
+    private readonly IAppReader _appState = ((IAppWithInternal)cdf._CodeApiSvc.App).AppReader;
 
     // Always supported on IEntity
     public bool IsSupported => true;

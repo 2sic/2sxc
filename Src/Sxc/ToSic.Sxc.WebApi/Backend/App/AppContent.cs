@@ -41,7 +41,7 @@ public class AppContent(
     }
     protected IContextOfApp Context;
 
-    protected IAppStateInternal AppState => Context?.AppState ??
+    protected IAppReader AppState => Context?.AppState ??
                                    throw new(
                                        "Can't access AppState before Context is ready. Did you forget to call Init(...)?");
 

@@ -14,61 +14,44 @@ using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 namespace ToSic.Sxc.Backend.Context;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>, IUiContextBuilder
+public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
+    : ServiceBase<UiContextBuilderBase.MyServices>(services, SxcLogName + ".UiCtx"), IUiContextBuilder
 {
-
     #region Dependencies 
 
-    public class MyServices: MyServicesBase
+    public class MyServices(
+        IContextOfSite siteCtx,
+        IAppStates appStates,
+        LazySvc<IEavFeaturesService> features,
+        LazySvc<IUiData> uiDataLazy,
+        LazySvc<LanguagesBackend> languagesBackend,
+        IAppPathsMicroSvc appPaths,
+        LazySvc<GlobalPaths> globalPaths)
+        : MyServicesBase(connect: [siteCtx, appStates, features, uiDataLazy, appPaths, languagesBackend, globalPaths])
     {
-        public LazySvc<GlobalPaths> GlobalPaths { get; }
-        public IAppPathsMicroSvc AppPaths { get; }
-        public IContextOfSite SiteCtx { get; }
-        public IAppStates AppStates { get; }
-        public LazySvc<LanguagesBackend> LanguagesBackend { get; }
-        public LazySvc<IEavFeaturesService> Features { get; }
-        public LazySvc<IUiData> UiDataLazy { get; }
-
-        public MyServices(
-            IContextOfSite siteCtx,
-            IAppStates appStates,
-            LazySvc<IEavFeaturesService> features,
-            LazySvc<IUiData> uiDataLazy,
-            LazySvc<LanguagesBackend> languagesBackend,
-            IAppPathsMicroSvc appPaths,
-            LazySvc<GlobalPaths> globalPaths
-        )
-        {
-            ConnectLogs([
-                SiteCtx = siteCtx,
-                AppStates = appStates,
-                Features = features,
-                UiDataLazy = uiDataLazy,
-                AppPaths = appPaths,
-                LanguagesBackend = languagesBackend,
-                GlobalPaths = globalPaths
-            ]);
-        }
+        public LazySvc<GlobalPaths> GlobalPaths { get; } = globalPaths;
+        public IAppPathsMicroSvc AppPaths { get; } = appPaths;
+        public IContextOfSite SiteCtx { get; } = siteCtx;
+        public IAppStates AppStates { get; } = appStates;
+        public LazySvc<LanguagesBackend> LanguagesBackend { get; } = languagesBackend;
+        public LazySvc<IEavFeaturesService> Features { get; } = features;
+        public LazySvc<IUiData> UiDataLazy { get; } = uiDataLazy;
     }
 
     #endregion
 
     #region Constructor / DI
 
-    protected UiContextBuilderBase(MyServices services): base(services, SxcLogName + ".UiCtx")
-    {
-    }
-
     protected int ZoneId => Services.SiteCtx.Site.ZoneId;
     protected IAppSpecs AppSpecsOrNull;
-    private IAppStateInternal _appStateOrNull;
+    private IAppReader _appStateOrNull;
 
     #endregion
 
-    public IUiContextBuilder InitApp(IAppState appState)
+    public IUiContextBuilder InitApp(IAppReader appState)
     {
         AppSpecsOrNull = appState;
-        _appStateOrNull = appState?.Internal();
+        _appStateOrNull = appState;
         return this;
     }
 

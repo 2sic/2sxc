@@ -9,9 +9,9 @@ public class ImpExpHelpers(IAppReaders appStates) : ServiceBase("Sxc.ImExHl", co
     /// Get an app - but only allow zone change if super-user
     /// </summary>
     /// <returns></returns>
-    internal IAppStateInternal GetAppAndCheckZoneSwitchPermissions(int zoneId, int appId, IUser user, int contextZoneId)
+    internal IAppReader GetAppAndCheckZoneSwitchPermissions(int zoneId, int appId, IUser user, int contextZoneId)
     {
-        var l = Log.Fn<IAppStateInternal>($"superuser: {user.IsSystemAdmin}");
+        var l = Log.Fn<IAppReader>($"superuser: {user.IsSystemAdmin}");
         if (!user.IsSystemAdmin && zoneId != contextZoneId)
         {
             l.ReturnNull("error");

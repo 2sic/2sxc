@@ -59,7 +59,7 @@ public class WorkApps(IAppStates appStates, IAppReaders appReaders, Generator<IA
     /// Returns all Apps for the current zone
     /// </summary>
     /// <returns></returns>
-    public List<IAppStateInternal> GetApps(ISite site)
+    public List<IAppReader> GetApps(ISite site)
     {
         // todo: unclear if this is the right way to do this - probably the ZoneId should come from the site?
         var zId = site.ZoneId;
@@ -75,7 +75,7 @@ public class WorkApps(IAppStates appStates, IAppReaders appReaders, Generator<IA
     /// Returns all Apps for the current zone
     /// </summary>
     /// <returns></returns>
-    public List<IAppStateInternal> GetInheritableApps(ISite site)
+    public List<IAppReader> GetInheritableApps(ISite site)
     {
         // Get existing apps, as we should not list inheritable apps which are already inherited
         var siteApps = appStates.Apps(site.ZoneId)

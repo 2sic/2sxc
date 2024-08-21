@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.State;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.State;
 using ToSic.Eav.Context;
 using ToSic.Eav.Metadata;
 
@@ -8,14 +9,14 @@ namespace ToSic.Sxc.Context.Internal;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class CmsSite: CmsContextPartBase<ISite>, ICmsSite
 {
-    public ICmsSite Init(CmsContext parent, IAppStateInternal appState)
+    public ICmsSite Init(CmsContext parent, IAppReader appState)
     {
         base.Init(parent, parent.CtxSite.Site);
         _appState = appState;
         return this;
     }
 
-    private IAppStateInternal _appState;
+    private IAppReader _appState;
 
     public int Id => GetContents()?.Id ?? Eav.Constants.NullId;
     public string Url => GetContents()?.Url ?? string.Empty;
