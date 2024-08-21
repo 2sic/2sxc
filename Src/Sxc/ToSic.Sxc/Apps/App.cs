@@ -5,7 +5,6 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Adam;
 using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 using CodeInfoService = ToSic.Eav.Code.InfoSystem.CodeInfoService;
 

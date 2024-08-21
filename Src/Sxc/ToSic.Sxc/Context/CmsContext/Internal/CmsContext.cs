@@ -19,17 +19,17 @@ internal class CmsContext(
     IPlatform platform,
     IContextOfSite initialContext,
     LazySvc<IPage> pageLazy,
-    IAppStates appStates,
+    IAppReaders appReaders,
     LazySvc<ICmsSite> cmsSiteLazy)
     : ServiceForDynamicCode(SxcLogName + ".CmsCtx",
-        connect: [initialContext, pageLazy, appStates, cmsSiteLazy, platform]), ICmsContext
+        connect: [initialContext, pageLazy, appReaders, cmsSiteLazy, platform]), ICmsContext
 {
     #region Constructor
 
     internal IContextOfSite CtxSite => _ctxSite.Get(() => CtxBlockOrNull ?? initialContext);
     private readonly GetOnce<IContextOfSite> _ctxSite = new();
 
-    private IAppStateInternal SiteAppState => _siteAppState ??= appStates.GetPrimaryReader(CtxSite.Site.ZoneId, Log);
+    private IAppStateInternal SiteAppState => _siteAppState ??= appReaders.GetPrimaryReader(CtxSite.Site.ZoneId, Log);
     private IAppStateInternal _siteAppState;
 
     // Note: Internal so it can be used for View<T, T>

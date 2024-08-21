@@ -17,7 +17,7 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
         ISite site,
         IUser user, 
         Generator<AssetEditor> assetEditorGenerator,
-        IAppStates appStates,
+        IAppReaders appReaders,
         IAppPathsMicroSvc appPaths,
         LazySvc<CodeControllerReal> codeController,
         LazySvc<AppCodeLoader> appCodeLoader
@@ -29,7 +29,7 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
         ConnectLogs([
             _assetEditorGenerator = assetEditorGenerator,
             _assetTemplates = new(),
-            _appStates = appStates,
+            _appReaders = appReaders,
             _appPaths = appPaths,
             _codeController = codeController,
             _appCodeLoader = appCodeLoader
@@ -39,7 +39,7 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
     private readonly ISite _site;
     private readonly Generator<AssetEditor> _assetEditorGenerator;
     private readonly AssetTemplates _assetTemplates;
-    private readonly IAppStates _appStates;
+    private readonly IAppReaders _appReaders;
     private readonly IAppPathsMicroSvc _appPaths;
     private readonly IUser _user;
     private readonly LazySvc<CodeControllerReal> _codeController;
@@ -150,7 +150,7 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
     private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string path)
     {
         var l = Log.Fn<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
-        var app = _appStates.GetReader(appId);
+        var app = _appReaders.GetReader(appId);
         var assetEditor = _assetEditorGenerator.New();
 
         assetEditor.Init(app, path, global, templateId);
@@ -161,7 +161,7 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
     private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(AppFileDto assetFromTemplateDto)
     {
         var l = Log.Fn<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
-        var app = _appStates.GetReader(assetFromTemplateDto.AppId);
+        var app = _appReaders.GetReader(assetFromTemplateDto.AppId);
         var assetEditor = _assetEditorGenerator.New().Init(app, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0);
         assetEditor.EnsureUserMayEditAssetOrThrow(assetEditor.InternalPath);
         return l.Return(assetEditor);

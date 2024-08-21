@@ -52,7 +52,7 @@ internal class OqtEnvironmentInstaller(
             RemoteDestinations.AutoConfigure,
             site,
             module.Id,
-            app: null,
+            appSpecsOrNull: null,
             forContentApp);
 
         return link;

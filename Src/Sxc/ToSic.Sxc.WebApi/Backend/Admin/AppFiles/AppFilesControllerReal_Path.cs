@@ -8,7 +8,7 @@ partial class AppFilesControllerReal
         (
             _appPaths.InitDone
                 ? _appPaths
-                : _appPaths.Init(_site, _appStates.GetReader(appId))
+                : _appPaths.Init(_site, _appReaders.GetReader(appId))
         )
         .PhysicalPathSwitch(global);
 }

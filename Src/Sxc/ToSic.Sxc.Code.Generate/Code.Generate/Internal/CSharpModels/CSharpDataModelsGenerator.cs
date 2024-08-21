@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Code.Generate.Internal;
 /// </summary>
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CSharpDataModelsGenerator(IUser user, IAppStates appStates)
+public class CSharpDataModelsGenerator(IUser user, IAppReaders appStates)
     : CSharpGeneratorBase(user, appStates, SxcLogName + ".DMoGen"), IFileGenerator
 {
     internal CSharpCodeSpecs Specs { get; private set; } = new();
@@ -31,15 +31,15 @@ public class CSharpDataModelsGenerator(IUser user, IAppStates appStates)
     private void Setup(IFileGeneratorSpecs parameters)
     {
         Specs = BuildSpecs(parameters);
-        var appState = Specs.AppState;
+        var appContentTypes = Specs.AppContentTypes;
 
         // Prepare Content Types and add to Specs, so the generators know what is available
         // Generate classes for all types in scope Default
-        var types = appState.ContentTypes.OfScope(Scopes.Default).ToList();
-        appState.GetContentType(AppLoadConstants.TypeAppResources).DoIfNotNull(types.Add);
-        appState.GetContentType(AppLoadConstants.TypeAppSettings).DoIfNotNull(types.Add);
+        var types = appContentTypes.ContentTypes.OfScope(Scopes.Default).ToList();
+        appContentTypes.GetContentType(AppLoadConstants.TypeAppResources).DoIfNotNull(types.Add);
+        appContentTypes.GetContentType(AppLoadConstants.TypeAppSettings).DoIfNotNull(types.Add);
 
-        var appConfigTypes = appState.ContentTypes
+        var appConfigTypes = appContentTypes.ContentTypes
             .OfScope(Scopes.SystemConfiguration)
             .Where(ct => !ct.HasAncestor())
             .ToList();

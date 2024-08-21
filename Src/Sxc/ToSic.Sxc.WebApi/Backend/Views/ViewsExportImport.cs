@@ -52,7 +52,7 @@ public class ViewsExportImport(
         var app = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(context.Site.ZoneId, appId, context.User, context.Site.ZoneId);
         var bundle = new BundleEntityWithAssets
         {
-            Entity = app.StateCache.List.One(viewId).IfOfType(Settings.TemplateContentType) // .Data[Eav.ImportExport.Settings.TemplateContentType].One(viewId)
+            Entity = app.StateCache.List.One(viewId).IfOfType(Settings.TemplateContentType)
         };
 
         var appPaths = appPathSvc.Init(context.Site, app);

@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Code.Generate.Internal.CSharpBaseClasses;
 /// </summary>
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CSharpServicesGenerator(IUser user, IAppStates appStates)
+public class CSharpServicesGenerator(IUser user, IAppReaders appStates)
     : CSharpGeneratorBase(user, appStates, SxcLogName + ".SvcGen"), IFileGenerator
 {
     #region Information for the interface

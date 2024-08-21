@@ -1,13 +1,13 @@
 ﻿using System.IO;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Integration;
+using ToSic.Eav.Apps.Internal.Specs;
 using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Apps.Internal.Assets;
@@ -24,27 +24,21 @@ public class AssetEditor(
 
     #region Constructor / DI
 
-    private IAppStateInternal _appState;
+    private IAppSpecsWithState _appState;
 
     private AssetEditInfo EditInfo { get; set; }
 
 
     public AssetEditor Init(IAppStateInternal appState, string path, bool global, int viewId)
     {
-        InitShared(appState);
+        _appState = appState;
+        appPaths.Init(site, _appState);
         EditInfo = new(_appState.AppId, _appState.Name, path, global);
         if (viewId == 0) return this;
 
         var view = workViews.New(appState).Get(viewId);
         AddViewDetailsAndTypes(EditInfo, view);
         return this;
-    }
-
-
-    private void InitShared(IAppStateInternal app)
-    {
-        _appState = app;
-        appPaths.Init(site, _appState);
     }
 
     #endregion

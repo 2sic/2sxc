@@ -31,7 +31,7 @@ public class WorkAppsRemove(
         // todo: maybe verify the app is of this portal; I assume delete will fail anyhow otherwise
 
         // Prepare to Delete folder in dnn - this must be done, before deleting the app in the DB
-        var appState = appStates.GetReader(new AppIdentity(zoneId, appId));
+        var appState = appStates.Get(new AppIdentity(zoneId, appId));
         var paths = appPaths.Init(site, appState);
         var folder = appState.Folder;
         var physPath = paths.PhysicalPath;

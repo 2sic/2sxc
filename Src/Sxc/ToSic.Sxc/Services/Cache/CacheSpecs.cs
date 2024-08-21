@@ -84,7 +84,7 @@ internal class CacheSpecs(ILog parentLog, ICodeApiService codeApiSvc, LazySvc<IA
 
     public ICacheSpecs WatchAppFolder(NoParamOrder protector = default, bool? withSubfolders = true)
     {
-        var appState = appStates.Value.GetReader(codeApiSvc.App.AppId);
+        var appState = appStates.Value.GetCacheState(codeApiSvc.App.AppId);
         var appPath = appPathsLazy.New().Init(((ICodeApiServiceInternal)codeApiSvc)?._Block?.Context.Site, appState);
         var mainPath = appPath.PhysicalPath;
         return Next(policyMaker.WatchFolders(new Dictionary<string, bool> { { mainPath, withSubfolders ?? true } }));

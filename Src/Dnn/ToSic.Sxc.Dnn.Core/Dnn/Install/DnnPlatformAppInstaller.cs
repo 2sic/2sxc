@@ -44,7 +44,7 @@ internal class DnnPlatformAppInstaller(
             RemoteDestinations.AutoConfigure,
             site,
             module.Id,
-            app: null,
+            appSpecsOrNull: null,
             forContentApp);
 
         // Set src to iframe

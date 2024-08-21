@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Services;
+﻿using ToSic.Eav.Apps.Internal.Specs;
+using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.DataSources.Sys.Internal;
@@ -11,17 +12,17 @@ namespace ToSic.Sxc.Backend.AppStack;
 public class AppStackBackend(
     AppDataStackService dataStackService,
     IZoneCultureResolver zoneCulture,
-    IAppStates appStates,
+    IAppReaders appReaders,
     Generator<QueryDefinitionBuilder> qDefBuilder)
-    : ServiceBase("Sxc.ApiApQ", connect: [dataStackService, zoneCulture, appStates])
+    : ServiceBase("Sxc.ApiApQ", connect: [dataStackService, zoneCulture, appReaders])
 {
-    public List<AppStackDataRaw> GetAll(int appId, string part, string key, Guid? viewGuid) //, string[] languages = default)
+    public List<AppStackDataRaw> GetAll(int appId, string part, string key, Guid? viewGuid)
     {
         // Correct languages
         //if (languages == null || !languages.Any())
         var languages = zoneCulture.SafeLanguagePriorityCodes();
         // Get app 
-        var appState = appStates.GetReader(appId);
+        var appState = appReaders.GetReader(appId);
         // Ensure we have the correct stack name
         var partName = SystemStackHelpers.GetStackNameOrNull(part);
         if (partName == null)
@@ -43,7 +44,7 @@ public class AppStackBackend(
 
 
 
-    public List<PropertyDumpItem> GetStackDump(IAppState appState, string partName, string[] languages, IEntity viewSettingsMixin)
+    public List<PropertyDumpItem> GetStackDump(IAppSpecsWithStateAndCache appState, string partName, string[] languages, IEntity viewSettingsMixin)
     {
         // Build Sources List
         var settings = dataStackService.Init(appState).GetStack(partName, viewSettingsMixin);

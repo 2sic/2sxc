@@ -22,10 +22,10 @@ public class TypeControllerReal(
     LazySvc<ContentExportApi> contentExportLazy,
     GenWorkDb<WorkContentTypesMod> typeMod,
     LazySvc<IUser> userLazy,
-    IAppStates appStates,
+    IAppReaders appReaders,
     Generator<ImportContent> importContent)
     : ServiceBase("Api.TypesRl",
-        connect: [appStates, context, ctApiLazy, contentExportLazy, userLazy, typeMod, importContent]), ITypeController
+        connect: [appReaders, context, ctApiLazy, contentExportLazy, userLazy, typeMod, importContent]), ITypeController
 {
     public const string LogSuffix = "Types";
 
@@ -43,7 +43,7 @@ public class TypeControllerReal(
     public ScopesDto Scopes(int appId)
     {
         var l = Log.Fn<ScopesDto>($"{appId}");
-        var reader = appStates.GetReader(appId);
+        var reader = appReaders.GetContentTypes(appId);
         var dic = reader.ContentTypes.GetAllScopesWithLabels();
         var infos = dic
             .Select(pair =>

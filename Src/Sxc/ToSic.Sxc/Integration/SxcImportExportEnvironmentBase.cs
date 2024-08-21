@@ -50,8 +50,8 @@ public abstract class SxcImportExportEnvironmentBase: EavImportExportEnvironment
     public override string GlobalTemplatesRoot(int zoneId, int appId) 
         => AppPaths(zoneId, appId).PhysicalPathShared;
 
-    private IAppPaths AppPaths(int zoneId, int appId) => _appPaths ??= _services.AppPaths.Init(_services.Site,
-        _services.AppStates.GetReader(new AppIdentity(zoneId, appId)));
+    private IAppPaths AppPaths(int zoneId, int appId) => _appPaths
+        ??= _services.AppPaths.Init(_services.Site, _services.AppStates.Get(new AppIdentity(zoneId, appId)));
     private IAppPaths _appPaths;
 
 

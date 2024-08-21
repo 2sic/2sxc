@@ -33,7 +33,7 @@ public class AppControllerReal(
     LazySvc<ResetApp> resetAppLazy,
     LazySvc<AppCachePurger> systemManagerLazy,
     LazySvc<LanguagesBackend> languagesBackendLazy,
-    LazySvc<IAppStates> appStatesLazy,
+    LazySvc<IAppReaders> appReadersLazy,
     LazySvc<AppStackBackend> appStackBackendLazy,
     LazySvc<IJsonService> json,
     IGlobalConfiguration globalConfiguration)
@@ -41,7 +41,7 @@ public class AppControllerReal(
         connect:
         [
             appsBackendLazy, workAppsRemove, exportAppLazy, importAppLazy, appBuilderLazy, resetAppLazy,
-            systemManagerLazy, languagesBackendLazy, appStatesLazy, appStackBackendLazy, json, globalConfiguration
+            systemManagerLazy, languagesBackendLazy, appReadersLazy, appStackBackendLazy, json, globalConfiguration
         ])
 {
     public const string LogSuffix = "AppCon";
@@ -100,7 +100,7 @@ public class AppControllerReal(
     }
 
     public List<SiteLanguageDto> Languages(int appId)
-        => languagesBackendLazy.Value.GetLanguagesOfApp(appStatesLazy.Value.GetReader(appId), true);
+        => languagesBackendLazy.Value.GetLanguagesOfApp(appReadersLazy.Value.GetReader(appId), true);
 
     public AppExportInfoDto Statistics(int zoneId, int appId) => exportAppLazy.Value.GetAppInfo(zoneId, appId);
 

@@ -5,7 +5,7 @@ using ToSic.Eav.WebApi.Sys.Insights;
 
 namespace ToSic.Sxc.Backend.Sys;
 
-internal class InsightsAppCodeOverview(IAppStates appStates) : InsightsProvider(Link, helpCategory: Constants.AppCode)
+internal class InsightsAppCodeOverview(IAppReaders appReaders, IAppStates appStates) : InsightsProvider(Link, helpCategory: Constants.AppCode)
 {
     public static string Link => "AppCodeOverview";
 
@@ -26,7 +26,7 @@ internal class InsightsAppCodeOverview(IAppStates appStates) : InsightsProvider(
                 {
                     var appIdentity = new AppIdentity(zone.Value.ZoneId, a.Key);
                     var inCache = appStates.IsCached(appIdentity);
-                    var appState = inCache ? appStates.GetReader(appIdentity) : null;
+                    var appState = inCache ? appReaders.GetReader(appIdentity) : null;
                     return new
                     {
                         Id = a.Key,

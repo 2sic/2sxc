@@ -47,7 +47,7 @@ public class ExportApp(
         var appPaths = appPathSvc.Init(site, appRead);
 
         var zipExport = export.Init(zoneId, appId, appRead.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
-        var cultCount = zoneMapper.CulturesEnabledWithState(site).Count; //c => c.IsEnabled);
+        var cultCount = zoneMapper.CulturesEnabledWithState(site).Count;
 
         var appCtx = appWorkCtxSvc.ContextPlus(appRead);
         var appEntities = workEntities.New(appCtx);

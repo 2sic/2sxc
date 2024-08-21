@@ -23,7 +23,7 @@ namespace ToSic.Sxc.DataSources.Internal;
 internal class AppDataSourcesLoader(
     ILogStore logStore,
     ISite site,
-    IAppStates appStates,
+    IAppReaders appReaders,
     LazySvc<IAppPathsMicroSvc> appPathsLazy,
     LazySvc<CodeCompiler> codeCompilerLazy,
     LazySvc<AppCodeLoader> appCodeLoaderLazy,
@@ -33,7 +33,7 @@ internal class AppDataSourcesLoader(
     : ServiceBase("Eav.AppDtaSrcLoad",
         connect:
         [
-            logStore, site, appStates, appPathsLazy, codeCompilerLazy, appCodeLoaderLazy, ctxResolver, polymorphism,
+            logStore, site, appReaders, appPathsLazy, codeCompilerLazy, appCodeLoaderLazy, ctxResolver, polymorphism,
             memoryCacheService
         ]), IAppDataSourcesLoader
 {
@@ -100,7 +100,7 @@ internal class AppDataSourcesLoader(
         var l = Log.Fn<HotBuildSpec>($"{appId}:'{appId}'", timer: true);
 
         // Prepare / Get App State
-        var appState = appStates.GetReader(appId);
+        var appState = appReaders.GetAppSpecs(appId);
 
         // Figure out the current edition
         var edition = FigureEdition().TrimLastSlash();
@@ -122,7 +122,7 @@ internal class AppDataSourcesLoader(
 
     private (string physicalPath, string relativePath) GetAppDataSourceFolderPaths(int appId)
     {
-        var appState = appStates.GetReader(appId);
+        var appState = appReaders.GetAppSpecsWithState(appId);
         var appPaths = appPathsLazy.Value.Init(site, appState);
         var physicalPath = Path.Combine(appPaths.PhysicalPath, DataSourcesFolder);
         var relativePath = Path.Combine(appPaths.RelativePath, DataSourcesFolder);
@@ -241,7 +241,7 @@ internal class AppDataSourcesLoader(
         if (types == null) return l.Return([], "types are null");
 
         // App state for automatic lookup of configuration content-types
-        var appState = appStates.GetReader(appId);
+        var appState = appReaders.GetContentTypes(appId);
         var data = types
             .Select(pair =>
             {

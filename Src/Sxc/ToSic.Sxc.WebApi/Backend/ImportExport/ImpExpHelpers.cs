@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Backend.ImportExport;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ImpExpHelpers(IAppStates appStates) : ServiceBase("Sxc.ImExHl", connect: [appStates])
+public class ImpExpHelpers(IAppReaders appStates) : ServiceBase("Sxc.ImExHl", connect: [appStates])
 {
     /// <summary>
     /// Get an app - but only allow zone change if super-user

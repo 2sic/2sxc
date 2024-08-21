@@ -163,7 +163,7 @@ public class DependenciesLoader(ILogStore logStore, ISite site, IAppStates appSt
     private (string physicalPath, string relativePath) GetDependenciesPaths(string folder, HotBuildSpec spec)
     {
         var l = Log.Fn<(string physicalPath, string relativePath)>($"{spec}");
-        var appPaths = appPathsLazy.Value.Init(site, appStates.GetReader(spec.AppId));
+        var appPaths = appPathsLazy.Value.Init(site, appStates.GetCacheState(spec.AppId));
         var folderWithEdition = folder.HasValue()
             ? (spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder)
             : spec.Edition;

@@ -24,7 +24,7 @@ partial class AppFilesControllerReal : Eav.WebApi.Admin.IAppExplorerControllerDe
         const string mask = $"*{Constants.ApiControllerSuffix}.cs";
 
         var appPath = ResolveAppPath(appId, global: false);
-        var app = _appStates.GetReader(appId);
+        var app = _appReaders.GetReader(appId);
         var editions = _codeController.Value.GetEditions(appId);
         l.A($"{nameof(app.Folder)}:'{app.Folder}', appPath:'{appPath}', editions:{editions.Editions.Count}");
 

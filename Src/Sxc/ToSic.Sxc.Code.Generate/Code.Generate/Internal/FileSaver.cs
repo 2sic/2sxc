@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Context;
@@ -49,7 +48,7 @@ public class FileSaver(ISite site, IAppStates appStates, IAppPathsMicroSvc appPa
 
     private string GetAppFullPath(int appId)
     {
-        var appState = appStates.ToReader(appStates.GetCacheState(appId));
+        var appState = appStates.GetCacheState(appId);
         return appPaths.Init(site, appState).PhysicalPath;
     }
 

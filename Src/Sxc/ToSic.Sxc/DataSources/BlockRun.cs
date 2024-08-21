@@ -4,6 +4,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks.Internal;
 #if NETFRAMEWORK
+using ToSic.Eav.Apps;
 using ToSic.Lib.DI;
 using CodeInfoService = ToSic.Eav.Code.InfoSystem.CodeInfoService;
 #endif
@@ -23,10 +24,10 @@ internal partial class ContextData : PassThrough, IBlockInstance
     #region Constructor and Init
 
 #if NETFRAMEWORK
-    public ContextData(MyServices services, ToSic.Eav.Apps.IAppStates appStates, LazySvc<CodeInfoService> codeChanges) : base(services, "Sxc.BlckDs")
+    public ContextData(MyServices services, IAppReaders appReaders, LazySvc<CodeInfoService> codeChanges) : base(services, "Sxc.BlckDs")
     {
         ConnectLogs([
-            _appStates = appStates,
+            _appReaders = appReaders,
             _codeChanges = codeChanges
         ]);
     }

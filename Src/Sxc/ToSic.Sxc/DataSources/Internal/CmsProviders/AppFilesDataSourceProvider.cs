@@ -55,19 +55,19 @@ public class AppFilesDataSourceProvider(AppFilesDataSourceProvider.MyServices se
         bool onlyFiles = default,
         string root = default,
         string filter = default
-    ) => Log.Func($"a:{appId}; z:{zoneId}, onlyFolders:{onlyFolders}, onlyFiles:{onlyFiles}, root:{root}, filter:{filter}", l =>
-    {
+    ) {
+        var l = Log.Fn<AppFilesDataSourceProvider>($"a:{appId}; z:{zoneId}, onlyFolders:{onlyFolders}, onlyFiles:{onlyFiles}, root:{root}, filter:{filter}");
         _onlyFolders = onlyFolders;
         _onlyFiles = onlyFiles;
         _root = root.TrimPrefixSlash().Backslash();
         _filter = filter;
 
-        var appState = Services.AppStates.GetReader(new AppIdentity(zoneId, appId));
+        var appState = Services.AppStates.Get(new AppIdentity(zoneId, appId));
         _appPaths = Services.AppPathMicroSvc.Init(Services.Site, appState);
         
         _fileManager = Services.FileManagerGenerator.New().SetFolder(appId, _appPaths.PhysicalPath, _root);
-        return this;
-    });
+        return l.Return(this);
+    }
 
     private bool _onlyFolders;
     private bool _onlyFiles;

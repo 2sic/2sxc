@@ -12,8 +12,8 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Apps.Internal.Work;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class WorkApps(IAppStates appStates, Generator<IAppPathsMicroSvc> appPathsGen, LazySvc<GlobalPaths> globalPaths)
-    : ServiceBase("Cms.AppsRt", connect: [appStates, appPathsGen, globalPaths])
+public class WorkApps(IAppStates appStates, IAppReaders appReaders, Generator<IAppPathsMicroSvc> appPathsGen, LazySvc<GlobalPaths> globalPaths)
+    : ServiceBase("Cms.AppsRt", connect: [appStates, appReaders, appPathsGen, globalPaths])
 {
 
     public IList<AppUiInfo> GetSelectableApps(ISite site, string filter)
@@ -21,13 +21,17 @@ public class WorkApps(IAppStates appStates, Generator<IAppPathsMicroSvc> appPath
         var l = Log.Fn<List<AppUiInfo>>($"filter:{filter}");
         var list =
             GetApps(site)
-                .Where(a => a.Name != Eav.Constants.ContentAppName 
-                            && a.Name != Eav.Constants.ErrorAppName // "Error" it is a name of empty Content app (before content templates are installed)
-                            && a.Name != Eav.Constants.PrimaryAppName 
-                            && a.Name != Eav.Constants.PrimaryAppGuid) // #SiteApp v13
+                .Where(a
+                    => a.Name != Eav.Constants.ContentAppName
+                       && a.Name !=
+                       Eav.Constants
+                           .ErrorAppName // "Error" it is a name of empty Content app (before content templates are installed)
+                       && a.Name != Eav.Constants.PrimaryAppName
+                       && a.Name != Eav.Constants.PrimaryAppGuid
+                ) // #SiteApp v13
                 .Where(a => !a.Configuration.IsHidden)
-        .Select(a =>
-        {
+                .Select(a =>
+                {
                     var paths = appPathsGen.New().Init(site, a);
                     var thumbnail = AppAssetThumbnail.GetUrl(a, paths, globalPaths);
                     return new AppUiInfo
@@ -35,7 +39,7 @@ public class WorkApps(IAppStates appStates, Generator<IAppPathsMicroSvc> appPath
                         Name = a.Name,
                         AppId = a.AppId,
                         SupportsAjaxReload = a.Configuration?.EnableAjax ?? false,
-                        Thumbnail = thumbnail, // a.Thumbnail,
+                        Thumbnail = thumbnail,
                         Version = a.Configuration?.Version?.ToString() ?? ""
                     };
                 })
@@ -62,20 +66,9 @@ public class WorkApps(IAppStates appStates, Generator<IAppPathsMicroSvc> appPath
         var appIds = appStates.Apps(zId);
 
         return appIds
-            .Select(a =>
-            {
-                var appIdentity = new AppIdentityPure(zId, a.Key);
-                return appStates.GetReader(appIdentity);
-            })
+            .Select(a => appReaders.GetReader(new AppIdentityPure(zId, a.Key)))
             .OrderBy(a => a.Name)
             .ToList();
-
-        //return appIds
-        //    .Select(a => _appGenerator.New()
-        //        .PreInit(site)
-        //        .Init(new AppIdentityPure(zId, a.Key), buildConfig) as IApp)
-        //    .OrderBy(a => a.Name)
-        //    .ToList();
     }
 
     /// <summary>
@@ -86,7 +79,8 @@ public class WorkApps(IAppStates appStates, Generator<IAppPathsMicroSvc> appPath
     {
         // Get existing apps, as we should not list inheritable apps which are already inherited
         var siteApps = appStates.Apps(site.ZoneId)
-            .Select(a => appStates.GetReader(a.Key).Folder)
+            // TODO: #AppStates we could only get the specs here...
+            .Select(a => appReaders.GetReader(a.Key).Folder)
             .ToList();
 
         var zones = appStates.Zones;
@@ -105,7 +99,9 @@ public class WorkApps(IAppStates appStates, Generator<IAppPathsMicroSvc> appPath
                     .Select(a =>
                     {
                         var appIdentity = new AppIdentityPure(zId, a.Key);
-                        return appStateWithCacheInfo.IsCached(appIdentity) ? appStates.GetReader(appIdentity) : null;
+                        return appStateWithCacheInfo.IsCached(appIdentity)
+                            ? appReaders.GetReader(appIdentity)
+                            : null;
                     })
                     .Where(state =>
                     {

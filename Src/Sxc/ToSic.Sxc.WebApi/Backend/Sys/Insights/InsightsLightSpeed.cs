@@ -1,5 +1,7 @@
 ﻿using ToSic.Eav;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.Insights;
+using ToSic.Eav.Apps.Internal.Specs;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Sys.Insights;
 using ToSic.Sxc.Web.Internal.LightSpeed;
@@ -27,7 +29,7 @@ internal class InsightsLightSpeed(IAppStates appStates) : InsightsProvider(Link,
             var totalMemory = 0L;
             foreach (var md in countStats)
             {
-                var appState = appStates.GetReader(md.Key);
+                var appState = ((IHas<IAppSpecs>)appStates.GetCacheState(md.Key)).Value;
                 msg += InsightsHtmlTable.RowFields(
                     ++count,
                     SpecialField.Right(appState.ZoneId),

@@ -3,7 +3,7 @@ using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Backend.Sys;
 
-internal class InsightsAppCodeBuild(IAppStates appStates) : InsightsProvider(Link, helpCategory: HiddenFromAutoDisplay)
+internal class InsightsAppCodeBuild() : InsightsProvider(Link, helpCategory: HiddenFromAutoDisplay)
 {
     public static string Link = "AppCodeBuild";
 
@@ -11,9 +11,6 @@ internal class InsightsAppCodeBuild(IAppStates appStates) : InsightsProvider(Lin
     {
         if (AppId == null)
             return "please add appid to the url parameters";
-
-        var reader = appStates.GetReader(AppId.Value);
-
 
         var msg = "";
         msg += Tags.Nl2Br("Some Statistics\n"

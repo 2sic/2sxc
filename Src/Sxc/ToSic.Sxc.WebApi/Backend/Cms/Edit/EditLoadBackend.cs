@@ -27,6 +27,7 @@ public partial class EditLoadBackend(
     ISxcContextResolver ctxResolver,
     ITargetTypes mdTargetTypes,
     IAppStates appStates,
+    IAppReaders appReaders,
     IUiData uiData,
     GenWorkPlus<WorkInputTypes> inputTypes,
     Generator<JsonSerializer> jsonSerializerGenerator,
@@ -37,7 +38,7 @@ public partial class EditLoadBackend(
         connect:
         [
             workCtxSvc, inputTypes, api, contentGroupList, entityBuilder, contextBuilder, ctxResolver,
-            mdTargetTypes, appStates, uiData, jsonSerializerGenerator, typesPermissions, prefetch, loadSettings
+            mdTargetTypes, appStates, appReaders, uiData, jsonSerializerGenerator, typesPermissions, prefetch, loadSettings
         ])
 {
 
@@ -50,7 +51,7 @@ public partial class EditLoadBackend(
         
 
         // do early permission check - but at this time it may be that we don't have the types yet
-        // because they may be group/id combinations, without type information which we'll look up afterwards
+        // because they may be group/id combinations, without type information which we'll look up afterward
         var appIdentity = appStates.IdentityOfApp(appId);
         items = contentGroupList.Init(appIdentity)
             .ConvertGroup(items)
@@ -71,7 +72,7 @@ public partial class EditLoadBackend(
         var appWorkCtx = workCtxSvc.ContextPlus(appId, showDrafts: showDrafts);
         var result = new EditDto();
         var entityApi = api.Init(appId, showDrafts);
-        var appState = appStates.GetReader(appIdentity);
+        var appState = appReaders.GetReader(appIdentity);
         var list = entityApi.GetEntitiesForEditing(items);
         var jsonSerializer = jsonSerializerGenerator.New().SetApp(appState);
         result.Items = list
