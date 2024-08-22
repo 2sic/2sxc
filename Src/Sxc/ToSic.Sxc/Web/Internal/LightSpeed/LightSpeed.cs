@@ -20,10 +20,11 @@ namespace ToSic.Sxc.Web.Internal.LightSpeed;
 internal class LightSpeed(
     IEavFeaturesService features,
     LazySvc<IAppStates> appStatesLazy,
+    LazySvc<IAppReaders> appReadersLazy,
     Generator<IAppPathsMicroSvc> appPathsLazy,
     LazySvc<ICmsContext> cmsContext,
     LazySvc<OutputCacheManager> outputCacheManager
-) : ServiceBase(SxcLogName + ".Lights", connect: [features, appStatesLazy, appPathsLazy, cmsContext, outputCacheManager]), IOutputCache
+) : ServiceBase(SxcLogName + ".Lights", connect: [features, appStatesLazy, appReadersLazy, appPathsLazy, cmsContext, outputCacheManager]), IOutputCache
 {
     public IOutputCache Init(int moduleId, int pageId, IBlock block)
     {
@@ -58,7 +59,7 @@ internal class LightSpeed(
 
         // get dependent appStates
         var dependentAppsStates = data.DependentApps
-            .Select(da => appStatesLazy.Value.GetCacheState(da.AppId))
+            .Select(da => appReadersLazy.Value.GetReader(da.AppId))
             .ToList();
         l.A($"{nameof(dependentAppsStates)} count {dependentAppsStates.Count}");
 
@@ -74,7 +75,8 @@ internal class LightSpeed(
         if (appState.ZoneId >= 0)
         {
             l.A("dependentAppsStates add");
-            dependentAppsStates.Add(appStatesLazy.Value.Get(appStatesLazy.Value.IdentityOfPrimary(appState.ZoneId)));
+            var primary = appStatesLazy.Value.IdentityOfPrimary(appState.ZoneId);
+            dependentAppsStates.Add(appReadersLazy.Value.GetReader(primary));
         }
 
         l.A($"Found {data.DependentApps.Count} apps: " + string.Join(",", data.DependentApps.Select(da => da.AppId)));
@@ -120,10 +122,10 @@ internal class LightSpeed(
     /// <summary>
     /// find if caching is enabled on all dependent apps
     /// </summary>
-    private bool IsEnabledOnDependentApps(List<IAppStateCache> appStates)
+    private bool IsEnabledOnDependentApps(List<IAppReader> appStates)
     {
         var l = Log.Fn<bool>(timer: true);
-        foreach (var appState in appStates.Where(appState => !GetLightSpeedConfig(appState).IsEnabled))
+        foreach (var appState in appStates.Where(appState => !GetLightSpeedConfig(appState.StateCache).IsEnabled))
             return l.ReturnFalse($"Can't cache; caching disabled on dependent app {appState.AppId}");
         return l.ReturnTrue("ok");
     }
@@ -136,7 +138,7 @@ internal class LightSpeed(
     /// ADAM folders are not monitored
     /// </remarks>
     /// <returns>list of paths to monitor</returns>
-    private IList<string> AppPaths(List<IAppStateCache> dependentApps)
+    private IList<string> AppPaths(List<IAppReader> dependentApps)
     {
         if ((_block as BlockFromModule)?.App is not EavApp app) return null;
         if (dependentApps.SafeNone()) return null;
@@ -144,7 +146,7 @@ internal class LightSpeed(
         var paths = new List<string>();
         foreach (var appState in dependentApps)
         {
-            var appPaths = appPathsLazy.New().Init(app.Site, appState);
+            var appPaths = appPathsLazy.New().Get(appState, app.Site);
             if (Directory.Exists(appPaths.PhysicalPath)) paths.Add(appPaths.PhysicalPath);
             if (Directory.Exists(appPaths.PhysicalPathShared)) paths.Add(appPaths.PhysicalPathShared);
         }

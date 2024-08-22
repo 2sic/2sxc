@@ -32,7 +32,7 @@ public class WorkApps(IAppStates appStates, IAppReaders appReaders, Generator<IA
                 .Where(a => !a.Configuration.IsHidden)
                 .Select(a =>
                 {
-                    var paths = appPathsGen.New().Init(site, a);
+                    var paths = appPathsGen.New().Get(a, site);
                     var thumbnail = AppAssetThumbnail.GetUrl(a, paths, globalPaths);
                     return new AppUiInfo
                     {

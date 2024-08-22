@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Internal;
-using ToSic.Eav.Apps.State;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;
@@ -21,10 +20,10 @@ namespace ToSic.Sxc.Apps;
 public partial class App(
     EavApp.MyServices services,
     LazySvc<GlobalPaths> globalPaths,
-    LazySvc<IAppPathsMicroSvc> appPathsLazy,
     LazySvc<CodeDataFactory> cdfLazy,
-    LazySvc<CodeInfoService> codeChanges)
-    : EavApp(services, "App.SxcApp", connect: [globalPaths, appPathsLazy, cdfLazy, codeChanges]), IApp
+    LazySvc<CodeInfoService> codeChanges,
+    IAppPathsMicroSvc pathFactoryTemp)
+    : EavApp(services, "App.SxcApp", connect: [globalPaths, cdfLazy, codeChanges, pathFactoryTemp]), IApp
 {
     #region Special objects
 
@@ -32,7 +31,7 @@ public partial class App(
     private readonly GetOnce<CodeDataFactory> _cdf = new();
 
 
-    private IAppPaths AppPaths => _appPaths.Get(() => appPathsLazy.Value.Init(Site, AppStateInt));
+    private IAppPaths AppPaths => _appPaths.Get(() => pathFactoryTemp.Get(AppStateInt, Site));
     private readonly GetOnce<IAppPaths> _appPaths = new();
 
     #endregion

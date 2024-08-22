@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Internal.Work;
-using ToSic.Eav.Context;
 using ToSic.Eav.ImportExport.Internal.Zip;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
@@ -13,9 +12,9 @@ namespace ToSic.Sxc.Apps.Internal.Work;
 public class WorkAppsRemove(
     LazySvc<ZoneManager> zoneManagerLazy,
     IAppStates appStates,
-    ISite site,
+    IAppReaders appReaders,
     IAppPathsMicroSvc appPaths)
-    : ServiceBase("Cms.AppsRt", connect: [zoneManagerLazy, appStates, site, appPaths])
+    : ServiceBase("Cms.AppsRt", connect: [zoneManagerLazy, appStates, appReaders, appPaths])
 {
 
     internal void RemoveAppInSiteAndEav(int zoneId, int appId, bool fullDelete)
@@ -31,9 +30,9 @@ public class WorkAppsRemove(
         // todo: maybe verify the app is of this portal; I assume delete will fail anyhow otherwise
 
         // Prepare to Delete folder in dnn - this must be done, before deleting the app in the DB
-        var appState = appStates.Get(new AppIdentity(zoneId, appId));
-        var paths = appPaths.Init(site, appState);
-        var folder = appState.Folder;
+        var appReader = appReaders.GetReader(new AppIdentity(zoneId, appId));
+        var paths = appPaths.Get(appReader);
+        var folder = appReader.Folder;
         var physPath = paths.PhysicalPath;
 
         // now remove from DB. This sometimes fails, so we do this before trying to clean the files

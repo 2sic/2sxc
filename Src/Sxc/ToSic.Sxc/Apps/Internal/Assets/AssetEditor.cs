@@ -4,7 +4,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Internal.Specs;
 using ToSic.Eav.Apps.Internal.Work;
-using ToSic.Eav.Apps.State;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
@@ -29,11 +28,13 @@ public class AssetEditor(
 
     private AssetEditInfo EditInfo { get; set; }
 
+    private IAppPaths _appPaths;
+
 
     public AssetEditor Init(IAppReader appReader, string path, bool global, int viewId)
     {
         _appSpecs = appReader;
-        appPaths.Init(site, _appSpecs);
+        _appPaths = appPaths.Get(appReader, site);
         EditInfo = new(_appSpecs.AppId, _appSpecs.Name, path, global);
         if (viewId == 0) return this;
 
@@ -80,25 +81,24 @@ public class AssetEditor(
         if (path.Directory == null)
             throw new AccessViolationException("path is null");
 
-        if (path.Directory.FullName.IndexOf(appPaths.PhysicalPath, StringComparison.InvariantCultureIgnoreCase) != 0)
+        if (path.Directory.FullName.IndexOf(_appPaths.PhysicalPath, StringComparison.InvariantCultureIgnoreCase) != 0)
             throw new AccessViolationException("current user may not edit files outside of the app-scope");
     }
 
-    private static AssetEditInfo AddViewDetailsAndTypes(AssetEditInfo t, IView view)
+    private static AssetEditInfo AddViewDetailsAndTypes(AssetEditInfo template, IView view)
     {
         // Template specific properties, not really available in other files
-        t.Type = view.Type;
-        t.Name = view.Name;
-        t.HasList = view.UseForList;
-        t.TypeContent = view.ContentType;
-        t.TypeContentPresentation = view.PresentationType;
-        t.TypeList = view.HeaderType;
-        t.TypeListPresentation = view.HeaderPresentationType;
-        return t;
+        template.Type = view.Type;
+        template.Name = view.Name;
+        template.HasList = view.UseForList;
+        template.TypeContent = view.ContentType;
+        template.TypeContentPresentation = view.PresentationType;
+        template.TypeList = view.HeaderType;
+        template.TypeListPresentation = view.HeaderPresentationType;
+        return template;
     }
 
-    public string InternalPath => _internalPath ??= NormalizePath(Path.Combine(
-        appPaths.PhysicalPathSwitch(EditInfo.IsShared), EditInfo.FileName));
+    public string InternalPath => _internalPath ??= NormalizePath(Path.Combine(_appPaths.PhysicalPathSwitch(EditInfo.IsShared), EditInfo.FileName));
     private string _internalPath;
 
     private static string NormalizePath(string path) => Path.GetFullPath(new Uri(path).LocalPath);

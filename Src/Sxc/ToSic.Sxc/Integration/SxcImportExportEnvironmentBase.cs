@@ -11,22 +11,14 @@ public abstract class SxcImportExportEnvironmentBase: EavImportExportEnvironment
 {
     #region constructor / DI
 
-    public class MyServices: MyServicesBase
+    public class MyServices(ISite site, App newApp, IAppReaders appReaders, IAppStates appStates, IAppPathsMicroSvc appPaths)
+        : MyServicesBase(connect: [site, newApp, appReaders, appPaths])
     {
-        internal readonly IAppPathsMicroSvc AppPaths;
-        internal readonly IAppStates AppStates;
-        internal readonly ISite Site;
-        internal readonly App NewApp;
-
-        public MyServices(ISite site, App newApp, IAppStates appStates, IAppPathsMicroSvc appPaths)
-        {
-            ConnectLogs([
-                AppPaths = appPaths,
-                AppStates = appStates,
-                Site = site,
-                NewApp = newApp
-            ]);
-        }
+        internal readonly IAppPathsMicroSvc AppPaths = appPaths;
+        internal readonly IAppStates AppStates = appStates;
+        internal readonly IAppReaders AppReaders = appReaders;
+        internal readonly ISite Site = site;
+        internal readonly App NewApp = newApp;
     }
 
 
@@ -51,7 +43,7 @@ public abstract class SxcImportExportEnvironmentBase: EavImportExportEnvironment
         => AppPaths(zoneId, appId).PhysicalPathShared;
 
     private IAppPaths AppPaths(int zoneId, int appId) => _appPaths
-        ??= _services.AppPaths.Init(_services.Site, _services.AppStates.Get(new AppIdentity(zoneId, appId)));
+        ??= _services.AppPaths.Get(_services.AppReaders.GetReader(new AppIdentity(zoneId, appId)), _services.Site);
     private IAppPaths _appPaths;
 
 

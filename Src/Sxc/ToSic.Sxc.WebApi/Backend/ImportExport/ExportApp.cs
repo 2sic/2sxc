@@ -44,7 +44,7 @@ public class ExportApp(
         var l = Log.Fn<AppExportInfoDto>($"get app info for app:{appId} and zone:{zoneId}");
         var contextZoneId = site.ZoneId;
         var appReader = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, contextZoneId);
-        var appPaths = appPathSvc.Init(site, appReader);
+        var appPaths = appPathSvc.Get(appReader, site);
 
         var zipExport = export.Init(zoneId, appId, appReader.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
         var cultCount = zoneMapper.CulturesEnabledWithState(site).Count;
@@ -82,7 +82,7 @@ public class ExportApp(
 
         var contextZoneId = site.ZoneId;
         var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, contextZoneId);
-        var appPaths = appPathSvc.Init(site, appRead);
+        var appPaths = appPathSvc.Get(appRead, site);
 
         var zipExport = export.Init(zoneId, appId, appRead.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
         zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid, withSiteFiles);
@@ -111,7 +111,7 @@ public class ExportApp(
 
         var contextZoneId = site.ZoneId;
         var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, contextZoneId);
-        var appPaths = appPathSvc.Init(site, appRead);
+        var appPaths = appPathSvc.Get(appRead, site);
 
         var zipExport = export.Init(zoneId, appId, appRead.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
         var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";

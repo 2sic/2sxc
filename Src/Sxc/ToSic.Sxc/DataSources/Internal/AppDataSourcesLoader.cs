@@ -122,8 +122,8 @@ internal class AppDataSourcesLoader(
 
     private (string physicalPath, string relativePath) GetAppDataSourceFolderPaths(int appId)
     {
-        var appState = appReaders.GetAppSpecsWithState(appId);
-        var appPaths = appPathsLazy.Value.Init(site, appState);
+        var appReader = appReaders.GetReader(appId);
+        var appPaths = appPathsLazy.Value.Get(appReader, site);
         var physicalPath = Path.Combine(appPaths.PhysicalPath, DataSourcesFolder);
         var relativePath = Path.Combine(appPaths.RelativePath, DataSourcesFolder);
         return (physicalPath, relativePath);

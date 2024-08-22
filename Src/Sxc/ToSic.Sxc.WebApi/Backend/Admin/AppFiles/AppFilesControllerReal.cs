@@ -18,21 +18,20 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
         IUser user, 
         Generator<AssetEditor> assetEditorGenerator,
         IAppReaders appReaders,
-        IAppPathsMicroSvc appPaths,
         LazySvc<CodeControllerReal> codeController,
-        LazySvc<AppCodeLoader> appCodeLoader
+        LazySvc<AppCodeLoader> appCodeLoader,
+        IAppPathsMicroSvc appPathsFactoryTemp
     ) : base("Bck.Assets")
     {
-            
         _site = site;
         _user = user;
         ConnectLogs([
             _assetEditorGenerator = assetEditorGenerator,
             _assetTemplates = new(),
             _appReaders = appReaders,
-            _appPaths = appPaths,
             _codeController = codeController,
-            _appCodeLoader = appCodeLoader
+            _appCodeLoader = appCodeLoader,
+            _appPathsFactoryTemp = appPathsFactoryTemp
         ]);
     }
 
@@ -40,7 +39,8 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
     private readonly Generator<AssetEditor> _assetEditorGenerator;
     private readonly AssetTemplates _assetTemplates;
     private readonly IAppReaders _appReaders;
-    private readonly IAppPathsMicroSvc _appPaths;
+    private readonly IAppPathsMicroSvc _appPathsFactoryTemp;
+    private IAppPaths _appPaths;
     private readonly IUser _user;
     private readonly LazySvc<CodeControllerReal> _codeController;
     private readonly LazySvc<AppCodeLoader> _appCodeLoader;

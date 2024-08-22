@@ -55,7 +55,7 @@ public class ViewsExportImport(
             Entity = appReader.List.One(viewId).IfOfType(Settings.TemplateContentType)
         };
 
-        var appPaths = appPathSvc.Init(context.Site, appReader);
+        var appPaths = appPathSvc.Get(appReader, context.Site);
 
         // Attach files
         var view = new View(bundle.Entity, [context.Site.CurrentCultureCode], Log, qDefBuilder);
@@ -98,7 +98,7 @@ public class ViewsExportImport(
         {
             // 0.1 Check permissions, get the app, 
             var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(context.Site.ZoneId, appId, context.User, context.Site.ZoneId);
-            var appPaths = appPathSvc.Init(context.Site, appRead);
+            var appPaths = appPathSvc.Get(appRead, context.Site);
 
             // 0.2 Verify it's json etc.
             if (files.Any(file => !Json.IsValidJson(file.Contents)))

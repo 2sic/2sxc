@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps.Integration;
-using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.MetadataDecorators;
 using ToSic.Eav.Apps.Internal.Specs;
 using ToSic.Eav.Apps.State;
@@ -44,14 +43,14 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
 
     protected int ZoneId => Services.SiteCtx.Site.ZoneId;
     protected IAppSpecs AppSpecsOrNull;
-    private IAppReader _appStateOrNull;
+    private IAppReader _appReaderOrNull;
 
     #endregion
 
     public IUiContextBuilder InitApp(IAppReader appState)
     {
         AppSpecsOrNull = appState;
-        _appStateOrNull = appState;
+        _appReaderOrNull = appState;
         return this;
     }
 
@@ -80,7 +79,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
         if (ZoneId == 0) return null;
         var site = Services.SiteCtx.Site;
 
-        var converted = Services.LanguagesBackend.Value.GetLanguagesOfApp(_appStateOrNull);
+        var converted = Services.LanguagesBackend.Value.GetLanguagesOfApp(_appReaderOrNull);
 
         return new()
         {
@@ -148,13 +147,14 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
 
     protected virtual ContextAppDto GetApp(Ctx flags)
     {
-        if (AppSpecsOrNull == null) return null;
-        var paths = Services.AppPaths.Init(Services.SiteCtx.Site, _appStateOrNull);
+        if (_appReaderOrNull == null) return null;
+        var appSpecs = _appReaderOrNull.Specs;
+        var paths = Services.AppPaths.Get(_appReaderOrNull, Services.SiteCtx.Site);
         var result = new ContextAppDto
         {
-            Id = AppSpecsOrNull.AppId,
-            Name = AppSpecsOrNull.Name,
-            Folder = AppSpecsOrNull.Folder,
+            Id = appSpecs.AppId,
+            Name = appSpecs.Name,
+            Folder = appSpecs.Folder,
             Url = paths?.Path,
             SharedUrl = paths?.PathShared
         };
@@ -180,12 +180,12 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
                 ? "Site" 
                 : "App";
 
-        result.Permissions = new() { Count = _appStateOrNull.Metadata.Permissions.Count() };
+        result.Permissions = new() { Count = _appReaderOrNull.Metadata.Permissions.Count() };
 
-        result.IsShared = _appStateOrNull.IsShared();
-        result.IsInherited = _appStateOrNull.IsInherited();
+        result.IsShared = _appReaderOrNull.IsShared();
+        result.IsInherited = _appReaderOrNull.IsInherited();
 
-        result.Icon = AppAssetThumbnail.GetUrl(_appStateOrNull, paths, Services.GlobalPaths);
+        result.Icon = AppAssetThumbnail.GetUrl(_appReaderOrNull, paths, Services.GlobalPaths);
         return result;
     }
 

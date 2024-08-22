@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
-using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.ImportExport.Internal;
 using ToSic.Lib.DI;
@@ -23,27 +22,22 @@ public class AppFilesDataSourceProvider(AppFilesDataSourceProvider.MyServices se
 {
     public class MyServices : MyServicesBase
     {
-        public ISite Site { get; }
         internal Generator<FileManager> FileManagerGenerator { get; }
         internal IAppPathsMicroSvc AppPathMicroSvc { get; }
-        public IAppStates AppStates { get; }
+        public IAppReaders AppReaders { get; }
 
         /// <summary>
         /// Note that we will use Generators for safety, because in rare cases the dependencies could be re-used to create a sub-data-source
         /// </summary>
         public MyServices(
-            IAppStates appStates,
+            IAppReaders appReaders,
             IAppPathsMicroSvc appPathMicroSvc,
-            Generator<FileManager> fileManagerGenerator,
-            ISite site
-        )
+            Generator<FileManager> fileManagerGenerator
+        ): base(connect: [appReaders, appPathMicroSvc, fileManagerGenerator])
         {
-            ConnectLogs([
-                AppStates = appStates,
-                AppPathMicroSvc = appPathMicroSvc,
-                FileManagerGenerator = fileManagerGenerator,
-                Site = site
-            ]);
+            AppReaders = appReaders;
+            AppPathMicroSvc = appPathMicroSvc;
+            FileManagerGenerator = fileManagerGenerator;
         }
     }
 
@@ -62,8 +56,8 @@ public class AppFilesDataSourceProvider(AppFilesDataSourceProvider.MyServices se
         _root = root.TrimPrefixSlash().Backslash();
         _filter = filter;
 
-        var appState = Services.AppStates.Get(new AppIdentity(zoneId, appId));
-        _appPaths = Services.AppPathMicroSvc.Init(Services.Site, appState);
+        var appState = Services.AppReaders.GetReader(new AppIdentity(zoneId, appId));
+        _appPaths = Services.AppPathMicroSvc.Get(appState);
         
         _fileManager = Services.FileManagerGenerator.New().SetFolder(appId, _appPaths.PhysicalPath, _root);
         return l.Return(this);

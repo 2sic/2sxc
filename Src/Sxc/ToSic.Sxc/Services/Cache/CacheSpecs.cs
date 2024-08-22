@@ -13,7 +13,7 @@ using static System.StringComparer;
 
 namespace ToSic.Sxc.Services.Cache;
 
-internal class CacheSpecs(ILog parentLog, ICodeApiService codeApiSvc, LazySvc<IAppStates> appStates, Generator<IAppPathsMicroSvc> appPathsLazy, CacheKeySpecs key, IPolicyMaker policyMaker): ICacheSpecs
+internal class CacheSpecs(ILog parentLog, ICodeApiService codeApiSvc, LazySvc<IAppReaders> appReaders, Generator<IAppPathsMicroSvc> appPathsLazy, CacheKeySpecs key, IPolicyMaker policyMaker): ICacheSpecs
 {
     #region Keys
 
@@ -33,7 +33,7 @@ internal class CacheSpecs(ILog parentLog, ICodeApiService codeApiSvc, LazySvc<IA
 
     #region Next(...) calls, for functional API
 
-    private ICacheSpecs Next(IPolicyMaker newPm) => new CacheSpecs(parentLog, codeApiSvc, appStates, appPathsLazy, key, newPm);
+    private ICacheSpecs Next(IPolicyMaker newPm) => new CacheSpecs(parentLog, codeApiSvc, appReaders, appPathsLazy, key, newPm);
 
     private ICacheSpecs Next(string varyBy, int value) => Next(varyBy, value.ToString());
 
@@ -47,7 +47,7 @@ internal class CacheSpecs(ILog parentLog, ICodeApiService codeApiSvc, LazySvc<IA
         {
             [varyBy] = value
         };
-        return new CacheSpecs(parentLog, codeApiSvc, appStates, appPathsLazy, key with { VaryByDic = newDic }, policyMaker);
+        return new CacheSpecs(parentLog, codeApiSvc, appReaders, appPathsLazy, key with { VaryByDic = newDic }, policyMaker);
     }
 
     #endregion
@@ -80,12 +80,14 @@ internal class CacheSpecs(ILog parentLog, ICodeApiService codeApiSvc, LazySvc<IA
 
 
     public ICacheSpecs WatchAppData(NoParamOrder protector = default)
-        => Next(policyMaker.WatchNotifyKeys([appStates.Value.GetCacheState(codeApiSvc.App.AppId)]));
+        => Next(policyMaker.WatchNotifyKeys([AppReader.StateCache]));
+
+    private IAppReader AppReader => _appReader ??= appReaders.Value.GetReader(codeApiSvc.App.AppId);
+    private IAppReader _appReader;
 
     public ICacheSpecs WatchAppFolder(NoParamOrder protector = default, bool? withSubfolders = true)
     {
-        var appState = appStates.Value.GetCacheState(codeApiSvc.App.AppId);
-        var appPath = appPathsLazy.New().Init(((ICodeApiServiceInternal)codeApiSvc)?._Block?.Context.Site, appState);
+        var appPath = appPathsLazy.New().Get(AppReader, ((ICodeApiServiceInternal)codeApiSvc)?._Block?.Context.Site);
         var mainPath = appPath.PhysicalPath;
         return Next(policyMaker.WatchFolders(new Dictionary<string, bool> { { mainPath, withSubfolders ?? true } }));
     }

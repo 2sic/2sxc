@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Code.Internal.HotBuild;
 public class AppCodeLoader(
     ILogStore logStore,
     ISite site,
-    IAppStates appStates,
+    IAppReaders appStates,
     LazySvc<IAppPathsMicroSvc> appPathsLazy,
     LazySvc<AppCodeCompiler> appCompilerLazy,
     AssemblyCacheManager assemblyCacheManager)
@@ -202,7 +202,7 @@ public class AppCodeLoader(
     {
         var l = Log.Fn<(string physicalPath, string relativePath)>($"{nameof(folder)}: '{folder}'; {spec}");
         l.A($"site id: {site.Id}, ...: {site.AppsRootPhysicalFull}");
-        var appPaths = appPathsLazy.Value.Init(site, appStates.GetCacheState(spec.AppId));
+        var appPaths = appPathsLazy.Value.Get(appStates.GetReader(spec.AppId), site);
         var folderWithEdition = folder.HasValue() 
             ? spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder
             : spec.Edition;

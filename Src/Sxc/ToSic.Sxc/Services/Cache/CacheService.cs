@@ -12,7 +12,8 @@ namespace ToSic.Sxc.Services.Cache;
 /// - also vary-by variants, eg. vary by user, by culture, by role, by device, by query, by url, by page, by module, by app, by tenant, by site, by domain, by host, by path, by query, by form, by cookie, by header, by session, by cache, by request, by response, by server, by client, by browser, by os, by device, by location, by time, by date, by day, by month, by year, by week, by hour, by minute, by second, by millisecond, by timezone, by language, by currency, by country, by region, by state, by city, by zip, by postal, by address, by phone, by fax, by email, by name, by title, by description, by keyword, by tag, by category, by group, by list, by array, by object, by property, by field, by column, by row, by table, by view, by form, by control, by input, by button, by link, by image, by icon, by logo, by text, by number, by integer, by float, by decimal, by boolean
 /// </summary>
 /// <param name="cache"></param>
-internal class CacheService(MemoryCacheService cache, LazySvc<IAppStates> appStates, Generator<IAppPathsMicroSvc> appPathsLazy) : ServiceForDynamicCode($"{SxcLogName}.CchSvc", connect: [cache, appStates]), ICacheService
+internal class CacheService(MemoryCacheService cache, LazySvc<IAppReaders> appStates, Generator<IAppPathsMicroSvc> appPathsLazy)
+    : ServiceForDynamicCode($"{SxcLogName}.CchSvc", connect: [cache, appStates]), ICacheService
 {
     /// <summary>
     /// AppId to use in key generation, so it won't collide with other apps.

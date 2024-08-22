@@ -37,7 +37,7 @@ public class AppsBackend(
         if (lightSpeedDeco.Entity != null)
             lightspeed = new () { Id = lightSpeedDeco.Id, Title = lightSpeedDeco.Title, IsEnabled = lightSpeedDeco.IsEnabled };
 
-        var paths = appPathsGen.New().Init(context.Site, appReader);
+        var paths = appPathsGen.New().Get(appReader, context.Site);
         var thumbnail = AppAssetThumbnail.GetUrl(appReader, paths, globalPaths);
 
         return new ()
