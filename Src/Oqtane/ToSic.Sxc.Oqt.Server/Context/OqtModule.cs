@@ -21,18 +21,18 @@ internal class OqtModule: Module<Module>
 {
     private readonly SettingsHelper _settingsHelper;
     private readonly IModuleRepository _moduleRepository;
-    private readonly IAppStates _appStates;
+    private readonly IAppsCatalog _appsCatalog;
     private readonly LazySvc<AppFinder> _appFinderLazy;
     private readonly ISite _site;
     private Dictionary<string, string> _settings;
 
-    public OqtModule(SettingsHelper settingsHelper, IModuleRepository moduleRepository, 
-        IAppStates appStates, LazySvc<AppFinder> appFinderLazy, ISite site) : base ($"{OqtConstants.OqtLogPrefix}.Cont")
+    public OqtModule(SettingsHelper settingsHelper, IModuleRepository moduleRepository,
+        IAppsCatalog appsCatalog, LazySvc<AppFinder> appFinderLazy, ISite site) : base ($"{OqtConstants.OqtLogPrefix}.Cont")
     {
         ConnectLogs([
             _settingsHelper = settingsHelper,
             _moduleRepository = moduleRepository,
-            _appStates = appStates,
+            _appsCatalog = appsCatalog,
             _appFinderLazy = appFinderLazy,
             _site = site
         ]);
@@ -110,7 +110,7 @@ internal class OqtModule: Module<Module>
         var l = Log.Fn<(int, string)>($"{zoneId}", timer: true);
 
         if (IsContent) 
-            return l.Return((_appStates.DefaultAppId(zoneId), "Content"), "Content");
+            return l.Return((_appsCatalog.DefaultAppIdentity(zoneId).AppId, "Content"), "Content");
 
         if (!_settings.TryGetValue(ModuleSettingNames.AppName, out var setting)) 
             return l.Return((Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty), Eav.Constants.AppNameIdEmpty);

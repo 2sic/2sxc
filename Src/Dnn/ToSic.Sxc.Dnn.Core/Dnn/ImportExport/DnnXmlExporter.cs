@@ -14,8 +14,8 @@ internal class DnnXmlExporter: XmlExporter
 {
     #region Constructor / DI
 
-    public DnnXmlExporter(AdamManager<int, int> adamManager, ISxcContextResolver ctxResolver, XmlSerializer xmlSerializer, IAppStates appStates)
-        : base(xmlSerializer, appStates, ctxResolver, DnnConstants.LogName)
+    public DnnXmlExporter(AdamManager<int, int> adamManager, ISxcContextResolver ctxResolver, XmlSerializer xmlSerializer, IAppsCatalog appsCat)
+        : base(xmlSerializer, appsCat, ctxResolver, DnnConstants.LogName)
     {
         ConnectLogs([
             AdamManager = adamManager

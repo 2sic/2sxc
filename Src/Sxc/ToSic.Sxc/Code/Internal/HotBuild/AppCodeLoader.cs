@@ -14,12 +14,12 @@ namespace ToSic.Sxc.Code.Internal.HotBuild;
 public class AppCodeLoader(
     ILogStore logStore,
     ISite site,
-    IAppStates appStates,
+    IAppReaderFactory appReadFac,
     LazySvc<IAppPathsMicroSvc> appPathsLazy,
     LazySvc<AppCodeCompiler> appCompilerLazy,
     AssemblyCacheManager assemblyCacheManager)
     : ServiceBase("Sys.AppCodeLoad",
-        connect: [logStore, site, appStates, appPathsLazy, appCompilerLazy, assemblyCacheManager])
+        connect: [logStore, site, appReadFac, appPathsLazy, appCompilerLazy, assemblyCacheManager])
 {
     /// <summary>
     /// Try to get the app code - first of the edition, then of the root.
@@ -202,7 +202,7 @@ public class AppCodeLoader(
     {
         var l = Log.Fn<(string physicalPath, string relativePath)>($"{nameof(folder)}: '{folder}'; {spec}");
         l.A($"site id: {site.Id}, ...: {site.AppsRootPhysicalFull}");
-        var appPaths = appPathsLazy.Value.Init(site, appStates.GetReader(spec.AppId));
+        var appPaths = appPathsLazy.Value.Get(appReadFac.Get(spec.AppId), site);
         var folderWithEdition = folder.HasValue() 
             ? spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder
             : spec.Edition;

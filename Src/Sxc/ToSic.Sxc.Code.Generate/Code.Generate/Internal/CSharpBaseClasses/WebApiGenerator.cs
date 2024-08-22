@@ -8,8 +8,8 @@ namespace ToSic.Sxc.Code.Generate.Internal.CSharpBaseClasses;
 /// </summary>
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class WebApiGenerator(IUser user, IAppStates appStates)
-    : CSharpServicesGenerator(user, appStates), IFileGenerator
+public class WebApiGenerator(IUser user, IAppReaderFactory appReadFac)
+    : CSharpServicesGenerator(user, appReadFac), IFileGenerator
 {
     #region Information for the interface
 

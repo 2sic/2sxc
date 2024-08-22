@@ -1,5 +1,7 @@
 ﻿using ToSic.Eav;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.Insights;
+using ToSic.Eav.Apps.Internal.Specs;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Sys.Insights;
 using ToSic.Sxc.Web.Internal.LightSpeed;
@@ -7,7 +9,7 @@ using static ToSic.Razor.Blade.Tag;
 
 namespace ToSic.Sxc.Backend.Sys;
 
-internal class InsightsLightSpeed(IAppStates appStates) : InsightsProvider(Link, teaser: "Show LightSpeed Caching Statistics", helpCategory: "Performance")
+internal class InsightsLightSpeed(IAppStateCacheService appStates) : InsightsProvider(Link, teaser: "Show LightSpeed Caching Statistics", helpCategory: "Performance")
 {
     public static string Link = "LightSpeedStats";
 
@@ -25,19 +27,19 @@ internal class InsightsLightSpeed(IAppStates appStates) : InsightsProvider(Link,
             var count = 0;
             var totalItems = 0;
             var totalMemory = 0L;
-            foreach (var md in countStats)
+            foreach (var cacheItem in countStats)
             {
-                var appState = appStates.GetReader(md.Key);
+                var appState = ((IHas<IAppSpecs>)appStates.Get(cacheItem.Key)).Value;
                 msg += InsightsHtmlTable.RowFields(
                     ++count,
                     SpecialField.Right(appState.ZoneId),
-                    SpecialField.Right(md.Key),
+                    SpecialField.Right(cacheItem.Key),
                     appState.Name,
-                    SpecialField.Right(md.Value),
-                    SpecialField.Right(sizeStats.TryGetValue(md.Key, out var size) ? ByteToKByte(size) : Constants.NullNameId),
+                    SpecialField.Right(cacheItem.Value),
+                    SpecialField.Right(sizeStats.TryGetValue(cacheItem.Key, out var size) ? ByteToKByte(size) : Constants.NullNameId),
                     appState.NameId
                 );
-                totalItems += md.Value;
+                totalItems += cacheItem.Value;
                 totalMemory += size;
             }
             msg += "</tbody>";

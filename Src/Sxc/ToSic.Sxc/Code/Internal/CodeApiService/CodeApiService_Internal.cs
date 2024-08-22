@@ -1,6 +1,8 @@
-﻿using ToSic.Lib.DI;
+﻿using ToSic.Eav.Apps;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Internal;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Code.Internal;
 
@@ -14,7 +16,7 @@ public partial class CodeApiService : ICodeApiServiceInternal
 
         App = app;
 
-        _edition = Services.Polymorphism.UseViewEditionOrGet(_Block?.View, App.AppState);
+        _edition = Services.Polymorphism.UseViewEditionOrGet(_Block?.View, ((IAppWithInternal)App).AppReader);
     }
 
     private string _edition;

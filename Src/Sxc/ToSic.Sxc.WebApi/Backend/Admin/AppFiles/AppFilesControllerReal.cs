@@ -17,30 +17,30 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
         ISite site,
         IUser user, 
         Generator<AssetEditor> assetEditorGenerator,
-        IAppStates appStates,
-        IAppPathsMicroSvc appPaths,
+        IAppReaderFactory appReaders,
         LazySvc<CodeControllerReal> codeController,
-        LazySvc<AppCodeLoader> appCodeLoader
+        LazySvc<AppCodeLoader> appCodeLoader,
+        IAppPathsMicroSvc appPathsFactoryTemp
     ) : base("Bck.Assets")
     {
-            
         _site = site;
         _user = user;
         ConnectLogs([
             _assetEditorGenerator = assetEditorGenerator,
             _assetTemplates = new(),
-            _appStates = appStates,
-            _appPaths = appPaths,
+            _appReaders = appReaders,
             _codeController = codeController,
-            _appCodeLoader = appCodeLoader
+            _appCodeLoader = appCodeLoader,
+            _appPathsFactoryTemp = appPathsFactoryTemp
         ]);
     }
 
     private readonly ISite _site;
     private readonly Generator<AssetEditor> _assetEditorGenerator;
     private readonly AssetTemplates _assetTemplates;
-    private readonly IAppStates _appStates;
-    private readonly IAppPathsMicroSvc _appPaths;
+    private readonly IAppReaderFactory _appReaders;
+    private readonly IAppPathsMicroSvc _appPathsFactoryTemp;
+    private IAppPaths _appPaths;
     private readonly IUser _user;
     private readonly LazySvc<CodeControllerReal> _codeController;
     private readonly LazySvc<AppCodeLoader> _appCodeLoader;
@@ -150,7 +150,7 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
     private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string path)
     {
         var l = Log.Fn<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
-        var app = _appStates.GetReader(appId);
+        var app = _appReaders.Get(appId);
         var assetEditor = _assetEditorGenerator.New();
 
         assetEditor.Init(app, path, global, templateId);
@@ -161,7 +161,7 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
     private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(AppFileDto assetFromTemplateDto)
     {
         var l = Log.Fn<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
-        var app = _appStates.GetReader(assetFromTemplateDto.AppId);
+        var app = _appReaders.Get(assetFromTemplateDto.AppId);
         var assetEditor = _assetEditorGenerator.New().Init(app, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0);
         assetEditor.EnsureUserMayEditAssetOrThrow(assetEditor.InternalPath);
         return l.Return(assetEditor);

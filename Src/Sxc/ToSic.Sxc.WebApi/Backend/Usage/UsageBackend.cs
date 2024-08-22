@@ -21,7 +21,7 @@ public class UsageBackend(
         var context = ctxResolver.GetBlockOrSetApp(appId);
 
         // extra security to only allow zone change if host user
-        var permCheck = appPermissions.New().Init(context, context.AppState);
+        var permCheck = appPermissions.New().Init(context, context.AppReader);
         if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
             throw HttpException.PermissionDenied(error);
 

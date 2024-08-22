@@ -1,12 +1,13 @@
 ﻿@page
 @using ToSic.Eav.Apps
-@inject IAppStates AppStates
+@using ToSic.Eav.Apps.Internal
+@inject IAppStateCacheService AppStateCacheService
 @{
     ViewData["Title"] = "First Read Data from EAV";
 
     // #2sxcIntegration
     var appIdentity = IntegrationConstants.AppIdentity;
-    var appState = AppStates.Get(appIdentity);
+    var appState = AppStateCacheService.Get(appIdentity);
     var firstItem = appState.List.FirstOrDefault();
 }
 

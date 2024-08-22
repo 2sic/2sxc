@@ -1,4 +1,5 @@
-﻿using ToSic.Lib.Helpers;
+﻿using ToSic.Eav.Apps;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Decorators;
@@ -12,7 +13,7 @@ public partial class App
 
     // Create config object. Note that AppConfiguration could be null, then it would use default values
     /// <inheritdoc />
-    public IAppConfiguration Configuration => AppStateInt.Configuration;
+    public IAppConfiguration Configuration => AppReaderInt.Specs.Configuration;
 
     private DynamicEntity MakeDynProperty(IEntity contents, bool propsRequired)
     {

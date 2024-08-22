@@ -15,12 +15,8 @@ namespace ToSic.Sxc.Web.Internal.EditUi;
 /// Provide all resources (fonts, icons, etc.) needed for the edit-ui
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class EditUiResources(
-    IAppStates appStates,
-    AppDataStackService stackServiceHelper,
-    IZoneMapper zoneMapper,
-    IFeaturesService features)
-    : ServiceBase("Sxc.EUiRes", connect: [appStates, stackServiceHelper, zoneMapper, features])
+public class EditUiResources(AppDataStackService stackServiceHelper, IZoneMapper zoneMapper, IFeaturesService features)
+    : ServiceBase("Sxc.EUiRes", connect: [stackServiceHelper, zoneMapper, features])
 {
 
     #region Resources / Constants
@@ -49,8 +45,7 @@ public class EditUiResources(
         if (features.IsEnabled(SxcFeatures.CdnSourceEdit.NameId) && siteId.HasValue)
         {
             var zoneId = zoneMapper.GetZoneId(siteId.Value);
-            var appPreset = appStates.GetPrimaryReader(zoneId, Log);
-            var stack = stackServiceHelper.Init(appPreset).GetStack(RootNameSettings);
+            var stack = stackServiceHelper.InitForPrimaryAppOfZone(zoneId).GetStack(RootNameSettings);
             var getResult = stack.InternalGetPath($"{WebResourcesNode}.{CdnSourceEditField}");
             cdnRoot = getResult.Result as string;
             useAltCdn = cdnRoot.HasValue() && cdnRoot != CdnDefault;

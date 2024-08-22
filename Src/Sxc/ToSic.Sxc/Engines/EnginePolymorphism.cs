@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.Helpers;
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Engines;
 public class EnginePolymorphism(PolymorphConfigReader polymorphism, IServerPaths serverPaths)
     : ServiceBase("Sxc.EngPly", connect: [polymorphism, serverPaths])
 {
-    internal (string, string) PolymorphTryToSwitchPath(string root, IView view, IAppStateInternal appState)
+    internal (string, string) PolymorphTryToSwitchPath(string root, IView view, IAppReader appReader)
     {
         var subPath = view.Path;
         var l = Log.Fn<(string, string)>($"{root}, {subPath}");
@@ -25,7 +26,7 @@ public class EnginePolymorphism(PolymorphConfigReader polymorphism, IServerPaths
 
         // Figure out the current edition - if none, stop here
         // New 2023-03-20 - if the view comes with a preset edition, it's an ajax-preview which should be respected
-        var edition = polymorphism.UseViewEditionOrGet(view, appState);
+        var edition = polymorphism.UseViewEditionOrGet(view, appReader);
         // view.Edition.NullIfNoValue() ?? _polymorphism.Init(appState.List).Edition();
         if (edition == null)
             return l.ReturnNull("no edition detected");

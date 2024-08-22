@@ -25,7 +25,7 @@ public class ImportContent(
     ZipImport zipImport,
     Generator<JsonSerializer> jsonSerializerGenerator,
     IGlobalConfiguration globalConfiguration,
-    IAppStates appStates,
+    IAppReaderFactory appReaders,
     LazySvc<IUser> userLazy,
     AppCachePurger appCachePurger,
     LazySvc<IEavFeaturesService> features)
@@ -33,7 +33,7 @@ public class ImportContent(
         connect:
         [
             envLogger, importerLazy, xmlImportWithFilesLazy, zipImport, jsonSerializerGenerator, globalConfiguration,
-            appStates, appCachePurger, userLazy, features
+            appReaders, appCachePurger, userLazy, features
         ])
 {
 
@@ -84,7 +84,7 @@ public class ImportContent(
                 throw new ArgumentException("a file is not json");
 
             // 1. Create content types
-            var serializer = jsonSerializerGenerator.New().SetApp(appStates.GetReader(new AppIdentity(zoneId, appId)));
+            var serializer = jsonSerializerGenerator.New().SetApp(appReaders.Get(new AppIdentity(zoneId, appId)));
 
             // 1.1 Deserialize json files
             var packages = files.ToDictionary(file => file.Name, file => serializer.UnpackAndTestGenericJsonV1(file.Contents));
@@ -129,7 +129,7 @@ public class ImportContent(
             // 2. Create Entities
 
             // 2.1 Reset serializer to use the new app
-            var appState = appStates.GetReader(new AppIdentity(zoneId, appId));
+            var appState = appReaders.Get(new AppIdentity(zoneId, appId));
             serializer = jsonSerializerGenerator.New().SetApp(appState);
             l.A("Load items");
 

@@ -24,7 +24,7 @@ internal class DataSourceOptionsMs: ServiceBase
     {
         var l = Log.Fn<IDataSourceOptions>($"{nameof(options)}: {options}, {nameof(identityRequired)}: {identityRequired}");
         // Ensure we have a valid AppIdentity
-        var appIdentity = _appIdentity ?? (options as IDataSourceOptions)?.AppIdentity
+        var appIdentity = _appIdentity ?? (options as IDataSourceOptions)?.AppIdentityOrReader
             ?? (identityRequired
                 ? throw new(
                     "Creating a DataSource requires an AppIdentity which must either be supplied by the context, " +

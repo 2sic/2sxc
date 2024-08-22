@@ -1,6 +1,7 @@
 ﻿using Custom.Data;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Services;
 
 namespace ToSic.Sxc.Code.Generate.Internal;
 
@@ -13,7 +14,7 @@ internal class CSharpCodeSpecs: FileGeneratorSpecs
 
     public string AppName { get; set; } = "App";
 
-    internal IAppState AppState { get; set; }
+    internal IAppReadContentTypes AppContentTypes { get; set; }
 
     public List<IContentType> ExportedContentContentTypes { get; set; }
 

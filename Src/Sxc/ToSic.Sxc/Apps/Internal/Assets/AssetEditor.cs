@@ -1,13 +1,13 @@
 ﻿using System.IO;
 using System.Text.RegularExpressions;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
+using ToSic.Eav.Apps.Internal.Specs;
 using ToSic.Eav.Apps.Internal.Work;
-using ToSic.Eav.Apps.State;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Apps.Internal.Assets;
@@ -24,27 +24,23 @@ public class AssetEditor(
 
     #region Constructor / DI
 
-    private IAppStateInternal _appState;
+    private IAppSpecs _appSpecs;
 
     private AssetEditInfo EditInfo { get; set; }
 
+    private IAppPaths _appPaths;
 
-    public AssetEditor Init(IAppStateInternal appState, string path, bool global, int viewId)
+
+    public AssetEditor Init(IAppReader appReader, string path, bool global, int viewId)
     {
-        InitShared(appState);
-        EditInfo = new(_appState.AppId, _appState.Name, path, global);
+        _appSpecs = appReader.Specs;
+        _appPaths = appPaths.Get(appReader, site);
+        EditInfo = new(_appSpecs.AppId, _appSpecs.Name, path, global);
         if (viewId == 0) return this;
 
-        var view = workViews.New(appState).Get(viewId);
+        var view = workViews.New(appReader).Get(viewId);
         AddViewDetailsAndTypes(EditInfo, view);
         return this;
-    }
-
-
-    private void InitShared(IAppStateInternal app)
-    {
-        _appState = app;
-        appPaths.Init(site, _appState);
     }
 
     #endregion
@@ -85,25 +81,24 @@ public class AssetEditor(
         if (path.Directory == null)
             throw new AccessViolationException("path is null");
 
-        if (path.Directory.FullName.IndexOf(appPaths.PhysicalPath, StringComparison.InvariantCultureIgnoreCase) != 0)
+        if (path.Directory.FullName.IndexOf(_appPaths.PhysicalPath, StringComparison.InvariantCultureIgnoreCase) != 0)
             throw new AccessViolationException("current user may not edit files outside of the app-scope");
     }
 
-    private static AssetEditInfo AddViewDetailsAndTypes(AssetEditInfo t, IView view)
+    private static AssetEditInfo AddViewDetailsAndTypes(AssetEditInfo template, IView view)
     {
         // Template specific properties, not really available in other files
-        t.Type = view.Type;
-        t.Name = view.Name;
-        t.HasList = view.UseForList;
-        t.TypeContent = view.ContentType;
-        t.TypeContentPresentation = view.PresentationType;
-        t.TypeList = view.HeaderType;
-        t.TypeListPresentation = view.HeaderPresentationType;
-        return t;
+        template.Type = view.Type;
+        template.Name = view.Name;
+        template.HasList = view.UseForList;
+        template.TypeContent = view.ContentType;
+        template.TypeContentPresentation = view.PresentationType;
+        template.TypeList = view.HeaderType;
+        template.TypeListPresentation = view.HeaderPresentationType;
+        return template;
     }
 
-    public string InternalPath => _internalPath ??= NormalizePath(Path.Combine(
-        appPaths.PhysicalPathSwitch(EditInfo.IsShared), EditInfo.FileName));
+    public string InternalPath => _internalPath ??= NormalizePath(Path.Combine(_appPaths.PhysicalPathSwitch(EditInfo.IsShared), EditInfo.FileName));
     private string _internalPath;
 
     private static string NormalizePath(string path) => Path.GetFullPath(new Uri(path).LocalPath);
@@ -139,7 +134,7 @@ public class AssetEditor(
         if (SanitizeFileNameAndCheckIfAssetAlreadyExists()) return false;
 
         // ensure the web.config exists (usually missing in the global area)
-        appFolderInitializer.Value.EnsureTemplateFolderExists(_appState.Folder, EditInfo.IsShared);
+        appFolderInitializer.Value.EnsureTemplateFolderExists(_appSpecs.Folder, EditInfo.IsShared);
 
         var absolutePath = InternalPath;
 

@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Context;
@@ -15,8 +14,8 @@ namespace ToSic.Sxc.Code.Generate.Internal;
 /// </summary>
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class FileSaver(ISite site, IAppStates appStates, IAppPathsMicroSvc appPaths)
-    : ServiceBase(SxcLogName + ".GenFSv", connect: [site, appStates, appPaths])
+public class FileSaver(ISite site, IAppReaderFactory appReadFac, IAppPathsMicroSvc appPaths)
+    : ServiceBase(SxcLogName + ".GenFSv", connect: [site, appReadFac, appPaths])
 {
     public void GenerateAndSaveFiles(IFileGenerator generator, IFileGeneratorSpecs specs)
     {
@@ -49,8 +48,8 @@ public class FileSaver(ISite site, IAppStates appStates, IAppPathsMicroSvc appPa
 
     private string GetAppFullPath(int appId)
     {
-        var appState = appStates.ToReader(appStates.GetCacheState(appId));
-        return appPaths.Init(site, appState).PhysicalPath;
+        var appState = appReadFac.Get(appId);
+        return appPaths.Get(appState, site).PhysicalPath;
     }
 
     private string GetAppCodeDataPhysicalPath(string mask, IFileGeneratorSpecs specs)

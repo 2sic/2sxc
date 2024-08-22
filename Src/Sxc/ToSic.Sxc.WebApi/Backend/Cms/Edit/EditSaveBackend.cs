@@ -62,7 +62,7 @@ public class EditSaveBackend(
         var appEntities = workEntities.New(_appId);
         var appCtx = appEntities.AppWorkCtx;
 
-        var ser = jsonSerializer.SetApp(appCtx.AppState);
+        var ser = jsonSerializer.SetApp(appCtx.AppReader);
         // Since we're importing directly into this app, we would prefer local content-types
         ser.PreferLocalAppTypes = true;
         validator.PrepareForEntityChecks(appEntities);

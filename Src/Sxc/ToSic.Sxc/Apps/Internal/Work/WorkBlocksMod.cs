@@ -42,7 +42,7 @@ public class WorkBlocksMod(
 
     public void AddEmptyItem(BlockConfiguration block, int? index, bool forceDraft)
     {
-        workFieldList.New(AppWorkCtx.AppState)
+        workFieldList.New(AppWorkCtx.AppReader)
             .FieldListUpdate(block.Entity, ViewParts.ContentPair, forceDraft,
                 lists =>
                 {
@@ -75,11 +75,11 @@ public class WorkBlocksMod(
 
         // create the new entity 
         // #ExtractEntitySave - should be ok
-        var entityId = workEntCreate.New(AppWorkCtx.AppState).GetOrCreate(newGuid, typeName, values);
+        var entityId = workEntCreate.New(AppWorkCtx.AppReader).GetOrCreate(newGuid, typeName, values);
 
         #region attach to the current list of items
 
-        var cbEnt = AppWorkCtx.AppState.List.One(parentId);
+        var cbEnt = AppWorkCtx.AppReader.List.One(parentId);
         var blockList = cbEnt.Children(field);
 
         var intList = blockList.Select(b => b.EntityId).ToList();
@@ -91,7 +91,7 @@ public class WorkBlocksMod(
         }
         var updateDic = new Dictionary<string, object> { { field, intList } };
         // #ExtractEntitySave - should be ok
-        workEntUpdate.New(AppWorkCtx.AppState).UpdateParts(cbEnt.EntityId, updateDic);
+        workEntUpdate.New(AppWorkCtx.AppReader).UpdateParts(cbEnt.EntityId, updateDic);
 
         #endregion
 

@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Services;
+﻿using ToSic.Eav.Apps.Internal.Specs;
+using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.DataSources.Sys.Internal;
@@ -11,23 +12,23 @@ namespace ToSic.Sxc.Backend.AppStack;
 public class AppStackBackend(
     AppDataStackService dataStackService,
     IZoneCultureResolver zoneCulture,
-    IAppStates appStates,
+    IAppReaderFactory appReaders,
     Generator<QueryDefinitionBuilder> qDefBuilder)
-    : ServiceBase("Sxc.ApiApQ", connect: [dataStackService, zoneCulture, appStates])
+    : ServiceBase("Sxc.ApiApQ", connect: [dataStackService, zoneCulture, appReaders])
 {
-    public List<AppStackDataRaw> GetAll(int appId, string part, string key, Guid? viewGuid) //, string[] languages = default)
+    public List<AppStackDataRaw> GetAll(int appId, string part, string key, Guid? viewGuid)
     {
         // Correct languages
         //if (languages == null || !languages.Any())
         var languages = zoneCulture.SafeLanguagePriorityCodes();
         // Get app 
-        var appState = appStates.GetReader(appId);
+        var appReader = appReaders.Get(appId);
         // Ensure we have the correct stack name
         var partName = SystemStackHelpers.GetStackNameOrNull(part);
         if (partName == null)
             throw new($"Parameter '{nameof(part)}' must be {RootNameSettings} or {RootNameResources}");
-        var viewMixin = GetViewSettingsForMixin(viewGuid, languages, appState, partName);
-        var results = GetStackDump(appState, partName, languages, viewMixin);
+        var viewMixin = GetViewSettingsForMixin(viewGuid, languages, appReader, partName);
+        var results = GetStackDump(appReader, partName, languages, viewMixin);
         
         results = SystemStackHelpers.ApplyKeysFilter(results, key);
         if (!results.Any())
@@ -43,7 +44,7 @@ public class AppStackBackend(
 
 
 
-    public List<PropertyDumpItem> GetStackDump(IAppState appState, string partName, string[] languages, IEntity viewSettingsMixin)
+    public List<PropertyDumpItem> GetStackDump(IAppReader appState, string partName, string[] languages, IEntity viewSettingsMixin)
     {
         // Build Sources List
         var settings = dataStackService.Init(appState).GetStack(partName, viewSettingsMixin);
@@ -54,7 +55,7 @@ public class AppStackBackend(
     }
 
 
-    private IEntity GetViewSettingsForMixin(Guid? viewGuid, string[] languages, IAppEntityService appState, string realName)
+    private IEntity GetViewSettingsForMixin(Guid? viewGuid, string[] languages, IAppReadEntities appState, string realName)
     {
         if (viewGuid == null)
             return null;

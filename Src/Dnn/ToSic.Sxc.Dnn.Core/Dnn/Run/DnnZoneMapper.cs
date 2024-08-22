@@ -19,12 +19,11 @@ internal class DnnZoneMapper : ZoneMapperBase
     private const string PortalSettingZoneId = "ToSIC_SexyContent_ZoneID";
 
     /// <inheritdoc />
-    public DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCreatorLazy, IAppStates appStates) : base(appStates, "DNN.ZoneMp")
+    public DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCreatorLazy, IAppsCatalog appsCatalog)
+        : base(appsCatalog, "DNN.ZoneMp", connect: [site, zoneCreatorLazy])
     {
-        ConnectLogs([
-            _site = site,
-            _zoneCreatorLazy = zoneCreatorLazy
-        ]);
+        _site = site;
+        _zoneCreatorLazy = zoneCreatorLazy;
     }
     private readonly LazySvc<ZoneCreator> _zoneCreatorLazy;
     private readonly Generator<ISite> _site;
@@ -82,7 +81,7 @@ internal class DnnZoneMapper : ZoneMapperBase
     {
         if (_supportedCultures != null) return _supportedCultures;
 
-        var availableEavLanguages = AppStates.Languages(site.ZoneId, true);
+        var availableEavLanguages = AppsCatalog.Zone(site.ZoneId).Languages;
         var defaultLanguageCode = site.DefaultCultureCode;
 
         return _supportedCultures = LocaleController.Instance.GetLocales(site.Id)

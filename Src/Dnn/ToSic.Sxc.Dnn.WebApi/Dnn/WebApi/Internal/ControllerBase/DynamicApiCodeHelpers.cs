@@ -99,25 +99,23 @@ internal class DynamicApiCodeHelpers: CodeHelper
         try
         {
             var routeAppPath = services.AppFolderUtilities.Setup(request).GetAppFolder(false);
-            var appState = SharedContextResolver.SetAppOrNull(routeAppPath)?.AppState.StateCache;
+            var appReader = SharedContextResolver.SetAppOrNull(routeAppPath)?.AppReader;
 
-            if (appState != default)
-            {
-                var siteCtx = SharedContextResolver.Site();
-                // Look up if page publishing is enabled - if module context is not available, always false
-                l.A($"AppId: {appState.AppId}");
-                var app = services.AppOverrideLazy.Value;
-                app.Init(siteCtx.Site, appState.PureIdentity(), new());
-                return l.Return(app, $"found #{app.AppId}");
-            }
+            if (appReader == default)
+                return l.ReturnNull("no app detected");
+            
+            var siteCtx = SharedContextResolver.Site();
+            // Look up if page publishing is enabled - if module context is not available, always false
+            l.A($"AppId: {appReader.AppId}");
+            var app = services.AppOverrideLazy.Value;
+            app.Init(siteCtx.Site, appReader.PureIdentity(), new());
+            return l.Return(app, $"found #{app.AppId}");
         }
         catch
         {
-            l.ReturnNull("error, ignore");
-            /* ignore */
+            // ignore
+            return l.ReturnNull("exception, ignore");
         }
-
-        return l.ReturnNull("no app detected");
     }
 
     #endregion

@@ -44,7 +44,7 @@ public class ResetApp(
 
         var contextZoneId = site.ZoneId;
         var appRead = impExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, contextZoneId);
-        var appPaths = appPathSvc.Init(site, appRead);
+        var appPaths = appPathSvc.Get(appRead, site);
 
         // migrate old .data/app.xml to App_Data
         ZipImport.MigrateOldAppDataFile(appPaths.PhysicalPath);

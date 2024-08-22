@@ -63,10 +63,10 @@ public class Field(ITypedItem parent, string name, CodeDataFactory cdf) : IField
             return null;
 
         // Get AppState to retrieve metadata - but exit early if we don't have it
-        var appState = cdf?.BlockOrNull?.Context?.AppState;
-        if (appState == null) return null;
+        var appReader = cdf?.BlockOrNull?.Context?.AppReader;
+        if (appReader == null) return null;
 
-        var mdOf = appState.GetMetadataOf(TargetTypes.CmsItem, rawString, "");
+        var mdOf = appReader.Metadata.GetMetadataOf(TargetTypes.CmsItem, rawString, title: "");
         ImageDecorator.AddRecommendations(mdOf, Url, cdf?._CodeApiSvc); // needs the url so it can check if we use image recommendations
         return mdOf;
     });

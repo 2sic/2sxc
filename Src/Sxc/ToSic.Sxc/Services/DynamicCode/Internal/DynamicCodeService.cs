@@ -26,15 +26,15 @@ public partial class DynamicCodeService: ServiceBase<DynamicCodeService.MyServic
         // Dependencies to get primary app
         LazySvc<ISite> site,
         LazySvc<IZoneMapper> zoneMapper,
-        LazySvc<IAppStates> appStates)
-        : MyServicesBase(connect: [/* never! serviceProvider */ logStore, user, site, zoneMapper, appStates])
+        LazySvc<IAppsCatalog> appsCatalog)
+        : MyServicesBase(connect: [/* never! serviceProvider */ logStore, user, site, zoneMapper, appsCatalog])
     {
         internal IServiceProvider ServiceProvider { get; } = serviceProvider;
         public LazySvc<ILogStore> LogStore { get; } = logStore;
         public LazySvc<IUser> User { get; } = user;
         public LazySvc<ISite> Site { get; } = site;
         public LazySvc<IZoneMapper> ZoneMapper { get; } = zoneMapper;
-        public LazySvc<IAppStates> AppStates { get; } = appStates;
+        public LazySvc<IAppsCatalog> AppsCatalog { get; } = appsCatalog;
     }
 
     public class MyScopedServices(

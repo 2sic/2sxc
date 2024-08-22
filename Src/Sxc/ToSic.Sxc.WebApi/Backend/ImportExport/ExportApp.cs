@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Integration;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.Data.Shared;
 using ToSic.Eav.ImportExport.Internal.Zip;
@@ -43,23 +44,23 @@ public class ExportApp(
     {
         var l = Log.Fn<AppExportInfoDto>($"get app info for app:{appId} and zone:{zoneId}");
         var contextZoneId = site.ZoneId;
-        var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, contextZoneId);
-        var appPaths = appPathSvc.Init(site, appRead);
+        var appReader = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, contextZoneId);
+        var appPaths = appPathSvc.Get(appReader, site);
+        var specs = appReader.Specs;
+        var zipExport = export.Init(zoneId, appId, specs.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
+        var cultCount = zoneMapper.CulturesEnabledWithState(site).Count;
 
-        var zipExport = export.Init(zoneId, appId, appRead.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
-        var cultCount = zoneMapper.CulturesEnabledWithState(site).Count; //c => c.IsEnabled);
-
-        var appCtx = appWorkCtxSvc.ContextPlus(appRead);
+        var appCtx = appWorkCtxSvc.ContextPlus(appReader);
         var appEntities = workEntities.New(appCtx);
         var appViews = workViews.New(appCtx);
 
-        var appHasCustomParent = appRead.HasCustomParentApp();
+        var appHasCustomParent = appReader.HasCustomParentApp();
 
         return l.Return(new()
         {
-            Name = appRead.Name,
-            Guid = appRead.NameId,
-            Version = appRead.VersionSafe(),
+            Name = specs.Name,
+            Guid = specs.NameId,
+            Version = specs.VersionSafe(),
             EntitiesCount = appEntities.All().Count(e => !e.HasAncestor()),
             LanguagesCount = cultCount,
             TemplatesCount = appViews.GetAll().Count(),
@@ -82,9 +83,9 @@ public class ExportApp(
 
         var contextZoneId = site.ZoneId;
         var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, contextZoneId);
-        var appPaths = appPathSvc.Init(site, appRead);
+        var appPaths = appPathSvc.Get(appRead, site);
 
-        var zipExport = export.Init(zoneId, appId, appRead.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
+        var zipExport = export.Init(zoneId, appId, appRead.Specs.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
         zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid, withSiteFiles);
 
         return l.ReturnTrue();
@@ -111,13 +112,13 @@ public class ExportApp(
 
         var contextZoneId = site.ZoneId;
         var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, contextZoneId);
-        var appPaths = appPathSvc.Init(site, appRead);
+        var appPaths = appPathSvc.Get(appRead, site);
 
-        var zipExport = export.Init(zoneId, appId, appRead.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
+        var zipExport = export.Init(zoneId, appId, appRead.Specs.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
         var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";
 
         var fileName =
-            $"2sxcApp_{appRead.NameWithoutSpecialChars()}_{appRead.VersionSafe()}{addOnWhenContainingContent}.zip";
+            $"2sxcApp_{appRead.Specs.ToFileNameWithVersion()}{addOnWhenContainingContent}.zip";
         Log.A($"file name:{fileName}");
 
         using var fileStream = zipExport.ExportApp(includeContentGroups, resetAppGuid, assetsAdam, assetsSite);

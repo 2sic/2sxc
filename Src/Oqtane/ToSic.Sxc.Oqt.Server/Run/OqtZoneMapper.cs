@@ -22,16 +22,14 @@ internal class OqtZoneMapper : ZoneMapperBase
         ISettingRepository settingRepository,
         Generator<ISite> site,
         LazySvc<ZoneCreator> zoneCreatorLazy,
-        OqtCulture oqtCulture, 
-        IAppStates appStates) : base(appStates, $"{OqtConstants.OqtLogPrefix}.ZoneMp")
+        OqtCulture oqtCulture,
+        IAppsCatalog appsCat) : base(appsCat, $"{OqtConstants.OqtLogPrefix}.ZoneMp", connect: [siteRepository, settingRepository, site, zoneCreatorLazy, oqtCulture])
     {
-        ConnectLogs([
-            _siteRepository = siteRepository,
-            _settingRepository = settingRepository,
-            _site = site,
-            _zoneCreatorLazy = zoneCreatorLazy,
-            _oqtCulture = oqtCulture
-        ]);
+        _siteRepository = siteRepository;
+        _settingRepository = settingRepository;
+        _site = site;
+        _zoneCreatorLazy = zoneCreatorLazy;
+        _oqtCulture = oqtCulture;
     }
     private readonly ISiteRepository _siteRepository;
     private readonly ISettingRepository _settingRepository;
@@ -97,7 +95,7 @@ internal class OqtZoneMapper : ZoneMapperBase
     public override List<ISiteLanguageState> CulturesWithState(ISite site)
     {
         if (_supportedCultures != null) return _supportedCultures;
-        var availableEavLanguages = AppStates.Languages(site.ZoneId, true);
+        var availableEavLanguages = AppsCatalog.Zone(site.ZoneId).Languages;
         _supportedCultures = _oqtCulture.GetSupportedCultures(site.Id, availableEavLanguages);
         return _supportedCultures;
     }

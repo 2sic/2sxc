@@ -12,7 +12,7 @@ partial class ContextData: IBlockDataSource
 {
     private readonly LazySvc<CodeInfoService> _codeChanges;
 
-    private readonly IAppStates _appStates;
+    private readonly IAppReaderFactory _appReaders;
 
 #pragma warning disable 618
     [System.Obsolete("Old property on this data source, should really not be used at all. Must add warning in v13, and remove ca. v15")]
@@ -24,7 +24,7 @@ partial class ContextData: IBlockDataSource
             if (_cache != null) return _cache;
             // on first access report problem
             _codeChanges.Value.Warn(CaV8To17("Data.Cache", "https://go.2sxc.org/brc-13-datasource-cache"));
-            return _cache = new(_appStates.GetReader(this));
+            return _cache = new(_appReaders.Get(this));
         }
     }
 

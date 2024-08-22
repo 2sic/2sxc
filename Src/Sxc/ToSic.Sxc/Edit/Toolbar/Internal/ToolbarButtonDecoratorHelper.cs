@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ToolbarButtonDecoratorHelper(IAppStates appStates) : ServiceBase($"{SxcLogName}.TbdHlp")
+public class ToolbarButtonDecoratorHelper(IAppReaderFactory appReaders) : ServiceBase($"{SxcLogName}.TbdHlp", connect: [appReaders])
 {
     public IAppIdentity MainAppIdentity { get; set; }
 
@@ -15,12 +15,14 @@ public class ToolbarButtonDecoratorHelper(IAppStates appStates) : ServiceBase($"
         // If no special context was given, use the main one from the current context
         appIdentity ??= MainAppIdentity;
 
-        if (appIdentity == null || !typeName.HasValue() || !command.HasValue()) return null;
+        if (appIdentity == null || !typeName.HasValue() || !command.HasValue())
+            return null;
 
-        var appState = appStates.GetReader(appIdentity);
+        var appReader = appReaders.Get(appIdentity);
 
-        var type = appState?.GetContentType(typeName);
-        if (type == null) return null;
+        var type = appReader?.GetContentType(typeName);
+        if (type == null)
+            return null;
 
         var md = type.Metadata
             .OfType(ToolbarButtonDecorator.TypeName)

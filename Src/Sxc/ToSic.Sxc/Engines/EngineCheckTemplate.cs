@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Services;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Code.Help;
 using ToSic.Eav.Context;
 using ToSic.Eav.Security.Internal;
@@ -17,7 +18,7 @@ public class EngineCheckTemplate(LazySvc<AppPermissionCheck> appPermCheckLazy)
     /// Template Exceptions like missing configuration or defined type not found
     /// </summary>
     /// <exception cref="RenderingException"></exception>
-    internal void CheckExpectedTemplateErrors(IView view, IAppContentTypeService appState)
+    internal void CheckExpectedTemplateErrors(IView view, IAppReadContentTypes appState)
     {
         if (view == null)
             throw new RenderingException(ErrHelpConfigMissing);
@@ -42,7 +43,7 @@ public class EngineCheckTemplate(LazySvc<AppPermissionCheck> appPermCheckLazy)
         // do security check IF security exists
         // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
         var templatePermissions = appPermCheckLazy.Value
-            .ForItem(appContext, appContext.AppState, Template.Entity);
+            .ForItem(appContext, appContext.AppReader, Template.Entity);
 
         // Views only use permissions to prevent access, so only check if there are any configured permissions
         if (appContext.User.IsSiteAdmin || !templatePermissions.HasPermissions)
