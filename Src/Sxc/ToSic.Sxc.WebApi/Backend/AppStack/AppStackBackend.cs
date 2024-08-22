@@ -22,7 +22,7 @@ public class AppStackBackend(
         //if (languages == null || !languages.Any())
         var languages = zoneCulture.SafeLanguagePriorityCodes();
         // Get app 
-        var appReader = appReaders.GetReader(appId);
+        var appReader = appReaders.Get(appId);
         // Ensure we have the correct stack name
         var partName = SystemStackHelpers.GetStackNameOrNull(part);
         if (partName == null)
@@ -55,7 +55,7 @@ public class AppStackBackend(
     }
 
 
-    private IEntity GetViewSettingsForMixin(Guid? viewGuid, string[] languages, IAppEntityService appState, string realName)
+    private IEntity GetViewSettingsForMixin(Guid? viewGuid, string[] languages, IAppReadEntities appState, string realName)
     {
         if (viewGuid == null)
             return null;

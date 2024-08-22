@@ -12,10 +12,10 @@ public class EngineAppRequirements(IRequirementsService requirements) : EngineRe
     internal bool RequirementsMet(IAppReader appState) 
         => !RequirementsStatus(appState).SafeAny();
 
-    private List<RequirementStatus> RequirementsStatus(IAppReader appState)
-        => appState.GetPiggyBackExpiring("AppRequirementsStatus",
+    private List<RequirementStatus> RequirementsStatus(IAppReader appReader)
+        => appReader.GetPiggyBackExpiring("AppRequirementsStatus",
             // take the requirements reported by the app
-            () => requirements.UnfulfilledRequirements(appState.Metadata)
+            () => requirements.UnfulfilledRequirements(appReader.Specs.Metadata)
                 // Merge with the basic requirements for 2sxc 17 to work
                 //.Concat(requirements.UnfulfilledRequirements(SysFeatureSuggestions.CSharp08.ToListOfOne()).ToList())
                 .ToList()

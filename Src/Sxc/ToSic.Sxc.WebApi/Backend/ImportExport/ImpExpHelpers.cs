@@ -18,7 +18,7 @@ public class ImpExpHelpers(IAppReaders appStates) : ServiceBase("Sxc.ImExHl", co
             throw Eav.WebApi.Errors.HttpException.PermissionDenied("Tried to access app from another zone. Requires SuperUser permissions.");
         }
 
-        var app = appStates.GetReader(new AppIdentity(zoneId, appId));
+        var app = appStates.Get(new AppIdentity(zoneId, appId));
         return l.Return(app);
     }
 

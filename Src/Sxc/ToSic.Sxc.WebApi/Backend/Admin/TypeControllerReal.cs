@@ -43,7 +43,7 @@ public class TypeControllerReal(
     public ScopesDto Scopes(int appId)
     {
         var l = Log.Fn<ScopesDto>($"{appId}");
-        var reader = appReaders.GetContentTypes(appId);
+        var reader = appReaders.Get(appId);
         var dic = reader.ContentTypes.GetAllScopesWithLabels();
         var infos = dic
             .Select(pair =>

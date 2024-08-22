@@ -82,7 +82,7 @@ internal class CacheSpecs(ILog parentLog, ICodeApiService codeApiSvc, LazySvc<IA
     public ICacheSpecs WatchAppData(NoParamOrder protector = default)
         => Next(policyMaker.WatchNotifyKeys([AppReader.StateCache]));
 
-    private IAppReader AppReader => _appReader ??= appReaders.Value.GetReader(codeApiSvc.App.AppId);
+    private IAppReader AppReader => _appReader ??= appReaders.Value.Get(codeApiSvc.App.AppId);
     private IAppReader _appReader;
 
     public ICacheSpecs WatchAppFolder(NoParamOrder protector = default, bool? withSubfolders = true)

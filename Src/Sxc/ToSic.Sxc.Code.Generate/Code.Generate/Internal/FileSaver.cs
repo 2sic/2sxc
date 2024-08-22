@@ -48,7 +48,7 @@ public class FileSaver(ISite site, IAppReaders appStates, IAppPathsMicroSvc appP
 
     private string GetAppFullPath(int appId)
     {
-        var appState = appStates.GetReader(appId);
+        var appState = appStates.Get(appId);
         return appPaths.Get(appState, site).PhysicalPath;
     }
 

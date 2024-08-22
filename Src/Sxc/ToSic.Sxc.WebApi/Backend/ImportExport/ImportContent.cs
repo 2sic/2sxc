@@ -84,7 +84,7 @@ public class ImportContent(
                 throw new ArgumentException("a file is not json");
 
             // 1. Create content types
-            var serializer = jsonSerializerGenerator.New().SetApp(appReaders.GetReader(new AppIdentity(zoneId, appId)));
+            var serializer = jsonSerializerGenerator.New().SetApp(appReaders.Get(new AppIdentity(zoneId, appId)));
 
             // 1.1 Deserialize json files
             var packages = files.ToDictionary(file => file.Name, file => serializer.UnpackAndTestGenericJsonV1(file.Contents));
@@ -129,7 +129,7 @@ public class ImportContent(
             // 2. Create Entities
 
             // 2.1 Reset serializer to use the new app
-            var appState = appReaders.GetReader(new AppIdentity(zoneId, appId));
+            var appState = appReaders.Get(new AppIdentity(zoneId, appId));
             serializer = jsonSerializerGenerator.New().SetApp(appState);
             l.A("Load items");
 

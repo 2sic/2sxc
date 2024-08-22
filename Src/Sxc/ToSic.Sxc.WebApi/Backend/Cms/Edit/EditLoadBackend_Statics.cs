@@ -13,7 +13,7 @@ partial class EditLoadBackend
     /// </summary>
     /// <returns></returns>
     private JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleWithHeader<IEntity> bundle,
-        JsonSerializer jsonSerializer, IAppState appState, IAppWorkCtx appSysCtx)
+        JsonSerializer jsonSerializer, IAppReader appReader, IAppWorkCtx appSysCtx)
     {
         var l = Log.Fn<JsonEntity>();
         // attach original metadata assignment when creating a new one
@@ -43,7 +43,7 @@ partial class EditLoadBackend
                 var targetType = targetId.TargetType != 0
                     ? targetId.TargetType
                     : jsonSerializer.MetadataTargets.GetId(targetId.Target);
-                ent.For.Title = appState.FindTargetTitle(targetType,
+                ent.For.Title = appReader.FindTargetTitle(targetType,
                     targetId.String ?? targetId.Guid?.ToString() ?? targetId.Number?.ToString());
             }
         }

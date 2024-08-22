@@ -202,7 +202,7 @@ public class AppCodeLoader(
     {
         var l = Log.Fn<(string physicalPath, string relativePath)>($"{nameof(folder)}: '{folder}'; {spec}");
         l.A($"site id: {site.Id}, ...: {site.AppsRootPhysicalFull}");
-        var appPaths = appPathsLazy.Value.Get(appStates.GetReader(spec.AppId), site);
+        var appPaths = appPathsLazy.Value.Get(appStates.Get(spec.AppId), site);
         var folderWithEdition = folder.HasValue() 
             ? spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder
             : spec.Edition;

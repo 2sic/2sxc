@@ -50,11 +50,11 @@ public partial class EditLoadBackend(
         
         // do early permission check - but at this time it may be that we don't have the types yet
         // because they may be group/id combinations, without type information which we'll look up afterward
-        var appReader = appReaders.GetReader(appId);
+        var appReader = appReaders.Get(appId);
         items = contentGroupList.Init(appReader.PureIdentity())
             .ConvertGroup(items)
             .ConvertListIndexToId(items);
-        TryToAutoFindMetadataSingleton(items, context.AppReader);
+        TryToAutoFindMetadataSingleton(items, context.AppReader.Metadata);
 
         // Special Edge Case
         // If the user is Module-Admin then we can skip the remaining checks
@@ -163,7 +163,7 @@ public partial class EditLoadBackend(
     /// <summary>
     /// new 2020-12-08 - correct entity-id with lookup of existing if marked as singleton
     /// </summary>
-    private bool TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, IMetadataSource appState)
+    private bool TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, IMetadataSource appMdSource)
     {
         var l = Log.Fn<bool>();
         foreach (var header in list
@@ -175,10 +175,10 @@ public partial class EditLoadBackend(
             // #TargetTypeIdInsteadOfTarget
             var type = mdFor.TargetType != 0 ? mdFor.TargetType : mdTargetTypes.GetId(mdFor.Target);
             var mds = mdFor.Guid != null
-                ? appState.GetMetadata(type, mdFor.Guid.Value, header.ContentTypeName)
+                ? appMdSource.GetMetadata(type, mdFor.Guid.Value, header.ContentTypeName)
                 : mdFor.Number != null
-                    ? appState.GetMetadata(type, mdFor.Number.Value, header.ContentTypeName)
-                    : appState.GetMetadata(type, mdFor.String, header.ContentTypeName);
+                    ? appMdSource.GetMetadata(type, mdFor.Number.Value, header.ContentTypeName)
+                    : appMdSource.GetMetadata(type, mdFor.String, header.ContentTypeName);
 
             var mdList = mds.ToArray();
             if (mdList.Length > 1)

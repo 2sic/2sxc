@@ -28,14 +28,14 @@ internal class InsightsAppCodeOverview(IAppReaders appReaders, IAppStateCacheSer
                 {
                     var appIdentity = new AppIdentity(zone.Value.ZoneId, a.Key);
                     var inCache = appStates.IsCached(appIdentity);
-                    var appState = inCache ? appReaders.GetReader(appIdentity) : null;
+                    var appState = inCache ? appReaders.Get(appIdentity) : null;
                     return new
                     {
                         Id = a.Key,
                         Guid = a.Value,
                         InCache = inCache,
                         Name = inCache
-                            ? appState?.Name ?? "unknown, app-infos not json"
+                            ? appState?.Specs.Name ?? "unknown, app-infos not json"
                             : "not-loaded",
                         Reader = appState
                     };

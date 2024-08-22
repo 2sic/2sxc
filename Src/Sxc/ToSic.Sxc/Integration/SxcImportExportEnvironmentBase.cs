@@ -43,7 +43,7 @@ public abstract class SxcImportExportEnvironmentBase: EavImportExportEnvironment
         => AppPaths(zoneId, appId).PhysicalPathShared;
 
     private IAppPaths AppPaths(int zoneId, int appId) => _appPaths
-        ??= _services.AppPaths.Get(_services.AppReaders.GetReader(new AppIdentity(zoneId, appId)), _services.Site);
+        ??= _services.AppPaths.Get(_services.AppReaders.Get(new AppIdentity(zoneId, appId)), _services.Site);
     private IAppPaths _appPaths;
 
 

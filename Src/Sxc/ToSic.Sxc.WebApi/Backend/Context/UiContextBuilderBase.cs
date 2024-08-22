@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Integration;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.MetadataDecorators;
 using ToSic.Eav.Apps.Internal.Specs;
 using ToSic.Eav.Apps.State;
@@ -49,7 +50,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
 
     public IUiContextBuilder InitApp(IAppReader appState)
     {
-        AppSpecsOrNull = appState;
+        AppSpecsOrNull = appState.Specs;
         _appReaderOrNull = appState;
         return this;
     }
@@ -128,7 +129,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
 
     protected virtual ContextEnableDto GetEnable(CtxEnable ctx)
     {
-        var isRealApp = AppSpecsOrNull != null && !AppSpecsOrNull.IsContentApp();// App.NameId != Eav.Constants.DefaultAppGuid; // #SiteApp v13 - Site-Apps should also have permissions
+        var isRealApp = AppSpecsOrNull != null && ! AppSpecsOrNull.IsContentApp();
         var user = Services.SiteCtx.User;
         var dto = new ContextEnableDto
         {
@@ -148,8 +149,9 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
     protected virtual ContextAppDto GetApp(Ctx flags)
     {
         if (_appReaderOrNull == null) return null;
-        var appSpecs = _appReaderOrNull.Specs;
-        var paths = Services.AppPaths.Get(_appReaderOrNull, Services.SiteCtx.Site);
+        var appReader = _appReaderOrNull;
+        var appSpecs = appReader.Specs;
+        var paths = Services.AppPaths.Get(appReader, Services.SiteCtx.Site);
         var result = new ContextAppDto
         {
             Id = appSpecs.AppId,
@@ -180,12 +182,12 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
                 ? "Site" 
                 : "App";
 
-        result.Permissions = new() { Count = _appReaderOrNull.Metadata.Permissions.Count() };
+        result.Permissions = new() { Count = appReader.Specs.Metadata.Permissions.Count() };
 
-        result.IsShared = _appReaderOrNull.IsShared();
-        result.IsInherited = _appReaderOrNull.IsInherited();
+        result.IsShared = appReader.IsShared();
+        result.IsInherited = appReader.IsInherited();
 
-        result.Icon = AppAssetThumbnail.GetUrl(_appReaderOrNull, paths, Services.GlobalPaths);
+        result.Icon = AppAssetThumbnail.GetUrl(appReader, paths, Services.GlobalPaths);
         return result;
     }
 

@@ -16,7 +16,7 @@ public class AdamConfiguration(IAppReaders appReaders)
             if (_adamAppRootFolder != null)
                 return _adamAppRootFolder;
 
-            var found = appReaders.GetPresetReader().List.FirstOrDefaultOfType(TypeName)?.Get<string>(ConfigFieldRootFolder);
+            var found = appReaders.GetSystemPreset().List.FirstOrDefaultOfType(TypeName)?.Get<string>(ConfigFieldRootFolder);
 
             return _adamAppRootFolder = found ?? AdamFolderMask;
         }

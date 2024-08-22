@@ -29,7 +29,7 @@ internal class CmsContext(
     internal IContextOfSite CtxSite => _ctxSite.Get(() => CtxBlockOrNull ?? initialContext);
     private readonly GetOnce<IContextOfSite> _ctxSite = new();
 
-    private IAppReader SiteAppState => _siteAppState ??= appReaders.GetPrimaryReader(CtxSite.Site.ZoneId);
+    private IAppReader SiteAppState => _siteAppState ??= appReaders.GetZonePrimary(CtxSite.Site.ZoneId);
     private IAppReader _siteAppState;
 
     // Note: Internal so it can be used for View<T, T>

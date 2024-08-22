@@ -167,7 +167,7 @@ internal class AppApiControllerManager : IHasLog
         // Figure out the current edition
         var edition = FigureEdition(ctxResolver).TrimLastSlash();
 
-        var spec = new HotBuildSpec(appState?.AppId ?? Eav.Constants.AppIdEmpty, edition: edition, appState?.Name);
+        var spec = new HotBuildSpec(appState?.AppId ?? Eav.Constants.AppIdEmpty, edition: edition, appState?.Specs.Name);
 
         return l.ReturnAsOk(spec);
     }

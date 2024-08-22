@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Integration;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.MetadataDecorators;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.Code.InfoSystem;
@@ -39,21 +40,21 @@ public class AppsBackend(
 
         var paths = appPathsGen.New().Get(appReader, context.Site);
         var thumbnail = AppAssetThumbnail.GetUrl(appReader, paths, globalPaths);
-
+        var specs = appReader.Specs;
         return new ()
         {
             Id = appReader.AppId,
-            IsApp = appReader.NameId != Eav.Constants.DefaultAppGuid &&
-                    appReader.NameId != Eav.Constants.PrimaryAppGuid, // #SiteApp v13
-            Guid = appReader.NameId,
-            Name = appReader.Name,
-            Folder = appReader.Folder,
+            IsApp = specs.NameId != Eav.Constants.DefaultAppGuid &&
+                    specs.NameId != Eav.Constants.PrimaryAppGuid, // #SiteApp v13
+            Guid = specs.NameId,
+            Name = specs.Name,
+            Folder = specs.Folder,
             AppRoot = paths.Path,
-            IsHidden = appReader.Configuration.IsHidden,
-            ConfigurationId = appReader.Configuration.Id,
+            IsHidden = specs.Configuration.IsHidden,
+            ConfigurationId = specs.Configuration.Id,
             Items = appReader.List.Count,
-            Thumbnail = thumbnail,// a.Thumbnail,
-            Version = appReader.VersionSafe(),
+            Thumbnail = thumbnail,
+            Version = specs.VersionSafe(),
             IsGlobal = appReader.IsShared(),
             IsInherited = appReader.IsInherited(),
             Lightspeed = lightspeed,

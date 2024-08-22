@@ -100,7 +100,7 @@ internal class AppDataSourcesLoader(
         var l = Log.Fn<HotBuildSpec>($"{appId}:'{appId}'", timer: true);
 
         // Prepare / Get App State
-        var appState = appReaders.GetAppSpecs(appId);
+        var appState = appReaders.Get(appId).Specs;
 
         // Figure out the current edition
         var edition = FigureEdition().TrimLastSlash();
@@ -122,7 +122,7 @@ internal class AppDataSourcesLoader(
 
     private (string physicalPath, string relativePath) GetAppDataSourceFolderPaths(int appId)
     {
-        var appReader = appReaders.GetReader(appId);
+        var appReader = appReaders.Get(appId);
         var appPaths = appPathsLazy.Value.Get(appReader, site);
         var physicalPath = Path.Combine(appPaths.PhysicalPath, DataSourcesFolder);
         var relativePath = Path.Combine(appPaths.RelativePath, DataSourcesFolder);
@@ -241,7 +241,7 @@ internal class AppDataSourcesLoader(
         if (types == null) return l.Return([], "types are null");
 
         // App state for automatic lookup of configuration content-types
-        var appState = appReaders.GetContentTypes(appId);
+        var appState = appReaders.Get(appId);
         var data = types
             .Select(pair =>
             {

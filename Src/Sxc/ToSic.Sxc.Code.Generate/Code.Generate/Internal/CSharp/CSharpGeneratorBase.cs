@@ -31,15 +31,15 @@ public abstract class CSharpGeneratorBase(IUser user, IAppReaders appStates, str
     internal CSharpCodeSpecs BuildSpecs(IFileGeneratorSpecs parameters)
     {
         // Prepare App State and add to Specs
-        var appState = appStates.GetReader(parameters.AppId);
+        var appReader = appStates.Get(parameters.AppId);
 
         var specs = new CSharpCodeSpecs
         {
             AppId = parameters.AppId,
             Edition = parameters.Edition ?? "",
             DateTime = parameters.DateTime,
-            AppContentTypes = appState,
-            AppName = appState.Name,
+            AppContentTypes = appReader,
+            AppName = appReader.Specs.Name,
         };
         return specs;
     }

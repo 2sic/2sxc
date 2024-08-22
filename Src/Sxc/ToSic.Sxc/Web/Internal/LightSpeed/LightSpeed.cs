@@ -59,7 +59,7 @@ internal class LightSpeed(
 
         // get dependent appStates
         var dependentAppsStates = data.DependentApps
-            .Select(da => appReadersLazy.Value.GetReader(da.AppId))
+            .Select(da => appReadersLazy.Value.Get(da.AppId))
             .ToList();
         l.A($"{nameof(dependentAppsStates)} count {dependentAppsStates.Count}");
 
@@ -76,7 +76,7 @@ internal class LightSpeed(
         {
             l.A("dependentAppsStates add");
             var primary = appsCatalog.Value.PrimaryAppIdentity(appState.ZoneId);
-            dependentAppsStates.Add(appReadersLazy.Value.GetReader(primary));
+            dependentAppsStates.Add(appReadersLazy.Value.Get(primary));
         }
 
         l.A($"Found {data.DependentApps.Count} apps: " + string.Join(",", data.DependentApps.Select(da => da.AppId)));

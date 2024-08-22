@@ -31,7 +31,7 @@ internal class GlobalTypesCheck(LazySvc<IAppReaders> appReaders)
         var errorMessage = string.Empty;
 
         // Check if there is less than 50 global types and warn user to restart application.
-        _globalTypesCheckedAndError = appReaders.Value.GetPresetReader().ContentTypes.Count() < 50;
+        _globalTypesCheckedAndError = appReaders.Value.GetSystemPreset().ContentTypes.Count() < 50;
         if (_globalTypesCheckedAndError.Value)
         {
             errorMessage = "<strong>Warning:</strong> The \"global types\" are not loaded. Please <a href=\"/admin/system\">Restart Application</a>.";

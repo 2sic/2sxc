@@ -100,7 +100,7 @@ public class AppControllerReal(
     }
 
     public List<SiteLanguageDto> Languages(int appId)
-        => languagesBackendLazy.Value.GetLanguagesOfApp(appReadersLazy.Value.GetReader(appId), true);
+        => languagesBackendLazy.Value.GetLanguagesOfApp(appReadersLazy.Value.Get(appId), true);
 
     public AppExportInfoDto Statistics(int zoneId, int appId) => exportAppLazy.Value.GetAppInfo(zoneId, appId);
 

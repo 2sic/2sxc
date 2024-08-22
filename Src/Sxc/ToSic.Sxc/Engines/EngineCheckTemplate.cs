@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Services;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Code.Help;
 using ToSic.Eav.Context;
 using ToSic.Eav.Security.Internal;
@@ -17,7 +18,7 @@ public class EngineCheckTemplate(LazySvc<AppPermissionCheck> appPermCheckLazy)
     /// Template Exceptions like missing configuration or defined type not found
     /// </summary>
     /// <exception cref="RenderingException"></exception>
-    internal void CheckExpectedTemplateErrors(IView view, IAppContentTypeService appState)
+    internal void CheckExpectedTemplateErrors(IView view, IAppReadContentTypes appState)
     {
         if (view == null)
             throw new RenderingException(ErrHelpConfigMissing);

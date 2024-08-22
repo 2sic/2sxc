@@ -25,13 +25,13 @@ public class PolymorphConfigReader(LazySvc<ServiceSwitcher<IPolymorphismResolver
     /// </summary>
     public string UseViewEditionOrGet(IBlock block) => UseViewEditionOrGet(block?.View, block?.Context.AppReader);
 
-    public string UseViewEditionOrGet(IView view, IAppState appState)
+    public string UseViewEditionOrGet(IView view, IAppReader appReader)
     {
         var viewEdition = view?.Edition.NullIfNoValue();
         if (viewEdition != null) return viewEdition;
 
-        _appId = appState.AppId;
-        Init(appState.List);
+        _appId = appReader.AppId;
+        Init(appReader.List);
         return Edition();
     }
 

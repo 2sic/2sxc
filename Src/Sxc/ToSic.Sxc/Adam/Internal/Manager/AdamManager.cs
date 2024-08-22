@@ -88,7 +88,7 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
     /// <summary>
     /// Path to the app assets
     /// </summary>
-    public string Path => _path ??= Services.AdamConfiguration.PathForApp(AppContext.AppReader);
+    public string Path => _path ??= Services.AdamConfiguration.PathForApp(AppContext.AppReader.Specs);
     private string _path;
 
 
@@ -114,7 +114,7 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
     /// </summary>
     internal IMetadata Create(string key, string title, Action<IMetadataOf> mdInit = null)
     {
-        var mdOf = new MetadataOf<string>((int)TargetTypes.CmsItem, key, title, null, AppWorkCtx.AppReader);
+        var mdOf = new MetadataOf<string>((int)TargetTypes.CmsItem, key, title, null, AppWorkCtx.AppReader.StateCache);
         mdInit?.Invoke(mdOf);
         return Cdf.Metadata(mdOf);
     }

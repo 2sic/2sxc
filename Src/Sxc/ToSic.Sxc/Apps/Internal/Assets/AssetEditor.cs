@@ -33,7 +33,7 @@ public class AssetEditor(
 
     public AssetEditor Init(IAppReader appReader, string path, bool global, int viewId)
     {
-        _appSpecs = appReader;
+        _appSpecs = appReader.Specs;
         _appPaths = appPaths.Get(appReader, site);
         EditInfo = new(_appSpecs.AppId, _appSpecs.Name, path, global);
         if (viewId == 0) return this;

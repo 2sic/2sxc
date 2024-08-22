@@ -9,7 +9,7 @@ public class PolymorphismBackend(PolymorphConfigReader polymorphism, IAppReaders
     public PolymorphismDto Polymorphism(int appId)
     {
         var callLog = Log.Fn<PolymorphismDto>($"a#{appId}");
-        var appState = appReaders.GetReader(appId);
+        var appState = appReaders.Get(appId);
         var poly = polymorphism.Init(appState.List);
         var result = new PolymorphismDto
         {

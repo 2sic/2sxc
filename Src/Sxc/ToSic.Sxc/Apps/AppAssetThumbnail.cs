@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.MetadataDecorators;
 using ToSic.Eav.Apps.Internal.Specs;
 using ToSic.Eav.Apps.State;
@@ -23,7 +24,7 @@ internal class AppAssetThumbnail(IAppReader appReader, IAppPaths appPaths, LazyS
     {
         // Primary app - we only PiggyBack cache the icon in this case
         // Because otherwise the icon could get moved, and people would have a hard time seeing the effect
-        if (appReader.NameId == Eav.Constants.PrimaryAppGuid)
+        if (appReader.Specs.IsSiteSettingsApp())
             return appReader.GetPiggyBack("app-thumbnail-primary",
                 () => globalPaths.Value.GlobalPathTo(AppPrimaryIconFile, PathTypes.Link));
 

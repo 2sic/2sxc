@@ -150,7 +150,7 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
     private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string path)
     {
         var l = Log.Fn<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
-        var app = _appReaders.GetReader(appId);
+        var app = _appReaders.Get(appId);
         var assetEditor = _assetEditorGenerator.New();
 
         assetEditor.Init(app, path, global, templateId);
@@ -161,7 +161,7 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
     private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(AppFileDto assetFromTemplateDto)
     {
         var l = Log.Fn<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
-        var app = _appReaders.GetReader(assetFromTemplateDto.AppId);
+        var app = _appReaders.Get(assetFromTemplateDto.AppId);
         var assetEditor = _assetEditorGenerator.New().Init(app, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0);
         assetEditor.EnsureUserMayEditAssetOrThrow(assetEditor.InternalPath);
         return l.Return(assetEditor);

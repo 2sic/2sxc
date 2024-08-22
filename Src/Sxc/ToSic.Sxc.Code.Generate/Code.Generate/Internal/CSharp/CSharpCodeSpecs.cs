@@ -14,7 +14,7 @@ internal class CSharpCodeSpecs: FileGeneratorSpecs
 
     public string AppName { get; set; } = "App";
 
-    internal IAppContentTypeService AppContentTypes { get; set; }
+    internal IAppReadContentTypes AppContentTypes { get; set; }
 
     public List<IContentType> ExportedContentContentTypes { get; set; }
 
