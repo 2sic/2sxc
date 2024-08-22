@@ -125,7 +125,7 @@ internal class LightSpeed(
     private bool IsEnabledOnDependentApps(List<IAppReader> appStates)
     {
         var l = Log.Fn<bool>(timer: true);
-        foreach (var appState in appStates.Where(appState => !GetLightSpeedConfig(appState.StateCache).IsEnabled))
+        foreach (var appState in appStates.Where(appState => !GetLightSpeedConfig(appState).IsEnabled))
             return l.ReturnFalse($"Can't cache; caching disabled on dependent app {appState.AppId}");
         return l.ReturnTrue("ok");
     }
@@ -233,13 +233,13 @@ internal class LightSpeed(
         ?? AppConfig;
     private LightSpeedDecorator _lightSpeedConfig;
 
-    private LightSpeedDecorator AppConfig => _lsd.Get(() => GetLightSpeedConfig(AppState.StateCache));
+    private LightSpeedDecorator AppConfig => _lsd.Get(() => GetLightSpeedConfig(AppState));
     private readonly GetOnce<LightSpeedDecorator> _lsd = new();
 
-    private LightSpeedDecorator GetLightSpeedConfig(IAppStateCache appState)
+    private LightSpeedDecorator GetLightSpeedConfig(IAppReader appReader)
     {
         var l = Log.Fn<LightSpeedDecorator>();
-        var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(appState, Log);
+        var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(appReader, Log);
         return l.Return(decoFromPiggyBack, $"has decorator: {decoFromPiggyBack.Entity != null}");
     }
 

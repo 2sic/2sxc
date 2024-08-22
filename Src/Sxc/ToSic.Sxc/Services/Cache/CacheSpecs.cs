@@ -1,7 +1,7 @@
 ﻿using System.Collections.Specialized;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
-using ToSic.Eav.Apps.State;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
@@ -80,7 +80,7 @@ internal class CacheSpecs(ILog parentLog, ICodeApiService codeApiSvc, LazySvc<IA
 
 
     public ICacheSpecs WatchAppData(NoParamOrder protector = default)
-        => Next(policyMaker.WatchNotifyKeys([AppReader.StateCache]));
+        => Next(policyMaker.WatchNotifyKeys([AppReader.GetCache()]));
 
     private IAppReader AppReader => _appReader ??= appReaders.Value.Get(codeApiSvc.App.AppId);
     private IAppReader _appReader;

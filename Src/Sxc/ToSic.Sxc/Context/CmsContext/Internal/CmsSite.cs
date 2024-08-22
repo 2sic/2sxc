@@ -9,10 +9,10 @@ namespace ToSic.Sxc.Context.Internal;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class CmsSite: CmsContextPartBase<ISite>, ICmsSite
 {
-    public ICmsSite Init(CmsContext parent, IAppReader appState)
+    public ICmsSite Init(CmsContext parent, IAppReader appReader)
     {
         base.Init(parent, parent.CtxSite.Site);
-        _appReader = appState;
+        _appReader = appReader;
         return this;
     }
 
@@ -23,5 +23,5 @@ internal class CmsSite: CmsContextPartBase<ISite>, ICmsSite
     public string UrlRoot => GetContents().UrlRoot ?? string.Empty;
 
     protected override IMetadataOf GetMetadataOf() 
-        => ExtendWithRecommendations(_appReader.GetMetadataOf(TargetTypes.Site, Id, Url));
+        => ExtendWithRecommendations(_appReader.Metadata.GetMetadataOf(TargetTypes.Site, Id, title: Url));
 }

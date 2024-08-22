@@ -12,6 +12,6 @@ internal class CmsModule(CmsContext parent, IModule module, IBlock block)
     private ICmsBlock _cmsBlock;
 
     protected override IMetadataOf GetMetadataOf() 
-        => ExtendWithRecommendations(block.Context.AppReader.GetMetadataOf(TargetTypes.Module, Id, "Module " + Id));
+        => ExtendWithRecommendations(block.Context.AppReader.Metadata.GetMetadataOf(TargetTypes.Module, Id, title: "Module " + Id));
 
 }

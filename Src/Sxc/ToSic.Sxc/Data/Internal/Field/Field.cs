@@ -66,7 +66,7 @@ public class Field(ITypedItem parent, string name, CodeDataFactory cdf) : IField
         var appReader = cdf?.BlockOrNull?.Context?.AppReader;
         if (appReader == null) return null;
 
-        var mdOf = appReader.GetMetadataOf(TargetTypes.CmsItem, rawString, "");
+        var mdOf = appReader.Metadata.GetMetadataOf(TargetTypes.CmsItem, rawString, title: "");
         ImageDecorator.AddRecommendations(mdOf, Url, cdf?._CodeApiSvc); // needs the url so it can check if we use image recommendations
         return mdOf;
     });

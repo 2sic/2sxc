@@ -24,7 +24,7 @@ internal class CmsUser(CmsContext parent, IMetadataOfSource appReader)
     public bool IsAnonymous => GetContents().IsAnonymous;
 
     protected override IMetadataOf GetMetadataOf() 
-        => ExtendWithRecommendations(appReader.GetMetadataOf(TargetTypes.User, Id, "User (" + Id + ")"));
+        => ExtendWithRecommendations(appReader.GetMetadataOf(TargetTypes.User, Id, title: "User (" + Id + ")"));
 
     public string Name => IsAnonymous ? "" : GetContents().Name;
     public string Username => IsAnonymous ? "" : GetContents().Username;

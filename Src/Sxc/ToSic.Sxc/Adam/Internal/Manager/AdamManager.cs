@@ -114,7 +114,7 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
     /// </summary>
     internal IMetadata Create(string key, string title, Action<IMetadataOf> mdInit = null)
     {
-        var mdOf = new MetadataOf<string>((int)TargetTypes.CmsItem, key, title, null, AppWorkCtx.AppReader.StateCache);
+        var mdOf = AppWorkCtx.AppReader.Metadata.GetMetadataOf(TargetTypes.CmsItem, key, title: title);
         mdInit?.Invoke(mdOf);
         return Cdf.Metadata(mdOf);
     }

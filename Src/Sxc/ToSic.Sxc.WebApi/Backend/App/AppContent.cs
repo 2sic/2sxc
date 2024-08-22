@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.Api01;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.DataFormats.EavLight;
@@ -84,7 +85,7 @@ public class AppContent(
 
         // in case draft wasn't allow, get again with more restricted permissions 
         if (!permCheck.EnsureAny(GrantSets.ReadDraft))
-            itm = getOne(AppReader.ListPublished);
+            itm = getOne(AppReader.GetListPublished());
 
         return InitEavAndSerializer(AppReader.AppId, Context.Permissions.IsContentAdmin, oDataSelect).Convert(itm);
     }

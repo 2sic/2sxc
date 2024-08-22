@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.State;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Internal;
 
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
@@ -33,8 +34,9 @@ internal class LightSpeedDecorator(IEntity entity) : EntityBasedType(entity)
 
     public string Advanced => GetThis("");
 
-    public static LightSpeedDecorator GetFromAppStatePiggyBack(IAppStateCache appState, ILog log)
+    public static LightSpeedDecorator GetFromAppStatePiggyBack(IAppReader appReader, ILog log)
     {
+        var appState = appReader.GetCache();
         var decoFromPiggyBack = appState?.PiggyBack
             .GetOrGenerate(appState, $"decorator-{TypeNameId}", () =>
             {
