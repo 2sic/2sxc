@@ -48,11 +48,10 @@ public partial class EditLoadBackend(
         // Security check
         var context = ctxResolver.GetBlockOrSetApp(appId);
         
-
         // do early permission check - but at this time it may be that we don't have the types yet
         // because they may be group/id combinations, without type information which we'll look up afterward
-        var appIdentity = appReaders.AppsCatalog.AppIdentity(appId);
-        items = contentGroupList.Init(appIdentity)
+        var appReader = appReaders.GetReader(appId);
+        items = contentGroupList.Init(appReader.PureIdentity())
             .ConvertGroup(items)
             .ConvertListIndexToId(items);
         TryToAutoFindMetadataSingleton(items, context.AppReader);
@@ -71,14 +70,13 @@ public partial class EditLoadBackend(
         var appWorkCtx = workCtxSvc.ContextPlus(appId, showDrafts: showDrafts);
         var result = new EditDto();
         var entityApi = api.Init(appId, showDrafts);
-        var appState = appReaders.GetReader(appIdentity);
         var list = entityApi.GetEntitiesForEditing(items);
-        var jsonSerializer = jsonSerializerGenerator.New().SetApp(appState);
+        var jsonSerializer = jsonSerializerGenerator.New().SetApp(appReader);
         result.Items = list
             .Select(e => new BundleWithHeader<JsonEntity>
             {
                 Header = e.Header,
-                Entity = GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, appState, appWorkCtx)
+                Entity = GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, appReader, appWorkCtx)
             })
             .ToList();
 
@@ -89,7 +87,7 @@ public partial class EditLoadBackend(
             result.IsPublished = entity?.IsPublished ?? true; // Entity could be null (new), then true
             // only set draft-should-branch if this draft already has a published item
             if (!result.IsPublished)
-                result.DraftShouldBranch = (entity == null ? null : appState.GetPublished(entity)) != null;
+                result.DraftShouldBranch = (entity == null ? null : appReader.GetPublished(entity)) != null;
         }
 
         // since we're retrieving data - make sure we're allowed to
@@ -101,7 +99,7 @@ public partial class EditLoadBackend(
 
         #region Load content-types and additional data (eg. formulas)
 
-        var serializerForTypes = jsonSerializerGenerator.New().SetApp(appState);
+        var serializerForTypes = jsonSerializerGenerator.New().SetApp(appReader);
         serializerForTypes.ValueConvertHyperlinks = true;
         var usedTypes = UsedTypes(list, appWorkCtx);
         var serSettings = new JsonSerializationSettings

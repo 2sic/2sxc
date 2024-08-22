@@ -18,10 +18,10 @@ namespace ToSic.Sxc.Services.DataServices;
 internal partial class DataService(
     LazySvc<IDataSourcesService> dataSources,
     LazySvc<DataSourceCatalog> catalog,
-    LazySvc<IAppStates> appStates,
+    LazySvc<IAppsCatalog> appsCatalog,
     LazySvc<QueryManager> queryManager,
     IUser user)
-    : ServiceForDynamicCode("Sxc.DatSvc", connect: [user, dataSources, catalog, appStates, queryManager]), IDataService
+    : ServiceForDynamicCode("Sxc.DatSvc", connect: [user, dataSources, catalog, appsCatalog, queryManager]), IDataService
 {
     public override void ConnectToRoot(ICodeApiService codeRoot)
     {
@@ -44,13 +44,13 @@ internal partial class DataService(
         {
             if (appId != default)
                 appIdentity = zoneId == default
-                    ? appStates.Value.AppsCatalog.AppIdentity(appId)
+                    ? appsCatalog.Value.AppIdentity(appId)
                     : new AppIdentity(zoneId, appId);
             else
                 appIdentity = _appIdentity;
         }
 
-        var newDs = new DataService(dataSources, catalog, appStates, queryManager, user);
+        var newDs = new DataService(dataSources, catalog, appsCatalog, queryManager, user);
         if (_CodeApiSvc != null)
         {
             newDs.ConnectToRoot(_CodeApiSvc);

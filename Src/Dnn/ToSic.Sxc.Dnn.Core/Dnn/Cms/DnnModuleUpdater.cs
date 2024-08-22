@@ -18,9 +18,9 @@ namespace ToSic.Sxc.Dnn.Cms;
 internal class DnnModuleUpdater(
     GenWorkPlus<WorkViews> workViews,
     IZoneMapper zoneMapper,
-    IAppStates appStates,
+    IAppsCatalog appsCatalog,
     ISite site)
-    : ServiceBase("Dnn.MapA2I", connect: [workViews, appStates, site, zoneMapper]), IPlatformModuleUpdater
+    : ServiceBase("Dnn.MapA2I", connect: [workViews, appsCatalog, site, zoneMapper]), IPlatformModuleUpdater
 {
     public void SetAppId(IModule instance, int? appId)
     {
@@ -36,7 +36,7 @@ internal class DnnModuleUpdater(
             UpdateInstanceSettingForAllLanguages(instance.Id, ModuleSettingNames.AppName, null, Log);
         else
         {
-            var appName = appStates.AppsCatalog.AppNameId(zoneId, appId.Value);
+            var appName = appsCatalog.AppNameId(zoneId, appId.Value);
             UpdateInstanceSettingForAllLanguages(instance.Id, ModuleSettingNames.AppName, appName, Log);
         }
 

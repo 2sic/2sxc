@@ -36,20 +36,17 @@ partial class ToolbarBuilder: IToolbarBuilderInternal
 
         if (target == null) return (null, "no target");
         if (context.EqualsInsensitive(false.ToString())) return (null, "context=false");
-        var appStates = Services.AppStatesLazy.Value;
-        if (appStates == null) return (null, "no AppStates");
+        var appsCatalog = Services.AppsCatalog.Value;
+        if (appsCatalog == null) return (null, "no AppStates");
 
         // Try to find the context
         var appId = FindContextAppId(target);
 
         // If nothing found
-        if (appId == 0
-            || appId == NoAppId
-            || appId == Eav.Constants.TransientAppId
-            || appId < 1
-           ) return (null, "no app identified");
+        if (appId is 0 or NoAppId or Eav.Constants.TransientAppId or < 1)
+            return (null, "no app identified");
 
-        var identity = appStates.AppsCatalog.AppIdentity(appId);
+        var identity = appsCatalog.AppIdentity(appId);
         if (identity == null) return (null, "app not found");
 
         // If we're not forcing the context "true" then check cases where it's not needed
@@ -58,7 +55,7 @@ partial class ToolbarBuilder: IToolbarBuilderInternal
             if (_currentAppIdentity != null && _currentAppIdentity.AppId == identity.AppId)
             {
                 // ensure we're not in a global context where the current-context is already special
-                var globalAppId = appStates.AppsCatalog.GetPrimaryAppOfAppId(appId, Log);
+                var globalAppId = appsCatalog.GetPrimaryAppOfAppId(appId, Log);
                 if (globalAppId != identity.AppId)
                     return (null, $"same app and not Global, context not forced: {identity.Show()}");
             }

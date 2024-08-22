@@ -19,12 +19,12 @@ namespace ToSic.Sxc.Web.Internal.LightSpeed;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class LightSpeed(
     IEavFeaturesService features,
-    LazySvc<IAppStates> appStatesLazy,
+    LazySvc<IAppsCatalog> appsCatalog,
     LazySvc<IAppReaders> appReadersLazy,
     Generator<IAppPathsMicroSvc> appPathsLazy,
     LazySvc<ICmsContext> cmsContext,
     LazySvc<OutputCacheManager> outputCacheManager
-) : ServiceBase(SxcLogName + ".Lights", connect: [features, appStatesLazy, appReadersLazy, appPathsLazy, cmsContext, outputCacheManager]), IOutputCache
+) : ServiceBase(SxcLogName + ".Lights", connect: [features, appsCatalog, appReadersLazy, appPathsLazy, cmsContext, outputCacheManager]), IOutputCache
 {
     public IOutputCache Init(int moduleId, int pageId, IBlock block)
     {
@@ -75,7 +75,7 @@ internal class LightSpeed(
         if (appState.ZoneId >= 0)
         {
             l.A("dependentAppsStates add");
-            var primary = appStatesLazy.Value.AppsCatalog.PrimaryAppIdentity(appState.ZoneId);
+            var primary = appsCatalog.Value.PrimaryAppIdentity(appState.ZoneId);
             dependentAppsStates.Add(appReadersLazy.Value.GetReader(primary));
         }
 

@@ -49,8 +49,7 @@ public class EditUiResources(
         if (features.IsEnabled(SxcFeatures.CdnSourceEdit.NameId) && siteId.HasValue)
         {
             var zoneId = zoneMapper.GetZoneId(siteId.Value);
-            var appPreset = appStates.GetPrimaryAppOfZoneId(zoneId, Log);
-            var stack = stackServiceHelper.Init(appPreset).GetStack(RootNameSettings);
+            var stack = stackServiceHelper.InitForPrimaryAppOfZone(zoneId).GetStack(RootNameSettings);
             var getResult = stack.InternalGetPath($"{WebResourcesNode}.{CdnSourceEditField}");
             cdnRoot = getResult.Result as string;
             useAltCdn = cdnRoot.HasValue() && cdnRoot != CdnDefault;

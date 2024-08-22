@@ -24,10 +24,10 @@ internal class OqtModuleUpdater(
     SettingsHelper settingsHelper,
     IPageModuleRepository pageModuleRepository,
     GenWorkPlus<WorkViews> workViews,
-    LazySvc<IAppStates> appStates,
+    LazySvc<IAppsCatalog> appsCatalog,
     ISite site)
     : ServiceBase($"{OqtConstants.OqtLogPrefix}.MapA2I",
-        connect: [settingsHelper, pageModuleRepository, appStates, workViews, site]), IPlatformModuleUpdater
+        connect: [settingsHelper, pageModuleRepository, appsCatalog, workViews, site]), IPlatformModuleUpdater
 {
     public void SetAppId(IModule instance, int? appId)
     {
@@ -41,7 +41,7 @@ internal class OqtModuleUpdater(
             UpdateInstanceSetting(instance.Id, ModuleSettingNames.AppName, null, Log);
         else
         {
-            var appName = appStates.Value.AppsCatalog.AppNameId(site.ZoneId, appId.Value);
+            var appName = appsCatalog.Value.AppNameId(site.ZoneId, appId.Value);
             UpdateInstanceSetting(instance.Id, ModuleSettingNames.AppName, appName, Log);
         }
 

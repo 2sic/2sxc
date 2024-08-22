@@ -20,21 +20,21 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
 
     public class MyServices(
         IContextOfSite siteCtx,
-        IAppStates appStates,
         LazySvc<IEavFeaturesService> features,
         LazySvc<IUiData> uiDataLazy,
         LazySvc<LanguagesBackend> languagesBackend,
         IAppPathsMicroSvc appPaths,
-        LazySvc<GlobalPaths> globalPaths)
-        : MyServicesBase(connect: [siteCtx, appStates, features, uiDataLazy, appPaths, languagesBackend, globalPaths])
+        LazySvc<GlobalPaths> globalPaths,
+        IAppsCatalog appsCatalog
+    ) : MyServicesBase(connect: [siteCtx, features, uiDataLazy, appPaths, languagesBackend, globalPaths, appsCatalog])
     {
         public LazySvc<GlobalPaths> GlobalPaths { get; } = globalPaths;
         public IAppPathsMicroSvc AppPaths { get; } = appPaths;
         public IContextOfSite SiteCtx { get; } = siteCtx;
-        public IAppStates AppStates { get; } = appStates;
         public LazySvc<LanguagesBackend> LanguagesBackend { get; } = languagesBackend;
         public LazySvc<IEavFeaturesService> Features { get; } = features;
         public LazySvc<IUiData> UiDataLazy { get; } = uiDataLazy;
+        public IAppsCatalog AppsCatalog { get; } = appsCatalog;
     }
 
     #endregion
@@ -115,8 +115,8 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
 
         // Otherwise also add the global appId
         var zoneId = Services.SiteCtx.Site.ZoneId;
-        result.DefaultApp = (AppIdentity)Services.AppStates.AppsCatalog.DefaultAppIdentity(zoneId);
-        result.PrimaryApp = (AppIdentity)Services.AppStates.AppsCatalog.PrimaryAppIdentity(zoneId);
+        result.DefaultApp = (AppIdentity)Services.AppsCatalog.DefaultAppIdentity(zoneId);
+        result.PrimaryApp = (AppIdentity)Services.AppsCatalog.PrimaryAppIdentity(zoneId);
         return result;
     }
 

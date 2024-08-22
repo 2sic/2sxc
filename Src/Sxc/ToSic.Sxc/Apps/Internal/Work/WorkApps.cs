@@ -12,8 +12,8 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Apps.Internal.Work;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class WorkApps(IAppStates appStates, IAppReaders appReaders, Generator<IAppPathsMicroSvc> appPathsGen, LazySvc<GlobalPaths> globalPaths)
-    : ServiceBase("Cms.AppsRt", connect: [appStates, appReaders, appPathsGen, globalPaths])
+public class WorkApps(IAppStates appStates, IAppReaders appReaders, Generator<IAppPathsMicroSvc> appPathsGen, LazySvc<GlobalPaths> globalPaths, IAppsCatalog appsCatalog)
+    : ServiceBase("Cms.AppsRt", connect: [appStates, appReaders, appPathsGen, globalPaths, appsCatalog])
 {
 
     public IList<AppUiInfo> GetSelectableApps(ISite site, string filter)
@@ -63,7 +63,7 @@ public class WorkApps(IAppStates appStates, IAppReaders appReaders, Generator<IA
     {
         // todo: unclear if this is the right way to do this - probably the ZoneId should come from the site?
         var zId = site.ZoneId;
-        var appIds = appStates.AppsCatalog.Apps(zId);
+        var appIds = appsCatalog.Apps(zId);
 
         return appIds
             .Select(a => appReaders.GetReader(new AppIdentityPure(zId, a.Key)))
@@ -78,13 +78,12 @@ public class WorkApps(IAppStates appStates, IAppReaders appReaders, Generator<IA
     public List<IAppReader> GetInheritableApps(ISite site)
     {
         // Get existing apps, as we should not list inheritable apps which are already inherited
-        var siteApps = appStates.AppsCatalog.Apps(site.ZoneId)
+        var siteApps = appsCatalog.Apps(site.ZoneId)
             // TODO: #AppStates we could only get the specs here...
             .Select(a => appReaders.GetReader(a.Key).Folder)
             .ToList();
 
-        var zones = appStates.AppsCatalog.Zones;
-        var appStateWithCacheInfo = appStates;
+        var zones = appsCatalog.Zones;
         var result = zones
             // Skip all global apps on the current site, as they shouldn't be inheritable
             .Where(z => z.Key != site.ZoneId)
@@ -92,14 +91,14 @@ public class WorkApps(IAppStates appStates, IAppReaders appReaders, Generator<IA
             {
                 // todo: probably the ZoneId should come from the site?
                 var zId = zSet.Key;
-                var appIds = appStates.AppsCatalog.Apps(zId);
+                var appIds = appsCatalog.Apps(zId);
 
                 return appIds
                     //.Select(a => new AppIdentityPure(zId, a.Key))
                     .Select(a =>
                     {
                         var appIdentity = new AppIdentityPure(zId, a.Key);
-                        return appStateWithCacheInfo.IsCached(appIdentity)
+                        return appStates.IsCached(appIdentity)
                             ? appReaders.GetReader(appIdentity)
                             : null;
                     })

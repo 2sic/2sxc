@@ -11,17 +11,17 @@ namespace ToSic.Sxc.Apps.Internal.Work;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class WorkAppsRemove(
     LazySvc<ZoneManager> zoneManagerLazy,
-    IAppStates appStates,
     IAppReaders appReaders,
-    IAppPathsMicroSvc appPaths)
-    : ServiceBase("Cms.AppsRt", connect: [zoneManagerLazy, appStates, appReaders, appPaths])
+    IAppPathsMicroSvc appPaths,
+    IAppsCatalog appsCatalog
+) : ServiceBase("Cms.AppsRt", connect: [zoneManagerLazy, appReaders, appPaths, appsCatalog])
 {
 
     internal void RemoveAppInSiteAndEav(int zoneId, int appId, bool fullDelete)
     {
         // check portal assignment and that it's not the default app
         // enable restore for DefaultApp
-        if (appId == appStates.AppsCatalog.DefaultAppIdentity(zoneId).AppId && fullDelete)
+        if (appId == appsCatalog.DefaultAppIdentity(zoneId).AppId && fullDelete)
             throw new("The default app of a zone cannot be removed.");
 
         if (appId == Eav.Constants.MetaDataAppId)

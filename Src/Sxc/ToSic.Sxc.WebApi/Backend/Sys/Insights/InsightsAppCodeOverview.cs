@@ -5,7 +5,8 @@ using ToSic.Eav.WebApi.Sys.Insights;
 
 namespace ToSic.Sxc.Backend.Sys;
 
-internal class InsightsAppCodeOverview(IAppReaders appReaders, IAppStates appStates) : InsightsProvider(Link, helpCategory: Constants.AppCode)
+internal class InsightsAppCodeOverview(IAppReaders appReaders, IAppStates appStates, IAppsCatalog appsCatalog)
+    : InsightsProvider(Link, helpCategory: Constants.AppCode, connect: [appsCatalog])
 {
     public static string Link => "AppCodeOverview";
 
@@ -16,7 +17,7 @@ internal class InsightsAppCodeOverview(IAppReaders appReaders, IAppStates appSta
                + InsightsHtmlTable.HeadFields("Zone ↕", "App ↕", "Name", "Is Loaded", "Build App Code")
                + "<tbody>";
 
-        var zones = appStates.AppsCatalog.Zones.OrderBy(z => z.Key);
+        var zones = appsCatalog.Zones.OrderBy(z => z.Key);
 
 
         foreach (var zone in zones)

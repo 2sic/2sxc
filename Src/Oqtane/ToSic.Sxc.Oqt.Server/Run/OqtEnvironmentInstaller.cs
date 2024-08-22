@@ -13,8 +13,8 @@ namespace ToSic.Sxc.Oqt.Server.Run;
 internal class OqtEnvironmentInstaller(
     GenWorkPlus<WorkViews> workViews,
     RemoteRouterLink remoteRouterLink,
-    IAppStates appStates)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.Instll", connect: [remoteRouterLink, workViews, appStates]),
+    IAppsCatalog appsCatalog)
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.Instll", connect: [remoteRouterLink, workViews, appsCatalog]),
         IEnvironmentInstaller, IPlatformAppInstaller
 {
     public string UpgradeMessages()
@@ -41,7 +41,7 @@ internal class OqtEnvironmentInstaller(
         if (forContentApp)
             try
             {
-                var contentAppId = appStates.AppsCatalog.DefaultAppIdentity(site.ZoneId);
+                var contentAppId = appsCatalog.DefaultAppIdentity(site.ZoneId);
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                 var contentViews = workViews.New(contentAppId).GetAll();
                 if (contentViews.Any()) return null;

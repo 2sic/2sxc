@@ -11,11 +11,11 @@ public abstract class SxcImportExportEnvironmentBase: EavImportExportEnvironment
 {
     #region constructor / DI
 
-    public class MyServices(ISite site, App newApp, IAppReaders appReaders, IAppStates appStates, IAppPathsMicroSvc appPaths)
+    public class MyServices(ISite site, App newApp, IAppReaders appReaders, IAppsCatalog appStates, IAppPathsMicroSvc appPaths)
         : MyServicesBase(connect: [site, newApp, appReaders, appPaths])
     {
         internal readonly IAppPathsMicroSvc AppPaths = appPaths;
-        internal readonly IAppStates AppStates = appStates;
+        internal readonly IAppsCatalog AppStates = appStates;
         internal readonly IAppReaders AppReaders = appReaders;
         internal readonly ISite Site = site;
         internal readonly App NewApp = newApp;
