@@ -26,7 +26,6 @@ public partial class EditLoadBackend(
     IUiContextBuilder contextBuilder,
     ISxcContextResolver ctxResolver,
     ITargetTypes mdTargetTypes,
-    IAppStates appStates,
     IAppReaders appReaders,
     IUiData uiData,
     GenWorkPlus<WorkInputTypes> inputTypes,
@@ -38,7 +37,7 @@ public partial class EditLoadBackend(
         connect:
         [
             workCtxSvc, inputTypes, api, contentGroupList, entityBuilder, contextBuilder, ctxResolver,
-            mdTargetTypes, appStates, appReaders, uiData, jsonSerializerGenerator, typesPermissions, prefetch, loadSettings
+            mdTargetTypes, appReaders, uiData, jsonSerializerGenerator, typesPermissions, prefetch, loadSettings
         ])
 {
 
@@ -52,7 +51,7 @@ public partial class EditLoadBackend(
 
         // do early permission check - but at this time it may be that we don't have the types yet
         // because they may be group/id combinations, without type information which we'll look up afterward
-        var appIdentity = appStates.IdentityOfApp(appId);
+        var appIdentity = appReaders.AppsCatalog.AppIdentity(appId);
         items = contentGroupList.Init(appIdentity)
             .ConvertGroup(items)
             .ConvertListIndexToId(items);

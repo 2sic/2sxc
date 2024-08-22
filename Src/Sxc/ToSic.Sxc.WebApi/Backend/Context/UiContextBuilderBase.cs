@@ -115,8 +115,8 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
 
         // Otherwise also add the global appId
         var zoneId = Services.SiteCtx.Site.ZoneId;
-        result.DefaultApp = (AppIdentity)Services.AppStates.IdentityOfDefault(zoneId);
-        result.PrimaryApp = (AppIdentity)Services.AppStates.IdentityOfPrimary(zoneId);
+        result.DefaultApp = (AppIdentity)Services.AppStates.AppsCatalog.DefaultAppIdentity(zoneId);
+        result.PrimaryApp = (AppIdentity)Services.AppStates.AppsCatalog.PrimaryAppIdentity(zoneId);
         return result;
     }
 

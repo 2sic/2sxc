@@ -44,7 +44,7 @@ internal partial class DataService(
         {
             if (appId != default)
                 appIdentity = zoneId == default
-                    ? appStates.Value.IdentityOfApp(appId)
+                    ? appStates.Value.AppsCatalog.AppIdentity(appId)
                     : new AppIdentity(zoneId, appId);
             else
                 appIdentity = _appIdentity;

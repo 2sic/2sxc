@@ -21,7 +21,7 @@ public class WorkAppsRemove(
     {
         // check portal assignment and that it's not the default app
         // enable restore for DefaultApp
-        if (appId == appStates.DefaultAppId(zoneId) && fullDelete)
+        if (appId == appStates.AppsCatalog.DefaultAppIdentity(zoneId).AppId && fullDelete)
             throw new("The default app of a zone cannot be removed.");
 
         if (appId == Eav.Constants.MetaDataAppId)

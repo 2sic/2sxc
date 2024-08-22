@@ -16,7 +16,7 @@ internal class InsightsAppCodeOverview(IAppReaders appReaders, IAppStates appSta
                + InsightsHtmlTable.HeadFields("Zone ↕", "App ↕", "Name", "Is Loaded", "Build App Code")
                + "<tbody>";
 
-        var zones = appStates.Zones.OrderBy(z => z.Key);
+        var zones = appStates.AppsCatalog.Zones.OrderBy(z => z.Key);
 
 
         foreach (var zone in zones)

@@ -82,7 +82,7 @@ internal class DnnZoneMapper : ZoneMapperBase
     {
         if (_supportedCultures != null) return _supportedCultures;
 
-        var availableEavLanguages = AppStates.Languages(site.ZoneId, true);
+        var availableEavLanguages = AppStates.AppsCatalog.Zone(site.ZoneId).Languages;
         var defaultLanguageCode = site.DefaultCultureCode;
 
         return _supportedCultures = LocaleController.Instance.GetLocales(site.Id)

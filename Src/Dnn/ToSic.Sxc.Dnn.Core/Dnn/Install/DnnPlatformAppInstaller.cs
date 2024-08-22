@@ -30,7 +30,7 @@ internal class DnnPlatformAppInstaller(
         if (forContentApp)
             try
             {
-                var primaryAppId = appStatesLazy.Value.IdentityOfDefault(site.ZoneId);
+                var primaryAppId = appStatesLazy.Value.AppsCatalog.DefaultAppIdentity(site.ZoneId);
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                 var contentViews = workViews.New(primaryAppId).GetAll();
                 if (contentViews.Any()) return null;

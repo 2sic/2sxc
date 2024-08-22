@@ -97,7 +97,7 @@ internal class OqtZoneMapper : ZoneMapperBase
     public override List<ISiteLanguageState> CulturesWithState(ISite site)
     {
         if (_supportedCultures != null) return _supportedCultures;
-        var availableEavLanguages = AppStates.Languages(site.ZoneId, true);
+        var availableEavLanguages = AppStates.AppsCatalog.Zone(site.ZoneId).Languages;
         _supportedCultures = _oqtCulture.GetSupportedCultures(site.Id, availableEavLanguages);
         return _supportedCultures;
     }

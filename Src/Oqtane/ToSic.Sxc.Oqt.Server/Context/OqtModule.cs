@@ -110,7 +110,7 @@ internal class OqtModule: Module<Module>
         var l = Log.Fn<(int, string)>($"{zoneId}", timer: true);
 
         if (IsContent) 
-            return l.Return((_appStates.DefaultAppId(zoneId), "Content"), "Content");
+            return l.Return((_appStates.AppsCatalog.DefaultAppIdentity(zoneId).AppId, "Content"), "Content");
 
         if (!_settings.TryGetValue(ModuleSettingNames.AppName, out var setting)) 
             return l.Return((Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty), Eav.Constants.AppNameIdEmpty);

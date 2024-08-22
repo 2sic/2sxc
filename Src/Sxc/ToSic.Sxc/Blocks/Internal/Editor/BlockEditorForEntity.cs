@@ -32,8 +32,8 @@ public class BlockEditorForEntity : BlockEditorBase
         var appName = "";
         if (appId.HasValue)
         {
-            var zoneAppId = _appStates.IdentityOfApp(appId.Value);
-            appName = _appStates.AppIdentifier(zoneAppId.ZoneId, zoneAppId.AppId);
+            var zoneAppId = _appStates.AppsCatalog.AppIdentity(appId.Value);
+            appName = _appStates.AppsCatalog.AppNameId(zoneAppId.ZoneId, zoneAppId.AppId);
         }
         UpdateValue(BlockFromEntity.CbPropertyApp, appName);
     }

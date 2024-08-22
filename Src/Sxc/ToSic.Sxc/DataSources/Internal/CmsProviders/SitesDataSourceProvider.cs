@@ -41,14 +41,13 @@ public abstract class SitesDataSourceProvider(SitesDataSourceProvider.MyServices
 
     public int GetZoneId(int siteId) => Services.ZoneMapperLazy.Value.GetZoneId(siteId);
 
-    public int GetDefaultAppId(int siteId) => Services.AppStates.DefaultAppId(GetZoneId(siteId));
+    public int GetDefaultAppId(int siteId) => Services.AppStates.AppsCatalog.DefaultAppIdentity(GetZoneId(siteId)).AppId;
 
-    public int GetPrimaryAppId(int siteId) => Services.AppStates.PrimaryAppId(GetZoneId(siteId));
+    public int GetPrimaryAppId(int siteId) => Services.AppStates.AppsCatalog.PrimaryAppIdentity(GetZoneId(siteId)).AppId;
 
     public string GetLanguages(int siteId)
     {
-        var languages = Services.AppStates
-            .Languages(GetZoneId(siteId), true);
+        var languages = Services.AppStates.AppsCatalog.Zone(GetZoneId(siteId)).Languages;
         return string.Join(",", languages.Select(l => l.EnvironmentKey.ToLower()));
         //return Deps.AppStates
         //    .Languages(GetZoneId(siteId), true)

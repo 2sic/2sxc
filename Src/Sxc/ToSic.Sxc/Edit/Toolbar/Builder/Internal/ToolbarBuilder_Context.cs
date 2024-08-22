@@ -49,7 +49,7 @@ partial class ToolbarBuilder: IToolbarBuilderInternal
             || appId < 1
            ) return (null, "no app identified");
 
-        var identity = appStates.IdentityOfApp(appId);
+        var identity = appStates.AppsCatalog.AppIdentity(appId);
         if (identity == null) return (null, "app not found");
 
         // If we're not forcing the context "true" then check cases where it's not needed
@@ -58,7 +58,7 @@ partial class ToolbarBuilder: IToolbarBuilderInternal
             if (_currentAppIdentity != null && _currentAppIdentity.AppId == identity.AppId)
             {
                 // ensure we're not in a global context where the current-context is already special
-                var globalAppId = appStates.GetPrimaryAppOfAppId(appId, Log);
+                var globalAppId = appStates.AppsCatalog.GetPrimaryAppOfAppId(appId, Log);
                 if (globalAppId != identity.AppId)
                     return (null, $"same app and not Global, context not forced: {identity.Show()}");
             }

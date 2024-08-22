@@ -19,7 +19,7 @@ public partial class DynamicCodeService
         var realAppId = appId ?? throw new ArgumentException($"At least the {nameof(appId)} is required and must be a valid AppId", nameof(appId));
 
         // lookup zoneId if not provided
-        var realZoneId = zoneId ?? Services.AppStates.Value.IdentityOfApp(realAppId).ZoneId;
+        var realZoneId = zoneId ?? Services.AppStates.Value.AppsCatalog.AppIdentity(realAppId).ZoneId;
         return App(new AppIdentityPure(realZoneId, realAppId), site, showDrafts: withUnpublished);
     }
 
@@ -35,7 +35,7 @@ public partial class DynamicCodeService
     {
         siteId ??= site?.Id ?? Services.Site.Value.Id;
         var zoneId = Services.ZoneMapper.Value.GetZoneId(siteId.Value);
-        var primaryApp = Services.AppStates.Value.IdentityOfPrimary(zoneId);
+        var primaryApp = Services.AppStates.Value.AppsCatalog.PrimaryAppIdentity(zoneId);
         return primaryApp;
     }
 

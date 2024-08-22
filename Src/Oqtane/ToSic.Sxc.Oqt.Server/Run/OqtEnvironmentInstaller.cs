@@ -41,7 +41,7 @@ internal class OqtEnvironmentInstaller(
         if (forContentApp)
             try
             {
-                var contentAppId = appStates.IdentityOfDefault(site.ZoneId);
+                var contentAppId = appStates.AppsCatalog.DefaultAppIdentity(site.ZoneId);
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                 var contentViews = workViews.New(contentAppId).GetAll();
                 if (contentViews.Any()) return null;

@@ -102,7 +102,7 @@ public class DnnModule: Module<ModuleInfo>
         var msg = $"get appid from instance for Z:{zoneId} Mod:{module.ModuleID}";
         if (IsContent)
         {
-            var appId = _appStates.DefaultAppId(zoneId);
+            var appId = _appStates.AppsCatalog.DefaultAppIdentity(zoneId).AppId;
             return l.Return((appId, "Content"), $"{msg} - use Default app: {appId}");
         }
 

@@ -32,11 +32,11 @@ internal class DnnModuleUpdater(
         // note: this is the correct zone, even if the module is shared from another portal, because the Site is prepared correctly
         var zoneId = site.ZoneId;
 
-        if (appId == Eav.Constants.AppIdEmpty || !appId.HasValue)
+        if (appId is Eav.Constants.AppIdEmpty or null)
             UpdateInstanceSettingForAllLanguages(instance.Id, ModuleSettingNames.AppName, null, Log);
         else
         {
-            var appName = appStates.AppIdentifier(zoneId, appId.Value);
+            var appName = appStates.AppsCatalog.AppNameId(zoneId, appId.Value);
             UpdateInstanceSettingForAllLanguages(instance.Id, ModuleSettingNames.AppName, appName, Log);
         }
 

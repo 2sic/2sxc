@@ -75,7 +75,7 @@ internal class LightSpeed(
         if (appState.ZoneId >= 0)
         {
             l.A("dependentAppsStates add");
-            var primary = appStatesLazy.Value.IdentityOfPrimary(appState.ZoneId);
+            var primary = appStatesLazy.Value.AppsCatalog.PrimaryAppIdentity(appState.ZoneId);
             dependentAppsStates.Add(appReadersLazy.Value.GetReader(primary));
         }
 

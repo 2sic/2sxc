@@ -37,11 +37,11 @@ internal class OqtModuleUpdater(
 
         // ToDo: Should throw exception if a real BlockConfiguration exists
 
-        if (appId == Eav.Constants.AppIdEmpty || !appId.HasValue)
+        if (appId is Eav.Constants.AppIdEmpty or null)
             UpdateInstanceSetting(instance.Id, ModuleSettingNames.AppName, null, Log);
         else
         {
-            var appName = appStates.Value.AppIdentifier(site.ZoneId, appId.Value);
+            var appName = appStates.Value.AppsCatalog.AppNameId(site.ZoneId, appId.Value);
             UpdateInstanceSetting(instance.Id, ModuleSettingNames.AppName, appName, Log);
         }
 

@@ -63,7 +63,7 @@ public class WorkApps(IAppStates appStates, IAppReaders appReaders, Generator<IA
     {
         // todo: unclear if this is the right way to do this - probably the ZoneId should come from the site?
         var zId = site.ZoneId;
-        var appIds = appStates.Apps(zId);
+        var appIds = appStates.AppsCatalog.Apps(zId);
 
         return appIds
             .Select(a => appReaders.GetReader(new AppIdentityPure(zId, a.Key)))
@@ -78,12 +78,12 @@ public class WorkApps(IAppStates appStates, IAppReaders appReaders, Generator<IA
     public List<IAppReader> GetInheritableApps(ISite site)
     {
         // Get existing apps, as we should not list inheritable apps which are already inherited
-        var siteApps = appStates.Apps(site.ZoneId)
+        var siteApps = appStates.AppsCatalog.Apps(site.ZoneId)
             // TODO: #AppStates we could only get the specs here...
             .Select(a => appReaders.GetReader(a.Key).Folder)
             .ToList();
 
-        var zones = appStates.Zones;
+        var zones = appStates.AppsCatalog.Zones;
         var appStateWithCacheInfo = appStates;
         var result = zones
             // Skip all global apps on the current site, as they shouldn't be inheritable
@@ -92,7 +92,7 @@ public class WorkApps(IAppStates appStates, IAppReaders appReaders, Generator<IA
             {
                 // todo: probably the ZoneId should come from the site?
                 var zId = zSet.Key;
-                var appIds = appStates.Apps(zId);
+                var appIds = appStates.AppsCatalog.Apps(zId);
 
                 return appIds
                     //.Select(a => new AppIdentityPure(zId, a.Key))
