@@ -68,7 +68,9 @@ public class InstallControllerReal(
             .ToList();
 
         // Get list of allow/forbid rules for the App installer
-        var settingsSources = appSettingsStack.Value.InitForPrimaryAppOfZone(site.ZoneId).GetStack(AppStackConstants.Settings);
+        var settingsSources = appSettingsStack.Value
+            .InitForPrimaryAppOfZone(site.ZoneId)
+            .GetStack(AppStackConstants.Settings);
         var stack = new PropertyStack().Init(AppStackConstants.RootNameSettings, settingsSources);
 
         var rules = stack.InternalGetPath(new PropReqSpecs("SiteSetup.AutoInstallApps", PropReqSpecs.EmptyDimensions, true, Log), null);

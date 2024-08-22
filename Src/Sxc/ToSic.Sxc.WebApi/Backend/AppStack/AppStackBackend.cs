@@ -44,7 +44,7 @@ public class AppStackBackend(
 
 
 
-    public List<PropertyDumpItem> GetStackDump(IAppSpecsWithStateAndCache appState, string partName, string[] languages, IEntity viewSettingsMixin)
+    public List<PropertyDumpItem> GetStackDump(IAppReader appState, string partName, string[] languages, IEntity viewSettingsMixin)
     {
         // Build Sources List
         var settings = dataStackService.Init(appState).GetStack(partName, viewSettingsMixin);

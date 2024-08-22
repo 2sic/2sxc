@@ -13,7 +13,7 @@ public partial class App
 
     // Create config object. Note that AppConfiguration could be null, then it would use default values
     /// <inheritdoc />
-    public IAppConfiguration Configuration => AppStateInt.Configuration;
+    public IAppConfiguration Configuration => AppReaderInt.Configuration;
 
     private DynamicEntity MakeDynProperty(IEntity contents, bool propsRequired)
     {

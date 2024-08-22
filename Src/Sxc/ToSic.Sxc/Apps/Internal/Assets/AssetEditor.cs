@@ -24,7 +24,7 @@ public class AssetEditor(
 
     #region Constructor / DI
 
-    private IAppSpecsWithState _appSpecs;
+    private IAppSpecs _appSpecs;
 
     private AssetEditInfo EditInfo { get; set; }
 

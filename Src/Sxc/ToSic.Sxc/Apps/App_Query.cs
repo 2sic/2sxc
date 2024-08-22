@@ -34,7 +34,7 @@ partial class App
             return query;
 
         // Try to find query definition - while also checking parent apps
-        var qEntity = Services.QueryManager.Value.GetQuery(AppStateInt, name, ConfigurationProvider, recurseParents: 3);
+        var qEntity = Services.QueryManager.Value.GetQuery(AppReaderInt, name, ConfigurationProvider, recurseParents: 3);
 
         return qEntity ?? throw new((IsGlobalQuery(name) ? "Global " : "") + "Query not Found!");
     }

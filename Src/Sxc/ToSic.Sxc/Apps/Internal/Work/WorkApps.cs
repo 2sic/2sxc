@@ -30,18 +30,18 @@ public class WorkApps(IAppStateCacheService appStates, IAppReaders appReaders, G
                        && a.Name != Eav.Constants.PrimaryAppName
                        && a.Name != Eav.Constants.PrimaryAppGuid
                 ) // #SiteApp v13
-                .Where(a => !a.Configuration.IsHidden)
-                .Select(a =>
+                .Where(reader => !reader.Configuration.IsHidden)
+                .Select(reader =>
                 {
-                    var paths = appPathsGen.New().Get(a, site);
-                    var thumbnail = AppAssetThumbnail.GetUrl(a, paths, globalPaths);
+                    var paths = appPathsGen.New().Get(reader, site);
+                    var thumbnail = AppAssetThumbnail.GetUrl(reader, paths, globalPaths);
                     return new AppUiInfo
                     {
-                        Name = a.Name,
-                        AppId = a.AppId,
-                        SupportsAjaxReload = a.Configuration?.EnableAjax ?? false,
+                        Name = reader.Name,
+                        AppId = reader.AppId,
+                        SupportsAjaxReload = reader.Configuration?.EnableAjax ?? false,
                         Thumbnail = thumbnail,
-                        Version = a.Configuration?.Version?.ToString() ?? ""
+                        Version = reader.Configuration?.Version?.ToString() ?? ""
                     };
                 })
                 .ToList();
@@ -103,12 +103,12 @@ public class WorkApps(IAppStateCacheService appStates, IAppReaders appReaders, G
                             ? appReaders.GetReader(appIdentity)
                             : null;
                     })
-                    .Where(state =>
+                    .Where(reader =>
                     {
-                        if (state == null) return false;
+                        if (reader == null) return false;
                         // if (!appStateWithCacheInfo.IsCached(aId)) return false;
                         //var appState = _appStates.GetReader(aId);
-                        return state?.IsShared() == true && !siteApps.Any(sa => sa.Equals(state.Folder, StringComparison.InvariantCultureIgnoreCase));
+                        return reader?.IsShared() == true && !siteApps.Any(sa => sa.Equals(reader.Folder, StringComparison.InvariantCultureIgnoreCase));
                     })
                     //.Select(a => _appGenerator.New().PreInit(site).Init(a, buildConfig) as IApp)
                     .OrderBy(a => a.Name)
