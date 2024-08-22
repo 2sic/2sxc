@@ -23,7 +23,7 @@ internal class OqtZoneMapper : ZoneMapperBase
         Generator<ISite> site,
         LazySvc<ZoneCreator> zoneCreatorLazy,
         OqtCulture oqtCulture,
-        IAppsCatalog appStates) : base(appStates, $"{OqtConstants.OqtLogPrefix}.ZoneMp", connect: [siteRepository, settingRepository, site, zoneCreatorLazy, oqtCulture])
+        IAppsCatalog appsCat) : base(appsCat, $"{OqtConstants.OqtLogPrefix}.ZoneMp", connect: [siteRepository, settingRepository, site, zoneCreatorLazy, oqtCulture])
     {
         _siteRepository = siteRepository;
         _settingRepository = settingRepository;

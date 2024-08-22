@@ -11,12 +11,12 @@ public abstract class SxcImportExportEnvironmentBase: EavImportExportEnvironment
 {
     #region constructor / DI
 
-    public class MyServices(ISite site, App newApp, IAppReaders appReaders, IAppsCatalog appStates, IAppPathsMicroSvc appPaths)
+    public class MyServices(ISite site, App newApp, IAppReaderFactory appReaders, IAppsCatalog appsCatalog, IAppPathsMicroSvc appPaths)
         : MyServicesBase(connect: [site, newApp, appReaders, appPaths])
     {
         internal readonly IAppPathsMicroSvc AppPaths = appPaths;
-        internal readonly IAppsCatalog AppStates = appStates;
-        internal readonly IAppReaders AppReaders = appReaders;
+        internal readonly IAppsCatalog AppsCatalog = appsCatalog;
+        internal readonly IAppReaderFactory AppReaders = appReaders;
         internal readonly ISite Site = site;
         internal readonly App NewApp = newApp;
     }
@@ -25,7 +25,7 @@ public abstract class SxcImportExportEnvironmentBase: EavImportExportEnvironment
     /// <summary>
     /// DI Constructor
     /// </summary>
-    protected SxcImportExportEnvironmentBase(MyServices services, string logName) : base(services.Site, services.AppStates, logName)
+    protected SxcImportExportEnvironmentBase(MyServices services, string logName) : base(services.Site, services.AppsCatalog, logName)
     {
         _services = services.ConnectServices(Log);
     }

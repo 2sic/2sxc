@@ -25,7 +25,7 @@ public class ImportContent(
     ZipImport zipImport,
     Generator<JsonSerializer> jsonSerializerGenerator,
     IGlobalConfiguration globalConfiguration,
-    IAppReaders appReaders,
+    IAppReaderFactory appReaders,
     LazySvc<IUser> userLazy,
     AppCachePurger appCachePurger,
     LazySvc<IEavFeaturesService> features)

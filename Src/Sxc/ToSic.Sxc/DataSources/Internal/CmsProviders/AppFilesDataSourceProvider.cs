@@ -24,13 +24,13 @@ public class AppFilesDataSourceProvider(AppFilesDataSourceProvider.MyServices se
     {
         internal Generator<FileManager> FileManagerGenerator { get; }
         internal IAppPathsMicroSvc AppPathMicroSvc { get; }
-        public IAppReaders AppReaders { get; }
+        public IAppReaderFactory AppReaders { get; }
 
         /// <summary>
         /// Note that we will use Generators for safety, because in rare cases the dependencies could be re-used to create a sub-data-source
         /// </summary>
         public MyServices(
-            IAppReaders appReaders,
+            IAppReaderFactory appReaders,
             IAppPathsMicroSvc appPathMicroSvc,
             Generator<FileManager> fileManagerGenerator
         ): base(connect: [appReaders, appPathMicroSvc, fileManagerGenerator])

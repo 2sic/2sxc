@@ -22,7 +22,7 @@ public class TypeControllerReal(
     LazySvc<ContentExportApi> contentExportLazy,
     GenWorkDb<WorkContentTypesMod> typeMod,
     LazySvc<IUser> userLazy,
-    IAppReaders appReaders,
+    IAppReaderFactory appReaders,
     Generator<ImportContent> importContent)
     : ServiceBase("Api.TypesRl",
         connect: [appReaders, context, ctApiLazy, contentExportLazy, userLazy, typeMod, importContent]), ITypeController

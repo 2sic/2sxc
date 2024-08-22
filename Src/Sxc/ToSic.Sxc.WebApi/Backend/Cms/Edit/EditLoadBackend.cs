@@ -26,7 +26,7 @@ public partial class EditLoadBackend(
     IUiContextBuilder contextBuilder,
     ISxcContextResolver ctxResolver,
     ITargetTypes mdTargetTypes,
-    IAppReaders appReaders,
+    IAppReaderFactory appReaders,
     IUiData uiData,
     GenWorkPlus<WorkInputTypes> inputTypes,
     Generator<JsonSerializer> jsonSerializerGenerator,

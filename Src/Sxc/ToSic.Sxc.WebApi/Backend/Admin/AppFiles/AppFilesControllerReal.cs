@@ -17,7 +17,7 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
         ISite site,
         IUser user, 
         Generator<AssetEditor> assetEditorGenerator,
-        IAppReaders appReaders,
+        IAppReaderFactory appReaders,
         LazySvc<CodeControllerReal> codeController,
         LazySvc<AppCodeLoader> appCodeLoader,
         IAppPathsMicroSvc appPathsFactoryTemp
@@ -38,7 +38,7 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
     private readonly ISite _site;
     private readonly Generator<AssetEditor> _assetEditorGenerator;
     private readonly AssetTemplates _assetTemplates;
-    private readonly IAppReaders _appReaders;
+    private readonly IAppReaderFactory _appReaders;
     private readonly IAppPathsMicroSvc _appPathsFactoryTemp;
     private IAppPaths _appPaths;
     private readonly IUser _user;

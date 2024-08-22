@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Code.Generate.Internal;
 /// </summary>
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class CSharpGeneratorBase(IUser user, IAppReaders appStates, string logName)
+public abstract class CSharpGeneratorBase(IUser user, IAppReaderFactory appReadFac, string logName)
     : ServiceBase(logName ?? (SxcLogName + ".DMoGen"))
 {
 
@@ -31,7 +31,7 @@ public abstract class CSharpGeneratorBase(IUser user, IAppReaders appStates, str
     internal CSharpCodeSpecs BuildSpecs(IFileGeneratorSpecs parameters)
     {
         // Prepare App State and add to Specs
-        var appReader = appStates.Get(parameters.AppId);
+        var appReader = appReadFac.Get(parameters.AppId);
 
         var specs = new CSharpCodeSpecs
         {

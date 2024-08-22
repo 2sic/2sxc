@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Apps.Internal.Work;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class WorkAppsRemove(
     LazySvc<ZoneManager> zoneManagerLazy,
-    IAppReaders appReaders,
+    IAppReaderFactory appReaders,
     IAppPathsMicroSvc appPaths,
     IAppsCatalog appsCatalog
 ) : ServiceBase("Cms.AppsRt", connect: [zoneManagerLazy, appReaders, appPaths, appsCatalog])

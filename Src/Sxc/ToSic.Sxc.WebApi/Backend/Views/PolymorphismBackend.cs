@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Backend.Views;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class PolymorphismBackend(PolymorphConfigReader polymorphism, IAppReaders appReaders)
+public class PolymorphismBackend(PolymorphConfigReader polymorphism, IAppReaderFactory appReaders)
     : ServiceBase("Bck.Views", connect: [polymorphism, appReaders])
 {
     public PolymorphismDto Polymorphism(int appId)

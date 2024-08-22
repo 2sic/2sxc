@@ -24,7 +24,7 @@ internal partial class ContextData : PassThrough, IBlockInstance
     #region Constructor and Init
 
 #if NETFRAMEWORK
-    public ContextData(MyServices services, IAppReaders appReaders, LazySvc<CodeInfoService> codeChanges) : base(services, "Sxc.BlckDs")
+    public ContextData(MyServices services, IAppReaderFactory appReaders, LazySvc<CodeInfoService> codeChanges) : base(services, "Sxc.BlckDs")
     {
         ConnectLogs([
             _appReaders = appReaders,

@@ -33,7 +33,7 @@ public class AppControllerReal(
     LazySvc<ResetApp> resetAppLazy,
     LazySvc<AppCachePurger> systemManagerLazy,
     LazySvc<LanguagesBackend> languagesBackendLazy,
-    LazySvc<IAppReaders> appReadersLazy,
+    LazySvc<IAppReaderFactory> appReadersLazy,
     LazySvc<AppStackBackend> appStackBackendLazy,
     LazySvc<IJsonService> json,
     IGlobalConfiguration globalConfiguration)

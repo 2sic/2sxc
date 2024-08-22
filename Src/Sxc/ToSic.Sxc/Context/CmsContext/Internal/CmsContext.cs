@@ -19,7 +19,7 @@ internal class CmsContext(
     IPlatform platform,
     IContextOfSite initialContext,
     LazySvc<IPage> pageLazy,
-    IAppReaders appReaders,
+    IAppReaderFactory appReaders,
     LazySvc<ICmsSite> cmsSiteLazy)
     : ServiceForDynamicCode(SxcLogName + ".CmsCtx",
         connect: [initialContext, pageLazy, appReaders, cmsSiteLazy, platform]), ICmsContext

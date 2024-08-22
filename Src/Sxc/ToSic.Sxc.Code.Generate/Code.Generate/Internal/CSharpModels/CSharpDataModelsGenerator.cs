@@ -10,8 +10,8 @@ namespace ToSic.Sxc.Code.Generate.Internal;
 /// </summary>
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CSharpDataModelsGenerator(IUser user, IAppReaders appStates)
-    : CSharpGeneratorBase(user, appStates, SxcLogName + ".DMoGen"), IFileGenerator
+public class CSharpDataModelsGenerator(IUser user, IAppReaderFactory appReadFac)
+    : CSharpGeneratorBase(user, appReadFac, SxcLogName + ".DMoGen"), IFileGenerator
 {
     internal CSharpCodeSpecs Specs { get; private set; } = new();
 

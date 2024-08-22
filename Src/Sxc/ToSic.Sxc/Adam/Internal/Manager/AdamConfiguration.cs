@@ -7,7 +7,7 @@ using static ToSic.Eav.Apps.Internal.AdamConstants;
 namespace ToSic.Sxc.Adam.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AdamConfiguration(IAppReaders appReaders)
+public class AdamConfiguration(IAppReaderFactory appReaders)
 {
     public string AdamAppRootFolder
     {

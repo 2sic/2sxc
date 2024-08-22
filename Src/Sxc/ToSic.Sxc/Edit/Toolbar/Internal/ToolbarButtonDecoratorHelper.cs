@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ToolbarButtonDecoratorHelper(IAppReaders appReaders) : ServiceBase($"{SxcLogName}.TbdHlp", connect: [appReaders])
+public class ToolbarButtonDecoratorHelper(IAppReaderFactory appReaders) : ServiceBase($"{SxcLogName}.TbdHlp", connect: [appReaders])
 {
     public IAppIdentity MainAppIdentity { get; set; }
 

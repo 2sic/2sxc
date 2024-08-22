@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Backend.AppStack;
 public class AppStackBackend(
     AppDataStackService dataStackService,
     IZoneCultureResolver zoneCulture,
-    IAppReaders appReaders,
+    IAppReaderFactory appReaders,
     Generator<QueryDefinitionBuilder> qDefBuilder)
     : ServiceBase("Sxc.ApiApQ", connect: [dataStackService, zoneCulture, appReaders])
 {

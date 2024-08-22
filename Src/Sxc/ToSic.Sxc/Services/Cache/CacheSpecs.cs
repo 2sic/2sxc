@@ -13,7 +13,7 @@ using static System.StringComparer;
 
 namespace ToSic.Sxc.Services.Cache;
 
-internal class CacheSpecs(ILog parentLog, ICodeApiService codeApiSvc, LazySvc<IAppReaders> appReaders, Generator<IAppPathsMicroSvc> appPathsLazy, CacheKeySpecs key, IPolicyMaker policyMaker): ICacheSpecs
+internal class CacheSpecs(ILog parentLog, ICodeApiService codeApiSvc, LazySvc<IAppReaderFactory> appReaders, Generator<IAppPathsMicroSvc> appPathsLazy, CacheKeySpecs key, IPolicyMaker policyMaker): ICacheSpecs
 {
     #region Keys
 

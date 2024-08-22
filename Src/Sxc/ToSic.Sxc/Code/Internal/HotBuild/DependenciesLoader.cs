@@ -11,8 +11,8 @@ namespace ToSic.Sxc.Code.Internal.HotBuild;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class DependenciesLoader(ILogStore logStore, IAppReaders appStates, LazySvc<IAppPathsMicroSvc> appPathsLazy, AssemblyCacheManager assemblyCacheManager, LazySvc<AppCodeCompiler> appCodeCompilerLazy)
-    : ServiceBase("Sys.AppCodeLoad", connect: [logStore, appStates, appPathsLazy, assemblyCacheManager, appCodeCompilerLazy])
+public class DependenciesLoader(ILogStore logStore, IAppReaderFactory appReadFac, LazySvc<IAppPathsMicroSvc> appPathsLazy, AssemblyCacheManager assemblyCacheManager, LazySvc<AppCodeCompiler> appCodeCompilerLazy)
+    : ServiceBase("Sys.AppCodeLoad", connect: [logStore, appReadFac, appPathsLazy, assemblyCacheManager, appCodeCompilerLazy])
 {
     public const string DependenciesFolder = "Dependencies";
 
@@ -162,7 +162,7 @@ public class DependenciesLoader(ILogStore logStore, IAppReaders appStates, LazyS
     private (string physicalPath, string relativePath) GetDependenciesPaths(string folder, HotBuildSpec spec)
     {
         var l = Log.Fn<(string physicalPath, string relativePath)>($"{spec}");
-        var appPaths = appPathsLazy.Value.Get(appStates.Get(spec.AppId));
+        var appPaths = appPathsLazy.Value.Get(appReadFac.Get(spec.AppId));
         var folderWithEdition = folder.HasValue()
             ? (spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder)
             : spec.Edition;

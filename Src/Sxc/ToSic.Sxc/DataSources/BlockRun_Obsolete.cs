@@ -12,7 +12,7 @@ partial class ContextData: IBlockDataSource
 {
     private readonly LazySvc<CodeInfoService> _codeChanges;
 
-    private readonly IAppReaders _appReaders;
+    private readonly IAppReaderFactory _appReaders;
 
 #pragma warning disable 618
     [System.Obsolete("Old property on this data source, should really not be used at all. Must add warning in v13, and remove ca. v15")]

@@ -23,7 +23,7 @@ namespace ToSic.Sxc.DataSources.Internal;
 internal class AppDataSourcesLoader(
     ILogStore logStore,
     ISite site,
-    IAppReaders appReaders,
+    IAppReaderFactory appReaders,
     LazySvc<IAppPathsMicroSvc> appPathsLazy,
     LazySvc<CodeCompiler> codeCompilerLazy,
     LazySvc<AppCodeLoader> appCodeLoaderLazy,
