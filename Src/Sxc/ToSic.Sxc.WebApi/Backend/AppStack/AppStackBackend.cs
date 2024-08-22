@@ -22,13 +22,13 @@ public class AppStackBackend(
         //if (languages == null || !languages.Any())
         var languages = zoneCulture.SafeLanguagePriorityCodes();
         // Get app 
-        var appState = appReaders.GetReader(appId);
+        var appReader = appReaders.GetReader(appId);
         // Ensure we have the correct stack name
         var partName = SystemStackHelpers.GetStackNameOrNull(part);
         if (partName == null)
             throw new($"Parameter '{nameof(part)}' must be {RootNameSettings} or {RootNameResources}");
-        var viewMixin = GetViewSettingsForMixin(viewGuid, languages, appState, partName);
-        var results = GetStackDump(appState, partName, languages, viewMixin);
+        var viewMixin = GetViewSettingsForMixin(viewGuid, languages, appReader, partName);
+        var results = GetStackDump(appReader, partName, languages, viewMixin);
         
         results = SystemStackHelpers.ApplyKeysFilter(results, key);
         if (!results.Any())

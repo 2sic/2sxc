@@ -28,13 +28,12 @@ public class InstallControllerReal(
     IResponseMaker responseMaker,
     LazySvc<IFeaturesService> featureService,
     LazySvc<AppsBackend> appsBackend,
-    LazySvc<IAppStates> appStates,
     LazySvc<AppDataStackService> appSettingsStack)
     : ServiceBase($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl",
         connect:
         [
             context, envInstallerLazy, platformAppInstaller, impFromRemoteLazy, responseMaker, featureService,
-            appStates, appSettingsStack, appsBackend
+            appSettingsStack, appsBackend
         ])
 {
     public const string LogSuffix = "Install";

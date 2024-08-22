@@ -1,11 +1,12 @@
 ﻿using ToSic.Eav;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.Insights;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.WebApi.Sys.Insights;
 
 namespace ToSic.Sxc.Backend.Sys;
 
-internal class InsightsAppCodeOverview(IAppReaders appReaders, IAppStates appStates, IAppsCatalog appsCatalog)
+internal class InsightsAppCodeOverview(IAppReaders appReaders, IAppStateCacheService appStates, IAppsCatalog appsCatalog)
     : InsightsProvider(Link, helpCategory: Constants.AppCode, connect: [appsCatalog])
 {
     public static string Link => "AppCodeOverview";
