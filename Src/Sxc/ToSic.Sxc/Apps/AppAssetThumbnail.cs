@@ -25,7 +25,7 @@ internal class AppAssetThumbnail(IAppReader appReader, IAppPaths appPaths, LazyS
         // Primary app - we only PiggyBack cache the icon in this case
         // Because otherwise the icon could get moved, and people would have a hard time seeing the effect
         if (appReader.Specs.IsSiteSettingsApp())
-            return appReader.GetPiggyBack("app-thumbnail-primary",
+            return appReader.GetCache().GetPiggyBack("app-thumbnail-primary",
                 () => globalPaths.Value.GlobalPathTo(AppPrimaryIconFile, PathTypes.Link));
 
         // standard app (not global) try to find app-icon in its (portal) app folder
