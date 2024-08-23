@@ -50,7 +50,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
 
     public IUiContextBuilder InitApp(IAppReader appState)
     {
-        AppSpecsOrNull = appState.Specs;
+        AppSpecsOrNull = appState?.Specs;
         _appReaderOrNull = appState;
         return this;
     }
