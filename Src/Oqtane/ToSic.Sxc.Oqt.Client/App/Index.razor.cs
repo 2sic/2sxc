@@ -42,7 +42,7 @@ public partial class Index : ModuleProBase
 
     #region Shared Variables
 
-    protected string Content { get; private set; }
+    protected string Content { get; private set; } = "";
 
     private OqtViewResultsDto _viewResults;
     private RenderParameters _renderedParameters;
