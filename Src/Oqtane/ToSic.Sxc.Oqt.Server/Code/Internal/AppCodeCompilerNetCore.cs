@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal;
 [PrivateApi]
 internal class AppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, Generator<Compiler> compiler, IGlobalConfiguration globalConfiguration) : AppCodeCompiler(globalConfiguration, connect: [serverPaths, compiler])
 {
-    protected internal override AssemblyResult GetAppCode(string virtualPath, HotBuildSpec spec)
+    protected internal override AssemblyResult GetAppCode(string virtualPath, HotBuildSpecWithSharedSuffix spec)
     {
         var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {spec}", timer: true);
 

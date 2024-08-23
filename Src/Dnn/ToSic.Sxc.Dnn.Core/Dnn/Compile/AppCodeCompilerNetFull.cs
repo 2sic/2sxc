@@ -13,7 +13,7 @@ internal class AppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironm
     : AppCodeCompiler(globalConfiguration, connect: [hostingEnvironment, referencedAssembliesProvider])
 {
 
-    protected internal override AssemblyResult GetAppCode(string relativePath, HotBuildSpec spec)
+    protected internal override AssemblyResult GetAppCode(string relativePath, HotBuildSpecWithSharedSuffix spec)
     {
         var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {spec}");
 

@@ -9,11 +9,11 @@ namespace ToSic.Sxc.Code.Internal.HotBuild;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, object[] connect = default) : ServiceBase("Sxc.MyApCd", connect: connect)
 {
-    public const string CsFiles = ".cs";
-    public const bool UseSubfolders = true;
-    public const string AppCodeDll = "AppCode.dll";
+    protected const string AppCodeDll = "AppCode.dll";
+    private const string CsFiles = ".cs";
+    private const bool UseSubfolders = true;
 
-    protected internal abstract AssemblyResult GetAppCode(string relativePath, HotBuildSpec spec);
+    protected internal abstract AssemblyResult GetAppCode(string relativePath, HotBuildSpecWithSharedSuffix spec);
 
     protected string[] GetSourceFiles(string fullPath)
     {
@@ -40,37 +40,43 @@ public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, 
     /// Generates a random name for a dll file and ensures it does not already exist in the "2sxc.bin" folder.
     /// </summary>
     /// <returns>The generated random name.</returns>
-    protected string GetAppCodeDllName(string folderPath, HotBuildSpec spec)
+    private string GetAppCodeDllName(string folderPath, HotBuildSpecWithSharedSuffix spec)
     {
         var l = Log.Fn<string>($"{nameof(folderPath)}: '{folderPath}'; {spec}", timer: true);
-        string randomNameWithoutExtension;
-        do
-        {
-            var app = $"App-{spec.AppId:00000}";
-            var edition = spec.Edition.HasValue() ? $".{spec.Edition}" : "";
-            randomNameWithoutExtension = $"{app}-AppCode{edition}-{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}";
-        }
-        while (File.Exists(Path.Combine(folderPath, $"{randomNameWithoutExtension}.dll")));
-        return l.ReturnAsOk(randomNameWithoutExtension);
+        var assemblyName = $"App-{spec.AppId:00000}-AppCode{OptionalSuffix(spec)}";
+        return l.ReturnAsOk(RandomNameWithoutExtension(folderPath, assemblyName));
     }
 
     /// <summary>
     /// Generates a random name for a dll file and ensures it does not already exist in the "2sxc.bin" folder.
     /// </summary>
     /// <returns>The generated random name.</returns>
-    protected string GetDependencyDllName(string dependency, string folderPath, HotBuildSpec spec)
+    private string GetDependencyDllName(string folderPath, HotBuildSpecWithSharedSuffix spec, string dependency)
     {
-        var l = Log.Fn<string>($"{nameof(folderPath)}: '{folderPath}'; {spec}", timer: true);
+        var l = Log.Fn<string>($"{nameof(dependency)}: '{dependency}'; {nameof(folderPath)}: '{folderPath}'; {spec}", timer: true);
+        var dependencyFileName = Path.GetFileNameWithoutExtension(dependency);
+        var assemblyName = $"App-{spec.AppId:00000}-Dependency{OptionalSuffix(spec)}-{dependencyFileName}";
+        return l.ReturnAsOk(RandomNameWithoutExtension(folderPath, assemblyName));
+    }
+
+    private static string OptionalSuffix(HotBuildSpecWithSharedSuffix spec)
+    {
+        var optionalEditionSuffix = spec.Edition.HasValue() ? $".{spec.Edition}" : "";
+        var optionalSharedSuffix = spec.SharedSuffix.HasValue() ? $".{spec.SharedSuffix}" : "";
+        return $"{optionalEditionSuffix}{optionalSharedSuffix}";
+    }
+
+    private static string RandomNameWithoutExtension(string folderPath, string assemblyName)
+    {
         string randomNameWithoutExtension;
         do
         {
-            var app = $"App-{spec.AppId:00000}";
-            var edition = spec.Edition.HasValue() ? $".{spec.Edition}" : "";
-            var dependencyFileName = Path.GetFileNameWithoutExtension(dependency);
-            randomNameWithoutExtension = $"{app}-Dependency{edition}-{dependencyFileName}-{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}";
+            var randomSuffix = Path.GetFileNameWithoutExtension(Path.GetRandomFileName());
+            randomNameWithoutExtension = $"{assemblyName}-{randomSuffix}";
         }
         while (File.Exists(Path.Combine(folderPath, $"{randomNameWithoutExtension}.dll")));
-        return l.ReturnAsOk(randomNameWithoutExtension);
+
+        return randomNameWithoutExtension;
     }
 
 
@@ -92,7 +98,7 @@ public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, 
         l.Done();
     }
 
-    protected (string SymbolsPath, string AssemblyPath) GetAssemblyLocations(HotBuildSpec spec)
+    protected (string SymbolsPath, string AssemblyPath) GetAssemblyLocations(HotBuildSpecWithSharedSuffix spec)
     {
         var l = Log.Fn<(string, string)>($"{spec}");
         l.A($"TempAssemblyFolderPath: '{globalConfiguration.TempAssemblyFolder}'");
@@ -108,13 +114,13 @@ public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, 
         return l.ReturnAsOk(assemblyLocations);
     }
 
-    protected internal string GetDependencyAssemblyLocations(string dependency, HotBuildSpec spec)
+    protected internal string GetDependencyAssemblyLocations(string dependency, HotBuildSpecWithSharedSuffix spec)
     {
         var l = Log.Fn<string>($"{spec}");
         l.A($"TempAssemblyFolderPath: '{globalConfiguration.TempAssemblyFolder}'");
 
         // need random name, because assemblies has to be preserved on disk, and we can not replace them until AppDomain is unloaded 
-        var assemblyName = GetDependencyDllName(dependency, globalConfiguration.TempAssemblyFolder, spec);
+        var assemblyName = GetDependencyDllName(globalConfiguration.TempAssemblyFolder, spec, dependency);
         l.A($"AssemblyName: '{assemblyName}'");
         var assemblyFilePath = Path.Combine(globalConfiguration.TempAssemblyFolder, $"{assemblyName}.dll");
         l.A($"AssemblyFilePath: '{assemblyFilePath}'");

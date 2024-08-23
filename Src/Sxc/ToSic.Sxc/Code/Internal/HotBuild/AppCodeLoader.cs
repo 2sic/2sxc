@@ -83,7 +83,7 @@ public class AppCodeLoader(
         // All OK (no errors) - return
         if (string.IsNullOrEmpty(assemblyResults?.ErrorMessages))
             return l.ReturnAsOk(assemblyResults);
-        
+
         // Problems - log and throw
         l.ReturnAsError(null, assemblyResults.ErrorMessages);
         throw new(assemblyResults.ErrorMessages);
@@ -118,22 +118,39 @@ public class AppCodeLoader(
             logSummary.AddSpec("RelativePathShared", relativePathShared);
 
             var appCodeInShared = false;
-            var assemblyResult = appCompilerLazy.Value.GetAppCode(relativePath, spec);
-            if (!assemblyResult.HasAssembly)
+            var assemblyResult = appCompilerLazy.Value.GetAppCode(relativePath, spec.WithoutSharedSuffix());
+            if (assemblyResult.HasValue)
             {
-                assemblyResult = appCompilerLazy.Value.GetAppCode(relativePathShared, spec);
-                if (assemblyResult.HasAssembly) appCodeInShared = true;
+                l.A($"local AppCode folder exists: {physicalPath}");
+            }
+            else
+            {
+                assemblyResult = appCompilerLazy.Value.GetAppCode(relativePathShared, spec.WithSharedSuffix());
+                if (assemblyResult.HasValue)
+                {
+                    appCodeInShared = true;
+                    l.A($"shared AppCode folder exists: {physicalPathShared}");
+                }
             }
 
             logSummary.UpdateSpecs(assemblyResult.Infos);
 
-            if (assemblyResult.ErrorMessages.HasValue())
+            if (assemblyResult.HasError)
                 return l.ReturnAsError(assemblyResult, assemblyResult.ErrorMessages);
 
-            assemblyResult.WatcherFolders = GetWatcherFolders(assemblyResult.HasAssembly, spec, appCodeInShared ? physicalPathShared : physicalPath, Log);
+            #region WatchFolders
+            // for AppCode in local site path
+            assemblyResult.WatcherFolders = GetWatcherFolders(false, spec, physicalPath, Log);
+
+            // for AppCode in shared (global) path 
+            if (appCodeInShared)
+                foreach (var w in GetWatcherFolders(assemblyResult.HasAssembly, spec, physicalPathShared, Log))
+                    assemblyResult.WatcherFolders.Add(w.Key, w.Value);
+
             l.A("Folders to watch:");
             foreach (var watcherFolder in assemblyResult.WatcherFolders)
                 l.A($"- '{watcherFolder}'");
+            #endregion
 
             assemblyResult.CacheDependencyId = cacheKey; // used to create cache dependency with CacheEntryChangeMonitor 
 
@@ -204,7 +221,7 @@ public class AppCodeLoader(
             if (!Directory.Exists(folder)) return l2.ReturnFalse();
             folders.Add(folder, watchSubfolders);
             return l2.ReturnTrue();
-        }   
+        }
     }
 
     private (string physicalPath, string relativePath, string physicalPathShared, string relativePathShared) GetAppPaths(string folder, HotBuildSpec spec)
@@ -212,7 +229,7 @@ public class AppCodeLoader(
         var l = Log.Fn<(string physicalPath, string relativePath, string physicalPathShared, string relativePathShared)>($"{nameof(folder)}: '{folder}'; {spec}");
         l.A($"site id: {site.Id}, ...: {site.AppsRootPhysicalFull}");
         var appPaths = appPathsLazy.Value.Get(appReadFac.Get(spec.AppId), site);
-        var folderWithEdition = folder.HasValue() 
+        var folderWithEdition = folder.HasValue()
             ? spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder
             : spec.Edition;
         var physicalPath = Path.Combine(appPaths.PhysicalPath, folderWithEdition);

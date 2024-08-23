@@ -70,32 +70,27 @@ public class DependenciesLoader(ILogStore logStore, IAppReaderFactory appReadFac
         var l = Log.Fn<List<AssemblyResult>>($"{spec}");
 
         // Get paths
-        var (physicalPath, relativePath) = GetDependenciesPaths(DependenciesFolder, spec);
+        var (physicalPath, relativePath, physicalPathShared, relativePathShared) = GetDependenciesPaths(DependenciesFolder, spec);
         logSummary.AddSpec("Dependencies PhysicalPath", physicalPath);
         logSummary.AddSpec("Dependencies RelativePath", relativePath);
+        logSummary.AddSpec("Dependencies PhysicalPathShared", physicalPathShared);
+        logSummary.AddSpec("Dependencies RelativePathShared", relativePathShared);
 
-        // missing dependencies folder
-        if (!Directory.Exists(physicalPath))
-            return l.ReturnNull($"{DependenciesFolder} folder do not exists: {physicalPath}");
-
-        var assemblyResults = new List<AssemblyResult>();
-        foreach (var dependency in Directory.GetFiles(physicalPath, "*.dll"))
+        List<AssemblyResult> assemblyResults;
+        if (Directory.Exists(physicalPath))
         {
-            try
-            {
-                //var assembly = Assembly.Load(File.ReadAllBytes(dependency));
-
-                var location = appCodeCompilerLazy.Value.GetDependencyAssemblyLocations(dependency, spec);
-                File.Copy(dependency, location, true);
-                var assembly = Assembly.LoadFrom(location);
-                assemblyResults.Add(new(assembly, assemblyLocations: [dependency]));
-                l.A($"dependency loaded: {assembly.FullName} location: {location}");
-            }
-            catch (Exception ex)
-            {
-                // sink
-                l.Ex(ex);
-            }
+            l.A($"local dependencies folder exists: {physicalPath}");
+            assemblyResults = GetAssemblyResults(spec.WithoutSharedSuffix(), physicalPath);
+        }
+        else if (Directory.Exists(physicalPathShared))
+        {
+            l.A($"shared dependencies folder exists: {physicalPathShared}");
+            assemblyResults = GetAssemblyResults(spec.WithSharedSuffix(), physicalPathShared);
+        }
+        else
+        {
+            // missing dependencies folder
+            return l.ReturnNull($"{DependenciesFolder} folder do not exists: '{physicalPath}', or '{physicalPathShared}'");
         }
 
         l.A($"dependencies loaded: {assemblyResults.Count}");
@@ -112,6 +107,29 @@ public class DependenciesLoader(ILogStore logStore, IAppReaderFactory appReadFac
         return l.ReturnAsOk(assemblyResults);
     }
 
+    private List<AssemblyResult> GetAssemblyResults(HotBuildSpecWithSharedSuffix spec, string physicalPath)
+    {
+        var l = Log.Fn<List<AssemblyResult>>($"{spec}; {nameof(physicalPath)}: '{physicalPath}'");
+        var assemblyResults = new List<AssemblyResult>();
+        foreach (var dependency in Directory.GetFiles(physicalPath, "*.dll"))
+        {
+            try
+            {
+                var location = appCodeCompilerLazy.Value.GetDependencyAssemblyLocations(dependency, spec);
+                File.Copy(dependency, location, true);
+                var assembly = Assembly.LoadFrom(location);
+                assemblyResults.Add(new(assembly, assemblyLocations: [dependency]));
+                l.A($"dependency loaded: {assembly.FullName} location: {location}");
+            }
+            catch (Exception ex)
+            {
+                // sink
+                l.Ex(ex);
+            }
+        }
+
+        return assemblyResults;
+    }
 
 
     //private static IDictionary<string, bool> GetWatcherFolders(AssemblyResult assemblyResult, HotBuildSpec spec, string physicalPath)
@@ -159,18 +177,23 @@ public class DependenciesLoader(ILogStore logStore, IAppReaderFactory appReadFac
     //    }   
     //}
 
-    private (string physicalPath, string relativePath) GetDependenciesPaths(string folder, HotBuildSpec spec)
+    // TODO: stv# candidate for refactoring, similar to AppCodeLoader.GetAppPaths
+    private (string physicalPath, string relativePath, string physicalPathShared, string relativePathShared) GetDependenciesPaths(string folder, HotBuildSpec spec)
     {
-        var l = Log.Fn<(string physicalPath, string relativePath)>($"{spec}");
+        var l = Log.Fn<(string physicalPath, string relativePath, string physicalPathShared, string relativePathShared)>($"{spec}");
         var appPaths = appPathsLazy.Value.Get(appReadFac.Get(spec.AppId));
         var folderWithEdition = folder.HasValue()
             ? (spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder)
             : spec.Edition;
         var physicalPath = Path.Combine(appPaths.PhysicalPath, folderWithEdition);
-        l.A($"dependencies {nameof(physicalPath)}: '{physicalPath}'");
+        // l.A($"dependencies {nameof(physicalPath)}: '{physicalPath}'");
         var relativePath = Path.Combine(appPaths.RelativePath, folderWithEdition);
-        l.A($"dependencies {nameof(relativePath)}: '{relativePath}'");
-        return l.ReturnAsOk((physicalPath, relativePath));
+        // l.A($"dependencies {nameof(relativePath)}: '{relativePath}'");
+        var physicalPathShared = Path.Combine(appPaths.PhysicalPathShared, folderWithEdition);
+        // l.A($"dependencies {nameof(physicalPath)}: '{physicalPath}'");
+        var relativePathShared = Path.Combine(appPaths.RelativePathShared, folderWithEdition);
+        // l.A($"dependencies {nameof(relativePath)}: '{relativePath}'");
+        return l.ReturnAsOk((physicalPath, relativePath, physicalPathShared, relativePathShared));
     }
 
     // Idea: put dll in the App/bin folder, for VS Intellisense - ATM not relevant
