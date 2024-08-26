@@ -86,8 +86,12 @@ internal class TypedItemHelpers
         if (value == null) return null;
         return scrubHtml switch
         {
-            string scrubStr => scrubStr.HasValue() ? scrubSvc().Only(value, scrubStr.CsvToArrayWithoutEmpty()) : value,
-            bool scrubBln => scrubBln ? scrubSvc().All(value) : value,
+            string scrubStr => scrubStr.HasValue()
+                ? scrubSvc().Only(value, scrubStr.CsvToArrayWithoutEmpty())
+                : value,
+            bool scrubBln => scrubBln
+                ? scrubSvc().All(value)
+                : value,
             _ => value
         };
     }

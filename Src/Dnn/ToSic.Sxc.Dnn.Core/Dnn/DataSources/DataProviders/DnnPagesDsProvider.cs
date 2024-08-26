@@ -40,10 +40,10 @@ internal class DnnPagesDsProvider: PagesDataSourceProvider
         catch (Exception ex)
         {
             l.Ex(ex);
-            return l.Return(new(), "error");
+            return l.Return([], "error");
         }
 
-        if (pages == null || !pages.Any()) return l.Return(new(), "null/empty");
+        if (pages == null || !pages.Any()) return l.Return([], "null/empty");
 
         try
         {
@@ -87,7 +87,7 @@ internal class DnnPagesDsProvider: PagesDataSourceProvider
         catch (Exception ex)
         {
             l.Ex(ex);
-            return l.Return(new(), "error");
+            return l.Return([], "error");
         }
     }
 

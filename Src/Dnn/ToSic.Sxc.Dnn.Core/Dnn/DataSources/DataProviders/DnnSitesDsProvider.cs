@@ -1,5 +1,4 @@
 ﻿using DotNetNuke.Entities.Portals;
-using DotNetNuke.Entities.Urls;
 using ToSic.Eav.Helpers;
 using ToSic.Sxc.DataSources.Internal;
 
@@ -17,7 +16,7 @@ internal class DnnSitesDsProvider: SitesDataSourceProvider
         var l = Log.Fn<List<SiteDataRaw>>($"PortalId: {PortalSettings.Current?.PortalId ?? -1}");
         var portals = PortalController.Instance.GetPortals().OfType<PortalInfo>().ToList();
 
-        if (/*portals == null || */!portals.Any()) return l.Return(new(), "null/empty");
+        if (/*portals == null || */!portals.Any()) return l.Return([], "null/empty");
 
         var result = portals
             .Select(s => new SiteDataRaw

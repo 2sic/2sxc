@@ -199,7 +199,7 @@ internal class SearchController(
     {
         DnnEnvironmentLogger.AddSearchExceptionToLog(modInfo, e, nameof(SearchController));
         Log.Ex(e);
-        return new();
+        return [];
     }
         
         
@@ -236,7 +236,7 @@ internal class SearchController(
         foreach (var stream in streamsToIndex)
         {
             var entities = stream.Value.List.ToImmutableList();
-            var searchInfoList = searchInfoDictionary[stream.Key] = new();
+            var searchInfoList = searchInfoDictionary[stream.Key] = [];
 
             searchInfoList.AddRange(entities.Select(entity =>
             {

@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Internal.Unknown;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Images;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Integration.Paths;
 
@@ -8,7 +7,8 @@ namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi("for testing / un-implemented use")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class LinkServiceUnknown: LinkServiceBase, IIsUnknown
+internal class LinkServiceUnknown(ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy, WarnUseOfUnknown<LinkServiceUnknown> _)
+    : LinkServiceBase(imgLinker, linkPathsLazy), IIsUnknown
 {
     public const string DefDomain = "unknown.2sxc.org";
     public const string DefProtocol = "https";
@@ -32,10 +32,6 @@ internal class LinkServiceUnknown: LinkServiceBase, IIsUnknown
 
     internal static string CurrentPageUrl = NiceCurrentUrl;
     internal static string AnyPageUrl = NiceAnyPageUrl;
-
-    public LinkServiceUnknown(ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy, WarnUseOfUnknown<LinkServiceUnknown> _) : base(imgLinker, linkPathsLazy)
-    {
-    }
 
     protected override string ToApi(string api, string parameters = null) => $"{api}{Parameters(parameters)}";
 

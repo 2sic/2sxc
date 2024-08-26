@@ -10,21 +10,17 @@ using FileManager = DotNetNuke.Services.FileSystem.FileManager;
 
 namespace ToSic.Sxc.Dnn.ImportExport;
 
-internal class DnnXmlExporter: XmlExporter
+internal class DnnXmlExporter(
+    AdamManager<int, int> adamManager,
+    ISxcContextResolver ctxResolver,
+    XmlSerializer xmlSerializer,
+    IAppsCatalog appsCat)
+    : XmlExporter(xmlSerializer, appsCat, ctxResolver, DnnConstants.LogName, connect: [adamManager])
 {
     #region Constructor / DI
 
-    public DnnXmlExporter(AdamManager<int, int> adamManager, ISxcContextResolver ctxResolver, XmlSerializer xmlSerializer, IAppsCatalog appsCat)
-        : base(xmlSerializer, appsCat, ctxResolver, DnnConstants.LogName)
-    {
-        ConnectLogs([
-            AdamManager = adamManager
-        ]);
-    }
-
-
     private readonly IFileManager _dnnFiles = FileManager.Instance;
-    internal AdamManager<int, int> AdamManager { get; }
+    internal AdamManager<int, int> AdamManager { get; } = adamManager;
 
 
     protected override void PostContextInit(IContextOfApp appContext)

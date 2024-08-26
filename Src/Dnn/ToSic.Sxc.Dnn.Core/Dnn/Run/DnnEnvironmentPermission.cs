@@ -3,15 +3,12 @@ using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using ToSic.Eav.Integration.Security;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 
 namespace ToSic.Sxc.Dnn.Run;
 
-internal class DnnEnvironmentPermission : EnvironmentPermission
+internal class DnnEnvironmentPermission() : EnvironmentPermission(DnnConstants.LogName)
 {
-    public DnnEnvironmentPermission() : base(DnnConstants.LogName) { }
-
     public string CustomPermissionKey = ""; // "CONTENT";
 
     /// <summary>
@@ -46,7 +43,7 @@ internal class DnnEnvironmentPermission : EnvironmentPermission
             return l.Return(result, $"module: {result}");
         }
 
-        Log.A("trying to check permission " + fullPrefix + ", but don't have module in context");
+        l.A("trying to check permission " + fullPrefix + ", but don't have module in context");
         return l.ReturnFalse("can't verify: false");
     }
 
@@ -60,15 +57,16 @@ internal class DnnEnvironmentPermission : EnvironmentPermission
     protected override bool UserIsModuleEditor()
     {
         var l = Log.Fn<bool>();
-        if (Module == null) return false;
+        if (Module == null)
+            return false;
 
         // This seems to throw errors during search :(
         try
         {
             // skip during search (usual HttpContext is missing for search)
-            if (System.Web.HttpContext.Current == null) return l.ReturnFalse();
-
-            return l.ReturnAsOk(ModulePermissionController.HasModuleAccess(SecurityAccessLevel.Edit, "", Module));
+            return System.Web.HttpContext.Current == null
+                ? l.ReturnFalse()
+                : l.ReturnAsOk(ModulePermissionController.HasModuleAccess(SecurityAccessLevel.Edit, "", Module));
         }
         catch
         {

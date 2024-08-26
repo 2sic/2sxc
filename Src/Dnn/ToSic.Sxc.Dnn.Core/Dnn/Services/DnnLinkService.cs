@@ -15,23 +15,16 @@ namespace ToSic.Sxc.Dnn.Services;
 /// The DNN implementation of the <see cref="ILinkService"/>.
 /// </summary>
 [PrivateApi("This implementation shouldn't be visible")]
-internal class DnnLinkService : LinkServiceBase
+internal class DnnLinkService(
+    ImgResizeLinker imgLinker,
+    LazySvc<IValueConverter> dnnValueConverterLazy,
+    LazySvc<ILinkPaths> linkPathsLazy,
+    LazySvc<INavigationManager> navigationManager)
+    : LinkServiceBase(imgLinker, linkPathsLazy, connect: [dnnValueConverterLazy, navigationManager])
 {
-    public DnnLinkService(ImgResizeLinker imgLinker, LazySvc<IValueConverter> dnnValueConverterLazy,
-        LazySvc<ILinkPaths> linkPathsLazy, LazySvc<INavigationManager> navigationManager) : base(imgLinker, linkPathsLazy)
-    {
-        ConnectLogs([
-            _dnnValueConverterLazy = dnnValueConverterLazy,
-            _navigationManager = navigationManager
-        ]);
-    }
-
-    private readonly LazySvc<IValueConverter> _dnnValueConverterLazy;
-    private readonly LazySvc<INavigationManager> _navigationManager;
-
     [PrivateApi] private IDnnContext Dnn => _dnn ??= _CodeApiSvc.GetService<IDnnContext>();
     private IDnnContext _dnn;
-    [PrivateApi] private DnnValueConverter DnnValueConverter => _dnnValueConverter ??= _dnnValueConverterLazy.Value as DnnValueConverter;
+    [PrivateApi] private DnnValueConverter DnnValueConverter => _dnnValueConverter ??= dnnValueConverterLazy.Value as DnnValueConverter;
     private DnnValueConverter _dnnValueConverter;
 
     protected override string ToApi(string api, string parameters = null) 
@@ -47,7 +40,7 @@ internal class DnnLinkService : LinkServiceBase
             
         var currentPageUrl = parameters == null
             ? Dnn.Tab.FullUrl
-            : _navigationManager.Value.NavigateURL(Dnn.Tab.TabID, "", parameters); // NavigateURL returns absolute links
+            : navigationManager.Value.NavigateURL(Dnn.Tab.TabID, "", parameters); // NavigateURL returns absolute links
 
         return CurrentPageUrlWithEventualHashError(pageId, currentPageUrl);
     }

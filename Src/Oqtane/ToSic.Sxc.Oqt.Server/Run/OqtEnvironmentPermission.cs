@@ -13,27 +13,16 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
-internal class OqtEnvironmentPermission : EnvironmentPermission
+internal class OqtEnvironmentPermission(
+    IHttpContextAccessor httpContextAccessor,
+    LazySvc<IUserPermissions> userPermissions,
+    LazySvc<IUser> oqtUser)
+    : EnvironmentPermission(OqtConstants.OqtLogPrefix, connect: [httpContextAccessor, userPermissions, oqtUser])
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly LazySvc<IUserPermissions> _userPermissions;
-    private readonly LazySvc<IUser> _oqtUser;
-
-    public OqtEnvironmentPermission(IHttpContextAccessor httpContextAccessor,
-        LazySvc<IUserPermissions> userPermissions,
-        LazySvc<IUser> oqtUser) : base(OqtConstants.OqtLogPrefix)
-    {
-        ConnectLogs([
-            _httpContextAccessor = httpContextAccessor,
-            _userPermissions = userPermissions,
-            _oqtUser = oqtUser
-        ]);
-    }
-
     /// <summary>
     /// Gets the <see cref="ClaimsPrincipal"/> for user associated with the executing action.
     /// </summary>
-    private ClaimsPrincipal ClaimsPrincipal => _httpContextAccessor.HttpContext?.User;
+    private ClaimsPrincipal ClaimsPrincipal => httpContextAccessor.HttpContext?.User;
 
     private IModule Module => _module ??= (Context as IContextOfBlock)?.Module;
     private IModule _module;
@@ -47,16 +36,16 @@ internal class OqtEnvironmentPermission : EnvironmentPermission
         var m = Module;
 
         if (condition.Equals(SalView, InvariantCultureIgnoreCase))
-            return m != null && _userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, m.Id, PermissionNames.View);
+            return m != null && userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, m.Id, PermissionNames.View);
 
         if (condition.Equals(SalEdit, InvariantCultureIgnoreCase))
-            return m != null && _userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, m.Id, PermissionNames.Edit);
+            return m != null && userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, m.Id, PermissionNames.Edit);
 
         if (condition.Equals(SalSiteAdmin, InvariantCultureIgnoreCase))
-            return _oqtUser.Value.IsSiteAdmin;
+            return oqtUser.Value.IsSiteAdmin;
 
         if (condition.Equals(SalSystemUser, InvariantCultureIgnoreCase))
-            return _oqtUser.Value.IsSystemAdmin;
+            return oqtUser.Value.IsSystemAdmin;
 
         return false;
     }
@@ -77,7 +66,7 @@ internal class OqtEnvironmentPermission : EnvironmentPermission
                 return l.ReturnFalse();
             try
             {
-                return l.Return(_userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, Module.Id, PermissionNames.Edit));
+                return l.Return(userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, Module.Id, PermissionNames.Edit));
             }
             catch
             {

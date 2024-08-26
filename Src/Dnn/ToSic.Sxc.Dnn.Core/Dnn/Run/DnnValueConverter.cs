@@ -115,7 +115,7 @@ internal class DnnValueConverter : ValueConverterBase
         #endregion
     }
 
-    protected override string ResolvePageLink(int id) => ResolvePageLink(id, CurrentLanguage, new string[] { });
+    protected override string ResolvePageLink(int id) => ResolvePageLink(id, CurrentLanguage, []);
 
     /// <summary>
     /// Resolve URL to Page with TabId, but handles more situations than DNN framework:

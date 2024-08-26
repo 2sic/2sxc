@@ -26,10 +26,10 @@ namespace ToSic.Sxc.Dnn.DataSources;
     Type = DataSourceType.Source, 
     NameId = "ToSic.Sxc.Dnn.DataSources.DnnUserProfile, ToSic.Sxc.Dnn",
     ConfigurationType = "|Config ToSic.SexyContent.DataSources.DnnUserProfileDataSource",
-    NameIds = new []
-    {
+    NameIds =
+    [
         "ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource, ToSic.SexyContent"
-    }
+    ]
 )]
 public class DnnUserProfile : CustomDataSourceAdvanced
 {
@@ -85,25 +85,12 @@ public class DnnUserProfile : CustomDataSourceAdvanced
 
     #region Constructor / DI
 
-    public new class MyServices: MyServicesBase<CustomDataSourceAdvanced.MyServices>
+    public new class MyServices(CustomDataSourceAdvanced.MyServices parentServices, ISite site, IZoneMapper zoneMapper, LazySvc<DnnSecurity> dnnSecurity)
+        : MyServicesBase<CustomDataSourceAdvanced.MyServices>(parentServices, connect: [site, zoneMapper, dnnSecurity])
     {
-        public ISite Site { get; }
-        public IZoneMapper ZoneMapper { get; }
-        public LazySvc<DnnSecurity> DnnSecurity { get; }
-
-        public MyServices(
-            CustomDataSourceAdvanced.MyServices parentServices,
-            ISite site,
-            IZoneMapper zoneMapper,
-            LazySvc<DnnSecurity> dnnSecurity
-        ) : base(parentServices)
-        {
-            ConnectLogs([
-                Site = site,
-                ZoneMapper = zoneMapper,
-                DnnSecurity = dnnSecurity
-            ]);
-        }
+        public ISite Site { get; } = site;
+        public IZoneMapper ZoneMapper { get; } = zoneMapper;
+        public LazySvc<DnnSecurity> DnnSecurity { get; } = dnnSecurity;
     }
 
     public DnnUserProfile(MyServices services, IDataFactory dataFactory) : base(services, "Dnn.Profile")
@@ -124,10 +111,12 @@ public class DnnUserProfile : CustomDataSourceAdvanced
         var l = Log.Fn<IImmutableList<IEntity>>();
         Configuration.Parse();
 
-        var realTenant = _services.Site.Id != Eav.Constants.NullId ? _services.Site : _services.ZoneMapper.SiteOfApp(AppId);
+        var realTenant = _services.Site.Id != Eav.Constants.NullId
+            ? _services.Site
+            : _services.ZoneMapper.SiteOfApp(AppId);
         l.A($"realTenant {realTenant.Id}");
 
-        var properties = Properties.CsvToArrayWithoutEmpty(); //.Split(',').Select(p => p.Trim()).ToArray();
+        var properties = Properties.CsvToArrayWithoutEmpty();
         var portalId = realTenant.Id;
 
         // read all user Profiles
@@ -139,7 +128,7 @@ public class DnnUserProfile : CustomDataSourceAdvanced
         else
         {
             var userIds = UserIds.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
-            users = new();
+            users = [];
             foreach (var user in userIds.Select(userId => UserController.GetUserById(portalId, userId)))
                 users.Add(user);
         }

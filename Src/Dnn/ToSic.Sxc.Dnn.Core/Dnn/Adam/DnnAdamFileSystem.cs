@@ -159,11 +159,11 @@ internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem<
     {
         var l = Log.Fn<List<Folder<int, int>>>($"folder:{folder.Id}");
         var fldObj = GetDnnFolder(folder.AsDnn().SysId);
-        if (fldObj == null) return l.Return(new(), "");
+        if (fldObj == null) return l.Return([], "");
 
         var firstList = _dnnFolders.GetFolders(fldObj);
         var folders = firstList?.Select(DnnToAdam).ToList()
-                      ?? new List<Folder<int, int>>();
+                      ?? [];
         return l.Return(folders, $"{folders.Count}");
     }
 
@@ -184,12 +184,12 @@ internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem<
         var l = Log.Fn<List<File<int, int>>>($"folder:{folder.Id}");
         var fldObj = _dnnFolders.GetFolder(folder.AsDnn().SysId);
         // sometimes the folder doesn't exist for whatever reason
-        if (fldObj == null) return l.Return(new(), "");
+        if (fldObj == null) return l.Return([], "");
 
         // try to find the files
         var firstList = _dnnFolders.GetFiles(fldObj);
         var files = firstList?.Select(DnnToAdam).ToList()
-                    ?? new List<File<int, int>>();
+                    ?? [];
         return l.Return(files, $"{files.Count}");
     }
 
