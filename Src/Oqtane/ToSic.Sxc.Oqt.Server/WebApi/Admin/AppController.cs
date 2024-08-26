@@ -72,7 +72,7 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
 
     /// <inheritdoc />
     [HttpGet]
-    public IActionResult Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite, bool assetAdamDeleted = false) 
+    public IActionResult Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite, bool assetAdamDeleted = true) 
         => Real.Export(new AppExportSpecs(zoneId, appId, includeContentGroups, resetAppGuid, assetsAdam, assetsSite, assetAdamDeleted));
 
     /// <inheritdoc />

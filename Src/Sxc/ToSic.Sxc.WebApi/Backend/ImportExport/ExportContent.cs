@@ -76,7 +76,7 @@ public class ExportContent(
         var currentApp = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, site.ZoneId);
 
         var fileName = $"2sxcContentExport_{currentApp.Specs.ToFileNameWithVersion()}.xml";
-        var fileXml = xmlExporter.Init(zoneId, appId, currentApp, false,
+        var fileXml = xmlExporter.Init(new AppExportSpecs(zoneId, appId), currentApp, false,
             contentTypeIdsString?.Split(';') ?? [],
             entityIdsString?.Split(';') ?? []
         ).GenerateNiceXml();

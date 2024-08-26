@@ -120,7 +120,7 @@ public class ExportApp(
             $"2sxcApp_{appRead.Specs.ToFileNameWithVersion()}{addOnWhenContainingContent}.zip";
         l.A($"file name:{fileName}");
 
-        using var fileStream = zipExport.ExportApp(specs); //, includeContentGroups, resetAppGuid, assetsAdam, assetsSite, assetAdamDeleted);
+        using var fileStream = zipExport.ExportApp(specs);
         var fileBytes = fileStream.ToArray();
         l.A("will stream so many bytes:" + fileBytes.Length);
         var mimeType = MimeHelper.FallbackType;
