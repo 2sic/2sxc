@@ -8,15 +8,18 @@ using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security;
 using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.Backend.App;
 using ISite = ToSic.Eav.Context.ISite;
+using ToSic.Eav.ImportExport.Internal;
+
 
 #if NETFRAMEWORK
 using System.IO;
 using System.Net.Http;
 using ToSic.Eav.WebApi.ImportExport;
+using HttpResponse = System.Net.Http.HttpResponseMessage;
 #else
 using Microsoft.AspNetCore.Mvc;
+using HttpResponse = Microsoft.AspNetCore.Mvc.IActionResult;
 #endif
 
 namespace ToSic.Sxc.Backend.ImportExport;
@@ -73,7 +76,7 @@ public class ExportApp(
         });
     }
 
-    internal bool SaveDataForVersionControl(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withSiteFiles)
+    internal bool SaveDataForVersionControl(/* TODO: @STV use specs object */ int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withSiteFiles)
     {
         var l = Log.Fn<bool>($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
         SecurityHelpers.ThrowIfNotSiteAdmin(user, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
@@ -86,7 +89,7 @@ public class ExportApp(
         var appPaths = appPathSvc.Get(appRead, site);
 
         var zipExport = export.Init(zoneId, appId, appRead.Specs.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
-        zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid, withSiteFiles);
+        zipExport.ExportForSourceControl(/* TODO: @STV use specs object */ includeContentGroups, resetAppGuid, withSiteFiles);
 
         return l.ReturnTrue();
     }
@@ -98,33 +101,30 @@ public class ExportApp(
             BuiltInFeatures.AppSyncWithSiteFiles.Guid);
     }
 
-#if NETFRAMEWORK
-    public HttpResponseMessage Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite, bool assetAdamDeleted)
+    public HttpResponse Export(AppExportSpecs specs, /* int zoneId, int appId, */ bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite, bool assetAdamDeleted)
     {
-        var l = Log.Fn<HttpResponseMessage>($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
-#else
-    public IActionResult Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite, bool assetAdamDeleted)
-    {
-        var l = Log.Fn<IActionResult>($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
-#endif
+        var l = Log.Fn<HttpResponse>(specs.Dump());
 
         SecurityHelpers.ThrowIfNotSiteAdmin(user, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
         var contextZoneId = site.ZoneId;
-        var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, contextZoneId);
+        var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(specs.ZoneId, specs.AppId, user, contextZoneId);
         var appPaths = appPathSvc.Get(appRead, site);
 
-        var zipExport = export.Init(zoneId, appId, appRead.Specs.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
-        var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";
+        var zipExport = export.Init(specs.ZoneId, specs.AppId, appRead.Specs.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
+        var addOnWhenContainingContent = specs.IncludeContentGroups
+            ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm")
+            : "";
 
         var fileName =
             $"2sxcApp_{appRead.Specs.ToFileNameWithVersion()}{addOnWhenContainingContent}.zip";
-        Log.A($"file name:{fileName}");
+        l.A($"file name:{fileName}");
 
-        using var fileStream = zipExport.ExportApp(includeContentGroups, resetAppGuid, assetsAdam, assetsSite, assetAdamDeleted);
+        using var fileStream = zipExport.ExportApp(specs); //, includeContentGroups, resetAppGuid, assetsAdam, assetsSite, assetAdamDeleted);
         var fileBytes = fileStream.ToArray();
-        Log.A("will stream so many bytes:" + fileBytes.Length);
+        l.A("will stream so many bytes:" + fileBytes.Length);
         var mimeType = MimeHelper.FallbackType;
+
 #if NETFRAMEWORK
             return l.Return(HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, mimeType, new MemoryStream(fileBytes)));
 #else

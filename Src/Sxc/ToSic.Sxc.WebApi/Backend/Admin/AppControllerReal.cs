@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.DataSources.Sys.Internal;
+using ToSic.Eav.ImportExport.Internal;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.ImportExport;
@@ -53,7 +54,7 @@ public class AppControllerReal(
     public List<AppDto> InheritableApps() => appsBackendLazy.Value.GetInheritableApps();
 
     public void App(int zoneId, int appId, bool fullDelete = true)
-        => workAppsRemove.Value /*_cmsZonesLazy.Value.SetId(zoneId).AppsMan*/.RemoveAppInSiteAndEav(zoneId, appId, fullDelete);
+        => workAppsRemove.Value.RemoveAppInSiteAndEav(zoneId, appId, fullDelete);
 
     public void App(int zoneId, string name, int? inheritAppId = null, int templateId = 0)
     {
@@ -64,7 +65,8 @@ public class AppControllerReal(
             l.A("create default new app without template");
             appBuilderLazy.Value.Init(zoneId).Create(name, null, inheritAppId);
             l.Done("ok");
-            return; // Exit here, because we created the app without template
+            // Exit here, because we created the app without template
+            return;
         }
 
         l.A($"find template app zip path for {nameof(templateId)}:{templateId}");
@@ -111,14 +113,14 @@ public class AppControllerReal(
         return l.ReturnTrue("ok");
     }
 
-    public THttpResponseType Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite, bool assetAdamDeleted)
-        => exportAppLazy.Value.Export(zoneId, appId, includeContentGroups, resetAppGuid, assetsAdam, assetsSite, assetAdamDeleted) as THttpResponseType;
+    public THttpResponseType Export(AppExportSpecs specs, int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite, bool assetAdamDeleted)
+        => exportAppLazy.Value.Export(/* TODO: @STV use specs object */ specs, /* zoneId, appId, specs, */ includeContentGroups, resetAppGuid, assetsAdam, assetsSite, assetAdamDeleted) as THttpResponseType;
 
     public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withPortalFiles)
         => exportAppLazy.Value.SaveDataForVersionControl(zoneId, appId, includeContentGroups, resetAppGuid, withPortalFiles);
 
     public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
-        => appStackBackendLazy.Value.GetAll(appId, part ?? AppStackConstants.RootNameSettings, key, view); //, null);
+        => appStackBackendLazy.Value.GetAll(appId, part ?? AppStackConstants.RootNameSettings, key, view);
 
     public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage, bool withPortalFiles)
         => resetAppLazy.Value.Reset(zoneId, appId, defaultLanguage, withPortalFiles);
