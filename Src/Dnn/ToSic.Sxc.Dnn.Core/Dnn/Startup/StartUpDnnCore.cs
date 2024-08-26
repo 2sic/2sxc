@@ -1,13 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Internal;
 using ToSic.Eav.Integration;
 using ToSic.Eav.Integration.Environment;
 using ToSic.Eav.Internal.Environment;
-using ToSic.Eav.Internal.Loaders;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Security;
 using ToSic.Eav.StartUp;
@@ -60,11 +58,6 @@ internal static class StartUpDnnCore
 
         services.TryAddTransient<XmlExporter, DnnXmlExporter>();
         services.TryAddTransient<IImportExportEnvironment, DnnImportExportEnvironment>();
-
-        // new for .net standard
-        // todo: find out why we have both - do they have a different function? probably yes....
-        services.TryAddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
-        services.TryAddTransient<IAppContentTypesLoader, DnnAppFileSystemLoader>();
 
         services.TryAddTransient<IZoneMapper, DnnZoneMapper>();
 
