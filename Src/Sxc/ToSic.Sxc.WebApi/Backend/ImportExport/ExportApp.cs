@@ -99,11 +99,11 @@ public class ExportApp(
     }
 
 #if NETFRAMEWORK
-    public HttpResponseMessage Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite)
+    public HttpResponseMessage Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite, bool assetAdamDeleted)
     {
         var l = Log.Fn<HttpResponseMessage>($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
 #else
-    public IActionResult Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite)
+    public IActionResult Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite, bool assetAdamDeleted)
     {
         var l = Log.Fn<IActionResult>($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
 #endif
@@ -121,7 +121,7 @@ public class ExportApp(
             $"2sxcApp_{appRead.Specs.ToFileNameWithVersion()}{addOnWhenContainingContent}.zip";
         Log.A($"file name:{fileName}");
 
-        using var fileStream = zipExport.ExportApp(includeContentGroups, resetAppGuid, assetsAdam, assetsSite);
+        using var fileStream = zipExport.ExportApp(includeContentGroups, resetAppGuid, assetsAdam, assetsSite, assetAdamDeleted);
         var fileBytes = fileStream.ToArray();
         Log.A("will stream so many bytes:" + fileBytes.Length);
         var mimeType = MimeHelper.FallbackType;

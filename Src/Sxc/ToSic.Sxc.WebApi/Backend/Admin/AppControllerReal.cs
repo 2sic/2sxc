@@ -111,8 +111,8 @@ public class AppControllerReal(
         return l.ReturnTrue("ok");
     }
 
-    public THttpResponseType Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite)
-        => exportAppLazy.Value.Export(zoneId, appId, includeContentGroups, resetAppGuid, assetsAdam, assetsSite) as THttpResponseType;
+    public THttpResponseType Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite, bool assetAdamDeleted)
+        => exportAppLazy.Value.Export(zoneId, appId, includeContentGroups, resetAppGuid, assetsAdam, assetsSite, assetAdamDeleted) as THttpResponseType;
 
     public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withPortalFiles)
         => exportAppLazy.Value.SaveDataForVersionControl(zoneId, appId, includeContentGroups, resetAppGuid, withPortalFiles);
