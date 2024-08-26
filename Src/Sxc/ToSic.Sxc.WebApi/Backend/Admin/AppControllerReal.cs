@@ -113,11 +113,11 @@ public class AppControllerReal(
         return l.ReturnTrue("ok");
     }
 
-    public THttpResponseType Export(AppExportSpecs specs, int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite, bool assetAdamDeleted)
-        => exportAppLazy.Value.Export(/* TODO: @STV use specs object */ specs, /* zoneId, appId, specs, */ includeContentGroups, resetAppGuid, assetsAdam, assetsSite, assetAdamDeleted) as THttpResponseType;
+    public THttpResponseType Export(AppExportSpecs specs)
+        => exportAppLazy.Value.Export(specs) as THttpResponseType;
 
-    public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withPortalFiles)
-        => exportAppLazy.Value.SaveDataForVersionControl(zoneId, appId, includeContentGroups, resetAppGuid, withPortalFiles);
+    public bool SaveData(AppExportSpecs specs)
+        => exportAppLazy.Value.SaveDataForVersionControl(specs);
 
     public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
         => appStackBackendLazy.Value.GetAll(appId, part ?? AppStackConstants.RootNameSettings, key, view);

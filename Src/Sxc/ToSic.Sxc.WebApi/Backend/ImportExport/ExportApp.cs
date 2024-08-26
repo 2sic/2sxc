@@ -76,20 +76,20 @@ public class ExportApp(
         });
     }
 
-    internal bool SaveDataForVersionControl(/* TODO: @STV use specs object */ int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withSiteFiles)
+    internal bool SaveDataForVersionControl(AppExportSpecs specs)
     {
-        var l = Log.Fn<bool>($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
+        var l = Log.Fn<bool>(specs.Dump());
         SecurityHelpers.ThrowIfNotSiteAdmin(user, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
         // Ensure feature available...
-        SyncWithSiteFilesVerifyFeaturesOrThrow(features, withSiteFiles);
+        SyncWithSiteFilesVerifyFeaturesOrThrow(features, specs.WithSiteFiles);
 
         var contextZoneId = site.ZoneId;
-        var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, contextZoneId);
+        var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(specs.ZoneId, specs.AppId, user, contextZoneId);
         var appPaths = appPathSvc.Get(appRead, site);
 
-        var zipExport = export.Init(zoneId, appId, appRead.Specs.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
-        zipExport.ExportForSourceControl(/* TODO: @STV use specs object */ includeContentGroups, resetAppGuid, withSiteFiles);
+        var zipExport = export.Init(specs.ZoneId, specs.AppId, appRead.Specs.Folder, appPaths.PhysicalPath, appPaths.PhysicalPathShared);
+        zipExport.ExportForSourceControl(specs);
 
         return l.ReturnTrue();
     }
@@ -101,7 +101,7 @@ public class ExportApp(
             BuiltInFeatures.AppSyncWithSiteFiles.Guid);
     }
 
-    public HttpResponse Export(AppExportSpecs specs, /* int zoneId, int appId, */ bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite, bool assetAdamDeleted)
+    public HttpResponse Export(AppExportSpecs specs)
     {
         var l = Log.Fn<HttpResponse>(specs.Dump());
 
@@ -126,7 +126,7 @@ public class ExportApp(
         var mimeType = MimeHelper.FallbackType;
 
 #if NETFRAMEWORK
-            return l.Return(HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, mimeType, new MemoryStream(fileBytes)));
+        return l.Return(HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, mimeType, new MemoryStream(fileBytes)));
 #else
         return l.Return(new FileContentResult(fileBytes, mimeType) { FileDownloadName = fileName });
 #endif
