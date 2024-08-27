@@ -105,7 +105,7 @@ internal class LightSpeed(
                 CacheKey,
                 cacheItem,
                 duration,
-                dependentAppsStates.Cast<ICanBeCacheDependency>().ToList(),
+                dependentAppsStates.Select(r => r.GetCache()).Cast<ICanBeCacheDependency>().ToList(),
                 appPathsToMonitor,
                 LightSpeedStats.CreateNonCapturingRemoveCall(appId, size)
             )
