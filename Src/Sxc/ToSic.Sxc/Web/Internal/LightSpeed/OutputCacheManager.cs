@@ -1,5 +1,4 @@
-﻿using System.Runtime.Caching;
-using ToSic.Eav.Caching;
+﻿using ToSic.Eav.Caching;
 using ToSic.Eav.Internal.Features;
 using ToSic.Lib.Services;
 
@@ -19,7 +18,7 @@ internal class OutputCacheManager(MemoryCacheService memoryCacheService, Lazy<IE
         return id;
     }
 
-    public string Add(string cacheKey, OutputCacheItem data, int duration, List<ICanBeCacheDependency> apps, IList<string> appPaths, CacheEntryUpdateCallback updateCallback)
+    public string Add(string cacheKey, OutputCacheItem data, int duration, List<ICanBeCacheDependency> apps, IList<string> appPaths)
     {
         var l = Log.Fn<string>($"key: {cacheKey}", timer: true);
 
@@ -35,8 +34,7 @@ internal class OutputCacheManager(MemoryCacheService memoryCacheService, Lazy<IE
             // experimental, maybe use as replacement... v17.09+
             var policyMaker = memoryCacheService.NewPolicyMaker()
                 .SetSlidingExpiration(expiration)
-                .WatchNotifyKeys([..apps, featuresDoNotConnect.Value])
-                .WatchCallback(updateCallback);
+                .WatchNotifyKeys([..apps, featuresDoNotConnect.Value]);
 
             if (appPaths?.Any() == true)
                 policyMaker = policyMaker

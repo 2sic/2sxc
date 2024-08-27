@@ -1,7 +1,5 @@
 ﻿using ToSic.Eav;
-using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.Insights;
-using ToSic.Eav.Apps.Internal.Specs;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Sys.Insights;
 using ToSic.Sxc.Web.Internal.LightSpeed;
@@ -9,7 +7,7 @@ using static ToSic.Razor.Blade.Tag;
 
 namespace ToSic.Sxc.Backend.Sys;
 
-internal class InsightsLightSpeed(IAppStateCacheService appStates) : InsightsProvider(Link, teaser: "Show LightSpeed Caching Statistics", helpCategory: "Performance")
+internal class InsightsLightSpeed(LightSpeedStats lightSpeedStats, IAppReaderFactory appReader) : InsightsProvider(Link, teaser: "Show LightSpeed Caching Statistics", helpCategory: "Performance")
 {
     public static string Link = "LightSpeedStats";
 
@@ -18,8 +16,8 @@ internal class InsightsLightSpeed(IAppStateCacheService appStates) : InsightsPro
         var msg = H1("LightSpeed Stats").ToString();
         try
         {
-            var countStats = LightSpeedStats.ItemsCount;
-            var sizeStats = LightSpeedStats.Size;
+            var countStats = lightSpeedStats.ItemsCount;
+            var sizeStats = lightSpeedStats.Size;
             msg += P($"Apps in Cache: {countStats.Count}");
             msg += "<table id='table'>"
                    + InsightsHtmlTable.HeadFields("#", "ZoneId", "AppId", "Name", "Items in Cache", "Ca. Memory Use", "NameId")
@@ -29,15 +27,15 @@ internal class InsightsLightSpeed(IAppStateCacheService appStates) : InsightsPro
             var totalMemory = 0L;
             foreach (var cacheItem in countStats)
             {
-                var appState = ((IHas<IAppSpecs>)appStates.Get(cacheItem.Key)).Value;
+                var appSpecs = appReader.Get(cacheItem.Key).Specs;
                 msg += InsightsHtmlTable.RowFields(
                     ++count,
-                    SpecialField.Right(appState.ZoneId),
+                    SpecialField.Right(appSpecs.ZoneId),
                     SpecialField.Right(cacheItem.Key),
-                    appState.Name,
+                    appSpecs.Name,
                     SpecialField.Right(cacheItem.Value),
                     SpecialField.Right(sizeStats.TryGetValue(cacheItem.Key, out var size) ? ByteToKByte(size) : Constants.NullNameId),
-                    appState.NameId
+                    appSpecs.NameId
                 );
                 totalItems += cacheItem.Value;
                 totalMemory += size;

@@ -207,6 +207,7 @@ public static partial class RegisterSxcServices
 
         // v18
         services.TryAddSingleton<Util>();
+        services.TryAddTransient<LightSpeedStats>();
 
         // Add possibly missing fallback services
         // This must always be at the end here so it doesn't accidentally replace something we actually need

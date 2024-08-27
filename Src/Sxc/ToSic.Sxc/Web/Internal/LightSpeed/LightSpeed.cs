@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Internal;
-using ToSic.Eav.Apps.State;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Plumbing;
@@ -23,8 +22,9 @@ internal class LightSpeed(
     LazySvc<IAppReaderFactory> appReadersLazy,
     Generator<IAppPathsMicroSvc> appPathsLazy,
     LazySvc<ICmsContext> cmsContext,
-    LazySvc<OutputCacheManager> outputCacheManager
-) : ServiceBase(SxcLogName + ".Lights", connect: [features, appsCatalog, appReadersLazy, appPathsLazy, cmsContext, outputCacheManager]), IOutputCache
+    LazySvc<OutputCacheManager> outputCacheManager,
+    LazySvc<LightSpeedStats> lightSpeedStats
+) : ServiceBase(SxcLogName + ".Lights", connect: [features, appsCatalog, appReadersLazy, appPathsLazy, cmsContext, outputCacheManager, lightSpeedStats]), IOutputCache
 {
     public IOutputCache Init(int moduleId, int pageId, IBlock block)
     {
@@ -106,15 +106,14 @@ internal class LightSpeed(
                 cacheItem,
                 duration,
                 dependentAppsStates.Select(r => r.GetCache()).Cast<ICanBeCacheDependency>().ToList(),
-                appPathsToMonitor,
-                LightSpeedStats.CreateNonCapturingRemoveCall(appId, size)
+                appPathsToMonitor
             )
         );
 
         l.A($"LightSpeed Cache Key: {cacheKey}");
 
         if (cacheKey != "error")
-            LightSpeedStats.AddStatic(appId, size);
+            lightSpeedStats.Value.AddSize(appId, size, cacheKey);
 
         return l.ReturnTrue($"added for {duration}s");
     }
