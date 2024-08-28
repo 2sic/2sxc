@@ -81,6 +81,6 @@ public class RenderResult(string html) : TagText(null), IRenderResult, ICanEstim
         }
     }
 
-
-
+    /// <inheritdoc />
+    public int AppId { get; set; }
 }

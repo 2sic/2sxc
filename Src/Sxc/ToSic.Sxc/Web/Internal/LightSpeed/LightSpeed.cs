@@ -22,9 +22,8 @@ internal class LightSpeed(
     LazySvc<IAppReaderFactory> appReadersLazy,
     Generator<IAppPathsMicroSvc> appPathsLazy,
     LazySvc<ICmsContext> cmsContext,
-    LazySvc<OutputCacheManager> outputCacheManager,
-    LazySvc<LightSpeedStats> lightSpeedStats
-) : ServiceBase(SxcLogName + ".Lights", connect: [features, appsCatalog, appReadersLazy, appPathsLazy, cmsContext, outputCacheManager, lightSpeedStats]), IOutputCache
+    LazySvc<OutputCacheManager> outputCacheManager
+) : ServiceBase(SxcLogName + ".Lights", connect: [features, appsCatalog, appReadersLazy, appPathsLazy, cmsContext, outputCacheManager]), IOutputCache
 {
     public IOutputCache Init(int moduleId, int pageId, IBlock block)
     {
@@ -72,6 +71,8 @@ internal class LightSpeed(
         if (appState == null)
             return l.ReturnFalse("no app");
 
+        data.AppId = appState.AppId; // info for LightSpeedStats
+
         if (appState.ZoneId >= 0)
         {
             l.A("dependentAppsStates add");
@@ -94,10 +95,6 @@ internal class LightSpeed(
             : null;
         l.A($"{nameof(appPathsToMonitor)} done");
 
-        // copy the value into a separate variable so the cache doesn't capture the AppState separately
-        var appId = appState.AppId;
-        var size = data.Size;
-
         // add to cache and log
         string cacheKey = null;
         l.Do(message: "outputCacheManager add", timer: true,
@@ -111,9 +108,6 @@ internal class LightSpeed(
         );
 
         l.A($"LightSpeed Cache Key: {cacheKey}");
-
-        if (cacheKey != "error")
-            lightSpeedStats.Value.AddSize(appId, size, cacheKey);
 
         return l.ReturnTrue($"added for {duration}s");
     }

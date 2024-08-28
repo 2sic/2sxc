@@ -92,4 +92,9 @@ public interface IRenderResult
     /// Errors such as not-activated features
     /// </summary>
     List<string> Errors { get; set; }
+
+    /// <summary>
+    /// Info for LightSpeedStats (to group by AppId)
+    /// </summary>
+    int AppId { get; set; }
 }
