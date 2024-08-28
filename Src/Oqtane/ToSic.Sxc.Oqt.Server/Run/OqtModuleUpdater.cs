@@ -19,6 +19,8 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
+// TODO: @STV - this looks very similar to the Dnn implementation
+// Probably best to make a base class and de-duplicate.
 internal class OqtModuleUpdater(
     SettingsHelper settingsHelper,
     IPageModuleRepository pageModuleRepository,
@@ -40,7 +42,7 @@ internal class OqtModuleUpdater(
             UpdateInstanceSetting(instance.Id, ModuleSettingNames.AppName, null, Log);
         else
         {
-            var appName = appsCatalog.Value.AppNameId(site.ZoneId, appId.Value);
+            var appName = appsCatalog.Value.AppNameId(new AppIdentity(site.ZoneId, appId.Value));
             UpdateInstanceSetting(instance.Id, ModuleSettingNames.AppName, appName, Log);
         }
 
@@ -48,7 +50,8 @@ internal class OqtModuleUpdater(
         if (appId.HasValue)
         {
             var appIdentity = new AppIdentity(site.ZoneId, appId.Value);
-            var templateGuid = workViews.New(appIdentity).GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
+            var templateGuid = workViews.New(appIdentity).GetAll()
+                .FirstOrDefault(t => !t.IsHidden)?.Guid;
             if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);
         }
 

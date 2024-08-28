@@ -15,6 +15,8 @@ using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Dnn.Cms;
 
+// TODO: @STV - this looks very similar to the Oqtane implementation
+// Probably best to make a base class and de-duplicate.
 internal class DnnModuleUpdater(
     GenWorkPlus<WorkViews> workViews,
     IZoneMapper zoneMapper,
@@ -24,7 +26,7 @@ internal class DnnModuleUpdater(
 {
     public void SetAppId(IModule instance, int? appId)
     {
-        Log.A($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
+        var l = Log.Fn($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
         // Reset temporary template
         ClearPreview(instance.Id);
 
@@ -36,7 +38,7 @@ internal class DnnModuleUpdater(
             UpdateInstanceSettingForAllLanguages(instance.Id, ModuleSettingNames.AppName, null, Log);
         else
         {
-            var appName = appsCatalog.AppNameId(zoneId, appId.Value);
+            var appName = appsCatalog.AppNameId(new AppIdentity(zoneId, appId.Value));
             UpdateInstanceSettingForAllLanguages(instance.Id, ModuleSettingNames.AppName, appName, Log);
         }
 
@@ -52,6 +54,8 @@ internal class DnnModuleUpdater(
 
             if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);
         }
+
+        l.Done();
     }
 
     protected void ClearPreview(int instanceId)
