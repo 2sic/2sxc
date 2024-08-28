@@ -12,12 +12,24 @@ namespace ToSic.Sxc.Web.Internal.LightSpeed;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class LightSpeedStats(MemoryCacheService memoryCacheService) : ServiceBase(SxcLogName + ".LightSpeedStats", connect: [memoryCacheService])
 {
-    public Dictionary<int, int> ItemsCount => All.GroupBy(i => i.Data.AppId).ToDictionary(g => g.Key, g => g.Count());
-    public Dictionary<int, int> Size => All.GroupBy(i => i.Data.AppId).ToDictionary(g => g.Key, g => new MemorySizeEstimator(Log).EstimateMany(g.ToArray<object>()).Total);
+    public Dictionary<int, int> ItemsCount => All
+        .GroupBy(i => i.Data.AppId)
+        .ToDictionary(
+            g => g.Key,
+            g => g.Count()
+        );
 
-    private List<OutputCacheItem> All => _all.Get(()=> MemoryCache.Default
+    public Dictionary<int, int> Size => All
+        .GroupBy(i => i.Data.AppId)
+        .ToDictionary(
+            g => g.Key,
+            g => new MemorySizeEstimator(Log).EstimateMany(g.ToArray<object>()).Total
+        );
+
+    private List<OutputCacheItem> All => _all.Get(() => MemoryCache.Default
         .Where(pair => pair.Key.StartsWith(OutputCacheManager.GlobalCacheRoot))
         .Select(pair => (OutputCacheItem)pair.Value)
-        .ToList());
+        .ToList()
+    );
     private readonly GetOnce<List<OutputCacheItem>> _all = new();
 }
