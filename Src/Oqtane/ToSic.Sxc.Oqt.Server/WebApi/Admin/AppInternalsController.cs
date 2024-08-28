@@ -25,6 +25,6 @@ public class AppInternalsController() : OqtStatefulControllerBase(RealController
     [ValidateAntiForgeryToken]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public AppInternalsDto Get(int appId, int targetType, string keyType, string key)
-        => Real.Get(appId, targetType, keyType, key);
+    public AppInternalsDto Get(int appId)
+        => Real.Get(appId);
 }
