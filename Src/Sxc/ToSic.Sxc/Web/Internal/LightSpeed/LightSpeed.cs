@@ -216,8 +216,14 @@ internal class LightSpeed(
         // Normal check.
         var feat = features.IsEnabled(LightSpeedOutputCache.NameId);
         if (!feat) return l.ReturnFalse("feature disabled");
-        var ok = AppConfig.IsEnabled;
-        return l.Return(ok, $"app config: {ok}");
+
+        if (!AppConfig.IsEnabled)
+            return l.ReturnFalse("disabled at app level");
+
+        if (LightSpeedConfig.IsEnabledNullable == false)
+            return l.ReturnFalse("disabled at view level");
+
+        return l.ReturnTrue($"app and view config: true");
     }
 
 

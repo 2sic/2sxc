@@ -37,7 +37,7 @@ public class ViewsBackend(
                         {
                             Id = lightSpeedDeco.Id,
                             Title = lightSpeedDeco.Title,
-                            IsEnabled = lightSpeedDeco.IsEnabled
+                            IsEnabled = /*lightSpeedDeco.IsEnabled*/lightSpeedDeco.IsEnabledNullable != false,
                         })
                     );
 
