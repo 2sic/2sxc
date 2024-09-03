@@ -228,7 +228,7 @@ internal class LightSpeed(
 
 
     private LightSpeedDecorator LightSpeedConfig => _lightSpeedConfig ??=
-        _block.View.Metadata.OfType(LightSpeedDecorator.TypeNameId).FirstOrDefault()?.NullOrGetWith(viewLs => new LightSpeedDecorator(viewLs))
+        _block.View?.Metadata.OfType(LightSpeedDecorator.TypeNameId).FirstOrDefault()?.NullOrGetWith(viewLs => new LightSpeedDecorator(viewLs))
         ?? AppConfig;
     private LightSpeedDecorator _lightSpeedConfig;
 
