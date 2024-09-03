@@ -4,15 +4,6 @@
 // based on: https://github.dev/dotnet/aspnetcore/tree/v8.0.5
 // src/Mvc/Mvc.Razor.RuntimeCompilation/src/RuntimeViewCompiler.cs
 
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
@@ -27,6 +18,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using ToSic.Eav;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
@@ -444,20 +444,37 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
 
     private (string appRelativePath, string edition) GetSxcAppRelativePathWithEdition(string relativePath)
     {
-        if (_httpContextAccessor?.HttpContext == null) return GetSxcAppRelativePathWithEditionFallback(relativePath);
-
+        if (_httpContextAccessor?.HttpContext == null)
+            return GetSxcAppRelativePathWithEditionFallback(relativePath);
+        
         var sp = _httpContextAccessor.HttpContext.RequestServices;
-        var ctxResolver = sp.GetService(typeof(ISxcContextResolver)) as ISxcContextResolver;
+        var ctxResolver = sp.GetService<ISxcContextResolver>();
 
         var block = ctxResolver?.BlockOrNull();
-        if (block == null) return GetSxcAppRelativePathWithEditionFallback(relativePath);
+        if (block == null)
+            return GetSxcAppRelativePathWithEditionFallback(relativePath);
 
-        var polymorphism = sp.GetService<PolymorphConfigReader>();
+        // appRelativePath from block (this is not working for inner-content)
+        var appRelativePath = block.App.RelativePath;
 
-        var edition = polymorphism.UseViewEditionOrGet(block);
+        // Inner-content app case
+        if (IsTemplateLocatedInAppFolder(appRelativePath, relativePath))
+            return GetSxcAppRelativePathWithEditionFallback(relativePath);
 
-        return (block.App.RelativePath, edition);
+        // Standard case (appRelativePath and edition from block)
+        var edition = sp.GetService<PolymorphConfigReader>().UseViewEditionOrGet(block);
+        return (appRelativePath, edition);
     }
+
+    /// <summary>
+    /// Validate that relative path of template is not located in relative app path,
+    /// indicates that razor template is not in app, so it likely in inner app.
+    /// </summary>
+    /// <param name="appRelativePath">app relative path</param>
+    /// <param name="relativePath">template relative path</param>
+    /// <returns></returns>
+    private static bool IsTemplateLocatedInAppFolder(string appRelativePath, string relativePath) 
+        => !relativePath.TrimPrefixSlash().StartsWith(appRelativePath);
 
     /// <summary>
     /// extract appRelativePathWithEdition from relativePath
