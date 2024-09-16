@@ -1224,7 +1224,7 @@
                           "en-us": "Notes"
                         },
                         "Notes": {
-                          "en-us": "<p>Add notes / helpfull comments to aid the editor in adding his information. Note that you have a WYSIWYG for this field, but be careful to KISS.</p>\n<p>You can also add helpfull links like <a href=\"https://www.2sxc.org\" target=\"_blank\" rel=\"noopener\">www.2sxc.org</a>.</p>"
+                          "en-us": "<p>Add notes / helpful comments to aid the editor in adding his information. Note that you have a WYSIWYG for this field, but be careful to KISS.</p>\n<p>You can also add helpful links like <a href=\"https://www.2sxc.org\" target=\"_blank\" rel=\"noopener\">www.2sxc.org</a>.</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
