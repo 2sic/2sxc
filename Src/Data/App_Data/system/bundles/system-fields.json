@@ -1200,7 +1200,7 @@
                 "Metadata": [
                   {
                     "Id": 41574,
-                    "Version": 6,
+                    "Version": 7,
                     "Guid": "57004e54-c530-4777-ba86-f0eb0eafe729",
                     "Type": {
                       "Id": "@All",
@@ -1271,7 +1271,7 @@
                   },
                   {
                     "Id": 56935,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "22b951f5-4029-4f21-990c-99e809baaffd",
                     "Type": {
                       "Id": "@String",
@@ -1291,7 +1291,7 @@
                   },
                   {
                     "Id": 56936,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "c1885242-dc2a-4fb5-8793-5c4ed776e85e",
                     "Type": {
                       "Id": "@string-wysiwyg",

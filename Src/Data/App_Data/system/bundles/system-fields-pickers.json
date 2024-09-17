@@ -8026,7 +8026,7 @@
                 "Metadata": [
                   {
                     "Id": 182499,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "6aa01f5c-ceae-44a7-80f3-85aa757a2271",
                     "Type": {
                       "Id": "@All",
@@ -8097,7 +8097,7 @@
                   },
                   {
                     "Id": 182505,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "4559dee6-0ff8-40c5-9718-303e77def461",
                     "Type": {
                       "Id": "@String",
@@ -8117,7 +8117,7 @@
                   },
                   {
                     "Id": 182506,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "8271a4b9-9fdb-4c9b-ae84-6ad63ed1b352",
                     "Type": {
                       "Id": "@string-dropdown",
@@ -8134,7 +8134,7 @@
                       },
                       "Boolean": {
                         "EnableTextEntry": {
-                          "en-us": false
+                          "en-us": true
                         }
                       }
                     },
