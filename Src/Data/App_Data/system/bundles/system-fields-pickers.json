@@ -341,6 +341,85 @@
                 }
               },
               {
+                "Name": "MessageItemString",
+                "Type": "Empty",
+                "InputType": "empty-message",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183854,
+                    "Version": 2,
+                    "Guid": "07155dba-0fb7-4bf6-8017-3fbdd3813049",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-message"
+                        },
+                        "Name": {
+                          "en-us": "MessageItemString"
+                        },
+                        "Notes": {
+                          "en-us": "<p>For custom lists such as this one, the placeholders you can use are limited to the following:</p>\n<ul>\n<li>[Item:Value]</li>\n<li>[Item:Title]</li>\n</ul>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "ItemTooltip",
                 "Type": "String",
                 "InputType": "string-wysiwyg",
@@ -3896,7 +3975,7 @@
             },
             {
               "Id": 182681,
-              "Version": 25,
+              "Version": 26,
               "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -3905,7 +3984,7 @@
               "Attributes": {
                 "String": {
                   "CreateTypes": {
-                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList"
+                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv"
                   },
                   "Description": {
                     "en-us": "<p>Get all Data Sources for UI Pickers.</p>"
@@ -4069,7 +4148,7 @@
           "Entities": [
             {
               "Id": 182681,
-              "Version": 25,
+              "Version": 26,
               "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -4078,7 +4157,7 @@
               "Attributes": {
                 "String": {
                   "CreateTypes": {
-                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList"
+                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv"
                   },
                   "Description": {
                     "en-us": "<p>Get all Data Sources for UI Pickers.</p>"
@@ -4544,7 +4623,7 @@
             },
             {
               "Id": 182681,
-              "Version": 25,
+              "Version": 26,
               "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -4553,7 +4632,7 @@
               "Attributes": {
                 "String": {
                   "CreateTypes": {
-                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList"
+                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv"
                   },
                   "Description": {
                     "en-us": "<p>Get all Data Sources for UI Pickers.</p>"
@@ -8879,7 +8958,7 @@
           "Entities": [
             {
               "Id": 182681,
-              "Version": 25,
+              "Version": 26,
               "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -8888,7 +8967,7 @@
               "Attributes": {
                 "String": {
                   "CreateTypes": {
-                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList"
+                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv"
                   },
                   "Description": {
                     "en-us": "<p>Get all Data Sources for UI Pickers.</p>"
@@ -8987,7 +9066,7 @@
             },
             {
               "Id": 182681,
-              "Version": 25,
+              "Version": 26,
               "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -8996,7 +9075,7 @@
               "Attributes": {
                 "String": {
                   "CreateTypes": {
-                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList"
+                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv"
                   },
                   "Description": {
                     "en-us": "<p>Get all Data Sources for UI Pickers.</p>"
@@ -10626,6 +10705,550 @@
               "Owner": "dnn:userid=41"
             }
           ]
+        },
+        {
+          "ContentType": {
+            "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+            "Name": "UiPickerSourceCustomCsv",
+            "Scope": "System.Fields",
+            "Metadata": [
+              {
+                "Id": 183868,
+                "Version": 1,
+                "Guid": "7953fd0e-61e8-4c07-a0c5-6998c908860a",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": ""
+                    },
+                    "Label": {
+                      "en-us": "UI Picker Source - Custom CSV"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "3a96ad21-027d-4679-8372-c39406ad1d11"
+                }
+              }
+            ],
+            "Attributes": [
+              {
+                "Name": "Title",
+                "Type": "String",
+                "InputType": "string-default",
+                "IsTitle": true,
+                "Metadata": [
+                  {
+                    "Id": 183855,
+                    "Version": 3,
+                    "Guid": "84d21ca2-8dfb-4c25-941f-207975e43940",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "CSV Data Source"
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-default"
+                        },
+                        "Name": {
+                          "en-us": "Title"
+                        },
+                        "Notes": {
+                          "en-us": "<p>A simple name so you can identify this source when you re-use it.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183863,
+                    "Version": 2,
+                    "Guid": "29181a04-8d2c-4e6a-8715-1f4b79a265e3",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183864,
+                    "Version": 2,
+                    "Guid": "7cb7ba37-131c-426e-a30e-72cf02cbea05",
+                    "Type": {
+                      "Id": "@string-default",
+                      "Name": "@string-default"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "GroupDescription",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "SysSettings": {
+                  "InheritMetadataOf": "0046b3fd-b3ee-47ee-be29-1f0df071069a"
+                }
+              },
+              {
+                "Name": "Description",
+                "Type": "String",
+                "InputType": "string-wysiwyg",
+                "IsTitle": false,
+                "SysSettings": {
+                  "InheritMetadataOf": "970d9f99-9fc7-4ebb-b5c3-8ce1518a0bce"
+                }
+              },
+              {
+                "Name": "GroupCsvValues",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183870,
+                    "Version": 5,
+                    "Guid": "93582c68-a89a-4134-8f3c-2cf0c199baea",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-default"
+                        },
+                        "Name": {
+                          "en-us": "Comma Separated Values (BETA)"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Create a mini-table with CSV. Note that as of now, the configuration is as follows:</p>\n<ol>\n<li>the first row must contain the column names, and must contain a&nbsp;<em>Value. </em>The&nbsp;<em>Title</em> is not required, but recommended.&nbsp;</li>\n<li>spaces will be trimmed, so &lt;Value,Title&gt; and &lt;Value, Title&gt; are the same</li>\n<li>empty lines will be skipped</li>\n<li>delimiter will be guessed, we suggest you use a comma \",\"</li>\n<li>if you have text containing the delimiter, best put it in quotes eg \"I think, therefore I am\"</li>\n<li>numbers are not parsed, so make sure you use the neutral \".\" format like 42.27</li>\n</ol>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183871,
+                    "Version": 4,
+                    "Guid": "3952f26e-670c-46d3-90f4-f5d06863151d",
+                    "Type": {
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "Csv",
+                "Type": "String",
+                "InputType": "string-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183865,
+                    "Version": 7,
+                    "Guid": "c085bf57-68cf-489b-9b1b-15ef8315dcb6",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "Value,Title,Info,Link\n2sxc,2sxc CMS,the best plugin for Dnn and Oqtane,https://2sxc.org\n2sic,2sic - makers of 2sxc,the creators of 2sxc,https://2sic.com\nDescartes,René Descartes,\"I think, therefore I am\",\"https://en.wikipedia.org/wiki/Cogito,_ergo_sum\""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-default"
+                        },
+                        "Name": {
+                          "en-us": "CSV - Comma Separated Values"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183866,
+                    "Version": 6,
+                    "Guid": "632f2213-7ee1-41bb-add4-79cb21e391e2",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183867,
+                    "Version": 6,
+                    "Guid": "630ad0d7-8bbd-489e-9c89-607af64ef6b9",
+                    "Type": {
+                      "Id": "@string-default",
+                      "Name": "@string-default"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": "monospace"
+                        },
+                        "TextWrapping": {
+                          "en-us": "pre"
+                        }
+                      },
+                      "Number": {
+                        "RowCount": {
+                          "en-us": 20
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "GroupItemHelp",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "SysSettings": {
+                  "InheritMetadataOf": "ea9c3f94-578f-4c5f-b721-767f38fea57d"
+                }
+              },
+              {
+                "Name": "ItemTooltip",
+                "Type": "String",
+                "InputType": "string-wysiwyg",
+                "IsTitle": false,
+                "SysSettings": {
+                  "InheritMetadataOf": "49d939a6-b45c-405b-98e9-b7ee38a9c68a"
+                }
+              },
+              {
+                "Name": "ItemInformation",
+                "Type": "String",
+                "InputType": "string-wysiwyg",
+                "IsTitle": false,
+                "SysSettings": {
+                  "InheritMetadataOf": "2cd90609-840f-4ccf-aed6-8c6e39ea067e"
+                }
+              },
+              {
+                "Name": "ItemLink",
+                "Type": "Hyperlink",
+                "InputType": "hyperlink-default",
+                "IsTitle": false,
+                "SysSettings": {
+                  "InheritMetadataOf": "8a7dcb9e-f47b-4518-9519-f66db95f195e"
+                }
+              }
+            ]
+          },
+          "Entities": [
+            {
+              "Id": 183740,
+              "Version": 1,
+              "Guid": "294f8671-40aa-4af3-a111-c53d00cb53be",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data) => { return data.default + (!!data.Info ? '✅' : ''); });"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Name"
+                  },
+                  "Title": {
+                    "en-us": "Setting Name: Value"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183718,
+              "Version": 3,
+              "Guid": "e457872b-90e7-4041-a8de-07bb88ddd43e",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  const typeName = context.target.entity.type.name;\n  // For custom list, it can always be visible\n  if (typeName == \"UiPickerSourceCustomList\") {\n    // console.log('custom list - show by default');\n    return true;\n  }\n\n  // For Entity Picker\n  if (typeName == \"UiPickerSourceEntity\") {\n    // console.log('entity source');\n    return data.ContentTypeNames.length > 0;\n  }\n\n  if (typeName == \"UiPickerSourceQuery\") {\n    // console.log('2dm query source');\n    return data.Query.length > 0;\n  }\n\n  console.warn('formula for GroupItemHelp is running on an unexpected type: ' + typeName);\n  // console.log('2dm data', data, context);\n  return data.value;\n});"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Setting Visible: Value"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183739,
+              "Version": 1,
+              "Guid": "5a7bf19c-2be2-4310-b706-b888c89b8394",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  const icons = [];\n  if (!!data.ItemTooltip) icons.push('\uD83D\uDCA1');\n  if (!!data.ItemInformation) icons.push('ℹ️');\n  if (!!data.ItemHelpLink) icons.push('\uD83D\uDD17');\n  const addOn = icons.length ? ' (' + icons.join(' ') + ')' : '';\n  return data.default + addOn;\n});"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Name"
+                  },
+                  "Title": {
+                    "en-us": "Setting Name: Value"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            }
+          ]
         }
       ],
       "Entities": [
@@ -10709,7 +11332,7 @@
         },
         {
           "Id": 182681,
-          "Version": 25,
+          "Version": 26,
           "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
           "Type": {
             "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -10718,7 +11341,7 @@
           "Attributes": {
             "String": {
               "CreateTypes": {
-                "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList"
+                "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv"
               },
               "Description": {
                 "en-us": "<p>Get all Data Sources for UI Pickers.</p>"
