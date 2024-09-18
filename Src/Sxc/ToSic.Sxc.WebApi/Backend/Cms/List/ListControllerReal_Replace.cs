@@ -58,9 +58,16 @@ partial class ListControllerReal
 
         var listTemp = workEntities.New(Context.AppReader).Get(typeName).ToList();
 
-        var results = listTemp.Select(Context.AppReader.GetDraftOrKeep).ToDictionary(
+        var preferDraft = listTemp
+            .Select(Context.AppReader.GetDraftOrKeep)
+            .GroupBy(e => e.EntityId)
+            .Select(g => g.OrderBy(e => e.RepositoryId).Last())
+            .ToList();
+
+        var results = preferDraft.ToDictionary(
             p => p.EntityId,
-            p => p.GetBestTitle() ?? "");
+            p => p.GetBestTitle() ?? ""
+        );
 
         // if list is empty or shorter than index (would happen in an add-to-end-request) return null
         var selectedId = existingItemsInField.Count > index
