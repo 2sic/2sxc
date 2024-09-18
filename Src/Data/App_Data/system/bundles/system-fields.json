@@ -400,7 +400,7 @@
                 "Metadata": [
                   {
                     "Id": 130138,
-                    "Version": 4,
+                    "Version": 7,
                     "Guid": "116195e5-3f33-4bf3-adbd-155bea2ea818",
                     "Type": {
                       "Id": "@All",
@@ -409,25 +409,36 @@
                     "Attributes": {
                       "String": {
                         "CustomJavaScript": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "DefaultValue": {
-                          "*": ""
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": "boolean-tristate"
+                          "en-us": "boolean-tristate"
                         },
                         "Name": {
-                          "*": "Reverse Toggle"
+                          "en-us": "Reverse Toggle"
                         },
                         "Notes": {
-                          "*": "<p>Sometimes you're storing a negative-named-value like <em>Disable.</em> But you want to show the user <strong>Enabled</strong> when the value is <em>false</em>, showing an active toggle. This reverses what the toggle visual shows.&nbsp;</p>"
+                          "en-us": "<p>Sometimes you're storing a negative-named-value like <em>Disable.</em> But you want to show the user <strong>Enabled</strong> when the value is <em>false</em>, showing an active toggle. This reverses what the toggle visual shows.&nbsp;</p>"
                         },
                         "Placeholder": {
-                          "*": ""
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
                         },
                         "ValidationRegExJavaScript": {
-                          "*": ""
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
                         }
                       },
                       "Entity": {
@@ -443,16 +454,16 @@
                       },
                       "Boolean": {
                         "Disabled": {
-                          "*": false
+                          "en-us": false
                         },
                         "DisableTranslation": {
-                          "*": false
+                          "en-us": false
                         },
                         "Required": {
-                          "*": false
+                          "en-us": false
                         },
                         "VisibleInEditUI": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -460,7 +471,7 @@
                   },
                   {
                     "Id": 130139,
-                    "Version": 3,
+                    "Version": 6,
                     "Guid": "59b42099-e4b2-44ce-845a-53f175bd005e",
                     "Type": {
                       "Id": "@Boolean",
@@ -469,18 +480,18 @@
                     "Attributes": {
                       "String": {
                         "TitleFalse": {
-                          "*": "Normal Toggle: true shows the active toggle"
+                          "en-us": "Normal Toggle: true shows the active toggle"
                         },
                         "TitleIndeterminate": {
-                          "*": "Default Toggle: true shows the active toggle"
+                          "en-us": "Default Toggle: true shows the active toggle"
                         },
                         "TitleTrue": {
-                          "*": "Reverse Toggle: false shows the active toggle"
+                          "en-us": "Reverse Toggle: false shows the active toggle"
                         }
                       },
                       "Boolean": {
                         "ReverseToggle": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -493,7 +504,7 @@
           "Entities": [
             {
               "Id": 130495,
-              "Version": 3,
+              "Version": 5,
               "Guid": "ae75440d-d7d7-46c9-b405-9508603322ea",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -502,21 +513,21 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "*": "v1(data, context, exp) {\n  var entities = exp.getEntities();\n  var isTristate = entities.find(a => a.type.id == '@boolean-tristate');\n  // console.log('found', isTristate);\n  return !!isTristate;\n}"
+                    "en-us": "v2((data, context) => {\n  var isTristate = context.entities.getOfType('@boolean-tristate');\n  return !!isTristate;\n})"
                   },
                   "Notes": {
-                    "*": ""
+                    "en-us": ""
                   },
                   "Target": {
-                    "*": "Field.Settings.Visible"
+                    "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "*": "Setting Visible: Tristate only"
+                    "en-us": "Setting Visible: Tristate only"
                   }
                 },
                 "Boolean": {
                   "Enabled": {
-                    "*": true
+                    "en-us": true
                   }
                 }
               },
@@ -3288,7 +3299,7 @@
             },
             {
               "Id": 166032,
-              "Version": 1,
+              "Version": 2,
               "Guid": "f76bfadf-be8a-4703-a94e-66b25a3f37f4",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -3297,13 +3308,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  return !data.DisableTranslation;\n}"
+                    "en-us": "v1(data, context) { return !data.DisableTranslation; }"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -3316,7 +3330,7 @@
             },
             {
               "Id": 169162,
-              "Version": 1,
+              "Version": 2,
               "Guid": "d57e9667-b470-4557-a35d-eb13aaa94022",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -3325,13 +3339,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "// new formula syntax - see https://r.2sxc.org/formulas\nv2((data, context) => {\n  return context.debug;\n});"
+                    "en-us": "v2((data, context) => { return context.debug; });"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -5811,7 +5828,7 @@
             },
             {
               "Id": 169152,
-              "Version": 1,
+              "Version": 2,
               "Guid": "922a224c-f030-4e11-9cd6-ae51dc6cbcd4",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -5820,13 +5837,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "// new formula syntax - see https://r.2sxc.org/formulas\nv2((data, context) => {\n  return context.debug;\n});"
+                    "en-us": "v2((data, context) => { return context.debug; });"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -11462,7 +11482,7 @@
             },
             {
               "Id": 166525,
-              "Version": 1,
+              "Version": 2,
               "Guid": "f541e2a2-a6c2-4191-a708-0a6462d6a8b9",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -11471,13 +11491,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  return context.debug;\n}"
+                    "en-us": "v1(data, context) { return context.debug; }"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -11521,7 +11544,7 @@
             },
             {
               "Id": 169144,
-              "Version": 1,
+              "Version": 2,
               "Guid": "820ca909-c0d5-4905-9ba0-c0bc2ea8e506",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -11530,13 +11553,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "// new formula syntax - see https://r.2sxc.org/formulas\nv2((data, context) => {\n  return context.debug;\n});"
+                    "en-us": "v2((data, context) => { return context.debug; });"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -13507,7 +13533,7 @@
             },
             {
               "Id": 130439,
-              "Version": 3,
+              "Version": 4,
               "Guid": "f670e444-96a8-4a00-b588-70a6f8d879ef",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -13516,21 +13542,21 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1(data, context) {\n  if(context.cache.secondRun) return data.value;\n  context.cache.secondRun = true;\n  return !!data.DropdownValues;\n}"
+                    "en-us": "v1(data, context) {\n  if(context.cache.secondRun) return data.value;\n  context.cache.secondRun = true;\n  return !!data.DropdownValues;\n}"
                   },
                   "Notes": {
-                    "*": ""
+                    "en-us": ""
                   },
                   "Target": {
-                    "*": "Field.Settings.Visible"
+                    "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "*": "Setting Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
                   "Enabled": {
-                    "*": true
+                    "en-us": true
                   }
                 }
               },
@@ -15431,7 +15457,7 @@
             },
             {
               "Id": 164914,
-              "Version": 2,
+              "Version": 3,
               "Guid": "c1f607b3-6cc1-4797-a75b-b46555f512cf",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -15440,13 +15466,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  return data.WysiwygMode === 'enhanced';\n}"
+                    "en-us": "v1(data, context) { return data.WysiwygMode === 'enhanced'; }"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {

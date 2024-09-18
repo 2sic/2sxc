@@ -279,15 +279,9 @@
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
-                        },
-                        "Separator": {
-                          "en-us": ","
                         }
                       },
                       "Boolean": {
-                        "AllowMultiValue": {
-                          "en-us": false
-                        },
                         "EnableTextEntry": {
                           "en-us": true
                         }
@@ -639,7 +633,7 @@
             },
             {
               "Id": 167715,
-              "Version": 1,
+              "Version": 2,
               "Guid": "75c5a65b-e2ce-455e-9f1e-1bcde7b63c74",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -648,13 +642,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "// new formula syntax - see https://r.2sxc.org/formulas\nv2((data, context) => {\n  return !context.debug;\n});"
+                    "en-us": "v2((data, context) => { return !context.debug; });"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Disabled"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Disabled"
+                    "en-us": "Setting Disabled"
                   }
                 },
                 "Boolean": {
@@ -667,7 +664,7 @@
             },
             {
               "Id": 166481,
-              "Version": 1,
+              "Version": 2,
               "Guid": "eb12c7d9-2c4c-476e-bfb5-b9d1aff55854",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -676,13 +673,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  return data.CustomConfiguration;\n}"
+                    "en-us": "v1(data, context) { return data.CustomConfiguration; }"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {

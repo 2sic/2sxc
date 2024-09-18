@@ -6468,7 +6468,7 @@
             },
             {
               "Id": 130188,
-              "Version": 10,
+              "Version": 11,
               "Guid": "07958470-13f6-4e7d-b2a2-901517058e2a",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -6477,21 +6477,21 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "*": "v1 (data, context) {\n  // skip if already set\n  if(context.cache.notFirstRun) return data.value;\n  context.cache.notFirstRun = true;\n\n  // new without name - set empty so it's still required\n  if(!data.Name) return '';\n\n  const hasQuery = data.Pipeline.length == 1;\n  const hasList = data.UseForList;\n  const hasContent = data.ContentTypeStaticName != '';\n  const key = (hasContent || hasList ? 'c' : '') + (hasList ? 'l' : '') + (hasQuery ? 'q':'');\n  if(key == '') return '-'; // default to No-Content if not set\n  return key;\n}"
+                    "en-us": "v1(data, context) {\n  // skip if already set\n  if(context.cache.notFirstRun) return data.value;\n  context.cache.notFirstRun = true;\n\n  // new without name - set empty so it's still required\n  if(!data.Name) return '';\n\n  const hasQuery = data.Pipeline.length == 1;\n  const hasList = data.UseForList;\n  const hasContent = data.ContentTypeStaticName != '';\n  const key = (hasContent || hasList ? 'c' : '') + (hasList ? 'l' : '') + (hasQuery ? 'q':'');\n  if(key == '') return '-'; // default to No-Content if not set\n  return key;\n}"
                   },
                   "Notes": {
-                    "*": ""
+                    "en-us": ""
                   },
                   "Target": {
-                    "*": "Field.Value"
+                    "en-us": "Field.Value"
                   },
                   "Title": {
-                    "*": "Value: Initialize based on state"
+                    "en-us": "Value: Initialize based on state"
                   }
                 },
                 "Boolean": {
                   "Enabled": {
-                    "*": true
+                    "en-us": true
                   }
                 }
               },
@@ -6995,7 +6995,7 @@
             },
             {
               "Id": 163996,
-              "Version": 1,
+              "Version": 2,
               "Guid": "4c014396-a4b7-4b2c-897e-b383d6f23021",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -7004,13 +7004,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  const icon = data.Icon.toLowerCase();\n  if (icon.indexOf('[app:path]/') == 0)\n    return data.default + ' \uD83D\uDC4D\uD83C\uDFFD [App:Path]/... is the best option';\n  if (icon.indexOf('file:') == 0)\n    return data.default + \" ⚠️ using 'file:...' is not ideal, see docs link in description below\";\n  return data.default;\n}"
+                    "en-us": "v1(data, context) {\n  const icon = data.Icon.toLowerCase();\n  if (icon.indexOf('[app:path]/') == 0)\n    return data.default + ' \uD83D\uDC4D\uD83C\uDFFD [App:Path]/... is the best option';\n  if (icon.indexOf('file:') == 0)\n    return data.default + \" ⚠️ using 'file:...' is not ideal, see docs link in description below\";\n  return data.default;\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Name"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Name"
+                    "en-us": "Setting Name"
                   }
                 },
                 "Boolean": {
