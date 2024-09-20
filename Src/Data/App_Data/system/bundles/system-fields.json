@@ -12181,7 +12181,7 @@
                 "Metadata": [
                   {
                     "Id": 135571,
-                    "Version": 3,
+                    "Version": 5,
                     "Guid": "4dc0536d-f22b-431b-b39d-5a771501b750",
                     "Type": {
                       "Id": "@All",
@@ -12271,33 +12271,8 @@
                     "Owner": "dnn:userid=41"
                   },
                   {
-                    "Id": 135573,
-                    "Version": 3,
-                    "Guid": "e754b8b7-532b-48b9-82b0-19dcb6507529",
-                    "Type": {
-                      "Id": "@string-dropdown",
-                      "Name": "@string-dropdown"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "DropdownValues": {
-                          "en-us": "strict:JSON must be valid (default)\nlight:Show warning on invalid JSON but allow Save\nnone:JSON can be any text and also invalid JSON (not recommended)"
-                        },
-                        "DropdownValuesFormat": {
-                          "en-us": "value-label"
-                        }
-                      },
-                      "Boolean": {
-                        "EnableTextEntry": {
-                          "en-us": false
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
                     "Id": 183877,
-                    "Version": 1,
+                    "Version": 3,
                     "Guid": "f74b1720-bb48-4ede-91ce-b74e91f7e885",
                     "Type": {
                       "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
@@ -12315,7 +12290,7 @@
                           "en-us": ""
                         },
                         "PickerDisplayMode": {
-                          "en-us": "checkbox"
+                          "en-us": "auto-inline"
                         },
                         "Separator": {
                           "en-us": "\\n"
@@ -12362,12 +12337,12 @@
               {
                 "Name": "JsonSchemaMode",
                 "Type": "String",
-                "InputType": "string-dropdown",
+                "InputType": "string-picker",
                 "IsTitle": false,
                 "Metadata": [
                   {
                     "Id": 135574,
-                    "Version": 5,
+                    "Version": 10,
                     "Guid": "c0c26653-22ee-4ccf-80b9-61c68466725b",
                     "Type": {
                       "Id": "@All",
@@ -12381,19 +12356,30 @@
                         "DefaultValue": {
                           "en-us": "none"
                         },
+                        "Information": {
+                          "en-us": ""
+                        },
                         "InputType": {
-                          "en-us": "string-dropdown"
+                          "en-us": "string-picker"
                         },
                         "Name": {
                           "en-us": "JSON Schema Mode"
                         },
                         "Notes": {
-                          "en-us": "<p>JSONs can validate using a <a href=\"https://json-schema.org/\" target=\"_blank\" rel=\"noopener\">schema</a>. This can be activated.&nbsp;</p>"
+                          "en-us": "<p>JSONs can validate using a <a href=\"https://json-schema.org/\" target=\"_blank\" rel=\"noopener\">schema</a>.&nbsp;</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
                         },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
                         "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -12446,23 +12432,60 @@
                     "Owner": "dnn:userid=41"
                   },
                   {
-                    "Id": 135576,
-                    "Version": 4,
-                    "Guid": "d86e4c5b-d7db-48de-b7ea-3edb3039d6e6",
+                    "Id": 183882,
+                    "Version": 8,
+                    "Guid": "3a7d4165-b25e-40d2-ab8c-953de56532e8",
                     "Type": {
-                      "Id": "@string-dropdown",
-                      "Name": "@string-dropdown"
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
                     },
                     "Attributes": {
                       "String": {
-                        "DropdownValues": {
-                          "en-us": "none:Don't use a JSON Schema (default)\nstrict:Enforce a JSON Schema\nlight:Use a JSON Schema to help editing, but don't enforce"
+                        "CreateParameters": {
+                          "en-us": ""
                         },
-                        "DropdownValuesFormat": {
-                          "en-us": "value-label"
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "auto-inline"
+                        },
+                        "Separator": {
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "a4800b93-f69b-419c-bfa9-7eadbf1a9bfc"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
                         }
                       },
                       "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": true
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
                         "EnableTextEntry": {
                           "en-us": false
                         }
@@ -12475,12 +12498,12 @@
               {
                 "Name": "JsonSchemaSource",
                 "Type": "String",
-                "InputType": "string-dropdown",
+                "InputType": "string-picker",
                 "IsTitle": false,
                 "Metadata": [
                   {
                     "Id": 135577,
-                    "Version": 2,
+                    "Version": 5,
                     "Guid": "7c8e0a6d-4665-4d19-ada6-a37acb28b325",
                     "Type": {
                       "Id": "@All",
@@ -12494,8 +12517,11 @@
                         "DefaultValue": {
                           "en-us": "link"
                         },
+                        "Information": {
+                          "en-us": ""
+                        },
                         "InputType": {
-                          "en-us": "string-dropdown"
+                          "en-us": "string-picker"
                         },
                         "Name": {
                           "en-us": "Schema Source"
@@ -12506,7 +12532,15 @@
                         "Placeholder": {
                           "en-us": ""
                         },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
                         "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -12561,23 +12595,60 @@
                     "Owner": "dnn:userid=41"
                   },
                   {
-                    "Id": 135579,
+                    "Id": 183884,
                     "Version": 2,
-                    "Guid": "1c5c7930-f99c-4c65-8963-a43bf539ad24",
+                    "Guid": "b30d51f3-2a2a-4aba-b8ed-cacff7bdc848",
                     "Type": {
-                      "Id": "@string-dropdown",
-                      "Name": "@string-dropdown"
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
                     },
                     "Attributes": {
                       "String": {
-                        "DropdownValues": {
-                          "en-us": "link:Link to a Schema\nraw:Add Schema manually as JSON"
+                        "CreateParameters": {
+                          "en-us": ""
                         },
-                        "DropdownValuesFormat": {
-                          "en-us": "value-label"
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "auto-inline"
+                        },
+                        "Separator": {
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "2705cd61-c736-41f6-8d85-f717597924ea"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
                         }
                       },
                       "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": false
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
                         "EnableTextEntry": {
                           "en-us": false
                         }
@@ -12922,7 +12993,7 @@
           "Entities": [
             {
               "Id": 183875,
-              "Version": 1,
+              "Version": 2,
               "Guid": "f57b953e-9caf-4bf8-bbf8-51d2479835f5",
               "Type": {
                 "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
@@ -12931,16 +13002,16 @@
               "Attributes": {
                 "String": {
                   "Csv": {
-                    "en-us": "Value,Title\nstrict,JSON must be valid (default)\nlight,Show warning on invalid JSON but allow Save\nnone,JSON can be any text and also invalid JSON (not recommended)"
+                    "en-us": "Value,Title,Tooltip\nstrict,JSON must be valid (default),The JSON must be valid and can't be saved if it isn't.\nlight,Show warning on invalid JSON,The JSON should be valid, but save is still allowed if not.\nnone,JSON can be anything (not recommended),Allow any input, incl. text and invalid JSON."
                   },
                   "Description": {
                     "en-us": ""
                   },
                   "ItemInformation": {
-                    "en-us": ""
+                    "en-us": "<p>[Item:Tooltip]</p>"
                   },
                   "ItemTooltip": {
-                    "en-us": ""
+                    "en-us": "<p>[Item:Tooltip]</p>"
                   },
                   "Title": {
                     "en-us": "Custom JSON - JSON Validation"
@@ -12949,6 +13020,40 @@
                 "Hyperlink": {
                   "ItemLink": {
                     "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183881,
+              "Version": 7,
+              "Guid": "a4800b93-f69b-419c-bfa9-7eadbf1a9bfc",
+              "Type": {
+                "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+                "Name": "UiPickerSourceCustomCsv"
+              },
+              "Attributes": {
+                "String": {
+                  "Csv": {
+                    "en-us": "Value,Title,Info\nnone,No Schema (default),\"Don't use a JSON Schema\"\nstrict,Enforce (recommended),\"You can provide a real JSON Schema which will be checked and enforced.\"\nlight,Suggest,\"Use a JSON Schema to help editing, but don't enforce\""
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "ItemTooltip": {
+                    "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "Title": {
+                    "en-us": "Json Picker - Json Schema"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": "https://json-schema.org/"
                   }
                 }
               },
@@ -12980,6 +13085,40 @@
                 "Boolean": {
                   "Enabled": {
                     "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183883,
+              "Version": 1,
+              "Guid": "2705cd61-c736-41f6-8d85-f717597924ea",
+              "Type": {
+                "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+                "Name": "UiPickerSourceCustomCsv"
+              },
+              "Attributes": {
+                "String": {
+                  "Csv": {
+                    "en-us": "Value,Title,Info\nlink,Link / URL,\"Use a link to a Schema in the internet or on your site\"\nraw,Manual,\"Add Schema manually as JSON below\""
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "ItemTooltip": {
+                    "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "Title": {
+                    "en-us": "JSON Editor - Schema Source"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
                   }
                 }
               },
@@ -13847,12 +13986,12 @@
               {
                 "Name": "InputFontFamily",
                 "Type": "String",
-                "InputType": "string-dropdown",
+                "InputType": "string-picker",
                 "IsTitle": false,
                 "Metadata": [
                   {
                     "Id": 130496,
-                    "Version": 3,
+                    "Version": 5,
                     "Guid": "41af71f5-a567-4773-9a53-a23dda4caa88",
                     "Type": {
                       "Id": "@All",
@@ -13861,25 +14000,36 @@
                     "Attributes": {
                       "String": {
                         "CustomJavaScript": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "DefaultValue": {
-                          "*": ""
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": "string-dropdown"
+                          "en-us": "string-picker"
                         },
                         "Name": {
-                          "*": "Font Family"
+                          "en-us": "Font Family"
                         },
                         "Notes": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "Placeholder": {
-                          "*": ""
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
                         },
                         "ValidationRegExJavaScript": {
-                          "*": ""
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
                         }
                       },
                       "Entity": {
@@ -13895,16 +14045,16 @@
                       },
                       "Boolean": {
                         "Disabled": {
-                          "*": false
+                          "en-us": false
                         },
                         "DisableTranslation": {
-                          "*": false
+                          "en-us": false
                         },
                         "Required": {
-                          "*": false
+                          "en-us": false
                         },
                         "VisibleInEditUI": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -13931,22 +14081,62 @@
                     "Owner": "dnn:userid=41"
                   },
                   {
-                    "Id": 130498,
-                    "Version": 2,
-                    "Guid": "a8c8e552-c0c0-46fe-b9fc-3271b1521b38",
+                    "Id": 183889,
+                    "Version": 1,
+                    "Guid": "83a04b12-0c9c-4e0a-9429-f22fa099d4c0",
                     "Type": {
-                      "Id": "@string-dropdown",
-                      "Name": "@string-dropdown"
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
                     },
                     "Attributes": {
                       "String": {
-                        "DropdownValues": {
-                          "*": "Standard font (default):\nMonospace for code-style (usually Courier):monospace"
+                        "CreateParameters": {
+                          "en-us": ""
+                        },
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "auto-inline"
+                        },
+                        "Separator": {
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "6625ab49-7a69-45b0-be1e-f4a2e4cd1bf2"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
                         }
                       },
                       "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": true
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
                         "EnableTextEntry": {
-                          "*": false
+                          "en-us": false
                         }
                       }
                     },
@@ -13957,12 +14147,12 @@
               {
                 "Name": "TextWrapping",
                 "Type": "String",
-                "InputType": "string-dropdown",
+                "InputType": "string-picker",
                 "IsTitle": false,
                 "Metadata": [
                   {
                     "Id": 183872,
-                    "Version": 3,
+                    "Version": 7,
                     "Guid": "2be027ec-ebaf-4e69-acba-ac65eed2c08f",
                     "Type": {
                       "Id": "@All",
@@ -13980,7 +14170,7 @@
                           "en-us": ""
                         },
                         "InputType": {
-                          "en-us": "string-dropdown"
+                          "en-us": "string-picker"
                         },
                         "Name": {
                           "en-us": "Text Wrapping on White Space"
@@ -14052,23 +14242,60 @@
                     "Owner": "dnn:userid=41"
                   },
                   {
-                    "Id": 183874,
-                    "Version": 2,
-                    "Guid": "05f5cbfe-c3d8-40c1-84db-0d862ee39924",
+                    "Id": 183891,
+                    "Version": 3,
+                    "Guid": "21621aeb-54cf-4710-9f84-f38b5b73dce4",
                     "Type": {
-                      "Id": "@string-dropdown",
-                      "Name": "@string-dropdown"
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
                     },
                     "Attributes": {
                       "String": {
-                        "DropdownValues": {
-                          "en-us": ":Default, text will wrap (css: normal)\npre:No line wrapping unless manually adding an enter (css: pre)"
+                        "CreateParameters": {
+                          "en-us": ""
                         },
-                        "DropdownValuesFormat": {
-                          "en-us": "value-label"
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "auto-inline"
+                        },
+                        "Separator": {
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "397911a4-839e-4c7e-9e20-deb26335aa3a"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
                         }
                       },
                       "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": true
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
                         "EnableTextEntry": {
                           "en-us": false
                         }
@@ -14080,7 +14307,76 @@
               }
             ]
           },
-          "Entities": []
+          "Entities": [
+            {
+              "Id": 183888,
+              "Version": 4,
+              "Guid": "6625ab49-7a69-45b0-be1e-f4a2e4cd1bf2",
+              "Type": {
+                "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+                "Name": "UiPickerSourceCustomCsv"
+              },
+              "Attributes": {
+                "String": {
+                  "Csv": {
+                    "en-us": "Value,Title,Info\n,\"Standard\",\"The same standard font as everywhere (default)\"\nmonospace,\"Monospace (code-style)\",\"Font where every character has the same width - usually Courier.<br><br>This is for code-style inputs\""
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": ""
+                  },
+                  "ItemTooltip": {
+                    "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "Title": {
+                    "en-us": "String-Default Input-Font-Family"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183890,
+              "Version": 5,
+              "Guid": "397911a4-839e-4c7e-9e20-deb26335aa3a",
+              "Type": {
+                "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+                "Name": "UiPickerSourceCustomCsv"
+              },
+              "Attributes": {
+                "String": {
+                  "Csv": {
+                    "en-us": "Value,Title,Info,Css\n,Automatic (default),\"Text will wrap\",normal\npre,Manual (only on new-line),\"No line wrapping unless manually adding an enter\",pre"
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": ""
+                  },
+                  "ItemTooltip": {
+                    "en-us": "<p>[Item:Info]</p>\n<p>&nbsp;</p>\n<p>In CSS this is \"<strong>[Item:Css]</strong>\"</p>"
+                  },
+                  "Title": {
+                    "en-us": "String-Default - Text Wrapping Options"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            }
+          ]
         },
         {
           "ContentType": {
@@ -14724,12 +15020,12 @@
               {
                 "Name": "Dialog",
                 "Type": "String",
-                "InputType": "string-dropdown",
+                "InputType": "string-picker",
                 "IsTitle": true,
                 "Metadata": [
                   {
                     "Id": 53794,
-                    "Version": 6,
+                    "Version": 10,
                     "Guid": "5408022f-dfc2-4989-b645-1be76bb6d89b",
                     "Type": {
                       "Id": "@All",
@@ -14743,8 +15039,11 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
+                        "Information": {
+                          "en-us": ""
+                        },
                         "InputType": {
-                          "en-us": "string-dropdown"
+                          "en-us": "string-picker"
                         },
                         "Name": {
                           "en-us": "Dialog Type"
@@ -14755,7 +15054,15 @@
                         "Placeholder": {
                           "en-us": ""
                         },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
                         "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -14808,41 +15115,78 @@
                     "Owner": "dnn:userid=1"
                   },
                   {
-                    "Id": 53798,
-                    "Version": 5,
-                    "Guid": "8ae00964-b775-40bf-aa26-b8a5986aaebc",
+                    "Id": 183898,
+                    "Version": 3,
+                    "Guid": "8536c409-feac-4c30-9629-eb842076552c",
                     "Type": {
-                      "Id": "@string-dropdown",
-                      "Name": "@string-dropdown"
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
                     },
                     "Attributes": {
                       "String": {
-                        "DropdownValues": {
-                          "en-us": ":Default (inline editor)\ndialog:Use dialog\ninline:Place inline in form without dialog"
+                        "CreateParameters": {
+                          "en-us": ""
                         },
-                        "DropdownValuesFormat": {
-                          "en-us": "value-label"
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "auto-inline"
+                        },
+                        "Separator": {
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "28e7b048-6967-4abf-bf84-4b09e5c45843"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
                         }
                       },
                       "Boolean": {
-                        "EnableTextEntry": {
+                        "AllowMultiValue": {
                           "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": false
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
+                          "en-us": true
                         }
                       }
                     },
-                    "Owner": "dnn:userid=1"
+                    "Owner": "dnn:userid=41"
                   }
                 ]
               },
               {
                 "Name": "InlineInitialHeight",
                 "Type": "String",
-                "InputType": "string-dropdown",
+                "InputType": "string-picker",
                 "IsTitle": false,
                 "Metadata": [
                   {
                     "Id": 142600,
-                    "Version": 5,
+                    "Version": 7,
                     "Guid": "299a0045-1ff2-45d4-9351-d7863ca2a208",
                     "Type": {
                       "Id": "@All",
@@ -14856,8 +15200,11 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
+                        "Information": {
+                          "en-us": ""
+                        },
                         "InputType": {
-                          "en-us": "string-dropdown"
+                          "en-us": "string-picker"
                         },
                         "Name": {
                           "en-us": "Inline Editor - Initial Height"
@@ -14868,7 +15215,15 @@
                         "Placeholder": {
                           "en-us": ""
                         },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
                         "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -14923,23 +15278,60 @@
                     "Owner": "dnn:userid=41"
                   },
                   {
-                    "Id": 142602,
-                    "Version": 4,
-                    "Guid": "b084dafb-9f8f-483e-a2ef-195319f0db23",
+                    "Id": 183900,
+                    "Version": 1,
+                    "Guid": "3eba4b81-de2a-48e8-a5b3-5f6076625209",
                     "Type": {
-                      "Id": "@string-dropdown",
-                      "Name": "@string-dropdown"
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
                     },
                     "Attributes": {
                       "String": {
-                        "DropdownValues": {
-                          "en-us": ":Default (narrow)\n1:Minimum width (ca. 1 line of text)\n3:Narrow (ca. 3 lines of text)\n5:Medium (ca. 5 lines of text)\n10:Large (ca. 10 lines of text)"
+                        "CreateParameters": {
+                          "en-us": ""
                         },
-                        "DropdownValuesFormat": {
-                          "en-us": "value-label"
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "auto-inline"
+                        },
+                        "Separator": {
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "43c38be0-097c-4c0d-8860-7a530e1f4c7a"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
                         }
                       },
                       "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": false
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
                         "EnableTextEntry": {
                           "en-us": true
                         }
@@ -15220,69 +15612,9 @@
               {
                 "Name": "ButtonSource",
                 "Type": "String",
-                "InputType": "string-dropdown",
+                "InputType": "string-picker",
                 "IsTitle": false,
                 "Metadata": [
-                  {
-                    "Id": 53795,
-                    "Version": 6,
-                    "Guid": "54e74c8d-9539-44ba-9ce0-025db7a42e0c",
-                    "Type": {
-                      "Id": "@All",
-                      "Name": "@All"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "CustomJavaScript": {
-                          "en-us": ""
-                        },
-                        "DefaultValue": {
-                          "en-us": ""
-                        },
-                        "InputType": {
-                          "en-us": "string-dropdown"
-                        },
-                        "Name": {
-                          "en-us": "HTML Source"
-                        },
-                        "Notes": {
-                          "en-us": ""
-                        },
-                        "Placeholder": {
-                          "en-us": ""
-                        },
-                        "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Entity": {
-                        "Errors": {
-                          "*": []
-                        },
-                        "Formulas": {
-                          "*": []
-                        },
-                        "Warnings": {
-                          "*": []
-                        }
-                      },
-                      "Boolean": {
-                        "Disabled": {
-                          "en-us": false
-                        },
-                        "DisableTranslation": {
-                          "en-us": true
-                        },
-                        "Required": {
-                          "en-us": false
-                        },
-                        "VisibleInEditUI": {
-                          "en-us": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=1"
-                  },
                   {
                     "Id": 53800,
                     "Version": 5,
@@ -15304,42 +15636,9 @@
                     "Owner": "dnn:userid=1"
                   },
                   {
-                    "Id": 53801,
-                    "Version": 5,
-                    "Guid": "d7586c5f-5cc9-4e7b-bb12-22db998196ba",
-                    "Type": {
-                      "Id": "@string-dropdown",
-                      "Name": "@string-dropdown"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "DropdownValues": {
-                          "en-us": ":Default (enabled in Dialog, disabled when inline)\ntrue:Always Enable\nfalse:Always Disable"
-                        },
-                        "DropdownValuesFormat": {
-                          "en-us": "value-label"
-                        }
-                      },
-                      "Boolean": {
-                        "EnableTextEntry": {
-                          "en-us": false
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=1"
-                  }
-                ]
-              },
-              {
-                "Name": "ButtonAdvanced",
-                "Type": "String",
-                "InputType": "string-dropdown",
-                "IsTitle": false,
-                "Metadata": [
-                  {
-                    "Id": 53796,
-                    "Version": 6,
-                    "Guid": "2e4375c3-f594-44f8-b8d6-bf1d2f61bd1b",
+                    "Id": 53795,
+                    "Version": 10,
+                    "Guid": "54e74c8d-9539-44ba-9ce0-025db7a42e0c",
                     "Type": {
                       "Id": "@All",
                       "Name": "@All"
@@ -15352,19 +15651,30 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
+                        "Information": {
+                          "en-us": ""
+                        },
                         "InputType": {
-                          "en-us": "string-dropdown"
+                          "en-us": "string-picker"
                         },
                         "Name": {
-                          "en-us": "Advanced"
+                          "en-us": "HTML Source"
                         },
                         "Notes": {
-                          "en-us": ""
+                          "en-us": "<p>The button to access the HTML source code.</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
                         },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
                         "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -15397,6 +15707,76 @@
                     "Owner": "dnn:userid=1"
                   },
                   {
+                    "Id": 183905,
+                    "Version": 3,
+                    "Guid": "4e86b58c-6c66-4ff9-acb5-d58cd335e7ec",
+                    "Type": {
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CreateParameters": {
+                          "en-us": ""
+                        },
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "auto-inline"
+                        },
+                        "Separator": {
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "7a6b443a-6d23-45b2-9499-35743cf7d924"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": false
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": true
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "ButtonAdvanced",
+                "Type": "String",
+                "InputType": "string-picker",
+                "IsTitle": false,
+                "Metadata": [
+                  {
                     "Id": 53802,
                     "Version": 5,
                     "Guid": "ebacf837-1ae9-4c8a-b8f3-70a40b4daec6",
@@ -15417,29 +15797,137 @@
                     "Owner": "dnn:userid=1"
                   },
                   {
-                    "Id": 53803,
-                    "Version": 5,
-                    "Guid": "b91ef741-ce09-42ac-b016-bdf13b0700a1",
+                    "Id": 53796,
+                    "Version": 9,
+                    "Guid": "2e4375c3-f594-44f8-b8d6-bf1d2f61bd1b",
                     "Type": {
-                      "Id": "@string-dropdown",
-                      "Name": "@string-dropdown"
+                      "Id": "@All",
+                      "Name": "@All"
                     },
                     "Attributes": {
                       "String": {
-                        "DropdownValues": {
-                          "en-us": ":Default (enabled in Dialog, disabled inline)\ntrue:Always Enable\nfalse:Always Disabled"
+                        "CustomJavaScript": {
+                          "en-us": ""
                         },
-                        "DropdownValuesFormat": {
-                          "en-us": "value-label"
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-picker"
+                        },
+                        "Name": {
+                          "en-us": "Advanced"
+                        },
+                        "Notes": {
+                          "en-us": "<p>The button to access advanced features such as formatting and tables.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
                         }
                       },
                       "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": true
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=1"
+                  },
+                  {
+                    "Id": 183907,
+                    "Version": 2,
+                    "Guid": "b3eaf477-32ab-47aa-99ea-ada8a97b2d0e",
+                    "Type": {
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CreateParameters": {
+                          "en-us": ""
+                        },
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "auto-inline"
+                        },
+                        "Separator": {
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "4e5df6de-0980-48f3-8ad4-3e405fe67138"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": false
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": true
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
                         "EnableTextEntry": {
                           "en-us": false
                         }
                       }
                     },
-                    "Owner": "dnn:userid=1"
+                    "Owner": "dnn:userid=41"
                   }
                 ]
               },
@@ -15563,6 +16051,40 @@
               "Owner": "dnn:userid=41"
             },
             {
+              "Id": 183899,
+              "Version": 5,
+              "Guid": "43c38be0-097c-4c0d-8860-7a530e1f4c7a",
+              "Type": {
+                "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+                "Name": "UiPickerSourceCustomCsv"
+              },
+              "Attributes": {
+                "String": {
+                  "Csv": {
+                    "en-us": "Value,Title,Info\n,\"Default (narrow)\",\"Default is narrow, but visibly multi-line with ca. 3 lines of text\"\n1,\"Minimum\",\"As narrow as possible, so the user will usually not type much, and it doesn't take much screen space\"\n3,\"Narrow\",\"Narrow, but visibly multi-line\"\n5,\"Medium\",\"Medium size\"\n10,\"Large\",\"Large so it's clearly meant for a lot of text. Only do this if the user should write a lot\""
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": "<p>[Item:Info]</p>\n<p>ca. [Item:Value] lines</p>"
+                  },
+                  "ItemTooltip": {
+                    "en-us": "<p>[Item:Info]</p>\n<p>ca. [Item:Value] lines</p>"
+                  },
+                  "Title": {
+                    "en-us": "String-WYSIWYG - Inline Initial Height"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
               "Id": 164914,
               "Version": 3,
               "Guid": "c1f607b3-6cc1-4797-a75b-b46555f512cf",
@@ -15588,6 +16110,108 @@
                 "Boolean": {
                   "Enabled": {
                     "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183897,
+              "Version": 3,
+              "Guid": "28e7b048-6967-4abf-bf84-4b09e5c45843",
+              "Type": {
+                "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+                "Name": "UiPickerSourceCustomCsv"
+              },
+              "Attributes": {
+                "String": {
+                  "Csv": {
+                    "en-us": "Value,Title,Info\n,\"Default (inline editor)\",\"Will put the WYSIWYG into the form and usually allow opening a larger dialog when working on a lot of content\"\ndialog,\"Dialog only\",\"Only show a brief preview of the HTML, then use the dialog for editing\"\ninline,\"Inline without dialog\",\"Place inline in form without dialog\""
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "ItemTooltip": {
+                    "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "Title": {
+                    "en-us": "String-WYSIWYG Dialog Type"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183904,
+              "Version": 1,
+              "Guid": "7a6b443a-6d23-45b2-9499-35743cf7d924",
+              "Type": {
+                "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+                "Name": "UiPickerSourceCustomCsv"
+              },
+              "Attributes": {
+                "String": {
+                  "Csv": {
+                    "en-us": "Value,Title,Info\n,\"Default\",\"In default mode the button is disabled in the small editor, but enabled in the popup Dialog\"\ntrue,\"Always Enable\",\"Enable the button in both the small editor as well as the popup dialog\"\nfalse,\"Always Disable\",\"Disable the button in both the small editor as well as the popup dialog\""
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "ItemTooltip": {
+                    "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "Title": {
+                    "en-us": "String-WYSIWyG Button Source"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183906,
+              "Version": 2,
+              "Guid": "4e5df6de-0980-48f3-8ad4-3e405fe67138",
+              "Type": {
+                "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+                "Name": "UiPickerSourceCustomCsv"
+              },
+              "Attributes": {
+                "String": {
+                  "Csv": {
+                    "en-us": "Value,Title,Info\n,\"Default\",\"Disabled in the small editor, enabled in the popup Dialog\"\ntrue,\"Always Enable\",\"Always enable in all editors\"\nfalse,\"Always Disable\",\"Always disable in all editors\""
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "ItemTooltip": {
+                    "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "Title": {
+                    "en-us": "String-WYSIWYG - Button Advanced"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
                   }
                 }
               },
@@ -16293,6 +16917,77 @@
                 "IsTitle": false,
                 "Metadata": [
                   {
+                    "Id": 133274,
+                    "Version": 8,
+                    "Guid": "05edcd7a-4557-4b97-8505-3513cc372b33",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "strict"
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "*": "string-picker"
+                        },
+                        "Name": {
+                          "en-us": "JSON Validation"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": true
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
                     "Id": 133275,
                     "Version": 3,
                     "Guid": "428437ae-e7d7-4cd3-a339-879174513de1",
@@ -16394,77 +17089,6 @@
                         },
                         "EnableTextEntry": {
                           "en-us": false
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 133274,
-                    "Version": 8,
-                    "Guid": "05edcd7a-4557-4b97-8505-3513cc372b33",
-                    "Type": {
-                      "Id": "@All",
-                      "Name": "@All"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "CustomJavaScript": {
-                          "en-us": ""
-                        },
-                        "DefaultValue": {
-                          "en-us": "strict"
-                        },
-                        "Information": {
-                          "en-us": ""
-                        },
-                        "InputType": {
-                          "*": "string-picker"
-                        },
-                        "Name": {
-                          "en-us": "JSON Validation"
-                        },
-                        "Notes": {
-                          "en-us": ""
-                        },
-                        "Placeholder": {
-                          "en-us": ""
-                        },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
-                        "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
-                          "en-us": ""
-                        }
-                      },
-                      "Entity": {
-                        "Errors": {
-                          "*": []
-                        },
-                        "Formulas": {
-                          "*": []
-                        },
-                        "Warnings": {
-                          "*": []
-                        }
-                      },
-                      "Boolean": {
-                        "Disabled": {
-                          "en-us": false
-                        },
-                        "DisableTranslation": {
-                          "en-us": true
-                        },
-                        "Required": {
-                          "en-us": false
-                        },
-                        "VisibleInEditUI": {
-                          "en-us": true
                         }
                       }
                     },
@@ -16975,7 +17599,7 @@
             },
             {
               "Id": 183875,
-              "Version": 1,
+              "Version": 2,
               "Guid": "f57b953e-9caf-4bf8-bbf8-51d2479835f5",
               "Type": {
                 "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
@@ -16984,16 +17608,16 @@
               "Attributes": {
                 "String": {
                   "Csv": {
-                    "en-us": "Value,Title\nstrict,JSON must be valid (default)\nlight,Show warning on invalid JSON but allow Save\nnone,JSON can be any text and also invalid JSON (not recommended)"
+                    "en-us": "Value,Title,Tooltip\nstrict,JSON must be valid (default),The JSON must be valid and can't be saved if it isn't.\nlight,Show warning on invalid JSON,The JSON should be valid, but save is still allowed if not.\nnone,JSON can be anything (not recommended),Allow any input, incl. text and invalid JSON."
                   },
                   "Description": {
                     "en-us": ""
                   },
                   "ItemInformation": {
-                    "en-us": ""
+                    "en-us": "<p>[Item:Tooltip]</p>"
                   },
                   "ItemTooltip": {
-                    "en-us": ""
+                    "en-us": "<p>[Item:Tooltip]</p>"
                   },
                   "Title": {
                     "en-us": "Custom JSON - JSON Validation"
@@ -17074,8 +17698,68 @@
       ],
       "Entities": [
         {
+          "Id": 183906,
+          "Version": 2,
+          "Guid": "4e5df6de-0980-48f3-8ad4-3e405fe67138",
+          "Type": {
+            "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+            "Name": "UiPickerSourceCustomCsv"
+          },
+          "Attributes": {
+            "String": {
+              "Csv": {
+                "en-us": "Value,Title,Info\n,\"Default\",\"Disabled in the small editor, enabled in the popup Dialog\"\ntrue,\"Always Enable\",\"Always enable in all editors\"\nfalse,\"Always Disable\",\"Always disable in all editors\""
+              },
+              "Description": {
+                "en-us": ""
+              },
+              "ItemInformation": {
+                "en-us": "<p>[Item:Info]</p>"
+              },
+              "ItemTooltip": {
+                "en-us": "<p>[Item:Info]</p>"
+              },
+              "Title": {
+                "en-us": "String-WYSIWYG - Button Advanced"
+              }
+            },
+            "Hyperlink": {
+              "ItemLink": {
+                "en-us": ""
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 183908,
+              "Version": 1,
+              "Guid": "c4606ff4-651e-4664-8393-6fa552ce8055",
+              "Type": {
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "ca0051d4-0c30-4fee-b0b7-6c6136674941"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "4e5df6de-0980-48f3-8ad4-3e405fe67138"
+              }
+            }
+          ]
+        },
+        {
           "Id": 183875,
-          "Version": 1,
+          "Version": 2,
           "Guid": "f57b953e-9caf-4bf8-bbf8-51d2479835f5",
           "Type": {
             "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
@@ -17084,16 +17768,16 @@
           "Attributes": {
             "String": {
               "Csv": {
-                "en-us": "Value,Title\nstrict,JSON must be valid (default)\nlight,Show warning on invalid JSON but allow Save\nnone,JSON can be any text and also invalid JSON (not recommended)"
+                "en-us": "Value,Title,Tooltip\nstrict,JSON must be valid (default),The JSON must be valid and can't be saved if it isn't.\nlight,Show warning on invalid JSON,The JSON should be valid, but save is still allowed if not.\nnone,JSON can be anything (not recommended),Allow any input, incl. text and invalid JSON."
               },
               "Description": {
                 "en-us": ""
               },
               "ItemInformation": {
-                "en-us": ""
+                "en-us": "<p>[Item:Tooltip]</p>"
               },
               "ItemTooltip": {
-                "en-us": ""
+                "en-us": "<p>[Item:Tooltip]</p>"
               },
               "Title": {
                 "en-us": "Custom JSON - JSON Validation"
@@ -17129,6 +17813,426 @@
                 "Target": "Entity",
                 "TargetType": 4,
                 "Guid": "f57b953e-9caf-4bf8-bbf8-51d2479835f5"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 183881,
+          "Version": 7,
+          "Guid": "a4800b93-f69b-419c-bfa9-7eadbf1a9bfc",
+          "Type": {
+            "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+            "Name": "UiPickerSourceCustomCsv"
+          },
+          "Attributes": {
+            "String": {
+              "Csv": {
+                "en-us": "Value,Title,Info\nnone,No Schema (default),\"Don't use a JSON Schema\"\nstrict,Enforce (recommended),\"You can provide a real JSON Schema which will be checked and enforced.\"\nlight,Suggest,\"Use a JSON Schema to help editing, but don't enforce\""
+              },
+              "Description": {
+                "en-us": ""
+              },
+              "ItemInformation": {
+                "en-us": "<p>[Item:Info]</p>"
+              },
+              "ItemTooltip": {
+                "en-us": "<p>[Item:Info]</p>"
+              },
+              "Title": {
+                "en-us": "Json Picker - Json Schema"
+              }
+            },
+            "Hyperlink": {
+              "ItemLink": {
+                "en-us": "https://json-schema.org/"
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 183886,
+              "Version": 1,
+              "Guid": "ddb77773-8aaa-45c4-9982-9a240d72a627",
+              "Type": {
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "ca0051d4-0c30-4fee-b0b7-6c6136674941"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "a4800b93-f69b-419c-bfa9-7eadbf1a9bfc"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 183883,
+          "Version": 1,
+          "Guid": "2705cd61-c736-41f6-8d85-f717597924ea",
+          "Type": {
+            "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+            "Name": "UiPickerSourceCustomCsv"
+          },
+          "Attributes": {
+            "String": {
+              "Csv": {
+                "en-us": "Value,Title,Info\nlink,Link / URL,\"Use a link to a Schema in the internet or on your site\"\nraw,Manual,\"Add Schema manually as JSON below\""
+              },
+              "Description": {
+                "en-us": ""
+              },
+              "ItemInformation": {
+                "en-us": "<p>[Item:Info]</p>"
+              },
+              "ItemTooltip": {
+                "en-us": "<p>[Item:Info]</p>"
+              },
+              "Title": {
+                "en-us": "JSON Editor - Schema Source"
+              }
+            },
+            "Hyperlink": {
+              "ItemLink": {
+                "en-us": ""
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 183887,
+              "Version": 1,
+              "Guid": "4449a1c9-ef01-4a6d-9f85-3d33847bc41a",
+              "Type": {
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "ca0051d4-0c30-4fee-b0b7-6c6136674941"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "2705cd61-c736-41f6-8d85-f717597924ea"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 183890,
+          "Version": 5,
+          "Guid": "397911a4-839e-4c7e-9e20-deb26335aa3a",
+          "Type": {
+            "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+            "Name": "UiPickerSourceCustomCsv"
+          },
+          "Attributes": {
+            "String": {
+              "Csv": {
+                "en-us": "Value,Title,Info,Css\n,Automatic (default),\"Text will wrap\",normal\npre,Manual (only on new-line),\"No line wrapping unless manually adding an enter\",pre"
+              },
+              "Description": {
+                "en-us": ""
+              },
+              "ItemInformation": {
+                "en-us": ""
+              },
+              "ItemTooltip": {
+                "en-us": "<p>[Item:Info]</p>\n<p>&nbsp;</p>\n<p>In CSS this is \"<strong>[Item:Css]</strong>\"</p>"
+              },
+              "Title": {
+                "en-us": "String-Default - Text Wrapping Options"
+              }
+            },
+            "Hyperlink": {
+              "ItemLink": {
+                "en-us": ""
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 183892,
+              "Version": 1,
+              "Guid": "78ac9f55-ae6b-4f81-9a67-c6dfe88e3cc1",
+              "Type": {
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "ca0051d4-0c30-4fee-b0b7-6c6136674941"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "397911a4-839e-4c7e-9e20-deb26335aa3a"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 183888,
+          "Version": 4,
+          "Guid": "6625ab49-7a69-45b0-be1e-f4a2e4cd1bf2",
+          "Type": {
+            "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+            "Name": "UiPickerSourceCustomCsv"
+          },
+          "Attributes": {
+            "String": {
+              "Csv": {
+                "en-us": "Value,Title,Info\n,\"Standard\",\"The same standard font as everywhere (default)\"\nmonospace,\"Monospace (code-style)\",\"Font where every character has the same width - usually Courier.<br><br>This is for code-style inputs\""
+              },
+              "Description": {
+                "en-us": ""
+              },
+              "ItemInformation": {
+                "en-us": ""
+              },
+              "ItemTooltip": {
+                "en-us": "<p>[Item:Info]</p>"
+              },
+              "Title": {
+                "en-us": "String-Default Input-Font-Family"
+              }
+            },
+            "Hyperlink": {
+              "ItemLink": {
+                "en-us": ""
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 183893,
+              "Version": 1,
+              "Guid": "8bda4b98-e152-444a-9fdf-19c0c642000c",
+              "Type": {
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "ca0051d4-0c30-4fee-b0b7-6c6136674941"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "6625ab49-7a69-45b0-be1e-f4a2e4cd1bf2"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 183899,
+          "Version": 5,
+          "Guid": "43c38be0-097c-4c0d-8860-7a530e1f4c7a",
+          "Type": {
+            "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+            "Name": "UiPickerSourceCustomCsv"
+          },
+          "Attributes": {
+            "String": {
+              "Csv": {
+                "en-us": "Value,Title,Info\n,\"Default (narrow)\",\"Default is narrow, but visibly multi-line with ca. 3 lines of text\"\n1,\"Minimum\",\"As narrow as possible, so the user will usually not type much, and it doesn't take much screen space\"\n3,\"Narrow\",\"Narrow, but visibly multi-line\"\n5,\"Medium\",\"Medium size\"\n10,\"Large\",\"Large so it's clearly meant for a lot of text. Only do this if the user should write a lot\""
+              },
+              "Description": {
+                "en-us": ""
+              },
+              "ItemInformation": {
+                "en-us": "<p>[Item:Info]</p>\n<p>ca. [Item:Value] lines</p>"
+              },
+              "ItemTooltip": {
+                "en-us": "<p>[Item:Info]</p>\n<p>ca. [Item:Value] lines</p>"
+              },
+              "Title": {
+                "en-us": "String-WYSIWYG - Inline Initial Height"
+              }
+            },
+            "Hyperlink": {
+              "ItemLink": {
+                "en-us": ""
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 183901,
+              "Version": 1,
+              "Guid": "23ef7d6d-fb69-49ff-ac2d-a6dd3ca8e342",
+              "Type": {
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "ca0051d4-0c30-4fee-b0b7-6c6136674941"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "43c38be0-097c-4c0d-8860-7a530e1f4c7a"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 183897,
+          "Version": 3,
+          "Guid": "28e7b048-6967-4abf-bf84-4b09e5c45843",
+          "Type": {
+            "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+            "Name": "UiPickerSourceCustomCsv"
+          },
+          "Attributes": {
+            "String": {
+              "Csv": {
+                "en-us": "Value,Title,Info\n,\"Default (inline editor)\",\"Will put the WYSIWYG into the form and usually allow opening a larger dialog when working on a lot of content\"\ndialog,\"Dialog only\",\"Only show a brief preview of the HTML, then use the dialog for editing\"\ninline,\"Inline without dialog\",\"Place inline in form without dialog\""
+              },
+              "Description": {
+                "en-us": ""
+              },
+              "ItemInformation": {
+                "en-us": "<p>[Item:Info]</p>"
+              },
+              "ItemTooltip": {
+                "en-us": "<p>[Item:Info]</p>"
+              },
+              "Title": {
+                "en-us": "String-WYSIWYG Dialog Type"
+              }
+            },
+            "Hyperlink": {
+              "ItemLink": {
+                "en-us": ""
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 183902,
+              "Version": 1,
+              "Guid": "054d0ae7-21ba-4682-b9f5-d28a71db42fa",
+              "Type": {
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "ca0051d4-0c30-4fee-b0b7-6c6136674941"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "28e7b048-6967-4abf-bf84-4b09e5c45843"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 183904,
+          "Version": 1,
+          "Guid": "7a6b443a-6d23-45b2-9499-35743cf7d924",
+          "Type": {
+            "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+            "Name": "UiPickerSourceCustomCsv"
+          },
+          "Attributes": {
+            "String": {
+              "Csv": {
+                "en-us": "Value,Title,Info\n,\"Default\",\"In default mode the button is disabled in the small editor, but enabled in the popup Dialog\"\ntrue,\"Always Enable\",\"Enable the button in both the small editor as well as the popup dialog\"\nfalse,\"Always Disable\",\"Disable the button in both the small editor as well as the popup dialog\""
+              },
+              "Description": {
+                "en-us": ""
+              },
+              "ItemInformation": {
+                "en-us": "<p>[Item:Info]</p>"
+              },
+              "ItemTooltip": {
+                "en-us": "<p>[Item:Info]</p>"
+              },
+              "Title": {
+                "en-us": "String-WYSIWyG Button Source"
+              }
+            },
+            "Hyperlink": {
+              "ItemLink": {
+                "en-us": ""
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 183909,
+              "Version": 1,
+              "Guid": "2797f347-cc70-461c-a35c-e6eef9cdd09b",
+              "Type": {
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "ca0051d4-0c30-4fee-b0b7-6c6136674941"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "7a6b443a-6d23-45b2-9499-35743cf7d924"
               }
             }
           ]

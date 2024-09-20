@@ -3670,7 +3670,7 @@
               {
                 "Name": "PickerDisplayMode",
                 "Type": "String",
-                "InputType": "string-dropdown",
+                "InputType": "string-picker",
                 "IsTitle": false,
                 "SysSettings": {
                   "InheritMetadataOf": "16057c04-0f49-4bd2-96e7-97d13bf3f8f5"
@@ -3966,6 +3966,68 @@
                   },
                   "Title": {
                     "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183894,
+              "Version": 6,
+              "Guid": "b09500f5-0a16-4347-97d4-505bac83d0fc",
+              "Type": {
+                "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+                "Name": "UiPickerSourceCustomCsv"
+              },
+              "Attributes": {
+                "String": {
+                  "Csv": {
+                    "en-us": "Value,Title,Info,Disabled\nlist,\"Default\",\"Dropdown with search and dialog when more need to be selected.\",false\n\nauto-inline,\"Inline Auto WIP\",\"Inline - automatically showing checkboxes or radio buttons, depending on the amount of items you can select\",true\nradio,\"Inline Radio Buttons WIP\",\"Inline radio button selection for single-item choices\",true\ncheckbox,\"Inline Checkboxes WIP\",\"Inline checkbox list for multiple item selection\",true\n\ntree,\"Tree structure - requires more configuration (BETA, doesn't work yet)\",,true"
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "ItemTooltip": {
+                    "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "Title": {
+                    "en-us": "Picker Shared - DisplayMode"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183903,
+              "Version": 5,
+              "Guid": "bfc2786d-c211-4d74-8b58-621105cf3b27",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context, item) => {\n  console.warn('2dm in picker displaymode')\n  const options = data.optionsRaw.map(o => ({\n    ...o,\n    noSelect: o.entity?.Disabled ?? false,\n  }))\n  return {\n    options: options,\n  };\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Options"
+                  },
+                  "Title": {
+                    "en-us": "Field.Options"
                   }
                 },
                 "Boolean": {
@@ -4430,7 +4492,7 @@
               {
                 "Name": "PickerDisplayMode",
                 "Type": "String",
-                "InputType": "string-dropdown",
+                "InputType": "string-picker",
                 "IsTitle": false,
                 "SysSettings": {
                   "InheritMetadataOf": "16057c04-0f49-4bd2-96e7-97d13bf3f8f5"
@@ -4502,6 +4564,68 @@
                   },
                   "Title": {
                     "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183894,
+              "Version": 6,
+              "Guid": "b09500f5-0a16-4347-97d4-505bac83d0fc",
+              "Type": {
+                "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+                "Name": "UiPickerSourceCustomCsv"
+              },
+              "Attributes": {
+                "String": {
+                  "Csv": {
+                    "en-us": "Value,Title,Info,Disabled\nlist,\"Default\",\"Dropdown with search and dialog when more need to be selected.\",false\n\nauto-inline,\"Inline Auto WIP\",\"Inline - automatically showing checkboxes or radio buttons, depending on the amount of items you can select\",true\nradio,\"Inline Radio Buttons WIP\",\"Inline radio button selection for single-item choices\",true\ncheckbox,\"Inline Checkboxes WIP\",\"Inline checkbox list for multiple item selection\",true\n\ntree,\"Tree structure - requires more configuration (BETA, doesn't work yet)\",,true"
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "ItemTooltip": {
+                    "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "Title": {
+                    "en-us": "Picker Shared - DisplayMode"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183903,
+              "Version": 5,
+              "Guid": "bfc2786d-c211-4d74-8b58-621105cf3b27",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context, item) => {\n  console.warn('2dm in picker displaymode')\n  const options = data.optionsRaw.map(o => ({\n    ...o,\n    noSelect: o.entity?.Disabled ?? false,\n  }))\n  return {\n    options: options,\n  };\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Options"
+                  },
+                  "Title": {
+                    "en-us": "Field.Options"
                   }
                 },
                 "Boolean": {
@@ -8006,7 +8130,7 @@
                 "Metadata": [
                   {
                     "Id": 182498,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "30b66546-b066-43e0-bdca-3ca8c58aeb09",
                     "Type": {
                       "Id": "@All",
@@ -8079,7 +8203,7 @@
                   },
                   {
                     "Id": 182514,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "4a3a35af-f216-4ec1-bb9a-5ad4e521c0ba",
                     "Type": {
                       "Id": "@empty-default",
@@ -8088,7 +8212,7 @@
                     "Attributes": {
                       "Boolean": {
                         "DefaultCollapsed": {
-                          "en-us": true
+                          "en-us": false
                         }
                       }
                     },
@@ -8100,15 +8224,97 @@
                 "Name": "PickerDisplayMode",
                 "Guid": "16057c04-0f49-4bd2-96e7-97d13bf3f8f5",
                 "Type": "String",
-                "InputType": "string-dropdown",
+                "InputType": "string-picker",
                 "IsTitle": false,
                 "SysSettings": {
                   "Share": true
                 },
                 "Metadata": [
                   {
+                    "Id": 182505,
+                    "Version": 3,
+                    "Guid": "4559dee6-0ff8-40c5-9718-303e77def461",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183895,
+                    "Version": 1,
+                    "Guid": "d30201cc-f302-42e5-85d4-0f2866469ce2",
+                    "Type": {
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CreateParameters": {
+                          "en-us": ""
+                        },
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "auto-inline"
+                        },
+                        "Separator": {
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "b09500f5-0a16-4347-97d4-505bac83d0fc"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": true
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
                     "Id": 182499,
-                    "Version": 4,
+                    "Version": 7,
                     "Guid": "6aa01f5c-ceae-44a7-80f3-85aa757a2271",
                     "Type": {
                       "Id": "@All",
@@ -8126,7 +8332,7 @@
                           "en-us": ""
                         },
                         "InputType": {
-                          "en-us": "string-dropdown"
+                          "en-us": "string-picker"
                         },
                         "Name": {
                           "en-us": "Picker Display Mode"
@@ -8154,7 +8360,9 @@
                           "*": []
                         },
                         "Formulas": {
-                          "*": []
+                          "*": [
+                            "bfc2786d-c211-4d74-8b58-621105cf3b27"
+                          ]
                         },
                         "Warnings": {
                           "*": []
@@ -8171,51 +8379,6 @@
                           "en-us": true
                         },
                         "VisibleInEditUI": {
-                          "en-us": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 182505,
-                    "Version": 3,
-                    "Guid": "4559dee6-0ff8-40c5-9718-303e77def461",
-                    "Type": {
-                      "Id": "@String",
-                      "Name": "@String"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "DropdownValues": {
-                          "en-us": ""
-                        },
-                        "InputType": {
-                          "en-us": ""
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 182506,
-                    "Version": 3,
-                    "Guid": "8271a4b9-9fdb-4c9b-ae84-6ad63ed1b352",
-                    "Type": {
-                      "Id": "@string-dropdown",
-                      "Name": "@string-dropdown"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "DropdownValues": {
-                          "en-us": "list:List of values (default)\ntree:Tree structure - requires more configuration"
-                        },
-                        "DropdownValuesFormat": {
-                          "en-us": "value-label"
-                        }
-                      },
-                      "Boolean": {
-                        "EnableTextEntry": {
                           "en-us": true
                         }
                       }
@@ -9305,6 +9468,68 @@
                   },
                   "Title": {
                     "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183894,
+              "Version": 6,
+              "Guid": "b09500f5-0a16-4347-97d4-505bac83d0fc",
+              "Type": {
+                "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+                "Name": "UiPickerSourceCustomCsv"
+              },
+              "Attributes": {
+                "String": {
+                  "Csv": {
+                    "en-us": "Value,Title,Info,Disabled\nlist,\"Default\",\"Dropdown with search and dialog when more need to be selected.\",false\n\nauto-inline,\"Inline Auto WIP\",\"Inline - automatically showing checkboxes or radio buttons, depending on the amount of items you can select\",true\nradio,\"Inline Radio Buttons WIP\",\"Inline radio button selection for single-item choices\",true\ncheckbox,\"Inline Checkboxes WIP\",\"Inline checkbox list for multiple item selection\",true\n\ntree,\"Tree structure - requires more configuration (BETA, doesn't work yet)\",,true"
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "ItemTooltip": {
+                    "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "Title": {
+                    "en-us": "Picker Shared - DisplayMode"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183903,
+              "Version": 5,
+              "Guid": "bfc2786d-c211-4d74-8b58-621105cf3b27",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context, item) => {\n  console.warn('2dm in picker displaymode')\n  const options = data.optionsRaw.map(o => ({\n    ...o,\n    noSelect: o.entity?.Disabled ?? false,\n  }))\n  return {\n    options: options,\n  };\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Options"
+                  },
+                  "Title": {
+                    "en-us": "Field.Options"
                   }
                 },
                 "Boolean": {
@@ -11594,6 +11819,66 @@
                 "Target": "Entity",
                 "TargetType": 4,
                 "Guid": "0ff39e34-cee6-4ac1-b188-d6fbc6f0952d"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 183894,
+          "Version": 6,
+          "Guid": "b09500f5-0a16-4347-97d4-505bac83d0fc",
+          "Type": {
+            "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+            "Name": "UiPickerSourceCustomCsv"
+          },
+          "Attributes": {
+            "String": {
+              "Csv": {
+                "en-us": "Value,Title,Info,Disabled\nlist,\"Default\",\"Dropdown with search and dialog when more need to be selected.\",false\n\nauto-inline,\"Inline Auto WIP\",\"Inline - automatically showing checkboxes or radio buttons, depending on the amount of items you can select\",true\nradio,\"Inline Radio Buttons WIP\",\"Inline radio button selection for single-item choices\",true\ncheckbox,\"Inline Checkboxes WIP\",\"Inline checkbox list for multiple item selection\",true\n\ntree,\"Tree structure - requires more configuration (BETA, doesn't work yet)\",,true"
+              },
+              "Description": {
+                "en-us": ""
+              },
+              "ItemInformation": {
+                "en-us": "<p>[Item:Info]</p>"
+              },
+              "ItemTooltip": {
+                "en-us": "<p>[Item:Info]</p>"
+              },
+              "Title": {
+                "en-us": "Picker Shared - DisplayMode"
+              }
+            },
+            "Hyperlink": {
+              "ItemLink": {
+                "en-us": ""
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 183896,
+              "Version": 1,
+              "Guid": "bc423598-c313-48ac-8fab-28eb1cb0c44d",
+              "Type": {
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "ab72c1ff-f0c6-4d22-bada-75e0168736dc"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "b09500f5-0a16-4347-97d4-505bac83d0fc"
               }
             }
           ]
