@@ -4,12 +4,11 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code.Generate;
 using ToSic.Sxc.Code.Generate.Internal;
 using ToSic.Sxc.Code.Internal.Documentation;
-using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Backend.Admin;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeControllerReal(FileSaver fileSaver, LazySvc<IJsonService> json, LazySvc<IEnumerable<IFileGenerator>> generators, LazySvc<IAppJsonService> appJsonService) 
+public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGenerator>> generators, LazySvc<IAppJsonService> appJsonService) 
     : ServiceBase("Api.CodeRl", connect: [appJsonService])
 {
     public const string LogSuffix = "Code";
