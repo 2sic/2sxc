@@ -10882,6 +10882,87 @@
                 ]
               },
               {
+                "Name": "PickerSourceCsvNotEnabledWarning",
+                "Type": "Empty",
+                "InputType": "empty-message",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183878,
+                    "Version": 5,
+                    "Guid": "71fb0597-88bf-470c-9611-13058681c8ff",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-message"
+                        },
+                        "Name": {
+                          "en-us": "PickerSourceCsv FeatureNotEnabledWarning"
+                        },
+                        "Notes": {
+                          "en-us": "<p><strong>⚠️ Warning ⚠️</strong></p>\n<p>You are configuring an new CSV source. It appears that this feature is not enabled. See <a href=\"https://patrons.2sxc.org/features/feat/PickerSourceCsv\" target=\"_blank\" rel=\"noopener\">Picker CSV Source feature docs</a>.</p>\n<p>✅ You can still use this source and everything will work, but it will show a warning that you're using an unlicensed feature.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "4250edc0-640c-47da-81d6-f947a691c3d4"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "GroupDescription",
                 "Type": "Empty",
                 "InputType": "empty-default",
@@ -11158,6 +11239,34 @@
             ]
           },
           "Entities": [
+            {
+              "Id": 183879,
+              "Version": 1,
+              "Guid": "4250edc0-640c-47da-81d6-f947a691c3d4",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => { return !context.features.isEnabled('PickerSourceCsv'); });"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
             {
               "Id": 183740,
               "Version": 1,

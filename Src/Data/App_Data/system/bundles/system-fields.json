@@ -12176,12 +12176,12 @@
               {
                 "Name": "JsonValidation",
                 "Type": "String",
-                "InputType": "string-dropdown",
+                "InputType": "string-picker",
                 "IsTitle": false,
                 "Metadata": [
                   {
                     "Id": 135571,
-                    "Version": 4,
+                    "Version": 3,
                     "Guid": "4dc0536d-f22b-431b-b39d-5a771501b750",
                     "Type": {
                       "Id": "@All",
@@ -12195,8 +12195,11 @@
                         "DefaultValue": {
                           "en-us": "strict"
                         },
+                        "Information": {
+                          "en-us": ""
+                        },
                         "InputType": {
-                          "en-us": "string-dropdown"
+                          "en-us": "string-picker"
                         },
                         "Name": {
                           "en-us": "JSON Validation"
@@ -12207,7 +12210,15 @@
                         "Placeholder": {
                           "en-us": ""
                         },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
                         "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -12277,6 +12288,68 @@
                         }
                       },
                       "Boolean": {
+                        "EnableTextEntry": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183877,
+                    "Version": 1,
+                    "Guid": "f74b1720-bb48-4ede-91ce-b74e91f7e885",
+                    "Type": {
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CreateParameters": {
+                          "en-us": ""
+                        },
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "checkbox"
+                        },
+                        "Separator": {
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "f57b953e-9caf-4bf8-bbf8-51d2479835f5"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": false
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": false
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
                         "EnableTextEntry": {
                           "en-us": false
                         }
@@ -12847,6 +12920,40 @@
             ]
           },
           "Entities": [
+            {
+              "Id": 183875,
+              "Version": 1,
+              "Guid": "f57b953e-9caf-4bf8-bbf8-51d2479835f5",
+              "Type": {
+                "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+                "Name": "UiPickerSourceCustomCsv"
+              },
+              "Attributes": {
+                "String": {
+                  "Csv": {
+                    "en-us": "Value,Title\nstrict,JSON must be valid (default)\nlight,Show warning on invalid JSON but allow Save\nnone,JSON can be any text and also invalid JSON (not recommended)"
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": ""
+                  },
+                  "ItemTooltip": {
+                    "en-us": ""
+                  },
+                  "Title": {
+                    "en-us": "Custom JSON - JSON Validation"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
             {
               "Id": 135938,
               "Version": 1,
@@ -16182,69 +16289,9 @@
               {
                 "Name": "JsonValidation",
                 "Type": "String",
-                "InputType": "string-dropdown",
+                "InputType": "string-picker",
                 "IsTitle": false,
                 "Metadata": [
-                  {
-                    "Id": 133274,
-                    "Version": 4,
-                    "Guid": "05edcd7a-4557-4b97-8505-3513cc372b33",
-                    "Type": {
-                      "Id": "@All",
-                      "Name": "@All"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "CustomJavaScript": {
-                          "en-us": ""
-                        },
-                        "DefaultValue": {
-                          "en-us": "strict"
-                        },
-                        "InputType": {
-                          "en-us": "string-dropdown"
-                        },
-                        "Name": {
-                          "en-us": "JSON Validation"
-                        },
-                        "Notes": {
-                          "en-us": ""
-                        },
-                        "Placeholder": {
-                          "en-us": ""
-                        },
-                        "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Entity": {
-                        "Errors": {
-                          "*": []
-                        },
-                        "Formulas": {
-                          "*": []
-                        },
-                        "Warnings": {
-                          "*": []
-                        }
-                      },
-                      "Boolean": {
-                        "Disabled": {
-                          "en-us": false
-                        },
-                        "DisableTranslation": {
-                          "en-us": true
-                        },
-                        "Required": {
-                          "en-us": false
-                        },
-                        "VisibleInEditUI": {
-                          "en-us": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
                   {
                     "Id": 133275,
                     "Version": 3,
@@ -16285,6 +16332,139 @@
                       "Boolean": {
                         "EnableTextEntry": {
                           "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183876,
+                    "Version": 1,
+                    "Guid": "99cdc772-db96-4d00-b8be-f2666350814a",
+                    "Type": {
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CreateParameters": {
+                          "en-us": ""
+                        },
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "checkbox"
+                        },
+                        "Separator": {
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "f57b953e-9caf-4bf8-bbf8-51d2479835f5"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": false
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": false
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 133274,
+                    "Version": 8,
+                    "Guid": "05edcd7a-4557-4b97-8505-3513cc372b33",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "strict"
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "*": "string-picker"
+                        },
+                        "Name": {
+                          "en-us": "JSON Validation"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": true
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
                         }
                       }
                     },
@@ -16794,6 +16974,40 @@
               "Owner": "dnn:userid=41"
             },
             {
+              "Id": 183875,
+              "Version": 1,
+              "Guid": "f57b953e-9caf-4bf8-bbf8-51d2479835f5",
+              "Type": {
+                "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+                "Name": "UiPickerSourceCustomCsv"
+              },
+              "Attributes": {
+                "String": {
+                  "Csv": {
+                    "en-us": "Value,Title\nstrict,JSON must be valid (default)\nlight,Show warning on invalid JSON but allow Save\nnone,JSON can be any text and also invalid JSON (not recommended)"
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": ""
+                  },
+                  "ItemTooltip": {
+                    "en-us": ""
+                  },
+                  "Title": {
+                    "en-us": "Custom JSON - JSON Validation"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
               "Id": 133290,
               "Version": 2,
               "Guid": "196e4c5d-2c45-4908-bd3f-e9ae6d3eb8e0",
@@ -16854,6 +17068,68 @@
                 }
               },
               "Owner": "dnn:userid=41"
+            }
+          ]
+        }
+      ],
+      "Entities": [
+        {
+          "Id": 183875,
+          "Version": 1,
+          "Guid": "f57b953e-9caf-4bf8-bbf8-51d2479835f5",
+          "Type": {
+            "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+            "Name": "UiPickerSourceCustomCsv"
+          },
+          "Attributes": {
+            "String": {
+              "Csv": {
+                "en-us": "Value,Title\nstrict,JSON must be valid (default)\nlight,Show warning on invalid JSON but allow Save\nnone,JSON can be any text and also invalid JSON (not recommended)"
+              },
+              "Description": {
+                "en-us": ""
+              },
+              "ItemInformation": {
+                "en-us": ""
+              },
+              "ItemTooltip": {
+                "en-us": ""
+              },
+              "Title": {
+                "en-us": "Custom JSON - JSON Validation"
+              }
+            },
+            "Hyperlink": {
+              "ItemLink": {
+                "en-us": ""
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 183880,
+              "Version": 2,
+              "Guid": "444d9511-5e99-4576-8f3f-5d994144a7fe",
+              "Type": {
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "ca0051d4-0c30-4fee-b0b7-6c6136674941"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "f57b953e-9caf-4bf8-bbf8-51d2479835f5"
+              }
             }
           ]
         }
