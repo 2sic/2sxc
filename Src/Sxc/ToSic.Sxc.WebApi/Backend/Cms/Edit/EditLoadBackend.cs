@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Data.Build;
+﻿using ToSic.Eav;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Metadata;
@@ -121,6 +122,9 @@ public partial class EditLoadBackend(
             .SelectMany(t => t.Entities)
             .ToList();
 
+        var isSystemType = usedTypes.Any(t => t.AppId == Constants.PresetAppId);
+        l.A($"isSystemType: {isSystemType}");
+
         #endregion
 
         #region Input Types on ContentTypes and general definitions
@@ -135,12 +139,9 @@ public partial class EditLoadBackend(
 
         #endregion
 
-        // also include UI features
-        result.Features = uiData.Features(permCheck);
-
         // Attach context, but only the minimum needed for the UI
         result.Context = contextBuilder.InitApp(context.AppReader)
-            .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features, CtxEnable.EditUi);
+            .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features | (isSystemType ? Ctx.FeaturesForSystemTypes : Ctx.Features), CtxEnable.EditUi);
 
         result.Settings = loadSettings.GetSettings(context, usedTypes, result.ContentTypes, appWorkCtx);
 
@@ -155,7 +156,7 @@ public partial class EditLoadBackend(
         }
             
         // done
-        var finalMsg = $"items:{result.Items.Count}, types:{result.ContentTypes.Count}, inputs:{result.InputTypes.Count}, feats:{result.Features.Count}";
+        var finalMsg = $"items:{result.Items.Count}, types:{result.ContentTypes.Count}, inputs:{result.InputTypes.Count}, feats:{result.Context.Features.Count}";
         return l.Return(result, finalMsg);
     }
         

@@ -71,7 +71,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
         if (flags.HasFlag(Ctx.Site)) ctx.Site = GetSite(flags);
         if (flags.HasFlag(Ctx.System)) ctx.System = GetSystem(flags);
         if (flags.HasFlag(Ctx.User)) ctx.User = GetUser(flags);
-        if (flags.HasFlag(Ctx.Features)) ctx.Features = GetFeatures();
+        if (flags.HasFlag(Ctx.Features) || flags.HasFlag(Ctx.FeaturesForSystemTypes)) ctx.Features = GetFeatures(flags);
         return ctx;
     }
 
@@ -207,5 +207,11 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
         return userDto;
     }
 
-    protected virtual IList<FeatureDto> GetFeatures() => Services.UiDataLazy.Value.FeaturesDto(Services.SiteCtx.Permissions.IsContentAdmin);
+    /// <summary>
+    /// Features provided must be virtual, so that applications can override this.
+    /// </summary>
+    /// <param name="ctx"></param>
+    /// <returns></returns>
+    protected virtual IList<FeatureDto> GetFeatures(Ctx flags)
+        => Services.UiDataLazy.Value.FeaturesDto(Services.SiteCtx.Permissions.IsContentAdmin, flags.HasFlag(Ctx.FeaturesForSystemTypes));
 }
