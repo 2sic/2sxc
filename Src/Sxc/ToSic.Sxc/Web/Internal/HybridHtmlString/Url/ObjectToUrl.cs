@@ -79,12 +79,11 @@ public class ObjectToUrl
                 ? valueType.GetGenericArguments()[0]
                 : valueType.GetElementType();
 
-            if (valueElemType == null) throw new ArgumentNullException(
-                $"The field: '{set.FullName}', isGeneric: {isGeneric} with base type {valueType} to add to url seems to have a confusing setup");
+            if (valueElemType == null)
+                throw new ArgumentNullException($"The field: '{set.FullName}', isGeneric: {isGeneric} with base type {valueType} to add to url seems to have a confusing setup");
 
             if (valueElemType.IsPrimitive || valueElemType == typeof(string))
-                return new(set.FullName,
-                    $"{ArrayBoxStart}{string.Join(ArraySeparator, enumerable.Cast<object>())}{ArrayBoxEnd}");
+                return new(set.FullName, $"{ArrayBoxStart}{string.Join(ArraySeparator, enumerable.Cast<object>())}{ArrayBoxEnd}");
 
             return new(set.FullName, "array-like-but-unclear-what");
         }

@@ -291,7 +291,6 @@ internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, CodeDa
 
         // Standard case: just get the direct children
         var list = GetHelper.ChildrenItems(entity: Entity, field: field, type: type);
-        //var list = dynChildren; // .Cast<DynamicEntity>().Select(d => d.TypedItem).ToList();
         
         // Return list or special list if it's empty, as we need a special list which knows about this object being the parent
         return list.Any() ? list : cdf.CreateEmptyChildList<ITypedItem>(Entity, field);

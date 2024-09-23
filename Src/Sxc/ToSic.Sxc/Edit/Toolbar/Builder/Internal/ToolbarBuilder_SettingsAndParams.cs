@@ -68,13 +68,13 @@ partial class ToolbarBuilder
 
     }
 
-    private (object target, object parameters) FixTargetIsParameters(object target, object parameters)
+    private static (object target, object parameters) FixTargetIsParameters(object target, object parameters)
     {
         // No target, or parameters supplied
         if (parameters != null || target == null) return (target, parameters);
 
         // Basically only keep the target as is, if it's a known target
-        if (target is IEntity || target is ICanBeEntity)
+        if (target is IEntity or ICanBeEntity or IEnumerable<IEntity> or IEnumerable<ICanBeEntity>)
             return (target, null);
 
         return (null, target);

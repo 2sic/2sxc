@@ -224,10 +224,14 @@ internal class GetAndConvertHelper(
         => AsChildrenOf(entities, field, parentEntity,e => new TypedItemOfEntity(null, e, Cdf, PropsRequired) as ITypedItem);
 
     private static List<T> AsChildrenOf<T>(IEnumerable<IEntity> entities, string field, IEntity parentEntity, Func<IEntity, T> convert)
-        => entities
+        where T : class, ICanBeEntity
+    {
+        var list = entities
             .Select((e, i) => EntityInBlockDecorator.Wrap(entity: e, field: field, index: i, parent: parentEntity) as IEntity)
             .Select(convert)
             .ToList();
+        return new ListTypedItems<T>(list, null);
+    }
 
     #endregion
 

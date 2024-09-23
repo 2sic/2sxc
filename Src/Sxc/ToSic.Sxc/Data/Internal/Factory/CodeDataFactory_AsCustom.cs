@@ -64,7 +64,7 @@ partial class CodeDataFactory
             IEnumerable<TCustom> alreadyListT => alreadyListT,
             // special case: empty list, with hidden info about where it's from so the toolbar can adjust and provide new-buttons
             ListTypedItems<ITypedItem> { Count: 0, Entity: not null } list => new ListTypedItems<TCustom>(new List<TCustom>(), list.Entity),
-            _ => SafeItems().Select(AsCustomFromItem<TCustom>)
+            _ => new ListTypedItems<TCustom>(SafeItems().Select(AsCustomFromItem<TCustom>), null)
         };
 
         // Helper function to be called from above
