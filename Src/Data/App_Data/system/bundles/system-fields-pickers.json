@@ -420,6 +420,15 @@
                 ]
               },
               {
+                "Name": "GroupHelpMessageUnlicensed",
+                "Type": "Empty",
+                "InputType": "empty-message",
+                "IsTitle": false,
+                "SysSettings": {
+                  "InheritMetadataOf": "effab828-3273-497a-a7af-b93741fa25d5"
+                }
+              },
+              {
                 "Name": "ItemTooltip",
                 "Type": "String",
                 "InputType": "string-wysiwyg",
@@ -532,6 +541,34 @@
                   },
                   "Title": {
                     "en-us": "Setting Name: Value"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183912,
+              "Version": 3,
+              "Guid": "1910fa85-fdb5-468d-a7cc-32f2a3a6695d",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  const hasAny = !!data.ItemTooltip || !!data.ItemInformation || !!data.ItemLink;\n  if (!hasAny) return hasAny;\n  const enabled = context.features.isEnabled('PickerUiMoreInfo');\n  return !enabled;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
                   }
                 },
                 "Boolean": {
@@ -1601,6 +1638,15 @@
                 }
               },
               {
+                "Name": "GroupHelpMessageUnlicensed",
+                "Type": "Empty",
+                "InputType": "empty-message",
+                "IsTitle": false,
+                "SysSettings": {
+                  "InheritMetadataOf": "effab828-3273-497a-a7af-b93741fa25d5"
+                }
+              },
+              {
                 "Name": "ItemTooltip",
                 "Type": "String",
                 "InputType": "string-wysiwyg",
@@ -1982,6 +2028,34 @@
                 "Hyperlink": {
                   "ItemLink": {
                     "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183912,
+              "Version": 3,
+              "Guid": "1910fa85-fdb5-468d-a7cc-32f2a3a6695d",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  const hasAny = !!data.ItemTooltip || !!data.ItemInformation || !!data.ItemLink;\n  if (!hasAny) return hasAny;\n  const enabled = context.features.isEnabled('PickerUiMoreInfo');\n  return !enabled;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
                   }
                 }
               },
@@ -3217,6 +3291,15 @@
                 }
               },
               {
+                "Name": "GroupHelpMessageUnlicensed",
+                "Type": "Empty",
+                "InputType": "empty-message",
+                "IsTitle": false,
+                "SysSettings": {
+                  "InheritMetadataOf": "effab828-3273-497a-a7af-b93741fa25d5"
+                }
+              },
+              {
                 "Name": "ItemTooltip",
                 "Type": "String",
                 "InputType": "string-wysiwyg",
@@ -3246,6 +3329,34 @@
             ]
           },
           "Entities": [
+            {
+              "Id": 183912,
+              "Version": 3,
+              "Guid": "1910fa85-fdb5-468d-a7cc-32f2a3a6695d",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  const hasAny = !!data.ItemTooltip || !!data.ItemInformation || !!data.ItemLink;\n  if (!hasAny) return hasAny;\n  const enabled = context.features.isEnabled('PickerUiMoreInfo');\n  return !enabled;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
             {
               "Id": 183740,
               "Version": 1,
@@ -3977,6 +4088,34 @@
               "Owner": "dnn:userid=41"
             },
             {
+              "Id": 183903,
+              "Version": 5,
+              "Guid": "bfc2786d-c211-4d74-8b58-621105cf3b27",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context, item) => {\n  console.warn('2dm in picker displaymode')\n  const options = data.optionsRaw.map(o => ({\n    ...o,\n    noSelect: o.entity?.Disabled ?? false,\n  }))\n  return {\n    options: options,\n  };\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Options"
+                  },
+                  "Title": {
+                    "en-us": "Field.Options"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
               "Id": 183894,
               "Version": 6,
               "Guid": "b09500f5-0a16-4347-97d4-505bac83d0fc",
@@ -4005,34 +4144,6 @@
                 "Hyperlink": {
                   "ItemLink": {
                     "en-us": ""
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 183903,
-              "Version": 5,
-              "Guid": "bfc2786d-c211-4d74-8b58-621105cf3b27",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v2((data, context, item) => {\n  console.warn('2dm in picker displaymode')\n  const options = data.optionsRaw.map(o => ({\n    ...o,\n    noSelect: o.entity?.Disabled ?? false,\n  }))\n  return {\n    options: options,\n  };\n});"
-                  },
-                  "Target": {
-                    "en-us": "Field.Options"
-                  },
-                  "Title": {
-                    "en-us": "Field.Options"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
                   }
                 }
               },
@@ -4575,6 +4686,34 @@
               "Owner": "dnn:userid=41"
             },
             {
+              "Id": 183903,
+              "Version": 5,
+              "Guid": "bfc2786d-c211-4d74-8b58-621105cf3b27",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context, item) => {\n  console.warn('2dm in picker displaymode')\n  const options = data.optionsRaw.map(o => ({\n    ...o,\n    noSelect: o.entity?.Disabled ?? false,\n  }))\n  return {\n    options: options,\n  };\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Options"
+                  },
+                  "Title": {
+                    "en-us": "Field.Options"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
               "Id": 183894,
               "Version": 6,
               "Guid": "b09500f5-0a16-4347-97d4-505bac83d0fc",
@@ -4603,34 +4742,6 @@
                 "Hyperlink": {
                   "ItemLink": {
                     "en-us": ""
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 183903,
-              "Version": 5,
-              "Guid": "bfc2786d-c211-4d74-8b58-621105cf3b27",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v2((data, context, item) => {\n  console.warn('2dm in picker displaymode')\n  const options = data.optionsRaw.map(o => ({\n    ...o,\n    noSelect: o.entity?.Disabled ?? false,\n  }))\n  return {\n    options: options,\n  };\n});"
-                  },
-                  "Target": {
-                    "en-us": "Field.Options"
-                  },
-                  "Title": {
-                    "en-us": "Field.Options"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
                   }
                 }
               },
@@ -8231,6 +8342,79 @@
                 },
                 "Metadata": [
                   {
+                    "Id": 182499,
+                    "Version": 7,
+                    "Guid": "6aa01f5c-ceae-44a7-80f3-85aa757a2271",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "list"
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-picker"
+                        },
+                        "Name": {
+                          "en-us": "Picker Display Mode"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Choose how the picker should be presented.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "bfc2786d-c211-4d74-8b58-621105cf3b27"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": true
+                        },
+                        "Required": {
+                          "en-us": true
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
                     "Id": 182505,
                     "Version": 3,
                     "Guid": "4559dee6-0ff8-40c5-9718-303e77def461",
@@ -8306,79 +8490,6 @@
                           "en-us": false
                         },
                         "EnableTextEntry": {
-                          "en-us": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 182499,
-                    "Version": 7,
-                    "Guid": "6aa01f5c-ceae-44a7-80f3-85aa757a2271",
-                    "Type": {
-                      "Id": "@All",
-                      "Name": "@All"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "CustomJavaScript": {
-                          "en-us": ""
-                        },
-                        "DefaultValue": {
-                          "en-us": "list"
-                        },
-                        "Information": {
-                          "en-us": ""
-                        },
-                        "InputType": {
-                          "en-us": "string-picker"
-                        },
-                        "Name": {
-                          "en-us": "Picker Display Mode"
-                        },
-                        "Notes": {
-                          "en-us": "<p>Choose how the picker should be presented.</p>"
-                        },
-                        "Placeholder": {
-                          "en-us": ""
-                        },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
-                        "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
-                          "en-us": ""
-                        }
-                      },
-                      "Entity": {
-                        "Errors": {
-                          "*": []
-                        },
-                        "Formulas": {
-                          "*": [
-                            "bfc2786d-c211-4d74-8b58-621105cf3b27"
-                          ]
-                        },
-                        "Warnings": {
-                          "*": []
-                        }
-                      },
-                      "Boolean": {
-                        "Disabled": {
-                          "en-us": false
-                        },
-                        "DisableTranslation": {
-                          "en-us": true
-                        },
-                        "Required": {
-                          "en-us": true
-                        },
-                        "VisibleInEditUI": {
                           "en-us": true
                         }
                       }
@@ -9479,6 +9590,34 @@
               "Owner": "dnn:userid=41"
             },
             {
+              "Id": 183903,
+              "Version": 5,
+              "Guid": "bfc2786d-c211-4d74-8b58-621105cf3b27",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context, item) => {\n  console.warn('2dm in picker displaymode')\n  const options = data.optionsRaw.map(o => ({\n    ...o,\n    noSelect: o.entity?.Disabled ?? false,\n  }))\n  return {\n    options: options,\n  };\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Options"
+                  },
+                  "Title": {
+                    "en-us": "Field.Options"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
               "Id": 183894,
               "Version": 6,
               "Guid": "b09500f5-0a16-4347-97d4-505bac83d0fc",
@@ -9507,34 +9646,6 @@
                 "Hyperlink": {
                   "ItemLink": {
                     "en-us": ""
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 183903,
-              "Version": 5,
-              "Guid": "bfc2786d-c211-4d74-8b58-621105cf3b27",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v2((data, context, item) => {\n  console.warn('2dm in picker displaymode')\n  const options = data.optionsRaw.map(o => ({\n    ...o,\n    noSelect: o.entity?.Disabled ?? false,\n  }))\n  return {\n    options: options,\n  };\n});"
-                  },
-                  "Target": {
-                    "en-us": "Field.Options"
-                  },
-                  "Title": {
-                    "en-us": "Field.Options"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
                   }
                 }
               },
@@ -10385,6 +10496,91 @@
                 ]
               },
               {
+                "Name": "GroupHelpMessageUnlicensed",
+                "Guid": "effab828-3273-497a-a7af-b93741fa25d5",
+                "Type": "Empty",
+                "InputType": "empty-message",
+                "IsTitle": false,
+                "SysSettings": {
+                  "Share": true
+                },
+                "Metadata": [
+                  {
+                    "Id": 183910,
+                    "Version": 5,
+                    "Guid": "a0b43b4f-6e3a-42ce-8fda-bb064665482c",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-message"
+                        },
+                        "Name": {
+                          "en-us": "GroupHelpMessageUnlicensed"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Important: The feature <a href=\"https://patrons.2sxc.org/features/feat/PickerUiMoreInfo\" target=\"_blank\" rel=\"noopener\">PickerUiMoreInfo</a> is not enabled. You have filled in either the Info, Tooltip or Link, which require these features.&nbsp;</p>\n<p>For you as a developer this feature will work, so you can develop it. Just remember that the end user will only benefit from this information if the feature is enabled on their system.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "1910fa85-fdb5-468d-a7cc-32f2a3a6695d"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "ItemTooltip",
                 "Guid": "49d939a6-b45c-405b-98e9-b7ee38a9c68a",
                 "Type": "String",
@@ -10931,6 +11127,34 @@
                 }
               },
               "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183912,
+              "Version": 3,
+              "Guid": "1910fa85-fdb5-468d-a7cc-32f2a3a6695d",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  const hasAny = !!data.ItemTooltip || !!data.ItemInformation || !!data.ItemLink;\n  if (!hasAny) return hasAny;\n  const enabled = context.features.isEnabled('PickerUiMoreInfo');\n  return !enabled;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
             }
           ]
         },
@@ -11435,6 +11659,15 @@
                 }
               },
               {
+                "Name": "GroupHelpMessageUnlicensed",
+                "Type": "Empty",
+                "InputType": "empty-message",
+                "IsTitle": false,
+                "SysSettings": {
+                  "InheritMetadataOf": "effab828-3273-497a-a7af-b93741fa25d5"
+                }
+              },
+              {
                 "Name": "ItemTooltip",
                 "Type": "String",
                 "InputType": "string-wysiwyg",
@@ -11476,6 +11709,34 @@
                 "String": {
                   "Formula": {
                     "en-us": "v2((data, context) => { return !context.features.isEnabled('PickerSourceCsv'); });"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183912,
+              "Version": 3,
+              "Guid": "1910fa85-fdb5-468d-a7cc-32f2a3a6695d",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  const hasAny = !!data.ItemTooltip || !!data.ItemInformation || !!data.ItemLink;\n  if (!hasAny) return hasAny;\n  const enabled = context.features.isEnabled('PickerUiMoreInfo');\n  return !enabled;\n});"
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
